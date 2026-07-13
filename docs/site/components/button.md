@@ -174,7 +174,7 @@ const selected = ref(false);
 | --- | --- |
 | hover | 显示 8% 状态层；elevated、filled 和 tonal 按规格调整阴影 |
 | focus-visible | 显示焦点环和 10% 状态层 |
-| pressed | 显示 10% 状态层并按尺寸改变圆角 |
+| pressed | 显示 10% 状态层并按尺寸改变圆角；快速点击仍会完成一次可见的圆角往返过渡 |
 | selected | 切换形状、颜色及可选 slot，设置 `aria-pressed="true"` |
 | disabled | 容器使用 `on-surface` 10%，内容使用 38%，取消阴影和点击 |
 

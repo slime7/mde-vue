@@ -220,7 +220,7 @@ const isSelected = computed(() => effectiveToggle.value && effectiveSelected.val
 }
 
 .mat-icon-btn--shape-round {
-  --mat-button-radius: var(--mat-shape-corner-full);
+  --mat-button-radius: var(--mat-button-full-radius);
 }
 
 .mat-icon-btn--shape-square {
@@ -232,7 +232,7 @@ const isSelected = computed(() => effectiveToggle.value && effectiveSelected.val
 }
 
 .mat-icon-btn--shape-square.mat-icon-btn--selected {
-  --mat-button-radius: var(--mat-shape-corner-full);
+  --mat-button-radius: var(--mat-button-full-radius);
 }
 
 .mat-icon-btn--filled.mat-icon-btn--toggle:not(.mat-icon-btn--selected) {

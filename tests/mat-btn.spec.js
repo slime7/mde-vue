@@ -75,6 +75,30 @@ describe('MatBtn', () => {
     expect(wrapper.attributes('type')).toBe('submit');
   });
 
+  it('快速点击时保持足够长的按下状态以完成圆角过渡', async () => {
+    vi.useFakeTimers();
+    const wrapper = mount(MatBtn);
+
+    try {
+      wrapper.element.dispatchEvent(new MouseEvent('pointerdown', {
+        bubbles: true,
+        button: 0,
+      }));
+      await wrapper.vm.$nextTick();
+      expect(wrapper.classes()).toContain('mat-button-base--pressed');
+
+      wrapper.element.dispatchEvent(new MouseEvent('pointerup', { bubbles: true }));
+      await wrapper.vm.$nextTick();
+      await vi.advanceTimersByTimeAsync(149);
+      expect(wrapper.classes()).toContain('mat-button-base--pressed');
+
+      await vi.advanceTimersByTimeAsync(1);
+      expect(wrapper.classes()).not.toContain('mat-button-base--pressed');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it.each(['xs', 's', 'm', 'l', 'xl'])('支持 %s 尺寸', (size) => {
     const wrapper = mount(MatBtn, {
       props: {

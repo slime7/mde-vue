@@ -336,27 +336,34 @@ watch(
   --mat-btn-group-connected-square-outer-radius: var(--mat-btn-group-xl-connected-square-outer-radius);
 }
 
-.mat-btn-group--standard :deep(.mat-button-base) {
-  transition-property: color, background-color, border-color, border-radius, box-shadow, inline-size;
-}
-
 .mat-btn-group--connected :deep(.mat-button-base) {
-  --mat-button-radius: var(--mat-btn-group-connected-inner-radius);
+  --mat-button-start-start-radius: var(--mat-btn-group-connected-inner-radius);
+  --mat-button-start-end-radius: var(--mat-btn-group-connected-inner-radius);
+  --mat-button-end-start-radius: var(--mat-btn-group-connected-inner-radius);
+  --mat-button-end-end-radius: var(--mat-btn-group-connected-inner-radius);
+  --mat-button-pressed-start-start-radius: var(--mat-btn-group-connected-pressed-inner-radius);
+  --mat-button-pressed-start-end-radius: var(--mat-btn-group-connected-pressed-inner-radius);
+  --mat-button-pressed-end-start-radius: var(--mat-btn-group-connected-pressed-inner-radius);
+  --mat-button-pressed-end-end-radius: var(--mat-btn-group-connected-pressed-inner-radius);
   min-inline-size: var(--mat-interactive-target-min-size);
 }
 
 .mat-btn-group--connected :deep(.mat-button-base:first-child) {
-  border-start-start-radius: var(--mat-btn-group-outer-radius);
-  border-end-start-radius: var(--mat-btn-group-outer-radius);
+  --mat-button-start-start-radius: var(--mat-btn-group-outer-radius);
+  --mat-button-end-start-radius: var(--mat-btn-group-outer-radius);
+  --mat-button-pressed-start-start-radius: var(--mat-btn-group-outer-radius);
+  --mat-button-pressed-end-start-radius: var(--mat-btn-group-outer-radius);
 }
 
 .mat-btn-group--connected :deep(.mat-button-base:last-child) {
-  border-start-end-radius: var(--mat-btn-group-outer-radius);
-  border-end-end-radius: var(--mat-btn-group-outer-radius);
+  --mat-button-start-end-radius: var(--mat-btn-group-outer-radius);
+  --mat-button-end-end-radius: var(--mat-btn-group-outer-radius);
+  --mat-button-pressed-start-end-radius: var(--mat-btn-group-outer-radius);
+  --mat-button-pressed-end-end-radius: var(--mat-btn-group-outer-radius);
 }
 
-.mat-btn-group--connected.mat-btn-group--shape-round {
-  --mat-btn-group-outer-radius: var(--mat-shape-corner-full);
+.mat-btn-group--connected.mat-btn-group--shape-round :deep(.mat-button-base) {
+  --mat-btn-group-outer-radius: var(--mat-button-full-radius);
 }
 
 .mat-btn-group--connected.mat-btn-group--shape-square {
@@ -365,23 +372,30 @@ watch(
 
 .mat-btn-group--connected :deep(.mat-button-base.mat-btn--selected),
 .mat-btn-group--connected :deep(.mat-button-base.mat-icon-btn--selected) {
-  border-radius: 50%;
+  --mat-button-start-start-radius: var(--mat-button-full-radius);
+  --mat-button-start-end-radius: var(--mat-button-full-radius);
+  --mat-button-end-start-radius: var(--mat-button-full-radius);
+  --mat-button-end-end-radius: var(--mat-button-full-radius);
+  --mat-button-pressed-start-start-radius: var(--mat-button-full-radius);
+  --mat-button-pressed-start-end-radius: var(--mat-button-full-radius);
+  --mat-button-pressed-end-start-radius: var(--mat-button-full-radius);
+  --mat-button-pressed-end-end-radius: var(--mat-button-full-radius);
 }
 
 .mat-btn-group--connected :deep(.mat-button-base:first-child.mat-btn--selected),
 .mat-btn-group--connected :deep(.mat-button-base:first-child.mat-icon-btn--selected) {
-  border-start-start-radius: var(--mat-btn-group-outer-radius);
-  border-end-start-radius: var(--mat-btn-group-outer-radius);
+  --mat-button-start-start-radius: var(--mat-btn-group-outer-radius);
+  --mat-button-end-start-radius: var(--mat-btn-group-outer-radius);
+  --mat-button-pressed-start-start-radius: var(--mat-btn-group-outer-radius);
+  --mat-button-pressed-end-start-radius: var(--mat-btn-group-outer-radius);
 }
 
 .mat-btn-group--connected :deep(.mat-button-base:last-child.mat-btn--selected),
 .mat-btn-group--connected :deep(.mat-button-base:last-child.mat-icon-btn--selected) {
-  border-start-end-radius: var(--mat-btn-group-outer-radius);
-  border-end-end-radius: var(--mat-btn-group-outer-radius);
-}
-
-.mat-btn-group--connected :deep(.mat-button-base:active) {
-  --mat-button-pressed-radius: var(--mat-btn-group-connected-pressed-inner-radius);
+  --mat-button-start-end-radius: var(--mat-btn-group-outer-radius);
+  --mat-button-end-end-radius: var(--mat-btn-group-outer-radius);
+  --mat-button-pressed-start-end-radius: var(--mat-btn-group-outer-radius);
+  --mat-button-pressed-end-end-radius: var(--mat-btn-group-outer-radius);
 }
 
 .mat-btn-group--full-width {
@@ -394,9 +408,4 @@ watch(
   inline-size: auto;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .mat-btn-group--standard :deep(.mat-button-base) {
-    transition-duration: 0s;
-  }
-}
 </style>

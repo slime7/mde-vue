@@ -1,10 +1,14 @@
 <script setup>
+import {
+  onBeforeUnmount, ref, watch,
+} from 'vue';
+
 defineOptions({
   name: 'MatButtonBase',
   inheritAttrs: false,
 });
 
-defineProps({
+const props = defineProps({
   disabled: {
     type: Boolean,
     default: false,
@@ -24,6 +28,93 @@ const emit = defineEmits({
     return payload instanceof MouseEvent;
   },
 });
+const isPressed = ref(false);
+// 快速激活至少覆盖一次 short 过渡，避免按下形态在首帧前返回。
+const minimumPressDuration = 150;
+let pressStartedAt = 0;
+let releaseTimer;
+
+function clearReleaseTimer() {
+  if (releaseTimer === undefined) {
+    return;
+  }
+
+  globalThis.clearTimeout(releaseTimer);
+  releaseTimer = undefined;
+}
+
+function resetPress() {
+  clearReleaseTimer();
+  isPressed.value = false;
+}
+
+function startPress() {
+  if (props.disabled) {
+    return;
+  }
+
+  clearReleaseTimer();
+  pressStartedAt = Date.now();
+  isPressed.value = true;
+}
+
+function finishPress() {
+  if (!isPressed.value) {
+    return;
+  }
+
+  clearReleaseTimer();
+  const remainingDuration = Math.max(
+    0,
+    minimumPressDuration - (Date.now() - pressStartedAt),
+  );
+
+  releaseTimer = globalThis.setTimeout(() => {
+    isPressed.value = false;
+    releaseTimer = undefined;
+  }, remainingDuration);
+}
+
+/**
+ * @param {PointerEvent} event
+ */
+function handlePointerDown(event) {
+  if (event.button !== 0) {
+    return;
+  }
+
+  startPress();
+  event.currentTarget.setPointerCapture?.(event.pointerId);
+}
+
+/**
+ * @param {KeyboardEvent} event
+ */
+function handleKeyDown(event) {
+  if (event.repeat || ![' ', 'Enter'].includes(event.key)) {
+    return;
+  }
+
+  startPress();
+}
+
+/**
+ * @param {KeyboardEvent} event
+ */
+function handleKeyUp(event) {
+  if (![' ', 'Enter'].includes(event.key)) {
+    return;
+  }
+
+  finishPress();
+}
+
+watch(() => props.disabled, (disabled) => {
+  if (disabled) {
+    resetPress();
+  }
+});
+onBeforeUnmount(resetPress);
 
 /**
  * @param {MouseEvent} event
@@ -37,10 +128,18 @@ function handleClick(event) {
   <button
     v-bind="$attrs"
     class="mat-button-base"
+    :class="{ 'mat-button-base--pressed': isPressed }"
     :aria-pressed="ariaPressed"
     :disabled="disabled"
     :type="type"
+    @blur="finishPress"
     @click="handleClick"
+    @keydown="handleKeyDown"
+    @keyup="handleKeyUp"
+    @lostpointercapture="finishPress"
+    @pointercancel="finishPress"
+    @pointerdown="handlePointerDown"
+    @pointerup="finishPress"
   >
     <slot />
   </button>
@@ -56,8 +155,19 @@ function handleClick(event) {
   --mat-button-shadow: none;
   --mat-button-container-height: 40px;
   --mat-button-container-width: auto;
-  --mat-button-radius: var(--mat-shape-corner-full);
+
+  /* 将 full 限制为实际半径，避免与较小内角混用时触发 CSS 圆角整体缩放。 */
+  --mat-button-full-radius: min(calc(var(--mat-button-container-height) / 2), var(--mat-shape-corner-full));
+  --mat-button-radius: var(--mat-button-full-radius);
   --mat-button-pressed-radius: var(--mat-shape-corner-small);
+  --mat-button-start-start-radius: var(--mat-button-radius);
+  --mat-button-start-end-radius: var(--mat-button-radius);
+  --mat-button-end-start-radius: var(--mat-button-radius);
+  --mat-button-end-end-radius: var(--mat-button-radius);
+  --mat-button-pressed-start-start-radius: var(--mat-button-pressed-radius);
+  --mat-button-pressed-start-end-radius: var(--mat-button-pressed-radius);
+  --mat-button-pressed-end-start-radius: var(--mat-button-pressed-radius);
+  --mat-button-pressed-end-end-radius: var(--mat-button-pressed-radius);
   --mat-button-target-size: var(--mat-interactive-target-min-size, 48px);
   position: relative;
   isolation: isolate;
@@ -78,10 +188,13 @@ function handleClick(event) {
   border-color: var(--mat-button-border-color);
   border-style: solid;
   border-width: var(--mat-button-border-width);
-  border-radius: var(--mat-button-radius);
+  border-start-start-radius: var(--mat-button-start-start-radius);
+  border-start-end-radius: var(--mat-button-start-end-radius);
+  border-end-start-radius: var(--mat-button-end-start-radius);
+  border-end-end-radius: var(--mat-button-end-end-radius);
   box-shadow: var(--mat-button-shadow);
   transition-duration: var(--mat-motion-duration-short);
-  transition-property: color, background-color, border-color, border-radius, box-shadow, inline-size;
+  transition-property: color, background-color, border-color, border-start-start-radius, border-start-end-radius, border-end-start-radius, border-end-end-radius, box-shadow, inline-size;
   transition-timing-function: var(--mat-motion-easing-standard);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
@@ -125,11 +238,14 @@ function handleClick(event) {
   opacity: var(--mat-state-focus-opacity);
 }
 
-.mat-button-base:not(:disabled):active {
-  border-radius: var(--mat-button-pressed-radius);
+.mat-button-base:not(:disabled):is(:active, .mat-button-base--pressed) {
+  border-start-start-radius: var(--mat-button-pressed-start-start-radius);
+  border-start-end-radius: var(--mat-button-pressed-start-end-radius);
+  border-end-start-radius: var(--mat-button-pressed-end-start-radius);
+  border-end-end-radius: var(--mat-button-pressed-end-end-radius);
 }
 
-.mat-button-base:not(:disabled):active::before {
+.mat-button-base:not(:disabled):is(:active, .mat-button-base--pressed)::before {
   opacity: var(--mat-state-pressed-opacity);
 }
 

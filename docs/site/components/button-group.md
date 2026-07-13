@@ -152,7 +152,7 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 | `--mat-btn-group-<size>-connected-pressed-inner-radius` | `4 / 4 / 4 / 12 / 16px` |
 | `--mat-btn-group-<size>-connected-square-outer-radius` | `4 / 8 / 8 / 16 / 20px` |
 
-connected 选中内角固定为 `50%`，round 外角使用 `--mat-shape-corner-full`。组件没有公开方法。
+connected 选中项与 round 外角使用当前按钮容器高度的一半作为 full 圆角，避免宽按钮变成椭圆。组件没有公开方法。
 
 ## 参考来源
 

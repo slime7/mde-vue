@@ -238,7 +238,7 @@ watchEffect(() => {
 }
 
 .mat-btn--shape-round {
-  --mat-button-radius: var(--mat-shape-corner-full);
+  --mat-button-radius: var(--mat-button-full-radius);
 }
 
 .mat-btn--shape-square {
@@ -250,7 +250,7 @@ watchEffect(() => {
 }
 
 .mat-btn--shape-square.mat-btn--selected {
-  --mat-button-radius: var(--mat-shape-corner-full);
+  --mat-button-radius: var(--mat-button-full-radius);
 }
 
 .mat-btn--elevated {

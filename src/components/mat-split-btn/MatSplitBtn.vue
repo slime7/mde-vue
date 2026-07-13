@@ -214,8 +214,10 @@ watch(
 }
 
 .mat-split-btn__leading :deep(.mat-button-base) {
-  border-start-end-radius: var(--mat-split-btn-inner-radius);
-  border-end-end-radius: var(--mat-split-btn-inner-radius);
+  --mat-button-start-end-radius: var(--mat-split-btn-inner-radius);
+  --mat-button-end-end-radius: var(--mat-split-btn-inner-radius);
+  --mat-button-pressed-start-end-radius: var(--mat-split-btn-interactive-inner-radius);
+  --mat-button-pressed-end-end-radius: var(--mat-split-btn-interactive-inner-radius);
 }
 
 .mat-split-btn__leading :deep(.mat-btn) {
@@ -224,9 +226,11 @@ watch(
 
 .mat-split-btn__trailing :deep(.mat-button-base) {
   --mat-button-container-width: var(--mat-split-btn-trailing-width);
+  --mat-button-start-start-radius: var(--mat-split-btn-inner-radius);
+  --mat-button-end-start-radius: var(--mat-split-btn-inner-radius);
+  --mat-button-pressed-start-start-radius: var(--mat-split-btn-interactive-inner-radius);
+  --mat-button-pressed-end-start-radius: var(--mat-split-btn-interactive-inner-radius);
   padding-inline: var(--mat-split-btn-trailing-padding);
-  border-start-start-radius: var(--mat-split-btn-inner-radius);
-  border-end-start-radius: var(--mat-split-btn-inner-radius);
 }
 
 .mat-split-btn__trailing :deep(.mat-icon-btn__icon) {
@@ -237,8 +241,8 @@ watch(
 }
 
 .mat-split-btn--expanded .mat-split-btn__trailing :deep(.mat-button-base) {
-  border-start-start-radius: 50%;
-  border-end-start-radius: 50%;
+  border-start-start-radius: var(--mat-button-full-radius);
+  border-end-start-radius: var(--mat-button-full-radius);
 }
 
 .mat-split-btn--expanded .mat-split-btn__trailing :deep(.mat-icon-btn__icon) {
@@ -250,15 +254,13 @@ watch(
 }
 
 .mat-split-btn__leading :deep(.mat-button-base:not(:disabled):hover),
-.mat-split-btn__leading :deep(.mat-button-base:not(:disabled):focus-visible),
-.mat-split-btn__leading :deep(.mat-button-base:not(:disabled):active) {
+.mat-split-btn__leading :deep(.mat-button-base:not(:disabled):focus-visible) {
   border-start-end-radius: var(--mat-split-btn-interactive-inner-radius);
   border-end-end-radius: var(--mat-split-btn-interactive-inner-radius);
 }
 
 .mat-split-btn:not(.mat-split-btn--expanded) .mat-split-btn__trailing :deep(.mat-button-base:not(:disabled):hover),
-.mat-split-btn:not(.mat-split-btn--expanded) .mat-split-btn__trailing :deep(.mat-button-base:not(:disabled):focus-visible),
-.mat-split-btn:not(.mat-split-btn--expanded) .mat-split-btn__trailing :deep(.mat-button-base:not(:disabled):active) {
+.mat-split-btn:not(.mat-split-btn--expanded) .mat-split-btn__trailing :deep(.mat-button-base:not(:disabled):focus-visible) {
   border-start-start-radius: var(--mat-split-btn-interactive-inner-radius);
   border-end-start-radius: var(--mat-split-btn-interactive-inner-radius);
 }
