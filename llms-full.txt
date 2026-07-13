@@ -432,6 +432,12 @@ import 'mdu-ui/styles.css';
 <mat-btn>确认</mat-btn>
 ```
 
+<ClientOnly>
+  <DocsPreview label="Button 默认样式预览">
+    <mat-btn>确认</mat-btn>
+  </DocsPreview>
+</ClientOnly>
+
 ### 外观、尺寸和形状
 
 ```vue
@@ -441,6 +447,16 @@ import 'mdu-ui/styles.css';
 <mat-btn variant="outlined" size="l" shape="square">Outlined</mat-btn>
 <mat-btn variant="text" size="xl">Text</mat-btn>
 ```
+
+<ClientOnly>
+  <DocsPreview label="Button 外观、尺寸和形状预览">
+    <mat-btn variant="elevated" size="xs">Elevated</mat-btn>
+    <mat-btn variant="filled" size="s">Filled</mat-btn>
+    <mat-btn variant="tonal" size="m">Tonal</mat-btn>
+    <mat-btn variant="outlined" size="l" shape="square">Outlined</mat-btn>
+    <mat-btn variant="text" size="xl">Text</mat-btn>
+  </DocsPreview>
+</ClientOnly>
 
 `variant` 分别表示抬升、主要填充、次要 tonal、轮廓和低强调文本操作。`text` 不支持 toggle。
 
@@ -467,6 +483,21 @@ const selected = ref(false);
 </template>
 ```
 
+<ClientOnly>
+  <DocsPreview label="Button 前置图标与受控切换预览">
+    <mat-btn
+      toggle
+      :selected="buttonSelected"
+      @click="buttonSelected = !buttonSelected"
+    >
+      <template #icon>☆</template>
+      <template #selected-icon>★</template>
+      <template #default>收藏</template>
+      <template #selected>已收藏</template>
+    </mat-btn>
+  </DocsPreview>
+</ClientOnly>
+
 组件不自行修改 `selected`，也不触发 `update:selected`。未提供选中 slot 时复用默认内容；图标回退会尝试提高字重和 `FILL` 轴。
 
 ### 组件配色
@@ -475,6 +506,13 @@ const selected = ref(false);
 <mat-btn color="secondary">次要操作</mat-btn>
 <mat-btn color="#6750a4">局部种子色</mat-btn>
 ```
+
+<ClientOnly>
+  <DocsPreview label="Button 组件配色预览">
+    <mat-btn color="secondary">次要操作</mat-btn>
+    <mat-btn color="#6750a4">局部种子色</mat-btn>
+  </DocsPreview>
+</ClientOnly>
 
 省略 `color` 时按 `variant` 使用 Material 默认角色。语义字符串读取项目令牌，六位十六进制值生成只作用于当前按钮的 Material 2025 primary 色族。完整规则见[组件配色](/guide/component-color)。
 
@@ -543,6 +581,12 @@ const selected = ref(false);
 
 尺寸、形状和状态依据 [Material 3 Button specs](https://m3.material.io/components/buttons/specs)。基础交互结构改编自 [mdui v2 Button](https://www.mdui.org/zh-cn/docs/2/components/button)，MIT 许可见仓库根目录的 `THIRD_PARTY_NOTICES.md`。
 
+<script setup>
+import { ref } from 'vue';
+
+const buttonSelected = ref(false);
+</script>
+
 # Icon button 图标按钮
 
 `MatIconBtn` 渲染只包含图标的原生按钮。每个实例必须通过 `label` 提供可访问操作名称，并默认使用同一文本作为原生 `title` 提示。
@@ -578,6 +622,12 @@ import 'mdu-ui/styles.css';
 <mat-icon-btn label="更多操作">⋮</mat-icon-btn>
 ```
 
+<ClientOnly>
+  <DocsPreview label="Icon button 默认样式预览">
+    <mat-icon-btn label="更多操作">⋮</mat-icon-btn>
+  </DocsPreview>
+</ClientOnly>
+
 默认使用 `filled`、`s`、`default` 宽度和 `round` 形状。
 
 ### 外观、宽度和受控切换
@@ -599,6 +649,25 @@ import 'mdu-ui/styles.css';
   <template #selected>★</template>
 </mat-icon-btn>
 ```
+
+<ClientOnly>
+  <DocsPreview label="Icon button 外观、宽度和受控切换预览">
+    <mat-icon-btn label="Filled" variant="filled" width="narrow">★</mat-icon-btn>
+    <mat-icon-btn label="Tonal" variant="tonal">★</mat-icon-btn>
+    <mat-icon-btn label="Outlined" variant="outlined" width="wide">★</mat-icon-btn>
+    <mat-icon-btn label="Standard" variant="standard">★</mat-icon-btn>
+    <mat-icon-btn
+      label="收藏"
+      toggle
+      :selected="iconFavorite"
+      color="#6750a4"
+      @click="iconFavorite = !iconFavorite"
+    >
+      <template #default>☆</template>
+      <template #selected>★</template>
+    </mat-icon-btn>
+  </DocsPreview>
+</ClientOnly>
 
 ## API
 
@@ -654,6 +723,12 @@ hover、focus-visible、pressed、selected 和 disabled 状态与 Button 使用�
 
 参数与行为依据 [Material 3 Icon button specs](https://m3.material.io/components/icon-buttons/specs)。
 
+<script setup>
+import { ref } from 'vue';
+
+const iconFavorite = ref(false);
+</script>
+
 # Button group 按钮组
 
 `MatBtnGroup` 在单行中组织 `MatBtn` 和 `MatIconBtn`。standard 形态保留独立按钮间距，connected 形态连接可选择按钮。组容器不聚焦，每个子按钮保持独立 Tab 停靠点。
@@ -697,6 +772,15 @@ import 'mdu-ui/styles.css';
 </mat-btn-group>
 ```
 
+<ClientOnly>
+  <DocsPreview label="Button group 默认 standard 组预览">
+    <mat-btn-group>
+      <mat-btn variant="outlined">取消</mat-btn>
+      <mat-btn>保存</mat-btn>
+    </mat-btn-group>
+  </DocsPreview>
+</ClientOnly>
+
 按下 standard 子项时，该项宽度临时变为 115%，相邻项不缩窄，组整体允许增宽。
 
 ### 受控 connected 多选
@@ -726,6 +810,22 @@ function applySelection({ nextSelected }) {
   </mat-btn-group>
 </template>
 ```
+
+<ClientOnly>
+  <DocsPreview label="Button group 受控 connected 多选预览">
+    <mat-btn-group
+      variant="connected"
+      selection="multiple"
+      :selected="groupSelected"
+      required
+      full-width
+      @select="groupSelected = $event.nextSelected"
+    >
+      <mat-icon-btn label="粗体" value="bold">B</mat-icon-btn>
+      <mat-icon-btn label="斜体" value="italic">I</mat-icon-btn>
+    </mat-btn-group>
+  </DocsPreview>
+</ClientOnly>
 
 ## API
 
@@ -782,6 +882,12 @@ connected 选中内角固定为 `50%`，round 外角使用 `--mat-shape-corner-f
 
 参数与交互依据 [Material 3 Button group specs](https://m3.material.io/components/button-groups/specs)。
 
+<script setup>
+import { ref } from 'vue';
+
+const groupSelected = ref(['bold']);
+</script>
+
 # 限制
 
 当前版本有意保持较小的支持范围：
@@ -834,6 +940,32 @@ import 'mdu-ui/styles.css';
 
 ## 示例
 
+### 默认样式
+
+```vue
+<mat-split-btn>
+  <template #leading>
+    <mat-btn>新建</mat-btn>
+  </template>
+  <template #trailing>
+    <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
+  </template>
+</mat-split-btn>
+```
+
+<ClientOnly>
+  <DocsPreview label="Split button 默认样式预览">
+    <mat-split-btn>
+      <template #leading>
+        <mat-btn>新建</mat-btn>
+      </template>
+      <template #trailing>
+        <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
+      </template>
+    </mat-split-btn>
+  </DocsPreview>
+</ClientOnly>
+
 ### 受控展开与外部菜单
 
 ```vue
@@ -865,6 +997,29 @@ const expanded = ref(false);
   </div>
 </template>
 ```
+
+<ClientOnly>
+  <DocsPreview label="Split button 受控展开与外部菜单预览" stacked>
+    <mat-split-btn
+      variant="filled"
+      size="s"
+      color="#6750a4"
+      :expanded="splitExpanded"
+      controls="split-example-menu"
+      @update:expanded="splitExpanded = $event"
+    >
+      <template #leading>
+        <mat-btn>新建</mat-btn>
+      </template>
+      <template #trailing>
+        <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
+      </template>
+    </mat-split-btn>
+
+<!-- 保持下方原生元素顶格，避免 Markdown 将其解析为代码块。 -->
+<div v-if="splitExpanded" id="split-example-menu" class="docs-preview-menu" role="menu">新建文档<br>新建文件夹</div>
+  </DocsPreview>
+</ClientOnly>
 
 ## API
 
@@ -922,3 +1077,9 @@ slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展
 ## 参考来源
 
 参数、形状和展开状态依据 [Material 3 Split button specs](https://m3.material.io/components/split-button/specs)。
+
+<script setup>
+import { ref } from 'vue';
+
+const splitExpanded = ref(false);
+</script>

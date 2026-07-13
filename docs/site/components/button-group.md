@@ -48,6 +48,15 @@ import 'mdu-ui/styles.css';
 </mat-btn-group>
 ```
 
+<ClientOnly>
+  <DocsPreview label="Button group 默认 standard 组预览">
+    <mat-btn-group>
+      <mat-btn variant="outlined">取消</mat-btn>
+      <mat-btn>保存</mat-btn>
+    </mat-btn-group>
+  </DocsPreview>
+</ClientOnly>
+
 按下 standard 子项时，该项宽度临时变为 115%，相邻项不缩窄，组整体允许增宽。
 
 ### 受控 connected 多选
@@ -77,6 +86,22 @@ function applySelection({ nextSelected }) {
   </mat-btn-group>
 </template>
 ```
+
+<ClientOnly>
+  <DocsPreview label="Button group 受控 connected 多选预览">
+    <mat-btn-group
+      variant="connected"
+      selection="multiple"
+      :selected="groupSelected"
+      required
+      full-width
+      @select="groupSelected = $event.nextSelected"
+    >
+      <mat-icon-btn label="粗体" value="bold">B</mat-icon-btn>
+      <mat-icon-btn label="斜体" value="italic">I</mat-icon-btn>
+    </mat-btn-group>
+  </DocsPreview>
+</ClientOnly>
 
 ## API
 
@@ -132,3 +157,9 @@ connected 选中内角固定为 `50%`，round 外角使用 `--mat-shape-corner-f
 ## 参考来源
 
 参数与交互依据 [Material 3 Button group specs](https://m3.material.io/components/button-groups/specs)。
+
+<script setup>
+import { ref } from 'vue';
+
+const groupSelected = ref(['bold']);
+</script>

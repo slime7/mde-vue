@@ -34,10 +34,16 @@ export default defineConfig({
       {
         text: '组件',
         items: [
-          { text: 'Button 按钮', link: '/components/button' },
-          { text: 'Icon button 图标按钮', link: '/components/icon-button' },
-          { text: 'Button group 按钮组', link: '/components/button-group' },
-          { text: 'Split button 拆分按钮', link: '/components/split-button' },
+          {
+            text: 'Button 系列',
+            collapsed: true,
+            items: [
+              { text: 'Button 按钮', link: '/components/button' },
+              { text: 'Icon button 图标按钮', link: '/components/icon-button' },
+              { text: 'Button group 按钮组', link: '/components/button-group' },
+              { text: 'Split button 拆分按钮', link: '/components/split-button' },
+            ],
+          },
         ],
       },
       {

@@ -44,6 +44,32 @@ import 'mdu-ui/styles.css';
 
 ## 示例
 
+### 默认样式
+
+```vue
+<mat-split-btn>
+  <template #leading>
+    <mat-btn>新建</mat-btn>
+  </template>
+  <template #trailing>
+    <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
+  </template>
+</mat-split-btn>
+```
+
+<ClientOnly>
+  <DocsPreview label="Split button 默认样式预览">
+    <mat-split-btn>
+      <template #leading>
+        <mat-btn>新建</mat-btn>
+      </template>
+      <template #trailing>
+        <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
+      </template>
+    </mat-split-btn>
+  </DocsPreview>
+</ClientOnly>
+
 ### 受控展开与外部菜单
 
 ```vue
@@ -75,6 +101,29 @@ const expanded = ref(false);
   </div>
 </template>
 ```
+
+<ClientOnly>
+  <DocsPreview label="Split button 受控展开与外部菜单预览" stacked>
+    <mat-split-btn
+      variant="filled"
+      size="s"
+      color="#6750a4"
+      :expanded="splitExpanded"
+      controls="split-example-menu"
+      @update:expanded="splitExpanded = $event"
+    >
+      <template #leading>
+        <mat-btn>新建</mat-btn>
+      </template>
+      <template #trailing>
+        <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
+      </template>
+    </mat-split-btn>
+
+<!-- 保持下方原生元素顶格，避免 Markdown 将其解析为代码块。 -->
+<div v-if="splitExpanded" id="split-example-menu" class="docs-preview-menu" role="menu">新建文档<br>新建文件夹</div>
+  </DocsPreview>
+</ClientOnly>
 
 ## API
 
@@ -132,3 +181,9 @@ slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展
 ## 参考来源
 
 参数、形状和展开状态依据 [Material 3 Split button specs](https://m3.material.io/components/split-button/specs)。
+
+<script setup>
+import { ref } from 'vue';
+
+const splitExpanded = ref(false);
+</script>

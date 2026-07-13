@@ -53,6 +53,12 @@ import 'mdu-ui/styles.css';
 <mat-btn>确认</mat-btn>
 ```
 
+<ClientOnly>
+  <DocsPreview label="Button 默认样式预览">
+    <mat-btn>确认</mat-btn>
+  </DocsPreview>
+</ClientOnly>
+
 ### 外观、尺寸和形状
 
 ```vue
@@ -62,6 +68,16 @@ import 'mdu-ui/styles.css';
 <mat-btn variant="outlined" size="l" shape="square">Outlined</mat-btn>
 <mat-btn variant="text" size="xl">Text</mat-btn>
 ```
+
+<ClientOnly>
+  <DocsPreview label="Button 外观、尺寸和形状预览">
+    <mat-btn variant="elevated" size="xs">Elevated</mat-btn>
+    <mat-btn variant="filled" size="s">Filled</mat-btn>
+    <mat-btn variant="tonal" size="m">Tonal</mat-btn>
+    <mat-btn variant="outlined" size="l" shape="square">Outlined</mat-btn>
+    <mat-btn variant="text" size="xl">Text</mat-btn>
+  </DocsPreview>
+</ClientOnly>
 
 `variant` 分别表示抬升、主要填充、次要 tonal、轮廓和低强调文本操作。`text` 不支持 toggle。
 
@@ -88,6 +104,21 @@ const selected = ref(false);
 </template>
 ```
 
+<ClientOnly>
+  <DocsPreview label="Button 前置图标与受控切换预览">
+    <mat-btn
+      toggle
+      :selected="buttonSelected"
+      @click="buttonSelected = !buttonSelected"
+    >
+      <template #icon>☆</template>
+      <template #selected-icon>★</template>
+      <template #default>收藏</template>
+      <template #selected>已收藏</template>
+    </mat-btn>
+  </DocsPreview>
+</ClientOnly>
+
 组件不自行修改 `selected`，也不触发 `update:selected`。未提供选中 slot 时复用默认内容；图标回退会尝试提高字重和 `FILL` 轴。
 
 ### 组件配色
@@ -96,6 +127,13 @@ const selected = ref(false);
 <mat-btn color="secondary">次要操作</mat-btn>
 <mat-btn color="#6750a4">局部种子色</mat-btn>
 ```
+
+<ClientOnly>
+  <DocsPreview label="Button 组件配色预览">
+    <mat-btn color="secondary">次要操作</mat-btn>
+    <mat-btn color="#6750a4">局部种子色</mat-btn>
+  </DocsPreview>
+</ClientOnly>
 
 省略 `color` 时按 `variant` 使用 Material 默认角色。语义字符串读取项目令牌，六位十六进制值生成只作用于当前按钮的 Material 2025 primary 色族。完整规则见[组件配色](/guide/component-color)。
 
@@ -163,3 +201,9 @@ const selected = ref(false);
 ## 参考来源
 
 尺寸、形状和状态依据 [Material 3 Button specs](https://m3.material.io/components/buttons/specs)。基础交互结构改编自 [mdui v2 Button](https://www.mdui.org/zh-cn/docs/2/components/button)，MIT 许可见仓库根目录的 `THIRD_PARTY_NOTICES.md`。
+
+<script setup>
+import { ref } from 'vue';
+
+const buttonSelected = ref(false);
+</script>
