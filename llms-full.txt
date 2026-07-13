@@ -1,0 +1,222 @@
+# mdu-ui 完整文档
+
+> 本文件由 docs 中标记 llms: true 的 Markdown 页面生成，请勿手动编辑。
+
+# 概述
+
+`mdu-ui` 是一个仅供个人项目使用的 Vue 3 组件库。它只面向最新浏览器和客户端应用，源码使用 JavaScript、Vue SFC 与原生 CSS。
+
+首期公共能力包括：
+
+- `<mat-btn>` 按钮组件；
+- Material 3 动态颜色主题；
+- 可选的 Tailwind CSS v4 语义工具类；
+- 面向开发者与 AI 的同源 Markdown 文档。
+
+## 设计边界
+
+项目不提供 npm 发布产物、TypeScript 声明、服务端渲染、旧浏览器兼容、本地化、IDE 插件或其他框架适配。组件源码由使用方的 Vue/Vite 项目直接编译。
+
+## 公共入口
+
+```js
+import { createApp } from 'vue';
+import { createMatUi, MatBtn } from 'mdu-ui';
+import 'mdu-ui/styles.css';
+```
+
+既可以通过 `createMatUi()` 全局注册组件，也可以具名导入 `MatBtn`。单组件入口是 `mdu-ui/components/mat-btn`。
+
+# 安装
+
+`mdu-ui` 是私有 GitHub 仓库，不会发布到 npm。建议固定到明确的 Git 提交，确保安装结果可复现。
+
+```bash
+pnpm add "git+ssh://git@github.com/slime7/mdu-ui.git#<commit>"
+```
+
+使用项目需要 Vue 3。基础样式必须显式导入：
+
+```js
+import { createApp } from 'vue';
+import { createMatUi } from 'mdu-ui';
+import App from './App.vue';
+import 'mdu-ui/styles.css';
+
+const app = createApp(App);
+
+app.use(createMatUi());
+app.mount('#app');
+```
+
+插件会全局注册 `<mat-btn>`，并使后代组件能够调用 `useMatTheme()`。如果只使用单个组件，可以改为局部注册：
+
+```vue
+<script setup>
+import { MatBtn } from 'mdu-ui/components/mat-btn';
+import 'mdu-ui/styles.css';
+</script>
+
+<template>
+  <MatBtn>保存</MatBtn>
+</template>
+```
+
+使用 Git 依赖时，消费项目必须能够访问私有仓库，并配置相应的 SSH 凭据。
+
+# 主题
+
+`createMatUi()` 接受可选的 `theme` 配置。默认种子色是 `#20a6fc`，默认模式是 `system`，默认配色变体是 `tonal-spot`，默认对比度是 `0`。
+
+```js
+import { createMatUi } from 'mdu-ui';
+
+app.use(createMatUi({
+  theme: {
+    mode: 'system',
+    seedColor: '#20a6fc',
+    schemeVariant: 'tonal-spot',
+    contrastLevel: 0,
+  },
+}));
+```
+
+## 配置项
+
+| 配置 | 可用值 | 说明 |
+| --- | --- | --- |
+| `mode` | `light`、`dark`、`system` | `system` 跟随系统配色偏好 |
+| `seedColor` | `#RGB` 或 `#RRGGBB` | 例如 `#20a6fc`，用于生成完整色板 |
+| `schemeVariant` | 九种 Material 3 变体 | 默认 `tonal-spot` |
+| `contrastLevel` | `-1` 至 `1` | 超出范围或非数字值会被拒绝 |
+| `target` | `HTMLElement` | 默认写入 `document.documentElement` |
+
+支持的 `schemeVariant` 是 `tonal-spot`、`neutral`、`vibrant`、`expressive`、`fidelity`、`content`、`monochrome`、`rainbow` 和 `fruit-salad`。
+
+## 运行时切换
+
+在插件后代组件中调用 `useMatTheme()`，通过返回的主题控制器更新配置：
+
+```vue
+<script setup>
+import { useMatTheme } from 'mdu-ui';
+
+const theme = useMatTheme();
+
+function enableDarkMode() {
+  theme.setMode('dark');
+}
+
+function changeSeedColor() {
+  theme.setSeedColor('#6750a4');
+}
+</script>
+```
+
+控制器还提供当前配置、解析后的实际模式以及清理系统主题监听的方法。主题不会自动写入 `localStorage`；需要持久化时由应用自行读取与保存。
+
+## CSS 令牌
+
+运行时会在目标元素写入以下命名空间的 CSS 自定义属性：
+
+- 颜色：`--mat-color-*`；
+- 形状：`--mat-shape-*`；
+- 排版：`--mat-type-*`；
+- 阴影：`--mat-shadow-*`；
+- 动效：`--mat-motion-*`；
+- 状态：`--mat-state-*`。
+
+应用样式可以直接使用令牌，例如 `color: var(--mat-color-on-surface)`。主题切换时，依赖这些令牌的组件和应用样式会同步更新。
+
+# Tailwind CSS
+
+Tailwind CSS v4 是可选依赖。先按照 Tailwind 文档为 Vite 项目配置 `tailwindcss` 与 `@tailwindcss/vite`，然后在应用 CSS 中导入 Tailwind 和 mdu-ui 适配层：
+
+```css
+@import "tailwindcss";
+@import "mdu-ui/tailwind.css";
+```
+
+应用入口仍需导入基础主题样式：
+
+```js
+import 'mdu-ui/styles.css';
+```
+
+适配层使用 `@theme inline`，将运行时令牌映射到带 `mat` 前缀的 Tailwind 主题变量。常见工具类包括：
+
+```vue
+<template>
+  <section class="bg-mat-primary text-mat-on-primary rounded-mat-lg shadow-mat-2">
+    内容会跟随 mdu-ui 主题变化
+  </section>
+</template>
+```
+
+颜色类来自 `--color-mat-*`，圆角类来自 `--radius-mat-*`，字号类来自 `--text-mat-*`，阴影类来自 `--shadow-mat-*`，缓动类来自 `--ease-mat-*`。适配层不会覆盖 `primary`、`surface` 等常见无前缀变量。
+
+# Button 按钮
+
+`<mat-btn>` 使用原生 `<button>`，适合触发操作。插件安装后可以直接使用，也可以通过 `MatBtn` 具名导入。
+
+```vue
+<template>
+  <mat-btn>保存</mat-btn>
+  <mat-btn variant="outlined">取消</mat-btn>
+</template>
+```
+
+## 外观
+
+`variant` 支持以下五种值：
+
+| 值 | 适用场景 |
+| --- | --- |
+| `elevated` | 需要与背景分离的普通操作 |
+| `filled` | 页面中最重要的主要操作，默认值 |
+| `tonal` | 比填充按钮弱一级的强调操作 |
+| `outlined` | 中等强调的次要操作 |
+| `text` | 工具栏或紧凑区域中的低强调操作 |
+
+## 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `variant` | `string` | `filled` | 按钮外观 |
+| `disabled` | `boolean` | `false` | 禁用按钮并阻止交互 |
+| `type` | `string` | `button` | 原生按钮类型，可设为 `submit` 或 `reset` |
+
+默认 slot 是按钮文本。未声明的 HTML 属性、ARIA 属性和原生事件会透传到内部 `<button>`：
+
+```vue
+<mat-btn
+  aria-label="保存文档"
+  data-testid="save"
+  @click="save"
+>
+  保存
+</mat-btn>
+```
+
+## 状态与样式
+
+按钮提供可见的键盘焦点、hover 与 active 状态层。禁用按钮不会响应点击。可以在局部样式中覆盖 `--mat-btn-radius` 调整圆角：
+
+```css
+.square-action {
+  --mat-btn-radius: var(--mat-shape-corner-small);
+}
+```
+
+# 限制
+
+当前版本有意保持较小的支持范围：
+
+- 仅支持 Vue 3 客户端应用和最新浏览器；
+- 不支持 SSR、旧浏览器、本地化、IDE 插件或其他前端框架；
+- 不发布 npm 包，不提供预编译 `dist`，也不提供 TypeScript 声明；
+- 使用方的构建工具必须能够处理 `.vue` 源文件和 CSS；
+- 主题不会自动持久化，也不会自动写入应用状态；
+- 首期仅提供 `<mat-btn>`。
+
+`<mat-btn>` 暂不提供 loading、图标专用属性、链接模式、full-width、涟漪和完整的原生表单方法代理。这些能力在实际需求明确后再扩展，不应依赖未记录的内部实现。

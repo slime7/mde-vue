@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+@import 'mdu-ui/tailwind.css';
+
+:root {
+  --vp-c-brand-1: var(--mat-color-primary, #00639c);
+  --vp-c-brand-2: var(--mat-color-primary, #00639c);
+  --vp-c-brand-3: var(--mat-color-primary-container, #cee5ff);
+  --vp-c-brand-soft: color-mix(in srgb, var(--mat-color-primary, #00639c) 14%, transparent);
+}
+
+.vp-doc table {
+  display: table;
+  inline-size: 100%;
+}
