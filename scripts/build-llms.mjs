@@ -12,7 +12,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, '..');
-const docsDirectory = path.join(projectRoot, 'docs');
+const docsDirectory = path.join(projectRoot, 'docs', 'site');
 const llmsPath = path.join(projectRoot, 'llms.txt');
 const llmsFullPath = path.join(projectRoot, 'llms-full.txt');
 
@@ -151,7 +151,7 @@ function renderDocuments(documents) {
     llmsFull: [
       '# mdu-ui 完整文档',
       '',
-      '> 本文件由 docs 中标记 llms: true 的 Markdown 页面生成，请勿手动编辑。',
+      '> 本文件由 docs/site 中标记 llms: true 的 Markdown 页面生成，请勿手动编辑。',
       '',
       ...fullSections.flatMap((content) => [content, '']),
     ].join('\n'),

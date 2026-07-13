@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress';
 import tailwindcss from '@tailwindcss/vite';
 // eslint-disable-next-line import-x/extensions
-import { copyLlmsArtifacts } from '../../scripts/build-llms.mjs';
+import { copyLlmsArtifacts } from '../../../scripts/build-llms.mjs';
 
 export default defineConfig({
   title: 'mdu-ui',
@@ -12,6 +12,7 @@ export default defineConfig({
     nav: [
       { text: '指南', link: '/guide/overview' },
       { text: '组件', link: '/components/button' },
+      { text: 'AI', link: '/ai/llms' },
       { text: 'Demo', link: '/demo/' },
     ],
     sidebar: [
@@ -29,6 +30,12 @@ export default defineConfig({
         text: '组件',
         items: [
           { text: 'Button 按钮', link: '/components/button' },
+        ],
+      },
+      {
+        text: 'AI',
+        items: [
+          { text: 'LLMs.txt 使用说明', link: '/ai/llms' },
         ],
       },
       {

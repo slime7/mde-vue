@@ -7,6 +7,7 @@
 - 项目：`zdhxiong/mdui`
 - 固定来源提交：`818146c3e188580e2831873b4f245d864422552c`
 - 来源地址：<https://github.com/zdhxiong/mdui/tree/818146c3e188580e2831873b4f245d864422552c>
+- AI 文档用法参考：<https://github.com/zdhxiong/mdui/blob/v2/docs/zh-cn/ai/llms.md>
 - 原项目许可：MIT License
 - 许可原文：[licenses/mdui-MIT.txt](licenses/mdui-MIT.txt)
 

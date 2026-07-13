@@ -22,14 +22,14 @@
     "./tailwind.css": "./src/styles/tailwind.css"
   },
   "scripts": {
-    "dev": "vitepress dev docs",
-    "docs:dev": "vitepress dev docs",
+    "dev": "vitepress dev docs/site",
+    "docs:dev": "vitepress dev docs/site",
     "build": "vite build --config vite.lib.config.js",
     "build:check": "vite build --config vite.lib.config.js",
     "docs:llms": "node scripts/build-llms.mjs",
     "docs:check": "node scripts/build-llms.mjs --check",
-    "docs:build": "node scripts/build-llms.mjs && vitepress build docs",
-    "docs:preview": "vitepress preview docs",
+    "docs:build": "node scripts/build-llms.mjs && vitepress build docs/site",
+    "docs:preview": "vitepress preview docs/site",
     "lint": "eslint . && stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\"",
     "lint:js": "eslint .",
     "lint:styles": "stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\"",
@@ -39,7 +39,7 @@
     "test": "vitest",
     "test:run": "vitest run",
     "validate:agent-docs": "python scripts/validate-agent-docs.py .",
-    "check": "eslint . && stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\" && vitest run && vite build --config vite.lib.config.js && node scripts/build-llms.mjs --check && vitepress build docs && python scripts/validate-agent-docs.py ."
+    "check": "eslint . && stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\" && vitest run && vite build --config vite.lib.config.js && node scripts/build-llms.mjs --check && vitepress build docs/site && python scripts/validate-agent-docs.py ."
   },
   "dependencies": {
     "@material/material-color-utilities": "^0.4.0"

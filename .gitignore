@@ -1,7 +1,7 @@
 node_modules/
 dist/
 coverage/
-docs/.vitepress/cache/
-docs/.vitepress/dist/
+docs/site/.vitepress/cache/
+docs/site/.vitepress/dist/
 *.log
 .DS_Store

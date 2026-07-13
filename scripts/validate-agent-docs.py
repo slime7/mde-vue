@@ -16,11 +16,11 @@ from urllib.parse import unquote
 
 CORE_DOCUMENTS = (
     Path("AGENTS.md"),
-    Path("docs/VISION.md"),
-    Path("docs/ARCHITECTURE.md"),
-    Path("docs/ABSTRACTIONS.md"),
-    Path("docs/GETTING-STARTED.md"),
-    Path("docs/adr/README.md"),
+    Path("docs/project/VISION.md"),
+    Path("docs/project/ARCHITECTURE.md"),
+    Path("docs/project/ABSTRACTIONS.md"),
+    Path("docs/project/GETTING-STARTED.md"),
+    Path("docs/project/adr/README.md"),
 )
 
 AGENT_DOCUMENT_REFERENCES = tuple(
@@ -190,7 +190,7 @@ def validate_adr(path: Path, text: str, errors: list[str]) -> None:
 
 def collect_markdown_documents(project_root: Path) -> list[Path]:
     documents = [project_root / relative_path for relative_path in CORE_DOCUMENTS]
-    adr_directory = project_root / "docs/adr"
+    adr_directory = project_root / "docs/project/adr"
     if adr_directory.is_dir():
         documents.extend(
             path

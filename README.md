@@ -49,14 +49,15 @@ pnpm install
 pnpm dev
 ```
 
-文档站使用 `pnpm docs:dev` 启动。完整环境和检查命令见 [开发入门](docs/GETTING-STARTED.md)。
+文档站使用 `pnpm docs:dev` 启动。完整环境和检查命令见 [开发入门](docs/project/GETTING-STARTED.md)。
 
 ## 项目文档
 
-- [产品愿景](docs/VISION.md)
-- [架构说明](docs/ARCHITECTURE.md)
-- [核心抽象](docs/ABSTRACTIONS.md)
-- [架构决策记录](docs/adr/README.md)
+- [产品愿景](docs/project/VISION.md)
+- [架构说明](docs/project/ARCHITECTURE.md)
+- [核心抽象](docs/project/ABSTRACTIONS.md)
+- [架构决策记录](docs/project/adr/README.md)
+- [LLMs.txt 使用说明](docs/site/ai/llms.md)
 - AI 文档索引：`llms.txt`
 - AI 完整文档：`llms-full.txt`
 

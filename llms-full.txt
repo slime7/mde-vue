@@ -1,6 +1,6 @@
 # mdu-ui 完整文档
 
-> 本文件由 docs 中标记 llms: true 的 Markdown 页面生成，请勿手动编辑。
+> 本文件由 docs/site 中标记 llms: true 的 Markdown 页面生成，请勿手动编辑。
 
 # 概述
 

@@ -4,9 +4,9 @@
 
 ## 文档
 
-- [概述](docs/guide/overview.md): 了解 mdu-ui 的定位、支持范围、导入方式和首期组件。
-- [安装](docs/guide/installation.md): 从 GitHub 私有仓库固定提交安装 mdu-ui，并在 Vue 应用中注册插件或单个组件。
-- [主题](docs/guide/theme.md): 配置 Material 3 种子色、亮暗模式、配色变体和对比度，并在运行时切换主题。
-- [Tailwind CSS](docs/guide/tailwind.md): 将 mdu-ui 运行时令牌接入 Tailwind CSS v4，并使用带 mat 前缀的语义工具类。
-- [Button 按钮](docs/components/button.md): mat-btn 的五种外观、属性、事件、状态和样式扩展入口。
-- [限制](docs/guide/limitations.md): 记录 mdu-ui 首期明确不支持的运行环境、分发方式和组件能力。
+- [概述](docs/site/guide/overview.md): 了解 mdu-ui 的定位、支持范围、导入方式和首期组件。
+- [安装](docs/site/guide/installation.md): 从 GitHub 私有仓库固定提交安装 mdu-ui，并在 Vue 应用中注册插件或单个组件。
+- [主题](docs/site/guide/theme.md): 配置 Material 3 种子色、亮暗模式、配色变体和对比度，并在运行时切换主题。
+- [Tailwind CSS](docs/site/guide/tailwind.md): 将 mdu-ui 运行时令牌接入 Tailwind CSS v4，并使用带 mat 前缀的语义工具类。
+- [Button 按钮](docs/site/components/button.md): mat-btn 的五种外观、属性、事件、状态和样式扩展入口。
+- [限制](docs/site/guide/limitations.md): 记录 mdu-ui 首期明确不支持的运行环境、分发方式和组件能力。

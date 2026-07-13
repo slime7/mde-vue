@@ -54,7 +54,8 @@ pnpm docs:dev
 | 路径 | 内容 |
 | --- | --- |
 | `src/` | 组件、主题、公共入口和基础样式 |
-| `docs/` | VitePress 页面、交互 demo、项目说明和 ADR |
+| `docs/site/` | VitePress 使用文档、AI 使用指南和交互 demo |
+| `docs/project/` | 产品愿景、架构、公共抽象、开发入门和 ADR |
 | `tests/` | 主题及跨入口的测试辅助内容 |
 | `scripts/` | AI 文档生成与项目验证脚本 |
 | `llms.txt`、`llms-full.txt` | 从 Markdown 生成的 AI 文档产物 |
@@ -81,7 +82,7 @@ pnpm docs:dev
 
 ### 更新 AI 文档
 
-1. 编辑带 AI 文档 frontmatter 的 Markdown 来源页面。
+1. 编辑 `docs/site/` 中带 AI 文档 frontmatter 的 Markdown 来源页面。
 2. 运行 `pnpm docs:llms` 更新根目录 `llms.txt` 和 `llms-full.txt`。
 3. 运行 `pnpm docs:check`，确认生成文件没有过期。
 4. 不直接编辑生成文件。

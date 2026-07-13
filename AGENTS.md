@@ -6,11 +6,11 @@
 
 1. 获取任何文件内容时默认使用 UTF-8 编码。
 2. 阅读与任务相关的权威文档：
-   - 产品目标与边界：`docs/VISION.md`
-   - 系统结构与数据流：`docs/ARCHITECTURE.md`
-   - 公共概念与不变量：`docs/ABSTRACTIONS.md`
-   - 环境、命令与常见任务：`docs/GETTING-STARTED.md`
-   - 长期技术决策：`docs/adr/README.md` 及相关 ADR
+   - 产品目标与边界：`docs/project/VISION.md`
+   - 系统结构与数据流：`docs/project/ARCHITECTURE.md`
+   - 公共概念与不变量：`docs/project/ABSTRACTIONS.md`
+   - 环境、命令与常见任务：`docs/project/GETTING-STARTED.md`
+   - 长期技术决策：`docs/project/adr/README.md` 及相关 ADR
 3. 检查工作区状态，保留与当前任务无关的现有更改。
 4. 给用户看的回复使用清晰、直接的中文，禁止使用网络热梗、黑话或晦涩的典型互联网大厂术语。
 
@@ -41,7 +41,7 @@ pnpm docs:build
 pnpm validate:agent-docs
 ```
 
-本地查看组件 demo 使用 `pnpm dev`，查看 VitePress 文档使用 `pnpm docs:dev`，以监视模式运行测试使用 `pnpm test`。完整命令说明以 `docs/GETTING-STARTED.md` 为准。
+本地查看组件 demo 使用 `pnpm dev`，查看 VitePress 文档使用 `pnpm docs:dev`，以监视模式运行测试使用 `pnpm test`。完整命令说明以 `docs/project/GETTING-STARTED.md` 为准。
 
 ## 生成文件
 
@@ -53,12 +53,12 @@ pnpm validate:agent-docs
 
 | 变更类型 | 必须检查的文档 |
 | --- | --- |
-| 产品目标、受众或非目标变化 | `docs/VISION.md` |
-| 模块边界、数据流、依赖或运行环境变化 | `docs/ARCHITECTURE.md`，必要时新增 ADR |
-| 公共概念、状态、命名或兼容性约束变化 | `docs/ABSTRACTIONS.md`，必要时新增 ADR |
-| 环境要求、命令、目录或常见操作变化 | `docs/GETTING-STARTED.md` |
+| 产品目标、受众或非目标变化 | `docs/project/VISION.md` |
+| 模块边界、数据流、依赖或运行环境变化 | `docs/project/ARCHITECTURE.md`，必要时新增 ADR |
+| 公共概念、状态、命名或兼容性约束变化 | `docs/project/ABSTRACTIONS.md`，必要时新增 ADR |
+| 环境要求、命令、目录或常见操作变化 | `docs/project/GETTING-STARTED.md` |
 | 新增或修改组件及公共 API | 对应使用文档、测试和 AI 文档来源页面 |
-| 新的长期架构选择及其取舍 | `docs/adr/`，并同步当前状态文档 |
+| 新的长期架构选择及其取舍 | `docs/project/adr/`，并同步当前状态文档 |
 
 ## ADR 规则
 

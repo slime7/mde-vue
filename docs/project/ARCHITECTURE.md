@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-`mdu-ui` 是一个私有的 Vue 3 单包组件库。源码由包 `exports` 直接暴露给使用方的 Vue/Vite 构建过程；仓库同时包含本地 demo、VitePress 中文文档、测试和由 Markdown 生成的 AI 文档。
+`mdu-ui` 是一个私有的 Vue 3 单包组件库。源码由包 `exports` 直接暴露给使用方的 Vue/Vite 构建过程；仓库同时包含本地 demo、VitePress 中文使用文档、项目维护文档、测试和由 Markdown 生成的 AI 文档。
 
 长期技术选择及原因记录在 [ADR 索引](adr/README.md)；公共概念和不变量见 [核心抽象](ABSTRACTIONS.md)。
 
@@ -54,7 +54,9 @@ Tailwind 适配文件通过 `@theme inline` 将上述值映射到带 `mat` 前�
 
 ### demo、文档与 AI 文档
 
-demo 从包的公开出口加载组件和样式，用于人工查看主题与组件状态。VitePress 页面是中文使用文档及交互示例。带 frontmatter 标记的 Markdown 页面按顺序生成根目录 `llms.txt` 和 `llms-full.txt`；内部架构文档和纯交互页面不进入 AI 使用文档。
+demo 从包的公开出口加载组件和样式，用于人工查看主题与组件状态。`docs/site/` 是 VitePress 的唯一源目录，包含中文使用文档、AI 使用指南和交互示例。`docs/project/` 保存产品愿景、架构、公共抽象、开发入门和 ADR，不进入 VitePress 构建。
+
+`docs/site/` 中带 frontmatter 标记的 Markdown 页面按顺序生成根目录 `llms.txt` 和 `llms-full.txt`；项目维护文档和纯交互页面不进入 AI 使用文档。
 
 ## 关键数据流
 
@@ -87,7 +89,7 @@ flowchart LR
 
 ## 构建与验证
 
-Vite 构建检查从公开 `exports` 导入 `.vue` 和 CSS，验证普通 Vue/Vite 使用方能直接编译源码。文档、测试和静态检查在 Node.js 24 环境中运行；构建产物仅用于验证并保持忽略。
+Vite 构建检查从公开 `exports` 导入 `.vue` 和 CSS，验证普通 Vue/Vite 使用方能直接编译源码。VitePress 只构建 `docs/site/`；文档、测试和静态检查在 Node.js 24 环境中运行，构建产物仅用于验证并保持忽略。
 
 ## 安全与可靠性边界
 
