@@ -1,0 +1,81 @@
+{
+  "name": "mdu-ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=24 <25",
+    "pnpm": ">=10.28.0"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^24.11.0",
+      "onFail": "download"
+    }
+  },
+  "exports": {
+    ".": "./src/index.js",
+    "./components/mat-btn": "./src/components/mat-btn/index.js",
+    "./styles.css": "./src/styles/index.css",
+    "./tailwind.css": "./src/styles/tailwind.css"
+  },
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "docs:dev": "vitepress dev docs",
+    "build": "vite build --config vite.lib.config.js",
+    "build:check": "vite build --config vite.lib.config.js",
+    "docs:llms": "node scripts/build-llms.mjs",
+    "docs:check": "node scripts/build-llms.mjs --check",
+    "docs:build": "node scripts/build-llms.mjs && vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "lint": "eslint . && stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\"",
+    "lint:js": "eslint .",
+    "lint:styles": "stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\"",
+    "lint:fix": "eslint . --fix && stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\" --fix",
+    "lint:js:fix": "eslint . --fix",
+    "lint:styles:fix": "stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\" --fix",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "validate:agent-docs": "python scripts/validate-agent-docs.py .",
+    "check": "eslint . && stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\" && vitest run && vite build --config vite.lib.config.js && node scripts/build-llms.mjs --check && vitepress build docs && python scripts/validate-agent-docs.py ."
+  },
+  "dependencies": {
+    "@material/material-color-utilities": "^0.4.0"
+  },
+  "peerDependencies": {
+    "tailwindcss": "^4.0.0",
+    "vue": "^3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "tailwindcss": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.29.7",
+    "@babel/plugin-syntax-import-attributes": "^7.29.7",
+    "@stylistic/stylelint-plugin": "^5.2.1",
+    "@tailwindcss/vite": "^4.3.2",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "@vue/test-utils": "^2.4.11",
+    "eslint": "~9.39.4",
+    "eslint-config-airbnb-extended": "^3.1.1",
+    "eslint-plugin-import-x": "^4.17.1",
+    "eslint-plugin-vue": "^10.9.2",
+    "eslint-plugin-vuejs-accessibility": "^2.5.0",
+    "globals": "^17.7.0",
+    "jsdom": "^29.1.1",
+    "postcss-html": "^1.8.1",
+    "stylelint": "^17.14.0",
+    "stylelint-config-recommended-vue": "^1.6.1",
+    "stylelint-config-standard": "^40.0.0",
+    "tailwindcss": "^4.3.2",
+    "vite": "^8.1.4",
+    "vitepress": "^1.6.4",
+    "vitest": "^4.1.10",
+    "vue": "^3.5.39",
+    "vue-eslint-parser": "^10.4.1"
+  }
+}
