@@ -1,8 +1,10 @@
 import { inject } from 'vue';
 import MatBtn from './components/mat-btn/MatBtn.vue';
+import MatBtnGroup from './components/mat-btn-group/MatBtnGroup.vue';
+import MatIconBtn from './components/mat-icon-btn/MatIconBtn.vue';
+import MatSplitBtn from './components/mat-split-btn/MatSplitBtn.vue';
 import createThemeController from './theme';
-
-const MAT_THEME_KEY = Symbol('mdu-ui-theme');
+import MAT_THEME_KEY from './theme-context';
 
 /**
  * @typedef {object} MatUiOptions
@@ -28,6 +30,12 @@ export function createMatUi(options = {}) {
       // 公共标签遵循 mat-* 命名约定。
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-btn', MatBtn);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-btn-group', MatBtnGroup);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-icon-btn', MatIconBtn);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-split-btn', MatSplitBtn);
       app.provide(MAT_THEME_KEY, theme);
     },
   };

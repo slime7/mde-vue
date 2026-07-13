@@ -10,11 +10,6 @@ const SCHEME_VARIANTS = [
   'neutral',
   'vibrant',
   'expressive',
-  'fidelity',
-  'content',
-  'monochrome',
-  'rainbow',
-  'fruit-salad',
 ];
 
 /**
@@ -72,7 +67,7 @@ describe('主题控制器', () => {
     expect(plugin.theme.seedColor.value).toBe('#20a6fc');
     expect(plugin.theme.schemeVariant.value).toBe('tonal-spot');
     expect(plugin.theme.contrastLevel.value).toBe(0);
-    expect(target.style.getPropertyValue('--mat-color-primary')).toMatch(/^#[\da-f]{6}$/);
+    expect(target.style.getPropertyValue('--mat-color-primary')).toBe('#396287');
     expect(target.getAttribute('data-mat-theme')).toBe('light');
     expect(target.style.colorScheme).toBe('light');
   });

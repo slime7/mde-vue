@@ -61,6 +61,15 @@
   --text-mat-body-medium--line-height: var(--mat-type-body-medium-line-height);
   --text-mat-title-large: var(--mat-type-title-large-size);
   --text-mat-title-large--line-height: var(--mat-type-title-large-line-height);
+  --text-mat-title-medium: var(--mat-type-title-medium-size);
+  --text-mat-title-medium--line-height: var(--mat-type-title-medium-line-height);
+  --text-mat-title-medium--font-weight: var(--mat-type-title-medium-weight);
+  --text-mat-headline-small: var(--mat-type-headline-small-size);
+  --text-mat-headline-small--line-height: var(--mat-type-headline-small-line-height);
+  --text-mat-headline-small--font-weight: var(--mat-type-headline-small-weight);
+  --text-mat-headline-large: var(--mat-type-headline-large-size);
+  --text-mat-headline-large--line-height: var(--mat-type-headline-large-line-height);
+  --text-mat-headline-large--font-weight: var(--mat-type-headline-large-weight);
   --shadow-mat-1: var(--mat-shadow-level-1);
   --shadow-mat-2: var(--mat-shadow-level-2);
   --shadow-mat-3: var(--mat-shadow-level-3);

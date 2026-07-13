@@ -74,4 +74,67 @@ describe('MatBtn', () => {
 
     expect(wrapper.attributes('type')).toBe('submit');
   });
+
+  it.each(['xs', 's', 'm', 'l', 'xl'])('支持 %s 尺寸', (size) => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        size,
+      },
+    });
+
+    expect(wrapper.classes()).toContain(`mat-btn--size-${size}`);
+  });
+
+  it('支持方形、前置图标和受控选择内容', () => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        shape: 'square',
+        toggle: true,
+        selected: true,
+      },
+      slots: {
+        default: '收藏',
+        icon: '<span>☆</span>',
+        selected: '已收藏',
+        'selected-icon': '<span>★</span>',
+      },
+    });
+
+    expect(wrapper.classes()).toContain('mat-btn--shape-square');
+    expect(wrapper.classes()).toContain('mat-btn--selected');
+    expect(wrapper.attributes('aria-pressed')).toBe('true');
+    expect(wrapper.text()).toContain('★');
+    expect(wrapper.text()).toContain('已收藏');
+  });
+
+  it('语义 color 映射项目令牌，自定义种子色生成局部亮暗配色', () => {
+    const semantic = mount(MatBtn, {
+      props: {
+        color: 'tertiary',
+      },
+    });
+    const custom = mount(MatBtn, {
+      props: {
+        color: '#ff0000',
+      },
+    });
+
+    expect(semantic.attributes('style')).toContain('--mat-accent-color: var(--mat-color-tertiary)');
+    expect(custom.attributes('style')).toMatch(/--mat-accent-color: light-dark\(#[\da-f]{6}, #[\da-f]{6}\)/);
+  });
+
+  it('text 不进入 toggle 状态', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const wrapper = mount(MatBtn, {
+      props: {
+        variant: 'text',
+        toggle: true,
+        selected: true,
+      },
+    });
+
+    expect(wrapper.classes()).not.toContain('mat-btn--toggle');
+    expect(wrapper.attributes('aria-pressed')).toBeUndefined();
+    expect(warn).toHaveBeenCalledOnce();
+  });
 });

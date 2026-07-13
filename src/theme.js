@@ -1,89 +1,18 @@
-import {
-  argbFromHex,
-  Hct,
-  hexFromArgb,
-  SchemeContent,
-  SchemeExpressive,
-  SchemeFidelity,
-  SchemeFruitSalad,
-  SchemeMonochrome,
-  SchemeNeutral,
-  SchemeRainbow,
-  SchemeTonalSpot,
-  SchemeVibrant,
-} from '@material/material-color-utilities';
+import { hexFromArgb } from '@material/material-color-utilities';
 import { readonly, ref } from 'vue';
+import {
+  createMaterialScheme,
+  MAT_COLOR_ROLES,
+  MAT_SCHEME_VARIANTS,
+  normalizeSeedColor,
+} from './material-color';
 
 const DEFAULT_SEED_COLOR = '#20a6fc';
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 
-const SCHEME_CONSTRUCTORS = {
-  'tonal-spot': SchemeTonalSpot,
-  neutral: SchemeNeutral,
-  vibrant: SchemeVibrant,
-  expressive: SchemeExpressive,
-  fidelity: SchemeFidelity,
-  content: SchemeContent,
-  monochrome: SchemeMonochrome,
-  rainbow: SchemeRainbow,
-  'fruit-salad': SchemeFruitSalad,
-};
-
-const COLOR_ROLES = {
-  primary: 'primary',
-  onPrimary: 'on-primary',
-  primaryContainer: 'primary-container',
-  onPrimaryContainer: 'on-primary-container',
-  primaryFixed: 'primary-fixed',
-  primaryFixedDim: 'primary-fixed-dim',
-  onPrimaryFixed: 'on-primary-fixed',
-  onPrimaryFixedVariant: 'on-primary-fixed-variant',
-  secondary: 'secondary',
-  onSecondary: 'on-secondary',
-  secondaryContainer: 'secondary-container',
-  onSecondaryContainer: 'on-secondary-container',
-  secondaryFixed: 'secondary-fixed',
-  secondaryFixedDim: 'secondary-fixed-dim',
-  onSecondaryFixed: 'on-secondary-fixed',
-  onSecondaryFixedVariant: 'on-secondary-fixed-variant',
-  tertiary: 'tertiary',
-  onTertiary: 'on-tertiary',
-  tertiaryContainer: 'tertiary-container',
-  onTertiaryContainer: 'on-tertiary-container',
-  tertiaryFixed: 'tertiary-fixed',
-  tertiaryFixedDim: 'tertiary-fixed-dim',
-  onTertiaryFixed: 'on-tertiary-fixed',
-  onTertiaryFixedVariant: 'on-tertiary-fixed-variant',
-  error: 'error',
-  onError: 'on-error',
-  errorContainer: 'error-container',
-  onErrorContainer: 'on-error-container',
-  background: 'background',
-  onBackground: 'on-background',
-  surface: 'surface',
-  surfaceDim: 'surface-dim',
-  surfaceBright: 'surface-bright',
-  surfaceContainerLowest: 'surface-container-lowest',
-  surfaceContainerLow: 'surface-container-low',
-  surfaceContainer: 'surface-container',
-  surfaceContainerHigh: 'surface-container-high',
-  surfaceContainerHighest: 'surface-container-highest',
-  onSurface: 'on-surface',
-  surfaceVariant: 'surface-variant',
-  onSurfaceVariant: 'on-surface-variant',
-  outline: 'outline',
-  outlineVariant: 'outline-variant',
-  inverseSurface: 'inverse-surface',
-  inverseOnSurface: 'inverse-on-surface',
-  inversePrimary: 'inverse-primary',
-  shadow: 'shadow',
-  scrim: 'scrim',
-  surfaceTint: 'surface-tint',
-};
-
 /** @typedef {'light' | 'dark' | 'system'} MatThemeMode */
 /** @typedef {'light' | 'dark'} MatResolvedThemeMode */
-/** @typedef {'tonal-spot' | 'neutral' | 'vibrant' | 'expressive' | 'fidelity' | 'content' | 'monochrome' | 'rainbow' | 'fruit-salad'} MatSchemeVariant */
+/** @typedef {'tonal-spot' | 'neutral' | 'vibrant' | 'expressive'} MatSchemeVariant */
 
 /**
  * @typedef {object} MatThemeOptions
@@ -124,7 +53,7 @@ function assertMode(value) {
  * @returns {asserts value is MatSchemeVariant}
  */
 function assertSchemeVariant(value) {
-  if (!Object.hasOwn(SCHEME_CONSTRUCTORS, value)) {
+  if (!MAT_SCHEME_VARIANTS.includes(value)) {
     throw new TypeError(`不支持主题配色变体：${String(value)}`);
   }
 }
@@ -165,14 +94,6 @@ function assertSeedColor(value) {
  * @param {string} value
  * @returns {string}
  */
-function normalizeSeedColor(value) {
-  if (value.length === 4) {
-    return `#${[...value.slice(1)].map((character) => character.repeat(2)).join('')}`.toLowerCase();
-  }
-
-  return value.toLowerCase();
-}
-
 /**
  * @param {MatThemeOptions} [options]
  * @returns {MatThemeController}
@@ -230,15 +151,14 @@ export default function createThemeController(options = {}) {
   function applyTheme() {
     resolvedMode.value = resolveMode();
 
-    const SchemeConstructor = SCHEME_CONSTRUCTORS[schemeVariant.value];
-    const sourceColor = Hct.fromInt(argbFromHex(seedColor.value));
-    const scheme = new SchemeConstructor(
-      sourceColor,
-      resolvedMode.value === 'dark',
-      contrastLevel.value,
-    );
+    const scheme = createMaterialScheme({
+      seedColor: seedColor.value,
+      isDark: resolvedMode.value === 'dark',
+      schemeVariant: schemeVariant.value,
+      contrastLevel: contrastLevel.value,
+    });
 
-    Object.entries(COLOR_ROLES).forEach(([role, tokenName]) => {
+    Object.entries(MAT_COLOR_ROLES).forEach(([role, tokenName]) => {
       target.style.setProperty(`--mat-color-${tokenName}`, hexFromArgb(scheme[role]));
     });
 
