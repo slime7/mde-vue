@@ -327,9 +327,17 @@ const isSelected = computed(() => effectiveToggle.value && effectiveSelected.val
   block-size: 100%;
 }
 
+.mat-icon-btn:disabled {
+  --mat-button-container-color: color-mix(in srgb, var(--mat-color-on-surface) calc(var(--mat-state-disabled-container-opacity) * 100%), transparent);
+  --mat-button-content-color: color-mix(in srgb, var(--mat-color-on-surface) calc(var(--mat-state-disabled-content-opacity) * 100%), transparent);
+  --mat-button-state-color: var(--mat-color-on-surface);
+  --mat-button-shadow: none;
+  --mat-button-border-width: 0;
+}
+
 .mat-icon-btn--outlined:disabled {
   --mat-button-container-color: transparent;
-  --mat-button-border-color: color-mix(in srgb, var(--mat-color-on-surface) 10%, transparent);
+  --mat-button-border-color: color-mix(in srgb, var(--mat-color-on-surface) calc(var(--mat-state-disabled-container-opacity) * 100%), transparent);
 }
 
 .mat-icon-btn--standard:disabled {

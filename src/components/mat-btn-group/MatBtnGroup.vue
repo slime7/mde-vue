@@ -363,9 +363,9 @@ watch(
   --mat-btn-group-outer-radius: var(--mat-btn-group-connected-square-outer-radius);
 }
 
-.mat-btn-group--connected :deep(.mat-btn--selected),
-.mat-btn-group--connected :deep(.mat-icon-btn--selected) {
-  --mat-button-radius: 50%;
+.mat-btn-group--connected :deep(.mat-button-base.mat-btn--selected),
+.mat-btn-group--connected :deep(.mat-button-base.mat-icon-btn--selected) {
+  border-radius: 50%;
 }
 
 .mat-btn-group--connected :deep(.mat-button-base:first-child.mat-btn--selected),

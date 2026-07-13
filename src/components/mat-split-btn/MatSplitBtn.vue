@@ -263,7 +263,7 @@ watch(
   border-end-start-radius: var(--mat-split-btn-interactive-inner-radius);
 }
 
-.mat-split-btn--elevated :deep(.mat-button-base) {
+.mat-split-btn--elevated .mat-split-btn__segment :deep(.mat-button-base) {
   --mat-button-container-color: var(--mat-color-surface-container-low);
   --mat-button-content-color: var(--mat-accent-color);
   --mat-button-state-color: var(--mat-accent-color);
@@ -271,36 +271,49 @@ watch(
   --mat-button-border-width: 0;
 }
 
-.mat-split-btn--filled :deep(.mat-button-base) {
+.mat-split-btn--filled .mat-split-btn__segment :deep(.mat-button-base) {
   --mat-button-container-color: var(--mat-accent-color);
   --mat-button-content-color: var(--mat-on-accent-color);
   --mat-button-state-color: var(--mat-on-accent-color);
   --mat-button-border-width: 0;
 }
 
-.mat-split-btn--tonal :deep(.mat-button-base) {
+.mat-split-btn--tonal .mat-split-btn__segment :deep(.mat-button-base) {
   --mat-button-container-color: var(--mat-color-secondary-container);
   --mat-button-content-color: var(--mat-color-on-secondary-container);
   --mat-button-state-color: var(--mat-color-on-secondary-container);
   --mat-button-border-width: 0;
 }
 
-.mat-split-btn--tonal.mat-split-btn--explicit-color :deep(.mat-button-base) {
+.mat-split-btn--tonal.mat-split-btn--explicit-color .mat-split-btn__segment :deep(.mat-button-base) {
   --mat-button-container-color: var(--mat-accent-container-color);
   --mat-button-content-color: var(--mat-on-accent-container-color);
   --mat-button-state-color: var(--mat-on-accent-container-color);
 }
 
-.mat-split-btn--outlined :deep(.mat-button-base) {
+.mat-split-btn--outlined .mat-split-btn__segment :deep(.mat-button-base) {
   --mat-button-container-color: transparent;
   --mat-button-content-color: var(--mat-color-on-surface-variant);
   --mat-button-state-color: var(--mat-color-on-surface-variant);
   --mat-button-border-color: var(--mat-color-outline-variant);
 }
 
-.mat-split-btn--outlined.mat-split-btn--explicit-color :deep(.mat-button-base) {
+.mat-split-btn--outlined.mat-split-btn--explicit-color .mat-split-btn__segment :deep(.mat-button-base) {
   --mat-button-content-color: var(--mat-accent-color);
   --mat-button-state-color: var(--mat-accent-color);
+}
+
+.mat-split-btn .mat-split-btn__segment :deep(.mat-button-base:disabled) {
+  --mat-button-container-color: color-mix(in srgb, var(--mat-color-on-surface) calc(var(--mat-state-disabled-container-opacity) * 100%), transparent);
+  --mat-button-content-color: color-mix(in srgb, var(--mat-color-on-surface) calc(var(--mat-state-disabled-content-opacity) * 100%), transparent);
+  --mat-button-state-color: var(--mat-color-on-surface);
+  --mat-button-border-color: transparent;
+  --mat-button-shadow: none;
+}
+
+.mat-split-btn--outlined .mat-split-btn__segment :deep(.mat-button-base:disabled) {
+  --mat-button-container-color: transparent;
+  --mat-button-border-color: color-mix(in srgb, var(--mat-color-on-surface) calc(var(--mat-state-disabled-container-opacity) * 100%), transparent);
 }
 
 @media (hover: hover) {
