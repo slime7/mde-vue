@@ -123,6 +123,19 @@ describe('MatBtn', () => {
     expect(custom.attributes('style')).toMatch(/--mat-accent-color: light-dark\(#[\da-f]{6}, #[\da-f]{6}\)/);
   });
 
+  it('color prop 优先于调用方设置的同名局部 CSS 变量', () => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        color: 'secondary',
+      },
+      attrs: {
+        style: '--mat-accent-color: hotpink;',
+      },
+    });
+
+    expect(wrapper.element.style.getPropertyValue('--mat-accent-color')).toBe('var(--mat-color-secondary)');
+  });
+
   it('text 不进入 toggle 状态', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const wrapper = mount(MatBtn, {

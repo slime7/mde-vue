@@ -16,8 +16,18 @@ describe('MatSplitBtn', () => {
         controls: 'action-menu',
       },
       slots: {
-        leading: () => h(MatBtn, null, () => '新建'),
-        trailing: () => h(MatIconBtn, { label: '展开操作菜单' }, () => '⌄'),
+        leading: () => h(MatBtn, {
+          variant: 'outlined',
+          size: 'xs',
+          shape: 'square',
+          color: 'error',
+        }, () => '新建'),
+        trailing: () => h(MatIconBtn, {
+          label: '展开操作菜单',
+          variant: 'standard',
+          size: 'xs',
+          color: 'error',
+        }, () => '⌄'),
       },
     });
     const buttons = wrapper.findAll('button');
@@ -25,6 +35,8 @@ describe('MatSplitBtn', () => {
     expect(buttons).toHaveLength(2);
     expect(buttons[0].classes()).toContain('mat-btn--tonal');
     expect(buttons[0].classes()).toContain('mat-btn--size-l');
+    expect(buttons[0].classes()).toContain('mat-btn--shape-round');
+    expect(buttons[0].attributes('style')).toMatch(/--mat-accent-color: light-dark\(/);
     expect(buttons[1].classes()).toContain('mat-icon-btn--tonal');
     expect(buttons[1].attributes('aria-haspopup')).toBe('menu');
     expect(buttons[1].attributes('aria-expanded')).toBe('true');
