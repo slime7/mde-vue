@@ -39,6 +39,7 @@ llms: false
 
 - 安装：`docs/site/guide/installation.md`
 - 主题：`docs/site/guide/theme.md`
+- 组件配色：`docs/site/guide/component-color.md`
 - Tailwind CSS：`docs/site/guide/tailwind.md`
 - Button：`docs/site/components/button.md`
 - 支持范围：`docs/site/guide/limitations.md`

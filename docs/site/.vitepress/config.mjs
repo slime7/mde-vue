@@ -26,6 +26,7 @@ export default defineConfig({
           { text: '概述', link: '/guide/overview' },
           { text: '安装', link: '/guide/installation' },
           { text: '主题', link: '/guide/theme' },
+          { text: '组件配色', link: '/guide/component-color' },
           { text: 'Tailwind CSS', link: '/guide/tailwind' },
           { text: '限制', link: '/guide/limitations' },
         ],

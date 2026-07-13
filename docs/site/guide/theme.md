@@ -107,3 +107,5 @@ matUi.theme.dispose();
 - 状态：`--mat-state-*`。
 
 应用样式可以直接使用令牌，例如 `color: var(--mat-color-on-surface)`。主题切换时，依赖这些令牌的组件和应用样式会同步更新。
+
+实现组件时不能只根据色值挑选令牌。容器与内容的配对、强调层级、表面层级和边界选择见[组件配色](/guide/component-color)。

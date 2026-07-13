@@ -46,6 +46,21 @@
 
 Tailwind 适配层只把这些值映射到 `--color-mat-*`、`--radius-mat-*`、`--text-mat-*`、`--shadow-mat-*` 和 `--ease-mat-*`。两层必须保持同一语义，Tailwind 层不得复制具体颜色或覆盖常见无前缀主题变量。
 
+## 组件配色角色
+
+组件先按用途、重要程度和所在表面选择颜色角色，再通过 `--mat-<component>-*` 组件变量集中映射到全局令牌。组件不得根据某个种子色的外观硬编码颜色，也不得为亮色与暗色模式建立两套结构。
+
+组件配色必须保持以下关系：
+
+- `primary` 用于最高强调的操作和活动状态，`secondary` 用于较低强调元素，`tertiary` 只用于需要额外区分的对比强调，`error` 只表达错误或紧急错误状态。
+- `container` 角色只作为填充，文字和图标使用同组对应的 `on-*` 角色；不得跨组拼接容器和内容色。
+- 页面背景使用 `surface`，中性组件和嵌套区域按层级使用 `surface-container-lowest` 至 `surface-container-highest`；主要与低强调内容分别使用 `on-surface` 和 `on-surface-variant`。
+- `outline` 表达重要边界，`outline-variant` 表达分隔线或装饰性边界；不能仅依靠低强调边界定义交互目标。
+- `inverse`、`fixed`、`fixed-dim`、`surface-bright` 和 `surface-dim` 是按明确场景选用的角色，不作为普通组件的默认配色。fixed 内容仍须使用同组 `on-*-fixed` 或 `on-*-fixed-variant`。
+- `hover`、`focus` 和 `pressed` 状态层沿用当前内容或强调角色并读取 `--mat-state-*`；`disabled` 使用 `on-surface` 与约定透明度，不临时创造颜色角色。
+
+新增或修改映射后，必须在亮色、暗色、支持的配色变体和对比度边界下检查配对与层级。完整选择方法见[组件配色指南](../site/guide/component-color.md)。
+
 ## 组件公共模型
 
 - Vue 组件导出使用 PascalCase，例如 `MatBtn`；模板标签使用 `mat-*`，例如 `<mat-btn>`。
