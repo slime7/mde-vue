@@ -1,6 +1,6 @@
 ---
 title: 概述
-description: 了解 mdu-ui 的定位、支持范围、导入方式和首期组件。
+description: 了解 mdu-ui 的定位、支持范围、导入方式和 M3 Expressive 按钮体系。
 llms: true
 order: 10
 ---
@@ -9,10 +9,10 @@ order: 10
 
 `mdu-ui` 是一个仅供个人项目使用的 Vue 3 组件库。它只面向最新浏览器和客户端应用，源码使用 JavaScript、Vue SFC 与原生 CSS。
 
-首期公共能力包括：
+当前公共能力包括：
 
-- `<mat-btn>` 按钮组件；
-- Material 3 动态颜色主题；
+- `<mat-btn>`、`<mat-icon-btn>`、`<mat-btn-group>` 和 `<mat-split-btn>` 按钮体系；
+- Material 2025 动态颜色主题和组件级 `color` 配色；
 - 可选的 Tailwind CSS v4 语义工具类；
 - 面向开发者与 AI 的同源 Markdown 文档。
 
@@ -24,10 +24,16 @@ order: 10
 
 ```js
 import { createApp } from 'vue';
-import { createMatUi, MatBtn } from 'mdu-ui';
+import {
+  createMatUi,
+  MatBtn,
+  MatBtnGroup,
+  MatIconBtn,
+  MatSplitBtn,
+} from 'mdu-ui';
 import 'mdu-ui/styles.css';
 ```
 
-完整入口提供 `createMatUi()`、`useMatTheme()` 和组件具名导出。单组件入口 `mdu-ui/components/mat-btn` 只导出 `MatBtn`。
+完整入口提供 `createMatUi()`、`useMatTheme()` 和四个组件具名导出。各组件也有独立入口：`mdu-ui/components/mat-btn`、`mdu-ui/components/mat-icon-btn`、`mdu-ui/components/mat-btn-group` 和 `mdu-ui/components/mat-split-btn`。
 
-需要动态主题或多个组件时，推荐安装 `createMatUi()` 并使用全局 `<mat-btn>` 标签。仅使用少量组件且接受默认主题时，推荐从单组件入口按需导入，并在模板中使用 `<MatBtn>`。两种方式的完整代码见[安装](/guide/installation)。
+需要动态主题或多个组件时，推荐安装 `createMatUi()` 并使用全局 `mat-*` 标签。仅使用少量组件且接受默认主题时，推荐从单组件入口按需导入。两种方式的完整代码见[安装](/guide/installation)。

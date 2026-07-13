@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useMatTheme } from 'mdu-ui';
 
 const theme = useMatTheme();
@@ -23,6 +23,9 @@ const contrastLevel = computed({
   get: () => theme.contrastLevel.value,
   set: (value) => theme.setContrastLevel(Number(value)),
 });
+const toggleSelected = ref(false);
+const connectedSelected = ref(['bold']);
+const splitExpanded = ref(false);
 
 const variants = [
   ['elevated', 'Elevated'],
@@ -37,11 +40,6 @@ const schemeVariants = [
   ['neutral', 'Neutral'],
   ['vibrant', 'Vibrant'],
   ['expressive', 'Expressive'],
-  ['fidelity', 'Fidelity'],
-  ['content', 'Content'],
-  ['monochrome', 'Monochrome'],
-  ['rainbow', 'Rainbow'],
-  ['fruit-salad', 'Fruit salad'],
 ];
 </script>
 
@@ -91,18 +89,130 @@ const schemeVariants = [
       当前实际模式：<strong>{{ theme.resolvedMode.value }}</strong>
     </p>
 
-    <section class="button-demo" aria-label="按钮外观">
-      <mat-btn
-        v-for="([value, label]) in variants"
-        :key="value"
-        :variant="value"
-      >
-        {{ label }}
-      </mat-btn>
+    <section class="demo-section" aria-labelledby="button-demo-title">
+      <h2 id="button-demo-title">
+        Button
+      </h2>
 
-      <mat-btn disabled>
-        Disabled
-      </mat-btn>
+      <div class="button-demo">
+        <mat-btn
+          v-for="([value, label]) in variants"
+          :key="value"
+          :variant="value"
+        >
+          {{ label }}
+        </mat-btn>
+
+        <mat-btn
+          toggle
+          :selected="toggleSelected"
+          @click="toggleSelected = !toggleSelected"
+        >
+          <template #icon>
+            ☆
+          </template>
+          <template #selected-icon>
+            ★
+          </template>
+          收藏
+        </mat-btn>
+
+        <mat-btn color="secondary">
+          Secondary
+        </mat-btn>
+        <mat-btn color="#b3261e">
+          Custom seed
+        </mat-btn>
+        <mat-btn disabled>
+          Disabled
+        </mat-btn>
+      </div>
+    </section>
+
+    <section class="demo-section" aria-labelledby="icon-button-demo-title">
+      <h2 id="icon-button-demo-title">
+        Icon button
+      </h2>
+
+      <div class="button-demo">
+        <mat-icon-btn label="Filled">
+          ★
+        </mat-icon-btn>
+        <mat-icon-btn label="Tonal" variant="tonal">
+          ★
+        </mat-icon-btn>
+        <mat-icon-btn label="Outlined" variant="outlined">
+          ★
+        </mat-icon-btn>
+        <mat-icon-btn label="Standard" variant="standard">
+          ★
+        </mat-icon-btn>
+        <mat-icon-btn label="Wide custom" color="#6750a4" width="wide">
+          ★
+        </mat-icon-btn>
+      </div>
+    </section>
+
+    <section class="demo-section" aria-labelledby="button-group-demo-title">
+      <h2 id="button-group-demo-title">
+        Button group
+      </h2>
+
+      <div class="group-demo">
+        <mat-btn-group>
+          <mat-btn variant="outlined">
+            取消
+          </mat-btn>
+          <mat-btn>保存</mat-btn>
+        </mat-btn-group>
+
+        <mat-btn-group
+          variant="connected"
+          selection="multiple"
+          :selected="connectedSelected"
+          required
+          @select="connectedSelected = $event.nextSelected"
+        >
+          <mat-icon-btn label="粗体" value="bold">
+            B
+          </mat-icon-btn>
+          <mat-icon-btn label="斜体" value="italic">
+            I
+          </mat-icon-btn>
+          <mat-icon-btn label="下划线" value="underline">
+            U
+          </mat-icon-btn>
+        </mat-btn-group>
+      </div>
+    </section>
+
+    <section class="demo-section" aria-labelledby="split-button-demo-title">
+      <h2 id="split-button-demo-title">
+        Split button
+      </h2>
+
+      <div class="split-demo">
+        <mat-split-btn
+          color="#6750a4"
+          :expanded="splitExpanded"
+          controls="demo-create-menu"
+          @update:expanded="splitExpanded = $event"
+        >
+          <template #leading>
+            <mat-btn>新建</mat-btn>
+          </template>
+          <template #trailing>
+            <mat-icon-btn label="更多新建方式">
+              ⌄
+            </mat-icon-btn>
+          </template>
+        </mat-split-btn>
+
+        <div v-if="splitExpanded" id="demo-create-menu" class="menu-demo" role="menu">
+          新建文档<br>
+          新建文件夹
+        </div>
+      </div>
     </section>
 
     <section class="tailwind-demo bg-mat-primary text-mat-on-primary rounded-mat-lg shadow-mat-2">
@@ -182,6 +292,39 @@ const schemeVariants = [
   flex-wrap: wrap;
   gap: 12px;
   align-items: center;
+}
+
+.demo-section {
+  display: grid;
+  gap: 12px;
+}
+
+.demo-section h2 {
+  margin: 0;
+  color: var(--mat-color-on-surface);
+  font: var(--mat-type-title-medium-weight) var(--mat-type-title-medium-size) / var(--mat-type-title-medium-line-height) var(--mat-type-title-medium-font);
+}
+
+.group-demo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+
+.split-demo {
+  display: grid;
+  gap: var(--mat-split-btn-menu-gap);
+  justify-items: start;
+}
+
+.menu-demo {
+  min-inline-size: 180px;
+  padding: 12px;
+  color: var(--mat-color-on-surface);
+  background: var(--mat-color-surface-container);
+  border-radius: var(--mat-shape-corner-medium);
+  box-shadow: var(--mat-shadow-level-2);
 }
 
 .tailwind-demo {

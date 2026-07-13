@@ -1,6 +1,6 @@
 ---
 title: 限制
-description: 记录 mdu-ui 首期明确不支持的运行环境、分发方式和组件能力。
+description: 记录 mdu-ui 当前明确不支持的运行环境、分发方式和按钮能力。
 llms: true
 order: 60
 ---
@@ -14,6 +14,6 @@ order: 60
 - 不发布 npm 包，不提供预编译 `dist`，也不提供 TypeScript 声明；
 - 使用方的构建工具必须能够处理 `.vue` 源文件和 CSS；
 - 主题不会自动持久化，也不会自动写入应用状态；
-- 首期仅提供 `<mat-btn>`。
+- 当前公共组件集中在 Button、Icon button、Button group 与 Split button 按钮体系。
 
-`<mat-btn>` 暂不提供 loading、图标专用属性、链接模式、full-width、涟漪和完整的原生表单方法代理。这些能力在实际需求明确后再扩展，不应依赖未记录的内部实现。
+按钮体系不提供 loading、链接模式、涟漪、密度参数或完整的原生表单方法代理。`<mat-split-btn>` 不渲染菜单；应用负责菜单内容、焦点移动、Escape、外部点击和焦点返回。图标按钮目前使用原生 `title` 提示，后续有独立 Tooltip 组件时再提供一致的可见提示。不要依赖未记录的内部 class 或 DOM 结构补充这些能力。

@@ -42,6 +42,9 @@ llms: false
 - 组件配色：`docs/site/guide/component-color.md`
 - Tailwind CSS：`docs/site/guide/tailwind.md`
 - Button：`docs/site/components/button.md`
+- Icon button：`docs/site/components/icon-button.md`
+- Button group：`docs/site/components/button-group.md`
+- Split button：`docs/site/components/split-button.md`
 - 支持范围：`docs/site/guide/limitations.md`
 
 只提供单个页面时，可以使用以下提示：

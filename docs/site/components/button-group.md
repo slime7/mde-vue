@@ -1,0 +1,134 @@
+---
+title: Button group 按钮组
+description: mat-btn-group 的标准与连接布局、级联属性、受控单选多选、事件和 CSS 令牌。
+llms: true
+order: 60
+---
+
+# Button group 按钮组
+
+`MatBtnGroup` 在单行中组织 `MatBtn` 和 `MatIconBtn`。standard 形态保留独立按钮间距，connected 形态连接可选择按钮。组容器不聚焦，每个子按钮保持独立 Tab 停靠点。
+
+## 使用方法
+
+### 全局注册
+
+```vue
+<mat-btn-group>
+  <mat-btn>剪切</mat-btn>
+  <mat-btn>复制</mat-btn>
+</mat-btn-group>
+```
+
+### 按需导入
+
+```vue
+<script setup>
+import { MatBtn } from 'mdu-ui/components/mat-btn';
+import { MatBtnGroup } from 'mdu-ui/components/mat-btn-group';
+import 'mdu-ui/styles.css';
+</script>
+
+<template>
+  <MatBtnGroup>
+    <MatBtn>剪切</MatBtn>
+    <MatBtn>复制</MatBtn>
+  </MatBtnGroup>
+</template>
+```
+
+## 示例
+
+### 默认 standard 组
+
+```vue
+<mat-btn-group>
+  <mat-btn variant="outlined">取消</mat-btn>
+  <mat-btn>保存</mat-btn>
+</mat-btn-group>
+```
+
+按下 standard 子项时，该项宽度临时变为 115%，相邻项不缩窄，组整体允许增宽。
+
+### 受控 connected 多选
+
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const selected = ref(['bold']);
+
+function applySelection({ nextSelected }) {
+  selected.value = nextSelected;
+}
+</script>
+
+<template>
+  <mat-btn-group
+    variant="connected"
+    selection="multiple"
+    :selected="selected"
+    required
+    full-width
+    @select="applySelection"
+  >
+    <mat-icon-btn label="粗体" value="bold">B</mat-icon-btn>
+    <mat-icon-btn label="斜体" value="italic">I</mat-icon-btn>
+  </mat-btn-group>
+</template>
+```
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `variant` | `'standard' \| 'connected'` | `'standard'` | 组布局形态 |
+| `size` | `'xs' \| 's' \| 'm' \| 'l' \| 'xl'` | `'s'` | 未显式设置尺寸的子按钮继承该值 |
+| `shape` | `'round' \| 'square'` | `'round'` | 子按钮形状和 connected 外角形状 |
+| `color` | 语义色或 `#RRGGBB` | 未设置 | 级联给未显式设置 `color` 的子按钮 |
+| `disabled` | `boolean` | `false` | 为 true 时禁用全部子按钮；子按钮仍可单独禁用 |
+| `selection` | `'none' \| 'single' \| 'multiple'` | `'none'` | 是否按子按钮 `value` 计算选择候选值 |
+| `selected` | 基础值、基础值数组或 `null` | `null` | 受控当前值；single 使用单值，multiple 使用数组 |
+| `required` | `boolean` | `false` | 阻止取消 single 当前项或 multiple 最后一项 |
+| `fullWidth` | `boolean` | `false` | connected 形态下铺满父容器并等分子项；standard 中忽略 |
+
+组的 `size`、`shape`、`color` 只作为默认值，子组件显式 prop 优先。组 `disabled` 与子组件 `disabled` 取或。选择模式下每个直接子按钮都必须有唯一 `value`；缺少时发出开发警告并忽略该次选择。
+
+connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色形态，不使用 text Button 或 standard Icon button。违反这些组合约束时开发环境会警告。
+
+### 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `select` | `{ value, selected, nextSelected, originalEvent }` | 未禁用子按钮被激活且选择规则允许变化 |
+
+`value` 是本次项目值，`selected` 是该项目的候选布尔状态，`nextSelected` 是调用方应回写的单值、数组或 `null`，`originalEvent` 是原生 `MouseEvent`。组件不会修改 `selected`。
+
+### Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 直接放置 `MatBtn` 或 `MatIconBtn`；不要嵌套额外布局容器 |
+
+### 状态与键盘
+
+组根节点使用 `role="group"`，没有 `tabindex`。Tab 依次进入每个子按钮，Space 和 Enter 使用原生按钮激活；不实现方向键或 roving tabindex。connected 选择项使用 `aria-pressed`，不模拟 radio/radiogroup。
+
+### CSS 定制入口
+
+| 自定义属性 | 默认值 |
+| --- | --- |
+| `--mat-btn-group-standard-pressed-width-factor` | `1.15` |
+| `--mat-btn-group-connected-gap` | `2px` |
+| `--mat-btn-group-<size>-standard-gap` | `18 / 12 / 8 / 8 / 8px` |
+| `--mat-btn-group-<size>-connected-inner-radius` | `4 / 8 / 8 / 16 / 20px` |
+| `--mat-btn-group-<size>-connected-pressed-inner-radius` | `4 / 4 / 4 / 12 / 16px` |
+| `--mat-btn-group-<size>-connected-square-outer-radius` | `4 / 8 / 8 / 16 / 20px` |
+
+connected 选中内角固定为 `50%`，round 外角使用 `--mat-shape-corner-full`。组件没有公开方法。
+
+## 参考来源
+
+参数与交互依据 [Material 3 Button group specs](https://m3.material.io/components/button-groups/specs)。

@@ -1,19 +1,19 @@
 ---
 title: Button 按钮
-description: mat-btn 的使用方法、示例、API、原生事件、slot、状态和样式定制入口。
+description: mat-btn 的尺寸、形态、配色、受控切换、图标、事件、slots 和 CSS 令牌。
 llms: true
 order: 50
 ---
 
 # Button 按钮
 
-`MatBtn` 渲染原生 `<button>`，用于触发保存、确认或取消等页面内操作。它保留原生按钮的键盘操作、禁用和表单类型语义。
+`MatBtn` 渲染原生 `<button>`，用于触发保存、确认或取消等页面内操作。实现遵循 Material 3 Expressive Button 的五档尺寸、形状变换和状态规则。
 
 ## 使用方法
 
 ### 全局注册
 
-安装 `createMatUi()` 后，直接在任意后代模板中使用 `<mat-btn>`：
+安装插件后使用 `<mat-btn>`：
 
 ```js
 import { createApp } from 'vue';
@@ -21,9 +21,7 @@ import { createMatUi } from 'mdu-ui';
 import App from './App.vue';
 import 'mdu-ui/styles.css';
 
-createApp(App)
-  .use(createMatUi())
-  .mount('#app');
+createApp(App).use(createMatUi()).mount('#app');
 ```
 
 ```vue
@@ -33,8 +31,6 @@ createApp(App)
 ```
 
 ### 按需导入
-
-未安装插件时，可以从单组件入口导入 `MatBtn`。仍需导入基础样式：
 
 ```vue
 <script setup>
@@ -47,45 +43,61 @@ import 'mdu-ui/styles.css';
 </template>
 ```
 
-按需导入使用基础样式中的默认主题。需要运行时主题配置时，改用 `createMatUi()`；该插件也会全局注册按钮。
-
 ## 示例
 
-### 默认按钮
+### 默认样式
 
-省略 `variant` 时使用 `filled` 外观：
+省略属性时使用 `filled`、`s`、`round`：
 
 ```vue
 <mat-btn>确认</mat-btn>
 ```
 
-### 外观
-
-`variant` 支持以下五种值：
-
-| 值 | 适用场景 |
-| --- | --- |
-| `elevated` | 需要与背景分离的普通操作 |
-| `filled` | 页面中最重要的主要操作，默认值 |
-| `tonal` | 比填充按钮弱一级的强调操作 |
-| `outlined` | 中等强调的次要操作 |
-| `text` | 工具栏或紧凑区域中的低强调操作 |
+### 外观、尺寸和形状
 
 ```vue
-<mat-btn variant="elevated">Elevated</mat-btn>
-<mat-btn variant="filled">Filled</mat-btn>
-<mat-btn variant="tonal">Tonal</mat-btn>
-<mat-btn variant="outlined">Outlined</mat-btn>
-<mat-btn variant="text">Text</mat-btn>
+<mat-btn variant="elevated" size="xs">Elevated</mat-btn>
+<mat-btn variant="filled" size="s">Filled</mat-btn>
+<mat-btn variant="tonal" size="m">Tonal</mat-btn>
+<mat-btn variant="outlined" size="l" shape="square">Outlined</mat-btn>
+<mat-btn variant="text" size="xl">Text</mat-btn>
 ```
 
-### 禁用状态
+`variant` 分别表示抬升、主要填充、次要 tonal、轮廓和低强调文本操作。`text` 不支持 toggle。
+
+### 前置图标与受控切换
 
 ```vue
-<mat-btn disabled @click="save">无法保存</mat-btn>
+<script setup>
+import { ref } from 'vue';
+
+const selected = ref(false);
+</script>
+
+<template>
+  <mat-btn
+    toggle
+    :selected="selected"
+    @click="selected = !selected"
+  >
+    <template #icon>☆</template>
+    <template #selected-icon>★</template>
+    <template #default>收藏</template>
+    <template #selected>已收藏</template>
+  </mat-btn>
+</template>
 ```
 
-禁用时内部原生按钮带有 `disabled` 属性，不获得点击交互，也不会触发传入的 `click` 监听器。
+组件不自行修改 `selected`，也不触发 `update:selected`。未提供选中 slot 时复用默认内容；图标回退会尝试提高字重和 `FILL` 轴。
+
+### 组件配色
+
+```vue
+<mat-btn color="secondary">次要操作</mat-btn>
+<mat-btn color="#6750a4">局部种子色</mat-btn>
+```
+
+省略 `color` 时按 `variant` 使用 Material 默认角色。语义字符串读取项目令牌，六位十六进制值生成只作用于当前按钮的 Material 2025 primary 色族。完整规则见[组件配色](/guide/component-color)。
 
 ## API
 
@@ -93,82 +105,61 @@ import 'mdu-ui/styles.css';
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `variant` | `'elevated' \| 'filled' \| 'tonal' \| 'outlined' \| 'text'` | `'filled'` | 按钮的视觉层级 |
-| `disabled` | `boolean` | `false` | 使用原生禁用语义并阻止交互 |
-| `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 原生按钮类型；默认值避免在表单中意外提交 |
+| `variant` | `'elevated' \| 'filled' \| 'tonal' \| 'outlined' \| 'text'` | `'filled'` | 视觉层级 |
+| `size` | `'xs' \| 's' \| 'm' \| 'l' \| 'xl'` | `'s'` | 容器、排版、图标、间距和圆角尺寸 |
+| `shape` | `'round' \| 'square'` | `'round'` | 静止形状；toggle 选中时在 round 与 square 之间切换 |
+| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| #RRGGBB` | 未设置 | 语义色族或局部 Material 2025 种子色 |
+| `toggle` | `boolean` | `false` | 启用可选择外观和 `aria-pressed`；text 会忽略该值并发出开发警告 |
+| `selected` | `boolean` | `false` | 受控选中状态，仅在 toggle 或选择组中生效 |
+| `value` | `string \| number \| boolean` | 未设置 | 在 `MatBtnGroup` 选择模式中的项目值 |
+| `disabled` | `boolean` | `false` | 原生禁用状态；父组合组件也可强制禁用 |
+| `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 原生按钮类型 |
 
-`variant` 和 `type` 传入有效值之外的字符串时，Vue 会给出 prop 校验警告。
-
-### 原生属性
-
-组件未消费的属性会传递给内部 `<button>`，包括 `name`、`value`、`form`、`title`、`aria-*` 和 `data-*`：
-
-
-```vue
-<mat-btn
-  aria-label="保存文档"
-  name="action"
-  value="save"
-  data-testid="save"
->
-  保存
-</mat-btn>
-```
+未被组件消费的 `name`、`form`、`title`、`aria-*`、`data-*` 等属性传给内部 `<button>`。`color` 只接受严格六位十六进制值，不接受 `#RGB`、透明色、颜色名称或其他 CSS 表达式。
 
 ### 事件
 
-组件没有自定义事件。传入组件的原生事件监听器会绑定到内部 `<button>`；常用事件如下：
-
-| 事件 | 载荷 | 触发条件 |
-| --- | --- | --- |
-| `click` | `MouseEvent` | 用户点击或通过键盘激活未禁用按钮 |
-| `focus` | `FocusEvent` | 按钮获得焦点 |
-| `blur` | `FocusEvent` | 按钮失去焦点 |
-
-```vue
-<mat-btn @click="save" @focus="showHint">保存</mat-btn>
-```
-
-其他原生 `HTMLButtonElement` 事件监听器也会按 Vue 的属性透传规则生效。
+组件不定义状态更新事件。`click` 使用原生 `MouseEvent`，`focus`、`blur` 和其他原生按钮事件按 Vue 属性透传规则生效。禁用时浏览器不会触发 click。
 
 ### Slots
 
-| 名称 | 说明 |
+| 名称 | 内容约束 |
 | --- | --- |
-| 默认 | 按钮标签内容，通常放置简短文本 |
-
-组件当前没有具名 slot。
+| 默认 | 简短按钮标签 |
+| `icon` | 标签前的单个图标；按当前尺寸限制为规定图标大小 |
+| `selected` | toggle 选中时替换默认标签；省略时复用默认 slot |
+| `selected-icon` | toggle 选中时替换 `icon`；省略时复用并加强默认图标 |
 
 ### 状态
 
 | 状态 | 用户可观察行为 |
 | --- | --- |
-| 默认 | 使用所选 `variant` 的容器、文字、边框和阴影 |
-| hover | 支持 hover 的设备显示状态层；`elevated` 同时提高阴影 |
-| focus-visible | 键盘焦点显示清晰的外轮廓和状态层 |
-| active | 按下时显示状态层并轻微缩放；减少动态效果偏好下不缩放 |
-| disabled | 使用禁用配色，取消阴影和点击交互，并显示禁用光标 |
+| hover | 显示 8% 状态层；elevated、filled 和 tonal 按规格调整阴影 |
+| focus-visible | 显示焦点环和 10% 状态层 |
+| pressed | 显示 10% 状态层并按尺寸改变圆角 |
+| selected | 切换形状、颜色及可选 slot，设置 `aria-pressed="true"` |
+| disabled | 容器使用 `on-surface` 10%，内容使用 38%，取消阴影和点击 |
+
+`xs` 与 `s` 的视觉高度分别是 32px 和 40px，但交互目标至少为 48px。减少动态效果偏好下保留最终状态并取消过渡。
 
 ### CSS 定制入口
 
-| 自定义属性 | 默认回退值 | 说明 |
+尺寸令牌按 `xs`、`s`、`m`、`l`、`xl` 分组：
+
+| 模式 | 自定义属性 | 默认值序列 |
 | --- | --- | --- |
-| `--mat-btn-radius` | `--mat-shape-corner-full` | 按钮容器圆角 |
+| 容器高度 | `--mat-btn-<size>-container-height` | `32px / 40px / 56px / 96px / 136px` |
+| 水平内边距 | `--mat-btn-<size>-horizontal-padding` | `12px / 16px / 24px / 48px / 64px` |
+| 图标大小 | `--mat-btn-<size>-icon-size` | `20px / 20px / 24px / 32px / 40px` |
+| 图文间距 | `--mat-btn-<size>-icon-label-gap` | `8px / 8px / 8px / 12px / 16px` |
+| outline 宽度 | `--mat-btn-<size>-outline-width` | `1px / 1px / 1px / 2px / 3px` |
+| square 圆角 | `--mat-btn-<size>-square-radius` | `12px / 12px / 16px / 28px / 28px` |
+| pressed 圆角 | `--mat-btn-<size>-pressed-radius` | `8px / 8px / 12px / 16px / 16px` |
 
-通过 class 在局部覆盖圆角：
+共享入口包括 `--mat-interactive-target-min-size`、`--mat-focus-ring-width`、`--mat-focus-ring-offset`、`--mat-state-hover-opacity`、`--mat-state-focus-opacity`、`--mat-state-pressed-opacity`、`--mat-state-disabled-container-opacity` 和 `--mat-state-disabled-content-opacity`。prop 生成的配色优先于内部颜色变量；不要依赖未记录的内部 class 或 `--mat-button-*` 变量。
 
-```css
-.square-action {
-  --mat-btn-radius: var(--mat-shape-corner-small);
-}
-```
-
-```vue
-<mat-btn class="square-action">方角按钮</mat-btn>
-```
-
-组件没有公开方法。当前也不支持 loading、图标专用属性、链接模式、full-width、涟漪或完整表单方法代理；不要依赖内部 class 或元素结构实现这些能力。
+组件没有公开方法，也不提供 loading、链接模式、涟漪、密度参数或完整表单方法代理。
 
 ## 参考来源
 
-按钮的内容组织参考 [mdui v2 Button 文档](https://www.mdui.org/zh-cn/docs/2/components/button)，并按本项目现有 Vue API 与支持范围改写。实现来源及 MIT 许可见仓库根目录的 `THIRD_PARTY_NOTICES.md`。
+尺寸、形状和状态依据 [Material 3 Button specs](https://m3.material.io/components/buttons/specs)。基础交互结构改编自 [mdui v2 Button](https://www.mdui.org/zh-cn/docs/2/components/button)，MIT 许可见仓库根目录的 `THIRD_PARTY_NOTICES.md`。

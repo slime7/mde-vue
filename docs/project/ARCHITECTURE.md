@@ -10,7 +10,7 @@
 
 - 运行时只面向 Vue 3 客户端应用和最新浏览器。
 - 组件渲染、主题计算、CSS 令牌和文档生成保持边界清晰。
-- 组件只读取语义令牌，不自行计算 Material 配色。
+- 组件默认读取语义令牌；显式十六进制 `color` 通过共享配色模块生成局部 Material 配色，不在组件内重复计算规则。
 - 原生 CSS 令牌是运行时权威值；Tailwind 适配层只提供静态名称映射。
 - Markdown 是人工维护的使用文档权威来源，AI 文本是生成产物。
 - 包不生成或提交用于分发的 `dist/`。
@@ -32,19 +32,21 @@
 
 ### 公共入口
 
-`src/index.js` 是完整包入口，导出 `MatBtn`、`createMatUi()` 和 `useMatTheme()`。单组件入口允许只导入 `mdu-ui/components/mat-btn`。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
+`src/index.js` 是完整包入口，导出 `MatBtn`、`MatIconBtn`、`MatBtnGroup`、`MatSplitBtn`、`createMatUi()` 和 `useMatTheme()`。四个组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
 
 公共入口不得依赖 demo、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
 ### 主题运行时
 
-主题模块负责校验主题选项、调用 Material Color Utilities、将结果写入目标元素的 `--mat-*` CSS 自定义属性，并在 `system` 模式下监听系统亮暗偏好。它向 Vue 应用提供可响应的当前配置、解析后的实际模式、运行时修改方法和清理方法。
+主题模块负责校验主题选项、按 Material 2025 phone 规格调用 Material Color Utilities、将结果写入目标元素的 `--mat-*` CSS 自定义属性，并在 `system` 模式下监听系统亮暗偏好。它向 Vue 应用提供可响应的当前配置、解析后的实际模式、运行时修改方法和清理方法。
+
+共享配色模块同时服务全局主题与组件级十六进制种子色。组件局部配色只读取当前方案和对比度，生成亮暗 primary 色族并通过有界缓存复用结果；它不会写入主题目标。
 
 主题模块不读取或写入 `localStorage`，也不决定应用应何时保存用户选择。
 
 ### 组件
 
-每个组件拥有自己的 Vue SFC、公开入口、样式与测试。组件接收 Vue props 和原生属性，使用全局语义令牌表达颜色、形状、排版、阴影、动效和状态。首个组件 `<mat-btn>` 以原生 `<button>` 为语义基础。
+每个组件拥有自己的 Vue SFC、公开入口、样式与测试。按钮和图标按钮共享原生 `<button>` 基础结构、状态层和上下文合并逻辑；按钮组与 split button 使用 Vue provide/inject 协调子按钮，不复制交互协议。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
 
 ### 样式层
 
@@ -67,6 +69,9 @@ flowchart LR
     C --> D["目标元素上的 --mat-* 令牌"]
     D --> E["Vue 组件样式"]
     D --> F["Tailwind mat 语义类"]
+    G["组件 color 种子色"] --> C
+    C --> H["组件局部 primary 色族"]
+    H --> E
 ```
 
 ```mermaid
@@ -102,3 +107,5 @@ Vite 构建检查从公开 `exports` 导入 `.vue` 和 CSS，验证普通 Vue/Vi
 - [0001 — 通过私有 Git 直接分发源码](adr/0001-distribute-source-from-private-git.md)
 - [0002 — 采用运行时令牌与 Tailwind 适配双层主题](adr/0002-runtime-and-tailwind-theme-layers.md)
 - [0003 — 从 Markdown 生成 AI 使用文档](adr/0003-generate-ai-docs-from-markdown.md)
+- [0004 — 采用 Material 2025 动态配色规格](adr/0004-material-2025-dynamic-color.md)
+- [0005 — 采用组件级种子配色与父子继承](adr/0005-component-seed-color-inheritance.md)

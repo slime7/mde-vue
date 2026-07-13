@@ -10,7 +10,7 @@
 | 种子色 | 生成一组 Material 3 动态配色的十六进制起始颜色 |
 | 主题模式 | `light`、`dark` 或跟随系统的 `system` |
 | 解析模式 | `system` 根据当前媒体查询解析后实际使用的 `light` 或 `dark` |
-| 配色变体 | Material Color Utilities 提供的九种 scheme variant 之一 |
+| 配色变体 | 本项目按 Material 2025 支持的四种 scheme variant 之一 |
 | 主题目标 | 接收运行时 CSS 自定义属性的 DOM 元素，默认是 `document.documentElement` |
 | 组件变体 | 同一组件的视觉层级，例如按钮的 `filled` 或 `outlined`；不等于主题配色变体 |
 | AI 文档来源 | frontmatter 明确标记可进入 AI 文档的 Markdown 使用页面 |
@@ -27,7 +27,7 @@
 
 - `mode`：`light`、`dark` 或 `system`，默认 `system`。
 - `seedColor`：合法十六进制颜色，默认 `#20a6fc`。
-- `schemeVariant`：九种 Material 3 配色变体之一，默认 `tonal-spot`。
+- `schemeVariant`：`tonal-spot`、`neutral`、`vibrant`、`expressive` 之一，默认 `tonal-spot`。
 - `contrastLevel`：`-1` 至 `1`，默认 `0`。
 - `target`：接收 CSS 令牌的 DOM 元素，默认 `document.documentElement`。
 
@@ -61,6 +61,18 @@ Tailwind 适配层只把这些值映射到 `--color-mat-*`、`--radius-mat-*`、
 
 新增或修改映射后，必须在亮色、暗色、支持的配色变体和对比度边界下检查配对与层级。完整选择方法见[组件配色指南](../site/guide/component-color.md)。
 
+## 组件 `color` 约定
+
+除非组件完全没有可观察的强调色，所有新增公共组件都必须提供一致的 `color` 属性：
+
+- 省略时使用组件形态在 Material 规格中规定的语义角色，不强制改成 primary。
+- `primary`、`secondary`、`tertiary`、`error` 引用当前项目主题中同名的 base、on-base、container 和 on-container 令牌。
+- 严格六位 `#RRGGBB` 值作为局部种子色，按当前主题方案与对比度生成 Material 2025 亮暗 primary 色族；三位色值和其他 CSS 颜色写法不属于公共输入。
+- 显式 `color` 只覆盖强调色族，中性表面、边框和禁用角色不随种子色改变，也不得写入全局主题或影响兄弟组件。
+- 组合组件可以级联 `color`，子组件显式 prop 优先；由 prop 生成的局部变量优先于同名 CSS 定制变量。
+
+配色结果必须由共享模块生成并使用最多 64 项的缓存；后续组件不得复制 Material Color Utilities 调用或另立颜色格式。
+
 ## 组件公共模型
 
 - Vue 组件导出使用 PascalCase，例如 `MatBtn`；模板标签使用 `mat-*`，例如 `<mat-btn>`。
@@ -69,12 +81,15 @@ Tailwind 适配层只把这些值映射到 `--color-mat-*`、`--radius-mat-*`、
 - 未被组件消费的原生属性和事件应继续传递到根原生元素。
 - `disabled` 必须使用原生禁用语义；默认按钮 `type` 是 `button`，避免意外提交表单。
 - 组件必须提供可见的键盘焦点状态，并为 hover、focus、pressed 和 disabled 使用共享状态令牌。
+- 交互组件的 `xs` 和 `s` 视觉尺寸低于 48px 时，仍须提供至少 48px 的指针交互目标。
 
 ## `<mat-btn>`
 
-按钮的 `variant` 只接受 `elevated`、`filled`、`tonal`、`outlined` 和 `text`，默认 `filled`。默认 slot 是按钮内容来源，`--mat-btn-radius` 是首期公开样式定制入口。
+按钮的 `variant` 接受 `elevated`、`filled`、`tonal`、`outlined` 和 `text`，默认 `filled`；尺寸使用 `xs`、`s`、`m`、`l`、`xl`，形状使用 `round` 或 `square`。按钮可以通过 slots 提供前置图标与选中内容，`toggle` 与 `selected` 只表达受控状态，`text` 不支持 toggle。
 
-首期不把 loading、图标协议、链接模式、full-width、涟漪或完整表单代理方法纳入按钮抽象。增加这些能力前应先确认真实使用需要，并评估是否改变公共模型。
+`<mat-icon-btn>` 以必填 `label` 提供操作名称和原生 `title` 提示，支持三档宽度和受控 toggle。`<mat-btn-group>` 负责 standard/connected 布局以及受控 single/multiple 选择；组容器不进入 Tab 顺序，子按钮保持独立停靠点。`<mat-split-btn>` 接受调用方提供的 leading 和 trailing 按钮，只协调视觉、事件、`aria-haspopup`、`aria-expanded` 与可选 `aria-controls`，菜单始终由应用管理。
+
+当前按钮体系不包含 loading、链接模式、涟漪、密度参数、内置菜单或完整表单代理方法。
 
 ## 文档权威关系
 

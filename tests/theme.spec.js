@@ -3,7 +3,14 @@ import { mount } from '@vue/test-utils';
 import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
-import { createMatUi, MatBtn, useMatTheme } from '../src';
+import {
+  createMatUi,
+  MatBtn,
+  MatBtnGroup,
+  MatIconBtn,
+  MatSplitBtn,
+  useMatTheme,
+} from '../src';
 
 const SCHEME_VARIANTS = [
   'tonal-spot',
@@ -175,7 +182,15 @@ describe('主题控制器', () => {
       setup() {
         injectedTheme = useMatTheme();
 
-        return () => h(resolveComponent('mat-btn'), null, '主题按钮');
+        return () => h('div', [
+          h(resolveComponent('mat-btn'), null, '主题按钮'),
+          h(resolveComponent('mat-icon-btn'), { label: '图标按钮' }, () => '★'),
+          h(resolveComponent('mat-btn-group'), null, () => h(resolveComponent('mat-btn'), null, '组按钮')),
+          h(resolveComponent('mat-split-btn'), null, {
+            leading: () => h(resolveComponent('mat-btn'), null, '主要操作'),
+            trailing: () => h(resolveComponent('mat-icon-btn'), { label: '更多操作' }, () => '⌄'),
+          }),
+        ]);
       },
     });
     const plugin = createMatUi({
@@ -192,5 +207,8 @@ describe('主题控制器', () => {
 
     expect(injectedTheme).toBe(plugin.theme);
     expect(wrapper.findComponent(MatBtn).exists()).toBe(true);
+    expect(wrapper.findComponent(MatIconBtn).exists()).toBe(true);
+    expect(wrapper.findComponent(MatBtnGroup).exists()).toBe(true);
+    expect(wrapper.findComponent(MatSplitBtn).exists()).toBe(true);
   });
 });

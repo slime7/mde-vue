@@ -7,7 +7,7 @@ order: 30
 
 # 主题
 
-`createMatUi()` 接受可选的 `theme` 配置。默认种子色是 `#20a6fc`，默认模式是 `system`，默认配色变体是 `tonal-spot`，默认对比度是 `0`。
+`createMatUi()` 接受可选的 `theme` 配置。所有颜色按 Material 2025 phone 规格生成。默认种子色是 `#20a6fc`，默认模式是 `system`，默认配色变体是 `tonal-spot`，默认对比度是 `0`。
 
 ## 初始化
 
@@ -39,11 +39,11 @@ createApp(App)
 | --- | --- | --- | --- |
 | `mode` | `light`、`dark`、`system` | `system` | `system` 跟随系统配色偏好 |
 | `seedColor` | `#RGB` 或 `#RRGGBB` | `#20a6fc` | 用于生成完整 Material 3 色板 |
-| `schemeVariant` | 九种 Material 3 变体 | `tonal-spot` | 控制从种子色生成配色的方式 |
+| `schemeVariant` | 四种 Material 2025 变体 | `tonal-spot` | 控制从种子色生成配色的方式 |
 | `contrastLevel` | `-1` 至 `1` 的有限数字 | `0` | 调整配色对比度，越界值会抛出 `RangeError` |
 | `target` | 可设置 CSS 属性的 `HTMLElement` | `document.documentElement` | 接收 `--mat-*` 令牌，必须是使用组件的祖先 |
 
-支持的 `schemeVariant` 是 `tonal-spot`、`neutral`、`vibrant`、`expressive`、`fidelity`、`content`、`monochrome`、`rainbow` 和 `fruit-salad`。
+支持的 `schemeVariant` 是 `tonal-spot`、`neutral`、`vibrant` 和 `expressive`。依赖中的其他变体会回退到旧规格，因此不属于公共 API。
 
 非法的 `mode`、`seedColor`、`schemeVariant` 或 `target` 会在初始化或更新时抛出 `TypeError`。
 

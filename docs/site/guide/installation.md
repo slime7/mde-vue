@@ -57,11 +57,11 @@ function save() {
 </script>
 ```
 
-全局注册后的模板标签统一使用 kebab-case，例如 `<mat-btn>`。
+全局注册后的模板标签统一使用 kebab-case：`<mat-btn>`、`<mat-icon-btn>`、`<mat-btn-group>` 和 `<mat-split-btn>`。
 
 ## 按需导入
 
-只需要单个组件、且不需要运行时更换种子色或配色变体时，可以从单组件入口局部导入。基础样式仍然必须导入；它提供默认主题并通过系统偏好切换亮暗模式。
+只需要少量组件、且不需要运行时更换种子色或配色变体时，可以从单组件入口局部导入。基础样式仍然必须导入；它提供默认主题并通过系统偏好切换亮暗模式。
 
 ```vue
 <script setup>
@@ -74,7 +74,15 @@ import 'mdu-ui/styles.css';
 </template>
 ```
 
-局部导入的 Vue 组件在模板中使用 `<MatBtn>`。也可以写成 `<mat-btn>`，但 PascalCase 能更明确地表示它来自当前文件的导入。
+其他按需入口遵循相同规则：
+
+```js
+import { MatIconBtn } from 'mdu-ui/components/mat-icon-btn';
+import { MatBtnGroup } from 'mdu-ui/components/mat-btn-group';
+import { MatSplitBtn } from 'mdu-ui/components/mat-split-btn';
+```
+
+局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>` 或 `<MatIconBtn>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
 
 ## 如何选择
 
