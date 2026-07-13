@@ -25,17 +25,29 @@ import { createMatUi, MatBtn } from 'mdu-ui';
 import 'mdu-ui/styles.css';
 ```
 
-既可以通过 `createMatUi()` 全局注册组件，也可以具名导入 `MatBtn`。单组件入口是 `mdu-ui/components/mat-btn`。
+完整入口提供 `createMatUi()`、`useMatTheme()` 和组件具名导出。单组件入口 `mdu-ui/components/mat-btn` 只导出 `MatBtn`。
+
+需要动态主题或多个组件时，推荐安装 `createMatUi()` 并使用全局 `<mat-btn>` 标签。仅使用少量组件且接受默认主题时，推荐从单组件入口按需导入，并在模板中使用 `<MatBtn>`。两种方式的完整代码见[安装](/guide/installation)。
 
 # 安装
 
-`mdu-ui` 是私有 GitHub 仓库，不会发布到 npm。建议固定到明确的 Git 提交，确保安装结果可复现。
+`mdu-ui` 不发布到 npm registry，而是直接从私有 GitHub 仓库安装源码。使用方需要 Vue 3、能够编译 Vue SFC 的 Vite 项目，以及访问仓库的 SSH 凭据。
+
+## 从私有 Git 仓库安装
+
+把 `<commit>` 替换为需要固定的完整 Git 提交 SHA：
 
 ```bash
-pnpm add "git+ssh://git@github.com/slime7/mdu-ui.git#<commit>"
+pnpm add "mdu-ui@git+ssh://git@github.com/slime7/mdu-ui.git#<commit>"
 ```
 
-使用项目需要 Vue 3。基础样式必须显式导入：
+不要使用会随时间移动的分支名代替提交 SHA，否则不同时间安装可能得到不同源码。仓库的 `package.json` 直接导出 JavaScript、Vue SFC 和 CSS，不需要也不提供预编译 `dist`。
+
+## 全局注册：推荐用法
+
+大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，并全局注册所有 `mat-*` 组件。基础样式必须显式导入。
+
+应用入口 `src/main.js`：
 
 ```js
 import { createApp } from 'vue';
@@ -43,13 +55,37 @@ import { createMatUi } from 'mdu-ui';
 import App from './App.vue';
 import 'mdu-ui/styles.css';
 
-const app = createApp(App);
-
-app.use(createMatUi());
-app.mount('#app');
+createApp(App)
+  .use(createMatUi({
+    theme: {
+      mode: 'system',
+      seedColor: '#20a6fc',
+    },
+  }))
+  .mount('#app');
 ```
 
-插件会全局注册 `<mat-btn>`，并使后代组件能够调用 `useMatTheme()`。如果只使用单个组件，可以改为局部注册：
+组件 `src/App.vue`：
+
+```vue
+<template>
+  <main>
+    <mat-btn @click="save">保存</mat-btn>
+  </main>
+</template>
+
+<script setup>
+function save() {
+  // 执行应用的保存操作。
+}
+</script>
+```
+
+全局注册后的模板标签统一使用 kebab-case，例如 `<mat-btn>`。
+
+## 按需导入
+
+只需要单个组件、且不需要运行时更换种子色或配色变体时，可以从单组件入口局部导入。基础样式仍然必须导入；它提供默认主题并通过系统偏好切换亮暗模式。
 
 ```vue
 <script setup>
@@ -62,36 +98,59 @@ import 'mdu-ui/styles.css';
 </template>
 ```
 
-使用 Git 依赖时，消费项目必须能够访问私有仓库，并配置相应的 SSH 凭据。
+局部导入的 Vue 组件在模板中使用 `<MatBtn>`。也可以写成 `<mat-btn>`，但 PascalCase 能更明确地表示它来自当前文件的导入。
+
+## 如何选择
+
+| 需求 | 推荐方式 |
+| --- | --- |
+| 使用动态主题或 `useMatTheme()` | 安装 `createMatUi()`，使用全局 `mat-*` 标签 |
+| 应用会使用多个 mdu-ui 组件 | 安装 `createMatUi()`，统一全局注册 |
+| 只使用少量组件，并接受基础样式的默认主题 | 从 `mdu-ui/components/<组件目录>` 按需导入 |
+
+`createMatUi()` 当前同时负责主题初始化和全局注册。已经安装插件时，不需要再局部导入同一个组件。
 
 # 主题
 
 `createMatUi()` 接受可选的 `theme` 配置。默认种子色是 `#20a6fc`，默认模式是 `system`，默认配色变体是 `tonal-spot`，默认对比度是 `0`。
 
-```js
-import { createMatUi } from 'mdu-ui';
+## 初始化
 
-app.use(createMatUi({
-  theme: {
-    mode: 'system',
-    seedColor: '#20a6fc',
-    schemeVariant: 'tonal-spot',
-    contrastLevel: 0,
-  },
-}));
+在应用入口导入基础样式，并把插件传给 Vue 应用的 `.use()`：
+
+```js
+import { createApp } from 'vue';
+import { createMatUi } from 'mdu-ui';
+import App from './App.vue';
+import 'mdu-ui/styles.css';
+
+createApp(App)
+  .use(createMatUi({
+    theme: {
+      mode: 'system',
+      seedColor: '#20a6fc',
+      schemeVariant: 'tonal-spot',
+      contrastLevel: 0,
+    },
+  }))
+  .mount('#app');
 ```
+
+省略 `theme` 或直接调用 `createMatUi()` 会使用全部默认值。初始化会立即把颜色令牌写入 `document.documentElement`，因此整个应用都能继承主题。
 
 ## 配置项
 
-| 配置 | 可用值 | 说明 |
-| --- | --- | --- |
-| `mode` | `light`、`dark`、`system` | `system` 跟随系统配色偏好 |
-| `seedColor` | `#RGB` 或 `#RRGGBB` | 例如 `#20a6fc`，用于生成完整色板 |
-| `schemeVariant` | 九种 Material 3 变体 | 默认 `tonal-spot` |
-| `contrastLevel` | `-1` 至 `1` | 超出范围或非数字值会被拒绝 |
-| `target` | `HTMLElement` | 默认写入 `document.documentElement` |
+| 配置 | 类型或可用值 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `mode` | `light`、`dark`、`system` | `system` | `system` 跟随系统配色偏好 |
+| `seedColor` | `#RGB` 或 `#RRGGBB` | `#20a6fc` | 用于生成完整 Material 3 色板 |
+| `schemeVariant` | 九种 Material 3 变体 | `tonal-spot` | 控制从种子色生成配色的方式 |
+| `contrastLevel` | `-1` 至 `1` 的有限数字 | `0` | 调整配色对比度，越界值会抛出 `RangeError` |
+| `target` | 可设置 CSS 属性的 `HTMLElement` | `document.documentElement` | 接收 `--mat-*` 令牌，必须是使用组件的祖先 |
 
 支持的 `schemeVariant` 是 `tonal-spot`、`neutral`、`vibrant`、`expressive`、`fidelity`、`content`、`monochrome`、`rainbow` 和 `fruit-salad`。
+
+非法的 `mode`、`seedColor`、`schemeVariant` 或 `target` 会在初始化或更新时抛出 `TypeError`。
 
 ## 运行时切换
 
@@ -113,7 +172,33 @@ function changeSeedColor() {
 </script>
 ```
 
-控制器还提供当前配置、解析后的实际模式以及清理系统主题监听的方法。主题不会自动写入 `localStorage`；需要持久化时由应用自行读取与保存。
+### 主题控制器 API
+
+| 成员 | 类型 | 说明 |
+| --- | --- | --- |
+| `mode` | 只读 `Ref` | 当前配置的 `light`、`dark` 或 `system` |
+| `resolvedMode` | 只读 `Ref` | 实际生效的 `light` 或 `dark` |
+| `seedColor` | 只读 `Ref` | 规范化为六位小写格式的种子色 |
+| `schemeVariant` | 只读 `Ref` | 当前配色变体 |
+| `contrastLevel` | 只读 `Ref` | 当前对比度 |
+| `target` | `HTMLElement` | 当前令牌写入目标 |
+| `setMode(value)` | 方法 | 更新模式并重新应用主题 |
+| `setSeedColor(value)` | 方法 | 更新种子色并重新生成配色 |
+| `setSchemeVariant(value)` | 方法 | 更新配色变体 |
+| `setContrastLevel(value)` | 方法 | 更新对比度 |
+| `dispose()` | 方法 | 停止监听系统主题，可重复调用 |
+
+主题不会自动写入 `localStorage`；需要持久化时由应用自行读取与保存。应用完全卸载且不再使用插件时，应调用插件实例的 `theme.dispose()` 清理系统主题监听。
+
+```js
+const matUi = createMatUi();
+const app = createApp(App);
+
+app.use(matUi).mount('#app');
+
+// 应用宿主确认不再使用主题时调用。
+matUi.theme.dispose();
+```
 
 ## CSS 令牌
 
@@ -157,16 +242,59 @@ import 'mdu-ui/styles.css';
 
 # Button 按钮
 
-`<mat-btn>` 使用原生 `<button>`，适合触发操作。插件安装后可以直接使用，也可以通过 `MatBtn` 具名导入。
+`MatBtn` 渲染原生 `<button>`，用于触发保存、确认或取消等页面内操作。它保留原生按钮的键盘操作、禁用和表单类型语义。
+
+## 使用方法
+
+### 全局注册
+
+安装 `createMatUi()` 后，直接在任意后代模板中使用 `<mat-btn>`：
+
+```js
+import { createApp } from 'vue';
+import { createMatUi } from 'mdu-ui';
+import App from './App.vue';
+import 'mdu-ui/styles.css';
+
+createApp(App)
+  .use(createMatUi())
+  .mount('#app');
+```
 
 ```vue
 <template>
   <mat-btn>保存</mat-btn>
-  <mat-btn variant="outlined">取消</mat-btn>
 </template>
 ```
 
-## 外观
+### 按需导入
+
+未安装插件时，可以从单组件入口导入 `MatBtn`。仍需导入基础样式：
+
+```vue
+<script setup>
+import { MatBtn } from 'mdu-ui/components/mat-btn';
+import 'mdu-ui/styles.css';
+</script>
+
+<template>
+  <MatBtn>保存</MatBtn>
+</template>
+```
+
+按需导入使用基础样式中的默认主题。需要运行时主题配置时，改用 `createMatUi()`；该插件也会全局注册按钮。
+
+## 示例
+
+### 默认按钮
+
+省略 `variant` 时使用 `filled` 外观：
+
+```vue
+<mat-btn>确认</mat-btn>
+```
+
+### 外观
 
 `variant` 支持以下五种值：
 
@@ -178,35 +306,107 @@ import 'mdu-ui/styles.css';
 | `outlined` | 中等强调的次要操作 |
 | `text` | 工具栏或紧凑区域中的低强调操作 |
 
-## 属性
+```vue
+<mat-btn variant="elevated">Elevated</mat-btn>
+<mat-btn variant="filled">Filled</mat-btn>
+<mat-btn variant="tonal">Tonal</mat-btn>
+<mat-btn variant="outlined">Outlined</mat-btn>
+<mat-btn variant="text">Text</mat-btn>
+```
+
+### 禁用状态
+
+```vue
+<mat-btn disabled @click="save">无法保存</mat-btn>
+```
+
+禁用时内部原生按钮带有 `disabled` 属性，不获得点击交互，也不会触发传入的 `click` 监听器。
+
+## API
+
+### 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `variant` | `string` | `filled` | 按钮外观 |
-| `disabled` | `boolean` | `false` | 禁用按钮并阻止交互 |
-| `type` | `string` | `button` | 原生按钮类型，可设为 `submit` 或 `reset` |
+| `variant` | `'elevated' \| 'filled' \| 'tonal' \| 'outlined' \| 'text'` | `'filled'` | 按钮的视觉层级 |
+| `disabled` | `boolean` | `false` | 使用原生禁用语义并阻止交互 |
+| `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 原生按钮类型；默认值避免在表单中意外提交 |
 
-默认 slot 是按钮文本。未声明的 HTML 属性、ARIA 属性和原生事件会透传到内部 `<button>`：
+`variant` 和 `type` 传入有效值之外的字符串时，Vue 会给出 prop 校验警告。
+
+### 原生属性
+
+组件未消费的属性会传递给内部 `<button>`，包括 `name`、`value`、`form`、`title`、`aria-*` 和 `data-*`：
+
 
 ```vue
 <mat-btn
   aria-label="保存文档"
+  name="action"
+  value="save"
   data-testid="save"
-  @click="save"
 >
   保存
 </mat-btn>
 ```
 
-## 状态与样式
+### 事件
 
-按钮提供可见的键盘焦点、hover 与 active 状态层。禁用按钮不会响应点击。可以在局部样式中覆盖 `--mat-btn-radius` 调整圆角：
+组件没有自定义事件。传入组件的原生事件监听器会绑定到内部 `<button>`；常用事件如下：
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `click` | `MouseEvent` | 用户点击或通过键盘激活未禁用按钮 |
+| `focus` | `FocusEvent` | 按钮获得焦点 |
+| `blur` | `FocusEvent` | 按钮失去焦点 |
+
+```vue
+<mat-btn @click="save" @focus="showHint">保存</mat-btn>
+```
+
+其他原生 `HTMLButtonElement` 事件监听器也会按 Vue 的属性透传规则生效。
+
+### Slots
+
+| 名称 | 说明 |
+| --- | --- |
+| 默认 | 按钮标签内容，通常放置简短文本 |
+
+组件当前没有具名 slot。
+
+### 状态
+
+| 状态 | 用户可观察行为 |
+| --- | --- |
+| 默认 | 使用所选 `variant` 的容器、文字、边框和阴影 |
+| hover | 支持 hover 的设备显示状态层；`elevated` 同时提高阴影 |
+| focus-visible | 键盘焦点显示清晰的外轮廓和状态层 |
+| active | 按下时显示状态层并轻微缩放；减少动态效果偏好下不缩放 |
+| disabled | 使用禁用配色，取消阴影和点击交互，并显示禁用光标 |
+
+### CSS 定制入口
+
+| 自定义属性 | 默认回退值 | 说明 |
+| --- | --- | --- |
+| `--mat-btn-radius` | `--mat-shape-corner-full` | 按钮容器圆角 |
+
+通过 class 在局部覆盖圆角：
 
 ```css
 .square-action {
   --mat-btn-radius: var(--mat-shape-corner-small);
 }
 ```
+
+```vue
+<mat-btn class="square-action">方角按钮</mat-btn>
+```
+
+组件没有公开方法。当前也不支持 loading、图标专用属性、链接模式、full-width、涟漪或完整表单方法代理；不要依赖内部 class 或元素结构实现这些能力。
+
+## 参考来源
+
+按钮的内容组织参考 [mdui v2 Button 文档](https://www.mdui.org/zh-cn/docs/2/components/button)，并按本项目现有 Vue API 与支持范围改写。实现来源及 MIT 许可见仓库根目录的 `THIRD_PARTY_NOTICES.md`。
 
 # 限制
 

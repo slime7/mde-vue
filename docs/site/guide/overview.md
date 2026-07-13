@@ -28,4 +28,6 @@ import { createMatUi, MatBtn } from 'mdu-ui';
 import 'mdu-ui/styles.css';
 ```
 
-既可以通过 `createMatUi()` 全局注册组件，也可以具名导入 `MatBtn`。单组件入口是 `mdu-ui/components/mat-btn`。
+完整入口提供 `createMatUi()`、`useMatTheme()` 和组件具名导出。单组件入口 `mdu-ui/components/mat-btn` 只导出 `MatBtn`。
+
+需要动态主题或多个组件时，推荐安装 `createMatUi()` 并使用全局 `<mat-btn>` 标签。仅使用少量组件且接受默认主题时，推荐从单组件入口按需导入，并在模板中使用 `<MatBtn>`。两种方式的完整代码见[安装](/guide/installation)。

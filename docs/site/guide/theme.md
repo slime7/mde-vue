@@ -9,30 +9,43 @@ order: 30
 
 `createMatUi()` 接受可选的 `theme` 配置。默认种子色是 `#20a6fc`，默认模式是 `system`，默认配色变体是 `tonal-spot`，默认对比度是 `0`。
 
-```js
-import { createMatUi } from 'mdu-ui';
+## 初始化
 
-app.use(createMatUi({
-  theme: {
-    mode: 'system',
-    seedColor: '#20a6fc',
-    schemeVariant: 'tonal-spot',
-    contrastLevel: 0,
-  },
-}));
+在应用入口导入基础样式，并把插件传给 Vue 应用的 `.use()`：
+
+```js
+import { createApp } from 'vue';
+import { createMatUi } from 'mdu-ui';
+import App from './App.vue';
+import 'mdu-ui/styles.css';
+
+createApp(App)
+  .use(createMatUi({
+    theme: {
+      mode: 'system',
+      seedColor: '#20a6fc',
+      schemeVariant: 'tonal-spot',
+      contrastLevel: 0,
+    },
+  }))
+  .mount('#app');
 ```
+
+省略 `theme` 或直接调用 `createMatUi()` 会使用全部默认值。初始化会立即把颜色令牌写入 `document.documentElement`，因此整个应用都能继承主题。
 
 ## 配置项
 
-| 配置 | 可用值 | 说明 |
-| --- | --- | --- |
-| `mode` | `light`、`dark`、`system` | `system` 跟随系统配色偏好 |
-| `seedColor` | `#RGB` 或 `#RRGGBB` | 例如 `#20a6fc`，用于生成完整色板 |
-| `schemeVariant` | 九种 Material 3 变体 | 默认 `tonal-spot` |
-| `contrastLevel` | `-1` 至 `1` | 超出范围或非数字值会被拒绝 |
-| `target` | `HTMLElement` | 默认写入 `document.documentElement` |
+| 配置 | 类型或可用值 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `mode` | `light`、`dark`、`system` | `system` | `system` 跟随系统配色偏好 |
+| `seedColor` | `#RGB` 或 `#RRGGBB` | `#20a6fc` | 用于生成完整 Material 3 色板 |
+| `schemeVariant` | 九种 Material 3 变体 | `tonal-spot` | 控制从种子色生成配色的方式 |
+| `contrastLevel` | `-1` 至 `1` 的有限数字 | `0` | 调整配色对比度，越界值会抛出 `RangeError` |
+| `target` | 可设置 CSS 属性的 `HTMLElement` | `document.documentElement` | 接收 `--mat-*` 令牌，必须是使用组件的祖先 |
 
 支持的 `schemeVariant` 是 `tonal-spot`、`neutral`、`vibrant`、`expressive`、`fidelity`、`content`、`monochrome`、`rainbow` 和 `fruit-salad`。
+
+非法的 `mode`、`seedColor`、`schemeVariant` 或 `target` 会在初始化或更新时抛出 `TypeError`。
 
 ## 运行时切换
 
@@ -54,7 +67,33 @@ function changeSeedColor() {
 </script>
 ```
 
-控制器还提供当前配置、解析后的实际模式以及清理系统主题监听的方法。主题不会自动写入 `localStorage`；需要持久化时由应用自行读取与保存。
+### 主题控制器 API
+
+| 成员 | 类型 | 说明 |
+| --- | --- | --- |
+| `mode` | 只读 `Ref` | 当前配置的 `light`、`dark` 或 `system` |
+| `resolvedMode` | 只读 `Ref` | 实际生效的 `light` 或 `dark` |
+| `seedColor` | 只读 `Ref` | 规范化为六位小写格式的种子色 |
+| `schemeVariant` | 只读 `Ref` | 当前配色变体 |
+| `contrastLevel` | 只读 `Ref` | 当前对比度 |
+| `target` | `HTMLElement` | 当前令牌写入目标 |
+| `setMode(value)` | 方法 | 更新模式并重新应用主题 |
+| `setSeedColor(value)` | 方法 | 更新种子色并重新生成配色 |
+| `setSchemeVariant(value)` | 方法 | 更新配色变体 |
+| `setContrastLevel(value)` | 方法 | 更新对比度 |
+| `dispose()` | 方法 | 停止监听系统主题，可重复调用 |
+
+主题不会自动写入 `localStorage`；需要持久化时由应用自行读取与保存。应用完全卸载且不再使用插件时，应调用插件实例的 `theme.dispose()` 清理系统主题监听。
+
+```js
+const matUi = createMatUi();
+const app = createApp(App);
+
+app.use(matUi).mount('#app');
+
+// 应用宿主确认不再使用主题时调用。
+matUi.theme.dispose();
+```
 
 ## CSS 令牌
 
