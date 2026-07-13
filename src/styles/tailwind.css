@@ -73,6 +73,10 @@
   --shadow-mat-1: var(--mat-shadow-level-1);
   --shadow-mat-2: var(--mat-shadow-level-2);
   --shadow-mat-3: var(--mat-shadow-level-3);
+  --shadow-mat-4: var(--mat-shadow-level-4);
+  --shadow-mat-5: var(--mat-shadow-level-5);
   --ease-mat-standard: var(--mat-motion-easing-standard);
+  --ease-mat-decelerate: var(--mat-motion-easing-decelerate);
+  --ease-mat-accelerate: var(--mat-motion-easing-accelerate);
   --ease-mat-emphasized: var(--mat-motion-easing-emphasized);
 }

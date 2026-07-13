@@ -227,6 +227,8 @@ matUi.theme.dispose();
 
 应用样式可以直接使用令牌，例如 `color: var(--mat-color-on-surface)`。主题切换时，依赖这些令牌的组件和应用样式会同步更新。
 
+阴影层级从 `--mat-shadow-level-0` 到 `--mat-shadow-level-5`，其中 level 0 表示无阴影。时间函数包括标准的 `--mat-motion-easing-standard`、减速的 `--mat-motion-easing-decelerate`、加速的 `--mat-motion-easing-accelerate` 和强调的 `--mat-motion-easing-emphasized`。
+
 实现组件时不能只根据色值挑选令牌。容器与内容的配对、强调层级、表面层级和边界选择见[组件配色](/guide/component-color)。
 
 # 组件配色
@@ -382,7 +384,7 @@ import 'mdu-ui/styles.css';
 </template>
 ```
 
-颜色类来自 `--color-mat-*`，圆角类来自 `--radius-mat-*`，字号类来自 `--text-mat-*`，阴影类来自 `--shadow-mat-*`，缓动类来自 `--ease-mat-*`。新增的 `title-medium`、`headline-small` 和 `headline-large` 排版也已映射；组件专用尺寸令牌保持 CSS 定制入口，不生成大量专用工具类。适配层不会覆盖 `primary`、`surface` 等常见无前缀变量。
+颜色类来自 `--color-mat-*`，圆角类来自 `--radius-mat-*`，字号类来自 `--text-mat-*`，阴影类来自 `--shadow-mat-*`，缓动类来自 `--ease-mat-*`。阴影支持 `shadow-mat-1` 至 `shadow-mat-5`；缓动支持 `ease-mat-standard`、`ease-mat-decelerate`、`ease-mat-accelerate` 和 `ease-mat-emphasized`。新增的 `title-medium`、`headline-small` 和 `headline-large` 排版也已映射；组件专用尺寸令牌保持 CSS 定制入口，不生成大量专用工具类。适配层不会覆盖 `primary`、`surface` 等常见无前缀变量。
 
 # Button 按钮
 

@@ -30,4 +30,4 @@ import 'mdu-ui/styles.css';
 </template>
 ```
 
-颜色类来自 `--color-mat-*`，圆角类来自 `--radius-mat-*`，字号类来自 `--text-mat-*`，阴影类来自 `--shadow-mat-*`，缓动类来自 `--ease-mat-*`。新增的 `title-medium`、`headline-small` 和 `headline-large` 排版也已映射；组件专用尺寸令牌保持 CSS 定制入口，不生成大量专用工具类。适配层不会覆盖 `primary`、`surface` 等常见无前缀变量。
+颜色类来自 `--color-mat-*`，圆角类来自 `--radius-mat-*`，字号类来自 `--text-mat-*`，阴影类来自 `--shadow-mat-*`，缓动类来自 `--ease-mat-*`。阴影支持 `shadow-mat-1` 至 `shadow-mat-5`；缓动支持 `ease-mat-standard`、`ease-mat-decelerate`、`ease-mat-accelerate` 和 `ease-mat-emphasized`。新增的 `title-medium`、`headline-small` 和 `headline-large` 排版也已映射；组件专用尺寸令牌保持 CSS 定制入口，不生成大量专用工具类。适配层不会覆盖 `primary`、`surface` 等常见无前缀变量。

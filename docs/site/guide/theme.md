@@ -108,4 +108,6 @@ matUi.theme.dispose();
 
 应用样式可以直接使用令牌，例如 `color: var(--mat-color-on-surface)`。主题切换时，依赖这些令牌的组件和应用样式会同步更新。
 
+阴影层级从 `--mat-shadow-level-0` 到 `--mat-shadow-level-5`，其中 level 0 表示无阴影。时间函数包括标准的 `--mat-motion-easing-standard`、减速的 `--mat-motion-easing-decelerate`、加速的 `--mat-motion-easing-accelerate` 和强调的 `--mat-motion-easing-emphasized`。
+
 实现组件时不能只根据色值挑选令牌。容器与内容的配对、强调层级、表面层级和边界选择见[组件配色](/guide/component-color)。
