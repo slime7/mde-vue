@@ -91,10 +91,6 @@ function assertSeedColor(value) {
 }
 
 /**
- * @param {string} value
- * @returns {string}
- */
-/**
  * @param {MatThemeOptions} [options]
  * @returns {MatThemeController}
  */
@@ -159,7 +155,7 @@ export default function createThemeController(options = {}) {
     });
 
     Object.entries(MAT_COLOR_ROLES).forEach(([role, tokenName]) => {
-      target.style.setProperty(`--mat-color-${tokenName}`, hexFromArgb(scheme[role]));
+      target.style.setProperty(`--mat-sys-color-${tokenName}`, hexFromArgb(scheme[role]));
     });
 
     target.setAttribute?.('data-mat-theme', resolvedMode.value);
@@ -242,6 +238,13 @@ export default function createThemeController(options = {}) {
   function dispose() {
     isDisposed = true;
     stopListeningToSystemTheme();
+
+    Object.values(MAT_COLOR_ROLES).forEach((tokenName) => {
+      target.style.removeProperty(`--mat-sys-color-${tokenName}`);
+    });
+
+    target.removeAttribute?.('data-mat-theme');
+    target.style.removeProperty('color-scheme');
   }
 
   updateSystemThemeListener();

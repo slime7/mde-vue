@@ -47,7 +47,7 @@ import 'mdu-ui/styles.css';
 
 ### 默认样式
 
-省略属性时使用 `filled`、`s`、`round`：
+省略属性时使用 `filled`、`small`、`round`：
 
 ```vue
 <mat-btn>确认</mat-btn>
@@ -62,24 +62,24 @@ import 'mdu-ui/styles.css';
 ### 外观、尺寸和形状
 
 ```vue
-<mat-btn variant="elevated" size="xs">Elevated</mat-btn>
-<mat-btn variant="filled" size="s">Filled</mat-btn>
-<mat-btn variant="tonal" size="m">Tonal</mat-btn>
-<mat-btn variant="outlined" size="l" shape="square">Outlined</mat-btn>
-<mat-btn variant="text" size="xl">Text</mat-btn>
+<mat-btn variant="elevated" size="extra-small">Elevated</mat-btn>
+<mat-btn variant="filled" size="small">Filled</mat-btn>
+<mat-btn variant="filled-tonal" size="medium">Tonal</mat-btn>
+<mat-btn variant="outlined" size="large" shape="square">Outlined</mat-btn>
+<mat-btn variant="text" size="extra-large">Text</mat-btn>
 ```
 
 <ClientOnly>
   <DocsPreview label="Button 外观、尺寸和形状预览">
-    <mat-btn variant="elevated" size="xs">Elevated</mat-btn>
-    <mat-btn variant="filled" size="s">Filled</mat-btn>
-    <mat-btn variant="tonal" size="m">Tonal</mat-btn>
-    <mat-btn variant="outlined" size="l" shape="square">Outlined</mat-btn>
-    <mat-btn variant="text" size="xl">Text</mat-btn>
+    <mat-btn variant="elevated" size="extra-small">Elevated</mat-btn>
+    <mat-btn variant="filled" size="small">Filled</mat-btn>
+    <mat-btn variant="filled-tonal" size="medium">Tonal</mat-btn>
+    <mat-btn variant="outlined" size="large" shape="square">Outlined</mat-btn>
+    <mat-btn variant="text" size="extra-large">Text</mat-btn>
   </DocsPreview>
 </ClientOnly>
 
-`variant` 分别表示抬升、主要填充、次要 tonal、轮廓和低强调文本操作。`text` 不支持 toggle。
+`variant` 分别表示抬升、主要填充、次要 filled tonal、轮廓和低强调文本操作。`text` 不支持 toggle。
 
 ### 前置图标与受控切换
 
@@ -143,8 +143,8 @@ const selected = ref(false);
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `variant` | `'elevated' \| 'filled' \| 'tonal' \| 'outlined' \| 'text'` | `'filled'` | 视觉层级 |
-| `size` | `'xs' \| 's' \| 'm' \| 'l' \| 'xl'` | `'s'` | 容器、排版、图标、间距和圆角尺寸 |
+| `variant` | `'elevated' \| 'filled' \| 'filled-tonal' \| 'outlined' \| 'text'` | `'filled'` | 视觉层级 |
+| `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'small'` | 容器、排版、图标、间距和圆角尺寸 |
 | `shape` | `'round' \| 'square'` | `'round'` | 静止形状；toggle 选中时在 round 与 square 之间切换 |
 | `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| #RRGGBB` | 未设置 | 语义色族或局部 Material 2025 种子色 |
 | `toggle` | `boolean` | `false` | 启用可选择外观和 `aria-pressed`；text 会忽略该值并发出开发警告 |
@@ -172,29 +172,38 @@ const selected = ref(false);
 
 | 状态 | 用户可观察行为 |
 | --- | --- |
-| hover | 显示 8% 状态层；elevated、filled 和 tonal 按规格调整阴影 |
-| focus-visible | 显示焦点环和 10% 状态层 |
-| pressed | 显示 10% 状态层并按尺寸改变圆角；快速点击仍会完成一次可见的圆角往返过渡 |
+| hover | 显示 8% 状态层；elevated、filled 和 filled-tonal 按规格调整海拔 |
+| focus-visible | 显示焦点环和 12% 状态层 |
+| pressed | 显示 12% 状态层并按尺寸改变圆角；快速点击仍会完成一次可见的圆角往返过渡 |
 | selected | 切换形状、颜色及可选 slot，设置 `aria-pressed="true"` |
 | disabled | 容器使用 `on-surface` 10%，内容使用 38%，取消阴影和点击 |
 
-`xs` 与 `s` 的视觉高度分别是 32px 和 40px，但交互目标至少为 48px。减少动态效果偏好下保留最终状态并取消过渡。
+`extra-small` 与 `small` 的视觉高度分别是 32px 和 40px，但交互目标至少为 48px。减少动态效果偏好下保留最终状态并取消过渡。
 
 ### CSS 定制入口
 
-尺寸令牌按 `xs`、`s`、`m`、`l`、`xl` 分组：
+尺寸令牌按 `extra-small`、`small`、`medium`、`large`、`extra-large` 分组：
 
 | 模式 | 自定义属性 | 默认值序列 |
 | --- | --- | --- |
 | 容器高度 | `--mat-btn-<size>-container-height` | `32px / 40px / 56px / 96px / 136px` |
-| 水平内边距 | `--mat-btn-<size>-horizontal-padding` | `12px / 16px / 24px / 48px / 64px` |
+| 起始间距 | `--mat-btn-<size>-leading-space` | `12px / 16px / 24px / 48px / 64px` |
+| 结束间距 | `--mat-btn-<size>-trailing-space` | `12px / 16px / 24px / 48px / 64px` |
 | 图标大小 | `--mat-btn-<size>-icon-size` | `20px / 20px / 24px / 32px / 40px` |
-| 图文间距 | `--mat-btn-<size>-icon-label-gap` | `8px / 8px / 8px / 12px / 16px` |
-| outline 宽度 | `--mat-btn-<size>-outline-width` | `1px / 1px / 1px / 2px / 3px` |
-| square 圆角 | `--mat-btn-<size>-square-radius` | `12px / 12px / 16px / 28px / 28px` |
-| pressed 圆角 | `--mat-btn-<size>-pressed-radius` | `8px / 8px / 12px / 16px / 16px` |
+| 图文间距 | `--mat-btn-<size>-icon-label-space` | `8px / 8px / 8px / 12px / 16px` |
+| outline 宽度 | `--mat-btn-<size>-outlined-outline-width` | `1px / 1px / 1px / 2px / 3px` |
+| square 形状 | `--mat-btn-<size>-square-container-shape` | `12px / 12px / 16px / 28px / 28px` |
+| pressed 形状 | `--mat-btn-<size>-pressed-container-shape` | `8px / 8px / 12px / 16px / 16px` |
+| 标签排版 | `--mat-btn-<size>-label-text-{font,weight,size,line-height,tracking}` | 对应尺寸的 emphasized typescale |
 
-共享入口包括 `--mat-interactive-target-min-size`、`--mat-focus-ring-width`、`--mat-focus-ring-offset`、`--mat-state-hover-opacity`、`--mat-state-focus-opacity`、`--mat-state-pressed-opacity`、`--mat-state-disabled-container-opacity` 和 `--mat-state-disabled-content-opacity`。prop 生成的配色优先于内部颜色变量；不要依赖未记录的内部 class 或 `--mat-button-*` 变量。
+变体颜色和海拔使用以下入口：
+
+- `--mat-btn-<variant>-container-color`、`label-text-color`、`icon-color`、`state-layer-color`；其中 `<variant>` 为 `elevated`、`filled`、`filled-tonal`、`outlined` 或 `text`。
+- `--mat-btn-<variant>-container-elevation`；elevated、filled、filled-tonal 另有 `--mat-btn-<variant>-hover-container-elevation`。
+- outlined 使用 `--mat-btn-outlined-outline-color`。
+- toggle 或 selected 的独立入口使用 `--mat-btn-filled-unselected-*`、`--mat-btn-filled-tonal-selected-*`、`--mat-btn-outlined-selected-*`。
+
+共享入口包括 `--mat-sys-interaction-target-min-size`、`--mat-sys-interaction-focus-ring-width`、`--mat-sys-interaction-focus-ring-offset`、`--mat-sys-state-hover-state-layer-opacity`、`--mat-sys-state-focus-state-layer-opacity`、`--mat-sys-state-pressed-state-layer-opacity`、`--mat-sys-state-disabled-container-opacity` 和 `--mat-sys-state-disabled-content-opacity`。prop 生成的配色优先于内部颜色变量；不要依赖未记录的内部 class 或 `--mat-button-*` 变量。
 
 组件没有公开方法，也不提供 loading、链接模式、涟漪、密度参数或完整表单方法代理。
 

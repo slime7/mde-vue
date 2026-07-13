@@ -9,7 +9,7 @@ describe('MatBtnGroup', () => {
   it('级联尺寸、形状、颜色和禁用状态，子组件显式值优先', () => {
     const wrapper = mount(MatBtnGroup, {
       props: {
-        size: 'l',
+        size: 'large',
         shape: 'square',
         color: 'secondary',
         disabled: true,
@@ -18,7 +18,7 @@ describe('MatBtnGroup', () => {
         default: () => [
           h(MatBtn, { value: 'one' }, () => '一'),
           h(MatBtn, {
-            size: 'xs',
+            size: 'extra-small',
             shape: 'round',
             color: 'error',
             value: 'two',
@@ -28,13 +28,13 @@ describe('MatBtnGroup', () => {
     });
     const buttons = wrapper.findAll('button');
 
-    expect(buttons[0].classes()).toContain('mat-btn--size-l');
+    expect(buttons[0].classes()).toContain('mat-btn--size-large');
     expect(buttons[0].classes()).toContain('mat-btn--shape-square');
-    expect(buttons[0].attributes('style')).toContain('--mat-color-secondary');
+    expect(buttons[0].attributes('style')).toContain('--mat-sys-color-secondary');
     expect(buttons[0].attributes()).toHaveProperty('disabled');
-    expect(buttons[1].classes()).toContain('mat-btn--size-xs');
+    expect(buttons[1].classes()).toContain('mat-btn--size-extra-small');
     expect(buttons[1].classes()).toContain('mat-btn--shape-round');
-    expect(buttons[1].attributes('style')).toContain('--mat-color-error');
+    expect(buttons[1].attributes('style')).toContain('--mat-sys-color-error');
   });
 
   it('single 模式发出候选选择且不自行修改选中值', async () => {

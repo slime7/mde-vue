@@ -15,7 +15,7 @@ order: 35
 
 | 值 | 行为 |
 | --- | --- |
-| 省略 | 保留该组件形态的 Material 默认角色，例如 tonal 按钮默认使用 secondary container |
+| 省略 | 保留该组件形态的 Material 默认角色，例如 filled-tonal 按钮默认使用 secondary container |
 | `primary`、`secondary`、`tertiary`、`error` | 使用当前项目主题中对应色族的 base、on-base、container 和 on-container |
 | `#RRGGBB` | 把六位十六进制值作为局部种子色，生成亮暗 primary 色族 |
 
@@ -34,8 +34,8 @@ order: 35
 
 ```css
 .mat-example {
-  --mat-example-container-color: var(--mat-color-primary);
-  --mat-example-content-color: var(--mat-color-on-primary);
+  --mat-example-container-color: var(--mat-sys-color-primary);
+  --mat-example-content-color: var(--mat-sys-color-on-primary);
 
   color: var(--mat-example-content-color);
   background: var(--mat-example-container-color);
@@ -105,7 +105,7 @@ order: 35
 
 ## 处理状态
 
-- `hover`、`focus` 和 `pressed` 状态层沿用组件当前内容或强调角色，并使用共享的 `--mat-state-*` 透明度。
+- `hover`、`focus` 和 `pressed` 状态层沿用组件当前内容或强调角色，并使用共享的 `--mat-sys-state-*-state-layer-opacity` 透明度。
 - `disabled` 状态使用 `on-surface` 与约定透明度生成容器、内容或边界，不为禁用状态新增颜色角色。
 - `focus-visible` 边界应使用能在所在表面上保持清晰对比的语义角色。
 - 除状态层和禁用态等明确需要透明度的场景外，不混合不同颜色组来制造新的组件颜色。
@@ -121,7 +121,7 @@ order: 35
 
 新增或修改组件配色时确认：
 
-1. 默认颜色来自 `--mat-color-*` 语义令牌，自定义种子色只通过共享 Material 2025 模块生成，没有组件硬编码色值。
+1. 默认颜色来自 `--mat-sys-color-*` 语义令牌，自定义种子色只通过共享 Material 2025 模块生成，没有组件硬编码色值。
 2. 先按用途和强调程度选角色，再考虑视觉效果。
 3. 容器色与对应 `on-*` 内容色严格配对，`container` 角色不用于文字或图标。
 4. 表面、容器层级和边界角色在不同组件及窗口尺寸中含义一致。
@@ -131,4 +131,4 @@ order: 35
 
 ## 参考依据
 
-本指南提炼自 [Material Design 3：Color roles](https://m3.material.io/styles/color/roles)，并按本项目现有的 `--mat-color-*` 令牌、动态主题和组件私有变量约定改写。
+本指南提炼自 [Material Design 3：Color roles](https://m3.material.io/styles/color/roles)，并按本项目现有的 `--mat-sys-color-*` 令牌、动态主题和组件私有变量约定改写。

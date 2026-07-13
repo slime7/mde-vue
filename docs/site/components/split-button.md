@@ -82,7 +82,7 @@ const expanded = ref(false);
 <template>
   <mat-split-btn
     variant="filled"
-    size="s"
+    size="small"
     color="#6750a4"
     :expanded="expanded"
     controls="create-menu"
@@ -106,7 +106,7 @@ const expanded = ref(false);
   <DocsPreview label="Split button 受控展开与外部菜单预览" stacked>
     <mat-split-btn
       variant="filled"
-      size="s"
+      size="small"
       color="#6750a4"
       :expanded="splitExpanded"
       controls="split-example-menu"
@@ -131,14 +131,14 @@ const expanded = ref(false);
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `variant` | `'elevated' \| 'filled' \| 'tonal' \| 'outlined'` | `'filled'` | 两侧按钮统一视觉层级；不支持 text |
-| `size` | `'xs' \| 's' \| 'm' \| 'l' \| 'xl'` | `'s'` | 两侧按钮统一尺寸和 split 几何参数 |
+| `variant` | `'elevated' \| 'filled' \| 'filled-tonal' \| 'outlined'` | `'filled'` | 两侧按钮统一视觉层级；不支持 text |
+| `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'small'` | 两侧按钮统一尺寸和 split 几何参数 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 两侧按钮统一配色 |
 | `disabled` | `boolean` | `false` | 禁用两侧原生按钮 |
 | `expanded` | `boolean` | `false` | 受控菜单展开状态 |
 | `controls` | `string` | 未设置 | 写入 trailing 按钮的 `aria-controls`，通常是外部菜单 id |
 
-父组件的 `variant`、`size`、`color` 和 `disabled` 对两侧按钮具有最终决定权，slot 子按钮上的同名视觉值不会覆盖组合参数。expanded 不改变基础颜色，只加入 10% 状态层、改变 trailing 内角并把图标旋转 180°。
+父组件的 `variant`、`size`、`color` 和 `disabled` 对两侧按钮具有最终决定权，slot 子按钮上的同名视觉值不会覆盖组合参数。expanded 不改变基础颜色，只加入 12% 状态层、改变 trailing 内角并把图标旋转 180°。
 
 ### 事件
 
@@ -165,18 +165,19 @@ slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展
 
 ### CSS 定制入口
 
-| 自定义属性 | `xs / s / m / l / xl` 默认值 |
+| 自定义属性 | `extra-small / small / medium / large / extra-large` 默认值 |
 | --- | --- |
-| `--mat-split-btn-<size>-inner-radius` | `4 / 4 / 4 / 8 / 12px` |
-| `--mat-split-btn-<size>-interactive-inner-radius` | `8 / 12 / 12 / 20 / 20px` |
-| `--mat-split-btn-<size>-leading-start-padding` | `12 / 16 / 24 / 48 / 64px` |
-| `--mat-split-btn-<size>-leading-end-padding` | `10 / 12 / 24 / 48 / 64px` |
-| `--mat-split-btn-<size>-trailing-icon-size` | `22 / 22 / 26 / 38 / 50px` |
-| `--mat-split-btn-<size>-trailing-padding` | `13 / 13 / 15 / 29 / 43px` |
-| `--mat-split-btn-<size>-trailing-width` | `48 / 48 / 56 / 96 / 136px` |
-| `--mat-split-btn-<size>-icon-offset` | `-1 / -1 / -2 / -3 / -6px` |
+| `--mat-split-btn-<size>-inner-corner-size` | `4 / 4 / 4 / 8 / 12px` |
+| `--mat-split-btn-<size>-interactive-inner-corner-size` | `8 / 12 / 12 / 20 / 20px` |
+| `--mat-split-btn-<size>-leading-button-leading-space` | `12 / 16 / 24 / 48 / 64px` |
+| `--mat-split-btn-<size>-leading-button-trailing-space` | `10 / 12 / 24 / 48 / 64px` |
+| `--mat-split-btn-<size>-trailing-button-icon-size` | `22 / 22 / 26 / 38 / 50px` |
+| `--mat-split-btn-<size>-trailing-button-leading-space` | `13 / 13 / 15 / 29 / 43px` |
+| `--mat-split-btn-<size>-trailing-button-trailing-space` | `13 / 13 / 15 / 29 / 43px` |
 
-`--mat-split-btn-gap` 默认 `2px`；`--mat-split-btn-menu-gap` 默认 `4px`，供应用放置外部菜单时使用。组件没有公开方法。
+两侧间距 `--mat-split-btn-between-space` 默认 `2px`；`--mat-split-btn-menu-between-space` 默认 `4px`，供应用放置外部菜单时使用。组件根据 trailing 图标和两侧间距计算宽度，图标偏移属于内部实现，不是定制入口。
+
+变体颜色使用 `--mat-split-btn-<variant>-container-color`、`label-text-color`、`icon-color`、`state-layer-color`。elevated、filled 和 filled-tonal 另有 `container-elevation` 与 `hover-container-elevation`；outlined 使用 `--mat-split-btn-outlined-outline-color`。组件没有公开方法。
 
 ## 参考来源
 

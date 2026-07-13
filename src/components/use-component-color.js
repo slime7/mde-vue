@@ -24,10 +24,10 @@ export default function useComponentColor(color) {
 
     if (COMPONENT_COLORS.includes(value)) {
       return {
-        '--mat-accent-color': `var(--mat-color-${value})`,
-        '--mat-on-accent-color': `var(--mat-color-on-${value})`,
-        '--mat-accent-container-color': `var(--mat-color-${value}-container)`,
-        '--mat-on-accent-container-color': `var(--mat-color-on-${value}-container)`,
+        '--mat-accent-color': `var(--mat-sys-color-${value})`,
+        '--mat-on-accent-color': `var(--mat-sys-color-on-${value})`,
+        '--mat-accent-container-color': `var(--mat-sys-color-${value}-container)`,
+        '--mat-on-accent-container-color': `var(--mat-sys-color-on-${value}-container)`,
       };
     }
 

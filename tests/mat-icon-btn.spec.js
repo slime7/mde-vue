@@ -36,13 +36,18 @@ describe('MatIconBtn', () => {
     const wrapper = mount(MatIconBtn, {
       props: {
         label: '更多',
-        size: 'xl',
+        size: 'extra-large',
         width,
       },
     });
 
-    expect(wrapper.classes()).toContain('mat-icon-btn--size-xl');
+    expect(wrapper.classes()).toContain('mat-icon-btn--size-extra-large');
     expect(wrapper.classes()).toContain(`mat-icon-btn--width-${width}`);
+  });
+
+  it('拒绝旧尺寸缩写和 tonal 变体', () => {
+    expect(MatIconBtn.props.size.validator('xl')).toBe(false);
+    expect(MatIconBtn.props.variant.validator('tonal')).toBe(false);
   });
 
   it('受控 toggle 使用 selected slot 和 aria-pressed', () => {

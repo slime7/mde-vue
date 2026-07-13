@@ -17,6 +17,7 @@ export const MAT_SCHEME_VARIANTS = [
 
 export const MAT_COLOR_ROLES = {
   primary: 'primary',
+  primaryDim: 'primary-dim',
   onPrimary: 'on-primary',
   primaryContainer: 'primary-container',
   onPrimaryContainer: 'on-primary-container',
@@ -25,6 +26,7 @@ export const MAT_COLOR_ROLES = {
   onPrimaryFixed: 'on-primary-fixed',
   onPrimaryFixedVariant: 'on-primary-fixed-variant',
   secondary: 'secondary',
+  secondaryDim: 'secondary-dim',
   onSecondary: 'on-secondary',
   secondaryContainer: 'secondary-container',
   onSecondaryContainer: 'on-secondary-container',
@@ -33,6 +35,7 @@ export const MAT_COLOR_ROLES = {
   onSecondaryFixed: 'on-secondary-fixed',
   onSecondaryFixedVariant: 'on-secondary-fixed-variant',
   tertiary: 'tertiary',
+  tertiaryDim: 'tertiary-dim',
   onTertiary: 'on-tertiary',
   tertiaryContainer: 'tertiary-container',
   onTertiaryContainer: 'on-tertiary-container',
@@ -41,6 +44,7 @@ export const MAT_COLOR_ROLES = {
   onTertiaryFixed: 'on-tertiary-fixed',
   onTertiaryFixedVariant: 'on-tertiary-fixed-variant',
   error: 'error',
+  errorDim: 'error-dim',
   onError: 'on-error',
   errorContainer: 'error-container',
   onErrorContainer: 'on-error-container',

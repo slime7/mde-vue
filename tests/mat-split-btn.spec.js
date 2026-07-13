@@ -9,8 +9,8 @@ describe('MatSplitBtn', () => {
   it('将父组件外观传给两个按钮并建立菜单 ARIA', () => {
     const wrapper = mount(MatSplitBtn, {
       props: {
-        variant: 'tonal',
-        size: 'l',
+        variant: 'filled-tonal',
+        size: 'large',
         color: '#6750a4',
         expanded: true,
         controls: 'action-menu',
@@ -18,14 +18,14 @@ describe('MatSplitBtn', () => {
       slots: {
         leading: () => h(MatBtn, {
           variant: 'outlined',
-          size: 'xs',
+          size: 'extra-small',
           shape: 'square',
           color: 'error',
         }, () => '新建'),
         trailing: () => h(MatIconBtn, {
           label: '展开操作菜单',
           variant: 'standard',
-          size: 'xs',
+          size: 'extra-small',
           color: 'error',
         }, () => '⌄'),
       },
@@ -33,16 +33,21 @@ describe('MatSplitBtn', () => {
     const buttons = wrapper.findAll('button');
 
     expect(buttons).toHaveLength(2);
-    expect(buttons[0].classes()).toContain('mat-btn--tonal');
-    expect(buttons[0].classes()).toContain('mat-btn--size-l');
+    expect(buttons[0].classes()).toContain('mat-btn--filled-tonal');
+    expect(buttons[0].classes()).toContain('mat-btn--size-large');
     expect(buttons[0].classes()).toContain('mat-btn--shape-round');
     expect(buttons[0].attributes('style')).toMatch(/--mat-accent-color: light-dark\(/);
-    expect(buttons[1].classes()).toContain('mat-icon-btn--tonal');
+    expect(buttons[1].classes()).toContain('mat-icon-btn--filled-tonal');
     expect(buttons[1].attributes('aria-haspopup')).toBe('menu');
     expect(buttons[1].attributes('aria-expanded')).toBe('true');
     expect(buttons[1].attributes('aria-controls')).toBe('action-menu');
     expect(buttons[1].attributes('aria-pressed')).toBe('true');
     expect(wrapper.find('[role="menu"]').exists()).toBe(false);
+  });
+
+  it('拒绝旧尺寸缩写和 tonal 变体', () => {
+    expect(MatSplitBtn.props.size.validator('s')).toBe(false);
+    expect(MatSplitBtn.props.variant.validator('tonal')).toBe(false);
   });
 
   it('保留子按钮 click 并发出分段事件和受控展开候选值', async () => {

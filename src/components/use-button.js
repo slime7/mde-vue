@@ -12,7 +12,9 @@ import useComponentColor from './use-component-color';
 export default function useButton(props, emit) {
   const group = inject(MAT_BTN_GROUP_KEY, null);
   const split = inject(MAT_SPLIT_BTN_KEY, null);
-  const effectiveSize = computed(() => split?.size.value ?? props.size ?? group?.size.value ?? 's');
+  const effectiveSize = computed(() => (
+    split?.size.value ?? props.size ?? group?.size.value ?? 'small'
+  ));
   const effectiveShape = computed(() => (
     split ? 'round' : props.shape ?? group?.shape.value ?? 'round'
   ));

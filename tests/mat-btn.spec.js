@@ -14,11 +14,12 @@ describe('MatBtn', () => {
 
     expect(wrapper.element.tagName).toBe('BUTTON');
     expect(wrapper.classes()).toContain('mat-btn--filled');
+    expect(wrapper.classes()).toContain('mat-btn--size-small');
     expect(wrapper.attributes('type')).toBe('button');
     expect(wrapper.text()).toBe('保存');
   });
 
-  it.each(['elevated', 'filled', 'tonal', 'outlined', 'text'])(
+  it.each(['elevated', 'filled', 'filled-tonal', 'outlined', 'text'])(
     '支持 %s 外观',
     (variant) => {
       const wrapper = mount(MatBtn, {
@@ -99,7 +100,7 @@ describe('MatBtn', () => {
     }
   });
 
-  it.each(['xs', 's', 'm', 'l', 'xl'])('支持 %s 尺寸', (size) => {
+  it.each(['extra-small', 'small', 'medium', 'large', 'extra-large'])('支持 %s 尺寸', (size) => {
     const wrapper = mount(MatBtn, {
       props: {
         size,
@@ -107,6 +108,11 @@ describe('MatBtn', () => {
     });
 
     expect(wrapper.classes()).toContain(`mat-btn--size-${size}`);
+  });
+
+  it('拒绝旧尺寸缩写和 tonal 变体', () => {
+    expect(MatBtn.props.size.validator('s')).toBe(false);
+    expect(MatBtn.props.variant.validator('tonal')).toBe(false);
   });
 
   it('支持方形、前置图标和受控选择内容', () => {
@@ -143,7 +149,7 @@ describe('MatBtn', () => {
       },
     });
 
-    expect(semantic.attributes('style')).toContain('--mat-accent-color: var(--mat-color-tertiary)');
+    expect(semantic.attributes('style')).toContain('--mat-accent-color: var(--mat-sys-color-tertiary)');
     expect(custom.attributes('style')).toMatch(/--mat-accent-color: light-dark\(#[\da-f]{6}, #[\da-f]{6}\)/);
   });
 
@@ -157,7 +163,7 @@ describe('MatBtn', () => {
       },
     });
 
-    expect(wrapper.element.style.getPropertyValue('--mat-accent-color')).toBe('var(--mat-color-secondary)');
+    expect(wrapper.element.style.getPropertyValue('--mat-accent-color')).toBe('var(--mat-sys-color-secondary)');
   });
 
   it('text 不进入 toggle 状态', () => {

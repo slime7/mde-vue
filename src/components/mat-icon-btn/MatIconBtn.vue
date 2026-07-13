@@ -19,7 +19,7 @@ const props = defineProps({
     type: String,
     default: 'filled',
     validator(value) {
-      return ['filled', 'tonal', 'outlined', 'standard'].includes(value);
+      return ['filled', 'filled-tonal', 'outlined', 'standard'].includes(value);
     },
   },
   size: {
@@ -140,83 +140,103 @@ const isSelected = computed(() => effectiveToggle.value && effectiveSelected.val
 
 <style scoped>
 .mat-icon-btn {
-  --mat-accent-color: var(--mat-color-primary);
-  --mat-on-accent-color: var(--mat-color-on-primary);
-  --mat-accent-container-color: var(--mat-color-primary-container);
-  --mat-on-accent-container-color: var(--mat-color-on-primary-container);
-  --mat-button-container-color: var(--mat-accent-color);
-  --mat-button-content-color: var(--mat-on-accent-color);
-  --mat-button-state-color: var(--mat-button-content-color);
+  --mat-accent-color: var(--mat-sys-color-primary);
+  --mat-on-accent-color: var(--mat-sys-color-on-primary);
+  --mat-accent-container-color: var(--mat-sys-color-primary-container);
+  --mat-on-accent-container-color: var(--mat-sys-color-on-primary-container);
+  --mat-button-container-color: var(--mat-icon-btn-filled-container-color);
+  --mat-icon-btn-icon-color: var(--mat-icon-btn-filled-icon-color);
+  --mat-button-content-color: var(--mat-icon-btn-icon-color);
+  --mat-button-state-color: var(--mat-icon-btn-filled-state-layer-color);
   --mat-button-border-width: 0;
   --mat-button-outline-width: 1px;
-  --mat-button-shadow: var(--mat-shadow-level-0);
+  --mat-button-container-elevation: var(--mat-sys-elevation-level0);
+  --mat-button-container-width: calc(var(--mat-icon-btn-icon-size) + var(--mat-icon-btn-leading-space) + var(--mat-icon-btn-trailing-space));
 }
 
-.mat-icon-btn--size-xs {
-  --mat-button-container-height: var(--mat-icon-btn-xs-container-height);
-  --mat-icon-btn-icon-size: var(--mat-icon-btn-xs-icon-size);
-  --mat-icon-btn-narrow-width: var(--mat-icon-btn-xs-narrow-width);
-  --mat-icon-btn-default-width: var(--mat-icon-btn-xs-default-width);
-  --mat-icon-btn-wide-width: var(--mat-icon-btn-xs-wide-width);
-  --mat-button-outline-width: var(--mat-icon-btn-xs-outline-width);
-  --mat-icon-btn-square-radius: var(--mat-icon-btn-xs-square-radius);
-  --mat-button-pressed-radius: var(--mat-icon-btn-xs-pressed-radius);
+.mat-icon-btn--size-extra-small {
+  --mat-button-container-height: var(--mat-icon-btn-extra-small-container-height);
+  --mat-icon-btn-icon-size: var(--mat-icon-btn-extra-small-icon-size);
+  --mat-icon-btn-narrow-leading-space: var(--mat-icon-btn-extra-small-narrow-leading-space);
+  --mat-icon-btn-narrow-trailing-space: var(--mat-icon-btn-extra-small-narrow-trailing-space);
+  --mat-icon-btn-default-leading-space: var(--mat-icon-btn-extra-small-default-leading-space);
+  --mat-icon-btn-default-trailing-space: var(--mat-icon-btn-extra-small-default-trailing-space);
+  --mat-icon-btn-wide-leading-space: var(--mat-icon-btn-extra-small-wide-leading-space);
+  --mat-icon-btn-wide-trailing-space: var(--mat-icon-btn-extra-small-wide-trailing-space);
+  --mat-button-outline-width: var(--mat-icon-btn-extra-small-outlined-outline-width);
+  --mat-icon-btn-square-container-shape: var(--mat-icon-btn-extra-small-square-container-shape);
+  --mat-button-pressed-radius: var(--mat-icon-btn-extra-small-pressed-container-shape);
 }
 
-.mat-icon-btn--size-s {
-  --mat-button-container-height: var(--mat-icon-btn-s-container-height);
-  --mat-icon-btn-icon-size: var(--mat-icon-btn-s-icon-size);
-  --mat-icon-btn-narrow-width: var(--mat-icon-btn-s-narrow-width);
-  --mat-icon-btn-default-width: var(--mat-icon-btn-s-default-width);
-  --mat-icon-btn-wide-width: var(--mat-icon-btn-s-wide-width);
-  --mat-button-outline-width: var(--mat-icon-btn-s-outline-width);
-  --mat-icon-btn-square-radius: var(--mat-icon-btn-s-square-radius);
-  --mat-button-pressed-radius: var(--mat-icon-btn-s-pressed-radius);
+.mat-icon-btn--size-small {
+  --mat-button-container-height: var(--mat-icon-btn-small-container-height);
+  --mat-icon-btn-icon-size: var(--mat-icon-btn-small-icon-size);
+  --mat-icon-btn-narrow-leading-space: var(--mat-icon-btn-small-narrow-leading-space);
+  --mat-icon-btn-narrow-trailing-space: var(--mat-icon-btn-small-narrow-trailing-space);
+  --mat-icon-btn-default-leading-space: var(--mat-icon-btn-small-default-leading-space);
+  --mat-icon-btn-default-trailing-space: var(--mat-icon-btn-small-default-trailing-space);
+  --mat-icon-btn-wide-leading-space: var(--mat-icon-btn-small-wide-leading-space);
+  --mat-icon-btn-wide-trailing-space: var(--mat-icon-btn-small-wide-trailing-space);
+  --mat-button-outline-width: var(--mat-icon-btn-small-outlined-outline-width);
+  --mat-icon-btn-square-container-shape: var(--mat-icon-btn-small-square-container-shape);
+  --mat-button-pressed-radius: var(--mat-icon-btn-small-pressed-container-shape);
 }
 
-.mat-icon-btn--size-m {
-  --mat-button-container-height: var(--mat-icon-btn-m-container-height);
-  --mat-icon-btn-icon-size: var(--mat-icon-btn-m-icon-size);
-  --mat-icon-btn-narrow-width: var(--mat-icon-btn-m-narrow-width);
-  --mat-icon-btn-default-width: var(--mat-icon-btn-m-default-width);
-  --mat-icon-btn-wide-width: var(--mat-icon-btn-m-wide-width);
-  --mat-button-outline-width: var(--mat-icon-btn-m-outline-width);
-  --mat-icon-btn-square-radius: var(--mat-icon-btn-m-square-radius);
-  --mat-button-pressed-radius: var(--mat-icon-btn-m-pressed-radius);
+.mat-icon-btn--size-medium {
+  --mat-button-container-height: var(--mat-icon-btn-medium-container-height);
+  --mat-icon-btn-icon-size: var(--mat-icon-btn-medium-icon-size);
+  --mat-icon-btn-narrow-leading-space: var(--mat-icon-btn-medium-narrow-leading-space);
+  --mat-icon-btn-narrow-trailing-space: var(--mat-icon-btn-medium-narrow-trailing-space);
+  --mat-icon-btn-default-leading-space: var(--mat-icon-btn-medium-default-leading-space);
+  --mat-icon-btn-default-trailing-space: var(--mat-icon-btn-medium-default-trailing-space);
+  --mat-icon-btn-wide-leading-space: var(--mat-icon-btn-medium-wide-leading-space);
+  --mat-icon-btn-wide-trailing-space: var(--mat-icon-btn-medium-wide-trailing-space);
+  --mat-button-outline-width: var(--mat-icon-btn-medium-outlined-outline-width);
+  --mat-icon-btn-square-container-shape: var(--mat-icon-btn-medium-square-container-shape);
+  --mat-button-pressed-radius: var(--mat-icon-btn-medium-pressed-container-shape);
 }
 
-.mat-icon-btn--size-l {
-  --mat-button-container-height: var(--mat-icon-btn-l-container-height);
-  --mat-icon-btn-icon-size: var(--mat-icon-btn-l-icon-size);
-  --mat-icon-btn-narrow-width: var(--mat-icon-btn-l-narrow-width);
-  --mat-icon-btn-default-width: var(--mat-icon-btn-l-default-width);
-  --mat-icon-btn-wide-width: var(--mat-icon-btn-l-wide-width);
-  --mat-button-outline-width: var(--mat-icon-btn-l-outline-width);
-  --mat-icon-btn-square-radius: var(--mat-icon-btn-l-square-radius);
-  --mat-button-pressed-radius: var(--mat-icon-btn-l-pressed-radius);
+.mat-icon-btn--size-large {
+  --mat-button-container-height: var(--mat-icon-btn-large-container-height);
+  --mat-icon-btn-icon-size: var(--mat-icon-btn-large-icon-size);
+  --mat-icon-btn-narrow-leading-space: var(--mat-icon-btn-large-narrow-leading-space);
+  --mat-icon-btn-narrow-trailing-space: var(--mat-icon-btn-large-narrow-trailing-space);
+  --mat-icon-btn-default-leading-space: var(--mat-icon-btn-large-default-leading-space);
+  --mat-icon-btn-default-trailing-space: var(--mat-icon-btn-large-default-trailing-space);
+  --mat-icon-btn-wide-leading-space: var(--mat-icon-btn-large-wide-leading-space);
+  --mat-icon-btn-wide-trailing-space: var(--mat-icon-btn-large-wide-trailing-space);
+  --mat-button-outline-width: var(--mat-icon-btn-large-outlined-outline-width);
+  --mat-icon-btn-square-container-shape: var(--mat-icon-btn-large-square-container-shape);
+  --mat-button-pressed-radius: var(--mat-icon-btn-large-pressed-container-shape);
 }
 
-.mat-icon-btn--size-xl {
-  --mat-button-container-height: var(--mat-icon-btn-xl-container-height);
-  --mat-icon-btn-icon-size: var(--mat-icon-btn-xl-icon-size);
-  --mat-icon-btn-narrow-width: var(--mat-icon-btn-xl-narrow-width);
-  --mat-icon-btn-default-width: var(--mat-icon-btn-xl-default-width);
-  --mat-icon-btn-wide-width: var(--mat-icon-btn-xl-wide-width);
-  --mat-button-outline-width: var(--mat-icon-btn-xl-outline-width);
-  --mat-icon-btn-square-radius: var(--mat-icon-btn-xl-square-radius);
-  --mat-button-pressed-radius: var(--mat-icon-btn-xl-pressed-radius);
+.mat-icon-btn--size-extra-large {
+  --mat-button-container-height: var(--mat-icon-btn-extra-large-container-height);
+  --mat-icon-btn-icon-size: var(--mat-icon-btn-extra-large-icon-size);
+  --mat-icon-btn-narrow-leading-space: var(--mat-icon-btn-extra-large-narrow-leading-space);
+  --mat-icon-btn-narrow-trailing-space: var(--mat-icon-btn-extra-large-narrow-trailing-space);
+  --mat-icon-btn-default-leading-space: var(--mat-icon-btn-extra-large-default-leading-space);
+  --mat-icon-btn-default-trailing-space: var(--mat-icon-btn-extra-large-default-trailing-space);
+  --mat-icon-btn-wide-leading-space: var(--mat-icon-btn-extra-large-wide-leading-space);
+  --mat-icon-btn-wide-trailing-space: var(--mat-icon-btn-extra-large-wide-trailing-space);
+  --mat-button-outline-width: var(--mat-icon-btn-extra-large-outlined-outline-width);
+  --mat-icon-btn-square-container-shape: var(--mat-icon-btn-extra-large-square-container-shape);
+  --mat-button-pressed-radius: var(--mat-icon-btn-extra-large-pressed-container-shape);
 }
 
 .mat-icon-btn--width-narrow {
-  --mat-button-container-width: var(--mat-icon-btn-narrow-width);
+  --mat-icon-btn-leading-space: var(--mat-icon-btn-narrow-leading-space);
+  --mat-icon-btn-trailing-space: var(--mat-icon-btn-narrow-trailing-space);
 }
 
 .mat-icon-btn--width-default {
-  --mat-button-container-width: var(--mat-icon-btn-default-width);
+  --mat-icon-btn-leading-space: var(--mat-icon-btn-default-leading-space);
+  --mat-icon-btn-trailing-space: var(--mat-icon-btn-default-trailing-space);
 }
 
 .mat-icon-btn--width-wide {
-  --mat-button-container-width: var(--mat-icon-btn-wide-width);
+  --mat-icon-btn-leading-space: var(--mat-icon-btn-wide-leading-space);
+  --mat-icon-btn-trailing-space: var(--mat-icon-btn-wide-trailing-space);
 }
 
 .mat-icon-btn--shape-round {
@@ -224,11 +244,11 @@ const isSelected = computed(() => effectiveToggle.value && effectiveSelected.val
 }
 
 .mat-icon-btn--shape-square {
-  --mat-button-radius: var(--mat-icon-btn-square-radius);
+  --mat-button-radius: var(--mat-icon-btn-square-container-shape);
 }
 
 .mat-icon-btn--shape-round.mat-icon-btn--selected {
-  --mat-button-radius: var(--mat-icon-btn-square-radius);
+  --mat-button-radius: var(--mat-icon-btn-square-container-shape);
 }
 
 .mat-icon-btn--shape-square.mat-icon-btn--selected {
@@ -236,71 +256,83 @@ const isSelected = computed(() => effectiveToggle.value && effectiveSelected.val
 }
 
 .mat-icon-btn--filled.mat-icon-btn--toggle:not(.mat-icon-btn--selected) {
-  --mat-button-container-color: var(--mat-color-surface-container);
-  --mat-button-content-color: var(--mat-color-on-surface-variant);
-  --mat-button-state-color: var(--mat-color-on-surface-variant);
+  --mat-button-container-color: var(--mat-icon-btn-filled-unselected-container-color);
+  --mat-icon-btn-icon-color: var(--mat-icon-btn-filled-unselected-icon-color);
+  --mat-button-state-color: var(--mat-icon-btn-filled-unselected-state-layer-color);
 }
 
-.mat-icon-btn--tonal {
-  --mat-button-container-color: var(--mat-color-secondary-container);
-  --mat-button-content-color: var(--mat-color-on-secondary-container);
-  --mat-button-state-color: var(--mat-color-on-secondary-container);
+.mat-icon-btn--filled.mat-button--explicit-color:not(.mat-icon-btn--toggle),
+.mat-icon-btn--filled.mat-button--explicit-color.mat-icon-btn--selected {
+  --mat-button-container-color: var(--mat-accent-color);
+  --mat-icon-btn-icon-color: var(--mat-on-accent-color);
+  --mat-button-state-color: var(--mat-on-accent-color);
 }
 
-.mat-icon-btn--tonal.mat-icon-btn--selected {
-  --mat-button-container-color: var(--mat-color-secondary);
-  --mat-button-content-color: var(--mat-color-on-secondary);
-  --mat-button-state-color: var(--mat-color-on-secondary);
+.mat-icon-btn--filled-tonal {
+  --mat-button-container-color: var(--mat-icon-btn-filled-tonal-container-color);
+  --mat-icon-btn-icon-color: var(--mat-icon-btn-filled-tonal-icon-color);
+  --mat-button-state-color: var(--mat-icon-btn-filled-tonal-state-layer-color);
 }
 
-.mat-icon-btn--tonal.mat-button--explicit-color:not(.mat-icon-btn--selected) {
+.mat-icon-btn--filled-tonal.mat-icon-btn--selected {
+  --mat-button-container-color: var(--mat-icon-btn-filled-tonal-selected-container-color);
+  --mat-icon-btn-icon-color: var(--mat-icon-btn-filled-tonal-selected-icon-color);
+  --mat-button-state-color: var(--mat-icon-btn-filled-tonal-selected-state-layer-color);
+}
+
+.mat-icon-btn--filled-tonal.mat-button--explicit-color:not(.mat-icon-btn--selected) {
   --mat-button-container-color: var(--mat-accent-container-color);
-  --mat-button-content-color: var(--mat-on-accent-container-color);
+  --mat-icon-btn-icon-color: var(--mat-on-accent-container-color);
   --mat-button-state-color: var(--mat-on-accent-container-color);
 }
 
-.mat-icon-btn--tonal.mat-button--explicit-color.mat-icon-btn--selected {
+.mat-icon-btn--filled-tonal.mat-button--explicit-color.mat-icon-btn--selected {
   --mat-button-container-color: var(--mat-accent-color);
-  --mat-button-content-color: var(--mat-on-accent-color);
+  --mat-icon-btn-icon-color: var(--mat-on-accent-color);
   --mat-button-state-color: var(--mat-on-accent-color);
 }
 
 .mat-icon-btn--outlined {
-  --mat-button-container-color: transparent;
-  --mat-button-content-color: var(--mat-color-on-surface-variant);
-  --mat-button-state-color: var(--mat-color-on-surface-variant);
-  --mat-button-border-color: var(--mat-color-outline-variant);
+  --mat-button-container-color: var(--mat-icon-btn-outlined-container-color);
+  --mat-icon-btn-icon-color: var(--mat-icon-btn-outlined-icon-color);
+  --mat-button-state-color: var(--mat-icon-btn-outlined-state-layer-color);
+  --mat-button-border-color: var(--mat-icon-btn-outlined-outline-color);
   --mat-button-border-width: var(--mat-button-outline-width);
 }
 
 .mat-icon-btn--outlined.mat-icon-btn--selected {
-  --mat-button-container-color: var(--mat-color-inverse-surface);
-  --mat-button-content-color: var(--mat-color-inverse-on-surface);
-  --mat-button-state-color: var(--mat-color-inverse-on-surface);
+  --mat-button-container-color: var(--mat-icon-btn-outlined-selected-container-color);
+  --mat-icon-btn-icon-color: var(--mat-icon-btn-outlined-selected-icon-color);
+  --mat-button-state-color: var(--mat-icon-btn-outlined-selected-state-layer-color);
   --mat-button-border-color: transparent;
 }
 
 .mat-icon-btn--outlined.mat-button--explicit-color:not(.mat-icon-btn--selected),
 .mat-icon-btn--standard.mat-button--explicit-color:not(.mat-icon-btn--selected) {
-  --mat-button-content-color: var(--mat-accent-color);
+  --mat-icon-btn-icon-color: var(--mat-accent-color);
   --mat-button-state-color: var(--mat-accent-color);
 }
 
 .mat-icon-btn--outlined.mat-button--explicit-color.mat-icon-btn--selected {
   --mat-button-container-color: var(--mat-accent-color);
-  --mat-button-content-color: var(--mat-on-accent-color);
+  --mat-icon-btn-icon-color: var(--mat-on-accent-color);
   --mat-button-state-color: var(--mat-on-accent-color);
 }
 
 .mat-icon-btn--standard {
-  --mat-button-container-color: transparent;
-  --mat-button-content-color: var(--mat-color-on-surface-variant);
-  --mat-button-state-color: var(--mat-color-on-surface-variant);
+  --mat-button-container-color: var(--mat-icon-btn-standard-container-color);
+  --mat-icon-btn-icon-color: var(--mat-icon-btn-standard-icon-color);
+  --mat-button-state-color: var(--mat-icon-btn-standard-state-layer-color);
   --mat-button-border-width: 0;
 }
 
 .mat-icon-btn--standard.mat-icon-btn--selected {
-  --mat-button-content-color: var(--mat-accent-color);
+  --mat-icon-btn-icon-color: var(--mat-icon-btn-standard-selected-icon-color);
+  --mat-button-state-color: var(--mat-icon-btn-standard-selected-state-layer-color);
+}
+
+.mat-icon-btn--standard.mat-button--explicit-color.mat-icon-btn--selected {
+  --mat-icon-btn-icon-color: var(--mat-accent-color);
   --mat-button-state-color: var(--mat-accent-color);
 }
 
@@ -312,9 +344,10 @@ const isSelected = computed(() => effectiveToggle.value && effectiveSelected.val
   block-size: var(--mat-icon-btn-icon-size);
   align-items: center;
   justify-content: center;
+  color: var(--mat-icon-btn-icon-color);
   font-size: var(--mat-icon-btn-icon-size);
   line-height: 1;
-  transition: transform var(--mat-motion-duration-medium) var(--mat-motion-easing-standard);
+  transition: transform var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-standard);
 }
 
 .mat-icon-btn__icon--selected-fallback {
@@ -328,16 +361,16 @@ const isSelected = computed(() => effectiveToggle.value && effectiveSelected.val
 }
 
 .mat-icon-btn:disabled {
-  --mat-button-container-color: color-mix(in srgb, var(--mat-color-on-surface) calc(var(--mat-state-disabled-container-opacity) * 100%), transparent);
-  --mat-button-content-color: color-mix(in srgb, var(--mat-color-on-surface) calc(var(--mat-state-disabled-content-opacity) * 100%), transparent);
-  --mat-button-state-color: var(--mat-color-on-surface);
-  --mat-button-shadow: none;
+  --mat-button-container-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-container-opacity) * 100%), transparent);
+  --mat-icon-btn-icon-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-content-opacity) * 100%), transparent);
+  --mat-button-state-color: var(--mat-sys-color-on-surface);
+  --mat-button-container-elevation: none;
   --mat-button-border-width: 0;
 }
 
 .mat-icon-btn--outlined:disabled {
   --mat-button-container-color: transparent;
-  --mat-button-border-color: color-mix(in srgb, var(--mat-color-on-surface) calc(var(--mat-state-disabled-container-opacity) * 100%), transparent);
+  --mat-button-border-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-container-opacity) * 100%), transparent);
 }
 
 .mat-icon-btn--standard:disabled {

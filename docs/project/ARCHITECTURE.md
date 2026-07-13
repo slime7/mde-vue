@@ -38,7 +38,7 @@
 
 ### 主题运行时
 
-主题模块负责校验主题选项、按 Material 2025 phone 规格调用 Material Color Utilities、将结果写入目标元素的 `--mat-*` CSS 自定义属性，并在 `system` 模式下监听系统亮暗偏好。它向 Vue 应用提供可响应的当前配置、解析后的实际模式、运行时修改方法和清理方法。
+主题模块负责校验主题选项、按 Material 2025 phone 规格调用 Material Color Utilities、将 53 个颜色角色写入目标元素的 `--mat-sys-color-*` CSS 自定义属性，并在 `system` 模式下监听系统亮暗偏好。它向 Vue 应用提供可响应的当前配置、解析后的实际模式、运行时修改方法和清理方法。
 
 共享配色模块同时服务全局主题与组件级十六进制种子色。组件局部配色只读取当前方案和对比度，生成亮暗 primary 色族并通过有界缓存复用结果；它不会写入主题目标。
 
@@ -50,7 +50,7 @@
 
 ### 样式层
 
-基础样式声明 `--mat-color-*`、`--mat-shape-*`、`--mat-type-*`、`--mat-shadow-*`、`--mat-motion-*` 和 `--mat-state-*`。组件可提供窄范围的 `--mat-<component>-*` 覆盖入口。
+基础样式使用三层令牌：`--mat-ref-*` 保存字体等参考值，`--mat-sys-*` 保存颜色、排版、形状、海拔、动效、状态和交互值，`--mat-<component>-*` 保存组件实际读取的尺寸、颜色、形状、排版、描边与间距入口。组件内部临时变量不属于公共定制 API。
 
 Tailwind 适配文件通过 `@theme inline` 将上述值映射到带 `mat` 前缀的 Tailwind 主题变量，不重新定义主题来源。
 
@@ -66,7 +66,7 @@ demo 从包的公开出口加载组件和样式，用于人工查看主题与组
 flowchart LR
     A["应用的主题选项"] --> B["主题运行时校验"]
     B --> C["Material Color Utilities"]
-    C --> D["目标元素上的 --mat-* 令牌"]
+    C --> D["目标元素上的 --mat-sys-color-* 令牌"]
     D --> E["Vue 组件样式"]
     D --> F["Tailwind mat 语义类"]
     G["组件 color 种子色"] --> C
@@ -105,7 +105,8 @@ Vite 构建检查从公开 `exports` 导入 `.vue` 和 CSS，验证普通 Vue/Vi
 ## 相关决策
 
 - [0001 — 通过私有 Git 直接分发源码](adr/0001-distribute-source-from-private-git.md)
-- [0002 — 采用运行时令牌与 Tailwind 适配双层主题](adr/0002-runtime-and-tailwind-theme-layers.md)
+- [0002 — 采用运行时令牌与 Tailwind 适配双层主题（已由 0006 替代）](adr/0002-runtime-and-tailwind-theme-layers.md)
 - [0003 — 从 Markdown 生成 AI 使用文档](adr/0003-generate-ai-docs-from-markdown.md)
 - [0004 — 采用 Material 2025 动态配色规格](adr/0004-material-2025-dynamic-color.md)
 - [0005 — 采用组件级种子配色与父子继承](adr/0005-component-seed-color-inheritance.md)
+- [0006 — 采用 Material 3 分层令牌与完整组件属性名](adr/0006-material-3-layered-tokens-and-full-property-names.md)

@@ -11,6 +11,7 @@ import {
   MatSplitBtn,
   useMatTheme,
 } from '../src';
+import { MAT_COLOR_ROLES } from '../src/material-color';
 
 const SCHEME_VARIANTS = [
   'tonal-spot',
@@ -74,7 +75,11 @@ describe('主题控制器', () => {
     expect(plugin.theme.seedColor.value).toBe('#20a6fc');
     expect(plugin.theme.schemeVariant.value).toBe('tonal-spot');
     expect(plugin.theme.contrastLevel.value).toBe(0);
-    expect(target.style.getPropertyValue('--mat-color-primary')).toBe('#396287');
+    expect(target.style.getPropertyValue('--mat-sys-color-primary')).toBe('#396287');
+    expect(Object.values(MAT_COLOR_ROLES)).toHaveLength(53);
+    Object.values(MAT_COLOR_ROLES).forEach((tokenName) => {
+      expect(target.style.getPropertyValue(`--mat-sys-color-${tokenName}`)).toMatch(/^#[\da-f]{6}$/);
+    });
     expect(target.getAttribute('data-mat-theme')).toBe('light');
     expect(target.style.colorScheme).toBe('light');
   });
@@ -112,12 +117,12 @@ describe('主题控制器', () => {
         plugins: [plugin],
       },
     });
-    const initialPrimary = target.style.getPropertyValue('--mat-color-primary');
+    const initialPrimary = target.style.getPropertyValue('--mat-sys-color-primary');
 
     plugin.theme.setSeedColor('#f00');
 
     expect(plugin.theme.seedColor.value).toBe('#ff0000');
-    expect(target.style.getPropertyValue('--mat-color-primary')).not.toBe(initialPrimary);
+    expect(target.style.getPropertyValue('--mat-sys-color-primary')).not.toBe(initialPrimary);
     expect(wrapper.classes()).toContain('mat-btn--filled');
     plugin.theme.dispose();
   });
@@ -132,7 +137,7 @@ describe('主题控制器', () => {
     });
 
     expect(plugin.theme.schemeVariant.value).toBe(schemeVariant);
-    expect(plugin.theme.target.style.getPropertyValue('--mat-color-primary')).toMatch(/^#[\da-f]{6}$/);
+    expect(plugin.theme.target.style.getPropertyValue('--mat-sys-color-primary')).toMatch(/^#[\da-f]{6}$/);
   });
 
   it('接受对比度边界并拒绝越界值', () => {
@@ -161,9 +166,10 @@ describe('主题控制器', () => {
 
   it('dispose 清理系统主题监听且可重复调用', () => {
     const mediaQuery = createMatchMediaMock();
+    const target = document.createElement('div');
     const plugin = createMatUi({
       theme: {
-        target: document.createElement('div'),
+        target,
       },
     });
 
@@ -173,6 +179,9 @@ describe('主题控制器', () => {
     plugin.theme.dispose();
 
     expect(mediaQuery.removeEventListener).toHaveBeenCalledOnce();
+    expect(target.style.getPropertyValue('--mat-sys-color-primary')).toBe('');
+    expect(target.getAttribute('data-mat-theme')).toBeNull();
+    expect(target.style.colorScheme).toBe('');
   });
 
   it('通过插件注册组件并提供 useMatTheme()', () => {

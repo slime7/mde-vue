@@ -46,13 +46,13 @@ import 'mdu-ui/styles.css';
   </DocsPreview>
 </ClientOnly>
 
-默认使用 `filled`、`s`、`default` 宽度和 `round` 形状。
+默认使用 `filled`、`small`、`default` 宽度和 `round` 形状。
 
 ### 外观、宽度和受控切换
 
 ```vue
 <mat-icon-btn label="Filled" variant="filled" width="narrow">★</mat-icon-btn>
-<mat-icon-btn label="Tonal" variant="tonal">★</mat-icon-btn>
+<mat-icon-btn label="Tonal" variant="filled-tonal">★</mat-icon-btn>
 <mat-icon-btn label="Outlined" variant="outlined" width="wide">★</mat-icon-btn>
 <mat-icon-btn label="Standard" variant="standard">★</mat-icon-btn>
 
@@ -71,7 +71,7 @@ import 'mdu-ui/styles.css';
 <ClientOnly>
   <DocsPreview label="Icon button 外观、宽度和受控切换预览">
     <mat-icon-btn label="Filled" variant="filled" width="narrow">★</mat-icon-btn>
-    <mat-icon-btn label="Tonal" variant="tonal">★</mat-icon-btn>
+    <mat-icon-btn label="Tonal" variant="filled-tonal">★</mat-icon-btn>
     <mat-icon-btn label="Outlined" variant="outlined" width="wide">★</mat-icon-btn>
     <mat-icon-btn label="Standard" variant="standard">★</mat-icon-btn>
     <mat-icon-btn
@@ -93,8 +93,8 @@ import 'mdu-ui/styles.css';
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `variant` | `'filled' \| 'tonal' \| 'outlined' \| 'standard'` | `'filled'` | 视觉层级 |
-| `size` | `'xs' \| 's' \| 'm' \| 'l' \| 'xl'` | `'s'` | 高度、图标、宽度、边框和圆角尺寸 |
+| `variant` | `'filled' \| 'filled-tonal' \| 'outlined' \| 'standard'` | `'filled'` | 视觉层级 |
+| `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'small'` | 高度、图标、宽度、边框和圆角尺寸 |
 | `width` | `'narrow' \| 'default' \| 'wide'` | `'default'` | 当前尺寸中的容器宽度档位 |
 | `shape` | `'round' \| 'square'` | `'round'` | 静止形状；toggle 选中时变为相反形状 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 遵守统一组件配色约定 |
@@ -120,20 +120,22 @@ import 'mdu-ui/styles.css';
 
 ### 状态
 
-hover、focus-visible、pressed、selected 和 disabled 状态与 Button 使用相同状态层和禁用规则。`xs` 与 `s` 仍提供至少 48px 的交互目标。当前可见提示由原生 `title` 提供，不包含独立 Tooltip。
+hover、focus-visible、pressed、selected 和 disabled 状态与 Button 使用相同状态层和禁用规则；focus 与 pressed 使用 12% 状态层。`extra-small` 与 `small` 仍提供至少 48px 的交互目标。当前可见提示由原生 `title` 提供，不包含独立 Tooltip。
 
 ### CSS 定制入口
 
-| 模式 | 自定义属性 | `xs / s / m / l / xl` 默认值 |
+| 模式 | 自定义属性 | `extra-small / small / medium / large / extra-large` 默认值 |
 | --- | --- | --- |
 | 高度 | `--mat-icon-btn-<size>-container-height` | `32 / 40 / 56 / 96 / 136px` |
 | 图标 | `--mat-icon-btn-<size>-icon-size` | `20 / 24 / 24 / 32 / 40px` |
-| narrow 宽度 | `--mat-icon-btn-<size>-narrow-width` | `28 / 32 / 48 / 64 / 104px` |
-| default 宽度 | `--mat-icon-btn-<size>-default-width` | `32 / 40 / 56 / 96 / 136px` |
-| wide 宽度 | `--mat-icon-btn-<size>-wide-width` | `40 / 52 / 72 / 128 / 184px` |
-| outline | `--mat-icon-btn-<size>-outline-width` | `1 / 1 / 1 / 2 / 3px` |
-| square 圆角 | `--mat-icon-btn-<size>-square-radius` | `12 / 12 / 16 / 28 / 28px` |
-| pressed 圆角 | `--mat-icon-btn-<size>-pressed-radius` | `8 / 8 / 12 / 16 / 16px` |
+| narrow 起始/结束间距 | `--mat-icon-btn-<size>-narrow-{leading,trailing}-space` | `4 / 4 / 12 / 16 / 32px` |
+| default 起始/结束间距 | `--mat-icon-btn-<size>-default-{leading,trailing}-space` | `6 / 8 / 16 / 32 / 48px` |
+| wide 起始/结束间距 | `--mat-icon-btn-<size>-wide-{leading,trailing}-space` | `10 / 14 / 24 / 48 / 72px` |
+| outline | `--mat-icon-btn-<size>-outlined-outline-width` | `1 / 1 / 1 / 2 / 3px` |
+| square 形状 | `--mat-icon-btn-<size>-square-container-shape` | `12 / 12 / 16 / 28 / 28px` |
+| pressed 形状 | `--mat-icon-btn-<size>-pressed-container-shape` | `8 / 8 / 12 / 16 / 16px` |
+
+组件根据图标大小与两侧间距计算容器宽度。变体颜色入口为 `--mat-icon-btn-<variant>-container-color`、`icon-color`、`state-layer-color`；outlined 另有 `outline-color`。选择状态使用 `--mat-icon-btn-filled-unselected-*`、`--mat-icon-btn-filled-tonal-selected-*`、`--mat-icon-btn-outlined-selected-*` 和 `--mat-icon-btn-standard-selected-*`。
 
 共享交互、状态和焦点令牌与 Button 相同。组件没有公开方法。
 

@@ -7,10 +7,11 @@
 | ADR | 状态 | 主题 |
 | --- | --- | --- |
 | [0001](0001-distribute-source-from-private-git.md) | active | 通过私有 Git 直接分发源码 |
-| [0002](0002-runtime-and-tailwind-theme-layers.md) | active | 采用运行时令牌与 Tailwind 适配双层主题 |
+| [0002](0002-runtime-and-tailwind-theme-layers.md) | superseded | 采用运行时令牌与 Tailwind 适配双层主题 |
 | [0003](0003-generate-ai-docs-from-markdown.md) | active | 从 Markdown 生成 AI 使用文档 |
 | [0004](0004-material-2025-dynamic-color.md) | active | 采用 Material 2025 动态配色规格 |
 | [0005](0005-component-seed-color-inheritance.md) | active | 采用组件级种子配色与父子继承 |
+| [0006](0006-material-3-layered-tokens-and-full-property-names.md) | active | 采用 Material 3 分层令牌与完整组件属性名 |
 
 ## 何时创建 ADR
 

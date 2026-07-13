@@ -21,7 +21,7 @@ const props = defineProps({
     type: String,
     default: 'filled',
     validator(value) {
-      return ['elevated', 'filled', 'tonal', 'outlined', 'text'].includes(value);
+      return ['elevated', 'filled', 'filled-tonal', 'outlined', 'text'].includes(value);
     },
   },
   size: {
@@ -143,98 +143,108 @@ watchEffect(() => {
  */
 
 .mat-btn {
-  --mat-accent-color: var(--mat-color-primary);
-  --mat-on-accent-color: var(--mat-color-on-primary);
-  --mat-accent-container-color: var(--mat-color-primary-container);
-  --mat-on-accent-container-color: var(--mat-color-on-primary-container);
-  --mat-button-container-color: var(--mat-accent-color);
-  --mat-button-content-color: var(--mat-on-accent-color);
-  --mat-button-state-color: var(--mat-button-content-color);
+  --mat-accent-color: var(--mat-sys-color-primary);
+  --mat-on-accent-color: var(--mat-sys-color-on-primary);
+  --mat-accent-container-color: var(--mat-sys-color-primary-container);
+  --mat-on-accent-container-color: var(--mat-sys-color-on-primary-container);
+  --mat-button-container-color: var(--mat-btn-filled-container-color);
+  --mat-btn-label-text-color: var(--mat-btn-filled-label-text-color);
+  --mat-btn-icon-color: var(--mat-btn-filled-icon-color);
+  --mat-button-content-color: var(--mat-btn-label-text-color);
+  --mat-button-state-color: var(--mat-btn-filled-state-layer-color);
   --mat-button-border-width: 0;
   --mat-button-outline-width: 1px;
-  --mat-button-shadow: var(--mat-shadow-level-0);
-  gap: var(--mat-btn-icon-label-gap);
-  min-inline-size: calc(var(--mat-btn-horizontal-padding) * 2);
-  padding-inline: var(--mat-btn-horizontal-padding);
-  font-family: var(--mat-btn-label-font);
-  font-size: var(--mat-btn-label-size);
-  font-weight: var(--mat-btn-label-weight);
-  line-height: var(--mat-btn-label-line-height);
-  letter-spacing: var(--mat-btn-label-tracking, 0);
+  --mat-button-container-elevation: var(--mat-btn-filled-container-elevation);
+  gap: var(--mat-btn-icon-label-space);
+  min-inline-size: calc(var(--mat-btn-leading-space) + var(--mat-btn-trailing-space));
+  padding-inline: var(--mat-btn-leading-space) var(--mat-btn-trailing-space);
+  font-family: var(--mat-btn-label-text-font);
+  font-size: var(--mat-btn-label-text-size);
+  font-weight: var(--mat-btn-label-text-weight);
+  line-height: var(--mat-btn-label-text-line-height);
+  letter-spacing: var(--mat-btn-label-text-tracking, 0);
   text-align: center;
   text-decoration: none;
 }
 
-.mat-btn--size-xs {
-  --mat-button-container-height: var(--mat-btn-xs-container-height);
-  --mat-btn-horizontal-padding: var(--mat-btn-xs-horizontal-padding);
-  --mat-btn-icon-size: var(--mat-btn-xs-icon-size);
-  --mat-btn-icon-label-gap: var(--mat-btn-xs-icon-label-gap);
-  --mat-button-outline-width: var(--mat-btn-xs-outline-width);
-  --mat-btn-square-radius: var(--mat-btn-xs-square-radius);
-  --mat-button-pressed-radius: var(--mat-btn-xs-pressed-radius);
-  --mat-btn-label-font: var(--mat-type-label-large-font);
-  --mat-btn-label-size: var(--mat-type-label-large-size);
-  --mat-btn-label-line-height: var(--mat-type-label-large-line-height);
-  --mat-btn-label-weight: var(--mat-type-label-large-weight);
-  --mat-btn-label-tracking: var(--mat-type-label-large-tracking);
+.mat-btn--size-extra-small {
+  --mat-button-container-height: var(--mat-btn-extra-small-container-height);
+  --mat-btn-leading-space: var(--mat-btn-extra-small-leading-space);
+  --mat-btn-trailing-space: var(--mat-btn-extra-small-trailing-space);
+  --mat-btn-icon-size: var(--mat-btn-extra-small-icon-size);
+  --mat-btn-icon-label-space: var(--mat-btn-extra-small-icon-label-space);
+  --mat-button-outline-width: var(--mat-btn-extra-small-outlined-outline-width);
+  --mat-btn-square-container-shape: var(--mat-btn-extra-small-square-container-shape);
+  --mat-button-pressed-radius: var(--mat-btn-extra-small-pressed-container-shape);
+  --mat-btn-label-text-font: var(--mat-btn-extra-small-label-text-font);
+  --mat-btn-label-text-size: var(--mat-btn-extra-small-label-text-size);
+  --mat-btn-label-text-line-height: var(--mat-btn-extra-small-label-text-line-height);
+  --mat-btn-label-text-weight: var(--mat-btn-extra-small-label-text-weight);
+  --mat-btn-label-text-tracking: var(--mat-btn-extra-small-label-text-tracking);
 }
 
-.mat-btn--size-s {
-  --mat-button-container-height: var(--mat-btn-s-container-height);
-  --mat-btn-horizontal-padding: var(--mat-btn-s-horizontal-padding);
-  --mat-btn-icon-size: var(--mat-btn-s-icon-size);
-  --mat-btn-icon-label-gap: var(--mat-btn-s-icon-label-gap);
-  --mat-button-outline-width: var(--mat-btn-s-outline-width);
-  --mat-btn-square-radius: var(--mat-btn-s-square-radius);
-  --mat-button-pressed-radius: var(--mat-btn-s-pressed-radius);
-  --mat-btn-label-font: var(--mat-type-label-large-font);
-  --mat-btn-label-size: var(--mat-type-label-large-size);
-  --mat-btn-label-line-height: var(--mat-type-label-large-line-height);
-  --mat-btn-label-weight: var(--mat-type-label-large-weight);
-  --mat-btn-label-tracking: var(--mat-type-label-large-tracking);
+.mat-btn--size-small {
+  --mat-button-container-height: var(--mat-btn-small-container-height);
+  --mat-btn-leading-space: var(--mat-btn-small-leading-space);
+  --mat-btn-trailing-space: var(--mat-btn-small-trailing-space);
+  --mat-btn-icon-size: var(--mat-btn-small-icon-size);
+  --mat-btn-icon-label-space: var(--mat-btn-small-icon-label-space);
+  --mat-button-outline-width: var(--mat-btn-small-outlined-outline-width);
+  --mat-btn-square-container-shape: var(--mat-btn-small-square-container-shape);
+  --mat-button-pressed-radius: var(--mat-btn-small-pressed-container-shape);
+  --mat-btn-label-text-font: var(--mat-btn-small-label-text-font);
+  --mat-btn-label-text-size: var(--mat-btn-small-label-text-size);
+  --mat-btn-label-text-line-height: var(--mat-btn-small-label-text-line-height);
+  --mat-btn-label-text-weight: var(--mat-btn-small-label-text-weight);
+  --mat-btn-label-text-tracking: var(--mat-btn-small-label-text-tracking);
 }
 
-.mat-btn--size-m {
-  --mat-button-container-height: var(--mat-btn-m-container-height);
-  --mat-btn-horizontal-padding: var(--mat-btn-m-horizontal-padding);
-  --mat-btn-icon-size: var(--mat-btn-m-icon-size);
-  --mat-btn-icon-label-gap: var(--mat-btn-m-icon-label-gap);
-  --mat-button-outline-width: var(--mat-btn-m-outline-width);
-  --mat-btn-square-radius: var(--mat-btn-m-square-radius);
-  --mat-button-pressed-radius: var(--mat-btn-m-pressed-radius);
-  --mat-btn-label-font: var(--mat-type-title-medium-font);
-  --mat-btn-label-size: var(--mat-type-title-medium-size);
-  --mat-btn-label-line-height: var(--mat-type-title-medium-line-height);
-  --mat-btn-label-weight: var(--mat-type-title-medium-weight);
+.mat-btn--size-medium {
+  --mat-button-container-height: var(--mat-btn-medium-container-height);
+  --mat-btn-leading-space: var(--mat-btn-medium-leading-space);
+  --mat-btn-trailing-space: var(--mat-btn-medium-trailing-space);
+  --mat-btn-icon-size: var(--mat-btn-medium-icon-size);
+  --mat-btn-icon-label-space: var(--mat-btn-medium-icon-label-space);
+  --mat-button-outline-width: var(--mat-btn-medium-outlined-outline-width);
+  --mat-btn-square-container-shape: var(--mat-btn-medium-square-container-shape);
+  --mat-button-pressed-radius: var(--mat-btn-medium-pressed-container-shape);
+  --mat-btn-label-text-font: var(--mat-btn-medium-label-text-font);
+  --mat-btn-label-text-size: var(--mat-btn-medium-label-text-size);
+  --mat-btn-label-text-line-height: var(--mat-btn-medium-label-text-line-height);
+  --mat-btn-label-text-weight: var(--mat-btn-medium-label-text-weight);
+  --mat-btn-label-text-tracking: var(--mat-btn-medium-label-text-tracking);
 }
 
-.mat-btn--size-l {
-  --mat-button-container-height: var(--mat-btn-l-container-height);
-  --mat-btn-horizontal-padding: var(--mat-btn-l-horizontal-padding);
-  --mat-btn-icon-size: var(--mat-btn-l-icon-size);
-  --mat-btn-icon-label-gap: var(--mat-btn-l-icon-label-gap);
-  --mat-button-outline-width: var(--mat-btn-l-outline-width);
-  --mat-btn-square-radius: var(--mat-btn-l-square-radius);
-  --mat-button-pressed-radius: var(--mat-btn-l-pressed-radius);
-  --mat-btn-label-font: var(--mat-type-headline-small-font);
-  --mat-btn-label-size: var(--mat-type-headline-small-size);
-  --mat-btn-label-line-height: var(--mat-type-headline-small-line-height);
-  --mat-btn-label-weight: var(--mat-type-headline-small-weight);
+.mat-btn--size-large {
+  --mat-button-container-height: var(--mat-btn-large-container-height);
+  --mat-btn-leading-space: var(--mat-btn-large-leading-space);
+  --mat-btn-trailing-space: var(--mat-btn-large-trailing-space);
+  --mat-btn-icon-size: var(--mat-btn-large-icon-size);
+  --mat-btn-icon-label-space: var(--mat-btn-large-icon-label-space);
+  --mat-button-outline-width: var(--mat-btn-large-outlined-outline-width);
+  --mat-btn-square-container-shape: var(--mat-btn-large-square-container-shape);
+  --mat-button-pressed-radius: var(--mat-btn-large-pressed-container-shape);
+  --mat-btn-label-text-font: var(--mat-btn-large-label-text-font);
+  --mat-btn-label-text-size: var(--mat-btn-large-label-text-size);
+  --mat-btn-label-text-line-height: var(--mat-btn-large-label-text-line-height);
+  --mat-btn-label-text-weight: var(--mat-btn-large-label-text-weight);
+  --mat-btn-label-text-tracking: var(--mat-btn-large-label-text-tracking);
 }
 
-.mat-btn--size-xl {
-  --mat-button-container-height: var(--mat-btn-xl-container-height);
-  --mat-btn-horizontal-padding: var(--mat-btn-xl-horizontal-padding);
-  --mat-btn-icon-size: var(--mat-btn-xl-icon-size);
-  --mat-btn-icon-label-gap: var(--mat-btn-xl-icon-label-gap);
-  --mat-button-outline-width: var(--mat-btn-xl-outline-width);
-  --mat-btn-square-radius: var(--mat-btn-xl-square-radius);
-  --mat-button-pressed-radius: var(--mat-btn-xl-pressed-radius);
-  --mat-btn-label-font: var(--mat-type-headline-large-font);
-  --mat-btn-label-size: var(--mat-type-headline-large-size);
-  --mat-btn-label-line-height: var(--mat-type-headline-large-line-height);
-  --mat-btn-label-weight: var(--mat-type-headline-large-weight);
+.mat-btn--size-extra-large {
+  --mat-button-container-height: var(--mat-btn-extra-large-container-height);
+  --mat-btn-leading-space: var(--mat-btn-extra-large-leading-space);
+  --mat-btn-trailing-space: var(--mat-btn-extra-large-trailing-space);
+  --mat-btn-icon-size: var(--mat-btn-extra-large-icon-size);
+  --mat-btn-icon-label-space: var(--mat-btn-extra-large-icon-label-space);
+  --mat-button-outline-width: var(--mat-btn-extra-large-outlined-outline-width);
+  --mat-btn-square-container-shape: var(--mat-btn-extra-large-square-container-shape);
+  --mat-button-pressed-radius: var(--mat-btn-extra-large-pressed-container-shape);
+  --mat-btn-label-text-font: var(--mat-btn-extra-large-label-text-font);
+  --mat-btn-label-text-size: var(--mat-btn-extra-large-label-text-size);
+  --mat-btn-label-text-line-height: var(--mat-btn-extra-large-label-text-line-height);
+  --mat-btn-label-text-weight: var(--mat-btn-extra-large-label-text-weight);
+  --mat-btn-label-text-tracking: var(--mat-btn-extra-large-label-text-tracking);
 }
 
 .mat-btn--shape-round {
@@ -242,11 +252,11 @@ watchEffect(() => {
 }
 
 .mat-btn--shape-square {
-  --mat-button-radius: var(--mat-btn-square-radius);
+  --mat-button-radius: var(--mat-btn-square-container-shape);
 }
 
 .mat-btn--shape-round.mat-btn--selected {
-  --mat-button-radius: var(--mat-btn-square-radius);
+  --mat-button-radius: var(--mat-btn-square-container-shape);
 }
 
 .mat-btn--shape-square.mat-btn--selected {
@@ -254,83 +264,113 @@ watchEffect(() => {
 }
 
 .mat-btn--elevated {
-  --mat-button-container-color: var(--mat-color-surface-container-low);
-  --mat-button-content-color: var(--mat-accent-color);
-  --mat-button-state-color: var(--mat-accent-color);
-  --mat-button-shadow: var(--mat-shadow-level-1);
+  --mat-button-container-color: var(--mat-btn-elevated-container-color);
+  --mat-btn-label-text-color: var(--mat-btn-elevated-label-text-color);
+  --mat-btn-icon-color: var(--mat-btn-elevated-icon-color);
+  --mat-button-state-color: var(--mat-btn-elevated-state-layer-color);
+  --mat-button-container-elevation: var(--mat-btn-elevated-container-elevation);
   --mat-button-border-width: 0;
 }
 
 .mat-btn--elevated.mat-btn--selected,
 .mat-btn--filled:not(.mat-btn--toggle),
 .mat-btn--filled.mat-btn--selected {
-  --mat-button-container-color: var(--mat-accent-color);
-  --mat-button-content-color: var(--mat-on-accent-color);
-  --mat-button-state-color: var(--mat-on-accent-color);
+  --mat-button-container-color: var(--mat-btn-filled-container-color);
+  --mat-btn-label-text-color: var(--mat-btn-filled-label-text-color);
+  --mat-btn-icon-color: var(--mat-btn-filled-icon-color);
+  --mat-button-state-color: var(--mat-btn-filled-state-layer-color);
+  --mat-button-container-elevation: var(--mat-btn-filled-container-elevation);
 }
 
 .mat-btn--filled.mat-btn--toggle:not(.mat-btn--selected) {
-  --mat-button-container-color: var(--mat-color-surface-container);
-  --mat-button-content-color: var(--mat-color-on-surface-variant);
-  --mat-button-state-color: var(--mat-color-on-surface-variant);
+  --mat-button-container-color: var(--mat-btn-filled-unselected-container-color);
+  --mat-btn-label-text-color: var(--mat-btn-filled-unselected-label-text-color);
+  --mat-btn-icon-color: var(--mat-btn-filled-unselected-icon-color);
+  --mat-button-state-color: var(--mat-btn-filled-unselected-state-layer-color);
 }
 
-.mat-btn--tonal {
-  --mat-button-container-color: var(--mat-color-secondary-container);
-  --mat-button-content-color: var(--mat-color-on-secondary-container);
-  --mat-button-state-color: var(--mat-color-on-secondary-container);
+.mat-btn--elevated.mat-button--explicit-color {
+  --mat-btn-label-text-color: var(--mat-accent-color);
+  --mat-btn-icon-color: var(--mat-accent-color);
+  --mat-button-state-color: var(--mat-accent-color);
 }
 
-.mat-btn--tonal.mat-btn--selected {
-  --mat-button-container-color: var(--mat-color-secondary);
-  --mat-button-content-color: var(--mat-color-on-secondary);
-  --mat-button-state-color: var(--mat-color-on-secondary);
+.mat-btn--filled.mat-button--explicit-color:not(.mat-btn--toggle),
+.mat-btn--filled.mat-button--explicit-color.mat-btn--selected {
+  --mat-button-container-color: var(--mat-accent-color);
+  --mat-btn-label-text-color: var(--mat-on-accent-color);
+  --mat-btn-icon-color: var(--mat-on-accent-color);
+  --mat-button-state-color: var(--mat-on-accent-color);
 }
 
-.mat-btn--tonal.mat-button--explicit-color:not(.mat-btn--selected) {
+.mat-btn--filled-tonal {
+  --mat-button-container-color: var(--mat-btn-filled-tonal-container-color);
+  --mat-btn-label-text-color: var(--mat-btn-filled-tonal-label-text-color);
+  --mat-btn-icon-color: var(--mat-btn-filled-tonal-icon-color);
+  --mat-button-state-color: var(--mat-btn-filled-tonal-state-layer-color);
+  --mat-button-container-elevation: var(--mat-btn-filled-tonal-container-elevation);
+}
+
+.mat-btn--filled-tonal.mat-btn--selected {
+  --mat-button-container-color: var(--mat-btn-filled-tonal-selected-container-color);
+  --mat-btn-label-text-color: var(--mat-btn-filled-tonal-selected-label-text-color);
+  --mat-btn-icon-color: var(--mat-btn-filled-tonal-selected-icon-color);
+  --mat-button-state-color: var(--mat-btn-filled-tonal-selected-state-layer-color);
+}
+
+.mat-btn--filled-tonal.mat-button--explicit-color:not(.mat-btn--selected) {
   --mat-button-container-color: var(--mat-accent-container-color);
-  --mat-button-content-color: var(--mat-on-accent-container-color);
+  --mat-btn-label-text-color: var(--mat-on-accent-container-color);
+  --mat-btn-icon-color: var(--mat-on-accent-container-color);
   --mat-button-state-color: var(--mat-on-accent-container-color);
 }
 
-.mat-btn--tonal.mat-button--explicit-color.mat-btn--selected {
+.mat-btn--filled-tonal.mat-button--explicit-color.mat-btn--selected {
   --mat-button-container-color: var(--mat-accent-color);
-  --mat-button-content-color: var(--mat-on-accent-color);
+  --mat-btn-label-text-color: var(--mat-on-accent-color);
+  --mat-btn-icon-color: var(--mat-on-accent-color);
   --mat-button-state-color: var(--mat-on-accent-color);
 }
 
 .mat-btn--outlined {
-  --mat-button-container-color: transparent;
-  --mat-button-content-color: var(--mat-color-on-surface-variant);
-  --mat-button-state-color: var(--mat-color-on-surface-variant);
-  --mat-button-border-color: var(--mat-color-outline-variant);
+  --mat-button-container-color: var(--mat-btn-outlined-container-color);
+  --mat-btn-label-text-color: var(--mat-btn-outlined-label-text-color);
+  --mat-btn-icon-color: var(--mat-btn-outlined-icon-color);
+  --mat-button-state-color: var(--mat-btn-outlined-state-layer-color);
+  --mat-button-border-color: var(--mat-btn-outlined-outline-color);
   --mat-button-border-width: var(--mat-button-outline-width);
+  --mat-button-container-elevation: var(--mat-btn-outlined-container-elevation);
 }
 
 .mat-btn--outlined.mat-btn--selected {
-  --mat-button-container-color: var(--mat-color-inverse-surface);
-  --mat-button-content-color: var(--mat-color-inverse-on-surface);
-  --mat-button-state-color: var(--mat-color-inverse-on-surface);
+  --mat-button-container-color: var(--mat-btn-outlined-selected-container-color);
+  --mat-btn-label-text-color: var(--mat-btn-outlined-selected-label-text-color);
+  --mat-btn-icon-color: var(--mat-btn-outlined-selected-icon-color);
+  --mat-button-state-color: var(--mat-btn-outlined-selected-state-layer-color);
   --mat-button-border-color: transparent;
 }
 
 .mat-btn--outlined.mat-button--explicit-color:not(.mat-btn--selected),
 .mat-btn--text.mat-button--explicit-color {
-  --mat-button-content-color: var(--mat-accent-color);
+  --mat-btn-label-text-color: var(--mat-accent-color);
+  --mat-btn-icon-color: var(--mat-accent-color);
   --mat-button-state-color: var(--mat-accent-color);
 }
 
 .mat-btn--outlined.mat-button--explicit-color.mat-btn--selected {
   --mat-button-container-color: var(--mat-accent-color);
-  --mat-button-content-color: var(--mat-on-accent-color);
+  --mat-btn-label-text-color: var(--mat-on-accent-color);
+  --mat-btn-icon-color: var(--mat-on-accent-color);
   --mat-button-state-color: var(--mat-on-accent-color);
 }
 
 .mat-btn--text {
-  --mat-button-container-color: transparent;
-  --mat-button-content-color: var(--mat-color-primary);
-  --mat-button-state-color: var(--mat-color-primary);
+  --mat-button-container-color: var(--mat-btn-text-container-color);
+  --mat-btn-label-text-color: var(--mat-btn-text-label-text-color);
+  --mat-btn-icon-color: var(--mat-btn-text-icon-color);
+  --mat-button-state-color: var(--mat-btn-text-state-layer-color);
   --mat-button-border-width: 0;
+  --mat-button-container-elevation: var(--mat-btn-text-container-elevation);
 }
 
 .mat-btn__icon {
@@ -342,6 +382,7 @@ watchEffect(() => {
   block-size: var(--mat-btn-icon-size);
   align-items: center;
   justify-content: center;
+  color: var(--mat-btn-icon-color);
   font-size: var(--mat-btn-icon-size);
   line-height: 1;
 }
@@ -363,26 +404,30 @@ watchEffect(() => {
 
 @media (hover: hover) {
   .mat-btn--elevated:not(:disabled):hover {
-    --mat-button-shadow: var(--mat-shadow-level-2);
+    --mat-button-container-elevation: var(--mat-btn-elevated-hover-container-elevation);
   }
 
-  .mat-btn--filled:not(:disabled):hover,
-  .mat-btn--tonal:not(:disabled):hover {
-    --mat-button-shadow: var(--mat-shadow-level-1);
+  .mat-btn--filled:not(:disabled):hover {
+    --mat-button-container-elevation: var(--mat-btn-filled-hover-container-elevation);
+  }
+
+  .mat-btn--filled-tonal:not(:disabled):hover {
+    --mat-button-container-elevation: var(--mat-btn-filled-tonal-hover-container-elevation);
   }
 }
 
 .mat-btn:disabled {
-  --mat-button-container-color: color-mix(in srgb, var(--mat-color-on-surface) calc(var(--mat-state-disabled-container-opacity) * 100%), transparent);
-  --mat-button-content-color: color-mix(in srgb, var(--mat-color-on-surface) calc(var(--mat-state-disabled-content-opacity) * 100%), transparent);
-  --mat-button-state-color: var(--mat-color-on-surface);
-  --mat-button-shadow: none;
+  --mat-button-container-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-container-opacity) * 100%), transparent);
+  --mat-btn-label-text-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-content-opacity) * 100%), transparent);
+  --mat-btn-icon-color: var(--mat-btn-label-text-color);
+  --mat-button-state-color: var(--mat-sys-color-on-surface);
+  --mat-button-container-elevation: none;
   --mat-button-border-width: 0;
 }
 
 .mat-btn--outlined:disabled {
   --mat-button-container-color: transparent;
-  --mat-button-border-color: color-mix(in srgb, var(--mat-color-on-surface) calc(var(--mat-state-disabled-container-opacity) * 100%), transparent);
+  --mat-button-border-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-container-opacity) * 100%), transparent);
 }
 
 .mat-btn--text:disabled {

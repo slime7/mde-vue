@@ -1,4 +1,10 @@
-export const BUTTON_SIZES = ['xs', 's', 'm', 'l', 'xl'];
+export const BUTTON_SIZES = [
+  'extra-small',
+  'small',
+  'medium',
+  'large',
+  'extra-large',
+];
 export const BUTTON_SHAPES = ['round', 'square'];
 export const BUTTON_TYPES = ['button', 'submit', 'reset'];
 export const COMPONENT_COLORS = ['primary', 'secondary', 'tertiary', 'error'];

@@ -1,39 +1,118 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MAT_COLOR_ROLES } from '../src/material-color';
 
 const styles = readFileSync(resolve('src/styles/index.css'), 'utf8');
 const tailwindStyles = readFileSync(resolve('src/styles/tailwind.css'), 'utf8');
-
-const easingTokens = [
-  '--mat-motion-easing-standard: cubic-bezier(.2, 0, 0, 1);',
-  '--mat-motion-easing-decelerate: cubic-bezier(0, 0, 0, 1);',
-  '--mat-motion-easing-accelerate: cubic-bezier(.3, 0, 1, 1);',
+const typeStyles = [
+  'display-large', 'display-medium', 'display-small',
+  'headline-large', 'headline-medium', 'headline-small',
+  'title-large', 'title-medium', 'title-small',
+  'body-large', 'body-medium', 'body-small',
+  'label-large', 'label-medium', 'label-small',
 ];
-const shadowTokens = [
-  '--mat-shadow-level-1: rgb(0 0 0 / 20%) 0 2px 1px -1px, rgb(0 0 0 / 14%) 0 1px 1px 0, rgb(0 0 0 / 12%) 0 1px 3px 0;',
-  '--mat-shadow-level-2: rgb(0 0 0 / 20%) 0 3px 3px -2px, rgb(0 0 0 / 14%) 0 3px 4px 0, rgb(0 0 0 / 12%) 0 1px 8px 0;',
-  '--mat-shadow-level-3: rgb(0 0 0 / 20%) 0 3px 5px -1px, rgb(0 0 0 / 14%) 0 6px 10px 0, rgb(0 0 0 / 12%) 0 1px 18px 0;',
-  '--mat-shadow-level-4: rgb(0 0 0 / 20%) 0 5px 5px -3px, rgb(0 0 0 / 14%) 0 8px 10px 1px, rgb(0 0 0 / 12%) 0 3px 14px 2px;',
-  '--mat-shadow-level-5: rgb(0 0 0 / 20%) 0 7px 8px -4px, rgb(0 0 0 / 14%) 0 12px 17px 2px, rgb(0 0 0 / 12%) 0 5px 22px 4px;',
+const typeAxes = ['font', 'weight', 'size', 'line-height', 'tracking'];
+const shapeValues = {
+  none: '0',
+  'extra-small': '4px',
+  small: '8px',
+  medium: '12px',
+  large: '16px',
+  'large-increased': '20px',
+  'extra-large': '28px',
+  'extra-large-increased': '32px',
+  'extra-extra-large': '48px',
+  full: '9999px',
+};
+const elevationValues = [
+  'none',
+  '0 1px 2px rgb(0 0 0 / 30%), 0 1px 3px 1px rgb(0 0 0 / 15%)',
+  '0 1px 2px rgb(0 0 0 / 30%), 0 2px 6px 2px rgb(0 0 0 / 15%)',
+  '0 4px 8px 3px rgb(0 0 0 / 15%), 0 1px 3px rgb(0 0 0 / 30%)',
+  '0 6px 10px 4px rgb(0 0 0 / 15%), 0 2px 3px rgb(0 0 0 / 30%)',
+  '0 8px 12px 6px rgb(0 0 0 / 15%), 0 4px 4px rgb(0 0 0 / 30%)',
 ];
-const tailwindMappings = [
-  '--shadow-mat-1: var(--mat-shadow-level-1);',
-  '--shadow-mat-2: var(--mat-shadow-level-2);',
-  '--shadow-mat-3: var(--mat-shadow-level-3);',
-  '--shadow-mat-4: var(--mat-shadow-level-4);',
-  '--shadow-mat-5: var(--mat-shadow-level-5);',
-  '--ease-mat-standard: var(--mat-motion-easing-standard);',
-  '--ease-mat-decelerate: var(--mat-motion-easing-decelerate);',
-  '--ease-mat-accelerate: var(--mat-motion-easing-accelerate);',
+const durationGroups = {
+  short: [50, 100, 150, 200],
+  medium: [250, 300, 350, 400],
+  long: [450, 500, 550, 600],
+  'extra-long': [700, 800, 900, 1000],
+};
+const easingNames = [
+  'emphasized',
+  'emphasized-decelerate',
+  'emphasized-accelerate',
+  'standard',
+  'standard-decelerate',
+  'standard-accelerate',
 ];
 
 describe('公共样式令牌', () => {
-  it.each([...easingTokens, ...shadowTokens])('声明精确值：%s', (token) => {
-    expect(styles).toContain(token);
+  it('声明并映射全部 53 个动态颜色角色', () => {
+    const roles = Object.values(MAT_COLOR_ROLES);
+
+    expect(roles).toHaveLength(53);
+    roles.forEach((role) => {
+      expect(styles).toContain(`--mat-sys-color-${role}:`);
+      expect(tailwindStyles).toContain(`--color-mat-${role}: var(--mat-sys-color-${role});`);
+    });
   });
 
-  it.each(tailwindMappings)('映射 Tailwind 令牌：%s', (mapping) => {
-    expect(tailwindStyles).toContain(mapping);
+  it('声明 reference 字体和 15 套基线、强调字体样式', () => {
+    expect(styles).toContain('--mat-ref-typeface-brand: system-ui, sans-serif;');
+    expect(styles).toContain('--mat-ref-typeface-plain: system-ui, sans-serif;');
+
+    typeStyles.forEach((style) => {
+      typeAxes.forEach((axis) => {
+        expect(styles).toContain(`--mat-sys-typescale-${style}-${axis}:`);
+        expect(styles).toContain(`--mat-sys-typescale-emphasized-${style}-${axis}:`);
+      });
+
+      expect(tailwindStyles).toContain(`--text-mat-${style}:`);
+      expect(tailwindStyles).toContain(`--text-mat-emphasized-${style}:`);
+    });
+
+    expect(styles).toContain('--mat-sys-typescale-display-large-size: 3.5625rem;');
+    expect(styles).toContain('--mat-sys-typescale-emphasized-title-medium-weight: var(--mat-ref-typeface-weight-bold);');
+  });
+
+  it('声明完整形状、海拔、动效和状态值', () => {
+    Object.entries(shapeValues).forEach(([name, value]) => {
+      expect(styles).toContain(`--mat-sys-shape-corner-${name}: ${value};`);
+      expect(tailwindStyles).toContain(`--radius-mat-${name}: var(--mat-sys-shape-corner-${name});`);
+    });
+
+    elevationValues.forEach((value, level) => {
+      expect(styles).toContain(`--mat-sys-elevation-level${level}: ${value};`);
+      expect(tailwindStyles).toContain(`--shadow-mat-level${level}: var(--mat-sys-elevation-level${level});`);
+    });
+
+    Object.entries(durationGroups).forEach(([group, values]) => {
+      values.forEach((value, index) => {
+        expect(styles).toContain(`--mat-sys-motion-duration-${group}${index + 1}: ${value}ms;`);
+      });
+    });
+
+    easingNames.forEach((name) => {
+      expect(styles).toContain(`--mat-sys-motion-easing-${name}:`);
+      expect(tailwindStyles).toContain(`--ease-mat-${name}: var(--mat-sys-motion-easing-${name});`);
+    });
+
+    expect(styles).toContain('--mat-sys-state-hover-state-layer-opacity: .08;');
+    expect(styles).toContain('--mat-sys-state-focus-state-layer-opacity: .12;');
+    expect(styles).toContain('--mat-sys-state-pressed-state-layer-opacity: .12;');
+    expect(styles).toContain('--mat-sys-state-dragged-state-layer-opacity: .16;');
+    expect(styles).toContain('--mat-sys-interaction-target-min-size: 48px;');
+  });
+
+  it('公开完整名称的组件令牌并移除旧命名空间', () => {
+    expect(styles).toContain('--mat-btn-extra-large-container-height: 136px;');
+    expect(styles).toContain('--mat-btn-filled-tonal-container-color: var(--mat-sys-color-secondary-container);');
+    expect(styles).toContain('--mat-icon-btn-extra-small-narrow-leading-space: 4px;');
+    expect(styles).toContain('--mat-btn-group-standard-small-between-space: 12px;');
+    expect(styles).toContain('--mat-split-btn-large-trailing-button-icon-size: 38px;');
+    expect(styles).not.toMatch(/--mat-(?:color|shape|type|shadow|motion|state)-/);
+    expect(styles).not.toMatch(/--mat-(?:btn|icon-btn|btn-group|split-btn)-(?:xs|s|m|l|xl)-/);
   });
 });

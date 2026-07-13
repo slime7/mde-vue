@@ -77,10 +77,10 @@ const schemeVariants = [
       当前实际模式：<strong>{{ theme.resolvedMode.value }}</strong>
     </p>
 
-    <section class="tailwind-demo bg-mat-primary text-mat-on-primary rounded-mat-lg shadow-mat-2">
+    <section class="tailwind-demo bg-mat-primary text-mat-on-primary rounded-mat-large shadow-mat-level2">
       这个区域使用 Tailwind 的 <code>bg-mat-primary</code>、
-      <code>text-mat-on-primary</code>、<code>rounded-mat-lg</code> 和
-      <code>shadow-mat-2</code> 语义类。
+      <code>text-mat-on-primary</code>、<code>rounded-mat-large</code> 和
+      <code>shadow-mat-level2</code> 语义类。
     </section>
   </div>
 </template>
@@ -91,10 +91,10 @@ const schemeVariants = [
   gap: 24px;
   margin-block: 24px;
   padding: 24px;
-  color: var(--mat-color-on-surface);
-  background: var(--mat-color-surface);
-  border: 1px solid var(--mat-color-outline-variant);
-  border-radius: var(--mat-shape-corner-large);
+  color: var(--mat-sys-color-on-surface);
+  background: var(--mat-sys-color-surface);
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .control-panel {
@@ -102,19 +102,19 @@ const schemeVariants = [
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 16px;
   padding: 20px;
-  border: 1px solid var(--mat-color-outline-variant);
-  border-radius: var(--mat-shape-corner-large);
-  background: var(--mat-color-surface-container);
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+  background: var(--mat-sys-color-surface-container);
 }
 
 .control-field {
   display: grid;
   gap: 8px;
-  color: var(--mat-color-on-surface);
-  font-family: var(--mat-type-label-large-font);
-  font-size: var(--mat-type-label-large-size);
-  font-weight: var(--mat-type-label-large-weight);
-  line-height: var(--mat-type-label-large-line-height);
+  color: var(--mat-sys-color-on-surface);
+  font-family: var(--mat-sys-typescale-label-large-font);
+  font-size: var(--mat-sys-typescale-label-large-size);
+  font-weight: var(--mat-sys-typescale-label-large-weight);
+  line-height: var(--mat-sys-typescale-label-large-line-height);
 }
 
 .control-field select,
@@ -125,19 +125,19 @@ const schemeVariants = [
 .control-field select {
   min-block-size: 40px;
   padding-inline: 12px;
-  border: 1px solid var(--mat-color-outline);
-  border-radius: var(--mat-shape-corner-small);
-  color: var(--mat-color-on-surface);
-  background: var(--mat-color-surface);
+  border: 1px solid var(--mat-sys-color-outline);
+  border-radius: var(--mat-sys-shape-corner-small);
+  color: var(--mat-sys-color-on-surface);
+  background: var(--mat-sys-color-surface);
 }
 
 .control-field input[type='color'] {
   inline-size: 100%;
   min-block-size: 40px;
   padding: 3px;
-  border: 1px solid var(--mat-color-outline);
-  border-radius: var(--mat-shape-corner-small);
-  background: var(--mat-color-surface);
+  border: 1px solid var(--mat-sys-color-outline);
+  border-radius: var(--mat-sys-shape-corner-small);
+  background: var(--mat-sys-color-surface);
 }
 
 .contrast-field {
@@ -146,7 +146,7 @@ const schemeVariants = [
 
 .resolved-mode {
   margin: 0;
-  color: var(--mat-color-on-surface-variant);
+  color: var(--mat-sys-color-on-surface-variant);
 }
 
 .tailwind-demo {

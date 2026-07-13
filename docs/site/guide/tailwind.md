@@ -24,10 +24,26 @@ import 'mdu-ui/styles.css';
 
 ```vue
 <template>
-  <section class="bg-mat-primary text-mat-on-primary rounded-mat-lg shadow-mat-2">
+  <section class="bg-mat-primary text-mat-on-primary rounded-mat-large shadow-mat-level2 ease-mat-emphasized">
     内容会跟随 mdu-ui 主题变化
   </section>
 </template>
 ```
 
-颜色类来自 `--color-mat-*`，圆角类来自 `--radius-mat-*`，字号类来自 `--text-mat-*`，阴影类来自 `--shadow-mat-*`，缓动类来自 `--ease-mat-*`。阴影支持 `shadow-mat-1` 至 `shadow-mat-5`；缓动支持 `ease-mat-standard`、`ease-mat-decelerate`、`ease-mat-accelerate` 和 `ease-mat-emphasized`。新增的 `title-medium`、`headline-small` 和 `headline-large` 排版也已映射；组件专用尺寸令牌保持 CSS 定制入口，不生成大量专用工具类。适配层不会覆盖 `primary`、`surface` 等常见无前缀变量。
+颜色类来自 `--color-mat-*`，覆盖主题的全部 53 个颜色角色。字体族使用 `font-mat-brand` 和 `font-mat-plain`；15 套基线排版使用 `text-mat-<style>`，15 套强调排版使用 `text-mat-emphasized-<style>`，同时映射字号、行高、字距和字重。
+
+圆角类完整映射系统形状，例如 `rounded-mat-extra-small`、`rounded-mat-large-increased`、`rounded-mat-extra-extra-large` 和 `rounded-mat-full`。海拔使用 `shadow-mat-level0` 至 `shadow-mat-level5`。六个缓动类为：
+
+- `ease-mat-emphasized`、`ease-mat-emphasized-decelerate`、`ease-mat-emphasized-accelerate`；
+- `ease-mat-standard`、`ease-mat-standard-decelerate`、`ease-mat-standard-accelerate`。
+
+Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量命名空间，因此直接通过 CSS 属性使用，例如：
+
+```css
+.entering {
+  transition-duration: var(--mat-sys-motion-duration-medium4);
+  transition-timing-function: var(--mat-sys-motion-easing-emphasized-decelerate);
+}
+```
+
+组件专用令牌保持 CSS 定制入口，不生成按组件、尺寸和变体展开的工具类。适配层不会覆盖 `primary`、`surface` 等常见无前缀变量。

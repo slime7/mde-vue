@@ -148,18 +148,18 @@ function handleClick(event) {
 <style scoped>
 .mat-button-base {
   --mat-button-container-color: transparent;
-  --mat-button-content-color: var(--mat-color-on-surface);
+  --mat-button-content-color: var(--mat-sys-color-on-surface);
   --mat-button-state-color: var(--mat-button-content-color);
   --mat-button-border-color: transparent;
   --mat-button-border-width: 0;
-  --mat-button-shadow: none;
+  --mat-button-container-elevation: none;
   --mat-button-container-height: 40px;
   --mat-button-container-width: auto;
 
   /* 将 full 限制为实际半径，避免与较小内角混用时触发 CSS 圆角整体缩放。 */
-  --mat-button-full-radius: min(calc(var(--mat-button-container-height) / 2), var(--mat-shape-corner-full));
+  --mat-button-full-radius: min(calc(var(--mat-button-container-height) / 2), var(--mat-sys-shape-corner-full));
   --mat-button-radius: var(--mat-button-full-radius);
-  --mat-button-pressed-radius: var(--mat-shape-corner-small);
+  --mat-button-pressed-radius: var(--mat-sys-shape-corner-small);
   --mat-button-start-start-radius: var(--mat-button-radius);
   --mat-button-start-end-radius: var(--mat-button-radius);
   --mat-button-end-start-radius: var(--mat-button-radius);
@@ -168,7 +168,7 @@ function handleClick(event) {
   --mat-button-pressed-start-end-radius: var(--mat-button-pressed-radius);
   --mat-button-pressed-end-start-radius: var(--mat-button-pressed-radius);
   --mat-button-pressed-end-end-radius: var(--mat-button-pressed-radius);
-  --mat-button-target-size: var(--mat-interactive-target-min-size, 48px);
+  --mat-button-target-size: var(--mat-sys-interaction-target-min-size, 48px);
   position: relative;
   isolation: isolate;
   display: inline-flex;
@@ -192,10 +192,10 @@ function handleClick(event) {
   border-start-end-radius: var(--mat-button-start-end-radius);
   border-end-start-radius: var(--mat-button-end-start-radius);
   border-end-end-radius: var(--mat-button-end-end-radius);
-  box-shadow: var(--mat-button-shadow);
-  transition-duration: var(--mat-motion-duration-short);
+  box-shadow: var(--mat-button-container-elevation);
+  transition-duration: var(--mat-sys-motion-duration-short3);
   transition-property: color, background-color, border-color, border-start-start-radius, border-start-end-radius, border-end-start-radius, border-end-end-radius, box-shadow, inline-size;
-  transition-timing-function: var(--mat-motion-easing-standard);
+  transition-timing-function: var(--mat-sys-motion-easing-standard);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
@@ -209,7 +209,7 @@ function handleClick(event) {
   pointer-events: none;
   background: var(--mat-button-state-color);
   opacity: 0;
-  transition: opacity var(--mat-motion-duration-short) var(--mat-motion-easing-standard);
+  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
 }
 
 .mat-button-base::after {
@@ -225,17 +225,17 @@ function handleClick(event) {
 
 @media (hover: hover) {
   .mat-button-base:not(:disabled):hover::before {
-    opacity: var(--mat-state-hover-opacity);
+    opacity: var(--mat-sys-state-hover-state-layer-opacity);
   }
 }
 
 .mat-button-base:not(:disabled):focus-visible {
-  outline: var(--mat-focus-ring-width, 3px) solid var(--mat-color-secondary);
-  outline-offset: var(--mat-focus-ring-offset, 2px);
+  outline: var(--mat-sys-interaction-focus-ring-width, 3px) solid var(--mat-sys-color-secondary);
+  outline-offset: var(--mat-sys-interaction-focus-ring-offset, 2px);
 }
 
 .mat-button-base:not(:disabled):focus-visible::before {
-  opacity: var(--mat-state-focus-opacity);
+  opacity: var(--mat-sys-state-focus-state-layer-opacity);
 }
 
 .mat-button-base:not(:disabled):is(:active, .mat-button-base--pressed) {
@@ -246,14 +246,14 @@ function handleClick(event) {
 }
 
 .mat-button-base:not(:disabled):is(:active, .mat-button-base--pressed)::before {
-  opacity: var(--mat-state-pressed-opacity);
+  opacity: var(--mat-sys-state-pressed-state-layer-opacity);
 }
 
 .mat-button-base:disabled {
-  --mat-button-container-color: color-mix(in srgb, var(--mat-color-on-surface) calc(var(--mat-state-disabled-container-opacity) * 100%), transparent);
-  --mat-button-content-color: color-mix(in srgb, var(--mat-color-on-surface) calc(var(--mat-state-disabled-content-opacity) * 100%), transparent);
+  --mat-button-container-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-container-opacity) * 100%), transparent);
+  --mat-button-content-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-content-opacity) * 100%), transparent);
   --mat-button-border-color: transparent;
-  --mat-button-shadow: none;
+  --mat-button-container-elevation: none;
   cursor: not-allowed;
 }
 

@@ -110,7 +110,7 @@ function applySelection({ nextSelected }) {
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `variant` | `'standard' \| 'connected'` | `'standard'` | 组布局形态 |
-| `size` | `'xs' \| 's' \| 'm' \| 'l' \| 'xl'` | `'s'` | 未显式设置尺寸的子按钮继承该值 |
+| `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'small'` | 未显式设置尺寸的子按钮继承该值 |
 | `shape` | `'round' \| 'square'` | `'round'` | 子按钮形状和 connected 外角形状 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 级联给未显式设置 `color` 的子按钮 |
 | `disabled` | `boolean` | `false` | 为 true 时禁用全部子按钮；子按钮仍可单独禁用 |
@@ -146,11 +146,11 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 | 自定义属性 | 默认值 |
 | --- | --- |
 | `--mat-btn-group-standard-pressed-width-factor` | `1.15` |
-| `--mat-btn-group-connected-gap` | `2px` |
-| `--mat-btn-group-<size>-standard-gap` | `18 / 12 / 8 / 8 / 8px` |
-| `--mat-btn-group-<size>-connected-inner-radius` | `4 / 8 / 8 / 16 / 20px` |
-| `--mat-btn-group-<size>-connected-pressed-inner-radius` | `4 / 4 / 4 / 12 / 16px` |
-| `--mat-btn-group-<size>-connected-square-outer-radius` | `4 / 8 / 8 / 16 / 20px` |
+| `--mat-btn-group-connected-between-space` | `2px` |
+| `--mat-btn-group-standard-<size>-between-space` | `18 / 12 / 8 / 8 / 8px` |
+| `--mat-btn-group-connected-<size>-inner-corner-size` | `4 / 8 / 8 / 16 / 20px` |
+| `--mat-btn-group-connected-<size>-pressed-inner-corner-size` | `4 / 4 / 4 / 12 / 16px` |
+| `--mat-btn-group-connected-<size>-square-outer-corner-size` | `4 / 8 / 8 / 16 / 20px` |
 
 connected 选中项与 round 外角使用当前按钮容器高度的一半作为 full 圆角，避免宽按钮变成椭圆。组件没有公开方法。
 
