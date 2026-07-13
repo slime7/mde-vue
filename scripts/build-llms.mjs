@@ -15,6 +15,10 @@ const projectRoot = path.resolve(scriptDirectory, '..');
 const docsDirectory = path.join(projectRoot, 'docs', 'site');
 const llmsPath = path.join(projectRoot, 'llms.txt');
 const llmsFullPath = path.join(projectRoot, 'llms-full.txt');
+const llmsArtifacts = new Map([
+  ['/llms.txt', llmsPath],
+  ['/llms-full.txt', llmsFullPath],
+]);
 
 /**
  * @typedef {object} DocumentEntry
@@ -227,6 +231,42 @@ export async function copyLlmsArtifacts(outDirectory) {
       await cp(document.absolutePath, destination);
     }),
   ]);
+}
+
+/**
+ * 创建在 Vite 开发服务器中提供 AI 文档生成产物的插件。
+ *
+ * @returns {import('vite').Plugin} Vite 插件。
+ */
+export function createLlmsArtifactsPlugin() {
+  return {
+    name: 'mdu-ui:llms-artifacts',
+    configureServer(server) {
+      server.middlewares.use(async (request, response, next) => {
+        const requestUrl = new URL(request.url || '/', 'http://localhost');
+        const artifactPath = llmsArtifacts.get(requestUrl.pathname);
+
+        if (!artifactPath || !['GET', 'HEAD'].includes(request.method)) {
+          next();
+
+          return;
+        }
+
+        try {
+          const content = await readFile(artifactPath);
+
+          response.writeHead(200, {
+            'Cache-Control': 'no-cache',
+            'Content-Length': content.byteLength,
+            'Content-Type': 'text/plain; charset=utf-8',
+          });
+          response.end(request.method === 'HEAD' ? undefined : content);
+        } catch (error) {
+          next(error);
+        }
+      });
+    },
+  };
 }
 
 const isDirectExecution = process.argv[1]

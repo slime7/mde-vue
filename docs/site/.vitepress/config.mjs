@@ -1,7 +1,11 @@
 import { defineConfig } from 'vitepress';
 import tailwindcss from '@tailwindcss/vite';
-// eslint-disable-next-line import-x/extensions
-import { copyLlmsArtifacts } from '../../../scripts/build-llms.mjs';
+/* eslint-disable import-x/extensions */
+import {
+  copyLlmsArtifacts,
+  createLlmsArtifactsPlugin,
+} from '../../../scripts/build-llms.mjs';
+/* eslint-enable import-x/extensions */
 
 export default defineConfig({
   title: 'mdu-ui',
@@ -58,7 +62,7 @@ export default defineConfig({
     darkModeSwitchLabel: '外观',
   },
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), createLlmsArtifactsPlugin()],
     ssr: {
       noExternal: ['@material/material-color-utilities'],
     },
