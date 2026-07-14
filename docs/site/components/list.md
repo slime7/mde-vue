@@ -15,15 +15,15 @@ order: 100
 
 ### 外观变体
 
-`standard` 让项目连续排列，`segmented` 在项目之间保留 2px 间隔。两种外观只改变项目的组合方式，不改变内容结构或交互语义。
+`standard` 让项目连续排列，`segmented` 在项目之间保留 2px 间隔。下面使用单操作模式，可将指针移到项目上，对比两种外观在 hover 状态下的圆角和状态层底色变化。
 
 ```vue
-<mat-list variant="standard" aria-label="standard 列表">
+<mat-list variant="standard" interaction="single-action" aria-label="standard 列表">
   <mat-list-item>最近更新</mat-list-item>
   <mat-list-item>名称</mat-list-item>
 </mat-list>
 
-<mat-list variant="segmented" aria-label="segmented 列表">
+<mat-list variant="segmented" interaction="single-action" aria-label="segmented 列表">
   <mat-list-item>可离线使用</mat-list-item>
   <mat-list-item>与我共享</mat-list-item>
 </mat-list>
@@ -34,14 +34,14 @@ order: 100
     <div class="list-variant-grid">
       <section class="list-variant-example">
         <strong>standard</strong>
-        <mat-list variant="standard" aria-label="standard 列表">
+        <mat-list variant="standard" interaction="single-action" aria-label="standard 列表">
           <mat-list-item>最近更新</mat-list-item>
           <mat-list-item>名称</mat-list-item>
         </mat-list>
       </section>
       <section class="list-variant-example">
         <strong>segmented</strong>
-        <mat-list variant="segmented" aria-label="segmented 列表">
+        <mat-list variant="segmented" interaction="single-action" aria-label="segmented 列表">
           <mat-list-item>可离线使用</mat-list-item>
           <mat-list-item>与我共享</mat-list-item>
         </mat-list>
@@ -232,8 +232,6 @@ const multipleSelected = ref(['offline']);
     </mat-list>
   </DocsPreview>
 </ClientOnly>
-
-上例的单选和多选都显式使用 `variant="standard"`，因此项目连续排列。需要项目间保留 2px 间隔时，改用 `variant="segmented"`。
 
 选择模式由 `MatList` 统一管理候选值。组件不会修改 `selected`，调用方应在 `select` 事件中回写 `nextSelected`。选择标记是非交互视觉内容，不能在 `role="option"` 内放置可聚焦的 Checkbox、Radio、Switch、按钮或链接。
 
