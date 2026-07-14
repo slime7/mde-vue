@@ -11,7 +11,7 @@ order: 10
 
 当前公共能力包括：
 
-- `<mat-btn>`、`<mat-icon-btn>`、`<mat-btn-group>` 和 `<mat-split-btn>` 按钮体系；
+- 以 `<mat-btn>`、`<mat-card>` 为代表的 Material 组件；
 - Material 2025 动态颜色主题和组件级 `color` 配色；
 - 可选的 Tailwind CSS v4 语义工具类；
 - 面向开发者与 AI 的同源 Markdown 文档。
@@ -27,13 +27,11 @@ import { createApp } from 'vue';
 import {
   createMatUi,
   MatBtn,
-  MatBtnGroup,
-  MatIconBtn,
-  MatSplitBtn,
+  MatCard,
 } from 'mdu-ui';
 import 'mdu-ui/styles.css';
 ```
 
-完整入口提供 `createMatUi()`、`useMatTheme()` 和四个组件具名导出。各组件也有独立入口：`mdu-ui/components/mat-btn`、`mdu-ui/components/mat-icon-btn`、`mdu-ui/components/mat-btn-group` 和 `mdu-ui/components/mat-split-btn`。
+完整入口提供 `createMatUi()`、`useMatTheme()` 和组件具名导出。组件也可从各自的独立入口按需导入，例如 `mdu-ui/components/mat-card`。
 
 需要动态主题或多个组件时，推荐安装 `createMatUi()` 并使用全局 `mat-*` 标签。仅使用少量组件且接受默认主题时，推荐从单组件入口按需导入。两种方式的完整代码见[安装](/guide/installation)，插件的组件设置见 [`createMatUi`](/guide/create-mat-ui)。

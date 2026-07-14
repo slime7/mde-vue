@@ -15,3 +15,4 @@
 - [Button group 按钮组](docs/site/components/button-group.md): mat-btn-group 的标准与连接布局、级联属性、受控单选多选和事件。
 - [限制](docs/site/guide/limitations.md): 记录 mdu-ui 当前明确不支持的运行环境、分发方式和按钮能力。
 - [Split button 拆分按钮](docs/site/components/split-button.md): mat-split-btn 的双按钮组合、受控展开、事件、菜单 ARIA 和 slots。
+- [Card 卡片](docs/site/components/card.md): mat-card 的 Material 3 外观、局部配色、内容、操作区与链接式交互。

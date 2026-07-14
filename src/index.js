@@ -2,4 +2,8 @@ export { default as MatBtn } from './components/mat-btn/MatBtn.vue';
 export { default as MatBtnGroup } from './components/mat-btn-group/MatBtnGroup.vue';
 export { default as MatIconBtn } from './components/mat-icon-btn/MatIconBtn.vue';
 export { default as MatSplitBtn } from './components/mat-split-btn/MatSplitBtn.vue';
+export { default as MatCard } from './components/mat-card/MatCard.vue';
+export { default as MatCardActionArea } from './components/mat-card/MatCardActionArea.vue';
+export { default as MatCardContent } from './components/mat-card/MatCardContent.vue';
+export { default as MatCardActions } from './components/mat-card/MatCardActions.vue';
 export { createMatUi, useMatTheme } from './plugin';

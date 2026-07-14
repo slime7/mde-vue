@@ -17,10 +17,7 @@
   },
   "exports": {
     ".": "./src/index.js",
-    "./components/mat-btn": "./src/components/mat-btn/index.js",
-    "./components/mat-btn-group": "./src/components/mat-btn-group/index.js",
-    "./components/mat-icon-btn": "./src/components/mat-icon-btn/index.js",
-    "./components/mat-split-btn": "./src/components/mat-split-btn/index.js",
+    "./components/*": "./src/components/*/index.js",
     "./styles.css": "./src/styles/index.css",
     "./tailwind.css": "./src/styles/tailwind.css"
   },

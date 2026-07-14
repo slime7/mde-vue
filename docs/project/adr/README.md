@@ -13,6 +13,7 @@
 | [0005](0005-component-seed-color-inheritance.md) | active | 采用组件级种子配色与父子继承 |
 | [0006](0006-material-3-layered-tokens-and-full-property-names.md) | superseded | 采用 Material 3 分层令牌与完整组件属性名 |
 | [0007](0007-internal-component-tokens-without-public-customization.md) | active | 保留内部组件令牌但不提供公共定制入口 |
+| [0008](0008-surface-action.md) | active | 采用共享 Surface 与 Action 内部基础层 |
 
 ## 何时创建 ADR
 

@@ -1,14 +1,12 @@
 <script setup>
-import {
-  onBeforeUnmount, ref, watch,
-} from 'vue';
+import MatActionBase from './MatActionBase.vue';
 
 defineOptions({
   name: 'MatButtonBase',
   inheritAttrs: false,
 });
 
-const props = defineProps({
+defineProps({
   disabled: {
     type: Boolean,
     default: false,
@@ -27,129 +25,22 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits({
-  click(payload) {
-    return payload instanceof MouseEvent;
-  },
-});
-const isPressed = ref(false);
-// 快速激活至少覆盖一次 short 过渡，避免按下形态在首帧前返回。
-const minimumPressDuration = 150;
-let pressStartedAt = 0;
-let releaseTimer;
-
-function clearReleaseTimer() {
-  if (releaseTimer === undefined) {
-    return;
-  }
-
-  globalThis.clearTimeout(releaseTimer);
-  releaseTimer = undefined;
-}
-
-function resetPress() {
-  clearReleaseTimer();
-  isPressed.value = false;
-}
-
-function startPress() {
-  if (props.disabled) {
-    return;
-  }
-
-  clearReleaseTimer();
-  pressStartedAt = Date.now();
-  isPressed.value = true;
-}
-
-function finishPress() {
-  if (!isPressed.value) {
-    return;
-  }
-
-  clearReleaseTimer();
-  const remainingDuration = Math.max(
-    0,
-    minimumPressDuration - (Date.now() - pressStartedAt),
-  );
-
-  releaseTimer = globalThis.setTimeout(() => {
-    isPressed.value = false;
-    releaseTimer = undefined;
-  }, remainingDuration);
-}
-
-/**
- * @param {PointerEvent} event
- */
-function handlePointerDown(event) {
-  if (event.button !== 0) {
-    return;
-  }
-
-  startPress();
-  event.currentTarget.setPointerCapture?.(event.pointerId);
-}
-
-/**
- * @param {KeyboardEvent} event
- */
-function handleKeyDown(event) {
-  if (event.repeat || ![' ', 'Enter'].includes(event.key)) {
-    return;
-  }
-
-  startPress();
-}
-
-/**
- * @param {KeyboardEvent} event
- */
-function handleKeyUp(event) {
-  if (![' ', 'Enter'].includes(event.key)) {
-    return;
-  }
-
-  finishPress();
-}
-
-watch(() => props.disabled, (disabled) => {
-  if (disabled) {
-    resetPress();
-  }
-});
-onBeforeUnmount(resetPress);
-
-/**
- * @param {MouseEvent} event
- */
-function handleClick(event) {
-  emit('click', event);
-}
+const emit = defineEmits(['click']);
 </script>
 
 <template>
-  <button
+  <MatActionBase
     v-bind="$attrs"
     class="mat-button-base"
-    :class="{
-      'mat-button-base--pressed': isPressed,
-      'mat-button-base--use-cursor': useCursor,
-    }"
+    :class="{ 'mat-button-base--use-cursor': useCursor }"
     :aria-pressed="ariaPressed"
     :disabled="disabled"
     :type="type"
-    @blur="finishPress"
-    @click="handleClick"
-    @keydown="handleKeyDown"
-    @keyup="handleKeyUp"
-    @lostpointercapture="finishPress"
-    @pointercancel="finishPress"
-    @pointerdown="handlePointerDown"
-    @pointerup="finishPress"
+    pressed-class="mat-button-base--pressed"
+    @click="emit('click', $event)"
   >
     <slot />
-  </button>
+  </MatActionBase>
 </template>
 
 <style scoped>

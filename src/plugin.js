@@ -3,6 +3,10 @@ import MatBtn from './components/mat-btn/MatBtn.vue';
 import MatBtnGroup from './components/mat-btn-group/MatBtnGroup.vue';
 import MatIconBtn from './components/mat-icon-btn/MatIconBtn.vue';
 import MatSplitBtn from './components/mat-split-btn/MatSplitBtn.vue';
+import MatCard from './components/mat-card/MatCard.vue';
+import MatCardActionArea from './components/mat-card/MatCardActionArea.vue';
+import MatCardContent from './components/mat-card/MatCardContent.vue';
+import MatCardActions from './components/mat-card/MatCardActions.vue';
 import MAT_UI_KEY from './mat-ui-context';
 import createThemeController from './theme';
 import MAT_THEME_KEY from './theme-context';
@@ -60,6 +64,14 @@ export function createMatUi(options = {}) {
       app.component('mat-icon-btn', MatIconBtn);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-split-btn', MatSplitBtn);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-card', MatCard);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-card-action-area', MatCardActionArea);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-card-content', MatCardContent);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-card-actions', MatCardActions);
       app.provide(MAT_UI_KEY, componentOptions);
       app.provide(MAT_THEME_KEY, theme);
     },

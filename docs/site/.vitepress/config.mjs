@@ -71,6 +71,7 @@ export default defineConfig({
               { text: 'Split button 拆分按钮', link: '/components/split-button' },
             ],
           },
+          { text: 'Card 卡片', link: '/components/card' },
         ],
       },
       {

@@ -17,6 +17,8 @@
 
 ## Mat UI 插件
 
+`MatSurfaceBase` 与 `MatActionBase` 是内部结构复用层，不属于公共 API。前者只负责表面根节点，后者负责原生 button/link 交互语义；公共组件不得要求使用者依赖其 class、文件路径或内部 CSS 变量。
+
 `createMatUi({ theme, useCursor, useMaterialSymbols })` 创建一次 Vue 插件安装单元。插件负责全局注册 `mat-*` 组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
 
 `useCursor` 和 `useMaterialSymbols` 都必须是 boolean，默认均为 `false`。前者控制可用交互组件是否从 `cursor: default` 改为 `cursor: pointer`；后者让组件定义的图标容器使用 `--mat-ref-typeface-icon` 和连字规则，但不负责下载字体资源。未安装插件的按需组件使用相同默认值。
@@ -97,7 +99,7 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 
 `docs/site/` 中人工编辑的 Markdown 使用页面是组件说明的权威来源。`llms.txt` 只提供适合 AI 发现内容的索引，`llms-full.txt` 是这些页面的合并文本；两者均为可重复生成的派生文件，不接受手工修补。
 
-每个公共组件页面必须在介绍中写明 `mat-*` 模板标签与 PascalCase 组件导出名，并提供默认示例和 API。全局注册与按需导入写法统一由安装文档维护。API 按实际实现记录属性、方法、事件、slots 与状态；不存在的能力不保留空章节，不得为尚未实现的接口编写示例，也不得记录组件内部 class 或 CSS 自定义属性。
+每个公共组件页面必须包含组件简介、示例、API、事件和 Slots。简介写明全部相关 `mat-*` 模板标签与 PascalCase 组件导出名；示例同时提供代码和实际渲染预览，并在保持清晰、有效的前提下尽可能覆盖公共属性、重要状态、事件和 Slots。事件和 Slots 即使不存在公共能力也需明确说明，方法和状态等其他小节按实际能力添加。全局注册与按需导入写法统一由安装文档维护，不得为尚未实现的接口编写示例，也不得记录组件内部 class 或 CSS 自定义属性。
 
 ## 关键不变量
 
