@@ -1174,17 +1174,48 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
 
 ### 外观变体
 
-`standard` 让项目连续排列，`segmented` 在项目之间保留 2px 间隔。下面使用单操作模式，可将指针移到项目上，对比两种外观在 hover 状态下的圆角和状态层底色变化。
+`standard` 让项目连续排列，`segmented` 在项目之间保留 2px 间隔。下面使用受控单选模式：将指针移到项目上可观察 hover 状态，点击项目可观察选中底色与圆角变化。
 
 ```vue
-<mat-list variant="standard" interaction="single-action" aria-label="standard 列表">
-  <mat-list-item>最近更新</mat-list-item>
-  <mat-list-item>名称</mat-list-item>
+<script setup>
+import { ref } from 'vue';
+
+const standardSelected = ref(null);
+const segmentedSelected = ref(null);
+</script>
+
+<mat-list
+  variant="standard"
+  interaction="single-select"
+  :selected="standardSelected"
+  aria-label="standard 列表"
+  @select="standardSelected = $event.nextSelected"
+>
+  <mat-list-item value="recent">
+    最近更新
+    <template #trailing>{{ standardSelected === 'recent' ? '已选择' : '' }}</template>
+  </mat-list-item>
+  <mat-list-item value="name">
+    名称
+    <template #trailing>{{ standardSelected === 'name' ? '已选择' : '' }}</template>
+  </mat-list-item>
 </mat-list>
 
-<mat-list variant="segmented" interaction="single-action" aria-label="segmented 列表">
-  <mat-list-item>可离线使用</mat-list-item>
-  <mat-list-item>与我共享</mat-list-item>
+<mat-list
+  variant="segmented"
+  interaction="single-select"
+  :selected="segmentedSelected"
+  aria-label="segmented 列表"
+  @select="segmentedSelected = $event.nextSelected"
+>
+  <mat-list-item value="offline">
+    可离线使用
+    <template #trailing>{{ segmentedSelected === 'offline' ? '已选择' : '' }}</template>
+  </mat-list-item>
+  <mat-list-item value="shared">
+    与我共享
+    <template #trailing>{{ segmentedSelected === 'shared' ? '已选择' : '' }}</template>
+  </mat-list-item>
 </mat-list>
 ```
 
@@ -1193,16 +1224,40 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
     <div class="list-variant-grid">
       <section class="list-variant-example">
         <strong>standard</strong>
-        <mat-list variant="standard" interaction="single-action" aria-label="standard 列表">
-          <mat-list-item>最近更新</mat-list-item>
-          <mat-list-item>名称</mat-list-item>
+        <mat-list
+          variant="standard"
+          interaction="single-select"
+          :selected="listStandardVariantSelected"
+          aria-label="standard 列表"
+          @select="listStandardVariantSelected = $event.nextSelected"
+        >
+          <mat-list-item value="recent">
+            最近更新
+            <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listStandardVariantSelected === 'recent' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+          </mat-list-item>
+          <mat-list-item value="name">
+            名称
+            <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listStandardVariantSelected === 'name' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+          </mat-list-item>
         </mat-list>
       </section>
       <section class="list-variant-example">
         <strong>segmented</strong>
-        <mat-list variant="segmented" interaction="single-action" aria-label="segmented 列表">
-          <mat-list-item>可离线使用</mat-list-item>
-          <mat-list-item>与我共享</mat-list-item>
+        <mat-list
+          variant="segmented"
+          interaction="single-select"
+          :selected="listSegmentedVariantSelected"
+          aria-label="segmented 列表"
+          @select="listSegmentedVariantSelected = $event.nextSelected"
+        >
+          <mat-list-item value="offline">
+            可离线使用
+            <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listSegmentedVariantSelected === 'offline' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+          </mat-list-item>
+          <mat-list-item value="shared">
+            与我共享
+            <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listSegmentedVariantSelected === 'shared' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+          </mat-list-item>
         </mat-list>
       </section>
     </div>
@@ -1461,6 +1516,8 @@ import { ref } from 'vue';
 
 const listSingleSelected = ref('recent');
 const listMultipleSelected = ref(['offline']);
+const listStandardVariantSelected = ref(null);
+const listSegmentedVariantSelected = ref(null);
 </script>
 
 <style scoped>
