@@ -391,4 +391,14 @@ watch(
 .mat-list--segmented {
   gap: var(--mat-list-segmented-gap);
 }
+
+.mat-list :deep(.mat-list-item:first-child) {
+  --mat-list-item-start-start-shape: var(--mat-list-container-shape);
+  --mat-list-item-start-end-shape: var(--mat-list-container-shape);
+}
+
+.mat-list :deep(.mat-list-item:last-child) {
+  --mat-list-item-end-start-shape: var(--mat-list-container-shape);
+  --mat-list-item-end-end-shape: var(--mat-list-container-shape);
+}
 </style>

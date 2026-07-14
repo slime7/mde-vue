@@ -244,6 +244,7 @@ single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌�
 
 ## 状态与键盘
 
+- 静止时首项顶部和末项底部使用 16px 外角，相邻项目之间保持 4px 内角；仅有一项时四角均为 16px。
 - List 使用 roving tabindex，Tab 进入当前停靠项，再次 Tab 离开 List。
 - `ArrowDown`、`ArrowRight` 移至下一项，`ArrowUp`、`ArrowLeft` 移至上一项；到边界后循环并跳过禁用项。
 - 选择模式优先以第一个选中项作为初始停靠点；方向键只移动焦点，不自动改变选择。

@@ -292,6 +292,10 @@ watch(
 
 <style scoped>
 .mat-list-item {
+  --mat-list-item-start-start-shape: var(--mat-list-item-container-shape);
+  --mat-list-item-start-end-shape: var(--mat-list-item-container-shape);
+  --mat-list-item-end-start-shape: var(--mat-list-item-container-shape);
+  --mat-list-item-end-end-shape: var(--mat-list-item-container-shape);
   display: block;
   box-sizing: border-box;
   min-inline-size: 0;
@@ -311,7 +315,10 @@ watch(
   text-decoration: none;
   background: var(--mat-list-item-container-color);
   border: 0;
-  border-radius: var(--mat-list-item-container-shape);
+  border-start-start-radius: var(--mat-list-item-start-start-shape);
+  border-start-end-radius: var(--mat-list-item-start-end-shape);
+  border-end-start-radius: var(--mat-list-item-end-start-shape);
+  border-end-end-radius: var(--mat-list-item-end-end-shape);
   transition: border-radius var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
 }
 
