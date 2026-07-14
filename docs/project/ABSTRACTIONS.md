@@ -17,7 +17,7 @@
 
 ## Mat UI 插件
 
-`MatSurfaceBase`、`MatActionBase` 与 `MatSelectionControlBase` 是内部结构复用层，不属于公共 API。前两者负责表面根节点和原生 button/link 交互语义，后者负责选择控件的原生 input、标签、状态层和属性路由；公共组件不得要求使用者依赖其 class、文件路径或内部 CSS 变量。
+`MatSurfaceBase`、`MatActionBase`、`MatSelectionControlBase`、`MatTextInputBase`、`MatItemContentBase` 与 `useRovingFocus` 是内部结构复用层，不属于公共 API。它们分别负责表面根节点、原生 button/link 交互、选择控件结构、文本输入视觉、无语义项目内容排列和 tabindex 管理；公共组件不得要求使用者依赖其 class、文件路径或内部 CSS 变量。
 
 `createMatUi({ theme, useCursor, useMaterialSymbols })` 创建一次 Vue 插件安装单元。插件负责全局注册 `mat-*` 组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
 
@@ -110,6 +110,12 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 
 `<mat-divider>` 独立使用时保持原生 `hr`；进入普通 List 后使用合法的 `li` separator，进入选择 List 后成为不参与 listbox 语义的展示元素。Divider 不进入 Tab 顺序，也不提供强调色。
 
+## 文本输入与菜单
+
+`<mat-text-field>` 和 `<mat-textarea>` 共享 outlined/filled 外观、局部配色、辅助或错误文字、字符计数与属性路由，但分别保留 input 和 textarea 原生语义。错误角色始终覆盖 color 强调；Textarea 只提供固定初始行数与纵向调整，不自动增高。
+
+`<mat-menu>` 使用受控根 open、触发器 id anchor、Popover top layer 和 CSS Anchor Positioning。嵌套 Menu 只允许直接位于 MatMenuItem 的 submenu Slot，自动继承父级 color 与 variant，并以父项目为 anchor。MenuItem 是单一操作；叶子 click 关闭整条链，子菜单项只展开。Menu 与 List 可以共享无语义排列和 roving focus，但不得共享 listbox 选择模型、角色或左右键含义。
+
 ## 文档权威关系
 
 `docs/site/` 中人工编辑的 Markdown 使用页面是组件说明的权威来源。`llms.txt` 只提供适合 AI 发现内容的索引，`llms-full.txt` 是这些页面的合并文本；两者均为可重复生成的派生文件，不接受手工修补。
@@ -121,8 +127,8 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 1. 组件不得依赖 Tailwind 才能正确显示；基础 CSS 始终可独立使用。
 2. Tailwind 工具类与组件样式读取同一组运行时语义值。
 3. 主题模式与解析模式分开表达，`system` 不作为最终颜色方案。
-4. 公共源码入口不能依赖仓库内部 demo 或文档实现。
-5. 新组件只有在公共导出、样式、测试、demo 和文档同时存在时才算完整。
+4. 公共源码入口不能依赖仓库内部文档预览或文档实现。
+5. 新组件只有在公共导出、样式、测试、文档实时预览和使用文档同时存在时才算完整。
 6. 不为 SSR、旧浏览器、本地化或 npm 发布加入隐含兼容分支。
 7. 组件文档中的导入路径、模板标签、API 和状态必须能由当前公共实现与测试验证。
 8. 先写测试，再改代码；新增行为或缺陷修复必须先由能按预期失败的测试界定，再修改实现使其通过。

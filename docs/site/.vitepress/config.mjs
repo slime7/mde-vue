@@ -43,7 +43,6 @@ export default defineConfig({
       { text: '指南', link: '/guide/overview' },
       { text: '组件', link: '/components/button' },
       { text: 'AI', link: '/ai/llms' },
-      { text: 'Demo', link: '/demo/' },
     ],
     sidebar: [
       {
@@ -80,6 +79,8 @@ export default defineConfig({
               { text: 'Switch 开关', link: '/components/switch' },
             ],
           },
+          { text: 'Text field 文本输入', link: '/components/text-field' },
+          { text: 'Menu 菜单', link: '/components/menu' },
           { text: 'Card 卡片', link: '/components/card' },
           { text: 'List 列表', link: '/components/list' },
           { text: 'Divider 分隔线', link: '/components/divider' },
@@ -89,12 +90,6 @@ export default defineConfig({
         text: 'AI',
         items: [
           { text: 'LLMs.txt 使用说明', link: '/ai/llms' },
-        ],
-      },
-      {
-        text: '示例',
-        items: [
-          { text: '交互 demo', link: '/demo/' },
         ],
       },
     ],

@@ -21,12 +21,12 @@ order: 65
   </DocsPreview>
 </ClientOnly>
 
-### 受控展开与外部菜单
+### 受控展开与 MatMenu
 
 <<< @/examples/button/SplitButtonMenuExample.vue
 
 <ClientOnly>
-  <DocsPreview label="Split button 受控展开与外部菜单预览" stacked>
+<DocsPreview label="Split button 受控展开与 MatMenu 预览" stacked>
     <SplitButtonMenuExample />
   </DocsPreview>
 </ClientOnly>
@@ -67,7 +67,7 @@ slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展
 
 ### 状态与键盘
 
-两侧按钮都是独立 Tab 停靠点，使用原生 Space/Enter 激活。菜单打开后应由应用把焦点移动到菜单，处理方向键、Escape、外部点击，并在关闭后把焦点返回 trailing 按钮。
+两侧按钮都是独立 Tab 停靠点，使用原生 Space/Enter 激活。与 `MatMenu` 组合时，应用用同一个状态连接 `expanded` 与 `open`；MatMenu 负责菜单内部方向键、Escape、外部关闭和触发器焦点恢复。
 
 组件没有公开方法。
 

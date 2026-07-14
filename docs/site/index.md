@@ -12,8 +12,8 @@ hero:
       text: 开始使用
       link: /guide/overview
     - theme: alt
-      text: 查看 demo
-      link: /demo/
+      text: 浏览组件
+      link: /components/button
 
 features:
   - title: Vue 3 优先

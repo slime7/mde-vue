@@ -45,6 +45,8 @@ llms: false
 - Icon button：`docs/site/components/icon-button.md`
 - Button group：`docs/site/components/button-group.md`
 - Split button：`docs/site/components/split-button.md`
+- Text field 与 Textarea：`docs/site/components/text-field.md`
+- Menu 与 Menu item：`docs/site/components/menu.md`
 - 支持范围：`docs/site/guide/limitations.md`
 
 只提供单个页面时，可以使用以下提示：

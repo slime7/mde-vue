@@ -20,3 +20,10 @@
   max-block-size: min(70dvh, 48rem);
   overflow-y: auto;
 }
+
+@media (width < 640px) {
+  .vp-doc table {
+    display: block;
+    overflow-x: auto;
+  }
+}

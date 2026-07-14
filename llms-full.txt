@@ -113,9 +113,13 @@ import { MatCheckbox } from 'mdu-ui/components/mat-checkbox';
 import { MatRadio } from 'mdu-ui/components/mat-radio';
 import { MatRadioGroup } from 'mdu-ui/components/mat-radio-group';
 import { MatSwitch } from 'mdu-ui/components/mat-switch';
+import { MatTextField } from 'mdu-ui/components/mat-text-field';
+import { MatTextarea } from 'mdu-ui/components/mat-textarea';
+import { MatMenu } from 'mdu-ui/components/mat-menu';
+import { MatMenuItem } from 'mdu-ui/components/mat-menu-item';
 ```
 
-复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatCheckbox>` 或 `<MatRadioGroup>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
+复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatTextField>` 或 `<MatMenu>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
 
 ## 如何选择
 
@@ -966,7 +970,7 @@ import ButtonGroupSelectionExample from '../examples/button/ButtonGroupSelection
   </DocsPreview>
 </ClientOnly>
 
-### 受控展开与外部菜单
+### 受控展开与 MatMenu
 
 ```vue
 <script setup>
@@ -989,16 +993,21 @@ const expanded = ref(false);
         <mat-btn>新建</mat-btn>
       </template>
       <template #trailing>
-        <mat-icon-btn label="更多新建方式">
+        <mat-icon-btn id="split-create-trigger" label="更多新建方式">
           arrow_drop_down
         </mat-icon-btn>
       </template>
     </mat-split-btn>
 
-    <div v-if="expanded" id="create-menu" class="example-menu" role="menu">
-      新建文档<br>
-      新建文件夹
-    </div>
+    <mat-menu
+      id="create-menu"
+      v-model:open="expanded"
+      anchor="split-create-trigger"
+      color="#6750a4"
+    >
+      <mat-menu-item>新建文档</mat-menu-item>
+      <mat-menu-item>新建文件夹</mat-menu-item>
+    </mat-menu>
   </div>
 </template>
 
@@ -1010,18 +1019,10 @@ const expanded = ref(false);
   align-items: flex-start;
 }
 
-.example-menu {
-  min-inline-size: 180px;
-  padding: 12px;
-  color: var(--mat-sys-color-on-surface);
-  background: var(--mat-sys-color-surface-container);
-  border-radius: var(--mat-sys-shape-corner-medium);
-  box-shadow: var(--mat-sys-elevation-level2);
-}
 </style>
 ```
 <ClientOnly>
-  <DocsPreview label="Split button 受控展开与外部菜单预览" stacked>
+<DocsPreview label="Split button 受控展开与 MatMenu 预览" stacked>
     <SplitButtonMenuExample />
   </DocsPreview>
 </ClientOnly>
@@ -1062,7 +1063,7 @@ slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展
 
 ### 状态与键盘
 
-两侧按钮都是独立 Tab 停靠点，使用原生 Space/Enter 激活。菜单打开后应由应用把焦点移动到菜单，处理方向键、Escape、外部点击，并在关闭后把焦点返回 trailing 按钮。
+两侧按钮都是独立 Tab 停靠点，使用原生 Space/Enter 激活。与 `MatMenu` 组合时，应用用同一个状态连接 `expanded` 与 `open`；MatMenu 负责菜单内部方向键、Escape、外部关闭和触发器焦点恢复。
 
 组件没有公开方法。
 
@@ -1685,6 +1686,365 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
 import CardActionExample from '../examples/card/CardActionExample.vue';
 import CardDefaultExample from '../examples/card/CardDefaultExample.vue';
 import CardVariantsExample from '../examples/card/CardVariantsExample.vue';
+</script>
+
+# Text field 文本输入
+
+## 组件简介
+
+`<mat-text-field>` 的组件导出名是 `MatTextField`，渲染单行原生 `input`；`<mat-textarea>` 的组件导出名是 `MatTextarea`，渲染固定初始高度的原生 `textarea`。两者共享 outlined、filled 外观、浮动标签、辅助或错误文字、字符计数、前后缀和局部 `color` 配色，但不执行表单校验或自动调整 textarea 高度。
+
+## 示例
+
+下面同时展示 outlined、filled 错误状态和可纵向调整尺寸的 textarea。字符计数只在设置 `maxLength` 后显示。
+
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const email = ref('reader');
+const note = ref('请在工作日联系。');
+const touched = ref(false);
+</script>
+
+<template>
+  <div class="text-input-example">
+    <mat-text-field
+      v-model="email"
+      label="邮箱"
+      supporting-text="用于接收通知"
+      prefix-text="mailto:"
+      suffix-text="@example.com"
+      :max-length="24"
+      color="#6750a4"
+      autocomplete="email"
+      required
+      @blur="touched = true"
+    >
+      <template #leading>
+        mail
+      </template>
+      <template #trailing>
+        alternate_email
+      </template>
+    </mat-text-field>
+
+    <mat-text-field
+      model-value="123"
+      label="验证码"
+      variant="filled"
+      error
+      error-text="请输入六位验证码"
+      :max-length="6"
+    />
+
+    <mat-textarea
+      v-model="note"
+      label="备注"
+      supporting-text="可以纵向调整输入区域"
+      :rows="4"
+      :max-length="120"
+      color="tertiary"
+    />
+
+    <p class="example-status" aria-live="polite">
+      {{ touched ? '邮箱输入框已失去焦点' : '尚未离开邮箱输入框' }}
+    </p>
+  </div>
+</template>
+
+<style scoped>
+.text-input-example {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 24px;
+  inline-size: 100%;
+}
+
+.example-status {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--mat-sys-color-on-surface-variant);
+  font-family: var(--mat-sys-typescale-body-small-font);
+  font-size: var(--mat-sys-typescale-body-small-size);
+  line-height: var(--mat-sys-typescale-body-small-line-height);
+}
+</style>
+```
+<ClientOnly>
+  <DocsPreview label="Text field 与 Textarea 状态预览" stacked>
+    <TextFieldExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 共同属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `modelValue` | `string` | `''` | 受控输入值，可使用 `v-model` |
+| `label` | `string` | 未设置 | 始终可见的输入标签；输入有值、获得焦点或设置 placeholder 时浮动 |
+| `variant` | `'outlined' \| 'filled'` | `'outlined'` | 完整轮廓或带底部活动指示器的填充外观 |
+| `color` | 语义色或 `#RRGGBB` | 未设置 | 焦点描边、活动指示器和光标的强调色 |
+| `supportingText` | `string` | 未设置 | 控件下方的简短辅助说明 |
+| `errorText` | `string` | 未设置 | `error` 为 true 时替换 supportingText 的错误说明 |
+| `prefixText` | `string` | 未设置 | 输入值之前的固定短文本 |
+| `suffixText` | `string` | 未设置 | 输入值之后的固定短文本 |
+| `maxLength` | 非负整数 | 未设置 | 原生最大长度；设置后自动显示“当前长度 / 最大长度” |
+| `disabled` | `boolean` | `false` | 使用原生禁用语义并降低内容强调 |
+| `readonly` | `boolean` | `false` | 使用原生只读语义，保留选择和焦点 |
+| `required` | `boolean` | `false` | 设置原生 required，并在标签后显示星号 |
+| `error` | `boolean` | `false` | 启用错误外观、`aria-invalid` 和错误说明关联；错误色优先于 color |
+
+除 `class`、`style`、`inert` 和 `aria-hidden` 外，未消费的原生属性传给实际的 input 或 textarea。前述四个属性传给最外层 label。可以直接设置 `id`、`name`、`autocomplete`、`placeholder` 和原生 ARIA 属性。
+
+### MatTextField 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `type` | `string` | `'text'` | 原生 input type，例如 `email`、`password` 或 `search` |
+
+### MatTextarea 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `rows` | 正整数 | `4` | textarea 的初始可见行数；内容不会令组件自动增高 |
+
+组件没有公开方法。
+
+## 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `string` | 原生 input 事件产生新值，用于 `v-model` |
+| `input`、`change`、`focus`、`blur` | 对应原生 Event 或 FocusEvent | 实际 input 或 textarea 触发同名事件；监听器直接传给原生控件 |
+
+组件不会另外包装原生事件，也不会发出自定义校验事件。错误状态由调用方通过 `error` 和 `errorText` 控制。
+
+## Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| `leading` | 输入内容前的单个图标或简短展示内容，不应放置可交互控件 |
+| `trailing` | 输入内容后的单个图标或简短展示内容，不应放置可交互控件 |
+
+组件没有默认 Slot；输入文字只由 `modelValue` 提供。前后缀短文本使用 `prefixText` 与 `suffixText`，避免和图标 Slot 混淆。
+
+## 状态与无障碍
+
+- label 包裹原生控件，始终保留可访问标签；required 星号只作视觉提示。
+- error 状态把 `aria-invalid` 设为 true，并通过 `aria-describedby` 关联错误文字和字符计数区域。
+- 调用方已有的 `aria-describedby` 会与组件说明区域合并。
+- filled 和 outlined 在同一区域内应保持一致，不应在同一个表单内交替使用。
+- textarea 默认允许纵向调整尺寸；单行输入不会因长内容扩高。
+- 减少动态效果偏好下关闭标签、描边与活动指示器的非必要过渡。
+
+## 参考来源
+
+结构、尺寸、状态和使用原则依据 Material 3 [Text fields overview](https://m3.material.io/components/text-fields/overview)、[Text fields specs](https://m3.material.io/components/text-fields/specs) 与 [Text fields guidelines](https://m3.material.io/components/text-fields/guidelines)。
+
+<script setup>
+import TextFieldExample from '../examples/text-field/TextFieldExample.vue';
+</script>
+
+# Menu 菜单
+
+## 组件简介
+
+`<mat-menu>` 的组件导出名是 `MatMenu`，使用原生 Popover API 在 top layer 显示临时操作集合；`<mat-menu-item>` 的组件导出名是 `MatMenuItem`，渲染原生按钮和 `menuitem` 语义。Menu 支持 standard、vibrant 配色、多级子菜单、局部 `color`、循环键盘焦点和基于 CSS Anchor Positioning 的视口边缘换边。
+
+## 示例
+
+第一个菜单展示 leading、supporting、trailing、disabled 和 Divider；第二个菜单展示 vibrant 配色以及可递归展开的三级菜单。触发器的点击和 ARIA 由调用方控制。
+
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const standardOpen = ref(false);
+const vibrantOpen = ref(false);
+const result = ref('尚未选择操作');
+</script>
+
+<template>
+  <div class="menu-example">
+    <mat-btn
+      id="standard-menu-trigger"
+      variant="outlined"
+      aria-haspopup="menu"
+      :aria-expanded="standardOpen"
+      aria-controls="standard-menu"
+      @click="standardOpen = !standardOpen"
+    >
+      文件操作
+    </mat-btn>
+
+    <mat-menu
+      id="standard-menu"
+      v-model:open="standardOpen"
+      anchor="standard-menu-trigger"
+      color="secondary"
+    >
+      <mat-menu-item @click="result = '已新建文件'">
+        <template #leading>
+          note_add
+        </template>
+        新建文件
+        <template #supporting>
+          创建空白文档
+        </template>
+        <template #trailing>
+          Ctrl+N
+        </template>
+      </mat-menu-item>
+      <mat-menu-item disabled>
+        保存
+      </mat-menu-item>
+      <mat-divider />
+      <mat-menu-item @click="result = '已关闭文件'">
+        关闭
+      </mat-menu-item>
+    </mat-menu>
+
+    <mat-btn
+      id="vibrant-menu-trigger"
+      aria-haspopup="menu"
+      :aria-expanded="vibrantOpen"
+      aria-controls="vibrant-menu"
+      @click="vibrantOpen = !vibrantOpen"
+    >
+      导出
+    </mat-btn>
+
+    <mat-menu
+      id="vibrant-menu"
+      v-model:open="vibrantOpen"
+      anchor="vibrant-menu-trigger"
+      variant="vibrant"
+      color="#6750a4"
+    >
+      <mat-menu-item>
+        图片
+        <template #supporting>
+          选择图片格式
+        </template>
+        <template #submenu>
+          <mat-menu>
+            <mat-menu-item @click="result = '已选择 PNG'">
+              PNG
+            </mat-menu-item>
+            <mat-menu-item @click="result = '已选择 SVG'">
+              SVG
+            </mat-menu-item>
+            <mat-menu-item>
+              更多格式
+              <template #submenu>
+                <mat-menu>
+                  <mat-menu-item @click="result = '已选择 WebP'">
+                    WebP
+                  </mat-menu-item>
+                  <mat-menu-item @click="result = '已选择 AVIF'">
+                    AVIF
+                  </mat-menu-item>
+                </mat-menu>
+              </template>
+            </mat-menu-item>
+          </mat-menu>
+        </template>
+      </mat-menu-item>
+      <mat-menu-item @click="result = '已选择 PDF'">
+        PDF
+      </mat-menu-item>
+    </mat-menu>
+
+    <p class="menu-example__result" aria-live="polite">
+      {{ result }}
+    </p>
+  </div>
+</template>
+
+<style scoped>
+.menu-example {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  inline-size: 100%;
+}
+
+.menu-example__result {
+  flex-basis: 100%;
+  margin: 4px 0 0;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+<ClientOnly>
+  <DocsPreview label="标准与多级 vibrant 菜单预览" stacked>
+    <MenuNestedExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### MatMenu 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `open` | `boolean` | `false` | 根菜单的受控展开状态，使用 `v-model:open` |
+| `anchor` | `string` | 未设置 | 根菜单触发元素的 id；打开时必须能在当前 document 中找到 |
+| `variant` | `'standard' \| 'vibrant'` | `'standard'` | 中性表面或更高强调的 tertiary 表面 |
+| `color` | 语义色或 `#RRGGBB` | 未设置 | 活动项目与 vibrant 表面的局部配色 |
+
+根菜单使用 `anchor`；嵌套在 `submenu` Slot 中的 MatMenu 自动以父 MatMenuItem 为 anchor，并继承父菜单的 color 与 variant。嵌套菜单显式设置的 color 或 variant 优先。未消费的属性传给 `role="menu"` 的 Popover 根元素。
+
+### MatMenuItem 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `disabled` | `boolean` | `false` | 禁用原生按钮并从菜单方向键顺序中跳过 |
+
+组件没有 items 数据接口、选择模型、autocomplete、多选能力或公开方法。
+
+## 事件
+
+| 组件 | 事件 | 载荷 | 触发条件 |
+| --- | --- | --- | --- |
+| `MatMenu` | `update:open` | `boolean` | 根菜单请求关闭，或浏览器通过 Escape、轻触外部等方式关闭 Popover |
+| `MatMenuItem` | `click` | 原生 `MouseEvent` | 启用的叶子项目被激活；随后关闭整条菜单链 |
+
+包含 submenu 的项目把点击、Enter、Space 和朝子菜单方向的方向键用于展开，不发出叶子 click。关闭后，根菜单把焦点还给 anchor 触发器。
+
+## Slots
+
+| 组件 | 名称 | 内容约束 |
+| --- | --- | --- |
+| `MatMenu` | 默认 | 直接放置 MatMenuItem 和 MatDivider |
+| `MatMenuItem` | 默认 | 必需的简短操作标签 |
+| `MatMenuItem` | `leading` | 20px 图标或简短展示内容 |
+| `MatMenuItem` | `supporting` | 标签下方的一行简短辅助文字 |
+| `MatMenuItem` | `trailing` | 快捷键或短文本；省略时子菜单项自动显示方向图标 |
+| `MatMenuItem` | `submenu` | 直接放置一个 MatMenu；可以继续递归嵌套 |
+
+MenuItem 的 Slots 只构成一个操作，不应嵌套按钮、开关或其他独立交互控件。MatDivider 在 Menu 中自动使用 `role="separator"` 和菜单间距。
+
+## 键盘、定位与关闭
+
+- 打开菜单后焦点进入第一个启用项目。ArrowDown 和 ArrowUp 循环移动并跳过 disabled；Home 和 End 移到首末启用项。
+- 在从左到右的页面中，ArrowRight 展开子菜单，ArrowLeft 关闭当前子菜单；从右到左时方向相反。
+- Escape 关闭当前层；Tab 关闭整条菜单链并按浏览器正常焦点顺序继续。
+- 根菜单优先显示在触发器下方；子菜单优先显示在父项目行内末端。空间不足时自动向上、向左或向右换边，并保留视口间距。
+- 菜单宽度限制为 112–280px，内容过高时在菜单内部滚动。项目视觉高度为 44px，指针目标区至少为 48px。
+- 使用方负责触发器的点击、`aria-haspopup="menu"`、`aria-expanded` 和 `aria-controls`；Menu 不会接管外部按钮的展开逻辑。
+- 减少动态效果偏好下关闭展开和形状变化的非必要过渡。
+
+## 参考来源
+
+外观、测量、子菜单和换边规则依据 Material 3 [Menus overview](https://m3.material.io/components/menus/overview)、[Menus specs](https://m3.material.io/components/menus/specs) 与 [Menus guidelines](https://m3.material.io/components/menus/guidelines)。键盘语义参考 [WAI-ARIA Menu and Menubar Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)。
+
+<script setup>
+import MenuNestedExample from '../examples/menu/MenuNestedExample.vue';
 </script>
 
 # List 列表
