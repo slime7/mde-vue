@@ -1,6 +1,6 @@
 ---
 title: Split button 拆分按钮
-description: mat-split-btn 的双按钮组合、受控展开、事件、菜单 ARIA、slots 和 CSS 令牌。
+description: mat-split-btn 的双按钮组合、受控展开、事件、菜单 ARIA 和 slots。
 llms: true
 order: 65
 ---
@@ -130,21 +130,7 @@ slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展
 
 两侧按钮都是独立 Tab 停靠点，使用原生 Space/Enter 激活。菜单打开后应由应用把焦点移动到菜单，处理方向键、Escape、外部点击，并在关闭后把焦点返回 trailing 按钮。
 
-### CSS 定制入口
-
-| 自定义属性 | `extra-small / small / medium / large / extra-large` 默认值 |
-| --- | --- |
-| `--mat-split-btn-<size>-inner-corner-size` | `4 / 4 / 4 / 8 / 12px` |
-| `--mat-split-btn-<size>-interactive-inner-corner-size` | `8 / 12 / 12 / 20 / 20px` |
-| `--mat-split-btn-<size>-leading-button-leading-space` | `12 / 16 / 24 / 48 / 64px` |
-| `--mat-split-btn-<size>-leading-button-trailing-space` | `10 / 12 / 24 / 48 / 64px` |
-| `--mat-split-btn-<size>-trailing-button-icon-size` | `22 / 22 / 26 / 38 / 50px` |
-| `--mat-split-btn-<size>-trailing-button-leading-space` | `13 / 13 / 15 / 29 / 43px` |
-| `--mat-split-btn-<size>-trailing-button-trailing-space` | `13 / 13 / 15 / 29 / 43px` |
-
-两侧间距 `--mat-split-btn-between-space` 默认 `2px`；`--mat-split-btn-menu-between-space` 默认 `4px`，供应用放置外部菜单时使用。组件根据 trailing 图标和两侧间距计算宽度，图标偏移属于内部实现，不是定制入口。
-
-变体颜色使用 `--mat-split-btn-<variant>-container-color`、`label-text-color`、`icon-color`、`state-layer-color`。elevated、filled 和 filled-tonal 另有 `container-elevation` 与 `hover-container-elevation`；outlined 使用 `--mat-split-btn-outlined-outline-color`。组件没有公开方法。
+组件没有公开方法。
 
 ## 参考来源
 

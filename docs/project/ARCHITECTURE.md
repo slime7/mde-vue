@@ -54,9 +54,9 @@
 
 ### 样式层
 
-基础样式使用三层令牌：`--mat-ref-*` 保存文字与图标字体等参考值，`--mat-sys-*` 保存颜色、排版、形状、海拔、动效、状态和交互值，`--mat-<component>-*` 保存组件实际读取的尺寸、颜色、形状、排版、描边与间距入口。组件内部临时变量不属于公共定制 API。Material Symbols 选项只应用字体族与连字规则，字体资源仍由使用方加载。
+基础样式公开两层令牌：`--mat-ref-*` 保存文字与图标字体等参考值，`--mat-sys-*` 保存颜色、排版、形状、海拔、动效、状态和交互值。组件可以使用 `--mat-<component>-*`、`--mat-button-*` 等 CSS 自定义属性组织尺寸、变体和状态样式，但这些变量属于内部实现，不提供公共定制或兼容承诺。Material Symbols 选项只应用字体族与连字规则，字体资源仍由使用方加载。
 
-Tailwind 适配文件通过 `@theme inline` 将上述值映射到带 `mat` 前缀的 Tailwind 主题变量，不重新定义主题来源。
+Tailwind 适配文件通过 `@theme inline` 将公开的 reference 和 system 值映射到带 `mat` 前缀的 Tailwind 主题变量，不重新定义主题来源。
 
 ### demo、文档与 AI 文档
 
@@ -122,4 +122,5 @@ Vite 构建检查从公开 `exports` 导入 `.vue` 和 CSS，验证普通 Vue/Vi
 - [0003 — 从 Markdown 生成 AI 使用文档](adr/0003-generate-ai-docs-from-markdown.md)
 - [0004 — 采用 Material 2025 动态配色规格](adr/0004-material-2025-dynamic-color.md)
 - [0005 — 采用组件级种子配色与父子继承](adr/0005-component-seed-color-inheritance.md)
-- [0006 — 采用 Material 3 分层令牌与完整组件属性名](adr/0006-material-3-layered-tokens-and-full-property-names.md)
+- [0006 — 采用 Material 3 分层令牌与完整组件属性名（已由 0007 替代）](adr/0006-material-3-layered-tokens-and-full-property-names.md)
+- [0007 — 保留内部组件令牌但不提供公共定制入口](adr/0007-internal-component-tokens-without-public-customization.md)

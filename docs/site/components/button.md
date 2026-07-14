@@ -1,6 +1,6 @@
 ---
 title: Button 按钮
-description: mat-btn 的尺寸、形态、配色、受控切换、图标、事件、slots 和 CSS 令牌。
+description: mat-btn 的尺寸、形态、配色、受控切换、图标、事件和 slots。
 llms: true
 order: 50
 ---
@@ -143,31 +143,6 @@ const selected = ref(false);
 | disabled | 容器使用 `on-surface` 10%，内容使用 38%，取消阴影和点击 |
 
 `extra-small` 与 `small` 的视觉高度分别是 32px 和 40px，但交互目标至少为 48px。减少动态效果偏好下保留最终状态并取消过渡。
-
-### CSS 定制入口
-
-尺寸令牌按 `extra-small`、`small`、`medium`、`large`、`extra-large` 分组：
-
-| 模式 | 自定义属性 | 默认值序列 |
-| --- | --- | --- |
-| 容器高度 | `--mat-btn-<size>-container-height` | `32px / 40px / 56px / 96px / 136px` |
-| 起始间距 | `--mat-btn-<size>-leading-space` | `12px / 16px / 24px / 48px / 64px` |
-| 结束间距 | `--mat-btn-<size>-trailing-space` | `12px / 16px / 24px / 48px / 64px` |
-| 图标大小 | `--mat-btn-<size>-icon-size` | `20px / 20px / 24px / 32px / 40px` |
-| 图文间距 | `--mat-btn-<size>-icon-label-space` | `8px / 8px / 8px / 12px / 16px` |
-| outline 宽度 | `--mat-btn-<size>-outlined-outline-width` | `1px / 1px / 1px / 2px / 3px` |
-| square 形状 | `--mat-btn-<size>-square-container-shape` | `12px / 12px / 16px / 28px / 28px` |
-| pressed 形状 | `--mat-btn-<size>-pressed-container-shape` | `8px / 8px / 12px / 16px / 16px` |
-| 标签排版 | `--mat-btn-<size>-label-text-{font,weight,size,line-height,tracking}` | 对应尺寸的 emphasized typescale |
-
-变体颜色和海拔使用以下入口：
-
-- `--mat-btn-<variant>-container-color`、`label-text-color`、`icon-color`、`state-layer-color`；其中 `<variant>` 为 `elevated`、`filled`、`filled-tonal`、`outlined` 或 `text`。
-- `--mat-btn-<variant>-container-elevation`；elevated、filled、filled-tonal 另有 `--mat-btn-<variant>-hover-container-elevation`。
-- outlined 使用 `--mat-btn-outlined-outline-color`。
-- toggle 或 selected 的独立入口使用 `--mat-btn-filled-unselected-*`、`--mat-btn-filled-tonal-selected-*`、`--mat-btn-outlined-selected-*`。
-
-共享入口包括 `--mat-sys-interaction-target-min-size`、`--mat-sys-interaction-focus-ring-width`、`--mat-sys-interaction-focus-ring-offset`、`--mat-sys-state-hover-state-layer-opacity`、`--mat-sys-state-focus-state-layer-opacity`、`--mat-sys-state-pressed-state-layer-opacity`、`--mat-sys-state-disabled-container-opacity` 和 `--mat-sys-state-disabled-content-opacity`。prop 生成的配色优先于内部颜色变量；不要依赖未记录的内部 class 或 `--mat-button-*` 变量。
 
 组件没有公开方法，也不提供 loading、链接模式、涟漪、密度参数或完整表单方法代理。
 

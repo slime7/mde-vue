@@ -11,7 +11,8 @@
 | [0003](0003-generate-ai-docs-from-markdown.md) | active | 从 Markdown 生成 AI 使用文档 |
 | [0004](0004-material-2025-dynamic-color.md) | active | 采用 Material 2025 动态配色规格 |
 | [0005](0005-component-seed-color-inheritance.md) | active | 采用组件级种子配色与父子继承 |
-| [0006](0006-material-3-layered-tokens-and-full-property-names.md) | active | 采用 Material 3 分层令牌与完整组件属性名 |
+| [0006](0006-material-3-layered-tokens-and-full-property-names.md) | superseded | 采用 Material 3 分层令牌与完整组件属性名 |
+| [0007](0007-internal-component-tokens-without-public-customization.md) | active | 保留内部组件令牌但不提供公共定制入口 |
 
 ## 何时创建 ADR
 

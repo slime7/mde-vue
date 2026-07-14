@@ -109,14 +109,4 @@ describe('公共样式令牌', () => {
     expect(styles).toContain('--mat-sys-state-dragged-state-layer-opacity: .16;');
     expect(styles).toContain('--mat-sys-interaction-target-min-size: 48px;');
   });
-
-  it('公开完整名称的组件令牌并移除旧命名空间', () => {
-    expect(styles).toContain('--mat-btn-extra-large-container-height: 136px;');
-    expect(styles).toContain('--mat-btn-filled-tonal-container-color: var(--mat-sys-color-secondary-container);');
-    expect(styles).toContain('--mat-icon-btn-extra-small-narrow-leading-space: 4px;');
-    expect(styles).toContain('--mat-btn-group-standard-small-between-space: 12px;');
-    expect(styles).toContain('--mat-split-btn-large-trailing-button-icon-size: 38px;');
-    expect(styles).not.toMatch(/--mat-(?:color|shape|type|shadow|motion|state)-/);
-    expect(styles).not.toMatch(/--mat-(?:btn|icon-btn|btn-group|split-btn)-(?:xs|s|m|l|xl)-/);
-  });
 });

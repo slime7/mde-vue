@@ -10,8 +10,8 @@
 - [主题](docs/site/guide/theme.md): 配置 Material 3 种子色、亮暗模式、配色变体和对比度，并在运行时切换主题。
 - [组件配色](docs/site/guide/component-color.md): 按 Material 3 颜色角色为组件选择容器、内容、表面、边界和状态配色。
 - [Tailwind CSS](docs/site/guide/tailwind.md): 将 mdu-ui 运行时令牌接入 Tailwind CSS v4，并使用带 mat 前缀的语义工具类。
-- [Button 按钮](docs/site/components/button.md): mat-btn 的尺寸、形态、配色、受控切换、图标、事件、slots 和 CSS 令牌。
-- [Icon button 图标按钮](docs/site/components/icon-button.md): mat-icon-btn 的尺寸、宽度、配色、无障碍名称、受控切换、slots 和 CSS 令牌。
-- [Button group 按钮组](docs/site/components/button-group.md): mat-btn-group 的标准与连接布局、级联属性、受控单选多选、事件和 CSS 令牌。
+- [Button 按钮](docs/site/components/button.md): mat-btn 的尺寸、形态、配色、受控切换、图标、事件和 slots。
+- [Icon button 图标按钮](docs/site/components/icon-button.md): mat-icon-btn 的尺寸、宽度、配色、无障碍名称、受控切换和 slots。
+- [Button group 按钮组](docs/site/components/button-group.md): mat-btn-group 的标准与连接布局、级联属性、受控单选多选和事件。
 - [限制](docs/site/guide/limitations.md): 记录 mdu-ui 当前明确不支持的运行环境、分发方式和按钮能力。
-- [Split button 拆分按钮](docs/site/components/split-button.md): mat-split-btn 的双按钮组合、受控展开、事件、菜单 ARIA、slots 和 CSS 令牌。
+- [Split button 拆分按钮](docs/site/components/split-button.md): mat-split-btn 的双按钮组合、受控展开、事件、菜单 ARIA 和 slots。

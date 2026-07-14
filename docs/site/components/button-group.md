@@ -1,6 +1,6 @@
 ---
 title: Button group 按钮组
-description: mat-btn-group 的标准与连接布局、级联属性、受控单选多选、事件和 CSS 令牌。
+description: mat-btn-group 的标准与连接布局、级联属性、受控单选多选和事件。
 llms: true
 order: 60
 ---
@@ -113,18 +113,7 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 
 组根节点使用 `role="group"`，没有 `tabindex`。Tab 依次进入每个子按钮，Space 和 Enter 使用原生按钮激活；不实现方向键或 roving tabindex。connected 选择项使用 `aria-pressed`，不模拟 radio/radiogroup。
 
-### CSS 定制入口
-
-| 自定义属性 | 默认值 |
-| --- | --- |
-| `--mat-btn-group-standard-pressed-width-factor` | `1.15` |
-| `--mat-btn-group-connected-between-space` | `2px` |
-| `--mat-btn-group-standard-<size>-between-space` | `18 / 12 / 8 / 8 / 8px` |
-| `--mat-btn-group-connected-<size>-inner-corner-size` | `4 / 8 / 8 / 16 / 20px` |
-| `--mat-btn-group-connected-<size>-pressed-inner-corner-size` | `4 / 4 / 4 / 12 / 16px` |
-| `--mat-btn-group-connected-<size>-square-outer-corner-size` | `4 / 8 / 8 / 16 / 20px` |
-
-connected 选中项与 round 外角使用当前按钮容器高度的一半作为 full 圆角，避免宽按钮变成椭圆。组件没有公开方法。
+组件没有公开方法。
 
 ## 参考来源
 

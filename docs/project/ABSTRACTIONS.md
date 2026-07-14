@@ -37,18 +37,19 @@
 
 ## CSS 令牌层级
 
-公共 CSS 令牌分为三个层级：
+公共 CSS 令牌分为两个层级：
 
 - `--mat-ref-*`：字体族和字重等不带使用语义的参考值。
 - `--mat-sys-color-*`：Material 语义颜色及其 on-color。
 - `--mat-sys-typescale-*`、`--mat-sys-shape-*`、`--mat-sys-elevation-*`、`--mat-sys-motion-*`、`--mat-sys-state-*`、`--mat-sys-interaction-*`：跨组件共享的系统语义值。
-- `--mat-<component>-*`：组件实际消费的尺寸、颜色、形状、排版、描边、海拔和间距定制入口。
 
-Tailwind 适配层只把这些值映射到 `--color-mat-*`、`--radius-mat-*`、`--text-mat-*`、`--shadow-mat-*` 和 `--ease-mat-*`。两层必须保持同一语义，Tailwind 层不得复制具体颜色或覆盖常见无前缀主题变量。
+组件可以使用 `--mat-<component>-*` 等 CSS 自定义属性集中表达尺寸、颜色、形状、排版、描边、海拔和间距，但这些变量属于内部实现，不是公共定制入口，也不提供名称或行为兼容承诺。组件级定制通过已公开的 Vue props 完成。
+
+Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat-*`、`--radius-mat-*`、`--text-mat-*`、`--shadow-mat-*` 和 `--ease-mat-*`。两层必须保持同一语义，Tailwind 层不得复制具体颜色或覆盖常见无前缀主题变量。
 
 ## 组件配色角色
 
-组件先按用途、重要程度和所在表面选择颜色角色，再通过 `--mat-<component>-*` 组件变量集中映射到全局令牌。组件不得根据某个种子色的外观硬编码颜色，也不得为亮色与暗色模式建立两套结构。
+组件先按用途、重要程度和所在表面选择颜色角色，再通过内部组件变量集中映射到全局令牌。组件不得根据某个种子色的外观硬编码颜色，也不得为亮色与暗色模式建立两套结构。
 
 组件配色必须保持以下关系：
 
@@ -69,7 +70,7 @@ Tailwind 适配层只把这些值映射到 `--color-mat-*`、`--radius-mat-*`、
 - `primary`、`secondary`、`tertiary`、`error` 引用当前项目主题中同名的 base、on-base、container 和 on-container 令牌。
 - 严格六位 `#RRGGBB` 值作为局部种子色，按当前主题方案与对比度生成 Material 2025 亮暗 primary 色族；三位色值和其他 CSS 颜色写法不属于公共输入。
 - 显式 `color` 只覆盖强调色族，中性表面、边框和禁用角色不随种子色改变，也不得写入全局主题或影响兄弟组件。
-- 组合组件可以级联 `color`，子组件显式 prop 优先；由 prop 生成的局部变量优先于同名 CSS 定制变量。
+- 组合组件可以级联 `color`，子组件显式 prop 优先；由 prop 生成的局部变量优先于组件的默认角色映射。
 
 配色结果必须由共享模块生成并使用最多 64 项的缓存；后续组件不得复制 Material Color Utilities 调用或另立颜色格式。
 
@@ -96,7 +97,7 @@ Tailwind 适配层只把这些值映射到 `--color-mat-*`、`--radius-mat-*`、
 
 `docs/site/` 中人工编辑的 Markdown 使用页面是组件说明的权威来源。`llms.txt` 只提供适合 AI 发现内容的索引，`llms-full.txt` 是这些页面的合并文本；两者均为可重复生成的派生文件，不接受手工修补。
 
-每个公共组件页面必须在介绍中写明 `mat-*` 模板标签与 PascalCase 组件导出名，并提供默认示例和 API。全局注册与按需导入写法统一由安装文档维护。API 按实际实现记录属性、方法、事件、slots、状态与 CSS 定制入口；不存在的能力不保留空章节，也不得为尚未实现的接口编写示例。
+每个公共组件页面必须在介绍中写明 `mat-*` 模板标签与 PascalCase 组件导出名，并提供默认示例和 API。全局注册与按需导入写法统一由安装文档维护。API 按实际实现记录属性、方法、事件、slots 与状态；不存在的能力不保留空章节，不得为尚未实现的接口编写示例，也不得记录组件内部 class 或 CSS 自定义属性。
 
 ## 关键不变量
 

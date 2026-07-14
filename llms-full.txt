@@ -297,7 +297,7 @@ matUi.theme.dispose();
 
 ## CSS 令牌
 
-令牌分为三层：`--mat-ref-*` 保存字体族和字重参考值，`--mat-sys-*` 保存跨组件系统语义，`--mat-<component>-*` 保存各组件明确公开的定制入口。旧的扁平命名空间不再提供兼容别名。
+公共令牌分为两层：`--mat-ref-*` 保存字体族和字重参考值，`--mat-sys-*` 保存跨组件系统语义。组件样式中出现的 `--mat-<component>-*` 等变量属于内部实现，不是公共定制入口；旧的扁平命名空间不再提供兼容别名。
 
 运行时只向 `target` 写入 53 个 `--mat-sys-color-*`。基础样式同时提供默认亮暗回退值以及下列静态系统令牌。应用样式可以直接使用，例如 `color: var(--mat-sys-color-on-surface)`。
 
@@ -346,9 +346,9 @@ matUi.theme.dispose();
 
 局部色板沿用当前主题的 `schemeVariant` 和 `contrastLevel`，未安装插件时使用 `tonal-spot` 与对比度 `0`。生成结果通过 `light-dark()` 跟随当前 `color-scheme`，只写在当前组件作用域，不修改全局令牌。
 
-组件显式 `color` 优先于父组合组件级联值，父级联值优先于形态默认值。由 prop 生成的局部配色优先于同名组件 CSS 定制变量。中性表面、outline 和 disabled 仍使用项目中性角色，不随局部种子色变化。
+组件显式 `color` 优先于父组合组件级联值，父级联值优先于形态默认值。由 prop 生成的局部配色优先于组件的默认角色映射。中性表面、outline 和 disabled 仍使用项目中性角色，不随局部种子色变化。
 
-三位十六进制、带透明度的十六进制、`rgb()`、颜色名称和任意 CSS 值都不是合法 `color` prop。应用如需完全自定义内部角色，应只使用组件文档明确列出的 CSS 入口。
+三位十六进制、带透明度的十六进制、`rgb()`、颜色名称和任意 CSS 值都不是合法 `color` prop。组件内部颜色变量不是公共 API，不应由应用直接覆盖。
 
 ## 基本方法
 
@@ -367,7 +367,7 @@ matUi.theme.dispose();
 }
 ```
 
-上例中的组件变量用于集中表达角色映射；它们只有在对应组件文档明确列出时才是公共 CSS 定制入口。
+上例中的组件变量只用于集中表达内部角色映射，不属于公共 CSS API。
 
 ## 理解角色名称
 
@@ -499,7 +499,7 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 }
 ```
 
-组件专用令牌保持 CSS 定制入口，不生成按组件、尺寸和变体展开的工具类。适配层不会覆盖 `primary`、`surface` 等常见无前缀变量。
+组件内部变量不属于公共 CSS API，也不生成按组件、尺寸和变体展开的工具类。适配层不会覆盖 `primary`、`surface` 等常见无前缀变量。
 
 # Button 按钮
 
@@ -640,31 +640,6 @@ const selected = ref(false);
 
 `extra-small` 与 `small` 的视觉高度分别是 32px 和 40px，但交互目标至少为 48px。减少动态效果偏好下保留最终状态并取消过渡。
 
-### CSS 定制入口
-
-尺寸令牌按 `extra-small`、`small`、`medium`、`large`、`extra-large` 分组：
-
-| 模式 | 自定义属性 | 默认值序列 |
-| --- | --- | --- |
-| 容器高度 | `--mat-btn-<size>-container-height` | `32px / 40px / 56px / 96px / 136px` |
-| 起始间距 | `--mat-btn-<size>-leading-space` | `12px / 16px / 24px / 48px / 64px` |
-| 结束间距 | `--mat-btn-<size>-trailing-space` | `12px / 16px / 24px / 48px / 64px` |
-| 图标大小 | `--mat-btn-<size>-icon-size` | `20px / 20px / 24px / 32px / 40px` |
-| 图文间距 | `--mat-btn-<size>-icon-label-space` | `8px / 8px / 8px / 12px / 16px` |
-| outline 宽度 | `--mat-btn-<size>-outlined-outline-width` | `1px / 1px / 1px / 2px / 3px` |
-| square 形状 | `--mat-btn-<size>-square-container-shape` | `12px / 12px / 16px / 28px / 28px` |
-| pressed 形状 | `--mat-btn-<size>-pressed-container-shape` | `8px / 8px / 12px / 16px / 16px` |
-| 标签排版 | `--mat-btn-<size>-label-text-{font,weight,size,line-height,tracking}` | 对应尺寸的 emphasized typescale |
-
-变体颜色和海拔使用以下入口：
-
-- `--mat-btn-<variant>-container-color`、`label-text-color`、`icon-color`、`state-layer-color`；其中 `<variant>` 为 `elevated`、`filled`、`filled-tonal`、`outlined` 或 `text`。
-- `--mat-btn-<variant>-container-elevation`；elevated、filled、filled-tonal 另有 `--mat-btn-<variant>-hover-container-elevation`。
-- outlined 使用 `--mat-btn-outlined-outline-color`。
-- toggle 或 selected 的独立入口使用 `--mat-btn-filled-unselected-*`、`--mat-btn-filled-tonal-selected-*`、`--mat-btn-outlined-selected-*`。
-
-共享入口包括 `--mat-sys-interaction-target-min-size`、`--mat-sys-interaction-focus-ring-width`、`--mat-sys-interaction-focus-ring-offset`、`--mat-sys-state-hover-state-layer-opacity`、`--mat-sys-state-focus-state-layer-opacity`、`--mat-sys-state-pressed-state-layer-opacity`、`--mat-sys-state-disabled-container-opacity` 和 `--mat-sys-state-disabled-content-opacity`。prop 生成的配色优先于内部颜色变量；不要依赖未记录的内部 class 或 `--mat-button-*` 变量。
-
 组件没有公开方法，也不提供 loading、链接模式、涟漪、密度参数或完整表单方法代理。
 
 ## 参考来源
@@ -771,22 +746,7 @@ const buttonSelected = ref(false);
 
 hover、focus-visible、pressed、selected 和 disabled 状态与 Button 使用相同状态层和禁用规则；focus 与 pressed 使用 12% 状态层。`extra-small` 与 `small` 仍提供至少 48px 的交互目标。当前可见提示由原生 `title` 提供，不包含独立 Tooltip。
 
-### CSS 定制入口
-
-| 模式 | 自定义属性 | `extra-small / small / medium / large / extra-large` 默认值 |
-| --- | --- | --- |
-| 高度 | `--mat-icon-btn-<size>-container-height` | `32 / 40 / 56 / 96 / 136px` |
-| 图标 | `--mat-icon-btn-<size>-icon-size` | `20 / 24 / 24 / 32 / 40px` |
-| narrow 起始/结束间距 | `--mat-icon-btn-<size>-narrow-{leading,trailing}-space` | `4 / 4 / 12 / 16 / 32px` |
-| default 起始/结束间距 | `--mat-icon-btn-<size>-default-{leading,trailing}-space` | `6 / 8 / 16 / 32 / 48px` |
-| wide 起始/结束间距 | `--mat-icon-btn-<size>-wide-{leading,trailing}-space` | `10 / 14 / 24 / 48 / 72px` |
-| outline | `--mat-icon-btn-<size>-outlined-outline-width` | `1 / 1 / 1 / 2 / 3px` |
-| square 形状 | `--mat-icon-btn-<size>-square-container-shape` | `12 / 12 / 16 / 28 / 28px` |
-| pressed 形状 | `--mat-icon-btn-<size>-pressed-container-shape` | `8 / 8 / 12 / 16 / 16px` |
-
-组件根据图标大小与两侧间距计算容器宽度。变体颜色入口为 `--mat-icon-btn-<variant>-container-color`、`icon-color`、`state-layer-color`；outlined 另有 `outline-color`。选择状态使用 `--mat-icon-btn-filled-unselected-*`、`--mat-icon-btn-filled-tonal-selected-*`、`--mat-icon-btn-outlined-selected-*` 和 `--mat-icon-btn-standard-selected-*`。
-
-共享交互、状态和焦点令牌与 Button 相同。组件没有公开方法。
+组件没有公开方法。
 
 ## 参考来源
 
@@ -906,18 +866,7 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 
 组根节点使用 `role="group"`，没有 `tabindex`。Tab 依次进入每个子按钮，Space 和 Enter 使用原生按钮激活；不实现方向键或 roving tabindex。connected 选择项使用 `aria-pressed`，不模拟 radio/radiogroup。
 
-### CSS 定制入口
-
-| 自定义属性 | 默认值 |
-| --- | --- |
-| `--mat-btn-group-standard-pressed-width-factor` | `1.15` |
-| `--mat-btn-group-connected-between-space` | `2px` |
-| `--mat-btn-group-standard-<size>-between-space` | `18 / 12 / 8 / 8 / 8px` |
-| `--mat-btn-group-connected-<size>-inner-corner-size` | `4 / 8 / 8 / 16 / 20px` |
-| `--mat-btn-group-connected-<size>-pressed-inner-corner-size` | `4 / 4 / 4 / 12 / 16px` |
-| `--mat-btn-group-connected-<size>-square-outer-corner-size` | `4 / 8 / 8 / 16 / 20px` |
-
-connected 选中项与 round 外角使用当前按钮容器高度的一半作为 full 圆角，避免宽按钮变成椭圆。组件没有公开方法。
+组件没有公开方法。
 
 ## 参考来源
 
@@ -1067,21 +1016,7 @@ slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展
 
 两侧按钮都是独立 Tab 停靠点，使用原生 Space/Enter 激活。菜单打开后应由应用把焦点移动到菜单，处理方向键、Escape、外部点击，并在关闭后把焦点返回 trailing 按钮。
 
-### CSS 定制入口
-
-| 自定义属性 | `extra-small / small / medium / large / extra-large` 默认值 |
-| --- | --- |
-| `--mat-split-btn-<size>-inner-corner-size` | `4 / 4 / 4 / 8 / 12px` |
-| `--mat-split-btn-<size>-interactive-inner-corner-size` | `8 / 12 / 12 / 20 / 20px` |
-| `--mat-split-btn-<size>-leading-button-leading-space` | `12 / 16 / 24 / 48 / 64px` |
-| `--mat-split-btn-<size>-leading-button-trailing-space` | `10 / 12 / 24 / 48 / 64px` |
-| `--mat-split-btn-<size>-trailing-button-icon-size` | `22 / 22 / 26 / 38 / 50px` |
-| `--mat-split-btn-<size>-trailing-button-leading-space` | `13 / 13 / 15 / 29 / 43px` |
-| `--mat-split-btn-<size>-trailing-button-trailing-space` | `13 / 13 / 15 / 29 / 43px` |
-
-两侧间距 `--mat-split-btn-between-space` 默认 `2px`；`--mat-split-btn-menu-between-space` 默认 `4px`，供应用放置外部菜单时使用。组件根据 trailing 图标和两侧间距计算宽度，图标偏移属于内部实现，不是定制入口。
-
-变体颜色使用 `--mat-split-btn-<variant>-container-color`、`label-text-color`、`icon-color`、`state-layer-color`。elevated、filled 和 filled-tonal 另有 `container-elevation` 与 `hover-container-elevation`；outlined 使用 `--mat-split-btn-outlined-outline-color`。组件没有公开方法。
+组件没有公开方法。
 
 ## 参考来源
 
