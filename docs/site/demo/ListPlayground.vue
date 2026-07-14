@@ -41,8 +41,8 @@ const selected = ref(['documents']);
     </section>
 
     <section>
-      <h2>多操作项目</h2>
-      <mat-list interaction="multi-action" aria-label="最近文件">
+      <h2>standard 多操作项目</h2>
+      <mat-list variant="standard" interaction="multi-action" aria-label="最近文件">
         <mat-list-item>
           设计说明.pdf
           <template #supporting>

@@ -13,6 +13,43 @@ order: 100
 
 ## 示例
 
+### 外观变体
+
+`standard` 让项目连续排列，`segmented` 在项目之间保留 2px 间隔。两种外观只改变项目的组合方式，不改变内容结构或交互语义。
+
+```vue
+<mat-list variant="standard" aria-label="standard 列表">
+  <mat-list-item>最近更新</mat-list-item>
+  <mat-list-item>名称</mat-list-item>
+</mat-list>
+
+<mat-list variant="segmented" aria-label="segmented 列表">
+  <mat-list-item>可离线使用</mat-list-item>
+  <mat-list-item>与我共享</mat-list-item>
+</mat-list>
+```
+
+<ClientOnly>
+  <DocsPreview label="List standard 与 segmented 外观对比预览">
+    <div class="list-variant-grid">
+      <section class="list-variant-example">
+        <strong>standard</strong>
+        <mat-list variant="standard" aria-label="standard 列表">
+          <mat-list-item>最近更新</mat-list-item>
+          <mat-list-item>名称</mat-list-item>
+        </mat-list>
+      </section>
+      <section class="list-variant-example">
+        <strong>segmented</strong>
+        <mat-list variant="segmented" aria-label="segmented 列表">
+          <mat-list-item>可离线使用</mat-list-item>
+          <mat-list-item>与我共享</mat-list-item>
+        </mat-list>
+      </section>
+    </div>
+  </DocsPreview>
+</ClientOnly>
+
 ### 内容结构与 Divider
 
 ```vue
@@ -129,6 +166,7 @@ const multipleSelected = ref(['offline']);
 
 <template>
   <mat-list
+    variant="standard"
     interaction="single-select"
     :selected="singleSelected"
     aria-label="排序方式"
@@ -139,6 +177,7 @@ const multipleSelected = ref(['offline']);
   </mat-list>
 
   <mat-list
+    variant="standard"
     interaction="multi-select"
     :selected="multipleSelected"
     aria-label="筛选条件"
@@ -158,6 +197,7 @@ const multipleSelected = ref(['offline']);
 <ClientOnly>
   <DocsPreview label="List 受控单选与多选预览" stacked>
     <mat-list
+      variant="standard"
       interaction="single-select"
       :selected="listSingleSelected"
       aria-label="排序方式"
@@ -174,7 +214,7 @@ const multipleSelected = ref(['offline']);
       </mat-list-item>
     </mat-list>
     <mat-list
-      variant="segmented"
+      variant="standard"
       interaction="multi-select"
       :selected="listMultipleSelected"
       aria-label="筛选条件"
@@ -192,6 +232,8 @@ const multipleSelected = ref(['offline']);
     </mat-list>
   </DocsPreview>
 </ClientOnly>
+
+上例的单选和多选都显式使用 `variant="standard"`，因此项目连续排列。需要项目间保留 2px 间隔时，改用 `variant="segmented"`。
 
 选择模式由 `MatList` 统一管理候选值。组件不会修改 `selected`，调用方应在 `select` 事件中回写 `nextSelected`。选择标记是非交互视觉内容，不能在 `role="option"` 内放置可聚焦的 Checkbox、Radio、Switch、按钮或链接。
 
@@ -263,3 +305,19 @@ import { ref } from 'vue';
 const listSingleSelected = ref('recent');
 const listMultipleSelected = ref(['offline']);
 </script>
+
+<style scoped>
+.list-variant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 24px;
+  inline-size: 100%;
+}
+
+.list-variant-example {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-inline-size: 0;
+}
+</style>
