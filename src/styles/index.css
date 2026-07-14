@@ -4,6 +4,7 @@
 
   /* Reference tokens */
   --mat-ref-typeface-brand: system-ui, sans-serif;
+  --mat-ref-typeface-icon: 'Material Symbols Outlined';
   --mat-ref-typeface-plain: system-ui, sans-serif;
   --mat-ref-typeface-weight-regular: 400;
   --mat-ref-typeface-weight-medium: 500;
@@ -547,6 +548,20 @@
   --mat-split-btn-filled-tonal-container-elevation: var(--mat-btn-filled-tonal-container-elevation);
   --mat-split-btn-filled-tonal-hover-container-elevation: var(--mat-btn-filled-tonal-hover-container-elevation);
   --mat-split-btn-outlined-outline-color: var(--mat-btn-outlined-outline-color);
+}
+
+.mat-icon--material-symbols {
+  overflow-wrap: normal;
+  font-family: var(--mat-ref-typeface-icon);
+  font-weight: var(--mat-ref-typeface-weight-regular);
+  font-style: normal;
+  letter-spacing: normal;
+  white-space: nowrap;
+  direction: ltr;
+  text-transform: none;
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
 }
 
 @media (prefers-color-scheme: dark) {

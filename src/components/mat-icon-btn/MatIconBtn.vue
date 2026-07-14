@@ -95,6 +95,8 @@ const {
   handleClick,
   hasExplicitColor,
   split,
+  useCursor,
+  useMaterialSymbols,
 } = useButton(props, emit);
 const title = computed(() => attrs.title ?? props.label);
 const isSelected = computed(() => effectiveToggle.value && effectiveSelected.value);
@@ -125,11 +127,15 @@ const isSelected = computed(() => effectiveToggle.value && effectiveSelected.val
     :disabled="effectiveDisabled"
     :title="title"
     :type="type"
+    :use-cursor="useCursor"
     @click="handleClick"
   >
     <span
       class="mat-icon-btn__icon"
-      :class="{ 'mat-icon-btn__icon--selected-fallback': isSelected && !slots.selected }"
+      :class="{
+        'mat-icon-btn__icon--selected-fallback': isSelected && !slots.selected,
+        'mat-icon--material-symbols': useMaterialSymbols,
+      }"
       aria-hidden="true"
     >
       <slot v-if="isSelected && slots.selected" name="selected" />

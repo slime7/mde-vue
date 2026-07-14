@@ -85,6 +85,8 @@ const {
   handleClick,
   hasExplicitColor,
   split,
+  useCursor,
+  useMaterialSymbols,
 } = useButton(props, emit);
 const isToggle = computed(() => effectiveToggle.value && effectiveVariant.value !== 'text');
 const isSelected = computed(() => isToggle.value && effectiveSelected.value);
@@ -117,12 +119,16 @@ watchEffect(() => {
     :aria-pressed="isToggle ? isSelected : undefined"
     :disabled="effectiveDisabled"
     :type="type"
+    :use-cursor="useCursor"
     @click="handleClick"
   >
     <span
       v-if="hasIcon"
       class="mat-btn__icon"
-      :class="{ 'mat-btn__icon--selected-fallback': isSelected && !slots['selected-icon'] }"
+      :class="{
+        'mat-btn__icon--selected-fallback': isSelected && !slots['selected-icon'],
+        'mat-icon--material-symbols': useMaterialSymbols,
+      }"
       aria-hidden="true"
     >
       <slot v-if="isSelected && slots['selected-icon']" name="selected-icon" />

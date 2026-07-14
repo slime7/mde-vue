@@ -1,4 +1,5 @@
 import { computed, inject } from 'vue';
+import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../mat-ui-context';
 import { MAT_BTN_GROUP_KEY, MAT_SPLIT_BTN_KEY } from './button-context';
 import useComponentColor from './use-component-color';
 
@@ -10,6 +11,7 @@ import useComponentColor from './use-component-color';
  * @returns {object}
  */
 export default function useButton(props, emit) {
+  const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
   const group = inject(MAT_BTN_GROUP_KEY, null);
   const split = inject(MAT_SPLIT_BTN_KEY, null);
   const effectiveSize = computed(() => (
@@ -64,5 +66,7 @@ export default function useButton(props, emit) {
     handleClick,
     hasExplicitColor,
     split,
+    useCursor: matUi.useCursor,
+    useMaterialSymbols: matUi.useMaterialSymbols,
   };
 }

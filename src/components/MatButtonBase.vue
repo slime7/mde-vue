@@ -21,6 +21,10 @@ const props = defineProps({
     type: Boolean,
     default: undefined,
   },
+  useCursor: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits({
@@ -128,7 +132,10 @@ function handleClick(event) {
   <button
     v-bind="$attrs"
     class="mat-button-base"
-    :class="{ 'mat-button-base--pressed': isPressed }"
+    :class="{
+      'mat-button-base--pressed': isPressed,
+      'mat-button-base--use-cursor': useCursor,
+    }"
     :aria-pressed="ariaPressed"
     :disabled="disabled"
     :type="type"
@@ -183,7 +190,7 @@ function handleClick(event) {
   color: var(--mat-button-content-color);
   white-space: nowrap;
   appearance: none;
-  cursor: pointer;
+  cursor: default;
   background: var(--mat-button-container-color);
   border-color: var(--mat-button-border-color);
   border-style: solid;
@@ -198,6 +205,10 @@ function handleClick(event) {
   transition-timing-function: var(--mat-sys-motion-easing-standard);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+}
+
+.mat-button-base--use-cursor:not(:disabled) {
+  cursor: pointer;
 }
 
 .mat-button-base::before {

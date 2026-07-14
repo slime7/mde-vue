@@ -164,6 +164,46 @@ describe('主题控制器', () => {
     expect(() => createMatUi({ theme: { contrastLevel: Number.NaN, target } })).toThrow(RangeError);
   });
 
+  it('拒绝非 boolean 的组件选项', () => {
+    expect(() => createMatUi({ useCursor: 'pointer' })).toThrow(TypeError);
+    expect(() => createMatUi({ useMaterialSymbols: 1 })).toThrow(TypeError);
+  });
+
+  it('按插件选项启用手指指针和 Material Symbols 图标', () => {
+    const plugin = createMatUi({
+      useCursor: true,
+      useMaterialSymbols: true,
+      theme: {
+        target: document.createElement('div'),
+      },
+    });
+    const button = mount(MatBtn, {
+      global: {
+        plugins: [plugin],
+      },
+      slots: {
+        icon: 'favorite',
+      },
+    });
+    const iconButton = mount(MatIconBtn, {
+      global: {
+        plugins: [plugin],
+      },
+      props: {
+        label: '收藏',
+      },
+      slots: {
+        default: 'favorite',
+      },
+    });
+
+    expect(button.classes()).toContain('mat-button-base--use-cursor');
+    expect(button.find('.mat-btn__icon').classes()).toContain('mat-icon--material-symbols');
+    expect(iconButton.classes()).toContain('mat-button-base--use-cursor');
+    expect(iconButton.find('.mat-icon-btn__icon').classes()).toContain('mat-icon--material-symbols');
+    plugin.theme.dispose();
+  });
+
   it('dispose 清理系统主题监听且可重复调用', () => {
     const mediaQuery = createMatchMediaMock();
     const target = document.createElement('div');

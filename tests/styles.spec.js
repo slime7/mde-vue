@@ -61,6 +61,7 @@ describe('公共样式令牌', () => {
 
   it('声明 reference 字体和 15 套基线、强调字体样式', () => {
     expect(styles).toContain('--mat-ref-typeface-brand: system-ui, sans-serif;');
+    expect(styles).toContain("--mat-ref-typeface-icon: 'Material Symbols Outlined';");
     expect(styles).toContain('--mat-ref-typeface-plain: system-ui, sans-serif;');
 
     typeStyles.forEach((style) => {
@@ -75,6 +76,8 @@ describe('公共样式令牌', () => {
 
     expect(styles).toContain('--mat-sys-typescale-display-large-size: 3.5625rem;');
     expect(styles).toContain('--mat-sys-typescale-emphasized-title-medium-weight: var(--mat-ref-typeface-weight-bold);');
+    expect(styles).toContain('.mat-icon--material-symbols {');
+    expect(styles).toContain('font-feature-settings: \'liga\';');
   });
 
   it('声明完整形状、海拔、动效和状态值', () => {

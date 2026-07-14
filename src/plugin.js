@@ -3,25 +3,49 @@ import MatBtn from './components/mat-btn/MatBtn.vue';
 import MatBtnGroup from './components/mat-btn-group/MatBtnGroup.vue';
 import MatIconBtn from './components/mat-icon-btn/MatIconBtn.vue';
 import MatSplitBtn from './components/mat-split-btn/MatSplitBtn.vue';
+import MAT_UI_KEY from './mat-ui-context';
 import createThemeController from './theme';
 import MAT_THEME_KEY from './theme-context';
 
 /**
  * @typedef {object} MatUiOptions
  * @property {import('./theme.js').MatThemeOptions} [theme]
+ * @property {boolean} [useCursor=false]
+ * @property {boolean} [useMaterialSymbols=false]
  */
+
+/**
+ * @param {MatUiOptions} options
+ * @param {'useCursor' | 'useMaterialSymbols'} name
+ * @returns {boolean}
+ */
+function readBooleanOption(options, name) {
+  const value = options[name];
+
+  if (value !== undefined && typeof value !== 'boolean') {
+    throw new TypeError(`createMatUi ${name} 必须是 boolean`);
+  }
+
+  return value ?? false;
+}
 
 /**
  * 建立全局组件插件和对应主题控制器。
  *
  * @param {MatUiOptions} [options]
  * @returns {import('vue').Plugin & { theme: import('./theme.js').MatThemeController }}
+ * @throws {TypeError} 选项或选项值类型无效时抛出。
+ * @throws {RangeError} 主题对比度超出有效范围时抛出。
  */
 export function createMatUi(options = {}) {
   if (!options || typeof options !== 'object' || Array.isArray(options)) {
     throw new TypeError('createMatUi 选项必须是对象');
   }
 
+  const componentOptions = Object.freeze({
+    useCursor: readBooleanOption(options, 'useCursor'),
+    useMaterialSymbols: readBooleanOption(options, 'useMaterialSymbols'),
+  });
   const theme = createThemeController(options.theme);
 
   return {
@@ -36,6 +60,7 @@ export function createMatUi(options = {}) {
       app.component('mat-icon-btn', MatIconBtn);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-split-btn', MatSplitBtn);
+      app.provide(MAT_UI_KEY, componentOptions);
       app.provide(MAT_THEME_KEY, theme);
     },
   };

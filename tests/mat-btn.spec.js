@@ -17,6 +17,7 @@ describe('MatBtn', () => {
     expect(wrapper.classes()).toContain('mat-btn--size-small');
     expect(wrapper.attributes('type')).toBe('button');
     expect(wrapper.text()).toBe('保存');
+    expect(wrapper.classes()).not.toContain('mat-button-base--use-cursor');
   });
 
   it.each(['elevated', 'filled', 'filled-tonal', 'outlined', 'text'])(

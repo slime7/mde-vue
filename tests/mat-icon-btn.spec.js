@@ -17,6 +17,7 @@ describe('MatIconBtn', () => {
     expect(wrapper.attributes('aria-label')).toBe('收藏');
     expect(wrapper.attributes('title')).toBe('收藏');
     expect(wrapper.text()).toBe('☆');
+    expect(wrapper.find('.mat-icon-btn__icon').classes()).not.toContain('mat-icon--material-symbols');
   });
 
   it('显式 title 优先于 label', () => {
