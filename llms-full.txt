@@ -782,7 +782,9 @@ const iconFavorite = ref(false);
   </DocsPreview>
 </ClientOnly>
 
-按下 standard 子项时，该项宽度临时变为 115%，相邻项不缩窄，组整体允许增宽。
+按下 standard 子项时，该项宽度临时增大 15%，直接相邻项同步缩窄，组的总宽保持不变。首尾项由唯一邻项承担全部缩量，中间项由两侧邻项各承担一半；快速点击也会完成可见的展开和回弹。受控 `selected` 只保留形状和颜色状态，不持续改变宽度。connected 形态不联动子项宽度。
+
+宽度与形状动效使用 `--mat-sys-motion-duration-short3`（150ms）和 `--mat-sys-motion-easing-standard`，作为 Web 上对 Material 3 FastSpatial 的近似。按下展开和释放回弹使用相同的时间与缓动曲线；这是仍留在界面中的空间变化，不按方向切换 decelerate 或 accelerate。快速释放时，组件会等待展开至少完成 75% 后再开始回弹；`prefers-reduced-motion: reduce` 下不等待动画。
 
 ### 受控 connected 多选
 
@@ -991,7 +993,7 @@ const expanded = ref(false);
 | `expanded` | `boolean` | `false` | 受控菜单展开状态 |
 | `controls` | `string` | 未设置 | 写入 trailing 按钮的 `aria-controls`，通常是外部菜单 id |
 
-父组件的 `variant`、`size`、`color` 和 `disabled` 对两侧按钮具有最终决定权，slot 子按钮上的同名视觉值不会覆盖组合参数。expanded 不改变基础颜色，只加入 12% 状态层、改变 trailing 内角并把图标旋转 180°。
+父组件的 `variant`、`size`、`color` 和 `disabled` 对两侧按钮具有最终决定权，slot 子按钮上的同名视觉值不会覆盖组合参数。expanded 不改变基础颜色，只加入 12% 状态层，将 trailing 的四个普通及按下圆角保持为 full，并把图标居中后旋转 180°。
 
 ### 事件
 

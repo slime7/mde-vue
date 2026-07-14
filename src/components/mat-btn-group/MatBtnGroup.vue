@@ -1,6 +1,6 @@
 <script setup>
 import {
-  computed, nextTick, onMounted, provide, ref, watch,
+  computed, nextTick, onBeforeUnmount, onMounted, provide, ref, watch,
 } from 'vue';
 import { MAT_BTN_GROUP_KEY } from '../button-context';
 import {
@@ -76,6 +76,12 @@ const emit = defineEmits({
 const root = ref(null);
 const pressedButton = ref(null);
 const previousInlineSize = new WeakMap();
+const resizedButtons = new Set();
+const FALLBACK_WIDTH_TRANSITION_DURATION = 150;
+const MINIMUM_EXPANSION_PROGRESS = 0.75;
+let restoreTimer;
+let restoreReady = true;
+let restoreRequested = false;
 const { colorStyle } = useComponentColor(computed(() => props.color));
 
 /**
@@ -163,6 +169,108 @@ function getButton(target) {
 }
 
 /**
+ * @param {string} value
+ * @returns {number | null}
+ */
+function parseCssTime(value) {
+  const match = value.trim().match(/^(\d*\.?\d+)(ms|s)$/);
+
+  if (!match) {
+    return null;
+  }
+
+  const duration = Number.parseFloat(match[1]);
+
+  return match[2] === 's' ? duration * 1000 : duration;
+}
+
+/**
+ * @param {HTMLButtonElement} button
+ * @returns {number}
+ */
+function getWidthTransitionDuration(button) {
+  const [duration] = getComputedStyle(button).transitionDuration.split(',');
+
+  return parseCssTime(duration ?? '') ?? FALLBACK_WIDTH_TRANSITION_DURATION;
+}
+
+function prefersReducedMotion() {
+  return typeof window.matchMedia === 'function'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function clearRestoreTimer() {
+  if (restoreTimer === undefined) {
+    return;
+  }
+
+  globalThis.clearTimeout(restoreTimer);
+  restoreTimer = undefined;
+}
+
+function restorePressedButton() {
+  clearRestoreTimer();
+
+  resizedButtons.forEach((item) => {
+    const resizedButton = item;
+
+    resizedButton.style.inlineSize = previousInlineSize.get(resizedButton) ?? '';
+    previousInlineSize.delete(resizedButton);
+  });
+  resizedButtons.clear();
+
+  if (pressedButton.value) {
+    delete pressedButton.value.dataset.matGroupPressed;
+  }
+
+  pressedButton.value = null;
+  restoreReady = true;
+  restoreRequested = false;
+}
+
+function requestPressedButtonRestore() {
+  if (!pressedButton.value) {
+    return;
+  }
+
+  if (restoreReady) {
+    restorePressedButton();
+    return;
+  }
+
+  restoreRequested = true;
+}
+
+/**
+ * @param {HTMLButtonElement} button
+ */
+function startRestoreThreshold(button) {
+  restoreReady = false;
+  restoreRequested = false;
+
+  const transitionDuration = getWidthTransitionDuration(button);
+
+  if (prefersReducedMotion() || transitionDuration === 0) {
+    restoreReady = true;
+    return;
+  }
+
+  restoreTimer = globalThis.setTimeout(() => {
+    restoreTimer = undefined;
+
+    if (pressedButton.value !== button) {
+      return;
+    }
+
+    restoreReady = true;
+
+    if (restoreRequested) {
+      restorePressedButton();
+    }
+  }, transitionDuration * MINIMUM_EXPANSION_PROGRESS);
+}
+
+/**
  * @param {HTMLButtonElement} button
  */
 function expandButton(button) {
@@ -171,47 +279,78 @@ function expandButton(button) {
   }
 
   const targetButton = button;
-  const widthFactor = Number.parseFloat(getComputedStyle(root.value).getPropertyValue(
-    '--mat-btn-group-standard-pressed-width-factor',
-  )) || 1.15;
 
   restorePressedButton();
-  previousInlineSize.set(targetButton, targetButton.style.inlineSize);
-  targetButton.style.inlineSize = `${targetButton.getBoundingClientRect().width * widthFactor}px`;
-  targetButton.dataset.matGroupPressed = '';
-  pressedButton.value = targetButton;
-}
 
-function restorePressedButton() {
-  const button = pressedButton.value;
+  const buttons = [...root.value.querySelectorAll('.mat-button-base')];
+  const buttonIndex = buttons.indexOf(targetButton);
 
-  if (!button) {
+  if (buttons.length < 2 || buttonIndex === -1) {
     return;
   }
 
-  button.style.inlineSize = previousInlineSize.get(button) ?? '';
-  delete button.dataset.matGroupPressed;
-  pressedButton.value = null;
+  const widthFactor = Number.parseFloat(getComputedStyle(root.value).getPropertyValue(
+    '--mat-btn-group-standard-pressed-width-factor',
+  )) || 1.15;
+  const buttonWidths = new Map(buttons.map((item) => [
+    item,
+    item.getBoundingClientRect().width,
+  ]));
+  const growth = buttonWidths.get(targetButton) * (widthFactor - 1);
+  const nextInlineSizes = new Map([
+    [targetButton, buttonWidths.get(targetButton) + growth],
+  ]);
+
+  if (buttonIndex === 0) {
+    const nextButton = buttons[1];
+    nextInlineSizes.set(nextButton, buttonWidths.get(nextButton) - growth);
+  } else if (buttonIndex === buttons.length - 1) {
+    const previousButton = buttons[buttonIndex - 1];
+    nextInlineSizes.set(previousButton, buttonWidths.get(previousButton) - growth);
+  } else {
+    const previousButton = buttons[buttonIndex - 1];
+    const nextButton = buttons[buttonIndex + 1];
+    const neighborCompression = growth / 2;
+
+    nextInlineSizes.set(
+      previousButton,
+      buttonWidths.get(previousButton) - neighborCompression,
+    );
+    nextInlineSizes.set(nextButton, buttonWidths.get(nextButton) - neighborCompression);
+  }
+
+  nextInlineSizes.forEach((inlineSize, item) => {
+    const resizedButton = item;
+
+    previousInlineSize.set(resizedButton, resizedButton.style.inlineSize);
+    resizedButton.style.inlineSize = `${inlineSize}px`;
+    resizedButtons.add(resizedButton);
+  });
+
+  targetButton.dataset.matGroupPressed = '';
+  pressedButton.value = targetButton;
+  startRestoreThreshold(targetButton);
 }
 
 /**
  * @param {PointerEvent} event
  */
-function handlePointerDown(event) {
+async function handlePointerDown(event) {
   const button = getButton(event.target);
 
   if (!button) {
     return;
   }
 
-  expandButton(button);
   button.setPointerCapture?.(event.pointerId);
+  await nextTick();
+  expandButton(button);
 }
 
 /**
  * @param {KeyboardEvent} event
  */
-function handleKeyDown(event) {
+async function handleKeyDown(event) {
   if (event.repeat || ![' ', 'Enter'].includes(event.key)) {
     return;
   }
@@ -219,6 +358,7 @@ function handleKeyDown(event) {
   const button = getButton(event.target);
 
   if (button) {
+    await nextTick();
     expandButton(button);
   }
 }
@@ -251,9 +391,11 @@ function validateConnectedChildren() {
 }
 
 onMounted(validateConnectedChildren);
+onBeforeUnmount(restorePressedButton);
 watch(
   () => [props.variant, props.selection],
   async () => {
+    restorePressedButton();
     await nextTick();
     validateConnectedChildren();
   },
@@ -273,13 +415,13 @@ watch(
     ]"
     :style="colorStyle"
     role="group"
-    @focusout="restorePressedButton"
-    @keydown.capture="handleKeyDown"
-    @keyup.capture="restorePressedButton"
-    @lostpointercapture.capture="restorePressedButton"
-    @pointercancel.capture="restorePressedButton"
-    @pointerdown.capture="handlePointerDown"
-    @pointerup.capture="restorePressedButton"
+    @focusout="requestPressedButtonRestore"
+    @keydown="handleKeyDown"
+    @keyup.capture="requestPressedButtonRestore"
+    @lostpointercapture.capture="requestPressedButtonRestore"
+    @pointercancel.capture="requestPressedButtonRestore"
+    @pointerdown="handlePointerDown"
+    @pointerup.capture="requestPressedButtonRestore"
   >
     <slot />
   </div>

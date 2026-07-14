@@ -1,9 +1,56 @@
 import { mount } from '@vue/test-utils';
 import { h } from 'vue';
 import {
-  describe, expect, it, vi,
+  afterEach, describe, expect, it, vi,
 } from 'vitest';
 import { MatBtn, MatBtnGroup, MatIconBtn } from '../src';
+
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
+
+/**
+ * @param {import('@vue/test-utils').DOMWrapper<HTMLButtonElement>[]} buttons
+ * @param {number[]} widths
+ */
+function mockButtonWidths(buttons, widths) {
+  buttons.forEach((button, index) => {
+    vi.spyOn(button.element, 'getBoundingClientRect').mockReturnValue({
+      width: widths[index],
+    });
+  });
+}
+
+/**
+ * @param {import('@vue/test-utils').DOMWrapper<HTMLButtonElement>[]} buttons
+ * @returns {(number | null)[]}
+ */
+function getInlineSizes(buttons) {
+  return buttons.map((button) => (
+    button.element.style.inlineSize
+      ? Number.parseFloat(Number.parseFloat(button.element.style.inlineSize).toFixed(3))
+      : null
+  ));
+}
+
+/**
+ * @param {number} duration
+ */
+function mockWidthTransitionDuration(duration = 150) {
+  const getStyle = window.getComputedStyle;
+
+  vi.spyOn(window, 'getComputedStyle').mockImplementation((element) => {
+    const style = getStyle(element);
+
+    Object.defineProperty(style, 'transitionDuration', {
+      configurable: true,
+      value: `${duration}ms`,
+    });
+    return style;
+  });
+}
 
 describe('MatBtnGroup', () => {
   it('级联尺寸、形状、颜色和禁用状态，子组件显式值优先', () => {
@@ -83,7 +130,35 @@ describe('MatBtnGroup', () => {
     expect(required.emitted('select')[0][0].nextSelected).toEqual(['two']);
   });
 
-  it('standard 按下项增宽 15%，释放后恢复且不修改邻项', async () => {
+  it('standard 首尾项和中间项按 15% 同步调整相邻项宽度', async () => {
+    vi.useFakeTimers();
+    mockWidthTransitionDuration();
+    const wrapper = mount(MatBtnGroup, {
+      slots: {
+        default: () => [
+          h(MatBtn, null, () => '一'),
+          h(MatBtn, null, () => '二'),
+          h(MatBtn, null, () => '三'),
+        ],
+      },
+    });
+    const buttons = wrapper.findAll('button');
+    mockButtonWidths(buttons, [100, 100, 100]);
+
+    await buttons[0].trigger('pointerdown', { pointerId: 1 });
+    expect(getInlineSizes(buttons)).toEqual([115, 85, null]);
+
+    await buttons[0].trigger('pointercancel', { pointerId: 1 });
+    vi.advanceTimersByTime(113);
+    expect(getInlineSizes(buttons)).toEqual([null, null, null]);
+
+    await buttons[1].trigger('pointerdown', { pointerId: 2 });
+    expect(getInlineSizes(buttons)).toEqual([92.5, 115, 92.5]);
+  });
+
+  it('快速释放在 75% 阈值前保持展开，到达阈值后恢复', async () => {
+    vi.useFakeTimers();
+    mockWidthTransitionDuration(200);
     const wrapper = mount(MatBtnGroup, {
       slots: {
         default: () => [
@@ -93,14 +168,145 @@ describe('MatBtnGroup', () => {
       },
     });
     const buttons = wrapper.findAll('button');
-    vi.spyOn(buttons[0].element, 'getBoundingClientRect').mockReturnValue({ width: 100 });
+    mockButtonWidths(buttons, [100, 100]);
 
     await buttons[0].trigger('pointerdown', { pointerId: 1 });
-    expect(buttons[0].element.style.inlineSize).toBe('114.99999999999999px');
-    expect(buttons[1].element.style.inlineSize).toBe('');
+    await buttons[0].trigger('pointerup', { pointerId: 1 });
+    expect(getInlineSizes(buttons)).toEqual([115, 85]);
+
+    vi.advanceTimersByTime(149);
+    expect(getInlineSizes(buttons)).toEqual([115, 85]);
+
+    vi.advanceTimersByTime(1);
+    expect(getInlineSizes(buttons)).toEqual([null, null]);
+  });
+
+  it('长按超过阈值后在释放时立即恢复', async () => {
+    vi.useFakeTimers();
+    mockWidthTransitionDuration();
+    const wrapper = mount(MatBtnGroup, {
+      slots: {
+        default: () => [
+          h(MatBtn, null, () => '一'),
+          h(MatBtn, null, () => '二'),
+        ],
+      },
+    });
+    const buttons = wrapper.findAll('button');
+    mockButtonWidths(buttons, [100, 100]);
+
+    await buttons[0].trigger('pointerdown', { pointerId: 1 });
+    vi.advanceTimersByTime(113);
+    expect(getInlineSizes(buttons)).toEqual([115, 85]);
 
     await buttons[0].trigger('pointerup', { pointerId: 1 });
-    expect(buttons[0].element.style.inlineSize).toBe('');
+    expect(getInlineSizes(buttons)).toEqual([null, null]);
+  });
+
+  it('Space、Enter、取消和失焦都请求恢复宽度', async () => {
+    vi.useFakeTimers();
+    mockWidthTransitionDuration();
+    const wrapper = mount(MatBtnGroup, {
+      slots: {
+        default: () => [
+          h(MatBtn, null, () => '一'),
+          h(MatBtn, null, () => '二'),
+        ],
+      },
+    });
+    const buttons = wrapper.findAll('button');
+    mockButtonWidths(buttons, [100, 100]);
+
+    await buttons[0].trigger('keydown', { key: ' ' });
+    expect(getInlineSizes(buttons)).toEqual([115, 85]);
+    await buttons[0].trigger('keyup', { key: ' ' });
+    vi.advanceTimersByTime(113);
+    expect(getInlineSizes(buttons)).toEqual([null, null]);
+
+    await buttons[1].trigger('keydown', { key: 'Enter' });
+    expect(getInlineSizes(buttons)).toEqual([85, 115]);
+    await buttons[1].trigger('focusout');
+    vi.advanceTimersByTime(113);
+    expect(getInlineSizes(buttons)).toEqual([null, null]);
+  });
+
+  it('单项 standard 和 connected 组不联动宽度', async () => {
+    const single = mount(MatBtnGroup, {
+      slots: {
+        default: () => h(MatBtn, null, () => '一'),
+      },
+    });
+    const singleButton = single.find('button');
+    mockButtonWidths([singleButton], [100]);
+
+    await singleButton.trigger('pointerdown', { pointerId: 1 });
+    expect(singleButton.element.style.inlineSize).toBe('');
+
+    const connected = mount(MatBtnGroup, {
+      props: {
+        variant: 'connected',
+        selection: 'multiple',
+      },
+      slots: {
+        default: () => [
+          h(MatBtn, { value: 'one' }, () => '一'),
+          h(MatBtn, { value: 'two' }, () => '二'),
+        ],
+      },
+    });
+    const connectedButtons = connected.findAll('button');
+    mockButtonWidths(connectedButtons, [100, 100]);
+
+    await connectedButtons[0].trigger('pointerdown', { pointerId: 2 });
+    expect(getInlineSizes(connectedButtons)).toEqual([null, null]);
+  });
+
+  it('reduced motion 在释放时立即恢复，不等待阈值', async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: true })));
+    const wrapper = mount(MatBtnGroup, {
+      slots: {
+        default: () => [
+          h(MatBtn, null, () => '一'),
+          h(MatBtn, null, () => '二'),
+        ],
+      },
+    });
+    const buttons = wrapper.findAll('button');
+    mockButtonWidths(buttons, [100, 100]);
+
+    await buttons[0].trigger('pointerdown', { pointerId: 1 });
+    expect(getInlineSizes(buttons)).toEqual([115, 85]);
+    await buttons[0].trigger('pointerup', { pointerId: 1 });
+    expect(getInlineSizes(buttons)).toEqual([null, null]);
+  });
+
+  it('重新按下和卸载会清理计时器并恢复原有行内宽度', async () => {
+    vi.useFakeTimers();
+    mockWidthTransitionDuration();
+    const wrapper = mount(MatBtnGroup, {
+      slots: {
+        default: () => [
+          h(MatBtn, { style: { inlineSize: '90px' } }, () => '一'),
+          h(MatBtn, { style: { inlineSize: '110px' } }, () => '二'),
+        ],
+      },
+    });
+    const buttons = wrapper.findAll('button');
+    mockButtonWidths(buttons, [90, 110]);
+    const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout');
+
+    await buttons[0].trigger('pointerdown', { pointerId: 1 });
+    await buttons[0].trigger('pointerup', { pointerId: 1 });
+
+    await buttons[1].trigger('pointerdown', { pointerId: 2 });
+    expect(clearTimeoutSpy).toHaveBeenCalledTimes(1);
+    expect(getInlineSizes(buttons)).toEqual([73.5, 126.5]);
+
+    const clearCallsBeforeUnmount = clearTimeoutSpy.mock.calls.length;
+    wrapper.unmount();
+    expect(clearTimeoutSpy.mock.calls.length).toBeGreaterThan(clearCallsBeforeUnmount);
+    expect(getInlineSizes(buttons)).toEqual([90, 110]);
   });
 
   it('connected fullWidth 等分子按钮并保持独立 Tab 停靠点', () => {

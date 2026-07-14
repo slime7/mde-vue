@@ -105,7 +105,7 @@ const expanded = ref(false);
 | `expanded` | `boolean` | `false` | 受控菜单展开状态 |
 | `controls` | `string` | 未设置 | 写入 trailing 按钮的 `aria-controls`，通常是外部菜单 id |
 
-父组件的 `variant`、`size`、`color` 和 `disabled` 对两侧按钮具有最终决定权，slot 子按钮上的同名视觉值不会覆盖组合参数。expanded 不改变基础颜色，只加入 12% 状态层、改变 trailing 内角并把图标旋转 180°。
+父组件的 `variant`、`size`、`color` 和 `disabled` 对两侧按钮具有最终决定权，slot 子按钮上的同名视觉值不会覆盖组合参数。expanded 不改变基础颜色，只加入 12% 状态层，将 trailing 的四个普通及按下圆角保持为 full，并把图标居中后旋转 180°。
 
 ### 事件
 

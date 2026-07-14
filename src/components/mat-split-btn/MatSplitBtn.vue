@@ -246,8 +246,14 @@ watch(
 }
 
 .mat-split-btn--expanded .mat-split-btn__trailing :deep(.mat-button-base) {
-  border-start-start-radius: var(--mat-button-full-radius);
-  border-end-start-radius: var(--mat-button-full-radius);
+  --mat-button-start-start-radius: var(--mat-button-full-radius);
+  --mat-button-start-end-radius: var(--mat-button-full-radius);
+  --mat-button-end-start-radius: var(--mat-button-full-radius);
+  --mat-button-end-end-radius: var(--mat-button-full-radius);
+  --mat-button-pressed-start-start-radius: var(--mat-button-full-radius);
+  --mat-button-pressed-start-end-radius: var(--mat-button-full-radius);
+  --mat-button-pressed-end-start-radius: var(--mat-button-full-radius);
+  --mat-button-pressed-end-end-radius: var(--mat-button-full-radius);
 }
 
 .mat-split-btn--expanded .mat-split-btn__trailing :deep(.mat-icon-btn__icon) {
