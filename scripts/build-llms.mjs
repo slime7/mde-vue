@@ -13,6 +13,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, '..');
 const docsDirectory = path.join(projectRoot, 'docs', 'site');
+const examplesDirectory = path.join(docsDirectory, 'examples');
 const llmsPath = path.join(projectRoot, 'llms.txt');
 const llmsFullPath = path.join(projectRoot, 'llms-full.txt');
 const llmsArtifacts = new Map([
@@ -113,6 +114,45 @@ function parseDocument(source, absolutePath) {
 }
 
 /**
+ * 将 VitePress 的简单代码片段包含指令展开为 Markdown 代码块。
+ *
+ * @param {string} content Markdown 正文。
+ * @param {string} documentPath Markdown 文件绝对路径。
+ * @returns {Promise<string>} 已展开代码片段的正文。
+ * @throws {Error} 代码片段位于文档目录之外或无法读取时抛出。
+ */
+async function expandCodeSnippets(content, documentPath) {
+  const matches = [...content.matchAll(/^<<<\s+([^\s{#[\]]+)\s*$/gm)];
+  const replacements = await Promise.all(matches.map(async (match) => {
+    const sourcePath = match[1].startsWith('@/')
+      ? path.resolve(docsDirectory, match[1].slice(2))
+      : path.resolve(path.dirname(documentPath), match[1]);
+    const relativeSourcePath = path.relative(docsDirectory, sourcePath);
+
+    if (relativeSourcePath.startsWith('..') || path.isAbsolute(relativeSourcePath)) {
+      throw new Error(`${match[1]} 不在 VitePress 文档目录中。`);
+    }
+
+    const source = (await readFile(sourcePath, 'utf8')).trimEnd();
+    const language = path.extname(sourcePath).slice(1) || 'text';
+
+    return {
+      end: match.index + match[0].length,
+      start: match.index,
+      value: `\`\`\`${language}\n${source}\n\`\`\``,
+    };
+  }));
+
+  return replacements
+    .sort((left, right) => right.start - left.start)
+    .reduce((result, replacement) => (
+      result.slice(0, replacement.start)
+      + replacement.value
+      + result.slice(replacement.end)
+    ), content);
+}
+
+/**
  * 读取并排序所有纳入 AI 文档的 Markdown 页面。
  *
  * @returns {Promise<DocumentEntry[]>} 已排序的页面。
@@ -121,8 +161,16 @@ async function collectDocuments() {
   const markdownFiles = await findMarkdownFiles(docsDirectory);
   const documents = await Promise.all(markdownFiles.map(async (absolutePath) => {
     const source = await readFile(absolutePath, 'utf8');
+    const document = parseDocument(source, absolutePath);
 
-    return parseDocument(source, absolutePath);
+    if (!document) {
+      return null;
+    }
+
+    return {
+      ...document,
+      content: await expandCodeSnippets(document.content, absolutePath),
+    };
   }));
 
   return documents
@@ -224,6 +272,11 @@ export async function copyLlmsArtifacts(outDirectory) {
   await Promise.all([
     cp(llmsPath, path.join(outDirectory, 'llms.txt')),
     cp(llmsFullPath, path.join(outDirectory, 'llms-full.txt')),
+    cp(
+      examplesDirectory,
+      path.join(outDirectory, 'docs', 'site', 'examples'),
+      { recursive: true },
+    ),
     ...documents.map(async (document) => {
       const destination = path.join(outDirectory, document.relativePath);
 

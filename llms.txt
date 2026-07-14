@@ -16,8 +16,7 @@
 - [限制](docs/site/guide/limitations.md): 记录 mdu-ui 当前明确不支持的运行环境、分发方式和按钮能力。
 - [Split button 拆分按钮](docs/site/components/split-button.md): mat-split-btn 的双按钮组合、受控展开、事件、菜单 ARIA 和 slots。
 - [Checkbox 复选框](docs/site/components/checkbox.md): mat-checkbox 的布尔与数组 v-model、不确定态、配色、事件和默认 slot。
-- [Radio 单选按钮](docs/site/components/radio.md): mat-radio 的独立 v-model、标签、禁用、配色及与 mat-radio-group 的关系。
-- [Radio group 单选组](docs/site/components/radio-group.md): mat-radio-group 的组标签、受控单选、颜色与禁用级联、方向键和 roving tabindex。
+- [Radio 单选按钮与单选组](docs/site/components/radio.md): mat-radio 与 mat-radio-group 的独立或成组 v-model、标签、禁用、配色和键盘交互。
 - [Switch 开关](docs/site/components/switch.md): mat-switch 的布尔 v-model、三档内置图标、配色、事件和默认 slot。
 - [Card 卡片](docs/site/components/card.md): mat-card 的 Material 3 外观、局部配色、内容、操作区与链接式交互。
 - [List 列表](docs/site/components/list.md): mat-list 与 mat-list-item 的 Material 3 Expressive 外观、内容结构、操作和受控选择。

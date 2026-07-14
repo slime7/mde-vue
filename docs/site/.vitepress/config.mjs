@@ -76,8 +76,7 @@ export default defineConfig({
             collapsed: false,
             items: [
               { text: 'Checkbox 复选框', link: '/components/checkbox' },
-              { text: 'Radio 单选按钮', link: '/components/radio' },
-              { text: 'Radio group 单选组', link: '/components/radio-group' },
+              { text: 'Radio 单选按钮与单选组', link: '/components/radio' },
               { text: 'Switch 开关', link: '/components/switch' },
             ],
           },

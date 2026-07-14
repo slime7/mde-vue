@@ -12,7 +12,7 @@
 - 组件渲染、主题计算、CSS 令牌和文档生成保持边界清晰。
 - 组件默认读取语义令牌；显式十六进制 `color` 通过共享配色模块生成局部 Material 配色，不在组件内重复计算规则。
 - 原生 CSS 令牌是运行时权威值；Tailwind 适配层只提供静态名称映射。
-- Markdown 是人工维护的使用文档权威来源，AI 文本是生成产物。
+- Markdown 及其直接引用的 Vue 示例文件是人工维护的使用文档权威来源，AI 文本是生成产物。
 - 包不生成或提交用于分发的 `dist/`。
 
 ## 共享组件基础层
@@ -70,7 +70,7 @@ Tailwind 适配文件通过 `@theme inline` 将公开的 reference 和 system �
 
 demo 从包的公开出口加载组件和样式，用于人工查看主题与组件状态。`docs/site/` 是 VitePress 的唯一源目录，包含中文使用文档、AI 使用指南和交互示例。`docs/project/` 保存产品愿景、架构、公共抽象、开发入门和 ADR，不进入 VitePress 构建。
 
-`docs/site/` 中带 frontmatter 标记的 Markdown 页面按顺序生成根目录 `llms.txt` 和 `llms-full.txt`；项目维护文档和纯交互页面不进入 AI 使用文档。
+`docs/site/` 中带 frontmatter 标记的 Markdown 页面按顺序生成根目录 `llms.txt` 和 `llms-full.txt`。组件示例保存在 `docs/site/examples/`，同一 Vue 文件既由 VitePress 作为代码片段展示，也作为页面中的真实组件渲染；AI 文档生成器会把代码片段包含指令展开为完整代码块。项目维护文档和纯交互页面不进入 AI 使用文档。
 
 ## 关键数据流
 
@@ -97,11 +97,13 @@ flowchart LR
 ```mermaid
 flowchart LR
     A["带 AI 标记的 Markdown"] --> B["文档生成脚本"]
+    E["Markdown 引用的 Vue 示例"] --> B
+    E --> F["VitePress 示例预览"]
     B --> C["llms.txt"]
     B --> D["llms-full.txt"]
-    A --> E["VitePress"]
-    C --> E
-    D --> E
+    A --> F
+    C --> F
+    D --> F
 ```
 
 ## 外部依赖与运行边界

@@ -24,7 +24,9 @@ describe('选择控件样式规格', () => {
     expect(checkbox).toContain('@supports (border-shape: inset(0 round 2px))');
     expect(radio).toContain('clip-path: circle');
     expect(radio).toContain('@supports (border-shape: circle(50%))');
-    expect(matSwitch).toContain('@supports (border-shape: inset(0 round 50%))');
+    expect(matSwitch).toContain('@supports (border-shape: inset(0 round 1px))');
+    expect(matSwitch).toContain('border-shape: inset(0 round var(--mat-sys-shape-corner-full))');
+    expect(matSwitch).not.toContain('border-shape: inset(0 round 50%)');
   });
 
   it('保留状态层、可见焦点和 reduced-motion', () => {

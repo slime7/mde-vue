@@ -2,10 +2,10 @@
 @import 'mdu-ui/tailwind.css';
 
 :root {
-  --vp-c-brand-1: var(--mat-color-primary, #00639c);
-  --vp-c-brand-2: var(--mat-color-primary, #00639c);
-  --vp-c-brand-3: var(--mat-color-primary-container, #cee5ff);
-  --vp-c-brand-soft: color-mix(in srgb, var(--mat-color-primary, #00639c) 14%, transparent);
+  --vp-c-brand-1: var(--mat-sys-color-primary, #00639c);
+  --vp-c-brand-2: var(--mat-sys-color-primary, #00639c);
+  --vp-c-brand-3: var(--mat-sys-color-primary-container, #cee5ff);
+  --vp-c-brand-soft: color-mix(in srgb, var(--mat-sys-color-primary, #00639c) 14%, transparent);
   --vp-font-family-base: 'Noto Sans SC', system-ui, sans-serif;
   --mat-ref-typeface-brand: 'Noto Sans SC', system-ui, sans-serif;
   --mat-ref-typeface-plain: 'Noto Sans SC', system-ui, sans-serif;

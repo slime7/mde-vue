@@ -13,24 +13,15 @@ order: 80
 
 ## 示例
 
+以下代码块由 VitePress 直接读取实际渲染的 Vue 示例文件，因此代码与紧随其后的预览始终来自同一份源码。
+
 ### 布尔值
 
-```vue
-<script setup>
-import { ref } from 'vue';
-
-const newsletter = ref(true);
-</script>
-
-<template>
-  <mat-checkbox v-model="newsletter">接收更新邮件</mat-checkbox>
-</template>
-```
+<<< @/examples/selection/CheckboxBooleanExample.vue
 
 <ClientOnly>
   <DocsPreview label="Checkbox 布尔值预览" stacked>
-    <mat-checkbox v-model="checkboxNewsletter">接收更新邮件</mat-checkbox>
-    <span>当前值：{{ checkboxNewsletter }}</span>
+    <CheckboxBooleanExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -38,53 +29,21 @@ const newsletter = ref(true);
 
 每个实例用 `value` 声明自己的候选值。组件添加或移除项目时返回新数组，不修改原数组。
 
-```vue
-<script setup>
-import { ref } from 'vue';
-
-const filters = ref(['offline']);
-</script>
-
-<template>
-  <mat-checkbox v-model="filters" value="offline">可离线使用</mat-checkbox>
-  <mat-checkbox v-model="filters" value="shared">与我共享</mat-checkbox>
-</template>
-```
+<<< @/examples/selection/CheckboxArrayExample.vue
 
 <ClientOnly>
   <DocsPreview label="Checkbox 数组绑定预览" stacked>
-    <mat-checkbox v-model="checkboxFilters" value="offline">可离线使用</mat-checkbox>
-    <mat-checkbox v-model="checkboxFilters" value="shared">与我共享</mat-checkbox>
-    <span>当前值：{{ checkboxFilters.join('、') || '无' }}</span>
+    <CheckboxArrayExample />
   </DocsPreview>
 </ClientOnly>
 
 ### 父子选择与不确定态
 
-```vue
-<mat-checkbox
-  :model-value="allChecked"
-  :indeterminate="partiallyChecked"
-  @update:model-value="toggleAll"
->
-  全部权限
-</mat-checkbox>
-```
+<<< @/examples/selection/CheckboxIndeterminateExample.vue
 
 <ClientOnly>
   <DocsPreview label="Checkbox 不确定态预览" stacked>
-    <mat-checkbox
-      :model-value="checkboxAllChecked"
-      :indeterminate="checkboxPartiallyChecked"
-      color="#6750a4"
-      @update:model-value="toggleAllCheckboxes"
-    >
-      全部权限
-    </mat-checkbox>
-    <div class="checkbox-children">
-      <mat-checkbox v-model="checkboxPermissions" value="read">读取</mat-checkbox>
-      <mat-checkbox v-model="checkboxPermissions" value="write">写入</mat-checkbox>
-    </div>
+    <CheckboxIndeterminateExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -125,27 +84,7 @@ const filters = ref(['offline']);
 尺寸、状态和父子选择行为依据 Material 3 [Checkbox specs](https://m3.material.io/components/checkbox/specs) 与 [Checkbox guidelines](https://m3.material.io/components/checkbox/guidelines)。
 
 <script setup>
-import { computed, ref } from 'vue';
-
-const checkboxNewsletter = ref(true);
-const checkboxFilters = ref(['offline']);
-const checkboxPermissions = ref(['read']);
-const checkboxAllChecked = computed(() => checkboxPermissions.value.length === 2);
-const checkboxPartiallyChecked = computed(() => (
-  checkboxPermissions.value.length > 0 && !checkboxAllChecked.value
-));
-
-function toggleAllCheckboxes(checked) {
-  checkboxPermissions.value = checked ? ['read', 'write'] : [];
-}
+import CheckboxArrayExample from '../examples/selection/CheckboxArrayExample.vue';
+import CheckboxBooleanExample from '../examples/selection/CheckboxBooleanExample.vue';
+import CheckboxIndeterminateExample from '../examples/selection/CheckboxIndeterminateExample.vue';
 </script>
-
-<style scoped>
-.checkbox-children {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  align-items: flex-start;
-  padding-inline-start: 24px;
-}
-</style>

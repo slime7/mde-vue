@@ -1041,6 +1041,8 @@ const splitExpanded = ref(false);
 
 ## 示例
 
+以下代码块由 VitePress 直接读取实际渲染的 Vue 示例文件，因此代码与紧随其后的预览始终来自同一份源码。
+
 ### 布尔值
 
 ```vue
@@ -1051,14 +1053,26 @@ const newsletter = ref(true);
 </script>
 
 <template>
-  <mat-checkbox v-model="newsletter">接收更新邮件</mat-checkbox>
+  <div class="example-stack">
+    <mat-checkbox v-model="newsletter">
+      接收更新邮件
+    </mat-checkbox>
+    <span>当前值：{{ newsletter }}</span>
+  </div>
 </template>
-```
 
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+</style>
+```
 <ClientOnly>
   <DocsPreview label="Checkbox 布尔值预览" stacked>
-    <mat-checkbox v-model="checkboxNewsletter">接收更新邮件</mat-checkbox>
-    <span>当前值：{{ checkboxNewsletter }}</span>
+    <CheckboxBooleanExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -1074,45 +1088,91 @@ const filters = ref(['offline']);
 </script>
 
 <template>
-  <mat-checkbox v-model="filters" value="offline">可离线使用</mat-checkbox>
-  <mat-checkbox v-model="filters" value="shared">与我共享</mat-checkbox>
+  <div class="example-stack">
+    <mat-checkbox v-model="filters" value="offline">
+      可离线使用
+    </mat-checkbox>
+    <mat-checkbox v-model="filters" value="shared">
+      与我共享
+    </mat-checkbox>
+    <span>当前值：{{ filters.join('、') || '无' }}</span>
+  </div>
 </template>
-```
 
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+</style>
+```
 <ClientOnly>
   <DocsPreview label="Checkbox 数组绑定预览" stacked>
-    <mat-checkbox v-model="checkboxFilters" value="offline">可离线使用</mat-checkbox>
-    <mat-checkbox v-model="checkboxFilters" value="shared">与我共享</mat-checkbox>
-    <span>当前值：{{ checkboxFilters.join('、') || '无' }}</span>
+    <CheckboxArrayExample />
   </DocsPreview>
 </ClientOnly>
 
 ### 父子选择与不确定态
 
 ```vue
-<mat-checkbox
-  :model-value="allChecked"
-  :indeterminate="partiallyChecked"
-  @update:model-value="toggleAll"
->
-  全部权限
-</mat-checkbox>
-```
+<script setup>
+import { computed, ref } from 'vue';
 
-<ClientOnly>
-  <DocsPreview label="Checkbox 不确定态预览" stacked>
+const permissions = ref(['read']);
+const allChecked = computed(() => permissions.value.length === 2);
+const partiallyChecked = computed(() => (
+  permissions.value.length > 0 && !allChecked.value
+));
+
+function toggleAll(checked) {
+  permissions.value = checked ? ['read', 'write'] : [];
+}
+</script>
+
+<template>
+  <div class="example-stack">
     <mat-checkbox
-      :model-value="checkboxAllChecked"
-      :indeterminate="checkboxPartiallyChecked"
+      :model-value="allChecked"
+      :indeterminate="partiallyChecked"
       color="#6750a4"
-      @update:model-value="toggleAllCheckboxes"
+      @update:model-value="toggleAll"
     >
       全部权限
     </mat-checkbox>
-    <div class="checkbox-children">
-      <mat-checkbox v-model="checkboxPermissions" value="read">读取</mat-checkbox>
-      <mat-checkbox v-model="checkboxPermissions" value="write">写入</mat-checkbox>
+    <div class="example-children">
+      <mat-checkbox v-model="permissions" value="read">
+        读取
+      </mat-checkbox>
+      <mat-checkbox v-model="permissions" value="write">
+        写入
+      </mat-checkbox>
     </div>
+  </div>
+</template>
+
+<style scoped>
+.example-stack,
+.example-children {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.example-stack {
+  gap: 8px;
+}
+
+.example-children {
+  gap: 0;
+  padding-inline-start: 24px;
+}
+</style>
+```
+<ClientOnly>
+  <DocsPreview label="Checkbox 不确定态预览" stacked>
+    <CheckboxIndeterminateExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -1153,38 +1213,22 @@ const filters = ref(['offline']);
 尺寸、状态和父子选择行为依据 Material 3 [Checkbox specs](https://m3.material.io/components/checkbox/specs) 与 [Checkbox guidelines](https://m3.material.io/components/checkbox/guidelines)。
 
 <script setup>
-import { computed, ref } from 'vue';
-
-const checkboxNewsletter = ref(true);
-const checkboxFilters = ref(['offline']);
-const checkboxPermissions = ref(['read']);
-const checkboxAllChecked = computed(() => checkboxPermissions.value.length === 2);
-const checkboxPartiallyChecked = computed(() => (
-  checkboxPermissions.value.length > 0 && !checkboxAllChecked.value
-));
-
-function toggleAllCheckboxes(checked) {
-  checkboxPermissions.value = checked ? ['read', 'write'] : [];
-}
+import CheckboxArrayExample from '../examples/selection/CheckboxArrayExample.vue';
+import CheckboxBooleanExample from '../examples/selection/CheckboxBooleanExample.vue';
+import CheckboxIndeterminateExample from '../examples/selection/CheckboxIndeterminateExample.vue';
 </script>
 
-<style scoped>
-.checkbox-children {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  align-items: flex-start;
-  padding-inline-start: 24px;
-}
-</style>
-
-# Radio 单选按钮
+# Radio 单选按钮与单选组
 
 ## 组件简介
 
-`<mat-radio>` 的组件导出名是 `MatRadio`。它表示一项单选候选值，可以独立绑定，也可以放入 [`<mat-radio-group>`](/components/radio-group) 由 `MatRadioGroup` 统一管理。组件按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互目标。
+`<mat-radio>` 的组件导出名是 `MatRadio`，表示一个单选候选值；`<mat-radio-group>` 的组件导出名是 `MatRadioGroup`，通过默认 Slot 组织多个 Radio，并统一管理单值 `v-model`、组标签、禁用、配色和键盘焦点。Radio 可以独立绑定，也可以进入 Group 由组模型接管。
+
+Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互目标。需要标准方向键导航、唯一 Tab 停靠点或组级禁用与配色时，应使用 Radio Group。
 
 ## 示例
+
+以下代码块由 VitePress 直接读取实际渲染的 Vue 示例文件，因此代码与紧随其后的预览始终来自同一份源码。
 
 ### 独立绑定
 
@@ -1196,22 +1240,79 @@ const density = ref('comfortable');
 </script>
 
 <template>
-  <mat-radio v-model="density" value="compact">紧凑</mat-radio>
-  <mat-radio v-model="density" value="comfortable">舒适</mat-radio>
+  <div class="example-stack">
+    <mat-radio v-model="density" value="compact">
+      紧凑
+    </mat-radio>
+    <mat-radio v-model="density" value="comfortable" color="secondary">
+      舒适
+    </mat-radio>
+    <span>当前值：{{ density }}</span>
+  </div>
 </template>
-```
 
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+</style>
+```
 <ClientOnly>
   <DocsPreview label="Radio 独立绑定预览" stacked>
-    <mat-radio v-model="radioDensity" value="compact">紧凑</mat-radio>
-    <mat-radio v-model="radioDensity" value="comfortable" color="secondary">舒适</mat-radio>
-    <span>当前值：{{ radioDensity }}</span>
+    <RadioStandaloneExample />
   </DocsPreview>
 </ClientOnly>
 
-独立 Radio 共享同一个 `v-model` 时仍保持单值。需要标准方向键导航和统一禁用状态时，应使用 `MatRadioGroup`。
+独立 Radio 共享同一个 `v-model` 时仍保持单值，但不提供组级键盘导航。
 
-## API
+### Radio Group
+
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const themeMode = ref('system');
+</script>
+
+<template>
+  <div class="example-stack">
+    <mat-radio-group v-model="themeMode" label="主题模式" color="#6750a4">
+      <mat-radio value="system">
+        跟随系统
+      </mat-radio>
+      <mat-radio value="light">
+        亮色
+      </mat-radio>
+      <mat-radio value="dark">
+        暗色
+      </mat-radio>
+      <mat-radio value="legacy" disabled>
+        旧主题
+      </mat-radio>
+    </mat-radio-group>
+    <span>当前值：{{ themeMode }}</span>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+</style>
+```
+<ClientOnly>
+  <DocsPreview label="Radio group 受控单选预览" stacked>
+    <RadioGroupExample />
+  </DocsPreview>
+</ClientOnly>
+
+## MatRadio API
 
 ### 属性
 
@@ -1224,71 +1325,24 @@ const density = ref('comfortable');
 
 进入 `MatRadioGroup` 后，Group 的模型、禁用和颜色上下文生效；子项显式 `disabled` 与 Group 禁用叠加，显式 `color` 优先。此时不要再给子项传入 `v-model`。
 
-## 事件
+### 事件
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
 | `update:modelValue` | 当前 `value` | 独立 Radio 被选中；Group 内由 Group 发出更新 |
 | `change` | 原生 `Event` 或触发方向键的 `KeyboardEvent` | 当前 Radio 请求成为选中项 |
 
-## Slots
+### Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
 | 默认 | 描述当前候选值的相邻标签；省略时必须提供 `aria-label` |
 
-## 状态
+### 状态
 
-组件支持未选中、选中、hover、focus-visible、pressed 和 disabled。已经选中的 Radio 再次操作不会取消选择。组件没有公开方法。
+Radio 支持未选中、选中、hover、focus-visible、pressed 和 disabled。已经选中的 Radio 再次操作不会取消选择。组件没有公开方法。
 
-## 参考来源
-
-尺寸、标签和单选行为依据 Material 3 [Radio button specs](https://m3.material.io/components/radio-button/specs) 与 [Radio button guidelines](https://m3.material.io/components/radio-button/guidelines)。
-
-<script setup>
-import { ref } from 'vue';
-
-const radioDensity = ref('comfortable');
-</script>
-
-# Radio group 单选组
-
-## 组件简介
-
-`<mat-radio-group>` 的组件导出名是 `MatRadioGroup`。它通过默认 Slot 组织多个 [`<mat-radio>`](/components/radio)（`MatRadio`），统一管理单值 `v-model`、组标签、禁用和配色，并实现单选组的方向键与 roving tabindex。
-
-## 示例
-
-```vue
-<script setup>
-import { ref } from 'vue';
-
-const themeMode = ref('system');
-</script>
-
-<template>
-  <mat-radio-group v-model="themeMode" label="主题模式" color="#6750a4">
-    <mat-radio value="system">跟随系统</mat-radio>
-    <mat-radio value="light">亮色</mat-radio>
-    <mat-radio value="dark">暗色</mat-radio>
-    <mat-radio value="legacy" disabled>旧主题</mat-radio>
-  </mat-radio-group>
-</template>
-```
-
-<ClientOnly>
-  <DocsPreview label="Radio group 受控单选预览" stacked>
-    <mat-radio-group v-model="radioGroupMode" label="主题模式" color="#6750a4">
-      <mat-radio value="system">跟随系统</mat-radio>
-      <mat-radio value="light">亮色</mat-radio>
-      <mat-radio value="dark">暗色</mat-radio>
-      <mat-radio value="legacy" disabled>旧主题</mat-radio>
-    </mat-radio-group>
-    <span>当前值：{{ radioGroupMode }}</span>
-  </DocsPreview>
-</ClientOnly>
-
-## API
+## MatRadioGroup API
 
 ### 属性
 
@@ -1301,32 +1355,35 @@ const themeMode = ref('system');
 
 Group 只管理 Vue 状态，不公开 `name`、`required`、`form`、表单提交或原生校验能力。
 
-## 事件
+### 事件
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
 | `update:modelValue` | 下一选中值 | 指针、Space 或方向键选择新的 Radio |
 | `change` | 原生 `Event` 或 `KeyboardEvent` | 选中值实际发生变化 |
 
-## Slots
+### Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
 | 默认 | 放置 `MatRadio`；可以经过普通布局组件，但不要混入另一套单选组 |
 
-## 状态与键盘
+### 状态与键盘
 
 - Tab 只进入当前选中项；没有选中值时进入首个可用项。
 - `ArrowRight`、`ArrowDown` 选择下一项，`ArrowLeft`、`ArrowUp` 选择上一项；到边界后循环并跳过禁用项。
 - Space 使用原生 Radio 行为选择当前项。
 - Group 禁用与子项禁用叠加；子项显式 `color` 优先于 Group。
 
-组件没有公开方法。
+Group 没有公开方法。
+
+## 参考来源
+
+尺寸、标签和单选行为依据 Material 3 [Radio button specs](https://m3.material.io/components/radio-button/specs) 与 [Radio button guidelines](https://m3.material.io/components/radio-button/guidelines)。
 
 <script setup>
-import { ref } from 'vue';
-
-const radioGroupMode = ref('system');
+import RadioGroupExample from '../examples/selection/RadioGroupExample.vue';
+import RadioStandaloneExample from '../examples/selection/RadioStandaloneExample.vue';
 </script>
 
 # Switch 开关
@@ -1337,32 +1394,48 @@ const radioGroupMode = ref('system');
 
 ## 示例
 
+以下代码块由 VitePress 直接读取实际渲染的 Vue 示例文件，因此代码与紧随其后的预览始终来自同一份源码。
+
 ### 无图标与内置图标
 
 ```vue
 <script setup>
 import { ref } from 'vue';
 
-const notifications = ref(true);
+const withoutIcon = ref(true);
+const selectedIcon = ref(true);
+const bothIcons = ref(true);
 </script>
 
 <template>
-  <mat-switch v-model="notifications">通知</mat-switch>
-  <mat-switch v-model="notifications" icons="selected">仅显示开启图标</mat-switch>
-  <mat-switch v-model="notifications" icons="both">显示开启与关闭图标</mat-switch>
-</template>
-```
-
-<ClientOnly>
-  <DocsPreview label="Switch 图标配置预览" stacked>
-    <mat-switch v-model="switchNotifications">无图标</mat-switch>
-    <mat-switch v-model="switchSelectedIcon" icons="selected" color="secondary">
+  <div class="example-stack">
+    <mat-switch v-model="withoutIcon">
+      无图标
+    </mat-switch>
+    <mat-switch v-model="selectedIcon" icons="selected" color="secondary">
       仅显示开启图标
     </mat-switch>
-    <mat-switch v-model="switchBothIcons" icons="both" color="#6750a4">
+    <mat-switch v-model="bothIcons" icons="both" color="#6750a4">
       显示开启与关闭图标
     </mat-switch>
-    <mat-switch disabled>禁用设置</mat-switch>
+    <mat-switch disabled>
+      禁用设置
+    </mat-switch>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+</style>
+```
+<ClientOnly>
+  <DocsPreview label="Switch 图标配置预览" stacked>
+    <SwitchIconsExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -1401,11 +1474,7 @@ Switch 只表示二元状态，不用于在两个对立选项间选择。组件�
 尺寸、图标配置和即时生效行为依据 Material 3 [Switch specs](https://m3.material.io/components/switch/specs) 与 [Switch guidelines](https://m3.material.io/components/switch/guidelines)。
 
 <script setup>
-import { ref } from 'vue';
-
-const switchNotifications = ref(true);
-const switchSelectedIcon = ref(true);
-const switchBothIcons = ref(false);
+import SwitchIconsExample from '../examples/selection/SwitchIconsExample.vue';
 </script>
 
 # Card 卡片

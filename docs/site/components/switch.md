@@ -13,32 +13,15 @@ order: 86
 
 ## 示例
 
+以下代码块由 VitePress 直接读取实际渲染的 Vue 示例文件，因此代码与紧随其后的预览始终来自同一份源码。
+
 ### 无图标与内置图标
 
-```vue
-<script setup>
-import { ref } from 'vue';
-
-const notifications = ref(true);
-</script>
-
-<template>
-  <mat-switch v-model="notifications">通知</mat-switch>
-  <mat-switch v-model="notifications" icons="selected">仅显示开启图标</mat-switch>
-  <mat-switch v-model="notifications" icons="both">显示开启与关闭图标</mat-switch>
-</template>
-```
+<<< @/examples/selection/SwitchIconsExample.vue
 
 <ClientOnly>
   <DocsPreview label="Switch 图标配置预览" stacked>
-    <mat-switch v-model="switchNotifications">无图标</mat-switch>
-    <mat-switch v-model="switchSelectedIcon" icons="selected" color="secondary">
-      仅显示开启图标
-    </mat-switch>
-    <mat-switch v-model="switchBothIcons" icons="both" color="#6750a4">
-      显示开启与关闭图标
-    </mat-switch>
-    <mat-switch disabled>禁用设置</mat-switch>
+    <SwitchIconsExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -77,9 +60,5 @@ Switch 只表示二元状态，不用于在两个对立选项间选择。组件�
 尺寸、图标配置和即时生效行为依据 Material 3 [Switch specs](https://m3.material.io/components/switch/specs) 与 [Switch guidelines](https://m3.material.io/components/switch/guidelines)。
 
 <script setup>
-import { ref } from 'vue';
-
-const switchNotifications = ref(true);
-const switchSelectedIcon = ref(true);
-const switchBothIcons = ref(false);
+import SwitchIconsExample from '../examples/selection/SwitchIconsExample.vue';
 </script>

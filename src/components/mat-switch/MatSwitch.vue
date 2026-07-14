@@ -177,10 +177,10 @@ function handleChange(event) {
   clip-path: polygon(10% 0, 50% 40%, 90% 0, 100% 10%, 60% 50%, 100% 90%, 90% 100%, 50% 60%, 10% 100%, 0 90%, 40% 50%, 0 10%);
 }
 
-@supports (border-shape: inset(0 round 50%)) {
+@supports (border-shape: inset(0 round 1px)) {
   .mat-switch__track {
     border-radius: 0;
-    border-shape: inset(0 round 50%);
+    border-shape: inset(0 round var(--mat-sys-shape-corner-full));
   }
 
   .mat-switch__handle {
