@@ -7,6 +7,9 @@ import MatCard from './components/mat-card/MatCard.vue';
 import MatCardActionArea from './components/mat-card/MatCardActionArea.vue';
 import MatCardContent from './components/mat-card/MatCardContent.vue';
 import MatCardActions from './components/mat-card/MatCardActions.vue';
+import MatList from './components/mat-list/MatList.vue';
+import MatListItem from './components/mat-list/MatListItem.vue';
+import MatDivider from './components/mat-divider/MatDivider.vue';
 import MAT_UI_KEY from './mat-ui-context';
 import createThemeController from './theme';
 import MAT_THEME_KEY from './theme-context';
@@ -72,6 +75,12 @@ export function createMatUi(options = {}) {
       app.component('mat-card-content', MatCardContent);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-card-actions', MatCardActions);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-list', MatList);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-list-item', MatListItem);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-divider', MatDivider);
       app.provide(MAT_UI_KEY, componentOptions);
       app.provide(MAT_THEME_KEY, theme);
     },

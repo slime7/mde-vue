@@ -6,4 +6,7 @@ export { default as MatCard } from './components/mat-card/MatCard.vue';
 export { default as MatCardActionArea } from './components/mat-card/MatCardActionArea.vue';
 export { default as MatCardContent } from './components/mat-card/MatCardContent.vue';
 export { default as MatCardActions } from './components/mat-card/MatCardActions.vue';
+export { default as MatList } from './components/mat-list/MatList.vue';
+export { default as MatListItem } from './components/mat-list/MatListItem.vue';
+export { default as MatDivider } from './components/mat-divider/MatDivider.vue';
 export { createMatUi, useMatTheme } from './plugin';

@@ -274,6 +274,35 @@
   --mat-sys-interaction-focus-ring-width: 3px;
   --mat-sys-interaction-focus-ring-offset: 2px;
 
+  /* List and divider component tokens */
+  --mat-list-container-shape: var(--mat-sys-shape-corner-large);
+  --mat-list-segmented-gap: 2px;
+  --mat-list-item-container-color: var(--mat-sys-color-surface);
+  --mat-list-item-label-text-color: var(--mat-sys-color-on-surface);
+  --mat-list-item-supporting-text-color: var(--mat-sys-color-on-surface-variant);
+  --mat-list-item-state-layer-color: var(--mat-sys-color-on-surface);
+  --mat-list-item-selected-container-color: var(--mat-sys-color-secondary-container);
+  --mat-list-item-selected-label-text-color: var(--mat-sys-color-on-secondary-container);
+  --mat-list-item-selected-supporting-text-color: var(--mat-sys-color-on-secondary-container);
+  --mat-list-item-container-shape: var(--mat-sys-shape-corner-extra-small);
+  --mat-list-item-hover-container-shape: var(--mat-sys-shape-corner-medium);
+  --mat-list-item-interactive-container-shape: var(--mat-sys-shape-corner-large);
+  --mat-list-item-selected-container-shape: var(--mat-sys-shape-corner-large);
+  --mat-list-item-leading-space: 16px;
+  --mat-list-item-trailing-space: 16px;
+  --mat-list-item-vertical-space: 10px;
+  --mat-list-item-content-gap: 12px;
+  --mat-list-item-trailing-action-gap: 4px;
+  --mat-list-item-one-line-height: 56px;
+  --mat-list-item-two-line-height: 72px;
+  --mat-list-item-three-line-height: 88px;
+  --mat-list-item-icon-size: 20px;
+  --mat-list-item-disabled-content-opacity: .38;
+  --mat-list-item-disabled-selected-container-opacity: 12%;
+  --mat-divider-color: var(--mat-sys-color-outline-variant);
+  --mat-divider-thickness: 1px;
+  --mat-divider-inset-space: 16px;
+
   /* Button component tokens */
   --mat-btn-extra-small-container-height: 32px;
   --mat-btn-extra-small-leading-space: 12px;

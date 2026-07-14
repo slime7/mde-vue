@@ -6,6 +6,7 @@ import {
 defineOptions({ name: 'MatActionBase', inheritAttrs: false });
 
 const props = defineProps({
+  as: { type: String, default: 'button' },
   href: { type: String, default: undefined },
   disabled: { type: Boolean, default: false },
   type: { type: String, default: 'button' },
@@ -17,6 +18,8 @@ const emit = defineEmits({
   click(payload) { return payload instanceof MouseEvent; },
 });
 const isLink = computed(() => props.href !== undefined);
+const component = computed(() => (isLink.value ? 'a' : props.as));
+const isButton = computed(() => component.value === 'button');
 const isPressed = ref(false);
 let pressStartedAt = 0;
 let releaseTimer;
@@ -28,28 +31,46 @@ function clearReleaseTimer() {
   }
 }
 function finishPress() {
-  if (!isPressed.value) return;
+  if (!isPressed.value) {
+    return;
+  }
+
   clearReleaseTimer();
-  releaseTimer = globalThis.setTimeout(() => { isPressed.value = false; releaseTimer = undefined; }, Math.max(0, 150 - (Date.now() - pressStartedAt)));
+  releaseTimer = globalThis.setTimeout(() => {
+    isPressed.value = false;
+    releaseTimer = undefined;
+  }, Math.max(0, 150 - (Date.now() - pressStartedAt)));
 }
 function startPress() {
-  if (props.disabled) return;
+  if (props.disabled) {
+    return;
+  }
+
   clearReleaseTimer();
   pressStartedAt = Date.now();
   isPressed.value = true;
 }
 function handlePointerDown(event) {
-  if (event.button !== 0) return;
+  if (event.button !== 0) {
+    return;
+  }
+
   startPress();
   event.currentTarget.setPointerCapture?.(event.pointerId);
 }
 function handleKeyDown(event) {
   const keys = isLink.value ? ['Enter'] : [' ', 'Enter'];
-  if (!event.repeat && keys.includes(event.key)) startPress();
+
+  if (!event.repeat && keys.includes(event.key)) {
+    startPress();
+  }
 }
 function handleKeyUp(event) {
   const keys = isLink.value ? ['Enter'] : [' ', 'Enter'];
-  if (keys.includes(event.key)) finishPress();
+
+  if (keys.includes(event.key)) {
+    finishPress();
+  }
 }
 function handleClick(event) {
   if (props.disabled) {
@@ -57,15 +78,21 @@ function handleClick(event) {
     event.stopImmediatePropagation();
     return;
   }
+
   emit('click', event);
 }
-watch(() => props.disabled, (disabled) => { if (disabled) { clearReleaseTimer(); isPressed.value = false; } });
+watch(() => props.disabled, (disabled) => {
+  if (disabled) {
+    clearReleaseTimer();
+    isPressed.value = false;
+  }
+});
 onBeforeUnmount(clearReleaseTimer);
 </script>
 
 <template>
   <component
-    :is="isLink ? 'a' : 'button'"
+    :is="component"
     v-bind="$attrs"
     class="mat-action-base"
     :class="{
@@ -75,12 +102,12 @@ onBeforeUnmount(clearReleaseTimer);
       'mat-action-base--use-cursor': useCursor,
       'mat-action-base--focus-ring': focusRing,
     }"
-    :aria-disabled="isLink && disabled ? 'true' : undefined"
-    :disabled="!isLink ? disabled : undefined"
+    :aria-disabled="!isButton && disabled ? 'true' : $attrs['aria-disabled']"
+    :disabled="isButton ? disabled : undefined"
     :href="isLink && !disabled ? href : undefined"
-    :role="isLink && disabled ? 'link' : undefined"
-    :tabindex="isLink && disabled ? -1 : undefined"
-    :type="!isLink ? type : undefined"
+    :role="isLink && disabled ? 'link' : $attrs.role"
+    :tabindex="!isButton && disabled ? -1 : $attrs.tabindex"
+    :type="isButton ? type : undefined"
     @blur="finishPress"
     @click="handleClick"
     @keydown="handleKeyDown"
