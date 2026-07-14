@@ -81,9 +81,13 @@ import { MatCard } from 'mdu-ui/components/mat-card';
 import { MatList } from 'mdu-ui/components/mat-list';
 import { MatListItem } from 'mdu-ui/components/mat-list-item';
 import { MatDivider } from 'mdu-ui/components/mat-divider';
+import { MatCheckbox } from 'mdu-ui/components/mat-checkbox';
+import { MatRadio } from 'mdu-ui/components/mat-radio';
+import { MatRadioGroup } from 'mdu-ui/components/mat-radio-group';
+import { MatSwitch } from 'mdu-ui/components/mat-switch';
 ```
 
-复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatList>` 或 `<MatListItem>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
+复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatCheckbox>` 或 `<MatRadioGroup>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
 
 ## 如何选择
 

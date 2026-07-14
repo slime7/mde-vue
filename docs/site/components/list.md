@@ -34,11 +34,27 @@ const segmentedSelected = ref(null);
 >
   <mat-list-item value="recent">
     最近更新
-    <template #trailing>{{ standardSelected === 'recent' ? '已选择' : '' }}</template>
+    <template #trailing>
+      <mat-radio
+        :model-value="standardSelected"
+        value="recent"
+        inert
+        aria-hidden="true"
+        class="list-selection-indicator"
+      />
+    </template>
   </mat-list-item>
   <mat-list-item value="name">
     名称
-    <template #trailing>{{ standardSelected === 'name' ? '已选择' : '' }}</template>
+    <template #trailing>
+      <mat-radio
+        :model-value="standardSelected"
+        value="name"
+        inert
+        aria-hidden="true"
+        class="list-selection-indicator"
+      />
+    </template>
   </mat-list-item>
 </mat-list>
 
@@ -51,11 +67,27 @@ const segmentedSelected = ref(null);
 >
   <mat-list-item value="offline">
     可离线使用
-    <template #trailing>{{ segmentedSelected === 'offline' ? '已选择' : '' }}</template>
+    <template #trailing>
+      <mat-radio
+        :model-value="segmentedSelected"
+        value="offline"
+        inert
+        aria-hidden="true"
+        class="list-selection-indicator"
+      />
+    </template>
   </mat-list-item>
   <mat-list-item value="shared">
     与我共享
-    <template #trailing>{{ segmentedSelected === 'shared' ? '已选择' : '' }}</template>
+    <template #trailing>
+      <mat-radio
+        :model-value="segmentedSelected"
+        value="shared"
+        inert
+        aria-hidden="true"
+        class="list-selection-indicator"
+      />
+    </template>
   </mat-list-item>
 </mat-list>
 ```
@@ -74,11 +106,27 @@ const segmentedSelected = ref(null);
         >
           <mat-list-item value="recent">
             最近更新
-            <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listStandardVariantSelected === 'recent' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+            <template #trailing>
+              <mat-radio
+                :model-value="listStandardVariantSelected"
+                value="recent"
+                inert
+                aria-hidden="true"
+                class="list-selection-indicator"
+              />
+            </template>
           </mat-list-item>
           <mat-list-item value="name">
             名称
-            <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listStandardVariantSelected === 'name' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+            <template #trailing>
+              <mat-radio
+                :model-value="listStandardVariantSelected"
+                value="name"
+                inert
+                aria-hidden="true"
+                class="list-selection-indicator"
+              />
+            </template>
           </mat-list-item>
         </mat-list>
       </section>
@@ -93,11 +141,27 @@ const segmentedSelected = ref(null);
         >
           <mat-list-item value="offline">
             可离线使用
-            <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listSegmentedVariantSelected === 'offline' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+            <template #trailing>
+              <mat-radio
+                :model-value="listSegmentedVariantSelected"
+                value="offline"
+                inert
+                aria-hidden="true"
+                class="list-selection-indicator"
+              />
+            </template>
           </mat-list-item>
           <mat-list-item value="shared">
             与我共享
-            <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listSegmentedVariantSelected === 'shared' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+            <template #trailing>
+              <mat-radio
+                :model-value="listSegmentedVariantSelected"
+                value="shared"
+                inert
+                aria-hidden="true"
+                class="list-selection-indicator"
+              />
+            </template>
           </mat-list-item>
         </mat-list>
       </section>
@@ -227,8 +291,30 @@ const multipleSelected = ref(['offline']);
     aria-label="排序方式"
     @select="singleSelected = $event.nextSelected"
   >
-    <mat-list-item value="recent">最近更新</mat-list-item>
-    <mat-list-item value="name">名称</mat-list-item>
+    <mat-list-item value="recent">
+      最近更新
+      <template #trailing>
+        <mat-radio
+          :model-value="singleSelected"
+          value="recent"
+          inert
+          aria-hidden="true"
+          class="list-selection-indicator"
+        />
+      </template>
+    </mat-list-item>
+    <mat-list-item value="name">
+      名称
+      <template #trailing>
+        <mat-radio
+          :model-value="singleSelected"
+          value="name"
+          inert
+          aria-hidden="true"
+          class="list-selection-indicator"
+        />
+      </template>
+    </mat-list-item>
   </mat-list>
 
   <mat-list
@@ -241,10 +327,27 @@ const multipleSelected = ref(['offline']);
     <mat-list-item value="offline">
       可离线使用
       <template #trailing>
-        <span aria-hidden="true">{{ multipleSelected.includes('offline') ? 'check_circle' : 'circle' }}</span>
+        <mat-checkbox
+          :model-value="multipleSelected"
+          value="offline"
+          inert
+          aria-hidden="true"
+          class="list-selection-indicator"
+        />
       </template>
     </mat-list-item>
-    <mat-list-item value="shared">与我共享</mat-list-item>
+    <mat-list-item value="shared">
+      与我共享
+      <template #trailing>
+        <mat-checkbox
+          :model-value="multipleSelected"
+          value="shared"
+          inert
+          aria-hidden="true"
+          class="list-selection-indicator"
+        />
+      </template>
+    </mat-list-item>
   </mat-list>
 </template>
 ```
@@ -261,11 +364,27 @@ const multipleSelected = ref(['offline']);
     >
       <mat-list-item value="recent">
         最近更新
-        <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listSingleSelected === 'recent' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+        <template #trailing>
+          <mat-radio
+            :model-value="listSingleSelected"
+            value="recent"
+            inert
+            aria-hidden="true"
+            class="list-selection-indicator"
+          />
+        </template>
       </mat-list-item>
       <mat-list-item value="name">
         名称
-        <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listSingleSelected === 'name' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+        <template #trailing>
+          <mat-radio
+            :model-value="listSingleSelected"
+            value="name"
+            inert
+            aria-hidden="true"
+            class="list-selection-indicator"
+          />
+        </template>
       </mat-list-item>
     </mat-list>
     <mat-list
@@ -278,17 +397,33 @@ const multipleSelected = ref(['offline']);
     >
       <mat-list-item value="offline">
         可离线使用
-        <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listMultipleSelected.includes('offline') ? 'check_box' : 'check_box_outline_blank' }}</span></template>
+        <template #trailing>
+          <mat-checkbox
+            :model-value="listMultipleSelected"
+            value="offline"
+            inert
+            aria-hidden="true"
+            class="list-selection-indicator"
+          />
+        </template>
       </mat-list-item>
       <mat-list-item value="shared">
         与我共享
-        <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listMultipleSelected.includes('shared') ? 'check_box' : 'check_box_outline_blank' }}</span></template>
+        <template #trailing>
+          <mat-checkbox
+            :model-value="listMultipleSelected"
+            value="shared"
+            inert
+            aria-hidden="true"
+            class="list-selection-indicator"
+          />
+        </template>
       </mat-list-item>
     </mat-list>
   </DocsPreview>
 </ClientOnly>
 
-选择模式由 `MatList` 统一管理候选值。组件不会修改 `selected`，调用方应在 `select` 事件中回写 `nextSelected`。选择标记是非交互视觉内容，不能在 `role="option"` 内放置可聚焦的 Checkbox、Radio、Switch、按钮或链接。
+选择模式由 `MatList` 统一管理候选值。组件不会修改 `selected`，调用方应在 `select` 事件中回写 `nextSelected`。示例中的 `MatRadio` 和 `MatCheckbox` 只展示当前状态，因此同时设置 `inert`、`aria-hidden="true"` 和 `pointer-events: none`，不会进入焦点顺序、无障碍树或接管点击。正常业务中不能在 `role="option"` 内放置可交互的 Checkbox、Radio、Switch、按钮或链接。
 
 ## API {#list-api}
 
@@ -375,5 +510,9 @@ const listSegmentedVariantSelected = ref(null);
   flex-direction: column;
   gap: 8px;
   min-inline-size: 0;
+}
+
+.list-selection-indicator {
+  pointer-events: none;
 }
 </style>

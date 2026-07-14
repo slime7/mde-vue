@@ -30,7 +30,7 @@
 - 不发布到 npm，也不为公开生态维护版本兼容承诺。
 - 不支持 Vue 以外的框架、Web Components 适配层或 CDN 使用方式。
 - 不支持 SSR、旧浏览器、本地化、IDE 插件或编辑器元数据。
-- 不追求一次覆盖完整 Material 3 组件集合；当前优先完善 Button、Icon button、Button group 和 Split button 按钮体系。
+- 不追求一次覆盖完整 Material 3 组件集合；按实际个人项目需求逐步增加组件族。
 - 不在库中持久化用户主题偏好，应用负责自己的存储策略。
 
 ## 核心原则
@@ -43,4 +43,4 @@
 
 ## 当前阶段
 
-当前阶段已经建立可安装的单包工程、Material 2025 主题基础、M3 Expressive 按钮体系、可视 demo、AI 文档生成和项目级 Agent 文档。后续组件应沿用统一的配色、尺寸、状态和组合抽象逐个增加。
+当前阶段已经建立可安装的单包工程、Material 2025 主题基础、M3 Expressive 按钮体系、Checkbox/Radio/Switch 选择控件、可视 demo、AI 文档生成和项目级 Agent 文档。后续组件应沿用统一的配色、尺寸、状态和组合抽象逐个增加。

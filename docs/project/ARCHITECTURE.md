@@ -17,7 +17,7 @@
 
 ## 共享组件基础层
 
-`MatSurfaceBase` 负责表面组件的动态原生根元素和属性透传；`MatActionBase` 统一处理 button/link 及内部可聚焦宿主的禁用、状态层和键盘指针交互。两者均为内部实现，当前由 Card、List 等组件复用，不作为公共入口导出。
+`MatSurfaceBase` 负责表面组件的动态原生根元素和属性透传；`MatActionBase` 统一处理 button/link 及内部可聚焦宿主的禁用、状态层和键盘指针交互；`MatSelectionControlBase` 统一处理选择控件的原生 input、标签、48px 目标区、40px 状态层、属性路由和插件指针设置。这些基础层均为内部实现，不作为公共入口导出。
 
 ## 技术栈
 
@@ -36,7 +36,7 @@
 
 ### 公共入口
 
-`src/index.js` 是完整包入口，导出 Button、Card、List、Divider 组件族以及 `createMatUi()` 和 `useMatTheme()`。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口，复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
+`src/index.js` 是完整包入口，导出 Button、Card、List、Divider、Checkbox、Radio、Radio group、Switch 组件族以及 `createMatUi()` 和 `useMatTheme()`。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口，复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
 
 公共入口不得依赖 demo、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -57,6 +57,8 @@
 每个组件拥有自己的 Vue SFC、公开入口、样式与测试。按钮和图标按钮共享原生 `<button>` 基础结构、状态层、插件设置和上下文合并逻辑；按钮组与 split button 使用 Vue provide/inject 协调子按钮，不复制交互协议。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
 
 List 通过内部 provide/inject 上下文统一交互模式、受控选择和焦点刷新。普通与操作模式保留 `ul/li`，选择模式使用 `listbox/option`；roving tabindex 注册表按 DOM 顺序协调项目主操作和 multi-action trailing 控件，并在模式切换或卸载时恢复使用方原有的 tabindex。Divider 根据 List 上下文切换合法的根语义，不参与选择与焦点顺序。
+
+Checkbox 以布尔值或基础值数组表达受控选择，数组更新始终返回新数组。Radio 可以独立受控；进入 Radio group 后由 provide/inject 上下文统一选中值、禁用、配色和按 DOM 顺序维护的 roving tabindex。Switch 只表达立即生效的布尔状态。三类控件保留原生 input 语义，但不承诺表单提交、原生校验、重置或表单代理方法。
 
 ### 样式层
 
@@ -120,6 +122,7 @@ Vite 构建检查从公开 `exports` 导入 `.vue` 和 CSS，验证普通 Vue/Vi
 - 主题输入在写入 CSS 属性前校验，非法种子色、模式、变体和对比度必须明确失败或按公共 API 约定处理。
 - `system` 模式创建的媒体查询监听必须可清理，避免应用卸载后继续更新状态。
 - 组件不执行网络请求，不持有业务数据，也不承担表单校验或权限控制。
+- 选择控件只管理 Vue 受控状态；透传的原生 input 属性不构成完整表单生命周期保证。
 
 ## 相关决策
 

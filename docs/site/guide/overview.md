@@ -1,6 +1,6 @@
 ---
 title: 概述
-description: 了解 mdu-ui 的定位、支持范围、导入方式和 M3 Expressive 按钮体系。
+description: 了解 mdu-ui 的定位、支持范围、导入方式和 Material 组件体系。
 llms: true
 order: 10
 ---
@@ -11,7 +11,7 @@ order: 10
 
 当前公共能力包括：
 
-- 以 `<mat-btn>`、`<mat-card>` 为代表的 Material 组件；
+- Button、Card、List、Checkbox、Radio 和 Switch 等 Material 组件；
 - Material 2025 动态颜色主题和组件级 `color` 配色；
 - 可选的 Tailwind CSS v4 语义工具类；
 - 面向开发者与 AI 的同源 Markdown 文档。

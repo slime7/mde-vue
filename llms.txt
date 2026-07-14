@@ -4,7 +4,7 @@
 
 ## 文档
 
-- [概述](docs/site/guide/overview.md): 了解 mdu-ui 的定位、支持范围、导入方式和 M3 Expressive 按钮体系。
+- [概述](docs/site/guide/overview.md): 了解 mdu-ui 的定位、支持范围、导入方式和 Material 组件体系。
 - [安装](docs/site/guide/installation.md): 从 GitHub 私有仓库固定提交安装 mdu-ui，并选择全局注册或按需导入组件。
 - [createMatUi](docs/site/guide/create-mat-ui.md): 配置 mdu-ui 的全局组件注册、交互指针、Material Symbols 图标和主题控制器。
 - [主题](docs/site/guide/theme.md): 配置 Material 3 种子色、亮暗模式、配色变体和对比度，并在运行时切换主题。
@@ -15,6 +15,10 @@
 - [Button group 按钮组](docs/site/components/button-group.md): mat-btn-group 的标准与连接布局、级联属性、受控单选多选和事件。
 - [限制](docs/site/guide/limitations.md): 记录 mdu-ui 当前明确不支持的运行环境、分发方式和按钮能力。
 - [Split button 拆分按钮](docs/site/components/split-button.md): mat-split-btn 的双按钮组合、受控展开、事件、菜单 ARIA 和 slots。
+- [Checkbox 复选框](docs/site/components/checkbox.md): mat-checkbox 的布尔与数组 v-model、不确定态、配色、事件和默认 slot。
+- [Radio 单选按钮](docs/site/components/radio.md): mat-radio 的独立 v-model、标签、禁用、配色及与 mat-radio-group 的关系。
+- [Radio group 单选组](docs/site/components/radio-group.md): mat-radio-group 的组标签、受控单选、颜色与禁用级联、方向键和 roving tabindex。
+- [Switch 开关](docs/site/components/switch.md): mat-switch 的布尔 v-model、三档内置图标、配色、事件和默认 slot。
 - [Card 卡片](docs/site/components/card.md): mat-card 的 Material 3 外观、局部配色、内容、操作区与链接式交互。
 - [List 列表](docs/site/components/list.md): mat-list 与 mat-list-item 的 Material 3 Expressive 外观、内容结构、操作和受控选择。
 - [Divider 分隔线](docs/site/components/divider.md): mat-divider 的 Material 3 全宽、起始缩进和两侧缩进样式。

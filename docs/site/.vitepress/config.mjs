@@ -71,6 +71,16 @@ export default defineConfig({
               { text: 'Split button 拆分按钮', link: '/components/split-button' },
             ],
           },
+          {
+            text: '表单选择',
+            collapsed: false,
+            items: [
+              { text: 'Checkbox 复选框', link: '/components/checkbox' },
+              { text: 'Radio 单选按钮', link: '/components/radio' },
+              { text: 'Radio group 单选组', link: '/components/radio-group' },
+              { text: 'Switch 开关', link: '/components/switch' },
+            ],
+          },
           { text: 'Card 卡片', link: '/components/card' },
           { text: 'List 列表', link: '/components/list' },
           { text: 'Divider 分隔线', link: '/components/divider' },

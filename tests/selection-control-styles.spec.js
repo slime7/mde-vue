@@ -7,6 +7,7 @@ const checkbox = readFileSync(resolve('src/components/mat-checkbox/MatCheckbox.v
 const radio = readFileSync(resolve('src/components/mat-radio/MatRadio.vue'), 'utf8');
 const selectionBase = readFileSync(resolve('src/components/MatSelectionControlBase.vue'), 'utf8');
 const matSwitch = readFileSync(resolve('src/components/mat-switch/MatSwitch.vue'), 'utf8');
+const listDocs = readFileSync(resolve('docs/site/components/list.md'), 'utf8');
 
 describe('选择控件样式规格', () => {
   it('公开样式包含 Material 规格尺寸令牌', () => {
@@ -30,5 +31,13 @@ describe('选择控件样式规格', () => {
     expect(selectionBase).toContain('var(--mat-selection-control-state-layer-size)');
     expect(selectionBase).toContain(':focus-visible');
     expect(selectionBase).toContain('@media (prefers-reduced-motion: reduce)');
+  });
+
+  it('List 文档使用不可交互的新组件展示选择状态', () => {
+    expect(listDocs).not.toContain('radio_button_checked');
+    expect(listDocs).not.toContain('check_box_outline_blank');
+    expect(listDocs).toMatch(/<mat-radio[\s\S]*?inert[\s\S]*?aria-hidden="true"/);
+    expect(listDocs).toMatch(/<mat-checkbox[\s\S]*?inert[\s\S]*?aria-hidden="true"/);
+    expect(listDocs).toContain('pointer-events: none');
   });
 });

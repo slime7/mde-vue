@@ -8,7 +8,7 @@
 
 当前公共能力包括：
 
-- 以 `<mat-btn>`、`<mat-card>` 为代表的 Material 组件；
+- Button、Card、List、Checkbox、Radio 和 Switch 等 Material 组件；
 - Material 2025 动态颜色主题和组件级 `color` 配色；
 - 可选的 Tailwind CSS v4 语义工具类；
 - 面向开发者与 AI 的同源 Markdown 文档。
@@ -109,9 +109,13 @@ import { MatCard } from 'mdu-ui/components/mat-card';
 import { MatList } from 'mdu-ui/components/mat-list';
 import { MatListItem } from 'mdu-ui/components/mat-list-item';
 import { MatDivider } from 'mdu-ui/components/mat-divider';
+import { MatCheckbox } from 'mdu-ui/components/mat-checkbox';
+import { MatRadio } from 'mdu-ui/components/mat-radio';
+import { MatRadioGroup } from 'mdu-ui/components/mat-radio-group';
+import { MatSwitch } from 'mdu-ui/components/mat-switch';
 ```
 
-复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatList>` 或 `<MatListItem>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
+复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatCheckbox>` 或 `<MatRadioGroup>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
 
 ## 如何选择
 
@@ -1029,6 +1033,381 @@ import { ref } from 'vue';
 const splitExpanded = ref(false);
 </script>
 
+# Checkbox 复选框
+
+## 组件简介
+
+`<mat-checkbox>` 的组件导出名是 `MatCheckbox`。它让使用者从一组相关选项中选择任意数量的项目，也可以独立表示开关状态。组件使用原生 checkbox 语义，并按 Material 3 提供 18px 图标、40px 状态层和至少 48px 的交互目标。
+
+## 示例
+
+### 布尔值
+
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const newsletter = ref(true);
+</script>
+
+<template>
+  <mat-checkbox v-model="newsletter">接收更新邮件</mat-checkbox>
+</template>
+```
+
+<ClientOnly>
+  <DocsPreview label="Checkbox 布尔值预览" stacked>
+    <mat-checkbox v-model="checkboxNewsletter">接收更新邮件</mat-checkbox>
+    <span>当前值：{{ checkboxNewsletter }}</span>
+  </DocsPreview>
+</ClientOnly>
+
+### 多个 Checkbox 绑定同一数组
+
+每个实例用 `value` 声明自己的候选值。组件添加或移除项目时返回新数组，不修改原数组。
+
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const filters = ref(['offline']);
+</script>
+
+<template>
+  <mat-checkbox v-model="filters" value="offline">可离线使用</mat-checkbox>
+  <mat-checkbox v-model="filters" value="shared">与我共享</mat-checkbox>
+</template>
+```
+
+<ClientOnly>
+  <DocsPreview label="Checkbox 数组绑定预览" stacked>
+    <mat-checkbox v-model="checkboxFilters" value="offline">可离线使用</mat-checkbox>
+    <mat-checkbox v-model="checkboxFilters" value="shared">与我共享</mat-checkbox>
+    <span>当前值：{{ checkboxFilters.join('、') || '无' }}</span>
+  </DocsPreview>
+</ClientOnly>
+
+### 父子选择与不确定态
+
+```vue
+<mat-checkbox
+  :model-value="allChecked"
+  :indeterminate="partiallyChecked"
+  @update:model-value="toggleAll"
+>
+  全部权限
+</mat-checkbox>
+```
+
+<ClientOnly>
+  <DocsPreview label="Checkbox 不确定态预览" stacked>
+    <mat-checkbox
+      :model-value="checkboxAllChecked"
+      :indeterminate="checkboxPartiallyChecked"
+      color="#6750a4"
+      @update:model-value="toggleAllCheckboxes"
+    >
+      全部权限
+    </mat-checkbox>
+    <div class="checkbox-children">
+      <mat-checkbox v-model="checkboxPermissions" value="read">读取</mat-checkbox>
+      <mat-checkbox v-model="checkboxPermissions" value="write">写入</mat-checkbox>
+    </div>
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `modelValue` | `boolean \| Array<string \| number \| boolean>` | `false` | `v-model` 当前值；数组模式按 `value` 增删项目 |
+| `value` | `string \| number \| boolean` | `true` | 数组模式中的候选值；布尔模式忽略 |
+| `indeterminate` | `boolean` | `false` | 显示父级部分选中的不确定状态 |
+| `disabled` | `boolean` | `false` | 禁止指针与键盘交互 |
+| `color` | 语义色或 `#RRGGBB` | 未设置 | 选中容器、图标和状态层的局部强调色 |
+
+`class`、`style`、`inert`、`aria-hidden` 应用于外层标签，其余未消费属性传给内部 `input`。组件只承诺 Vue 状态绑定，不承诺表单提交、原生校验或表单重置。
+
+## 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | 下一布尔值或新数组 | 使用者切换选中状态 |
+| `update:indeterminate` | `false` | 使用者操作当前 Checkbox |
+| `change` | 原生 `Event` | 内部 checkbox 发生 change |
+
+## Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 与控件关联的相邻标签；省略时必须提供 `aria-label` |
+
+## 状态
+
+组件支持未选中、选中、不确定、hover、focus-visible、pressed 和 disabled。减少动态效果偏好下关闭勾号、横线和状态层过渡。组件没有公开方法。
+
+## 参考来源
+
+尺寸、状态和父子选择行为依据 Material 3 [Checkbox specs](https://m3.material.io/components/checkbox/specs) 与 [Checkbox guidelines](https://m3.material.io/components/checkbox/guidelines)。
+
+<script setup>
+import { computed, ref } from 'vue';
+
+const checkboxNewsletter = ref(true);
+const checkboxFilters = ref(['offline']);
+const checkboxPermissions = ref(['read']);
+const checkboxAllChecked = computed(() => checkboxPermissions.value.length === 2);
+const checkboxPartiallyChecked = computed(() => (
+  checkboxPermissions.value.length > 0 && !checkboxAllChecked.value
+));
+
+function toggleAllCheckboxes(checked) {
+  checkboxPermissions.value = checked ? ['read', 'write'] : [];
+}
+</script>
+
+<style scoped>
+.checkbox-children {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: flex-start;
+  padding-inline-start: 24px;
+}
+</style>
+
+# Radio 单选按钮
+
+## 组件简介
+
+`<mat-radio>` 的组件导出名是 `MatRadio`。它表示一项单选候选值，可以独立绑定，也可以放入 [`<mat-radio-group>`](/components/radio-group) 由 `MatRadioGroup` 统一管理。组件按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互目标。
+
+## 示例
+
+### 独立绑定
+
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const density = ref('comfortable');
+</script>
+
+<template>
+  <mat-radio v-model="density" value="compact">紧凑</mat-radio>
+  <mat-radio v-model="density" value="comfortable">舒适</mat-radio>
+</template>
+```
+
+<ClientOnly>
+  <DocsPreview label="Radio 独立绑定预览" stacked>
+    <mat-radio v-model="radioDensity" value="compact">紧凑</mat-radio>
+    <mat-radio v-model="radioDensity" value="comfortable" color="secondary">舒适</mat-radio>
+    <span>当前值：{{ radioDensity }}</span>
+  </DocsPreview>
+</ClientOnly>
+
+独立 Radio 共享同一个 `v-model` 时仍保持单值。需要标准方向键导航和统一禁用状态时，应使用 `MatRadioGroup`。
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `modelValue` | `string \| number \| boolean \| null` | 未设置 | 独立使用时的 `v-model` 当前值 |
+| `value` | `string \| number \| boolean` | 必填 | 当前候选值 |
+| `disabled` | `boolean` | `false` | 禁止当前 Radio 交互；Group 禁用时也会生效 |
+| `color` | 语义色或 `#RRGGBB` | 未设置 | 选中圆环、圆点和状态层强调色 |
+
+进入 `MatRadioGroup` 后，Group 的模型、禁用和颜色上下文生效；子项显式 `disabled` 与 Group 禁用叠加，显式 `color` 优先。此时不要再给子项传入 `v-model`。
+
+## 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | 当前 `value` | 独立 Radio 被选中；Group 内由 Group 发出更新 |
+| `change` | 原生 `Event` 或触发方向键的 `KeyboardEvent` | 当前 Radio 请求成为选中项 |
+
+## Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 描述当前候选值的相邻标签；省略时必须提供 `aria-label` |
+
+## 状态
+
+组件支持未选中、选中、hover、focus-visible、pressed 和 disabled。已经选中的 Radio 再次操作不会取消选择。组件没有公开方法。
+
+## 参考来源
+
+尺寸、标签和单选行为依据 Material 3 [Radio button specs](https://m3.material.io/components/radio-button/specs) 与 [Radio button guidelines](https://m3.material.io/components/radio-button/guidelines)。
+
+<script setup>
+import { ref } from 'vue';
+
+const radioDensity = ref('comfortable');
+</script>
+
+# Radio group 单选组
+
+## 组件简介
+
+`<mat-radio-group>` 的组件导出名是 `MatRadioGroup`。它通过默认 Slot 组织多个 [`<mat-radio>`](/components/radio)（`MatRadio`），统一管理单值 `v-model`、组标签、禁用和配色，并实现单选组的方向键与 roving tabindex。
+
+## 示例
+
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const themeMode = ref('system');
+</script>
+
+<template>
+  <mat-radio-group v-model="themeMode" label="主题模式" color="#6750a4">
+    <mat-radio value="system">跟随系统</mat-radio>
+    <mat-radio value="light">亮色</mat-radio>
+    <mat-radio value="dark">暗色</mat-radio>
+    <mat-radio value="legacy" disabled>旧主题</mat-radio>
+  </mat-radio-group>
+</template>
+```
+
+<ClientOnly>
+  <DocsPreview label="Radio group 受控单选预览" stacked>
+    <mat-radio-group v-model="radioGroupMode" label="主题模式" color="#6750a4">
+      <mat-radio value="system">跟随系统</mat-radio>
+      <mat-radio value="light">亮色</mat-radio>
+      <mat-radio value="dark">暗色</mat-radio>
+      <mat-radio value="legacy" disabled>旧主题</mat-radio>
+    </mat-radio-group>
+    <span>当前值：{{ radioGroupMode }}</span>
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `modelValue` | `string \| number \| boolean \| null` | `null` | `v-model` 当前选中值 |
+| `label` | `string` | 必填 | 渲染为 `legend` 的可访问组名称 |
+| `disabled` | `boolean` | `false` | 禁用全部子 Radio |
+| `color` | 语义色或 `#RRGGBB` | 未设置 | 级联给未显式设置颜色的子 Radio |
+
+Group 只管理 Vue 状态，不公开 `name`、`required`、`form`、表单提交或原生校验能力。
+
+## 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | 下一选中值 | 指针、Space 或方向键选择新的 Radio |
+| `change` | 原生 `Event` 或 `KeyboardEvent` | 选中值实际发生变化 |
+
+## Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 放置 `MatRadio`；可以经过普通布局组件，但不要混入另一套单选组 |
+
+## 状态与键盘
+
+- Tab 只进入当前选中项；没有选中值时进入首个可用项。
+- `ArrowRight`、`ArrowDown` 选择下一项，`ArrowLeft`、`ArrowUp` 选择上一项；到边界后循环并跳过禁用项。
+- Space 使用原生 Radio 行为选择当前项。
+- Group 禁用与子项禁用叠加；子项显式 `color` 优先于 Group。
+
+组件没有公开方法。
+
+<script setup>
+import { ref } from 'vue';
+
+const radioGroupMode = ref('system');
+</script>
+
+# Switch 开关
+
+## 组件简介
+
+`<mat-switch>` 的组件导出名是 `MatSwitch`。它切换一个独立设置并应立即产生效果。组件按 Material 3 使用 52×32px 轨道、16/24/28px 手柄、40px 状态层和至少 48px 的交互目标。
+
+## 示例
+
+### 无图标与内置图标
+
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const notifications = ref(true);
+</script>
+
+<template>
+  <mat-switch v-model="notifications">通知</mat-switch>
+  <mat-switch v-model="notifications" icons="selected">仅显示开启图标</mat-switch>
+  <mat-switch v-model="notifications" icons="both">显示开启与关闭图标</mat-switch>
+</template>
+```
+
+<ClientOnly>
+  <DocsPreview label="Switch 图标配置预览" stacked>
+    <mat-switch v-model="switchNotifications">无图标</mat-switch>
+    <mat-switch v-model="switchSelectedIcon" icons="selected" color="secondary">
+      仅显示开启图标
+    </mat-switch>
+    <mat-switch v-model="switchBothIcons" icons="both" color="#6750a4">
+      显示开启与关闭图标
+    </mat-switch>
+    <mat-switch disabled>禁用设置</mat-switch>
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `modelValue` | `boolean` | `false` | `v-model` 当前开关状态 |
+| `icons` | `'none' \| 'selected' \| 'both'` | `'none'` | 不显示图标、只显示开启勾号或同时显示勾号与叉号 |
+| `disabled` | `boolean` | `false` | 禁止指针与键盘交互 |
+| `color` | 语义色或 `#RRGGBB` | 未设置 | 开启轨道、手柄图标和状态层的局部强调色 |
+
+Switch 只表示二元状态，不用于在两个对立选项间选择。组件只承诺 Vue 状态绑定，不承诺表单提交、原生校验或表单重置。
+
+## 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | 下一布尔值 | 使用者切换开关 |
+| `change` | 原生 `Event` | 内部 checkbox 发生 change |
+
+## Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 描述开启状态作用的简短相邻标签；省略时必须提供 `aria-label` |
+
+## 状态
+
+组件支持关闭、开启、hover、focus-visible、pressed 和 disabled。按下时手柄扩展到 28px；减少动态效果偏好下关闭手柄与图标过渡。组件没有公开方法。
+
+## 参考来源
+
+尺寸、图标配置和即时生效行为依据 Material 3 [Switch specs](https://m3.material.io/components/switch/specs) 与 [Switch guidelines](https://m3.material.io/components/switch/guidelines)。
+
+<script setup>
+import { ref } from 'vue';
+
+const switchNotifications = ref(true);
+const switchSelectedIcon = ref(true);
+const switchBothIcons = ref(false);
+</script>
+
 # Card 卡片
 
 `<mat-card>` 的组件导出名是 `MatCard`。它承载同一主题的内容与操作，支持 `filled`、`elevated`、`outlined` 三种 Material 3 外观。组合组件 `<mat-card-action-area>`、`<mat-card-content>` 和 `<mat-card-actions>` 的导出名分别是 `MatCardActionArea`、`MatCardContent` 和 `MatCardActions`，用于组织可点击内容区、正文和独立操作区。
@@ -1193,11 +1572,27 @@ const segmentedSelected = ref(null);
 >
   <mat-list-item value="recent">
     最近更新
-    <template #trailing>{{ standardSelected === 'recent' ? '已选择' : '' }}</template>
+    <template #trailing>
+      <mat-radio
+        :model-value="standardSelected"
+        value="recent"
+        inert
+        aria-hidden="true"
+        class="list-selection-indicator"
+      />
+    </template>
   </mat-list-item>
   <mat-list-item value="name">
     名称
-    <template #trailing>{{ standardSelected === 'name' ? '已选择' : '' }}</template>
+    <template #trailing>
+      <mat-radio
+        :model-value="standardSelected"
+        value="name"
+        inert
+        aria-hidden="true"
+        class="list-selection-indicator"
+      />
+    </template>
   </mat-list-item>
 </mat-list>
 
@@ -1210,11 +1605,27 @@ const segmentedSelected = ref(null);
 >
   <mat-list-item value="offline">
     可离线使用
-    <template #trailing>{{ segmentedSelected === 'offline' ? '已选择' : '' }}</template>
+    <template #trailing>
+      <mat-radio
+        :model-value="segmentedSelected"
+        value="offline"
+        inert
+        aria-hidden="true"
+        class="list-selection-indicator"
+      />
+    </template>
   </mat-list-item>
   <mat-list-item value="shared">
     与我共享
-    <template #trailing>{{ segmentedSelected === 'shared' ? '已选择' : '' }}</template>
+    <template #trailing>
+      <mat-radio
+        :model-value="segmentedSelected"
+        value="shared"
+        inert
+        aria-hidden="true"
+        class="list-selection-indicator"
+      />
+    </template>
   </mat-list-item>
 </mat-list>
 ```
@@ -1233,11 +1644,27 @@ const segmentedSelected = ref(null);
         >
           <mat-list-item value="recent">
             最近更新
-            <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listStandardVariantSelected === 'recent' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+            <template #trailing>
+              <mat-radio
+                :model-value="listStandardVariantSelected"
+                value="recent"
+                inert
+                aria-hidden="true"
+                class="list-selection-indicator"
+              />
+            </template>
           </mat-list-item>
           <mat-list-item value="name">
             名称
-            <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listStandardVariantSelected === 'name' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+            <template #trailing>
+              <mat-radio
+                :model-value="listStandardVariantSelected"
+                value="name"
+                inert
+                aria-hidden="true"
+                class="list-selection-indicator"
+              />
+            </template>
           </mat-list-item>
         </mat-list>
       </section>
@@ -1252,11 +1679,27 @@ const segmentedSelected = ref(null);
         >
           <mat-list-item value="offline">
             可离线使用
-            <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listSegmentedVariantSelected === 'offline' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+            <template #trailing>
+              <mat-radio
+                :model-value="listSegmentedVariantSelected"
+                value="offline"
+                inert
+                aria-hidden="true"
+                class="list-selection-indicator"
+              />
+            </template>
           </mat-list-item>
           <mat-list-item value="shared">
             与我共享
-            <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listSegmentedVariantSelected === 'shared' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+            <template #trailing>
+              <mat-radio
+                :model-value="listSegmentedVariantSelected"
+                value="shared"
+                inert
+                aria-hidden="true"
+                class="list-selection-indicator"
+              />
+            </template>
           </mat-list-item>
         </mat-list>
       </section>
@@ -1386,8 +1829,30 @@ const multipleSelected = ref(['offline']);
     aria-label="排序方式"
     @select="singleSelected = $event.nextSelected"
   >
-    <mat-list-item value="recent">最近更新</mat-list-item>
-    <mat-list-item value="name">名称</mat-list-item>
+    <mat-list-item value="recent">
+      最近更新
+      <template #trailing>
+        <mat-radio
+          :model-value="singleSelected"
+          value="recent"
+          inert
+          aria-hidden="true"
+          class="list-selection-indicator"
+        />
+      </template>
+    </mat-list-item>
+    <mat-list-item value="name">
+      名称
+      <template #trailing>
+        <mat-radio
+          :model-value="singleSelected"
+          value="name"
+          inert
+          aria-hidden="true"
+          class="list-selection-indicator"
+        />
+      </template>
+    </mat-list-item>
   </mat-list>
 
   <mat-list
@@ -1400,10 +1865,27 @@ const multipleSelected = ref(['offline']);
     <mat-list-item value="offline">
       可离线使用
       <template #trailing>
-        <span aria-hidden="true">{{ multipleSelected.includes('offline') ? 'check_circle' : 'circle' }}</span>
+        <mat-checkbox
+          :model-value="multipleSelected"
+          value="offline"
+          inert
+          aria-hidden="true"
+          class="list-selection-indicator"
+        />
       </template>
     </mat-list-item>
-    <mat-list-item value="shared">与我共享</mat-list-item>
+    <mat-list-item value="shared">
+      与我共享
+      <template #trailing>
+        <mat-checkbox
+          :model-value="multipleSelected"
+          value="shared"
+          inert
+          aria-hidden="true"
+          class="list-selection-indicator"
+        />
+      </template>
+    </mat-list-item>
   </mat-list>
 </template>
 ```
@@ -1420,11 +1902,27 @@ const multipleSelected = ref(['offline']);
     >
       <mat-list-item value="recent">
         最近更新
-        <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listSingleSelected === 'recent' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+        <template #trailing>
+          <mat-radio
+            :model-value="listSingleSelected"
+            value="recent"
+            inert
+            aria-hidden="true"
+            class="list-selection-indicator"
+          />
+        </template>
       </mat-list-item>
       <mat-list-item value="name">
         名称
-        <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listSingleSelected === 'name' ? 'radio_button_checked' : 'radio_button_unchecked' }}</span></template>
+        <template #trailing>
+          <mat-radio
+            :model-value="listSingleSelected"
+            value="name"
+            inert
+            aria-hidden="true"
+            class="list-selection-indicator"
+          />
+        </template>
       </mat-list-item>
     </mat-list>
     <mat-list
@@ -1437,17 +1935,33 @@ const multipleSelected = ref(['offline']);
     >
       <mat-list-item value="offline">
         可离线使用
-        <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listMultipleSelected.includes('offline') ? 'check_box' : 'check_box_outline_blank' }}</span></template>
+        <template #trailing>
+          <mat-checkbox
+            :model-value="listMultipleSelected"
+            value="offline"
+            inert
+            aria-hidden="true"
+            class="list-selection-indicator"
+          />
+        </template>
       </mat-list-item>
       <mat-list-item value="shared">
         与我共享
-        <template #trailing><span class="material-symbols-outlined" aria-hidden="true">{{ listMultipleSelected.includes('shared') ? 'check_box' : 'check_box_outline_blank' }}</span></template>
+        <template #trailing>
+          <mat-checkbox
+            :model-value="listMultipleSelected"
+            value="shared"
+            inert
+            aria-hidden="true"
+            class="list-selection-indicator"
+          />
+        </template>
       </mat-list-item>
     </mat-list>
   </DocsPreview>
 </ClientOnly>
 
-选择模式由 `MatList` 统一管理候选值。组件不会修改 `selected`，调用方应在 `select` 事件中回写 `nextSelected`。选择标记是非交互视觉内容，不能在 `role="option"` 内放置可聚焦的 Checkbox、Radio、Switch、按钮或链接。
+选择模式由 `MatList` 统一管理候选值。组件不会修改 `selected`，调用方应在 `select` 事件中回写 `nextSelected`。示例中的 `MatRadio` 和 `MatCheckbox` 只展示当前状态，因此同时设置 `inert`、`aria-hidden="true"` 和 `pointer-events: none`，不会进入焦点顺序、无障碍树或接管点击。正常业务中不能在 `role="option"` 内放置可交互的 Checkbox、Radio、Switch、按钮或链接。
 
 ## API {#list-api}
 
@@ -1534,6 +2048,10 @@ const listSegmentedVariantSelected = ref(null);
   flex-direction: column;
   gap: 8px;
   min-inline-size: 0;
+}
+
+.list-selection-indicator {
+  pointer-events: none;
 }
 </style>
 

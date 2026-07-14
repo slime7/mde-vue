@@ -17,7 +17,7 @@
 
 ## Mat UI 插件
 
-`MatSurfaceBase` 与 `MatActionBase` 是内部结构复用层，不属于公共 API。前者只负责表面根节点，后者负责原生 button/link 交互语义；公共组件不得要求使用者依赖其 class、文件路径或内部 CSS 变量。
+`MatSurfaceBase`、`MatActionBase` 与 `MatSelectionControlBase` 是内部结构复用层，不属于公共 API。前两者负责表面根节点和原生 button/link 交互语义，后者负责选择控件的原生 input、标签、状态层和属性路由；公共组件不得要求使用者依赖其 class、文件路径或内部 CSS 变量。
 
 `createMatUi({ theme, useCursor, useMaterialSymbols })` 创建一次 Vue 插件安装单元。插件负责全局注册 `mat-*` 组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
 
@@ -82,6 +82,7 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 - 完整包入口和单组件入口必须导出同一个组件对象与同一套行为。
 - 原生元素语义优先于自造交互协议；`<mat-btn>` 渲染原生 `<button>`。
 - 未被组件消费的原生属性和事件应继续传递到根原生元素。
+- 带标签容器的选择控件把 `class`、`style`、`inert`、`aria-hidden` 传给外层标签，其余未消费属性和监听器传给内部原生 input。
 - `disabled` 必须使用原生禁用语义；默认按钮 `type` 是 `button`，避免意外提交表单。
 - 交互组件默认使用 `cursor: default`；只在插件明确启用 `useCursor` 时为可用组件使用 `cursor: pointer`。
 - 组件必须提供可见的键盘焦点状态，并为 hover、focus、pressed 和 disabled 使用共享状态令牌。
@@ -94,6 +95,16 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 `<mat-icon-btn>` 以必填 `label` 提供操作名称和原生 `title` 提示，支持三档宽度和受控 toggle。`<mat-btn-group>` 负责 standard/connected 布局以及受控 single/multiple 选择；组容器不进入 Tab 顺序，子按钮保持独立停靠点。`<mat-split-btn>` 接受调用方提供的 leading 和 trailing 按钮，只协调视觉、事件、`aria-haspopup`、`aria-expanded` 与可选 `aria-controls`，菜单始终由应用管理。
 
 当前按钮体系不包含 loading、链接模式、涟漪、密度参数、内置菜单或完整表单代理方法。
+
+## 表单选择控件
+
+`<mat-checkbox>` 的 `v-model` 接受 boolean 或基础值数组；数组模式通过 `value` 和 `Object.is()` 计算成员，每次更新都返回新数组。`indeterminate` 是受控展示状态，使用者操作时组件请求将其清除。
+
+`<mat-radio>` 可以独立绑定基础单值；进入 `<mat-radio-group>` 后由 Group 的 `v-model` 统一管理，子级模型被忽略。Group 通过注册表保持一个 Tab 停靠点，并让方向键循环选择、跳过禁用项。Group 的 `label` 是必填可访问名称，禁用和配色向下级联，子级显式配色优先。
+
+`<mat-switch>` 只绑定 boolean，并通过 `none`、`selected`、`both` 三档内置图标表示无图标、只显示开启图标或同时显示开关图标。Switch 用于立即生效的独立二元状态，不代替按钮或互斥选项组。
+
+选择控件使用原生 input 保留 checkbox、radio 和 switch 语义，但公共能力只覆盖 Vue 状态绑定，不包括 FormData、原生 required 校验、表单重置或表单代理方法。纯展示实例必须同时从指针、焦点和无障碍树移除，不能在 List option 内形成嵌套交互。
 
 `<mat-list>` 在同一实例中只允许一种 `interaction`。`none`、`single-action`、`multi-action` 使用原生列表结构；`single-select`、`multi-select` 使用 listbox/option，并由父组件以受控 `selected` 和 `select` 事件协调选择。方向键只移动 roving tabindex 焦点，不隐式修改选择。选择 option 内不得放置可聚焦后代，多操作项的附加操作只能位于 trailing Slot。
 
