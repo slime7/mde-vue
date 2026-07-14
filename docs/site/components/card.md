@@ -13,39 +13,21 @@ order: 90
 
 ### 默认样式
 
-```vue
-<mat-card>
-  <mat-card-content>默认 filled 卡片</mat-card-content>
-</mat-card>
-```
+<<< @/examples/card/CardDefaultExample.vue
 
 <ClientOnly>
   <DocsPreview label="Card 默认样式预览">
-    <mat-card style="inline-size: min(100%, 320px)">
-      <mat-card-content>默认 filled 卡片</mat-card-content>
-    </mat-card>
+    <CardDefaultExample />
   </DocsPreview>
 </ClientOnly>
 
 ### 外观与配色
 
-```vue
-<mat-card variant="elevated"><mat-card-content>Elevated</mat-card-content></mat-card>
-<mat-card variant="filled" color="secondary"><mat-card-content>Secondary</mat-card-content></mat-card>
-<mat-card variant="outlined" color="#6750a4"><mat-card-content>局部种子色</mat-card-content></mat-card>
-```
+<<< @/examples/card/CardVariantsExample.vue
 
 <ClientOnly>
   <DocsPreview label="Card 外观与配色预览">
-    <mat-card variant="elevated" style="inline-size: 200px">
-      <mat-card-content>Elevated</mat-card-content>
-    </mat-card>
-    <mat-card variant="filled" color="secondary" style="inline-size: 200px">
-      <mat-card-content>Secondary</mat-card-content>
-    </mat-card>
-    <mat-card variant="outlined" color="#6750a4" style="inline-size: 200px">
-      <mat-card-content>局部种子色</mat-card-content>
-    </mat-card>
+    <CardVariantsExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -53,41 +35,11 @@ order: 90
 
 ### 语义、可点击内容与禁用状态
 
-```vue
-<mat-card as="article">
-  <mat-card-action-area type="button" @click="openDetails">
-    <mat-card-content>查看详情</mat-card-content>
-  </mat-card-action-area>
-  <mat-card-actions>
-    <mat-btn variant="text">收藏</mat-btn>
-  </mat-card-actions>
-</mat-card>
-
-<mat-card as="section" variant="outlined">
-  <mat-card-action-area href="/detail" disabled>
-    <mat-card-content>暂不可用的详情链接</mat-card-content>
-  </mat-card-action-area>
-</mat-card>
-```
+<<< @/examples/card/CardActionExample.vue
 
 <ClientOnly>
   <DocsPreview label="Card 语义、可点击内容与禁用状态预览" stacked>
-    <mat-card as="article" style="inline-size: min(100%, 360px)">
-      <mat-card-action-area type="button">
-        <mat-card-content>
-          <strong>Card 组件</strong>
-          <p>点击内容区查看详情，或使用下方的独立操作。</p>
-        </mat-card-content>
-      </mat-card-action-area>
-      <mat-card-actions>
-        <mat-btn variant="text">收藏</mat-btn>
-      </mat-card-actions>
-    </mat-card>
-    <mat-card as="section" variant="outlined" style="inline-size: min(100%, 360px)">
-      <mat-card-action-area href="/detail" disabled>
-        <mat-card-content>暂不可用的详情链接</mat-card-content>
-      </mat-card-action-area>
-    </mat-card>
+    <CardActionExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -139,3 +91,9 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
 ## 状态
 
 只有启用的 ActionArea 才会触发 Card 的 hover、focus 和 pressed 状态。焦点环显示在整张卡片上，减少动态效果偏好下不播放状态层过渡。
+
+<script setup>
+import CardActionExample from '../examples/card/CardActionExample.vue';
+import CardDefaultExample from '../examples/card/CardDefaultExample.vue';
+import CardVariantsExample from '../examples/card/CardVariantsExample.vue';
+</script>

@@ -17,206 +17,21 @@ order: 100
 
 `standard` 让项目连续排列，`segmented` 在项目之间保留 2px 间隔。下面使用受控单选模式：将指针移到项目上可观察 hover 状态，点击项目可观察选中底色与圆角变化。
 
-```vue
-<script setup>
-import { ref } from 'vue';
-
-const standardSelected = ref(null);
-const segmentedSelected = ref(null);
-</script>
-
-<mat-list
-  variant="standard"
-  interaction="single-select"
-  :selected="standardSelected"
-  aria-label="standard 列表"
-  @select="standardSelected = $event.nextSelected"
->
-  <mat-list-item value="recent">
-    最近更新
-    <template #trailing>
-      <mat-radio
-        :model-value="standardSelected"
-        value="recent"
-        inert
-        aria-hidden="true"
-        class="list-selection-indicator"
-      />
-    </template>
-  </mat-list-item>
-  <mat-list-item value="name">
-    名称
-    <template #trailing>
-      <mat-radio
-        :model-value="standardSelected"
-        value="name"
-        inert
-        aria-hidden="true"
-        class="list-selection-indicator"
-      />
-    </template>
-  </mat-list-item>
-</mat-list>
-
-<mat-list
-  variant="segmented"
-  interaction="single-select"
-  :selected="segmentedSelected"
-  aria-label="segmented 列表"
-  @select="segmentedSelected = $event.nextSelected"
->
-  <mat-list-item value="offline">
-    可离线使用
-    <template #trailing>
-      <mat-radio
-        :model-value="segmentedSelected"
-        value="offline"
-        inert
-        aria-hidden="true"
-        class="list-selection-indicator"
-      />
-    </template>
-  </mat-list-item>
-  <mat-list-item value="shared">
-    与我共享
-    <template #trailing>
-      <mat-radio
-        :model-value="segmentedSelected"
-        value="shared"
-        inert
-        aria-hidden="true"
-        class="list-selection-indicator"
-      />
-    </template>
-  </mat-list-item>
-</mat-list>
-```
+<<< @/examples/list/ListVariantsExample.vue
 
 <ClientOnly>
   <DocsPreview label="List standard 与 segmented 外观对比预览">
-    <div class="list-variant-grid">
-      <section class="list-variant-example">
-        <strong>standard</strong>
-        <mat-list
-          variant="standard"
-          interaction="single-select"
-          :selected="listStandardVariantSelected"
-          aria-label="standard 列表"
-          @select="listStandardVariantSelected = $event.nextSelected"
-        >
-          <mat-list-item value="recent">
-            最近更新
-            <template #trailing>
-              <mat-radio
-                :model-value="listStandardVariantSelected"
-                value="recent"
-                inert
-                aria-hidden="true"
-                class="list-selection-indicator"
-              />
-            </template>
-          </mat-list-item>
-          <mat-list-item value="name">
-            名称
-            <template #trailing>
-              <mat-radio
-                :model-value="listStandardVariantSelected"
-                value="name"
-                inert
-                aria-hidden="true"
-                class="list-selection-indicator"
-              />
-            </template>
-          </mat-list-item>
-        </mat-list>
-      </section>
-      <section class="list-variant-example">
-        <strong>segmented</strong>
-        <mat-list
-          variant="segmented"
-          interaction="single-select"
-          :selected="listSegmentedVariantSelected"
-          aria-label="segmented 列表"
-          @select="listSegmentedVariantSelected = $event.nextSelected"
-        >
-          <mat-list-item value="offline">
-            可离线使用
-            <template #trailing>
-              <mat-radio
-                :model-value="listSegmentedVariantSelected"
-                value="offline"
-                inert
-                aria-hidden="true"
-                class="list-selection-indicator"
-              />
-            </template>
-          </mat-list-item>
-          <mat-list-item value="shared">
-            与我共享
-            <template #trailing>
-              <mat-radio
-                :model-value="listSegmentedVariantSelected"
-                value="shared"
-                inert
-                aria-hidden="true"
-                class="list-selection-indicator"
-              />
-            </template>
-          </mat-list-item>
-        </mat-list>
-      </section>
-    </div>
+    <ListVariantsExample />
   </DocsPreview>
 </ClientOnly>
 
 ### 内容结构与 Divider
 
-```vue
-<mat-list variant="standard" aria-label="账户信息">
-  <mat-list-item>
-    <template #leading><span aria-hidden="true">person</span></template>
-    当前账户
-  </mat-list-item>
-
-  <mat-divider inset="start" />
-
-  <mat-list-item>
-    <template #leading><span aria-hidden="true">mail</span></template>
-    收件箱
-    <template #supporting>12 封未读邮件</template>
-    <template #trailing>12</template>
-  </mat-list-item>
-
-  <mat-list-item :lines="3">
-    <template #overline>今天</template>
-    设计评审
-    <template #supporting>请在会议前查看最新的组件交互说明。</template>
-    <template #trailing>10:30</template>
-  </mat-list-item>
-</mat-list>
-```
+<<< @/examples/list/ListContentExample.vue
 
 <ClientOnly>
   <DocsPreview label="List 内容结构与 Divider 预览" stacked>
-    <mat-list variant="standard" aria-label="账户信息" style="inline-size: min(100%, 420px)">
-      <mat-list-item>
-        <template #leading><span class="material-symbols-outlined" aria-hidden="true">person</span></template>
-        当前账户
-      </mat-list-item>
-      <mat-divider inset="start" />
-      <mat-list-item>
-        <template #leading><span class="material-symbols-outlined" aria-hidden="true">mail</span></template>
-        收件箱
-        <template #supporting>12 封未读邮件</template>
-        <template #trailing>12</template>
-      </mat-list-item>
-      <mat-list-item :lines="3">
-        <template #overline>今天</template>
-        设计评审
-        <template #supporting>请在会议前查看最新的组件交互说明。</template>
-        <template #trailing>10:30</template>
-      </mat-list-item>
-    </mat-list>
+    <ListContentExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -224,50 +39,11 @@ const segmentedSelected = ref(null);
 
 ### 单操作与多操作
 
-```vue
-<mat-list variant="segmented" interaction="single-action" aria-label="设置">
-  <mat-list-item @click="openProfile">
-    <template #leading><span aria-hidden="true">person</span></template>
-    个人资料
-    <template #trailing><span aria-hidden="true">chevron_right</span></template>
-  </mat-list-item>
-  <mat-list-item href="/security">安全设置</mat-list-item>
-  <mat-list-item disabled>不可用项目</mat-list-item>
-</mat-list>
-
-<mat-list interaction="multi-action" aria-label="文件">
-  <mat-list-item @click="openFile">
-    项目说明.pdf
-    <template #supporting>2.4 MB</template>
-    <template #trailing>
-      <mat-icon-btn label="下载">download</mat-icon-btn>
-      <mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
-    </template>
-  </mat-list-item>
-</mat-list>
-```
+<<< @/examples/list/ListActionsExample.vue
 
 <ClientOnly>
   <DocsPreview label="List 单操作与多操作预览" stacked>
-    <mat-list variant="segmented" interaction="single-action" aria-label="设置" style="inline-size: min(100%, 420px)">
-      <mat-list-item>
-        <template #leading><span class="material-symbols-outlined" aria-hidden="true">person</span></template>
-        个人资料
-        <template #trailing><span class="material-symbols-outlined" aria-hidden="true">chevron_right</span></template>
-      </mat-list-item>
-      <mat-list-item href="#list-api">安全设置</mat-list-item>
-      <mat-list-item disabled>不可用项目</mat-list-item>
-    </mat-list>
-    <mat-list interaction="multi-action" aria-label="文件" style="inline-size: min(100%, 420px)">
-      <mat-list-item>
-        项目说明.pdf
-        <template #supporting>2.4 MB</template>
-        <template #trailing>
-          <mat-icon-btn label="下载">download</mat-icon-btn>
-          <mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
-        </template>
-      </mat-list-item>
-    </mat-list>
+    <ListActionsExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -275,151 +51,11 @@ const segmentedSelected = ref(null);
 
 ### 受控单选与多选
 
-```vue
-<script setup>
-import { ref } from 'vue';
-
-const singleSelected = ref('recent');
-const multipleSelected = ref(['offline']);
-</script>
-
-<template>
-  <mat-list
-    variant="standard"
-    interaction="single-select"
-    :selected="singleSelected"
-    aria-label="排序方式"
-    @select="singleSelected = $event.nextSelected"
-  >
-    <mat-list-item value="recent">
-      最近更新
-      <template #trailing>
-        <mat-radio
-          :model-value="singleSelected"
-          value="recent"
-          inert
-          aria-hidden="true"
-          class="list-selection-indicator"
-        />
-      </template>
-    </mat-list-item>
-    <mat-list-item value="name">
-      名称
-      <template #trailing>
-        <mat-radio
-          :model-value="singleSelected"
-          value="name"
-          inert
-          aria-hidden="true"
-          class="list-selection-indicator"
-        />
-      </template>
-    </mat-list-item>
-  </mat-list>
-
-  <mat-list
-    variant="standard"
-    interaction="multi-select"
-    :selected="multipleSelected"
-    aria-label="筛选条件"
-    @select="multipleSelected = $event.nextSelected"
-  >
-    <mat-list-item value="offline">
-      可离线使用
-      <template #trailing>
-        <mat-checkbox
-          :model-value="multipleSelected"
-          value="offline"
-          inert
-          aria-hidden="true"
-          class="list-selection-indicator"
-        />
-      </template>
-    </mat-list-item>
-    <mat-list-item value="shared">
-      与我共享
-      <template #trailing>
-        <mat-checkbox
-          :model-value="multipleSelected"
-          value="shared"
-          inert
-          aria-hidden="true"
-          class="list-selection-indicator"
-        />
-      </template>
-    </mat-list-item>
-  </mat-list>
-</template>
-```
+<<< @/examples/list/ListSelectionExample.vue
 
 <ClientOnly>
   <DocsPreview label="List 受控单选与多选预览" stacked>
-    <mat-list
-      variant="standard"
-      interaction="single-select"
-      :selected="listSingleSelected"
-      aria-label="排序方式"
-      style="inline-size: min(100%, 420px)"
-      @select="listSingleSelected = $event.nextSelected"
-    >
-      <mat-list-item value="recent">
-        最近更新
-        <template #trailing>
-          <mat-radio
-            :model-value="listSingleSelected"
-            value="recent"
-            inert
-            aria-hidden="true"
-            class="list-selection-indicator"
-          />
-        </template>
-      </mat-list-item>
-      <mat-list-item value="name">
-        名称
-        <template #trailing>
-          <mat-radio
-            :model-value="listSingleSelected"
-            value="name"
-            inert
-            aria-hidden="true"
-            class="list-selection-indicator"
-          />
-        </template>
-      </mat-list-item>
-    </mat-list>
-    <mat-list
-      variant="standard"
-      interaction="multi-select"
-      :selected="listMultipleSelected"
-      aria-label="筛选条件"
-      style="inline-size: min(100%, 420px)"
-      @select="listMultipleSelected = $event.nextSelected"
-    >
-      <mat-list-item value="offline">
-        可离线使用
-        <template #trailing>
-          <mat-checkbox
-            :model-value="listMultipleSelected"
-            value="offline"
-            inert
-            aria-hidden="true"
-            class="list-selection-indicator"
-          />
-        </template>
-      </mat-list-item>
-      <mat-list-item value="shared">
-        与我共享
-        <template #trailing>
-          <mat-checkbox
-            :model-value="listMultipleSelected"
-            value="shared"
-            inert
-            aria-hidden="true"
-            class="list-selection-indicator"
-          />
-        </template>
-      </mat-list-item>
-    </mat-list>
+    <ListSelectionExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -489,30 +125,8 @@ single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌�
 外观、内容结构和交互依据 Material 3 [List overview](https://m3.material.io/components/lists/overview)、[List specs](https://m3.material.io/components/lists/specs) 与 [List guidelines](https://m3.material.io/components/lists/guidelines)。选择模式的语义限制参考 [WAI-ARIA Listbox Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/)。
 
 <script setup>
-import { ref } from 'vue';
-
-const listSingleSelected = ref('recent');
-const listMultipleSelected = ref(['offline']);
-const listStandardVariantSelected = ref(null);
-const listSegmentedVariantSelected = ref(null);
+import ListActionsExample from '../examples/list/ListActionsExample.vue';
+import ListContentExample from '../examples/list/ListContentExample.vue';
+import ListSelectionExample from '../examples/list/ListSelectionExample.vue';
+import ListVariantsExample from '../examples/list/ListVariantsExample.vue';
 </script>
-
-<style scoped>
-.list-variant-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-  gap: 24px;
-  inline-size: 100%;
-}
-
-.list-variant-example {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-inline-size: 0;
-}
-
-.list-selection-indicator {
-  pointer-events: none;
-}
-</style>

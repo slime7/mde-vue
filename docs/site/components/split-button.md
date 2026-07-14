@@ -13,82 +13,21 @@ order: 65
 
 ### 默认样式
 
-```vue
-<mat-split-btn>
-  <template #leading>
-    <mat-btn>新建</mat-btn>
-  </template>
-  <template #trailing>
-    <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
-  </template>
-</mat-split-btn>
-```
+<<< @/examples/button/SplitButtonDefaultExample.vue
 
 <ClientOnly>
   <DocsPreview label="Split button 默认样式预览">
-    <mat-split-btn>
-      <template #leading>
-        <mat-btn>新建</mat-btn>
-      </template>
-      <template #trailing>
-        <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
-      </template>
-    </mat-split-btn>
+    <SplitButtonDefaultExample />
   </DocsPreview>
 </ClientOnly>
 
 ### 受控展开与外部菜单
 
-```vue
-<script setup>
-import { ref } from 'vue';
-
-const expanded = ref(false);
-</script>
-
-<template>
-  <mat-split-btn
-    variant="filled"
-    size="small"
-    color="#6750a4"
-    :expanded="expanded"
-    controls="create-menu"
-    @update:expanded="expanded = $event"
-  >
-    <template #leading>
-      <mat-btn @click="createDefault">新建</mat-btn>
-    </template>
-    <template #trailing>
-      <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
-    </template>
-  </mat-split-btn>
-
-  <div v-if="expanded" id="create-menu" role="menu">
-    <!-- 应用负责菜单项、焦点、Escape、外部点击和焦点返回。 -->
-  </div>
-</template>
-```
+<<< @/examples/button/SplitButtonMenuExample.vue
 
 <ClientOnly>
   <DocsPreview label="Split button 受控展开与外部菜单预览" stacked>
-    <mat-split-btn
-      variant="filled"
-      size="small"
-      color="#6750a4"
-      :expanded="splitExpanded"
-      controls="split-example-menu"
-      @update:expanded="splitExpanded = $event"
-    >
-      <template #leading>
-        <mat-btn>新建</mat-btn>
-      </template>
-      <template #trailing>
-        <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
-      </template>
-    </mat-split-btn>
-
-<!-- 保持下方原生元素顶格，避免 Markdown 将其解析为代码块。 -->
-<div v-if="splitExpanded" id="split-example-menu" class="docs-preview-menu" role="menu">新建文档<br>新建文件夹</div>
+    <SplitButtonMenuExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -137,7 +76,6 @@ slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展
 参数、形状和展开状态依据 [Material 3 Split button specs](https://m3.material.io/components/split-button/specs)。
 
 <script setup>
-import { ref } from 'vue';
-
-const splitExpanded = ref(false);
+import SplitButtonDefaultExample from '../examples/button/SplitButtonDefaultExample.vue';
+import SplitButtonMenuExample from '../examples/button/SplitButtonMenuExample.vue';
 </script>

@@ -8,6 +8,10 @@ const radio = readFileSync(resolve('src/components/mat-radio/MatRadio.vue'), 'ut
 const selectionBase = readFileSync(resolve('src/components/MatSelectionControlBase.vue'), 'utf8');
 const matSwitch = readFileSync(resolve('src/components/mat-switch/MatSwitch.vue'), 'utf8');
 const listDocs = readFileSync(resolve('docs/site/components/list.md'), 'utf8');
+const listSelectionExamples = [
+  'docs/site/examples/list/ListSelectionExample.vue',
+  'docs/site/examples/list/ListVariantsExample.vue',
+].map((filePath) => readFileSync(resolve(filePath), 'utf8')).join('\n');
 
 describe('选择控件样式规格', () => {
   it('公开样式包含 Material 规格尺寸令牌', () => {
@@ -38,8 +42,8 @@ describe('选择控件样式规格', () => {
   it('List 文档使用不可交互的新组件展示选择状态', () => {
     expect(listDocs).not.toContain('radio_button_checked');
     expect(listDocs).not.toContain('check_box_outline_blank');
-    expect(listDocs).toMatch(/<mat-radio[\s\S]*?inert[\s\S]*?aria-hidden="true"/);
-    expect(listDocs).toMatch(/<mat-checkbox[\s\S]*?inert[\s\S]*?aria-hidden="true"/);
-    expect(listDocs).toContain('pointer-events: none');
+    expect(listSelectionExamples).toMatch(/<mat-radio[\s\S]*?inert[\s\S]*?aria-hidden="true"/);
+    expect(listSelectionExamples).toMatch(/<mat-checkbox[\s\S]*?inert[\s\S]*?aria-hidden="true"/);
+    expect(listSelectionExamples).toContain('pointer-events: none');
   });
 });

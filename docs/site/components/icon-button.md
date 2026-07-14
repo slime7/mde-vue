@@ -13,13 +13,11 @@ order: 55
 
 ### 默认样式
 
-```vue
-<mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
-```
+<<< @/examples/button/IconButtonDefaultExample.vue
 
 <ClientOnly>
   <DocsPreview label="Icon button 默认样式预览">
-    <mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
+    <IconButtonDefaultExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -27,40 +25,11 @@ order: 55
 
 ### 外观、宽度和受控切换
 
-```vue
-<mat-icon-btn label="Filled" variant="filled" width="narrow">star</mat-icon-btn>
-<mat-icon-btn label="Tonal" variant="filled-tonal">star</mat-icon-btn>
-<mat-icon-btn label="Outlined" variant="outlined" width="wide">star</mat-icon-btn>
-<mat-icon-btn label="Standard" variant="standard">star</mat-icon-btn>
-
-<mat-icon-btn
-  label="收藏"
-  toggle
-  :selected="favorite"
-  color="#6750a4"
-  @click="favorite = !favorite"
->
-  <template #default>favorite_border</template>
-  <template #selected>favorite</template>
-</mat-icon-btn>
-```
+<<< @/examples/button/IconButtonVariantsExample.vue
 
 <ClientOnly>
   <DocsPreview label="Icon button 外观、宽度和受控切换预览">
-    <mat-icon-btn label="Filled" variant="filled" width="narrow">star</mat-icon-btn>
-    <mat-icon-btn label="Tonal" variant="filled-tonal">star</mat-icon-btn>
-    <mat-icon-btn label="Outlined" variant="outlined" width="wide">star</mat-icon-btn>
-    <mat-icon-btn label="Standard" variant="standard">star</mat-icon-btn>
-    <mat-icon-btn
-      label="收藏"
-      toggle
-      :selected="iconFavorite"
-      color="#6750a4"
-      @click="iconFavorite = !iconFavorite"
-    >
-      <template #default>favorite_border</template>
-      <template #selected>favorite</template>
-    </mat-icon-btn>
+    <IconButtonVariantsExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -106,7 +75,6 @@ hover、focus-visible、pressed、selected 和 disabled 状态与 Button 使用�
 参数与行为依据 [Material 3 Icon button specs](https://m3.material.io/components/icon-buttons/specs)。
 
 <script setup>
-import { ref } from 'vue';
-
-const iconFavorite = ref(false);
+import IconButtonDefaultExample from '../examples/button/IconButtonDefaultExample.vue';
+import IconButtonVariantsExample from '../examples/button/IconButtonVariantsExample.vue';
 </script>

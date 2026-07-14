@@ -15,48 +15,21 @@ order: 110
 
 ### 三种缩进
 
-```vue
-<mat-divider />
-<mat-divider inset="start" />
-<mat-divider inset="middle" />
-```
+<<< @/examples/divider/DividerInsetsExample.vue
 
 <ClientOnly>
   <DocsPreview label="Divider 三种缩进预览" stacked>
-    <div style="display: grid; gap: 20px; inline-size: min(100%, 420px); padding-block: 12px">
-      <div>
-        <p style="margin: 0 16px 8px">全宽</p>
-        <mat-divider />
-      </div>
-      <div>
-        <p style="margin: 0 16px 8px">起始侧缩进</p>
-        <mat-divider inset="start" />
-      </div>
-      <div>
-        <p style="margin: 0 16px 8px">两侧缩进</p>
-        <mat-divider inset="middle" />
-      </div>
-    </div>
+    <DividerInsetsExample />
   </DocsPreview>
 </ClientOnly>
 
 ### List 中使用
 
-```vue
-<mat-list variant="standard">
-  <mat-list-item>账户</mat-list-item>
-  <mat-divider inset="start" />
-  <mat-list-item>设置</mat-list-item>
-</mat-list>
-```
+<<< @/examples/divider/DividerListExample.vue
 
 <ClientOnly>
   <DocsPreview label="Divider 在 List 中的预览">
-    <mat-list variant="standard" style="inline-size: min(100%, 420px)">
-      <mat-list-item>账户</mat-list-item>
-      <mat-divider inset="start" />
-      <mat-list-item>设置</mat-list-item>
-    </mat-list>
+    <DividerListExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -87,3 +60,8 @@ Divider 固定为 1px，不响应 hover、focus、pressed 或 selected，也不�
 ## 参考来源
 
 尺寸、缩进和颜色角色依据 Material 3 [Divider specs](https://m3.material.io/components/divider/specs)。
+
+<script setup>
+import DividerInsetsExample from '../examples/divider/DividerInsetsExample.vue';
+import DividerListExample from '../examples/divider/DividerListExample.vue';
+</script>

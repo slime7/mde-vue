@@ -515,32 +515,51 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 省略属性时使用 `filled`、`small`、`round`：
 
 ```vue
-<mat-btn>确认</mat-btn>
+<template>
+  <mat-btn>确认</mat-btn>
+</template>
 ```
-
 <ClientOnly>
   <DocsPreview label="Button 默认样式预览">
-    <mat-btn>确认</mat-btn>
+    <ButtonDefaultExample />
   </DocsPreview>
 </ClientOnly>
 
 ### 外观、尺寸和形状
 
 ```vue
-<mat-btn variant="elevated" size="extra-small">Elevated</mat-btn>
-<mat-btn variant="filled" size="small">Filled</mat-btn>
-<mat-btn variant="filled-tonal" size="medium">Tonal</mat-btn>
-<mat-btn variant="outlined" size="large" shape="square">Outlined</mat-btn>
-<mat-btn variant="text" size="extra-large">Text</mat-btn>
-```
+<template>
+  <div class="example-row">
+    <mat-btn variant="elevated" size="extra-small">
+      Elevated
+    </mat-btn>
+    <mat-btn variant="filled" size="small">
+      Filled
+    </mat-btn>
+    <mat-btn variant="filled-tonal" size="medium">
+      Tonal
+    </mat-btn>
+    <mat-btn variant="outlined" size="large" shape="square">
+      Outlined
+    </mat-btn>
+    <mat-btn variant="text" size="extra-large">
+      Text
+    </mat-btn>
+  </div>
+</template>
 
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+</style>
+```
 <ClientOnly>
   <DocsPreview label="Button 外观、尺寸和形状预览">
-    <mat-btn variant="elevated" size="extra-small">Elevated</mat-btn>
-    <mat-btn variant="filled" size="small">Filled</mat-btn>
-    <mat-btn variant="filled-tonal" size="medium">Tonal</mat-btn>
-    <mat-btn variant="outlined" size="large" shape="square">Outlined</mat-btn>
-    <mat-btn variant="text" size="extra-large">Text</mat-btn>
+    <ButtonVariantsExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -561,24 +580,21 @@ const selected = ref(false);
     :selected="selected"
     @click="selected = !selected"
   >
-    <template #icon>favorite</template>
-    <template #default>收藏</template>
-    <template #selected>已收藏</template>
+    <template #icon>
+      favorite
+    </template>
+    <template #default>
+      收藏
+    </template>
+    <template #selected>
+      已收藏
+    </template>
   </mat-btn>
 </template>
 ```
-
 <ClientOnly>
   <DocsPreview label="Button 前置图标与受控切换预览">
-    <mat-btn
-      toggle
-      :selected="buttonSelected"
-      @click="buttonSelected = !buttonSelected"
-    >
-      <template #icon>favorite</template>
-      <template #default>收藏</template>
-      <template #selected>已收藏</template>
-    </mat-btn>
+    <ButtonToggleExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -587,14 +603,29 @@ const selected = ref(false);
 ### 组件配色
 
 ```vue
-<mat-btn color="secondary">次要操作</mat-btn>
-<mat-btn color="#6750a4">局部种子色</mat-btn>
-```
+<template>
+  <div class="example-row">
+    <mat-btn color="secondary">
+      次要操作
+    </mat-btn>
+    <mat-btn color="#6750a4">
+      局部种子色
+    </mat-btn>
+  </div>
+</template>
 
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+</style>
+```
 <ClientOnly>
   <DocsPreview label="Button 组件配色预览">
-    <mat-btn color="secondary">次要操作</mat-btn>
-    <mat-btn color="#6750a4">局部种子色</mat-btn>
+    <ButtonColorExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -650,9 +681,10 @@ const selected = ref(false);
 尺寸、形状和状态依据 [Material 3 Button specs](https://m3.material.io/components/buttons/specs)。基础交互结构改编自 [mdui v2 Button](https://www.mdui.org/zh-cn/docs/2/components/button)，MIT 许可见仓库根目录的 `THIRD_PARTY_NOTICES.md`。
 
 <script setup>
-import { ref } from 'vue';
-
-const buttonSelected = ref(false);
+import ButtonColorExample from '../examples/button/ButtonColorExample.vue';
+import ButtonDefaultExample from '../examples/button/ButtonDefaultExample.vue';
+import ButtonToggleExample from '../examples/button/ButtonToggleExample.vue';
+import ButtonVariantsExample from '../examples/button/ButtonVariantsExample.vue';
 </script>
 
 # Icon button 图标按钮
@@ -664,12 +696,15 @@ const buttonSelected = ref(false);
 ### 默认样式
 
 ```vue
-<mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
+<template>
+  <mat-icon-btn label="更多操作">
+    more_vert
+  </mat-icon-btn>
+</template>
 ```
-
 <ClientOnly>
   <DocsPreview label="Icon button 默认样式预览">
-    <mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
+    <IconButtonDefaultExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -678,39 +713,55 @@ const buttonSelected = ref(false);
 ### 外观、宽度和受控切换
 
 ```vue
-<mat-icon-btn label="Filled" variant="filled" width="narrow">star</mat-icon-btn>
-<mat-icon-btn label="Tonal" variant="filled-tonal">star</mat-icon-btn>
-<mat-icon-btn label="Outlined" variant="outlined" width="wide">star</mat-icon-btn>
-<mat-icon-btn label="Standard" variant="standard">star</mat-icon-btn>
+<script setup>
+import { ref } from 'vue';
 
-<mat-icon-btn
-  label="收藏"
-  toggle
-  :selected="favorite"
-  color="#6750a4"
-  @click="favorite = !favorite"
->
-  <template #default>favorite_border</template>
-  <template #selected>favorite</template>
-</mat-icon-btn>
-```
+const favorite = ref(false);
+</script>
 
-<ClientOnly>
-  <DocsPreview label="Icon button 外观、宽度和受控切换预览">
-    <mat-icon-btn label="Filled" variant="filled" width="narrow">star</mat-icon-btn>
-    <mat-icon-btn label="Tonal" variant="filled-tonal">star</mat-icon-btn>
-    <mat-icon-btn label="Outlined" variant="outlined" width="wide">star</mat-icon-btn>
-    <mat-icon-btn label="Standard" variant="standard">star</mat-icon-btn>
+<template>
+  <div class="example-row">
+    <mat-icon-btn label="Filled" variant="filled" width="narrow">
+      star
+    </mat-icon-btn>
+    <mat-icon-btn label="Tonal" variant="filled-tonal">
+      star
+    </mat-icon-btn>
+    <mat-icon-btn label="Outlined" variant="outlined" width="wide">
+      star
+    </mat-icon-btn>
+    <mat-icon-btn label="Standard" variant="standard">
+      star
+    </mat-icon-btn>
     <mat-icon-btn
       label="收藏"
       toggle
-      :selected="iconFavorite"
+      :selected="favorite"
       color="#6750a4"
-      @click="iconFavorite = !iconFavorite"
+      @click="favorite = !favorite"
     >
-      <template #default>favorite_border</template>
-      <template #selected>favorite</template>
+      <template #default>
+        favorite_border
+      </template>
+      <template #selected>
+        favorite
+      </template>
     </mat-icon-btn>
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+</style>
+```
+<ClientOnly>
+  <DocsPreview label="Icon button 外观、宽度和受控切换预览">
+    <IconButtonVariantsExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -756,9 +807,8 @@ hover、focus-visible、pressed、selected 和 disabled 状态与 Button 使用�
 参数与行为依据 [Material 3 Icon button specs](https://m3.material.io/components/icon-buttons/specs)。
 
 <script setup>
-import { ref } from 'vue';
-
-const iconFavorite = ref(false);
+import IconButtonDefaultExample from '../examples/button/IconButtonDefaultExample.vue';
+import IconButtonVariantsExample from '../examples/button/IconButtonVariantsExample.vue';
 </script>
 
 # Button group 按钮组
@@ -770,18 +820,18 @@ const iconFavorite = ref(false);
 ### 默认 standard 组
 
 ```vue
-<mat-btn-group>
-  <mat-btn variant="outlined">取消</mat-btn>
-  <mat-btn>保存</mat-btn>
-</mat-btn-group>
+<template>
+  <mat-btn-group>
+    <mat-btn variant="outlined">
+      取消
+    </mat-btn>
+    <mat-btn>保存</mat-btn>
+  </mat-btn-group>
+</template>
 ```
-
 <ClientOnly>
   <DocsPreview label="Button group 默认 standard 组预览">
-    <mat-btn-group>
-      <mat-btn variant="outlined">取消</mat-btn>
-      <mat-btn>保存</mat-btn>
-    </mat-btn-group>
+    <ButtonGroupDefaultExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -811,25 +861,18 @@ function applySelection({ nextSelected }) {
     full-width
     @select="applySelection"
   >
-    <mat-icon-btn label="粗体" value="bold">format_bold</mat-icon-btn>
-    <mat-icon-btn label="斜体" value="italic">format_italic</mat-icon-btn>
+    <mat-icon-btn label="粗体" value="bold">
+      format_bold
+    </mat-icon-btn>
+    <mat-icon-btn label="斜体" value="italic">
+      format_italic
+    </mat-icon-btn>
   </mat-btn-group>
 </template>
 ```
-
 <ClientOnly>
   <DocsPreview label="Button group 受控 connected 多选预览">
-    <mat-btn-group
-      variant="connected"
-      selection="multiple"
-      :selected="groupSelected"
-      required
-      full-width
-      @select="groupSelected = $event.nextSelected"
-    >
-      <mat-icon-btn label="粗体" value="bold">format_bold</mat-icon-btn>
-      <mat-icon-btn label="斜体" value="italic">format_italic</mat-icon-btn>
-    </mat-btn-group>
+    <ButtonGroupSelectionExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -878,9 +921,8 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 参数与交互依据 [Material 3 Button group specs](https://m3.material.io/components/button-groups/specs)。
 
 <script setup>
-import { ref } from 'vue';
-
-const groupSelected = ref(['bold']);
+import ButtonGroupDefaultExample from '../examples/button/ButtonGroupDefaultExample.vue';
+import ButtonGroupSelectionExample from '../examples/button/ButtonGroupSelectionExample.vue';
 </script>
 
 # 限制
@@ -905,26 +947,22 @@ const groupSelected = ref(['bold']);
 ### 默认样式
 
 ```vue
-<mat-split-btn>
-  <template #leading>
-    <mat-btn>新建</mat-btn>
-  </template>
-  <template #trailing>
-    <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
-  </template>
-</mat-split-btn>
+<template>
+  <mat-split-btn>
+    <template #leading>
+      <mat-btn>新建</mat-btn>
+    </template>
+    <template #trailing>
+      <mat-icon-btn label="更多新建方式">
+        arrow_drop_down
+      </mat-icon-btn>
+    </template>
+  </mat-split-btn>
+</template>
 ```
-
 <ClientOnly>
   <DocsPreview label="Split button 默认样式预览">
-    <mat-split-btn>
-      <template #leading>
-        <mat-btn>新建</mat-btn>
-      </template>
-      <template #trailing>
-        <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
-      </template>
-    </mat-split-btn>
+    <SplitButtonDefaultExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -938,48 +976,53 @@ const expanded = ref(false);
 </script>
 
 <template>
-  <mat-split-btn
-    variant="filled"
-    size="small"
-    color="#6750a4"
-    :expanded="expanded"
-    controls="create-menu"
-    @update:expanded="expanded = $event"
-  >
-    <template #leading>
-      <mat-btn @click="createDefault">新建</mat-btn>
-    </template>
-    <template #trailing>
-      <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
-    </template>
-  </mat-split-btn>
-
-  <div v-if="expanded" id="create-menu" role="menu">
-    <!-- 应用负责菜单项、焦点、Escape、外部点击和焦点返回。 -->
-  </div>
-</template>
-```
-
-<ClientOnly>
-  <DocsPreview label="Split button 受控展开与外部菜单预览" stacked>
+  <div class="example-stack">
     <mat-split-btn
       variant="filled"
       size="small"
       color="#6750a4"
-      :expanded="splitExpanded"
-      controls="split-example-menu"
-      @update:expanded="splitExpanded = $event"
+      :expanded="expanded"
+      controls="create-menu"
+      @update:expanded="expanded = $event"
     >
       <template #leading>
         <mat-btn>新建</mat-btn>
       </template>
       <template #trailing>
-        <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
+        <mat-icon-btn label="更多新建方式">
+          arrow_drop_down
+        </mat-icon-btn>
       </template>
     </mat-split-btn>
 
-<!-- 保持下方原生元素顶格，避免 Markdown 将其解析为代码块。 -->
-<div v-if="splitExpanded" id="split-example-menu" class="docs-preview-menu" role="menu">新建文档<br>新建文件夹</div>
+    <div v-if="expanded" id="create-menu" class="example-menu" role="menu">
+      新建文档<br>
+      新建文件夹
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.example-menu {
+  min-inline-size: 180px;
+  padding: 12px;
+  color: var(--mat-sys-color-on-surface);
+  background: var(--mat-sys-color-surface-container);
+  border-radius: var(--mat-sys-shape-corner-medium);
+  box-shadow: var(--mat-sys-elevation-level2);
+}
+</style>
+```
+<ClientOnly>
+  <DocsPreview label="Split button 受控展开与外部菜单预览" stacked>
+    <SplitButtonMenuExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -1028,9 +1071,8 @@ slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展
 参数、形状和展开状态依据 [Material 3 Split button specs](https://m3.material.io/components/split-button/specs)。
 
 <script setup>
-import { ref } from 'vue';
-
-const splitExpanded = ref(false);
+import SplitButtonDefaultExample from '../examples/button/SplitButtonDefaultExample.vue';
+import SplitButtonMenuExample from '../examples/button/SplitButtonMenuExample.vue';
 </script>
 
 # Checkbox 复选框
@@ -1486,38 +1528,58 @@ import SwitchIconsExample from '../examples/selection/SwitchIconsExample.vue';
 ### 默认样式
 
 ```vue
-<mat-card>
-  <mat-card-content>默认 filled 卡片</mat-card-content>
-</mat-card>
-```
+<template>
+  <mat-card class="example-card">
+    <mat-card-content>默认 filled 卡片</mat-card-content>
+  </mat-card>
+</template>
 
+<style scoped>
+.example-card {
+  inline-size: min(100%, 320px);
+}
+</style>
+```
 <ClientOnly>
   <DocsPreview label="Card 默认样式预览">
-    <mat-card style="inline-size: min(100%, 320px)">
-      <mat-card-content>默认 filled 卡片</mat-card-content>
-    </mat-card>
+    <CardDefaultExample />
   </DocsPreview>
 </ClientOnly>
 
 ### 外观与配色
 
 ```vue
-<mat-card variant="elevated"><mat-card-content>Elevated</mat-card-content></mat-card>
-<mat-card variant="filled" color="secondary"><mat-card-content>Secondary</mat-card-content></mat-card>
-<mat-card variant="outlined" color="#6750a4"><mat-card-content>局部种子色</mat-card-content></mat-card>
-```
-
-<ClientOnly>
-  <DocsPreview label="Card 外观与配色预览">
-    <mat-card variant="elevated" style="inline-size: 200px">
+<template>
+  <div class="example-row">
+    <mat-card variant="elevated">
       <mat-card-content>Elevated</mat-card-content>
     </mat-card>
-    <mat-card variant="filled" color="secondary" style="inline-size: 200px">
+    <mat-card variant="filled" color="secondary">
       <mat-card-content>Secondary</mat-card-content>
     </mat-card>
-    <mat-card variant="outlined" color="#6750a4" style="inline-size: 200px">
+    <mat-card variant="outlined" color="#6750a4">
       <mat-card-content>局部种子色</mat-card-content>
     </mat-card>
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.example-row > * {
+  flex-shrink: 0;
+  inline-size: min(100%, 200px);
+}
+</style>
+```
+<ClientOnly>
+  <DocsPreview label="Card 外观与配色预览">
+    <CardVariantsExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -1526,25 +1588,9 @@ import SwitchIconsExample from '../examples/selection/SwitchIconsExample.vue';
 ### 语义、可点击内容与禁用状态
 
 ```vue
-<mat-card as="article">
-  <mat-card-action-area type="button" @click="openDetails">
-    <mat-card-content>查看详情</mat-card-content>
-  </mat-card-action-area>
-  <mat-card-actions>
-    <mat-btn variant="text">收藏</mat-btn>
-  </mat-card-actions>
-</mat-card>
-
-<mat-card as="section" variant="outlined">
-  <mat-card-action-area href="/detail" disabled>
-    <mat-card-content>暂不可用的详情链接</mat-card-content>
-  </mat-card-action-area>
-</mat-card>
-```
-
-<ClientOnly>
-  <DocsPreview label="Card 语义、可点击内容与禁用状态预览" stacked>
-    <mat-card as="article" style="inline-size: min(100%, 360px)">
+<template>
+  <div class="example-stack">
+    <mat-card as="article">
       <mat-card-action-area type="button">
         <mat-card-content>
           <strong>Card 组件</strong>
@@ -1552,14 +1598,37 @@ import SwitchIconsExample from '../examples/selection/SwitchIconsExample.vue';
         </mat-card-content>
       </mat-card-action-area>
       <mat-card-actions>
-        <mat-btn variant="text">收藏</mat-btn>
+        <mat-btn variant="text">
+          收藏
+        </mat-btn>
       </mat-card-actions>
     </mat-card>
-    <mat-card as="section" variant="outlined" style="inline-size: min(100%, 360px)">
+
+    <mat-card as="section" variant="outlined">
       <mat-card-action-area href="/detail" disabled>
         <mat-card-content>暂不可用的详情链接</mat-card-content>
       </mat-card-action-area>
     </mat-card>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+  inline-size: 100%;
+}
+
+.example-stack > * {
+  inline-size: min(100%, 360px);
+}
+</style>
+```
+<ClientOnly>
+  <DocsPreview label="Card 语义、可点击内容与禁用状态预览" stacked>
+    <CardActionExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -1612,6 +1681,12 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
 
 只有启用的 ActionArea 才会触发 Card 的 hover、focus 和 pressed 状态。焦点环显示在整张卡片上，减少动态效果偏好下不播放状态层过渡。
 
+<script setup>
+import CardActionExample from '../examples/card/CardActionExample.vue';
+import CardDefaultExample from '../examples/card/CardDefaultExample.vue';
+import CardVariantsExample from '../examples/card/CardVariantsExample.vue';
+</script>
+
 # List 列表
 
 ## 组件简介
@@ -1632,198 +1707,159 @@ const standardSelected = ref(null);
 const segmentedSelected = ref(null);
 </script>
 
-<mat-list
-  variant="standard"
-  interaction="single-select"
-  :selected="standardSelected"
-  aria-label="standard 列表"
-  @select="standardSelected = $event.nextSelected"
->
-  <mat-list-item value="recent">
-    最近更新
-    <template #trailing>
-      <mat-radio
-        :model-value="standardSelected"
-        value="recent"
-        inert
-        aria-hidden="true"
-        class="list-selection-indicator"
-      />
-    </template>
-  </mat-list-item>
-  <mat-list-item value="name">
-    名称
-    <template #trailing>
-      <mat-radio
-        :model-value="standardSelected"
-        value="name"
-        inert
-        aria-hidden="true"
-        class="list-selection-indicator"
-      />
-    </template>
-  </mat-list-item>
-</mat-list>
+<template>
+  <div class="example-grid">
+    <section class="example-stack">
+      <strong>standard</strong>
+      <mat-list
+        variant="standard"
+        interaction="single-select"
+        :selected="standardSelected"
+        aria-label="standard 列表"
+        @select="standardSelected = $event.nextSelected"
+      >
+        <mat-list-item value="recent">
+          最近更新
+          <template #trailing>
+            <mat-radio
+              :model-value="standardSelected"
+              value="recent"
+              inert
+              aria-hidden="true"
+              class="selection-indicator"
+            />
+          </template>
+        </mat-list-item>
+        <mat-list-item value="name">
+          名称
+          <template #trailing>
+            <mat-radio
+              :model-value="standardSelected"
+              value="name"
+              inert
+              aria-hidden="true"
+              class="selection-indicator"
+            />
+          </template>
+        </mat-list-item>
+      </mat-list>
+    </section>
 
-<mat-list
-  variant="segmented"
-  interaction="single-select"
-  :selected="segmentedSelected"
-  aria-label="segmented 列表"
-  @select="segmentedSelected = $event.nextSelected"
->
-  <mat-list-item value="offline">
-    可离线使用
-    <template #trailing>
-      <mat-radio
-        :model-value="segmentedSelected"
-        value="offline"
-        inert
-        aria-hidden="true"
-        class="list-selection-indicator"
-      />
-    </template>
-  </mat-list-item>
-  <mat-list-item value="shared">
-    与我共享
-    <template #trailing>
-      <mat-radio
-        :model-value="segmentedSelected"
-        value="shared"
-        inert
-        aria-hidden="true"
-        class="list-selection-indicator"
-      />
-    </template>
-  </mat-list-item>
-</mat-list>
+    <section class="example-stack">
+      <strong>segmented</strong>
+      <mat-list
+        variant="segmented"
+        interaction="single-select"
+        :selected="segmentedSelected"
+        aria-label="segmented 列表"
+        @select="segmentedSelected = $event.nextSelected"
+      >
+        <mat-list-item value="offline">
+          可离线使用
+          <template #trailing>
+            <mat-radio
+              :model-value="segmentedSelected"
+              value="offline"
+              inert
+              aria-hidden="true"
+              class="selection-indicator"
+            />
+          </template>
+        </mat-list-item>
+        <mat-list-item value="shared">
+          与我共享
+          <template #trailing>
+            <mat-radio
+              :model-value="segmentedSelected"
+              value="shared"
+              inert
+              aria-hidden="true"
+              class="selection-indicator"
+            />
+          </template>
+        </mat-list-item>
+      </mat-list>
+    </section>
+  </div>
+</template>
+
+<style scoped>
+.example-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 24px;
+  inline-size: 100%;
+}
+
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-inline-size: 0;
+}
+
+.selection-indicator {
+  pointer-events: none;
+}
+</style>
 ```
-
 <ClientOnly>
   <DocsPreview label="List standard 与 segmented 外观对比预览">
-    <div class="list-variant-grid">
-      <section class="list-variant-example">
-        <strong>standard</strong>
-        <mat-list
-          variant="standard"
-          interaction="single-select"
-          :selected="listStandardVariantSelected"
-          aria-label="standard 列表"
-          @select="listStandardVariantSelected = $event.nextSelected"
-        >
-          <mat-list-item value="recent">
-            最近更新
-            <template #trailing>
-              <mat-radio
-                :model-value="listStandardVariantSelected"
-                value="recent"
-                inert
-                aria-hidden="true"
-                class="list-selection-indicator"
-              />
-            </template>
-          </mat-list-item>
-          <mat-list-item value="name">
-            名称
-            <template #trailing>
-              <mat-radio
-                :model-value="listStandardVariantSelected"
-                value="name"
-                inert
-                aria-hidden="true"
-                class="list-selection-indicator"
-              />
-            </template>
-          </mat-list-item>
-        </mat-list>
-      </section>
-      <section class="list-variant-example">
-        <strong>segmented</strong>
-        <mat-list
-          variant="segmented"
-          interaction="single-select"
-          :selected="listSegmentedVariantSelected"
-          aria-label="segmented 列表"
-          @select="listSegmentedVariantSelected = $event.nextSelected"
-        >
-          <mat-list-item value="offline">
-            可离线使用
-            <template #trailing>
-              <mat-radio
-                :model-value="listSegmentedVariantSelected"
-                value="offline"
-                inert
-                aria-hidden="true"
-                class="list-selection-indicator"
-              />
-            </template>
-          </mat-list-item>
-          <mat-list-item value="shared">
-            与我共享
-            <template #trailing>
-              <mat-radio
-                :model-value="listSegmentedVariantSelected"
-                value="shared"
-                inert
-                aria-hidden="true"
-                class="list-selection-indicator"
-              />
-            </template>
-          </mat-list-item>
-        </mat-list>
-      </section>
-    </div>
+    <ListVariantsExample />
   </DocsPreview>
 </ClientOnly>
 
 ### 内容结构与 Divider
 
 ```vue
-<mat-list variant="standard" aria-label="账户信息">
-  <mat-list-item>
-    <template #leading><span aria-hidden="true">person</span></template>
-    当前账户
-  </mat-list-item>
+<template>
+  <mat-list variant="standard" aria-label="账户信息" class="example-list">
+    <mat-list-item>
+      <template #leading>
+        <span class="material-symbols-outlined" aria-hidden="true">person</span>
+      </template>
+      当前账户
+    </mat-list-item>
 
-  <mat-divider inset="start" />
+    <mat-divider inset="start" />
 
-  <mat-list-item>
-    <template #leading><span aria-hidden="true">mail</span></template>
-    收件箱
-    <template #supporting>12 封未读邮件</template>
-    <template #trailing>12</template>
-  </mat-list-item>
+    <mat-list-item>
+      <template #leading>
+        <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+      </template>
+      收件箱
+      <template #supporting>
+        12 封未读邮件
+      </template>
+      <template #trailing>
+        12
+      </template>
+    </mat-list-item>
 
-  <mat-list-item :lines="3">
-    <template #overline>今天</template>
-    设计评审
-    <template #supporting>请在会议前查看最新的组件交互说明。</template>
-    <template #trailing>10:30</template>
-  </mat-list-item>
-</mat-list>
+    <mat-list-item :lines="3">
+      <template #overline>
+        今天
+      </template>
+      设计评审
+      <template #supporting>
+        请在会议前查看最新的组件交互说明。
+      </template>
+      <template #trailing>
+        10:30
+      </template>
+    </mat-list-item>
+  </mat-list>
+</template>
+
+<style scoped>
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
 ```
-
 <ClientOnly>
   <DocsPreview label="List 内容结构与 Divider 预览" stacked>
-    <mat-list variant="standard" aria-label="账户信息" style="inline-size: min(100%, 420px)">
-      <mat-list-item>
-        <template #leading><span class="material-symbols-outlined" aria-hidden="true">person</span></template>
-        当前账户
-      </mat-list-item>
-      <mat-divider inset="start" />
-      <mat-list-item>
-        <template #leading><span class="material-symbols-outlined" aria-hidden="true">mail</span></template>
-        收件箱
-        <template #supporting>12 封未读邮件</template>
-        <template #trailing>12</template>
-      </mat-list-item>
-      <mat-list-item :lines="3">
-        <template #overline>今天</template>
-        设计评审
-        <template #supporting>请在会议前查看最新的组件交互说明。</template>
-        <template #trailing>10:30</template>
-      </mat-list-item>
-    </mat-list>
+    <ListContentExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -1832,49 +1868,71 @@ const segmentedSelected = ref(null);
 ### 单操作与多操作
 
 ```vue
-<mat-list variant="segmented" interaction="single-action" aria-label="设置">
-  <mat-list-item @click="openProfile">
-    <template #leading><span aria-hidden="true">person</span></template>
-    个人资料
-    <template #trailing><span aria-hidden="true">chevron_right</span></template>
-  </mat-list-item>
-  <mat-list-item href="/security">安全设置</mat-list-item>
-  <mat-list-item disabled>不可用项目</mat-list-item>
-</mat-list>
-
-<mat-list interaction="multi-action" aria-label="文件">
-  <mat-list-item @click="openFile">
-    项目说明.pdf
-    <template #supporting>2.4 MB</template>
-    <template #trailing>
-      <mat-icon-btn label="下载">download</mat-icon-btn>
-      <mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
-    </template>
-  </mat-list-item>
-</mat-list>
-```
-
-<ClientOnly>
-  <DocsPreview label="List 单操作与多操作预览" stacked>
-    <mat-list variant="segmented" interaction="single-action" aria-label="设置" style="inline-size: min(100%, 420px)">
+<template>
+  <div class="example-stack">
+    <mat-list
+      variant="segmented"
+      interaction="single-action"
+      aria-label="设置"
+      class="example-list"
+    >
       <mat-list-item>
-        <template #leading><span class="material-symbols-outlined" aria-hidden="true">person</span></template>
+        <template #leading>
+          <span class="material-symbols-outlined" aria-hidden="true">person</span>
+        </template>
         个人资料
-        <template #trailing><span class="material-symbols-outlined" aria-hidden="true">chevron_right</span></template>
+        <template #trailing>
+          <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+        </template>
       </mat-list-item>
-      <mat-list-item href="#list-api">安全设置</mat-list-item>
-      <mat-list-item disabled>不可用项目</mat-list-item>
+      <mat-list-item href="#list-api">
+        安全设置
+      </mat-list-item>
+      <mat-list-item disabled>
+        不可用项目
+      </mat-list-item>
     </mat-list>
-    <mat-list interaction="multi-action" aria-label="文件" style="inline-size: min(100%, 420px)">
+
+    <mat-list
+      interaction="multi-action"
+      aria-label="文件"
+      class="example-list"
+    >
       <mat-list-item>
         项目说明.pdf
-        <template #supporting>2.4 MB</template>
+        <template #supporting>
+          2.4 MB
+        </template>
         <template #trailing>
-          <mat-icon-btn label="下载">download</mat-icon-btn>
-          <mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
+          <mat-icon-btn label="下载">
+            download
+          </mat-icon-btn>
+          <mat-icon-btn label="更多操作">
+            more_vert
+          </mat-icon-btn>
         </template>
       </mat-list-item>
     </mat-list>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+  inline-size: 100%;
+}
+
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
+```
+<ClientOnly>
+  <DocsPreview label="List 单操作与多操作预览" stacked>
+    <ListActionsExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -1891,93 +1949,24 @@ const multipleSelected = ref(['offline']);
 </script>
 
 <template>
-  <mat-list
-    variant="standard"
-    interaction="single-select"
-    :selected="singleSelected"
-    aria-label="排序方式"
-    @select="singleSelected = $event.nextSelected"
-  >
-    <mat-list-item value="recent">
-      最近更新
-      <template #trailing>
-        <mat-radio
-          :model-value="singleSelected"
-          value="recent"
-          inert
-          aria-hidden="true"
-          class="list-selection-indicator"
-        />
-      </template>
-    </mat-list-item>
-    <mat-list-item value="name">
-      名称
-      <template #trailing>
-        <mat-radio
-          :model-value="singleSelected"
-          value="name"
-          inert
-          aria-hidden="true"
-          class="list-selection-indicator"
-        />
-      </template>
-    </mat-list-item>
-  </mat-list>
-
-  <mat-list
-    variant="standard"
-    interaction="multi-select"
-    :selected="multipleSelected"
-    aria-label="筛选条件"
-    @select="multipleSelected = $event.nextSelected"
-  >
-    <mat-list-item value="offline">
-      可离线使用
-      <template #trailing>
-        <mat-checkbox
-          :model-value="multipleSelected"
-          value="offline"
-          inert
-          aria-hidden="true"
-          class="list-selection-indicator"
-        />
-      </template>
-    </mat-list-item>
-    <mat-list-item value="shared">
-      与我共享
-      <template #trailing>
-        <mat-checkbox
-          :model-value="multipleSelected"
-          value="shared"
-          inert
-          aria-hidden="true"
-          class="list-selection-indicator"
-        />
-      </template>
-    </mat-list-item>
-  </mat-list>
-</template>
-```
-
-<ClientOnly>
-  <DocsPreview label="List 受控单选与多选预览" stacked>
+  <div class="example-stack">
     <mat-list
       variant="standard"
       interaction="single-select"
-      :selected="listSingleSelected"
+      :selected="singleSelected"
       aria-label="排序方式"
-      style="inline-size: min(100%, 420px)"
-      @select="listSingleSelected = $event.nextSelected"
+      class="example-list"
+      @select="singleSelected = $event.nextSelected"
     >
       <mat-list-item value="recent">
         最近更新
         <template #trailing>
           <mat-radio
-            :model-value="listSingleSelected"
+            :model-value="singleSelected"
             value="recent"
             inert
             aria-hidden="true"
-            class="list-selection-indicator"
+            class="selection-indicator"
           />
         </template>
       </mat-list-item>
@@ -1985,32 +1974,33 @@ const multipleSelected = ref(['offline']);
         名称
         <template #trailing>
           <mat-radio
-            :model-value="listSingleSelected"
+            :model-value="singleSelected"
             value="name"
             inert
             aria-hidden="true"
-            class="list-selection-indicator"
+            class="selection-indicator"
           />
         </template>
       </mat-list-item>
     </mat-list>
+
     <mat-list
       variant="standard"
       interaction="multi-select"
-      :selected="listMultipleSelected"
+      :selected="multipleSelected"
       aria-label="筛选条件"
-      style="inline-size: min(100%, 420px)"
-      @select="listMultipleSelected = $event.nextSelected"
+      class="example-list"
+      @select="multipleSelected = $event.nextSelected"
     >
       <mat-list-item value="offline">
         可离线使用
         <template #trailing>
           <mat-checkbox
-            :model-value="listMultipleSelected"
+            :model-value="multipleSelected"
             value="offline"
             inert
             aria-hidden="true"
-            class="list-selection-indicator"
+            class="selection-indicator"
           />
         </template>
       </mat-list-item>
@@ -2018,15 +2008,39 @@ const multipleSelected = ref(['offline']);
         与我共享
         <template #trailing>
           <mat-checkbox
-            :model-value="listMultipleSelected"
+            :model-value="multipleSelected"
             value="shared"
             inert
             aria-hidden="true"
-            class="list-selection-indicator"
+            class="selection-indicator"
           />
         </template>
       </mat-list-item>
     </mat-list>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+  inline-size: 100%;
+}
+
+.example-list {
+  inline-size: min(100%, 420px);
+}
+
+.selection-indicator {
+  pointer-events: none;
+}
+</style>
+```
+<ClientOnly>
+  <DocsPreview label="List 受控单选与多选预览" stacked>
+    <ListSelectionExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -2096,33 +2110,11 @@ single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌�
 外观、内容结构和交互依据 Material 3 [List overview](https://m3.material.io/components/lists/overview)、[List specs](https://m3.material.io/components/lists/specs) 与 [List guidelines](https://m3.material.io/components/lists/guidelines)。选择模式的语义限制参考 [WAI-ARIA Listbox Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/)。
 
 <script setup>
-import { ref } from 'vue';
-
-const listSingleSelected = ref('recent');
-const listMultipleSelected = ref(['offline']);
-const listStandardVariantSelected = ref(null);
-const listSegmentedVariantSelected = ref(null);
+import ListActionsExample from '../examples/list/ListActionsExample.vue';
+import ListContentExample from '../examples/list/ListContentExample.vue';
+import ListSelectionExample from '../examples/list/ListSelectionExample.vue';
+import ListVariantsExample from '../examples/list/ListVariantsExample.vue';
 </script>
-
-<style scoped>
-.list-variant-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-  gap: 24px;
-  inline-size: 100%;
-}
-
-.list-variant-example {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-inline-size: 0;
-}
-
-.list-selection-indicator {
-  pointer-events: none;
-}
-</style>
 
 # Divider 分隔线
 
@@ -2135,47 +2127,67 @@ const listSegmentedVariantSelected = ref(null);
 ### 三种缩进
 
 ```vue
-<mat-divider />
-<mat-divider inset="start" />
-<mat-divider inset="middle" />
-```
+<template>
+  <div class="example-stack">
+    <section>
+      <p>全宽</p>
+      <mat-divider />
+    </section>
+    <section>
+      <p>起始侧缩进</p>
+      <mat-divider inset="start" />
+    </section>
+    <section>
+      <p>两侧缩进</p>
+      <mat-divider inset="middle" />
+    </section>
+  </div>
+</template>
 
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  inline-size: min(100%, 420px);
+  padding-block: 12px;
+}
+
+.example-stack section {
+  inline-size: 100%;
+}
+
+.example-stack p {
+  margin: 0 16px 8px;
+}
+</style>
+```
 <ClientOnly>
   <DocsPreview label="Divider 三种缩进预览" stacked>
-    <div style="display: grid; gap: 20px; inline-size: min(100%, 420px); padding-block: 12px">
-      <div>
-        <p style="margin: 0 16px 8px">全宽</p>
-        <mat-divider />
-      </div>
-      <div>
-        <p style="margin: 0 16px 8px">起始侧缩进</p>
-        <mat-divider inset="start" />
-      </div>
-      <div>
-        <p style="margin: 0 16px 8px">两侧缩进</p>
-        <mat-divider inset="middle" />
-      </div>
-    </div>
+    <DividerInsetsExample />
   </DocsPreview>
 </ClientOnly>
 
 ### List 中使用
 
 ```vue
-<mat-list variant="standard">
-  <mat-list-item>账户</mat-list-item>
-  <mat-divider inset="start" />
-  <mat-list-item>设置</mat-list-item>
-</mat-list>
-```
+<template>
+  <mat-list variant="standard" class="example-list">
+    <mat-list-item>账户</mat-list-item>
+    <mat-divider inset="start" />
+    <mat-list-item>设置</mat-list-item>
+  </mat-list>
+</template>
 
+<style scoped>
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
+```
 <ClientOnly>
   <DocsPreview label="Divider 在 List 中的预览">
-    <mat-list variant="standard" style="inline-size: min(100%, 420px)">
-      <mat-list-item>账户</mat-list-item>
-      <mat-divider inset="start" />
-      <mat-list-item>设置</mat-list-item>
-    </mat-list>
+    <DividerListExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -2206,3 +2218,8 @@ Divider 固定为 1px，不响应 hover、focus、pressed 或 selected，也不�
 ## 参考来源
 
 尺寸、缩进和颜色角色依据 Material 3 [Divider specs](https://m3.material.io/components/divider/specs)。
+
+<script setup>
+import DividerInsetsExample from '../examples/divider/DividerInsetsExample.vue';
+import DividerListExample from '../examples/divider/DividerListExample.vue';
+</script>

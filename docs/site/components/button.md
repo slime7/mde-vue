@@ -15,33 +15,21 @@ order: 50
 
 省略属性时使用 `filled`、`small`、`round`：
 
-```vue
-<mat-btn>确认</mat-btn>
-```
+<<< @/examples/button/ButtonDefaultExample.vue
 
 <ClientOnly>
   <DocsPreview label="Button 默认样式预览">
-    <mat-btn>确认</mat-btn>
+    <ButtonDefaultExample />
   </DocsPreview>
 </ClientOnly>
 
 ### 外观、尺寸和形状
 
-```vue
-<mat-btn variant="elevated" size="extra-small">Elevated</mat-btn>
-<mat-btn variant="filled" size="small">Filled</mat-btn>
-<mat-btn variant="filled-tonal" size="medium">Tonal</mat-btn>
-<mat-btn variant="outlined" size="large" shape="square">Outlined</mat-btn>
-<mat-btn variant="text" size="extra-large">Text</mat-btn>
-```
+<<< @/examples/button/ButtonVariantsExample.vue
 
 <ClientOnly>
   <DocsPreview label="Button 外观、尺寸和形状预览">
-    <mat-btn variant="elevated" size="extra-small">Elevated</mat-btn>
-    <mat-btn variant="filled" size="small">Filled</mat-btn>
-    <mat-btn variant="filled-tonal" size="medium">Tonal</mat-btn>
-    <mat-btn variant="outlined" size="large" shape="square">Outlined</mat-btn>
-    <mat-btn variant="text" size="extra-large">Text</mat-btn>
+    <ButtonVariantsExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -49,37 +37,11 @@ order: 50
 
 ### 前置图标与受控切换
 
-```vue
-<script setup>
-import { ref } from 'vue';
-
-const selected = ref(false);
-</script>
-
-<template>
-  <mat-btn
-    toggle
-    :selected="selected"
-    @click="selected = !selected"
-  >
-    <template #icon>favorite</template>
-    <template #default>收藏</template>
-    <template #selected>已收藏</template>
-  </mat-btn>
-</template>
-```
+<<< @/examples/button/ButtonToggleExample.vue
 
 <ClientOnly>
   <DocsPreview label="Button 前置图标与受控切换预览">
-    <mat-btn
-      toggle
-      :selected="buttonSelected"
-      @click="buttonSelected = !buttonSelected"
-    >
-      <template #icon>favorite</template>
-      <template #default>收藏</template>
-      <template #selected>已收藏</template>
-    </mat-btn>
+    <ButtonToggleExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -87,15 +49,11 @@ const selected = ref(false);
 
 ### 组件配色
 
-```vue
-<mat-btn color="secondary">次要操作</mat-btn>
-<mat-btn color="#6750a4">局部种子色</mat-btn>
-```
+<<< @/examples/button/ButtonColorExample.vue
 
 <ClientOnly>
   <DocsPreview label="Button 组件配色预览">
-    <mat-btn color="secondary">次要操作</mat-btn>
-    <mat-btn color="#6750a4">局部种子色</mat-btn>
+    <ButtonColorExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -151,7 +109,8 @@ const selected = ref(false);
 尺寸、形状和状态依据 [Material 3 Button specs](https://m3.material.io/components/buttons/specs)。基础交互结构改编自 [mdui v2 Button](https://www.mdui.org/zh-cn/docs/2/components/button)，MIT 许可见仓库根目录的 `THIRD_PARTY_NOTICES.md`。
 
 <script setup>
-import { ref } from 'vue';
-
-const buttonSelected = ref(false);
+import ButtonColorExample from '../examples/button/ButtonColorExample.vue';
+import ButtonDefaultExample from '../examples/button/ButtonDefaultExample.vue';
+import ButtonToggleExample from '../examples/button/ButtonToggleExample.vue';
+import ButtonVariantsExample from '../examples/button/ButtonVariantsExample.vue';
 </script>

@@ -13,19 +13,11 @@ order: 60
 
 ### 默认 standard 组
 
-```vue
-<mat-btn-group>
-  <mat-btn variant="outlined">取消</mat-btn>
-  <mat-btn>保存</mat-btn>
-</mat-btn-group>
-```
+<<< @/examples/button/ButtonGroupDefaultExample.vue
 
 <ClientOnly>
   <DocsPreview label="Button group 默认 standard 组预览">
-    <mat-btn-group>
-      <mat-btn variant="outlined">取消</mat-btn>
-      <mat-btn>保存</mat-btn>
-    </mat-btn-group>
+    <ButtonGroupDefaultExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -35,45 +27,11 @@ order: 60
 
 ### 受控 connected 多选
 
-```vue
-<script setup>
-import { ref } from 'vue';
-
-const selected = ref(['bold']);
-
-function applySelection({ nextSelected }) {
-  selected.value = nextSelected;
-}
-</script>
-
-<template>
-  <mat-btn-group
-    variant="connected"
-    selection="multiple"
-    :selected="selected"
-    required
-    full-width
-    @select="applySelection"
-  >
-    <mat-icon-btn label="粗体" value="bold">format_bold</mat-icon-btn>
-    <mat-icon-btn label="斜体" value="italic">format_italic</mat-icon-btn>
-  </mat-btn-group>
-</template>
-```
+<<< @/examples/button/ButtonGroupSelectionExample.vue
 
 <ClientOnly>
   <DocsPreview label="Button group 受控 connected 多选预览">
-    <mat-btn-group
-      variant="connected"
-      selection="multiple"
-      :selected="groupSelected"
-      required
-      full-width
-      @select="groupSelected = $event.nextSelected"
-    >
-      <mat-icon-btn label="粗体" value="bold">format_bold</mat-icon-btn>
-      <mat-icon-btn label="斜体" value="italic">format_italic</mat-icon-btn>
-    </mat-btn-group>
+    <ButtonGroupSelectionExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -122,7 +80,6 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 参数与交互依据 [Material 3 Button group specs](https://m3.material.io/components/button-groups/specs)。
 
 <script setup>
-import { ref } from 'vue';
-
-const groupSelected = ref(['bold']);
+import ButtonGroupDefaultExample from '../examples/button/ButtonGroupDefaultExample.vue';
+import ButtonGroupSelectionExample from '../examples/button/ButtonGroupSelectionExample.vue';
 </script>
