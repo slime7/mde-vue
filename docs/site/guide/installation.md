@@ -92,4 +92,4 @@ import { MatSplitBtn } from 'mdu-ui/components/mat-split-btn';
 | 应用会使用多个 mdu-ui 组件 | 安装 `createMatUi()`，统一全局注册 |
 | 只使用少量组件，并接受基础样式的默认主题 | 从 `mdu-ui/components/<组件目录>` 按需导入 |
 
-`createMatUi()` 当前同时负责主题初始化和全局注册。已经安装插件时，不需要再局部导入同一个组件。
+`createMatUi()` 同时负责主题初始化、组件设置和全局注册。已经安装插件时，不需要再局部导入同一个组件。交互指针、Material Symbols 与主题入口见 [`createMatUi` 配置](/guide/create-mat-ui)。

@@ -44,13 +44,17 @@
 
 主题模块不读取或写入 `localStorage`，也不决定应用应何时保存用户选择。
 
+### 插件配置
+
+`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针，以及是否让组件图标容器使用 Material Symbols。顶层布尔选项不会写入 DOM 或主题控制器，也不改变按需导入组件在未安装插件时的默认行为。
+
 ### 组件
 
-每个组件拥有自己的 Vue SFC、公开入口、样式与测试。按钮和图标按钮共享原生 `<button>` 基础结构、状态层和上下文合并逻辑；按钮组与 split button 使用 Vue provide/inject 协调子按钮，不复制交互协议。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
+每个组件拥有自己的 Vue SFC、公开入口、样式与测试。按钮和图标按钮共享原生 `<button>` 基础结构、状态层、插件设置和上下文合并逻辑；按钮组与 split button 使用 Vue provide/inject 协调子按钮，不复制交互协议。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
 
 ### 样式层
 
-基础样式使用三层令牌：`--mat-ref-*` 保存字体等参考值，`--mat-sys-*` 保存颜色、排版、形状、海拔、动效、状态和交互值，`--mat-<component>-*` 保存组件实际读取的尺寸、颜色、形状、排版、描边与间距入口。组件内部临时变量不属于公共定制 API。
+基础样式使用三层令牌：`--mat-ref-*` 保存文字与图标字体等参考值，`--mat-sys-*` 保存颜色、排版、形状、海拔、动效、状态和交互值，`--mat-<component>-*` 保存组件实际读取的尺寸、颜色、形状、排版、描边与间距入口。组件内部临时变量不属于公共定制 API。Material Symbols 选项只应用字体族与连字规则，字体资源仍由使用方加载。
 
 Tailwind 适配文件通过 `@theme inline` 将上述值映射到带 `mat` 前缀的 Tailwind 主题变量，不重新定义主题来源。
 
@@ -76,6 +80,14 @@ flowchart LR
 
 ```mermaid
 flowchart LR
+    A["createMatUi 顶层选项"] --> B["插件选项校验"]
+    B --> C["不可变组件设置上下文"]
+    C --> D["共享按钮指针"]
+    C --> E["组件图标容器"]
+```
+
+```mermaid
+flowchart LR
     A["带 AI 标记的 Markdown"] --> B["文档生成脚本"]
     B --> C["llms.txt"]
     B --> D["llms-full.txt"]
@@ -89,6 +101,7 @@ flowchart LR
 - Vue 是 peer dependency，由使用方应用提供。
 - Material Color Utilities 是主题运行时依赖。
 - Tailwind CSS v4 是可选 peer dependency；不使用 Tailwind 的项目只导入基础样式。
+- Material Symbols 字体是可选的应用资源；插件不会下载字体或发起网络请求。
 - 项目无服务端、数据库、缓存、遥测或远程运行时服务。
 - 私有 GitHub 仓库是源码分发边界，使用方应锁定具体提交。
 

@@ -7,41 +7,7 @@ order: 50
 
 # Button 按钮
 
-`MatBtn` 渲染原生 `<button>`，用于触发保存、确认或取消等页面内操作。实现遵循 Material 3 Expressive Button 的五档尺寸、形状变换和状态规则。
-
-## 使用方法
-
-### 全局注册
-
-安装插件后使用 `<mat-btn>`：
-
-```js
-import { createApp } from 'vue';
-import { createMatUi } from 'mdu-ui';
-import App from './App.vue';
-import 'mdu-ui/styles.css';
-
-createApp(App).use(createMatUi()).mount('#app');
-```
-
-```vue
-<template>
-  <mat-btn>保存</mat-btn>
-</template>
-```
-
-### 按需导入
-
-```vue
-<script setup>
-import { MatBtn } from 'mdu-ui/components/mat-btn';
-import 'mdu-ui/styles.css';
-</script>
-
-<template>
-  <MatBtn>保存</MatBtn>
-</template>
-```
+`<mat-btn>` 的组件导出名是 `MatBtn`。它渲染原生 `<button>`，用于触发保存、确认或取消等页面内操作。实现遵循 Material 3 Expressive Button 的五档尺寸、形状变换和状态规则。
 
 ## 示例
 
@@ -96,8 +62,7 @@ const selected = ref(false);
     :selected="selected"
     @click="selected = !selected"
   >
-    <template #icon>☆</template>
-    <template #selected-icon>★</template>
+    <template #icon>favorite</template>
     <template #default>收藏</template>
     <template #selected>已收藏</template>
   </mat-btn>
@@ -111,8 +76,7 @@ const selected = ref(false);
       :selected="buttonSelected"
       @click="buttonSelected = !buttonSelected"
     >
-      <template #icon>☆</template>
-      <template #selected-icon>★</template>
+      <template #icon>favorite</template>
       <template #default>收藏</template>
       <template #selected>已收藏</template>
     </mat-btn>

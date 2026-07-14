@@ -33,7 +33,7 @@ import 'mdu-ui/styles.css';
 
 完整入口提供 `createMatUi()`、`useMatTheme()` 和四个组件具名导出。各组件也有独立入口：`mdu-ui/components/mat-btn`、`mdu-ui/components/mat-icon-btn`、`mdu-ui/components/mat-btn-group` 和 `mdu-ui/components/mat-split-btn`。
 
-需要动态主题或多个组件时，推荐安装 `createMatUi()` 并使用全局 `mat-*` 标签。仅使用少量组件且接受默认主题时，推荐从单组件入口按需导入。两种方式的完整代码见[安装](/guide/installation)。
+需要动态主题或多个组件时，推荐安装 `createMatUi()` 并使用全局 `mat-*` 标签。仅使用少量组件且接受默认主题时，推荐从单组件入口按需导入。两种方式的完整代码见[安装](/guide/installation)，插件的组件设置见 [`createMatUi`](/guide/create-mat-ui)。
 
 # 安装
 
@@ -122,11 +122,92 @@ import { MatSplitBtn } from 'mdu-ui/components/mat-split-btn';
 | 应用会使用多个 mdu-ui 组件 | 安装 `createMatUi()`，统一全局注册 |
 | 只使用少量组件，并接受基础样式的默认主题 | 从 `mdu-ui/components/<组件目录>` 按需导入 |
 
-`createMatUi()` 当前同时负责主题初始化和全局注册。已经安装插件时，不需要再局部导入同一个组件。
+`createMatUi()` 同时负责主题初始化、组件设置和全局注册。已经安装插件时，不需要再局部导入同一个组件。交互指针、Material Symbols 与主题入口见 [`createMatUi` 配置](/guide/create-mat-ui)。
+
+# createMatUi
+
+`createMatUi(options)` 创建供 Vue 应用安装的 mdu-ui 插件。插件会全局注册所有 `mat-*` 组件、创建主题控制器，并把组件设置与主题上下文提供给应用后代。
+
+## 基本用法
+
+```js
+import { createApp } from 'vue';
+import { createMatUi } from 'mdu-ui';
+import App from './App.vue';
+import 'mdu-ui/styles.css';
+
+const matUi = createMatUi({
+  useCursor: true,
+  useMaterialSymbols: true,
+  theme: {
+    mode: 'system',
+    seedColor: '#20a6fc',
+  },
+});
+
+createApp(App).use(matUi).mount('#app');
+```
+
+所有选项都可以省略。传给 `createMatUi()` 的值必须是对象，`useCursor` 和 `useMaterialSymbols` 必须是 `boolean`，否则会抛出 `TypeError`。
+
+## 选项
+
+| 选项 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `useCursor` | `boolean` | `false` | 是否为可用交互组件显示 `cursor: pointer` |
+| `useMaterialSymbols` | `boolean` | `false` | 是否让组件图标容器使用 Material Symbols Outlined 字体和连字 |
+| `theme` | `object` | 默认主题配置 | 动态主题的初始模式、种子色、配色变体、对比度和写入目标 |
+
+## 交互指针
+
+默认情况下，按钮等交互组件使用 `cursor: default`。传入 `useCursor: true` 后，可用的交互组件改用 `cursor: pointer`；禁用组件仍显示不可用指针。
+
+```js
+createApp(App).use(createMatUi({
+  useCursor: true,
+}));
+```
+
+该选项只控制 mdu-ui 组件，不修改页面中的原生按钮或其他应用元素。
+
+## Material Symbols
+
+传入 `useMaterialSymbols: true` 后，可以直接把 Material Symbols 标签写入组件定义的图标 slot：
+
+```vue
+<mat-btn>
+  <template #icon>save</template>
+  保存
+</mat-btn>
+
+<mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
+```
+
+此选项负责设置图标容器的 `font-family`、连字和文字渲染规则，不会下载字体文件。应用需要自行加载 Material Symbols Outlined，例如在 HTML 头部加入：
+
+```html
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+>
+```
+
+字体族由 `--mat-ref-typeface-icon` 控制，默认值是 `'Material Symbols Outlined'`。不启用此选项时，图标 slot 仍可传入 SVG 或其他普通 Vue 内容。
+
+## 主题
+
+`theme` 的默认值、有效范围、运行时修改方法和清理方式见[主题](/guide/theme)。插件实例的 `theme` 属性就是对应的主题控制器：
+
+```js
+const matUi = createMatUi();
+
+matUi.theme.setMode('dark');
+matUi.theme.dispose();
+```
 
 # 主题
 
-`createMatUi()` 接受可选的 `theme` 配置。所有颜色按 Material 2025 phone 规格生成。默认种子色是 `#20a6fc`，默认模式是 `system`，默认配色变体是 `tonal-spot`，默认对比度是 `0`。
+`createMatUi()` 接受可选的 `theme` 配置。所有颜色按 Material 2025 phone 规格生成。默认种子色是 `#20a6fc`，默认模式是 `system`，默认配色变体是 `tonal-spot`，默认对比度是 `0`。其他插件选项见 [`createMatUi`](/guide/create-mat-ui)。
 
 ## 初始化
 
@@ -234,7 +315,7 @@ matUi.theme.dispose();
 
 ### 字体与排版
 
-参考字体为 `--mat-ref-typeface-brand`、`--mat-ref-typeface-plain`，默认均为 `system-ui, sans-serif`；字重为 `--mat-ref-typeface-weight-regular`、`medium`、`bold`。
+参考文字字体为 `--mat-ref-typeface-brand`、`--mat-ref-typeface-plain`，默认均为 `system-ui, sans-serif`；图标字体 `--mat-ref-typeface-icon` 默认为 `'Material Symbols Outlined'`。字重为 `--mat-ref-typeface-weight-regular`、`medium`、`bold`。
 
 系统排版包含 `display`、`headline`、`title`、`body`、`label` 五组，每组都有 `large`、`medium`、`small`，并分别公开 `font`、`weight`、`size`、`line-height`、`tracking` 五个轴。例如 `--mat-sys-typescale-title-medium-size`。强调样式使用 `--mat-sys-typescale-emphasized-<style>-<axis>`，共提供相同的 15 套样式。
 
@@ -402,7 +483,7 @@ import 'mdu-ui/styles.css';
 </template>
 ```
 
-颜色类来自 `--color-mat-*`，覆盖主题的全部 53 个颜色角色。字体族使用 `font-mat-brand` 和 `font-mat-plain`；15 套基线排版使用 `text-mat-<style>`，15 套强调排版使用 `text-mat-emphasized-<style>`，同时映射字号、行高、字距和字重。
+颜色类来自 `--color-mat-*`，覆盖主题的全部 53 个颜色角色。字体族使用 `font-mat-brand`、`font-mat-icon` 和 `font-mat-plain`；15 套基线排版使用 `text-mat-<style>`，15 套强调排版使用 `text-mat-emphasized-<style>`，同时映射字号、行高、字距和字重。
 
 圆角类完整映射系统形状，例如 `rounded-mat-extra-small`、`rounded-mat-large-increased`、`rounded-mat-extra-extra-large` 和 `rounded-mat-full`。海拔使用 `shadow-mat-level0` 至 `shadow-mat-level5`。六个缓动类为：
 
@@ -422,41 +503,7 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 # Button 按钮
 
-`MatBtn` 渲染原生 `<button>`，用于触发保存、确认或取消等页面内操作。实现遵循 Material 3 Expressive Button 的五档尺寸、形状变换和状态规则。
-
-## 使用方法
-
-### 全局注册
-
-安装插件后使用 `<mat-btn>`：
-
-```js
-import { createApp } from 'vue';
-import { createMatUi } from 'mdu-ui';
-import App from './App.vue';
-import 'mdu-ui/styles.css';
-
-createApp(App).use(createMatUi()).mount('#app');
-```
-
-```vue
-<template>
-  <mat-btn>保存</mat-btn>
-</template>
-```
-
-### 按需导入
-
-```vue
-<script setup>
-import { MatBtn } from 'mdu-ui/components/mat-btn';
-import 'mdu-ui/styles.css';
-</script>
-
-<template>
-  <MatBtn>保存</MatBtn>
-</template>
-```
+`<mat-btn>` 的组件导出名是 `MatBtn`。它渲染原生 `<button>`，用于触发保存、确认或取消等页面内操作。实现遵循 Material 3 Expressive Button 的五档尺寸、形状变换和状态规则。
 
 ## 示例
 
@@ -511,8 +558,7 @@ const selected = ref(false);
     :selected="selected"
     @click="selected = !selected"
   >
-    <template #icon>☆</template>
-    <template #selected-icon>★</template>
+    <template #icon>favorite</template>
     <template #default>收藏</template>
     <template #selected>已收藏</template>
   </mat-btn>
@@ -526,8 +572,7 @@ const selected = ref(false);
       :selected="buttonSelected"
       @click="buttonSelected = !buttonSelected"
     >
-      <template #icon>☆</template>
-      <template #selected-icon>★</template>
+      <template #icon>favorite</template>
       <template #default>收藏</template>
       <template #selected>已收藏</template>
     </mat-btn>
@@ -634,42 +679,19 @@ const buttonSelected = ref(false);
 
 # Icon button 图标按钮
 
-`MatIconBtn` 渲染只包含图标的原生按钮。每个实例必须通过 `label` 提供可访问操作名称，并默认使用同一文本作为原生 `title` 提示。
-
-## 使用方法
-
-### 全局注册
-
-安装 `createMatUi()` 后使用：
-
-```vue
-<mat-icon-btn label="收藏">☆</mat-icon-btn>
-```
-
-### 按需导入
-
-```vue
-<script setup>
-import { MatIconBtn } from 'mdu-ui/components/mat-icon-btn';
-import 'mdu-ui/styles.css';
-</script>
-
-<template>
-  <MatIconBtn label="收藏">☆</MatIconBtn>
-</template>
-```
+`<mat-icon-btn>` 的组件导出名是 `MatIconBtn`。它渲染只包含图标的原生按钮。每个实例必须通过 `label` 提供可访问操作名称，并默认使用同一文本作为原生 `title` 提示。
 
 ## 示例
 
 ### 默认样式
 
 ```vue
-<mat-icon-btn label="更多操作">⋮</mat-icon-btn>
+<mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
 ```
 
 <ClientOnly>
   <DocsPreview label="Icon button 默认样式预览">
-    <mat-icon-btn label="更多操作">⋮</mat-icon-btn>
+    <mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
   </DocsPreview>
 </ClientOnly>
 
@@ -678,10 +700,10 @@ import 'mdu-ui/styles.css';
 ### 外观、宽度和受控切换
 
 ```vue
-<mat-icon-btn label="Filled" variant="filled" width="narrow">★</mat-icon-btn>
-<mat-icon-btn label="Tonal" variant="filled-tonal">★</mat-icon-btn>
-<mat-icon-btn label="Outlined" variant="outlined" width="wide">★</mat-icon-btn>
-<mat-icon-btn label="Standard" variant="standard">★</mat-icon-btn>
+<mat-icon-btn label="Filled" variant="filled" width="narrow">star</mat-icon-btn>
+<mat-icon-btn label="Tonal" variant="filled-tonal">star</mat-icon-btn>
+<mat-icon-btn label="Outlined" variant="outlined" width="wide">star</mat-icon-btn>
+<mat-icon-btn label="Standard" variant="standard">star</mat-icon-btn>
 
 <mat-icon-btn
   label="收藏"
@@ -690,17 +712,17 @@ import 'mdu-ui/styles.css';
   color="#6750a4"
   @click="favorite = !favorite"
 >
-  <template #default>☆</template>
-  <template #selected>★</template>
+  <template #default>favorite_border</template>
+  <template #selected>favorite</template>
 </mat-icon-btn>
 ```
 
 <ClientOnly>
   <DocsPreview label="Icon button 外观、宽度和受控切换预览">
-    <mat-icon-btn label="Filled" variant="filled" width="narrow">★</mat-icon-btn>
-    <mat-icon-btn label="Tonal" variant="filled-tonal">★</mat-icon-btn>
-    <mat-icon-btn label="Outlined" variant="outlined" width="wide">★</mat-icon-btn>
-    <mat-icon-btn label="Standard" variant="standard">★</mat-icon-btn>
+    <mat-icon-btn label="Filled" variant="filled" width="narrow">star</mat-icon-btn>
+    <mat-icon-btn label="Tonal" variant="filled-tonal">star</mat-icon-btn>
+    <mat-icon-btn label="Outlined" variant="outlined" width="wide">star</mat-icon-btn>
+    <mat-icon-btn label="Standard" variant="standard">star</mat-icon-btn>
     <mat-icon-btn
       label="收藏"
       toggle
@@ -708,8 +730,8 @@ import 'mdu-ui/styles.css';
       color="#6750a4"
       @click="iconFavorite = !iconFavorite"
     >
-      <template #default>☆</template>
-      <template #selected>★</template>
+      <template #default>favorite_border</template>
+      <template #selected>favorite</template>
     </mat-icon-btn>
   </DocsPreview>
 </ClientOnly>
@@ -778,35 +800,7 @@ const iconFavorite = ref(false);
 
 # Button group 按钮组
 
-`MatBtnGroup` 在单行中组织 `MatBtn` 和 `MatIconBtn`。standard 形态保留独立按钮间距，connected 形态连接可选择按钮。组容器不聚焦，每个子按钮保持独立 Tab 停靠点。
-
-## 使用方法
-
-### 全局注册
-
-```vue
-<mat-btn-group>
-  <mat-btn>剪切</mat-btn>
-  <mat-btn>复制</mat-btn>
-</mat-btn-group>
-```
-
-### 按需导入
-
-```vue
-<script setup>
-import { MatBtn } from 'mdu-ui/components/mat-btn';
-import { MatBtnGroup } from 'mdu-ui/components/mat-btn-group';
-import 'mdu-ui/styles.css';
-</script>
-
-<template>
-  <MatBtnGroup>
-    <MatBtn>剪切</MatBtn>
-    <MatBtn>复制</MatBtn>
-  </MatBtnGroup>
-</template>
-```
+`<mat-btn-group>` 的组件导出名是 `MatBtnGroup`。它在单行中组织 `MatBtn` 和 `MatIconBtn`。standard 形态保留独立按钮间距，connected 形态连接可选择按钮。组容器不聚焦，每个子按钮保持独立 Tab 停靠点。
 
 ## 示例
 
@@ -852,8 +846,8 @@ function applySelection({ nextSelected }) {
     full-width
     @select="applySelection"
   >
-    <mat-icon-btn label="粗体" value="bold">B</mat-icon-btn>
-    <mat-icon-btn label="斜体" value="italic">I</mat-icon-btn>
+    <mat-icon-btn label="粗体" value="bold">format_bold</mat-icon-btn>
+    <mat-icon-btn label="斜体" value="italic">format_italic</mat-icon-btn>
   </mat-btn-group>
 </template>
 ```
@@ -868,8 +862,8 @@ function applySelection({ nextSelected }) {
       full-width
       @select="groupSelected = $event.nextSelected"
     >
-      <mat-icon-btn label="粗体" value="bold">B</mat-icon-btn>
-      <mat-icon-btn label="斜体" value="italic">I</mat-icon-btn>
+      <mat-icon-btn label="粗体" value="bold">format_bold</mat-icon-btn>
+      <mat-icon-btn label="斜体" value="italic">format_italic</mat-icon-btn>
     </mat-btn-group>
   </DocsPreview>
 </ClientOnly>
@@ -950,40 +944,7 @@ const groupSelected = ref(['bold']);
 
 # Split button 拆分按钮
 
-`MatSplitBtn` 把主要操作和展开菜单操作组合为两个独立原生按钮。组件只协调外观、事件、受控展开状态和菜单 ARIA，不创建菜单，也不管理菜单焦点。
-
-## 使用方法
-
-### 全局注册
-
-```vue
-<mat-split-btn>
-  <template #leading>
-    <mat-btn>新建</mat-btn>
-  </template>
-  <template #trailing>
-    <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
-  </template>
-</mat-split-btn>
-```
-
-### 按需导入
-
-```vue
-<script setup>
-import { MatBtn } from 'mdu-ui/components/mat-btn';
-import { MatIconBtn } from 'mdu-ui/components/mat-icon-btn';
-import { MatSplitBtn } from 'mdu-ui/components/mat-split-btn';
-import 'mdu-ui/styles.css';
-</script>
-
-<template>
-  <MatSplitBtn>
-    <template #leading><MatBtn>新建</MatBtn></template>
-    <template #trailing><MatIconBtn label="更多新建方式">⌄</MatIconBtn></template>
-  </MatSplitBtn>
-</template>
-```
+`<mat-split-btn>` 的组件导出名是 `MatSplitBtn`。它把主要操作和展开菜单操作组合为两个独立原生按钮。组件只协调外观、事件、受控展开状态和菜单 ARIA，不创建菜单，也不管理菜单焦点。
 
 ## 示例
 
@@ -995,7 +956,7 @@ import 'mdu-ui/styles.css';
     <mat-btn>新建</mat-btn>
   </template>
   <template #trailing>
-    <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
+    <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
   </template>
 </mat-split-btn>
 ```
@@ -1007,7 +968,7 @@ import 'mdu-ui/styles.css';
         <mat-btn>新建</mat-btn>
       </template>
       <template #trailing>
-        <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
+        <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
       </template>
     </mat-split-btn>
   </DocsPreview>
@@ -1035,7 +996,7 @@ const expanded = ref(false);
       <mat-btn @click="createDefault">新建</mat-btn>
     </template>
     <template #trailing>
-      <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
+      <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
     </template>
   </mat-split-btn>
 
@@ -1059,7 +1020,7 @@ const expanded = ref(false);
         <mat-btn>新建</mat-btn>
       </template>
       <template #trailing>
-        <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
+        <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
       </template>
     </mat-split-btn>
 

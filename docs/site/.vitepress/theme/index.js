@@ -11,7 +11,9 @@ export default {
     app.component('DocsPreview', DocsPreview);
 
     if (typeof document !== 'undefined') {
-      app.use(createMatUi());
+      app.use(createMatUi({
+        useMaterialSymbols: true,
+      }));
     }
   },
 };

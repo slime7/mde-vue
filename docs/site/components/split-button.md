@@ -7,40 +7,7 @@ order: 65
 
 # Split button 拆分按钮
 
-`MatSplitBtn` 把主要操作和展开菜单操作组合为两个独立原生按钮。组件只协调外观、事件、受控展开状态和菜单 ARIA，不创建菜单，也不管理菜单焦点。
-
-## 使用方法
-
-### 全局注册
-
-```vue
-<mat-split-btn>
-  <template #leading>
-    <mat-btn>新建</mat-btn>
-  </template>
-  <template #trailing>
-    <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
-  </template>
-</mat-split-btn>
-```
-
-### 按需导入
-
-```vue
-<script setup>
-import { MatBtn } from 'mdu-ui/components/mat-btn';
-import { MatIconBtn } from 'mdu-ui/components/mat-icon-btn';
-import { MatSplitBtn } from 'mdu-ui/components/mat-split-btn';
-import 'mdu-ui/styles.css';
-</script>
-
-<template>
-  <MatSplitBtn>
-    <template #leading><MatBtn>新建</MatBtn></template>
-    <template #trailing><MatIconBtn label="更多新建方式">⌄</MatIconBtn></template>
-  </MatSplitBtn>
-</template>
-```
+`<mat-split-btn>` 的组件导出名是 `MatSplitBtn`。它把主要操作和展开菜单操作组合为两个独立原生按钮。组件只协调外观、事件、受控展开状态和菜单 ARIA，不创建菜单，也不管理菜单焦点。
 
 ## 示例
 
@@ -52,7 +19,7 @@ import 'mdu-ui/styles.css';
     <mat-btn>新建</mat-btn>
   </template>
   <template #trailing>
-    <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
+    <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
   </template>
 </mat-split-btn>
 ```
@@ -64,7 +31,7 @@ import 'mdu-ui/styles.css';
         <mat-btn>新建</mat-btn>
       </template>
       <template #trailing>
-        <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
+        <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
       </template>
     </mat-split-btn>
   </DocsPreview>
@@ -92,7 +59,7 @@ const expanded = ref(false);
       <mat-btn @click="createDefault">新建</mat-btn>
     </template>
     <template #trailing>
-      <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
+      <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
     </template>
   </mat-split-btn>
 
@@ -116,7 +83,7 @@ const expanded = ref(false);
         <mat-btn>新建</mat-btn>
       </template>
       <template #trailing>
-        <mat-icon-btn label="更多新建方式">⌄</mat-icon-btn>
+        <mat-icon-btn label="更多新建方式">arrow_drop_down</mat-icon-btn>
       </template>
     </mat-split-btn>
 

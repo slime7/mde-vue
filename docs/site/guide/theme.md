@@ -7,7 +7,7 @@ order: 30
 
 # 主题
 
-`createMatUi()` 接受可选的 `theme` 配置。所有颜色按 Material 2025 phone 规格生成。默认种子色是 `#20a6fc`，默认模式是 `system`，默认配色变体是 `tonal-spot`，默认对比度是 `0`。
+`createMatUi()` 接受可选的 `theme` 配置。所有颜色按 Material 2025 phone 规格生成。默认种子色是 `#20a6fc`，默认模式是 `system`，默认配色变体是 `tonal-spot`，默认对比度是 `0`。其他插件选项见 [`createMatUi`](/guide/create-mat-ui)。
 
 ## 初始化
 
@@ -115,7 +115,7 @@ matUi.theme.dispose();
 
 ### 字体与排版
 
-参考字体为 `--mat-ref-typeface-brand`、`--mat-ref-typeface-plain`，默认均为 `system-ui, sans-serif`；字重为 `--mat-ref-typeface-weight-regular`、`medium`、`bold`。
+参考文字字体为 `--mat-ref-typeface-brand`、`--mat-ref-typeface-plain`，默认均为 `system-ui, sans-serif`；图标字体 `--mat-ref-typeface-icon` 默认为 `'Material Symbols Outlined'`。字重为 `--mat-ref-typeface-weight-regular`、`medium`、`bold`。
 
 系统排版包含 `display`、`headline`、`title`、`body`、`label` 五组，每组都有 `large`、`medium`、`small`，并分别公开 `font`、`weight`、`size`、`line-height`、`tracking` 五个轴。例如 `--mat-sys-typescale-title-medium-size`。强调样式使用 `--mat-sys-typescale-emphasized-<style>-<axis>`，共提供相同的 15 套样式。
 

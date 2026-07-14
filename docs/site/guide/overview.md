@@ -36,4 +36,4 @@ import 'mdu-ui/styles.css';
 
 完整入口提供 `createMatUi()`、`useMatTheme()` 和四个组件具名导出。各组件也有独立入口：`mdu-ui/components/mat-btn`、`mdu-ui/components/mat-icon-btn`、`mdu-ui/components/mat-btn-group` 和 `mdu-ui/components/mat-split-btn`。
 
-需要动态主题或多个组件时，推荐安装 `createMatUi()` 并使用全局 `mat-*` 标签。仅使用少量组件且接受默认主题时，推荐从单组件入口按需导入。两种方式的完整代码见[安装](/guide/installation)。
+需要动态主题或多个组件时，推荐安装 `createMatUi()` 并使用全局 `mat-*` 标签。仅使用少量组件且接受默认主题时，推荐从单组件入口按需导入。两种方式的完整代码见[安装](/guide/installation)，插件的组件设置见 [`createMatUi`](/guide/create-mat-ui)。

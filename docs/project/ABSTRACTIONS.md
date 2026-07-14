@@ -17,7 +17,9 @@
 
 ## Mat UI 插件
 
-`createMatUi({ theme })` 创建一次 Vue 插件安装单元。插件负责全局注册 `mat-*` 组件、建立主题控制器，并通过 Vue provide 暴露主题上下文。
+`createMatUi({ theme, useCursor, useMaterialSymbols })` 创建一次 Vue 插件安装单元。插件负责全局注册 `mat-*` 组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
+
+`useCursor` 和 `useMaterialSymbols` 都必须是 boolean，默认均为 `false`。前者控制可用交互组件是否从 `cursor: default` 改为 `cursor: pointer`；后者让组件定义的图标容器使用 `--mat-ref-typeface-icon` 和连字规则，但不负责下载字体资源。未安装插件的按需组件使用相同默认值。
 
 `useMatTheme()` 只能读取当前 Vue 应用提供的主题上下文。组件不得自行创建第二套主题状态；应用级主题控制器是运行时配置的权威来源。
 
@@ -78,6 +80,7 @@ Tailwind 适配层只把这些值映射到 `--color-mat-*`、`--radius-mat-*`、
 - 原生元素语义优先于自造交互协议；`<mat-btn>` 渲染原生 `<button>`。
 - 未被组件消费的原生属性和事件应继续传递到根原生元素。
 - `disabled` 必须使用原生禁用语义；默认按钮 `type` 是 `button`，避免意外提交表单。
+- 交互组件默认使用 `cursor: default`；只在插件明确启用 `useCursor` 时为可用组件使用 `cursor: pointer`。
 - 组件必须提供可见的键盘焦点状态，并为 hover、focus、pressed 和 disabled 使用共享状态令牌。
 - 交互组件的 `extra-small` 和 `small` 视觉尺寸低于 48px 时，仍须提供至少 48px 的指针交互目标。
 
@@ -93,7 +96,7 @@ Tailwind 适配层只把这些值映射到 `--color-mat-*`、`--radius-mat-*`、
 
 `docs/site/` 中人工编辑的 Markdown 使用页面是组件说明的权威来源。`llms.txt` 只提供适合 AI 发现内容的索引，`llms-full.txt` 是这些页面的合并文本；两者均为可重复生成的派生文件，不接受手工修补。
 
-每个公共组件页面必须说明使用方法、默认示例和 API，并按实际实现记录属性、方法、事件、slots、状态与 CSS 定制入口。不存在的能力不保留空章节，也不得为尚未实现的接口编写示例。
+每个公共组件页面必须在介绍中写明 `mat-*` 模板标签与 PascalCase 组件导出名，并提供默认示例和 API。全局注册与按需导入写法统一由安装文档维护。API 按实际实现记录属性、方法、事件、slots、状态与 CSS 定制入口；不存在的能力不保留空章节，也不得为尚未实现的接口编写示例。
 
 ## 关键不变量
 

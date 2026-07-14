@@ -53,6 +53,7 @@
   --color-mat-scrim: var(--mat-sys-color-scrim);
   --color-mat-surface-tint: var(--mat-sys-color-surface-tint);
   --font-mat-brand: var(--mat-ref-typeface-brand);
+  --font-mat-icon: var(--mat-ref-typeface-icon);
   --font-mat-plain: var(--mat-ref-typeface-plain);
   --radius-mat-none: var(--mat-sys-shape-corner-none);
   --radius-mat-extra-small: var(--mat-sys-shape-corner-extra-small);

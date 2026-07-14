@@ -7,35 +7,7 @@ order: 60
 
 # Button group 按钮组
 
-`MatBtnGroup` 在单行中组织 `MatBtn` 和 `MatIconBtn`。standard 形态保留独立按钮间距，connected 形态连接可选择按钮。组容器不聚焦，每个子按钮保持独立 Tab 停靠点。
-
-## 使用方法
-
-### 全局注册
-
-```vue
-<mat-btn-group>
-  <mat-btn>剪切</mat-btn>
-  <mat-btn>复制</mat-btn>
-</mat-btn-group>
-```
-
-### 按需导入
-
-```vue
-<script setup>
-import { MatBtn } from 'mdu-ui/components/mat-btn';
-import { MatBtnGroup } from 'mdu-ui/components/mat-btn-group';
-import 'mdu-ui/styles.css';
-</script>
-
-<template>
-  <MatBtnGroup>
-    <MatBtn>剪切</MatBtn>
-    <MatBtn>复制</MatBtn>
-  </MatBtnGroup>
-</template>
-```
+`<mat-btn-group>` 的组件导出名是 `MatBtnGroup`。它在单行中组织 `MatBtn` 和 `MatIconBtn`。standard 形态保留独立按钮间距，connected 形态连接可选择按钮。组容器不聚焦，每个子按钮保持独立 Tab 停靠点。
 
 ## 示例
 
@@ -81,8 +53,8 @@ function applySelection({ nextSelected }) {
     full-width
     @select="applySelection"
   >
-    <mat-icon-btn label="粗体" value="bold">B</mat-icon-btn>
-    <mat-icon-btn label="斜体" value="italic">I</mat-icon-btn>
+    <mat-icon-btn label="粗体" value="bold">format_bold</mat-icon-btn>
+    <mat-icon-btn label="斜体" value="italic">format_italic</mat-icon-btn>
   </mat-btn-group>
 </template>
 ```
@@ -97,8 +69,8 @@ function applySelection({ nextSelected }) {
       full-width
       @select="groupSelected = $event.nextSelected"
     >
-      <mat-icon-btn label="粗体" value="bold">B</mat-icon-btn>
-      <mat-icon-btn label="斜体" value="italic">I</mat-icon-btn>
+      <mat-icon-btn label="粗体" value="bold">format_bold</mat-icon-btn>
+      <mat-icon-btn label="斜体" value="italic">format_italic</mat-icon-btn>
     </mat-btn-group>
   </DocsPreview>
 </ClientOnly>

@@ -30,7 +30,7 @@ import 'mdu-ui/styles.css';
 </template>
 ```
 
-颜色类来自 `--color-mat-*`，覆盖主题的全部 53 个颜色角色。字体族使用 `font-mat-brand` 和 `font-mat-plain`；15 套基线排版使用 `text-mat-<style>`，15 套强调排版使用 `text-mat-emphasized-<style>`，同时映射字号、行高、字距和字重。
+颜色类来自 `--color-mat-*`，覆盖主题的全部 53 个颜色角色。字体族使用 `font-mat-brand`、`font-mat-icon` 和 `font-mat-plain`；15 套基线排版使用 `text-mat-<style>`，15 套强调排版使用 `text-mat-emphasized-<style>`，同时映射字号、行高、字距和字重。
 
 圆角类完整映射系统形状，例如 `rounded-mat-extra-small`、`rounded-mat-large-increased`、`rounded-mat-extra-extra-large` 和 `rounded-mat-full`。海拔使用 `shadow-mat-level0` 至 `shadow-mat-level5`。六个缓动类为：
 

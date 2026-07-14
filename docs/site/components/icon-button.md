@@ -7,42 +7,19 @@ order: 55
 
 # Icon button 图标按钮
 
-`MatIconBtn` 渲染只包含图标的原生按钮。每个实例必须通过 `label` 提供可访问操作名称，并默认使用同一文本作为原生 `title` 提示。
-
-## 使用方法
-
-### 全局注册
-
-安装 `createMatUi()` 后使用：
-
-```vue
-<mat-icon-btn label="收藏">☆</mat-icon-btn>
-```
-
-### 按需导入
-
-```vue
-<script setup>
-import { MatIconBtn } from 'mdu-ui/components/mat-icon-btn';
-import 'mdu-ui/styles.css';
-</script>
-
-<template>
-  <MatIconBtn label="收藏">☆</MatIconBtn>
-</template>
-```
+`<mat-icon-btn>` 的组件导出名是 `MatIconBtn`。它渲染只包含图标的原生按钮。每个实例必须通过 `label` 提供可访问操作名称，并默认使用同一文本作为原生 `title` 提示。
 
 ## 示例
 
 ### 默认样式
 
 ```vue
-<mat-icon-btn label="更多操作">⋮</mat-icon-btn>
+<mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
 ```
 
 <ClientOnly>
   <DocsPreview label="Icon button 默认样式预览">
-    <mat-icon-btn label="更多操作">⋮</mat-icon-btn>
+    <mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
   </DocsPreview>
 </ClientOnly>
 
@@ -51,10 +28,10 @@ import 'mdu-ui/styles.css';
 ### 外观、宽度和受控切换
 
 ```vue
-<mat-icon-btn label="Filled" variant="filled" width="narrow">★</mat-icon-btn>
-<mat-icon-btn label="Tonal" variant="filled-tonal">★</mat-icon-btn>
-<mat-icon-btn label="Outlined" variant="outlined" width="wide">★</mat-icon-btn>
-<mat-icon-btn label="Standard" variant="standard">★</mat-icon-btn>
+<mat-icon-btn label="Filled" variant="filled" width="narrow">star</mat-icon-btn>
+<mat-icon-btn label="Tonal" variant="filled-tonal">star</mat-icon-btn>
+<mat-icon-btn label="Outlined" variant="outlined" width="wide">star</mat-icon-btn>
+<mat-icon-btn label="Standard" variant="standard">star</mat-icon-btn>
 
 <mat-icon-btn
   label="收藏"
@@ -63,17 +40,17 @@ import 'mdu-ui/styles.css';
   color="#6750a4"
   @click="favorite = !favorite"
 >
-  <template #default>☆</template>
-  <template #selected>★</template>
+  <template #default>favorite_border</template>
+  <template #selected>favorite</template>
 </mat-icon-btn>
 ```
 
 <ClientOnly>
   <DocsPreview label="Icon button 外观、宽度和受控切换预览">
-    <mat-icon-btn label="Filled" variant="filled" width="narrow">★</mat-icon-btn>
-    <mat-icon-btn label="Tonal" variant="filled-tonal">★</mat-icon-btn>
-    <mat-icon-btn label="Outlined" variant="outlined" width="wide">★</mat-icon-btn>
-    <mat-icon-btn label="Standard" variant="standard">★</mat-icon-btn>
+    <mat-icon-btn label="Filled" variant="filled" width="narrow">star</mat-icon-btn>
+    <mat-icon-btn label="Tonal" variant="filled-tonal">star</mat-icon-btn>
+    <mat-icon-btn label="Outlined" variant="outlined" width="wide">star</mat-icon-btn>
+    <mat-icon-btn label="Standard" variant="standard">star</mat-icon-btn>
     <mat-icon-btn
       label="收藏"
       toggle
@@ -81,8 +58,8 @@ import 'mdu-ui/styles.css';
       color="#6750a4"
       @click="iconFavorite = !iconFavorite"
     >
-      <template #default>☆</template>
-      <template #selected>★</template>
+      <template #default>favorite_border</template>
+      <template #selected>favorite</template>
     </mat-icon-btn>
   </DocsPreview>
 </ClientOnly>

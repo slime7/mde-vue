@@ -6,6 +6,7 @@
 
 - [概述](docs/site/guide/overview.md): 了解 mdu-ui 的定位、支持范围、导入方式和 M3 Expressive 按钮体系。
 - [安装](docs/site/guide/installation.md): 从 GitHub 私有仓库固定提交安装 mdu-ui，并选择全局注册或按需导入组件。
+- [createMatUi](docs/site/guide/create-mat-ui.md): 配置 mdu-ui 的全局组件注册、交互指针、Material Symbols 图标和主题控制器。
 - [主题](docs/site/guide/theme.md): 配置 Material 3 种子色、亮暗模式、配色变体和对比度，并在运行时切换主题。
 - [组件配色](docs/site/guide/component-color.md): 按 Material 3 颜色角色为组件选择容器、内容、表面、边界和状态配色。
 - [Tailwind CSS](docs/site/guide/tailwind.md): 将 mdu-ui 运行时令牌接入 Tailwind CSS v4，并使用带 mat 前缀的语义工具类。

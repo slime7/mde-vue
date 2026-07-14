@@ -63,6 +63,7 @@ describe('公共样式令牌', () => {
     expect(styles).toContain('--mat-ref-typeface-brand: system-ui, sans-serif;');
     expect(styles).toContain("--mat-ref-typeface-icon: 'Material Symbols Outlined';");
     expect(styles).toContain('--mat-ref-typeface-plain: system-ui, sans-serif;');
+    expect(tailwindStyles).toContain('--font-mat-icon: var(--mat-ref-typeface-icon);');
 
     typeStyles.forEach((style) => {
       typeAxes.forEach((axis) => {

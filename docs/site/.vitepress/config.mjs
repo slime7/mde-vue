@@ -17,10 +17,6 @@ const materialSymbolsUrl = [
   googleFontsApiUrl,
   '?family=Material+Symbols+Outlined:',
   'opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
-  '&family=Material+Symbols+Rounded:',
-  'opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
-  '&family=Material+Symbols+Sharp:',
-  'opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
   '&display=block',
 ].join('');
 
@@ -55,6 +51,7 @@ export default defineConfig({
         items: [
           { text: '概述', link: '/guide/overview' },
           { text: '安装', link: '/guide/installation' },
+          { text: 'createMatUi', link: '/guide/create-mat-ui' },
           { text: '主题', link: '/guide/theme' },
           { text: '组件配色', link: '/guide/component-color' },
           { text: 'Tailwind CSS', link: '/guide/tailwind' },
