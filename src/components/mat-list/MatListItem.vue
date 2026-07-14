@@ -322,6 +322,12 @@ watch(
   transition: border-radius var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
 }
 
+.mat-list-item:focus-visible,
+.mat-list-item:has(:focus-visible) {
+  position: relative;
+  z-index: 2;
+}
+
 .mat-list-item__primary {
   --mat-action-state-color: var(--mat-list-item-state-layer-color);
   display: block;
@@ -336,6 +342,7 @@ watch(
 }
 
 .mat-list-item--multi-action {
+  overflow: visible;
   display: flex;
   gap: var(--mat-list-item-content-gap);
   align-items: center;

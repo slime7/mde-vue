@@ -122,4 +122,11 @@ describe('List 形状', () => {
     expect(listItemComponent).toContain('border-start-start-radius: var(--mat-list-item-start-start-shape);');
     expect(listItemComponent).toContain('border-end-end-radius: var(--mat-list-item-end-end-shape);');
   });
+
+  it('焦点项目高于相邻项目且多操作主操作不被外层裁剪', () => {
+    expect(listItemComponent).toContain('.mat-list-item:focus-visible,');
+    expect(listItemComponent).toContain('.mat-list-item:has(:focus-visible)');
+    expect(listItemComponent).toContain('z-index: 2;');
+    expect(listItemComponent).toContain('.mat-list-item--multi-action {\n  overflow: visible;');
+  });
 });
