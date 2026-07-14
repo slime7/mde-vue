@@ -109,6 +109,35 @@ describe('MatMenu', () => {
     expect(document.activeElement).toBe(anchor);
   });
 
+  it('在 CSS 换边后把最终菜单矩形夹紧到视口安全间距', async () => {
+    const anchor = document.createElement('button');
+
+    anchor.id = 'edge-trigger';
+    document.body.append(anchor);
+    const wrapper = mount(MatMenu, {
+      attachTo: document.body,
+      props: { open: true, anchor: 'edge-trigger' },
+      slots: { default: () => h(MatMenuItem, null, () => '边缘项目') },
+    });
+
+    await nextTick();
+    const menu = wrapper.get('[role="menu"]');
+
+    menu.element.getBoundingClientRect = () => ({
+      left: 0,
+      top: 2,
+      right: 200,
+      bottom: 102,
+    });
+    window.dispatchEvent(new Event('resize'));
+    await new Promise((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(resolve));
+    });
+
+    expect(menu.element.style.getPropertyValue('--mat-menu-viewport-shift-x')).toBe('8px');
+    expect(menu.element.style.getPropertyValue('--mat-menu-viewport-shift-y')).toBe('6px');
+  });
+
   it('叶子项目关闭菜单并把焦点还给触发器', async () => {
     const anchor = document.createElement('button');
 

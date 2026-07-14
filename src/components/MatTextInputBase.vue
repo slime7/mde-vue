@@ -213,7 +213,7 @@ function handleInput(event) {
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  min-block-size: 56px;
+  min-block-size: var(--mat-text-input-container-height);
   inline-size: 100%;
   overflow: clip;
   background: transparent;

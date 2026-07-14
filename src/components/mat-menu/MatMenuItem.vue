@@ -180,10 +180,10 @@ onBeforeUnmount(() => menu?.unregisterItem(itemApi));
   --mat-item-trailing-weight: var(--mat-sys-typescale-label-large-weight);
   --mat-item-trailing-tracking: var(--mat-sys-typescale-label-large-tracking);
   --mat-item-trailing-line-height: var(--mat-sys-typescale-label-large-line-height);
-  --mat-item-min-block-size: 44px;
+  --mat-item-min-block-size: var(--mat-menu-item-visual-height);
   display: flex;
   align-items: center;
-  min-block-size: 44px;
+  min-block-size: var(--mat-menu-item-visual-height);
   inline-size: 100%;
   padding: 0;
   color: var(--mat-menu-content-color);
@@ -196,7 +196,9 @@ onBeforeUnmount(() => menu?.unregisterItem(itemApi));
 
 .mat-menu-item::after {
   position: absolute;
-  inset-block: -2px;
+  inset-block: calc(
+    (var(--mat-menu-item-target-height) - var(--mat-menu-item-visual-height)) / -2
+  );
   inset-inline: 0;
   content: '';
 }

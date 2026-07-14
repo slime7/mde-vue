@@ -52,6 +52,8 @@ let attachedAnchor = null;
 let previousAnchorName = '';
 let popoverShown = false;
 let programmaticClose = false;
+let viewportFrame;
+let sizeObserver;
 
 const isNested = computed(() => Boolean(itemParent));
 const effectiveOpen = computed(() => (
@@ -141,6 +143,58 @@ function hidePopover() {
   root.value.hidePopover?.();
 }
 
+function clampToViewport() {
+  viewportFrame = undefined;
+
+  if (!root.value || !popoverShown) {
+    return;
+  }
+
+  const style = root.value.style;
+  const rect = root.value.getBoundingClientRect();
+  const currentX = Number.parseFloat(
+    style.getPropertyValue('--mat-menu-viewport-shift-x'),
+  ) || 0;
+  const currentY = Number.parseFloat(
+    style.getPropertyValue('--mat-menu-viewport-shift-y'),
+  ) || 0;
+  const configuredSpace = Number.parseFloat(
+    getComputedStyle(root.value).getPropertyValue('--mat-menu-viewport-space'),
+  );
+  const space = Number.isFinite(configuredSpace) ? configuredSpace : 8;
+  const baseRect = {
+    bottom: rect.bottom - currentY,
+    left: rect.left - currentX,
+    right: rect.right - currentX,
+    top: rect.top - currentY,
+  };
+  let shiftX = 0;
+  let shiftY = 0;
+
+  if (baseRect.left < space) {
+    shiftX = space - baseRect.left;
+  } else if (baseRect.right > window.innerWidth - space) {
+    shiftX = window.innerWidth - space - baseRect.right;
+  }
+
+  if (baseRect.top < space) {
+    shiftY = space - baseRect.top;
+  } else if (baseRect.bottom > window.innerHeight - space) {
+    shiftY = window.innerHeight - space - baseRect.bottom;
+  }
+
+  style.setProperty('--mat-menu-viewport-shift-x', `${shiftX}px`);
+  style.setProperty('--mat-menu-viewport-shift-y', `${shiftY}px`);
+}
+
+function scheduleViewportClamp() {
+  if (viewportFrame !== undefined) {
+    cancelAnimationFrame(viewportFrame);
+  }
+
+  viewportFrame = requestAnimationFrame(clampToViewport);
+}
+
 async function showPopover() {
   await nextTick();
   const anchorElement = attachAnchor();
@@ -164,6 +218,7 @@ async function showPopover() {
 
   roving.refresh();
   roving.focusFirst();
+  scheduleViewportClamp();
 }
 
 function focusAnchor() {
@@ -254,6 +309,10 @@ function handleKeyDown(event) {
 function handleToggle(event) {
   popoverShown = event.newState === 'open';
 
+  if (popoverShown) {
+    scheduleViewportClamp();
+  }
+
   if (event.newState === 'closed' && effectiveOpen.value) {
     if (programmaticClose) {
       programmaticClose = false;
@@ -288,12 +347,25 @@ if (itemParent) {
 
 onMounted(() => {
   roving.observe();
+  window.addEventListener('resize', scheduleViewportClamp);
+  window.addEventListener('scroll', scheduleViewportClamp, { capture: true, passive: true });
+
+  if (typeof ResizeObserver !== 'undefined') {
+    sizeObserver = new ResizeObserver(scheduleViewportClamp);
+    sizeObserver.observe(root.value);
+  }
 
   if (effectiveOpen.value) {
     showPopover();
   }
 });
 onBeforeUnmount(() => {
+  if (viewportFrame !== undefined) {
+    cancelAnimationFrame(viewportFrame);
+  }
+  sizeObserver?.disconnect();
+  window.removeEventListener('resize', scheduleViewportClamp);
+  window.removeEventListener('scroll', scheduleViewportClamp, { capture: true });
   hidePopover();
   detachAnchor();
   itemParent?.unregisterSubmenu();
@@ -347,11 +419,16 @@ watch(() => props.anchor, async () => {
   position-area: block-end span-inline-end;
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
   box-sizing: border-box;
-  min-inline-size: 112px;
-  max-inline-size: min(280px, calc(100dvi - 16px));
-  max-block-size: calc(100dvb - 16px);
-  padding: 8px;
-  margin: 4px 0;
+  min-inline-size: var(--mat-menu-container-min-width);
+  max-inline-size: min(
+    var(--mat-menu-container-max-width),
+    calc(100dvi - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space))
+  );
+  max-block-size: calc(
+    100dvb - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)
+  );
+  padding: var(--mat-menu-container-padding);
+  margin: var(--mat-menu-anchor-space) 0;
   overflow: auto;
   color: var(--mat-menu-content-color);
   background: var(--mat-menu-container-color);
@@ -360,6 +437,7 @@ watch(() => props.anchor, async () => {
   box-shadow: var(--mat-sys-elevation-level2);
   clip-path: inset(0 round var(--mat-sys-shape-corner-large));
   opacity: 1;
+  translate: var(--mat-menu-viewport-shift-x, 0) var(--mat-menu-viewport-shift-y, 0);
   transform: scale(1);
   transform-origin: top left;
   transition: clip-path var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized-decelerate), opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), transform var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized-decelerate);
@@ -368,7 +446,7 @@ watch(() => props.anchor, async () => {
 .mat-menu--nested {
   position-area: inline-end span-block-end;
   position-try-fallbacks: flip-inline, flip-block, flip-inline flip-block;
-  margin: 0 4px;
+  margin: 0 var(--mat-menu-anchor-space);
   transform-origin: left top;
 }
 

@@ -313,6 +313,18 @@
   --mat-switch-unselected-icon-color: var(--mat-sys-color-surface-container-highest);
   --mat-switch-unselected-state-layer-color: var(--mat-sys-color-on-surface);
 
+  /* Text input component tokens */
+  --mat-text-input-container-height: 56px;
+
+  /* Menu component tokens */
+  --mat-menu-container-min-width: 112px;
+  --mat-menu-container-max-width: 280px;
+  --mat-menu-container-padding: 8px;
+  --mat-menu-viewport-space: 8px;
+  --mat-menu-anchor-space: 4px;
+  --mat-menu-item-visual-height: 44px;
+  --mat-menu-item-target-height: 48px;
+
   /* List and divider component tokens */
   --mat-list-container-shape: var(--mat-sys-shape-corner-large);
   --mat-list-segmented-gap: 2px;
