@@ -10,6 +10,10 @@ import MatCardActions from './components/mat-card/MatCardActions.vue';
 import MatList from './components/mat-list/MatList.vue';
 import MatListItem from './components/mat-list/MatListItem.vue';
 import MatDivider from './components/mat-divider/MatDivider.vue';
+import MatCheckbox from './components/mat-checkbox/MatCheckbox.vue';
+import MatRadio from './components/mat-radio/MatRadio.vue';
+import MatRadioGroup from './components/mat-radio-group/MatRadioGroup.vue';
+import MatSwitch from './components/mat-switch/MatSwitch.vue';
 import MAT_UI_KEY from './mat-ui-context';
 import createThemeController from './theme';
 import MAT_THEME_KEY from './theme-context';
@@ -81,6 +85,14 @@ export function createMatUi(options = {}) {
       app.component('mat-list-item', MatListItem);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-divider', MatDivider);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-checkbox', MatCheckbox);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-radio', MatRadio);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-radio-group', MatRadioGroup);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-switch', MatSwitch);
       app.provide(MAT_UI_KEY, componentOptions);
       app.provide(MAT_THEME_KEY, theme);
     },

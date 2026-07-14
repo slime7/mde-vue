@@ -274,6 +274,45 @@
   --mat-sys-interaction-focus-ring-width: 3px;
   --mat-sys-interaction-focus-ring-offset: 2px;
 
+  /* Selection control component tokens */
+  --mat-selection-control-label-space: 8px;
+  --mat-checkbox-container-size: 18px;
+  --mat-checkbox-container-shape: 2px;
+  --mat-checkbox-outline-width: 2px;
+  --mat-checkbox-state-layer-size: 40px;
+  --mat-checkbox-label-text-color: var(--mat-sys-color-on-surface);
+  --mat-checkbox-selected-container-color: var(--mat-sys-color-primary);
+  --mat-checkbox-selected-icon-color: var(--mat-sys-color-on-primary);
+  --mat-checkbox-unselected-outline-color: var(--mat-sys-color-on-surface-variant);
+  --mat-checkbox-unselected-state-layer-color: var(--mat-sys-color-on-surface);
+  --mat-radio-icon-size: 20px;
+  --mat-radio-selected-dot-size: 10px;
+  --mat-radio-outline-width: 2px;
+  --mat-radio-state-layer-size: 40px;
+  --mat-radio-label-text-color: var(--mat-sys-color-on-surface);
+  --mat-radio-selected-icon-color: var(--mat-sys-color-primary);
+  --mat-radio-unselected-icon-color: var(--mat-sys-color-on-surface-variant);
+  --mat-radio-unselected-state-layer-color: var(--mat-sys-color-on-surface);
+  --mat-radio-group-item-space: 0;
+  --mat-radio-group-label-space: 8px;
+  --mat-switch-track-width: 52px;
+  --mat-switch-track-height: 32px;
+  --mat-switch-track-outline-width: 2px;
+  --mat-switch-unselected-handle-size: 16px;
+  --mat-switch-icon-handle-size: 24px;
+  --mat-switch-selected-handle-size: 24px;
+  --mat-switch-pressed-handle-size: 28px;
+  --mat-switch-state-layer-size: 40px;
+  --mat-switch-icon-size: 16px;
+  --mat-switch-label-text-color: var(--mat-sys-color-on-surface);
+  --mat-switch-selected-track-color: var(--mat-sys-color-primary);
+  --mat-switch-selected-handle-color: var(--mat-sys-color-on-primary);
+  --mat-switch-unselected-track-color: var(--mat-sys-color-surface-container-highest);
+  --mat-switch-unselected-track-outline-color: var(--mat-sys-color-outline);
+  --mat-switch-unselected-handle-color: var(--mat-sys-color-outline);
+  --mat-switch-unselected-icon-color: var(--mat-sys-color-surface-container-highest);
+  --mat-switch-unselected-state-layer-color: var(--mat-sys-color-on-surface);
+
   /* List and divider component tokens */
   --mat-list-container-shape: var(--mat-sys-shape-corner-large);
   --mat-list-segmented-gap: 2px;

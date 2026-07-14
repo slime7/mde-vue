@@ -9,4 +9,8 @@ export { default as MatCardActions } from './components/mat-card/MatCardActions.
 export { default as MatList } from './components/mat-list/MatList.vue';
 export { default as MatListItem } from './components/mat-list/MatListItem.vue';
 export { default as MatDivider } from './components/mat-divider/MatDivider.vue';
+export { default as MatCheckbox } from './components/mat-checkbox/MatCheckbox.vue';
+export { default as MatRadio } from './components/mat-radio/MatRadio.vue';
+export { default as MatRadioGroup } from './components/mat-radio-group/MatRadioGroup.vue';
+export { default as MatSwitch } from './components/mat-switch/MatSwitch.vue';
 export { createMatUi, useMatTheme } from './plugin';
