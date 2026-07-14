@@ -13,6 +13,10 @@ import MatCheckbox, { MatCheckbox as NamedMatCheckbox } from 'mdu-ui/components/
 import MatRadio, { MatRadio as NamedMatRadio } from 'mdu-ui/components/mat-radio';
 import MatRadioGroup, { MatRadioGroup as NamedMatRadioGroup } from 'mdu-ui/components/mat-radio-group';
 import MatSwitch, { MatSwitch as NamedMatSwitch } from 'mdu-ui/components/mat-switch';
+import MatTextField, { MatTextField as NamedMatTextField } from 'mdu-ui/components/mat-text-field';
+import MatTextarea, { MatTextarea as NamedMatTextarea } from 'mdu-ui/components/mat-textarea';
+import MatMenu, { MatMenu as NamedMatMenu } from 'mdu-ui/components/mat-menu';
+import MatMenuItem, { MatMenuItem as NamedMatMenuItem } from 'mdu-ui/components/mat-menu-item';
 /* eslint-enable import-x/no-named-as-default */
 import {
   createMatUi,
@@ -24,10 +28,14 @@ import {
   MatIconBtn as RootMatIconBtn,
   MatList as RootMatList,
   MatListItem as RootMatListItem,
+  MatMenu as RootMatMenu,
+  MatMenuItem as RootMatMenuItem,
   MatRadio as RootMatRadio,
   MatRadioGroup as RootMatRadioGroup,
   MatSplitBtn as RootMatSplitBtn,
   MatSwitch as RootMatSwitch,
+  MatTextarea as RootMatTextarea,
+  MatTextField as RootMatTextField,
 } from '../src';
 
 describe('公共组件导出', () => {
@@ -44,6 +52,10 @@ describe('公共组件导出', () => {
     ['MatRadio', RootMatRadio, NamedMatRadio, MatRadio],
     ['MatRadioGroup', RootMatRadioGroup, NamedMatRadioGroup, MatRadioGroup],
     ['MatSwitch', RootMatSwitch, NamedMatSwitch, MatSwitch],
+    ['MatTextField', RootMatTextField, NamedMatTextField, MatTextField],
+    ['MatTextarea', RootMatTextarea, NamedMatTextarea, MatTextarea],
+    ['MatMenu', RootMatMenu, NamedMatMenu, MatMenu],
+    ['MatMenuItem', RootMatMenuItem, NamedMatMenuItem, MatMenuItem],
   ])('%s 的根入口、具名子入口和默认子入口指向同一组件', (
     name,
     rootExport,
@@ -67,6 +79,10 @@ describe('公共组件导出', () => {
     expect(app.component('mat-radio')).toBe(RootMatRadio);
     expect(app.component('mat-radio-group')).toBe(RootMatRadioGroup);
     expect(app.component('mat-switch')).toBe(RootMatSwitch);
+    expect(app.component('mat-text-field')).toBe(RootMatTextField);
+    expect(app.component('mat-textarea')).toBe(RootMatTextarea);
+    expect(app.component('mat-menu')).toBe(RootMatMenu);
+    expect(app.component('mat-menu-item')).toBe(RootMatMenuItem);
 
     plugin.theme.dispose();
   });

@@ -1,6 +1,7 @@
 <script setup>
 import { computed, inject } from 'vue';
 import { MAT_LIST_KEY } from '../list-context';
+import { MAT_MENU_KEY } from '../menu-context';
 
 defineOptions({
   name: 'MatDivider',
@@ -17,11 +18,13 @@ const props = defineProps({
   },
 });
 const list = inject(MAT_LIST_KEY, null);
+const menu = inject(MAT_MENU_KEY, null);
 const isInList = computed(() => Boolean(list));
+const isInMenu = computed(() => Boolean(menu));
 const isInListbox = computed(() => list?.isSelectable.value ?? false);
 const tag = computed(() => {
   if (!isInList.value) {
-    return 'hr';
+    return isInMenu.value ? 'div' : 'hr';
   }
 
   return isInListbox.value ? 'div' : 'li';
@@ -35,7 +38,7 @@ const tag = computed(() => {
     class="mat-divider"
     :class="`mat-divider--${props.inset}`"
     :aria-hidden="isInListbox ? 'true' : $attrs['aria-hidden']"
-    :role="isInListbox ? 'presentation' : isInList ? 'separator' : $attrs.role"
+    :role="isInListbox ? 'presentation' : isInList || isInMenu ? 'separator' : $attrs.role"
   />
 </template>
 
@@ -59,5 +62,9 @@ const tag = computed(() => {
 
 .mat-divider--middle {
   margin-inline: var(--mat-divider-inset-space);
+}
+
+:global(.mat-menu) .mat-divider {
+  margin-block: 8px;
 }
 </style>

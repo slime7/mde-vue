@@ -14,6 +14,10 @@ import MatCheckbox from './components/mat-checkbox/MatCheckbox.vue';
 import MatRadio from './components/mat-radio/MatRadio.vue';
 import MatRadioGroup from './components/mat-radio-group/MatRadioGroup.vue';
 import MatSwitch from './components/mat-switch/MatSwitch.vue';
+import MatTextField from './components/mat-text-field/MatTextField.vue';
+import MatTextarea from './components/mat-textarea/MatTextarea.vue';
+import MatMenu from './components/mat-menu/MatMenu.vue';
+import MatMenuItem from './components/mat-menu/MatMenuItem.vue';
 import MAT_UI_KEY from './mat-ui-context';
 import createThemeController from './theme';
 import MAT_THEME_KEY from './theme-context';
@@ -93,6 +97,14 @@ export function createMatUi(options = {}) {
       app.component('mat-radio-group', MatRadioGroup);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-switch', MatSwitch);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-text-field', MatTextField);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-textarea', MatTextarea);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-menu', MatMenu);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-menu-item', MatMenuItem);
       app.provide(MAT_UI_KEY, componentOptions);
       app.provide(MAT_THEME_KEY, theme);
     },

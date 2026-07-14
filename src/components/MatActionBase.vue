@@ -21,6 +21,7 @@ const isLink = computed(() => props.href !== undefined);
 const component = computed(() => (isLink.value ? 'a' : props.as));
 const isButton = computed(() => component.value === 'button');
 const isPressed = ref(false);
+const root = ref(null);
 let pressStartedAt = 0;
 let releaseTimer;
 
@@ -88,11 +89,14 @@ watch(() => props.disabled, (disabled) => {
   }
 });
 onBeforeUnmount(clearReleaseTimer);
+
+defineExpose({ root });
 </script>
 
 <template>
   <component
     :is="component"
+    ref="root"
     v-bind="$attrs"
     class="mat-action-base"
     :class="{

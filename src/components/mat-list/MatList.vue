@@ -1,12 +1,13 @@
 <script setup>
 import {
-  computed, nextTick, onBeforeUnmount, onMounted, provide, ref, watch,
+  computed, nextTick, onMounted, provide, ref, watch,
 } from 'vue';
 import { isComponentColor } from '../button-props';
 import {
   isSelectableInteraction, LIST_INTERACTIONS, MAT_LIST_KEY,
 } from '../list-context';
 import useComponentColor from '../use-component-color';
+import useRovingFocus from '../use-roving-focus';
 
 defineOptions({
   name: 'MatList',
@@ -51,10 +52,6 @@ const root = ref(null);
 const isSelectable = computed(() => isSelectableInteraction(props.interaction));
 const rootTag = computed(() => (isSelectable.value ? 'div' : 'ul'));
 const { colorStyle } = useComponentColor(computed(() => props.color));
-const originalTabIndexes = new Map();
-let activeElement = null;
-let focusObserver;
-let refreshQueued = false;
 
 const FOCUSABLE_SELECTOR = [
   '[data-mat-list-primary]',
@@ -146,63 +143,7 @@ function isAvailableFocusable(element) {
     return false;
   }
 
-  if (!originalTabIndexes.has(element)) {
-    const authorTabIndex = element.getAttribute('tabindex');
-
-    if (authorTabIndex !== null && Number(authorTabIndex) < 0) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-/**
- * @returns {HTMLElement[]}
- */
-function collectFocusables() {
-  if (!root.value || props.interaction === 'none') {
-    return [];
-  }
-
-  return [...root.value.querySelectorAll(FOCUSABLE_SELECTOR)]
-    .filter(isAvailableFocusable);
-}
-
-/**
- * @param {HTMLElement} element
- */
-function rememberTabIndex(element) {
-  if (!originalTabIndexes.has(element)) {
-    originalTabIndexes.set(element, element.getAttribute('tabindex'));
-  }
-}
-
-/**
- * @param {HTMLElement} element
- */
-function restoreTabIndex(element) {
-  const original = originalTabIndexes.get(element);
-
-  if (original === null) {
-    element.removeAttribute('tabindex');
-  } else if (original !== undefined) {
-    element.setAttribute('tabindex', original);
-  }
-
-  originalTabIndexes.delete(element);
-}
-
-function restoreFocusables() {
-  originalTabIndexes.forEach((original, element) => {
-    if (original === null) {
-      element.removeAttribute('tabindex');
-    } else {
-      element.setAttribute('tabindex', original);
-    }
-  });
-  originalTabIndexes.clear();
-  activeElement = null;
+  return props.interaction !== 'none';
 }
 
 /**
@@ -223,47 +164,13 @@ function findInitialFocusable(focusables) {
   return focusables[0] ?? null;
 }
 
-function refreshFocusables() {
-  refreshQueued = false;
-  const focusables = collectFocusables();
-  const focusableSet = new Set(focusables);
-
-  [...originalTabIndexes.keys()].forEach((element) => {
-    if (!focusableSet.has(element)) {
-      restoreTabIndex(element);
-    }
-  });
-
-  if (!activeElement || !focusableSet.has(activeElement)) {
-    activeElement = findInitialFocusable(focusables);
-  }
-
-  focusables.forEach((element) => {
-    rememberTabIndex(element);
-    element.setAttribute('tabindex', element === activeElement ? '0' : '-1');
-  });
-}
-
-function queueFocusRefresh() {
-  if (refreshQueued) {
-    return;
-  }
-
-  refreshQueued = true;
-  queueMicrotask(refreshFocusables);
-}
-
-/**
- * @param {FocusEvent} event
- */
-function handleFocusIn(event) {
-  const focusables = collectFocusables();
-
-  if (event.target instanceof HTMLElement && focusables.includes(event.target)) {
-    activeElement = event.target;
-    refreshFocusables();
-  }
-}
+const roving = useRovingFocus({
+  root,
+  selector: FOCUSABLE_SELECTOR,
+  isAvailable: isAvailableFocusable,
+  findInitial: findInitialFocusable,
+  observedAttributes: ['aria-disabled', 'disabled', 'href'],
+});
 
 /**
  * @param {KeyboardEvent} event
@@ -280,74 +187,41 @@ function handleKeyDown(event) {
     return;
   }
 
-  const focusables = collectFocusables();
-  const currentIndex = focusables.indexOf(event.target);
-
-  if (currentIndex === -1 || focusables.length === 0) {
-    return;
-  }
-
   event.preventDefault();
-  const nextIndex = (currentIndex + direction + focusables.length) % focusables.length;
-
-  activeElement = focusables[nextIndex];
-  refreshFocusables();
-  activeElement.focus();
-}
-
-function observeFocusables() {
-  focusObserver?.disconnect();
-  focusObserver = undefined;
-
-  if (!root.value) {
-    return;
-  }
-
-  focusObserver = new MutationObserver(queueFocusRefresh);
-  focusObserver.observe(root.value, {
-    attributes: true,
-    attributeFilter: ['aria-disabled', 'disabled', 'href'],
-    childList: true,
-    subtree: true,
-  });
-  queueFocusRefresh();
+  roving.move(event.target, direction);
 }
 
 provide(MAT_LIST_KEY, {
   interaction: computed(() => props.interaction),
   isSelectable,
   isSelected,
-  requestFocusRefresh: queueFocusRefresh,
+  requestFocusRefresh: roving.queueRefresh,
   requestSelection,
 });
 
-onMounted(observeFocusables);
-onBeforeUnmount(() => {
-  focusObserver?.disconnect();
-  restoreFocusables();
-});
+onMounted(roving.observe);
 watch(root, async () => {
-  restoreFocusables();
+  roving.restore();
   await nextTick();
-  observeFocusables();
+  roving.observe();
 });
 watch(
   () => props.interaction,
   async () => {
-    restoreFocusables();
+    roving.restore();
     await nextTick();
-    observeFocusables();
+    roving.observe();
   },
 );
 watch(
   () => props.selected,
   async () => {
     if (!root.value?.contains(document.activeElement)) {
-      activeElement = null;
+      roving.resetActive();
     }
 
     await nextTick();
-    queueFocusRefresh();
+    roving.queueRefresh();
   },
   { deep: true },
 );
@@ -366,7 +240,7 @@ watch(
       : $attrs['aria-multiselectable']"
     :aria-orientation="isSelectable ? 'vertical' : $attrs['aria-orientation']"
     :role="isSelectable ? 'listbox' : $attrs.role"
-    @focusin="handleFocusIn"
+    @focusin="roving.handleFocusIn"
     @keydown="handleKeyDown"
   >
     <slot />
