@@ -29,7 +29,7 @@ describe('MatList', () => {
     });
 
     expect(wrapper.element.tagName).toBe('UL');
-    expect(wrapper.classes()).toContain('mat-list--standard');
+    expect(wrapper.classes()).toContain('mat-list--segmented');
     expect(wrapper.find('li').classes()).toContain('mat-list-item--lines-3');
     expect(wrapper.find('.mat-list-item-content__leading').text()).toBe('图标');
     expect(wrapper.find('.mat-list-item-content__overline').text()).toBe('上方文字');
@@ -38,10 +38,10 @@ describe('MatList', () => {
     expect(wrapper.find('.mat-list-item-content__trailing').text()).toBe('尾部');
   });
 
-  it('支持 segmented、显式行数和局部选择配色', () => {
+  it('支持显式 standard、显式行数和局部选择配色', () => {
     const wrapper = mount(MatList, {
       props: {
-        variant: 'segmented',
+        variant: 'standard',
         interaction: 'single-select',
         selected: 'one',
         color: 'tertiary',
@@ -51,7 +51,7 @@ describe('MatList', () => {
       },
     });
 
-    expect(wrapper.classes()).toContain('mat-list--segmented');
+    expect(wrapper.classes()).toContain('mat-list--standard');
     expect(wrapper.attributes('style')).toContain(
       '--mat-accent-container-color: var(--mat-sys-color-tertiary-container)',
     );

@@ -43,7 +43,7 @@ order: 110
 ### List 中使用
 
 ```vue
-<mat-list>
+<mat-list variant="standard">
   <mat-list-item>账户</mat-list-item>
   <mat-divider inset="start" />
   <mat-list-item>设置</mat-list-item>
@@ -52,7 +52,7 @@ order: 110
 
 <ClientOnly>
   <DocsPreview label="Divider 在 List 中的预览">
-    <mat-list style="inline-size: min(100%, 420px)">
+    <mat-list variant="standard" style="inline-size: min(100%, 420px)">
       <mat-list-item>账户</mat-list-item>
       <mat-divider inset="start" />
       <mat-list-item>设置</mat-list-item>

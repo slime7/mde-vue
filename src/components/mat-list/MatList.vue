@@ -16,7 +16,7 @@ defineOptions({
 const props = defineProps({
   variant: {
     type: String,
-    default: 'standard',
+    default: 'segmented',
     validator(value) {
       return ['standard', 'segmented'].includes(value);
     },
