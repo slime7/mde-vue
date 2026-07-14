@@ -57,7 +57,7 @@ function save() {
 </script>
 ```
 
-全局注册后的模板标签统一使用 kebab-case，例如 `<mat-btn>` 和 `<mat-card>`。
+全局注册后的模板标签统一使用 kebab-case，例如 `<mat-btn>`、`<mat-card>` 和 `<mat-list>`。
 
 ## 按需导入
 
@@ -78,9 +78,12 @@ import 'mdu-ui/styles.css';
 
 ```js
 import { MatCard } from 'mdu-ui/components/mat-card';
+import { MatList } from 'mdu-ui/components/mat-list';
+import { MatListItem } from 'mdu-ui/components/mat-list-item';
+import { MatDivider } from 'mdu-ui/components/mat-divider';
 ```
 
-局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>` 或 `<MatCard>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
+复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatList>` 或 `<MatListItem>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
 
 ## 如何选择
 

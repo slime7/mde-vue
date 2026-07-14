@@ -17,7 +17,7 @@
 
 ## 共享组件基础层
 
-`MatSurfaceBase` 负责表面组件的动态原生根元素和属性透传；`MatActionBase` 在其上统一处理 button/link 的语义、禁用、状态层和键盘指针交互。两者均为内部实现，Card 及后续 Dialog、List 等组件可以复用，不作为公共入口导出。
+`MatSurfaceBase` 负责表面组件的动态原生根元素和属性透传；`MatActionBase` 统一处理 button/link 及内部可聚焦宿主的禁用、状态层和键盘指针交互。两者均为内部实现，当前由 Card、List 等组件复用，不作为公共入口导出。
 
 ## 技术栈
 
@@ -36,7 +36,7 @@
 
 ### 公共入口
 
-`src/index.js` 是完整包入口，导出 `MatBtn`、`MatIconBtn`、`MatBtnGroup`、`MatSplitBtn`、`createMatUi()` 和 `useMatTheme()`。四个组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
+`src/index.js` 是完整包入口，导出 Button、Card、List、Divider 组件族以及 `createMatUi()` 和 `useMatTheme()`。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口，复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
 
 公共入口不得依赖 demo、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -55,6 +55,8 @@
 ### 组件
 
 每个组件拥有自己的 Vue SFC、公开入口、样式与测试。按钮和图标按钮共享原生 `<button>` 基础结构、状态层、插件设置和上下文合并逻辑；按钮组与 split button 使用 Vue provide/inject 协调子按钮，不复制交互协议。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
+
+List 通过内部 provide/inject 上下文统一交互模式、受控选择和焦点刷新。普通与操作模式保留 `ul/li`，选择模式使用 `listbox/option`；roving tabindex 注册表按 DOM 顺序协调项目主操作和 multi-action trailing 控件，并在模式切换或卸载时恢复使用方原有的 tabindex。Divider 根据 List 上下文切换合法的根语义，不参与选择与焦点顺序。
 
 ### 样式层
 

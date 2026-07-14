@@ -16,3 +16,5 @@
 - [限制](docs/site/guide/limitations.md): 记录 mdu-ui 当前明确不支持的运行环境、分发方式和按钮能力。
 - [Split button 拆分按钮](docs/site/components/split-button.md): mat-split-btn 的双按钮组合、受控展开、事件、菜单 ARIA 和 slots。
 - [Card 卡片](docs/site/components/card.md): mat-card 的 Material 3 外观、局部配色、内容、操作区与链接式交互。
+- [List 列表](docs/site/components/list.md): mat-list 与 mat-list-item 的 Material 3 Expressive 外观、内容结构、操作和受控选择。
+- [Divider 分隔线](docs/site/components/divider.md): mat-divider 的 Material 3 全宽、起始缩进和两侧缩进样式。
