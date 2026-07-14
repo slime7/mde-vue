@@ -7,11 +7,41 @@ import {
 } from '../../../scripts/build-llms.mjs';
 /* eslint-enable import-x/extensions */
 
+const googleFontsApiUrl = 'https://fonts.googleapis.com/css2';
+const notoSansScUrl = [
+  googleFontsApiUrl,
+  '?family=Noto+Sans+SC:wght@100..900',
+  '&display=swap',
+].join('');
+const materialSymbolsUrl = [
+  googleFontsApiUrl,
+  '?family=Material+Symbols+Outlined:',
+  'opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
+  '&family=Material+Symbols+Rounded:',
+  'opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
+  '&family=Material+Symbols+Sharp:',
+  'opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
+  '&display=block',
+].join('');
+
 export default defineConfig({
   title: 'mdu-ui',
   description: '面向现代浏览器的私有 Vue 3 组件库',
   lang: 'zh-CN',
   cleanUrls: true,
+  head: [
+    ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
+    [
+      'link',
+      {
+        rel: 'preconnect',
+        href: 'https://fonts.gstatic.com',
+        crossorigin: '',
+      },
+    ],
+    ['link', { rel: 'stylesheet', href: notoSansScUrl }],
+    ['link', { rel: 'stylesheet', href: materialSymbolsUrl }],
+  ],
   themeConfig: {
     nav: [
       { text: '指南', link: '/guide/overview' },
