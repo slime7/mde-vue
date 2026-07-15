@@ -13,7 +13,21 @@ order: 90
 
 ## 示例
 
-下面同时展示 outlined 的空值聚焦/失焦与错误状态、设置 `block` 的 filled textarea、前后图标、字符计数、只读和禁用状态。验证码初始为空，可以反复聚焦并在不输入内容时离开，观察标签从边框返回容器中央；字符计数只在设置 `maxLength` 后显示。
+### 块级宽度
+
+设置 `block` 后，Text field 与 Textarea 使用块级 flex 根并明确铺满父元素。下面的虚线框是宽度为 360px、带 12px 内边距的父容器。
+
+<<< @/examples/text-field/TextFieldBlockExample.vue
+
+<ClientOnly>
+  <DocsPreview label="Text field 与 Textarea 块级宽度预览">
+    <TextFieldBlockExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 状态、内容与校验
+
+下面同时展示 outlined 的空值聚焦/失焦与错误状态、filled textarea、前后图标、字符计数、只读和禁用状态。验证码初始为空，可以反复聚焦并在不输入内容时离开，观察标签从边框返回容器中央；字符计数只在设置 `maxLength` 后显示。
 
 <<< @/examples/text-field/TextFieldExample.vue
 
@@ -92,5 +106,6 @@ order: 90
 结构、尺寸、状态和使用原则依据 Material 3 [Text fields overview](https://m3.material.io/components/text-fields/overview)、[Text fields specs](https://m3.material.io/components/text-fields/specs) 与 [Text fields guidelines](https://m3.material.io/components/text-fields/guidelines)。
 
 <script setup>
+import TextFieldBlockExample from '../examples/text-field/TextFieldBlockExample.vue';
 import TextFieldExample from '../examples/text-field/TextFieldExample.vue';
 </script>

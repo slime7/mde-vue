@@ -111,7 +111,7 @@ const emit = defineEmits(['click']);
 
 .mat-button-base--block {
   display: flex;
-  inline-size: auto;
+  inline-size: 100%;
 }
 
 .mat-button-base::before {

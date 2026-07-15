@@ -46,7 +46,6 @@ const verificationTouched = ref(false);
 
     <mat-textarea
       v-model="note"
-      block
       label="备注"
       variant="filled"
       supporting-text="可以纵向调整输入区域"
