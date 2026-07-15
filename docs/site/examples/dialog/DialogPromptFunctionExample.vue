@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { prompt } from 'mdu-ui';
+import { prompt } from 'mdu-ui/functions';
 
 const result = ref('尚未输入');
 

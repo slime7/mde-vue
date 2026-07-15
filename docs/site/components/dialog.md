@@ -204,7 +204,7 @@ order: 100
 
 ### 命令式函数
 
-四个函数可以从包根入口或 `mdu-ui/components/mat-dialog` 导入，只接受简单字符串内容，不接受 HTML 字符串、VNode 或 Slots：
+四个函数统一从 `mdu-ui/functions` 导入，只接受简单字符串内容，不接受 HTML 字符串、VNode 或 Slots：
 
 ```js
 import {
@@ -212,7 +212,7 @@ import {
   confirm,
   dialog,
   prompt,
-} from 'mdu-ui';
+} from 'mdu-ui/functions';
 ```
 
 | 函数 | 主要附加选项 | 返回值 |
@@ -253,9 +253,9 @@ import {
 | `title` | 标题中的丰富 Vue 内容；`title` prop 存在时忽略 |
 | 默认 | 正文中的丰富 Vue 内容；`content` prop 存在时忽略 |
 | `icon` | 基础 Dialog 的图标内容；`icon` prop 存在时忽略，全屏布局不显示 |
-| `actions` | 基础布局底部或全屏固定头部中的操作按钮 |
+| `actions` | 基础布局底部或全屏固定头部中的操作；容器只提供 flex、换行和间距，使用者可添加弹性 spacer 控制对齐 |
 
-标题和动作区固定，正文过长时只有 content 区域滚动。基础 Dialog 宽度限制为 280–560px；全屏 Dialog 占满视口并使用固定 56px 头部。
+Dialog 打开期间锁定页面根滚动，最后一层关闭后恢复原有内联样式。标题和动作区固定，正文过长时只有 content 区域滚动，并预留稳定的滚动条空间。基础 Dialog 宽度限制为 280–560px；全屏 Dialog 占满视口并使用固定 56px 头部。
 
 ## 参考来源
 

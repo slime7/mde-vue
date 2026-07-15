@@ -20,6 +20,7 @@ function choose(value) {
 
   <mat-dialog v-model="open" title="保存更改？" content="可以稍后继续编辑。">
     <template #actions>
+      <span class="dialog-actions-example__spacer" aria-hidden="true" />
       <mat-btn variant="text" @click="choose('已取消')">
         取消
       </mat-btn>
@@ -35,5 +36,9 @@ function choose(value) {
   display: flex;
   gap: 12px;
   align-items: center;
+}
+
+.dialog-actions-example__spacer {
+  flex: 1 1 auto;
 }
 </style>

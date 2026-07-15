@@ -9,7 +9,7 @@ order: 90
 
 ## 组件简介
 
-`<mat-text-field>` 的组件导出名是 `MatTextField`，渲染单行原生 `input`；`<mat-textarea>` 的组件导出名是 `MatTextarea`，渲染固定初始高度的原生 `textarea`。两者共享 outlined、filled 外观、浮动标签、辅助或错误文字、字符计数、前后缀和局部 `color` 配色，但不执行表单校验或自动调整 textarea 高度。
+`<mat-text-field>` 的组件导出名是 `MatTextField`，渲染单行原生 `input`；`<mat-textarea>` 的组件导出名是 `MatTextarea`，渲染固定初始高度的原生 `textarea`。两者共享 outlined、filled 外观、浮动标签、辅助或错误文字、字符计数、前后缀和局部 `color` 配色，但不执行表单校验或自动调整 textarea 高度。有标签的 outlined 外观会在顶部保留浮动标签空间，避免被外层滚动容器裁切。
 
 ## 示例
 

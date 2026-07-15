@@ -4,7 +4,7 @@ import {
 import { nextTick } from 'vue';
 import {
   alert, confirm, dialog, prompt,
-} from '../src/components/mat-dialog/dialog';
+} from 'mdu-ui/functions';
 
 beforeAll(() => {
   Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {

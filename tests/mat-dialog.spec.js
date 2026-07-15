@@ -87,6 +87,38 @@ describe('MatDialog', () => {
     expect(wrapper.emitted('opened')).toHaveLength(2);
   });
 
+  it('Dialog 堆叠期间锁定页面滚动，并在最后一层关闭后恢复根样式', async () => {
+    document.documentElement.style.overflow = 'scroll';
+    document.documentElement.style.paddingInlineEnd = '7px';
+    const first = mount(MatDialog, {
+      props: {
+        modelValue: true,
+        title: '第一层',
+      },
+    });
+    const second = mount(MatDialog, {
+      props: {
+        modelValue: true,
+        title: '第二层',
+      },
+    });
+
+    await settleRender();
+
+    expect(document.documentElement.style.overflow).toBe('hidden');
+
+    await second.setProps({ modelValue: false });
+    await vi.advanceTimersByTimeAsync(200);
+
+    expect(document.documentElement.style.overflow).toBe('hidden');
+
+    await first.setProps({ modelValue: false });
+    await vi.advanceTimersByTimeAsync(200);
+
+    expect(document.documentElement.style.overflow).toBe('scroll');
+    expect(document.documentElement.style.paddingInlineEnd).toBe('7px');
+  });
+
   it('支持 attach，并将未消费属性透传给原生 dialog', async () => {
     const target = document.createElement('section');
 

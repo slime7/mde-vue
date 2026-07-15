@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { confirm } from 'mdu-ui';
+import { confirm } from 'mdu-ui/functions';
 
 const result = ref('尚未选择');
 

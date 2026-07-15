@@ -36,7 +36,7 @@
 
 ### 公共入口
 
-`src/index.js` 是完整包入口，导出 Icon、Button、Card、List、Divider、选择控件、Text field、Textarea、Menu、Dialog 组件族、Dialog 命令式函数以及 `createMatUi()` 和 `useMatTheme()`。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口，复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
+`src/index.js` 是完整组件包入口，导出 Icon、Button、Card、List、Divider、选择控件、Text field、Textarea、Menu、Dialog 组件族以及 `createMatUi()` 和 `useMatTheme()`。Dialog 命令式函数由独立的 `mdu-ui/functions` 入口导出，不从根入口或 Dialog 组件子入口重复导出。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口，复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 

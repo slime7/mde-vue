@@ -102,6 +102,7 @@ function finish() {
     </template>
 
     <template #actions>
+      <span class="mat-imperative-dialog__action-spacer" aria-hidden="true" />
       <MatBtn
         v-for="(action, index) in options.actions"
         :key="index"
@@ -119,5 +120,9 @@ function finish() {
 <style scoped>
 .mat-dialog-prompt__content {
   margin-block: 0 16px;
+}
+
+.mat-imperative-dialog__action-spacer {
+  flex: 1 1 auto;
 }
 </style>

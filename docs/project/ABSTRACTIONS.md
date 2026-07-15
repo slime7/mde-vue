@@ -129,11 +129,11 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 ## Dialog
 
-`<mat-dialog>` 通过 `modelValue` 受控显示，使用原生 modal dialog 和 Teleport。`fullScreen` 只接受显式布尔值，不根据视口自动切换；基础和全屏布局都只允许 content 区域滚动。`scrim=false` 只把帷幕变透明，不允许背景接收指针事件；`closeOnBack` 只控制点击帷幕关闭，Escape 始终请求关闭。多个实例只显示顶层帷幕。
+`<mat-dialog>` 通过 `modelValue` 受控显示，使用原生 modal dialog 和 Teleport。`fullScreen` 只接受显式布尔值，不根据视口自动切换；基础和全屏布局都只允许 content 区域滚动，打开期间由共享堆叠管理器锁定页面根滚动。`scrim=false` 只把帷幕变透明，不允许背景接收指针事件；`closeOnBack` 只控制点击帷幕关闭，Escape 始终请求关闭。多个实例只显示顶层帷幕，最后一层关闭后才恢复页面滚动。
 
 标题、正文和图标都遵循 prop 优先于同名 Slot；无标题时必须由使用者提供 `aria-label` 或 `aria-labelledby`。关闭期间 DOM 保留到退出动画完成，随后触发 `closed` 并恢复原焦点。
 
-`dialog()`、`alert()`、`confirm()` 和 `prompt()` 只在客户端调用。正常取消分别返回 `undefined`、`undefined`、`false` 和 `null`，不拒绝 Promise；参数、挂载目标或运行环境错误使用 rejected Promise。Promise 只在退出动画、原生关闭和一次性宿主清理全部完成后结算。多个命令式实例可以并行存在；最后安装的 `createMatUi()` 配置为后续命令式实例提供主题和组件设置。
+`dialog()`、`alert()`、`confirm()` 和 `prompt()` 统一从 `mdu-ui/functions` 导入，并且只在客户端调用。正常取消分别返回 `undefined`、`undefined`、`false` 和 `null`，不拒绝 Promise；参数、挂载目标或运行环境错误使用 rejected Promise。Promise 只在退出动画、原生关闭和一次性宿主清理全部完成后结算。多个命令式实例可以并行存在；最后安装的 `createMatUi()` 配置为后续命令式实例提供主题和组件设置。
 
 ## 文档权威关系
 

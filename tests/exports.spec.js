@@ -18,19 +18,13 @@ import MatTextField, { MatTextField as NamedMatTextField } from 'mdu-ui/componen
 import MatTextarea, { MatTextarea as NamedMatTextarea } from 'mdu-ui/components/mat-textarea';
 import MatMenu, { MatMenu as NamedMatMenu } from 'mdu-ui/components/mat-menu';
 import MatMenuItem, { MatMenuItem as NamedMatMenuItem } from 'mdu-ui/components/mat-menu-item';
-import MatDialog, {
-  alert as childAlert,
-  confirm as childConfirm,
-  dialog as childDialog,
-  prompt as childPrompt,
-  MatDialog as NamedMatDialog,
-} from 'mdu-ui/components/mat-dialog';
+import MatDialog, { MatDialog as NamedMatDialog } from 'mdu-ui/components/mat-dialog';
 /* eslint-enable import-x/no-named-as-default */
 import {
+  alert, confirm, dialog, prompt,
+} from 'mdu-ui/functions';
+import {
   createMatUi,
-  alert as rootAlert,
-  confirm as rootConfirm,
-  dialog as rootDialog,
   MatBtn as RootMatBtn,
   MatBtnGroup as RootMatBtnGroup,
   MatCard as RootMatCard,
@@ -48,7 +42,6 @@ import {
   MatSwitch as RootMatSwitch,
   MatTextarea as RootMatTextarea,
   MatTextField as RootMatTextField,
-  prompt as rootPrompt,
 } from '../src';
 
 describe('公共组件导出', () => {
@@ -104,11 +97,18 @@ describe('公共组件导出', () => {
     plugin.theme.dispose();
   });
 
-  it('根入口和 Dialog 子入口导出相同的命令式函数', () => {
-    expect(rootDialog).toBe(childDialog);
-    expect(rootAlert).toBe(childAlert);
-    expect(rootConfirm).toBe(childConfirm);
-    expect(rootPrompt).toBe(childPrompt);
+  it('只从 functions 入口导出命令式函数', async () => {
+    const [rootExports, dialogComponentExports] = await Promise.all([
+      import('../src'),
+      import('mdu-ui/components/mat-dialog'),
+    ]);
+
+    expect(dialog).toBeTypeOf('function');
+    expect(alert).toBeTypeOf('function');
+    expect(confirm).toBeTypeOf('function');
+    expect(prompt).toBeTypeOf('function');
+    expect(rootExports.dialog).toBeUndefined();
+    expect(dialogComponentExports.dialog).toBeUndefined();
   });
 
   it('不再提供 MatIconBtn 单组件入口', () => {

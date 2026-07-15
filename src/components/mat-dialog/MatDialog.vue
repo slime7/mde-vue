@@ -505,6 +505,7 @@ watchEffect(() => {
   flex: 0 1 auto;
   min-block-size: 0;
   overflow: auto;
+  scrollbar-gutter: stable;
   font-family: var(--mat-sys-typescale-body-medium-font);
   font-size: var(--mat-sys-typescale-body-medium-size);
   font-weight: var(--mat-sys-typescale-body-medium-weight);
@@ -519,7 +520,6 @@ watchEffect(() => {
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
-  justify-content: flex-end;
   margin-block-start: 24px;
 }
 
@@ -547,13 +547,12 @@ watchEffect(() => {
   padding-inline: 4px 16px;
 }
 
-.mat-dialog__header .mat-dialog__close,
-.mat-dialog__header .mat-dialog__actions {
+.mat-dialog__header .mat-dialog__close {
   flex-shrink: 0;
 }
 
 .mat-dialog__header .mat-dialog__title {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   overflow: hidden;
   font-family: var(--mat-sys-typescale-title-large-font);
   font-size: var(--mat-sys-typescale-title-large-size);
@@ -565,7 +564,9 @@ watchEffect(() => {
 }
 
 .mat-dialog__header .mat-dialog__actions {
+  flex: 1 1 auto;
   flex-wrap: nowrap;
+  min-inline-size: 0;
   margin: 0;
 }
 

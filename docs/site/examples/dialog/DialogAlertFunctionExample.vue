@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { alert } from 'mdu-ui';
+import { alert } from 'mdu-ui/functions';
 
 const closed = ref(false);
 

@@ -30,6 +30,9 @@ describe('新增组件现代 CSS', () => {
     expect(source).toContain('transform: translateY(calc(-100% - 8px))');
     expect(source).toContain('background: var(--mat-sys-color-surface)');
     expect(source).toContain('padding-inline: 4px');
+    expect(source).toContain(
+      '.mat-text-input--outlined:has(.mat-text-input__label) {\n  padding-block-start: 8px;\n}',
+    );
     expect(source).not.toContain('block-size: 40px');
     expect(source).toContain('border: 1px solid var(--mat-text-input-outline-color)');
     expect(source).toContain('border: 2px solid var(--mat-text-input-accent-color)');
@@ -45,6 +48,21 @@ describe('新增组件现代 CSS', () => {
     expect(source).not.toContain('border-block-end: 1px solid');
     expect(source).toContain('@supports (border-shape:');
     expect(source).toContain('prefers-reduced-motion: reduce');
+  });
+
+  it('Dialog 仅让 content 滚动且不强制 actions 末端对齐', () => {
+    const source = readFileSync('src/components/mat-dialog/MatDialog.vue', 'utf8');
+    const contentStyles = source.match(
+      /\n\.mat-dialog__content \{(?<body>[\s\S]*?)\n\}/,
+    )?.groups?.body;
+    const actionStyles = source.match(
+      /\n\.mat-dialog__actions \{(?<body>[\s\S]*?)\n\}/,
+    )?.groups?.body;
+
+    expect(contentStyles).toContain('overflow: auto');
+    expect(contentStyles).toContain('scrollbar-gutter: stable');
+    expect(actionStyles).toContain('display: flex');
+    expect(actionStyles).not.toContain('justify-content: flex-end');
   });
 
   it('菜单使用 Popover、CSS Anchor Positioning、换边和形状动效', () => {

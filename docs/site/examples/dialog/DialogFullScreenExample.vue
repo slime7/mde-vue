@@ -16,7 +16,7 @@ const open = ref(false);
     title="编辑资料"
   >
     <p>全屏 Dialog 的标题和操作固定在顶部，只有这里的正文区域滚动。</p>
-    <p v-for="index in 40" :key="index">
+    <p v-for="index in 80" :key="index">
       正文段落 {{ index }}
     </p>
 

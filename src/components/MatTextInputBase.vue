@@ -356,6 +356,10 @@ function handleInput(event) {
   transform: translateY(-8px);
 }
 
+.mat-text-input--outlined:has(.mat-text-input__label) {
+  padding-block-start: 8px;
+}
+
 .mat-text-input--outlined.mat-text-input--floating .mat-text-input__label {
   box-sizing: border-box;
   max-inline-size: calc(100% - 8px);

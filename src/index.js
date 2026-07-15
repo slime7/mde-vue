@@ -18,7 +18,4 @@ export { default as MatTextarea } from './components/mat-textarea/MatTextarea.vu
 export { default as MatMenu } from './components/mat-menu/MatMenu.vue';
 export { default as MatMenuItem } from './components/mat-menu/MatMenuItem.vue';
 export { default as MatDialog } from './components/mat-dialog/MatDialog.vue';
-export {
-  alert, confirm, dialog, prompt,
-} from './components/mat-dialog/dialog';
 export { createMatUi, useMatTheme } from './plugin';
