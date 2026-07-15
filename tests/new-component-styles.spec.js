@@ -22,20 +22,25 @@ describe('新增组件现代 CSS', () => {
     expect(source).toContain('--mat-menu-item-target-height: 48px');
   });
 
-  it('文本输入使用 clip-path 和 border-shape 渐进增强', () => {
+  it('文本输入使用透明 outline 缺口、单层聚焦描边和原生 textarea 行高', () => {
     const source = readFileSync('src/components/MatTextInputBase.vue', 'utf8');
 
-    expect(source).toContain('clip-path: inset(');
+    expect(source).toContain('<fieldset');
+    expect(source).toContain('class="mat-text-input__outline"');
+    expect(source).toContain('<legend');
+    expect(source).toContain(
+      '.mat-text-input__outline:has(.mat-text-input__outline-label) {\n  inset-block-start: -8px;\n}',
+    );
     expect(source).toContain('.mat-text-input--outlined.mat-text-input--floating');
     expect(source).toContain('transform: translateY(calc(-100% - 8px))');
-    expect(source).toContain('background: var(--mat-sys-color-surface)');
-    expect(source).toContain('padding-inline: 4px');
+    expect(source).not.toContain('background: var(--mat-sys-color-surface)');
     expect(source).toContain(
       '.mat-text-input--outlined:has(.mat-text-input__label) {\n  padding-block-start: 8px;\n}',
     );
     expect(source).not.toContain('block-size: 40px');
     expect(source).toContain('border: 1px solid var(--mat-text-input-outline-color)');
-    expect(source).toContain('border: 2px solid var(--mat-text-input-accent-color)');
+    expect(source).toContain('border-width: 2px');
+    expect(source).not.toContain('.mat-text-input__container::after');
     expect(source).toContain('.mat-text-input--filled:has(.mat-text-input__label)');
     expect(source).toContain('padding-block: 24px 8px');
     expect(source).not.toContain(
@@ -44,8 +49,20 @@ describe('新增组件现代 CSS', () => {
     expect(source).toContain('inline-size: 52px');
     expect(source).toContain('padding-inline: 12px 16px');
     expect(source).toContain('padding-inline: 16px 12px');
+    expect(source).toContain(
+      '.mat-text-input__container:not(:has(.mat-text-input__leading)) .mat-text-input__main',
+    );
+    expect(source).toContain(
+      '.mat-text-input__container:not(:has(.mat-text-input__trailing)) .mat-text-input__main',
+    );
+    expect(source).not.toContain('.mat-text-input__main:first-child');
+    expect(source).not.toContain('.mat-text-input__main:last-child');
     expect(source).toContain('box-shadow: inset 0 -1px 0 var(--mat-text-input-outline-color)');
     expect(source).not.toContain('border-block-end: 1px solid');
+    expect(source).toContain('.mat-text-input__affix {\n  visibility: hidden;');
+    expect(source).toContain('.mat-text-input--floating .mat-text-input__affix');
+    expect(source).toContain('.mat-text-input--textarea .mat-text-input__control {\n  min-block-size: 0;');
+    expect(source).not.toContain('min-block-size: 96px');
     expect(source).toContain('@supports (border-shape:');
     expect(source).toContain('prefers-reduced-motion: reduce');
   });

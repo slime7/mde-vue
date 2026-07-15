@@ -90,6 +90,7 @@ const attrs = useAttrs();
 const focused = ref(false);
 const generatedId = useId();
 const supportingId = `${generatedId}-supporting`;
+const controlId = computed(() => attrs.id || generatedId);
 const { colorStyle } = useComponentColor(computed(() => props.color));
 const hasPlaceholder = computed(() => Boolean(attrs.placeholder));
 const isFloating = computed(() => (
@@ -125,7 +126,7 @@ function handleInput(event) {
 </script>
 
 <template>
-  <label
+  <div
     class="mat-text-input"
     :class="[
       $attrs.class,
@@ -143,7 +144,23 @@ function handleInput(event) {
     :inert="$attrs.inert"
     :aria-hidden="$attrs['aria-hidden']"
   >
-    <span class="mat-text-input__container">
+    <div class="mat-text-input__container">
+      <fieldset
+        v-if="variant === 'outlined'"
+        class="mat-text-input__outline"
+        aria-hidden="true"
+      >
+        <legend v-if="isFloating && label" class="mat-text-input__outline-label">
+          {{ label }}<span v-if="required"> *</span>
+        </legend>
+      </fieldset>
+
+      <span
+        v-if="variant === 'filled'"
+        class="mat-text-input__indicator"
+        aria-hidden="true"
+      />
+
       <MatIcon
         v-if="$slots.leading"
         as="span"
@@ -155,9 +172,13 @@ function handleInput(event) {
       </MatIcon>
 
       <span class="mat-text-input__main">
-        <span v-if="label" class="mat-text-input__label">
+        <label
+          v-if="label"
+          class="mat-text-input__label"
+          :for="controlId"
+        >
           {{ label }}<span v-if="required" aria-hidden="true"> *</span>
-        </span>
+        </label>
 
         <span class="mat-text-input__control-row">
           <span v-if="prefixText" class="mat-text-input__affix mat-text-input__prefix">
@@ -171,6 +192,7 @@ function handleInput(event) {
             :aria-describedby="describedBy"
             :aria-invalid="error ? 'true' : undefined"
             :disabled="disabled"
+            :id="controlId"
             :maxlength="maxLength"
             :readonly="readonly"
             :required="required"
@@ -197,7 +219,7 @@ function handleInput(event) {
       >
         <slot name="trailing" />
       </MatIcon>
-    </span>
+    </div>
 
     <span v-if="hasSupporting" :id="supportingId" class="mat-text-input__supporting">
       <span class="mat-text-input__supporting-text">
@@ -207,7 +229,7 @@ function handleInput(event) {
         {{ modelValue.length }} / {{ maxLength }}
       </span>
     </span>
-  </label>
+  </div>
 </template>
 
 <style scoped>
@@ -235,7 +257,6 @@ function handleInput(event) {
   inline-size: 100%;
   overflow: visible;
   background: transparent;
-  border: 1px solid var(--mat-text-input-outline-color);
   border-radius: var(--mat-sys-shape-corner-small);
 }
 
@@ -243,47 +264,72 @@ function handleInput(event) {
   display: flex;
 }
 
-.mat-text-input__container::after {
+.mat-text-input__outline {
   position: absolute;
-  z-index: 2;
   inset: 0;
-  border: 2px solid var(--mat-text-input-accent-color);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid var(--mat-text-input-outline-color);
   border-radius: inherit;
-  clip-path: inset(0 50% round var(--mat-sys-shape-corner-small));
-  content: '';
-  opacity: 0;
   pointer-events: none;
-  transition: clip-path var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized), opacity var(--mat-sys-motion-duration-short2) var(--mat-sys-motion-easing-standard);
+  transition: border-color var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
 }
 
-.mat-text-input--focused .mat-text-input__container::after {
-  clip-path: inset(0 round var(--mat-sys-shape-corner-small));
-  opacity: 1;
+.mat-text-input__outline:has(.mat-text-input__outline-label) {
+  inset-block-start: -8px;
+}
+
+.mat-text-input__container:has(.mat-text-input__leading) .mat-text-input__outline {
+  padding-inline-start: 48px;
+}
+
+.mat-text-input__outline-label {
+  box-sizing: border-box;
+  max-inline-size: calc(100% - 8px);
+  padding-inline: 4px;
+  overflow: hidden;
+  color: transparent;
+  font-family: var(--mat-sys-typescale-body-small-font);
+  font-size: var(--mat-sys-typescale-body-small-size);
+  font-weight: var(--mat-sys-typescale-body-small-weight);
+  letter-spacing: var(--mat-sys-typescale-body-small-tracking);
+  line-height: var(--mat-sys-typescale-body-small-line-height);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mat-text-input--focused .mat-text-input__outline {
+  border-width: 2px;
+  border-color: var(--mat-text-input-accent-color);
 }
 
 .mat-text-input--filled .mat-text-input__container {
   overflow: clip;
   background: var(--mat-text-input-container-color);
-  border: 0;
   border-radius: var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small) 0 0;
   box-shadow: inset 0 -1px 0 var(--mat-text-input-outline-color);
 }
 
-.mat-text-input--filled .mat-text-input__container::after {
+.mat-text-input__indicator {
+  position: absolute;
+  z-index: 2;
   inset: auto 0 0;
   block-size: 2px;
-  border: 0;
-  border-radius: 0;
   background: var(--mat-text-input-accent-color);
-  clip-path: inset(0 50%);
+  pointer-events: none;
+  transform: scaleX(0);
+  transition: transform var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized);
 }
 
-.mat-text-input--filled.mat-text-input--focused .mat-text-input__container::after {
-  clip-path: inset(0);
+.mat-text-input--filled.mat-text-input--focused .mat-text-input__indicator {
+  transform: scaleX(1);
 }
 
 .mat-text-input__main {
   position: relative;
+  z-index: 1;
   display: flex;
   flex: 1 1 auto;
   align-self: stretch;
@@ -323,7 +369,7 @@ function handleInput(event) {
 }
 
 .mat-text-input--textarea .mat-text-input__control {
-  min-block-size: 96px;
+  min-block-size: 0;
   resize: vertical;
 }
 
@@ -361,10 +407,7 @@ function handleInput(event) {
 }
 
 .mat-text-input--outlined.mat-text-input--floating .mat-text-input__label {
-  box-sizing: border-box;
   max-inline-size: calc(100% - 8px);
-  padding-inline: 4px;
-  background: var(--mat-sys-color-surface);
   transform: translateY(calc(-100% - 8px));
 }
 
@@ -382,6 +425,7 @@ function handleInput(event) {
 }
 
 .mat-text-input__icon {
+  z-index: 1;
   box-sizing: border-box;
   align-self: stretch;
   min-inline-size: 52px;
@@ -397,16 +441,25 @@ function handleInput(event) {
   padding-inline: 16px 12px;
 }
 
-.mat-text-input__main:first-child {
+.mat-text-input__container:not(:has(.mat-text-input__leading)) .mat-text-input__main {
   margin-inline-start: 16px;
 }
 
-.mat-text-input__main:last-child {
+.mat-text-input__container:not(:has(.mat-text-input__trailing)) .mat-text-input__main {
   margin-inline-end: 16px;
 }
 
 .mat-text-input__affix {
+  visibility: hidden;
   font: inherit;
+  opacity: 0;
+  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
+}
+
+.mat-text-input--floating .mat-text-input__affix,
+.mat-text-input:not(:has(.mat-text-input__label)) .mat-text-input__affix {
+  visibility: visible;
+  opacity: 1;
 }
 
 .mat-text-input__supporting {
@@ -455,7 +508,7 @@ function handleInput(event) {
 }
 
 @supports (border-shape: inset(0 round 1px)) {
-  .mat-text-input__container {
+  .mat-text-input__outline {
     border-shape: inset(0 round var(--mat-sys-shape-corner-small));
   }
 
@@ -465,7 +518,8 @@ function handleInput(event) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mat-text-input__container::after,
+  .mat-text-input__affix,
+  .mat-text-input__indicator,
   .mat-text-input__label {
     transition-duration: 0s;
   }

@@ -3501,7 +3501,7 @@ import CardVariantExample from '../examples/card/CardVariantExample.vue';
 
 ## 组件简介
 
-`<mat-text-field>` 的组件导出名是 `MatTextField`，渲染单行原生 `input`；`<mat-textarea>` 的组件导出名是 `MatTextarea`，渲染固定初始高度的原生 `textarea`。两者共享 outlined、filled 外观、浮动标签、辅助或错误文字、字符计数、前后缀和局部 `color` 配色，但不执行表单校验或自动调整 textarea 高度。有标签的 outlined 外观会在顶部保留浮动标签空间，避免被外层滚动容器裁切。
+`<mat-text-field>` 的组件导出名是 `MatTextField`，渲染单行原生 `input`；`<mat-textarea>` 的组件导出名是 `MatTextarea`，渲染固定初始高度的原生 `textarea`。两者共享 outlined、filled 外观、浮动标签、辅助或错误文字、字符计数、前后缀和局部 `color` 配色，但不执行表单校验或自动调整 textarea 高度。有标签的 outlined 外观会在顶部保留浮动标签空间，并以透明缺口裁剪描边，因此可以放在任意主题表面色上。
 
 ## 示例
 
@@ -3708,6 +3708,8 @@ const value = ref('');
 
 ### `prefixText`
 
+空值且未聚焦时隐藏前缀，避免与停留在输入行的标签重叠；输入获得焦点、已有值或标签因 placeholder 浮动后显示。
+
 ::: details 查看示例代码
 ```vue
 <template>
@@ -3726,6 +3728,8 @@ const value = ref('');
 </ClientOnly>
 
 ### `suffixText`
+
+后缀与前缀使用相同的可见条件。
 
 ::: details 查看示例代码
 ```vue
@@ -3940,8 +3944,8 @@ const value = ref('输入内容');
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 焦点描边、活动指示器和光标的强调色 |
 | `supportingText` | `string` | 未设置 | 控件下方的简短辅助说明 |
 | `errorText` | `string` | 未设置 | `error` 为 true 时替换 supportingText 的错误说明 |
-| `prefixText` | `string` | 未设置 | 输入值之前的固定短文本 |
-| `suffixText` | `string` | 未设置 | 输入值之后的固定短文本 |
+| `prefixText` | `string` | 未设置 | 输入值之前的固定短文本；有标签的空输入未聚焦时隐藏 |
+| `suffixText` | `string` | 未设置 | 输入值之后的固定短文本；可见条件与 prefixText 相同 |
 | `maxLength` | 非负整数 | 未设置 | 原生最大长度；设置后自动显示“当前长度 / 最大长度” |
 | `disabled` | `boolean` | `false` | 使用原生禁用语义并降低内容强调 |
 | `readonly` | `boolean` | `false` | 使用原生只读语义，保留选择和焦点 |
@@ -3984,11 +3988,12 @@ const value = ref('输入内容');
 
 ## 状态与无障碍
 
-- label 包裹原生控件，始终保留可访问标签；required 星号只作视觉提示。
+- label 通过 `for` 与原生控件显式关联，始终保留可访问标签；required 星号只作视觉提示。
+- outlined 的标签缺口不填充背景色，聚焦时由同一条描边切换颜色和宽度。
 - error 状态把 `aria-invalid` 设为 true，并通过 `aria-describedby` 关联错误文字和字符计数区域。
 - 调用方已有的 `aria-describedby` 会与组件说明区域合并。
 - filled 和 outlined 在同一区域内应保持一致，不应在同一个表单内交替使用。
-- textarea 默认允许纵向调整尺寸；单行输入不会因长内容扩高。
+- textarea 默认允许纵向调整尺寸，初始内容区高度严格按 `rows` 与正文行高计算；单行输入不会因长内容扩高。
 - 减少动态效果偏好下关闭标签、描边与活动指示器的非必要过渡。
 
 ## 参考来源

@@ -46,7 +46,7 @@ describe('文本输入组件', () => {
     });
     const input = wrapper.get('input');
 
-    expect(wrapper.element.tagName).toBe('LABEL');
+    expect(wrapper.element.tagName).toBe('DIV');
     expect(wrapper.classes()).toContain('consumer-field');
     expect(wrapper.classes()).toContain('mat-text-input--floating');
     expect(wrapper.attributes('style')).toContain('inline-size: 320px');
@@ -72,6 +72,23 @@ describe('文本输入组件', () => {
 
     expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['updated']);
     expect(change).toHaveBeenCalledOnce();
+  });
+
+  it('outlined 使用透明的 fieldset 缺口并由显式 label 关联原生控件', () => {
+    const wrapper = mount(MatTextField, {
+      props: {
+        modelValue: 'hello',
+        label: '邮箱',
+      },
+    });
+    const input = wrapper.get('input');
+    const label = wrapper.get('label.mat-text-input__label');
+    const outline = wrapper.get('fieldset.mat-text-input__outline');
+
+    expect(input.attributes('id')).toBeTruthy();
+    expect(label.attributes('for')).toBe(input.attributes('id'));
+    expect(outline.attributes('aria-hidden')).toBe('true');
+    expect(outline.get('legend').text()).toBe('邮箱');
   });
 
   it('errorText 替换辅助文字并建立错误说明关系', () => {
@@ -125,6 +142,24 @@ describe('文本输入组件', () => {
     expect(blur).toHaveBeenCalledOnce();
   });
 
+  it('空内容未聚焦时隐藏 prefixText 和 suffixText，浮动后显示', async () => {
+    const wrapper = mount(MatTextField, {
+      props: {
+        modelValue: '',
+        label: '网址',
+        prefixText: 'https://',
+        suffixText: '.example.com',
+      },
+    });
+    const input = wrapper.get('input');
+
+    expect(wrapper.classes()).not.toContain('mat-text-input--floating');
+
+    await input.trigger('focus');
+
+    expect(wrapper.classes()).toContain('mat-text-input--floating');
+  });
+
   it('MatTextarea 渲染固定行数的原生 textarea 并支持模型更新', async () => {
     const wrapper = mount(MatTextarea, {
       props: {
@@ -147,6 +182,17 @@ describe('文本输入组件', () => {
     await textarea.setValue('更新后的说明');
 
     expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['更新后的说明']);
+  });
+
+  it('MatTextarea 把显式 rows 原样交给原生 textarea', () => {
+    const wrapper = mount(MatTextarea, {
+      props: {
+        label: '说明',
+        rows: 2,
+      },
+    });
+
+    expect(wrapper.get('textarea').attributes('rows')).toBe('2');
   });
 
   it('用统一 MatIcon 承载前后图标 Slot', () => {
