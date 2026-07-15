@@ -5,9 +5,7 @@
         <mat-btn>新建</mat-btn>
       </template>
       <template #trailing>
-        <mat-icon-btn label="更多新建方式">
-          arrow_drop_down
-        </mat-icon-btn>
+        <mat-btn icon="arrow_drop_down" label="更多新建方式" />
       </template>
     </mat-split-btn>
 
@@ -16,9 +14,7 @@
         <mat-btn>导出</mat-btn>
       </template>
       <template #trailing>
-        <mat-icon-btn label="更多导出方式">
-          arrow_drop_down
-        </mat-icon-btn>
+        <mat-btn icon="arrow_drop_down" label="更多导出方式" />
       </template>
     </mat-split-btn>
   </div>

@@ -81,11 +81,11 @@ order: 35
 
 ## 状态与无障碍
 
-Icon 本身不提供交互语义。装饰性图标应传入 `aria-hidden="true"`；承担信息含义时，应按所在上下文为根元素提供 `role` 和可访问名称。图标按钮仍由 `MatIconBtn` 的必填 `label` 提供操作名称。
+Icon 本身不提供交互语义。装饰性图标应传入 `aria-hidden="true"`；承担信息含义时，应按所在上下文为根元素提供 `role` 和可访问名称。图标模式的 `MatBtn` 仍由必填 `label` 提供操作名称。
 
 ## 参考来源
 
-四轴名称、范围和 FILL 状态动画依据 [Material Symbols 官方指南](https://developers.google.com/fonts/docs/material_symbols?hl=zh-CN)。内容来源设计参考 [mdui v2 Icon](https://www.mdui.org/en/docs/2/components/icon)，改编代码继续遵循仓库中的 mdui MIT 许可声明。
+四轴名称、范围和 FILL 状态动画依据 [Material Symbols 官方指南](https://developers.google.com/fonts/docs/material_symbols?hl=zh-CN)。
 
 <script setup>
 import IconAppearanceExample from '../examples/icon/IconAppearanceExample.vue';

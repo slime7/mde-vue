@@ -2,7 +2,7 @@
 
 `mdu-ui` 是一个私有的 Vue 3 Material 3 组件库，面向最新浏览器中的客户端应用。项目使用 JavaScript、Vue SFC 和原生 CSS，并通过私有 Git 仓库直接分发源码。
 
-当前提供 `<mat-btn>`、`<mat-icon>`、`<mat-icon-btn>`、`<mat-btn-group>`、`<mat-split-btn>`、Material 2025 动态主题、Tailwind CSS v4 语义令牌适配、可视 demo，以及面向 AI 的 `llms.txt` 和 `llms-full.txt`。
+当前提供 `<mat-btn>`、`<mat-icon>`、`<mat-btn-group>`、`<mat-split-btn>`、Material 2025 动态主题、Tailwind CSS v4 语义令牌适配、可视 demo，以及面向 AI 的 `llms.txt` 和 `llms-full.txt`。
 
 ## 环境
 
@@ -63,4 +63,4 @@ pnpm dev
 
 ## 许可说明
 
-本私有项目不声明对外开源许可。项目参考并改编 mdui v2，相关来源和 MIT 许可见 [第三方声明](THIRD_PARTY_NOTICES.md)。
+本私有项目不声明对外开源许可。第三方内容及其许可见[第三方声明](THIRD_PARTY_NOTICES.md)。

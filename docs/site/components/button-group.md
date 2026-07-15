@@ -7,7 +7,7 @@ order: 60
 
 # Button group 按钮组
 
-`<mat-btn-group>` 的组件导出名是 `MatBtnGroup`。它在单行中组织 `MatBtn` 和 `MatIconBtn`。standard 形态保留独立按钮间距，connected 形态连接可选择按钮。组容器不聚焦，每个子按钮保持独立 Tab 停靠点。
+`<mat-btn-group>` 的组件导出名是 `MatBtnGroup`。它在单行中组织普通或图标模式的 `MatBtn`。standard 形态保留独立按钮间距，connected 形态连接可选择按钮。组容器不聚焦，每个子按钮保持独立 Tab 停靠点。
 
 ## 示例
 
@@ -58,7 +58,7 @@ order: 60
 
 组的 `size`、`shape`、`color` 只作为默认值，子组件显式 prop 优先。组 `disabled` 与子组件 `disabled` 取或。选择模式下每个直接子按钮都必须有唯一 `value`；缺少时发出开发警告并忽略该次选择。
 
-connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色形态，不使用 text Button 或 standard Icon button。违反这些组合约束时开发环境会警告。
+connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色形态，不使用 text 或 standard Button。违反这些组合约束时开发环境会警告。
 
 ### 事件
 
@@ -72,7 +72,7 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 
 | 名称 | 内容约束 |
 | --- | --- |
-| 默认 | 直接放置 `MatBtn` 或 `MatIconBtn`；不要嵌套额外布局容器 |
+| 默认 | 直接放置普通或图标模式的 `MatBtn`；不要嵌套额外布局容器 |
 
 ### 状态与键盘
 

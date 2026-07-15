@@ -18,9 +18,11 @@ const expanded = ref(false);
         <mat-btn>新建</mat-btn>
       </template>
       <template #trailing>
-        <mat-icon-btn id="split-create-trigger" label="更多新建方式">
-          arrow_drop_down
-        </mat-icon-btn>
+        <mat-btn
+          id="split-create-trigger"
+          icon="arrow_drop_down"
+          label="更多新建方式"
+        />
       </template>
     </mat-split-btn>
 

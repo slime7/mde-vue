@@ -7,7 +7,6 @@ import {
   createMatUi,
   MatBtn,
   MatBtnGroup,
-  MatIconBtn,
   MatSplitBtn,
   useMatTheme,
 } from '../src';
@@ -181,19 +180,17 @@ describe('主题控制器', () => {
       global: {
         plugins: [plugin],
       },
-      slots: {
-        icon: 'favorite',
+      props: {
+        prefix: 'favorite',
       },
     });
-    const iconButton = mount(MatIconBtn, {
+    const iconButton = mount(MatBtn, {
       global: {
         plugins: [plugin],
       },
       props: {
+        icon: 'favorite',
         label: '收藏',
-      },
-      slots: {
-        default: 'favorite',
       },
     });
 
@@ -201,8 +198,8 @@ describe('主题控制器', () => {
     expect(button.find('.mat-btn__icon').classes()).toContain('mat-icon');
     expect(button.find('.mat-btn__icon').classes()).toContain('custom-symbols');
     expect(iconButton.classes()).toContain('mat-button-base--use-cursor');
-    expect(iconButton.find('.mat-icon-btn__icon').classes()).toContain('mat-icon');
-    expect(iconButton.find('.mat-icon-btn__icon').classes()).toContain('custom-symbols');
+    expect(iconButton.find('.mat-btn__icon').classes()).toContain('mat-icon');
+    expect(iconButton.find('.mat-btn__icon').classes()).toContain('custom-symbols');
     plugin.theme.dispose();
   });
 
@@ -235,11 +232,14 @@ describe('主题控制器', () => {
 
         return () => h('div', [
           h(resolveComponent('mat-btn'), null, '主题按钮'),
-          h(resolveComponent('mat-icon-btn'), { label: '图标按钮' }, () => '★'),
+          h(resolveComponent('mat-btn'), { icon: 'star', label: '图标按钮' }),
           h(resolveComponent('mat-btn-group'), null, () => h(resolveComponent('mat-btn'), null, '组按钮')),
           h(resolveComponent('mat-split-btn'), null, {
             leading: () => h(resolveComponent('mat-btn'), null, '主要操作'),
-            trailing: () => h(resolveComponent('mat-icon-btn'), { label: '更多操作' }, () => '⌄'),
+            trailing: () => h(resolveComponent('mat-btn'), {
+              icon: 'arrow_drop_down',
+              label: '更多操作',
+            }),
           }),
         ]);
       },
@@ -258,7 +258,7 @@ describe('主题控制器', () => {
 
     expect(injectedTheme).toBe(plugin.theme);
     expect(wrapper.findComponent(MatBtn).exists()).toBe(true);
-    expect(wrapper.findComponent(MatIconBtn).exists()).toBe(true);
+    expect(wrapper.findAllComponents(MatBtn)).toHaveLength(5);
     expect(wrapper.findComponent(MatBtnGroup).exists()).toBe(true);
     expect(wrapper.findComponent(MatSplitBtn).exists()).toBe(true);
   });

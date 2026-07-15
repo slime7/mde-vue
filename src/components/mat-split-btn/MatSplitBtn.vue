@@ -97,11 +97,11 @@ function validateSlots() {
   }
 
   if (!slots.leading || root.value.querySelectorAll('.mat-split-btn__leading .mat-button-base').length !== 1) {
-    console.warn('MatSplitBtn: leading slot 必须提供一个 MatBtn 或 MatIconBtn');
+    console.warn('MatSplitBtn: leading slot 必须提供一个 MatBtn');
   }
 
-  if (!slots.trailing || root.value.querySelectorAll('.mat-split-btn__trailing .mat-icon-btn').length !== 1) {
-    console.warn('MatSplitBtn: trailing slot 必须提供一个 MatIconBtn');
+  if (!slots.trailing || root.value.querySelectorAll('.mat-split-btn__trailing .mat-btn--icon').length !== 1) {
+    console.warn('MatSplitBtn: trailing slot 必须提供一个带 icon 和 label 的 MatBtn');
   }
 }
 
@@ -247,7 +247,7 @@ watch(
   padding-inline: var(--mat-split-btn-trailing-button-leading-space) var(--mat-split-btn-trailing-button-trailing-space);
 }
 
-.mat-split-btn__trailing :deep(.mat-icon-btn__icon) {
+.mat-split-btn__trailing :deep(.mat-btn__icon--only) {
   inline-size: var(--mat-split-btn-trailing-button-icon-size);
   block-size: var(--mat-split-btn-trailing-button-icon-size);
   font-size: var(--mat-split-btn-trailing-button-icon-size);
@@ -265,7 +265,7 @@ watch(
   --mat-button-pressed-end-end-radius: var(--mat-button-full-radius);
 }
 
-.mat-split-btn--expanded .mat-split-btn__trailing :deep(.mat-icon-btn__icon) {
+.mat-split-btn--expanded .mat-split-btn__trailing :deep(.mat-btn__icon--only) {
   transform: translateX(0) rotate(180deg);
 }
 
@@ -301,8 +301,7 @@ watch(
   --mat-split-btn-active-icon-color: var(--mat-split-btn-outlined-icon-color);
 }
 
-.mat-split-btn :deep(.mat-btn__icon),
-.mat-split-btn :deep(.mat-icon-btn__icon) {
+.mat-split-btn :deep(.mat-btn__icon) {
   color: var(--mat-split-btn-active-icon-color);
 }
 
@@ -403,7 +402,7 @@ watch(
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mat-split-btn :deep(.mat-icon-btn__icon) {
+  .mat-split-btn :deep(.mat-btn__icon--only) {
     transition-duration: 0s;
   }
 }

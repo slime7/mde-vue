@@ -1,7 +1,6 @@
 import { inject } from 'vue';
 import MatBtn from './components/mat-btn/MatBtn.vue';
 import MatBtnGroup from './components/mat-btn-group/MatBtnGroup.vue';
-import MatIconBtn from './components/mat-icon-btn/MatIconBtn.vue';
 import MatIcon from './components/mat-icon/MatIcon.vue';
 import MatSplitBtn from './components/mat-split-btn/MatSplitBtn.vue';
 import MatCard from './components/mat-card/MatCard.vue';
@@ -86,8 +85,6 @@ export function createMatUi(options = {}) {
       app.component('mat-btn', MatBtn);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-btn-group', MatBtnGroup);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-icon-btn', MatIconBtn);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-icon', MatIcon);
       // eslint-disable-next-line vue/component-definition-name-casing

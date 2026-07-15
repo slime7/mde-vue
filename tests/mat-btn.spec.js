@@ -1,8 +1,12 @@
 import { mount } from '@vue/test-utils';
 import {
-  describe, expect, it, vi,
+  afterEach, describe, expect, it, vi,
 } from 'vitest';
 import { MatBtn } from '../src';
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe('MatBtn', () => {
   it('block 默认关闭，启用后切换根布局且不透传原生属性', () => {
@@ -29,16 +33,25 @@ describe('MatBtn', () => {
     expect(wrapper.classes()).not.toContain('mat-button-base--use-cursor');
   });
 
-  it.each(['elevated', 'filled', 'filled-tonal', 'outlined', 'text'])(
+  it.each(['elevated', 'filled', 'filled-tonal', 'outlined', 'text', 'standard'])(
     '支持 %s 外观',
     (variant) => {
-      const wrapper = mount(MatBtn, {
+      const button = mount(MatBtn, {
         props: {
           variant,
         },
       });
+      const iconButton = mount(MatBtn, {
+        props: {
+          icon: 'favorite',
+          label: '收藏',
+          variant,
+        },
+      });
 
-      expect(wrapper.classes()).toContain(`mat-btn--${variant}`);
+      expect(button.classes()).toContain(`mat-btn--${variant}`);
+      expect(iconButton.classes()).toContain(`mat-btn--${variant}`);
+      expect(iconButton.classes()).toContain('mat-btn--icon');
     },
   );
 
@@ -125,40 +138,114 @@ describe('MatBtn', () => {
     expect(MatBtn.props.variant.validator('tonal')).toBe(false);
   });
 
-  it('支持方形、前置图标和受控选择内容', () => {
+  it('支持方形、前后图标和受控选择内容，prop 优先于同名 Slot', () => {
     const wrapper = mount(MatBtn, {
       props: {
+        prefix: 'favorite',
         shape: 'square',
+        suffix: 'arrow_forward',
         toggle: true,
         selected: true,
       },
       slots: {
         default: '收藏',
-        icon: '<span>☆</span>',
+        prefix: '<span>前置 Slot</span>',
         selected: '已收藏',
-        'selected-icon': '<span>★</span>',
+        suffix: '<span>后置 Slot</span>',
       },
     });
 
     expect(wrapper.classes()).toContain('mat-btn--shape-square');
     expect(wrapper.classes()).toContain('mat-btn--selected');
     expect(wrapper.attributes('aria-pressed')).toBe('true');
-    expect(wrapper.text()).toContain('★');
+    expect(wrapper.text()).toContain('favorite');
     expect(wrapper.text()).toContain('已收藏');
+    expect(wrapper.text()).toContain('arrow_forward');
+    expect(wrapper.text()).not.toContain('前置 Slot');
+    expect(wrapper.text()).not.toContain('后置 Slot');
   });
 
-  it('没有 selected-icon Slot 时通过 fill 轴展示选中图标', () => {
+  it('没有 prefix 和 suffix prop 时使用同名 Slot', () => {
     const wrapper = mount(MatBtn, {
-      props: {
-        selected: true,
-        toggle: true,
-      },
       slots: {
         default: '收藏',
-        icon: 'favorite',
+        prefix: '<span class="prefix-slot">☆</span>',
+        suffix: '<span class="suffix-slot">→</span>',
       },
     });
 
+    expect(wrapper.get('.prefix-slot').text()).toBe('☆');
+    expect(wrapper.get('.suffix-slot').text()).toBe('→');
+  });
+
+  it('icon 字符串切换图标模式并忽略标签、prefix 和 suffix 内容', () => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        icon: 'more_vert',
+        label: '更多操作',
+        prefix: 'favorite',
+        suffix: 'arrow_forward',
+      },
+      attrs: {
+        title: '打开更多操作',
+      },
+      slots: {
+        default: '不应显示的标签',
+        prefix: '<span>不应显示的前置 Slot</span>',
+        suffix: '<span>不应显示的后置 Slot</span>',
+      },
+    });
+
+    expect(wrapper.classes()).toContain('mat-btn--icon');
+    expect(wrapper.classes()).toContain('mat-btn--width-uniform');
+    expect(wrapper.classes()).toContain('mat-btn--shape-round');
+    expect(wrapper.attributes('aria-label')).toBe('更多操作');
+    expect(wrapper.attributes('title')).toBe('打开更多操作');
+    expect(wrapper.text()).toBe('more_vert');
+  });
+
+  it('图标模式默认使用 label 作为 title，缺少 label 时发出警告', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const labelled = mount(MatBtn, {
+      props: {
+        icon: 'settings',
+        label: '设置',
+      },
+    });
+    mount(MatBtn, {
+      props: {
+        icon: 'settings',
+      },
+    });
+
+    expect(labelled.attributes('title')).toBe('设置');
+    expect(warn).toHaveBeenCalledWith('MatBtn: 图标模式必须提供非空 label');
+  });
+
+  it.each(['narrow', 'uniform', 'wide'])('图标模式支持 %s 宽度', (width) => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        icon: 'star',
+        label: '收藏',
+        width,
+      },
+    });
+
+    expect(wrapper.classes()).toContain(`mat-btn--width-${width}`);
+  });
+
+  it('图标模式受控 toggle 复用 icon 并通过 fill 轴表达选中状态', () => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        icon: 'favorite',
+        label: '收藏',
+        selected: true,
+        toggle: true,
+      },
+    });
+
+    expect(wrapper.classes()).toContain('mat-btn--selected');
+    expect(wrapper.attributes('aria-pressed')).toBe('true');
     expect(wrapper.get('.mat-btn__icon').attributes('style')).toContain("'FILL' 1");
   });
 

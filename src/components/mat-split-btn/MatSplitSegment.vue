@@ -41,12 +41,8 @@ function flattenNodes(nodes) {
 }
 
 function FirstValidButton() {
-  const allowedNames = props.role === 'trailing'
-    ? ['MatIconBtn']
-    : ['MatBtn', 'MatIconBtn'];
-
   return flattenNodes(slots.default?.() ?? []).find((node) => (
-    isVNode(node) && allowedNames.includes(node.type?.name ?? node.type?.__name)
+    isVNode(node) && (node.type?.name ?? node.type?.__name) === 'MatBtn'
   )) ?? null;
 }
 </script>

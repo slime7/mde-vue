@@ -57,11 +57,11 @@ createApp(App).use(createMatUi({
 
 ```vue
 <mat-btn>
-  <template #icon>save</template>
+  <template #prefix>save</template>
   保存
 </mat-btn>
 
-<mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
+<mat-btn icon="more_vert" label="更多操作" />
 ```
 
 `iconClass` 只设置图标容器的 class，不会下载字体文件。应用需要自行加载 Material Symbols Outlined，例如在 HTML 头部加入：

@@ -1,12 +1,8 @@
 <template>
   <div class="icon-button-default-example">
-    <mat-icon-btn label="更多操作">
-      more_vert
-    </mat-icon-btn>
+    <mat-btn icon="more_vert" label="更多操作" />
 
-    <mat-icon-btn label="铺满父元素" block>
-      fit_screen
-    </mat-icon-btn>
+    <mat-btn icon="fit_screen" label="铺满父元素" block />
   </div>
 </template>
 

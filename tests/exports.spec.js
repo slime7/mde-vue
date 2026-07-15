@@ -1,10 +1,10 @@
+import { existsSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { createApp } from 'vue';
 /* eslint-disable import-x/no-named-as-default -- 验证子入口默认导出和具名导出相同。 */
 import MatCard, { MatCard as NamedMatCard } from 'mdu-ui/components/mat-card';
 import MatBtn, { MatBtn as NamedMatBtn } from 'mdu-ui/components/mat-btn';
 import MatBtnGroup, { MatBtnGroup as NamedMatBtnGroup } from 'mdu-ui/components/mat-btn-group';
-import MatIconBtn, { MatIconBtn as NamedMatIconBtn } from 'mdu-ui/components/mat-icon-btn';
 import MatIcon, { MatIcon as NamedMatIcon } from 'mdu-ui/components/mat-icon';
 import MatSplitBtn, { MatSplitBtn as NamedMatSplitBtn } from 'mdu-ui/components/mat-split-btn';
 import MatList, { MatList as NamedMatList } from 'mdu-ui/components/mat-list';
@@ -27,7 +27,6 @@ import {
   MatCheckbox as RootMatCheckbox,
   MatDivider as RootMatDivider,
   MatIcon as RootMatIcon,
-  MatIconBtn as RootMatIconBtn,
   MatList as RootMatList,
   MatListItem as RootMatListItem,
   MatMenu as RootMatMenu,
@@ -45,7 +44,6 @@ describe('公共组件导出', () => {
     ['MatCard', RootMatCard, NamedMatCard, MatCard],
     ['MatBtn', RootMatBtn, NamedMatBtn, MatBtn],
     ['MatBtnGroup', RootMatBtnGroup, NamedMatBtnGroup, MatBtnGroup],
-    ['MatIconBtn', RootMatIconBtn, NamedMatIconBtn, MatIconBtn],
     ['MatIcon', RootMatIcon, NamedMatIcon, MatIcon],
     ['MatSplitBtn', RootMatSplitBtn, NamedMatSplitBtn, MatSplitBtn],
     ['MatList', RootMatList, NamedMatList, MatList],
@@ -87,7 +85,12 @@ describe('公共组件导出', () => {
     expect(app.component('mat-menu')).toBe(RootMatMenu);
     expect(app.component('mat-menu-item')).toBe(RootMatMenuItem);
     expect(app.component('mat-icon')).toBe(RootMatIcon);
+    expect(app.component('mat-icon-btn')).toBeUndefined();
 
     plugin.theme.dispose();
+  });
+
+  it('不再提供 MatIconBtn 单组件入口', () => {
+    expect(existsSync(new URL('../src/components/mat-icon-btn', import.meta.url))).toBe(false);
   });
 });

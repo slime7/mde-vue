@@ -15,6 +15,7 @@
 | [0007](0007-internal-component-tokens-without-public-customization.md) | active | 保留内部组件令牌但不提供公共定制入口 |
 | [0008](0008-surface-action.md) | active | 采用共享 Surface 与 Action 内部基础层 |
 | [0009](0009-public-icon-and-configurable-icon-class.md) | active | 采用公共 Icon 与可配置图标类 |
+| [0010](0010-merge-button-and-icon-button.md) | active | 合并 Button 与 Icon button |
 
 ## 何时创建 ADR
 

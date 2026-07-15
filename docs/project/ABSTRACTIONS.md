@@ -83,7 +83,7 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 - 原生元素语义优先于自造交互协议；`<mat-btn>` 渲染原生 `<button>`。
 - 未被组件消费的原生属性和事件应继续传递到根原生元素。
 - 带标签容器的选择控件把 `class`、`style`、`inert`、`aria-hidden` 传给外层标签，其余未消费属性和监听器传给内部原生 input。
-- Button、Icon button、Button group、Split button、Text field 与 Textarea 的 `block` 默认 `false`；启用后只把组件根切换为块级 flex 布局，不替使用方定义 flex 或 grid 父布局中的伸缩规则。Card 与 List 的根本身是块级布局，不提供该属性。
+- Button、Button group、Split button、Text field 与 Textarea 的 `block` 默认 `false`；启用后只把组件根切换为块级 flex 布局，不替使用方定义 flex 或 grid 父布局中的伸缩规则。Card 与 List 的根本身是块级布局，不提供该属性。
 - `disabled` 必须使用原生禁用语义；默认按钮 `type` 是 `button`，避免意外提交表单。
 - 交互组件默认使用 `cursor: default`；只在插件明确启用 `useCursor` 时为可用组件使用 `cursor: pointer`。
 - 组件必须提供可见的键盘焦点状态，并为 hover、focus、pressed 和 disabled 使用共享状态令牌。
@@ -91,9 +91,11 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 
 ## `<mat-btn>`
 
-按钮的 `variant` 接受 `elevated`、`filled`、`filled-tonal`、`outlined` 和 `text`，默认 `filled`；尺寸使用 `extra-small`、`small`、`medium`、`large`、`extra-large`，形状使用 `round` 或 `square`。按钮可以通过 slots 提供前置图标与选中内容，`toggle` 与 `selected` 只表达受控状态，`text` 不支持 toggle。
+按钮的 `variant` 接受 `elevated`、`filled`、`filled-tonal`、`outlined`、`text` 和 `standard`，默认 `filled`；尺寸使用 `extra-small`、`small`、`medium`、`large`、`extra-large`，形状使用 `round` 或 `square`。普通模式渲染默认 Slot，可使用字符串 `prefix`、`suffix` 或同名 Slots 提供前后图标，prop 存在时优先于 Slot；`selected` Slot 可替换选中时的标签内容。
 
-`<mat-icon-btn>` 以必填 `label` 提供操作名称和原生 `title` 提示，支持三档宽度和受控 toggle。`<mat-btn-group>` 负责 standard/connected 布局以及受控 single/multiple 选择；组容器不进入 Tab 顺序，子按钮保持独立停靠点。`<mat-split-btn>` 接受调用方提供的 leading 和 trailing 按钮，只协调视觉、事件、`aria-haspopup`、`aria-expanded` 与可选 `aria-controls`，菜单始终由应用管理。
+非空字符串 `icon` 把 `<mat-btn>` 切换为图标模式。该模式只渲染共享 `MatIcon`，忽略默认、`prefix` 和 `suffix` 内容；`label` 必须是非空字符串，用作可访问名称，并在没有显式 `title` 时提供原生提示。图标模式的 `width` 接受 `narrow`、`uniform` 和 `wide`，默认 `uniform`；默认 `round` 形状在等宽时呈圆形。`toggle` 与 `selected` 只表达受控状态，图标模式选中时复用同一图标并切换 FILL 轴；`text` 不支持 toggle。
+
+`<mat-btn-group>` 只接收 `<mat-btn>`，负责 standard/connected 布局以及受控 single/multiple 选择；组容器不进入 Tab 顺序，子按钮保持独立停靠点。图标模式的显式 `width` 不根据组内子项数量变化，connected `fullWidth` 仍按组规则等分子项。`<mat-split-btn>` 的 leading 和 trailing 都接收 `<mat-btn>`，trailing 必须是同时带非空 `icon` 和 `label` 的图标模式按钮；split button 只协调视觉、事件、`aria-haspopup`、`aria-expanded` 与可选 `aria-controls`，菜单始终由应用管理。
 
 当前按钮体系不包含 loading、链接模式、涟漪、密度参数、内置菜单或完整表单代理方法。
 

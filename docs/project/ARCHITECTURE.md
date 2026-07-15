@@ -54,7 +54,7 @@
 
 ### 组件
 
-每个组件拥有自己的 Vue SFC、公开入口、样式与测试。按钮和图标按钮共享原生 `<button>` 基础结构、状态层、插件设置和上下文合并逻辑；按钮组与 split button 使用 Vue provide/inject 协调子按钮，不复制交互协议。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
+每个组件拥有自己的 Vue SFC、公开入口、样式与测试。`MatBtn` 以同一个原生 `<button>` 组件提供普通按钮和图标模式：非空 `icon` 切换为图标模式，普通模式可使用 `prefix`、`suffix` 或同名 Slots。按钮组与 split button 使用 Vue provide/inject 协调 `MatBtn` 子按钮，不复制交互协议。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
 
 Icon 统一字体字形、SVG 资源和默认 Slot 中的 SVG 元素，负责 Material Symbols 经典四轴、尺寸、内容颜色和动态根标签。内容来源优先级固定为 `src`、`icon`、默认 Slot；组件级 `iconClass` 可覆盖或关闭插件全局值。按钮、List、Menu 和文本输入复用同一公共 Icon 实现，但各自负责上下文尺寸、颜色和无障碍语义。
 
@@ -140,3 +140,4 @@ Vite 构建检查从公开 `exports` 导入 `.vue` 和 CSS，验证普通 Vue/Vi
 - [0006 — 采用 Material 3 分层令牌与完整组件属性名（已由 0007 替代）](adr/0006-material-3-layered-tokens-and-full-property-names.md)
 - [0007 — 保留内部组件令牌但不提供公共定制入口](adr/0007-internal-component-tokens-without-public-customization.md)
 - [0009 — 采用公共 Icon 与可配置图标类](adr/0009-public-icon-and-configurable-icon-class.md)
+- [0010 — 合并 Button 与 Icon button](adr/0010-merge-button-and-icon-button.md)

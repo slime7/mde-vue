@@ -6,7 +6,7 @@ import {
   describe, expect, it, vi,
 } from 'vitest';
 import {
-  createMatUi, MatIconBtn, MatList, MatListItem,
+  createMatUi, MatBtn, MatList, MatListItem,
 } from '../src';
 
 async function flushFocusManagement() {
@@ -190,10 +190,11 @@ describe('MatList', () => {
       slots: {
         default: () => h(MatListItem, null, {
           default: () => '项目',
-          trailing: () => h(MatIconBtn, {
+          trailing: () => h(MatBtn, {
+            icon: 'more_vert',
             label: '更多',
             tabindex: 2,
-          }, () => 'more_vert'),
+          }),
         }),
       },
     });

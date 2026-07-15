@@ -26,7 +26,7 @@ const props = defineProps({
     type: String,
     default: 'filled',
     validator(value) {
-      return ['elevated', 'filled', 'filled-tonal', 'outlined', 'text'].includes(value);
+      return ['elevated', 'filled', 'filled-tonal', 'outlined', 'text', 'standard'].includes(value);
     },
   },
   size: {
@@ -42,6 +42,32 @@ const props = defineProps({
     validator(value) {
       return BUTTON_SHAPES.includes(value);
     },
+  },
+  width: {
+    type: String,
+    default: 'uniform',
+    validator(value) {
+      return ['narrow', 'uniform', 'wide'].includes(value);
+    },
+  },
+  icon: {
+    type: String,
+    default: undefined,
+    validator(value) {
+      return value === undefined || value.trim().length > 0;
+    },
+  },
+  prefix: {
+    type: String,
+    default: undefined,
+  },
+  suffix: {
+    type: String,
+    default: undefined,
+  },
+  label: {
+    type: String,
+    default: undefined,
   },
   color: {
     type: String,
@@ -94,19 +120,28 @@ const {
 } = useButton(props, emit);
 const isToggle = computed(() => effectiveToggle.value && effectiveVariant.value !== 'text');
 const isSelected = computed(() => isToggle.value && effectiveSelected.value);
-const hasIcon = computed(() => Boolean(slots.icon || (isSelected.value && slots['selected-icon'])));
+const isIcon = computed(() => typeof props.icon === 'string' && props.icon.trim().length > 0);
+const hasPrefix = computed(() => !isIcon.value && (
+  props.prefix !== undefined || Boolean(slots.prefix)
+));
+const hasSuffix = computed(() => !isIcon.value && (
+  props.suffix !== undefined || Boolean(slots.suffix)
+));
 const hasSelectedLabel = computed(() => isSelected.value && Boolean(slots.selected));
 const iconOpticalSize = computed(() => ({
   'extra-small': 20,
-  small: 20,
+  small: isIcon.value ? 24 : 20,
   medium: 24,
   large: 32,
   'extra-large': 40,
 })[effectiveSize.value]);
-
 watchEffect(() => {
   if (props.toggle && props.variant === 'text') {
     console.warn('MatBtn: text 形态不支持 toggle，当前按普通文本按钮处理');
+  }
+
+  if (isIcon.value && (!props.label || props.label.trim().length === 0)) {
+    console.warn('MatBtn: 图标模式必须提供非空 label');
   }
 });
 </script>
@@ -121,36 +156,72 @@ watchEffect(() => {
       `mat-btn--shape-${effectiveShape}`,
       {
         'mat-button--explicit-color': hasExplicitColor,
+        'mat-btn--icon': isIcon,
+        [`mat-btn--width-${width}`]: isIcon,
         'mat-btn--toggle': isToggle,
         'mat-btn--selected': isSelected,
         'mat-btn--split-leading': split?.role === 'leading',
       },
     ]"
     :style="colorStyle"
+    :aria-label="isIcon ? label : $attrs['aria-label']"
+    :aria-controls="split?.role === 'trailing' ? split.controls.value : undefined"
+    :aria-expanded="split?.role === 'trailing' ? split.expanded.value : undefined"
+    :aria-haspopup="split?.role === 'trailing' ? 'menu' : undefined"
     :aria-pressed="isToggle ? isSelected : undefined"
     :block="block"
     :disabled="effectiveDisabled"
+    :title="isIcon ? ($attrs.title ?? label) : $attrs.title"
     :type="type"
     :use-cursor="useCursor"
     @click="handleClick"
   >
     <MatIcon
-      v-if="hasIcon"
+      v-if="isIcon"
       as="span"
-      class="mat-btn__icon"
-      :fill="isSelected && !slots['selected-icon'] ? 1 : 0"
+      class="mat-btn__icon mat-btn__icon--only"
+      :fill="isSelected ? 1 : 0"
       :optical-size="iconOpticalSize"
       size="var(--mat-btn-icon-size)"
       aria-hidden="true"
     >
-      <slot v-if="isSelected && slots['selected-icon']" name="selected-icon" />
-      <slot v-else name="icon" />
+      {{ icon }}
     </MatIcon>
 
-    <span class="mat-btn__label">
+    <MatIcon
+      v-if="hasPrefix"
+      as="span"
+      class="mat-btn__icon mat-btn__icon--prefix"
+      :fill="isSelected ? 1 : 0"
+      :optical-size="iconOpticalSize"
+      size="var(--mat-btn-icon-size)"
+      aria-hidden="true"
+    >
+      <template v-if="prefix !== undefined">
+        {{ prefix }}
+      </template>
+      <slot v-else name="prefix" />
+    </MatIcon>
+
+    <span v-if="!isIcon" class="mat-btn__label">
       <slot v-if="hasSelectedLabel" name="selected" />
       <slot v-else />
     </span>
+
+    <MatIcon
+      v-if="hasSuffix"
+      as="span"
+      class="mat-btn__icon mat-btn__icon--suffix"
+      :fill="isSelected ? 1 : 0"
+      :optical-size="iconOpticalSize"
+      size="var(--mat-btn-icon-size)"
+      aria-hidden="true"
+    >
+      <template v-if="suffix !== undefined">
+        {{ suffix }}
+      </template>
+      <slot v-else name="suffix" />
+    </MatIcon>
   </MatButtonBase>
 </template>
 
@@ -199,6 +270,13 @@ watchEffect(() => {
   --mat-btn-label-text-line-height: var(--mat-btn-extra-small-label-text-line-height);
   --mat-btn-label-text-weight: var(--mat-btn-extra-small-label-text-weight);
   --mat-btn-label-text-tracking: var(--mat-btn-extra-small-label-text-tracking);
+  --mat-btn-icon-only-size: var(--mat-btn-icon-only-extra-small-icon-size);
+  --mat-btn-icon-only-narrow-space: var(--mat-btn-icon-only-extra-small-narrow-space);
+  --mat-btn-icon-only-uniform-space: var(--mat-btn-icon-only-extra-small-uniform-space);
+  --mat-btn-icon-only-wide-space: var(--mat-btn-icon-only-extra-small-wide-space);
+  --mat-btn-icon-only-outline-width: var(--mat-btn-icon-only-extra-small-outline-width);
+  --mat-btn-icon-only-square-shape: var(--mat-btn-icon-only-extra-small-square-shape);
+  --mat-btn-icon-only-pressed-shape: var(--mat-btn-icon-only-extra-small-pressed-shape);
 }
 
 .mat-btn--size-small {
@@ -215,6 +293,13 @@ watchEffect(() => {
   --mat-btn-label-text-line-height: var(--mat-btn-small-label-text-line-height);
   --mat-btn-label-text-weight: var(--mat-btn-small-label-text-weight);
   --mat-btn-label-text-tracking: var(--mat-btn-small-label-text-tracking);
+  --mat-btn-icon-only-size: var(--mat-btn-icon-only-small-icon-size);
+  --mat-btn-icon-only-narrow-space: var(--mat-btn-icon-only-small-narrow-space);
+  --mat-btn-icon-only-uniform-space: var(--mat-btn-icon-only-small-uniform-space);
+  --mat-btn-icon-only-wide-space: var(--mat-btn-icon-only-small-wide-space);
+  --mat-btn-icon-only-outline-width: var(--mat-btn-icon-only-small-outline-width);
+  --mat-btn-icon-only-square-shape: var(--mat-btn-icon-only-small-square-shape);
+  --mat-btn-icon-only-pressed-shape: var(--mat-btn-icon-only-small-pressed-shape);
 }
 
 .mat-btn--size-medium {
@@ -231,6 +316,13 @@ watchEffect(() => {
   --mat-btn-label-text-line-height: var(--mat-btn-medium-label-text-line-height);
   --mat-btn-label-text-weight: var(--mat-btn-medium-label-text-weight);
   --mat-btn-label-text-tracking: var(--mat-btn-medium-label-text-tracking);
+  --mat-btn-icon-only-size: var(--mat-btn-icon-only-medium-icon-size);
+  --mat-btn-icon-only-narrow-space: var(--mat-btn-icon-only-medium-narrow-space);
+  --mat-btn-icon-only-uniform-space: var(--mat-btn-icon-only-medium-uniform-space);
+  --mat-btn-icon-only-wide-space: var(--mat-btn-icon-only-medium-wide-space);
+  --mat-btn-icon-only-outline-width: var(--mat-btn-icon-only-medium-outline-width);
+  --mat-btn-icon-only-square-shape: var(--mat-btn-icon-only-medium-square-shape);
+  --mat-btn-icon-only-pressed-shape: var(--mat-btn-icon-only-medium-pressed-shape);
 }
 
 .mat-btn--size-large {
@@ -247,6 +339,13 @@ watchEffect(() => {
   --mat-btn-label-text-line-height: var(--mat-btn-large-label-text-line-height);
   --mat-btn-label-text-weight: var(--mat-btn-large-label-text-weight);
   --mat-btn-label-text-tracking: var(--mat-btn-large-label-text-tracking);
+  --mat-btn-icon-only-size: var(--mat-btn-icon-only-large-icon-size);
+  --mat-btn-icon-only-narrow-space: var(--mat-btn-icon-only-large-narrow-space);
+  --mat-btn-icon-only-uniform-space: var(--mat-btn-icon-only-large-uniform-space);
+  --mat-btn-icon-only-wide-space: var(--mat-btn-icon-only-large-wide-space);
+  --mat-btn-icon-only-outline-width: var(--mat-btn-icon-only-large-outline-width);
+  --mat-btn-icon-only-square-shape: var(--mat-btn-icon-only-large-square-shape);
+  --mat-btn-icon-only-pressed-shape: var(--mat-btn-icon-only-large-pressed-shape);
 }
 
 .mat-btn--size-extra-large {
@@ -263,6 +362,39 @@ watchEffect(() => {
   --mat-btn-label-text-line-height: var(--mat-btn-extra-large-label-text-line-height);
   --mat-btn-label-text-weight: var(--mat-btn-extra-large-label-text-weight);
   --mat-btn-label-text-tracking: var(--mat-btn-extra-large-label-text-tracking);
+  --mat-btn-icon-only-size: var(--mat-btn-icon-only-extra-large-icon-size);
+  --mat-btn-icon-only-narrow-space: var(--mat-btn-icon-only-extra-large-narrow-space);
+  --mat-btn-icon-only-uniform-space: var(--mat-btn-icon-only-extra-large-uniform-space);
+  --mat-btn-icon-only-wide-space: var(--mat-btn-icon-only-extra-large-wide-space);
+  --mat-btn-icon-only-outline-width: var(--mat-btn-icon-only-extra-large-outline-width);
+  --mat-btn-icon-only-square-shape: var(--mat-btn-icon-only-extra-large-square-shape);
+  --mat-btn-icon-only-pressed-shape: var(--mat-btn-icon-only-extra-large-pressed-shape);
+}
+
+.mat-btn--icon {
+  --mat-btn-icon-size: var(--mat-btn-icon-only-size);
+  --mat-button-outline-width: var(--mat-btn-icon-only-outline-width);
+  --mat-btn-square-container-shape: var(--mat-btn-icon-only-square-shape);
+  --mat-button-pressed-radius: var(--mat-btn-icon-only-pressed-shape);
+  --mat-button-container-width: calc(var(--mat-btn-icon-size) + var(--mat-btn-icon-only-leading-space) + var(--mat-btn-icon-only-trailing-space));
+  gap: 0;
+  min-inline-size: 0;
+  padding-inline: 0;
+}
+
+.mat-btn--icon.mat-btn--width-narrow {
+  --mat-btn-icon-only-leading-space: var(--mat-btn-icon-only-narrow-space);
+  --mat-btn-icon-only-trailing-space: var(--mat-btn-icon-only-narrow-space);
+}
+
+.mat-btn--icon.mat-btn--width-uniform {
+  --mat-btn-icon-only-leading-space: var(--mat-btn-icon-only-uniform-space);
+  --mat-btn-icon-only-trailing-space: var(--mat-btn-icon-only-uniform-space);
+}
+
+.mat-btn--icon.mat-btn--width-wide {
+  --mat-btn-icon-only-leading-space: var(--mat-btn-icon-only-wide-space);
+  --mat-btn-icon-only-trailing-space: var(--mat-btn-icon-only-wide-space);
 }
 
 .mat-btn--shape-round {
@@ -391,6 +523,27 @@ watchEffect(() => {
   --mat-button-container-elevation: var(--mat-btn-text-container-elevation);
 }
 
+.mat-btn--standard {
+  --mat-button-container-color: var(--mat-btn-standard-container-color);
+  --mat-btn-label-text-color: var(--mat-btn-standard-content-color);
+  --mat-btn-icon-color: var(--mat-btn-standard-content-color);
+  --mat-button-state-color: var(--mat-btn-standard-state-layer-color);
+  --mat-button-border-width: 0;
+  --mat-button-container-elevation: var(--mat-sys-elevation-level0);
+}
+
+.mat-btn--standard.mat-btn--selected {
+  --mat-btn-label-text-color: var(--mat-btn-standard-selected-content-color);
+  --mat-btn-icon-color: var(--mat-btn-standard-selected-content-color);
+  --mat-button-state-color: var(--mat-btn-standard-selected-state-layer-color);
+}
+
+.mat-btn--standard.mat-button--explicit-color {
+  --mat-btn-label-text-color: var(--mat-accent-color);
+  --mat-btn-icon-color: var(--mat-accent-color);
+  --mat-button-state-color: var(--mat-accent-color);
+}
+
 .mat-btn__icon {
   position: relative;
   z-index: 1;
@@ -438,7 +591,8 @@ watchEffect(() => {
   --mat-button-border-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-container-opacity) * 100%), transparent);
 }
 
-.mat-btn--text:disabled {
+.mat-btn--text:disabled,
+.mat-btn--standard:disabled {
   --mat-button-container-color: transparent;
 }
 </style>

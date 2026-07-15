@@ -3,7 +3,7 @@ import { h } from 'vue';
 import {
   afterEach, describe, expect, it, vi,
 } from 'vitest';
-import { MatBtn, MatBtnGroup, MatIconBtn } from '../src';
+import { MatBtn, MatBtnGroup } from '../src';
 
 afterEach(() => {
   vi.useRealTimers();
@@ -400,7 +400,11 @@ describe('MatBtnGroup', () => {
       slots: {
         default: () => [
           h(MatBtn, { value: 'one' }, () => '一'),
-          h(MatIconBtn, { label: '二', value: 'two' }, () => '二'),
+          h(MatBtn, {
+            icon: 'looks_two',
+            label: '二',
+            value: 'two',
+          }),
         ],
       },
     });
@@ -409,5 +413,22 @@ describe('MatBtnGroup', () => {
     wrapper.findAll('button').forEach((button) => {
       expect(button.attributes('tabindex')).toBeUndefined();
     });
+  });
+
+  it('图标模式在组内保持显式宽度且默认 uniform，不按子项数量变化', () => {
+    const wrapper = mount(MatBtnGroup, {
+      slots: {
+        default: () => [
+          h(MatBtn, { icon: 'one', label: '一' }),
+          h(MatBtn, { icon: 'two', label: '二', width: 'narrow' }),
+          h(MatBtn, { icon: 'three', label: '三', width: 'wide' }),
+        ],
+      },
+    });
+    const buttons = wrapper.findAll('button');
+
+    expect(buttons[0].classes()).toContain('mat-btn--width-uniform');
+    expect(buttons[1].classes()).toContain('mat-btn--width-narrow');
+    expect(buttons[2].classes()).toContain('mat-btn--width-wide');
   });
 });

@@ -434,14 +434,14 @@ function validateConnectedChildren() {
   const buttons = [...root.value.querySelectorAll('.mat-button-base')];
   const hasUnsupportedVariant = buttons.some((button) => (
     button.classList.contains('mat-btn--text')
-      || button.classList.contains('mat-icon-btn--standard')
+      || button.classList.contains('mat-btn--standard')
   ));
   const colorVariants = new Set(buttons.flatMap((button) => [...button.classList]
-    .filter((name) => /^mat-(?:icon-)?btn--(?:elevated|filled|filled-tonal|outlined)$/.test(name))
+    .filter((name) => /^mat-btn--(?:elevated|filled|filled-tonal|outlined)$/.test(name))
     .map((name) => name.slice(name.lastIndexOf('--') + 2))));
 
   if (hasUnsupportedVariant) {
-    console.warn('MatBtnGroup: connected 形态不支持 text 按钮或 standard icon button');
+    console.warn('MatBtnGroup: connected 形态不支持 text 或 standard 按钮');
   }
 
   if (colorVariants.size > 1) {
@@ -578,8 +578,7 @@ watch(
   --mat-btn-group-outer-corner-size: var(--mat-btn-group-connected-square-outer-corner-size);
 }
 
-.mat-btn-group--connected :deep(.mat-button-base.mat-btn--selected),
-.mat-btn-group--connected :deep(.mat-button-base.mat-icon-btn--selected) {
+.mat-btn-group--connected :deep(.mat-button-base.mat-btn--selected) {
   --mat-button-start-start-radius: var(--mat-button-full-radius);
   --mat-button-start-end-radius: var(--mat-button-full-radius);
   --mat-button-end-start-radius: var(--mat-button-full-radius);
@@ -590,16 +589,14 @@ watch(
   --mat-button-pressed-end-end-radius: var(--mat-button-full-radius);
 }
 
-.mat-btn-group--connected :deep(.mat-button-base:first-child.mat-btn--selected),
-.mat-btn-group--connected :deep(.mat-button-base:first-child.mat-icon-btn--selected) {
+.mat-btn-group--connected :deep(.mat-button-base:first-child.mat-btn--selected) {
   --mat-button-start-start-radius: var(--mat-btn-group-outer-corner-size);
   --mat-button-end-start-radius: var(--mat-btn-group-outer-corner-size);
   --mat-button-pressed-start-start-radius: var(--mat-btn-group-outer-corner-size);
   --mat-button-pressed-end-start-radius: var(--mat-btn-group-outer-corner-size);
 }
 
-.mat-btn-group--connected :deep(.mat-button-base:last-child.mat-btn--selected),
-.mat-btn-group--connected :deep(.mat-button-base:last-child.mat-icon-btn--selected) {
+.mat-btn-group--connected :deep(.mat-button-base:last-child.mat-btn--selected) {
   --mat-button-start-end-radius: var(--mat-btn-group-outer-corner-size);
   --mat-button-end-end-radius: var(--mat-btn-group-outer-corner-size);
   --mat-button-pressed-start-end-radius: var(--mat-btn-group-outer-corner-size);

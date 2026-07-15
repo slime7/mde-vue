@@ -17,11 +17,7 @@ function applySelection({ nextSelected }) {
     full-width
     @select="applySelection"
   >
-    <mat-icon-btn label="粗体" value="bold">
-      format_bold
-    </mat-icon-btn>
-    <mat-icon-btn label="斜体" value="italic">
-      format_italic
-    </mat-icon-btn>
+    <mat-btn icon="format_bold" label="粗体" value="bold" />
+    <mat-btn icon="format_italic" label="斜体" value="italic" />
   </mat-btn-group>
 </template>

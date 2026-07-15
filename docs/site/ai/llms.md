@@ -42,7 +42,6 @@ llms: false
 - 组件配色：`docs/site/guide/component-color.md`
 - Tailwind CSS：`docs/site/guide/tailwind.md`
 - Button：`docs/site/components/button.md`
-- Icon button：`docs/site/components/icon-button.md`
 - Button group：`docs/site/components/button-group.md`
 - Split button：`docs/site/components/split-button.md`
 - Text field 与 Textarea：`docs/site/components/text-field.md`
@@ -55,7 +54,3 @@ llms: false
 请以提供的 mdu-ui Markdown 页面为主要依据回答问题。
 如果需求超出页面记录的公共 API，请明确指出，不要推测内部实现。
 ```
-
-## 来源说明
-
-本页的信息组织参考并改编自 [mdui v2 的 LLMs.txt 使用说明](https://github.com/zdhxiong/mdui/blob/v2/docs/zh-cn/ai/llms.md)，并根据本项目的私有 Git 分发方式和文档结构进行了调整。相关许可见仓库根目录的 `THIRD_PARTY_NOTICES.md`。

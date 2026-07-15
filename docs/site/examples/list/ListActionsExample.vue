@@ -34,12 +34,8 @@
           2.4 MB
         </template>
         <template #trailing>
-          <mat-icon-btn label="下载">
-            download
-          </mat-icon-btn>
-          <mat-icon-btn label="更多操作">
-            more_vert
-          </mat-icon-btn>
+          <mat-btn icon="download" label="下载" />
+          <mat-btn icon="more_vert" label="更多操作" />
         </template>
       </mat-list-item>
     </mat-list>

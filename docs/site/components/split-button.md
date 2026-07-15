@@ -63,8 +63,8 @@ slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展
 
 | 名称 | 内容约束 |
 | --- | --- |
-| `leading` | 一个 `MatBtn` 或 `MatIconBtn`，提供主要操作内容和原生属性 |
-| `trailing` | 一个带必填 `label` 的 `MatIconBtn`，提供展开/收起图标 |
+| `leading` | 一个 `MatBtn`，提供主要操作内容和原生属性 |
+| `trailing` | 一个带非空 `icon` 和必填 `label` 的 `MatBtn`，提供展开/收起图标 |
 
 每个 slot 只渲染首个有效按钮。缺少或类型不符时开发环境会警告。trailing 自动获得 `aria-haspopup="menu"`、`aria-expanded`、可选 `aria-controls` 和受控 `aria-pressed`。
 

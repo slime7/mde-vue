@@ -6,13 +6,11 @@ const selected = ref(false);
 
 <template>
   <mat-btn
+    prefix="favorite"
     toggle
     :selected="selected"
     @click="selected = !selected"
   >
-    <template #icon>
-      favorite
-    </template>
     <template #default>
       收藏
     </template>

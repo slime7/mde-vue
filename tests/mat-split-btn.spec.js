@@ -5,7 +5,7 @@ import { h } from 'vue';
 import {
   describe, expect, it, vi,
 } from 'vitest';
-import { MatBtn, MatIconBtn, MatSplitBtn } from '../src';
+import { MatBtn, MatSplitBtn } from '../src';
 
 const splitButtonSource = readFileSync(
   resolve('src/components/mat-split-btn/MatSplitBtn.vue'),
@@ -16,7 +16,7 @@ describe('MatSplitBtn', () => {
   it('block 默认关闭，启用后切换组根布局且不透传原生属性', () => {
     const createSlots = () => ({
       leading: () => h(MatBtn, null, () => '新建'),
-      trailing: () => h(MatIconBtn, { label: '更多' }, () => 'arrow_drop_down'),
+      trailing: () => h(MatBtn, { icon: 'arrow_drop_down', label: '更多' }),
     });
     const defaultButton = mount(MatSplitBtn, { slots: createSlots() });
     const blockButton = mount(MatSplitBtn, {
@@ -45,12 +45,13 @@ describe('MatSplitBtn', () => {
           shape: 'square',
           color: 'error',
         }, () => '新建'),
-        trailing: () => h(MatIconBtn, {
+        trailing: () => h(MatBtn, {
+          icon: 'arrow_drop_down',
           label: '展开操作菜单',
           variant: 'standard',
           size: 'extra-small',
           color: 'error',
-        }, () => '⌄'),
+        }),
       },
     });
     const buttons = wrapper.findAll('button');
@@ -60,7 +61,8 @@ describe('MatSplitBtn', () => {
     expect(buttons[0].classes()).toContain('mat-btn--size-large');
     expect(buttons[0].classes()).toContain('mat-btn--shape-round');
     expect(buttons[0].attributes('style')).toMatch(/--mat-accent-color: light-dark\(/);
-    expect(buttons[1].classes()).toContain('mat-icon-btn--filled-tonal');
+    expect(buttons[1].classes()).toContain('mat-btn--filled-tonal');
+    expect(buttons[1].classes()).toContain('mat-btn--icon');
     expect(buttons[1].attributes('aria-haspopup')).toBe('menu');
     expect(buttons[1].attributes('aria-expanded')).toBe('true');
     expect(buttons[1].attributes('aria-controls')).toBe('action-menu');
@@ -79,7 +81,11 @@ describe('MatSplitBtn', () => {
     const wrapper = mount(MatSplitBtn, {
       slots: {
         leading: () => h(MatBtn, { onClick: leadingClick }, () => '执行'),
-        trailing: () => h(MatIconBtn, { label: '更多', onClick: trailingClick }, () => '⌄'),
+        trailing: () => h(MatBtn, {
+          icon: 'arrow_drop_down',
+          label: '更多',
+          onClick: trailingClick,
+        }),
       },
     });
     const buttons = wrapper.findAll('button');
@@ -102,7 +108,7 @@ describe('MatSplitBtn', () => {
       },
       slots: {
         leading: () => h(MatBtn, null, () => '执行'),
-        trailing: () => h(MatIconBtn, { label: '更多' }, () => '⌄'),
+        trailing: () => h(MatBtn, { icon: 'arrow_drop_down', label: '更多' }),
       },
     });
 
