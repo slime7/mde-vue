@@ -127,6 +127,14 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 `<mat-menu>` 使用受控根 open、触发器 id anchor、Popover top layer 和 CSS Anchor Positioning。嵌套 Menu 只允许直接位于 MatMenuItem 的 submenu Slot，自动继承父级 color 与 variant，并以父项目为 anchor。MenuItem 是单一操作；叶子 click 关闭整条链，子菜单项只展开。Menu 与 List 可以共享无语义排列和 roving focus，但不得共享 listbox 选择模型、角色或左右键含义。
 
+## Dialog
+
+`<mat-dialog>` 通过 `modelValue` 受控显示，使用原生 modal dialog 和 Teleport。`fullScreen` 只接受显式布尔值，不根据视口自动切换；基础和全屏布局都只允许 content 区域滚动。`scrim=false` 只把帷幕变透明，不允许背景接收指针事件；`closeOnBack` 只控制点击帷幕关闭，Escape 始终请求关闭。多个实例只显示顶层帷幕。
+
+标题、正文和图标都遵循 prop 优先于同名 Slot；无标题时必须由使用者提供 `aria-label` 或 `aria-labelledby`。关闭期间 DOM 保留到退出动画完成，随后触发 `closed` 并恢复原焦点。
+
+`dialog()`、`alert()`、`confirm()` 和 `prompt()` 只在客户端调用。正常取消分别返回 `undefined`、`undefined`、`false` 和 `null`，不拒绝 Promise；参数、挂载目标或运行环境错误使用 rejected Promise。Promise 只在退出动画、原生关闭和一次性宿主清理全部完成后结算。多个命令式实例可以并行存在；最后安装的 `createMatUi()` 配置为后续命令式实例提供主题和组件设置。
+
 ## 文档权威关系
 
 `docs/site/` 中人工编辑的 Markdown 使用页面是组件说明的权威来源。`llms.txt` 只提供适合 AI 发现内容的索引，`llms-full.txt` 是这些页面的合并文本；两者均为可重复生成的派生文件，不接受手工修补。

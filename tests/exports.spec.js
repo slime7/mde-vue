@@ -31,13 +31,12 @@ import {
   alert as rootAlert,
   confirm as rootConfirm,
   dialog as rootDialog,
-  prompt as rootPrompt,
   MatBtn as RootMatBtn,
   MatBtnGroup as RootMatBtnGroup,
   MatCard as RootMatCard,
   MatCheckbox as RootMatCheckbox,
-  MatDivider as RootMatDivider,
   MatDialog as RootMatDialog,
+  MatDivider as RootMatDivider,
   MatIcon as RootMatIcon,
   MatList as RootMatList,
   MatListItem as RootMatListItem,
@@ -49,6 +48,7 @@ import {
   MatSwitch as RootMatSwitch,
   MatTextarea as RootMatTextarea,
   MatTextField as RootMatTextField,
+  prompt as rootPrompt,
 } from '../src';
 
 describe('公共组件导出', () => {

@@ -1,6 +1,6 @@
 <script setup>
 import {
-  computed, provide, ref,
+  computed, provide, ref, shallowRef,
 } from 'vue';
 import { getImperativeComponentOptions, getImperativeTheme } from '../../imperative-context';
 import MAT_UI_KEY from '../../mat-ui-context';
@@ -36,7 +36,7 @@ if (theme) {
 }
 
 const open = ref(true);
-const result = ref(props.cancelValue);
+const result = shallowRef(props.cancelValue);
 const inputValue = ref(props.options.promptConfig?.defaultValue ?? '');
 const isPrompt = computed(() => Boolean(props.options.promptConfig));
 const promptRequired = computed(() => props.options.promptConfig?.required ?? false);

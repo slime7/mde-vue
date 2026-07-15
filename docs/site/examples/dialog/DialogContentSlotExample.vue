@@ -1,0 +1,24 @@
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+
+<template>
+  <mat-btn variant="outlined" @click="open = true">
+    丰富正文
+  </mat-btn>
+
+  <mat-dialog v-model="open" title="本次更新包含">
+    <ul>
+      <li>新的 Dialog 组件</li>
+      <li>四个命令式函数</li>
+    </ul>
+
+    <template #actions>
+      <mat-btn variant="text" @click="open = false">
+        关闭
+      </mat-btn>
+    </template>
+  </mat-dialog>
+</template>

@@ -113,6 +113,25 @@ describe('MatDialog', () => {
     expect(element.getAttribute('aria-describedby')).toBe('dialog-description');
   });
 
+  it('attach 无效时警告并请求关闭', async () => {
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const wrapper = mount(MatDialog, {
+      props: {
+        modelValue: true,
+        attach: '#missing-dialog-target',
+        title: '无效目标',
+      },
+    });
+
+    await settleRender();
+
+    expect(document.body.querySelector('dialog')).toBeNull();
+    expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
+    expect(warning).toHaveBeenCalledWith(
+      'MatDialog: attach 必须指向当前 document 中存在的 HTMLElement',
+    );
+  });
+
   it('prop 内容优先于同名 Slot', async () => {
     mount(MatDialog, {
       props: {
@@ -184,6 +203,17 @@ describe('MatDialog', () => {
     expect(cancelEvent.defaultPrevented).toBe(true);
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
 
+    const escapeEvent = new KeyboardEvent('keydown', {
+      bubbles: true,
+      cancelable: true,
+      key: 'Escape',
+    });
+
+    element.dispatchEvent(escapeEvent);
+
+    expect(escapeEvent.defaultPrevented).toBe(true);
+    expect(wrapper.emitted('update:modelValue')).toHaveLength(2);
+
     element.getBoundingClientRect = () => ({
       bottom: 200,
       left: 100,
@@ -196,7 +226,7 @@ describe('MatDialog', () => {
       clientY: 0,
     }));
 
-    expect(wrapper.emitted('update:modelValue')).toHaveLength(1);
+    expect(wrapper.emitted('update:modelValue')).toHaveLength(2);
 
     await wrapper.setProps({ closeOnBack: true });
     element.dispatchEvent(new MouseEvent('click', {
@@ -205,17 +235,17 @@ describe('MatDialog', () => {
       clientY: 0,
     }));
 
-    expect(wrapper.emitted('update:modelValue')).toHaveLength(2);
+    expect(wrapper.emitted('update:modelValue')).toHaveLength(3);
   });
 
   it('scrim=false 保持透明帷幕，多 Dialog 只显示顶层帷幕', async () => {
-    mount(MatDialog, {
+    const first = mount(MatDialog, {
       props: {
         modelValue: true,
         title: '第一层',
       },
     });
-    mount(MatDialog, {
+    const second = mount(MatDialog, {
       props: {
         modelValue: true,
         scrim: false,
@@ -231,6 +261,43 @@ describe('MatDialog', () => {
     expect(elements[0].classList).not.toContain('mat-dialog--top');
     expect(elements[1].classList).toContain('mat-dialog--top');
     expect(elements[1].classList).toContain('mat-dialog--transparent-scrim');
+
+    await second.setProps({ modelValue: false });
+    await vi.advanceTimersByTimeAsync(200);
+
+    expect(document.body.querySelector('dialog')).toBe(elements[0]);
+    expect(elements[0].classList).toContain('mat-dialog--top');
+
+    await first.setProps({ modelValue: false });
+    await vi.advanceTimersByTimeAsync(200);
+  });
+
+  it('打开时聚焦首个操作，关闭完成后恢复原焦点', async () => {
+    const trigger = document.createElement('button');
+
+    trigger.textContent = '触发器';
+    document.body.append(trigger);
+    trigger.focus();
+
+    const wrapper = mount(MatDialog, {
+      props: {
+        modelValue: true,
+        title: '焦点测试',
+      },
+      slots: {
+        actions: '<button class="focus-action">确定</button>',
+      },
+    });
+
+    await settleRender();
+
+    expect(document.activeElement.classList).toContain('focus-action');
+
+    await wrapper.setProps({ modelValue: false });
+    await vi.advanceTimersByTimeAsync(200);
+    await nextTick();
+
+    expect(document.activeElement).toBe(trigger);
   });
 
   it('没有可访问名称时给出警告', async () => {

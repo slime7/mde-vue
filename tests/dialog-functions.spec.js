@@ -75,6 +75,25 @@ describe('Dialog 命令式函数', () => {
     await expect(result).resolves.toBe('continue');
   });
 
+  it('dialog 保留对象 value 的身份且不把额外选项传给原生元素', async () => {
+    const value = { id: 1 };
+    const result = dialog({
+      title: '对象结果',
+      confirmText: '不应透传',
+      actions: [{ text: '选择', value }],
+    });
+
+    await settleRender();
+
+    const element = document.body.querySelector('dialog');
+
+    expect(element.hasAttribute('confirmtext')).toBe(false);
+    element.querySelector('button').click();
+    await closeAnimation();
+
+    await expect(result).resolves.toBe(value);
+  });
+
   it('alert 在任意关闭方式完成后返回 undefined', async () => {
     const result = alert({
       title: '警告',

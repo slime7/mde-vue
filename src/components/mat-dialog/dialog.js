@@ -136,11 +136,22 @@ function normalizeOptions(options) {
     throw new TypeError('dialog actions 必须是数组');
   }
 
-  return {
-    ...options,
+  const normalized = {
     actions: (options.actions ?? [{ text: '确定', value: undefined }]).map(normalizeAction),
     attach: resolveAttach(options.attach),
   };
+
+  [...BOOLEAN_OPTIONS, ...STRING_OPTIONS, 'color'].forEach((name) => {
+    if (options[name] !== undefined) {
+      normalized[name] = options[name];
+    }
+  });
+
+  if (options.promptConfig) {
+    normalized.promptConfig = options.promptConfig;
+  }
+
+  return normalized;
 }
 
 /**

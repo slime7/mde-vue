@@ -6,11 +6,14 @@ export const dialogStack = shallowRef([]);
  * @param {HTMLDialogElement} element
  */
 export function registerDialog(element) {
-  if (dialogStack.value.includes(element)) {
+  const connectedDialogs = dialogStack.value.filter((item) => item.isConnected);
+
+  if (connectedDialogs.includes(element)) {
+    dialogStack.value = connectedDialogs;
     return;
   }
 
-  dialogStack.value = [...dialogStack.value, element];
+  dialogStack.value = [...connectedDialogs, element];
 }
 
 /**

@@ -259,6 +259,18 @@ function handleCancel(event) {
 }
 
 /**
+ * @param {KeyboardEvent} event
+ */
+function handleKeyDown(event) {
+  if (event.key !== 'Escape') {
+    return;
+  }
+
+  event.preventDefault();
+  requestClose();
+}
+
+/**
  * @param {MouseEvent} event
  */
 function handleDialogClick(event) {
@@ -340,6 +352,7 @@ watchEffect(() => {
       tabindex="-1"
       @cancel="handleCancel"
       @click="handleDialogClick"
+      @keydown="handleKeyDown"
     >
       <template v-if="fullScreen">
         <header class="mat-dialog__header">
