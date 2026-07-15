@@ -16,6 +16,7 @@ export { default as MatSwitch } from './components/mat-switch/MatSwitch.vue';
 export { default as MatTextField } from './components/mat-text-field/MatTextField.vue';
 export { default as MatTextarea } from './components/mat-textarea/MatTextarea.vue';
 export { default as MatMenu } from './components/mat-menu/MatMenu.vue';
+export { default as MatMenuGroup } from './components/mat-menu-group/MatMenuGroup.vue';
 export { default as MatMenuItem } from './components/mat-menu/MatMenuItem.vue';
 export { default as MatDialog } from './components/mat-dialog/MatDialog.vue';
 export { default as MatSpacer } from './components/mat-spacer/MatSpacer.vue';

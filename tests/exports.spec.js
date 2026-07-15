@@ -17,6 +17,7 @@ import MatSwitch, { MatSwitch as NamedMatSwitch } from 'mdu-ui/components/mat-sw
 import MatTextField, { MatTextField as NamedMatTextField } from 'mdu-ui/components/mat-text-field';
 import MatTextarea, { MatTextarea as NamedMatTextarea } from 'mdu-ui/components/mat-textarea';
 import MatMenu, { MatMenu as NamedMatMenu } from 'mdu-ui/components/mat-menu';
+import MatMenuGroup, { MatMenuGroup as NamedMatMenuGroup } from 'mdu-ui/components/mat-menu-group';
 import MatMenuItem, { MatMenuItem as NamedMatMenuItem } from 'mdu-ui/components/mat-menu-item';
 import MatDialog, { MatDialog as NamedMatDialog } from 'mdu-ui/components/mat-dialog';
 import MatSpacer, { MatSpacer as NamedMatSpacer } from 'mdu-ui/components/mat-spacer';
@@ -36,6 +37,7 @@ import {
   MatList as RootMatList,
   MatListItem as RootMatListItem,
   MatMenu as RootMatMenu,
+  MatMenuGroup as RootMatMenuGroup,
   MatMenuItem as RootMatMenuItem,
   MatRadio as RootMatRadio,
   MatRadioGroup as RootMatRadioGroup,
@@ -63,6 +65,7 @@ describe('公共组件导出', () => {
     ['MatTextField', RootMatTextField, NamedMatTextField, MatTextField],
     ['MatTextarea', RootMatTextarea, NamedMatTextarea, MatTextarea],
     ['MatMenu', RootMatMenu, NamedMatMenu, MatMenu],
+    ['MatMenuGroup', RootMatMenuGroup, NamedMatMenuGroup, MatMenuGroup],
     ['MatMenuItem', RootMatMenuItem, NamedMatMenuItem, MatMenuItem],
     ['MatDialog', RootMatDialog, NamedMatDialog, MatDialog],
     ['MatSpacer', RootMatSpacer, NamedMatSpacer, MatSpacer],
@@ -92,6 +95,7 @@ describe('公共组件导出', () => {
     expect(app.component('mat-text-field')).toBe(RootMatTextField);
     expect(app.component('mat-textarea')).toBe(RootMatTextarea);
     expect(app.component('mat-menu')).toBe(RootMatMenu);
+    expect(app.component('mat-menu-group')).toBe(RootMatMenuGroup);
     expect(app.component('mat-menu-item')).toBe(RootMatMenuItem);
     expect(app.component('mat-dialog')).toBe(RootMatDialog);
     expect(app.component('mat-spacer')).toBe(RootMatSpacer);

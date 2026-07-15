@@ -18,8 +18,10 @@ describe('新增组件现代 CSS', () => {
     expect(source).toContain('--mat-text-input-container-height: 56px');
     expect(source).toContain('--mat-menu-container-min-width: 112px');
     expect(source).toContain('--mat-menu-container-max-width: 280px');
-    expect(source).toContain('--mat-menu-item-visual-height: 44px');
-    expect(source).toContain('--mat-menu-item-target-height: 48px');
+    expect(source).toContain('--mat-menu-container-padding: 4px');
+    expect(source).toContain('--mat-menu-item-height: 48px');
+    expect(source).toContain('--mat-menu-group-space: 2px');
+    expect(source).toContain('--mat-menu-group-label-height: 32px');
   });
 
   it('文本输入使用透明 outline 缺口、单层聚焦描边和原生 textarea 行高', () => {
@@ -87,7 +89,8 @@ describe('新增组件现代 CSS', () => {
 
     expect(source).toContain('position-area:');
     expect(source).toContain('position-try-fallbacks:');
-    expect(source).toContain('translate: var(--mat-menu-viewport-shift-x');
+    expect(source).toContain('var(--mat-menu-offset-x, 0px)');
+    expect(source).toContain('var(--mat-menu-viewport-shift-x, 0px)');
     expect(source).toContain('<div class="mat-menu__surface">');
     const rootStyles = source.match(/\.mat-menu \{(?<body>[\s\S]*?)\n\}/)?.groups?.body;
     const surfaceStyles = source.match(/\.mat-menu__surface \{(?<body>[\s\S]*?)\n\}/)?.groups?.body;
@@ -99,5 +102,21 @@ describe('新增组件现代 CSS', () => {
     expect(source).toContain('clip-path: inset(');
     expect(source).toContain('@supports (border-shape:');
     expect(source).toContain('prefers-reduced-motion: reduce');
+  });
+
+  it('菜单项目和分组使用 expressive 测量值', () => {
+    const itemSource = readFileSync('src/components/mat-menu/MatMenuItem.vue', 'utf8');
+    const groupSource = readFileSync('src/components/mat-menu-group/MatMenuGroup.vue', 'utf8');
+
+    expect(itemSource).toContain('--mat-item-content-gap: 8px');
+    expect(itemSource).toContain('--mat-item-leading-space: 8px');
+    expect(itemSource).toContain('--mat-item-trailing-space: 8px');
+    expect(itemSource).toContain('--mat-item-icon-size: 20px');
+    expect(itemSource).toContain('min-block-size: var(--mat-menu-item-height)');
+    expect(itemSource).not.toContain('.mat-menu-item::after');
+    expect(itemSource).toContain('border-radius: var(--mat-sys-shape-corner-medium)');
+    expect(groupSource).toContain('padding: var(--mat-menu-container-padding)');
+    expect(groupSource).toContain('min-block-size: var(--mat-menu-group-label-height)');
+    expect(groupSource).toContain('box-shadow: var(--mat-sys-elevation-level2)');
   });
 });

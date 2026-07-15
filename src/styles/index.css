@@ -319,11 +319,12 @@
   /* Menu component tokens */
   --mat-menu-container-min-width: 112px;
   --mat-menu-container-max-width: 280px;
-  --mat-menu-container-padding: 8px;
+  --mat-menu-container-padding: 4px;
   --mat-menu-viewport-space: 8px;
   --mat-menu-anchor-space: 4px;
-  --mat-menu-item-visual-height: 44px;
-  --mat-menu-item-target-height: 48px;
+  --mat-menu-item-height: 48px;
+  --mat-menu-group-space: 2px;
+  --mat-menu-group-label-height: 32px;
 
   /* List and divider component tokens */
   --mat-list-container-shape: var(--mat-sys-shape-corner-large);

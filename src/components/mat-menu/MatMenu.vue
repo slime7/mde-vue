@@ -14,13 +14,30 @@ defineOptions({
 });
 
 const props = defineProps({
-  open: {
+  modelValue: {
     type: Boolean,
     default: false,
   },
   anchor: {
-    type: String,
+    type: [String, Array],
     default: undefined,
+    validator(value) {
+      return value === undefined
+        || typeof value === 'string'
+        || (
+          Array.isArray(value)
+          && value.length === 2
+          && value.every((coordinate) => Number.isFinite(coordinate))
+        );
+    },
+  },
+  offset: {
+    type: Array,
+    default: () => [0, 0],
+    validator(value) {
+      return value.length === 2
+        && value.every((coordinate) => Number.isFinite(coordinate));
+    },
   },
   variant: {
     type: String,
@@ -36,7 +53,7 @@ const props = defineProps({
   },
 });
 const emit = defineEmits({
-  'update:open': (payload) => typeof payload === 'boolean',
+  'update:modelValue': (payload) => typeof payload === 'boolean',
 });
 const attrs = useAttrs();
 const itemParent = inject(MAT_MENU_ITEM_KEY, null);
@@ -47,6 +64,7 @@ const generatedId = useId().replace(/[^\w-]/g, '-');
 const menuId = computed(() => attrs.id ?? `${generatedId}-menu`);
 const anchorName = `--mat-menu-anchor-${generatedId}`;
 const nestedOpen = ref(false);
+const groupCount = ref(0);
 const itemApis = new Map();
 let attachedAnchor = null;
 let previousAnchorName = '';
@@ -54,10 +72,15 @@ let popoverShown = false;
 let programmaticClose = false;
 let viewportFrame;
 let sizeObserver;
+let returnFocusElement = null;
 
 const isNested = computed(() => Boolean(itemParent));
+const isCoordinateAnchor = computed(() => (
+  !isNested.value && Array.isArray(props.anchor)
+));
+const isGrouped = computed(() => groupCount.value > 0);
 const effectiveOpen = computed(() => (
-  isNested.value ? nestedOpen.value : props.open
+  isNested.value ? nestedOpen.value : props.modelValue
 ));
 const effectiveVariant = computed(() => (
   props.variant ?? parentMenu?.variant.value ?? 'standard'
@@ -66,9 +89,24 @@ const effectiveColor = computed(() => (
   props.color ?? parentMenu?.color.value
 ));
 const { colorStyle } = useComponentColor(effectiveColor);
+const positionStyle = computed(() => {
+  const [offsetX, offsetY] = isCoordinatePair(props.offset) ? props.offset : [0, 0];
+  const style = {
+    '--mat-menu-offset-x': `${offsetX}px`,
+    '--mat-menu-offset-y': `${offsetY}px`,
+    positionAnchor: isCoordinateAnchor.value ? 'auto' : anchorName,
+  };
+
+  if (isCoordinateAnchor.value && isCoordinatePair(props.anchor)) {
+    style.left = `${props.anchor[0]}px`;
+    style.top = `${props.anchor[1]}px`;
+  }
+
+  return style;
+});
 const rootStyle = computed(() => [
   colorStyle.value,
-  { positionAnchor: anchorName },
+  positionStyle.value,
   attrs.style,
 ]);
 const roving = useRovingFocus({
@@ -82,6 +120,16 @@ const roving = useRovingFocus({
 });
 
 /**
+ * @param {unknown} value
+ * @returns {value is [number, number]}
+ */
+function isCoordinatePair(value) {
+  return Array.isArray(value)
+    && value.length === 2
+    && value.every((coordinate) => Number.isFinite(coordinate));
+}
+
+/**
  * @returns {HTMLElement | null}
  */
 function resolveAnchor() {
@@ -89,7 +137,7 @@ function resolveAnchor() {
     return itemParent.element.value;
   }
 
-  if (!props.anchor) {
+  if (!props.anchor || typeof props.anchor !== 'string') {
     return null;
   }
 
@@ -197,17 +245,22 @@ function scheduleViewportClamp() {
 
 async function showPopover() {
   await nextTick();
-  const anchorElement = attachAnchor();
+  const anchorElement = isCoordinateAnchor.value ? null : attachAnchor();
+  const hasAnchor = isCoordinateAnchor.value || Boolean(anchorElement);
 
-  if (!root.value || !anchorElement) {
+  if (!root.value || !hasAnchor) {
     if (!isNested.value) {
-      console.warn('MatMenu: open 为 true 时必须能通过 anchor 找到触发元素');
-      emit('update:open', false);
+      console.warn('MatMenu: modelValue 为 true 时必须通过 anchor 提供元素 id 或视口坐标');
+      emit('update:modelValue', false);
     }
     return;
   }
 
   if (!popoverShown) {
+    if (isCoordinateAnchor.value && document.activeElement instanceof HTMLElement) {
+      returnFocusElement = document.activeElement;
+    }
+
     popoverShown = true;
     root.value.showPopover?.();
   }
@@ -222,7 +275,10 @@ async function showPopover() {
 }
 
 function focusAnchor() {
-  nextTick(() => resolveAnchor()?.focus());
+  const focusTarget = resolveAnchor() ?? returnFocusElement;
+
+  returnFocusElement = null;
+  nextTick(() => focusTarget?.focus());
 }
 
 function closeDescendants() {
@@ -236,7 +292,7 @@ function closeSelf({ focus = true } = {}) {
     nestedOpen.value = false;
     itemParent.submenuOpen.value = false;
   } else {
-    emit('update:open', false);
+    emit('update:modelValue', false);
   }
 
   hidePopover();
@@ -270,6 +326,16 @@ function registerItem(api) {
  */
 function unregisterItem(api) {
   itemApis.delete(api.element);
+  roving.queueRefresh();
+}
+
+function registerGroup() {
+  groupCount.value += 1;
+  roving.queueRefresh();
+}
+
+function unregisterGroup() {
+  groupCount.value = Math.max(0, groupCount.value - 1);
   roving.queueRefresh();
 }
 
@@ -335,7 +401,7 @@ function handleToggle(event) {
   }
 
   if (!isNested.value) {
-    emit('update:open', false);
+    emit('update:modelValue', false);
   }
 
   focusAnchor();
@@ -346,7 +412,9 @@ provide(MAT_MENU_KEY, {
   closeTree,
   color: effectiveColor,
   registerItem,
+  registerGroup,
   unregisterItem,
+  unregisterGroup,
   variant: effectiveVariant,
 });
 
@@ -396,7 +464,13 @@ watch(() => props.anchor, async () => {
   if (effectiveOpen.value) {
     await showPopover();
   }
-});
+}, { deep: true });
+watch(() => props.offset, async () => {
+  if (effectiveOpen.value) {
+    await nextTick();
+    scheduleViewportClamp();
+  }
+}, { deep: true });
 </script>
 
 <template>
@@ -407,7 +481,11 @@ watch(() => props.anchor, async () => {
     class="mat-menu"
     :class="[
       `mat-menu--${effectiveVariant}`,
-      { 'mat-menu--nested': isNested },
+      {
+        'mat-menu--coordinate': isCoordinateAnchor,
+        'mat-menu--grouped': isGrouped,
+        'mat-menu--nested': isNested,
+      },
     ]"
     :style="rootStyle"
     popover="auto"
@@ -451,7 +529,8 @@ watch(() => props.anchor, async () => {
   border-radius: var(--mat-sys-shape-corner-large);
   box-shadow: var(--mat-sys-elevation-level2);
   opacity: 1;
-  translate: var(--mat-menu-viewport-shift-x, 0) var(--mat-menu-viewport-shift-y, 0);
+  translate: calc(var(--mat-menu-offset-x, 0px) + var(--mat-menu-viewport-shift-x, 0px))
+    calc(var(--mat-menu-offset-y, 0px) + var(--mat-menu-viewport-shift-y, 0px));
   transform: scale(1);
   transform-origin: top left;
   transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), transform var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized-decelerate);
@@ -468,6 +547,24 @@ watch(() => props.anchor, async () => {
   border-radius: inherit;
   clip-path: inset(0 round var(--mat-sys-shape-corner-large));
   transition: clip-path var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized-decelerate);
+}
+
+.mat-menu--coordinate {
+  position-area: none;
+  position-try-fallbacks: none;
+  margin: 0;
+}
+
+.mat-menu--grouped {
+  box-shadow: none;
+}
+
+.mat-menu--grouped .mat-menu__surface {
+  display: grid;
+  gap: var(--mat-menu-group-space);
+  padding: 0;
+  background: transparent;
+  clip-path: none;
 }
 
 .mat-menu--nested {
@@ -491,7 +588,7 @@ watch(() => props.anchor, async () => {
     transform: scale(.96);
   }
 
-  .mat-menu:popover-open .mat-menu__surface {
+  .mat-menu:not(.mat-menu--grouped):popover-open .mat-menu__surface {
     clip-path: inset(46% 8% round var(--mat-sys-shape-corner-extra-large));
   }
 }

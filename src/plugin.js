@@ -17,6 +17,7 @@ import MatSwitch from './components/mat-switch/MatSwitch.vue';
 import MatTextField from './components/mat-text-field/MatTextField.vue';
 import MatTextarea from './components/mat-textarea/MatTextarea.vue';
 import MatMenu from './components/mat-menu/MatMenu.vue';
+import MatMenuGroup from './components/mat-menu-group/MatMenuGroup.vue';
 import MatMenuItem from './components/mat-menu/MatMenuItem.vue';
 import MatDialog from './components/mat-dialog/MatDialog.vue';
 import MatSpacer from './components/mat-spacer/MatSpacer.vue';
@@ -120,6 +121,8 @@ export function createMatUi(options = {}) {
       app.component('mat-textarea', MatTextarea);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-menu', MatMenu);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-menu-group', MatMenuGroup);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-menu-item', MatMenuItem);
       // eslint-disable-next-line vue/component-definition-name-casing
