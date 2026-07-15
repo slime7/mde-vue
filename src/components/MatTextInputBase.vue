@@ -2,7 +2,7 @@
 import {
   computed, ref, useAttrs, useId,
 } from 'vue';
-import MatIconBase from './MatIconBase.vue';
+import MatIcon from './mat-icon/MatIcon.vue';
 import useComponentColor from './use-component-color';
 
 defineOptions({
@@ -139,12 +139,15 @@ function handleInput(event) {
     :aria-hidden="$attrs['aria-hidden']"
   >
     <span class="mat-text-input__container">
-      <MatIconBase
+      <MatIcon
         v-if="$slots.leading"
+        as="span"
         class="mat-text-input__icon mat-text-input__leading"
+        :optical-size="24"
+        size="24px"
       >
         <slot name="leading" />
-      </MatIconBase>
+      </MatIcon>
 
       <span class="mat-text-input__main">
         <span v-if="label" class="mat-text-input__label">
@@ -180,12 +183,15 @@ function handleInput(event) {
         </span>
       </span>
 
-      <MatIconBase
+      <MatIcon
         v-if="$slots.trailing"
+        as="span"
         class="mat-text-input__icon mat-text-input__trailing"
+        :optical-size="24"
+        size="24px"
       >
         <slot name="trailing" />
-      </MatIconBase>
+      </MatIcon>
     </span>
 
     <span v-if="hasSupporting" :id="supportingId" class="mat-text-input__supporting">

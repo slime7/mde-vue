@@ -138,6 +138,21 @@ describe('MatBtn', () => {
     expect(wrapper.text()).toContain('已收藏');
   });
 
+  it('没有 selected-icon Slot 时通过 fill 轴展示选中图标', () => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        selected: true,
+        toggle: true,
+      },
+      slots: {
+        default: '收藏',
+        icon: 'favorite',
+      },
+    });
+
+    expect(wrapper.get('.mat-btn__icon').attributes('style')).toContain("'FILL' 1");
+  });
+
   it('语义 color 映射项目令牌，自定义种子色生成局部亮暗配色', () => {
     const semantic = mount(MatBtn, {
       props: {

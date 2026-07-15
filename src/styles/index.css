@@ -630,20 +630,6 @@
   --mat-split-btn-outlined-outline-color: var(--mat-btn-outlined-outline-color);
 }
 
-.mat-icon--material-symbols {
-  overflow-wrap: normal;
-  font-family: var(--mat-ref-typeface-icon);
-  font-weight: var(--mat-ref-typeface-weight-regular);
-  font-style: normal;
-  letter-spacing: normal;
-  white-space: nowrap;
-  direction: ltr;
-  text-transform: none;
-  font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizelegibility;
-}
-
 @media (prefers-color-scheme: dark) {
   :root:not([data-mat-theme]) {
     color-scheme: dark;

@@ -164,15 +164,15 @@ describe('主题控制器', () => {
     expect(() => createMatUi({ theme: { contrastLevel: Number.NaN, target } })).toThrow(RangeError);
   });
 
-  it('拒绝非 boolean 的组件选项', () => {
+  it('拒绝类型错误的组件选项', () => {
     expect(() => createMatUi({ useCursor: 'pointer' })).toThrow(TypeError);
-    expect(() => createMatUi({ useMaterialSymbols: 1 })).toThrow(TypeError);
+    expect(() => createMatUi({ iconClass: 1 })).toThrow(TypeError);
   });
 
-  it('按插件选项启用手指指针和 Material Symbols 图标', () => {
+  it('按插件选项启用手指指针和自定义图标 class', () => {
     const plugin = createMatUi({
+      iconClass: 'custom-symbols',
       useCursor: true,
-      useMaterialSymbols: true,
       theme: {
         target: document.createElement('div'),
       },
@@ -199,10 +199,10 @@ describe('主题控制器', () => {
 
     expect(button.classes()).toContain('mat-button-base--use-cursor');
     expect(button.find('.mat-btn__icon').classes()).toContain('mat-icon');
-    expect(button.find('.mat-btn__icon').classes()).toContain('mat-icon--material-symbols');
+    expect(button.find('.mat-btn__icon').classes()).toContain('custom-symbols');
     expect(iconButton.classes()).toContain('mat-button-base--use-cursor');
     expect(iconButton.find('.mat-icon-btn__icon').classes()).toContain('mat-icon');
-    expect(iconButton.find('.mat-icon-btn__icon').classes()).toContain('mat-icon--material-symbols');
+    expect(iconButton.find('.mat-icon-btn__icon').classes()).toContain('custom-symbols');
     plugin.theme.dispose();
   });
 

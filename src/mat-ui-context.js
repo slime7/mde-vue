@@ -1,6 +1,6 @@
 export const DEFAULT_MAT_UI_OPTIONS = Object.freeze({
+  iconClass: 'material-symbols-outlined',
   useCursor: false,
-  useMaterialSymbols: false,
 });
 
 const MAT_UI_KEY = Symbol('mdu-ui-options');

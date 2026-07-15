@@ -306,13 +306,13 @@ describe('MatMenu', () => {
     expect(divider.attributes('role')).toBe('separator');
   });
 
-  it('插件启用 Material Symbols 时只用独立图标元素承载 leading Slot', () => {
+  it('只用统一 MatIcon 承载 leading Slot', () => {
     const wrapper = mount(MatMenuItem, {
       global: {
         provide: {
           [MAT_UI_KEY]: {
+            iconClass: 'material-symbols-outlined',
             useCursor: false,
-            useMaterialSymbols: true,
           },
         },
       },
@@ -327,7 +327,7 @@ describe('MatMenu', () => {
     const trailing = wrapper.get('[data-mat-item-content-trailing]');
 
     expect(icon.element.tagName).toBe('SPAN');
-    expect(icon.classes()).toContain('mat-icon--material-symbols');
+    expect(icon.classes()).toContain('material-symbols-outlined');
     expect(icon.text()).toBe('note_add');
     expect(trailing.find('.mat-icon').exists()).toBe(false);
   });
@@ -337,8 +337,8 @@ describe('MatMenu', () => {
       global: {
         provide: {
           [MAT_UI_KEY]: {
+            iconClass: 'material-symbols-outlined',
             useCursor: false,
-            useMaterialSymbols: true,
           },
         },
       },
@@ -351,7 +351,8 @@ describe('MatMenu', () => {
 
     expect(icon.element.tagName).toBe('SPAN');
     expect(icon.classes()).toContain('mat-icon');
-    expect(icon.classes()).toContain('mat-icon--material-symbols');
+    expect(icon.classes()).toContain('material-symbols-outlined');
     expect(icon.text()).toBe('chevron_right');
+    expect(icon.attributes('style')).toContain('--mat-icon-size: 20px');
   });
 });

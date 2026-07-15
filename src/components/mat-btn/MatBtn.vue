@@ -3,7 +3,7 @@ import {
   computed, useSlots, watchEffect,
 } from 'vue';
 import MatButtonBase from '../MatButtonBase.vue';
-import MatIconBase from '../MatIconBase.vue';
+import MatIcon from '../mat-icon/MatIcon.vue';
 import {
   BUTTON_SHAPES,
   BUTTON_SIZES,
@@ -92,6 +92,13 @@ const isToggle = computed(() => effectiveToggle.value && effectiveVariant.value 
 const isSelected = computed(() => isToggle.value && effectiveSelected.value);
 const hasIcon = computed(() => Boolean(slots.icon || (isSelected.value && slots['selected-icon'])));
 const hasSelectedLabel = computed(() => isSelected.value && Boolean(slots.selected));
+const iconOpticalSize = computed(() => ({
+  'extra-small': 20,
+  small: 20,
+  medium: 24,
+  large: 32,
+  'extra-large': 40,
+})[effectiveSize.value]);
 
 watchEffect(() => {
   if (props.toggle && props.variant === 'text') {
@@ -122,17 +129,18 @@ watchEffect(() => {
     :use-cursor="useCursor"
     @click="handleClick"
   >
-    <MatIconBase
+    <MatIcon
       v-if="hasIcon"
+      as="span"
       class="mat-btn__icon"
-      :class="{
-        'mat-btn__icon--selected-fallback': isSelected && !slots['selected-icon'],
-      }"
+      :fill="isSelected && !slots['selected-icon'] ? 1 : 0"
+      :optical-size="iconOpticalSize"
+      size="var(--mat-btn-icon-size)"
       aria-hidden="true"
     >
       <slot v-if="isSelected && slots['selected-icon']" name="selected-icon" />
       <slot v-else name="icon" />
-    </MatIconBase>
+    </MatIcon>
 
     <span class="mat-btn__label">
       <slot v-if="hasSelectedLabel" name="selected" />
@@ -390,16 +398,6 @@ watchEffect(() => {
   color: var(--mat-btn-icon-color);
   font-size: var(--mat-btn-icon-size);
   line-height: 1;
-}
-
-.mat-btn__icon--selected-fallback {
-  font-variation-settings: 'FILL' 1;
-  font-weight: 600;
-}
-
-.mat-btn__icon :deep(svg) {
-  inline-size: 100%;
-  block-size: 100%;
 }
 
 .mat-btn__label {

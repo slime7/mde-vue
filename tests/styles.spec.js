@@ -79,8 +79,6 @@ describe('公共样式令牌', () => {
 
     expect(styles).toContain('--mat-sys-typescale-display-large-size: 3.5625rem;');
     expect(styles).toContain('--mat-sys-typescale-emphasized-title-medium-weight: var(--mat-ref-typeface-weight-bold);');
-    expect(styles).toContain('.mat-icon--material-symbols {');
-    expect(styles).toContain('font-feature-settings: \'liga\';');
   });
 
   it('声明完整形状、海拔、动效和状态值', () => {

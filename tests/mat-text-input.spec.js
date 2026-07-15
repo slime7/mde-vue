@@ -138,13 +138,13 @@ describe('文本输入组件', () => {
     expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['更新后的说明']);
   });
 
-  it('插件启用 Material Symbols 时用独立图标元素承载前后图标 Slot', () => {
+  it('用统一 MatIcon 承载前后图标 Slot', () => {
     const wrapper = mount(MatTextField, {
       global: {
         provide: {
           [MAT_UI_KEY]: {
+            iconClass: 'material-symbols-outlined',
             useCursor: false,
-            useMaterialSymbols: true,
           },
         },
       },
@@ -163,9 +163,11 @@ describe('文本输入组件', () => {
 
     expect(leading.element.tagName).toBe('SPAN');
     expect(leading.classes()).toContain('mat-icon');
-    expect(leading.classes()).toContain('mat-icon--material-symbols');
+    expect(leading.classes()).toContain('material-symbols-outlined');
     expect(trailing.element.tagName).toBe('SPAN');
     expect(trailing.classes()).toContain('mat-icon');
-    expect(trailing.classes()).toContain('mat-icon--material-symbols');
+    expect(trailing.classes()).toContain('material-symbols-outlined');
+    expect(leading.attributes('style')).toContain('--mat-icon-size: 24px');
+    expect(trailing.attributes('style')).toContain('--mat-icon-size: 24px');
   });
 });

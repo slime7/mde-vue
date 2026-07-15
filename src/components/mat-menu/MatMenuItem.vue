@@ -4,8 +4,8 @@ import {
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatActionBase from '../MatActionBase.vue';
-import MatIconBase from '../MatIconBase.vue';
 import MatItemContentBase from '../MatItemContentBase.vue';
+import MatIcon from '../mat-icon/MatIcon.vue';
 import { MAT_MENU_ITEM_KEY, MAT_MENU_KEY } from '../menu-context';
 
 defineOptions({
@@ -142,13 +142,15 @@ onBeforeUnmount(() => menu?.unregisterItem(itemApi));
 
         <template #trailing>
           <slot v-if="$slots.trailing" name="trailing" />
-          <MatIconBase
+          <MatIcon
             v-else-if="hasSubmenu"
+            as="span"
             class="mat-menu-item__submenu-icon"
+            icon="chevron_right"
+            :optical-size="20"
+            size="small"
             aria-hidden="true"
-          >
-            chevron_right
-          </MatIconBase>
+          />
         </template>
       </MatItemContentBase>
     </MatActionBase>

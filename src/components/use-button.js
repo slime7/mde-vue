@@ -67,6 +67,5 @@ export default function useButton(props, emit) {
     hasExplicitColor,
     split,
     useCursor: matUi.useCursor,
-    useMaterialSymbols: matUi.useMaterialSymbols,
   };
 }

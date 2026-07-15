@@ -5,6 +5,7 @@ import MatCard, { MatCard as NamedMatCard } from 'mdu-ui/components/mat-card';
 import MatBtn, { MatBtn as NamedMatBtn } from 'mdu-ui/components/mat-btn';
 import MatBtnGroup, { MatBtnGroup as NamedMatBtnGroup } from 'mdu-ui/components/mat-btn-group';
 import MatIconBtn, { MatIconBtn as NamedMatIconBtn } from 'mdu-ui/components/mat-icon-btn';
+import MatIcon, { MatIcon as NamedMatIcon } from 'mdu-ui/components/mat-icon';
 import MatSplitBtn, { MatSplitBtn as NamedMatSplitBtn } from 'mdu-ui/components/mat-split-btn';
 import MatList, { MatList as NamedMatList } from 'mdu-ui/components/mat-list';
 import MatListItem, { MatListItem as NamedMatListItem } from 'mdu-ui/components/mat-list-item';
@@ -25,6 +26,7 @@ import {
   MatCard as RootMatCard,
   MatCheckbox as RootMatCheckbox,
   MatDivider as RootMatDivider,
+  MatIcon as RootMatIcon,
   MatIconBtn as RootMatIconBtn,
   MatList as RootMatList,
   MatListItem as RootMatListItem,
@@ -44,6 +46,7 @@ describe('公共组件导出', () => {
     ['MatBtn', RootMatBtn, NamedMatBtn, MatBtn],
     ['MatBtnGroup', RootMatBtnGroup, NamedMatBtnGroup, MatBtnGroup],
     ['MatIconBtn', RootMatIconBtn, NamedMatIconBtn, MatIconBtn],
+    ['MatIcon', RootMatIcon, NamedMatIcon, MatIcon],
     ['MatSplitBtn', RootMatSplitBtn, NamedMatSplitBtn, MatSplitBtn],
     ['MatList', RootMatList, NamedMatList, MatList],
     ['MatListItem', RootMatListItem, NamedMatListItem, MatListItem],
@@ -83,6 +86,7 @@ describe('公共组件导出', () => {
     expect(app.component('mat-textarea')).toBe(RootMatTextarea);
     expect(app.component('mat-menu')).toBe(RootMatMenu);
     expect(app.component('mat-menu-item')).toBe(RootMatMenuItem);
+    expect(app.component('mat-icon')).toBe(RootMatIcon);
 
     plugin.theme.dispose();
   });

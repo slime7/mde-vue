@@ -2,6 +2,7 @@ import { inject } from 'vue';
 import MatBtn from './components/mat-btn/MatBtn.vue';
 import MatBtnGroup from './components/mat-btn-group/MatBtnGroup.vue';
 import MatIconBtn from './components/mat-icon-btn/MatIconBtn.vue';
+import MatIcon from './components/mat-icon/MatIcon.vue';
 import MatSplitBtn from './components/mat-split-btn/MatSplitBtn.vue';
 import MatCard from './components/mat-card/MatCard.vue';
 import MatCardActionArea from './components/mat-card/MatCardActionArea.vue';
@@ -18,20 +19,20 @@ import MatTextField from './components/mat-text-field/MatTextField.vue';
 import MatTextarea from './components/mat-textarea/MatTextarea.vue';
 import MatMenu from './components/mat-menu/MatMenu.vue';
 import MatMenuItem from './components/mat-menu/MatMenuItem.vue';
-import MAT_UI_KEY from './mat-ui-context';
+import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from './mat-ui-context';
 import createThemeController from './theme';
 import MAT_THEME_KEY from './theme-context';
 
 /**
  * @typedef {object} MatUiOptions
  * @property {import('./theme.js').MatThemeOptions} [theme]
+ * @property {string} [iconClass='material-symbols-outlined']
  * @property {boolean} [useCursor=false]
- * @property {boolean} [useMaterialSymbols=false]
  */
 
 /**
  * @param {MatUiOptions} options
- * @param {'useCursor' | 'useMaterialSymbols'} name
+ * @param {'useCursor'} name
  * @returns {boolean}
  */
 function readBooleanOption(options, name) {
@@ -42,6 +43,20 @@ function readBooleanOption(options, name) {
   }
 
   return value ?? false;
+}
+
+/**
+ * @param {MatUiOptions} options
+ * @returns {string}
+ */
+function readIconClass(options) {
+  const value = options.iconClass;
+
+  if (value !== undefined && typeof value !== 'string') {
+    throw new TypeError('createMatUi iconClass 必须是 string');
+  }
+
+  return value ?? DEFAULT_MAT_UI_OPTIONS.iconClass;
 }
 
 /**
@@ -58,8 +73,8 @@ export function createMatUi(options = {}) {
   }
 
   const componentOptions = Object.freeze({
+    iconClass: readIconClass(options),
     useCursor: readBooleanOption(options, 'useCursor'),
-    useMaterialSymbols: readBooleanOption(options, 'useMaterialSymbols'),
   });
   const theme = createThemeController(options.theme);
 
@@ -73,6 +88,8 @@ export function createMatUi(options = {}) {
       app.component('mat-btn-group', MatBtnGroup);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-icon-btn', MatIconBtn);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-icon', MatIcon);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-split-btn', MatSplitBtn);
       // eslint-disable-next-line vue/component-definition-name-casing

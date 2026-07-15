@@ -17,7 +17,7 @@ describe('MatIconBtn', () => {
     expect(wrapper.attributes('aria-label')).toBe('收藏');
     expect(wrapper.attributes('title')).toBe('收藏');
     expect(wrapper.text()).toBe('☆');
-    expect(wrapper.find('.mat-icon-btn__icon').classes()).not.toContain('mat-icon--material-symbols');
+    expect(wrapper.find('.mat-icon-btn__icon').classes()).toContain('material-symbols-outlined');
   });
 
   it('显式 title 优先于 label', () => {
@@ -67,5 +67,20 @@ describe('MatIconBtn', () => {
     expect(wrapper.classes()).toContain('mat-icon-btn--selected');
     expect(wrapper.attributes('aria-pressed')).toBe('true');
     expect(wrapper.text()).toBe('★');
+  });
+
+  it('没有 selected Slot 时通过 fill 轴展示选中状态', () => {
+    const wrapper = mount(MatIconBtn, {
+      props: {
+        label: '收藏',
+        selected: true,
+        toggle: true,
+      },
+      slots: {
+        default: 'favorite',
+      },
+    });
+
+    expect(wrapper.get('.mat-icon-btn__icon').attributes('style')).toContain("'FILL' 1");
   });
 });

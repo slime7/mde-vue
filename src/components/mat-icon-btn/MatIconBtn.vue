@@ -1,7 +1,7 @@
 <script setup>
 import { computed, useAttrs, useSlots } from 'vue';
 import MatButtonBase from '../MatButtonBase.vue';
-import MatIconBase from '../MatIconBase.vue';
+import MatIcon from '../mat-icon/MatIcon.vue';
 import {
   BUTTON_SHAPES,
   BUTTON_SIZES,
@@ -100,6 +100,13 @@ const {
 } = useButton(props, emit);
 const title = computed(() => attrs.title ?? props.label);
 const isSelected = computed(() => effectiveToggle.value && effectiveSelected.value);
+const iconOpticalSize = computed(() => ({
+  'extra-small': 20,
+  small: 24,
+  medium: 24,
+  large: 32,
+  'extra-large': 40,
+})[effectiveSize.value]);
 </script>
 
 <template>
@@ -130,16 +137,17 @@ const isSelected = computed(() => effectiveToggle.value && effectiveSelected.val
     :use-cursor="useCursor"
     @click="handleClick"
   >
-    <MatIconBase
+    <MatIcon
+      as="span"
       class="mat-icon-btn__icon"
-      :class="{
-        'mat-icon-btn__icon--selected-fallback': isSelected && !slots.selected,
-      }"
+      :fill="isSelected && !slots.selected ? 1 : 0"
+      :optical-size="iconOpticalSize"
+      size="var(--mat-icon-btn-icon-size)"
       aria-hidden="true"
     >
       <slot v-if="isSelected && slots.selected" name="selected" />
       <slot v-else />
-    </MatIconBase>
+    </MatIcon>
   </MatButtonBase>
 </template>
 
@@ -353,16 +361,6 @@ const isSelected = computed(() => effectiveToggle.value && effectiveSelected.val
   font-size: var(--mat-icon-btn-icon-size);
   line-height: 1;
   transition: transform var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-standard);
-}
-
-.mat-icon-btn__icon--selected-fallback {
-  font-variation-settings: 'FILL' 1;
-  font-weight: 600;
-}
-
-.mat-icon-btn__icon :deep(svg) {
-  inline-size: 100%;
-  block-size: 100%;
 }
 
 .mat-icon-btn:disabled {
