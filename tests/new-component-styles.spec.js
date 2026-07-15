@@ -111,6 +111,8 @@ describe('新增组件现代 CSS', () => {
     expect(rootStyles).toContain('box-shadow: var(--mat-sys-elevation-level2)');
     expect(rootStyles).not.toContain('clip-path:');
     expect(surfaceStyles).toContain('clip-path: inset(');
+    expect(surfaceStyles).toContain('overflow: hidden auto');
+    expect(surfaceStyles).not.toContain('overflow: auto');
     expect(source).toContain('@starting-style');
     expect(source).toContain('clip-path: inset(');
     expect(source).toContain('@supports (border-shape:');
@@ -165,5 +167,13 @@ describe('新增组件现代 CSS', () => {
       'drop-shadow(0 2px 6px rgb(from var(--mat-sys-color-shadow) r g b / 15%))',
     );
     expect(menuSource).not.toContain('overflow: visible;\n  background: transparent;');
+  });
+
+  it('原生与模拟禁用操作都显示禁用指针', () => {
+    const actionSource = readFileSync('src/components/MatActionBase.vue', 'utf8');
+
+    expect(actionSource).toContain(
+      '.mat-action-base:disabled,\n.mat-action-base--disabled { cursor: not-allowed; }',
+    );
   });
 });

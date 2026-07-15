@@ -4290,6 +4290,7 @@ const open = ref(true);
       v-model="open"
       anchor="color-menu-trigger"
       color="#6750a4"
+      variant="vibrant"
     >
       <mat-menu-item>局部种子色菜单</mat-menu-item>
     </mat-menu>

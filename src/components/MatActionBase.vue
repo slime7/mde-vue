@@ -162,6 +162,7 @@ defineExpose({ root });
 
 .mat-action-base:not(:disabled):not(.mat-action-base--disabled):is(:active, .mat-action-base--pressed)::before { opacity: var(--mat-sys-state-pressed-state-layer-opacity); }
 
+.mat-action-base:disabled,
 .mat-action-base--disabled { cursor: not-allowed; }
 
 @media (prefers-reduced-motion: reduce) { .mat-action-base::before { transition-duration: 0s; } }

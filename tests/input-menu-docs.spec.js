@@ -59,6 +59,16 @@ describe('文本输入与菜单文档', () => {
     expect(contextExample).toContain('@contextmenu.prevent="showContextMenu"');
   });
 
+  it('Menu color 示例使用 vibrant 表面展示局部配色', () => {
+    const source = readFileSync(
+      resolve('docs/site/examples/menu/MenuColorExample.vue'),
+      'utf8',
+    );
+
+    expect(source).toContain('variant="vibrant"');
+    expect(source).toContain('color="#6750a4"');
+  });
+
   it('窄屏文档表格在自身内部滚动', () => {
     const source = readFileSync(
       resolve('docs/site/.vitepress/theme/custom.css'),
