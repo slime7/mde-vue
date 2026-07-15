@@ -13,7 +13,7 @@ order: 90
 
 ## 示例
 
-下面同时展示 outlined、filled 错误状态和可纵向调整尺寸的 textarea。字符计数只在设置 `maxLength` 后显示。
+下面同时展示 outlined 的空值聚焦/失焦与错误状态、filled textarea、前后图标、字符计数、只读和禁用状态。验证码初始为空，可以反复聚焦并在不输入内容时离开，观察标签从边框返回容器中央；字符计数只在设置 `maxLength` 后显示。
 
 <<< @/examples/text-field/TextFieldExample.vue
 

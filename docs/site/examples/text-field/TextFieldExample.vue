@@ -4,6 +4,8 @@ import { ref } from 'vue';
 const email = ref('reader');
 const note = ref('请在工作日联系。');
 const touched = ref(false);
+const verificationCode = ref('');
+const verificationTouched = ref(false);
 </script>
 
 <template>
@@ -11,6 +13,7 @@ const touched = ref(false);
     <mat-text-field
       v-model="email"
       label="邮箱"
+      variant="outlined"
       supporting-text="用于接收通知"
       prefix-text="mailto:"
       suffix-text="@example.com"
@@ -29,25 +32,45 @@ const touched = ref(false);
     </mat-text-field>
 
     <mat-text-field
-      model-value="123"
+      v-model="verificationCode"
       label="验证码"
-      variant="filled"
-      error
+      variant="outlined"
+      supporting-text="聚焦后不输入内容并离开，可观察标签复位"
+      :error="verificationTouched && verificationCode.length !== 6"
       error-text="请输入六位验证码"
       :max-length="6"
+      inputmode="numeric"
+      @blur="verificationTouched = true"
+      @focus="verificationTouched = false"
     />
 
     <mat-textarea
       v-model="note"
       label="备注"
+      variant="filled"
       supporting-text="可以纵向调整输入区域"
       :rows="4"
       :max-length="120"
       color="tertiary"
     />
 
+    <mat-text-field
+      model-value="INV-2026-0715"
+      label="只读编号"
+      supporting-text="内容可选择，但不能编辑"
+      readonly
+    />
+
+    <mat-text-field
+      model-value="由管理员分配"
+      label="组织"
+      supporting-text="当前不可修改"
+      disabled
+    />
+
     <p class="example-status" aria-live="polite">
-      {{ touched ? '邮箱输入框已失去焦点' : '尚未离开邮箱输入框' }}
+      {{ touched ? '邮箱输入框已失去焦点' : '尚未离开邮箱输入框' }}；
+      验证码当前为 {{ verificationCode.length }} 位。
     </p>
   </div>
 </template>

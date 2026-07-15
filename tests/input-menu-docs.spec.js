@@ -51,4 +51,19 @@ describe('文本输入与菜单文档', () => {
     expect(source).toContain('@media (width < 640px)');
     expect(source).toContain('overflow-x: auto');
   });
+
+  it('Text field 示例覆盖空值失焦、两种外观和只读禁用状态', () => {
+    const source = readFileSync(
+      resolve('docs/site/examples/text-field/TextFieldExample.vue'),
+      'utf8',
+    );
+
+    expect(source).toContain("const verificationCode = ref('');");
+    expect(source).toContain('v-model="verificationCode"');
+    expect(source).not.toContain('model-value="123"');
+    expect(source).toContain('variant="outlined"');
+    expect(source).toContain('variant="filled"');
+    expect(source).toContain('readonly');
+    expect(source).toContain('disabled');
+  });
 });
