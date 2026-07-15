@@ -2,6 +2,7 @@
 import {
   computed, ref, useAttrs, useId,
 } from 'vue';
+import MatIconBase from './MatIconBase.vue';
 import useComponentColor from './use-component-color';
 
 defineOptions({
@@ -138,9 +139,12 @@ function handleInput(event) {
     :aria-hidden="$attrs['aria-hidden']"
   >
     <span class="mat-text-input__container">
-      <span v-if="$slots.leading" class="mat-text-input__icon mat-text-input__leading">
+      <MatIconBase
+        v-if="$slots.leading"
+        class="mat-text-input__icon mat-text-input__leading"
+      >
         <slot name="leading" />
-      </span>
+      </MatIconBase>
 
       <span class="mat-text-input__main">
         <span v-if="label" class="mat-text-input__label">
@@ -176,9 +180,12 @@ function handleInput(event) {
         </span>
       </span>
 
-      <span v-if="$slots.trailing" class="mat-text-input__icon mat-text-input__trailing">
+      <MatIconBase
+        v-if="$slots.trailing"
+        class="mat-text-input__icon mat-text-input__trailing"
+      >
         <slot name="trailing" />
-      </span>
+      </MatIconBase>
     </span>
 
     <span v-if="hasSupporting" :id="supportingId" class="mat-text-input__supporting">
@@ -215,7 +222,7 @@ function handleInput(event) {
   box-sizing: border-box;
   min-block-size: var(--mat-text-input-container-height);
   inline-size: 100%;
-  overflow: clip;
+  overflow: visible;
   background: transparent;
   border: 1px solid var(--mat-text-input-outline-color);
   border-radius: var(--mat-sys-shape-corner-small);
@@ -224,7 +231,7 @@ function handleInput(event) {
 .mat-text-input__container::after {
   position: absolute;
   z-index: 2;
-  inset: -1px;
+  inset: 0;
   border: 2px solid var(--mat-text-input-accent-color);
   border-radius: inherit;
   clip-path: inset(0 50% round var(--mat-sys-shape-corner-small));
@@ -234,13 +241,13 @@ function handleInput(event) {
   transition: clip-path var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized), opacity var(--mat-sys-motion-duration-short2) var(--mat-sys-motion-easing-standard);
 }
 
-.mat-text-input--focused .mat-text-input__container::after,
-.mat-text-input--error .mat-text-input__container::after {
+.mat-text-input--focused .mat-text-input__container::after {
   clip-path: inset(0 round var(--mat-sys-shape-corner-small));
   opacity: 1;
 }
 
 .mat-text-input--filled .mat-text-input__container {
+  overflow: clip;
   background: var(--mat-text-input-container-color);
   border: 0;
   border-block-end: 1px solid var(--mat-text-input-outline-color);
@@ -248,7 +255,7 @@ function handleInput(event) {
 }
 
 .mat-text-input--filled .mat-text-input__container::after {
-  inset: auto 0 -1px;
+  inset: auto 0 0;
   block-size: 2px;
   border: 0;
   border-radius: 0;
@@ -256,8 +263,7 @@ function handleInput(event) {
   clip-path: inset(0 50%);
 }
 
-.mat-text-input--filled.mat-text-input--focused .mat-text-input__container::after,
-.mat-text-input--filled.mat-text-input--error .mat-text-input__container::after {
+.mat-text-input--filled.mat-text-input--focused .mat-text-input__container::after {
   clip-path: inset(0);
 }
 
@@ -297,10 +303,6 @@ function handleInput(event) {
   outline: 0;
 }
 
-.mat-text-input--input .mat-text-input__control {
-  block-size: 40px;
-}
-
 .mat-text-input--textarea .mat-text-input__container {
   align-items: flex-start;
 }
@@ -312,7 +314,7 @@ function handleInput(event) {
 
 .mat-text-input__label {
   position: absolute;
-  z-index: 1;
+  z-index: 3;
   inset-block-start: 16px;
   inset-inline-start: 0;
   max-inline-size: 100%;
@@ -331,13 +333,20 @@ function handleInput(event) {
 }
 
 .mat-text-input--floating .mat-text-input__label {
-  color: var(--mat-text-input-accent-color);
   font-family: var(--mat-sys-typescale-body-small-font);
   font-size: var(--mat-sys-typescale-body-small-size);
   font-weight: var(--mat-sys-typescale-body-small-weight);
   letter-spacing: var(--mat-sys-typescale-body-small-tracking);
   line-height: var(--mat-sys-typescale-body-small-line-height);
-  transform: translateY(-10px);
+  transform: translateY(-8px);
+}
+
+.mat-text-input--outlined.mat-text-input--floating .mat-text-input__label {
+  box-sizing: border-box;
+  max-inline-size: calc(100% - 8px);
+  padding-inline: 4px;
+  background: var(--mat-sys-color-surface);
+  transform: translateY(calc(-100% - 8px));
 }
 
 .mat-text-input:has(.mat-text-input__label) .mat-text-input__control-row {
@@ -398,6 +407,10 @@ function handleInput(event) {
 
 .mat-text-input--focused {
   --mat-text-input-label-color: var(--mat-text-input-accent-color);
+}
+
+.mat-text-input--outlined:not(.mat-text-input--focused):not(.mat-text-input--error):not(.mat-text-input--disabled):hover {
+  --mat-text-input-outline-color: var(--mat-sys-color-on-surface);
 }
 
 .mat-text-input--error {

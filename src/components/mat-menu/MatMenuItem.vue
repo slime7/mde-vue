@@ -4,6 +4,7 @@ import {
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatActionBase from '../MatActionBase.vue';
+import MatIconBase from '../MatIconBase.vue';
 import MatItemContentBase from '../MatItemContentBase.vue';
 import { MAT_MENU_ITEM_KEY, MAT_MENU_KEY } from '../menu-context';
 
@@ -127,6 +128,7 @@ onBeforeUnmount(() => menu?.unregisterItem(itemApi));
       <MatItemContentBase
         namespace="mat-menu-item-content"
         :line-count="$slots.supporting ? 2 : 1"
+        leading-icon
       >
         <template v-if="$slots.leading" #leading>
           <slot name="leading" />
@@ -140,9 +142,13 @@ onBeforeUnmount(() => menu?.unregisterItem(itemApi));
 
         <template #trailing>
           <slot v-if="$slots.trailing" name="trailing" />
-          <span v-else-if="hasSubmenu" class="mat-menu-item__submenu-icon" aria-hidden="true">
+          <MatIconBase
+            v-else-if="hasSubmenu"
+            class="mat-menu-item__submenu-icon"
+            aria-hidden="true"
+          >
             chevron_right
-          </span>
+          </MatIconBase>
         </template>
       </MatItemContentBase>
     </MatActionBase>
@@ -210,7 +216,6 @@ onBeforeUnmount(() => menu?.unregisterItem(itemApi));
 }
 
 .mat-menu-item__submenu-icon {
-  font-family: var(--mat-ref-typeface-icon);
   font-size: 20px;
   transition: transform var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-emphasized);
 }

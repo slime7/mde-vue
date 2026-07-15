@@ -4,6 +4,7 @@ import {
 } from 'vitest';
 import MatTextField from '../src/components/mat-text-field/MatTextField.vue';
 import MatTextarea from '../src/components/mat-textarea/MatTextarea.vue';
+import MAT_UI_KEY from '../src/mat-ui-context';
 
 describe('文本输入组件', () => {
   it('MatTextField 渲染原生 input、路由属性并请求更新模型', async () => {
@@ -85,6 +86,34 @@ describe('文本输入组件', () => {
     expect(input.attributes('required')).toBeDefined();
   });
 
+  it('空内容聚焦时浮动标签，并在失焦后恢复标签位置且透传原生事件', async () => {
+    const focus = vi.fn();
+    const blur = vi.fn();
+    const wrapper = mount(MatTextField, {
+      props: {
+        modelValue: '',
+        label: '验证码',
+      },
+      attrs: {
+        onBlur: blur,
+        onFocus: focus,
+      },
+    });
+    const input = wrapper.get('input');
+
+    await input.trigger('focus');
+
+    expect(wrapper.classes()).toContain('mat-text-input--focused');
+    expect(wrapper.classes()).toContain('mat-text-input--floating');
+    expect(focus).toHaveBeenCalledOnce();
+
+    await input.trigger('blur');
+
+    expect(wrapper.classes()).not.toContain('mat-text-input--focused');
+    expect(wrapper.classes()).not.toContain('mat-text-input--floating');
+    expect(blur).toHaveBeenCalledOnce();
+  });
+
   it('MatTextarea 渲染固定行数的原生 textarea 并支持模型更新', async () => {
     const wrapper = mount(MatTextarea, {
       props: {
@@ -107,5 +136,36 @@ describe('文本输入组件', () => {
     await textarea.setValue('更新后的说明');
 
     expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['更新后的说明']);
+  });
+
+  it('插件启用 Material Symbols 时用独立图标元素承载前后图标 Slot', () => {
+    const wrapper = mount(MatTextField, {
+      global: {
+        provide: {
+          [MAT_UI_KEY]: {
+            useCursor: false,
+            useMaterialSymbols: true,
+          },
+        },
+      },
+      props: {
+        modelValue: '',
+        label: '邮箱',
+      },
+      slots: {
+        leading: 'mail',
+        trailing: 'alternate_email',
+      },
+    });
+
+    const leading = wrapper.get('.mat-text-input__leading');
+    const trailing = wrapper.get('.mat-text-input__trailing');
+
+    expect(leading.element.tagName).toBe('SPAN');
+    expect(leading.classes()).toContain('mat-icon');
+    expect(leading.classes()).toContain('mat-icon--material-symbols');
+    expect(trailing.element.tagName).toBe('SPAN');
+    expect(trailing.classes()).toContain('mat-icon');
+    expect(trailing.classes()).toContain('mat-icon--material-symbols');
   });
 });

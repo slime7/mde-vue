@@ -403,7 +403,9 @@ watch(() => props.anchor, async () => {
     @keydown="handleKeyDown"
     @toggle="handleToggle"
   >
-    <slot />
+    <div class="mat-menu__surface">
+      <slot />
+    </div>
   </MatSurfaceBase>
 </template>
 
@@ -427,20 +429,32 @@ watch(() => props.anchor, async () => {
   max-block-size: calc(
     100dvb - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)
   );
-  padding: var(--mat-menu-container-padding);
+  padding: 0;
   margin: var(--mat-menu-anchor-space) 0;
-  overflow: auto;
+  overflow: visible;
   color: var(--mat-menu-content-color);
-  background: var(--mat-menu-container-color);
+  background: transparent;
   border: 0;
   border-radius: var(--mat-sys-shape-corner-large);
   box-shadow: var(--mat-sys-elevation-level2);
-  clip-path: inset(0 round var(--mat-sys-shape-corner-large));
   opacity: 1;
   translate: var(--mat-menu-viewport-shift-x, 0) var(--mat-menu-viewport-shift-y, 0);
   transform: scale(1);
   transform-origin: top left;
-  transition: clip-path var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized-decelerate), opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), transform var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized-decelerate);
+  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), transform var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized-decelerate);
+}
+
+.mat-menu__surface {
+  display: block;
+  box-sizing: border-box;
+  min-inline-size: 100%;
+  max-block-size: inherit;
+  padding: var(--mat-menu-container-padding);
+  overflow: auto;
+  background: var(--mat-menu-container-color);
+  border-radius: inherit;
+  clip-path: inset(0 round var(--mat-sys-shape-corner-large));
+  transition: clip-path var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized-decelerate);
 }
 
 .mat-menu--nested {
@@ -460,20 +474,27 @@ watch(() => props.anchor, async () => {
 
 @starting-style {
   .mat-menu:popover-open {
-    clip-path: inset(46% 8% round var(--mat-sys-shape-corner-extra-large));
     opacity: 0;
     transform: scale(.96);
+  }
+
+  .mat-menu:popover-open .mat-menu__surface {
+    clip-path: inset(46% 8% round var(--mat-sys-shape-corner-extra-large));
   }
 }
 
 @supports (border-shape: inset(0 round 1px)) {
-  .mat-menu {
+  .mat-menu__surface {
     border-shape: inset(0 round var(--mat-sys-shape-corner-large));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .mat-menu {
+    transition-duration: 0s;
+  }
+
+  .mat-menu__surface {
     transition-duration: 0s;
   }
 }

@@ -1,6 +1,7 @@
 <script setup>
 import { computed, useAttrs, useSlots } from 'vue';
 import MatButtonBase from '../MatButtonBase.vue';
+import MatIconBase from '../MatIconBase.vue';
 import {
   BUTTON_SHAPES,
   BUTTON_SIZES,
@@ -96,7 +97,6 @@ const {
   hasExplicitColor,
   split,
   useCursor,
-  useMaterialSymbols,
 } = useButton(props, emit);
 const title = computed(() => attrs.title ?? props.label);
 const isSelected = computed(() => effectiveToggle.value && effectiveSelected.value);
@@ -130,17 +130,16 @@ const isSelected = computed(() => effectiveToggle.value && effectiveSelected.val
     :use-cursor="useCursor"
     @click="handleClick"
   >
-    <span
+    <MatIconBase
       class="mat-icon-btn__icon"
       :class="{
         'mat-icon-btn__icon--selected-fallback': isSelected && !slots.selected,
-        'mat-icon--material-symbols': useMaterialSymbols,
       }"
       aria-hidden="true"
     >
       <slot v-if="isSelected && slots.selected" name="selected" />
       <slot v-else />
-    </span>
+    </MatIconBase>
   </MatButtonBase>
 </template>
 

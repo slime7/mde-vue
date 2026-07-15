@@ -198,8 +198,10 @@ describe('主题控制器', () => {
     });
 
     expect(button.classes()).toContain('mat-button-base--use-cursor');
+    expect(button.find('.mat-btn__icon').classes()).toContain('mat-icon');
     expect(button.find('.mat-btn__icon').classes()).toContain('mat-icon--material-symbols');
     expect(iconButton.classes()).toContain('mat-button-base--use-cursor');
+    expect(iconButton.find('.mat-icon-btn__icon').classes()).toContain('mat-icon');
     expect(iconButton.find('.mat-icon-btn__icon').classes()).toContain('mat-icon--material-symbols');
     plugin.theme.dispose();
   });

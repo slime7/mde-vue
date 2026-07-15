@@ -9,6 +9,7 @@ import {
 import MatDivider from '../src/components/mat-divider/MatDivider.vue';
 import MatMenu from '../src/components/mat-menu/MatMenu.vue';
 import MatMenuItem from '../src/components/mat-menu/MatMenuItem.vue';
+import MAT_UI_KEY from '../src/mat-ui-context';
 
 function dispatchToggle(element, newState) {
   const event = new Event('toggle');
@@ -60,6 +61,7 @@ describe('MatMenu', () => {
     const items = wrapper.findAll('[role="menuitem"]');
 
     expect(menu.attributes('popover')).toBe('auto');
+    expect(menu.find('.mat-menu__surface').exists()).toBe(true);
     expect(menu.attributes('aria-label')).toBe('操作');
     expect(menu.attributes('style')).toContain('--mat-accent-color');
     expect(menu.element.showPopover).toHaveBeenCalled();
@@ -229,5 +231,54 @@ describe('MatMenu', () => {
 
     expect(divider.element.tagName).toBe('DIV');
     expect(divider.attributes('role')).toBe('separator');
+  });
+
+  it('插件启用 Material Symbols 时只用独立图标元素承载 leading Slot', () => {
+    const wrapper = mount(MatMenuItem, {
+      global: {
+        provide: {
+          [MAT_UI_KEY]: {
+            useCursor: false,
+            useMaterialSymbols: true,
+          },
+        },
+      },
+      slots: {
+        default: '新建文件',
+        leading: 'note_add',
+        trailing: 'Ctrl+N',
+      },
+    });
+    const leading = wrapper.get('[data-mat-item-content-leading]');
+    const icon = leading.get('.mat-icon');
+    const trailing = wrapper.get('[data-mat-item-content-trailing]');
+
+    expect(icon.element.tagName).toBe('SPAN');
+    expect(icon.classes()).toContain('mat-icon--material-symbols');
+    expect(icon.text()).toBe('note_add');
+    expect(trailing.find('.mat-icon').exists()).toBe(false);
+  });
+
+  it('子菜单箭头也使用统一的独立图标元素', () => {
+    const wrapper = mount(MatMenuItem, {
+      global: {
+        provide: {
+          [MAT_UI_KEY]: {
+            useCursor: false,
+            useMaterialSymbols: true,
+          },
+        },
+      },
+      slots: {
+        default: '更多',
+        submenu: '<span />',
+      },
+    });
+    const icon = wrapper.get('.mat-menu-item__submenu-icon');
+
+    expect(icon.element.tagName).toBe('SPAN');
+    expect(icon.classes()).toContain('mat-icon');
+    expect(icon.classes()).toContain('mat-icon--material-symbols');
+    expect(icon.text()).toBe('chevron_right');
   });
 });

@@ -16,6 +16,13 @@ describe('新增组件现代 CSS', () => {
     const source = readFileSync('src/components/MatTextInputBase.vue', 'utf8');
 
     expect(source).toContain('clip-path: inset(');
+    expect(source).toContain('.mat-text-input--outlined.mat-text-input--floating');
+    expect(source).toContain('transform: translateY(calc(-100% - 8px))');
+    expect(source).toContain('background: var(--mat-sys-color-surface)');
+    expect(source).toContain('padding-inline: 4px');
+    expect(source).not.toContain('block-size: 40px');
+    expect(source).toContain('border: 1px solid var(--mat-text-input-outline-color)');
+    expect(source).toContain('border: 2px solid var(--mat-text-input-accent-color)');
     expect(source).toContain('@supports (border-shape:');
     expect(source).toContain('prefers-reduced-motion: reduce');
   });
@@ -26,6 +33,13 @@ describe('新增组件现代 CSS', () => {
     expect(source).toContain('position-area:');
     expect(source).toContain('position-try-fallbacks:');
     expect(source).toContain('translate: var(--mat-menu-viewport-shift-x');
+    expect(source).toContain('<div class="mat-menu__surface">');
+    const rootStyles = source.match(/\.mat-menu \{(?<body>[\s\S]*?)\n\}/)?.groups?.body;
+    const surfaceStyles = source.match(/\.mat-menu__surface \{(?<body>[\s\S]*?)\n\}/)?.groups?.body;
+
+    expect(rootStyles).toContain('box-shadow: var(--mat-sys-elevation-level2)');
+    expect(rootStyles).not.toContain('clip-path:');
+    expect(surfaceStyles).toContain('clip-path: inset(');
     expect(source).toContain('@starting-style');
     expect(source).toContain('clip-path: inset(');
     expect(source).toContain('@supports (border-shape:');
