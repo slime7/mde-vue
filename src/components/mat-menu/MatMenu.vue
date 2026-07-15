@@ -76,7 +76,7 @@ let returnFocusElement = null;
 
 const isNested = computed(() => Boolean(itemParent));
 const isCoordinateAnchor = computed(() => (
-  !isNested.value && Array.isArray(props.anchor)
+  !isNested.value && isCoordinatePair(props.anchor)
 ));
 const isGrouped = computed(() => groupCount.value > 0);
 const effectiveOpen = computed(() => (

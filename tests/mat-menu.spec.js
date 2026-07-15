@@ -224,20 +224,24 @@ describe('MatMenu', () => {
     expect(menu.element.style.getPropertyValue('--mat-menu-offset-y')).toBe('12px');
   });
 
-  it('拒绝无效的坐标和 offset 数组', () => {
+  it('拒绝无效的坐标和 offset 数组', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-    mount(MatMenu, {
+    const wrapper = mount(MatMenu, {
       props: {
+        modelValue: true,
         anchor: [10],
         offset: [0, Number.NaN],
       },
     });
 
+    await nextTick();
+
     const warnings = warn.mock.calls.flat().join(' ');
 
     expect(warnings).toContain('Invalid prop: custom validator check failed for prop "anchor"');
     expect(warnings).toContain('Invalid prop: custom validator check failed for prop "offset"');
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([false]);
     warn.mockRestore();
   });
 
