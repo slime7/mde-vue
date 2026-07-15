@@ -560,7 +560,8 @@ watch(() => props.offset, async () => {
 }
 
 .mat-menu--grouped .mat-menu__surface {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--mat-menu-group-space);
   padding: 0;
   background: transparent;
