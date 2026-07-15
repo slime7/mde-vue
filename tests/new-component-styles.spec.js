@@ -1,5 +1,18 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+
+function getComponentSources(directory) {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const path = join(directory, entry.name);
+
+    if (entry.isDirectory()) {
+      return getComponentSources(path);
+    }
+
+    return entry.name.endsWith('.vue') ? [path] : [];
+  });
+}
 
 describe('新增组件现代 CSS', () => {
   it('block Button 使用块级 flex 并铺满父元素', () => {
@@ -104,6 +117,14 @@ describe('新增组件现代 CSS', () => {
     expect(source).toContain('prefers-reduced-motion: reduce');
   });
 
+  it('组件 scoped 样式不使用 :global 跨越组件边界', () => {
+    const usages = getComponentSources('src/components').filter((file) => (
+      readFileSync(file, 'utf8').includes(':global(')
+    ));
+
+    expect(usages).toEqual([]);
+  });
+
   it('菜单项目和分组使用 expressive 测量值', () => {
     const itemSource = readFileSync('src/components/mat-menu/MatMenuItem.vue', 'utf8');
     const groupSource = readFileSync('src/components/mat-menu-group/MatMenuGroup.vue', 'utf8');
@@ -114,9 +135,8 @@ describe('新增组件现代 CSS', () => {
     expect(itemSource).toContain('--mat-item-icon-size: 20px');
     expect(itemSource).toContain('min-block-size: var(--mat-menu-item-height)');
     expect(itemSource).not.toContain('.mat-menu-item::after');
-    expect(itemSource).toContain(
-      '.mat-menu-item-host:first-child > .mat-menu-item:not(.mat-menu-item--submenu-open)',
-    );
+    expect(itemSource).toContain('.mat-menu-item--first:not(.mat-menu-item--submenu-open)');
+    expect(itemSource).toContain('.mat-menu-item--only:not(.mat-menu-item--submenu-open)');
     expect(itemSource).toContain(
       'var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium)\n    var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)',
     );
@@ -135,6 +155,15 @@ describe('新增组件现代 CSS', () => {
     expect(groupSource).toContain(
       'var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small)\n    var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)',
     );
-    expect(groupSource).toContain('box-shadow: var(--mat-sys-elevation-level2)');
+    expect(groupSource).not.toContain('box-shadow:');
+    const menuSource = readFileSync('src/components/mat-menu/MatMenu.vue', 'utf8');
+
+    expect(menuSource).toContain(
+      'drop-shadow(0 1px 2px rgb(from var(--mat-sys-color-shadow) r g b / 30%))',
+    );
+    expect(menuSource).toContain(
+      'drop-shadow(0 2px 6px rgb(from var(--mat-sys-color-shadow) r g b / 15%))',
+    );
+    expect(menuSource).not.toContain('overflow: visible;\n  background: transparent;');
   });
 });

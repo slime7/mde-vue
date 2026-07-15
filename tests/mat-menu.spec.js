@@ -387,6 +387,7 @@ describe('MatMenu', () => {
 
     expect(divider.element.tagName).toBe('DIV');
     expect(divider.attributes('role')).toBe('separator');
+    expect(divider.classes()).toContain('mat-divider--menu');
   });
 
   it('MatMenuGroup 提供分组标签并保持跨组 roving focus', async () => {
@@ -422,6 +423,9 @@ describe('MatMenu', () => {
     expect(groups[0].attributes('aria-labelledby')).toBeTruthy();
     expect(groups[0].get('.mat-menu-group__label').text()).toBe('编辑');
     expect(groups[1].attributes('aria-labelledby')).toBeUndefined();
+    expect(items[0].classes()).toContain('mat-menu-item--first');
+    expect(items[1].classes()).toContain('mat-menu-item--last');
+    expect(items[2].classes()).toContain('mat-menu-item--only');
     expect(document.activeElement).toBe(items[0].element);
 
     await items[0].trigger('keydown', { key: 'ArrowDown' });

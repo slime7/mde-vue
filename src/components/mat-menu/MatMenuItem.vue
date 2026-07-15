@@ -6,7 +6,9 @@ import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatActionBase from '../MatActionBase.vue';
 import MatItemContentBase from '../MatItemContentBase.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
-import { MAT_MENU_ITEM_KEY, MAT_MENU_KEY } from '../menu-context';
+import {
+  MAT_MENU_GROUP_KEY, MAT_MENU_ITEM_KEY, MAT_MENU_KEY,
+} from '../menu-context';
 
 defineOptions({
   name: 'MatMenuItem',
@@ -24,11 +26,13 @@ const emit = defineEmits({
 });
 const slots = useSlots();
 const menu = inject(MAT_MENU_KEY, null);
+const group = inject(MAT_MENU_GROUP_KEY, null);
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const action = ref(null);
 const element = computed(() => action.value?.root ?? action.value?.$el ?? null);
 const submenuOpen = ref(false);
 const submenuId = ref(undefined);
+const position = ref('only');
 let submenuApi;
 const hasSubmenu = computed(() => Boolean(slots.submenu));
 
@@ -64,6 +68,10 @@ function unregisterSubmenu() {
 const itemApi = {
   closeSubmenu,
   element,
+  grouped: Boolean(group),
+  setPosition(value) {
+    position.value = value;
+  },
 };
 
 /**
@@ -103,8 +111,14 @@ provide(MAT_MENU_ITEM_KEY, {
   unregisterSubmenu,
 });
 
-onMounted(() => menu?.registerItem(itemApi));
-onBeforeUnmount(() => menu?.unregisterItem(itemApi));
+onMounted(() => {
+  group?.registerItem(itemApi);
+  menu?.registerItem(itemApi);
+});
+onBeforeUnmount(() => {
+  group?.unregisterItem(itemApi);
+  menu?.unregisterItem(itemApi);
+});
 </script>
 
 <template>
@@ -113,7 +127,10 @@ onBeforeUnmount(() => menu?.unregisterItem(itemApi));
       ref="action"
       v-bind="$attrs"
       class="mat-menu-item"
-      :class="{ 'mat-menu-item--submenu-open': submenuOpen }"
+      :class="[
+        `mat-menu-item--${position}`,
+        { 'mat-menu-item--submenu-open': submenuOpen },
+      ]"
       data-mat-menu-item
       :aria-controls="hasSubmenu ? submenuId : undefined"
       :aria-expanded="hasSubmenu ? String(submenuOpen) : undefined"
@@ -202,20 +219,18 @@ onBeforeUnmount(() => menu?.unregisterItem(itemApi));
   transition: border-radius var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-emphasized), color var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), background-color var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
 }
 
-.mat-menu-item-host:first-child > .mat-menu-item:not(.mat-menu-item--submenu-open),
-:global(.mat-menu-group__label) + .mat-menu-item-host > .mat-menu-item:not(.mat-menu-item--submenu-open) {
+.mat-menu-item--first:not(.mat-menu-item--submenu-open) {
   border-radius: var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium)
     var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small);
 }
 
-.mat-menu-item-host:last-child > .mat-menu-item:not(.mat-menu-item--submenu-open) {
+.mat-menu-item--last:not(.mat-menu-item--submenu-open) {
   border-radius: var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
     var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium);
 }
 
-.mat-menu-item-host:first-child:last-child > .mat-menu-item:not(.mat-menu-item--submenu-open),
-:global(.mat-menu-group__label) + .mat-menu-item-host:last-child > .mat-menu-item:not(.mat-menu-item--submenu-open) {
-  border-radius: var(--mat-sys-shape-corner-extra-small);
+.mat-menu-item--only:not(.mat-menu-item--submenu-open) {
+  border-radius: var(--mat-sys-shape-corner-medium);
 }
 
 .mat-menu-item--submenu-open {
@@ -247,8 +262,7 @@ onBeforeUnmount(() => menu?.unregisterItem(itemApi));
     border-shape: inset(0 round var(--mat-sys-shape-corner-medium));
   }
 
-  .mat-menu-item-host:first-child > .mat-menu-item:not(.mat-menu-item--submenu-open),
-  :global(.mat-menu-group__label) + .mat-menu-item-host > .mat-menu-item:not(.mat-menu-item--submenu-open) {
+  .mat-menu-item--first:not(.mat-menu-item--submenu-open) {
     border-shape: inset(
       0 round
       var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium)
@@ -256,7 +270,7 @@ onBeforeUnmount(() => menu?.unregisterItem(itemApi));
     );
   }
 
-  .mat-menu-item-host:last-child > .mat-menu-item:not(.mat-menu-item--submenu-open) {
+  .mat-menu-item--last:not(.mat-menu-item--submenu-open) {
     border-shape: inset(
       0 round
       var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
@@ -264,9 +278,8 @@ onBeforeUnmount(() => menu?.unregisterItem(itemApi));
     );
   }
 
-  .mat-menu-item-host:first-child:last-child > .mat-menu-item:not(.mat-menu-item--submenu-open),
-  :global(.mat-menu-group__label) + .mat-menu-item-host:last-child > .mat-menu-item:not(.mat-menu-item--submenu-open) {
-    border-shape: inset(0 round var(--mat-sys-shape-corner-extra-small));
+  .mat-menu-item--only:not(.mat-menu-item--submenu-open) {
+    border-shape: inset(0 round var(--mat-sys-shape-corner-medium));
   }
 }
 

@@ -1,8 +1,10 @@
 <script setup>
 import {
-  computed, inject, onBeforeUnmount, onMounted, useAttrs, useId,
+  computed, inject, onBeforeUnmount, onMounted, provide, useAttrs, useId,
 } from 'vue';
-import { MAT_MENU_KEY } from '../menu-context';
+import {
+  MAT_MENU_GROUP_KEY, MAT_MENU_KEY, updateMenuItemPositions,
+} from '../menu-context';
 
 defineOptions({
   name: 'MatMenuGroup',
@@ -22,6 +24,22 @@ const labelId = `${generatedId}-label`;
 const labelledBy = computed(() => (
   props.label ? labelId : attrs['aria-labelledby']
 ));
+const itemApis = new Set();
+
+function registerItem(api) {
+  itemApis.add(api);
+  updateMenuItemPositions(Array.from(itemApis));
+}
+
+function unregisterItem(api) {
+  itemApis.delete(api);
+  updateMenuItemPositions(Array.from(itemApis));
+}
+
+provide(MAT_MENU_GROUP_KEY, {
+  registerItem,
+  unregisterItem,
+});
 
 onMounted(() => menu?.registerGroup());
 onBeforeUnmount(() => menu?.unregisterGroup());
@@ -55,7 +73,6 @@ onBeforeUnmount(() => menu?.unregisterGroup());
   color: var(--mat-menu-content-color);
   background: var(--mat-menu-container-color);
   border-radius: var(--mat-sys-shape-corner-small);
-  box-shadow: var(--mat-sys-elevation-level2);
 }
 
 .mat-menu-group:first-child:not(:last-child) {

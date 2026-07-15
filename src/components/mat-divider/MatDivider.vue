@@ -36,7 +36,10 @@ const tag = computed(() => {
     :is="tag"
     v-bind="$attrs"
     class="mat-divider"
-    :class="`mat-divider--${props.inset}`"
+    :class="[
+      `mat-divider--${props.inset}`,
+      { 'mat-divider--menu': isInMenu },
+    ]"
     :aria-hidden="isInListbox ? 'true' : $attrs['aria-hidden']"
     :role="isInListbox ? 'presentation' : isInList || isInMenu ? 'separator' : $attrs.role"
   />
@@ -64,7 +67,7 @@ const tag = computed(() => {
   margin-inline: var(--mat-divider-inset-space);
 }
 
-:global(.mat-menu) .mat-divider {
+.mat-divider--menu {
   margin-block: 8px;
 }
 </style>

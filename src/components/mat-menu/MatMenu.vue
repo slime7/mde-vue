@@ -4,7 +4,9 @@ import {
 } from 'vue';
 import MatSurfaceBase from '../MatSurfaceBase.vue';
 import { isComponentColor } from '../button-props';
-import { MAT_MENU_ITEM_KEY, MAT_MENU_KEY } from '../menu-context';
+import {
+  MAT_MENU_ITEM_KEY, MAT_MENU_KEY, updateMenuItemPositions,
+} from '../menu-context';
 import useComponentColor from '../use-component-color';
 import useRovingFocus from '../use-roving-focus';
 
@@ -318,6 +320,9 @@ function closeTree() {
  */
 function registerItem(api) {
   itemApis.set(api.element, api);
+  updateMenuItemPositions(
+    Array.from(itemApis.values()).filter((item) => !item.grouped),
+  );
   roving.queueRefresh();
 }
 
@@ -326,6 +331,9 @@ function registerItem(api) {
  */
 function unregisterItem(api) {
   itemApis.delete(api.element);
+  updateMenuItemPositions(
+    Array.from(itemApis.values()).filter((item) => !item.grouped),
+  );
   roving.queueRefresh();
 }
 
@@ -557,6 +565,8 @@ watch(() => props.offset, async () => {
 
 .mat-menu--grouped {
   box-shadow: none;
+  filter: drop-shadow(0 1px 2px rgb(from var(--mat-sys-color-shadow) r g b / 30%))
+    drop-shadow(0 2px 6px rgb(from var(--mat-sys-color-shadow) r g b / 15%));
 }
 
 .mat-menu--grouped .mat-menu__surface {
