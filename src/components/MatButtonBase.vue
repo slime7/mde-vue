@@ -7,6 +7,10 @@ defineOptions({
 });
 
 defineProps({
+  block: {
+    type: Boolean,
+    default: false,
+  },
   disabled: {
     type: Boolean,
     default: false,
@@ -32,7 +36,10 @@ const emit = defineEmits(['click']);
   <MatActionBase
     v-bind="$attrs"
     class="mat-button-base"
-    :class="{ 'mat-button-base--use-cursor': useCursor }"
+    :class="{
+      'mat-button-base--block': block,
+      'mat-button-base--use-cursor': useCursor,
+    }"
     :aria-pressed="ariaPressed"
     :disabled="disabled"
     :type="type"
@@ -100,6 +107,11 @@ const emit = defineEmits(['click']);
 
 .mat-button-base--use-cursor:not(:disabled) {
   cursor: pointer;
+}
+
+.mat-button-base--block {
+  display: flex;
+  inline-size: auto;
 }
 
 .mat-button-base::before {

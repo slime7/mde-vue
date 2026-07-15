@@ -13,6 +13,8 @@ order: 60
 
 ### 默认 standard 组
 
+第二组设置 `block`，组根铺满父元素，子按钮仍保持内容宽度。
+
 <<< @/examples/button/ButtonGroupDefaultExample.vue
 
 <ClientOnly>
@@ -41,6 +43,7 @@ order: 60
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `block` | `boolean` | `false` | 使用块级 flex 组根，在普通文档流中铺满父元素；不改变子按钮宽度分配 |
 | `variant` | `'standard' \| 'connected'` | `'standard'` | 组布局形态 |
 | `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'small'` | 未显式设置尺寸的子按钮继承该值 |
 | `shape` | `'round' \| 'square'` | `'round'` | 子按钮形状和 connected 外角形状 |
@@ -50,6 +53,8 @@ order: 60
 | `selected` | 基础值、基础值数组或 `null` | `null` | 受控当前值；single 使用单值，multiple 使用数组 |
 | `required` | `boolean` | `false` | 阻止取消 single 当前项或 multiple 最后一项 |
 | `fullWidth` | `boolean` | `false` | connected 形态下铺满父容器并等分子项；standard 中忽略 |
+
+`block` 只控制组根的外部布局；`fullWidth` 还会让 connected 的直接子按钮等分整行。connected 可以只设置 `block` 并保留内容宽度，也可以只设置 `fullWidth` 直接启用铺满与等分。standard 始终忽略 `fullWidth`。
 
 组的 `size`、`shape`、`color` 只作为默认值，子组件显式 prop 优先。组 `disabled` 与子组件 `disabled` 取或。选择模式下每个直接子按钮都必须有唯一 `value`；缺少时发出开发警告并忽略该次选择。
 

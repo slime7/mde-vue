@@ -7,6 +7,17 @@ import MatTextarea from '../src/components/mat-textarea/MatTextarea.vue';
 import MAT_UI_KEY from '../src/mat-ui-context';
 
 describe('文本输入组件', () => {
+  it('Text field 和 Textarea 仅在 block 启用时切换根布局且不透传属性', () => {
+    [MatTextField, MatTextarea].forEach((component) => {
+      const defaultInput = mount(component);
+      const blockInput = mount(component, { props: { block: true } });
+
+      expect(defaultInput.classes()).not.toContain('mat-text-input--block');
+      expect(blockInput.classes()).toContain('mat-text-input--block');
+      expect(blockInput.attributes('block')).toBeUndefined();
+    });
+  });
+
   it('MatTextField 渲染原生 input、路由属性并请求更新模型', async () => {
     const change = vi.fn();
     const wrapper = mount(MatTextField, {

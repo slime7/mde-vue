@@ -11,6 +11,10 @@ defineOptions({
 });
 
 const props = defineProps({
+  block: {
+    type: Boolean,
+    required: true,
+  },
   control: {
     type: String,
     required: true,
@@ -132,6 +136,7 @@ function handleInput(event) {
         'mat-text-input--focused': focused,
         'mat-text-input--error': error,
         'mat-text-input--disabled': disabled,
+        'mat-text-input--block': block,
       },
     ]"
     :style="rootStyle"
@@ -232,6 +237,10 @@ function handleInput(event) {
   background: transparent;
   border: 1px solid var(--mat-text-input-outline-color);
   border-radius: var(--mat-sys-shape-corner-small);
+}
+
+.mat-text-input--block {
+  display: flex;
 }
 
 .mat-text-input__container::after {

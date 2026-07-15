@@ -18,6 +18,10 @@ defineOptions({
 });
 
 const props = defineProps({
+  block: {
+    type: Boolean,
+    default: false,
+  },
   variant: {
     type: String,
     default: 'filled',
@@ -124,6 +128,7 @@ watchEffect(() => {
     ]"
     :style="colorStyle"
     :aria-pressed="isToggle ? isSelected : undefined"
+    :block="block"
     :disabled="effectiveDisabled"
     :type="type"
     :use-cursor="useCursor"

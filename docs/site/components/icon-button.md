@@ -21,7 +21,7 @@ order: 55
   </DocsPreview>
 </ClientOnly>
 
-默认使用 `filled`、`small`、`default` 宽度和 `round` 形状。
+默认使用 `filled`、`small`、`default` 宽度和 `round` 形状。第二个图标按钮设置 `block`，图标保持居中，按钮根在普通文档流中铺满父元素。
 
 ### 外观、宽度和受控切换
 
@@ -39,6 +39,7 @@ order: 55
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `block` | `boolean` | `false` | 使用块级 flex 根布局，在普通文档流中铺满父元素 |
 | `variant` | `'filled' \| 'filled-tonal' \| 'outlined' \| 'standard'` | `'filled'` | 视觉层级 |
 | `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'small'` | 高度、图标、宽度、边框和圆角尺寸 |
 | `width` | `'narrow' \| 'default' \| 'wide'` | `'default'` | 当前尺寸中的容器宽度档位 |

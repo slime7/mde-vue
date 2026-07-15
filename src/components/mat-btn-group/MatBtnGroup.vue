@@ -14,6 +14,10 @@ defineOptions({
 });
 
 const props = defineProps({
+  block: {
+    type: Boolean,
+    default: false,
+  },
   variant: {
     type: String,
     default: 'standard',
@@ -76,10 +80,13 @@ const emit = defineEmits({
 const root = ref(null);
 const pressedButton = ref(null);
 const previousInlineSize = new WeakMap();
+const restingInlineSize = new WeakMap();
 const resizedButtons = new Set();
 const FALLBACK_WIDTH_TRANSITION_DURATION = 150;
 const MINIMUM_EXPANSION_PROGRESS = 0.75;
 let restoreTimer;
+let cleanupTimer;
+let activeTransitionDuration = FALLBACK_WIDTH_TRANSITION_DURATION;
 let restoreReady = true;
 let restoreRequested = false;
 const { colorStyle } = useComponentColor(computed(() => props.color));
@@ -208,14 +215,25 @@ function clearRestoreTimer() {
   restoreTimer = undefined;
 }
 
-function restorePressedButton() {
+function clearCleanupTimer() {
+  if (cleanupTimer === undefined) {
+    return;
+  }
+
+  globalThis.clearTimeout(cleanupTimer);
+  cleanupTimer = undefined;
+}
+
+function finishPressedButtonRestore() {
   clearRestoreTimer();
+  clearCleanupTimer();
 
   resizedButtons.forEach((item) => {
     const resizedButton = item;
 
     resizedButton.style.inlineSize = previousInlineSize.get(resizedButton) ?? '';
     previousInlineSize.delete(resizedButton);
+    restingInlineSize.delete(resizedButton);
   });
   resizedButtons.clear();
 
@@ -224,8 +242,36 @@ function restorePressedButton() {
   }
 
   pressedButton.value = null;
+  activeTransitionDuration = FALLBACK_WIDTH_TRANSITION_DURATION;
   restoreReady = true;
   restoreRequested = false;
+}
+
+function restorePressedButton() {
+  clearRestoreTimer();
+
+  if (!pressedButton.value) {
+    return;
+  }
+
+  if (prefersReducedMotion() || activeTransitionDuration === 0) {
+    finishPressedButtonRestore();
+    return;
+  }
+
+  resizedButtons.forEach((item) => {
+    const resizedButton = item;
+
+    resizedButton.style.inlineSize = `${restingInlineSize.get(resizedButton)}px`;
+  });
+  delete pressedButton.value.dataset.matGroupPressed;
+  pressedButton.value = null;
+  restoreReady = true;
+  restoreRequested = false;
+  cleanupTimer = globalThis.setTimeout(() => {
+    cleanupTimer = undefined;
+    finishPressedButtonRestore();
+  }, activeTransitionDuration);
 }
 
 function requestPressedButtonRestore() {
@@ -249,6 +295,8 @@ function startRestoreThreshold(button) {
   restoreRequested = false;
 
   const transitionDuration = getWidthTransitionDuration(button);
+
+  activeTransitionDuration = transitionDuration;
 
   if (prefersReducedMotion() || transitionDuration === 0) {
     restoreReady = true;
@@ -280,7 +328,7 @@ function expandButton(button) {
 
   const targetButton = button;
 
-  restorePressedButton();
+  finishPressedButtonRestore();
 
   const buttons = [...root.value.querySelectorAll('.mat-button-base')];
   const buttonIndex = buttons.indexOf(targetButton);
@@ -323,8 +371,19 @@ function expandButton(button) {
     const resizedButton = item;
 
     previousInlineSize.set(resizedButton, resizedButton.style.inlineSize);
-    resizedButton.style.inlineSize = `${inlineSize}px`;
+    restingInlineSize.set(resizedButton, buttonWidths.get(resizedButton));
+    resizedButton.style.inlineSize = `${buttonWidths.get(resizedButton)}px`;
     resizedButtons.add(resizedButton);
+  });
+
+  resizedButtons.forEach((item) => {
+    item.getBoundingClientRect();
+  });
+
+  nextInlineSizes.forEach((inlineSize, item) => {
+    const resizedButton = item;
+
+    resizedButton.style.inlineSize = `${inlineSize}px`;
   });
 
   targetButton.dataset.matGroupPressed = '';
@@ -391,11 +450,11 @@ function validateConnectedChildren() {
 }
 
 onMounted(validateConnectedChildren);
-onBeforeUnmount(restorePressedButton);
+onBeforeUnmount(finishPressedButtonRestore);
 watch(
   () => [props.variant, props.selection],
   async () => {
-    restorePressedButton();
+    finishPressedButtonRestore();
     await nextTick();
     validateConnectedChildren();
   },
@@ -411,7 +470,10 @@ watch(
       `mat-btn-group--${variant}`,
       `mat-btn-group--size-${size}`,
       `mat-btn-group--shape-${shape}`,
-      { 'mat-btn-group--full-width': variant === 'connected' && fullWidth },
+      {
+        'mat-btn-group--block': block,
+        'mat-btn-group--full-width': variant === 'connected' && fullWidth,
+      },
     ]"
     :style="colorStyle"
     role="group"
@@ -441,6 +503,10 @@ watch(
 
 .mat-btn-group--connected {
   gap: var(--mat-btn-group-connected-between-space);
+}
+
+.mat-btn-group--block {
+  display: flex;
 }
 
 .mat-btn-group--size-extra-small {

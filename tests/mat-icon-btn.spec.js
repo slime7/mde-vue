@@ -3,6 +3,17 @@ import { describe, expect, it } from 'vitest';
 import { MatIconBtn } from '../src';
 
 describe('MatIconBtn', () => {
+  it('block 默认关闭，启用后切换根布局且不透传原生属性', () => {
+    const defaultButton = mount(MatIconBtn, { props: { label: '默认' } });
+    const blockButton = mount(MatIconBtn, {
+      props: { label: '铺满', block: true },
+    });
+
+    expect(defaultButton.classes()).not.toContain('mat-button-base--block');
+    expect(blockButton.classes()).toContain('mat-button-base--block');
+    expect(blockButton.attributes('block')).toBeUndefined();
+  });
+
   it('渲染带操作名称和原生提示的图标按钮', () => {
     const wrapper = mount(MatIconBtn, {
       props: {

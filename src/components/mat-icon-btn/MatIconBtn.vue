@@ -16,6 +16,10 @@ defineOptions({
 });
 
 const props = defineProps({
+  block: {
+    type: Boolean,
+    default: false,
+  },
   variant: {
     type: String,
     default: 'filled',
@@ -131,6 +135,7 @@ const iconOpticalSize = computed(() => ({
     :aria-expanded="split?.role === 'trailing' ? split.expanded.value : undefined"
     :aria-haspopup="split?.role === 'trailing' ? 'menu' : undefined"
     :aria-pressed="effectiveToggle ? isSelected : undefined"
+    :block="block"
     :disabled="effectiveDisabled"
     :title="title"
     :type="type"

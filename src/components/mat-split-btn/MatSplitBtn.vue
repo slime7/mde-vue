@@ -13,6 +13,10 @@ defineOptions({
 });
 
 const props = defineProps({
+  block: {
+    type: Boolean,
+    default: false,
+  },
   variant: {
     type: String,
     default: 'filled',
@@ -120,6 +124,7 @@ watch(
       `mat-split-btn--${variant}`,
       `mat-split-btn--size-${size}`,
       {
+        'mat-split-btn--block': block,
         'mat-split-btn--expanded': expanded,
         'mat-split-btn--explicit-color': hasExplicitColor,
       },
@@ -156,6 +161,10 @@ watch(
 .mat-split-btn__segment {
   display: inline-flex;
   flex-shrink: 0;
+}
+
+.mat-split-btn--block {
+  display: flex;
 }
 
 .mat-split-btn--size-extra-small {

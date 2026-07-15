@@ -13,6 +13,22 @@ const splitButtonSource = readFileSync(
 );
 
 describe('MatSplitBtn', () => {
+  it('block 默认关闭，启用后切换组根布局且不透传原生属性', () => {
+    const createSlots = () => ({
+      leading: () => h(MatBtn, null, () => '新建'),
+      trailing: () => h(MatIconBtn, { label: '更多' }, () => 'arrow_drop_down'),
+    });
+    const defaultButton = mount(MatSplitBtn, { slots: createSlots() });
+    const blockButton = mount(MatSplitBtn, {
+      props: { block: true },
+      slots: createSlots(),
+    });
+
+    expect(defaultButton.classes()).not.toContain('mat-split-btn--block');
+    expect(blockButton.classes()).toContain('mat-split-btn--block');
+    expect(blockButton.attributes('block')).toBeUndefined();
+  });
+
   it('将父组件外观传给两个按钮并建立菜单 ARIA', () => {
     const wrapper = mount(MatSplitBtn, {
       props: {

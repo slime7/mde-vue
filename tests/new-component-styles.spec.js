@@ -2,6 +2,16 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 describe('新增组件现代 CSS', () => {
+  it('block Button 使用块级 flex 和自动宽度', () => {
+    const source = readFileSync('src/components/MatButtonBase.vue', 'utf8');
+    const blockStyles = source.match(
+      /\.mat-button-base--block \{(?<body>[\s\S]*?)\n\}/,
+    )?.groups?.body;
+
+    expect(blockStyles).toContain('display: flex');
+    expect(blockStyles).toContain('inline-size: auto');
+  });
+
   it('在基础样式中集中声明组件设计值', () => {
     const source = readFileSync('src/styles/index.css', 'utf8');
 

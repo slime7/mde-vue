@@ -13,6 +13,8 @@ order: 65
 
 ### 默认样式
 
+第二个拆分按钮设置 `block`，只让组合根采用块级布局，不改变 leading 和 trailing 子项的宽度分配。
+
 <<< @/examples/button/SplitButtonDefaultExample.vue
 
 <ClientOnly>
@@ -37,6 +39,7 @@ order: 65
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `block` | `boolean` | `false` | 使用块级 flex 组根，在普通文档流中铺满父元素；不拉伸两侧按钮 |
 | `variant` | `'elevated' \| 'filled' \| 'filled-tonal' \| 'outlined'` | `'filled'` | 两侧按钮统一视觉层级；不支持 text |
 | `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'small'` | 两侧按钮统一尺寸和 split 几何参数 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 两侧按钮统一配色 |

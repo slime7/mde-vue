@@ -25,6 +25,24 @@ function mockButtonWidths(buttons, widths) {
 
 /**
  * @param {import('@vue/test-utils').DOMWrapper<HTMLButtonElement>[]} buttons
+ * @param {number[]} widths
+ * @returns {(string | null)[]}
+ */
+function trackButtonWidthReads(buttons, widths) {
+  const inlineSizes = [];
+
+  buttons.forEach((button, index) => {
+    vi.spyOn(button.element, 'getBoundingClientRect').mockImplementation(() => {
+      inlineSizes.push(button.element.style.inlineSize || null);
+      return { width: widths[index] };
+    });
+  });
+
+  return inlineSizes;
+}
+
+/**
+ * @param {import('@vue/test-utils').DOMWrapper<HTMLButtonElement>[]} buttons
  * @returns {(number | null)[]}
  */
 function getInlineSizes(buttons) {
@@ -53,6 +71,32 @@ function mockWidthTransitionDuration(duration = 150) {
 }
 
 describe('MatBtnGroup', () => {
+  it('block 只切换组根布局，和 connected fullWidth 保持独立', () => {
+    const standard = mount(MatBtnGroup, {
+      props: { block: true, fullWidth: true },
+      slots: { default: () => h(MatBtn, null, () => '标准') },
+    });
+    const connected = mount(MatBtnGroup, {
+      props: {
+        block: true,
+        variant: 'connected',
+        selection: 'multiple',
+      },
+      slots: {
+        default: () => [
+          h(MatBtn, { value: 'one' }, () => '一'),
+          h(MatBtn, { value: 'two' }, () => '二'),
+        ],
+      },
+    });
+
+    expect(standard.classes()).toContain('mat-btn-group--block');
+    expect(standard.classes()).not.toContain('mat-btn-group--full-width');
+    expect(standard.attributes('block')).toBeUndefined();
+    expect(connected.classes()).toContain('mat-btn-group--block');
+    expect(connected.classes()).not.toContain('mat-btn-group--full-width');
+  });
+
   it('级联尺寸、形状、颜色和禁用状态，子组件显式值优先', () => {
     const wrapper = mount(MatBtnGroup, {
       props: {
@@ -150,10 +194,33 @@ describe('MatBtnGroup', () => {
 
     await buttons[0].trigger('pointercancel', { pointerId: 1 });
     vi.advanceTimersByTime(113);
+    expect(getInlineSizes(buttons)).toEqual([100, 100, null]);
+    vi.advanceTimersByTime(150);
     expect(getInlineSizes(buttons)).toEqual([null, null, null]);
 
     await buttons[1].trigger('pointerdown', { pointerId: 2 });
     expect(getInlineSizes(buttons)).toEqual([92.5, 115, 92.5]);
+  });
+
+  it('宽度变化先提交像素起点，再写入可插值的像素终点', async () => {
+    mockWidthTransitionDuration(1000);
+    const wrapper = mount(MatBtnGroup, {
+      slots: {
+        default: () => [
+          h(MatBtn, null, () => '一'),
+          h(MatBtn, null, () => '二'),
+        ],
+      },
+    });
+    const buttons = wrapper.findAll('button');
+    const widthReads = trackButtonWidthReads(buttons, [100, 100]);
+
+    await buttons[0].trigger('pointerdown', { pointerId: 1 });
+
+    expect(widthReads).toEqual([null, null, '100px', '100px']);
+    expect(getInlineSizes(buttons)).toEqual([115, 85]);
+
+    wrapper.unmount();
   });
 
   it('快速释放在 75% 阈值前保持展开，到达阈值后恢复', async () => {
@@ -178,6 +245,12 @@ describe('MatBtnGroup', () => {
     expect(getInlineSizes(buttons)).toEqual([115, 85]);
 
     vi.advanceTimersByTime(1);
+    expect(getInlineSizes(buttons)).toEqual([100, 100]);
+
+    vi.advanceTimersByTime(199);
+    expect(getInlineSizes(buttons)).toEqual([100, 100]);
+
+    vi.advanceTimersByTime(1);
     expect(getInlineSizes(buttons)).toEqual([null, null]);
   });
 
@@ -200,6 +273,9 @@ describe('MatBtnGroup', () => {
     expect(getInlineSizes(buttons)).toEqual([115, 85]);
 
     await buttons[0].trigger('pointerup', { pointerId: 1 });
+    expect(getInlineSizes(buttons)).toEqual([100, 100]);
+
+    vi.advanceTimersByTime(150);
     expect(getInlineSizes(buttons)).toEqual([null, null]);
   });
 
@@ -221,12 +297,16 @@ describe('MatBtnGroup', () => {
     expect(getInlineSizes(buttons)).toEqual([115, 85]);
     await buttons[0].trigger('keyup', { key: ' ' });
     vi.advanceTimersByTime(113);
+    expect(getInlineSizes(buttons)).toEqual([100, 100]);
+    vi.advanceTimersByTime(150);
     expect(getInlineSizes(buttons)).toEqual([null, null]);
 
     await buttons[1].trigger('keydown', { key: 'Enter' });
     expect(getInlineSizes(buttons)).toEqual([85, 115]);
     await buttons[1].trigger('focusout');
     vi.advanceTimersByTime(113);
+    expect(getInlineSizes(buttons)).toEqual([100, 100]);
+    vi.advanceTimersByTime(150);
     expect(getInlineSizes(buttons)).toEqual([null, null]);
   });
 

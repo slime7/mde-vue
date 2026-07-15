@@ -13,7 +13,7 @@ order: 50
 
 ### 默认样式
 
-省略属性时使用 `filled`、`small`、`round`：
+省略属性时使用 `filled`、`small`、`round`。第二个按钮设置 `block`，在普通文档流中作为块级 flex 容器铺满父元素：
 
 <<< @/examples/button/ButtonDefaultExample.vue
 
@@ -65,6 +65,7 @@ order: 50
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `block` | `boolean` | `false` | 使用块级 flex 根布局，在普通文档流中铺满父元素 |
 | `variant` | `'elevated' \| 'filled' \| 'filled-tonal' \| 'outlined' \| 'text'` | `'filled'` | 视觉层级 |
 | `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'small'` | 容器、排版、图标、间距和圆角尺寸 |
 | `shape` | `'round' \| 'square'` | `'round'` | 静止形状；toggle 选中时在 round 与 square 之间切换 |

@@ -5,6 +5,15 @@ import {
 import { MatBtn } from '../src';
 
 describe('MatBtn', () => {
+  it('block 默认关闭，启用后切换根布局且不透传原生属性', () => {
+    const defaultButton = mount(MatBtn);
+    const blockButton = mount(MatBtn, { props: { block: true } });
+
+    expect(defaultButton.classes()).not.toContain('mat-button-base--block');
+    expect(blockButton.classes()).toContain('mat-button-base--block');
+    expect(blockButton.attributes('block')).toBeUndefined();
+  });
+
   it('默认渲染 filled 按钮并避免意外提交表单', () => {
     const wrapper = mount(MatBtn, {
       slots: {

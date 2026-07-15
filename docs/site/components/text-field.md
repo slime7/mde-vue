@@ -13,7 +13,7 @@ order: 90
 
 ## 示例
 
-下面同时展示 outlined 的空值聚焦/失焦与错误状态、filled textarea、前后图标、字符计数、只读和禁用状态。验证码初始为空，可以反复聚焦并在不输入内容时离开，观察标签从边框返回容器中央；字符计数只在设置 `maxLength` 后显示。
+下面同时展示 outlined 的空值聚焦/失焦与错误状态、设置 `block` 的 filled textarea、前后图标、字符计数、只读和禁用状态。验证码初始为空，可以反复聚焦并在不输入内容时离开，观察标签从边框返回容器中央；字符计数只在设置 `maxLength` 后显示。
 
 <<< @/examples/text-field/TextFieldExample.vue
 
@@ -29,6 +29,7 @@ order: 90
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `block` | `boolean` | `false` | 使用块级 flex 根布局，在普通文档流中铺满父元素 |
 | `modelValue` | `string` | `''` | 受控输入值，可使用 `v-model` |
 | `label` | `string` | 未设置 | 始终可见的输入标签；输入有值、获得焦点或设置 placeholder 时浮动 |
 | `variant` | `'outlined' \| 'filled'` | `'outlined'` | 完整轮廓或带底部活动指示器的填充外观 |
