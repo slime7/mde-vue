@@ -78,6 +78,7 @@ import 'mdu-ui/styles.css';
 
 ```js
 import { MatCard } from 'mdu-ui/components/mat-card';
+import { MatIcon } from 'mdu-ui/components/mat-icon';
 import { MatList } from 'mdu-ui/components/mat-list';
 import { MatListItem } from 'mdu-ui/components/mat-list-item';
 import { MatDivider } from 'mdu-ui/components/mat-divider';
@@ -91,7 +92,7 @@ import { MatMenu } from 'mdu-ui/components/mat-menu';
 import { MatMenuItem } from 'mdu-ui/components/mat-menu-item';
 ```
 
-复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatTextField>` 或 `<MatMenu>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
+复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatIcon>`、`<MatTextField>` 或 `<MatMenu>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
 
 ## 如何选择
 
@@ -101,4 +102,4 @@ import { MatMenuItem } from 'mdu-ui/components/mat-menu-item';
 | 应用会使用多个 mdu-ui 组件 | 安装 `createMatUi()`，统一全局注册 |
 | 只使用少量组件，并接受基础样式的默认主题 | 从 `mdu-ui/components/<组件目录>` 按需导入 |
 
-`createMatUi()` 同时负责主题初始化、组件设置和全局注册。已经安装插件时，不需要再局部导入同一个组件。交互指针、Material Symbols 与主题入口见 [`createMatUi` 配置](/guide/create-mat-ui)。
+`createMatUi()` 同时负责主题初始化、组件设置和全局注册。已经安装插件时，不需要再局部导入同一个组件。交互指针、图标 class 与主题入口见 [`createMatUi` 配置](/guide/create-mat-ui)。

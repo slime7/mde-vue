@@ -36,7 +36,7 @@
 
 ### 公共入口
 
-`src/index.js` 是完整包入口，导出 Button、Card、List、Divider、选择控件、Text field、Textarea、Menu 组件族以及 `createMatUi()` 和 `useMatTheme()`。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口，复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
+`src/index.js` 是完整包入口，导出 Icon、Button、Card、List、Divider、选择控件、Text field、Textarea、Menu 组件族以及 `createMatUi()` 和 `useMatTheme()`。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口，复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -50,11 +50,13 @@
 
 ### 插件配置
 
-`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针，以及是否让组件图标容器使用 Material Symbols。顶层布尔选项不会写入 DOM 或主题控制器，也不改变按需导入组件在未安装插件时的默认行为。
+`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针，以及组件图标容器使用的全局 `iconClass`。顶层选项不会写入主题控制器；未安装插件的按需组件使用同一组默认设置。
 
 ### 组件
 
 每个组件拥有自己的 Vue SFC、公开入口、样式与测试。按钮和图标按钮共享原生 `<button>` 基础结构、状态层、插件设置和上下文合并逻辑；按钮组与 split button 使用 Vue provide/inject 协调子按钮，不复制交互协议。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
+
+Icon 统一字体字形、SVG 资源和默认 Slot 中的 SVG 元素，负责 Material Symbols 经典四轴、尺寸、内容颜色和动态根标签。内容来源优先级固定为 `src`、`icon`、默认 Slot；组件级 `iconClass` 可覆盖或关闭插件全局值。按钮、List、Menu 和文本输入复用同一公共 Icon 实现，但各自负责上下文尺寸、颜色和无障碍语义。
 
 List 通过内部 provide/inject 上下文统一交互模式、受控选择和焦点刷新。普通与操作模式保留 `ul/li`，选择模式使用 `listbox/option`；roving tabindex 注册表按 DOM 顺序协调项目主操作和 multi-action trailing 控件，并在模式切换或卸载时恢复使用方原有的 tabindex。Divider 根据 List 上下文切换合法的根语义，不参与选择与焦点顺序。
 
@@ -64,7 +66,7 @@ Checkbox 以布尔值或基础值数组表达受控选择，数组更新始终�
 
 ### 样式层
 
-基础样式公开两层令牌：`--mat-ref-*` 保存文字与图标字体等参考值，`--mat-sys-*` 保存颜色、排版、形状、海拔、动效、状态和交互值。组件可以使用 `--mat-<component>-*`、`--mat-button-*` 等 CSS 自定义属性组织尺寸、变体和状态样式，但这些变量属于内部实现，不提供公共定制或兼容承诺。Material Symbols 选项只应用字体族与连字规则，字体资源仍由使用方加载。
+基础样式公开两层令牌：`--mat-ref-*` 保存文字与图标字体等参考值，`--mat-sys-*` 保存颜色、排版、形状、海拔、动效、状态和交互值。组件可以使用 `--mat-<component>-*`、`--mat-button-*` 等 CSS 自定义属性组织尺寸、变体和状态样式，但这些变量属于内部实现，不提供公共定制或兼容承诺。Icon 的字体由 `iconClass` 对应样式决定，字体与 SVG 资源仍由使用方加载。
 
 Tailwind 适配文件通过 `@theme inline` 将公开的 reference 和 system 值映射到带 `mat` 前缀的 Tailwind 主题变量，不重新定义主题来源。
 
@@ -113,7 +115,7 @@ flowchart LR
 - Vue 是 peer dependency，由使用方应用提供。
 - Material Color Utilities 是主题运行时依赖。
 - Tailwind CSS v4 是可选 peer dependency；不使用 Tailwind 的项目只导入基础样式。
-- Material Symbols 字体是可选的应用资源；插件不会下载字体或发起网络请求。
+- Material Symbols 或其他图标字体是可选的应用资源；Icon 也不下载外部 SVG，插件不会发起网络请求。
 - 项目无服务端、数据库、缓存、遥测或远程运行时服务。
 - 私有 GitHub 仓库是源码分发边界，使用方应锁定具体提交。
 
@@ -137,3 +139,4 @@ Vite 构建检查从公开 `exports` 导入 `.vue` 和 CSS，验证普通 Vue/Vi
 - [0005 — 采用组件级种子配色与父子继承](adr/0005-component-seed-color-inheritance.md)
 - [0006 — 采用 Material 3 分层令牌与完整组件属性名（已由 0007 替代）](adr/0006-material-3-layered-tokens-and-full-property-names.md)
 - [0007 — 保留内部组件令牌但不提供公共定制入口](adr/0007-internal-component-tokens-without-public-customization.md)
+- [0009 — 采用公共 Icon 与可配置图标类](adr/0009-public-icon-and-configurable-icon-class.md)

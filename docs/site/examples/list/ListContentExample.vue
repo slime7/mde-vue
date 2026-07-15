@@ -2,7 +2,7 @@
   <mat-list variant="standard" aria-label="账户信息" class="example-list">
     <mat-list-item>
       <template #leading>
-        <span class="material-symbols-outlined" aria-hidden="true">person</span>
+        person
       </template>
       当前账户
     </mat-list-item>
@@ -11,7 +11,7 @@
 
     <mat-list-item>
       <template #leading>
-        <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+        mail
       </template>
       收件箱
       <template #supporting>

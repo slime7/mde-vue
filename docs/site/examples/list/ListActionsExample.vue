@@ -8,11 +8,11 @@
     >
       <mat-list-item>
         <template #leading>
-          <span class="material-symbols-outlined" aria-hidden="true">person</span>
+          person
         </template>
         个人资料
         <template #trailing>
-          <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+          <mat-icon icon="chevron_right" size="small" aria-hidden="true" />
         </template>
       </mat-list-item>
       <mat-list-item href="#list-api">

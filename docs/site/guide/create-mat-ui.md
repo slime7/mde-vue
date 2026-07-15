@@ -1,6 +1,6 @@
 ---
 title: createMatUi
-description: 配置 mdu-ui 的全局组件注册、交互指针、Material Symbols 图标和主题控制器。
+description: 配置 mdu-ui 的全局组件注册、交互指针、图标 class 和主题控制器。
 llms: true
 order: 25
 ---
@@ -18,8 +18,8 @@ import App from './App.vue';
 import 'mdu-ui/styles.css';
 
 const matUi = createMatUi({
+  iconClass: 'material-symbols-outlined',
   useCursor: true,
-  useMaterialSymbols: true,
   theme: {
     mode: 'system',
     seedColor: '#20a6fc',
@@ -29,14 +29,14 @@ const matUi = createMatUi({
 createApp(App).use(matUi).mount('#app');
 ```
 
-所有选项都可以省略。传给 `createMatUi()` 的值必须是对象，`useCursor` 和 `useMaterialSymbols` 必须是 `boolean`，否则会抛出 `TypeError`。
+所有选项都可以省略。传给 `createMatUi()` 的值必须是对象，`useCursor` 必须是 `boolean`，`iconClass` 必须是 `string`，否则会抛出 `TypeError`。
 
 ## 选项
 
 | 选项 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `iconClass` | `string` | `'material-symbols-outlined'` | 应用于 `MatIcon` 和组件图标容器的空格分隔 class |
 | `useCursor` | `boolean` | `false` | 是否为可用交互组件显示 `cursor: pointer` |
-| `useMaterialSymbols` | `boolean` | `false` | 是否让组件图标容器使用 Material Symbols Outlined 字体和连字 |
 | `theme` | `object` | 默认主题配置 | 动态主题的初始模式、种子色、配色变体、对比度和写入目标 |
 
 ## 交互指针
@@ -53,7 +53,7 @@ createApp(App).use(createMatUi({
 
 ## Material Symbols
 
-传入 `useMaterialSymbols: true` 后，可以直接把 Material Symbols 标签写入组件定义的图标 slot：
+默认 `iconClass` 已设置为 `material-symbols-outlined`，可以直接把 Material Symbols 字形写入 `MatIcon` 或组件定义的图标 Slot：
 
 ```vue
 <mat-btn>
@@ -64,16 +64,16 @@ createApp(App).use(createMatUi({
 <mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
 ```
 
-此选项负责设置图标容器的 `font-family`、连字和文字渲染规则，不会下载字体文件。应用需要自行加载 Material Symbols Outlined，例如在 HTML 头部加入：
+`iconClass` 只设置图标容器的 class，不会下载字体文件。应用需要自行加载 Material Symbols Outlined，例如在 HTML 头部加入：
 
 ```html
 <link
   rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
 >
 ```
 
-字体族由 `--mat-ref-typeface-icon` 控制，默认值是 `'Material Symbols Outlined'`。不启用此选项时，图标 slot 仍可传入 SVG 或其他普通 Vue 内容。
+改用其他图标字体时，把 `iconClass` 设置为对应基础 class；单个 `MatIcon` 还可以通过 `icon-class` 覆盖或以空字符串关闭全局值。字体库可以忽略 Material Symbols 专用的 `fill`、`weight`、`grade` 和 `optical-size`。SVG URL、`data:` URL 和内联 SVG 用法见 [Icon 图标](/components/icon)。
 
 ## 主题
 

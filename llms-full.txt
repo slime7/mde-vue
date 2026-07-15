@@ -106,6 +106,7 @@ import 'mdu-ui/styles.css';
 
 ```js
 import { MatCard } from 'mdu-ui/components/mat-card';
+import { MatIcon } from 'mdu-ui/components/mat-icon';
 import { MatList } from 'mdu-ui/components/mat-list';
 import { MatListItem } from 'mdu-ui/components/mat-list-item';
 import { MatDivider } from 'mdu-ui/components/mat-divider';
@@ -119,7 +120,7 @@ import { MatMenu } from 'mdu-ui/components/mat-menu';
 import { MatMenuItem } from 'mdu-ui/components/mat-menu-item';
 ```
 
-复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatTextField>` 或 `<MatMenu>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
+复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatIcon>`、`<MatTextField>` 或 `<MatMenu>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
 
 ## 如何选择
 
@@ -129,7 +130,7 @@ import { MatMenuItem } from 'mdu-ui/components/mat-menu-item';
 | 应用会使用多个 mdu-ui 组件 | 安装 `createMatUi()`，统一全局注册 |
 | 只使用少量组件，并接受基础样式的默认主题 | 从 `mdu-ui/components/<组件目录>` 按需导入 |
 
-`createMatUi()` 同时负责主题初始化、组件设置和全局注册。已经安装插件时，不需要再局部导入同一个组件。交互指针、Material Symbols 与主题入口见 [`createMatUi` 配置](/guide/create-mat-ui)。
+`createMatUi()` 同时负责主题初始化、组件设置和全局注册。已经安装插件时，不需要再局部导入同一个组件。交互指针、图标 class 与主题入口见 [`createMatUi` 配置](/guide/create-mat-ui)。
 
 # createMatUi
 
@@ -144,8 +145,8 @@ import App from './App.vue';
 import 'mdu-ui/styles.css';
 
 const matUi = createMatUi({
+  iconClass: 'material-symbols-outlined',
   useCursor: true,
-  useMaterialSymbols: true,
   theme: {
     mode: 'system',
     seedColor: '#20a6fc',
@@ -155,14 +156,14 @@ const matUi = createMatUi({
 createApp(App).use(matUi).mount('#app');
 ```
 
-所有选项都可以省略。传给 `createMatUi()` 的值必须是对象，`useCursor` 和 `useMaterialSymbols` 必须是 `boolean`，否则会抛出 `TypeError`。
+所有选项都可以省略。传给 `createMatUi()` 的值必须是对象，`useCursor` 必须是 `boolean`，`iconClass` 必须是 `string`，否则会抛出 `TypeError`。
 
 ## 选项
 
 | 选项 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `iconClass` | `string` | `'material-symbols-outlined'` | 应用于 `MatIcon` 和组件图标容器的空格分隔 class |
 | `useCursor` | `boolean` | `false` | 是否为可用交互组件显示 `cursor: pointer` |
-| `useMaterialSymbols` | `boolean` | `false` | 是否让组件图标容器使用 Material Symbols Outlined 字体和连字 |
 | `theme` | `object` | 默认主题配置 | 动态主题的初始模式、种子色、配色变体、对比度和写入目标 |
 
 ## 交互指针
@@ -179,7 +180,7 @@ createApp(App).use(createMatUi({
 
 ## Material Symbols
 
-传入 `useMaterialSymbols: true` 后，可以直接把 Material Symbols 标签写入组件定义的图标 slot：
+默认 `iconClass` 已设置为 `material-symbols-outlined`，可以直接把 Material Symbols 字形写入 `MatIcon` 或组件定义的图标 Slot：
 
 ```vue
 <mat-btn>
@@ -190,16 +191,16 @@ createApp(App).use(createMatUi({
 <mat-icon-btn label="更多操作">more_vert</mat-icon-btn>
 ```
 
-此选项负责设置图标容器的 `font-family`、连字和文字渲染规则，不会下载字体文件。应用需要自行加载 Material Symbols Outlined，例如在 HTML 头部加入：
+`iconClass` 只设置图标容器的 class，不会下载字体文件。应用需要自行加载 Material Symbols Outlined，例如在 HTML 头部加入：
 
 ```html
 <link
   rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
 >
 ```
 
-字体族由 `--mat-ref-typeface-icon` 控制，默认值是 `'Material Symbols Outlined'`。不启用此选项时，图标 slot 仍可传入 SVG 或其他普通 Vue 内容。
+改用其他图标字体时，把 `iconClass` 设置为对应基础 class；单个 `MatIcon` 还可以通过 `icon-class` 覆盖或以空字符串关闭全局值。字体库可以忽略 Material Symbols 专用的 `fill`、`weight`、`grade` 和 `optical-size`。SVG URL、`data:` URL 和内联 SVG 用法见 [Icon 图标](/components/icon)。
 
 ## 主题
 
@@ -322,7 +323,7 @@ matUi.theme.dispose();
 
 ### 字体与排版
 
-参考文字字体为 `--mat-ref-typeface-brand`、`--mat-ref-typeface-plain`，默认均为 `system-ui, sans-serif`；图标字体 `--mat-ref-typeface-icon` 默认为 `'Material Symbols Outlined'`。字重为 `--mat-ref-typeface-weight-regular`、`medium`、`bold`。
+参考文字字体为 `--mat-ref-typeface-brand`、`--mat-ref-typeface-plain`，默认均为 `system-ui, sans-serif`；图标字体参考值 `--mat-ref-typeface-icon` 默认为 `'Material Symbols Outlined'`。`MatIcon` 实际使用的字体由 `createMatUi({ iconClass })` 对应的 CSS class 决定。字重为 `--mat-ref-typeface-weight-regular`、`medium`、`bold`。
 
 系统排版包含 `display`、`headline`、`title`、`body`、`label` 五组，每组都有 `large`、`medium`、`small`，并分别公开 `font`、`weight`、`size`、`line-height`、`tracking` 五个轴。例如 `--mat-sys-typescale-title-medium-size`。强调样式使用 `--mat-sys-typescale-emphasized-<style>-<axis>`，共提供相同的 15 套样式。
 
@@ -336,6 +337,198 @@ matUi.theme.dispose();
 - 交互：`--mat-sys-interaction-target-min-size` 为 `48px`，焦点环使用 `--mat-sys-interaction-focus-ring-width` 和 `--mat-sys-interaction-focus-ring-offset`。
 
 实现组件时不能只根据色值挑选令牌。容器与内容的配对、强调层级、表面层级和边界选择见[组件配色](/guide/component-color)。
+
+# Icon 图标
+
+## 组件简介
+
+`<mat-icon>` 的组件导出名是 `MatIcon`。它统一展示 Material Symbols 字形、SVG URL 或 `data:` URL，以及默认 Slot 中的真实 SVG 元素，并能控制尺寸、经典四轴、颜色和根标签。组件只负责渲染，不下载字体或图标资源。
+
+## 示例
+
+### 字形、SVG 资源和 SVG Slot
+
+```vue
+<script setup>
+const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path fill="#6750a4" d="M12 2 2 7v10l10 5 10-5V7Zm0 2.2L19.6 8 12 11.8 4.4 8ZM4 9.6l7 3.5v6.4l-7-3.5Zm9 9.9v-6.4l7-3.5V16Z"/>
+  </svg>
+`)}`;
+</script>
+
+<template>
+  <div class="example-row">
+    <mat-icon icon="home" aria-hidden="true" />
+
+    <mat-icon
+      :src="sourceIcon"
+      role="img"
+      aria-label="立方体"
+    />
+
+    <mat-icon font-color="rebeccapurple" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2 15.1 8.3 22 9.3 17 14.2 18.2 21 12 17.8 5.8 21 7 14.2 2 9.3 8.9 8.3Z" />
+      </svg>
+    </mat-icon>
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+</style>
+```
+<ClientOnly>
+  <DocsPreview label="Icon 内容来源预览">
+    <IconSourcesExample />
+  </DocsPreview>
+</ClientOnly>
+
+同时提供多个来源时固定使用 `src > icon > 默认 Slot`。`src` 交给内部 `<img alt="">` 加载，不会下载后再转成内联 SVG；默认 Slot 直接接收 Vue 渲染的 SVG 元素，不解析 SVG 字符串。
+
+### 尺寸、配色和字体轴动画
+
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const filled = ref(false);
+</script>
+
+<template>
+  <div class="example-stack">
+    <div class="example-row">
+      <mat-icon icon="favorite" size="small" aria-hidden="true" />
+      <mat-icon icon="favorite" size="medium" color="primary" aria-hidden="true" />
+      <mat-icon icon="favorite" size="large" color="tertiary" aria-hidden="true" />
+      <mat-icon icon="favorite" size="extra-large" font-color="rgb(196 38 80)" aria-hidden="true" />
+    </div>
+
+    <div class="example-row">
+      <mat-icon
+        icon="favorite"
+        size="40px"
+        :fill="filled ? 1 : 0"
+        :grade="filled ? 100 : 0"
+        :weight="filled ? 600 : 400"
+        :optical-size="40"
+        color="primary"
+        aria-hidden="true"
+      />
+      <mat-btn variant="filled-tonal" @click="filled = !filled">
+        切换字体轴
+      </mat-btn>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  gap: 24px;
+  flex-direction: column;
+}
+
+.example-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+</style>
+```
+<ClientOnly>
+  <DocsPreview label="Icon 尺寸和字体轴预览" stacked>
+    <IconAppearanceExample />
+  </DocsPreview>
+</ClientOnly>
+
+`fill`、`weight`、`grade` 和 `optical-size` 会通过项目动效令牌平滑过渡；系统要求减少动画时立即切换。应用加载的字体文件必须包含对应变量范围，否则字体可能忽略部分值。
+
+### 自定义图标 class 与根标签
+
+```vue
+<template>
+  <div class="example-row">
+    <mat-icon
+      as="span"
+      icon=""
+      icon-class="example-diamond-icon"
+      font-color="darkorange"
+      aria-hidden="true"
+    />
+    <span>由自定义 class 的伪元素生成</span>
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.example-diamond-icon::before {
+  content: '◆';
+}
+</style>
+```
+<ClientOnly>
+  <DocsPreview label="Icon 自定义 class 预览">
+    <IconClassExample />
+  </DocsPreview>
+</ClientOnly>
+
+空 `icon` 仍视为显式字形来源，可配合由 class 或伪元素决定具体图形的图标库。`icon-class` 会覆盖 `createMatUi({ iconClass })` 的全局值；传入空字符串可以关闭全局 class。
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `icon` | `string` | 未设置 | 字体字形或连字文本；允许空字符串 |
+| `src` | `string` | 未设置 | 非空 SVG URL 或 `data:` URL，优先于其他内容来源 |
+| `size` | `'small' \| 'medium' \| 'large' \| 'extra-large' \| CSS 长度` | `'medium'` | 对应 `20px / 24px / 40px / 48px`；也接受带单位长度及 `var()`、`calc()`、`min()`、`max()`、`clamp()` |
+| `fill` | `number` | `0` | Material Symbols `FILL` 轴，范围 `0..1` |
+| `weight` | `number` | `400` | Material Symbols `wght` 轴，范围 `100..700` |
+| `grade` | `number` | `0` | Material Symbols `GRAD` 轴，范围 `-50..200` |
+| `optical-size` | `number` | 自动 | Material Symbols `opsz` 轴，范围 `20..48`；命名尺寸使用对应值，自定义尺寸回退为 `24` |
+| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| #RRGGBB` | 未设置 | 语义色族或局部 Material 2025 种子色；省略时继承 `currentColor` |
+| `font-color` | `string` | 未设置 | 直接使用任意合法 CSS 颜色，同时传入时优先于 `color` |
+| `as` | `string` | `'i'` | 非空 HTML 标签名，用作实际根元素 |
+| `icon-class` | `string` | 继承全局值 | 空格分隔的图标 class；默认全局值为 `material-symbols-outlined`，空字符串关闭全局值 |
+
+未被消费的原生属性传递给实际根元素。组件没有公开方法。Slot SVG 只有在自身使用 `currentColor` 时才继承组件颜色；`src` 资源保留自己的内部颜色。
+
+## 事件
+
+组件不定义自定义事件。传入的原生事件监听器作用于 `as` 指定的根元素；内部图片的 `load`、`error` 不作为公共自定义事件转发。
+
+## Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 在未传 `src` 和 `icon` 时展示真实 SVG 或其他 Vue 内容；推荐 SVG 使用 `viewBox` 并以 `currentColor` 表达可继承颜色 |
+
+## 状态与无障碍
+
+Icon 本身不提供交互语义。装饰性图标应传入 `aria-hidden="true"`；承担信息含义时，应按所在上下文为根元素提供 `role` 和可访问名称。图标按钮仍由 `MatIconBtn` 的必填 `label` 提供操作名称。
+
+## 参考来源
+
+四轴名称、范围和 FILL 状态动画依据 [Material Symbols 官方指南](https://developers.google.com/fonts/docs/material_symbols?hl=zh-CN)。内容来源设计参考 [mdui v2 Icon](https://www.mdui.org/en/docs/2/components/icon)，改编代码继续遵循仓库中的 mdui MIT 许可声明。
+
+<script setup>
+import IconAppearanceExample from '../examples/icon/IconAppearanceExample.vue';
+import IconClassExample from '../examples/icon/IconClassExample.vue';
+import IconSourcesExample from '../examples/icon/IconSourcesExample.vue';
+</script>
 
 # 组件配色
 
@@ -356,6 +549,8 @@ matUi.theme.dispose();
 组件显式 `color` 优先于父组合组件级联值，父级联值优先于形态默认值。由 prop 生成的局部配色优先于组件的默认角色映射。中性表面、outline 和 disabled 仍使用项目中性角色，不随局部种子色变化。
 
 三位十六进制、带透明度的十六进制、`rgb()`、颜色名称和任意 CSS 值都不是合法 `color` prop。组件内部颜色变量不是公共 API，不应由应用直接覆盖。
+
+`MatIcon` 是内容颜色例外：省略 `color` 时继承 `currentColor`；需要绕过动态色板直接使用 CSS 颜色时可传入 `font-color`，它接受 `rgb()`、颜色名称、CSS 变量等合法颜色，并优先于 `color`。该例外不扩展其他组件的 `color` 输入格式。
 
 ## 基本方法
 
@@ -2199,7 +2394,7 @@ const segmentedSelected = ref(null);
   <mat-list variant="standard" aria-label="账户信息" class="example-list">
     <mat-list-item>
       <template #leading>
-        <span class="material-symbols-outlined" aria-hidden="true">person</span>
+        person
       </template>
       当前账户
     </mat-list-item>
@@ -2208,7 +2403,7 @@ const segmentedSelected = ref(null);
 
     <mat-list-item>
       <template #leading>
-        <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+        mail
       </template>
       收件箱
       <template #supporting>
@@ -2261,11 +2456,11 @@ const segmentedSelected = ref(null);
     >
       <mat-list-item>
         <template #leading>
-          <span class="material-symbols-outlined" aria-hidden="true">person</span>
+          person
         </template>
         个人资料
         <template #trailing>
-          <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+          <mat-icon icon="chevron_right" size="small" aria-hidden="true" />
         </template>
       </mat-list-item>
       <mat-list-item href="#list-api">

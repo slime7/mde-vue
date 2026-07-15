@@ -115,7 +115,7 @@ matUi.theme.dispose();
 
 ### 字体与排版
 
-参考文字字体为 `--mat-ref-typeface-brand`、`--mat-ref-typeface-plain`，默认均为 `system-ui, sans-serif`；图标字体 `--mat-ref-typeface-icon` 默认为 `'Material Symbols Outlined'`。字重为 `--mat-ref-typeface-weight-regular`、`medium`、`bold`。
+参考文字字体为 `--mat-ref-typeface-brand`、`--mat-ref-typeface-plain`，默认均为 `system-ui, sans-serif`；图标字体参考值 `--mat-ref-typeface-icon` 默认为 `'Material Symbols Outlined'`。`MatIcon` 实际使用的字体由 `createMatUi({ iconClass })` 对应的 CSS class 决定。字重为 `--mat-ref-typeface-weight-regular`、`medium`、`bold`。
 
 系统排版包含 `display`、`headline`、`title`、`body`、`label` 五组，每组都有 `large`、`medium`、`small`，并分别公开 `font`、`weight`、`size`、`line-height`、`tracking` 五个轴。例如 `--mat-sys-typescale-title-medium-size`。强调样式使用 `--mat-sys-typescale-emphasized-<style>-<axis>`，共提供相同的 15 套样式。
 

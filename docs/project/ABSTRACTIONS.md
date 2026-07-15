@@ -19,9 +19,9 @@
 
 `MatSurfaceBase`、`MatActionBase`、`MatSelectionControlBase`、`MatTextInputBase`、`MatItemContentBase` 与 `useRovingFocus` 是内部结构复用层，不属于公共 API。它们分别负责表面根节点、原生 button/link 交互、选择控件结构、文本输入视觉、无语义项目内容排列和 tabindex 管理；公共组件不得要求使用者依赖其 class、文件路径或内部 CSS 变量。
 
-`createMatUi({ theme, useCursor, useMaterialSymbols })` 创建一次 Vue 插件安装单元。插件负责全局注册 `mat-*` 组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
+`createMatUi({ theme, useCursor, iconClass })` 创建一次 Vue 插件安装单元。插件负责全局注册 `mat-*` 组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
 
-`useCursor` 和 `useMaterialSymbols` 都必须是 boolean，默认均为 `false`。前者控制可用交互组件是否从 `cursor: default` 改为 `cursor: pointer`；后者让组件定义的图标容器使用 `--mat-ref-typeface-icon` 和连字规则，但不负责下载字体资源。未安装插件的按需组件使用相同默认值。
+`useCursor` 必须是 boolean，默认 `false`，控制可用交互组件是否从 `cursor: default` 改为 `cursor: pointer`。`iconClass` 必须是 string，默认 `material-symbols-outlined`，作为公共 Icon 与组件图标容器的全局 class；组件级 `iconClass` 可以覆盖或以空字符串关闭它。插件不下载字体或图标资源，未安装插件的按需组件使用相同默认值。
 
 `useMatTheme()` 只能读取当前 Vue 应用提供的主题上下文。组件不得自行创建第二套主题状态；应用级主题控制器是运行时配置的权威来源。
 
@@ -95,6 +95,14 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 `<mat-icon-btn>` 以必填 `label` 提供操作名称和原生 `title` 提示，支持三档宽度和受控 toggle。`<mat-btn-group>` 负责 standard/connected 布局以及受控 single/multiple 选择；组容器不进入 Tab 顺序，子按钮保持独立停靠点。`<mat-split-btn>` 接受调用方提供的 leading 和 trailing 按钮，只协调视觉、事件、`aria-haspopup`、`aria-expanded` 与可选 `aria-controls`，菜单始终由应用管理。
 
 当前按钮体系不包含 loading、链接模式、涟漪、密度参数、内置菜单或完整表单代理方法。
+
+## `<mat-icon>`
+
+`<mat-icon>` 的导出名是 `MatIcon`，默认以 `i` 为根元素，`as` 可以改用其他非空 HTML 标签。内容按 `src`、`icon`、默认 Slot 的顺序选择：`src` 通过内部空替代文字的 img 加载 SVG URL 或 data URL，`icon` 输出字体字形或连字文本，默认 Slot 直接渲染 SVG 或其他 Vue 内容。组件不获取或解析远程 SVG，也不把 SVG 字符串写入 DOM。
+
+Icon 尺寸使用 `small`、`medium`、`large`、`extra-large` 四档，分别为 20px、24px、40px、48px，也接受带单位的 CSS 长度。`fill`、`weight`、`grade`、`opticalSize` 对应 Material Symbols 的经典四轴并按官方范围校验；轴、字号和颜色使用系统动效令牌过渡，并尊重减少动画偏好。
+
+Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `currentColor`；`fontColor` 直接接受任意 CSS 颜色并优先于 `color`。Slot SVG 只有使用 `currentColor` 时继承颜色，`src` 资源保留内部颜色。其他组件复用 MatIcon 时负责传入所在组件的尺寸、光学尺寸、内容颜色和无障碍属性。
 
 ## 表单选择控件
 

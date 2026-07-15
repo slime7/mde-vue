@@ -70,6 +70,7 @@ export default defineConfig({
               { text: 'Split button 拆分按钮', link: '/components/split-button' },
             ],
           },
+          { text: 'Icon 图标', link: '/components/icon' },
           {
             text: '表单选择',
             collapsed: false,
