@@ -349,10 +349,6 @@ function handleInput(event) {
   transform: translateY(calc(-100% - 8px));
 }
 
-.mat-text-input:has(.mat-text-input__label) .mat-text-input__control-row {
-  padding-block-start: 16px;
-}
-
 .mat-text-input--filled:has(.mat-text-input__label) .mat-text-input__control-row {
   padding-block: 24px 8px;
 }
