@@ -89,7 +89,7 @@ order: 65
 
 ### `controls`
 
-`controls` 与菜单的 `open`、`anchor` 共同建立展开按钮和菜单之间的 ARIA 与定位关系。
+`controls` 与菜单的 `modelValue`、`anchor` 共同建立展开按钮和菜单之间的 ARIA 与定位关系。
 
 ::: details 查看示例代码
 <<< @/examples/button/SplitButtonControlsExample.vue
@@ -162,7 +162,7 @@ slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展
 
 ### 状态与键盘
 
-两侧按钮都是独立 Tab 停靠点，使用原生 Space/Enter 激活。与 `MatMenu` 组合时，应用用同一个状态连接 `expanded` 与 `open`；MatMenu 负责菜单内部方向键、Escape、外部关闭和触发器焦点恢复。
+两侧按钮都是独立 Tab 停靠点，使用原生 Space/Enter 激活。与 `MatMenu` 组合时，应用用同一个状态连接 `expanded` 与 MatMenu 的普通 `v-model`；MatMenu 负责菜单内部方向键、Escape、外部关闭和触发器焦点恢复。
 
 组件没有公开方法。
 

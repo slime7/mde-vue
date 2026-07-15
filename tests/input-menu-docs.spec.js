@@ -42,6 +42,23 @@ describe('文本输入与菜单文档', () => {
     expect(source).not.toContain('class="example-menu"');
   });
 
+  it('Menu 文档覆盖普通 v-model、分组、右键坐标和 offset', () => {
+    const page = readFileSync(resolve('docs/site/components/menu.md'), 'utf8');
+    const contextExample = readFileSync(
+      resolve('docs/site/examples/menu/MenuContextExample.vue'),
+      'utf8',
+    );
+
+    expect(page).toContain('`modelValue`');
+    expect(page).toContain('`MatMenuGroup`');
+    expect(page).toContain('MenuGroupExample.vue');
+    expect(page).toContain('MenuContextExample.vue');
+    expect(page).toContain('MenuOffsetExample.vue');
+    expect(page).not.toContain('v-model:open');
+    expect(contextExample).toContain('[event.clientX, event.clientY]');
+    expect(contextExample).toContain('@contextmenu.prevent="showContextMenu"');
+  });
+
   it('窄屏文档表格在自身内部滚动', () => {
     const source = readFileSync(
       resolve('docs/site/.vitepress/theme/custom.css'),

@@ -18,7 +18,7 @@ const open = ref(false);
     </mat-btn>
     <mat-menu
       id="open-anchor-menu"
-      v-model:open="open"
+      v-model="open"
       anchor="open-anchor-menu-trigger"
     >
       <mat-menu-item>菜单项目</mat-menu-item>

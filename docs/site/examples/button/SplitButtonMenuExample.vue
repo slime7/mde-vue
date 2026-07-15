@@ -28,7 +28,7 @@ const expanded = ref(false);
 
     <mat-menu
       id="create-menu"
-      v-model:open="expanded"
+      v-model="expanded"
       anchor="split-create-trigger"
       color="#6750a4"
     >

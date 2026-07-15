@@ -20,7 +20,7 @@ const open = ref(false);
     </mat-split-btn>
     <mat-menu
       id="split-controls-menu"
-      v-model:open="open"
+      v-model="open"
       anchor="split-controls-trigger"
     >
       <mat-menu-item>文档</mat-menu-item>

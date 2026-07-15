@@ -17,7 +17,7 @@ const open = ref(true);
     </mat-btn>
     <mat-menu
       id="color-menu"
-      v-model:open="open"
+      v-model="open"
       anchor="color-menu-trigger"
       color="#6750a4"
     >

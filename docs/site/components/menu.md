@@ -1,6 +1,6 @@
 ---
 title: Menu 菜单
-description: mat-menu 与 mat-menu-item 的 Popover、锚点换边、多级展开、键盘焦点和局部配色。
+description: mat-menu、mat-menu-group 与 mat-menu-item 的分组、坐标定位、多级展开、键盘焦点和局部配色。
 llms: true
 order: 95
 ---
@@ -9,21 +9,59 @@ order: 95
 
 ## 组件简介
 
-`<mat-menu>` 的组件导出名是 `MatMenu`，使用原生 Popover API 在 top layer 显示临时操作集合；`<mat-menu-item>` 的组件导出名是 `MatMenuItem`，渲染原生按钮和 `menuitem` 语义。Menu 支持 standard、vibrant 配色、多级子菜单、局部 `color`、循环键盘焦点和基于 CSS Anchor Positioning 的视口边缘换边。
+`<mat-menu>` 的组件导出名是 `MatMenu`，使用原生 Popover API 在 top layer 显示临时操作集合；`<mat-menu-group>` 的组件导出名是 `MatMenuGroup`，以带可选标签的独立表面组织相关操作；`<mat-menu-item>` 的组件导出名是 `MatMenuItem`，渲染原生按钮和 `menuitem` 语义。Menu 支持 standard、vibrant 配色、expressive 间隙分组、多级子菜单、局部 `color`、循环键盘焦点、元素锚点换边和右键坐标定位。
 
 ## 示例
 
-根菜单的 `open` 与 `anchor` 是受控定位所需的必要依赖，触发器只保留展示菜单所需的点击状态。
+根菜单通过普通 `v-model` 控制显示状态，并使用元素 id 或视口坐标形式的 `anchor` 定位。触发器只保留展示菜单所需的点击状态。
 
-### `open` 与 `anchor`
+### `modelValue` 与元素 `anchor`
 
 ::: details 查看示例代码
 <<< @/examples/menu/MenuOpenAnchorExample.vue
 :::
 
 <ClientOnly>
-  <DocsPreview label="Menu open 与 anchor 预览">
+  <DocsPreview label="Menu modelValue 与元素 anchor 预览">
     <MenuOpenAnchorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatMenuGroup 分组与 `label`
+
+::: details 查看示例代码
+<<< @/examples/menu/MenuGroupExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="MenuGroup 分组与 label 预览">
+    <MenuGroupExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 右键坐标菜单
+
+::: details 查看示例代码
+<<< @/examples/menu/MenuContextExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Menu 右键坐标预览">
+    <MenuContextExample />
+  </DocsPreview>
+</ClientOnly>
+
+坐标使用鼠标事件的 `[clientX, clientY]`，表示当前视口中的位置。示例先聚焦右键目标，以便菜单关闭后恢复焦点。
+
+### `offset`
+
+::: details 查看示例代码
+<<< @/examples/menu/MenuOffsetExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Menu offset 预览">
+    <MenuOffsetExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -143,12 +181,21 @@ Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `open` | `boolean` | `false` | 根菜单的受控展开状态，使用 `v-model:open` |
-| `anchor` | `string` | 未设置 | 根菜单触发元素的 id；打开时必须能在当前 document 中找到 |
+| `modelValue` | `boolean` | `false` | 根菜单的受控展开状态，使用普通 `v-model` |
+| `anchor` | `string \| [number, number]` | 未设置 | 根菜单触发元素的 id，或 `[clientX, clientY]` 视口坐标 |
+| `offset` | `[number, number]` | `[0, 0]` | 在基础位置之后增加 `[x, y]` 偏移；正值向右、向下 |
 | `variant` | `'standard' \| 'vibrant'` | `'standard'` | 中性表面或更高强调的 tertiary 表面 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 活动项目与 vibrant 表面的局部配色 |
 
-根菜单使用 `anchor`；嵌套在 `submenu` Slot 中的 MatMenu 自动以父 MatMenuItem 为 anchor，并继承父菜单的 color 与 variant。嵌套菜单显式设置的 color 或 variant 优先。未消费的属性传给 `role="menu"` 的 Popover 根元素。
+字符串 anchor 必须能在当前 document 中找到对应 id。坐标 anchor 使用 fixed 定位，适合 `contextmenu`；坐标或 offset 改变时，已打开的菜单立即重新定位。根菜单缺少有效 anchor 时会请求关闭。嵌套在 `submenu` Slot 中的 MatMenu 自动以父 MatMenuItem 为 anchor，并继承父菜单的 color 与 variant；嵌套菜单显式设置的 color、variant 或 offset 优先，自身 anchor 被忽略。未消费的属性传给 `role="menu"` 的 Popover 根元素。
+
+### MatMenuGroup 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `label` | `string` | 未设置 | 可选的可见分组标签，同时作为 `role="group"` 的无障碍名称 |
+
+同一个 MatMenu 的直接子级应统一使用 MatMenuGroup，或统一直接放置 MatMenuItem 与 MatDivider，不混合两种组织方式。两个 Group 之间使用 2px 间隙；每个 Group 保留独立圆角表面和阴影。
 
 ### MatMenuItem 属性
 
@@ -162,16 +209,17 @@ Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项
 
 | 组件 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- | --- |
-| `MatMenu` | `update:open` | `boolean` | 根菜单请求关闭，或浏览器通过 Escape、轻触外部等方式关闭 Popover |
+| `MatMenu` | `update:modelValue` | `boolean` | 根菜单请求关闭，或浏览器通过 Escape、轻触外部等方式关闭 Popover |
 | `MatMenuItem` | `click` | 原生 `MouseEvent` | 启用的叶子项目被激活；随后关闭整条菜单链 |
 
-包含 submenu 的项目把点击、Enter、Space 和朝子菜单方向的方向键用于展开，不发出叶子 click。关闭后，根菜单把焦点还给 anchor 触发器。
+MatMenuGroup 没有自定义事件。包含 submenu 的项目把点击、Enter、Space 和朝子菜单方向的方向键用于展开，不发出叶子 click。元素锚点菜单关闭后把焦点还给 anchor；坐标菜单恢复打开前的焦点元素。
 
 ## Slots
 
 | 组件 | 名称 | 内容约束 |
 | --- | --- | --- |
-| `MatMenu` | 默认 | 直接放置 MatMenuItem 和 MatDivider |
+| `MatMenu` | 默认 | 直接放置 MatMenuItem 和 MatDivider，或统一放置 MatMenuGroup |
+| `MatMenuGroup` | 默认 | 直接放置 MatMenuItem 和可选 MatDivider |
 | `MatMenuItem` | 默认 | 必需的简短操作标签 |
 | `MatMenuItem` | `leading` | 20px 图标或简短展示内容 |
 | `MatMenuItem` | `supporting` | 标签下方的一行简短辅助文字 |
@@ -185,8 +233,10 @@ MenuItem 的 Slots 只构成一个操作，不应嵌套按钮、开关或其他�
 - 打开菜单后焦点进入第一个启用项目。ArrowDown 和 ArrowUp 循环移动并跳过 disabled；Home 和 End 移到首末启用项。
 - 在从左到右的页面中，ArrowRight 展开子菜单，ArrowLeft 关闭当前子菜单；从右到左时方向相反。
 - Escape 关闭当前层；Tab 关闭整条菜单链并按浏览器正常焦点顺序继续。
-- 根菜单优先显示在触发器下方；子菜单优先显示在父项目行内末端。空间不足时自动向上、向左或向右换边，并保留视口间距。
-- 菜单宽度限制为 112–280px，内容过高时在菜单内部滚动。项目视觉高度为 44px，指针目标区至少为 48px。
+- 元素锚点菜单优先显示在触发器下方；子菜单优先显示在父项目行内末端。空间不足时自动向上、向左或向右换边，并保留视口间距。坐标菜单以视口坐标为左上基准，超出边缘时向内夹紧。
+- `offset` 在基础定位后、视口夹紧前生效。坐标使用 client 坐标，不接受 page/document 坐标；页面滚动后由下一次鼠标事件提供新坐标。
+- 菜单宽度限制为 112–280px，内容过高时在菜单内部滚动。容器内边距为 4px，项目和活动高亮高度为 48px，图标为 20px，项目总水平边缘距离为 12px。
+- MatMenuGroup 提供 Material 3 expressive 间隙分组；这是本组件库补充的 Web 实现能力，不受 Google 官方 Web 组件暂未提供间隙分组的限制。滚动菜单仍应优先使用 MatDivider，避免间隙削弱连续滚动内容。
 - 使用方负责触发器的点击、`aria-haspopup="menu"`、`aria-expanded` 和 `aria-controls`；Menu 不会接管外部按钮的展开逻辑。
 - 减少动态效果偏好下关闭展开和形状变化的非必要过渡。
 
@@ -196,7 +246,9 @@ MenuItem 的 Slots 只构成一个操作，不应嵌套按钮、开关或其他�
 
 <script setup>
 import MenuColorExample from '../examples/menu/MenuColorExample.vue';
+import MenuContextExample from '../examples/menu/MenuContextExample.vue';
 import MenuDefaultSlotExample from '../examples/menu/MenuDefaultSlotExample.vue';
+import MenuGroupExample from '../examples/menu/MenuGroupExample.vue';
 import MenuItemDefaultSlotExample from '../examples/menu/MenuItemDefaultSlotExample.vue';
 import MenuItemDisabledExample from '../examples/menu/MenuItemDisabledExample.vue';
 import MenuItemLeadingSlotExample from '../examples/menu/MenuItemLeadingSlotExample.vue';
@@ -204,5 +256,6 @@ import MenuItemSubmenuSlotExample from '../examples/menu/MenuItemSubmenuSlotExam
 import MenuItemSupportingSlotExample from '../examples/menu/MenuItemSupportingSlotExample.vue';
 import MenuItemTrailingSlotExample from '../examples/menu/MenuItemTrailingSlotExample.vue';
 import MenuOpenAnchorExample from '../examples/menu/MenuOpenAnchorExample.vue';
+import MenuOffsetExample from '../examples/menu/MenuOffsetExample.vue';
 import MenuVariantExample from '../examples/menu/MenuVariantExample.vue';
 </script>

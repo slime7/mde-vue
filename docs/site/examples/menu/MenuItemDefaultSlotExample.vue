@@ -11,7 +11,7 @@ const open = ref(true);
     </mat-btn>
     <mat-menu
       id="item-default-slot-menu"
-      v-model:open="open"
+      v-model="open"
       anchor="item-default-slot-menu-trigger"
     >
       <mat-menu-item>默认 Slot 提供操作标签</mat-menu-item>

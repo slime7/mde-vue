@@ -126,7 +126,7 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 `<mat-text-field>` 和 `<mat-textarea>` 共享 outlined/filled 外观、局部配色、辅助或错误文字、字符计数与属性路由，但分别保留 input 和 textarea 原生语义。错误角色始终覆盖 color 强调；Textarea 只提供固定初始行数与纵向调整，不自动增高。
 
-`<mat-menu>` 使用受控根 open、触发器 id anchor、Popover top layer 和 CSS Anchor Positioning。嵌套 Menu 只允许直接位于 MatMenuItem 的 submenu Slot，自动继承父级 color 与 variant，并以父项目为 anchor。MenuItem 是单一操作；叶子 click 关闭整条链，子菜单项只展开。Menu 与 List 可以共享无语义排列和 roving focus，但不得共享 listbox 选择模型、角色或左右键含义。
+`<mat-menu>` 使用受控根 `modelValue` 和 Popover top layer。根 anchor 接受触发器 id 或 `[clientX, clientY]` 视口坐标，offset 在基础位置之后、视口夹紧之前生效；元素 anchor 使用 CSS Anchor Positioning，坐标 anchor 使用 fixed 定位。嵌套 Menu 只允许直接位于 MatMenuItem 的 submenu Slot，自动继承父级 color 与 variant，并以父项目为 anchor。MatMenuGroup 以带可选标签的 `role="group"` 和 2px expressive 间隙组织相关项目；同一菜单不得混合分组和未分组的直接子级。MenuItem 是单一操作；叶子 click 关闭整条链，子菜单项只展开。Menu 与 List 可以共享无语义排列和 roving focus，但不得共享 listbox 选择模型、角色或左右键含义。
 
 ## Dialog
 

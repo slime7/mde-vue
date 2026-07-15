@@ -17,7 +17,7 @@ const open = ref(true);
     </mat-btn>
     <mat-menu
       id="disabled-menu"
-      v-model:open="open"
+      v-model="open"
       anchor="disabled-menu-trigger"
     >
       <mat-menu-item>可用项目</mat-menu-item>

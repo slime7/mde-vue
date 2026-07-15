@@ -17,7 +17,7 @@ const open = ref(true);
     </mat-btn>
     <mat-menu
       id="variant-menu"
-      v-model:open="open"
+      v-model="open"
       anchor="variant-menu-trigger"
       variant="vibrant"
     >

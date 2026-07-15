@@ -11,7 +11,7 @@ const open = ref(true);
     </mat-btn>
     <mat-menu
       id="default-slot-menu"
-      v-model:open="open"
+      v-model="open"
       anchor="default-slot-menu-trigger"
     >
       <mat-menu-item>直接放置的项目</mat-menu-item>

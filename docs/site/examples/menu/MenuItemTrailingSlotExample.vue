@@ -11,7 +11,7 @@ const open = ref(true);
     </mat-btn>
     <mat-menu
       id="trailing-slot-menu"
-      v-model:open="open"
+      v-model="open"
       anchor="trailing-slot-menu-trigger"
     >
       <mat-menu-item>
