@@ -16,6 +16,7 @@ const open = ref(false);
     content="页面仍不可点击，只是不显示帷幕颜色。"
   >
     <template #actions>
+      <mat-spacer />
       <mat-btn variant="text" @click="open = false">
         关闭
       </mat-btn>

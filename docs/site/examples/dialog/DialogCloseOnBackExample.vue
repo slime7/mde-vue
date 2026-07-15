@@ -16,6 +16,7 @@ const open = ref(false);
     content="点击 Dialog 外的帷幕即可关闭。"
   >
     <template #actions>
+      <mat-spacer />
       <mat-btn variant="text" @click="open = false">
         关闭
       </mat-btn>

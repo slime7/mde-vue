@@ -16,6 +16,7 @@ const open = ref(false);
     </ul>
 
     <template #actions>
+      <mat-spacer />
       <mat-btn variant="text" @click="open = false">
         关闭
       </mat-btn>

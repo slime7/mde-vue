@@ -21,6 +21,7 @@ const target = ref(null);
     content="原生模态层仍会阻止页面背景交互。"
   >
     <template #actions>
+      <mat-spacer />
       <mat-btn variant="text" @click="open = false">
         关闭
       </mat-btn>

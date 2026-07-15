@@ -15,6 +15,7 @@ const open = ref(false);
     content="删除后无法恢复，请确认是否继续。"
   >
     <template #actions>
+      <mat-spacer />
       <mat-btn variant="text" @click="open = false">
         取消
       </mat-btn>

@@ -21,6 +21,7 @@ const open = ref(false);
     </p>
 
     <template #actions>
+      <mat-spacer />
       <mat-btn variant="text" @click="open = false">
         保存
       </mat-btn>

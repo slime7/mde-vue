@@ -17,6 +17,7 @@ const open = ref(false);
     content="color 只改变基础 Dialog 的装饰图标强调色。"
   >
     <template #actions>
+      <mat-spacer />
       <mat-btn variant="text" color="tertiary" @click="open = false">
         知道了
       </mat-btn>
