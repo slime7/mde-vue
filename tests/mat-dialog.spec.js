@@ -1,0 +1,248 @@
+import { mount } from '@vue/test-utils';
+import {
+  beforeAll, beforeEach, describe, expect, it, vi,
+} from 'vitest';
+import { nextTick } from 'vue';
+import MatDialog from '../src/components/mat-dialog/MatDialog.vue';
+
+beforeAll(() => {
+  Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {
+    configurable: true,
+    value() {
+      this.setAttribute('open', '');
+    },
+  });
+  Object.defineProperty(HTMLDialogElement.prototype, 'close', {
+    configurable: true,
+    value() {
+      this.removeAttribute('open');
+    },
+  });
+});
+
+async function settleRender() {
+  await nextTick();
+  await nextTick();
+}
+
+describe('MatDialog', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  it('通过 modelValue 打开，并在关闭动画完成后移除 DOM', async () => {
+    const wrapper = mount(MatDialog, {
+      props: {
+        modelValue: true,
+        title: '删除项目',
+        content: '删除后无法恢复。',
+      },
+    });
+
+    await settleRender();
+
+    const element = document.body.querySelector('dialog');
+
+    expect(element).not.toBeNull();
+    expect(element.open).toBe(true);
+    expect(element.classList).toContain('mat-dialog--opening');
+
+    await vi.advanceTimersByTimeAsync(400);
+
+    expect(element.classList).toContain('mat-dialog--open');
+    expect(wrapper.emitted('opened')).toHaveLength(1);
+
+    await wrapper.setProps({ modelValue: false });
+
+    expect(element.classList).toContain('mat-dialog--closing');
+    expect(document.body.contains(element)).toBe(true);
+
+    await vi.advanceTimersByTimeAsync(199);
+
+    expect(document.body.contains(element)).toBe(true);
+
+    await vi.advanceTimersByTimeAsync(1);
+
+    expect(document.body.contains(element)).toBe(false);
+    expect(wrapper.emitted('closed')).toHaveLength(1);
+  });
+
+  it('快速反向打开时取消尚未完成的关闭', async () => {
+    const wrapper = mount(MatDialog, {
+      props: {
+        modelValue: true,
+        title: '状态切换',
+      },
+    });
+
+    await settleRender();
+    await vi.advanceTimersByTimeAsync(400);
+    await wrapper.setProps({ modelValue: false });
+    await vi.advanceTimersByTimeAsync(100);
+    await wrapper.setProps({ modelValue: true });
+    await vi.advanceTimersByTimeAsync(400);
+
+    expect(document.body.querySelector('dialog')).not.toBeNull();
+    expect(wrapper.emitted('closed')).toBeUndefined();
+    expect(wrapper.emitted('opened')).toHaveLength(2);
+  });
+
+  it('支持 attach，并将未消费属性透传给原生 dialog', async () => {
+    const target = document.createElement('section');
+
+    target.id = 'dialog-target';
+    document.body.append(target);
+    mount(MatDialog, {
+      props: {
+        modelValue: true,
+        attach: '#dialog-target',
+        title: '自定义目标',
+      },
+      attrs: {
+        class: 'consumer-dialog',
+        'aria-describedby': 'dialog-description',
+      },
+    });
+
+    await settleRender();
+
+    const element = target.querySelector('dialog');
+
+    expect(element).not.toBeNull();
+    expect(element.classList).toContain('consumer-dialog');
+    expect(element.getAttribute('aria-describedby')).toBe('dialog-description');
+  });
+
+  it('prop 内容优先于同名 Slot', async () => {
+    mount(MatDialog, {
+      props: {
+        modelValue: true,
+        title: '属性标题',
+        content: '属性内容',
+        icon: 'info',
+      },
+      slots: {
+        title: 'Slot 标题',
+        default: 'Slot 内容',
+        icon: 'warning',
+        actions: '<button class="slot-action">继续</button>',
+      },
+    });
+
+    await settleRender();
+
+    const element = document.body.querySelector('dialog');
+
+    expect(element.textContent).toContain('属性标题');
+    expect(element.textContent).toContain('属性内容');
+    expect(element.textContent).toContain('info');
+    expect(element.textContent).not.toContain('Slot 标题');
+    expect(element.textContent).not.toContain('Slot 内容');
+    expect(element.textContent).not.toContain('warning');
+    expect(element.querySelector('.slot-action')).not.toBeNull();
+  });
+
+  it('fullScreen 使用固定头部且只有 content 区域承担滚动', async () => {
+    mount(MatDialog, {
+      props: {
+        modelValue: true,
+        fullScreen: true,
+        title: '全屏编辑',
+        content: '很长的正文',
+      },
+      slots: {
+        actions: '<button>保存</button>',
+      },
+    });
+
+    await settleRender();
+
+    const element = document.body.querySelector('dialog');
+
+    expect(element.classList).toContain('mat-dialog--full-screen');
+    expect(element.querySelector('.mat-dialog__header')).not.toBeNull();
+    expect(element.querySelector('.mat-dialog__content').textContent).toContain('很长的正文');
+    expect(element.querySelector('.mat-dialog__actions').textContent).toContain('保存');
+    expect(element.querySelector('.mat-dialog__close').getAttribute('aria-label')).toBe('关闭');
+  });
+
+  it('Escape 总是请求关闭，点击帷幕仅由 closeOnBack 控制', async () => {
+    const wrapper = mount(MatDialog, {
+      props: {
+        modelValue: true,
+        title: '关闭行为',
+      },
+    });
+
+    await settleRender();
+
+    const element = document.body.querySelector('dialog');
+    const cancelEvent = new Event('cancel', { cancelable: true });
+
+    element.dispatchEvent(cancelEvent);
+
+    expect(cancelEvent.defaultPrevented).toBe(true);
+    expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
+
+    element.getBoundingClientRect = () => ({
+      bottom: 200,
+      left: 100,
+      right: 200,
+      top: 100,
+    });
+    element.dispatchEvent(new MouseEvent('click', {
+      bubbles: true,
+      clientX: 0,
+      clientY: 0,
+    }));
+
+    expect(wrapper.emitted('update:modelValue')).toHaveLength(1);
+
+    await wrapper.setProps({ closeOnBack: true });
+    element.dispatchEvent(new MouseEvent('click', {
+      bubbles: true,
+      clientX: 0,
+      clientY: 0,
+    }));
+
+    expect(wrapper.emitted('update:modelValue')).toHaveLength(2);
+  });
+
+  it('scrim=false 保持透明帷幕，多 Dialog 只显示顶层帷幕', async () => {
+    mount(MatDialog, {
+      props: {
+        modelValue: true,
+        title: '第一层',
+      },
+    });
+    mount(MatDialog, {
+      props: {
+        modelValue: true,
+        scrim: false,
+        title: '第二层',
+      },
+    });
+
+    await settleRender();
+
+    const elements = [...document.body.querySelectorAll('dialog')];
+
+    expect(elements).toHaveLength(2);
+    expect(elements[0].classList).not.toContain('mat-dialog--top');
+    expect(elements[1].classList).toContain('mat-dialog--top');
+    expect(elements[1].classList).toContain('mat-dialog--transparent-scrim');
+  });
+
+  it('没有可访问名称时给出警告', async () => {
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    mount(MatDialog, {
+      props: { modelValue: true },
+    });
+    await settleRender();
+
+    expect(warning).toHaveBeenCalledWith(
+      'MatDialog: 必须通过 title、title Slot、aria-label 或 aria-labelledby 提供可访问名称',
+    );
+  });
+});

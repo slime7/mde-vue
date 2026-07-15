@@ -18,14 +18,26 @@ import MatTextField, { MatTextField as NamedMatTextField } from 'mdu-ui/componen
 import MatTextarea, { MatTextarea as NamedMatTextarea } from 'mdu-ui/components/mat-textarea';
 import MatMenu, { MatMenu as NamedMatMenu } from 'mdu-ui/components/mat-menu';
 import MatMenuItem, { MatMenuItem as NamedMatMenuItem } from 'mdu-ui/components/mat-menu-item';
+import MatDialog, {
+  alert as childAlert,
+  confirm as childConfirm,
+  dialog as childDialog,
+  prompt as childPrompt,
+  MatDialog as NamedMatDialog,
+} from 'mdu-ui/components/mat-dialog';
 /* eslint-enable import-x/no-named-as-default */
 import {
   createMatUi,
+  alert as rootAlert,
+  confirm as rootConfirm,
+  dialog as rootDialog,
+  prompt as rootPrompt,
   MatBtn as RootMatBtn,
   MatBtnGroup as RootMatBtnGroup,
   MatCard as RootMatCard,
   MatCheckbox as RootMatCheckbox,
   MatDivider as RootMatDivider,
+  MatDialog as RootMatDialog,
   MatIcon as RootMatIcon,
   MatList as RootMatList,
   MatListItem as RootMatListItem,
@@ -57,6 +69,7 @@ describe('公共组件导出', () => {
     ['MatTextarea', RootMatTextarea, NamedMatTextarea, MatTextarea],
     ['MatMenu', RootMatMenu, NamedMatMenu, MatMenu],
     ['MatMenuItem', RootMatMenuItem, NamedMatMenuItem, MatMenuItem],
+    ['MatDialog', RootMatDialog, NamedMatDialog, MatDialog],
   ])('%s 的根入口、具名子入口和默认子入口指向同一组件', (
     name,
     rootExport,
@@ -84,10 +97,18 @@ describe('公共组件导出', () => {
     expect(app.component('mat-textarea')).toBe(RootMatTextarea);
     expect(app.component('mat-menu')).toBe(RootMatMenu);
     expect(app.component('mat-menu-item')).toBe(RootMatMenuItem);
+    expect(app.component('mat-dialog')).toBe(RootMatDialog);
     expect(app.component('mat-icon')).toBe(RootMatIcon);
     expect(app.component('mat-icon-btn')).toBeUndefined();
 
     plugin.theme.dispose();
+  });
+
+  it('根入口和 Dialog 子入口导出相同的命令式函数', () => {
+    expect(rootDialog).toBe(childDialog);
+    expect(rootAlert).toBe(childAlert);
+    expect(rootConfirm).toBe(childConfirm);
+    expect(rootPrompt).toBe(childPrompt);
   });
 
   it('不再提供 MatIconBtn 单组件入口', () => {
