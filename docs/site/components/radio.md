@@ -19,7 +19,9 @@ Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互
 
 ### 独立绑定
 
+::: details 查看示例代码
 <<< @/examples/selection/RadioStandaloneExample.vue
+:::
 
 <ClientOnly>
   <DocsPreview label="Radio 独立绑定预览" stacked>
@@ -31,11 +33,61 @@ Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互
 
 ### Radio Group
 
+::: details 查看示例代码
 <<< @/examples/selection/RadioGroupExample.vue
+:::
 
 <ClientOnly>
   <DocsPreview label="Radio group 受控单选预览" stacked>
     <RadioGroupExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatRadio `color`
+
+::: details 查看示例代码
+<<< @/examples/selection/RadioColorExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Radio color 预览" stacked>
+    <RadioColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatRadio `disabled`
+
+::: details 查看示例代码
+<<< @/examples/selection/RadioDisabledExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Radio disabled 预览" stacked>
+    <RadioDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatRadioGroup `disabled`
+
+::: details 查看示例代码
+<<< @/examples/selection/RadioGroupDisabledExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Radio group disabled 预览" stacked>
+    <RadioGroupDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatRadioGroup `color`
+
+::: details 查看示例代码
+<<< @/examples/selection/RadioGroupColorExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Radio group color 预览" stacked>
+    <RadioGroupColorExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -110,5 +162,9 @@ Group 没有公开方法。
 
 <script setup>
 import RadioGroupExample from '../examples/selection/RadioGroupExample.vue';
+import RadioGroupColorExample from '../examples/selection/RadioGroupColorExample.vue';
+import RadioGroupDisabledExample from '../examples/selection/RadioGroupDisabledExample.vue';
+import RadioColorExample from '../examples/selection/RadioColorExample.vue';
+import RadioDisabledExample from '../examples/selection/RadioDisabledExample.vue';
 import RadioStandaloneExample from '../examples/selection/RadioStandaloneExample.vue';
 </script>

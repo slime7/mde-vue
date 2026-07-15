@@ -7,81 +7,237 @@ order: 50
 
 # Button 按钮
 
+## 组件简介
+
 `<mat-btn>` 的组件导出名是 `MatBtn`。它统一渲染普通按钮和图标按钮：省略 `icon` 时由默认 Slot 提供可见标签；传入 Material Symbols 字符串 `icon` 时切换为只包含图标的按钮。两种模式都渲染原生 `<button>`。
 
 ## 示例
 
-### 默认样式
+代码默认收起，预览直接可见。
 
-省略属性时使用 `filled`、`small`、`round`。第二个按钮设置 `block`，在普通文档流中作为块级 flex 容器铺满父元素：
+### 默认内容
 
-<<< @/examples/button/ButtonDefaultExample.vue
+::: details 查看示例代码
+<<< @/examples/button/ButtonDefaultOnlyExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Button 默认样式预览">
-    <ButtonDefaultExample />
+  <DocsPreview label="Button 默认内容预览">
+    <ButtonDefaultOnlyExample />
   </DocsPreview>
 </ClientOnly>
 
-### 外观、尺寸和形状
+### `block`
 
-<<< @/examples/button/ButtonVariantsExample.vue
+::: details 查看示例代码
+<<< @/examples/button/ButtonBlockExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Button 外观、尺寸和形状预览">
-    <ButtonVariantsExample />
+  <DocsPreview label="Button block 预览">
+    <ButtonBlockExample />
   </DocsPreview>
 </ClientOnly>
 
-`variant` 支持 elevated、filled、filled tonal、outlined、text 和 standard。普通与图标模式都可以使用全部六种形态。
+### `variant`
 
-### 前置图标与受控切换
-
-<<< @/examples/button/ButtonToggleExample.vue
+::: details 查看示例代码
+<<< @/examples/button/ButtonVariantExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Button 前置图标与受控切换预览">
-    <ButtonToggleExample />
+  <DocsPreview label="Button variant 预览">
+    <ButtonVariantExample />
   </DocsPreview>
 </ClientOnly>
 
-组件不自行修改 `selected`，也不触发 `update:selected`。普通按钮可以通过 `prefix`、`suffix` 属性或同名 Slots 放置前后图标；属性和 Slot 同时存在时，属性优先。
+### `size`
 
-### 图标模式
-
-<<< @/examples/button/IconButtonDefaultExample.vue
+::: details 查看示例代码
+<<< @/examples/button/ButtonSizeExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Button 图标模式默认样式预览">
-    <IconButtonDefaultExample />
+  <DocsPreview label="Button size 预览">
+    <ButtonSizeExample />
   </DocsPreview>
 </ClientOnly>
 
-图标模式必须提供 `label` 作为操作名称；未显式传入 `title` 时，组件也使用 `label` 提供原生提示。默认 `uniform` 宽度与 `round` 形状组成圆形容器。
+### `shape`
 
-### 图标模式的外观、宽度和切换
-
-<<< @/examples/button/IconButtonVariantsExample.vue
+::: details 查看示例代码
+<<< @/examples/button/ButtonShapeExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Button 图标模式外观、宽度和切换预览">
-    <IconButtonVariantsExample />
+  <DocsPreview label="Button shape 预览">
+    <ButtonShapeExample />
   </DocsPreview>
 </ClientOnly>
 
-`width` 提供 narrow、uniform、wide 三档并且只影响图标模式。Button group 不根据子项数量自动改变该值。图标模式选中时复用 `icon`，通过 Material Symbols 的 FILL 轴加强图标。
+### `width`
 
-### 组件配色
+图标模式必须提供 `label`，它是展示 `width` 的必要依赖。
 
+::: details 查看示例代码
+<<< @/examples/button/ButtonWidthExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button width 预览">
+    <ButtonWidthExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `icon` 与 `label`
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonIconExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button icon 预览">
+    <ButtonIconExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `prefix`
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonPrefixExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button prefix 预览">
+    <ButtonPrefixExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `suffix`
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonSuffixExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button suffix 预览">
+    <ButtonSuffixExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
 <<< @/examples/button/ButtonColorExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Button 组件配色预览">
+  <DocsPreview label="Button color 预览">
     <ButtonColorExample />
   </DocsPreview>
 </ClientOnly>
 
-省略 `color` 时按 `variant` 使用 Material 默认角色。语义字符串读取项目令牌，六位十六进制值生成只作用于当前按钮的 Material 2025 primary 色族。完整规则见[组件配色](/guide/component-color)。
+### `toggle` 与 `selected`
+
+`selected` 是 toggle 的必要受控状态；组件不自行修改它。
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonToggleExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button toggle 与 selected 预览">
+    <ButtonToggleExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonDisabledExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button disabled 预览">
+    <ButtonDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `type`
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonTypeExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button type 预览">
+    <ButtonTypeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `value`
+
+`value` 需要放在 `MatBtnGroup` 的选择模式中才有可见作用。
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonValueExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button value 预览">
+    <ButtonValueExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 默认 Slot
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonDefaultSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button 默认 Slot 预览">
+    <ButtonDefaultSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `prefix` Slot
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonPrefixSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button prefix Slot 预览">
+    <ButtonPrefixSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `suffix` Slot
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonSuffixSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button suffix Slot 预览">
+    <ButtonSuffixSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `selected` Slot
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonSelectedSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button selected Slot 预览">
+    <ButtonSelectedSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+组件不自行修改 `selected`，也不触发 `update:selected`。图标模式必须提供 `label`；普通按钮可以通过 `prefix`、`suffix` 属性或同名 Slot 放置前后图标，属性和 Slot 同时存在时属性优先。完整配色规则见[组件配色](/guide/component-color)。
 
 ## API
 
@@ -139,10 +295,22 @@ order: 50
 尺寸、形状和状态依据 [Material 3 Button specs](https://m3.material.io/components/buttons/specs) 与 [Icon button specs](https://m3.material.io/components/icon-buttons/specs)。
 
 <script setup>
+import ButtonBlockExample from '../examples/button/ButtonBlockExample.vue';
 import ButtonColorExample from '../examples/button/ButtonColorExample.vue';
-import ButtonDefaultExample from '../examples/button/ButtonDefaultExample.vue';
+import ButtonDefaultOnlyExample from '../examples/button/ButtonDefaultOnlyExample.vue';
+import ButtonDefaultSlotExample from '../examples/button/ButtonDefaultSlotExample.vue';
+import ButtonDisabledExample from '../examples/button/ButtonDisabledExample.vue';
+import ButtonIconExample from '../examples/button/ButtonIconExample.vue';
+import ButtonPrefixExample from '../examples/button/ButtonPrefixExample.vue';
+import ButtonPrefixSlotExample from '../examples/button/ButtonPrefixSlotExample.vue';
+import ButtonSelectedSlotExample from '../examples/button/ButtonSelectedSlotExample.vue';
+import ButtonSizeExample from '../examples/button/ButtonSizeExample.vue';
+import ButtonShapeExample from '../examples/button/ButtonShapeExample.vue';
+import ButtonSuffixExample from '../examples/button/ButtonSuffixExample.vue';
+import ButtonSuffixSlotExample from '../examples/button/ButtonSuffixSlotExample.vue';
 import ButtonToggleExample from '../examples/button/ButtonToggleExample.vue';
-import ButtonVariantsExample from '../examples/button/ButtonVariantsExample.vue';
-import IconButtonDefaultExample from '../examples/button/IconButtonDefaultExample.vue';
-import IconButtonVariantsExample from '../examples/button/IconButtonVariantsExample.vue';
+import ButtonTypeExample from '../examples/button/ButtonTypeExample.vue';
+import ButtonValueExample from '../examples/button/ButtonValueExample.vue';
+import ButtonVariantExample from '../examples/button/ButtonVariantExample.vue';
+import ButtonWidthExample from '../examples/button/ButtonWidthExample.vue';
 </script>

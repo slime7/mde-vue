@@ -17,11 +17,49 @@ order: 86
 
 ### 无图标与内置图标
 
+::: details 查看示例代码
 <<< @/examples/selection/SwitchIconsExample.vue
+:::
 
 <ClientOnly>
   <DocsPreview label="Switch 图标配置预览" stacked>
     <SwitchIconsExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `modelValue`
+
+::: details 查看示例代码
+<<< @/examples/selection/SwitchModelValueExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Switch modelValue 预览" stacked>
+    <SwitchModelValueExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+::: details 查看示例代码
+<<< @/examples/selection/SwitchDisabledExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Switch disabled 预览" stacked>
+    <SwitchDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+<<< @/examples/selection/SwitchColorExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Switch color 预览" stacked>
+    <SwitchColorExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -60,5 +98,8 @@ Switch 只表示二元状态，不用于在两个对立选项间选择。组件�
 尺寸、图标配置和即时生效行为依据 Material 3 [Switch specs](https://m3.material.io/components/switch/specs) 与 [Switch guidelines](https://m3.material.io/components/switch/guidelines)。
 
 <script setup>
+import SwitchColorExample from '../examples/selection/SwitchColorExample.vue';
+import SwitchDisabledExample from '../examples/selection/SwitchDisabledExample.vue';
 import SwitchIconsExample from '../examples/selection/SwitchIconsExample.vue';
+import SwitchModelValueExample from '../examples/selection/SwitchModelValueExample.vue';
 </script>

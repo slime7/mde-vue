@@ -11,35 +11,101 @@ order: 90
 
 ## 示例
 
-### 默认样式
+卡片内容区域和操作区域仅作为展示结构的必要依赖。
 
-<<< @/examples/card/CardDefaultExample.vue
+### `variant`
+
+::: details 查看示例代码
+<<< @/examples/card/CardVariantExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Card 默认样式预览">
-    <CardDefaultExample />
+  <DocsPreview label="Card variant 预览">
+    <CardVariantExample />
   </DocsPreview>
 </ClientOnly>
 
-### 外观与配色
+### `color`
 
-<<< @/examples/card/CardVariantsExample.vue
+::: details 查看示例代码
+<<< @/examples/card/CardColorExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Card 外观与配色预览">
-    <CardVariantsExample />
+  <DocsPreview label="Card color 预览">
+    <CardColorExample />
   </DocsPreview>
 </ClientOnly>
 
-省略 `color` 时使用中性表面。设置语义色或六位十六进制种子色后，卡片使用对应的 container/on-container 色对；outlined 的边框仍使用中性 `outline-variant`。
+### `as`
 
-### 语义、可点击内容与禁用状态
-
-<<< @/examples/card/CardActionExample.vue
+::: details 查看示例代码
+<<< @/examples/card/CardAsExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Card 语义、可点击内容与禁用状态预览" stacked>
-    <CardActionExample />
+  <DocsPreview label="Card as 预览">
+    <CardAsExample />
+  </DocsPreview>
+</ClientOnly>
+
+### ActionArea 的 `href`
+
+::: details 查看示例代码
+<<< @/examples/card/CardActionHrefExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Card ActionArea href 预览">
+    <CardActionHrefExample />
+  </DocsPreview>
+</ClientOnly>
+
+### ActionArea 的 `disabled`
+
+::: details 查看示例代码
+<<< @/examples/card/CardActionDisabledExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Card ActionArea disabled 预览">
+    <CardActionDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### ActionArea 的 `type`
+
+::: details 查看示例代码
+<<< @/examples/card/CardActionTypeExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Card ActionArea type 预览">
+    <CardActionTypeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatCardContent 默认 Slot
+
+::: details 查看示例代码
+<<< @/examples/card/CardContentSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="CardContent 默认 Slot 预览">
+    <CardContentSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatCardActions 默认 Slot
+
+::: details 查看示例代码
+<<< @/examples/card/CardActionsSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="CardActions 默认 Slot 预览">
+    <CardActionsSlotExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -93,7 +159,12 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
 只有启用的 ActionArea 才会触发 Card 的 hover、focus 和 pressed 状态。焦点环显示在整张卡片上，减少动态效果偏好下不播放状态层过渡。
 
 <script setup>
-import CardActionExample from '../examples/card/CardActionExample.vue';
-import CardDefaultExample from '../examples/card/CardDefaultExample.vue';
-import CardVariantsExample from '../examples/card/CardVariantsExample.vue';
+import CardActionDisabledExample from '../examples/card/CardActionDisabledExample.vue';
+import CardActionHrefExample from '../examples/card/CardActionHrefExample.vue';
+import CardActionTypeExample from '../examples/card/CardActionTypeExample.vue';
+import CardActionsSlotExample from '../examples/card/CardActionsSlotExample.vue';
+import CardAsExample from '../examples/card/CardAsExample.vue';
+import CardColorExample from '../examples/card/CardColorExample.vue';
+import CardContentSlotExample from '../examples/card/CardContentSlotExample.vue';
+import CardVariantExample from '../examples/card/CardVariantExample.vue';
 </script>

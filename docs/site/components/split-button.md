@@ -7,29 +7,121 @@ order: 65
 
 # Split button 拆分按钮
 
+## 组件简介
+
 `<mat-split-btn>` 的组件导出名是 `MatSplitBtn`。它把主要操作和展开菜单操作组合为两个独立原生按钮。组件只协调外观、事件、受控展开状态和菜单 ARIA，不创建菜单，也不管理菜单焦点。
 
 ## 示例
 
-### 默认样式
+拆分按钮必须同时提供 `leading` 和 `trailing` 两侧 Slot，这是组件结构所需的依赖。
 
-第二个拆分按钮设置 `block`，只让组合根采用块级布局，不改变 leading 和 trailing 子项的宽度分配。
+### `block`
 
-<<< @/examples/button/SplitButtonDefaultExample.vue
+::: details 查看示例代码
+<<< @/examples/button/SplitButtonBlockExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Split button 默认样式预览">
-    <SplitButtonDefaultExample />
+  <DocsPreview label="Split button block 预览">
+    <SplitButtonBlockExample />
   </DocsPreview>
 </ClientOnly>
 
-### 受控展开与 MatMenu
+### `variant`
 
-<<< @/examples/button/SplitButtonMenuExample.vue
+::: details 查看示例代码
+<<< @/examples/button/SplitButtonVariantExample.vue
+:::
 
 <ClientOnly>
-<DocsPreview label="Split button 受控展开与 MatMenu 预览" stacked>
-    <SplitButtonMenuExample />
+  <DocsPreview label="Split button variant 预览">
+    <SplitButtonVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `size`
+
+::: details 查看示例代码
+<<< @/examples/button/SplitButtonSizeExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Split button size 预览">
+    <SplitButtonSizeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+<<< @/examples/button/SplitButtonColorExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Split button color 预览">
+    <SplitButtonColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+::: details 查看示例代码
+<<< @/examples/button/SplitButtonDisabledExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Split button disabled 预览">
+    <SplitButtonDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `expanded`
+
+::: details 查看示例代码
+<<< @/examples/button/SplitButtonExpandedExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Split button expanded 预览">
+    <SplitButtonExpandedExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `controls`
+
+`controls` 与菜单的 `open`、`anchor` 共同建立展开按钮和菜单之间的 ARIA 与定位关系。
+
+::: details 查看示例代码
+<<< @/examples/button/SplitButtonControlsExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Split button controls 预览">
+    <SplitButtonControlsExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `leading` Slot
+
+::: details 查看示例代码
+<<< @/examples/button/SplitButtonLeadingSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Split button leading Slot 预览">
+    <SplitButtonLeadingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `trailing` Slot
+
+::: details 查看示例代码
+<<< @/examples/button/SplitButtonTrailingSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Split button trailing Slot 预览">
+    <SplitButtonTrailingSlotExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -79,6 +171,13 @@ slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展
 参数、形状和展开状态依据 [Material 3 Split button specs](https://m3.material.io/components/split-button/specs)。
 
 <script setup>
-import SplitButtonDefaultExample from '../examples/button/SplitButtonDefaultExample.vue';
-import SplitButtonMenuExample from '../examples/button/SplitButtonMenuExample.vue';
+import SplitButtonBlockExample from '../examples/button/SplitButtonBlockExample.vue';
+import SplitButtonColorExample from '../examples/button/SplitButtonColorExample.vue';
+import SplitButtonControlsExample from '../examples/button/SplitButtonControlsExample.vue';
+import SplitButtonDisabledExample from '../examples/button/SplitButtonDisabledExample.vue';
+import SplitButtonExpandedExample from '../examples/button/SplitButtonExpandedExample.vue';
+import SplitButtonLeadingSlotExample from '../examples/button/SplitButtonLeadingSlotExample.vue';
+import SplitButtonSizeExample from '../examples/button/SplitButtonSizeExample.vue';
+import SplitButtonTrailingSlotExample from '../examples/button/SplitButtonTrailingSlotExample.vue';
+import SplitButtonVariantExample from '../examples/button/SplitButtonVariantExample.vue';
 </script>

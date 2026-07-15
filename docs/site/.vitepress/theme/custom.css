@@ -16,6 +16,21 @@
   inline-size: 100%;
 }
 
+.vp-doc .custom-block.details {
+  margin-block: 16px 12px;
+}
+
+.vp-doc .custom-block.details > div[class*='language-'] {
+  max-inline-size: 100%;
+  margin-block: 12px 0;
+  overflow-x: auto;
+}
+
+.vp-doc .docs-preview {
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
+
 .vp-doc div[class*='language-'] > pre {
   max-block-size: min(70dvh, 48rem);
   overflow-y: auto;
@@ -25,5 +40,13 @@
   .vp-doc table {
     display: block;
     overflow-x: auto;
+  }
+
+  .vp-doc .custom-block.details {
+    margin-block: 12px 8px;
+  }
+
+  .vp-doc .custom-block.details > div[class*='language-'] {
+    margin-block-start: 8px;
   }
 }

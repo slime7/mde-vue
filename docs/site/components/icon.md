@@ -13,41 +13,153 @@ order: 35
 
 ## 示例
 
-### 字形、SVG 资源和 SVG Slot
+`src`、`icon` 和默认 Slot 是互斥的内容来源，因此分别展示。
 
-<<< @/examples/icon/IconSourcesExample.vue
+### `icon`
+
+::: details 查看示例代码
+<<< @/examples/icon/IconIconExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Icon 内容来源预览">
-    <IconSourcesExample />
+  <DocsPreview label="Icon icon 预览">
+    <IconIconExample />
   </DocsPreview>
 </ClientOnly>
 
-同时提供多个来源时固定使用 `src > icon > 默认 Slot`。`src` 交给内部 `<img alt="">` 加载，不会下载后再转成内联 SVG；默认 Slot 直接接收 Vue 渲染的 SVG 元素，不解析 SVG 字符串。
+### `src`
 
-### 尺寸、配色和字体轴动画
-
-<<< @/examples/icon/IconAppearanceExample.vue
+::: details 查看示例代码
+<<< @/examples/icon/IconSrcExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Icon 尺寸和字体轴预览" stacked>
-    <IconAppearanceExample />
+  <DocsPreview label="Icon src 预览">
+    <IconSrcExample />
   </DocsPreview>
 </ClientOnly>
 
-`fill`、`weight`、`grade` 和 `optical-size` 会通过项目动效令牌平滑过渡；系统要求减少动画时立即切换。应用加载的字体文件必须包含对应变量范围，否则字体可能忽略部分值。
+### 默认 Slot
 
-### 自定义图标 class 与根标签
-
-<<< @/examples/icon/IconClassExample.vue
+::: details 查看示例代码
+<<< @/examples/icon/IconDefaultSlotExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Icon 自定义 class 预览">
-    <IconClassExample />
+  <DocsPreview label="Icon 默认 Slot 预览">
+    <IconDefaultSlotExample />
   </DocsPreview>
 </ClientOnly>
 
-空 `icon` 仍视为显式字形来源，可配合由 class 或伪元素决定具体图形的图标库。`icon-class` 会覆盖 `createMatUi({ iconClass })` 的全局值；传入空字符串可以关闭全局 class。
+### `size`
+
+::: details 查看示例代码
+<<< @/examples/icon/IconSizeExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon size 预览">
+    <IconSizeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `fill`
+
+::: details 查看示例代码
+<<< @/examples/icon/IconFillExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon fill 预览">
+    <IconFillExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `weight`
+
+::: details 查看示例代码
+<<< @/examples/icon/IconWeightExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon weight 预览">
+    <IconWeightExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `grade`
+
+::: details 查看示例代码
+<<< @/examples/icon/IconGradeExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon grade 预览">
+    <IconGradeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `optical-size`
+
+::: details 查看示例代码
+<<< @/examples/icon/IconOpticalSizeExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon optical-size 预览">
+    <IconOpticalSizeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+<<< @/examples/icon/IconColorExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon color 预览">
+    <IconColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `font-color`
+
+::: details 查看示例代码
+<<< @/examples/icon/IconFontColorExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon font-color 预览">
+    <IconFontColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `as`
+
+::: details 查看示例代码
+<<< @/examples/icon/IconAsExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon as 预览">
+    <IconAsExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `icon-class`
+
+::: details 查看示例代码
+<<< @/examples/icon/IconClassOnlyExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon icon-class 预览">
+    <IconClassOnlyExample />
+  </DocsPreview>
+</ClientOnly>
+
+同时提供多个来源时固定使用 `src > icon > 默认 Slot`。`src` 交给内部 `<img alt="">` 加载；默认 Slot 直接接收 Vue 渲染的 SVG 元素，不解析 SVG 字符串。`fill`、`weight`、`grade` 和 `optical-size` 使用 Material Symbols 字体轴。
 
 ## API
 
@@ -88,7 +200,16 @@ Icon 本身不提供交互语义。装饰性图标应传入 `aria-hidden="true"`
 四轴名称、范围和 FILL 状态动画依据 [Material Symbols 官方指南](https://developers.google.com/fonts/docs/material_symbols?hl=zh-CN)。
 
 <script setup>
-import IconAppearanceExample from '../examples/icon/IconAppearanceExample.vue';
-import IconClassExample from '../examples/icon/IconClassExample.vue';
-import IconSourcesExample from '../examples/icon/IconSourcesExample.vue';
+import IconAsExample from '../examples/icon/IconAsExample.vue';
+import IconClassOnlyExample from '../examples/icon/IconClassOnlyExample.vue';
+import IconColorExample from '../examples/icon/IconColorExample.vue';
+import IconDefaultSlotExample from '../examples/icon/IconDefaultSlotExample.vue';
+import IconFillExample from '../examples/icon/IconFillExample.vue';
+import IconFontColorExample from '../examples/icon/IconFontColorExample.vue';
+import IconGradeExample from '../examples/icon/IconGradeExample.vue';
+import IconIconExample from '../examples/icon/IconIconExample.vue';
+import IconOpticalSizeExample from '../examples/icon/IconOpticalSizeExample.vue';
+import IconSizeExample from '../examples/icon/IconSizeExample.vue';
+import IconSrcExample from '../examples/icon/IconSrcExample.vue';
+import IconWeightExample from '../examples/icon/IconWeightExample.vue';
 </script>

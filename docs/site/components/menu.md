@@ -13,15 +13,129 @@ order: 95
 
 ## 示例
 
-第一个菜单展示 leading、supporting、trailing、disabled 和 Divider；第二个菜单展示 vibrant 配色以及可递归展开的三级菜单。触发器的点击和 ARIA 由调用方控制。
+根菜单的 `open` 与 `anchor` 是受控定位所需的必要依赖，触发器只保留展示菜单所需的点击状态。
 
-<<< @/examples/menu/MenuNestedExample.vue
+### `open` 与 `anchor`
+
+::: details 查看示例代码
+<<< @/examples/menu/MenuOpenAnchorExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="标准与多级 vibrant 菜单预览" stacked>
-    <MenuNestedExample />
+  <DocsPreview label="Menu open 与 anchor 预览">
+    <MenuOpenAnchorExample />
   </DocsPreview>
 </ClientOnly>
+
+### `variant`
+
+::: details 查看示例代码
+<<< @/examples/menu/MenuVariantExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Menu variant 预览">
+    <MenuVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+<<< @/examples/menu/MenuColorExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Menu color 预览">
+    <MenuColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MenuItem 的 `disabled`
+
+::: details 查看示例代码
+<<< @/examples/menu/MenuItemDisabledExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="MenuItem disabled 预览">
+    <MenuItemDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatMenu 默认 Slot
+
+::: details 查看示例代码
+<<< @/examples/menu/MenuDefaultSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Menu 默认 Slot 预览">
+    <MenuDefaultSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatMenuItem 默认 Slot
+
+::: details 查看示例代码
+<<< @/examples/menu/MenuItemDefaultSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="MenuItem 默认 Slot 预览">
+    <MenuItemDefaultSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `leading` Slot
+
+::: details 查看示例代码
+<<< @/examples/menu/MenuItemLeadingSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="MenuItem leading Slot 预览">
+    <MenuItemLeadingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `supporting` Slot
+
+::: details 查看示例代码
+<<< @/examples/menu/MenuItemSupportingSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="MenuItem supporting Slot 预览">
+    <MenuItemSupportingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `trailing` Slot
+
+::: details 查看示例代码
+<<< @/examples/menu/MenuItemTrailingSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="MenuItem trailing Slot 预览">
+    <MenuItemTrailingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `submenu` Slot
+
+::: details 查看示例代码
+<<< @/examples/menu/MenuItemSubmenuSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="MenuItem submenu Slot 预览">
+    <MenuItemSubmenuSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项目为 anchor，并继承父菜单的配色与形态。
 
 ## API
 
@@ -81,5 +195,14 @@ MenuItem 的 Slots 只构成一个操作，不应嵌套按钮、开关或其他�
 外观、测量、子菜单和换边规则依据 Material 3 [Menus overview](https://m3.material.io/components/menus/overview)、[Menus specs](https://m3.material.io/components/menus/specs) 与 [Menus guidelines](https://m3.material.io/components/menus/guidelines)。键盘语义参考 [WAI-ARIA Menu and Menubar Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)。
 
 <script setup>
-import MenuNestedExample from '../examples/menu/MenuNestedExample.vue';
+import MenuColorExample from '../examples/menu/MenuColorExample.vue';
+import MenuDefaultSlotExample from '../examples/menu/MenuDefaultSlotExample.vue';
+import MenuItemDefaultSlotExample from '../examples/menu/MenuItemDefaultSlotExample.vue';
+import MenuItemDisabledExample from '../examples/menu/MenuItemDisabledExample.vue';
+import MenuItemLeadingSlotExample from '../examples/menu/MenuItemLeadingSlotExample.vue';
+import MenuItemSubmenuSlotExample from '../examples/menu/MenuItemSubmenuSlotExample.vue';
+import MenuItemSupportingSlotExample from '../examples/menu/MenuItemSupportingSlotExample.vue';
+import MenuItemTrailingSlotExample from '../examples/menu/MenuItemTrailingSlotExample.vue';
+import MenuOpenAnchorExample from '../examples/menu/MenuOpenAnchorExample.vue';
+import MenuVariantExample from '../examples/menu/MenuVariantExample.vue';
 </script>

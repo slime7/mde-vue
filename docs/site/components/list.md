@@ -13,53 +13,191 @@ order: 100
 
 ## 示例
 
-### 外观变体
+选择与操作示例只保留组件结构所需的 `interaction`、`selected` 和 `value` 依赖。
 
-`standard` 让项目连续排列，`segmented` 在项目之间保留 2px 间隔。下面使用受控单选模式：将指针移到项目上可观察 hover 状态，点击项目可观察选中底色与圆角变化。
+### `variant`
 
-<<< @/examples/list/ListVariantsExample.vue
+::: details 查看示例代码
+<<< @/examples/list/ListVariantExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="List standard 与 segmented 外观对比预览">
-    <ListVariantsExample />
+  <DocsPreview label="List variant 预览">
+    <ListVariantExample />
   </DocsPreview>
 </ClientOnly>
 
-### 内容结构与 Divider
+### `interaction`
 
-<<< @/examples/list/ListContentExample.vue
+::: details 查看示例代码
+<<< @/examples/list/ListInteractionExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="List 内容结构与 Divider 预览" stacked>
-    <ListContentExample />
+  <DocsPreview label="List interaction 预览" stacked>
+    <ListInteractionExample />
   </DocsPreview>
 </ClientOnly>
 
-省略 `lines` 时，组件按 overline、默认标签和 supporting Slot 的数量推断一至三行。辅助文字自行换成更多行时，应显式设置 `:lines="3"`，使 leading 和 trailing 内容改为顶部对齐。头像推荐使用 40×40px，普通图片使用 56×56px；媒体尺寸由 Slot 内容设置。
+### `selected`
 
-### 单操作与多操作
+选择模式必须同时提供 `interaction`、项目 `value`，并在 `select` 事件中回写值。
 
-<<< @/examples/list/ListActionsExample.vue
+::: details 查看示例代码
+<<< @/examples/list/ListSelectedExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="List 单操作与多操作预览" stacked>
-    <ListActionsExample />
+  <DocsPreview label="List selected 预览" stacked>
+    <ListSelectedExample />
   </DocsPreview>
 </ClientOnly>
 
-单操作模式的 leading、文字和 trailing 共同构成一个主操作。多操作模式把 trailing 放在主操作之外，其中的按钮和链接保留独立事件；点击 trailing 操作不会触发 `MatListItem` 的 `click`。
+### `color`
 
-### 受控单选与多选
-
-<<< @/examples/list/ListSelectionExample.vue
+::: details 查看示例代码
+<<< @/examples/list/ListColorExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="List 受控单选与多选预览" stacked>
-    <ListSelectionExample />
+  <DocsPreview label="List color 预览" stacked>
+    <ListColorExample />
   </DocsPreview>
 </ClientOnly>
 
-选择模式由 `MatList` 统一管理候选值。组件不会修改 `selected`，调用方应在 `select` 事件中回写 `nextSelected`。示例中的 `MatRadio` 和 `MatCheckbox` 只展示当前状态，因此同时设置 `inert`、`aria-hidden="true"` 和 `pointer-events: none`，不会进入焦点顺序、无障碍树或接管点击。正常业务中不能在 `role="option"` 内放置可交互的 Checkbox、Radio、Switch、按钮或链接。
+### ListItem 的 `value`
+
+::: details 查看示例代码
+<<< @/examples/list/ListItemValueExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem value 预览">
+    <ListItemValueExample />
+  </DocsPreview>
+</ClientOnly>
+
+### ListItem 的 `href`
+
+::: details 查看示例代码
+<<< @/examples/list/ListItemHrefExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem href 预览">
+    <ListItemHrefExample />
+  </DocsPreview>
+</ClientOnly>
+
+### ListItem 的 `type`
+
+::: details 查看示例代码
+<<< @/examples/list/ListItemTypeExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem type 预览">
+    <ListItemTypeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### ListItem 的 `disabled`
+
+::: details 查看示例代码
+<<< @/examples/list/ListItemDisabledExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem disabled 预览">
+    <ListItemDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### ListItem 的 `lines`
+
+::: details 查看示例代码
+<<< @/examples/list/ListItemLinesExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem lines 预览">
+    <ListItemLinesExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatList 默认 Slot
+
+::: details 查看示例代码
+<<< @/examples/list/ListDefaultSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="List 默认 Slot 预览">
+    <ListDefaultSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatListItem 默认 Slot
+
+::: details 查看示例代码
+<<< @/examples/list/ListItemDefaultSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem 默认 Slot 预览">
+    <ListItemDefaultSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `leading` Slot
+
+::: details 查看示例代码
+<<< @/examples/list/ListItemLeadingSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem leading Slot 预览">
+    <ListItemLeadingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `overline` Slot
+
+::: details 查看示例代码
+<<< @/examples/list/ListItemOverlineSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem overline Slot 预览">
+    <ListItemOverlineSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `supporting` Slot
+
+::: details 查看示例代码
+<<< @/examples/list/ListItemSupportingSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem supporting Slot 预览">
+    <ListItemSupportingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `trailing` Slot
+
+::: details 查看示例代码
+<<< @/examples/list/ListItemTrailingSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem trailing Slot 预览">
+    <ListItemTrailingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+省略 `lines` 时，组件按 overline、默认标签和 supporting Slot 的数量推断一至三行。单操作模式的 leading、文字和 trailing 共同构成一个主操作；多操作模式把 trailing 放在主操作之外。
 
 ## API {#list-api}
 
@@ -125,8 +263,19 @@ single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌�
 外观、内容结构和交互依据 Material 3 [List overview](https://m3.material.io/components/lists/overview)、[List specs](https://m3.material.io/components/lists/specs) 与 [List guidelines](https://m3.material.io/components/lists/guidelines)。选择模式的语义限制参考 [WAI-ARIA Listbox Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/)。
 
 <script setup>
-import ListActionsExample from '../examples/list/ListActionsExample.vue';
-import ListContentExample from '../examples/list/ListContentExample.vue';
-import ListSelectionExample from '../examples/list/ListSelectionExample.vue';
-import ListVariantsExample from '../examples/list/ListVariantsExample.vue';
+import ListColorExample from '../examples/list/ListColorExample.vue';
+import ListDefaultSlotExample from '../examples/list/ListDefaultSlotExample.vue';
+import ListInteractionExample from '../examples/list/ListInteractionExample.vue';
+import ListItemDefaultSlotExample from '../examples/list/ListItemDefaultSlotExample.vue';
+import ListItemDisabledExample from '../examples/list/ListItemDisabledExample.vue';
+import ListItemHrefExample from '../examples/list/ListItemHrefExample.vue';
+import ListItemLeadingSlotExample from '../examples/list/ListItemLeadingSlotExample.vue';
+import ListItemLinesExample from '../examples/list/ListItemLinesExample.vue';
+import ListItemOverlineSlotExample from '../examples/list/ListItemOverlineSlotExample.vue';
+import ListItemSupportingSlotExample from '../examples/list/ListItemSupportingSlotExample.vue';
+import ListItemTrailingSlotExample from '../examples/list/ListItemTrailingSlotExample.vue';
+import ListItemTypeExample from '../examples/list/ListItemTypeExample.vue';
+import ListItemValueExample from '../examples/list/ListItemValueExample.vue';
+import ListSelectedExample from '../examples/list/ListSelectedExample.vue';
+import ListVariantExample from '../examples/list/ListVariantExample.vue';
 </script>

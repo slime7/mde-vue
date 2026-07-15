@@ -17,7 +17,9 @@ order: 80
 
 ### 布尔值
 
+::: details 查看示例代码
 <<< @/examples/selection/CheckboxBooleanExample.vue
+:::
 
 <ClientOnly>
   <DocsPreview label="Checkbox 布尔值预览" stacked>
@@ -29,7 +31,9 @@ order: 80
 
 每个实例用 `value` 声明自己的候选值。组件添加或移除项目时返回新数组，不修改原数组。
 
+::: details 查看示例代码
 <<< @/examples/selection/CheckboxArrayExample.vue
+:::
 
 <ClientOnly>
   <DocsPreview label="Checkbox 数组绑定预览" stacked>
@@ -39,11 +43,37 @@ order: 80
 
 ### 父子选择与不确定态
 
+::: details 查看示例代码
 <<< @/examples/selection/CheckboxIndeterminateExample.vue
+:::
 
 <ClientOnly>
   <DocsPreview label="Checkbox 不确定态预览" stacked>
     <CheckboxIndeterminateExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+<<< @/examples/selection/CheckboxColorExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Checkbox color 预览" stacked>
+    <CheckboxColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+::: details 查看示例代码
+<<< @/examples/selection/CheckboxDisabledExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Checkbox disabled 预览" stacked>
+    <CheckboxDisabledExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -86,5 +116,7 @@ order: 80
 <script setup>
 import CheckboxArrayExample from '../examples/selection/CheckboxArrayExample.vue';
 import CheckboxBooleanExample from '../examples/selection/CheckboxBooleanExample.vue';
+import CheckboxColorExample from '../examples/selection/CheckboxColorExample.vue';
+import CheckboxDisabledExample from '../examples/selection/CheckboxDisabledExample.vue';
 import CheckboxIndeterminateExample from '../examples/selection/CheckboxIndeterminateExample.vue';
 </script>

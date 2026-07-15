@@ -1,0 +1,33 @@
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(true);
+</script>
+
+<template>
+  <div class="example-menu">
+    <mat-btn
+      id="color-menu-trigger"
+      aria-haspopup="menu"
+      :aria-expanded="open"
+      aria-controls="color-menu"
+      @click="open = !open"
+    >
+      color
+    </mat-btn>
+    <mat-menu
+      id="color-menu"
+      v-model:open="open"
+      anchor="color-menu-trigger"
+      color="#6750a4"
+    >
+      <mat-menu-item>局部种子色菜单</mat-menu-item>
+    </mat-menu>
+  </div>
+</template>
+
+<style scoped>
+.example-menu {
+  min-block-size: 160px;
+}
+</style>

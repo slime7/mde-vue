@@ -346,8 +346,39 @@ matUi.theme.dispose();
 
 ## 示例
 
-### 字形、SVG 资源和 SVG Slot
+`src`、`icon` 和默认 Slot 是互斥的内容来源，因此分别展示。
 
+### `icon`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-icon icon="home" aria-hidden="true" />
+    <mat-icon icon="favorite" aria-hidden="true" />
+    <mat-icon icon="settings" aria-hidden="true" />
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon icon 预览">
+    <IconIconExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `src`
+
+::: details 查看示例代码
 ```vue
 <script setup>
 const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
@@ -358,82 +389,52 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 </script>
 
 <template>
-  <div class="example-row">
-    <mat-icon icon="home" aria-hidden="true" />
-
-    <mat-icon
-      :src="sourceIcon"
-      role="img"
-      aria-label="立方体"
-    />
-
-    <mat-icon font-color="rebeccapurple" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2 15.1 8.3 22 9.3 17 14.2 18.2 21 12 17.8 5.8 21 7 14.2 2 9.3 8.9 8.3Z" />
-      </svg>
-    </mat-icon>
-  </div>
+  <mat-icon :src="sourceIcon" role="img" aria-label="立方体" />
 </template>
-
-<style scoped>
-.example-row {
-  display: flex;
-  gap: 24px;
-  align-items: center;
-}
-</style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Icon 内容来源预览">
-    <IconSourcesExample />
+  <DocsPreview label="Icon src 预览">
+    <IconSrcExample />
   </DocsPreview>
 </ClientOnly>
 
-同时提供多个来源时固定使用 `src > icon > 默认 Slot`。`src` 交给内部 `<img alt="">` 加载，不会下载后再转成内联 SVG；默认 Slot 直接接收 Vue 渲染的 SVG 元素，不解析 SVG 字符串。
+### 默认 Slot
 
-### 尺寸、配色和字体轴动画
-
+::: details 查看示例代码
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const filled = ref(false);
-</script>
-
 <template>
-  <div class="example-stack">
-    <div class="example-row">
-      <mat-icon icon="favorite" size="small" aria-hidden="true" />
-      <mat-icon icon="favorite" size="medium" color="primary" aria-hidden="true" />
-      <mat-icon icon="favorite" size="large" color="tertiary" aria-hidden="true" />
-      <mat-icon icon="favorite" size="extra-large" font-color="rgb(196 38 80)" aria-hidden="true" />
-    </div>
+  <mat-icon font-color="rebeccapurple" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2 15.1 8.3 22 9.3 17 14.2 18.2 21 12 17.8 5.8 21 7 14.2 2 9.3 8.9 8.3Z" />
+    </svg>
+  </mat-icon>
+</template>
+```
+:::
 
-    <div class="example-row">
-      <mat-icon
-        icon="favorite"
-        size="40px"
-        :fill="filled ? 1 : 0"
-        :grade="filled ? 100 : 0"
-        :weight="filled ? 600 : 400"
-        :optical-size="40"
-        color="primary"
-        aria-hidden="true"
-      />
-      <mat-btn variant="filled-tonal" @click="filled = !filled">
-        切换字体轴
-      </mat-btn>
-    </div>
+<ClientOnly>
+  <DocsPreview label="Icon 默认 Slot 预览">
+    <IconDefaultSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `size`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-icon icon="favorite" size="small" aria-hidden="true" />
+    <mat-icon icon="favorite" size="medium" aria-hidden="true" />
+    <mat-icon icon="favorite" size="large" aria-hidden="true" />
+    <mat-icon icon="favorite" size="extra-large" aria-hidden="true" />
+    <mat-icon icon="favorite" size="32px" aria-hidden="true" />
   </div>
 </template>
 
 <style scoped>
-.example-stack {
-  display: flex;
-  gap: 24px;
-  flex-direction: column;
-}
-
 .example-row {
   display: flex;
   gap: 20px;
@@ -442,16 +443,216 @@ const filled = ref(false);
 }
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Icon 尺寸和字体轴预览" stacked>
-    <IconAppearanceExample />
+  <DocsPreview label="Icon size 预览">
+    <IconSizeExample />
   </DocsPreview>
 </ClientOnly>
 
-`fill`、`weight`、`grade` 和 `optical-size` 会通过项目动效令牌平滑过渡；系统要求减少动画时立即切换。应用加载的字体文件必须包含对应变量范围，否则字体可能忽略部分值。
+### `fill`
 
-### 自定义图标 class 与根标签
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-icon icon="favorite" :fill="0" aria-hidden="true" />
+    <mat-icon icon="favorite" :fill="0.5" aria-hidden="true" />
+    <mat-icon icon="favorite" :fill="1" aria-hidden="true" />
+  </div>
+</template>
 
+<style scoped>
+.example-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon fill 预览">
+    <IconFillExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `weight`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-icon icon="favorite" :weight="100" aria-hidden="true" />
+    <mat-icon icon="favorite" :weight="400" aria-hidden="true" />
+    <mat-icon icon="favorite" :weight="700" aria-hidden="true" />
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon weight 预览">
+    <IconWeightExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `grade`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-icon icon="favorite" :grade="-50" aria-hidden="true" />
+    <mat-icon icon="favorite" :grade="0" aria-hidden="true" />
+    <mat-icon icon="favorite" :grade="200" aria-hidden="true" />
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon grade 预览">
+    <IconGradeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `optical-size`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-icon icon="favorite" :optical-size="20" aria-hidden="true" />
+    <mat-icon icon="favorite" :optical-size="32" aria-hidden="true" />
+    <mat-icon icon="favorite" :optical-size="48" aria-hidden="true" />
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon optical-size 预览">
+    <IconOpticalSizeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-icon icon="favorite" color="primary" aria-hidden="true" />
+    <mat-icon icon="favorite" color="secondary" aria-hidden="true" />
+    <mat-icon icon="favorite" color="tertiary" aria-hidden="true" />
+    <mat-icon icon="favorite" color="error" aria-hidden="true" />
+    <mat-icon icon="favorite" color="#6750a4" aria-hidden="true" />
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon color 预览">
+    <IconColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `font-color`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-icon icon="favorite" font-color="tomato" aria-hidden="true" />
+    <mat-icon icon="favorite" font-color="rebeccapurple" aria-hidden="true" />
+    <mat-icon icon="favorite" font-color="seagreen" aria-hidden="true" />
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon font-color 预览">
+    <IconFontColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `as`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-icon as="i" icon="home" aria-hidden="true" />
+    <mat-icon as="span" icon="home" aria-hidden="true" />
+    <mat-icon as="div" icon="home" aria-hidden="true" />
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Icon as 预览">
+    <IconAsExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `icon-class`
+
+::: details 查看示例代码
 ```vue
 <template>
   <div class="example-row">
@@ -478,13 +679,15 @@ const filled = ref(false);
 }
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Icon 自定义 class 预览">
-    <IconClassExample />
+  <DocsPreview label="Icon icon-class 预览">
+    <IconClassOnlyExample />
   </DocsPreview>
 </ClientOnly>
 
-空 `icon` 仍视为显式字形来源，可配合由 class 或伪元素决定具体图形的图标库。`icon-class` 会覆盖 `createMatUi({ iconClass })` 的全局值；传入空字符串可以关闭全局 class。
+同时提供多个来源时固定使用 `src > icon > 默认 Slot`。`src` 交给内部 `<img alt="">` 加载；默认 Slot 直接接收 Vue 渲染的 SVG 元素，不解析 SVG 字符串。`fill`、`weight`、`grade` 和 `optical-size` 使用 Material Symbols 字体轴。
 
 ## API
 
@@ -525,9 +728,18 @@ Icon 本身不提供交互语义。装饰性图标应传入 `aria-hidden="true"`
 四轴名称、范围和 FILL 状态动画依据 [Material Symbols 官方指南](https://developers.google.com/fonts/docs/material_symbols?hl=zh-CN)。
 
 <script setup>
-import IconAppearanceExample from '../examples/icon/IconAppearanceExample.vue';
-import IconClassExample from '../examples/icon/IconClassExample.vue';
-import IconSourcesExample from '../examples/icon/IconSourcesExample.vue';
+import IconAsExample from '../examples/icon/IconAsExample.vue';
+import IconClassOnlyExample from '../examples/icon/IconClassOnlyExample.vue';
+import IconColorExample from '../examples/icon/IconColorExample.vue';
+import IconDefaultSlotExample from '../examples/icon/IconDefaultSlotExample.vue';
+import IconFillExample from '../examples/icon/IconFillExample.vue';
+import IconFontColorExample from '../examples/icon/IconFontColorExample.vue';
+import IconGradeExample from '../examples/icon/IconGradeExample.vue';
+import IconIconExample from '../examples/icon/IconIconExample.vue';
+import IconOpticalSizeExample from '../examples/icon/IconOpticalSizeExample.vue';
+import IconSizeExample from '../examples/icon/IconSizeExample.vue';
+import IconSrcExample from '../examples/icon/IconSrcExample.vue';
+import IconWeightExample from '../examples/icon/IconWeightExample.vue';
 </script>
 
 # 组件配色
@@ -705,60 +917,84 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 # Button 按钮
 
+## 组件简介
+
 `<mat-btn>` 的组件导出名是 `MatBtn`。它统一渲染普通按钮和图标按钮：省略 `icon` 时由默认 Slot 提供可见标签；传入 Material Symbols 字符串 `icon` 时切换为只包含图标的按钮。两种模式都渲染原生 `<button>`。
 
 ## 示例
 
-### 默认样式
+代码默认收起，预览直接可见。
 
-省略属性时使用 `filled`、`small`、`round`。第二个按钮设置 `block`，在普通文档流中作为块级 flex 容器铺满父元素：
+### 默认内容
 
+::: details 查看示例代码
 ```vue
 <template>
-  <div class="button-default-example">
-    <mat-btn>确认</mat-btn>
+  <mat-btn>确认</mat-btn>
+</template>
+```
+:::
 
+<ClientOnly>
+  <DocsPreview label="Button 默认内容预览">
+    <ButtonDefaultOnlyExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `block`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-stack">
+    <mat-btn>普通宽度</mat-btn>
     <mat-btn block>
-      铺满父元素
+      块级宽度
     </mat-btn>
   </div>
 </template>
 
 <style scoped>
-.button-default-example {
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
   inline-size: min(100%, 360px);
-}
-
-.button-default-example > :last-child {
-  margin-block-start: 12px;
 }
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Button 默认样式预览">
-    <ButtonDefaultExample />
+  <DocsPreview label="Button block 预览">
+    <ButtonBlockExample />
   </DocsPreview>
 </ClientOnly>
 
-### 外观、尺寸和形状
+### `variant`
 
+::: details 查看示例代码
 ```vue
 <template>
   <div class="example-row">
-    <mat-btn variant="elevated" size="extra-small">
-      Elevated
+    <mat-btn variant="elevated">
+      elevated
     </mat-btn>
-    <mat-btn variant="filled" size="small">
-      Filled
+    <mat-btn variant="filled">
+      filled
     </mat-btn>
-    <mat-btn variant="filled-tonal" size="medium">
-      Tonal
+    <mat-btn variant="filled-tonal">
+      filled tonal
     </mat-btn>
-    <mat-btn variant="outlined" size="large" shape="square">
-      Outlined
+    <mat-btn variant="outlined">
+      outlined
     </mat-btn>
-    <mat-btn variant="text" size="extra-large">
-      Text
+    <mat-btn variant="text">
+      text
+    </mat-btn>
+    <mat-btn variant="standard">
+      standard
     </mat-btn>
   </div>
 </template>
@@ -767,131 +1003,202 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 .example-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 12px;
   align-items: center;
 }
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Button 外观、尺寸和形状预览">
-    <ButtonVariantsExample />
+  <DocsPreview label="Button variant 预览">
+    <ButtonVariantExample />
   </DocsPreview>
 </ClientOnly>
 
-`variant` 支持 elevated、filled、filled tonal、outlined、text 和 standard。普通与图标模式都可以使用全部六种形态。
+### `size`
 
-### 前置图标与受控切换
-
+::: details 查看示例代码
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const selected = ref(false);
-</script>
-
 <template>
-  <mat-btn
-    prefix="favorite"
-    toggle
-    :selected="selected"
-    @click="selected = !selected"
-  >
-    <template #default>
-      收藏
-    </template>
-    <template #selected>
-      已收藏
-    </template>
+  <div class="example-row">
+    <mat-btn size="extra-small">
+      extra-small
+    </mat-btn>
+    <mat-btn size="small">
+      small
+    </mat-btn>
+    <mat-btn size="medium">
+      medium
+    </mat-btn>
+    <mat-btn size="large">
+      large
+    </mat-btn>
+    <mat-btn size="extra-large">
+      extra-large
+    </mat-btn>
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button size 预览">
+    <ButtonSizeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `shape`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-btn shape="round">
+      round
+    </mat-btn>
+    <mat-btn shape="square">
+      square
+    </mat-btn>
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button shape 预览">
+    <ButtonShapeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `width`
+
+图标模式必须提供 `label`，它是展示 `width` 的必要依赖。
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-btn icon="star" label="窄宽度" width="narrow" />
+    <mat-btn icon="star" label="等宽" width="uniform" />
+    <mat-btn icon="star" label="宽宽度" width="wide" />
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button width 预览">
+    <ButtonWidthExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `icon` 与 `label`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-btn icon="home" label="主页" />
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button icon 预览">
+    <ButtonIconExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `prefix`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-btn prefix="add">
+    新增项目
   </mat-btn>
 </template>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Button 前置图标与受控切换预览">
-    <ButtonToggleExample />
+  <DocsPreview label="Button prefix 预览">
+    <ButtonPrefixExample />
   </DocsPreview>
 </ClientOnly>
 
-组件不自行修改 `selected`，也不触发 `update:selected`。普通按钮可以通过 `prefix`、`suffix` 属性或同名 Slots 放置前后图标；属性和 Slot 同时存在时，属性优先。
+### `suffix`
 
-### 图标模式
-
+::: details 查看示例代码
 ```vue
 <template>
-  <div class="icon-button-default-example">
-    <mat-btn icon="more_vert" label="更多操作" />
-
-    <mat-btn icon="fit_screen" label="铺满父元素" block />
-  </div>
+  <mat-btn suffix="arrow_forward">
+    继续
+  </mat-btn>
 </template>
-
-<style scoped>
-.icon-button-default-example {
-  inline-size: min(100%, 360px);
-}
-
-.icon-button-default-example > :last-child {
-  margin-block-start: 12px;
-}
-</style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Button 图标模式默认样式预览">
-    <IconButtonDefaultExample />
+  <DocsPreview label="Button suffix 预览">
+    <ButtonSuffixExample />
   </DocsPreview>
 </ClientOnly>
 
-图标模式必须提供 `label` 作为操作名称；未显式传入 `title` 时，组件也使用 `label` 提供原生提示。默认 `uniform` 宽度与 `round` 形状组成圆形容器。
+### `color`
 
-### 图标模式的外观、宽度和切换
-
-```vue
-<script setup>
-import { ref } from 'vue';
-
-const favorite = ref(false);
-</script>
-
-<template>
-  <div class="example-row">
-    <mat-btn icon="star" label="Filled" variant="filled" width="narrow" />
-    <mat-btn icon="star" label="Tonal" variant="filled-tonal" />
-    <mat-btn icon="star" label="Outlined" variant="outlined" width="wide" />
-    <mat-btn icon="star" label="Standard" variant="standard" />
-    <mat-btn
-      icon="favorite"
-      label="收藏"
-      toggle
-      :selected="favorite"
-      color="#6750a4"
-      @click="favorite = !favorite"
-    />
-  </div>
-</template>
-
-<style scoped>
-.example-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
-}
-</style>
-```
-<ClientOnly>
-  <DocsPreview label="Button 图标模式外观、宽度和切换预览">
-    <IconButtonVariantsExample />
-  </DocsPreview>
-</ClientOnly>
-
-`width` 提供 narrow、uniform、wide 三档并且只影响图标模式。Button group 不根据子项数量自动改变该值。图标模式选中时复用 `icon`，通过 Material Symbols 的 FILL 轴加强图标。
-
-### 组件配色
-
+::: details 查看示例代码
 ```vue
 <template>
   <div class="example-row">
+    <mat-btn color="primary">
+      primary
+    </mat-btn>
     <mat-btn color="secondary">
-      次要操作
+      secondary
+    </mat-btn>
+    <mat-btn color="tertiary">
+      tertiary
+    </mat-btn>
+    <mat-btn color="error">
+      error
     </mat-btn>
     <mat-btn color="#6750a4">
       局部种子色
@@ -903,18 +1210,243 @@ const favorite = ref(false);
 .example-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 12px;
   align-items: center;
 }
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Button 组件配色预览">
+  <DocsPreview label="Button color 预览">
     <ButtonColorExample />
   </DocsPreview>
 </ClientOnly>
 
-省略 `color` 时按 `variant` 使用 Material 默认角色。语义字符串读取项目令牌，六位十六进制值生成只作用于当前按钮的 Material 2025 primary 色族。完整规则见[组件配色](/guide/component-color)。
+### `toggle` 与 `selected`
+
+`selected` 是 toggle 的必要受控状态；组件不自行修改它。
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const selected = ref(false);
+</script>
+
+<template>
+  <mat-btn
+    toggle
+    :selected="selected"
+    @click="selected = !selected"
+  >
+    切换收藏
+  </mat-btn>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button toggle 与 selected 预览">
+    <ButtonToggleExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-btn>可用</mat-btn>
+    <mat-btn disabled>
+      禁用
+    </mat-btn>
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button disabled 预览">
+    <ButtonDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `type`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const submitted = ref('尚未提交');
+</script>
+
+<template>
+  <form class="example-stack" @submit.prevent="submitted = 'submit 已触发'">
+    <div class="example-row">
+      <mat-btn type="submit">
+        提交
+      </mat-btn>
+      <mat-btn type="reset" @click="submitted = 'reset 已触发'">
+        重置
+      </mat-btn>
+    </div>
+    <span>{{ submitted }}</span>
+  </form>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.example-row {
+  display: flex;
+  gap: 12px;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button type 预览">
+    <ButtonTypeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `value`
+
+`value` 需要放在 `MatBtnGroup` 的选择模式中才有可见作用。
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const selected = ref(['bold']);
+
+function updateSelection({ nextSelected }) {
+  selected.value = nextSelected;
+}
+</script>
+
+<template>
+  <mat-btn-group
+    selection="multiple"
+    :selected="selected"
+    @select="updateSelection"
+  >
+    <mat-btn value="bold">
+      粗体
+    </mat-btn>
+    <mat-btn value="italic">
+      斜体
+    </mat-btn>
+  </mat-btn-group>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button value 预览">
+    <ButtonValueExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 默认 Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-btn>默认 Slot 标签</mat-btn>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button 默认 Slot 预览">
+    <ButtonDefaultSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `prefix` Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-btn>
+    <template #prefix>
+      <span aria-hidden="true">☆</span>
+    </template>
+    前置 Slot
+  </mat-btn>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button prefix Slot 预览">
+    <ButtonPrefixSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `suffix` Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-btn>
+    后置 Slot
+    <template #suffix>
+      <span aria-hidden="true">→</span>
+    </template>
+  </mat-btn>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button suffix Slot 预览">
+    <ButtonSuffixSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `selected` Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-btn toggle :selected="true">
+    默认标签
+    <template #selected>
+      选中 Slot 标签
+    </template>
+  </mat-btn>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button selected Slot 预览">
+    <ButtonSelectedSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+组件不自行修改 `selected`，也不触发 `update:selected`。图标模式必须提供 `label`；普通按钮可以通过 `prefix`、`suffix` 属性或同名 Slot 放置前后图标，属性和 Slot 同时存在时属性优先。完整配色规则见[组件配色](/guide/component-color)。
 
 ## API
 
@@ -972,95 +1504,396 @@ const favorite = ref(false);
 尺寸、形状和状态依据 [Material 3 Button specs](https://m3.material.io/components/buttons/specs) 与 [Icon button specs](https://m3.material.io/components/icon-buttons/specs)。
 
 <script setup>
+import ButtonBlockExample from '../examples/button/ButtonBlockExample.vue';
 import ButtonColorExample from '../examples/button/ButtonColorExample.vue';
-import ButtonDefaultExample from '../examples/button/ButtonDefaultExample.vue';
+import ButtonDefaultOnlyExample from '../examples/button/ButtonDefaultOnlyExample.vue';
+import ButtonDefaultSlotExample from '../examples/button/ButtonDefaultSlotExample.vue';
+import ButtonDisabledExample from '../examples/button/ButtonDisabledExample.vue';
+import ButtonIconExample from '../examples/button/ButtonIconExample.vue';
+import ButtonPrefixExample from '../examples/button/ButtonPrefixExample.vue';
+import ButtonPrefixSlotExample from '../examples/button/ButtonPrefixSlotExample.vue';
+import ButtonSelectedSlotExample from '../examples/button/ButtonSelectedSlotExample.vue';
+import ButtonSizeExample from '../examples/button/ButtonSizeExample.vue';
+import ButtonShapeExample from '../examples/button/ButtonShapeExample.vue';
+import ButtonSuffixExample from '../examples/button/ButtonSuffixExample.vue';
+import ButtonSuffixSlotExample from '../examples/button/ButtonSuffixSlotExample.vue';
 import ButtonToggleExample from '../examples/button/ButtonToggleExample.vue';
-import ButtonVariantsExample from '../examples/button/ButtonVariantsExample.vue';
-import IconButtonDefaultExample from '../examples/button/IconButtonDefaultExample.vue';
-import IconButtonVariantsExample from '../examples/button/IconButtonVariantsExample.vue';
+import ButtonTypeExample from '../examples/button/ButtonTypeExample.vue';
+import ButtonValueExample from '../examples/button/ButtonValueExample.vue';
+import ButtonVariantExample from '../examples/button/ButtonVariantExample.vue';
+import ButtonWidthExample from '../examples/button/ButtonWidthExample.vue';
 </script>
 
 # Button group 按钮组
+
+## 组件简介
 
 `<mat-btn-group>` 的组件导出名是 `MatBtnGroup`。它在单行中组织普通或图标模式的 `MatBtn`。standard 形态保留独立按钮间距，connected 形态连接可选择按钮。组容器不聚焦，每个子按钮保持独立 Tab 停靠点。
 
 ## 示例
 
-### 默认 standard 组
+示例代码默认收起，预览直接可见。
 
-第二组设置 `block`，组根铺满父元素，子按钮仍保持内容宽度。
+### `block`
 
+::: details 查看示例代码
 ```vue
 <template>
-  <div class="button-group-default-example">
+  <div class="example-stack">
     <mat-btn-group>
-      <mat-btn variant="outlined">
-        取消
-      </mat-btn>
-      <mat-btn>保存</mat-btn>
+      <mat-btn>普通组</mat-btn>
+      <mat-btn>按钮</mat-btn>
     </mat-btn-group>
-
     <mat-btn-group block>
-      <mat-btn variant="outlined">
-        上一步
-      </mat-btn>
-      <mat-btn>下一步</mat-btn>
+      <mat-btn>块级组</mat-btn>
+      <mat-btn>按钮</mat-btn>
     </mat-btn-group>
   </div>
 </template>
 
 <style scoped>
-.button-group-default-example {
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
   inline-size: min(100%, 360px);
-}
-
-.button-group-default-example > :last-child {
-  margin-block-start: 12px;
 }
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Button group 默认 standard 组预览">
-    <ButtonGroupDefaultExample />
+  <DocsPreview label="Button group block 预览">
+    <ButtonGroupBlockExample />
   </DocsPreview>
 </ClientOnly>
 
-按下 standard 子项时，该项宽度临时增大 15%，直接相邻项同步缩窄，组的总宽保持不变。首尾项由唯一邻项承担全部缩量，中间项由两侧邻项各承担一半；快速点击也会完成可见的展开和回弹。受控 `selected` 只保留形状和颜色状态，不持续改变宽度。connected 形态不联动子项宽度。
+### `variant`
 
-宽度与形状动效使用 `--mat-sys-motion-duration-short3`（150ms）和 `--mat-sys-motion-easing-standard`，作为 Web 上对 Material 3 FastSpatial 的近似。按下展开和释放回弹使用相同的时间与缓动曲线；这是仍留在界面中的空间变化，不按方向切换 decelerate 或 accelerate。快速释放时，组件会等待展开至少完成 75% 后再开始回弹；`prefers-reduced-motion: reduce` 下不等待动画。
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
 
-### 受控 connected 多选
+const selected = ref('one');
+</script>
 
+<template>
+  <div class="example-stack">
+    <mat-btn-group>
+      <mat-btn>standard</mat-btn>
+      <mat-btn>组</mat-btn>
+    </mat-btn-group>
+    <mat-btn-group
+      variant="connected"
+      selection="single"
+      :selected="selected"
+      @select="selected = $event.nextSelected"
+    >
+      <mat-btn value="one">
+        connected
+      </mat-btn>
+      <mat-btn value="two">
+        组
+      </mat-btn>
+    </mat-btn-group>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group variant 预览">
+    <ButtonGroupVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `size`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-btn-group size="extra-small">
+      <mat-btn>XS</mat-btn><mat-btn>组</mat-btn>
+    </mat-btn-group>
+    <mat-btn-group size="small">
+      <mat-btn>S</mat-btn><mat-btn>组</mat-btn>
+    </mat-btn-group>
+    <mat-btn-group size="medium">
+      <mat-btn>M</mat-btn><mat-btn>组</mat-btn>
+    </mat-btn-group>
+    <mat-btn-group size="large">
+      <mat-btn>L</mat-btn><mat-btn>组</mat-btn>
+    </mat-btn-group>
+    <mat-btn-group size="extra-large">
+      <mat-btn>XL</mat-btn><mat-btn>组</mat-btn>
+    </mat-btn-group>
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group size 预览">
+    <ButtonGroupSizeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `shape`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-btn-group shape="round">
+      <mat-btn>round</mat-btn><mat-btn>组</mat-btn>
+    </mat-btn-group>
+    <mat-btn-group shape="square">
+      <mat-btn>square</mat-btn><mat-btn>组</mat-btn>
+    </mat-btn-group>
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group shape 预览">
+    <ButtonGroupShapeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-btn-group color="primary">
+      <mat-btn>primary</mat-btn><mat-btn>组</mat-btn>
+    </mat-btn-group>
+    <mat-btn-group color="secondary">
+      <mat-btn>secondary</mat-btn><mat-btn>组</mat-btn>
+    </mat-btn-group>
+    <mat-btn-group color="#6750a4">
+      <mat-btn>局部色</mat-btn><mat-btn>组</mat-btn>
+    </mat-btn-group>
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group color 预览">
+    <ButtonGroupColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-btn-group>
+      <mat-btn>可用</mat-btn>
+      <mat-btn>按钮</mat-btn>
+    </mat-btn-group>
+    <mat-btn-group disabled>
+      <mat-btn>禁用</mat-btn>
+      <mat-btn>组</mat-btn>
+    </mat-btn-group>
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group disabled 预览">
+    <ButtonGroupDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `selection` 与 `selected`
+
+选择模式必须给每个子按钮提供 `value`，并在 `select` 事件中回写 `selected`。
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const singleSelected = ref('day');
+const multipleSelected = ref(['bold']);
+</script>
+
+<template>
+  <div class="example-stack">
+    <mat-btn-group
+      selection="single"
+      :selected="singleSelected"
+      @select="singleSelected = $event.nextSelected"
+    >
+      <mat-btn value="day">
+        日间
+      </mat-btn>
+      <mat-btn value="night">
+        夜间
+      </mat-btn>
+    </mat-btn-group>
+    <mat-btn-group
+      selection="multiple"
+      :selected="multipleSelected"
+      @select="multipleSelected = $event.nextSelected"
+    >
+      <mat-btn value="bold">
+        粗体
+      </mat-btn>
+      <mat-btn value="italic">
+        斜体
+      </mat-btn>
+    </mat-btn-group>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group selection 与 selected 预览">
+    <ButtonGroupSelectionExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `required`
+
+::: details 查看示例代码
 ```vue
 <script setup>
 import { ref } from 'vue';
 
 const selected = ref(['bold']);
-
-function applySelection({ nextSelected }) {
-  selected.value = nextSelected;
-}
 </script>
 
 <template>
   <mat-btn-group
-    variant="connected"
     selection="multiple"
     :selected="selected"
     required
-    full-width
-    @select="applySelection"
+    @select="selected = $event.nextSelected"
   >
-    <mat-btn icon="format_bold" label="粗体" value="bold" />
-    <mat-btn icon="format_italic" label="斜体" value="italic" />
+    <mat-btn value="bold">
+      粗体
+    </mat-btn>
+    <mat-btn value="italic">
+      斜体
+    </mat-btn>
   </mat-btn-group>
 </template>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Button group 受控 connected 多选预览">
-    <ButtonGroupSelectionExample />
+  <DocsPreview label="Button group required 预览">
+    <ButtonGroupRequiredExample />
   </DocsPreview>
 </ClientOnly>
+
+### `fullWidth`
+
+`fullWidth` 只在 connected 形态中生效。
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-btn-group variant="connected" full-width>
+    <mat-btn>左侧</mat-btn>
+    <mat-btn>右侧</mat-btn>
+  </mat-btn-group>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group fullWidth 预览">
+    <ButtonGroupFullWidthExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 默认 Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-btn-group>
+    <mat-btn>默认 Slot</mat-btn>
+    <mat-btn>子按钮</mat-btn>
+  </mat-btn-group>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group 默认 Slot 预览">
+    <ButtonGroupDefaultSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+按下 standard 子项时，该项宽度临时增大，直接相邻项同步缩窄；connected 形态不联动子项宽度。组的 `size`、`shape`、`color` 只作为未显式设置子项的默认值，组 `disabled` 与子项 `disabled` 取或。
 
 ## API
 
@@ -1110,8 +1943,16 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 参数与交互依据 [Material 3 Button group specs](https://m3.material.io/components/button-groups/specs)。
 
 <script setup>
-import ButtonGroupDefaultExample from '../examples/button/ButtonGroupDefaultExample.vue';
+import ButtonGroupBlockExample from '../examples/button/ButtonGroupBlockExample.vue';
+import ButtonGroupColorExample from '../examples/button/ButtonGroupColorExample.vue';
+import ButtonGroupDefaultSlotExample from '../examples/button/ButtonGroupDefaultSlotExample.vue';
+import ButtonGroupDisabledExample from '../examples/button/ButtonGroupDisabledExample.vue';
+import ButtonGroupFullWidthExample from '../examples/button/ButtonGroupFullWidthExample.vue';
+import ButtonGroupRequiredExample from '../examples/button/ButtonGroupRequiredExample.vue';
 import ButtonGroupSelectionExample from '../examples/button/ButtonGroupSelectionExample.vue';
+import ButtonGroupShapeExample from '../examples/button/ButtonGroupShapeExample.vue';
+import ButtonGroupSizeExample from '../examples/button/ButtonGroupSizeExample.vue';
+import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExample.vue';
 </script>
 
 # 限制
@@ -1129,55 +1970,249 @@ import ButtonGroupSelectionExample from '../examples/button/ButtonGroupSelection
 
 # Split button 拆分按钮
 
+## 组件简介
+
 `<mat-split-btn>` 的组件导出名是 `MatSplitBtn`。它把主要操作和展开菜单操作组合为两个独立原生按钮。组件只协调外观、事件、受控展开状态和菜单 ARIA，不创建菜单，也不管理菜单焦点。
 
 ## 示例
 
-### 默认样式
+拆分按钮必须同时提供 `leading` 和 `trailing` 两侧 Slot，这是组件结构所需的依赖。
 
-第二个拆分按钮设置 `block`，只让组合根采用块级布局，不改变 leading 和 trailing 子项的宽度分配。
+### `block`
 
+::: details 查看示例代码
 ```vue
 <template>
-  <div class="split-button-default-example">
+  <div class="example-stack">
     <mat-split-btn>
       <template #leading>
-        <mat-btn>新建</mat-btn>
+        <mat-btn>普通宽度</mat-btn>
       </template>
       <template #trailing>
-        <mat-btn icon="arrow_drop_down" label="更多新建方式" />
+        <mat-btn icon="arrow_drop_down" label="展开" />
       </template>
     </mat-split-btn>
-
     <mat-split-btn block>
       <template #leading>
-        <mat-btn>导出</mat-btn>
+        <mat-btn>块级宽度</mat-btn>
       </template>
       <template #trailing>
-        <mat-btn icon="arrow_drop_down" label="更多导出方式" />
+        <mat-btn icon="arrow_drop_down" label="展开" />
       </template>
     </mat-split-btn>
   </div>
 </template>
 
 <style scoped>
-.split-button-default-example {
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
   inline-size: min(100%, 360px);
-}
-
-.split-button-default-example > :last-child {
-  margin-block-start: 12px;
 }
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Split button 默认样式预览">
-    <SplitButtonDefaultExample />
+  <DocsPreview label="Split button block 预览">
+    <SplitButtonBlockExample />
   </DocsPreview>
 </ClientOnly>
 
-### 受控展开与 MatMenu
+### `variant`
 
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-stack">
+    <mat-split-btn variant="elevated">
+      <template #leading>
+        <mat-btn>elevated</mat-btn>
+      </template>
+      <template #trailing>
+        <mat-btn icon="arrow_drop_down" label="展开" />
+      </template>
+    </mat-split-btn>
+    <mat-split-btn variant="filled">
+      <template #leading>
+        <mat-btn>filled</mat-btn>
+      </template>
+      <template #trailing>
+        <mat-btn icon="arrow_drop_down" label="展开" />
+      </template>
+    </mat-split-btn>
+    <mat-split-btn variant="filled-tonal">
+      <template #leading>
+        <mat-btn>tonal</mat-btn>
+      </template>
+      <template #trailing>
+        <mat-btn icon="arrow_drop_down" label="展开" />
+      </template>
+    </mat-split-btn>
+    <mat-split-btn variant="outlined">
+      <template #leading>
+        <mat-btn>outlined</mat-btn>
+      </template>
+      <template #trailing>
+        <mat-btn icon="arrow_drop_down" label="展开" />
+      </template>
+    </mat-split-btn>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Split button variant 预览">
+    <SplitButtonVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `size`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-stack">
+    <mat-split-btn size="extra-small">
+      <template #leading>
+        <mat-btn>XS</mat-btn>
+      </template><template #trailing>
+        <mat-btn icon="arrow_drop_down" label="展开" />
+      </template>
+    </mat-split-btn>
+    <mat-split-btn size="small">
+      <template #leading>
+        <mat-btn>S</mat-btn>
+      </template><template #trailing>
+        <mat-btn icon="arrow_drop_down" label="展开" />
+      </template>
+    </mat-split-btn>
+    <mat-split-btn size="medium">
+      <template #leading>
+        <mat-btn>M</mat-btn>
+      </template><template #trailing>
+        <mat-btn icon="arrow_drop_down" label="展开" />
+      </template>
+    </mat-split-btn>
+    <mat-split-btn size="large">
+      <template #leading>
+        <mat-btn>L</mat-btn>
+      </template><template #trailing>
+        <mat-btn icon="arrow_drop_down" label="展开" />
+      </template>
+    </mat-split-btn>
+    <mat-split-btn size="extra-large">
+      <template #leading>
+        <mat-btn>XL</mat-btn>
+      </template><template #trailing>
+        <mat-btn icon="arrow_drop_down" label="展开" />
+      </template>
+    </mat-split-btn>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Split button size 预览">
+    <SplitButtonSizeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-stack">
+    <mat-split-btn color="primary">
+      <template #leading>
+        <mat-btn>primary</mat-btn>
+      </template><template #trailing>
+        <mat-btn icon="arrow_drop_down" label="展开" />
+      </template>
+    </mat-split-btn>
+    <mat-split-btn color="secondary">
+      <template #leading>
+        <mat-btn>secondary</mat-btn>
+      </template><template #trailing>
+        <mat-btn icon="arrow_drop_down" label="展开" />
+      </template>
+    </mat-split-btn>
+    <mat-split-btn color="#6750a4">
+      <template #leading>
+        <mat-btn>局部色</mat-btn>
+      </template><template #trailing>
+        <mat-btn icon="arrow_drop_down" label="展开" />
+      </template>
+    </mat-split-btn>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Split button color 预览">
+    <SplitButtonColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-split-btn disabled>
+    <template #leading>
+      <mat-btn>禁用主要操作</mat-btn>
+    </template>
+    <template #trailing>
+      <mat-btn icon="arrow_drop_down" label="展开" />
+    </template>
+  </mat-split-btn>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Split button disabled 预览">
+    <SplitButtonDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `expanded`
+
+::: details 查看示例代码
 ```vue
 <script setup>
 import { ref } from 'vue';
@@ -1186,35 +2221,60 @@ const expanded = ref(false);
 </script>
 
 <template>
+  <mat-split-btn
+    :expanded="expanded"
+    @update:expanded="expanded = $event"
+  >
+    <template #leading>
+      <mat-btn>主要操作</mat-btn>
+    </template>
+    <template #trailing>
+      <mat-btn icon="arrow_drop_down" label="展开菜单" />
+    </template>
+  </mat-split-btn>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Split button expanded 预览">
+    <SplitButtonExpandedExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `controls`
+
+`controls` 与菜单的 `open`、`anchor` 共同建立展开按钮和菜单之间的 ARIA 与定位关系。
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+
+<template>
   <div class="example-stack">
     <mat-split-btn
-      variant="filled"
-      size="small"
-      color="#6750a4"
-      :expanded="expanded"
-      controls="create-menu"
-      @update:expanded="expanded = $event"
+      controls="split-controls-menu"
+      :expanded="open"
+      @update:expanded="open = $event"
     >
       <template #leading>
         <mat-btn>新建</mat-btn>
       </template>
       <template #trailing>
-        <mat-btn
-          id="split-create-trigger"
-          icon="arrow_drop_down"
-          label="更多新建方式"
-        />
+        <mat-btn id="split-controls-trigger" icon="arrow_drop_down" label="更多新建方式" />
       </template>
     </mat-split-btn>
-
     <mat-menu
-      id="create-menu"
-      v-model:open="expanded"
-      anchor="split-create-trigger"
-      color="#6750a4"
+      id="split-controls-menu"
+      v-model:open="open"
+      anchor="split-controls-trigger"
     >
-      <mat-menu-item>新建文档</mat-menu-item>
-      <mat-menu-item>新建文件夹</mat-menu-item>
+      <mat-menu-item>文档</mat-menu-item>
+      <mat-menu-item>文件夹</mat-menu-item>
     </mat-menu>
   </div>
 </template>
@@ -1223,15 +2283,62 @@ const expanded = ref(false);
 .example-stack {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   align-items: flex-start;
 }
-
 </style>
 ```
+:::
+
 <ClientOnly>
-<DocsPreview label="Split button 受控展开与 MatMenu 预览" stacked>
-    <SplitButtonMenuExample />
+  <DocsPreview label="Split button controls 预览">
+    <SplitButtonControlsExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `leading` Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-split-btn>
+    <template #leading>
+      <mat-btn>自定义主要按钮</mat-btn>
+    </template>
+    <template #trailing>
+      <mat-btn icon="arrow_drop_down" label="展开" />
+    </template>
+  </mat-split-btn>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Split button leading Slot 预览">
+    <SplitButtonLeadingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `trailing` Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-split-btn>
+    <template #leading>
+      <mat-btn>主要操作</mat-btn>
+    </template>
+    <template #trailing>
+      <mat-btn icon="more_vert" label="更多操作" />
+    </template>
+  </mat-split-btn>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Split button trailing Slot 预览">
+    <SplitButtonTrailingSlotExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -1281,8 +2388,15 @@ slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展
 参数、形状和展开状态依据 [Material 3 Split button specs](https://m3.material.io/components/split-button/specs)。
 
 <script setup>
-import SplitButtonDefaultExample from '../examples/button/SplitButtonDefaultExample.vue';
-import SplitButtonMenuExample from '../examples/button/SplitButtonMenuExample.vue';
+import SplitButtonBlockExample from '../examples/button/SplitButtonBlockExample.vue';
+import SplitButtonColorExample from '../examples/button/SplitButtonColorExample.vue';
+import SplitButtonControlsExample from '../examples/button/SplitButtonControlsExample.vue';
+import SplitButtonDisabledExample from '../examples/button/SplitButtonDisabledExample.vue';
+import SplitButtonExpandedExample from '../examples/button/SplitButtonExpandedExample.vue';
+import SplitButtonLeadingSlotExample from '../examples/button/SplitButtonLeadingSlotExample.vue';
+import SplitButtonSizeExample from '../examples/button/SplitButtonSizeExample.vue';
+import SplitButtonTrailingSlotExample from '../examples/button/SplitButtonTrailingSlotExample.vue';
+import SplitButtonVariantExample from '../examples/button/SplitButtonVariantExample.vue';
 </script>
 
 # Checkbox 复选框
@@ -1297,6 +2411,7 @@ import SplitButtonMenuExample from '../examples/button/SplitButtonMenuExample.vu
 
 ### 布尔值
 
+::: details 查看示例代码
 ```vue
 <script setup>
 import { ref } from 'vue';
@@ -1322,6 +2437,8 @@ const newsletter = ref(true);
 }
 </style>
 ```
+:::
+
 <ClientOnly>
   <DocsPreview label="Checkbox 布尔值预览" stacked>
     <CheckboxBooleanExample />
@@ -1332,6 +2449,7 @@ const newsletter = ref(true);
 
 每个实例用 `value` 声明自己的候选值。组件添加或移除项目时返回新数组，不修改原数组。
 
+::: details 查看示例代码
 ```vue
 <script setup>
 import { ref } from 'vue';
@@ -1360,6 +2478,8 @@ const filters = ref(['offline']);
 }
 </style>
 ```
+:::
+
 <ClientOnly>
   <DocsPreview label="Checkbox 数组绑定预览" stacked>
     <CheckboxArrayExample />
@@ -1368,6 +2488,7 @@ const filters = ref(['offline']);
 
 ### 父子选择与不确定态
 
+::: details 查看示例代码
 ```vue
 <script setup>
 import { computed, ref } from 'vue';
@@ -1422,9 +2543,84 @@ function toggleAll(checked) {
 }
 </style>
 ```
+:::
+
 <ClientOnly>
   <DocsPreview label="Checkbox 不确定态预览" stacked>
     <CheckboxIndeterminateExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-stack">
+    <mat-checkbox model-value color="primary">
+      primary
+    </mat-checkbox>
+    <mat-checkbox model-value color="secondary">
+      secondary
+    </mat-checkbox>
+    <mat-checkbox model-value color="tertiary">
+      tertiary
+    </mat-checkbox>
+    <mat-checkbox model-value color="error">
+      error
+    </mat-checkbox>
+    <mat-checkbox model-value color="#6750a4">
+      局部种子色
+    </mat-checkbox>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Checkbox color 预览" stacked>
+    <CheckboxColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-stack">
+    <mat-checkbox model-value>
+      启用
+    </mat-checkbox>
+    <mat-checkbox model-value disabled>
+      禁用
+    </mat-checkbox>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Checkbox disabled 预览" stacked>
+    <CheckboxDisabledExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -1467,6 +2663,8 @@ function toggleAll(checked) {
 <script setup>
 import CheckboxArrayExample from '../examples/selection/CheckboxArrayExample.vue';
 import CheckboxBooleanExample from '../examples/selection/CheckboxBooleanExample.vue';
+import CheckboxColorExample from '../examples/selection/CheckboxColorExample.vue';
+import CheckboxDisabledExample from '../examples/selection/CheckboxDisabledExample.vue';
 import CheckboxIndeterminateExample from '../examples/selection/CheckboxIndeterminateExample.vue';
 </script>
 
@@ -1484,6 +2682,7 @@ Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互
 
 ### 独立绑定
 
+::: details 查看示例代码
 ```vue
 <script setup>
 import { ref } from 'vue';
@@ -1512,6 +2711,8 @@ const density = ref('comfortable');
 }
 </style>
 ```
+:::
+
 <ClientOnly>
   <DocsPreview label="Radio 独立绑定预览" stacked>
     <RadioStandaloneExample />
@@ -1522,6 +2723,7 @@ const density = ref('comfortable');
 
 ### Radio Group
 
+::: details 查看示例代码
 ```vue
 <script setup>
 import { ref } from 'vue';
@@ -1558,9 +2760,130 @@ const themeMode = ref('system');
 }
 </style>
 ```
+:::
+
 <ClientOnly>
   <DocsPreview label="Radio group 受控单选预览" stacked>
     <RadioGroupExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatRadio `color`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-stack">
+    <mat-radio model-value="primary" value="primary" color="primary">
+      primary
+    </mat-radio>
+    <mat-radio model-value="secondary" value="secondary" color="secondary">
+      secondary
+    </mat-radio>
+    <mat-radio model-value="tertiary" value="tertiary" color="tertiary">
+      tertiary
+    </mat-radio>
+    <mat-radio model-value="error" value="error" color="error">
+      error
+    </mat-radio>
+    <mat-radio model-value="seed" value="seed" color="#6750a4">
+      局部种子色
+    </mat-radio>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Radio color 预览" stacked>
+    <RadioColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatRadio `disabled`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-stack">
+    <mat-radio model-value="enabled" value="enabled">
+      启用
+    </mat-radio>
+    <mat-radio model-value="disabled" value="disabled" disabled>
+      禁用
+    </mat-radio>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Radio disabled 预览" stacked>
+    <RadioDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatRadioGroup `disabled`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-radio-group model-value="enabled" label="通知方式">
+    <mat-radio value="enabled">
+      启用通知
+    </mat-radio>
+    <mat-radio value="disabled" disabled>
+      暂不可用
+    </mat-radio>
+  </mat-radio-group>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Radio group disabled 预览" stacked>
+    <RadioGroupDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatRadioGroup `color`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-radio-group model-value="email" label="通知方式" color="secondary">
+    <mat-radio value="email">
+      邮件
+    </mat-radio>
+    <mat-radio value="message">
+      站内信
+    </mat-radio>
+  </mat-radio-group>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Radio group color 预览" stacked>
+    <RadioGroupColorExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -1635,6 +2958,10 @@ Group 没有公开方法。
 
 <script setup>
 import RadioGroupExample from '../examples/selection/RadioGroupExample.vue';
+import RadioGroupColorExample from '../examples/selection/RadioGroupColorExample.vue';
+import RadioGroupDisabledExample from '../examples/selection/RadioGroupDisabledExample.vue';
+import RadioColorExample from '../examples/selection/RadioColorExample.vue';
+import RadioDisabledExample from '../examples/selection/RadioDisabledExample.vue';
 import RadioStandaloneExample from '../examples/selection/RadioStandaloneExample.vue';
 </script>
 
@@ -1650,28 +2977,73 @@ import RadioStandaloneExample from '../examples/selection/RadioStandaloneExample
 
 ### 无图标与内置图标
 
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-switch model-value icons="none">
+      none
+    </mat-switch>
+    <mat-switch model-value icons="selected">
+      selected
+    </mat-switch>
+    <mat-switch model-value icons="both">
+      both
+    </mat-switch>
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Switch 图标配置预览" stacked>
+    <SwitchIconsExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `modelValue`
+
+::: details 查看示例代码
 ```vue
 <script setup>
 import { ref } from 'vue';
 
-const withoutIcon = ref(true);
-const selectedIcon = ref(true);
-const bothIcons = ref(true);
+const enabled = ref(false);
 </script>
 
 <template>
+  <mat-switch v-model="enabled">
+    {{ enabled ? '已开启' : '已关闭' }}
+  </mat-switch>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Switch modelValue 预览" stacked>
+    <SwitchModelValueExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+::: details 查看示例代码
+```vue
+<template>
   <div class="example-stack">
-    <mat-switch v-model="withoutIcon">
-      无图标
+    <mat-switch model-value>
+      启用状态
     </mat-switch>
-    <mat-switch v-model="selectedIcon" icons="selected" color="secondary">
-      仅显示开启图标
-    </mat-switch>
-    <mat-switch v-model="bothIcons" icons="both" color="#6750a4">
-      显示开启与关闭图标
-    </mat-switch>
-    <mat-switch disabled>
-      禁用设置
+    <mat-switch model-value disabled>
+      禁用状态
     </mat-switch>
   </div>
 </template>
@@ -1685,9 +3057,52 @@ const bothIcons = ref(true);
 }
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Switch 图标配置预览" stacked>
-    <SwitchIconsExample />
+  <DocsPreview label="Switch disabled 预览" stacked>
+    <SwitchDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-stack">
+    <mat-switch model-value color="primary">
+      primary
+    </mat-switch>
+    <mat-switch model-value color="secondary">
+      secondary
+    </mat-switch>
+    <mat-switch model-value color="tertiary">
+      tertiary
+    </mat-switch>
+    <mat-switch model-value color="error">
+      error
+    </mat-switch>
+    <mat-switch model-value color="#6750a4">
+      局部种子色
+    </mat-switch>
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Switch color 预览" stacked>
+    <SwitchColorExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -1726,7 +3141,10 @@ Switch 只表示二元状态，不用于在两个对立选项间选择。组件�
 尺寸、图标配置和即时生效行为依据 Material 3 [Switch specs](https://m3.material.io/components/switch/specs) 与 [Switch guidelines](https://m3.material.io/components/switch/guidelines)。
 
 <script setup>
+import SwitchColorExample from '../examples/selection/SwitchColorExample.vue';
+import SwitchDisabledExample from '../examples/selection/SwitchDisabledExample.vue';
 import SwitchIconsExample from '../examples/selection/SwitchIconsExample.vue';
+import SwitchModelValueExample from '../examples/selection/SwitchModelValueExample.vue';
 </script>
 
 # Card 卡片
@@ -1735,39 +3153,65 @@ import SwitchIconsExample from '../examples/selection/SwitchIconsExample.vue';
 
 ## 示例
 
-### 默认样式
+卡片内容区域和操作区域仅作为展示结构的必要依赖。
 
-```vue
-<template>
-  <mat-card class="example-card">
-    <mat-card-content>默认 filled 卡片</mat-card-content>
-  </mat-card>
-</template>
+### `variant`
 
-<style scoped>
-.example-card {
-  inline-size: min(100%, 320px);
-}
-</style>
-```
-<ClientOnly>
-  <DocsPreview label="Card 默认样式预览">
-    <CardDefaultExample />
-  </DocsPreview>
-</ClientOnly>
-
-### 外观与配色
-
+::: details 查看示例代码
 ```vue
 <template>
   <div class="example-row">
     <mat-card variant="elevated">
-      <mat-card-content>Elevated</mat-card-content>
+      <mat-card-content>elevated</mat-card-content>
     </mat-card>
-    <mat-card variant="filled" color="secondary">
-      <mat-card-content>Secondary</mat-card-content>
+    <mat-card variant="filled">
+      <mat-card-content>filled</mat-card-content>
     </mat-card>
-    <mat-card variant="outlined" color="#6750a4">
+    <mat-card variant="outlined">
+      <mat-card-content>outlined</mat-card-content>
+    </mat-card>
+  </div>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.example-row > * {
+  inline-size: min(100%, 180px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Card variant 预览">
+    <CardVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-row">
+    <mat-card color="primary">
+      <mat-card-content>primary</mat-card-content>
+    </mat-card>
+    <mat-card color="secondary">
+      <mat-card-content>secondary</mat-card-content>
+    </mat-card>
+    <mat-card color="tertiary">
+      <mat-card-content>tertiary</mat-card-content>
+    </mat-card>
+    <mat-card color="error">
+      <mat-card-content>error</mat-card-content>
+    </mat-card>
+    <mat-card color="#6750a4">
       <mat-card-content>局部种子色</mat-card-content>
     </mat-card>
   </div>
@@ -1778,67 +3222,208 @@ import SwitchIconsExample from '../examples/selection/SwitchIconsExample.vue';
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-  align-items: flex-start;
 }
 
 .example-row > * {
-  flex-shrink: 0;
-  inline-size: min(100%, 200px);
+  inline-size: min(100%, 180px);
 }
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Card 外观与配色预览">
-    <CardVariantsExample />
+  <DocsPreview label="Card color 预览">
+    <CardColorExample />
   </DocsPreview>
 </ClientOnly>
 
-省略 `color` 时使用中性表面。设置语义色或六位十六进制种子色后，卡片使用对应的 container/on-container 色对；outlined 的边框仍使用中性 `outline-variant`。
+### `as`
 
-### 语义、可点击内容与禁用状态
-
+::: details 查看示例代码
 ```vue
 <template>
-  <div class="example-stack">
+  <div class="example-row">
     <mat-card as="article">
-      <mat-card-action-area type="button">
-        <mat-card-content>
-          <strong>Card 组件</strong>
-          <p>点击内容区查看详情，或使用下方的独立操作。</p>
-        </mat-card-content>
-      </mat-card-action-area>
-      <mat-card-actions>
-        <mat-btn variant="text">
-          收藏
-        </mat-btn>
-      </mat-card-actions>
+      <mat-card-content>article</mat-card-content>
     </mat-card>
-
-    <mat-card as="section" variant="outlined">
-      <mat-card-action-area href="/detail" disabled>
-        <mat-card-content>暂不可用的详情链接</mat-card-content>
-      </mat-card-action-area>
+    <mat-card as="section">
+      <mat-card-content>section</mat-card-content>
+    </mat-card>
+    <mat-card as="li">
+      <mat-card-content>li</mat-card-content>
     </mat-card>
   </div>
 </template>
 
 <style scoped>
-.example-stack {
+.example-row {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 16px;
-  align-items: flex-start;
-  inline-size: 100%;
 }
 
-.example-stack > * {
-  inline-size: min(100%, 360px);
+.example-row > * {
+  inline-size: min(100%, 180px);
 }
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Card 语义、可点击内容与禁用状态预览" stacked>
-    <CardActionExample />
+  <DocsPreview label="Card as 预览">
+    <CardAsExample />
+  </DocsPreview>
+</ClientOnly>
+
+### ActionArea 的 `href`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-card class="example-card">
+    <mat-card-action-area href="#card-api">
+      <mat-card-content>链接式内容区域</mat-card-content>
+    </mat-card-action-area>
+  </mat-card>
+</template>
+
+<style scoped>
+.example-card {
+  inline-size: min(100%, 320px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Card ActionArea href 预览">
+    <CardActionHrefExample />
+  </DocsPreview>
+</ClientOnly>
+
+### ActionArea 的 `disabled`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-card class="example-card">
+    <mat-card-action-area disabled>
+      <mat-card-content>禁用的内容区域</mat-card-content>
+    </mat-card-action-area>
+  </mat-card>
+</template>
+
+<style scoped>
+.example-card {
+  inline-size: min(100%, 320px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Card ActionArea disabled 预览">
+    <CardActionDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### ActionArea 的 `type`
+
+::: details 查看示例代码
+```vue
+<template>
+  <form class="example-row" @submit.prevent>
+    <mat-card class="example-card">
+      <mat-card-action-area type="submit">
+        <mat-card-content>提交表单</mat-card-content>
+      </mat-card-action-area>
+    </mat-card>
+    <mat-card class="example-card">
+      <mat-card-action-area type="reset">
+        <mat-card-content>重置表单</mat-card-content>
+      </mat-card-action-area>
+    </mat-card>
+  </form>
+</template>
+
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.example-card {
+  inline-size: min(100%, 220px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Card ActionArea type 预览">
+    <CardActionTypeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatCardContent 默认 Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-card class="example-card">
+    <mat-card-content>
+      <strong>内容区域</strong>
+      <p>MatCardContent 负责卡片正文的内边距。</p>
+    </mat-card-content>
+  </mat-card>
+</template>
+
+<style scoped>
+.example-card {
+  inline-size: min(100%, 320px);
+}
+
+p {
+  margin-block: 8px 0;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="CardContent 默认 Slot 预览">
+    <CardContentSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatCardActions 默认 Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-card class="example-card">
+    <mat-card-content>正文内容</mat-card-content>
+    <mat-card-actions>
+      <mat-btn variant="text">
+        取消
+      </mat-btn>
+      <mat-btn>保存</mat-btn>
+    </mat-card-actions>
+  </mat-card>
+</template>
+
+<style scoped>
+.example-card {
+  inline-size: min(100%, 320px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="CardActions 默认 Slot 预览">
+    <CardActionsSlotExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -1892,9 +3477,14 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
 只有启用的 ActionArea 才会触发 Card 的 hover、focus 和 pressed 状态。焦点环显示在整张卡片上，减少动态效果偏好下不播放状态层过渡。
 
 <script setup>
-import CardActionExample from '../examples/card/CardActionExample.vue';
-import CardDefaultExample from '../examples/card/CardDefaultExample.vue';
-import CardVariantsExample from '../examples/card/CardVariantsExample.vue';
+import CardActionDisabledExample from '../examples/card/CardActionDisabledExample.vue';
+import CardActionHrefExample from '../examples/card/CardActionHrefExample.vue';
+import CardActionTypeExample from '../examples/card/CardActionTypeExample.vue';
+import CardActionsSlotExample from '../examples/card/CardActionsSlotExample.vue';
+import CardAsExample from '../examples/card/CardAsExample.vue';
+import CardColorExample from '../examples/card/CardColorExample.vue';
+import CardContentSlotExample from '../examples/card/CardContentSlotExample.vue';
+import CardVariantExample from '../examples/card/CardVariantExample.vue';
 </script>
 
 # Text field 文本输入
@@ -1905,10 +3495,11 @@ import CardVariantsExample from '../examples/card/CardVariantsExample.vue';
 
 ## 示例
 
-### 块级宽度
+`error` 与 `errorText`、输入值与 `v-model` 等只保留必要依赖。
 
-设置 `block` 后，Text field 与 Textarea 使用块级 flex 根并明确铺满父元素。下面的虚线框是宽度为 360px、带 12px 内边距的父容器。
+### `block`
 
+::: details 查看示例代码
 ```vue
 <template>
   <div class="text-field-block-example">
@@ -1940,115 +3531,389 @@ import CardVariantsExample from '../examples/card/CardVariantsExample.vue';
 }
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Text field 与 Textarea 块级宽度预览">
+  <DocsPreview label="Text field 与 Textarea block 预览">
     <TextFieldBlockExample />
   </DocsPreview>
 </ClientOnly>
 
-### 状态、内容与校验
+### `modelValue`
 
-下面同时展示 outlined 的空值聚焦/失焦与错误状态、filled textarea、前后图标、字符计数、只读和禁用状态。验证码初始为空，可以反复聚焦并在不输入内容时离开，观察标签从边框返回容器中央；字符计数只在设置 `maxLength` 后显示。
-
+::: details 查看示例代码
 ```vue
 <script setup>
 import { ref } from 'vue';
 
-const email = ref('reader');
-const note = ref('请在工作日联系。');
-const touched = ref(false);
-const verificationCode = ref('');
-const verificationTouched = ref(false);
+const value = ref('可编辑内容');
 </script>
 
 <template>
-  <div class="text-input-example">
-    <mat-text-field
-      v-model="email"
-      label="邮箱"
-      variant="outlined"
-      supporting-text="用于接收通知"
-      prefix-text="mailto:"
-      suffix-text="@example.com"
-      :max-length="24"
-      color="#6750a4"
-      autocomplete="email"
-      required
-      @blur="touched = true"
-    >
-      <template #leading>
-        mail
-      </template>
-      <template #trailing>
-        alternate_email
-      </template>
-    </mat-text-field>
+  <mat-text-field v-model="value" label="名称" />
+</template>
+```
+:::
 
-    <mat-text-field
-      v-model="verificationCode"
-      label="验证码"
-      variant="outlined"
-      supporting-text="聚焦后不输入内容并离开，可观察标签复位"
-      :error="verificationTouched && verificationCode.length !== 6"
-      error-text="请输入六位验证码"
-      :max-length="6"
-      inputmode="numeric"
-      @blur="verificationTouched = true"
-      @focus="verificationTouched = false"
-    />
+<ClientOnly>
+  <DocsPreview label="Text field modelValue 预览">
+    <TextFieldModelValueExample />
+  </DocsPreview>
+</ClientOnly>
 
-    <mat-textarea
-      v-model="note"
-      label="备注"
-      variant="filled"
-      supporting-text="可以纵向调整输入区域"
-      :rows="4"
-      :max-length="120"
-      color="tertiary"
-    />
+### `label`
 
-    <mat-text-field
-      model-value="INV-2026-0715"
-      label="只读编号"
-      supporting-text="内容可选择，但不能编辑"
-      readonly
-    />
-
-    <mat-text-field
-      model-value="由管理员分配"
-      label="组织"
-      supporting-text="当前不可修改"
-      disabled
-    />
-
-    <p class="example-status" aria-live="polite">
-      {{ touched ? '邮箱输入框已失去焦点' : '尚未离开邮箱输入框' }}；
-      验证码当前为 {{ verificationCode.length }} 位。
-    </p>
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-stack">
+    <mat-text-field label="有标签的输入框" />
+    <mat-text-field label="带占位提示" placeholder="请输入内容" />
   </div>
 </template>
 
 <style scoped>
-.text-input-example {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-  gap: 24px;
-  inline-size: 100%;
-}
-
-.example-status {
-  grid-column: 1 / -1;
-  margin: 0;
-  color: var(--mat-sys-color-on-surface-variant);
-  font-family: var(--mat-sys-typescale-body-small-font);
-  font-size: var(--mat-sys-typescale-body-small-size);
-  line-height: var(--mat-sys-typescale-body-small-line-height);
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  inline-size: min(100%, 360px);
 }
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="Text field 与 Textarea 状态预览" stacked>
-    <TextFieldExample />
+  <DocsPreview label="Text field label 预览">
+    <TextFieldLabelExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `variant`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-stack">
+    <mat-text-field label="outlined" variant="outlined" />
+    <mat-text-field label="filled" variant="filled" />
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  inline-size: min(100%, 360px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field variant 预览">
+    <TextFieldVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-stack">
+    <mat-text-field label="primary" color="primary" />
+    <mat-text-field label="secondary" color="secondary" />
+    <mat-text-field label="tertiary" color="tertiary" />
+    <mat-text-field label="error" color="error" />
+    <mat-text-field label="局部种子色" color="#6750a4" />
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  inline-size: min(100%, 360px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field color 预览">
+    <TextFieldColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `supportingText`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-text-field
+    label="邮箱"
+    supporting-text="用于接收通知"
+  />
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field supportingText 预览">
+    <TextFieldSupportingTextExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `error` 与 `errorText`
+
+`errorText` 只有在 `error` 为 true 时才显示，因此两者是必要依赖。
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const value = ref('');
+</script>
+
+<template>
+  <mat-text-field
+    v-model="value"
+    label="验证码"
+    :error="value.length !== 6"
+    error-text="请输入六位验证码"
+  />
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field error 预览">
+    <TextFieldErrorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `prefixText`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-text-field
+    label="网址"
+    prefix-text="https://"
+  />
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field prefixText 预览">
+    <TextFieldPrefixTextExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `suffixText`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-text-field
+    label="邮箱"
+    suffix-text="@example.com"
+  />
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field suffixText 预览">
+    <TextFieldSuffixTextExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `maxLength`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const value = ref('输入内容');
+</script>
+
+<template>
+  <mat-text-field
+    v-model="value"
+    label="标题"
+    :max-length="12"
+  />
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field maxLength 预览">
+    <TextFieldMaxLengthExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-text-field
+    model-value="由管理员分配"
+    label="组织"
+    disabled
+  />
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field disabled 预览">
+    <TextFieldDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `readonly`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-text-field
+    model-value="INV-2026-0715"
+    label="只读编号"
+    readonly
+  />
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field readonly 预览">
+    <TextFieldReadonlyExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `required`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-text-field
+    label="必填名称"
+    required
+  />
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field required 预览">
+    <TextFieldRequiredExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `type`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-stack">
+    <mat-text-field label="邮箱" type="email" />
+    <mat-text-field label="密码" type="password" />
+    <mat-text-field label="搜索" type="search" />
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  inline-size: min(100%, 360px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field type 预览">
+    <TextFieldTypeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### Textarea 的 `rows`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example-stack">
+    <mat-textarea label="两行" :rows="2" />
+    <mat-textarea label="四行" :rows="4" />
+    <mat-textarea label="六行" :rows="6" />
+  </div>
+</template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  inline-size: min(100%, 360px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Textarea rows 预览">
+    <TextareaRowsExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `leading` Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-text-field label="邮箱">
+    <template #leading>
+      <mat-icon icon="mail" aria-hidden="true" />
+    </template>
+  </mat-text-field>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field leading Slot 预览">
+    <TextFieldLeadingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `trailing` Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-text-field label="搜索">
+    <template #trailing>
+      <mat-icon icon="search" aria-hidden="true" />
+    </template>
+  </mat-text-field>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field trailing Slot 预览">
+    <TextFieldTrailingSlotExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -2122,7 +3987,22 @@ const verificationTouched = ref(false);
 
 <script setup>
 import TextFieldBlockExample from '../examples/text-field/TextFieldBlockExample.vue';
-import TextFieldExample from '../examples/text-field/TextFieldExample.vue';
+import TextFieldColorExample from '../examples/text-field/TextFieldColorExample.vue';
+import TextFieldDisabledExample from '../examples/text-field/TextFieldDisabledExample.vue';
+import TextFieldErrorExample from '../examples/text-field/TextFieldErrorExample.vue';
+import TextFieldLabelExample from '../examples/text-field/TextFieldLabelExample.vue';
+import TextFieldLeadingSlotExample from '../examples/text-field/TextFieldLeadingSlotExample.vue';
+import TextFieldMaxLengthExample from '../examples/text-field/TextFieldMaxLengthExample.vue';
+import TextFieldModelValueExample from '../examples/text-field/TextFieldModelValueExample.vue';
+import TextFieldPrefixTextExample from '../examples/text-field/TextFieldPrefixTextExample.vue';
+import TextFieldReadonlyExample from '../examples/text-field/TextFieldReadonlyExample.vue';
+import TextFieldRequiredExample from '../examples/text-field/TextFieldRequiredExample.vue';
+import TextFieldSupportingTextExample from '../examples/text-field/TextFieldSupportingTextExample.vue';
+import TextFieldSuffixTextExample from '../examples/text-field/TextFieldSuffixTextExample.vue';
+import TextFieldTrailingSlotExample from '../examples/text-field/TextFieldTrailingSlotExample.vue';
+import TextFieldTypeExample from '../examples/text-field/TextFieldTypeExample.vue';
+import TextFieldVariantExample from '../examples/text-field/TextFieldVariantExample.vue';
+import TextareaRowsExample from '../examples/text-field/TextareaRowsExample.vue';
 </script>
 
 # Menu 菜单
@@ -2133,135 +4013,454 @@ import TextFieldExample from '../examples/text-field/TextFieldExample.vue';
 
 ## 示例
 
-第一个菜单展示 leading、supporting、trailing、disabled 和 Divider；第二个菜单展示 vibrant 配色以及可递归展开的三级菜单。触发器的点击和 ARIA 由调用方控制。
+根菜单的 `open` 与 `anchor` 是受控定位所需的必要依赖，触发器只保留展示菜单所需的点击状态。
 
+### `open` 与 `anchor`
+
+::: details 查看示例代码
 ```vue
 <script setup>
 import { ref } from 'vue';
 
-const standardOpen = ref(false);
-const vibrantOpen = ref(false);
-const result = ref('尚未选择操作');
+const open = ref(false);
 </script>
 
 <template>
-  <div class="menu-example">
+  <div class="example-menu">
     <mat-btn
-      id="standard-menu-trigger"
+      id="open-anchor-menu-trigger"
       variant="outlined"
       aria-haspopup="menu"
-      :aria-expanded="standardOpen"
-      aria-controls="standard-menu"
-      @click="standardOpen = !standardOpen"
+      :aria-expanded="open"
+      aria-controls="open-anchor-menu"
+      @click="open = !open"
     >
-      文件操作
+      打开菜单
     </mat-btn>
-
     <mat-menu
-      id="standard-menu"
-      v-model:open="standardOpen"
-      anchor="standard-menu-trigger"
-      color="secondary"
+      id="open-anchor-menu"
+      v-model:open="open"
+      anchor="open-anchor-menu-trigger"
     >
-      <mat-menu-item @click="result = '已新建文件'">
-        <template #leading>
-          note_add
-        </template>
-        新建文件
-        <template #supporting>
-          创建空白文档
-        </template>
-        <template #trailing>
-          Ctrl+N
-        </template>
-      </mat-menu-item>
-      <mat-menu-item disabled>
-        保存
-      </mat-menu-item>
-      <mat-divider />
-      <mat-menu-item @click="result = '已关闭文件'">
-        关闭
-      </mat-menu-item>
+      <mat-menu-item>菜单项目</mat-menu-item>
     </mat-menu>
-
-    <mat-btn
-      id="vibrant-menu-trigger"
-      aria-haspopup="menu"
-      :aria-expanded="vibrantOpen"
-      aria-controls="vibrant-menu"
-      @click="vibrantOpen = !vibrantOpen"
-    >
-      导出
-    </mat-btn>
-
-    <mat-menu
-      id="vibrant-menu"
-      v-model:open="vibrantOpen"
-      anchor="vibrant-menu-trigger"
-      variant="vibrant"
-      color="#6750a4"
-    >
-      <mat-menu-item>
-        图片
-        <template #supporting>
-          选择图片格式
-        </template>
-        <template #submenu>
-          <mat-menu>
-            <mat-menu-item @click="result = '已选择 PNG'">
-              PNG
-            </mat-menu-item>
-            <mat-menu-item @click="result = '已选择 SVG'">
-              SVG
-            </mat-menu-item>
-            <mat-menu-item>
-              更多格式
-              <template #submenu>
-                <mat-menu>
-                  <mat-menu-item @click="result = '已选择 WebP'">
-                    WebP
-                  </mat-menu-item>
-                  <mat-menu-item @click="result = '已选择 AVIF'">
-                    AVIF
-                  </mat-menu-item>
-                </mat-menu>
-              </template>
-            </mat-menu-item>
-          </mat-menu>
-        </template>
-      </mat-menu-item>
-      <mat-menu-item @click="result = '已选择 PDF'">
-        PDF
-      </mat-menu-item>
-    </mat-menu>
-
-    <p class="menu-example__result" aria-live="polite">
-      {{ result }}
-    </p>
   </div>
 </template>
 
 <style scoped>
-.menu-example {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-  inline-size: 100%;
-}
-
-.menu-example__result {
-  flex-basis: 100%;
-  margin: 4px 0 0;
-  color: var(--mat-sys-color-on-surface-variant);
+.example-menu {
+  min-block-size: 120px;
 }
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="标准与多级 vibrant 菜单预览" stacked>
-    <MenuNestedExample />
+  <DocsPreview label="Menu open 与 anchor 预览">
+    <MenuOpenAnchorExample />
   </DocsPreview>
 </ClientOnly>
+
+### `variant`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(true);
+</script>
+
+<template>
+  <div class="example-menu">
+    <mat-btn
+      id="variant-menu-trigger"
+      aria-haspopup="menu"
+      :aria-expanded="open"
+      aria-controls="variant-menu"
+      @click="open = !open"
+    >
+      variant
+    </mat-btn>
+    <mat-menu
+      id="variant-menu"
+      v-model:open="open"
+      anchor="variant-menu-trigger"
+      variant="vibrant"
+    >
+      <mat-menu-item>高强调菜单</mat-menu-item>
+    </mat-menu>
+  </div>
+</template>
+
+<style scoped>
+.example-menu {
+  min-block-size: 160px;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Menu variant 预览">
+    <MenuVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(true);
+</script>
+
+<template>
+  <div class="example-menu">
+    <mat-btn
+      id="color-menu-trigger"
+      aria-haspopup="menu"
+      :aria-expanded="open"
+      aria-controls="color-menu"
+      @click="open = !open"
+    >
+      color
+    </mat-btn>
+    <mat-menu
+      id="color-menu"
+      v-model:open="open"
+      anchor="color-menu-trigger"
+      color="#6750a4"
+    >
+      <mat-menu-item>局部种子色菜单</mat-menu-item>
+    </mat-menu>
+  </div>
+</template>
+
+<style scoped>
+.example-menu {
+  min-block-size: 160px;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Menu color 预览">
+    <MenuColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MenuItem 的 `disabled`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(true);
+</script>
+
+<template>
+  <div class="example-menu">
+    <mat-btn
+      id="disabled-menu-trigger"
+      aria-haspopup="menu"
+      :aria-expanded="open"
+      aria-controls="disabled-menu"
+      @click="open = !open"
+    >
+      disabled
+    </mat-btn>
+    <mat-menu
+      id="disabled-menu"
+      v-model:open="open"
+      anchor="disabled-menu-trigger"
+    >
+      <mat-menu-item>可用项目</mat-menu-item>
+      <mat-menu-item disabled>
+        禁用项目
+      </mat-menu-item>
+    </mat-menu>
+  </div>
+</template>
+
+<style scoped>
+.example-menu {
+  min-block-size: 160px;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="MenuItem disabled 预览">
+    <MenuItemDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatMenu 默认 Slot
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(true);
+</script>
+
+<template>
+  <div class="example-menu">
+    <mat-btn id="default-slot-menu-trigger" @click="open = !open">
+      默认 Slot
+    </mat-btn>
+    <mat-menu
+      id="default-slot-menu"
+      v-model:open="open"
+      anchor="default-slot-menu-trigger"
+    >
+      <mat-menu-item>直接放置的项目</mat-menu-item>
+      <mat-divider />
+      <mat-menu-item>直接放置的分隔线</mat-menu-item>
+    </mat-menu>
+  </div>
+</template>
+
+<style scoped>
+.example-menu {
+  min-block-size: 180px;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Menu 默认 Slot 预览">
+    <MenuDefaultSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatMenuItem 默认 Slot
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(true);
+</script>
+
+<template>
+  <div class="example-menu">
+    <mat-btn id="item-default-slot-menu-trigger" @click="open = !open">
+      项目标签
+    </mat-btn>
+    <mat-menu
+      id="item-default-slot-menu"
+      v-model:open="open"
+      anchor="item-default-slot-menu-trigger"
+    >
+      <mat-menu-item>默认 Slot 提供操作标签</mat-menu-item>
+    </mat-menu>
+  </div>
+</template>
+
+<style scoped>
+.example-menu {
+  min-block-size: 160px;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="MenuItem 默认 Slot 预览">
+    <MenuItemDefaultSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `leading` Slot
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(true);
+</script>
+
+<template>
+  <div class="example-menu">
+    <mat-btn id="leading-slot-menu-trigger" @click="open = !open">
+      leading
+    </mat-btn>
+    <mat-menu
+      id="leading-slot-menu"
+      v-model:open="open"
+      anchor="leading-slot-menu-trigger"
+    >
+      <mat-menu-item>
+        <template #leading>
+          <mat-icon icon="note_add" aria-hidden="true" />
+        </template>
+        新建文件
+      </mat-menu-item>
+    </mat-menu>
+  </div>
+</template>
+
+<style scoped>
+.example-menu {
+  min-block-size: 160px;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="MenuItem leading Slot 预览">
+    <MenuItemLeadingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `supporting` Slot
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(true);
+</script>
+
+<template>
+  <div class="example-menu">
+    <mat-btn id="supporting-slot-menu-trigger" @click="open = !open">
+      supporting
+    </mat-btn>
+    <mat-menu
+      id="supporting-slot-menu"
+      v-model:open="open"
+      anchor="supporting-slot-menu-trigger"
+    >
+      <mat-menu-item>
+        新建文件
+        <template #supporting>
+          创建空白文档
+        </template>
+      </mat-menu-item>
+    </mat-menu>
+  </div>
+</template>
+
+<style scoped>
+.example-menu {
+  min-block-size: 160px;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="MenuItem supporting Slot 预览">
+    <MenuItemSupportingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `trailing` Slot
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(true);
+</script>
+
+<template>
+  <div class="example-menu">
+    <mat-btn id="trailing-slot-menu-trigger" @click="open = !open">
+      trailing
+    </mat-btn>
+    <mat-menu
+      id="trailing-slot-menu"
+      v-model:open="open"
+      anchor="trailing-slot-menu-trigger"
+    >
+      <mat-menu-item>
+        保存
+        <template #trailing>
+          Ctrl+S
+        </template>
+      </mat-menu-item>
+    </mat-menu>
+  </div>
+</template>
+
+<style scoped>
+.example-menu {
+  min-block-size: 160px;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="MenuItem trailing Slot 预览">
+    <MenuItemTrailingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `submenu` Slot
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(true);
+</script>
+
+<template>
+  <div class="example-menu">
+    <mat-btn id="submenu-slot-menu-trigger" @click="open = !open">
+      submenu
+    </mat-btn>
+    <mat-menu
+      id="submenu-slot-menu"
+      v-model:open="open"
+      anchor="submenu-slot-menu-trigger"
+    >
+      <mat-menu-item>
+        导出
+        <template #submenu>
+          <mat-menu>
+            <mat-menu-item>PDF</mat-menu-item>
+            <mat-menu-item>SVG</mat-menu-item>
+          </mat-menu>
+        </template>
+      </mat-menu-item>
+    </mat-menu>
+  </div>
+</template>
+
+<style scoped>
+.example-menu {
+  min-block-size: 180px;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="MenuItem submenu Slot 预览">
+    <MenuItemSubmenuSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项目为 anchor，并继承父菜单的配色与形态。
 
 ## API
 
@@ -2321,7 +4520,16 @@ MenuItem 的 Slots 只构成一个操作，不应嵌套按钮、开关或其他�
 外观、测量、子菜单和换边规则依据 Material 3 [Menus overview](https://m3.material.io/components/menus/overview)、[Menus specs](https://m3.material.io/components/menus/specs) 与 [Menus guidelines](https://m3.material.io/components/menus/guidelines)。键盘语义参考 [WAI-ARIA Menu and Menubar Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)。
 
 <script setup>
-import MenuNestedExample from '../examples/menu/MenuNestedExample.vue';
+import MenuColorExample from '../examples/menu/MenuColorExample.vue';
+import MenuDefaultSlotExample from '../examples/menu/MenuDefaultSlotExample.vue';
+import MenuItemDefaultSlotExample from '../examples/menu/MenuItemDefaultSlotExample.vue';
+import MenuItemDisabledExample from '../examples/menu/MenuItemDisabledExample.vue';
+import MenuItemLeadingSlotExample from '../examples/menu/MenuItemLeadingSlotExample.vue';
+import MenuItemSubmenuSlotExample from '../examples/menu/MenuItemSubmenuSlotExample.vue';
+import MenuItemSupportingSlotExample from '../examples/menu/MenuItemSupportingSlotExample.vue';
+import MenuItemTrailingSlotExample from '../examples/menu/MenuItemTrailingSlotExample.vue';
+import MenuOpenAnchorExample from '../examples/menu/MenuOpenAnchorExample.vue';
+import MenuVariantExample from '../examples/menu/MenuVariantExample.vue';
 </script>
 
 # List 列表
@@ -2332,89 +4540,26 @@ import MenuNestedExample from '../examples/menu/MenuNestedExample.vue';
 
 ## 示例
 
-### 外观变体
+选择与操作示例只保留组件结构所需的 `interaction`、`selected` 和 `value` 依赖。
 
-`standard` 让项目连续排列，`segmented` 在项目之间保留 2px 间隔。下面使用受控单选模式：将指针移到项目上可观察 hover 状态，点击项目可观察选中底色与圆角变化。
+### `variant`
 
+::: details 查看示例代码
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const standardSelected = ref(null);
-const segmentedSelected = ref(null);
-</script>
-
 <template>
   <div class="example-grid">
-    <section class="example-stack">
+    <section>
       <strong>standard</strong>
-      <mat-list
-        variant="standard"
-        interaction="single-select"
-        :selected="standardSelected"
-        aria-label="standard 列表"
-        @select="standardSelected = $event.nextSelected"
-      >
-        <mat-list-item value="recent">
-          最近更新
-          <template #trailing>
-            <mat-radio
-              :model-value="standardSelected"
-              value="recent"
-              inert
-              aria-hidden="true"
-              class="selection-indicator"
-            />
-          </template>
-        </mat-list-item>
-        <mat-list-item value="name">
-          名称
-          <template #trailing>
-            <mat-radio
-              :model-value="standardSelected"
-              value="name"
-              inert
-              aria-hidden="true"
-              class="selection-indicator"
-            />
-          </template>
-        </mat-list-item>
+      <mat-list variant="standard" aria-label="standard 列表">
+        <mat-list-item>第一项</mat-list-item>
+        <mat-list-item>第二项</mat-list-item>
       </mat-list>
     </section>
-
-    <section class="example-stack">
+    <section>
       <strong>segmented</strong>
-      <mat-list
-        variant="segmented"
-        interaction="single-select"
-        :selected="segmentedSelected"
-        aria-label="segmented 列表"
-        @select="segmentedSelected = $event.nextSelected"
-      >
-        <mat-list-item value="offline">
-          可离线使用
-          <template #trailing>
-            <mat-radio
-              :model-value="segmentedSelected"
-              value="offline"
-              inert
-              aria-hidden="true"
-              class="selection-indicator"
-            />
-          </template>
-        </mat-list-item>
-        <mat-list-item value="shared">
-          与我共享
-          <template #trailing>
-            <mat-radio
-              :model-value="segmentedSelected"
-              value="shared"
-              inert
-              aria-hidden="true"
-              class="selection-indicator"
-            />
-          </template>
-        </mat-list-item>
+      <mat-list variant="segmented" aria-label="segmented 列表">
+        <mat-list-item>第一项</mat-list-item>
+        <mat-list-item>第二项</mat-list-item>
       </mat-list>
     </section>
   </div>
@@ -2423,66 +4568,99 @@ const segmentedSelected = ref(null);
 <style scoped>
 .example-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   gap: 24px;
   inline-size: 100%;
 }
 
-.example-stack {
+section {
   display: flex;
   flex-direction: column;
   gap: 8px;
   min-inline-size: 0;
 }
-
-.selection-indicator {
-  pointer-events: none;
-}
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="List standard 与 segmented 外观对比预览">
-    <ListVariantsExample />
+  <DocsPreview label="List variant 预览">
+    <ListVariantExample />
   </DocsPreview>
 </ClientOnly>
 
-### 内容结构与 Divider
+### `interaction`
 
+::: details 查看示例代码
 ```vue
 <template>
-  <mat-list variant="standard" aria-label="账户信息" class="example-list">
-    <mat-list-item>
-      <template #leading>
-        person
-      </template>
-      当前账户
-    </mat-list-item>
+  <div class="example-stack">
+    <mat-list interaction="single-action" aria-label="单操作列表" class="example-list">
+      <mat-list-item>打开项目</mat-list-item>
+      <mat-list-item>查看归档</mat-list-item>
+    </mat-list>
+    <mat-list interaction="multi-action" aria-label="多操作列表" class="example-list">
+      <mat-list-item>
+        项目说明.pdf
+        <template #trailing>
+          <mat-btn icon="download" label="下载" />
+        </template>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</template>
 
-    <mat-divider inset="start" />
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  inline-size: 100%;
+}
 
-    <mat-list-item>
-      <template #leading>
-        mail
-      </template>
-      收件箱
-      <template #supporting>
-        12 封未读邮件
-      </template>
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="List interaction 预览" stacked>
+    <ListInteractionExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `selected`
+
+选择模式必须同时提供 `interaction`、项目 `value`，并在 `select` 事件中回写值。
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const selected = ref('recent');
+</script>
+
+<template>
+  <mat-list
+    interaction="single-select"
+    :selected="selected"
+    aria-label="排序方式"
+    class="example-list"
+    @select="selected = $event.nextSelected"
+  >
+    <mat-list-item value="recent">
+      最近更新
       <template #trailing>
-        12
+        <mat-radio :model-value="selected" value="recent" inert aria-hidden="true" />
       </template>
     </mat-list-item>
-
-    <mat-list-item :lines="3">
-      <template #overline>
-        今天
-      </template>
-      设计评审
-      <template #supporting>
-        请在会议前查看最新的组件交互说明。
-      </template>
+    <mat-list-item value="name">
+      名称
       <template #trailing>
-        10:30
+        <mat-radio :model-value="selected" value="name" inert aria-hidden="true" />
       </template>
     </mat-list-item>
   </mat-list>
@@ -2494,190 +4672,392 @@ const segmentedSelected = ref(null);
 }
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="List 内容结构与 Divider 预览" stacked>
-    <ListContentExample />
+  <DocsPreview label="List selected 预览" stacked>
+    <ListSelectedExample />
   </DocsPreview>
 </ClientOnly>
 
-省略 `lines` 时，组件按 overline、默认标签和 supporting Slot 的数量推断一至三行。辅助文字自行换成更多行时，应显式设置 `:lines="3"`，使 leading 和 trailing 内容改为顶部对齐。头像推荐使用 40×40px，普通图片使用 56×56px；媒体尺寸由 Slot 内容设置。
+### `color`
 
-### 单操作与多操作
-
-```vue
-<template>
-  <div class="example-stack">
-    <mat-list
-      variant="segmented"
-      interaction="single-action"
-      aria-label="设置"
-      class="example-list"
-    >
-      <mat-list-item>
-        <template #leading>
-          person
-        </template>
-        个人资料
-        <template #trailing>
-          <mat-icon icon="chevron_right" size="small" aria-hidden="true" />
-        </template>
-      </mat-list-item>
-      <mat-list-item href="#list-api">
-        安全设置
-      </mat-list-item>
-      <mat-list-item disabled>
-        不可用项目
-      </mat-list-item>
-    </mat-list>
-
-    <mat-list
-      interaction="multi-action"
-      aria-label="文件"
-      class="example-list"
-    >
-      <mat-list-item>
-        项目说明.pdf
-        <template #supporting>
-          2.4 MB
-        </template>
-        <template #trailing>
-          <mat-btn icon="download" label="下载" />
-          <mat-btn icon="more_vert" label="更多操作" />
-        </template>
-      </mat-list-item>
-    </mat-list>
-  </div>
-</template>
-
-<style scoped>
-.example-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: flex-start;
-  inline-size: 100%;
-}
-
-.example-list {
-  inline-size: min(100%, 420px);
-}
-</style>
-```
-<ClientOnly>
-  <DocsPreview label="List 单操作与多操作预览" stacked>
-    <ListActionsExample />
-  </DocsPreview>
-</ClientOnly>
-
-单操作模式的 leading、文字和 trailing 共同构成一个主操作。多操作模式把 trailing 放在主操作之外，其中的按钮和链接保留独立事件；点击 trailing 操作不会触发 `MatListItem` 的 `click`。
-
-### 受控单选与多选
-
+::: details 查看示例代码
 ```vue
 <script setup>
 import { ref } from 'vue';
 
-const singleSelected = ref('recent');
-const multipleSelected = ref(['offline']);
+const selected = ref('primary');
 </script>
 
 <template>
-  <div class="example-stack">
-    <mat-list
-      variant="standard"
-      interaction="single-select"
-      :selected="singleSelected"
-      aria-label="排序方式"
-      class="example-list"
-      @select="singleSelected = $event.nextSelected"
-    >
-      <mat-list-item value="recent">
-        最近更新
-        <template #trailing>
-          <mat-radio
-            :model-value="singleSelected"
-            value="recent"
-            inert
-            aria-hidden="true"
-            class="selection-indicator"
-          />
-        </template>
-      </mat-list-item>
-      <mat-list-item value="name">
-        名称
-        <template #trailing>
-          <mat-radio
-            :model-value="singleSelected"
-            value="name"
-            inert
-            aria-hidden="true"
-            class="selection-indicator"
-          />
-        </template>
-      </mat-list-item>
-    </mat-list>
-
-    <mat-list
-      variant="standard"
-      interaction="multi-select"
-      :selected="multipleSelected"
-      aria-label="筛选条件"
-      class="example-list"
-      @select="multipleSelected = $event.nextSelected"
-    >
-      <mat-list-item value="offline">
-        可离线使用
-        <template #trailing>
-          <mat-checkbox
-            :model-value="multipleSelected"
-            value="offline"
-            inert
-            aria-hidden="true"
-            class="selection-indicator"
-          />
-        </template>
-      </mat-list-item>
-      <mat-list-item value="shared">
-        与我共享
-        <template #trailing>
-          <mat-checkbox
-            :model-value="multipleSelected"
-            value="shared"
-            inert
-            aria-hidden="true"
-            class="selection-indicator"
-          />
-        </template>
-      </mat-list-item>
-    </mat-list>
-  </div>
+  <mat-list
+    interaction="single-select"
+    :selected="selected"
+    color="secondary"
+    aria-label="配色列表"
+    class="example-list"
+    @select="selected = $event.nextSelected"
+  >
+    <mat-list-item value="primary">
+      primary
+    </mat-list-item>
+    <mat-list-item value="secondary">
+      secondary
+    </mat-list-item>
+  </mat-list>
 </template>
 
 <style scoped>
-.example-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: flex-start;
-  inline-size: 100%;
-}
-
 .example-list {
   inline-size: min(100%, 420px);
 }
-
-.selection-indicator {
-  pointer-events: none;
-}
 </style>
 ```
+:::
+
 <ClientOnly>
-  <DocsPreview label="List 受控单选与多选预览" stacked>
-    <ListSelectionExample />
+  <DocsPreview label="List color 预览" stacked>
+    <ListColorExample />
   </DocsPreview>
 </ClientOnly>
 
-选择模式由 `MatList` 统一管理候选值。组件不会修改 `selected`，调用方应在 `select` 事件中回写 `nextSelected`。示例中的 `MatRadio` 和 `MatCheckbox` 只展示当前状态，因此同时设置 `inert`、`aria-hidden="true"` 和 `pointer-events: none`，不会进入焦点顺序、无障碍树或接管点击。正常业务中不能在 `role="option"` 内放置可交互的 Checkbox、Radio、Switch、按钮或链接。
+### ListItem 的 `value`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const selected = ref('two');
+</script>
+
+<template>
+  <mat-list
+    interaction="single-select"
+    :selected="selected"
+    aria-label="项目值"
+    class="example-list"
+    @select="selected = $event.nextSelected"
+  >
+    <mat-list-item value="one">
+      值为 one
+    </mat-list-item>
+    <mat-list-item value="two">
+      值为 two
+    </mat-list-item>
+  </mat-list>
+</template>
+
+<style scoped>
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem value 预览">
+    <ListItemValueExample />
+  </DocsPreview>
+</ClientOnly>
+
+### ListItem 的 `href`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-list interaction="single-action" aria-label="链接列表" class="example-list">
+    <mat-list-item href="#list-api">
+      跳转到 List API
+    </mat-list-item>
+  </mat-list>
+</template>
+
+<style scoped>
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem href 预览">
+    <ListItemHrefExample />
+  </DocsPreview>
+</ClientOnly>
+
+### ListItem 的 `type`
+
+::: details 查看示例代码
+```vue
+<template>
+  <form class="example-row" @submit.prevent>
+    <mat-list interaction="single-action" aria-label="按钮类型列表" class="example-list">
+      <mat-list-item type="submit">
+        提交
+      </mat-list-item>
+      <mat-list-item type="reset">
+        重置
+      </mat-list-item>
+    </mat-list>
+  </form>
+</template>
+
+<style scoped>
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem type 预览">
+    <ListItemTypeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### ListItem 的 `disabled`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-list interaction="single-action" aria-label="禁用项目" class="example-list">
+    <mat-list-item>可用项目</mat-list-item>
+    <mat-list-item disabled>
+      禁用项目
+    </mat-list-item>
+  </mat-list>
+</template>
+
+<style scoped>
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem disabled 预览">
+    <ListItemDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### ListItem 的 `lines`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-list variant="standard" aria-label="行数列表" class="example-list">
+    <mat-list-item :lines="1">
+      一行内容
+      <template #supporting>
+        lines=1
+      </template>
+    </mat-list-item>
+    <mat-list-item :lines="2">
+      两行内容
+      <template #supporting>
+        lines=2
+      </template>
+    </mat-list-item>
+    <mat-list-item :lines="3">
+      三行内容
+      <template #overline>
+        上方文字
+      </template>
+      <template #supporting>
+        lines=3 的辅助文字
+      </template>
+    </mat-list-item>
+  </mat-list>
+</template>
+
+<style scoped>
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem lines 预览">
+    <ListItemLinesExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatList 默认 Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-list aria-label="默认 Slot 列表" class="example-list">
+    <mat-list-item>直接放置的项目</mat-list-item>
+    <mat-divider />
+    <mat-list-item>直接放置的分隔线</mat-list-item>
+  </mat-list>
+</template>
+
+<style scoped>
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="List 默认 Slot 预览">
+    <ListDefaultSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### MatListItem 默认 Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-list aria-label="项目默认 Slot" class="example-list">
+    <mat-list-item>默认 Slot 提供主要标签文字</mat-list-item>
+  </mat-list>
+</template>
+
+<style scoped>
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem 默认 Slot 预览">
+    <ListItemDefaultSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `leading` Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-list aria-label="leading Slot" class="example-list">
+    <mat-list-item>
+      <template #leading>
+        <mat-icon icon="person" aria-hidden="true" />
+      </template>
+      账户资料
+    </mat-list-item>
+  </mat-list>
+</template>
+
+<style scoped>
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem leading Slot 预览">
+    <ListItemLeadingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `overline` Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-list variant="standard" aria-label="overline Slot" class="example-list">
+    <mat-list-item :lines="3">
+      <template #overline>
+        最近更新
+      </template>
+      项目说明
+    </mat-list-item>
+  </mat-list>
+</template>
+
+<style scoped>
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem overline Slot 预览">
+    <ListItemOverlineSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `supporting` Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-list aria-label="supporting Slot" class="example-list">
+    <mat-list-item>
+      收件箱
+      <template #supporting>
+        12 封未读邮件
+      </template>
+    </mat-list-item>
+  </mat-list>
+</template>
+
+<style scoped>
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem supporting Slot 预览">
+    <ListItemSupportingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `trailing` Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-list aria-label="trailing Slot" class="example-list">
+    <mat-list-item>
+      下载文件
+      <template #trailing>
+        <mat-icon icon="download" aria-hidden="true" />
+      </template>
+    </mat-list-item>
+  </mat-list>
+</template>
+
+<style scoped>
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="ListItem trailing Slot 预览">
+    <ListItemTrailingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+省略 `lines` 时，组件按 overline、默认标签和 supporting Slot 的数量推断一至三行。单操作模式的 leading、文字和 trailing 共同构成一个主操作；多操作模式把 trailing 放在主操作之外。
 
 ## API {#list-api}
 
@@ -2743,10 +5123,21 @@ single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌�
 外观、内容结构和交互依据 Material 3 [List overview](https://m3.material.io/components/lists/overview)、[List specs](https://m3.material.io/components/lists/specs) 与 [List guidelines](https://m3.material.io/components/lists/guidelines)。选择模式的语义限制参考 [WAI-ARIA Listbox Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/)。
 
 <script setup>
-import ListActionsExample from '../examples/list/ListActionsExample.vue';
-import ListContentExample from '../examples/list/ListContentExample.vue';
-import ListSelectionExample from '../examples/list/ListSelectionExample.vue';
-import ListVariantsExample from '../examples/list/ListVariantsExample.vue';
+import ListColorExample from '../examples/list/ListColorExample.vue';
+import ListDefaultSlotExample from '../examples/list/ListDefaultSlotExample.vue';
+import ListInteractionExample from '../examples/list/ListInteractionExample.vue';
+import ListItemDefaultSlotExample from '../examples/list/ListItemDefaultSlotExample.vue';
+import ListItemDisabledExample from '../examples/list/ListItemDisabledExample.vue';
+import ListItemHrefExample from '../examples/list/ListItemHrefExample.vue';
+import ListItemLeadingSlotExample from '../examples/list/ListItemLeadingSlotExample.vue';
+import ListItemLinesExample from '../examples/list/ListItemLinesExample.vue';
+import ListItemOverlineSlotExample from '../examples/list/ListItemOverlineSlotExample.vue';
+import ListItemSupportingSlotExample from '../examples/list/ListItemSupportingSlotExample.vue';
+import ListItemTrailingSlotExample from '../examples/list/ListItemTrailingSlotExample.vue';
+import ListItemTypeExample from '../examples/list/ListItemTypeExample.vue';
+import ListItemValueExample from '../examples/list/ListItemValueExample.vue';
+import ListSelectedExample from '../examples/list/ListSelectedExample.vue';
+import ListVariantExample from '../examples/list/ListVariantExample.vue';
 </script>
 
 # Divider 分隔线
@@ -2759,6 +5150,7 @@ import ListVariantsExample from '../examples/list/ListVariantsExample.vue';
 
 ### 三种缩进
 
+::: details 查看示例代码
 ```vue
 <template>
   <div class="example-stack">
@@ -2795,6 +5187,8 @@ import ListVariantsExample from '../examples/list/ListVariantsExample.vue';
 }
 </style>
 ```
+:::
+
 <ClientOnly>
   <DocsPreview label="Divider 三种缩进预览" stacked>
     <DividerInsetsExample />
@@ -2803,6 +5197,7 @@ import ListVariantsExample from '../examples/list/ListVariantsExample.vue';
 
 ### List 中使用
 
+::: details 查看示例代码
 ```vue
 <template>
   <mat-list variant="standard" class="example-list">
@@ -2818,6 +5213,8 @@ import ListVariantsExample from '../examples/list/ListVariantsExample.vue';
 }
 </style>
 ```
+:::
+
 <ClientOnly>
   <DocsPreview label="Divider 在 List 中的预览">
     <DividerListExample />

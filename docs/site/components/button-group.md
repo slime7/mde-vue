@@ -7,35 +7,139 @@ order: 60
 
 # Button group 按钮组
 
+## 组件简介
+
 `<mat-btn-group>` 的组件导出名是 `MatBtnGroup`。它在单行中组织普通或图标模式的 `MatBtn`。standard 形态保留独立按钮间距，connected 形态连接可选择按钮。组容器不聚焦，每个子按钮保持独立 Tab 停靠点。
 
 ## 示例
 
-### 默认 standard 组
+示例代码默认收起，预览直接可见。
 
-第二组设置 `block`，组根铺满父元素，子按钮仍保持内容宽度。
+### `block`
 
-<<< @/examples/button/ButtonGroupDefaultExample.vue
+::: details 查看示例代码
+<<< @/examples/button/ButtonGroupBlockExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Button group 默认 standard 组预览">
-    <ButtonGroupDefaultExample />
+  <DocsPreview label="Button group block 预览">
+    <ButtonGroupBlockExample />
   </DocsPreview>
 </ClientOnly>
 
-按下 standard 子项时，该项宽度临时增大 15%，直接相邻项同步缩窄，组的总宽保持不变。首尾项由唯一邻项承担全部缩量，中间项由两侧邻项各承担一半；快速点击也会完成可见的展开和回弹。受控 `selected` 只保留形状和颜色状态，不持续改变宽度。connected 形态不联动子项宽度。
+### `variant`
 
-宽度与形状动效使用 `--mat-sys-motion-duration-short3`（150ms）和 `--mat-sys-motion-easing-standard`，作为 Web 上对 Material 3 FastSpatial 的近似。按下展开和释放回弹使用相同的时间与缓动曲线；这是仍留在界面中的空间变化，不按方向切换 decelerate 或 accelerate。快速释放时，组件会等待展开至少完成 75% 后再开始回弹；`prefers-reduced-motion: reduce` 下不等待动画。
-
-### 受控 connected 多选
-
-<<< @/examples/button/ButtonGroupSelectionExample.vue
+::: details 查看示例代码
+<<< @/examples/button/ButtonGroupVariantExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Button group 受控 connected 多选预览">
+  <DocsPreview label="Button group variant 预览">
+    <ButtonGroupVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `size`
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonGroupSizeExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group size 预览">
+    <ButtonGroupSizeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `shape`
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonGroupShapeExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group shape 预览">
+    <ButtonGroupShapeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonGroupColorExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group color 预览">
+    <ButtonGroupColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonGroupDisabledExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group disabled 预览">
+    <ButtonGroupDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `selection` 与 `selected`
+
+选择模式必须给每个子按钮提供 `value`，并在 `select` 事件中回写 `selected`。
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonGroupSelectionExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group selection 与 selected 预览">
     <ButtonGroupSelectionExample />
   </DocsPreview>
 </ClientOnly>
+
+### `required`
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonGroupRequiredExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group required 预览">
+    <ButtonGroupRequiredExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `fullWidth`
+
+`fullWidth` 只在 connected 形态中生效。
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonGroupFullWidthExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group fullWidth 预览">
+    <ButtonGroupFullWidthExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 默认 Slot
+
+::: details 查看示例代码
+<<< @/examples/button/ButtonGroupDefaultSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Button group 默认 Slot 预览">
+    <ButtonGroupDefaultSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+按下 standard 子项时，该项宽度临时增大，直接相邻项同步缩窄；connected 形态不联动子项宽度。组的 `size`、`shape`、`color` 只作为未显式设置子项的默认值，组 `disabled` 与子项 `disabled` 取或。
 
 ## API
 
@@ -85,6 +189,14 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 参数与交互依据 [Material 3 Button group specs](https://m3.material.io/components/button-groups/specs)。
 
 <script setup>
-import ButtonGroupDefaultExample from '../examples/button/ButtonGroupDefaultExample.vue';
+import ButtonGroupBlockExample from '../examples/button/ButtonGroupBlockExample.vue';
+import ButtonGroupColorExample from '../examples/button/ButtonGroupColorExample.vue';
+import ButtonGroupDefaultSlotExample from '../examples/button/ButtonGroupDefaultSlotExample.vue';
+import ButtonGroupDisabledExample from '../examples/button/ButtonGroupDisabledExample.vue';
+import ButtonGroupFullWidthExample from '../examples/button/ButtonGroupFullWidthExample.vue';
+import ButtonGroupRequiredExample from '../examples/button/ButtonGroupRequiredExample.vue';
 import ButtonGroupSelectionExample from '../examples/button/ButtonGroupSelectionExample.vue';
+import ButtonGroupShapeExample from '../examples/button/ButtonGroupShapeExample.vue';
+import ButtonGroupSizeExample from '../examples/button/ButtonGroupSizeExample.vue';
+import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExample.vue';
 </script>

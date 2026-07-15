@@ -1,23 +1,44 @@
 <script setup>
 import { ref } from 'vue';
 
-const selected = ref(['bold']);
-
-function applySelection({ nextSelected }) {
-  selected.value = nextSelected;
-}
+const singleSelected = ref('day');
+const multipleSelected = ref(['bold']);
 </script>
 
 <template>
-  <mat-btn-group
-    variant="connected"
-    selection="multiple"
-    :selected="selected"
-    required
-    full-width
-    @select="applySelection"
-  >
-    <mat-btn icon="format_bold" label="粗体" value="bold" />
-    <mat-btn icon="format_italic" label="斜体" value="italic" />
-  </mat-btn-group>
+  <div class="example-stack">
+    <mat-btn-group
+      selection="single"
+      :selected="singleSelected"
+      @select="singleSelected = $event.nextSelected"
+    >
+      <mat-btn value="day">
+        日间
+      </mat-btn>
+      <mat-btn value="night">
+        夜间
+      </mat-btn>
+    </mat-btn-group>
+    <mat-btn-group
+      selection="multiple"
+      :selected="multipleSelected"
+      @select="multipleSelected = $event.nextSelected"
+    >
+      <mat-btn value="bold">
+        粗体
+      </mat-btn>
+      <mat-btn value="italic">
+        斜体
+      </mat-btn>
+    </mat-btn-group>
+  </div>
 </template>
+
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+</style>

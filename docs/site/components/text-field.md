@@ -13,27 +13,211 @@ order: 90
 
 ## 示例
 
-### 块级宽度
+`error` 与 `errorText`、输入值与 `v-model` 等只保留必要依赖。
 
-设置 `block` 后，Text field 与 Textarea 使用块级 flex 根并明确铺满父元素。下面的虚线框是宽度为 360px、带 12px 内边距的父容器。
+### `block`
 
+::: details 查看示例代码
 <<< @/examples/text-field/TextFieldBlockExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Text field 与 Textarea 块级宽度预览">
+  <DocsPreview label="Text field 与 Textarea block 预览">
     <TextFieldBlockExample />
   </DocsPreview>
 </ClientOnly>
 
-### 状态、内容与校验
+### `modelValue`
 
-下面同时展示 outlined 的空值聚焦/失焦与错误状态、filled textarea、前后图标、字符计数、只读和禁用状态。验证码初始为空，可以反复聚焦并在不输入内容时离开，观察标签从边框返回容器中央；字符计数只在设置 `maxLength` 后显示。
-
-<<< @/examples/text-field/TextFieldExample.vue
+::: details 查看示例代码
+<<< @/examples/text-field/TextFieldModelValueExample.vue
+:::
 
 <ClientOnly>
-  <DocsPreview label="Text field 与 Textarea 状态预览" stacked>
-    <TextFieldExample />
+  <DocsPreview label="Text field modelValue 预览">
+    <TextFieldModelValueExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `label`
+
+::: details 查看示例代码
+<<< @/examples/text-field/TextFieldLabelExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field label 预览">
+    <TextFieldLabelExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `variant`
+
+::: details 查看示例代码
+<<< @/examples/text-field/TextFieldVariantExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field variant 预览">
+    <TextFieldVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+<<< @/examples/text-field/TextFieldColorExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field color 预览">
+    <TextFieldColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `supportingText`
+
+::: details 查看示例代码
+<<< @/examples/text-field/TextFieldSupportingTextExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field supportingText 预览">
+    <TextFieldSupportingTextExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `error` 与 `errorText`
+
+`errorText` 只有在 `error` 为 true 时才显示，因此两者是必要依赖。
+
+::: details 查看示例代码
+<<< @/examples/text-field/TextFieldErrorExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field error 预览">
+    <TextFieldErrorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `prefixText`
+
+::: details 查看示例代码
+<<< @/examples/text-field/TextFieldPrefixTextExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field prefixText 预览">
+    <TextFieldPrefixTextExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `suffixText`
+
+::: details 查看示例代码
+<<< @/examples/text-field/TextFieldSuffixTextExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field suffixText 预览">
+    <TextFieldSuffixTextExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `maxLength`
+
+::: details 查看示例代码
+<<< @/examples/text-field/TextFieldMaxLengthExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field maxLength 预览">
+    <TextFieldMaxLengthExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+::: details 查看示例代码
+<<< @/examples/text-field/TextFieldDisabledExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field disabled 预览">
+    <TextFieldDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `readonly`
+
+::: details 查看示例代码
+<<< @/examples/text-field/TextFieldReadonlyExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field readonly 预览">
+    <TextFieldReadonlyExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `required`
+
+::: details 查看示例代码
+<<< @/examples/text-field/TextFieldRequiredExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field required 预览">
+    <TextFieldRequiredExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `type`
+
+::: details 查看示例代码
+<<< @/examples/text-field/TextFieldTypeExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field type 预览">
+    <TextFieldTypeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### Textarea 的 `rows`
+
+::: details 查看示例代码
+<<< @/examples/text-field/TextareaRowsExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Textarea rows 预览">
+    <TextareaRowsExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `leading` Slot
+
+::: details 查看示例代码
+<<< @/examples/text-field/TextFieldLeadingSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field leading Slot 预览">
+    <TextFieldLeadingSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `trailing` Slot
+
+::: details 查看示例代码
+<<< @/examples/text-field/TextFieldTrailingSlotExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Text field trailing Slot 预览">
+    <TextFieldTrailingSlotExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -107,5 +291,20 @@ order: 90
 
 <script setup>
 import TextFieldBlockExample from '../examples/text-field/TextFieldBlockExample.vue';
-import TextFieldExample from '../examples/text-field/TextFieldExample.vue';
+import TextFieldColorExample from '../examples/text-field/TextFieldColorExample.vue';
+import TextFieldDisabledExample from '../examples/text-field/TextFieldDisabledExample.vue';
+import TextFieldErrorExample from '../examples/text-field/TextFieldErrorExample.vue';
+import TextFieldLabelExample from '../examples/text-field/TextFieldLabelExample.vue';
+import TextFieldLeadingSlotExample from '../examples/text-field/TextFieldLeadingSlotExample.vue';
+import TextFieldMaxLengthExample from '../examples/text-field/TextFieldMaxLengthExample.vue';
+import TextFieldModelValueExample from '../examples/text-field/TextFieldModelValueExample.vue';
+import TextFieldPrefixTextExample from '../examples/text-field/TextFieldPrefixTextExample.vue';
+import TextFieldReadonlyExample from '../examples/text-field/TextFieldReadonlyExample.vue';
+import TextFieldRequiredExample from '../examples/text-field/TextFieldRequiredExample.vue';
+import TextFieldSupportingTextExample from '../examples/text-field/TextFieldSupportingTextExample.vue';
+import TextFieldSuffixTextExample from '../examples/text-field/TextFieldSuffixTextExample.vue';
+import TextFieldTrailingSlotExample from '../examples/text-field/TextFieldTrailingSlotExample.vue';
+import TextFieldTypeExample from '../examples/text-field/TextFieldTypeExample.vue';
+import TextFieldVariantExample from '../examples/text-field/TextFieldVariantExample.vue';
+import TextareaRowsExample from '../examples/text-field/TextareaRowsExample.vue';
 </script>
