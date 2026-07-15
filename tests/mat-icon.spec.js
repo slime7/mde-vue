@@ -89,6 +89,7 @@ describe('MatIcon', () => {
 
   it('接受带单位和 CSS 函数尺寸，自定义尺寸默认使用 24 光学尺寸', () => {
     expect(MatIcon.props.size.validator('1.5rem')).toBe(true);
+    expect(MatIcon.props.size.validator('2cqi')).toBe(true);
     expect(MatIcon.props.size.validator('var(--app-icon-size)')).toBe(true);
     expect(MatIcon.props.size.validator('calc(1rem + 8px)')).toBe(true);
     expect(MatIcon.props.size.validator('24')).toBe(false);

@@ -5,7 +5,7 @@ export const ICON_SIZES = Object.freeze({
   'extra-large': { fontSize: '48px', opticalSize: 48 },
 });
 
-const CSS_LENGTH_PATTERN = /^(?:(?:\d+(?:\.\d+)?|\.\d+)(?:cap|ch|cm|dvh|dvw|em|ex|ic|in|lh|mm|pc|pt|px|q|rem|rlh|svh|svw|vmax|vmin|vh|vw|%)|(?:calc|clamp|max|min|var)\(.+\))$/i;
+const CSS_LENGTH_PATTERN = /^(?:(?:\d+(?:\.\d+)?|\.\d+)(?:cap|ch|cm|cqb|cqh|cqi|cqmax|cqmin|cqw|dvb|dvh|dvi|dvw|em|ex|ic|in|lh|lvb|lvh|lvi|lvw|mm|pc|pt|px|q|rem|rlh|svb|svh|svi|svw|vb|vh|vi|vmax|vmin|vw|%)|(?:calc|clamp|max|min|var)\(.+\))$/i;
 
 /**
  * @param {unknown} value
