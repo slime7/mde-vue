@@ -114,9 +114,27 @@ describe('新增组件现代 CSS', () => {
     expect(itemSource).toContain('--mat-item-icon-size: 20px');
     expect(itemSource).toContain('min-block-size: var(--mat-menu-item-height)');
     expect(itemSource).not.toContain('.mat-menu-item::after');
+    expect(itemSource).toContain(
+      '.mat-menu-item-host:first-child > .mat-menu-item:not(.mat-menu-item--submenu-open)',
+    );
+    expect(itemSource).toContain(
+      'var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium)\n    var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)',
+    );
+    expect(itemSource).toContain(
+      'var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)\n    var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium)',
+    );
     expect(itemSource).toContain('border-radius: var(--mat-sys-shape-corner-medium)');
     expect(groupSource).toContain('padding: var(--mat-menu-container-padding)');
     expect(groupSource).toContain('min-block-size: var(--mat-menu-group-label-height)');
+    expect(groupSource).toContain(
+      'border-radius: var(--mat-sys-shape-corner-small)',
+    );
+    expect(groupSource).toContain(
+      'var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)\n    var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small)',
+    );
+    expect(groupSource).toContain(
+      'var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small)\n    var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)',
+    );
     expect(groupSource).toContain('box-shadow: var(--mat-sys-elevation-level2)');
   });
 });

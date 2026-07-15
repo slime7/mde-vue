@@ -202,6 +202,22 @@ onBeforeUnmount(() => menu?.unregisterItem(itemApi));
   transition: border-radius var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-emphasized), color var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), background-color var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
 }
 
+.mat-menu-item-host:first-child > .mat-menu-item:not(.mat-menu-item--submenu-open),
+:global(.mat-menu-group__label) + .mat-menu-item-host > .mat-menu-item:not(.mat-menu-item--submenu-open) {
+  border-radius: var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium)
+    var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small);
+}
+
+.mat-menu-item-host:last-child > .mat-menu-item:not(.mat-menu-item--submenu-open) {
+  border-radius: var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
+    var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium);
+}
+
+.mat-menu-item-host:first-child:last-child > .mat-menu-item:not(.mat-menu-item--submenu-open),
+:global(.mat-menu-group__label) + .mat-menu-item-host:last-child > .mat-menu-item:not(.mat-menu-item--submenu-open) {
+  border-radius: var(--mat-sys-shape-corner-extra-small);
+}
+
 .mat-menu-item--submenu-open {
   color: var(--mat-menu-active-content-color);
   background: var(--mat-menu-active-container-color);
@@ -229,6 +245,28 @@ onBeforeUnmount(() => menu?.unregisterItem(itemApi));
 
   .mat-menu-item--submenu-open {
     border-shape: inset(0 round var(--mat-sys-shape-corner-medium));
+  }
+
+  .mat-menu-item-host:first-child > .mat-menu-item:not(.mat-menu-item--submenu-open),
+  :global(.mat-menu-group__label) + .mat-menu-item-host > .mat-menu-item:not(.mat-menu-item--submenu-open) {
+    border-shape: inset(
+      0 round
+      var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium)
+      var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
+    );
+  }
+
+  .mat-menu-item-host:last-child > .mat-menu-item:not(.mat-menu-item--submenu-open) {
+    border-shape: inset(
+      0 round
+      var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
+      var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium)
+    );
+  }
+
+  .mat-menu-item-host:first-child:last-child > .mat-menu-item:not(.mat-menu-item--submenu-open),
+  :global(.mat-menu-group__label) + .mat-menu-item-host:last-child > .mat-menu-item:not(.mat-menu-item--submenu-open) {
+    border-shape: inset(0 round var(--mat-sys-shape-corner-extra-small));
   }
 }
 
