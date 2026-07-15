@@ -23,6 +23,13 @@ describe('新增组件现代 CSS', () => {
     expect(source).not.toContain('block-size: 40px');
     expect(source).toContain('border: 1px solid var(--mat-text-input-outline-color)');
     expect(source).toContain('border: 2px solid var(--mat-text-input-accent-color)');
+    expect(source).toContain('.mat-text-input--filled:has(.mat-text-input__label)');
+    expect(source).toContain('padding-block: 24px 8px');
+    expect(source).toContain('inline-size: 52px');
+    expect(source).toContain('padding-inline: 12px 16px');
+    expect(source).toContain('padding-inline: 16px 12px');
+    expect(source).toContain('box-shadow: inset 0 -1px 0 var(--mat-text-input-outline-color)');
+    expect(source).not.toContain('border-block-end: 1px solid');
     expect(source).toContain('@supports (border-shape:');
     expect(source).toContain('prefers-reduced-motion: reduce');
   });

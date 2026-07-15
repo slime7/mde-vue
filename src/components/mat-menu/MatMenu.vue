@@ -225,7 +225,13 @@ function focusAnchor() {
   nextTick(() => resolveAnchor()?.focus());
 }
 
+function closeDescendants() {
+  itemApis.forEach((api) => api.closeSubmenu());
+}
+
 function closeSelf({ focus = true } = {}) {
+  closeDescendants();
+
   if (isNested.value) {
     nestedOpen.value = false;
     itemParent.submenuOpen.value = false;
@@ -311,21 +317,28 @@ function handleToggle(event) {
 
   if (popoverShown) {
     scheduleViewportClamp();
+    return;
   }
 
-  if (event.newState === 'closed' && effectiveOpen.value) {
-    if (programmaticClose) {
-      programmaticClose = false;
-      return;
-    }
+  const wasProgrammatic = programmaticClose;
 
-    if (isNested.value) {
-      nestedOpen.value = false;
-    } else {
-      emit('update:open', false);
-    }
-    focusAnchor();
+  programmaticClose = false;
+  closeDescendants();
+
+  if (isNested.value) {
+    nestedOpen.value = false;
+    itemParent.submenuOpen.value = false;
   }
+
+  if (!effectiveOpen.value || wasProgrammatic) {
+    return;
+  }
+
+  if (!isNested.value) {
+    emit('update:open', false);
+  }
+
+  focusAnchor();
 }
 
 provide(MAT_MENU_KEY, {

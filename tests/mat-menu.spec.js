@@ -111,6 +111,28 @@ describe('MatMenu', () => {
     expect(document.activeElement).toBe(anchor);
   });
 
+  it('程序化关闭并重开后仍响应浏览器发起的关闭', async () => {
+    const anchor = document.createElement('button');
+
+    anchor.id = 'reopen-dismiss-trigger';
+    document.body.append(anchor);
+    const wrapper = mount(MatMenu, {
+      attachTo: document.body,
+      props: { open: true, anchor: 'reopen-dismiss-trigger' },
+      slots: { default: () => h(MatMenuItem, null, () => '关闭') },
+    });
+
+    await nextTick();
+    await wrapper.setProps({ open: false });
+    await nextTick();
+    await wrapper.setProps({ open: true });
+    await nextTick();
+    dispatchToggle(wrapper.get('[role="menu"]').element, 'closed');
+    await nextTick();
+
+    expect(wrapper.emitted('update:open')?.at(-1)).toEqual([false]);
+  });
+
   it('在 CSS 换边后把最终菜单矩形夹紧到视口安全间距', async () => {
     const anchor = document.createElement('button');
 
@@ -207,6 +229,57 @@ describe('MatMenu', () => {
 
     expect(parentItem.attributes('aria-expanded')).toBe('false');
     expect(document.activeElement).toBe(parentItem.element);
+  });
+
+  it('关闭根菜单时递归清除所有后代菜单的展开状态', async () => {
+    const anchor = document.createElement('button');
+
+    anchor.id = 'reopen-trigger';
+    document.body.append(anchor);
+    const wrapper = mount(MatMenu, {
+      attachTo: document.body,
+      props: { open: true, anchor: 'reopen-trigger' },
+      slots: {
+        default: () => h(MatMenuItem, null, {
+          default: () => '导出',
+          submenu: () => h(MatMenu, null, {
+            default: () => h(MatMenuItem, null, {
+              default: () => '更多格式',
+              submenu: () => h(MatMenu, null, {
+                default: () => h(MatMenuItem, null, () => 'WebP'),
+              }),
+            }),
+          }),
+        }),
+      },
+    });
+
+    await nextTick();
+    const menus = wrapper.findAll('[role="menu"]');
+    const firstParent = menus[0].get('[role="menuitem"]');
+    const secondParent = menus[1].get('[role="menuitem"]');
+
+    await firstParent.trigger('click');
+    await nextTick();
+    await secondParent.trigger('click');
+    await nextTick();
+
+    expect(firstParent.attributes('aria-expanded')).toBe('true');
+    expect(secondParent.attributes('aria-expanded')).toBe('true');
+
+    await wrapper.setProps({ open: false });
+    await nextTick();
+
+    expect(firstParent.attributes('aria-expanded')).toBe('false');
+    expect(secondParent.attributes('aria-expanded')).toBe('false');
+    expect(menus[1].element.hidePopover).toHaveBeenCalled();
+    expect(menus[2].element.hidePopover).toHaveBeenCalled();
+
+    await wrapper.setProps({ open: true });
+    await nextTick();
+
+    expect(firstParent.attributes('aria-expanded')).toBe('false');
+    expect(secondParent.attributes('aria-expanded')).toBe('false');
   });
 
   it('MatDivider 在菜单中使用 separator 语义', async () => {
