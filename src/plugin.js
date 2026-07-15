@@ -19,6 +19,7 @@ import MatTextarea from './components/mat-textarea/MatTextarea.vue';
 import MatMenu from './components/mat-menu/MatMenu.vue';
 import MatMenuItem from './components/mat-menu/MatMenuItem.vue';
 import MatDialog from './components/mat-dialog/MatDialog.vue';
+import MatSpacer from './components/mat-spacer/MatSpacer.vue';
 import { setImperativeContext } from './imperative-context';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from './mat-ui-context';
 import createThemeController from './theme';
@@ -123,6 +124,8 @@ export function createMatUi(options = {}) {
       app.component('mat-menu-item', MatMenuItem);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-dialog', MatDialog);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-spacer', MatSpacer);
       app.provide(MAT_UI_KEY, componentOptions);
       app.provide(MAT_THEME_KEY, theme);
       setImperativeContext(componentOptions, theme);

@@ -85,6 +85,7 @@ export default defineConfig({
           { text: 'Card 卡片', link: '/components/card' },
           { text: 'List 列表', link: '/components/list' },
           { text: 'Divider 分隔线', link: '/components/divider' },
+          { text: 'Spacer 弹性占位', link: '/components/spacer' },
         ],
       },
       {

@@ -24,3 +24,4 @@
 - [Dialog 对话框](docs/site/components/dialog.md): mat-dialog 的模态展示、全屏布局、帷幕、动画、滚动区域和 Promise 命令式函数。
 - [List 列表](docs/site/components/list.md): mat-list 与 mat-list-item 的 Material 3 Expressive 外观、内容结构、操作和受控选择。
 - [Divider 分隔线](docs/site/components/divider.md): mat-divider 的 Material 3 全宽、起始缩进和两侧缩进样式。
+- [Spacer 弹性占位](docs/site/components/spacer.md): mat-spacer 在 flex 布局中占据主轴剩余空间。

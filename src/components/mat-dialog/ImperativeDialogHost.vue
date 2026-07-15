@@ -6,6 +6,7 @@ import { getImperativeComponentOptions, getImperativeTheme } from '../../imperat
 import MAT_UI_KEY from '../../mat-ui-context';
 import MAT_THEME_KEY from '../../theme-context';
 import MatBtn from '../mat-btn/MatBtn.vue';
+import MatSpacer from '../mat-spacer/MatSpacer.vue';
 import MatTextField from '../mat-text-field/MatTextField.vue';
 import MatDialog from './MatDialog.vue';
 
@@ -102,7 +103,7 @@ function finish() {
     </template>
 
     <template #actions>
-      <span class="mat-imperative-dialog__action-spacer" aria-hidden="true" />
+      <MatSpacer />
       <MatBtn
         v-for="(action, index) in options.actions"
         :key="index"
@@ -120,9 +121,5 @@ function finish() {
 <style scoped>
 .mat-dialog-prompt__content {
   margin-block: 0 16px;
-}
-
-.mat-imperative-dialog__action-spacer {
-  flex: 1 1 auto;
 }
 </style>

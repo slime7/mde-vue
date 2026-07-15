@@ -18,4 +18,5 @@ export { default as MatTextarea } from './components/mat-textarea/MatTextarea.vu
 export { default as MatMenu } from './components/mat-menu/MatMenu.vue';
 export { default as MatMenuItem } from './components/mat-menu/MatMenuItem.vue';
 export { default as MatDialog } from './components/mat-dialog/MatDialog.vue';
+export { default as MatSpacer } from './components/mat-spacer/MatSpacer.vue';
 export { createMatUi, useMatTheme } from './plugin';
