@@ -4,6 +4,11 @@ import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { nextTick } from 'vue';
 import { MatSlider, MatTooltip } from '../src';
+import {
+  getSliderValueFromPointer,
+  getSliderVisualPosition,
+  SLIDER_TRACK_END_INSET,
+} from '../src/components/slider-utils';
 
 const componentSource = readFileSync(
   resolve('src/components/mat-slider/MatSlider.vue'),
@@ -95,7 +100,7 @@ describe('MatSlider', () => {
     expect(input.attributes('aria-valuemax')).toBe('10');
     expect(input.attributes('aria-valuenow')).toBe('6');
     expect(input.element.value).toBe('6');
-    expect(wrapper.attributes('style')).toContain('--mat-slider-position: 60%');
+    expect(wrapper.attributes('style')).toContain('--mat-slider-position: calc(60% - 1.2px)');
   });
 
   it('限制数值、按步长对齐，并为居中变体计算活动轨道基准', () => {
@@ -119,10 +124,10 @@ describe('MatSlider', () => {
     });
 
     expect(clamped.find('input').attributes('aria-valuenow')).toBe('8');
-    expect(clamped.attributes('style')).toContain('--mat-slider-position: 100%');
+    expect(clamped.attributes('style')).toContain('--mat-slider-position: calc(100% - 6px)');
     expect(centered.classes()).toContain('mat-slider--centered');
     expect(centered.attributes('style')).toContain('--mat-slider-center-position: 50%');
-    expect(centered.attributes('style')).toContain('--mat-slider-position: 70%');
+    expect(centered.attributes('style')).toContain('--mat-slider-position: calc(70% - 2.4px)');
   });
 
   it('通过指针和键盘更新模型，并保留 input 与 change 事件语义', async () => {
@@ -178,6 +183,10 @@ describe('MatSlider', () => {
     expect(componentSource).toContain('data-slider-value-indicator');
     expect(componentSource).not.toContain('mat-slider--with-value-indicator');
     expect(tooltipComponentSource).toContain('.mat-tooltip[data-slider-value-indicator]');
+    expect(tooltipComponentSource).not.toContain(
+      '.mat-tooltip[data-slider-value-indicator]::after',
+    );
+    expect(stylesSource).not.toContain('--mat-slider-value-indicator-stem-');
 
     await input.trigger('blur');
 
@@ -307,7 +316,12 @@ describe('MatSlider', () => {
     expect(componentSource).toContain('.mat-slider--vertical.mat-slider--dragging .mat-slider__handle {');
   });
 
-  it('将端点停靠点夹在轨道内，断口使用 2px 圆角且不绘制手柄背景层', () => {
+  it('始终在固定端部保护区域内显示终点，断口使用 2px 圆角且不绘制手柄背景层', () => {
+    const continuous = mount(MatSlider, {
+      props: {
+        modelValue: 2,
+      },
+    });
     const wrapper = mount(MatSlider, {
       props: {
         max: 4,
@@ -315,10 +329,74 @@ describe('MatSlider', () => {
         showStopIndicator: true,
       },
     });
+    const atMaximum = mount(MatSlider, {
+      props: {
+        modelValue: 100,
+      },
+    });
+    const unevenSteps = mount(MatSlider, {
+      props: {
+        max: 5,
+        modelValue: 2,
+        showStopIndicator: true,
+        step: 2,
+      },
+    });
+    const pointerTarget = {
+      getBoundingClientRect() {
+        return {
+          height: 16,
+          left: 0,
+          width: 100,
+        };
+      },
+    };
 
+    expect(continuous.findAll('.mat-slider__stop')).toHaveLength(1);
+    expect(continuous.find('.mat-slider__stop').attributes('style')).toContain(
+      '--mat-slider-stop-position: calc(100% - 6px)',
+    );
+    expect(atMaximum.attributes('style')).toContain(
+      '--mat-slider-position: calc(100% - 6px)',
+    );
+    expect(unevenSteps.findAll('.mat-slider__stop')).toHaveLength(4);
+    expect(
+      unevenSteps.findAll('.mat-slider__stop')
+        .some((stop) => stop.attributes('style').includes(
+          '--mat-slider-stop-position: calc(100% - 6px)',
+        )),
+    ).toBe(true);
+    expect(
+      getSliderValueFromPointer(
+        { clientX: 6 },
+        pointerTarget,
+        { min: 0, max: 100 },
+        1,
+        'horizontal',
+      ),
+    ).toBe(0);
+    expect(
+      getSliderValueFromPointer(
+        { clientX: 94 },
+        pointerTarget,
+        { min: 0, max: 100 },
+        1,
+        'horizontal',
+      ),
+    ).toBe(100);
     expect(wrapper.findAll('.mat-slider__stop')).toHaveLength(5);
     expect(wrapper.find('.mat-slider__state-layer').exists()).toBe(false);
-    expect(componentSource).toContain('clamp(calc(var(--mat-slider-stop-indicator-size) / 2)');
+    expect(SLIDER_TRACK_END_INSET).toBe(6);
+    expect(getSliderVisualPosition(0)).toBe('6px');
+    expect(getSliderVisualPosition(25)).toBe('calc(25% + 3px)');
+    expect(getSliderVisualPosition(50)).toBe('50%');
+    expect(getSliderVisualPosition(75)).toBe('calc(75% - 3px)');
+    expect(getSliderVisualPosition(100)).toBe('calc(100% - 6px)');
+    expect(stylesSource).toContain('--mat-slider-track-end-inset: 6px');
+    expect(componentSource).not.toContain('mat-slider-current-track-corner) -');
+    expect(componentSource).not.toContain(
+      'clamp(calc(var(--mat-slider-stop-indicator-size) / 2)',
+    );
     expect(componentSource).toContain('cursor: default;');
     expect(componentSource).toContain('.mat-slider--use-cursor .mat-slider__interaction');
     expect(componentSource).toContain('outline: var(--mat-slider-focus-indicator-width) solid');

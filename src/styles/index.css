@@ -389,11 +389,10 @@
   --mat-slider-pressed-handle-width: 2px;
   --mat-slider-handle-track-gap: 6px;
   --mat-slider-track-gap-corner: 2px;
+  --mat-slider-track-end-inset: 6px;
   --mat-slider-stop-indicator-size: 4px;
   --mat-slider-value-indicator-width: 48px;
   --mat-slider-value-indicator-height: 48px;
-  --mat-slider-value-indicator-stem-height: 8px;
-  --mat-slider-value-indicator-stem-width: 4px;
   --mat-slider-inset-icon-offset: 12px;
   --mat-slider-focus-indicator-width: 2px;
   --mat-slider-focus-indicator-offset: 2px;

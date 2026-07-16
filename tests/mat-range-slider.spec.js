@@ -80,8 +80,8 @@ describe('MatRangeSlider', () => {
     expect(inputs.map((input) => input.attributes('aria-label'))).toEqual(['价格下限', '价格上限']);
     expect(inputs.map((input) => input.attributes('aria-valuenow'))).toEqual(['4', '10']);
     expect(inputs.map((input) => input.element.value)).toEqual(['4', '10']);
-    expect(wrapper.attributes('style')).toContain('--mat-range-slider-start-position: 40%');
-    expect(wrapper.attributes('style')).toContain('--mat-range-slider-end-position: 100%');
+    expect(wrapper.attributes('style')).toContain('--mat-range-slider-start-position: calc(40% + 1.2px)');
+    expect(wrapper.attributes('style')).toContain('--mat-range-slider-end-position: calc(100% - 6px)');
   });
 
   it('指针操作选择最近端点，发出新的不可变元组并在释放时发出 change', async () => {
@@ -108,7 +108,7 @@ describe('MatRangeSlider', () => {
 
     const nextValue = wrapper.emitted('update:modelValue')?.[0][0];
 
-    expect(nextValue).toEqual([1, 8]);
+    expect(nextValue).toEqual([0, 8]);
     expect(nextValue).not.toBe(sourceValue);
     expect(wrapper.emitted('input')?.[0][0]).toBeInstanceOf(Event);
     expect(wrapper.emitted('change')?.[0][0]).toBeInstanceOf(Event);
@@ -178,6 +178,11 @@ describe('MatRangeSlider', () => {
   });
 
   it('只收窄正在拖动的手柄，并为两个端点分别保留轨道断口', () => {
+    const continuous = mount(MatRangeSlider, {
+      props: {
+        modelValue: [25, 75],
+      },
+    });
     const wrapper = mount(MatRangeSlider, {
       props: {
         modelValue: [25, 75],
@@ -190,6 +195,14 @@ describe('MatRangeSlider', () => {
       /\.mat-range-slider__handle-shape \{(?<body>[\s\S]*?)\n\}/,
     )?.groups?.body;
 
+    expect(continuous.findAll('.mat-range-slider__stop')).toHaveLength(2);
+    expect(
+      continuous.findAll('.mat-range-slider__stop')
+        .map((stop) => stop.attributes('style')),
+    ).toEqual(expect.arrayContaining([
+      expect.stringContaining('--mat-range-slider-stop-position: 6px'),
+      expect.stringContaining('--mat-range-slider-stop-position: calc(100% - 6px)'),
+    ]));
     expect(wrapper.findAll('.mat-range-slider__inactive-track')).toHaveLength(2);
     expect(wrapper.attributes('style')).toContain('--mat-range-slider-active-visible-start:');
     expect(wrapper.attributes('style')).toContain('--mat-range-slider-active-visible-size:');
@@ -205,7 +218,10 @@ describe('MatRangeSlider', () => {
       '.mat-range-slider--vertical.mat-range-slider--dragging .mat-range-slider__handle--active {',
     );
     expect(wrapper.find('.mat-range-slider__state-layer').exists()).toBe(false);
-    expect(componentSource).toContain('clamp(calc(var(--mat-slider-stop-indicator-size) / 2)');
+    expect(componentSource).not.toContain('mat-range-slider-current-track-corner) -');
+    expect(componentSource).not.toContain(
+      'clamp(calc(var(--mat-slider-stop-indicator-size) / 2)',
+    );
     expect(componentSource).toContain('cursor: default;');
     expect(componentSource).toContain('.mat-range-slider--use-cursor .mat-range-slider__interaction');
     expect(componentSource).toContain('outline: var(--mat-slider-focus-indicator-width) solid');

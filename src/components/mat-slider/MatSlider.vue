@@ -7,11 +7,11 @@ import MatIcon from '../mat-icon/MatIcon.vue';
 import MatTooltip from '../mat-tooltip/MatTooltip.vue';
 import { isComponentColor } from '../button-props';
 import {
-  formatSliderNumber,
   getSliderPercentage,
   getSliderStopValues,
   getSliderValueFromKeyboard,
   getSliderValueFromPointer,
+  getSliderVisualPosition,
   isFiniteNumber,
   isPositiveNumber,
   isSliderOrientation,
@@ -145,8 +145,12 @@ const centerPosition = computed(() => getSliderPercentage(
   trackOriginValue.value,
   bounds.value,
 ));
-const formattedValuePosition = computed(() => `${formatSliderNumber(valuePosition.value)}%`);
-const formattedCenterPosition = computed(() => `${formatSliderNumber(centerPosition.value)}%`);
+const formattedValuePosition = computed(() => getSliderVisualPosition(valuePosition.value));
+const formattedCenterPosition = computed(() => (
+  props.variant === 'standard'
+    ? '0%'
+    : getSliderVisualPosition(centerPosition.value)
+));
 const trackDirection = computed(() => Math.sign(valuePosition.value - centerPosition.value));
 const activeVisibleStart = computed(() => {
   if (trackDirection.value >= 0) {
@@ -190,7 +194,7 @@ const inactiveAfterSize = computed(() => {
 const stopValues = computed(() => (
   props.showStopIndicator
     ? getSliderStopValues(bounds.value, resolvedStep.value)
-    : []
+    : [bounds.value.max]
 ));
 const showInsetIcon = computed(() => (
   props.insetIcon !== undefined
@@ -369,7 +373,9 @@ function handleKeyDown(event) {
             && stopValue <= Math.max(trackOriginValue, displayedValue),
         }"
         :style="{
-          '--mat-slider-stop-position': `${formatSliderNumber(getSliderPercentage(stopValue, bounds))}%`,
+          '--mat-slider-stop-position': getSliderVisualPosition(
+            getSliderPercentage(stopValue, bounds),
+          ),
         }"
       />
 
@@ -541,7 +547,7 @@ function handleKeyDown(event) {
 .mat-slider__stop {
   position: absolute;
   inset-block-start: 50%;
-  inset-inline-start: clamp(calc(var(--mat-slider-stop-indicator-size) / 2), var(--mat-slider-stop-position), calc(100% - (var(--mat-slider-stop-indicator-size) / 2)));
+  inset-inline-start: var(--mat-slider-stop-position);
   z-index: 1;
   display: block;
   inline-size: var(--mat-slider-stop-indicator-size);
@@ -696,7 +702,7 @@ function handleKeyDown(event) {
 }
 
 .mat-slider--vertical .mat-slider__stop {
-  inset-block-end: clamp(calc(var(--mat-slider-stop-indicator-size) / 2), var(--mat-slider-stop-position), calc(100% - (var(--mat-slider-stop-indicator-size) / 2)));
+  inset-block-end: var(--mat-slider-stop-position);
   inset-inline-start: 50%;
   transform: translate(-50%, 50%);
 }

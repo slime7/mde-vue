@@ -6,11 +6,11 @@ import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import { isComponentColor } from '../button-props';
 import MatTooltip from '../mat-tooltip/MatTooltip.vue';
 import {
-  formatSliderNumber,
   getSliderPercentage,
   getSliderStopValues,
   getSliderValueFromKeyboard,
   getSliderValueFromPointer,
+  getSliderVisualPosition,
   isFiniteNumber,
   isPositiveNumber,
   isRangeSliderModelValue,
@@ -132,12 +132,12 @@ const displayedValue = computed(() => (
 ));
 const startPosition = computed(() => getSliderPercentage(displayedValue.value[0], bounds.value));
 const endPosition = computed(() => getSliderPercentage(displayedValue.value[1], bounds.value));
-const formattedStartPosition = computed(() => `${formatSliderNumber(startPosition.value)}%`);
-const formattedEndPosition = computed(() => `${formatSliderNumber(endPosition.value)}%`);
+const formattedStartPosition = computed(() => getSliderVisualPosition(startPosition.value));
+const formattedEndPosition = computed(() => getSliderVisualPosition(endPosition.value));
 const stopValues = computed(() => (
   props.showStopIndicator
     ? getSliderStopValues(bounds.value, resolvedStep.value)
-    : []
+    : [bounds.value.min, bounds.value.max]
 ));
 const activeHandleElement = computed(() => handleElements.value[activeHandle.value] ?? null);
 const activeValue = computed(() => displayedValue.value[activeHandle.value]);
@@ -374,7 +374,9 @@ function setHandleElement(index, element) {
             && stopValue <= displayedValue[1],
         }"
         :style="{
-          '--mat-range-slider-stop-position': `${formatSliderNumber(getSliderPercentage(stopValue, bounds))}%`,
+          '--mat-range-slider-stop-position': getSliderVisualPosition(
+            getSliderPercentage(stopValue, bounds),
+          ),
         }"
       />
 
@@ -541,7 +543,7 @@ function setHandleElement(index, element) {
 .mat-range-slider__stop {
   position: absolute;
   inset-block-start: 50%;
-  inset-inline-start: clamp(calc(var(--mat-slider-stop-indicator-size) / 2), var(--mat-range-slider-stop-position), calc(100% - (var(--mat-slider-stop-indicator-size) / 2)));
+  inset-inline-start: var(--mat-range-slider-stop-position);
   z-index: 1;
   display: block;
   inline-size: var(--mat-slider-stop-indicator-size);
@@ -678,7 +680,7 @@ function setHandleElement(index, element) {
 }
 
 .mat-range-slider--vertical .mat-range-slider__stop {
-  inset-block-end: clamp(calc(var(--mat-slider-stop-indicator-size) / 2), var(--mat-range-slider-stop-position), calc(100% - (var(--mat-slider-stop-indicator-size) / 2)));
+  inset-block-end: var(--mat-range-slider-stop-position);
   inset-inline-start: 50%;
   transform: translate(-50%, 50%);
 }

@@ -7,6 +7,7 @@ export const SLIDER_SIZES = Object.freeze([
   'extra-large',
 ]);
 export const SLIDER_VARIANTS = Object.freeze(['standard', 'centered']);
+export const SLIDER_TRACK_END_INSET = 6;
 
 const MAX_DECIMAL_PRECISION = 12;
 
@@ -176,6 +177,35 @@ export function formatSliderNumber(value) {
 }
 
 /**
+ * 将数值百分比映射到轨道两端各保留固定空间的可视位置。
+ *
+ * @param {number} percentage
+ * @returns {string}
+ */
+export function getSliderVisualPosition(percentage) {
+  const normalizedPercentage = Math.min(Math.max(percentage, 0), 100);
+  const formattedPercentage = formatSliderNumber(normalizedPercentage);
+  const offset = roundNumber(
+    SLIDER_TRACK_END_INSET * (1 - ((normalizedPercentage * 2) / 100)),
+    3,
+  );
+
+  if (normalizedPercentage === 0) {
+    return `${SLIDER_TRACK_END_INSET}px`;
+  }
+
+  if (normalizedPercentage === 100) {
+    return `calc(100% - ${SLIDER_TRACK_END_INSET}px)`;
+  }
+
+  if (offset === 0) {
+    return `${formattedPercentage}%`;
+  }
+
+  return `calc(${formattedPercentage}% ${offset > 0 ? '+' : '-'} ${formatSliderNumber(Math.abs(offset))}px)`;
+}
+
+/**
  * @param {{min: number, max: number}} bounds
  * @param {number} step
  * @returns {number[]}
@@ -188,10 +218,16 @@ export function getSliderStopValues(bounds, step) {
     getDecimalPrecision(step),
   );
 
-  return Array.from(
+  const values = Array.from(
     { length: count + 1 },
     (_, index) => roundNumber(bounds.min + (index * step), precision),
   );
+
+  if (values.at(-1) !== bounds.max) {
+    values.push(bounds.max);
+  }
+
+  return values;
 }
 
 /**
@@ -222,7 +258,10 @@ export function getSliderValueFromPointer(
   const offset = orientation === 'vertical'
     ? rect.bottom - coordinate
     : coordinate - rect.left;
-  const ratio = Math.min(Math.max(offset / length, 0), 1);
+  const usableLength = length - (SLIDER_TRACK_END_INSET * 2);
+  const ratio = usableLength > 0
+    ? Math.min(Math.max((offset - SLIDER_TRACK_END_INSET) / usableLength, 0), 1)
+    : Math.min(Math.max(offset / length, 0), 1);
 
   return normalizeSliderValue(
     bounds.min + ((bounds.max - bounds.min) * ratio),
