@@ -121,6 +121,7 @@ import { MatMenuItem } from 'mdu-ui/components/mat-menu-item';
 import { MatDialog } from 'mdu-ui/components/mat-dialog';
 import { MatSpacer } from 'mdu-ui/components/mat-spacer';
 import { MatLoader } from 'mdu-ui/components/mat-loader';
+import { MatTooltip } from 'mdu-ui/components/mat-tooltip';
 import {
   alert,
   confirm,
@@ -129,7 +130,7 @@ import {
 } from 'mdu-ui/functions';
 ```
 
-复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatIcon>`、`<MatTextField>`、`<MatMenu>`、`<MatSpacer>` 或 `<MatLoader>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
+复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatIcon>`、`<MatTextField>`、`<MatMenu>`、`<MatSpacer>`、`<MatLoader>` 或 `<MatTooltip>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
 
 ## 如何选择
 
@@ -1977,7 +1978,7 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
 - 主题不会自动持久化，也不会自动写入应用状态；
 - 当前公共按钮组件集中在 Button、Button group 与 Split button；Button 同时提供普通模式和图标模式。
 
-按钮体系不提供 loading、链接模式、涟漪、密度参数或完整的原生表单方法代理。`<mat-split-btn>` 不渲染菜单；应用负责菜单内容、焦点移动、Escape、外部点击和焦点返回。Button 图标模式目前使用原生 `title` 提示，后续有独立 Tooltip 组件时再提供一致的可见提示。不要依赖未记录的内部 class 或 DOM 结构补充这些能力。
+按钮体系不提供 loading、链接模式、涟漪、密度参数或完整的原生表单方法代理。`<mat-split-btn>` 不渲染菜单；应用负责菜单内容、焦点移动、Escape、外部点击和焦点返回。Button 图标模式默认使用原生 `title` 提示；需要符合 Material 3 的可见说明时，可组合 `<mat-tooltip>`。不要依赖未记录的内部 class 或 DOM 结构补充这些能力。
 
 # Split button 拆分按钮
 
@@ -6382,6 +6383,327 @@ import ListItemTypeExample from '../examples/list/ListItemTypeExample.vue';
 import ListItemValueExample from '../examples/list/ListItemValueExample.vue';
 import ListSelectedExample from '../examples/list/ListSelectedExample.vue';
 import ListVariantExample from '../examples/list/ListVariantExample.vue';
+</script>
+
+# Tooltip 文字提示
+
+## 组件简介
+
+`<mat-tooltip>` 的组件导出名是 `MatTooltip`。它实现 Material 3 Plain tooltip：用于补充展示元素的简短、非交互说明。组件以固定定位 Teleport 到指定容器，默认显示在展示元素上方；不包含 Rich tooltip、操作按钮、箭头或触屏长按。
+
+## 示例
+
+### content
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-btn id="tooltip-content-target" variant="outlined">
+    保存
+  </mat-btn>
+
+  <mat-tooltip
+    content="保存当前修改"
+    target="#tooltip-content-target"
+  />
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Tooltip content 预览">
+    <TooltipContentExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 默认 Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-btn id="tooltip-default-slot-target" variant="outlined">
+    复制链接
+  </mat-btn>
+
+  <mat-tooltip target="#tooltip-default-slot-target">
+    复制当前页面链接
+  </mat-tooltip>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Tooltip 默认 Slot 预览">
+    <TooltipDefaultSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### activator Slot
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-tooltip content="使用 activator Slot 指定展示元素">
+    <template #activator>
+      <mat-btn variant="outlined">
+        使用 Slot
+      </mat-btn>
+    </template>
+  </mat-tooltip>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Tooltip activator Slot 预览">
+    <TooltipActivatorSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### target
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-btn id="tooltip-target-example" variant="outlined">
+    指定 target
+  </mat-btn>
+
+  <mat-tooltip
+    content="target 可以是 CSS 选择器或 HTMLElement"
+    target="#tooltip-target-example"
+  />
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Tooltip target 预览">
+    <TooltipTargetExample />
+  </DocsPreview>
+</ClientOnly>
+
+### attach
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const attach = ref(null);
+</script>
+
+<template>
+  <mat-btn id="tooltip-attach-example" variant="outlined">
+    自定义挂载目标
+  </mat-btn>
+
+  <section ref="attach" class="tooltip-attach-target">
+    Tooltip 的 DOM 会 Teleport 到这个区域。
+  </section>
+
+  <mat-tooltip
+    :attach="attach"
+    content="仍使用固定视口定位"
+    target="#tooltip-attach-example"
+  />
+</template>
+
+<style scoped>
+.tooltip-attach-target {
+  margin-block-start: 16px;
+  padding: 16px;
+  color: var(--mat-sys-color-on-surface-variant);
+  border: 1px dashed var(--mat-sys-color-outline);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Tooltip attach 预览">
+    <TooltipAttachExample />
+  </DocsPreview>
+</ClientOnly>
+
+### location
+
+::: details 查看示例代码
+```vue
+<script setup>
+const locations = [
+  { name: 'top', target: '#tooltip-location-top' },
+  { name: 'top-start', target: '#tooltip-location-top-start' },
+  { name: 'top-end', target: '#tooltip-location-top-end' },
+  { name: 'right', target: '#tooltip-location-right' },
+  { name: 'right-start', target: '#tooltip-location-right-start' },
+  { name: 'right-end', target: '#tooltip-location-right-end' },
+  { name: 'bottom', target: '#tooltip-location-bottom' },
+  { name: 'bottom-start', target: '#tooltip-location-bottom-start' },
+  { name: 'bottom-end', target: '#tooltip-location-bottom-end' },
+  { name: 'left', target: '#tooltip-location-left' },
+  { name: 'left-start', target: '#tooltip-location-left-start' },
+  { name: 'left-end', target: '#tooltip-location-left-end' },
+];
+</script>
+
+<template>
+  <div class="tooltip-location-grid">
+    <div
+      v-for="item in locations"
+      :key="item.name"
+      class="tooltip-location-item"
+    >
+      <mat-btn
+        :id="item.target.slice(1)"
+        variant="outlined"
+      >
+        {{ item.name }}
+      </mat-btn>
+      <mat-tooltip
+        content="查看提示位置"
+        :location="item.name"
+        :target="item.target"
+      />
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.tooltip-location-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.tooltip-location-item {
+  display: flex;
+  justify-content: center;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Tooltip location 预览">
+    <TooltipLocationExample />
+  </DocsPreview>
+</ClientOnly>
+
+### open-delay
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-tooltip
+    content="指针进入 600ms 后显示"
+    open-delay="600"
+  >
+    <template #activator>
+      <mat-btn variant="outlined">
+        悬停后稍候
+      </mat-btn>
+    </template>
+  </mat-tooltip>
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Tooltip open-delay 预览">
+    <TooltipOpenDelayExample />
+  </DocsPreview>
+</ClientOnly>
+
+### v-model
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+
+<template>
+  <mat-btn
+    id="tooltip-model-value-target"
+    :aria-pressed="open"
+    variant="outlined"
+    @click="open = !open"
+  >
+    {{ open ? '关闭提示' : '打开提示' }}
+  </mat-btn>
+
+  <mat-tooltip
+    v-model="open"
+    content="此时由 v-model 完全控制展示状态"
+    target="#tooltip-model-value-target"
+  />
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Tooltip v-model 预览">
+    <TooltipModelValueExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| modelValue | boolean | false | 显式传入时启用受控模式，可使用 v-model；省略时由 hover 和 focus 自动控制 |
+| content | string | 未设置 | 简短纯文本内容；存在时优先于默认 Slot |
+| target | string 或 HTMLElement | 未设置 | 展示元素；字符串按当前 document 的 CSS 选择器解析 |
+| attach | string 或 HTMLElement | body | Tooltip 的 Teleport 目标；字符串按当前 document 的 CSS 选择器解析 |
+| location | top、right、bottom、left 及其 -start、-end 形式 | top | Tooltip 相对展示元素的首选位置 |
+| openDelay | number | 0 | 自动模式的打开延迟，单位为毫秒；可直接写为 open-delay="600"，动态数值使用 :open-delay；负数、空字符串或非有限数字按 0 处理，并触发 Vue prop 校验警告 |
+
+activator Slot 存在时优先于 target，且必须只渲染一个属于当前 document 的 HTMLElement 根节点。两者都无法解析时，组件给出警告且不显示。attach 无法解析时同样给出警告并抑制显示。
+
+未消费的 class、style、id、aria-* 和原生事件监听器传递给 Teleport 后的 tooltip 根节点；根节点的 role 固定为 tooltip。组件没有 color 属性、Rich tooltip 内容、公共方法或操作按钮。
+
+## 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| update:modelValue | boolean | 受控模式下 Escape、无效挂载目标或被新 Tooltip 替代而请求关闭时发出 false |
+
+自动模式不会发出自定义事件。受控模式忽略 hover、focus 和 open-delay，展示状态由使用者传入的 modelValue 决定。
+
+## Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 简短、非交互的 Plain tooltip 内容；content prop 存在时忽略 |
+| activator | 唯一的 HTMLElement 根节点，作为 tooltip 的展示元素；存在时优先于 target |
+
+## 展示行为与无障碍
+
+自动模式在鼠标悬停或键盘焦点进入展示元素时打开，默认没有延迟；指针和焦点都离开后等待 1.5 秒关闭。Escape 会立即关闭当前提示。模块级协调器保证同一时间只显示一个 Tooltip；打开新实例会关闭旧实例，并向受控旧实例发出关闭请求。
+
+Tooltip 默认位于上方，展示元素边界与提示之间保持 4px 间距。首选方向空间不足时会翻转到对侧并保留 start、end 对齐；最终坐标始终夹紧在距离视口边缘至少 8px 的区域内。窗口缩放、任意滚动容器滚动以及展示元素或 Tooltip 尺寸变化都会重新计算位置。
+
+显示期间组件把 tooltip 的 id 合并到展示元素的 aria-describedby；关闭、切换展示元素或卸载时恢复展示元素原有属性值。内容应帮助理解已可见的界面，不应重复标签、仅承载关键操作说明，或放置链接、按钮等可交互内容。
+
+## 参考来源
+
+外观、尺寸和颜色角色依据 Material 3 [Tooltips overview](https://m3.material.io/components/tooltips/overview) 与 [Tooltips specs](https://m3.material.io/components/tooltips/specs)。展示时机、单实例行为和内容限制依据 [Tooltips guidelines](https://m3.material.io/components/tooltips/guidelines)。
+
+<script setup>
+import TooltipActivatorSlotExample from '../examples/tooltip/TooltipActivatorSlotExample.vue';
+import TooltipAttachExample from '../examples/tooltip/TooltipAttachExample.vue';
+import TooltipContentExample from '../examples/tooltip/TooltipContentExample.vue';
+import TooltipDefaultSlotExample from '../examples/tooltip/TooltipDefaultSlotExample.vue';
+import TooltipLocationExample from '../examples/tooltip/TooltipLocationExample.vue';
+import TooltipModelValueExample from '../examples/tooltip/TooltipModelValueExample.vue';
+import TooltipOpenDelayExample from '../examples/tooltip/TooltipOpenDelayExample.vue';
+import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
 </script>
 
 # Divider 分隔线

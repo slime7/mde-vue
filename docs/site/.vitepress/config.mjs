@@ -83,6 +83,7 @@ export default defineConfig({
           { text: 'Loader 加载器', link: '/components/loader' },
           { text: 'Menu 菜单', link: '/components/menu' },
           { text: 'Dialog 对话框', link: '/components/dialog' },
+          { text: 'Tooltip 文字提示', link: '/components/tooltip' },
           { text: 'Card 卡片', link: '/components/card' },
           { text: 'List 列表', link: '/components/list' },
           { text: 'Divider 分隔线', link: '/components/divider' },

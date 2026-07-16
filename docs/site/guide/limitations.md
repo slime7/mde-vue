@@ -16,4 +16,4 @@ order: 60
 - 主题不会自动持久化，也不会自动写入应用状态；
 - 当前公共按钮组件集中在 Button、Button group 与 Split button；Button 同时提供普通模式和图标模式。
 
-按钮体系不提供 loading、链接模式、涟漪、密度参数或完整的原生表单方法代理。`<mat-split-btn>` 不渲染菜单；应用负责菜单内容、焦点移动、Escape、外部点击和焦点返回。Button 图标模式目前使用原生 `title` 提示，后续有独立 Tooltip 组件时再提供一致的可见提示。不要依赖未记录的内部 class 或 DOM 结构补充这些能力。
+按钮体系不提供 loading、链接模式、涟漪、密度参数或完整的原生表单方法代理。`<mat-split-btn>` 不渲染菜单；应用负责菜单内容、焦点移动、Escape、外部点击和焦点返回。Button 图标模式默认使用原生 `title` 提示；需要符合 Material 3 的可见说明时，可组合 `<mat-tooltip>`。不要依赖未记录的内部 class 或 DOM 结构补充这些能力。

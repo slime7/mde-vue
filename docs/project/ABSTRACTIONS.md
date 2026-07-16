@@ -142,6 +142,12 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 `dialog()`、`alert()`、`confirm()` 和 `prompt()` 统一从 `mdu-ui/functions` 导入，并且只在客户端调用。正常取消分别返回 `undefined`、`undefined`、`false` 和 `null`，不拒绝 Promise；参数、挂载目标或运行环境错误使用 rejected Promise。Promise 只在退出动画、原生关闭和一次性宿主清理全部完成后结算。多个命令式实例可以并行存在；最后安装的 `createMatUi()` 配置为后续命令式实例提供主题和组件设置。
 
+## Tooltip
+
+`<mat-tooltip>` 的 `content` prop 优先于默认 Slot，`activator` Slot 优先于 `target`；activator 必须只产生一个当前 document 中的 HTMLElement 根节点。没有显式传入 `modelValue` 时，组件只在桌面 hover 或键盘 focus 下自动展示，并在两个状态都离开 1.5 秒后关闭；显式传入时改为完全受控，忽略自动触发和 `openDelay`。
+
+Tooltip 只实现 Material 3 Plain tooltip，不提供 color、Rich 内容、操作、箭头或触屏长按。模块级协调器保证同一时间只有一个实例可见；展示期间将唯一 tooltip id 无损合并到展示元素的 `aria-describedby`，关闭、换锚点或卸载时恢复原有属性。定位始终使用固定视口坐标，按首选方向翻转并在 8px 视口安全边距内夹紧。
+
 ## 文档权威关系
 
 `docs/site/` 中人工编辑的 Markdown 使用页面是组件说明的权威来源。`llms.txt` 只提供适合 AI 发现内容的索引，`llms-full.txt` 是这些页面的合并文本；两者均为可重复生成的派生文件，不接受手工修补。

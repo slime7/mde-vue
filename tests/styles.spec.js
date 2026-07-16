@@ -7,6 +7,10 @@ const styles = readFileSync(resolve('src/styles/index.css'), 'utf8');
 const tailwindStyles = readFileSync(resolve('src/styles/tailwind.css'), 'utf8');
 const listComponent = readFileSync(resolve('src/components/mat-list/MatList.vue'), 'utf8');
 const listItemComponent = readFileSync(resolve('src/components/mat-list/MatListItem.vue'), 'utf8');
+const tooltipComponent = readFileSync(
+  resolve('src/components/mat-tooltip/MatTooltip.vue'),
+  'utf8',
+);
 const typeStyles = [
   'display-large', 'display-medium', 'display-small',
   'headline-large', 'headline-medium', 'headline-small',
@@ -126,5 +130,21 @@ describe('List 形状', () => {
     expect(listItemComponent).toContain('.mat-list-item:has(:focus-visible)');
     expect(listItemComponent).toContain('z-index: 2;');
     expect(listItemComponent).toContain('.mat-list-item--multi-action {\n  overflow: visible;');
+  });
+});
+
+describe('Tooltip 样式', () => {
+  it('使用 Material 3 Plain tooltip 的内部尺寸和系统令牌', () => {
+    expect(styles).toContain('--mat-tooltip-container-height: 24px;');
+    expect(styles).toContain('--mat-tooltip-container-padding-inline: 8px;');
+    expect(styles).toContain('--mat-tooltip-container-shape: var(--mat-sys-shape-corner-extra-small);');
+    expect(styles).toContain('--mat-tooltip-container-elevation: var(--mat-sys-elevation-level0);');
+    expect(styles).toContain('--mat-tooltip-viewport-margin: 8px;');
+    expect(tooltipComponent).toContain('min-block-size: var(--mat-tooltip-container-height);');
+    expect(tooltipComponent).toContain('padding-inline: var(--mat-tooltip-container-padding-inline);');
+    expect(tooltipComponent).toContain('border-radius: var(--mat-tooltip-container-shape);');
+    expect(tooltipComponent).toContain('box-shadow: var(--mat-tooltip-container-elevation);');
+    expect(tooltipComponent).toContain('pointer-events: none;');
+    expect(tooltipComponent).toContain('@media (prefers-reduced-motion: reduce)');
   });
 });

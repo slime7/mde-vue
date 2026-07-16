@@ -21,4 +21,5 @@ export { default as MatMenuItem } from './components/mat-menu/MatMenuItem.vue';
 export { default as MatDialog } from './components/mat-dialog/MatDialog.vue';
 export { default as MatSpacer } from './components/mat-spacer/MatSpacer.vue';
 export { default as MatLoader } from './components/mat-loader/MatLoader.vue';
+export { default as MatTooltip } from './components/mat-tooltip/MatTooltip.vue';
 export { createMatUi, useMatTheme } from './plugin';

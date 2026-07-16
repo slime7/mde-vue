@@ -22,6 +22,7 @@ import MatMenuItem, { MatMenuItem as NamedMatMenuItem } from 'mdu-ui/components/
 import MatDialog, { MatDialog as NamedMatDialog } from 'mdu-ui/components/mat-dialog';
 import MatSpacer, { MatSpacer as NamedMatSpacer } from 'mdu-ui/components/mat-spacer';
 import MatLoader, { MatLoader as NamedMatLoader } from 'mdu-ui/components/mat-loader';
+import MatTooltip, { MatTooltip as NamedMatTooltip } from 'mdu-ui/components/mat-tooltip';
 /* eslint-enable import-x/no-named-as-default */
 import {
   alert, confirm, dialog, prompt,
@@ -48,6 +49,7 @@ import {
   MatSwitch as RootMatSwitch,
   MatTextarea as RootMatTextarea,
   MatTextField as RootMatTextField,
+  MatTooltip as RootMatTooltip,
 } from '../src';
 
 describe('公共组件导出', () => {
@@ -72,6 +74,7 @@ describe('公共组件导出', () => {
     ['MatDialog', RootMatDialog, NamedMatDialog, MatDialog],
     ['MatSpacer', RootMatSpacer, NamedMatSpacer, MatSpacer],
     ['MatLoader', RootMatLoader, NamedMatLoader, MatLoader],
+    ['MatTooltip', RootMatTooltip, NamedMatTooltip, MatTooltip],
   ])('%s 的根入口、具名子入口和默认子入口指向同一组件', (
     name,
     rootExport,
@@ -103,6 +106,7 @@ describe('公共组件导出', () => {
     expect(app.component('mat-dialog')).toBe(RootMatDialog);
     expect(app.component('mat-spacer')).toBe(RootMatSpacer);
     expect(app.component('mat-loader')).toBe(RootMatLoader);
+    expect(app.component('mat-tooltip')).toBe(RootMatTooltip);
     expect(app.component('mat-icon')).toBe(RootMatIcon);
     expect(app.component('mat-icon-btn')).toBeUndefined();
 
