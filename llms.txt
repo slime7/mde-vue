@@ -26,5 +26,5 @@
 - [List 列表](docs/site/components/list.md): mat-list 与 mat-list-item 的 Material 3 Expressive 外观、内容结构、操作和受控选择。
 - [Tooltip 文字提示](docs/site/components/tooltip.md): mat-tooltip 的 Material 3 Plain tooltip、展示元素、固定定位、延迟和无障碍说明。
 - [Divider 分隔线](docs/site/components/divider.md): mat-divider 的 Material 3 全宽、起始缩进和两侧缩进样式。
-- [Snackbar 消息提示](docs/site/components/snackbar.md): mat-snackbar 的 Material 3 底部消息提示、全局 FIFO 队列、关闭选项和 Promise 函数。
+- [Snackbar 消息提示](docs/site/components/snackbar.md): mat-snackbar 的 Material 3 底部消息提示、文字 action、全局 FIFO 队列和 Promise 函数。
 - [Spacer 弹性占位](docs/site/components/spacer.md): mat-spacer 在 flex 布局中占据主轴剩余空间。

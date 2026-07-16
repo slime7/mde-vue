@@ -1,5 +1,5 @@
 <script setup>
-import { provide, ref } from 'vue';
+import { computed, provide, ref } from 'vue';
 import { getImperativeComponentOptions, getImperativeTheme } from '../../imperative-context';
 import MAT_UI_KEY from '../../mat-ui-context';
 import MAT_THEME_KEY from '../../theme-context';
@@ -28,16 +28,28 @@ if (theme) {
 }
 
 const open = ref(true);
+const snackbarOptions = computed(() => {
+  const options = { ...props.options };
+
+  delete options.onAction;
+
+  return options;
+});
 
 function finish() {
   props.onClosed();
+}
+
+function handleAction() {
+  props.options.onAction?.();
 }
 </script>
 
 <template>
   <MatSnackbar
     v-model="open"
-    v-bind="options"
+    v-bind="snackbarOptions"
+    @action="handleAction"
     @closed="finish"
   />
 </template>

@@ -33,6 +33,13 @@ const props = defineProps({
     type: String,
     default: undefined,
   },
+  actionText: {
+    type: String,
+    default: undefined,
+    validator(value) {
+      return typeof value === 'string' && value.trim().length > 0;
+    },
+  },
   closable: {
     type: Boolean,
     default: false,
@@ -60,6 +67,7 @@ const props = defineProps({
   },
 });
 const emit = defineEmits({
+  action: () => true,
   'update:modelValue': (value) => typeof value === 'boolean',
   closed: () => true,
 });
@@ -72,7 +80,11 @@ const suppressed = ref(false);
 const hasContent = computed(() => Boolean(slots.default) || (
   typeof props.text === 'string' && props.text.trim().length > 0
 ));
+const hasAction = computed(() => Boolean(slots.action) || (
+  typeof props.actionText === 'string' && props.actionText.trim().length > 0
+));
 const hasClose = computed(() => Boolean(slots.close) || props.closable);
+const hasTrailing = computed(() => hasAction.value || hasClose.value);
 const resolvedCloseLabel = computed(() => (
   typeof props.closeLabel === 'string' && props.closeLabel.trim().length > 0
     ? props.closeLabel
@@ -195,6 +207,15 @@ function requestModelClose() {
 function requestClose() {
   requestModelClose();
   dismissSnackbar();
+}
+
+function requestAction() {
+  if (!rendered.value || phase.value === 'closing') {
+    return;
+  }
+
+  requestClose();
+  emit('action');
 }
 
 async function openSnackbar() {
@@ -320,7 +341,7 @@ watch(() => props.duration, () => {
       :class="[
         `mat-snackbar--${phase}`,
         `mat-snackbar--${position}`,
-        { 'mat-snackbar--with-close': hasClose },
+        { 'mat-snackbar--with-trailing': hasTrailing },
       ]"
       aria-atomic="true"
       aria-live="polite"
@@ -333,24 +354,39 @@ watch(() => props.duration, () => {
         </template>
       </div>
 
-      <div v-if="hasClose" class="mat-snackbar__close">
-        <slot v-if="$slots.close" name="close" :close="requestClose" />
+      <div v-if="hasTrailing" class="mat-snackbar__controls">
+        <div v-if="hasAction" class="mat-snackbar__action">
+          <slot v-if="$slots.action" name="action" :action="requestAction" />
 
-        <MatActionBase
-          v-else
-          class="mat-snackbar__default-close"
-          :aria-label="resolvedCloseLabel"
-          :use-cursor="matUi.useCursor"
-          @click="requestClose"
-        >
-          <MatIcon
-            class="mat-snackbar__close-icon"
-            icon="close"
-            size="24px"
-            :optical-size="24"
-            aria-hidden="true"
-          />
-        </MatActionBase>
+          <MatActionBase
+            v-else
+            class="mat-snackbar__default-action"
+            :use-cursor="matUi.useCursor"
+            @click="requestAction"
+          >
+            {{ actionText }}
+          </MatActionBase>
+        </div>
+
+        <div v-if="hasClose" class="mat-snackbar__close">
+          <slot v-if="$slots.close" name="close" :close="requestClose" />
+
+          <MatActionBase
+            v-else
+            class="mat-snackbar__default-close"
+            :aria-label="resolvedCloseLabel"
+            :use-cursor="matUi.useCursor"
+            @click="requestClose"
+          >
+            <MatIcon
+              class="mat-snackbar__close-icon"
+              icon="close"
+              size="24px"
+              :optical-size="24"
+              aria-hidden="true"
+            />
+          </MatActionBase>
+        </div>
       </div>
     </section>
   </Teleport>
@@ -361,6 +397,7 @@ watch(() => props.duration, () => {
   --mat-snackbar-leading-space: 16px;
   --mat-snackbar-content-action-space: 24px;
   --mat-snackbar-action-trailing-space: 8px;
+  --mat-snackbar-action-target-size: 48px;
   --mat-snackbar-close-target-size: 48px;
   --mat-snackbar-close-icon-size: 24px;
   position: fixed;
@@ -406,12 +443,8 @@ watch(() => props.duration, () => {
   animation: mat-snackbar-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) both;
 }
 
-.mat-snackbar--with-close {
-  padding-inline-end: calc(
-    var(--mat-snackbar-close-target-size)
-    + var(--mat-snackbar-content-action-space)
-    + var(--mat-snackbar-action-trailing-space)
-  );
+.mat-snackbar--with-trailing {
+  padding-inline-end: var(--mat-snackbar-action-trailing-space);
 }
 
 .mat-snackbar__text {
@@ -420,16 +453,43 @@ watch(() => props.duration, () => {
   overflow-wrap: anywhere;
 }
 
-.mat-snackbar__close {
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-end: var(--mat-snackbar-action-trailing-space);
+.mat-snackbar__controls {
   display: flex;
+  flex: 0 0 auto;
+  align-self: flex-end;
+  align-items: center;
+  min-block-size: var(--mat-snackbar-action-target-size);
+  margin-block: -12px;
+  margin-inline-start: var(--mat-snackbar-content-action-space);
+}
+
+.mat-snackbar__action,
+.mat-snackbar__close {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  min-block-size: var(--mat-snackbar-action-target-size);
+}
+
+.mat-snackbar__default-action {
+  --mat-action-state-color: var(--mat-snackbar-action-color);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  inline-size: var(--mat-snackbar-close-target-size);
-  block-size: var(--mat-snackbar-close-target-size);
-  translate: 0 -50%;
+  box-sizing: border-box;
+  min-inline-size: var(--mat-snackbar-action-target-size);
+  min-block-size: var(--mat-snackbar-action-target-size);
+  padding-inline: 12px;
+  color: var(--mat-snackbar-action-color);
+  font-family: var(--mat-sys-typescale-label-large-font);
+  font-size: var(--mat-sys-typescale-label-large-size);
+  font-weight: var(--mat-sys-typescale-label-large-weight);
+  letter-spacing: var(--mat-sys-typescale-label-large-tracking);
+  line-height: var(--mat-sys-typescale-label-large-line-height);
+  white-space: nowrap;
+  background: transparent;
+  border: 0;
+  border-radius: var(--mat-sys-shape-corner-full);
 }
 
 .mat-snackbar__default-close {

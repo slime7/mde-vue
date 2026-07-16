@@ -10,6 +10,8 @@ const exampleNames = [
   'SnackbarClosableExample',
   'SnackbarCloseLabelExample',
   'SnackbarCloseSlotExample',
+  'SnackbarActionTextExample',
+  'SnackbarActionSlotExample',
   'SnackbarPositionExample',
   'SnackbarDurationExample',
   'SnackbarFunctionExample',
@@ -27,6 +29,9 @@ describe('Snackbar 文档', () => {
 
     expect(page).toContain('llms: true');
     expect(page).toContain('`<mat-snackbar>` 的组件导出名是 `MatSnackbar`');
+    expect(page).toContain('`actionText`');
+    expect(page).toContain('`onAction`');
+    expect(page).toContain('| `action` | 无 |');
     ['## 组件简介', '## 示例', '## API', '## 事件', '## Slots'].forEach((heading) => {
       expect(page).toContain(heading);
     });

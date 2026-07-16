@@ -89,9 +89,70 @@ describe('MatSnackbar', () => {
     expect(snackbarElement()).toBeNull();
   });
 
+  it('actionText 显示默认文字操作，action Slot 优先且触发 action 事件后关闭', async () => {
+    const propertyAction = mountSnackbar({
+      props: {
+        actionText: '撤销',
+        closable: true,
+        duration: 0,
+        modelValue: true,
+        text: '已归档邮件',
+      },
+    });
+
+    await settleRender();
+
+    const propertyElement = snackbarElement();
+    const defaultAction = propertyElement.querySelector('.mat-snackbar__default-action');
+
+    expect(defaultAction.textContent).toBe('撤销');
+    expect(propertyElement.querySelector('.mat-snackbar__default-close')).not.toBeNull();
+
+    defaultAction.click();
+    await settleRender();
+
+    expect(propertyAction.emitted('action')).toHaveLength(1);
+    expect(propertyAction.emitted('update:modelValue')).toEqual([[false]]);
+
+    await finishExit();
+
+    const slotAction = mountSnackbar({
+      props: {
+        actionText: '属性操作',
+        duration: 0,
+        modelValue: true,
+        text: '自定义操作',
+      },
+      slots: {
+        action: ({ action }) => h('button', {
+          class: 'slot-action',
+          type: 'button',
+          onClick: action,
+        }, 'Slot 操作'),
+      },
+    });
+
+    await settleRender();
+
+    const slotElement = snackbarElement();
+
+    expect(slotElement.querySelector('.slot-action')).not.toBeNull();
+    expect(slotElement.querySelector('.slot-action').textContent).toBe('Slot 操作');
+    expect(slotElement.querySelector('.mat-snackbar__default-action')).toBeNull();
+
+    slotElement.querySelector('.slot-action').click();
+    await settleRender();
+
+    expect(slotAction.emitted('action')).toHaveLength(1);
+    expect(slotAction.emitted('update:modelValue')).toEqual([[false]]);
+
+    await finishExit();
+  });
+
   it('默认显示四秒，duration=0 时保持显示', async () => {
     const timed = mountSnackbar({
       props: {
+        actionText: '撤销',
         modelValue: true,
         text: '四秒后关闭',
       },
@@ -99,6 +160,7 @@ describe('MatSnackbar', () => {
 
     await settleRender();
     expect(snackbarElement().classList).toContain('mat-snackbar--center');
+    expect(snackbarElement().querySelector('.mat-snackbar__default-action')).not.toBeNull();
     expect(snackbarElement().querySelector('.mat-snackbar__default-close')).toBeNull();
     await finishEnter();
     await vi.advanceTimersByTimeAsync(3999);
@@ -131,7 +193,7 @@ describe('MatSnackbar', () => {
     expect(persistent.emitted('update:modelValue')).toBeUndefined();
   });
 
-  it('提供不抢占焦点的关闭按钮、位置类和状态播报语义', async () => {
+  it('提供不抢占焦点的 action、关闭按钮、位置类和状态播报语义', async () => {
     const trigger = document.createElement('button');
 
     trigger.type = 'button';
@@ -140,6 +202,7 @@ describe('MatSnackbar', () => {
 
     const wrapper = mountSnackbar({
       props: {
+        actionText: '撤销',
         closable: true,
         modelValue: true,
         position: 'left',
@@ -150,6 +213,7 @@ describe('MatSnackbar', () => {
     await settleRender();
 
     const element = snackbarElement();
+    const action = element.querySelector('.mat-snackbar__default-action');
     const closeButton = element.querySelector('.mat-snackbar__default-close');
 
     expect(element.getAttribute('role')).toBe('status');
@@ -157,6 +221,7 @@ describe('MatSnackbar', () => {
     expect(element.getAttribute('aria-atomic')).toBe('true');
     expect(element.classList).toContain('mat-snackbar--left');
     expect(document.activeElement).toBe(trigger);
+    expect(action.textContent).toBe('撤销');
     expect(closeButton.getAttribute('aria-label')).toBe('关闭');
 
     await wrapper.setProps({ closeLabel: '关闭提示' });
@@ -251,8 +316,20 @@ describe('MatSnackbar', () => {
     expect(componentSource).toContain('--mat-snackbar-leading-space: 16px');
     expect(componentSource).toContain('--mat-snackbar-content-action-space: 24px');
     expect(componentSource).toContain('--mat-snackbar-action-trailing-space: 8px');
+    expect(componentSource).toContain('--mat-snackbar-action-target-size: 48px');
     expect(componentSource).toContain('--mat-snackbar-close-target-size: 48px');
     expect(componentSource).toContain('--mat-snackbar-close-icon-size: 24px');
+    expect(componentSource).toContain('class="mat-snackbar__default-action"');
+    expect(componentSource).toContain(
+      'min-inline-size: var(--mat-snackbar-action-target-size);',
+    );
+    expect(componentSource).toContain('color: var(--mat-snackbar-action-color);');
+    expect(componentSource).toContain(
+      'margin-inline-start: var(--mat-snackbar-content-action-space);',
+    );
+    expect(componentSource).toContain(
+      'padding-inline-end: var(--mat-snackbar-action-trailing-space);',
+    );
     expect(componentSource).toContain('@media (prefers-reduced-motion: reduce)');
   });
 });

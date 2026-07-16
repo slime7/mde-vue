@@ -6829,7 +6829,7 @@ import DividerListExample from '../examples/divider/DividerListExample.vue';
 
 `<mat-snackbar>` 的组件导出名是 `MatSnackbar`。它用于展示短暂、非阻塞的操作结果或状态提示，并固定在视口底部。模板组件和命令式 `snackbar()` 会共同进入全局 FIFO 队列，任意时刻只显示一条通知；`toast` 是同一个函数的别名。
 
-Snackbar 适合“保存完成”“已复制链接”这类无需立即作答的反馈。它不提供通用操作按钮、图标、颜色或挂载目标；可选关闭按钮是唯一内置操作。需要用户决定、输入或确认时应使用 Dialog。
+Snackbar 适合“保存完成”“已复制链接”这类无需立即作答的反馈。可选文字 action 适合与这条反馈直接相关的简短操作，例如“撤销”；一次只提供一个 action。它不提供多操作菜单、图标、颜色或挂载目标。需要用户决定、输入或确认时应使用 Dialog。
 
 ## 示例
 
@@ -7029,6 +7029,107 @@ const open = ref(false);
   </DocsPreview>
 </ClientOnly>
 
+### `action-text`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+const result = ref('尚未执行操作');
+
+function undo() {
+  result.value = '已撤销归档';
+}
+</script>
+
+<template>
+  <mat-btn @click="open = true">
+    显示带 action 的通知
+  </mat-btn>
+
+  <span>{{ result }}</span>
+
+  <mat-snackbar
+    v-model="open"
+    action-text="撤销"
+    :duration="0"
+    text="邮件已归档。"
+    @action="undo"
+  />
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Snackbar action-text 预览">
+    <SnackbarActionTextExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `action` Slot
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+const result = ref('尚未执行操作');
+
+/**
+ * @param {() => void} action
+ */
+function undo(action) {
+  result.value = '已撤销删除';
+  action();
+}
+</script>
+
+<template>
+  <mat-btn @click="open = true">
+    自定义 action Slot
+  </mat-btn>
+
+  <span>{{ result }}</span>
+
+  <mat-snackbar
+    v-model="open"
+    action-text="属性操作会被忽略"
+    :duration="0"
+    text="项目已删除。"
+  >
+    <template #action="{ action }">
+      <button class="slot-action" type="button" @click="undo(action)">
+        恢复项目
+      </button>
+    </template>
+  </mat-snackbar>
+</template>
+
+<style scoped>
+.slot-action {
+  box-sizing: border-box;
+  min-inline-size: 48px;
+  min-block-size: 48px;
+  padding-inline: 12px;
+  color: var(--mat-sys-color-inverse-primary);
+  font: var(--mat-sys-typescale-label-large-weight) var(--mat-sys-typescale-label-large-size) / var(--mat-sys-typescale-label-large-line-height) var(--mat-sys-typescale-label-large-font);
+  letter-spacing: var(--mat-sys-typescale-label-large-tracking);
+  background: transparent;
+  border: 0;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Snackbar action Slot 预览">
+    <SnackbarActionSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `position`
 
 ::: details 查看示例代码
@@ -7147,12 +7248,22 @@ import { snackbar, toast } from 'mdu-ui/functions';
 const result = ref('尚未展示');
 
 async function showSnackbar() {
+  let restored = false;
+
   await snackbar({
+    actionText: '撤销',
     closable: true,
     duration: 0,
+    onAction() {
+      restored = true;
+      result.value = '已撤销 snackbar() 的操作';
+    },
     text: 'snackbar() 已展示通知。',
   });
-  result.value = 'snackbar() 已关闭';
+
+  if (!restored) {
+    result.value = 'snackbar() 已关闭';
+  }
 }
 
 async function showToast() {
@@ -7254,6 +7365,7 @@ function showAll() {
 | --- | --- | --- | --- |
 | `modelValue` | `boolean` | `false` | 使用 `v-model` 请求展示或取消排队中的通知；收到 `false` 时，活动通知开始退出，排队通知直接取消 |
 | `text` | `string` | 未设置 | 简短文本内容；默认 Slot 存在时忽略 |
+| `actionText` | `string` | 未设置 | 可选 action 的非空文字；`action` Slot 存在时忽略 |
 | `closable` | `boolean` | `false` | 是否显示内置关闭按钮；不影响自动关闭计时 |
 | `closeLabel` | `string` | `'关闭'` | 内置关闭按钮的非空可访问名称 |
 | `position` | `'left' \| 'center' \| 'right'` | `'center'` | 宽屏时的底部对齐位置；窄屏占满安全边距内的可用宽度 |
@@ -7261,7 +7373,7 @@ function showAll() {
 
 未消费的 `class`、`style`、`id`、`aria-*` 与原生事件传给 Teleport 后的 Snackbar 根元素；根元素的 `role` 固定为 `status`，并固定使用 `aria-live="polite"`。没有 `text` 和默认 Slot 时组件不会展示，并请求把 `modelValue` 更新为 `false`。
 
-组件没有公共方法，也不提供 `color`、操作按钮、图标、`attach` 或其他挂载位置属性。
+组件没有公共方法，也不提供多个 action、图标、`color`、`attach` 或其他挂载位置属性。
 
 ### 命令式函数
 
@@ -7271,38 +7383,44 @@ function showAll() {
 import { snackbar, toast } from 'mdu-ui/functions';
 
 await snackbar({
+  actionText: '撤销',
   closable: true,
+  onAction() {
+    // 执行与这条提示直接相关的操作。
+  },
   text: '保存完成。',
 });
 ```
 
-`snackbar(options)` 只接受对象参数，`text` 为必填非空字符串；`closable`、`closeLabel`、`position`、`duration` 与组件同名属性一致。它返回 `Promise<void>`，会在退出动画完成、命令式宿主清理后结算。`toast === snackbar`，因此两者行为完全相同。
+`snackbar(options)` 只接受对象参数，`text` 为必填非空字符串；`actionText`、`closable`、`closeLabel`、`position`、`duration` 与组件同名属性一致。`onAction` 是可选函数，在用户点击 action 后调用。它返回 `Promise<void>`，会在退出动画完成、命令式宿主清理后结算。`toast === snackbar`，因此两者行为完全相同。
 
-命令式调用只接受文本和属性，不接受 HTML 字符串、VNode 或 Slots。参数不是对象、`text` 为空、`duration` 不是大于等于零的有限数字，或其他选项无效时，函数返回 rejected Promise。
+命令式调用只接受文本、action 回调和属性，不接受 HTML 字符串、VNode 或 Slots。参数不是对象、`text` 或 `actionText` 为空、`onAction` 不是函数、`duration` 不是大于等于零的有限数字，或其他选项无效时，函数返回 rejected Promise。
 
 ## 事件
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
 | `update:modelValue` | `false` | 自动计时结束、关闭按钮或 `close` Slot 调用 `close()`、内容缺失时请求关闭 |
+| `action` | 无 | 用户点击内置 action，或 `action` Slot 调用 `action()`；当前 Snackbar 随即开始关闭 |
 | `closed` | 无 | 退出动画完成、Snackbar DOM 已移除且下一条队列项可以展示时触发 |
 
-通知显示期间不会移动焦点。自动关闭和关闭操作都会开始本组件的退出动画，同时向绑定值请求 `false`；使用 `v-model` 时仍应同步更新绑定状态，避免应用状态与通知状态不一致。
+通知显示期间不会移动焦点。自动关闭、action 和关闭操作都会开始本组件的退出动画，同时向绑定值请求 `false`；使用 `v-model` 时仍应同步更新绑定状态，避免应用状态与通知状态不一致。
 
 ## Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
 | 默认 | Snackbar 的 Vue 内容；存在时优先于 `text`，内容应保持简短且不放置额外可交互控件 |
+| `action` | 可选 action 控件；存在时替代 `actionText`，并接收 `{ action }`，调用 `action()` 会派发 `action` 事件并关闭当前通知 |
 | `close` | 可选关闭控件；存在时替代内置关闭按钮，并接收 `{ close }`，调用 `close()` 请求关闭当前通知 |
 
-`close` Slot 即使 `closable=false` 也会展示。需要可访问名称和足够大的交互目标时，应由自定义控件自身负责。
+`action` Slot 即使未设置 `actionText` 也会展示，`close` Slot 即使 `closable=false` 也会展示。自定义 action 与关闭控件需要由自身提供可访问名称和至少 48px 的交互目标。
 
 ## 队列、显示与无障碍
 
 模板 `<mat-snackbar v-model="open">` 与每次 `snackbar()` / `toast()` 调用共享同一个全局 FIFO 队列。活动通知完成 200ms 退出动画后，才会激活下一条；不会堆叠显示。排队中的模板通知在 `v-model=false` 或组件卸载时取消。命令式调用没有独立取消句柄，Promise 在对应通知显示并关闭后结算。
 
-默认显示时间为 4 秒，即使 `closable=true` 也不改变；需要常驻通知时设置 `duration=0`。Snackbar 使用底部安全边距，窄屏一行最小高度为 48px、两行自然扩展为 64px；宽屏支持左、中、右对齐。表面使用 Material 3 inverse surface、inverse on surface 与 inverse primary 角色，形状为 extra-small 圆角。文本起始留白为 16px，关闭控件保留 48px 交互目标与 24px 图标。
+默认显示时间为 4 秒，即使设置 action 或 `closable=true` 也不改变；需要常驻通知时设置 `duration=0`。Snackbar 使用底部安全边距，窄屏一行最小高度为 48px、两行自然扩展为 64px；宽屏支持左、中、右对齐。表面使用 Material 3 inverse surface、inverse on surface 与 inverse primary 角色，形状为 extra-small 圆角。文本起始留白为 16px，文本与尾部操作区相隔 24px，action 末端保留 8px；内置 action 与关闭控件都保留 48px 交互目标，关闭图标为 24px。
 
 根元素使用 `role="status"` 和礼貌播报，不会抢占焦点。自动关闭的 Snackbar 不能是操作结果的唯一反馈：应在触发位置同时提供等价、可持续读取的行内反馈，例如保存状态文字或错误说明。
 
@@ -7312,6 +7430,8 @@ await snackbar({
 
 <script setup>
 import SnackbarClosableExample from '../examples/snackbar/SnackbarClosableExample.vue';
+import SnackbarActionSlotExample from '../examples/snackbar/SnackbarActionSlotExample.vue';
+import SnackbarActionTextExample from '../examples/snackbar/SnackbarActionTextExample.vue';
 import SnackbarCloseLabelExample from '../examples/snackbar/SnackbarCloseLabelExample.vue';
 import SnackbarCloseSlotExample from '../examples/snackbar/SnackbarCloseSlotExample.vue';
 import SnackbarDefaultSlotExample from '../examples/snackbar/SnackbarDefaultSlotExample.vue';

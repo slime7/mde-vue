@@ -7,10 +7,23 @@ const POSITIONS = ['left', 'center', 'right'];
 /**
  * @typedef {object} SnackbarOptions
  * @property {string} text
+ * @property {string} [actionText]
+ * @property {() => void} [onAction]
  * @property {boolean} [closable=false]
  * @property {string} [closeLabel='关闭']
  * @property {'left'|'center'|'right'} [position='center']
  * @property {number} [duration=4000]
+ */
+
+/**
+ * @typedef {object} NormalizedSnackbarOptions
+ * @property {string} text
+ * @property {string | undefined} actionText
+ * @property {(() => void) | undefined} onAction
+ * @property {boolean} closable
+ * @property {string} closeLabel
+ * @property {'left'|'center'|'right'} position
+ * @property {number} duration
  */
 
 /** @type {HTMLDivElement | null} */
@@ -33,13 +46,23 @@ function assertOptions(options) {
 
 /**
  * @param {*} options
- * @returns {Required<SnackbarOptions>}
+ * @returns {NormalizedSnackbarOptions}
  */
 function normalizeOptions(options) {
   assertOptions(options);
 
   if (typeof options.text !== 'string' || options.text.trim().length === 0) {
     throw new TypeError('snackbar text 必须是非空字符串');
+  }
+
+  if (options.actionText !== undefined && (
+    typeof options.actionText !== 'string' || options.actionText.trim().length === 0
+  )) {
+    throw new TypeError('snackbar actionText 必须是非空字符串');
+  }
+
+  if (options.onAction !== undefined && typeof options.onAction !== 'function') {
+    throw new TypeError('snackbar onAction 必须是函数');
   }
 
   if (options.closable !== undefined && typeof options.closable !== 'boolean') {
@@ -63,9 +86,11 @@ function normalizeOptions(options) {
   }
 
   return {
+    actionText: options.actionText,
     closable: options.closable ?? false,
     closeLabel: options.closeLabel ?? '关闭',
     duration: options.duration ?? 4000,
+    onAction: options.onAction,
     position: options.position ?? 'center',
     text: options.text,
   };

@@ -47,6 +47,51 @@ describe('Snackbar 命令式函数', () => {
     await expect(snackbar({ text: '错误时长', duration: -1 })).rejects.toThrow(
       'snackbar duration 必须是大于等于 0 的有限数字',
     );
+    await expect(snackbar({ text: '错误 action', actionText: '' })).rejects.toThrow(
+      'snackbar actionText 必须是非空字符串',
+    );
+    await expect(snackbar({ text: '错误回调', onAction: true })).rejects.toThrow(
+      'snackbar onAction 必须是函数',
+    );
+  });
+
+  it('函数式 action 调用回调、关闭当前通知并继续 FIFO 队列', async () => {
+    const onAction = vi.fn();
+    const first = snackbar({
+      actionText: '撤销',
+      closable: true,
+      duration: 0,
+      onAction,
+      text: '已归档邮件',
+    });
+    const second = snackbar({
+      closable: true,
+      duration: 0,
+      text: '下一条函数通知',
+    });
+
+    await settleRender();
+
+    const action = snackbarElement().querySelector('.mat-snackbar__default-action');
+
+    expect(action).not.toBeNull();
+    expect(action.textContent).toBe('撤销');
+
+    action.click();
+    await settleRender();
+
+    expect(onAction).toHaveBeenCalledOnce();
+    expect(snackbarElement().classList).toContain('mat-snackbar--closing');
+
+    await finishExit();
+
+    await expect(first).resolves.toBeUndefined();
+    expect(snackbarElement().textContent).toContain('下一条函数通知');
+
+    snackbarElement().querySelector('.mat-snackbar__default-close').click();
+    await finishExit();
+
+    await expect(second).resolves.toBeUndefined();
   });
 
   it('函数式调用按 FIFO 展示、复用一个宿主，并在最后关闭后清理宿主', async () => {

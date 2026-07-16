@@ -5,12 +5,22 @@ import { snackbar, toast } from 'mdu-ui/functions';
 const result = ref('尚未展示');
 
 async function showSnackbar() {
+  let restored = false;
+
   await snackbar({
+    actionText: '撤销',
     closable: true,
     duration: 0,
+    onAction() {
+      restored = true;
+      result.value = '已撤销 snackbar() 的操作';
+    },
     text: 'snackbar() 已展示通知。',
   });
-  result.value = 'snackbar() 已关闭';
+
+  if (!restored) {
+    result.value = 'snackbar() 已关闭';
+  }
 }
 
 async function showToast() {
