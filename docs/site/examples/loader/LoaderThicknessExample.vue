@@ -1,29 +1,39 @@
+<script setup>
+import { ref } from 'vue';
+
+const thickness = ref(4);
+</script>
+
 <template>
-  <p>线条形：4px 与 8px</p>
+  <mat-btn-group
+    variant="connected"
+    selection="single"
+    required
+    :selected="thickness"
+    @select="thickness = $event.nextSelected"
+  >
+    <mat-btn :value="4">
+      4px
+    </mat-btn>
+    <mat-btn :value="8">
+      8px
+    </mat-btn>
+  </mat-btn-group>
+
+  <p>线条形：{{ thickness }}px</p>
   <mat-loader
     shape="wavy"
+    :thickness="thickness"
     :value=".6"
-    aria-label="4 像素波浪线进度 60%"
-  />
-  <mat-loader
-    shape="wavy"
-    :thickness="8"
-    :value=".6"
-    aria-label="8 像素波浪线进度 60%"
+    aria-label="波浪线进度 60%"
   />
 
-  <p>环形：4px 与 8px</p>
+  <p>环形：{{ thickness }}px</p>
   <mat-loader
     shape="wavy"
+    :thickness="thickness"
     variant="circular"
     :value=".6"
-    aria-label="4 像素波浪环进度 60%"
-  />
-  <mat-loader
-    shape="wavy"
-    :thickness="8"
-    variant="circular"
-    :value=".6"
-    aria-label="8 像素波浪环进度 60%"
+    aria-label="波浪环进度 60%"
   />
 </template>

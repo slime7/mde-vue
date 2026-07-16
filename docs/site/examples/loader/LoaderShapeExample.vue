@@ -1,22 +1,37 @@
+<script setup>
+import { ref } from 'vue';
+
+const shape = ref('flat');
+</script>
+
 <template>
-  <p>直线</p>
+  <mat-btn-group
+    variant="connected"
+    selection="single"
+    required
+    :selected="shape"
+    @select="shape = $event.nextSelected"
+  >
+    <mat-btn value="flat">
+      直线
+    </mat-btn>
+    <mat-btn value="wavy">
+      波浪
+    </mat-btn>
+  </mat-btn-group>
+
+  <p>线条形：{{ shape }}</p>
   <mat-loader
+    :shape="shape"
     :value=".6"
-    aria-label="直线形进度 60%"
+    aria-label="线条形进度 60%"
   />
 
-  <p>波浪线</p>
+  <p>环形：{{ shape }}</p>
   <mat-loader
-    shape="wavy"
-    :value=".6"
-    aria-label="波浪形进度 60%"
-  />
-
-  <p>波浪环</p>
-  <mat-loader
-    shape="wavy"
+    :shape="shape"
     variant="circular"
     :value=".6"
-    aria-label="波浪环形进度 60%"
+    aria-label="环形进度 60%"
   />
 </template>
