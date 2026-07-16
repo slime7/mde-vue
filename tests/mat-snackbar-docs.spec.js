@@ -7,6 +7,7 @@ const exampleNames = [
   'SnackbarModelValueExample',
   'SnackbarTextExample',
   'SnackbarDefaultSlotExample',
+  'SnackbarTwoLineExample',
   'SnackbarClosableExample',
   'SnackbarCloseLabelExample',
   'SnackbarCloseSlotExample',

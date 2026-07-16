@@ -51,6 +51,20 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
   </DocsPreview>
 </ClientOnly>
 
+### 两行内容
+
+两行由内容自然换行触发，不需要额外属性。此示例同时展示双行内容中的 action 与关闭入口；使用 `duration=0` 以便观察布局。
+
+::: details 查看示例代码
+<<< @/examples/snackbar/SnackbarTwoLineExample.vue
+:::
+
+<ClientOnly>
+  <DocsPreview label="Snackbar 两行内容预览">
+    <SnackbarTwoLineExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `closable`
 
 ::: details 查看示例代码
@@ -237,6 +251,7 @@ import SnackbarActionTextExample from '../examples/snackbar/SnackbarActionTextEx
 import SnackbarCloseLabelExample from '../examples/snackbar/SnackbarCloseLabelExample.vue';
 import SnackbarCloseSlotExample from '../examples/snackbar/SnackbarCloseSlotExample.vue';
 import SnackbarDefaultSlotExample from '../examples/snackbar/SnackbarDefaultSlotExample.vue';
+import SnackbarTwoLineExample from '../examples/snackbar/SnackbarTwoLineExample.vue';
 import SnackbarDurationExample from '../examples/snackbar/SnackbarDurationExample.vue';
 import SnackbarFunctionExample from '../examples/snackbar/SnackbarFunctionExample.vue';
 import SnackbarModelValueExample from '../examples/snackbar/SnackbarModelValueExample.vue';
