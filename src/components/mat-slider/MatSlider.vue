@@ -191,11 +191,15 @@ const inactiveAfterSize = computed(() => {
 
   return `max(0px, calc(100% - ${formattedValuePosition.value} - var(--mat-slider-handle-track-gap)))`;
 });
-const stopValues = computed(() => (
-  props.showStopIndicator
-    ? getSliderStopValues(bounds.value, resolvedStep.value)
-    : [bounds.value.max]
-));
+const stopValues = computed(() => {
+  if (props.showStopIndicator) {
+    return getSliderStopValues(bounds.value, resolvedStep.value);
+  }
+
+  return props.variant === 'centered'
+    ? [bounds.value.min, bounds.value.max]
+    : [bounds.value.max];
+});
 const showInsetIcon = computed(() => (
   props.insetIcon !== undefined
   && ['medium', 'large', 'extra-large'].includes(props.size)
@@ -702,7 +706,7 @@ function handleKeyDown(event) {
 }
 
 .mat-slider--vertical .mat-slider__stop {
-  inset-block-end: var(--mat-slider-stop-position);
+  inset-block: auto var(--mat-slider-stop-position);
   inset-inline-start: 50%;
   transform: translate(-50%, 50%);
 }

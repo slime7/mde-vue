@@ -212,6 +212,9 @@ describe('MatSlider', () => {
     });
 
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([10]);
+    expect(componentSource).toMatch(
+      /\.mat-slider--vertical \.mat-slider__stop \{[\s\S]*?inset-block: auto var\(--mat-slider-stop-position\);/,
+    );
   });
 
   it('支持方向、五档尺寸、内嵌图标、停靠点、禁用和局部强调色', async () => {
@@ -342,6 +345,12 @@ describe('MatSlider', () => {
         step: 2,
       },
     });
+    const centered = mount(MatSlider, {
+      props: {
+        modelValue: 40,
+        variant: 'centered',
+      },
+    });
     const pointerTarget = {
       getBoundingClientRect() {
         return {
@@ -359,6 +368,12 @@ describe('MatSlider', () => {
     expect(atMaximum.attributes('style')).toContain(
       '--mat-slider-position: calc(100% - 6px)',
     );
+    expect(
+      centered.findAll('.mat-slider__stop').map((stop) => stop.attributes('style')),
+    ).toEqual(expect.arrayContaining([
+      expect.stringContaining('--mat-slider-stop-position: 6px'),
+      expect.stringContaining('--mat-slider-stop-position: calc(100% - 6px)'),
+    ]));
     expect(unevenSteps.findAll('.mat-slider__stop')).toHaveLength(4);
     expect(
       unevenSteps.findAll('.mat-slider__stop')

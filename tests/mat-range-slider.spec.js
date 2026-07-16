@@ -231,6 +231,9 @@ describe('MatRangeSlider', () => {
   it('纵向范围轨道重置横向定位，并让尺寸示例共享可交互区间', () => {
     expect(componentSource).toMatch(/\.mat-range-slider--vertical \.mat-range-slider__track \{[\s\S]*?inset-inline: 50% auto;/);
     expect(componentSource).toMatch(/\.mat-range-slider--vertical \.mat-range-slider__active-track \{[\s\S]*?inset-block: auto var\(--mat-range-slider-active-visible-start\);/);
+    expect(componentSource).toMatch(
+      /\.mat-range-slider--vertical \.mat-range-slider__stop \{[\s\S]*?inset-block: auto var\(--mat-range-slider-stop-position\);/,
+    );
     expect(rangeSliderSizeExampleSource).toContain('const range = ref([30, 70])');
     expect(rangeSliderSizeExampleSource.match(/v-model="range"/g)).toHaveLength(5);
     expect(rangeSliderSizeExampleSource).not.toContain('model-value=');

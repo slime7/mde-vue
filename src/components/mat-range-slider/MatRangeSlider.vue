@@ -680,7 +680,7 @@ function setHandleElement(index, element) {
 }
 
 .mat-range-slider--vertical .mat-range-slider__stop {
-  inset-block-end: var(--mat-range-slider-stop-position);
+  inset-block: auto var(--mat-range-slider-stop-position);
   inset-inline-start: 50%;
   transform: translate(-50%, 50%);
 }
