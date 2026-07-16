@@ -141,9 +141,9 @@ order: 87
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 活动轨道、手柄和状态层的局部强调色 |
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | 横向从左到右递增；纵向从下到上递增 |
 | `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'extra-small'` | 对应 16、24、40、56、96px 轨道高度 |
-| `insetIcon` | `string` | 未设置 | Material Symbols 图标名；仅在 `medium`、`large`、`extra-large` 显示 |
-| `showStopIndicator` | `boolean` | `false` | 为所有离散步长渲染停靠点 |
-| `showValueIndicator` | `boolean` | `false` | 当前手柄聚焦或拖动时显示规范化后的数值 |
+| `insetIcon` | `string` | 未设置 | Material Symbols 图标名；仅在 `medium`、`large`、`extra-large` 显示，并随活动轨道覆盖范围切换前景色 |
+| `showStopIndicator` | `boolean` | `false` | 为所有离散步长渲染停靠点，端点保持在轨道轮廓内 |
+| `showValueIndicator` | `boolean` | `false` | 当前手柄聚焦或拖动时通过受控 `MatTooltip` 显示规范化后的数值 |
 
 `aria-label` 会透传给内部原生 range 输入。组件使用隐藏的原生输入提供焦点、键盘和 ARIA slider 语义，但不承诺表单提交、原生校验或表单重置代理。
 
@@ -161,7 +161,7 @@ order: 87
 
 ## 状态与交互
 
-组件支持 hover、focus-visible、pressed、disabled 和减少动态效果偏好。按下或拖动时，当前手柄会由 4px 收窄至 2px；轨道在手柄两侧保留 6px 断口。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至最小和最大可对齐值。纵向滑块以底部为最小值、顶部为最大值。组件没有公开方法。
+组件支持 focus-visible、pressed、disabled 和减少动态效果偏好。键盘焦点使用手柄轮廓表示，不绘制圆形背景状态层；按下或拖动时，当前手柄会由 4px 收窄至 2px，轨道在手柄两侧保留 6px 断口且断口圆角为 2px。指针默认使用 `default`，并遵循 `createMatUi()` 的全局 `useCursor` 设置。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至最小和最大可对齐值。纵向滑块以底部为最小值、顶部为最大值。组件没有公开方法。
 
 ## 参考来源
 

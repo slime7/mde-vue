@@ -717,6 +717,54 @@ watch(tooltipId, () => {
   visibility: visible;
 }
 
+.mat-tooltip[data-slider-value-indicator] {
+  inline-size: var(--mat-slider-value-indicator-width);
+  block-size: var(--mat-slider-value-indicator-height);
+  min-block-size: var(--mat-slider-value-indicator-height);
+  min-inline-size: var(--mat-slider-value-indicator-width);
+  padding-inline: 0;
+  overflow: visible;
+  border-radius: var(--mat-sys-shape-corner-full);
+}
+
+.mat-tooltip[data-slider-value-indicator]::after {
+  position: absolute;
+  background: var(--mat-tooltip-container-color);
+  content: '';
+}
+
+.mat-tooltip[data-slider-value-indicator][data-location^='top']::after {
+  inset-block-start: 100%;
+  inset-inline-start: 50%;
+  inline-size: var(--mat-slider-value-indicator-stem-width);
+  block-size: var(--mat-slider-value-indicator-stem-height);
+  transform: translateX(-50%);
+}
+
+.mat-tooltip[data-slider-value-indicator][data-location^='bottom']::after {
+  inset-block-end: 100%;
+  inset-inline-start: 50%;
+  inline-size: var(--mat-slider-value-indicator-stem-width);
+  block-size: var(--mat-slider-value-indicator-stem-height);
+  transform: translateX(-50%);
+}
+
+.mat-tooltip[data-slider-value-indicator][data-location^='right']::after {
+  inset-block-start: 50%;
+  inset-inline-end: 100%;
+  inline-size: var(--mat-slider-value-indicator-stem-height);
+  block-size: var(--mat-slider-value-indicator-stem-width);
+  transform: translateY(-50%);
+}
+
+.mat-tooltip[data-slider-value-indicator][data-location^='left']::after {
+  inset-block-start: 50%;
+  inset-inline-start: 100%;
+  inline-size: var(--mat-slider-value-indicator-stem-height);
+  block-size: var(--mat-slider-value-indicator-stem-width);
+  transform: translateY(-50%);
+}
+
 @starting-style {
   .mat-tooltip {
     opacity: 0;

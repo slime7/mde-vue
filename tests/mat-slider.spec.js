@@ -3,10 +3,14 @@ import { resolve } from 'node:path';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { nextTick } from 'vue';
-import { MatSlider } from '../src';
+import { MatSlider, MatTooltip } from '../src';
 
 const componentSource = readFileSync(
   resolve('src/components/mat-slider/MatSlider.vue'),
+  'utf8',
+);
+const tooltipComponentSource = readFileSync(
+  resolve('src/components/mat-tooltip/MatTooltip.vue'),
   'utf8',
 );
 const stylesSource = readFileSync(resolve('src/styles/index.css'), 'utf8');
@@ -157,21 +161,28 @@ describe('MatSlider', () => {
       },
     });
     const input = wrapper.find('input');
+    const tooltip = wrapper.findComponent(MatTooltip);
 
-    expect(wrapper.find('.mat-slider__value-indicator').exists()).toBe(false);
-    expect(wrapper.classes()).toContain('mat-slider--with-value-indicator');
+    expect(tooltip.exists()).toBe(true);
+    expect(tooltip.props('content')).toBe('32');
+    expect(tooltip.props('location')).toBe('top');
+    expect(tooltip.props('modelValue')).toBe(false);
 
     await input.trigger('focus');
+    await nextTick();
 
-    expect(wrapper.find('.mat-slider__value-indicator').text()).toBe('32');
+    expect(tooltip.props('modelValue')).toBe(true);
     expect(wrapper.find('.mat-slider__handle-shape').exists()).toBe(true);
-    expect(wrapper.find('.mat-slider__handle-shape .mat-slider__value-indicator').exists()).toBe(false);
-    expect(componentSource).toMatch(/\.mat-slider--horizontal\.mat-slider--with-value-indicator \{[\s\S]*?min-block-size: calc\(/);
-    expect(componentSource).toMatch(/\.mat-slider--horizontal\.mat-slider--with-value-indicator \.mat-slider__track \{[\s\S]*?inset-block-start: calc\(/);
+    expect(componentSource).toContain('<MatTooltip');
+    expect(componentSource).toContain('class="mat-slider__value-indicator"');
+    expect(componentSource).toContain('data-slider-value-indicator');
+    expect(componentSource).not.toContain('mat-slider--with-value-indicator');
+    expect(tooltipComponentSource).toContain('.mat-tooltip[data-slider-value-indicator]');
 
     await input.trigger('blur');
 
-    expect(wrapper.find('.mat-slider__value-indicator').exists()).toBe(false);
+    expect(tooltip.props('modelValue')).toBe(false);
+    wrapper.unmount();
   });
 
   it('纵向滑轨以底部为最小值、顶部为最大值', async () => {
@@ -217,7 +228,7 @@ describe('MatSlider', () => {
       'mat-slider--disabled',
     ]));
     expect(wrapper.find('input').element.disabled).toBe(true);
-    expect(wrapper.find('.mat-slider__inset-icon').exists()).toBe(true);
+    expect(wrapper.findAll('.mat-slider__inset-icon')).toHaveLength(2);
     expect(wrapper.findAll('.mat-slider__stop')).toHaveLength(5);
     expect(wrapper.attributes('style')).toContain('--mat-accent-color: light-dark(');
 
@@ -230,7 +241,7 @@ describe('MatSlider', () => {
     expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
 
-  it('标准变体从最小值识别活动刻度，并让图标显式使用活动轨道前景色', () => {
+  it('标准变体从最小值识别活动刻度，并按活动轨道覆盖范围切换图标颜色', () => {
     const stops = mount(MatSlider, {
       props: {
         max: 5,
@@ -239,14 +250,14 @@ describe('MatSlider', () => {
         showStopIndicator: true,
       },
     }).findAll('.mat-slider__stop');
-    const icon = mount(MatSlider, {
+    const icons = mount(MatSlider, {
       props: {
         color: 'tertiary',
         insetIcon: 'volume_up',
         modelValue: 70,
         size: 'medium',
       },
-    }).find('.mat-slider__inset-icon');
+    }).findAll('.mat-slider__inset-icon');
 
     expect(stops.map((stop) => stop.classes('mat-slider__stop--active'))).toEqual([
       true,
@@ -255,9 +266,14 @@ describe('MatSlider', () => {
       false,
       false,
     ]);
-    expect(icon.attributes('style')).toContain(
+    expect(icons).toHaveLength(2);
+    expect(icons[0].attributes('style')).toContain(
+      'color: var(--mat-slider-inset-icon-inactive-color)',
+    );
+    expect(icons[1].attributes('style')).toContain(
       'color: var(--mat-on-accent-color, var(--mat-slider-inset-icon-color))',
     );
+    expect(componentSource).toMatch(/\.mat-slider__inset-icon-layer--active \{[\s\S]*?clip-path: inset\(/);
   });
 
   it('使用三段轨道在手柄两侧保留断口，并完全重置纵向定位', () => {
@@ -291,6 +307,25 @@ describe('MatSlider', () => {
     expect(componentSource).toContain('.mat-slider--vertical.mat-slider--dragging .mat-slider__handle {');
   });
 
+  it('将端点停靠点夹在轨道内，断口使用 2px 圆角且不绘制手柄背景层', () => {
+    const wrapper = mount(MatSlider, {
+      props: {
+        max: 4,
+        modelValue: 2,
+        showStopIndicator: true,
+      },
+    });
+
+    expect(wrapper.findAll('.mat-slider__stop')).toHaveLength(5);
+    expect(wrapper.find('.mat-slider__state-layer').exists()).toBe(false);
+    expect(componentSource).toContain('clamp(calc(var(--mat-slider-stop-indicator-size) / 2)');
+    expect(componentSource).toContain('cursor: default;');
+    expect(componentSource).toContain('.mat-slider--use-cursor .mat-slider__interaction');
+    expect(componentSource).toContain('outline: var(--mat-slider-focus-indicator-width) solid');
+    expect(stylesSource).toContain('--mat-slider-track-gap-corner: 2px');
+    expect(stylesSource).toContain('--mat-slider-inset-icon-inactive-color: var(--mat-sys-color-on-secondary-container)');
+  });
+
   it('固定外观示例改用可交互模型，尺寸示例共享同一个数值', () => {
     expect(sliderSizeExampleSource).toContain('const value = ref(50)');
     expect(sliderSizeExampleSource.match(/v-model="value"/g)).toHaveLength(5);
@@ -310,7 +345,7 @@ describe('MatSlider', () => {
     expect(MatSlider.props.size.validator('compact')).toBe(false);
     expect(MatSlider.props.step.validator(1)).toBe(true);
     expect(MatSlider.props.step.validator(0)).toBe(false);
-    expect(componentSource).toContain('clip-path: polygon(');
+    expect(componentSource).toContain('clip-path: inset(');
     expect(componentSource).toContain('@supports (border-shape:');
     expect(componentSource).toContain('@media (prefers-reduced-motion: reduce)');
     expect(stylesSource).toContain('--mat-slider-extra-small-track-height: 16px');

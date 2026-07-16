@@ -1,6 +1,10 @@
 <script setup>
-import { computed, ref, useAttrs } from 'vue';
+import {
+  computed, inject, ref, useAttrs,
+} from 'vue';
+import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import { isComponentColor } from '../button-props';
+import MatTooltip from '../mat-tooltip/MatTooltip.vue';
 import {
   formatSliderNumber,
   getSliderPercentage,
@@ -102,6 +106,7 @@ const emit = defineEmits({
 });
 
 const attrs = useAttrs();
+const handleElements = ref([]);
 const interaction = ref(null);
 const startInput = ref(null);
 const endInput = ref(null);
@@ -111,6 +116,7 @@ const dragging = ref(false);
 const dragPointerId = ref(undefined);
 const dragValue = ref(undefined);
 const dragChanged = ref(false);
+const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const { colorStyle } = useComponentColor(computed(() => props.color));
 
 const bounds = computed(() => resolveSliderBounds(props.min, props.max));
@@ -132,6 +138,12 @@ const stopValues = computed(() => (
   props.showStopIndicator
     ? getSliderStopValues(bounds.value, resolvedStep.value)
     : []
+));
+const activeHandleElement = computed(() => handleElements.value[activeHandle.value] ?? null);
+const activeValue = computed(() => displayedValue.value[activeHandle.value]);
+const showValueIndicator = computed(() => (
+  props.showValueIndicator
+  && (dragging.value || focusedHandle.value === activeHandle.value)
 ));
 const rootStyle = computed(() => ({
   ...colorStyle.value,
@@ -323,11 +335,10 @@ function handleBlur(index) {
 
 /**
  * @param {number} index
- * @returns {boolean}
+ * @param {Element | import('vue').ComponentPublicInstance | null} element
  */
-function shouldShowValueIndicator(index) {
-  return props.showValueIndicator
-    && (dragging.value ? activeHandle.value === index : focusedHandle.value === index);
+function setHandleElement(index, element) {
+  handleElements.value[index] = element instanceof HTMLElement ? element : null;
 }
 </script>
 
@@ -341,7 +352,7 @@ function shouldShowValueIndicator(index) {
       {
         'mat-range-slider--disabled': disabled,
         'mat-range-slider--dragging': dragging,
-        'mat-range-slider--with-value-indicator': props.showValueIndicator,
+        'mat-range-slider--use-cursor': matUi.useCursor,
       },
     ]"
     :style="rootStyle"
@@ -370,6 +381,7 @@ function shouldShowValueIndicator(index) {
       <span
         v-for="(value, index) in displayedValue"
         :key="index"
+        :ref="(element) => setHandleElement(index, element)"
         class="mat-range-slider__handle"
         :class="[
           `mat-range-slider__handle--${index === 0 ? 'start' : 'end'}`,
@@ -377,16 +389,17 @@ function shouldShowValueIndicator(index) {
         ]"
       >
         <span class="mat-range-slider__handle-shape" />
-        <span class="mat-range-slider__state-layer" />
-
-        <span
-          v-if="shouldShowValueIndicator(index)"
-          class="mat-range-slider__value-indicator"
-        >
-          {{ value }}
-        </span>
       </span>
     </span>
+
+    <MatTooltip
+      class="mat-range-slider__value-indicator"
+      data-slider-value-indicator
+      :content="String(activeValue)"
+      :location="orientation === 'vertical' ? 'right' : 'top'"
+      :model-value="showValueIndicator"
+      :target="activeHandleElement"
+    />
 
     <span
       ref="interaction"
@@ -444,7 +457,6 @@ function shouldShowValueIndicator(index) {
   --mat-range-slider-current-active-track-color: var(--mat-accent-color, var(--mat-slider-active-track-color));
   --mat-range-slider-current-handle-color: var(--mat-accent-color, var(--mat-slider-handle-color));
   --mat-range-slider-current-inactive-track-color: var(--mat-slider-inactive-track-color);
-  --mat-range-slider-current-state-layer-color: var(--mat-accent-color, var(--mat-slider-state-layer-color));
   --mat-range-slider-current-stop-color: var(--mat-accent-color, var(--mat-slider-stop-indicator-color));
   --mat-range-slider-current-track-corner: var(--mat-slider-extra-small-track-corner);
   --mat-range-slider-current-track-height: var(--mat-slider-extra-small-track-height);
@@ -483,14 +495,6 @@ function shouldShowValueIndicator(index) {
   --mat-range-slider-current-handle-height: var(--mat-slider-extra-large-handle-height);
 }
 
-.mat-range-slider--horizontal.mat-range-slider--with-value-indicator {
-  min-block-size: calc(var(--mat-slider-value-indicator-height) + var(--mat-slider-value-indicator-offset) + max(var(--mat-sys-interaction-target-min-size), var(--mat-range-slider-current-handle-height)));
-}
-
-.mat-range-slider--horizontal.mat-range-slider--with-value-indicator .mat-range-slider__track {
-  inset-block-start: calc(var(--mat-slider-value-indicator-height) + var(--mat-slider-value-indicator-offset) + (max(var(--mat-sys-interaction-target-min-size), var(--mat-range-slider-current-handle-height)) / 2));
-}
-
 .mat-range-slider__track {
   position: absolute;
   inset-block-start: 50%;
@@ -506,7 +510,7 @@ function shouldShowValueIndicator(index) {
   position: absolute;
   inset-block: 0;
   display: block;
-  border-radius: var(--mat-range-slider-current-track-corner);
+  border-radius: var(--mat-slider-track-gap-corner);
   transition: inset-inline-start var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), inline-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
 }
 
@@ -517,6 +521,8 @@ function shouldShowValueIndicator(index) {
 .mat-range-slider__inactive-track--before {
   inset-inline: 0 auto;
   inline-size: var(--mat-range-slider-inactive-before-size);
+  border-end-start-radius: var(--mat-range-slider-current-track-corner);
+  border-start-start-radius: var(--mat-range-slider-current-track-corner);
 }
 
 .mat-range-slider__active-track {
@@ -528,12 +534,14 @@ function shouldShowValueIndicator(index) {
 .mat-range-slider__inactive-track--after {
   inset-inline: var(--mat-range-slider-inactive-after-start) auto;
   inline-size: var(--mat-range-slider-inactive-after-size);
+  border-end-end-radius: var(--mat-range-slider-current-track-corner);
+  border-start-end-radius: var(--mat-range-slider-current-track-corner);
 }
 
 .mat-range-slider__stop {
   position: absolute;
   inset-block-start: 50%;
-  inset-inline-start: var(--mat-range-slider-stop-position);
+  inset-inline-start: clamp(calc(var(--mat-slider-stop-indicator-size) / 2), var(--mat-range-slider-stop-position), calc(100% - (var(--mat-slider-stop-indicator-size) / 2)));
   z-index: 1;
   display: block;
   inline-size: var(--mat-slider-stop-indicator-size);
@@ -576,58 +584,16 @@ function shouldShowValueIndicator(index) {
   inset-inline-start: var(--mat-range-slider-end-position);
 }
 
-.mat-range-slider__state-layer {
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-start: 50%;
-  inline-size: var(--mat-slider-state-layer-size);
-  block-size: var(--mat-slider-state-layer-size);
-  background: var(--mat-range-slider-current-state-layer-color);
-  border-radius: var(--mat-sys-shape-corner-full);
-  opacity: 0;
-  transform: translate(-50%, -50%);
-  transition: opacity var(--mat-sys-motion-duration-short2) var(--mat-sys-motion-easing-standard);
-}
-
-.mat-range-slider__value-indicator {
-  position: absolute;
-  inset-block-end: calc(100% + var(--mat-slider-value-indicator-offset));
-  inset-inline-start: 50%;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  inline-size: var(--mat-slider-value-indicator-width);
-  block-size: var(--mat-slider-value-indicator-height);
-  box-sizing: border-box;
-  background: var(--mat-slider-value-indicator-color);
-  border-radius: var(--mat-sys-shape-corner-full);
-  color: var(--mat-slider-value-indicator-content-color);
-  font: var(--mat-sys-typescale-label-large-font);
-  font-size: var(--mat-sys-typescale-label-large-size);
-  font-weight: var(--mat-sys-typescale-label-large-weight);
-  letter-spacing: var(--mat-sys-typescale-label-large-tracking);
-  line-height: var(--mat-sys-typescale-label-large-line-height);
-  transform: translateX(-50%);
-}
-
-.mat-range-slider__value-indicator::after {
-  position: absolute;
-  inset-block-start: calc(100% - 1px);
-  inset-inline-start: 50%;
-  inline-size: calc(var(--mat-slider-value-indicator-arrow-size) * 2);
-  block-size: var(--mat-slider-value-indicator-arrow-size);
-  background: var(--mat-slider-value-indicator-color);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  content: '';
-  transform: translateX(-50%);
-}
-
 .mat-range-slider__interaction {
   position: absolute;
   inset: 0;
   z-index: 3;
-  cursor: pointer;
+  cursor: default;
   touch-action: none;
+}
+
+.mat-range-slider--use-cursor .mat-range-slider__interaction {
+  cursor: pointer;
 }
 
 .mat-range-slider__native-input {
@@ -643,20 +609,13 @@ function shouldShowValueIndicator(index) {
   white-space: nowrap;
 }
 
-.mat-range-slider:not(.mat-range-slider--disabled):hover .mat-range-slider__state-layer {
-  opacity: var(--mat-sys-state-hover-state-layer-opacity);
-}
-
-.mat-range-slider:has(.mat-range-slider__native-input:focus-visible) .mat-range-slider__state-layer {
-  opacity: var(--mat-sys-state-focus-state-layer-opacity);
+.mat-range-slider:has(.mat-range-slider__native-input:focus-visible) .mat-range-slider__handle--active .mat-range-slider__handle-shape {
+  outline: var(--mat-slider-focus-indicator-width) solid var(--mat-accent-color, var(--mat-slider-focus-indicator-color));
+  outline-offset: var(--mat-slider-focus-indicator-offset);
 }
 
 .mat-range-slider--dragging .mat-range-slider__handle--active {
   inline-size: var(--mat-slider-pressed-handle-width);
-}
-
-.mat-range-slider--dragging .mat-range-slider__handle--active .mat-range-slider__state-layer {
-  opacity: var(--mat-sys-state-pressed-state-layer-opacity);
 }
 
 .mat-range-slider--disabled {
@@ -695,6 +654,9 @@ function shouldShowValueIndicator(index) {
   inset-inline: 0;
   inline-size: auto;
   block-size: var(--mat-range-slider-inactive-before-size);
+  border-radius: var(--mat-slider-track-gap-corner);
+  border-end-end-radius: var(--mat-range-slider-current-track-corner);
+  border-end-start-radius: var(--mat-range-slider-current-track-corner);
 }
 
 .mat-range-slider--vertical .mat-range-slider__active-track {
@@ -710,10 +672,13 @@ function shouldShowValueIndicator(index) {
   inset-inline: 0;
   inline-size: auto;
   block-size: var(--mat-range-slider-inactive-after-size);
+  border-radius: var(--mat-slider-track-gap-corner);
+  border-start-end-radius: var(--mat-range-slider-current-track-corner);
+  border-start-start-radius: var(--mat-range-slider-current-track-corner);
 }
 
 .mat-range-slider--vertical .mat-range-slider__stop {
-  inset-block-end: var(--mat-range-slider-stop-position);
+  inset-block-end: clamp(calc(var(--mat-slider-stop-indicator-size) / 2), var(--mat-range-slider-stop-position), calc(100% - (var(--mat-slider-stop-indicator-size) / 2)));
   inset-inline-start: 50%;
   transform: translate(-50%, 50%);
 }
@@ -739,24 +704,7 @@ function shouldShowValueIndicator(index) {
   inset-block-end: var(--mat-range-slider-end-position);
 }
 
-.mat-range-slider--vertical .mat-range-slider__value-indicator {
-  inset-block-end: 50%;
-  inset-inline-start: calc(100% + var(--mat-slider-value-indicator-offset));
-  transform: translateY(50%);
-}
-
-.mat-range-slider--vertical .mat-range-slider__value-indicator::after {
-  inset-block-start: 50%;
-  inset-inline-start: calc((var(--mat-slider-value-indicator-arrow-size) * -1) + 1px);
-  inline-size: var(--mat-slider-value-indicator-arrow-size);
-  block-size: calc(var(--mat-slider-value-indicator-arrow-size) * 2);
-  clip-path: polygon(0 50%, 100% 0, 100% 100%);
-  transform: translateY(-50%);
-}
-
 @supports (border-shape: inset(0 round 1px)) {
-  .mat-range-slider__active-track,
-  .mat-range-slider__inactive-track,
   .mat-range-slider__handle-shape {
     border-radius: 0;
     border-shape: inset(0 round var(--mat-range-slider-current-track-corner));
@@ -768,8 +716,7 @@ function shouldShowValueIndicator(index) {
   .mat-range-slider__active-track,
   .mat-range-slider__inactive-track,
   .mat-range-slider__handle,
-  .mat-range-slider__handle-shape,
-  .mat-range-slider__state-layer {
+  .mat-range-slider__handle-shape {
     transition: none;
   }
 }

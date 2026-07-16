@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { nextTick } from 'vue';
-import { MatRangeSlider } from '../src';
+import { MatRangeSlider, MatTooltip } from '../src';
 
 const componentSource = readFileSync(
   resolve('src/components/mat-range-slider/MatRangeSlider.vue'),
@@ -164,12 +164,16 @@ describe('MatRangeSlider', () => {
     await wrapper.setProps({ disabled: false });
 
     await inputs[1].trigger('focus');
+    await nextTick();
 
-    expect(wrapper.findAll('.mat-range-slider__value-indicator')).toHaveLength(1);
-    expect(wrapper.find('.mat-range-slider__value-indicator').text()).toBe('3');
-    expect(wrapper.classes()).toContain('mat-range-slider--with-value-indicator');
-    expect(componentSource).toMatch(/\.mat-range-slider--horizontal\.mat-range-slider--with-value-indicator \{[\s\S]*?min-block-size: calc\(/);
-    expect(componentSource).toMatch(/\.mat-range-slider--horizontal\.mat-range-slider--with-value-indicator \.mat-range-slider__track \{[\s\S]*?inset-block-start: calc\(/);
+    const tooltip = wrapper.findComponent(MatTooltip);
+
+    expect(tooltip.exists()).toBe(true);
+    expect(tooltip.props('content')).toBe('3');
+    expect(tooltip.props('location')).toBe('right');
+    expect(tooltip.props('modelValue')).toBe(true);
+    expect(componentSource).toContain('<MatTooltip');
+    expect(componentSource).not.toContain('mat-range-slider--with-value-indicator');
     expect(wrapper.findAll('.mat-range-slider__handle-shape')).toHaveLength(2);
   });
 
@@ -200,6 +204,12 @@ describe('MatRangeSlider', () => {
     expect(componentSource).toContain(
       '.mat-range-slider--vertical.mat-range-slider--dragging .mat-range-slider__handle--active {',
     );
+    expect(wrapper.find('.mat-range-slider__state-layer').exists()).toBe(false);
+    expect(componentSource).toContain('clamp(calc(var(--mat-slider-stop-indicator-size) / 2)');
+    expect(componentSource).toContain('cursor: default;');
+    expect(componentSource).toContain('.mat-range-slider--use-cursor .mat-range-slider__interaction');
+    expect(componentSource).toContain('outline: var(--mat-slider-focus-indicator-width) solid');
+    expect(componentSource).toContain('var(--mat-slider-track-gap-corner)');
   });
 
   it('纵向范围轨道重置横向定位，并让尺寸示例共享可交互区间', () => {
@@ -217,7 +227,7 @@ describe('MatRangeSlider', () => {
     expect(MatRangeSlider.props.ariaLabelStart.validator(1)).toBe(false);
     expect(MatRangeSlider.props.orientation.validator('vertical')).toBe(true);
     expect(MatRangeSlider.props.size.validator('medium')).toBe(true);
-    expect(componentSource).toContain('clip-path: polygon(');
+    expect(componentSource).toContain('clip-path: inset(');
     expect(componentSource).toContain('@supports (border-shape:');
     expect(componentSource).toContain('@media (prefers-reduced-motion: reduce)');
     expect(componentSource).not.toContain('insetIcon');
