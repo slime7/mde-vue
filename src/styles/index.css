@@ -355,6 +355,16 @@
   --mat-divider-thickness: 1px;
   --mat-divider-inset-space: 16px;
 
+  /* Loader component tokens */
+  --mat-loader-thickness: 4px;
+  --mat-loader-linear-size: 4px;
+  --mat-loader-circular-size: 40px;
+  --mat-loader-circular-radius: 18px;
+  --mat-loader-progress: 0;
+  --mat-loader-stop-indicator-size: 4px;
+  --mat-loader-active-indicator-color: var(--mat-sys-color-primary);
+  --mat-loader-track-color: var(--mat-sys-color-secondary-container);
+
   /* Button component tokens */
   --mat-btn-extra-small-container-height: 32px;
   --mat-btn-extra-small-leading-space: 12px;

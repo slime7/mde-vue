@@ -92,6 +92,7 @@ import { MatMenu } from 'mdu-ui/components/mat-menu';
 import { MatMenuItem } from 'mdu-ui/components/mat-menu-item';
 import { MatDialog } from 'mdu-ui/components/mat-dialog';
 import { MatSpacer } from 'mdu-ui/components/mat-spacer';
+import { MatLoader } from 'mdu-ui/components/mat-loader';
 import {
   alert,
   confirm,
@@ -100,7 +101,7 @@ import {
 } from 'mdu-ui/functions';
 ```
 
-复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatIcon>`、`<MatTextField>`、`<MatMenu>` 或 `<MatSpacer>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
+复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatIcon>`、`<MatTextField>`、`<MatMenu>`、`<MatSpacer>` 或 `<MatLoader>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。
 
 ## 如何选择
 

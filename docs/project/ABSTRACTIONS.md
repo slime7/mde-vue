@@ -108,6 +108,12 @@ Icon 尺寸使用 `small`、`medium`、`large`、`extra-large` 四档，分别�
 
 Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `currentColor`；`fontColor` 直接接受任意 CSS 颜色并优先于 `color`。Slot SVG 只有使用 `currentColor` 时继承颜色，`src` 资源保留内部颜色。其他组件复用 MatIcon 时负责传入所在组件的尺寸、光学尺寸、内容颜色和无障碍属性。
 
+## `<mat-loader>`
+
+`<mat-loader>` 的导出名是 `MatLoader`，以 `variant='linear' | 'circular'` 统一线条和环形 Progress indicator。默认是确定进度：`value` 会限制在 `0` 与正数 `max` 之间，根元素提供 progressbar ARIA 最小值、最大值和当前值；`indeterminate` 时省略当前值并展示加载动画。组件根始终为块级元素。
+
+`shape='flat' | 'wavy'` 选择平直或 Expressive 波浪形活动指示器，`thickness` 以 CSS px 调整轨道和活动指示器厚度。活动与停止指示器默认使用 primary，轨道使用 secondary container；`color` 遵循统一组件配色约定，只替换前两者的强调色。Loader 没有 Slots、方法或自定义事件。
+
 ## 表单选择控件
 
 `<mat-checkbox>` 的 `v-model` 接受 boolean 或基础值数组；数组模式通过 `value` 和 `Object.is()` 计算成员，每次更新都返回新数组。`indeterminate` 是受控展示状态，使用者操作时组件请求将其清除。

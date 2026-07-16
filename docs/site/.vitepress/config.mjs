@@ -80,6 +80,7 @@ export default defineConfig({
             ],
           },
           { text: 'Text field 文本输入', link: '/components/text-field' },
+          { text: 'Loader 加载器', link: '/components/loader' },
           { text: 'Menu 菜单', link: '/components/menu' },
           { text: 'Dialog 对话框', link: '/components/dialog' },
           { text: 'Card 卡片', link: '/components/card' },

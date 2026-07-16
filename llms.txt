@@ -18,6 +18,7 @@
 - [Checkbox 复选框](docs/site/components/checkbox.md): mat-checkbox 的布尔与数组 v-model、不确定态、配色、事件和默认 slot。
 - [Radio 单选按钮与单选组](docs/site/components/radio.md): mat-radio 与 mat-radio-group 的独立或成组 v-model、标签、禁用、配色和键盘交互。
 - [Switch 开关](docs/site/components/switch.md): mat-switch 的布尔 v-model、三档内置图标、配色、事件和默认 slot。
+- [Loader 加载器](docs/site/components/loader.md): mat-loader 的线条与环形进度、确定与不确定状态、波浪形、厚度和配色。
 - [Card 卡片](docs/site/components/card.md): mat-card 的 Material 3 外观、局部配色、内容、操作区与链接式交互。
 - [Text field 文本输入](docs/site/components/text-field.md): mat-text-field 与 mat-textarea 的输入、校验提示、计数、局部配色和原生事件。
 - [Menu 菜单](docs/site/components/menu.md): mat-menu、mat-menu-group 与 mat-menu-item 的分组、坐标定位、多级展开、键盘焦点和局部配色。
