@@ -14,6 +14,8 @@ import MatCheckbox from './components/mat-checkbox/MatCheckbox.vue';
 import MatRadio from './components/mat-radio/MatRadio.vue';
 import MatRadioGroup from './components/mat-radio-group/MatRadioGroup.vue';
 import MatSwitch from './components/mat-switch/MatSwitch.vue';
+import MatSlider from './components/mat-slider/MatSlider.vue';
+import MatRangeSlider from './components/mat-range-slider/MatRangeSlider.vue';
 import MatTextField from './components/mat-text-field/MatTextField.vue';
 import MatTextarea from './components/mat-textarea/MatTextarea.vue';
 import MatMenu from './components/mat-menu/MatMenu.vue';
@@ -118,6 +120,10 @@ export function createMatUi(options = {}) {
       app.component('mat-radio-group', MatRadioGroup);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-switch', MatSwitch);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-slider', MatSlider);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-range-slider', MatRangeSlider);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-text-field', MatTextField);
       // eslint-disable-next-line vue/component-definition-name-casing

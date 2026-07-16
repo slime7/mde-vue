@@ -14,6 +14,8 @@ import MatCheckbox, { MatCheckbox as NamedMatCheckbox } from 'mdu-ui/components/
 import MatRadio, { MatRadio as NamedMatRadio } from 'mdu-ui/components/mat-radio';
 import MatRadioGroup, { MatRadioGroup as NamedMatRadioGroup } from 'mdu-ui/components/mat-radio-group';
 import MatSwitch, { MatSwitch as NamedMatSwitch } from 'mdu-ui/components/mat-switch';
+import MatSlider, { MatSlider as NamedMatSlider } from 'mdu-ui/components/mat-slider';
+import MatRangeSlider, { MatRangeSlider as NamedMatRangeSlider } from 'mdu-ui/components/mat-range-slider';
 import MatTextField, { MatTextField as NamedMatTextField } from 'mdu-ui/components/mat-text-field';
 import MatTextarea, { MatTextarea as NamedMatTextarea } from 'mdu-ui/components/mat-textarea';
 import MatMenu, { MatMenu as NamedMatMenu } from 'mdu-ui/components/mat-menu';
@@ -44,6 +46,8 @@ import {
   MatMenuItem as RootMatMenuItem,
   MatRadio as RootMatRadio,
   MatRadioGroup as RootMatRadioGroup,
+  MatRangeSlider as RootMatRangeSlider,
+  MatSlider as RootMatSlider,
   MatSpacer as RootMatSpacer,
   MatSplitBtn as RootMatSplitBtn,
   MatSwitch as RootMatSwitch,
@@ -66,6 +70,8 @@ describe('公共组件导出', () => {
     ['MatRadio', RootMatRadio, NamedMatRadio, MatRadio],
     ['MatRadioGroup', RootMatRadioGroup, NamedMatRadioGroup, MatRadioGroup],
     ['MatSwitch', RootMatSwitch, NamedMatSwitch, MatSwitch],
+    ['MatSlider', RootMatSlider, NamedMatSlider, MatSlider],
+    ['MatRangeSlider', RootMatRangeSlider, NamedMatRangeSlider, MatRangeSlider],
     ['MatTextField', RootMatTextField, NamedMatTextField, MatTextField],
     ['MatTextarea', RootMatTextarea, NamedMatTextarea, MatTextarea],
     ['MatMenu', RootMatMenu, NamedMatMenu, MatMenu],
@@ -98,6 +104,8 @@ describe('公共组件导出', () => {
     expect(app.component('mat-radio')).toBe(RootMatRadio);
     expect(app.component('mat-radio-group')).toBe(RootMatRadioGroup);
     expect(app.component('mat-switch')).toBe(RootMatSwitch);
+    expect(app.component('mat-slider')).toBe(RootMatSlider);
+    expect(app.component('mat-range-slider')).toBe(RootMatRangeSlider);
     expect(app.component('mat-text-field')).toBe(RootMatTextField);
     expect(app.component('mat-textarea')).toBe(RootMatTextarea);
     expect(app.component('mat-menu')).toBe(RootMatMenu);

@@ -13,6 +13,8 @@ export { default as MatCheckbox } from './components/mat-checkbox/MatCheckbox.vu
 export { default as MatRadio } from './components/mat-radio/MatRadio.vue';
 export { default as MatRadioGroup } from './components/mat-radio-group/MatRadioGroup.vue';
 export { default as MatSwitch } from './components/mat-switch/MatSwitch.vue';
+export { default as MatSlider } from './components/mat-slider/MatSlider.vue';
+export { default as MatRangeSlider } from './components/mat-range-slider/MatRangeSlider.vue';
 export { default as MatTextField } from './components/mat-text-field/MatTextField.vue';
 export { default as MatTextarea } from './components/mat-textarea/MatTextarea.vue';
 export { default as MatMenu } from './components/mat-menu/MatMenu.vue';

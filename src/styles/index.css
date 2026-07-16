@@ -366,6 +366,48 @@
   --mat-loader-active-indicator-color: var(--mat-sys-color-primary);
   --mat-loader-track-color: var(--mat-sys-color-secondary-container);
 
+  /* Slider component tokens */
+  --mat-slider-extra-small-track-height: 16px;
+  --mat-slider-small-track-height: 24px;
+  --mat-slider-medium-track-height: 40px;
+  --mat-slider-large-track-height: 56px;
+  --mat-slider-extra-large-track-height: 96px;
+  --mat-slider-extra-small-handle-height: 44px;
+  --mat-slider-small-handle-height: 44px;
+  --mat-slider-medium-handle-height: 52px;
+  --mat-slider-large-handle-height: 68px;
+  --mat-slider-extra-large-handle-height: 108px;
+  --mat-slider-extra-small-track-corner: 8px;
+  --mat-slider-small-track-corner: 8px;
+  --mat-slider-medium-track-corner: 12px;
+  --mat-slider-large-track-corner: 16px;
+  --mat-slider-extra-large-track-corner: 28px;
+  --mat-slider-medium-inset-icon-size: 24px;
+  --mat-slider-large-inset-icon-size: 24px;
+  --mat-slider-extra-large-inset-icon-size: 32px;
+  --mat-slider-handle-width: 4px;
+  --mat-slider-pressed-handle-width: 20px;
+  --mat-slider-state-layer-size: 48px;
+  --mat-slider-stop-indicator-size: 4px;
+  --mat-slider-value-indicator-width: 48px;
+  --mat-slider-value-indicator-height: 44px;
+  --mat-slider-value-indicator-arrow-size: 8px;
+  --mat-slider-value-indicator-offset: 8px;
+  --mat-slider-inset-icon-offset: 12px;
+  --mat-slider-vertical-length: 256px;
+  --mat-slider-active-track-color: var(--mat-sys-color-primary);
+  --mat-slider-handle-color: var(--mat-sys-color-primary);
+  --mat-slider-inactive-track-color: var(--mat-sys-color-secondary-container);
+  --mat-slider-stop-indicator-color: var(--mat-sys-color-on-secondary-container);
+  --mat-slider-active-stop-indicator-color: var(--mat-sys-color-on-primary);
+  --mat-slider-state-layer-color: var(--mat-sys-color-primary);
+  --mat-slider-inset-icon-color: var(--mat-sys-color-on-primary);
+  --mat-slider-value-indicator-color: var(--mat-sys-color-inverse-surface);
+  --mat-slider-value-indicator-content-color: var(--mat-sys-color-inverse-on-surface);
+  --mat-slider-disabled-track-color: var(--mat-sys-color-on-surface);
+  --mat-slider-disabled-handle-color: var(--mat-sys-color-on-surface);
+  --mat-slider-disabled-stop-indicator-color: var(--mat-sys-color-on-surface);
+
   /* Tooltip component tokens */
   --mat-tooltip-container-color: var(--mat-sys-color-inverse-surface);
   --mat-tooltip-content-color: var(--mat-sys-color-inverse-on-surface);

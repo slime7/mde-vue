@@ -3162,6 +3162,810 @@ import SwitchIconsExample from '../examples/selection/SwitchIconsExample.vue';
 import SwitchModelValueExample from '../examples/selection/SwitchModelValueExample.vue';
 </script>
 
+# Slider 滑块
+
+## 组件简介
+
+`<mat-slider>` 的组件导出名是 `MatSlider`。它用于立即应用一个连续或离散数值，例如音量、亮度或平衡值。组件提供标准与居中两种单滑块变体，支持横向和纵向布局、五档 Material 3 尺寸、内嵌图标、停靠点和按需显示的数值指示。
+
+数值始终被限制在 `min` 与 `max` 之间，并按 `step` 对齐。若没有可见标签，必须传入 `aria-label`，使内部原生 range 输入具有可访问名称。
+
+## 示例
+
+以下代码块由 VitePress 直接读取实际渲染的 Vue 示例文件，因此代码与紧随其后的预览始终来自同一份源码。
+
+### `modelValue`、`min`、`max` 与 `step`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const volume = ref(35);
+</script>
+
+<template>
+  <div class="example">
+    <mat-slider
+      v-model="volume"
+      aria-label="音量"
+      :max="100"
+      :min="0"
+      :step="5"
+    />
+    <output>音量：{{ volume }}</output>
+  </div>
+</template>
+
+<style scoped>
+.example {
+  display: grid;
+  gap: 12px;
+  inline-size: min(100%, 480px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Slider 数值模型预览" stacked>
+    <SliderModelValueExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `variant` 与 `center`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const balance = ref(-20);
+</script>
+
+<template>
+  <div class="example">
+    <mat-slider
+      v-model="balance"
+      aria-label="左右声道平衡"
+      center="0"
+      :max="50"
+      :min="-50"
+      :step="10"
+      variant="centered"
+    />
+    <output>平衡：{{ balance }}</output>
+  </div>
+</template>
+
+<style scoped>
+.example {
+  display: grid;
+  gap: 12px;
+  inline-size: min(100%, 480px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Slider 居中变体预览" stacked>
+    <SliderVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `orientation`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const horizontal = ref(40);
+const vertical = ref(70);
+</script>
+
+<template>
+  <div class="example">
+    <div class="example__horizontal">
+      <mat-slider
+        v-model="horizontal"
+        aria-label="横向音量"
+      />
+      <output>{{ horizontal }}</output>
+    </div>
+
+    <div class="example__vertical">
+      <mat-slider
+        v-model="vertical"
+        aria-label="纵向音量"
+        orientation="vertical"
+      />
+      <output>{{ vertical }}</output>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.example {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  inline-size: min(100%, 480px);
+}
+
+.example__horizontal {
+  display: grid;
+  flex: 1;
+  gap: 12px;
+}
+
+.example__vertical {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Slider 横竖方向预览" stacked>
+    <SliderOrientationExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `size`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example">
+    <mat-slider
+      aria-label="超小尺寸"
+      model-value="20"
+      size="extra-small"
+    />
+    <mat-slider
+      aria-label="小尺寸"
+      model-value="35"
+      size="small"
+    />
+    <mat-slider
+      aria-label="中等尺寸"
+      model-value="50"
+      size="medium"
+    />
+    <mat-slider
+      aria-label="大尺寸"
+      model-value="65"
+      size="large"
+    />
+    <mat-slider
+      aria-label="超大尺寸"
+      model-value="80"
+      size="extra-large"
+    />
+  </div>
+</template>
+
+<style scoped>
+.example {
+  display: grid;
+  gap: 20px;
+  inline-size: min(100%, 560px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Slider 五档尺寸预览" stacked>
+    <SliderSizeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `insetIcon`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example">
+    <mat-slider
+      aria-label="音量"
+      inset-icon="volume_up"
+      model-value="55"
+      size="medium"
+    />
+    <mat-slider
+      aria-label="亮度"
+      inset-icon="light_mode"
+      model-value="70"
+      size="large"
+    />
+    <mat-slider
+      aria-label="飞行高度"
+      inset-icon="flight"
+      model-value="85"
+      size="extra-large"
+    />
+  </div>
+</template>
+
+<style scoped>
+.example {
+  display: grid;
+  gap: 20px;
+  inline-size: min(100%, 560px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Slider 内嵌图标预览" stacked>
+    <SliderInsetIconExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `showStopIndicator`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const rating = ref(3);
+</script>
+
+<template>
+  <div class="example">
+    <mat-slider
+      v-model="rating"
+      aria-label="评分"
+      :max="5"
+      :min="1"
+      show-stop-indicator
+    />
+    <output>评分：{{ rating }}</output>
+  </div>
+</template>
+
+<style scoped>
+.example {
+  display: grid;
+  gap: 12px;
+  inline-size: min(100%, 480px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Slider 停靠点预览" stacked>
+    <SliderShowStopIndicatorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `showValueIndicator`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const temperature = ref(22);
+</script>
+
+<template>
+  <div class="example">
+    <mat-slider
+      v-model="temperature"
+      aria-label="温度"
+      :max="30"
+      :min="16"
+      show-value-indicator
+    />
+    <output>聚焦或拖动手柄即可显示：{{ temperature }} ℃</output>
+  </div>
+</template>
+
+<style scoped>
+.example {
+  display: grid;
+  gap: 12px;
+  inline-size: min(100%, 480px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Slider 数值指示预览" stacked>
+    <SliderShowValueIndicatorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-slider
+    aria-label="不可用的音量"
+    disabled
+    model-value="45"
+  />
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Slider 禁用状态预览" stacked>
+    <SliderDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const semanticValue = ref(45);
+const seededValue = ref(70);
+</script>
+
+<template>
+  <div class="example">
+    <mat-slider
+      v-model="semanticValue"
+      aria-label="三级语义色"
+      color="tertiary"
+    />
+    <mat-slider
+      v-model="seededValue"
+      aria-label="局部种子色"
+      color="#6750a4"
+    />
+  </div>
+</template>
+
+<style scoped>
+.example {
+  display: grid;
+  gap: 16px;
+  inline-size: min(100%, 480px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Slider 局部配色预览" stacked>
+    <SliderColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `modelValue` | `number` | `0` | `v-model` 的当前数值；会被钳制并按步长对齐 |
+| `min` | `number` | `0` | 可选数值的下界 |
+| `max` | `number` | `100` | 可选数值的上界；应大于 `min` |
+| `step` | `number` | `1` | 大于零的离散步长 |
+| `variant` | `'standard' \| 'centered'` | `'standard'` | 标准轨道或从中心基准向两侧延展的轨道 |
+| `center` | `number` | `min`、`max` 的中点并按步长对齐 | 居中变体的活动轨道起点；标准变体忽略它 |
+| `disabled` | `boolean` | `false` | 禁止指针和键盘交互 |
+| `color` | 语义色或 `#RRGGBB` | 未设置 | 活动轨道、手柄和状态层的局部强调色 |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | 横向从左到右递增；纵向从下到上递增 |
+| `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'extra-small'` | 对应 16、24、40、56、96px 轨道高度 |
+| `insetIcon` | `string` | 未设置 | Material Symbols 图标名；仅在 `medium`、`large`、`extra-large` 显示 |
+| `showStopIndicator` | `boolean` | `false` | 为所有离散步长渲染停靠点 |
+| `showValueIndicator` | `boolean` | `false` | 当前手柄聚焦或拖动时显示规范化后的数值 |
+
+`aria-label` 会透传给内部原生 range 输入。组件使用隐藏的原生输入提供焦点、键盘和 ARIA slider 语义，但不承诺表单提交、原生校验或表单重置代理。
+
+## 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | 下一 `number` | 数值因指针或键盘交互发生变化 |
+| `input` | 触发交互的原生 `Event` | 每次数值变化时触发 |
+| `change` | 触发交互的原生 `Event` | 指针拖动释放或键盘操作导致数值变化后触发 |
+
+## Slots
+
+该组件没有自定义 Slots。请用相邻文本、`aria-label` 或 `aria-labelledby` 说明滑块用途。
+
+## 状态与交互
+
+组件支持 hover、focus-visible、pressed、disabled 和减少动态效果偏好。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至最小和最大可对齐值。纵向滑块以底部为最小值、顶部为最大值。组件没有公开方法。
+
+## 参考来源
+
+尺寸、变体、图标、停靠点和数值指示依据 Material 3 [Slider overview](https://m3.material.io/components/sliders/overview)、[Slider specs](https://m3.material.io/components/sliders/specs) 与 [Slider guidelines](https://m3.material.io/components/sliders/guidelines)。键盘、输入与事件语义参考 [Material Web slider API](https://github.com/material-components/material-web/blob/main/docs/components/slider.md)。
+
+<script setup>
+import SliderColorExample from '../examples/slider/SliderColorExample.vue';
+import SliderDisabledExample from '../examples/slider/SliderDisabledExample.vue';
+import SliderInsetIconExample from '../examples/slider/SliderInsetIconExample.vue';
+import SliderModelValueExample from '../examples/slider/SliderModelValueExample.vue';
+import SliderOrientationExample from '../examples/slider/SliderOrientationExample.vue';
+import SliderShowStopIndicatorExample from '../examples/slider/SliderShowStopIndicatorExample.vue';
+import SliderShowValueIndicatorExample from '../examples/slider/SliderShowValueIndicatorExample.vue';
+import SliderSizeExample from '../examples/slider/SliderSizeExample.vue';
+import SliderVariantExample from '../examples/slider/SliderVariantExample.vue';
+</script>
+
+# Range slider 范围滑块
+
+## 组件简介
+
+`<mat-range-slider>` 的组件导出名是 `MatRangeSlider`。它使用两个手柄立即应用一个数值区间，例如价格范围、可用时段或筛选阈值。`v-model` 始终是 `[start, end]` 形式的不可变数组，两个端点会钳制到有效范围、按 `step` 对齐，并始终保持 `start <= end`。
+
+范围滑块没有 `center` 或 `insetIcon` 属性。请用 `aria-label-start` 与 `aria-label-end` 为两个端点分别提供可访问名称，尤其是在没有相邻文本标签时。
+
+## 示例
+
+以下代码块由 VitePress 直接读取实际渲染的 Vue 示例文件，因此代码与紧随其后的预览始终来自同一份源码。
+
+### `modelValue`、`min`、`max` 与 `step`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const price = ref([20, 75]);
+</script>
+
+<template>
+  <div class="example">
+    <mat-range-slider
+      v-model="price"
+      aria-label-end="价格上限"
+      aria-label-start="价格下限"
+      :max="100"
+      :min="0"
+      :step="5"
+    />
+    <output>价格区间：{{ price[0] }} — {{ price[1] }}</output>
+  </div>
+</template>
+
+<style scoped>
+.example {
+  display: grid;
+  gap: 12px;
+  inline-size: min(100%, 480px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Range slider 区间模型预览" stacked>
+    <RangeSliderModelValueExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `orientation`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const horizontal = ref([25, 70]);
+const vertical = ref([30, 85]);
+</script>
+
+<template>
+  <div class="example">
+    <div class="example__horizontal">
+      <mat-range-slider
+        v-model="horizontal"
+        aria-label-end="横向结束值"
+        aria-label-start="横向起始值"
+      />
+      <output>{{ horizontal[0] }} — {{ horizontal[1] }}</output>
+    </div>
+
+    <div class="example__vertical">
+      <mat-range-slider
+        v-model="vertical"
+        aria-label-end="纵向结束值"
+        aria-label-start="纵向起始值"
+        orientation="vertical"
+      />
+      <output>{{ vertical[0] }} — {{ vertical[1] }}</output>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.example {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  inline-size: min(100%, 480px);
+}
+
+.example__horizontal {
+  display: grid;
+  flex: 1;
+  gap: 12px;
+}
+
+.example__vertical {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Range slider 横竖方向预览" stacked>
+    <RangeSliderOrientationExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `size`
+
+::: details 查看示例代码
+```vue
+<template>
+  <div class="example">
+    <mat-range-slider
+      aria-label-end="超小尺寸结束值"
+      aria-label-start="超小尺寸起始值"
+      :model-value="[15, 45]"
+      size="extra-small"
+    />
+    <mat-range-slider
+      aria-label-end="小尺寸结束值"
+      aria-label-start="小尺寸起始值"
+      :model-value="[20, 50]"
+      size="small"
+    />
+    <mat-range-slider
+      aria-label-end="中等尺寸结束值"
+      aria-label-start="中等尺寸起始值"
+      :model-value="[25, 55]"
+      size="medium"
+    />
+    <mat-range-slider
+      aria-label-end="大尺寸结束值"
+      aria-label-start="大尺寸起始值"
+      :model-value="[30, 60]"
+      size="large"
+    />
+    <mat-range-slider
+      aria-label-end="超大尺寸结束值"
+      aria-label-start="超大尺寸起始值"
+      :model-value="[35, 65]"
+      size="extra-large"
+    />
+  </div>
+</template>
+
+<style scoped>
+.example {
+  display: grid;
+  gap: 20px;
+  inline-size: min(100%, 560px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Range slider 五档尺寸预览" stacked>
+    <RangeSliderSizeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `showStopIndicator`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const hours = ref([2, 6]);
+</script>
+
+<template>
+  <div class="example">
+    <mat-range-slider
+      v-model="hours"
+      aria-label-end="结束小时"
+      aria-label-start="开始小时"
+      :max="8"
+      :min="0"
+      show-stop-indicator
+    />
+    <output>时段：{{ hours[0] }} — {{ hours[1] }} 点</output>
+  </div>
+</template>
+
+<style scoped>
+.example {
+  display: grid;
+  gap: 12px;
+  inline-size: min(100%, 480px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Range slider 停靠点预览" stacked>
+    <RangeSliderShowStopIndicatorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `showValueIndicator`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const range = ref([30, 70]);
+</script>
+
+<template>
+  <div class="example">
+    <mat-range-slider
+      v-model="range"
+      aria-label-end="湿度上限"
+      aria-label-start="湿度下限"
+      show-value-indicator
+    />
+    <output>聚焦或拖动的端点会显示数值：{{ range[0] }} — {{ range[1] }}</output>
+  </div>
+</template>
+
+<style scoped>
+.example {
+  display: grid;
+  gap: 12px;
+  inline-size: min(100%, 480px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Range slider 数值指示预览" stacked>
+    <RangeSliderShowValueIndicatorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+::: details 查看示例代码
+```vue
+<template>
+  <mat-range-slider
+    aria-label-end="不可用结束值"
+    aria-label-start="不可用起始值"
+    disabled
+    :model-value="[30, 70]"
+  />
+</template>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Range slider 禁用状态预览" stacked>
+    <RangeSliderDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+::: details 查看示例代码
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const semanticRange = ref([20, 65]);
+const seededRange = ref([35, 80]);
+</script>
+
+<template>
+  <div class="example">
+    <mat-range-slider
+      v-model="semanticRange"
+      aria-label-end="三级语义色结束值"
+      aria-label-start="三级语义色起始值"
+      color="tertiary"
+    />
+    <mat-range-slider
+      v-model="seededRange"
+      aria-label-end="局部种子色结束值"
+      aria-label-start="局部种子色起始值"
+      color="#6750a4"
+    />
+  </div>
+</template>
+
+<style scoped>
+.example {
+  display: grid;
+  gap: 16px;
+  inline-size: min(100%, 480px);
+}
+</style>
+```
+:::
+
+<ClientOnly>
+  <DocsPreview label="Range slider 局部配色预览" stacked>
+    <RangeSliderColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `modelValue` | `[number, number]` | `[0, 100]` | `v-model` 的 `[start, end]` 区间；每次更新都会发出新的数组 |
+| `min` | `number` | `0` | 可选数值的下界 |
+| `max` | `number` | `100` | 可选数值的上界；应大于 `min` |
+| `step` | `number` | `1` | 大于零的离散步长 |
+| `disabled` | `boolean` | `false` | 禁止两个端点的指针和键盘交互 |
+| `color` | 语义色或 `#RRGGBB` | 未设置 | 活动轨道、手柄和状态层的局部强调色 |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | 横向从左到右递增；纵向从下到上递增 |
+| `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'extra-small'` | 对应 16、24、40、56、96px 轨道高度 |
+| `showStopIndicator` | `boolean` | `false` | 为所有离散步长渲染停靠点 |
+| `showValueIndicator` | `boolean` | `false` | 仅为当前聚焦或拖动的手柄显示规范化后的数值 |
+| `ariaLabelStart` | `string` | 未设置 | 起始端点的可访问名称；模板属性写作 `aria-label-start` |
+| `ariaLabelEnd` | `string` | 未设置 | 结束端点的可访问名称；模板属性写作 `aria-label-end` |
+
+拖动或键盘操作试图越过另一端点时，端点会停在另一端点的位置。组件使用两个隐藏的原生 range 输入提供焦点、键盘和 ARIA slider 语义，但不承诺表单提交、原生校验或表单重置代理。
+
+## 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | 新的 `[start, end]` 数组 | 任一端点因指针或键盘交互发生变化 |
+| `input` | 触发交互的原生 `Event` | 每次区间变化时触发 |
+| `change` | 触发交互的原生 `Event` | 指针拖动释放或键盘操作导致区间变化后触发 |
+
+## Slots
+
+该组件没有自定义 Slots。两个端点的名称由 `aria-label-start` 与 `aria-label-end` 提供；不要依赖未命名的范围滑块表达两个端点的含义。
+
+## 状态与交互
+
+组件支持 hover、focus-visible、pressed、disabled 和减少动态效果偏好。点击轨道时选择较近的端点；范围滑块的数值指示只显示当前活跃手柄。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至当前端点允许的最小和最大位置。组件没有公开方法。
+
+## 参考来源
+
+范围变体、尺寸、停靠点和数值指示依据 Material 3 [Slider overview](https://m3.material.io/components/sliders/overview)、[Slider specs](https://m3.material.io/components/sliders/specs) 与 [Slider guidelines](https://m3.material.io/components/sliders/guidelines)。键盘、输入与事件语义参考 [Material Web slider API](https://github.com/material-components/material-web/blob/main/docs/components/slider.md)。
+
+<script setup>
+import RangeSliderColorExample from '../examples/slider/RangeSliderColorExample.vue';
+import RangeSliderDisabledExample from '../examples/slider/RangeSliderDisabledExample.vue';
+import RangeSliderModelValueExample from '../examples/slider/RangeSliderModelValueExample.vue';
+import RangeSliderOrientationExample from '../examples/slider/RangeSliderOrientationExample.vue';
+import RangeSliderShowStopIndicatorExample from '../examples/slider/RangeSliderShowStopIndicatorExample.vue';
+import RangeSliderShowValueIndicatorExample from '../examples/slider/RangeSliderShowValueIndicatorExample.vue';
+import RangeSliderSizeExample from '../examples/slider/RangeSliderSizeExample.vue';
+</script>
+
 # Loader 加载器
 
 ## 组件简介

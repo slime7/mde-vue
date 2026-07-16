@@ -77,6 +77,8 @@ export default defineConfig({
               { text: 'Checkbox 复选框', link: '/components/checkbox' },
               { text: 'Radio 单选按钮与单选组', link: '/components/radio' },
               { text: 'Switch 开关', link: '/components/switch' },
+              { text: 'Slider 滑块', link: '/components/slider' },
+              { text: 'Range slider 范围滑块', link: '/components/range-slider' },
             ],
           },
           { text: 'Text field 文本输入', link: '/components/text-field' },

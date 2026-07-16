@@ -1,0 +1,25 @@
+<script setup>
+import { ref } from 'vue';
+
+const range = ref([30, 70]);
+</script>
+
+<template>
+  <div class="example">
+    <mat-range-slider
+      v-model="range"
+      aria-label-end="湿度上限"
+      aria-label-start="湿度下限"
+      show-value-indicator
+    />
+    <output>聚焦或拖动的端点会显示数值：{{ range[0] }} — {{ range[1] }}</output>
+  </div>
+</template>
+
+<style scoped>
+.example {
+  display: grid;
+  gap: 12px;
+  inline-size: min(100%, 480px);
+}
+</style>
