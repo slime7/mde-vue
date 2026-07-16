@@ -9,6 +9,10 @@ const componentSource = readFileSync(
   resolve('src/components/mat-range-slider/MatRangeSlider.vue'),
   'utf8',
 );
+const rangeSliderSizeExampleSource = readFileSync(
+  resolve('docs/site/examples/slider/RangeSliderSizeExample.vue'),
+  'utf8',
+);
 
 /**
  * @param {import('@vue/test-utils').VueWrapper} wrapper
@@ -163,6 +167,47 @@ describe('MatRangeSlider', () => {
 
     expect(wrapper.findAll('.mat-range-slider__value-indicator')).toHaveLength(1);
     expect(wrapper.find('.mat-range-slider__value-indicator').text()).toBe('3');
+    expect(wrapper.classes()).toContain('mat-range-slider--with-value-indicator');
+    expect(componentSource).toMatch(/\.mat-range-slider--horizontal\.mat-range-slider--with-value-indicator \{[\s\S]*?min-block-size: calc\(/);
+    expect(componentSource).toMatch(/\.mat-range-slider--horizontal\.mat-range-slider--with-value-indicator \.mat-range-slider__track \{[\s\S]*?inset-block-start: calc\(/);
+    expect(wrapper.findAll('.mat-range-slider__handle-shape')).toHaveLength(2);
+  });
+
+  it('只收窄正在拖动的手柄，并为两个端点分别保留轨道断口', () => {
+    const wrapper = mount(MatRangeSlider, {
+      props: {
+        modelValue: [25, 75],
+      },
+    });
+    const handleStyles = componentSource.match(
+      /\.mat-range-slider__handle \{(?<body>[\s\S]*?)\n\}/,
+    )?.groups?.body;
+    const shapeStyles = componentSource.match(
+      /\.mat-range-slider__handle-shape \{(?<body>[\s\S]*?)\n\}/,
+    )?.groups?.body;
+
+    expect(wrapper.findAll('.mat-range-slider__inactive-track')).toHaveLength(2);
+    expect(wrapper.attributes('style')).toContain('--mat-range-slider-active-visible-start:');
+    expect(wrapper.attributes('style')).toContain('--mat-range-slider-active-visible-size:');
+    expect(handleStyles).not.toContain('clip-path');
+    expect(shapeStyles).toContain('clip-path');
+    expect(componentSource).not.toContain(
+      '.mat-range-slider--dragging .mat-range-slider__handle {',
+    );
+    expect(componentSource).toContain(
+      '.mat-range-slider--dragging .mat-range-slider__handle--active {',
+    );
+    expect(componentSource).toContain(
+      '.mat-range-slider--vertical.mat-range-slider--dragging .mat-range-slider__handle--active {',
+    );
+  });
+
+  it('纵向范围轨道重置横向定位，并让尺寸示例共享可交互区间', () => {
+    expect(componentSource).toMatch(/\.mat-range-slider--vertical \.mat-range-slider__track \{[\s\S]*?inset-inline: 50% auto;/);
+    expect(componentSource).toMatch(/\.mat-range-slider--vertical \.mat-range-slider__active-track \{[\s\S]*?inset-block: auto var\(--mat-range-slider-active-visible-start\);/);
+    expect(rangeSliderSizeExampleSource).toContain('const range = ref([30, 70])');
+    expect(rangeSliderSizeExampleSource.match(/v-model="range"/g)).toHaveLength(5);
+    expect(rangeSliderSizeExampleSource).not.toContain('model-value=');
   });
 
   it('校验范围专有属性和共享的现代样式分支', () => {

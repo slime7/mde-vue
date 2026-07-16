@@ -1,28 +1,34 @@
+<script setup>
+import { ref } from 'vue';
+
+const value = ref(50);
+</script>
+
 <template>
   <div class="example">
     <mat-slider
       aria-label="超小尺寸"
-      model-value="20"
+      v-model="value"
       size="extra-small"
     />
     <mat-slider
       aria-label="小尺寸"
-      model-value="35"
+      v-model="value"
       size="small"
     />
     <mat-slider
       aria-label="中等尺寸"
-      model-value="50"
+      v-model="value"
       size="medium"
     />
     <mat-slider
       aria-label="大尺寸"
-      model-value="65"
+      v-model="value"
       size="large"
     />
     <mat-slider
       aria-label="超大尺寸"
-      model-value="80"
+      v-model="value"
       size="extra-large"
     />
   </div>

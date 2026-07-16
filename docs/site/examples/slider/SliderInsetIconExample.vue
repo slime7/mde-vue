@@ -1,21 +1,29 @@
+<script setup>
+import { ref } from 'vue';
+
+const altitude = ref(85);
+const brightness = ref(70);
+const volume = ref(55);
+</script>
+
 <template>
   <div class="example">
     <mat-slider
       aria-label="音量"
       inset-icon="volume_up"
-      model-value="55"
+      v-model="volume"
       size="medium"
     />
     <mat-slider
       aria-label="亮度"
       inset-icon="light_mode"
-      model-value="70"
+      v-model="brightness"
       size="large"
     />
     <mat-slider
       aria-label="飞行高度"
       inset-icon="flight"
-      model-value="85"
+      v-model="altitude"
       size="extra-large"
     />
   </div>

@@ -131,18 +131,56 @@ const centerValue = computed(() => resolveSliderCenter(
   bounds.value,
   resolvedStep.value,
 ));
+const trackOriginValue = computed(() => (
+  props.variant === 'centered' ? centerValue.value : bounds.value.min
+));
 const valuePosition = computed(() => getSliderPercentage(displayedValue.value, bounds.value));
 const centerPosition = computed(() => getSliderPercentage(
-  props.variant === 'centered' ? centerValue.value : bounds.value.min,
+  trackOriginValue.value,
   bounds.value,
 ));
-const activeTrackStartPosition = computed(() => Math.min(
-  valuePosition.value,
-  centerPosition.value,
-));
-const activeTrackSize = computed(() => Math.abs(
-  valuePosition.value - centerPosition.value,
-));
+const formattedValuePosition = computed(() => `${formatSliderNumber(valuePosition.value)}%`);
+const formattedCenterPosition = computed(() => `${formatSliderNumber(centerPosition.value)}%`);
+const trackDirection = computed(() => Math.sign(valuePosition.value - centerPosition.value));
+const activeVisibleStart = computed(() => {
+  if (trackDirection.value >= 0) {
+    return formattedCenterPosition.value;
+  }
+
+  return `calc(${formattedValuePosition.value} + var(--mat-slider-handle-track-gap))`;
+});
+const activeVisibleSize = computed(() => {
+  if (trackDirection.value > 0) {
+    return `max(0px, calc(${formattedValuePosition.value} - ${formattedCenterPosition.value} - var(--mat-slider-handle-track-gap)))`;
+  }
+
+  if (trackDirection.value < 0) {
+    return `max(0px, calc(${formattedCenterPosition.value} - ${formattedValuePosition.value} - var(--mat-slider-handle-track-gap)))`;
+  }
+
+  return '0px';
+});
+const inactiveBeforeSize = computed(() => {
+  if (trackDirection.value > 0) {
+    return formattedCenterPosition.value;
+  }
+
+  return `max(0px, calc(${formattedValuePosition.value} - var(--mat-slider-handle-track-gap)))`;
+});
+const inactiveAfterStart = computed(() => {
+  if (trackDirection.value < 0) {
+    return formattedCenterPosition.value;
+  }
+
+  return `calc(${formattedValuePosition.value} + var(--mat-slider-handle-track-gap))`;
+});
+const inactiveAfterSize = computed(() => {
+  if (trackDirection.value < 0) {
+    return `calc(100% - ${formattedCenterPosition.value})`;
+  }
+
+  return `max(0px, calc(100% - ${formattedValuePosition.value} - var(--mat-slider-handle-track-gap)))`;
+});
 const stopValues = computed(() => (
   props.showStopIndicator
     ? getSliderStopValues(bounds.value, resolvedStep.value)
@@ -160,10 +198,13 @@ const showValueIndicator = computed(() => (
 ));
 const rootStyle = computed(() => ({
   ...colorStyle.value,
-  '--mat-slider-active-start-position': `${formatSliderNumber(activeTrackStartPosition.value)}%`,
-  '--mat-slider-active-track-size': `${formatSliderNumber(activeTrackSize.value)}%`,
-  '--mat-slider-center-position': `${formatSliderNumber(centerPosition.value)}%`,
-  '--mat-slider-position': `${formatSliderNumber(valuePosition.value)}%`,
+  '--mat-slider-active-visible-size': activeVisibleSize.value,
+  '--mat-slider-active-visible-start': activeVisibleStart.value,
+  '--mat-slider-center-position': formattedCenterPosition.value,
+  '--mat-slider-inactive-after-size': inactiveAfterSize.value,
+  '--mat-slider-inactive-after-start': inactiveAfterStart.value,
+  '--mat-slider-inactive-before-size': inactiveBeforeSize.value,
+  '--mat-slider-position': formattedValuePosition.value,
 }));
 
 /**
@@ -297,6 +338,7 @@ function handleKeyDown(event) {
       {
         'mat-slider--disabled': disabled,
         'mat-slider--dragging': dragging,
+        'mat-slider--with-value-indicator': props.showValueIndicator,
       },
     ]"
     :style="rootStyle"
@@ -305,15 +347,17 @@ function handleKeyDown(event) {
       class="mat-slider__track"
       aria-hidden="true"
     >
+      <span class="mat-slider__inactive-track mat-slider__inactive-track--before" />
       <span class="mat-slider__active-track" />
+      <span class="mat-slider__inactive-track mat-slider__inactive-track--after" />
 
       <span
         v-for="stopValue in stopValues"
         :key="stopValue"
         class="mat-slider__stop"
         :class="{
-          'mat-slider__stop--active': stopValue >= Math.min(centerValue, displayedValue)
-            && stopValue <= Math.max(centerValue, displayedValue),
+          'mat-slider__stop--active': stopValue >= Math.min(trackOriginValue, displayedValue)
+            && stopValue <= Math.max(trackOriginValue, displayedValue),
         }"
         :style="{
           '--mat-slider-stop-position': `${formatSliderNumber(getSliderPercentage(stopValue, bounds))}%`,
@@ -323,6 +367,7 @@ function handleKeyDown(event) {
       <MatIcon
         v-if="showInsetIcon"
         class="mat-slider__inset-icon"
+        font-color="var(--mat-on-accent-color, var(--mat-slider-inset-icon-color))"
         :icon="insetIcon"
         :optical-size="insetIconOpticalSize"
         size="var(--mat-slider-current-inset-icon-size)"
@@ -330,6 +375,7 @@ function handleKeyDown(event) {
       />
 
       <span class="mat-slider__handle">
+        <span class="mat-slider__handle-shape" />
         <span class="mat-slider__state-layer" />
 
         <span
@@ -379,7 +425,7 @@ function handleKeyDown(event) {
   --mat-slider-current-handle-color: var(--mat-accent-color, var(--mat-slider-handle-color));
   --mat-slider-current-inactive-track-color: var(--mat-slider-inactive-track-color);
   --mat-slider-current-state-layer-color: var(--mat-accent-color, var(--mat-slider-state-layer-color));
-  --mat-slider-current-stop-color: var(--mat-slider-stop-indicator-color);
+  --mat-slider-current-stop-color: var(--mat-accent-color, var(--mat-slider-stop-indicator-color));
   --mat-slider-current-track-corner: var(--mat-slider-extra-small-track-corner);
   --mat-slider-current-track-height: var(--mat-slider-extra-small-track-height);
   --mat-slider-current-handle-height: var(--mat-slider-extra-small-handle-height);
@@ -421,27 +467,51 @@ function handleKeyDown(event) {
   --mat-slider-current-inset-icon-size: var(--mat-slider-extra-large-inset-icon-size);
 }
 
+.mat-slider--horizontal.mat-slider--with-value-indicator {
+  min-block-size: calc(var(--mat-slider-value-indicator-height) + var(--mat-slider-value-indicator-offset) + max(var(--mat-sys-interaction-target-min-size), var(--mat-slider-current-handle-height)));
+}
+
+.mat-slider--horizontal.mat-slider--with-value-indicator .mat-slider__track {
+  inset-block-start: calc(var(--mat-slider-value-indicator-height) + var(--mat-slider-value-indicator-offset) + (max(var(--mat-sys-interaction-target-min-size), var(--mat-slider-current-handle-height)) / 2));
+}
+
 .mat-slider__track {
   position: absolute;
   inset-block-start: 50%;
   inset-inline: 0;
   display: block;
   block-size: var(--mat-slider-current-track-height);
-  background: var(--mat-slider-current-inactive-track-color);
-  border-radius: var(--mat-slider-current-track-corner);
   transform: translateY(-50%);
-  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard), block-size var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized), border-radius var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized);
+  transition: block-size var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized);
+}
+
+.mat-slider__active-track,
+.mat-slider__inactive-track {
+  position: absolute;
+  inset-block: 0;
+  display: block;
+  border-radius: var(--mat-slider-current-track-corner);
+  transition: inset-inline-start var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), inline-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.mat-slider__inactive-track {
+  background: var(--mat-slider-current-inactive-track-color);
+}
+
+.mat-slider__inactive-track--before {
+  inset-inline: 0 auto;
+  inline-size: var(--mat-slider-inactive-before-size);
 }
 
 .mat-slider__active-track {
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: var(--mat-slider-active-start-position);
-  display: block;
-  inline-size: var(--mat-slider-active-track-size);
+  inset-inline: var(--mat-slider-active-visible-start) auto;
+  inline-size: var(--mat-slider-active-visible-size);
   background: var(--mat-slider-current-active-track-color);
-  border-radius: inherit;
-  transition: inset-inline-start var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), inline-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.mat-slider__inactive-track--after {
+  inset-inline: var(--mat-slider-inactive-after-start) auto;
+  inline-size: var(--mat-slider-inactive-after-size);
 }
 
 .mat-slider__stop {
@@ -469,11 +539,18 @@ function handleKeyDown(event) {
   display: block;
   inline-size: var(--mat-slider-handle-width);
   block-size: var(--mat-slider-current-handle-height);
+  transform: translate(-50%, -50%);
+  transition: inset-inline-start var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), inline-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), block-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized);
+}
+
+.mat-slider__handle-shape {
+  position: absolute;
+  inset: 0;
+  display: block;
   background: var(--mat-slider-current-handle-color);
   border-radius: var(--mat-slider-current-track-corner);
   clip-path: inset(0 round var(--mat-slider-current-track-corner));
-  transform: translate(-50%, -50%);
-  transition: inset-inline-start var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), inline-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), block-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard), clip-path var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized);
+  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard), clip-path var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized);
 }
 
 .mat-slider__state-layer {
@@ -497,17 +574,28 @@ function handleKeyDown(event) {
   display: grid;
   place-items: center;
   inline-size: var(--mat-slider-value-indicator-width);
-  min-block-size: var(--mat-slider-value-indicator-height);
-  padding-block-end: var(--mat-slider-value-indicator-arrow-size);
+  block-size: var(--mat-slider-value-indicator-height);
   box-sizing: border-box;
   background: var(--mat-slider-value-indicator-color);
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--mat-slider-value-indicator-arrow-size)), 65% calc(100% - var(--mat-slider-value-indicator-arrow-size)), 50% 100%, 35% calc(100% - var(--mat-slider-value-indicator-arrow-size)), 0 calc(100% - var(--mat-slider-value-indicator-arrow-size)));
+  border-radius: var(--mat-sys-shape-corner-full);
   color: var(--mat-slider-value-indicator-content-color);
   font: var(--mat-sys-typescale-label-large-font);
   font-size: var(--mat-sys-typescale-label-large-size);
   font-weight: var(--mat-sys-typescale-label-large-weight);
   letter-spacing: var(--mat-sys-typescale-label-large-tracking);
   line-height: var(--mat-sys-typescale-label-large-line-height);
+  transform: translateX(-50%);
+}
+
+.mat-slider__value-indicator::after {
+  position: absolute;
+  inset-block-start: calc(100% - 1px);
+  inset-inline-start: 50%;
+  inline-size: calc(var(--mat-slider-value-indicator-arrow-size) * 2);
+  block-size: var(--mat-slider-value-indicator-arrow-size);
+  background: var(--mat-slider-value-indicator-color);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  content: '';
   transform: translateX(-50%);
 }
 
@@ -555,7 +643,6 @@ function handleKeyDown(event) {
 
 .mat-slider--dragging .mat-slider__handle {
   inline-size: var(--mat-slider-pressed-handle-width);
-  clip-path: inset(0 round calc(var(--mat-slider-current-track-corner) * .7));
 }
 
 .mat-slider--disabled {
@@ -583,18 +670,32 @@ function handleKeyDown(event) {
 
 .mat-slider--vertical .mat-slider__track {
   inset-block: 0;
-  inset-inline-start: 50%;
+  inset-inline: 50% auto;
   inline-size: var(--mat-slider-current-track-height);
   block-size: auto;
   transform: translateX(-50%);
 }
 
-.mat-slider--vertical .mat-slider__active-track {
-  inset-block-end: var(--mat-slider-active-start-position);
+.mat-slider--vertical .mat-slider__inactive-track--before {
+  inset-block: auto 0;
   inset-inline: 0;
-  block-size: var(--mat-slider-active-track-size);
   inline-size: auto;
+  block-size: var(--mat-slider-inactive-before-size);
+}
+
+.mat-slider--vertical .mat-slider__active-track {
+  inset-block: auto var(--mat-slider-active-visible-start);
+  inset-inline: 0;
+  inline-size: auto;
+  block-size: var(--mat-slider-active-visible-size);
   transition: inset-block-end var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), block-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+}
+
+.mat-slider--vertical .mat-slider__inactive-track--after {
+  inset-block: auto var(--mat-slider-inactive-after-start);
+  inset-inline: 0;
+  inline-size: auto;
+  block-size: var(--mat-slider-inactive-after-size);
 }
 
 .mat-slider--vertical .mat-slider__stop {
@@ -605,10 +706,15 @@ function handleKeyDown(event) {
 
 .mat-slider--vertical .mat-slider__handle {
   inset-block: auto var(--mat-slider-position);
-  inset-inline-start: 50%;
+  inset-inline: 50% auto;
   inline-size: var(--mat-slider-current-handle-height);
   block-size: var(--mat-slider-handle-width);
   transform: translate(-50%, 50%);
+}
+
+.mat-slider--vertical.mat-slider--dragging .mat-slider__handle {
+  inline-size: var(--mat-slider-current-handle-height);
+  block-size: var(--mat-slider-pressed-handle-width);
 }
 
 .mat-slider--vertical .mat-slider__inset-icon {
@@ -620,16 +726,22 @@ function handleKeyDown(event) {
 .mat-slider--vertical .mat-slider__value-indicator {
   inset-block-end: 50%;
   inset-inline-start: calc(100% + var(--mat-slider-value-indicator-offset));
-  padding-block-end: 0;
-  padding-inline-start: var(--mat-slider-value-indicator-arrow-size);
-  clip-path: polygon(var(--mat-slider-value-indicator-arrow-size) 0, 100% 0, 100% 100%, var(--mat-slider-value-indicator-arrow-size) 100%, var(--mat-slider-value-indicator-arrow-size) 65%, 0 50%, var(--mat-slider-value-indicator-arrow-size) 35%);
   transform: translateY(50%);
 }
 
+.mat-slider--vertical .mat-slider__value-indicator::after {
+  inset-block-start: 50%;
+  inset-inline-start: calc((var(--mat-slider-value-indicator-arrow-size) * -1) + 1px);
+  inline-size: var(--mat-slider-value-indicator-arrow-size);
+  block-size: calc(var(--mat-slider-value-indicator-arrow-size) * 2);
+  clip-path: polygon(0 50%, 100% 0, 100% 100%);
+  transform: translateY(-50%);
+}
+
 @supports (border-shape: inset(0 round 1px)) {
-  .mat-slider__track,
   .mat-slider__active-track,
-  .mat-slider__handle {
+  .mat-slider__inactive-track,
+  .mat-slider__handle-shape {
     border-radius: 0;
     border-shape: inset(0 round var(--mat-slider-current-track-corner));
   }
@@ -638,7 +750,9 @@ function handleKeyDown(event) {
 @media (prefers-reduced-motion: reduce) {
   .mat-slider__track,
   .mat-slider__active-track,
+  .mat-slider__inactive-track,
   .mat-slider__handle,
+  .mat-slider__handle-shape,
   .mat-slider__state-layer {
     transition: none;
   }

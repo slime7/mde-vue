@@ -386,7 +386,8 @@
   --mat-slider-large-inset-icon-size: 24px;
   --mat-slider-extra-large-inset-icon-size: 32px;
   --mat-slider-handle-width: 4px;
-  --mat-slider-pressed-handle-width: 20px;
+  --mat-slider-pressed-handle-width: 2px;
+  --mat-slider-handle-track-gap: 6px;
   --mat-slider-state-layer-size: 48px;
   --mat-slider-stop-indicator-size: 4px;
   --mat-slider-value-indicator-width: 48px;
@@ -398,7 +399,7 @@
   --mat-slider-active-track-color: var(--mat-sys-color-primary);
   --mat-slider-handle-color: var(--mat-sys-color-primary);
   --mat-slider-inactive-track-color: var(--mat-sys-color-secondary-container);
-  --mat-slider-stop-indicator-color: var(--mat-sys-color-on-secondary-container);
+  --mat-slider-stop-indicator-color: var(--mat-sys-color-primary);
   --mat-slider-active-stop-indicator-color: var(--mat-sys-color-on-primary);
   --mat-slider-state-layer-color: var(--mat-sys-color-primary);
   --mat-slider-inset-icon-color: var(--mat-sys-color-on-primary);

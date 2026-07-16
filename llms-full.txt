@@ -3319,31 +3319,37 @@ const vertical = ref(70);
 
 ::: details 查看示例代码
 ```vue
+<script setup>
+import { ref } from 'vue';
+
+const value = ref(50);
+</script>
+
 <template>
   <div class="example">
     <mat-slider
       aria-label="超小尺寸"
-      model-value="20"
+      v-model="value"
       size="extra-small"
     />
     <mat-slider
       aria-label="小尺寸"
-      model-value="35"
+      v-model="value"
       size="small"
     />
     <mat-slider
       aria-label="中等尺寸"
-      model-value="50"
+      v-model="value"
       size="medium"
     />
     <mat-slider
       aria-label="大尺寸"
-      model-value="65"
+      v-model="value"
       size="large"
     />
     <mat-slider
       aria-label="超大尺寸"
-      model-value="80"
+      v-model="value"
       size="extra-large"
     />
   </div>
@@ -3369,24 +3375,32 @@ const vertical = ref(70);
 
 ::: details 查看示例代码
 ```vue
+<script setup>
+import { ref } from 'vue';
+
+const altitude = ref(85);
+const brightness = ref(70);
+const volume = ref(55);
+</script>
+
 <template>
   <div class="example">
     <mat-slider
       aria-label="音量"
       inset-icon="volume_up"
-      model-value="55"
+      v-model="volume"
       size="medium"
     />
     <mat-slider
       aria-label="亮度"
       inset-icon="light_mode"
-      model-value="70"
+      v-model="brightness"
       size="large"
     />
     <mat-slider
       aria-label="飞行高度"
       inset-icon="flight"
-      model-value="85"
+      v-model="altitude"
       size="extra-large"
     />
   </div>
@@ -3584,7 +3598,7 @@ const seededValue = ref(70);
 
 ## 状态与交互
 
-组件支持 hover、focus-visible、pressed、disabled 和减少动态效果偏好。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至最小和最大可对齐值。纵向滑块以底部为最小值、顶部为最大值。组件没有公开方法。
+组件支持 hover、focus-visible、pressed、disabled 和减少动态效果偏好。按下或拖动时，当前手柄会由 4px 收窄至 2px；轨道在手柄两侧保留 6px 断口。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至最小和最大可对齐值。纵向滑块以底部为最小值、顶部为最大值。组件没有公开方法。
 
 ## 参考来源
 
@@ -3721,36 +3735,42 @@ const vertical = ref([30, 85]);
 
 ::: details 查看示例代码
 ```vue
+<script setup>
+import { ref } from 'vue';
+
+const range = ref([30, 70]);
+</script>
+
 <template>
   <div class="example">
     <mat-range-slider
       aria-label-end="超小尺寸结束值"
       aria-label-start="超小尺寸起始值"
-      :model-value="[15, 45]"
+      v-model="range"
       size="extra-small"
     />
     <mat-range-slider
       aria-label-end="小尺寸结束值"
       aria-label-start="小尺寸起始值"
-      :model-value="[20, 50]"
+      v-model="range"
       size="small"
     />
     <mat-range-slider
       aria-label-end="中等尺寸结束值"
       aria-label-start="中等尺寸起始值"
-      :model-value="[25, 55]"
+      v-model="range"
       size="medium"
     />
     <mat-range-slider
       aria-label-end="大尺寸结束值"
       aria-label-start="大尺寸起始值"
-      :model-value="[30, 60]"
+      v-model="range"
       size="large"
     />
     <mat-range-slider
       aria-label-end="超大尺寸结束值"
       aria-label-start="超大尺寸起始值"
-      :model-value="[35, 65]"
+      v-model="range"
       size="extra-large"
     />
   </div>
@@ -3950,7 +3970,7 @@ const seededRange = ref([35, 80]);
 
 ## 状态与交互
 
-组件支持 hover、focus-visible、pressed、disabled 和减少动态效果偏好。点击轨道时选择较近的端点；范围滑块的数值指示只显示当前活跃手柄。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至当前端点允许的最小和最大位置。组件没有公开方法。
+组件支持 hover、focus-visible、pressed、disabled 和减少动态效果偏好。点击轨道时选择较近的端点；按下或拖动时仅当前活跃手柄由 4px 收窄至 2px，轨道在两个手柄两侧各保留 6px 断口；数值指示也只显示当前活跃手柄。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至当前端点允许的最小和最大位置。组件没有公开方法。
 
 ## 参考来源
 

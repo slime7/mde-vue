@@ -161,7 +161,7 @@ order: 87
 
 ## 状态与交互
 
-组件支持 hover、focus-visible、pressed、disabled 和减少动态效果偏好。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至最小和最大可对齐值。纵向滑块以底部为最小值、顶部为最大值。组件没有公开方法。
+组件支持 hover、focus-visible、pressed、disabled 和减少动态效果偏好。按下或拖动时，当前手柄会由 4px 收窄至 2px；轨道在手柄两侧保留 6px 断口。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至最小和最大可对齐值。纵向滑块以底部为最小值、顶部为最大值。组件没有公开方法。
 
 ## 参考来源
 

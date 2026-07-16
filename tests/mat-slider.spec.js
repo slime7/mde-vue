@@ -10,6 +10,14 @@ const componentSource = readFileSync(
   'utf8',
 );
 const stylesSource = readFileSync(resolve('src/styles/index.css'), 'utf8');
+const sliderInsetIconExampleSource = readFileSync(
+  resolve('docs/site/examples/slider/SliderInsetIconExample.vue'),
+  'utf8',
+);
+const sliderSizeExampleSource = readFileSync(
+  resolve('docs/site/examples/slider/SliderSizeExample.vue'),
+  'utf8',
+);
 
 /**
  * @param {import('@vue/test-utils').VueWrapper} wrapper
@@ -151,10 +159,15 @@ describe('MatSlider', () => {
     const input = wrapper.find('input');
 
     expect(wrapper.find('.mat-slider__value-indicator').exists()).toBe(false);
+    expect(wrapper.classes()).toContain('mat-slider--with-value-indicator');
 
     await input.trigger('focus');
 
     expect(wrapper.find('.mat-slider__value-indicator').text()).toBe('32');
+    expect(wrapper.find('.mat-slider__handle-shape').exists()).toBe(true);
+    expect(wrapper.find('.mat-slider__handle-shape .mat-slider__value-indicator').exists()).toBe(false);
+    expect(componentSource).toMatch(/\.mat-slider--horizontal\.mat-slider--with-value-indicator \{[\s\S]*?min-block-size: calc\(/);
+    expect(componentSource).toMatch(/\.mat-slider--horizontal\.mat-slider--with-value-indicator \.mat-slider__track \{[\s\S]*?inset-block-start: calc\(/);
 
     await input.trigger('blur');
 
@@ -217,6 +230,76 @@ describe('MatSlider', () => {
     expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
 
+  it('标准变体从最小值识别活动刻度，并让图标显式使用活动轨道前景色', () => {
+    const stops = mount(MatSlider, {
+      props: {
+        max: 5,
+        min: 1,
+        modelValue: 2,
+        showStopIndicator: true,
+      },
+    }).findAll('.mat-slider__stop');
+    const icon = mount(MatSlider, {
+      props: {
+        color: 'tertiary',
+        insetIcon: 'volume_up',
+        modelValue: 70,
+        size: 'medium',
+      },
+    }).find('.mat-slider__inset-icon');
+
+    expect(stops.map((stop) => stop.classes('mat-slider__stop--active'))).toEqual([
+      true,
+      true,
+      false,
+      false,
+      false,
+    ]);
+    expect(icon.attributes('style')).toContain(
+      'color: var(--mat-on-accent-color, var(--mat-slider-inset-icon-color))',
+    );
+  });
+
+  it('使用三段轨道在手柄两侧保留断口，并完全重置纵向定位', () => {
+    const wrapper = mount(MatSlider, {
+      props: {
+        modelValue: 50,
+      },
+    });
+
+    expect(wrapper.findAll('.mat-slider__inactive-track')).toHaveLength(2);
+    expect(wrapper.find('.mat-slider__active-track').exists()).toBe(true);
+    expect(wrapper.attributes('style')).toContain('--mat-slider-active-visible-start:');
+    expect(wrapper.attributes('style')).toContain('--mat-slider-inactive-after-start:');
+    expect(componentSource).toMatch(/\.mat-slider--vertical \.mat-slider__track \{[\s\S]*?inset-inline: 50% auto;/);
+    expect(componentSource).toMatch(/\.mat-slider--vertical \.mat-slider__active-track \{[\s\S]*?inset-block: auto var\(--mat-slider-active-visible-start\);/);
+  });
+
+  it('按住时将手柄收窄，并把裁剪形态限制在手柄形状层', () => {
+    const handleStyles = componentSource.match(
+      /\.mat-slider__handle \{(?<body>[\s\S]*?)\n\}/,
+    )?.groups?.body;
+    const shapeStyles = componentSource.match(
+      /\.mat-slider__handle-shape \{(?<body>[\s\S]*?)\n\}/,
+    )?.groups?.body;
+
+    expect(stylesSource).toContain('--mat-slider-pressed-handle-width: 2px');
+    expect(stylesSource).toContain('--mat-slider-handle-track-gap: 6px');
+    expect(handleStyles).not.toContain('clip-path');
+    expect(shapeStyles).toContain('clip-path');
+    expect(componentSource).toContain('.mat-slider--dragging .mat-slider__handle {');
+    expect(componentSource).toContain('.mat-slider--vertical.mat-slider--dragging .mat-slider__handle {');
+  });
+
+  it('固定外观示例改用可交互模型，尺寸示例共享同一个数值', () => {
+    expect(sliderSizeExampleSource).toContain('const value = ref(50)');
+    expect(sliderSizeExampleSource.match(/v-model="value"/g)).toHaveLength(5);
+    expect(sliderSizeExampleSource).not.toContain('model-value=');
+    expect(sliderInsetIconExampleSource).toContain('const volume = ref(55)');
+    expect(sliderInsetIconExampleSource.match(/v-model=/g)).toHaveLength(3);
+    expect(sliderInsetIconExampleSource).not.toContain('model-value=');
+  });
+
   it('校验公开属性，并在样式中保留官方尺寸、形态增强和减少动态效果分支', () => {
     expect(MatSlider.props.variant.validator('standard')).toBe(true);
     expect(MatSlider.props.variant.validator('centered')).toBe(true);
@@ -246,5 +329,6 @@ describe('MatSlider', () => {
     expect(stylesSource).toContain('--mat-slider-extra-large-track-corner: 28px');
     expect(stylesSource).toContain('--mat-slider-medium-inset-icon-size: 24px');
     expect(stylesSource).toContain('--mat-slider-extra-large-inset-icon-size: 32px');
+    expect(stylesSource).toContain('--mat-slider-stop-indicator-color: var(--mat-sys-color-primary)');
   });
 });
