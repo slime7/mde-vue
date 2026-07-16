@@ -23,6 +23,7 @@ import MatDialog from './components/mat-dialog/MatDialog.vue';
 import MatSpacer from './components/mat-spacer/MatSpacer.vue';
 import MatLoader from './components/mat-loader/MatLoader.vue';
 import MatTooltip from './components/mat-tooltip/MatTooltip.vue';
+import MatSnackbar from './components/mat-snackbar/MatSnackbar.vue';
 import { setImperativeContext } from './imperative-context';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from './mat-ui-context';
 import createThemeController from './theme';
@@ -135,6 +136,8 @@ export function createMatUi(options = {}) {
       app.component('mat-loader', MatLoader);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-tooltip', MatTooltip);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-snackbar', MatSnackbar);
       app.provide(MAT_UI_KEY, componentOptions);
       app.provide(MAT_THEME_KEY, theme);
       setImperativeContext(componentOptions, theme);

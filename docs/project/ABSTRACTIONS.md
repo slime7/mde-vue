@@ -148,6 +148,12 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 Tooltip 只实现 Material 3 Plain tooltip，不提供 color、Rich 内容、操作、箭头或触屏长按。模块级协调器保证同一时间只有一个实例可见；展示期间将唯一 tooltip id 无损合并到展示元素的 `aria-describedby`，关闭、换锚点或卸载时恢复原有属性。定位始终使用固定视口坐标，按首选方向翻转并在 8px 视口安全边距内夹紧。
 
+## Snackbar
+
+`<mat-snackbar>` 通过 `modelValue` 请求展示底部短暂通知；它使用全局 FIFO 队列，因此任意模板实例与命令式调用合计同一时刻只显示一条。活动项必须先完成退出动画，下一条才可进入；排队模板项收到 `modelValue=false` 或卸载时取消。`text` 与默认 Slot 都能提供内容，默认 Slot 优先；`closable` 提供内置关闭按钮，`close` Slot 存在时优先并接收 `{ close }`。默认持续 4000ms，`duration=0` 常驻，`position` 只接受 `left`、`center`、`right`。
+
+`snackbar(options)` 与别名 `toast` 只从 `mdu-ui/functions` 导入，必须接收包含非空 `text` 的对象，返回在退出动画和单个命令式宿主清理完成后结算的 `Promise<void>`。命令式请求没有 Slots 或取消句柄，但与模板组件使用同一个全局队列，并读取最后安装的插件图标与主题上下文。Snackbar 固定为 `role="status"`、`aria-live="polite"`，从不主动移动焦点。
+
 ## 文档权威关系
 
 `docs/site/` 中人工编辑的 Markdown 使用页面是组件说明的权威来源。`llms.txt` 只提供适合 AI 发现内容的索引，`llms-full.txt` 是这些页面的合并文本；两者均为可重复生成的派生文件，不接受手工修补。

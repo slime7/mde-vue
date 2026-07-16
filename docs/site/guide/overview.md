@@ -11,7 +11,7 @@ order: 10
 
 当前公共能力包括：
 
-- Button、Card、List、Checkbox、Radio 和 Switch 等 Material 组件；
+- Button、Card、List、Checkbox、Radio、Switch、Dialog、Tooltip 和 Snackbar 等 Material 组件；
 - Material 2025 动态颜色主题和组件级 `color` 配色；
 - 可选的 Tailwind CSS v4 语义工具类；
 - 面向开发者与 AI 的同源 Markdown 文档。

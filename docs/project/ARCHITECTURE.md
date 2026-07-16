@@ -36,7 +36,7 @@
 
 ### 公共入口
 
-`src/index.js` 是完整组件包入口，导出 Icon、Button、Card、List、Divider、Spacer、Loader、Tooltip、选择控件、Text field、Textarea、Menu、Dialog 组件族以及 `createMatUi()` 和 `useMatTheme()`。Dialog 命令式函数由独立的 `mdu-ui/functions` 入口导出，不从根入口或 Dialog 组件子入口重复导出。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口，复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
+`src/index.js` 是完整组件包入口，导出 Icon、Button、Card、List、Divider、Spacer、Loader、Tooltip、Snackbar、选择控件、Text field、Textarea、Menu、Dialog 组件族以及 `createMatUi()` 和 `useMatTheme()`。Dialog 与 Snackbar 命令式函数由独立的 `mdu-ui/functions` 入口导出，不从根入口或对应组件子入口重复导出。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口，复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -63,6 +63,8 @@ List 通过内部 provide/inject 上下文统一交互模式、受控选择和�
 Text field 与 Textarea 共享视觉基础层，但分别保留原生 input 与 textarea。Menu 组合 `MatSurfaceBase` 与 Popover，通过受控 `modelValue` 管理显示，支持元素 id 的 CSS anchor 定位和 `[clientX, clientY]` 视口坐标定位，并负责 offset、视口夹紧、多级开关和 menu/menuitem 键盘语义；MenuItem 组合 `MatActionBase`。MatMenuGroup 提供带可选标签的 `role="group"`、独立 level 2 表面和 expressive 间隙分组。Menu 与 List 只共享无语义内容排列和 roving focus 工具，不共享选择模型或根语义。Divider 在 Menu 中切换为 separator。
 
 Dialog 组合 `MatSurfaceBase` 与原生 modal dialog，通过 Teleport 挂载到 body 或指定元素。组件在退出动画期间保留原生模态状态和 DOM；共享堆叠管理器只显示顶层帷幕。`dialog()`、`alert()`、`confirm()` 与 `prompt()` 使用一次性 Vue 宿主复用同一组件，关闭动画完成并清理宿主后再结算 Promise。命令式宿主读取最后安装的插件组件设置与主题控制器；未安装插件时使用默认设置。
+
+Snackbar 通过 Teleport 固定在视口底部，使用 `modelValue` 请求展示而不移动焦点。模块级 FIFO 调度器同时协调所有模板实例和 `snackbar()` / `toast()` 命令式请求；活动项只在退出动画完成后释放下一项，排队模板项可由 `modelValue=false` 或卸载取消。命令式 Snackbar 使用单个可复用 Vue 宿主并注入最后安装插件的组件设置与主题控制器；宿主没有待显示内容时移除，Promise 在退出与清理完成后结算。
 
 Loader 以单个组件的 `linear` 与 `circular` variant 表达两种 Progress indicator 形态。确定状态在根元素上提供 progressbar ARIA 值，不确定状态仅保留进度语义和动画；波浪形活动指示器由内联 SVG 绘制，轨道保持平直。组件只读取系统 primary 与 secondary container 颜色角色，显式 `color` 通过共享局部配色模块替换活动与停止指示器色。
 

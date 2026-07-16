@@ -47,6 +47,7 @@ llms: false
 - Text field 与 Textarea：`docs/site/components/text-field.md`
 - Menu 与 Menu item：`docs/site/components/menu.md`
 - Tooltip：`docs/site/components/tooltip.md`
+- Snackbar：`docs/site/components/snackbar.md`
 - Spacer：`docs/site/components/spacer.md`
 - 支持范围：`docs/site/guide/limitations.md`
 

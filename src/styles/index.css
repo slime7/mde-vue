@@ -375,6 +375,16 @@
   --mat-tooltip-container-elevation: var(--mat-sys-elevation-level0);
   --mat-tooltip-viewport-margin: 8px;
 
+  /* Snackbar component tokens */
+  --mat-snackbar-container-color: var(--mat-sys-color-inverse-surface);
+  --mat-snackbar-content-color: var(--mat-sys-color-inverse-on-surface);
+  --mat-snackbar-action-color: var(--mat-sys-color-inverse-primary);
+  --mat-snackbar-container-height: 48px;
+  --mat-snackbar-two-line-container-height: 64px;
+  --mat-snackbar-container-shape: var(--mat-sys-shape-corner-extra-small);
+  --mat-snackbar-container-elevation: var(--mat-sys-elevation-level3);
+  --mat-snackbar-viewport-margin: 16px;
+
   /* Button component tokens */
   --mat-btn-extra-small-container-height: 32px;
   --mat-btn-extra-small-leading-space: 12px;
