@@ -188,4 +188,9 @@ describe('MatIcon', () => {
     expect(componentSource).toContain('@media (prefers-reduced-motion: reduce)');
     expect(componentSource).toContain('transition-duration: 0s;');
   });
+
+  it('不允许选择图标文字，并使用默认指针避免显示文本选择光标', () => {
+    expect(componentSource).toContain('user-select: none;');
+    expect(componentSource).toContain('cursor: default;');
+  });
 });

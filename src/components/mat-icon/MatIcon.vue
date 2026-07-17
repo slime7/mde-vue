@@ -135,6 +135,8 @@ const rootStyle = computed(() => ({
   text-transform: none;
   white-space: nowrap;
   overflow-wrap: normal;
+  user-select: none;
+  cursor: default;
   transition-duration: var(--mat-sys-motion-duration-short4);
   transition-property: color, font-size, font-variation-settings;
   transition-timing-function: var(--mat-sys-motion-easing-standard);
