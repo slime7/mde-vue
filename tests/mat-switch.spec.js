@@ -25,11 +25,7 @@ describe('MatSwitch', () => {
     expect(wrapper.emitted('change')?.[0][0]).toBeInstanceOf(Event);
   });
 
-  it.each([
-    ['none', 0],
-    ['selected', 1],
-    ['both', 2],
-  ])('icons=%s 渲染 %i 个内置图标', (icons, count) => {
+  it.each(['none', 'selected', 'both'])('icons=%s 保持固定图标结构并交给 CSS 控制状态', (icons) => {
     const wrapper = mount(MatSwitch, {
       props: {
         icons,
@@ -37,7 +33,8 @@ describe('MatSwitch', () => {
       },
     });
 
-    expect(wrapper.findAll('.mat-switch__icon')).toHaveLength(count);
+    expect(wrapper.find('.mat-switch__handle-positioner').exists()).toBe(true);
+    expect(wrapper.findAll('.mat-switch__icon')).toHaveLength(2);
     expect(wrapper.classes()).toContain(`mat-switch--icons-${icons}`);
   });
 

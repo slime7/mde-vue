@@ -35,6 +35,12 @@ describe('选择控件样式规格', () => {
 
   it('保留状态层、可见焦点和 reduced-motion', () => {
     expect(selectionBase).toContain('var(--mat-selection-control-state-layer-size)');
+    expect(selectionBase).toContain('translate(var(--mat-selection-control-state-layer-translation), -50%)');
+    expect(selectionBase).toContain('transition: transform');
+    expect(selectionBase).not.toContain('transition: inset-inline-start');
+    expect(matSwitch).toContain('--mat-switch-handle-translation: 20px');
+    expect(matSwitch).toContain('--mat-selection-control-state-layer-translation: var(--mat-switch-handle-translation)');
+    expect(selectionBase).not.toContain('--mat-selection-control-current-handle-offset');
     expect(selectionBase).toContain(':focus-visible');
     expect(selectionBase).toContain('@media (prefers-reduced-motion: reduce)');
   });

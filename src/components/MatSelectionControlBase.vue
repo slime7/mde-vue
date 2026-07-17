@@ -156,6 +156,7 @@ defineExpose({
 .mat-selection-control {
   --mat-selection-control-target-width: var(--mat-sys-interaction-target-min-size);
   --mat-selection-control-state-layer-offset: calc((var(--mat-selection-control-target-width) - var(--mat-selection-control-state-layer-size)) / 2);
+  --mat-selection-control-state-layer-translation: 0;
   --mat-selection-control-state-layer-color: var(--mat-sys-color-on-surface);
   --mat-selection-control-focus-ring-color: var(--mat-accent-color, var(--mat-sys-color-primary));
   display: inline-flex;
@@ -214,8 +215,8 @@ defineExpose({
   outline: 0 solid transparent;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-50%);
-  transition: inset-inline-start var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard), opacity var(--mat-sys-motion-duration-short2) var(--mat-sys-motion-easing-standard), outline-color var(--mat-sys-motion-duration-short2) var(--mat-sys-motion-easing-standard);
+  transform: translate(var(--mat-selection-control-state-layer-translation), -50%);
+  transition: transform var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard), opacity var(--mat-sys-motion-duration-short2) var(--mat-sys-motion-easing-standard), outline-color var(--mat-sys-motion-duration-short2) var(--mat-sys-motion-easing-standard);
 }
 
 .mat-selection-control__indicator {
@@ -247,7 +248,6 @@ defineExpose({
 
 .mat-selection-control__input:active ~ .mat-selection-control__indicator {
   --mat-selection-control-current-handle-size: var(--mat-selection-control-pressed-handle-size, var(--mat-selection-control-current-handle-size));
-  --mat-selection-control-current-handle-offset: var(--mat-selection-control-pressed-handle-offset, var(--mat-selection-control-current-handle-offset));
 }
 
 .mat-selection-control__label {

@@ -1,5 +1,4 @@
 <script setup>
-import { computed } from 'vue';
 import MatSelectionControlBase from '../MatSelectionControlBase.vue';
 import { isComponentColor } from '../button-props';
 
@@ -8,7 +7,7 @@ defineOptions({
   inheritAttrs: false,
 });
 
-const props = defineProps({
+defineProps({
   modelValue: {
     type: Boolean,
     default: false,
@@ -39,9 +38,6 @@ const emit = defineEmits({
     return event instanceof Event;
   },
 });
-const showSelectedIcon = computed(() => ['selected', 'both'].includes(props.icons));
-const showUnselectedIcon = computed(() => props.icons === 'both');
-
 /**
  * @param {Event} event
  */
@@ -69,15 +65,11 @@ function handleChange(event) {
   >
     <template #indicator>
       <span class="mat-switch__track">
-        <span class="mat-switch__handle">
-          <span
-            v-if="showSelectedIcon"
-            class="mat-switch__icon mat-switch__icon--selected"
-          />
-          <span
-            v-if="showUnselectedIcon"
-            class="mat-switch__icon mat-switch__icon--unselected"
-          />
+        <span class="mat-switch__handle-positioner">
+          <span class="mat-switch__handle">
+            <span class="mat-switch__icon mat-switch__icon--selected" />
+            <span class="mat-switch__icon mat-switch__icon--unselected" />
+          </span>
         </span>
       </span>
     </template>
@@ -90,6 +82,7 @@ function handleChange(event) {
 .mat-switch {
   --mat-accent-color: var(--mat-switch-selected-track-color);
   --mat-on-accent-color: var(--mat-switch-selected-handle-color);
+  --mat-switch-handle-translation: 20px;
   --mat-selection-control-target-width: var(--mat-switch-track-width);
   --mat-selection-control-indicator-width: var(--mat-switch-track-width);
   --mat-selection-control-indicator-height: var(--mat-switch-track-height);
@@ -98,22 +91,21 @@ function handleChange(event) {
   --mat-selection-control-state-layer-color: var(--mat-switch-unselected-state-layer-color);
   --mat-selection-control-label-color: var(--mat-switch-label-text-color);
   --mat-selection-control-current-handle-size: var(--mat-switch-unselected-handle-size);
-  --mat-selection-control-current-handle-offset: 8px;
   --mat-selection-control-pressed-handle-size: var(--mat-switch-pressed-handle-size);
-  --mat-selection-control-pressed-handle-offset: 2px;
+}
+
+.mat-switch:dir(rtl) {
+  --mat-switch-handle-translation: -20px;
 }
 
 .mat-switch--icons-both:not(.mat-switch--checked) {
   --mat-selection-control-current-handle-size: var(--mat-switch-icon-handle-size);
-  --mat-selection-control-current-handle-offset: 4px;
 }
 
 .mat-switch--checked {
-  --mat-selection-control-state-layer-offset: 16px;
+  --mat-selection-control-state-layer-translation: var(--mat-switch-handle-translation);
   --mat-selection-control-state-layer-color: var(--mat-accent-color);
   --mat-selection-control-current-handle-size: var(--mat-switch-selected-handle-size);
-  --mat-selection-control-current-handle-offset: 24px;
-  --mat-selection-control-pressed-handle-offset: 22px;
 }
 
 .mat-switch__track {
@@ -133,19 +125,31 @@ function handleChange(event) {
   border-color: var(--mat-accent-color);
 }
 
-.mat-switch__handle {
+.mat-switch__handle-positioner {
   position: absolute;
   inset-block-start: 50%;
-  inset-inline-start: var(--mat-selection-control-current-handle-offset);
+  inset-inline-start: 2px;
+  inline-size: var(--mat-switch-pressed-handle-size);
+  block-size: var(--mat-switch-pressed-handle-size);
+  transform: translateY(-50%);
+  transition: transform var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized);
+}
+
+.mat-switch--checked .mat-switch__handle-positioner {
+  transform: translate(var(--mat-switch-handle-translation), -50%);
+}
+
+.mat-switch__handle {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  inline-size: var(--mat-selection-control-current-handle-size);
-  block-size: var(--mat-selection-control-current-handle-size);
+  inline-size: 100%;
+  block-size: 100%;
   background: var(--mat-switch-unselected-handle-color);
   border-radius: var(--mat-sys-shape-corner-full);
-  transform: translateY(-50%);
-  transition: inset-inline-start var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), inline-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), block-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+  clip-path: circle(calc(var(--mat-selection-control-current-handle-size) / 2));
+  transition: clip-path var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
 }
 
 .mat-switch--checked .mat-switch__handle {
@@ -156,7 +160,13 @@ function handleChange(event) {
   position: absolute;
   inline-size: var(--mat-switch-icon-size);
   block-size: var(--mat-switch-icon-size);
-  transition: clip-path var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-emphasized);
+  opacity: 0;
+  transition: clip-path var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-emphasized), opacity var(--mat-sys-motion-duration-short2) var(--mat-sys-motion-easing-standard);
+}
+
+.mat-switch--icons-selected .mat-switch__icon--selected,
+.mat-switch--icons-both .mat-switch__icon {
+  opacity: 1;
 }
 
 .mat-switch__icon--selected {
@@ -191,6 +201,7 @@ function handleChange(event) {
 
 @media (prefers-reduced-motion: reduce) {
   .mat-switch__track,
+  .mat-switch__handle-positioner,
   .mat-switch__handle,
   .mat-switch__icon {
     transition: none;
