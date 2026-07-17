@@ -48,4 +48,13 @@ describe('VitePress 文档自定义主题', () => {
     expect(source).toContain('<ThemeSettings />');
     expect(source).toContain('import ThemeSettings from \'../.vitepress/theme/ThemeSettings.vue\';');
   });
+
+  it('将 VitePress 页面变量映射到 mdu-ui 主题令牌', () => {
+    const source = readThemeFile('custom.css');
+
+    expect(source).toContain('html[data-mat-theme=\'dark\']');
+    expect(source).toContain('--vp-c-bg: var(--mat-sys-color-background)');
+    expect(source).toContain('--vp-c-text-1: var(--mat-sys-color-on-background)');
+    expect(source).toContain('--vp-code-block-bg: var(--mat-sys-color-surface-container)');
+  });
 });

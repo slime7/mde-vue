@@ -1,11 +1,9 @@
 <script setup>
-import { useData } from 'vitepress';
 import {
   computed, ref, watch,
 } from 'vue';
 import { useMatTheme } from 'mdu-ui';
 
-const { isDark } = useData();
 const theme = useMatTheme();
 const seedColorInput = ref(theme.seedColor.value);
 const seedColorError = ref('');
@@ -14,10 +12,6 @@ const colorPicker = ref(null);
 const resolvedModeLabel = computed(() => (
   theme.resolvedMode.value === 'dark' ? '暗色' : '亮色'
 ));
-
-watch(() => theme.resolvedMode.value, (mode) => {
-  isDark.value = mode === 'dark';
-}, { immediate: true });
 
 watch(() => theme.seedColor.value, (value) => {
   seedColorInput.value = value;
