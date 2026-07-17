@@ -42,9 +42,6 @@ html[data-mat-theme='dark'] {
   --vp-c-danger-2: var(--mat-sys-color-error-container);
   --vp-c-danger-3: var(--mat-sys-color-error-container);
   --vp-c-danger-soft: var(--mat-sys-color-error-container);
-  --vp-code-block-bg: var(--mat-sys-color-surface-container);
-  --vp-code-block-divider-color: var(--mat-sys-color-outline-variant);
-  --vp-code-bg: var(--mat-sys-color-surface-container-low);
   --vp-nav-bg-color: var(--mat-sys-color-background);
   --vp-sidebar-bg-color: var(--mat-sys-color-background);
   --vp-local-search-result-bg: var(--mat-sys-color-surface-container);

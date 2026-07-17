@@ -13,6 +13,10 @@ const resolvedModeLabel = computed(() => (
   theme.resolvedMode.value === 'dark' ? '暗色' : '亮色'
 ));
 
+watch(() => theme.resolvedMode.value, (mode) => {
+  document.documentElement.classList.toggle('dark', mode === 'dark');
+}, { immediate: true });
+
 watch(() => theme.seedColor.value, (value) => {
   seedColorInput.value = value;
 });
