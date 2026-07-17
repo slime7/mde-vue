@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils';
 import {
   beforeAll, beforeEach, describe, expect, it, vi,
 } from 'vitest';
-import { nextTick } from 'vue';
+import { h, nextTick } from 'vue';
 import MatDialog from '../src/components/mat-dialog/MatDialog.vue';
 
 beforeAll(() => {
@@ -28,6 +28,61 @@ async function settleRender() {
 describe('MatDialog', () => {
   beforeEach(() => {
     vi.useFakeTimers();
+  });
+
+  it('渲染 activator Slot，并在关闭完成后恢复触发器焦点', async () => {
+    const wrapper = mount(MatDialog, {
+      attachTo: document.body,
+      props: {
+        title: '确认操作',
+      },
+      slots: {
+        activator: () => h('button', {
+          id: 'dialog-activator',
+          type: 'button',
+        }, '打开 Dialog'),
+      },
+    });
+    const activator = wrapper.get('#dialog-activator').element;
+
+    activator.focus();
+    await wrapper.setProps({ modelValue: true });
+    await settleRender();
+
+    expect(document.body.querySelector('dialog')).not.toBeNull();
+
+    await wrapper.setProps({ modelValue: false });
+    await vi.advanceTimersByTimeAsync(200);
+    await nextTick();
+
+    expect(document.activeElement).toBe(activator);
+    wrapper.unmount();
+  });
+
+  it('activator Slot 渲染多个元素根节点时警告并请求关闭', async () => {
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const wrapper = mount(MatDialog, {
+      props: {
+        modelValue: true,
+        title: '无效触发器',
+      },
+      slots: {
+        activator: () => [
+          h('button', { type: 'button' }, '第一个'),
+          h('button', { type: 'button' }, '第二个'),
+        ],
+      },
+    });
+
+    await settleRender();
+
+    expect(document.body.querySelector('dialog')).toBeNull();
+    expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
+    expect(warning).toHaveBeenCalledWith(
+      'MatDialog: activator Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点',
+    );
+
+    wrapper.unmount();
   });
 
   it('通过 modelValue 打开，并在关闭动画完成后移除 DOM', async () => {

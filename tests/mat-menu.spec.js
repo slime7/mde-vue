@@ -31,6 +31,66 @@ describe('MatMenu', () => {
     });
   });
 
+  it('activator Slot 优先于 anchor prop，并在关闭后恢复触发器焦点', async () => {
+    const externalAnchor = document.createElement('button');
+
+    externalAnchor.id = 'external-menu-anchor';
+    document.body.append(externalAnchor);
+    const wrapper = mount(MatMenu, {
+      attachTo: document.body,
+      props: {
+        modelValue: true,
+        anchor: 'external-menu-anchor',
+      },
+      slots: {
+        activator: () => h('button', {
+          id: 'slot-menu-activator',
+          type: 'button',
+        }, '打开菜单'),
+        default: () => h(MatMenuItem, null, () => '菜单项目'),
+      },
+    });
+
+    await nextTick();
+    const activator = wrapper.get('#slot-menu-activator').element;
+    const menu = wrapper.get('[role="menu"]');
+
+    expect(activator.style.getPropertyValue('anchor-name')).toMatch(/--mat-menu-anchor-/);
+    expect(externalAnchor.style.getPropertyValue('anchor-name')).toBe('');
+    expect(document.activeElement).toBe(menu.get('[role="menuitem"]').element);
+
+    await menu.get('[role="menuitem"]').trigger('click');
+    await nextTick();
+
+    expect(document.activeElement).toBe(activator);
+    wrapper.unmount();
+  });
+
+  it('activator Slot 渲染多个元素根节点时警告并请求关闭', async () => {
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const wrapper = mount(MatMenu, {
+      attachTo: document.body,
+      props: { modelValue: true },
+      slots: {
+        activator: () => [
+          h('button', { type: 'button' }, '第一个'),
+          h('button', { type: 'button' }, '第二个'),
+        ],
+        default: () => h(MatMenuItem, null, () => '菜单项目'),
+      },
+    });
+
+    await nextTick();
+
+    expect(document.body.querySelector('[role="menu"]')?.dataset.popoverOpen).toBeUndefined();
+    expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
+    expect(warning).toHaveBeenCalledWith(
+      'MatMenu: activator Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点',
+    );
+
+    wrapper.unmount();
+  });
+
   it('通过 anchor 打开顶层菜单并建立 roving tabindex', async () => {
     const anchor = document.createElement('button');
 

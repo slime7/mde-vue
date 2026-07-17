@@ -73,6 +73,7 @@ const emit = defineEmits({
 });
 const attrs = useAttrs();
 const slots = useSlots();
+const activatorHost = ref(null);
 const surface = ref(null);
 const rendered = ref(false);
 const phase = ref('closed');
@@ -84,12 +85,27 @@ const hasContent = computed(() => props.content !== undefined || Boolean(slots.d
 const hasIcon = computed(() => !props.fullScreen && (
   props.icon !== undefined || Boolean(slots.icon)
 ));
+const hasActivatorSlot = computed(() => Boolean(slots.activator));
 const isTop = computed(() => dialogStack.value.at(-1) === root.value);
 const { colorStyle } = useComponentColor(computed(() => props.color));
 const rootStyle = computed(() => [colorStyle.value, attrs.style]);
 let mounted = false;
 let phaseTimer;
 let previousFocus = null;
+
+/**
+ * @returns {HTMLElement | null}
+ */
+function resolveActivatorTarget() {
+  const elements = activatorHost.value ? [...activatorHost.value.children] : [];
+
+  if (elements.length === 1 && elements[0] instanceof HTMLElement
+    && elements[0].ownerDocument === document) {
+    return elements[0];
+  }
+
+  return null;
+}
 
 function clearPhaseTimer() {
   if (phaseTimer !== undefined) {
@@ -153,6 +169,12 @@ function warnForAccessibleName() {
   );
 }
 
+function warnForInvalidActivator() {
+  console.warn(
+    'MatDialog: activator Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点',
+  );
+}
+
 function focusInitialElement() {
   const element = root.value;
 
@@ -185,6 +207,14 @@ async function openDialog() {
     return;
   }
 
+  const activator = hasActivatorSlot.value ? resolveActivatorTarget() : null;
+
+  if (hasActivatorSlot.value && !activator) {
+    warnForInvalidActivator();
+    requestClose();
+    return;
+  }
+
   const target = resolveAttach();
 
   if (!target) {
@@ -193,9 +223,11 @@ async function openDialog() {
     return;
   }
 
-  previousFocus = document.activeElement instanceof HTMLElement
-    ? document.activeElement
-    : null;
+  previousFocus = activator ?? (
+    document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null
+  );
   teleportTarget.value = target;
   rendered.value = true;
   phase.value = 'opening';
@@ -332,6 +364,10 @@ watchEffect(() => {
 </script>
 
 <template>
+  <span v-if="hasActivatorSlot" ref="activatorHost" class="mat-dialog__activator">
+    <slot name="activator" />
+  </span>
+
   <Teleport v-if="rendered" :to="teleportTarget">
     <MatSurfaceBase
       ref="surface"
@@ -423,6 +459,10 @@ watchEffect(() => {
 </template>
 
 <style scoped>
+.mat-dialog__activator {
+  display: contents;
+}
+
 .mat-dialog {
   --mat-dialog-container-color: var(--mat-sys-color-surface-container-high);
   --mat-dialog-headline-color: var(--mat-sys-color-on-surface);

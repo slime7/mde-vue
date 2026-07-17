@@ -5662,7 +5662,7 @@ import TextareaRowsExample from '../examples/text-field/TextareaRowsExample.vue'
 
 ## 示例
 
-根菜单通过普通 `v-model` 控制显示状态，并使用元素 id 或视口坐标形式的 `anchor` 定位。触发器只保留展示菜单所需的点击状态。
+根菜单通过普通 `v-model` 控制显示状态，并使用元素 id、`activator` Slot 或视口坐标形式的 `anchor` 定位。触发器只保留展示菜单所需的点击状态。
 
 ### `modelValue` 与元素 `anchor`
 
@@ -5712,6 +5712,58 @@ const open = ref(false);
 <ClientOnly>
   <DocsPreview label="Menu modelValue 与元素 anchor 预览">
     <MenuOpenAnchorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `activator` Slot
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example-menu">
+    <mat-menu
+      id="activator-slot-menu"
+      v-model="open"
+    >
+      <template #activator>
+        <mat-btn
+          variant="outlined"
+          aria-haspopup="menu"
+          :aria-expanded="open"
+          aria-controls="activator-slot-menu"
+          @click="open = !open"
+        >
+          使用 activator Slot
+        </mat-btn>
+      </template>
+
+      <mat-menu-item>菜单项目</mat-menu-item>
+    </mat-menu>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
+```vue
+<style scoped>
+.example-menu {
+  min-block-size: 120px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Menu activator Slot 预览">
+    <MenuActivatorSlotExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -6342,12 +6394,12 @@ Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `modelValue` | `boolean` | `false` | 根菜单的受控展开状态，使用普通 `v-model` |
-| `anchor` | `string \| [number, number]` | 未设置 | 根菜单触发元素的 id，或 `[clientX, clientY]` 视口坐标 |
+| `anchor` | `string \| [number, number]` | 未设置 | 根菜单触发元素的 id，或 `[clientX, clientY]` 视口坐标；存在 `activator` Slot 时忽略 |
 | `offset` | `[number, number]` | `[0, 0]` | 在基础位置之后增加 `[x, y]` 偏移；正值向右、向下 |
 | `variant` | `'standard' \| 'vibrant'` | `'standard'` | 中性表面或更高强调的 tertiary 表面 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 活动项目与 vibrant 表面的局部配色 |
 
-字符串 anchor 必须能在当前 document 中找到对应 id。坐标 anchor 使用 fixed 定位，适合 `contextmenu`；坐标或 offset 改变时，已打开的菜单立即重新定位。根菜单缺少有效 anchor 时会请求关闭。嵌套在 `submenu` Slot 中的 MatMenu 自动以父 MatMenuItem 为 anchor，并继承父菜单的 color 与 variant；嵌套菜单显式设置的 color、variant 或 offset 优先，自身 anchor 被忽略。未消费的属性传给 `role="menu"` 的 Popover 根元素。
+字符串 anchor 必须能在当前 document 中找到对应 id。`activator` Slot 存在时优先使用其唯一的 HTMLElement 根节点，并忽略 `anchor`；多根节点或非 HTMLElement 根节点会给出警告并请求关闭。坐标 anchor 使用 fixed 定位，适合 `contextmenu`；坐标或 offset 改变时，已打开的菜单立即重新定位。根菜单缺少有效 anchor 时会请求关闭。嵌套在 `submenu` Slot 中的 MatMenu 自动以父 MatMenuItem 为 anchor，并继承父菜单的 color 与 variant；嵌套菜单显式设置的 color、variant 或 offset 优先，自身 anchor 被忽略。未消费的属性传给 `role="menu"` 的 Popover 根元素。
 
 ### MatMenuGroup 属性
 
@@ -6378,6 +6430,7 @@ MatMenuGroup 没有自定义事件。包含 submenu 的项目把点击、Enter�
 
 | 组件 | 名称 | 内容约束 |
 | --- | --- | --- |
+| `MatMenu` | `activator` | 唯一的当前 document 中 HTMLElement 根节点，作为根菜单锚点；存在时优先于 `anchor` |
 | `MatMenu` | 默认 | 直接放置 MatMenuItem 和 MatDivider，或统一放置 MatMenuGroup |
 | `MatMenuGroup` | 默认 | 直接放置 MatMenuItem 和可选 MatDivider |
 | `MatMenuItem` | 默认 | 必需的简短操作标签 |
@@ -6405,6 +6458,7 @@ MenuItem 的 Slots 只构成一个操作，不应嵌套按钮、开关或其他�
 外观、测量、子菜单和换边规则依据 Material 3 [Menus overview](https://m3.material.io/components/menus/overview)、[Menus specs](https://m3.material.io/components/menus/specs) 与 [Menus guidelines](https://m3.material.io/components/menus/guidelines)。键盘语义参考 [WAI-ARIA Menu and Menubar Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)。
 
 <script setup>
+import MenuActivatorSlotExample from '../examples/menu/MenuActivatorSlotExample.vue';
 import MenuColorExample from '../examples/menu/MenuColorExample.vue';
 import MenuContextExample from '../examples/menu/MenuContextExample.vue';
 import MenuDefaultSlotExample from '../examples/menu/MenuDefaultSlotExample.vue';
@@ -6424,7 +6478,7 @@ import MenuVariantExample from '../examples/menu/MenuVariantExample.vue';
 
 ## 组件简介
 
-`<mat-dialog>` 的组件导出名是 `MatDialog`。组件使用原生 modal dialog 与 Vue Teleport，在基础或全屏布局中展示需要使用者确认、输入或选择的内容。Dialog 支持受控开关、进入和退出动画、焦点恢复、多个实例的顶层帷幕合并，以及 `dialog()`、`alert()`、`confirm()`、`prompt()` 四个 Promise 函数。
+`<mat-dialog>` 的组件导出名是 `MatDialog`。组件使用原生 modal dialog 与 Vue Teleport，在基础或全屏布局中展示需要使用者确认、输入或选择的内容，并可通过 `activator` Slot 放置触发元素。Dialog 支持受控开关、进入和退出动画、焦点恢复、多个实例的顶层帷幕合并，以及 `dialog()`、`alert()`、`confirm()`、`prompt()` 四个 Promise 函数。
 
 ## 示例
 
@@ -6469,6 +6523,52 @@ const open = ref(false);
 <ClientOnly>
   <DocsPreview label="Dialog modelValue 预览">
     <DialogModelValueExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `activator` Slot
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-dialog
+    v-model="open"
+    title="确认删除？"
+    content="删除后无法恢复，请确认是否继续。"
+  >
+    <template #activator>
+      <mat-btn variant="outlined" @click="open = true">
+        使用 activator Slot
+      </mat-btn>
+    </template>
+
+    <template #actions>
+      <mat-spacer />
+      <mat-btn variant="text" @click="open = false">
+        取消
+      </mat-btn>
+      <mat-btn variant="text" color="error" @click="open = false">
+        删除
+      </mat-btn>
+    </template>
+  </mat-dialog>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Dialog activator Slot 预览">
+    <DialogActivatorSlotExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -7126,6 +7226,8 @@ async function showPrompt() {
 
 未消费的属性、原生 Dialog 事件、`class` 和 `style` 传给原生 `<dialog>`。没有标题时必须显式提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件给出警告并请求把 `modelValue` 更新为 `false`。
 
+`activator` Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点；组件使用它作为打开后的焦点恢复目标。多根节点或非 HTMLElement 根节点会给出警告并请求把 `modelValue` 更新为 `false`。
+
 组件没有公共方法，不公开原生 `returnValue` 或 `method="dialog"` 表单协议。
 
 ### 命令式函数
@@ -7176,6 +7278,7 @@ import {
 
 | 名称 | 内容约束 |
 | --- | --- |
+| `activator` | 唯一的当前 document 中 HTMLElement 根节点，作为 Dialog 的触发元素和焦点恢复目标 |
 | `title` | 标题中的丰富 Vue 内容；`title` prop 存在时忽略 |
 | 默认 | 正文中的丰富 Vue 内容；`content` prop 存在时忽略 |
 | `icon` | 基础 Dialog 的图标内容；`icon` prop 存在时忽略，全屏布局不显示 |
@@ -7189,6 +7292,7 @@ Dialog 打开期间锁定页面根滚动，最后一层关闭后恢复原有内�
 
 <script setup>
 import DialogActionsSlotExample from '../examples/dialog/DialogActionsSlotExample.vue';
+import DialogActivatorSlotExample from '../examples/dialog/DialogActivatorSlotExample.vue';
 import DialogAlertFunctionExample from '../examples/dialog/DialogAlertFunctionExample.vue';
 import DialogAttachExample from '../examples/dialog/DialogAttachExample.vue';
 import DialogCloseOnBackExample from '../examples/dialog/DialogCloseOnBackExample.vue';

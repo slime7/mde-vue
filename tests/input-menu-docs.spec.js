@@ -54,9 +54,23 @@ describe('文本输入与菜单文档', () => {
     expect(page).toContain('MenuGroupExample.vue');
     expect(page).toContain('MenuContextExample.vue');
     expect(page).toContain('MenuOffsetExample.vue');
+    expect(page).toContain('MenuActivatorSlotExample.vue');
     expect(page).not.toContain('v-model:open');
     expect(contextExample).toContain('[event.clientX, event.clientY]');
     expect(contextExample).toContain('@contextmenu.prevent="showContextMenu"');
+  });
+
+  it('Dialog 文档覆盖 activator Slot，并与示例保持同源', () => {
+    const page = readFileSync(resolve('docs/site/components/dialog.md'), 'utf8');
+    const example = readFileSync(
+      resolve('docs/site/examples/dialog/DialogActivatorSlotExample.vue'),
+      'utf8',
+    );
+
+    expect(page).toContain('`activator` Slot');
+    expect(page).toContain('DialogActivatorSlotExample.vue');
+    expect(page).toContain('<DialogActivatorSlotExample />');
+    expect(example).toContain('#activator');
   });
 
   it('Menu color 示例使用 vibrant 表面展示局部配色', () => {

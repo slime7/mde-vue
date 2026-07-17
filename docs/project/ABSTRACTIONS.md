@@ -132,11 +132,11 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 `<mat-text-field>` 和 `<mat-textarea>` 共享 outlined/filled 外观、局部配色、辅助或错误文字、字符计数与属性路由，但分别保留 input 和 textarea 原生语义。错误角色始终覆盖 color 强调；Textarea 只提供固定初始行数与纵向调整，不自动增高。
 
-`<mat-menu>` 使用受控根 `modelValue` 和 Popover top layer。根 anchor 接受触发器 id 或 `[clientX, clientY]` 视口坐标，offset 在基础位置之后、视口夹紧之前生效；元素 anchor 使用 CSS Anchor Positioning，坐标 anchor 使用 fixed 定位。嵌套 Menu 只允许直接位于 MatMenuItem 的 submenu Slot，自动继承父级 color 与 variant，并以父项目为 anchor。MatMenuGroup 以带可选标签的 `role="group"` 和 2px expressive 间隙组织相关项目；同一菜单不得混合分组和未分组的直接子级。MenuItem 是单一操作；叶子 click 关闭整条链，子菜单项只展开。Menu 与 List 可以共享无语义排列和 roving focus，但不得共享 listbox 选择模型、角色或左右键含义。
+`<mat-menu>` 使用受控根 `modelValue` 和 Popover top layer。根 `activator` Slot 优先于 anchor，并且必须只产生一个当前 document 中的 HTMLElement 根节点；没有 Slot 时 anchor 接受触发器 id 或 `[clientX, clientY]` 视口坐标，offset 在基础位置之后、视口夹紧之前生效；元素 anchor 使用 CSS Anchor Positioning，坐标 anchor 使用 fixed 定位。嵌套 Menu 只允许直接位于 MatMenuItem 的 submenu Slot，自动继承父级 color 与 variant，并以父项目为 anchor。MatMenuGroup 以带可选标签的 `role="group"` 和 2px expressive 间隙组织相关项目；同一菜单不得混合分组和未分组的直接子级。MenuItem 是单一操作；叶子 click 关闭整条链，子菜单项只展开。Menu 与 List 可以共享无语义排列和 roving focus，但不得共享 listbox 选择模型、角色或左右键含义。
 
 ## Dialog
 
-`<mat-dialog>` 通过 `modelValue` 受控显示，使用原生 modal dialog 和 Teleport。`fullScreen` 只接受显式布尔值，不根据视口自动切换；基础和全屏布局都只允许 content 区域滚动，打开期间由共享堆叠管理器锁定页面根滚动。`scrim=false` 只把帷幕变透明，不允许背景接收指针事件；`closeOnBack` 只控制点击帷幕关闭，Escape 始终请求关闭。多个实例只显示顶层帷幕，最后一层关闭后才恢复页面滚动。
+`<mat-dialog>` 通过 `modelValue` 受控显示，使用原生 modal dialog 和 Teleport。`activator` Slot 必须只产生一个当前 document 中的 HTMLElement 根节点，作为触发元素和关闭后的焦点恢复目标。`fullScreen` 只接受显式布尔值，不根据视口自动切换；基础和全屏布局都只允许 content 区域滚动，打开期间由共享堆叠管理器锁定页面根滚动。`scrim=false` 只把帷幕变透明，不允许背景接收指针事件；`closeOnBack` 只控制点击帷幕关闭，Escape 始终请求关闭。多个实例只显示顶层帷幕，最后一层关闭后才恢复页面滚动。
 
 标题、正文和图标都遵循 prop 优先于同名 Slot；无标题时必须由使用者提供 `aria-label` 或 `aria-labelledby`。关闭期间 DOM 保留到退出动画完成，随后触发 `closed` 并恢复原焦点。
 

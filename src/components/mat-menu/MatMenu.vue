@@ -1,6 +1,7 @@
 <script setup>
 import {
-  computed, inject, nextTick, onBeforeUnmount, onMounted, provide, ref, useAttrs, useId, watch,
+  computed, inject, nextTick, onBeforeUnmount, onMounted, onUpdated, provide, ref, useAttrs,
+  useId, useSlots, watch,
 } from 'vue';
 import MatSurfaceBase from '../MatSurfaceBase.vue';
 import { isComponentColor } from '../button-props';
@@ -58,8 +59,10 @@ const emit = defineEmits({
   'update:modelValue': (payload) => typeof payload === 'boolean',
 });
 const attrs = useAttrs();
+const slots = useSlots();
 const itemParent = inject(MAT_MENU_ITEM_KEY, null);
 const parentMenu = inject(MAT_MENU_KEY, null);
+const activatorHost = ref(null);
 const surface = ref(null);
 const root = computed(() => surface.value?.root ?? surface.value?.$el ?? null);
 const generatedId = useId().replace(/[^\w-]/g, '-');
@@ -82,8 +85,9 @@ let returnFocusElement = null;
 let pointerListenerAttached = false;
 
 const isNested = computed(() => Boolean(itemParent));
+const hasActivatorSlot = computed(() => Boolean(slots.activator));
 const isCoordinateAnchor = computed(() => (
-  !isNested.value && isCoordinatePair(props.anchor)
+  !isNested.value && !hasActivatorSlot.value && isCoordinatePair(props.anchor)
 ));
 const isGrouped = computed(() => groupCount.value > 0);
 const effectiveOpen = computed(() => (
@@ -142,6 +146,17 @@ function isCoordinatePair(value) {
 function resolveAnchor() {
   if (isNested.value) {
     return itemParent.element.value;
+  }
+
+  if (hasActivatorSlot.value) {
+    const elements = activatorHost.value ? [...activatorHost.value.children] : [];
+
+    if (elements.length === 1 && elements[0] instanceof HTMLElement
+      && elements[0].ownerDocument === document) {
+      return elements[0];
+    }
+
+    return null;
   }
 
   if (!props.anchor || typeof props.anchor !== 'string') {
@@ -257,7 +272,11 @@ async function showPopover() {
 
   if (!root.value || !hasAnchor) {
     if (!isNested.value) {
-      console.warn('MatMenu: modelValue 为 true 时必须通过 anchor 提供元素 id 或视口坐标');
+      console.warn(
+        hasActivatorSlot.value
+          ? 'MatMenu: activator Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点'
+          : 'MatMenu: modelValue 为 true 时必须通过 anchor 提供元素 id 或视口坐标',
+      );
       emit('update:modelValue', false);
     }
     return;
@@ -462,6 +481,18 @@ onMounted(() => {
     showPopover();
   }
 });
+onUpdated(() => {
+  if (isNested.value || !effectiveOpen.value || isCoordinateAnchor.value) {
+    return;
+  }
+
+  const nextAnchor = resolveAnchor();
+
+  if (nextAnchor !== attachedAnchor) {
+    detachAnchor();
+    showPopover();
+  }
+});
 onBeforeUnmount(() => {
   if (viewportFrame !== undefined) {
     cancelAnimationFrame(viewportFrame);
@@ -526,6 +557,10 @@ watch(() => props.offset, async () => {
 </script>
 
 <template>
+  <span v-if="!isNested && hasActivatorSlot" ref="activatorHost" class="mat-menu__activator">
+    <slot name="activator" />
+  </span>
+
   <MatSurfaceBase
     :id="menuId"
     ref="surface"
@@ -554,6 +589,10 @@ watch(() => props.offset, async () => {
 </template>
 
 <style scoped>
+.mat-menu__activator {
+  display: contents;
+}
+
 .mat-menu {
   --mat-menu-container-color: var(--mat-sys-color-surface-container-low);
   --mat-menu-content-color: var(--mat-sys-color-on-surface);

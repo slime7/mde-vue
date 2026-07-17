@@ -13,7 +13,7 @@ order: 95
 
 ## 示例
 
-根菜单通过普通 `v-model` 控制显示状态，并使用元素 id 或视口坐标形式的 `anchor` 定位。触发器只保留展示菜单所需的点击状态。
+根菜单通过普通 `v-model` 控制显示状态，并使用元素 id、`activator` Slot 或视口坐标形式的 `anchor` 定位。触发器只保留展示菜单所需的点击状态。
 
 ### `modelValue` 与元素 `anchor`
 
@@ -32,6 +32,26 @@ order: 95
 <ClientOnly>
   <DocsPreview label="Menu modelValue 与元素 anchor 预览">
     <MenuOpenAnchorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `activator` Slot
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuActivatorSlotExample.vue#template [template]
+
+<<< @/examples/menu/MenuActivatorSlotExample.vue#script [script]
+
+<<< @/examples/menu/MenuActivatorSlotExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Menu activator Slot 预览">
+    <MenuActivatorSlotExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -286,12 +306,12 @@ Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `modelValue` | `boolean` | `false` | 根菜单的受控展开状态，使用普通 `v-model` |
-| `anchor` | `string \| [number, number]` | 未设置 | 根菜单触发元素的 id，或 `[clientX, clientY]` 视口坐标 |
+| `anchor` | `string \| [number, number]` | 未设置 | 根菜单触发元素的 id，或 `[clientX, clientY]` 视口坐标；存在 `activator` Slot 时忽略 |
 | `offset` | `[number, number]` | `[0, 0]` | 在基础位置之后增加 `[x, y]` 偏移；正值向右、向下 |
 | `variant` | `'standard' \| 'vibrant'` | `'standard'` | 中性表面或更高强调的 tertiary 表面 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 活动项目与 vibrant 表面的局部配色 |
 
-字符串 anchor 必须能在当前 document 中找到对应 id。坐标 anchor 使用 fixed 定位，适合 `contextmenu`；坐标或 offset 改变时，已打开的菜单立即重新定位。根菜单缺少有效 anchor 时会请求关闭。嵌套在 `submenu` Slot 中的 MatMenu 自动以父 MatMenuItem 为 anchor，并继承父菜单的 color 与 variant；嵌套菜单显式设置的 color、variant 或 offset 优先，自身 anchor 被忽略。未消费的属性传给 `role="menu"` 的 Popover 根元素。
+字符串 anchor 必须能在当前 document 中找到对应 id。`activator` Slot 存在时优先使用其唯一的 HTMLElement 根节点，并忽略 `anchor`；多根节点或非 HTMLElement 根节点会给出警告并请求关闭。坐标 anchor 使用 fixed 定位，适合 `contextmenu`；坐标或 offset 改变时，已打开的菜单立即重新定位。根菜单缺少有效 anchor 时会请求关闭。嵌套在 `submenu` Slot 中的 MatMenu 自动以父 MatMenuItem 为 anchor，并继承父菜单的 color 与 variant；嵌套菜单显式设置的 color、variant 或 offset 优先，自身 anchor 被忽略。未消费的属性传给 `role="menu"` 的 Popover 根元素。
 
 ### MatMenuGroup 属性
 
@@ -322,6 +342,7 @@ MatMenuGroup 没有自定义事件。包含 submenu 的项目把点击、Enter�
 
 | 组件 | 名称 | 内容约束 |
 | --- | --- | --- |
+| `MatMenu` | `activator` | 唯一的当前 document 中 HTMLElement 根节点，作为根菜单锚点；存在时优先于 `anchor` |
 | `MatMenu` | 默认 | 直接放置 MatMenuItem 和 MatDivider，或统一放置 MatMenuGroup |
 | `MatMenuGroup` | 默认 | 直接放置 MatMenuItem 和可选 MatDivider |
 | `MatMenuItem` | 默认 | 必需的简短操作标签 |
@@ -349,6 +370,7 @@ MenuItem 的 Slots 只构成一个操作，不应嵌套按钮、开关或其他�
 外观、测量、子菜单和换边规则依据 Material 3 [Menus overview](https://m3.material.io/components/menus/overview)、[Menus specs](https://m3.material.io/components/menus/specs) 与 [Menus guidelines](https://m3.material.io/components/menus/guidelines)。键盘语义参考 [WAI-ARIA Menu and Menubar Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)。
 
 <script setup>
+import MenuActivatorSlotExample from '../examples/menu/MenuActivatorSlotExample.vue';
 import MenuColorExample from '../examples/menu/MenuColorExample.vue';
 import MenuContextExample from '../examples/menu/MenuContextExample.vue';
 import MenuDefaultSlotExample from '../examples/menu/MenuDefaultSlotExample.vue';

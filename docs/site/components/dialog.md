@@ -9,7 +9,7 @@ order: 100
 
 ## 组件简介
 
-`<mat-dialog>` 的组件导出名是 `MatDialog`。组件使用原生 modal dialog 与 Vue Teleport，在基础或全屏布局中展示需要使用者确认、输入或选择的内容。Dialog 支持受控开关、进入和退出动画、焦点恢复、多个实例的顶层帷幕合并，以及 `dialog()`、`alert()`、`confirm()`、`prompt()` 四个 Promise 函数。
+`<mat-dialog>` 的组件导出名是 `MatDialog`。组件使用原生 modal dialog 与 Vue Teleport，在基础或全屏布局中展示需要使用者确认、输入或选择的内容，并可通过 `activator` Slot 放置触发元素。Dialog 支持受控开关、进入和退出动画、焦点恢复、多个实例的顶层帷幕合并，以及 `dialog()`、`alert()`、`confirm()`、`prompt()` 四个 Promise 函数。
 
 ## 示例
 
@@ -28,6 +28,24 @@ order: 100
 <ClientOnly>
   <DocsPreview label="Dialog modelValue 预览">
     <DialogModelValueExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `activator` Slot
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogActivatorSlotExample.vue#template [template]
+
+<<< @/examples/dialog/DialogActivatorSlotExample.vue#script [script]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Dialog activator Slot 预览">
+    <DialogActivatorSlotExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -298,6 +316,8 @@ order: 100
 
 未消费的属性、原生 Dialog 事件、`class` 和 `style` 传给原生 `<dialog>`。没有标题时必须显式提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件给出警告并请求把 `modelValue` 更新为 `false`。
 
+`activator` Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点；组件使用它作为打开后的焦点恢复目标。多根节点或非 HTMLElement 根节点会给出警告并请求把 `modelValue` 更新为 `false`。
+
 组件没有公共方法，不公开原生 `returnValue` 或 `method="dialog"` 表单协议。
 
 ### 命令式函数
@@ -348,6 +368,7 @@ import {
 
 | 名称 | 内容约束 |
 | --- | --- |
+| `activator` | 唯一的当前 document 中 HTMLElement 根节点，作为 Dialog 的触发元素和焦点恢复目标 |
 | `title` | 标题中的丰富 Vue 内容；`title` prop 存在时忽略 |
 | 默认 | 正文中的丰富 Vue 内容；`content` prop 存在时忽略 |
 | `icon` | 基础 Dialog 的图标内容；`icon` prop 存在时忽略，全屏布局不显示 |
@@ -361,6 +382,7 @@ Dialog 打开期间锁定页面根滚动，最后一层关闭后恢复原有内�
 
 <script setup>
 import DialogActionsSlotExample from '../examples/dialog/DialogActionsSlotExample.vue';
+import DialogActivatorSlotExample from '../examples/dialog/DialogActivatorSlotExample.vue';
 import DialogAlertFunctionExample from '../examples/dialog/DialogAlertFunctionExample.vue';
 import DialogAttachExample from '../examples/dialog/DialogAttachExample.vue';
 import DialogCloseOnBackExample from '../examples/dialog/DialogCloseOnBackExample.vue';
