@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <p>线条形</p>
   <mat-loader
@@ -12,3 +13,4 @@
     aria-label="环形进度 60%"
   />
 </template>
+<!-- #endregion template -->

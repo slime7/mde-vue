@@ -17,9 +17,15 @@ order: 35
 
 ### `icon`
 
-::: details 查看示例代码
-<<< @/examples/icon/IconIconExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/icon/IconIconExample.vue#template [template]
+
+<<< @/examples/icon/IconIconExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon icon 预览">
@@ -29,9 +35,15 @@ order: 35
 
 ### `src`
 
-::: details 查看示例代码
-<<< @/examples/icon/IconSrcExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/icon/IconSrcExample.vue#template [template]
+
+<<< @/examples/icon/IconSrcExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon src 预览">
@@ -41,9 +53,13 @@ order: 35
 
 ### 默认 Slot
 
-::: details 查看示例代码
-<<< @/examples/icon/IconDefaultSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/icon/IconDefaultSlotExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon 默认 Slot 预览">
@@ -53,9 +69,15 @@ order: 35
 
 ### `size`
 
-::: details 查看示例代码
-<<< @/examples/icon/IconSizeExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/icon/IconSizeExample.vue#template [template]
+
+<<< @/examples/icon/IconSizeExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon size 预览">
@@ -65,9 +87,15 @@ order: 35
 
 ### `fill`
 
-::: details 查看示例代码
-<<< @/examples/icon/IconFillExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/icon/IconFillExample.vue#template [template]
+
+<<< @/examples/icon/IconFillExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon fill 预览">
@@ -77,9 +105,15 @@ order: 35
 
 ### `weight`
 
-::: details 查看示例代码
-<<< @/examples/icon/IconWeightExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/icon/IconWeightExample.vue#template [template]
+
+<<< @/examples/icon/IconWeightExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon weight 预览">
@@ -89,9 +123,15 @@ order: 35
 
 ### `grade`
 
-::: details 查看示例代码
-<<< @/examples/icon/IconGradeExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/icon/IconGradeExample.vue#template [template]
+
+<<< @/examples/icon/IconGradeExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon grade 预览">
@@ -101,9 +141,15 @@ order: 35
 
 ### `optical-size`
 
-::: details 查看示例代码
-<<< @/examples/icon/IconOpticalSizeExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/icon/IconOpticalSizeExample.vue#template [template]
+
+<<< @/examples/icon/IconOpticalSizeExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon optical-size 预览">
@@ -113,9 +159,15 @@ order: 35
 
 ### `color`
 
-::: details 查看示例代码
-<<< @/examples/icon/IconColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/icon/IconColorExample.vue#template [template]
+
+<<< @/examples/icon/IconColorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon color 预览">
@@ -125,9 +177,15 @@ order: 35
 
 ### `font-color`
 
-::: details 查看示例代码
-<<< @/examples/icon/IconFontColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/icon/IconFontColorExample.vue#template [template]
+
+<<< @/examples/icon/IconFontColorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon font-color 预览">
@@ -137,9 +195,15 @@ order: 35
 
 ### `as`
 
-::: details 查看示例代码
-<<< @/examples/icon/IconAsExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/icon/IconAsExample.vue#template [template]
+
+<<< @/examples/icon/IconAsExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon as 预览">
@@ -149,9 +213,15 @@ order: 35
 
 ### `icon-class`
 
-::: details 查看示例代码
-<<< @/examples/icon/IconClassOnlyExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/icon/IconClassOnlyExample.vue#template [template]
+
+<<< @/examples/icon/IconClassOnlyExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon icon-class 预览">

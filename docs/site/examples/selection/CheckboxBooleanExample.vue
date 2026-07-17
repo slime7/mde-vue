@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const newsletter = ref(true);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-checkbox v-model="newsletter">
@@ -12,7 +15,9 @@ const newsletter = ref(true);
     <span>当前值：{{ newsletter }}</span>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -21,3 +26,4 @@ const newsletter = ref(true);
   align-items: flex-start;
 }
 </style>
+<!-- #endregion style -->

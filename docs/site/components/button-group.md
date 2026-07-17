@@ -17,9 +17,15 @@ order: 60
 
 ### `block`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonGroupBlockExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonGroupBlockExample.vue#template [template]
+
+<<< @/examples/button/ButtonGroupBlockExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group block 预览">
@@ -29,9 +35,17 @@ order: 60
 
 ### `variant`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonGroupVariantExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonGroupVariantExample.vue#template [template]
+
+<<< @/examples/button/ButtonGroupVariantExample.vue#script [script]
+
+<<< @/examples/button/ButtonGroupVariantExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group variant 预览">
@@ -41,9 +55,15 @@ order: 60
 
 ### `size`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonGroupSizeExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonGroupSizeExample.vue#template [template]
+
+<<< @/examples/button/ButtonGroupSizeExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group size 预览">
@@ -53,9 +73,15 @@ order: 60
 
 ### `shape`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonGroupShapeExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonGroupShapeExample.vue#template [template]
+
+<<< @/examples/button/ButtonGroupShapeExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group shape 预览">
@@ -65,9 +91,15 @@ order: 60
 
 ### `color`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonGroupColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonGroupColorExample.vue#template [template]
+
+<<< @/examples/button/ButtonGroupColorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group color 预览">
@@ -77,9 +109,15 @@ order: 60
 
 ### `disabled`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonGroupDisabledExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonGroupDisabledExample.vue#template [template]
+
+<<< @/examples/button/ButtonGroupDisabledExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group disabled 预览">
@@ -91,9 +129,17 @@ order: 60
 
 选择模式必须给每个子按钮提供 `value`，并在 `select` 事件中回写 `selected`。
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonGroupSelectionExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonGroupSelectionExample.vue#template [template]
+
+<<< @/examples/button/ButtonGroupSelectionExample.vue#script [script]
+
+<<< @/examples/button/ButtonGroupSelectionExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group selection 与 selected 预览">
@@ -103,9 +149,15 @@ order: 60
 
 ### `required`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonGroupRequiredExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonGroupRequiredExample.vue#template [template]
+
+<<< @/examples/button/ButtonGroupRequiredExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group required 预览">
@@ -117,9 +169,13 @@ order: 60
 
 `fullWidth` 只在 connected 形态中生效。
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonGroupFullWidthExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonGroupFullWidthExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group fullWidth 预览">
@@ -129,9 +185,13 @@ order: 60
 
 ### 默认 Slot
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonGroupDefaultSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonGroupDefaultSlotExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group 默认 Slot 预览">

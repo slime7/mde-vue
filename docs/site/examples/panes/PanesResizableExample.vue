@@ -1,10 +1,13 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const sizes = ref({ first: 1, second: 1 });
 const resizable = ref(true);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="panes-resizable-example">
     <mat-btn
@@ -37,7 +40,9 @@ const resizable = ref(true);
     </div>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .panes-resizable-example {
   display: grid;
@@ -56,3 +61,4 @@ const resizable = ref(true);
   background: var(--mat-sys-color-surface-container-low);
 }
 </style>
+<!-- #endregion style -->

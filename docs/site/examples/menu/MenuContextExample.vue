@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
@@ -10,7 +11,9 @@ function showContextMenu(event) {
   open.value = true;
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div
     class="context-target"
@@ -27,7 +30,9 @@ function showContextMenu(event) {
     <mat-menu-item>查看详情</mat-menu-item>
   </mat-menu>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .context-target {
   display: grid;
@@ -39,3 +44,4 @@ function showContextMenu(event) {
   border-radius: var(--mat-sys-shape-corner-large);
 }
 </style>
+<!-- #endregion style -->

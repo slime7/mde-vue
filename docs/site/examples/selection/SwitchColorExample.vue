@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-switch model-value color="primary">
@@ -17,7 +18,9 @@
     </mat-switch>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -26,3 +29,4 @@
   align-items: flex-start;
 }
 </style>
+<!-- #endregion style -->

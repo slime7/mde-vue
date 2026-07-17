@@ -17,9 +17,15 @@ order: 100
 
 ### `variant`
 
-::: details 查看示例代码
-<<< @/examples/list/ListVariantExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListVariantExample.vue#template [template]
+
+<<< @/examples/list/ListVariantExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="List variant 预览">
@@ -29,9 +35,15 @@ order: 100
 
 ### `interaction`
 
-::: details 查看示例代码
-<<< @/examples/list/ListInteractionExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListInteractionExample.vue#template [template]
+
+<<< @/examples/list/ListInteractionExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="List interaction 预览" stacked>
@@ -43,9 +55,17 @@ order: 100
 
 选择模式必须同时提供 `interaction`、项目 `value`，并在 `select` 事件中回写值。
 
-::: details 查看示例代码
-<<< @/examples/list/ListSelectedExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListSelectedExample.vue#template [template]
+
+<<< @/examples/list/ListSelectedExample.vue#script [script]
+
+<<< @/examples/list/ListSelectedExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="List selected 预览" stacked>
@@ -55,9 +75,17 @@ order: 100
 
 ### `color`
 
-::: details 查看示例代码
-<<< @/examples/list/ListColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListColorExample.vue#template [template]
+
+<<< @/examples/list/ListColorExample.vue#script [script]
+
+<<< @/examples/list/ListColorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="List color 预览" stacked>
@@ -67,9 +95,17 @@ order: 100
 
 ### ListItem 的 `value`
 
-::: details 查看示例代码
-<<< @/examples/list/ListItemValueExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListItemValueExample.vue#template [template]
+
+<<< @/examples/list/ListItemValueExample.vue#script [script]
+
+<<< @/examples/list/ListItemValueExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem value 预览">
@@ -79,9 +115,15 @@ order: 100
 
 ### ListItem 的 `href`
 
-::: details 查看示例代码
-<<< @/examples/list/ListItemHrefExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListItemHrefExample.vue#template [template]
+
+<<< @/examples/list/ListItemHrefExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem href 预览">
@@ -91,9 +133,15 @@ order: 100
 
 ### ListItem 的 `type`
 
-::: details 查看示例代码
-<<< @/examples/list/ListItemTypeExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListItemTypeExample.vue#template [template]
+
+<<< @/examples/list/ListItemTypeExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem type 预览">
@@ -103,9 +151,15 @@ order: 100
 
 ### ListItem 的 `disabled`
 
-::: details 查看示例代码
-<<< @/examples/list/ListItemDisabledExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListItemDisabledExample.vue#template [template]
+
+<<< @/examples/list/ListItemDisabledExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem disabled 预览">
@@ -115,9 +169,15 @@ order: 100
 
 ### ListItem 的 `lines`
 
-::: details 查看示例代码
-<<< @/examples/list/ListItemLinesExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListItemLinesExample.vue#template [template]
+
+<<< @/examples/list/ListItemLinesExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem lines 预览">
@@ -127,9 +187,15 @@ order: 100
 
 ### MatList 默认 Slot
 
-::: details 查看示例代码
-<<< @/examples/list/ListDefaultSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListDefaultSlotExample.vue#template [template]
+
+<<< @/examples/list/ListDefaultSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="List 默认 Slot 预览">
@@ -139,9 +205,15 @@ order: 100
 
 ### MatListItem 默认 Slot
 
-::: details 查看示例代码
-<<< @/examples/list/ListItemDefaultSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListItemDefaultSlotExample.vue#template [template]
+
+<<< @/examples/list/ListItemDefaultSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem 默认 Slot 预览">
@@ -151,9 +223,15 @@ order: 100
 
 ### `leading` Slot
 
-::: details 查看示例代码
-<<< @/examples/list/ListItemLeadingSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListItemLeadingSlotExample.vue#template [template]
+
+<<< @/examples/list/ListItemLeadingSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem leading Slot 预览">
@@ -163,9 +241,15 @@ order: 100
 
 ### `overline` Slot
 
-::: details 查看示例代码
-<<< @/examples/list/ListItemOverlineSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListItemOverlineSlotExample.vue#template [template]
+
+<<< @/examples/list/ListItemOverlineSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem overline Slot 预览">
@@ -175,9 +259,15 @@ order: 100
 
 ### `supporting` Slot
 
-::: details 查看示例代码
-<<< @/examples/list/ListItemSupportingSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListItemSupportingSlotExample.vue#template [template]
+
+<<< @/examples/list/ListItemSupportingSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem supporting Slot 预览">
@@ -187,9 +277,15 @@ order: 100
 
 ### `trailing` Slot
 
-::: details 查看示例代码
-<<< @/examples/list/ListItemTrailingSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListItemTrailingSlotExample.vue#template [template]
+
+<<< @/examples/list/ListItemTrailingSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem trailing Slot 预览">

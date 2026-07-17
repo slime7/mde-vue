@@ -17,9 +17,15 @@ order: 90
 
 ### `block`
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldBlockExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldBlockExample.vue#template [template]
+
+<<< @/examples/text-field/TextFieldBlockExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field 与 Textarea block 预览">
@@ -29,9 +35,15 @@ order: 90
 
 ### `modelValue`
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldModelValueExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldModelValueExample.vue#template [template]
+
+<<< @/examples/text-field/TextFieldModelValueExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field modelValue 预览">
@@ -41,9 +53,15 @@ order: 90
 
 ### `label`
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldLabelExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldLabelExample.vue#template [template]
+
+<<< @/examples/text-field/TextFieldLabelExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field label 预览">
@@ -53,9 +71,15 @@ order: 90
 
 ### `variant`
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldVariantExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldVariantExample.vue#template [template]
+
+<<< @/examples/text-field/TextFieldVariantExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field variant 预览">
@@ -65,9 +89,15 @@ order: 90
 
 ### `color`
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldColorExample.vue#template [template]
+
+<<< @/examples/text-field/TextFieldColorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field color 预览">
@@ -77,9 +107,13 @@ order: 90
 
 ### `supportingText`
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldSupportingTextExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldSupportingTextExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field supportingText 预览">
@@ -91,9 +125,15 @@ order: 90
 
 `errorText` 只有在 `error` 为 true 时才显示，因此两者是必要依赖。
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldErrorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldErrorExample.vue#template [template]
+
+<<< @/examples/text-field/TextFieldErrorExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field error 预览">
@@ -105,9 +145,13 @@ order: 90
 
 空值且未聚焦时隐藏前缀，避免与停留在输入行的标签重叠；输入获得焦点、已有值或标签因 placeholder 浮动后显示。
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldPrefixTextExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldPrefixTextExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field prefixText 预览">
@@ -119,9 +163,13 @@ order: 90
 
 后缀与前缀使用相同的可见条件。
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldSuffixTextExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldSuffixTextExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field suffixText 预览">
@@ -131,9 +179,15 @@ order: 90
 
 ### `maxLength`
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldMaxLengthExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldMaxLengthExample.vue#template [template]
+
+<<< @/examples/text-field/TextFieldMaxLengthExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field maxLength 预览">
@@ -143,9 +197,13 @@ order: 90
 
 ### `disabled`
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldDisabledExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldDisabledExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field disabled 预览">
@@ -155,9 +213,13 @@ order: 90
 
 ### `readonly`
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldReadonlyExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldReadonlyExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field readonly 预览">
@@ -167,9 +229,13 @@ order: 90
 
 ### `required`
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldRequiredExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldRequiredExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field required 预览">
@@ -179,9 +245,15 @@ order: 90
 
 ### `type`
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldTypeExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldTypeExample.vue#template [template]
+
+<<< @/examples/text-field/TextFieldTypeExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field type 预览">
@@ -191,9 +263,15 @@ order: 90
 
 ### Textarea 的 `rows`
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextareaRowsExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextareaRowsExample.vue#template [template]
+
+<<< @/examples/text-field/TextareaRowsExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Textarea rows 预览">
@@ -203,9 +281,13 @@ order: 90
 
 ### `leading` Slot
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldLeadingSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldLeadingSlotExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field leading Slot 预览">
@@ -215,9 +297,13 @@ order: 90
 
 ### `trailing` Slot
 
-::: details 查看示例代码
-<<< @/examples/text-field/TextFieldTrailingSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldTrailingSlotExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field trailing Slot 预览">

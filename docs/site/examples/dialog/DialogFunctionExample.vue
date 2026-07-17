@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 import { dialog } from 'mdu-ui/functions';
@@ -15,7 +16,9 @@ async function openDialog() {
   }) ?? '已取消';
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="dialog-function-example">
     <mat-btn @click="openDialog">
@@ -24,7 +27,9 @@ async function openDialog() {
     <span>结果：{{ result }}</span>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .dialog-function-example {
   display: flex;
@@ -32,3 +37,4 @@ async function openDialog() {
   align-items: center;
 }
 </style>
+<!-- #endregion style -->

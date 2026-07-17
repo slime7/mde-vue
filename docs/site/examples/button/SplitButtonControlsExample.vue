@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const open = ref(false);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-split-btn
@@ -28,7 +31,9 @@ const open = ref(false);
     </mat-menu>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -37,3 +42,4 @@ const open = ref(false);
   align-items: flex-start;
 }
 </style>
+<!-- #endregion style -->

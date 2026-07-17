@@ -15,9 +15,15 @@ order: 115
 
 ### Flex 操作栏
 
-::: details 查看示例代码
-<<< @/examples/spacer/SpacerFlexExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/spacer/SpacerFlexExample.vue#template [template]
+
+<<< @/examples/spacer/SpacerFlexExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Spacer flex 布局预览">

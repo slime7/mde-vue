@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const filters = ref(['offline']);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-checkbox v-model="filters" value="offline">
@@ -15,7 +18,9 @@ const filters = ref(['offline']);
     <span>当前值：{{ filters.join('、') || '无' }}</span>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -24,3 +29,4 @@ const filters = ref(['offline']);
   align-items: flex-start;
 }
 </style>
+<!-- #endregion style -->

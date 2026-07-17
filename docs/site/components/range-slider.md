@@ -19,9 +19,17 @@ order: 87.5
 
 ### `modelValue`、`min`、`max` 与 `step`
 
-::: details 查看示例代码
-<<< @/examples/slider/RangeSliderModelValueExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/RangeSliderModelValueExample.vue#template [template]
+
+<<< @/examples/slider/RangeSliderModelValueExample.vue#script [script]
+
+<<< @/examples/slider/RangeSliderModelValueExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Range slider 区间模型预览" stacked>
@@ -31,9 +39,17 @@ order: 87.5
 
 ### `orientation`
 
-::: details 查看示例代码
-<<< @/examples/slider/RangeSliderOrientationExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/RangeSliderOrientationExample.vue#template [template]
+
+<<< @/examples/slider/RangeSliderOrientationExample.vue#script [script]
+
+<<< @/examples/slider/RangeSliderOrientationExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Range slider 横竖方向预览" stacked>
@@ -43,9 +59,17 @@ order: 87.5
 
 ### `size`
 
-::: details 查看示例代码
-<<< @/examples/slider/RangeSliderSizeExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/RangeSliderSizeExample.vue#template [template]
+
+<<< @/examples/slider/RangeSliderSizeExample.vue#script [script]
+
+<<< @/examples/slider/RangeSliderSizeExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Range slider 五档尺寸预览" stacked>
@@ -55,9 +79,17 @@ order: 87.5
 
 ### `showStopIndicator`
 
-::: details 查看示例代码
-<<< @/examples/slider/RangeSliderShowStopIndicatorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/RangeSliderShowStopIndicatorExample.vue#template [template]
+
+<<< @/examples/slider/RangeSliderShowStopIndicatorExample.vue#script [script]
+
+<<< @/examples/slider/RangeSliderShowStopIndicatorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Range slider 停靠点预览" stacked>
@@ -67,9 +99,17 @@ order: 87.5
 
 ### `showValueIndicator`
 
-::: details 查看示例代码
-<<< @/examples/slider/RangeSliderShowValueIndicatorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/RangeSliderShowValueIndicatorExample.vue#template [template]
+
+<<< @/examples/slider/RangeSliderShowValueIndicatorExample.vue#script [script]
+
+<<< @/examples/slider/RangeSliderShowValueIndicatorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Range slider 数值指示预览" stacked>
@@ -79,9 +119,13 @@ order: 87.5
 
 ### `disabled`
 
-::: details 查看示例代码
-<<< @/examples/slider/RangeSliderDisabledExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/RangeSliderDisabledExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Range slider 禁用状态预览" stacked>
@@ -91,9 +135,17 @@ order: 87.5
 
 ### `color`
 
-::: details 查看示例代码
-<<< @/examples/slider/RangeSliderColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/RangeSliderColorExample.vue#template [template]
+
+<<< @/examples/slider/RangeSliderColorExample.vue#script [script]
+
+<<< @/examples/slider/RangeSliderColorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Range slider 局部配色预览" stacked>

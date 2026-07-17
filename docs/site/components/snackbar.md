@@ -17,9 +17,15 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 
 ### `v-model`
 
-::: details 查看示例代码
-<<< @/examples/snackbar/SnackbarModelValueExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/snackbar/SnackbarModelValueExample.vue#template [template]
+
+<<< @/examples/snackbar/SnackbarModelValueExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar v-model 预览">
@@ -29,9 +35,15 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 
 ### `text`
 
-::: details 查看示例代码
-<<< @/examples/snackbar/SnackbarTextExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/snackbar/SnackbarTextExample.vue#template [template]
+
+<<< @/examples/snackbar/SnackbarTextExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar text 预览">
@@ -41,9 +53,15 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 
 ### 默认 Slot
 
-::: details 查看示例代码
-<<< @/examples/snackbar/SnackbarDefaultSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/snackbar/SnackbarDefaultSlotExample.vue#template [template]
+
+<<< @/examples/snackbar/SnackbarDefaultSlotExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar 默认 Slot 预览">
@@ -55,9 +73,15 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 
 两行由内容自然换行触发，不需要额外属性。此示例同时展示双行内容中的 action 与关闭入口；使用 `duration=0` 以便观察布局。
 
-::: details 查看示例代码
-<<< @/examples/snackbar/SnackbarTwoLineExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/snackbar/SnackbarTwoLineExample.vue#template [template]
+
+<<< @/examples/snackbar/SnackbarTwoLineExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar 两行内容预览">
@@ -67,9 +91,15 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 
 ### `closable`
 
-::: details 查看示例代码
-<<< @/examples/snackbar/SnackbarClosableExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/snackbar/SnackbarClosableExample.vue#template [template]
+
+<<< @/examples/snackbar/SnackbarClosableExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar closable 预览">
@@ -79,9 +109,15 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 
 ### `close-label`
 
-::: details 查看示例代码
-<<< @/examples/snackbar/SnackbarCloseLabelExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/snackbar/SnackbarCloseLabelExample.vue#template [template]
+
+<<< @/examples/snackbar/SnackbarCloseLabelExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar close-label 预览">
@@ -91,9 +127,15 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 
 ### `close` Slot
 
-::: details 查看示例代码
-<<< @/examples/snackbar/SnackbarCloseSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/snackbar/SnackbarCloseSlotExample.vue#template [template]
+
+<<< @/examples/snackbar/SnackbarCloseSlotExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar close Slot 预览">
@@ -103,9 +145,15 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 
 ### `action-text`
 
-::: details 查看示例代码
-<<< @/examples/snackbar/SnackbarActionTextExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/snackbar/SnackbarActionTextExample.vue#template [template]
+
+<<< @/examples/snackbar/SnackbarActionTextExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar action-text 预览">
@@ -115,9 +163,17 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 
 ### `action` Slot
 
-::: details 查看示例代码
-<<< @/examples/snackbar/SnackbarActionSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/snackbar/SnackbarActionSlotExample.vue#template [template]
+
+<<< @/examples/snackbar/SnackbarActionSlotExample.vue#script [script]
+
+<<< @/examples/snackbar/SnackbarActionSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar action Slot 预览">
@@ -127,9 +183,17 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 
 ### `position`
 
-::: details 查看示例代码
-<<< @/examples/snackbar/SnackbarPositionExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/snackbar/SnackbarPositionExample.vue#template [template]
+
+<<< @/examples/snackbar/SnackbarPositionExample.vue#script [script]
+
+<<< @/examples/snackbar/SnackbarPositionExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar position 预览">
@@ -139,9 +203,17 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 
 ### `duration`
 
-::: details 查看示例代码
-<<< @/examples/snackbar/SnackbarDurationExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/snackbar/SnackbarDurationExample.vue#template [template]
+
+<<< @/examples/snackbar/SnackbarDurationExample.vue#script [script]
+
+<<< @/examples/snackbar/SnackbarDurationExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar duration 预览">
@@ -151,9 +223,17 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 
 ### `snackbar()` 与 `toast()`
 
-::: details 查看示例代码
-<<< @/examples/snackbar/SnackbarFunctionExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/snackbar/SnackbarFunctionExample.vue#template [template]
+
+<<< @/examples/snackbar/SnackbarFunctionExample.vue#script [script]
+
+<<< @/examples/snackbar/SnackbarFunctionExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar 函数式调用预览">
@@ -163,9 +243,15 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 
 ### 全局队列
 
-::: details 查看示例代码
-<<< @/examples/snackbar/SnackbarQueueExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/snackbar/SnackbarQueueExample.vue#template [template]
+
+<<< @/examples/snackbar/SnackbarQueueExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar 全局队列预览">

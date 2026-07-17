@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const open = ref(false);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn color="tertiary" @click="open = true">
     显示图标
@@ -24,3 +27,4 @@ const open = ref(false);
     </template>
   </mat-dialog>
 </template>
+<!-- #endregion template -->

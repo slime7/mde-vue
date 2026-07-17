@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <div class="spacer-example">
     <mat-btn variant="text">
@@ -9,7 +10,9 @@
     </mat-btn>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .spacer-example {
   display: flex;
@@ -18,3 +21,4 @@
   inline-size: 100%;
 }
 </style>
+<!-- #endregion style -->

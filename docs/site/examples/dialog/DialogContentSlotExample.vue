@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const open = ref(false);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn variant="outlined" @click="open = true">
     丰富正文
@@ -23,3 +26,4 @@ const open = ref(false);
     </template>
   </mat-dialog>
 </template>
+<!-- #endregion template -->

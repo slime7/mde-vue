@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const value = ref(50);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example">
     <mat-slider
@@ -33,7 +36,9 @@ const value = ref(50);
     />
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example {
   display: grid;
@@ -41,3 +46,4 @@ const value = ref(50);
   inline-size: min(100%, 560px);
 }
 </style>
+<!-- #endregion style -->

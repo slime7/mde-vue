@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const range = ref([30, 70]);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example">
     <mat-range-slider
@@ -15,7 +18,9 @@ const range = ref([30, 70]);
     <output>聚焦或拖动的端点会显示数值：{{ range[0] }} — {{ range[1] }}</output>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example {
   display: grid;
@@ -23,3 +28,4 @@ const range = ref([30, 70]);
   inline-size: min(100%, 480px);
 }
 </style>
+<!-- #endregion style -->

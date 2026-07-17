@@ -17,9 +17,15 @@ order: 65
 
 ### `block`
 
-::: details 查看示例代码
-<<< @/examples/button/SplitButtonBlockExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/SplitButtonBlockExample.vue#template [template]
+
+<<< @/examples/button/SplitButtonBlockExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button block 预览">
@@ -29,9 +35,15 @@ order: 65
 
 ### `variant`
 
-::: details 查看示例代码
-<<< @/examples/button/SplitButtonVariantExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/SplitButtonVariantExample.vue#template [template]
+
+<<< @/examples/button/SplitButtonVariantExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button variant 预览">
@@ -41,9 +53,15 @@ order: 65
 
 ### `size`
 
-::: details 查看示例代码
-<<< @/examples/button/SplitButtonSizeExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/SplitButtonSizeExample.vue#template [template]
+
+<<< @/examples/button/SplitButtonSizeExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button size 预览">
@@ -53,9 +71,15 @@ order: 65
 
 ### `color`
 
-::: details 查看示例代码
-<<< @/examples/button/SplitButtonColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/SplitButtonColorExample.vue#template [template]
+
+<<< @/examples/button/SplitButtonColorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button color 预览">
@@ -65,9 +89,13 @@ order: 65
 
 ### `disabled`
 
-::: details 查看示例代码
-<<< @/examples/button/SplitButtonDisabledExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/SplitButtonDisabledExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button disabled 预览">
@@ -77,9 +105,15 @@ order: 65
 
 ### `expanded`
 
-::: details 查看示例代码
-<<< @/examples/button/SplitButtonExpandedExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/SplitButtonExpandedExample.vue#template [template]
+
+<<< @/examples/button/SplitButtonExpandedExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button expanded 预览">
@@ -91,9 +125,17 @@ order: 65
 
 `controls` 与菜单的 `modelValue`、`anchor` 共同建立展开按钮和菜单之间的 ARIA 与定位关系。
 
-::: details 查看示例代码
-<<< @/examples/button/SplitButtonControlsExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/SplitButtonControlsExample.vue#template [template]
+
+<<< @/examples/button/SplitButtonControlsExample.vue#script [script]
+
+<<< @/examples/button/SplitButtonControlsExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button controls 预览">
@@ -103,9 +145,13 @@ order: 65
 
 ### `leading` Slot
 
-::: details 查看示例代码
-<<< @/examples/button/SplitButtonLeadingSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/SplitButtonLeadingSlotExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button leading Slot 预览">
@@ -115,9 +161,13 @@ order: 65
 
 ### `trailing` Slot
 
-::: details 查看示例代码
-<<< @/examples/button/SplitButtonTrailingSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/SplitButtonTrailingSlotExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button trailing Slot 预览">

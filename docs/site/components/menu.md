@@ -17,9 +17,17 @@ order: 95
 
 ### `modelValue` 与元素 `anchor`
 
-::: details 查看示例代码
-<<< @/examples/menu/MenuOpenAnchorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuOpenAnchorExample.vue#template [template]
+
+<<< @/examples/menu/MenuOpenAnchorExample.vue#script [script]
+
+<<< @/examples/menu/MenuOpenAnchorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Menu modelValue 与元素 anchor 预览">
@@ -29,9 +37,17 @@ order: 95
 
 ### MatMenuGroup 分组与 `label`
 
-::: details 查看示例代码
-<<< @/examples/menu/MenuGroupExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuGroupExample.vue#template [template]
+
+<<< @/examples/menu/MenuGroupExample.vue#script [script]
+
+<<< @/examples/menu/MenuGroupExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="MenuGroup 分组与 label 预览">
@@ -41,9 +57,17 @@ order: 95
 
 ### 右键坐标菜单
 
-::: details 查看示例代码
-<<< @/examples/menu/MenuContextExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuContextExample.vue#template [template]
+
+<<< @/examples/menu/MenuContextExample.vue#script [script]
+
+<<< @/examples/menu/MenuContextExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Menu 右键坐标预览">
@@ -55,9 +79,17 @@ order: 95
 
 ### `offset`
 
-::: details 查看示例代码
-<<< @/examples/menu/MenuOffsetExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuOffsetExample.vue#template [template]
+
+<<< @/examples/menu/MenuOffsetExample.vue#script [script]
+
+<<< @/examples/menu/MenuOffsetExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Menu offset 预览">
@@ -67,9 +99,17 @@ order: 95
 
 ### `variant`
 
-::: details 查看示例代码
-<<< @/examples/menu/MenuVariantExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuVariantExample.vue#template [template]
+
+<<< @/examples/menu/MenuVariantExample.vue#script [script]
+
+<<< @/examples/menu/MenuVariantExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Menu variant 预览">
@@ -79,9 +119,17 @@ order: 95
 
 ### `color`
 
-::: details 查看示例代码
-<<< @/examples/menu/MenuColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuColorExample.vue#template [template]
+
+<<< @/examples/menu/MenuColorExample.vue#script [script]
+
+<<< @/examples/menu/MenuColorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Menu color 预览">
@@ -91,9 +139,17 @@ order: 95
 
 ### MenuItem 的 `disabled`
 
-::: details 查看示例代码
-<<< @/examples/menu/MenuItemDisabledExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuItemDisabledExample.vue#template [template]
+
+<<< @/examples/menu/MenuItemDisabledExample.vue#script [script]
+
+<<< @/examples/menu/MenuItemDisabledExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="MenuItem disabled 预览">
@@ -103,9 +159,17 @@ order: 95
 
 ### MatMenu 默认 Slot
 
-::: details 查看示例代码
-<<< @/examples/menu/MenuDefaultSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuDefaultSlotExample.vue#template [template]
+
+<<< @/examples/menu/MenuDefaultSlotExample.vue#script [script]
+
+<<< @/examples/menu/MenuDefaultSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Menu 默认 Slot 预览">
@@ -115,9 +179,17 @@ order: 95
 
 ### MatMenuItem 默认 Slot
 
-::: details 查看示例代码
-<<< @/examples/menu/MenuItemDefaultSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuItemDefaultSlotExample.vue#template [template]
+
+<<< @/examples/menu/MenuItemDefaultSlotExample.vue#script [script]
+
+<<< @/examples/menu/MenuItemDefaultSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="MenuItem 默认 Slot 预览">
@@ -127,9 +199,17 @@ order: 95
 
 ### `leading` Slot
 
-::: details 查看示例代码
-<<< @/examples/menu/MenuItemLeadingSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuItemLeadingSlotExample.vue#template [template]
+
+<<< @/examples/menu/MenuItemLeadingSlotExample.vue#script [script]
+
+<<< @/examples/menu/MenuItemLeadingSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="MenuItem leading Slot 预览">
@@ -139,9 +219,17 @@ order: 95
 
 ### `supporting` Slot
 
-::: details 查看示例代码
-<<< @/examples/menu/MenuItemSupportingSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuItemSupportingSlotExample.vue#template [template]
+
+<<< @/examples/menu/MenuItemSupportingSlotExample.vue#script [script]
+
+<<< @/examples/menu/MenuItemSupportingSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="MenuItem supporting Slot 预览">
@@ -151,9 +239,17 @@ order: 95
 
 ### `trailing` Slot
 
-::: details 查看示例代码
-<<< @/examples/menu/MenuItemTrailingSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuItemTrailingSlotExample.vue#template [template]
+
+<<< @/examples/menu/MenuItemTrailingSlotExample.vue#script [script]
+
+<<< @/examples/menu/MenuItemTrailingSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="MenuItem trailing Slot 预览">
@@ -163,9 +259,17 @@ order: 95
 
 ### `submenu` Slot
 
-::: details 查看示例代码
-<<< @/examples/menu/MenuItemSubmenuSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuItemSubmenuSlotExample.vue#template [template]
+
+<<< @/examples/menu/MenuItemSubmenuSlotExample.vue#script [script]
+
+<<< @/examples/menu/MenuItemSubmenuSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="MenuItem submenu Slot 预览">

@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <div class="example-row">
     <mat-btn variant="elevated">
@@ -20,7 +21,9 @@
     </mat-btn>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-row {
   display: flex;
@@ -29,3 +32,4 @@
   align-items: center;
 }
 </style>
+<!-- #endregion style -->

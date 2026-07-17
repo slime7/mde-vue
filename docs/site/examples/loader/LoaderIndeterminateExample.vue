@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <p>线条形加载中</p>
   <mat-loader
@@ -25,3 +26,4 @@
     aria-label="正在加载内容"
   />
 </template>
+<!-- #endregion template -->

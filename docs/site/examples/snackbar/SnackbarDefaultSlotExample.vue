@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const open = ref(false);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn @click="open = true">
     使用默认 Slot
@@ -18,3 +21,4 @@ const open = ref(false);
     已同步 <strong>12 个项目</strong>。
   </mat-snackbar>
 </template>
+<!-- #endregion template -->

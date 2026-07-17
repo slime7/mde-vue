@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const open = ref(false);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn
     id="tooltip-model-value-target"
@@ -20,3 +23,4 @@ const open = ref(false);
     target="#tooltip-model-value-target"
   />
 </template>
+<!-- #endregion template -->

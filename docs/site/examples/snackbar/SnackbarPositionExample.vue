@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
@@ -9,7 +10,9 @@ function show(nextPosition) {
   open.value = true;
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="snackbar-position-example">
     <mat-btn variant="outlined" @click="show('left')">
@@ -33,7 +36,9 @@ function show(nextPosition) {
     :text="`当前在底部${position === 'center' ? '居中' : position === 'left' ? '左侧' : '右侧'}显示。`"
   />
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .snackbar-position-example {
   display: flex;
@@ -41,3 +46,4 @@ function show(nextPosition) {
   gap: 12px;
 }
 </style>
+<!-- #endregion style -->

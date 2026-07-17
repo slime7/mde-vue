@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <mat-list variant="standard" aria-label="行数列表" class="example-list">
     <mat-list-item :lines="1">
@@ -23,9 +24,12 @@
     </mat-list-item>
   </mat-list>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
 }
 </style>
+<!-- #endregion style -->

@@ -1,9 +1,11 @@
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-split-btn color="primary">
       <template #leading>
         <mat-btn>primary</mat-btn>
-      </template><template #trailing>
+      </template>
+      <template #trailing>
         <mat-btn icon="arrow_drop_down" label="展开" />
       </template>
     </mat-split-btn>
@@ -23,7 +25,9 @@
     </mat-split-btn>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -32,3 +36,4 @@
   align-items: center;
 }
 </style>
+<!-- #endregion style -->

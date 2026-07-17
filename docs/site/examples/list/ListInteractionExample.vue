@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-list interaction="single-action" aria-label="单操作列表" class="example-list">
@@ -14,7 +15,9 @@
     </mat-list>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -27,3 +30,4 @@
   inline-size: min(100%, 420px);
 }
 </style>
+<!-- #endregion style -->

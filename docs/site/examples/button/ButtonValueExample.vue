@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
@@ -7,7 +8,9 @@ function updateSelection({ nextSelected }) {
   selected.value = nextSelected;
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn-group
     selection="multiple"
@@ -22,3 +25,4 @@ function updateSelection({ nextSelected }) {
     </mat-btn>
   </mat-btn-group>
 </template>
+<!-- #endregion template -->

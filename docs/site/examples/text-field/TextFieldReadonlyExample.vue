@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <mat-text-field
     model-value="INV-2026-0715"
@@ -5,3 +6,4 @@
     readonly
   />
 </template>
+<!-- #endregion template -->

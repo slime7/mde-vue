@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-text-field label="邮箱" type="email" />
@@ -5,7 +6,9 @@
     <mat-text-field label="搜索" type="search" />
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -14,3 +17,4 @@
   inline-size: min(100%, 360px);
 }
 </style>
+<!-- #endregion style -->

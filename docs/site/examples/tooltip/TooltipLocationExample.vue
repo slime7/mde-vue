@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 const locations = [
   { name: 'top', target: '#tooltip-location-top' },
@@ -14,7 +15,9 @@ const locations = [
   { name: 'left-end', target: '#tooltip-location-left-end' },
 ];
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="tooltip-location-grid">
     <div
@@ -36,7 +39,9 @@ const locations = [
     </div>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .tooltip-location-grid {
   display: grid;
@@ -49,3 +54,4 @@ const locations = [
   justify-content: center;
 }
 </style>
+<!-- #endregion style -->

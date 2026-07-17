@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const hours = ref([2, 6]);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example">
     <mat-range-slider
@@ -17,7 +20,9 @@ const hours = ref([2, 6]);
     <output>时段：{{ hours[0] }} — {{ hours[1] }} 点</output>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example {
   display: grid;
@@ -25,3 +30,4 @@ const hours = ref([2, 6]);
   inline-size: min(100%, 480px);
 }
 </style>
+<!-- #endregion style -->

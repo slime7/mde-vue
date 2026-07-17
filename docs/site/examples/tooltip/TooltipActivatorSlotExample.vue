@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <mat-tooltip content="使用 activator Slot 指定展示元素">
     <template #activator>
@@ -7,3 +8,4 @@
     </template>
   </mat-tooltip>
 </template>
+<!-- #endregion template -->

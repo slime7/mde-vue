@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 import { confirm } from 'mdu-ui/functions';
@@ -13,7 +14,9 @@ async function showConfirm() {
   }) ? '已确认' : '已取消';
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="dialog-function-example">
     <mat-btn variant="outlined" @click="showConfirm">
@@ -22,7 +25,9 @@ async function showConfirm() {
     <span>{{ result }}</span>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .dialog-function-example {
   display: flex;
@@ -30,3 +35,4 @@ async function showConfirm() {
   align-items: center;
 }
 </style>
+<!-- #endregion style -->

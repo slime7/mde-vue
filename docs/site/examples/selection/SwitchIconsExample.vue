@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <div class="example-row">
     <mat-switch model-value icons="none">
@@ -11,7 +12,9 @@
     </mat-switch>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-row {
   display: flex;
@@ -19,3 +22,4 @@
   gap: 16px;
 }
 </style>
+<!-- #endregion style -->

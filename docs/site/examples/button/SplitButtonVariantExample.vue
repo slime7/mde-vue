@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-split-btn variant="elevated">
@@ -34,7 +35,9 @@
     </mat-split-btn>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -43,3 +46,4 @@
   align-items: center;
 }
 </style>
+<!-- #endregion style -->

@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-text-field label="primary" color="primary" />
@@ -7,7 +8,9 @@
     <mat-text-field label="局部种子色" color="#6750a4" />
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -16,3 +19,4 @@
   inline-size: min(100%, 360px);
 }
 </style>
+<!-- #endregion style -->

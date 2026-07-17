@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <p>0 / 100</p>
   <mat-loader
@@ -21,3 +22,4 @@
     aria-label="文件上传进度 80%"
   />
 </template>
+<!-- #endregion template -->

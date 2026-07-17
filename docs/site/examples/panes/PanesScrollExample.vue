@@ -1,10 +1,13 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const sizes = ref({ first: 1, second: 1 });
 const rows = Array.from({ length: 12 }, (_, index) => `可滚动内容 ${index + 1}`);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="panes-scroll-example">
     <mat-panes :sizes="sizes">
@@ -33,7 +36,9 @@ const rows = Array.from({ length: 12 }, (_, index) => `可滚动内容 ${index +
     </mat-panes>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .panes-scroll-example {
   block-size: 180px;
@@ -52,3 +57,4 @@ const rows = Array.from({ length: 12 }, (_, index) => `可滚动内容 ${index +
   margin: 0 0 8px;
 }
 </style>
+<!-- #endregion style -->

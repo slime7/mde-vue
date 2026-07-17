@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <mat-btn id="tooltip-target-example" variant="outlined">
     指定 target
@@ -8,3 +9,4 @@
     target="#tooltip-target-example"
   />
 </template>
+<!-- #endregion template -->

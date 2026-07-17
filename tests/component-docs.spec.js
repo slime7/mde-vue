@@ -47,6 +47,27 @@ describe('组件文档约束', () => {
     });
   });
 
+  it('所有 Vue 示例代码按 template、script、style 顺序使用代码组', () => {
+    componentDocs.forEach(({ fileName, source }) => {
+      expect(source, fileName).not.toMatch(/^<<< @\/[^\s]+\.vue$/m);
+
+      [...source.matchAll(/::: code-group([\s\S]*?):::/g)].forEach((match) => {
+        const labels = [...match[1].matchAll(/\[([^\]]+)\]/g)]
+          .map((labelMatch) => labelMatch[1]);
+
+        expect(labels, fileName).toEqual(
+          [...labels].sort((left, right) => (
+            ['template', 'script', 'style'].indexOf(left)
+            - ['template', 'script', 'style'].indexOf(right)
+          )),
+        );
+      });
+
+      expect(source, fileName).not.toMatch(/^::: details 查看示例代码\r?\n^::: code-group/m);
+      expect(source, fileName).not.toMatch(/\n:::\r?\n:::\r?\n/);
+    });
+  });
+
   it('项目规则明确要求先写测试再改代码', () => {
     [
       'AGENTS.md',

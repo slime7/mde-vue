@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <mat-icon font-color="rebeccapurple" aria-hidden="true">
     <svg viewBox="0 0 24 24" fill="currentColor">
@@ -5,3 +6,4 @@
     </svg>
   </mat-icon>
 </template>
+<!-- #endregion template -->

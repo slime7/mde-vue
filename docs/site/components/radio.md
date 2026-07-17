@@ -19,9 +19,17 @@ Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互
 
 ### 独立绑定
 
-::: details 查看示例代码
-<<< @/examples/selection/RadioStandaloneExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/selection/RadioStandaloneExample.vue#template [template]
+
+<<< @/examples/selection/RadioStandaloneExample.vue#script [script]
+
+<<< @/examples/selection/RadioStandaloneExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Radio 独立绑定预览" stacked>
@@ -33,9 +41,17 @@ Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互
 
 ### Radio Group
 
-::: details 查看示例代码
-<<< @/examples/selection/RadioGroupExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/selection/RadioGroupExample.vue#template [template]
+
+<<< @/examples/selection/RadioGroupExample.vue#script [script]
+
+<<< @/examples/selection/RadioGroupExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Radio group 受控单选预览" stacked>
@@ -45,9 +61,15 @@ Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互
 
 ### MatRadio `color`
 
-::: details 查看示例代码
-<<< @/examples/selection/RadioColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/selection/RadioColorExample.vue#template [template]
+
+<<< @/examples/selection/RadioColorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Radio color 预览" stacked>
@@ -57,9 +79,15 @@ Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互
 
 ### MatRadio `disabled`
 
-::: details 查看示例代码
-<<< @/examples/selection/RadioDisabledExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/selection/RadioDisabledExample.vue#template [template]
+
+<<< @/examples/selection/RadioDisabledExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Radio disabled 预览" stacked>
@@ -69,9 +97,13 @@ Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互
 
 ### MatRadioGroup `disabled`
 
-::: details 查看示例代码
-<<< @/examples/selection/RadioGroupDisabledExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/selection/RadioGroupDisabledExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Radio group disabled 预览" stacked>
@@ -81,9 +113,13 @@ Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互
 
 ### MatRadioGroup `color`
 
-::: details 查看示例代码
-<<< @/examples/selection/RadioGroupColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/selection/RadioGroupColorExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Radio group color 预览" stacked>

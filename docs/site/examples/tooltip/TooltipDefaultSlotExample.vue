@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <mat-btn id="tooltip-default-slot-target" variant="outlined">
     复制链接
@@ -7,3 +8,4 @@
     复制当前页面链接
   </mat-tooltip>
 </template>
+<!-- #endregion template -->

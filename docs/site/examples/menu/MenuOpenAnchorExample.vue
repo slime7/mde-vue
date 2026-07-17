@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const open = ref(false);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example-menu">
     <mat-btn
@@ -25,9 +28,12 @@ const open = ref(false);
     </mat-menu>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-menu {
   min-block-size: 120px;
 }
 </style>
+<!-- #endregion style -->

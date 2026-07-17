@@ -17,9 +17,13 @@ order: 50
 
 ### 默认内容
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonDefaultOnlyExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonDefaultOnlyExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button 默认内容预览">
@@ -29,17 +33,15 @@ order: 50
 
 ### `block`
 
-::: details 查看示例代码
+:::: details 查看示例代码
 ::: code-group
-
-<<< @/examples/button/ButtonBlockExample.vue#script [script]
 
 <<< @/examples/button/ButtonBlockExample.vue#template [template]
 
 <<< @/examples/button/ButtonBlockExample.vue#style [style]
 
 :::
-:::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button block 预览">
@@ -49,9 +51,15 @@ order: 50
 
 ### `variant`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonVariantExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonVariantExample.vue#template [template]
+
+<<< @/examples/button/ButtonVariantExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button variant 预览">
@@ -61,9 +69,15 @@ order: 50
 
 ### `size`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonSizeExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonSizeExample.vue#template [template]
+
+<<< @/examples/button/ButtonSizeExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button size 预览">
@@ -73,9 +87,15 @@ order: 50
 
 ### `shape`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonShapeExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonShapeExample.vue#template [template]
+
+<<< @/examples/button/ButtonShapeExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button shape 预览">
@@ -87,9 +107,15 @@ order: 50
 
 图标模式必须提供 `label`，它是展示 `width` 的必要依赖。
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonWidthExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonWidthExample.vue#template [template]
+
+<<< @/examples/button/ButtonWidthExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button width 预览">
@@ -99,9 +125,15 @@ order: 50
 
 ### `icon` 与 `label`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonIconExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonIconExample.vue#template [template]
+
+<<< @/examples/button/ButtonIconExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button icon 预览">
@@ -111,9 +143,13 @@ order: 50
 
 ### `prefix`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonPrefixExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonPrefixExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button prefix 预览">
@@ -123,9 +159,13 @@ order: 50
 
 ### `suffix`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonSuffixExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonSuffixExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button suffix 预览">
@@ -135,9 +175,15 @@ order: 50
 
 ### `color`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonColorExample.vue#template [template]
+
+<<< @/examples/button/ButtonColorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button color 预览">
@@ -149,9 +195,15 @@ order: 50
 
 `selected` 是 toggle 的必要受控状态；组件不自行修改它。
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonToggleExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonToggleExample.vue#template [template]
+
+<<< @/examples/button/ButtonToggleExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button toggle 与 selected 预览">
@@ -161,9 +213,15 @@ order: 50
 
 ### `disabled`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonDisabledExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonDisabledExample.vue#template [template]
+
+<<< @/examples/button/ButtonDisabledExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button disabled 预览">
@@ -173,9 +231,17 @@ order: 50
 
 ### `type`
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonTypeExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonTypeExample.vue#template [template]
+
+<<< @/examples/button/ButtonTypeExample.vue#script [script]
+
+<<< @/examples/button/ButtonTypeExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button type 预览">
@@ -187,9 +253,15 @@ order: 50
 
 `value` 需要放在 `MatBtnGroup` 的选择模式中才有可见作用。
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonValueExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonValueExample.vue#template [template]
+
+<<< @/examples/button/ButtonValueExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button value 预览">
@@ -199,9 +271,13 @@ order: 50
 
 ### 默认 Slot
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonDefaultSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonDefaultSlotExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button 默认 Slot 预览">
@@ -211,9 +287,13 @@ order: 50
 
 ### `prefix` Slot
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonPrefixSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonPrefixSlotExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button prefix Slot 预览">
@@ -223,9 +303,13 @@ order: 50
 
 ### `suffix` Slot
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonSuffixSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonSuffixSlotExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button suffix Slot 预览">
@@ -235,9 +319,13 @@ order: 50
 
 ### `selected` Slot
 
-::: details 查看示例代码
-<<< @/examples/button/ButtonSelectedSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonSelectedSlotExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button selected Slot 预览">

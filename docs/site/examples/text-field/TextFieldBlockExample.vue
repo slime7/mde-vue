@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <div class="text-field-block-example">
     <mat-text-field
@@ -14,7 +15,9 @@
     />
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .text-field-block-example {
   box-sizing: border-box;
@@ -27,3 +30,4 @@
   margin-block-start: 16px;
 }
 </style>
+<!-- #endregion style -->

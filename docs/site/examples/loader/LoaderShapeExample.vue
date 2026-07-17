@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const shape = ref('flat');
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn-group
     variant="connected"
@@ -35,3 +38,4 @@ const shape = ref('flat');
     aria-label="环形进度 60%"
   />
 </template>
+<!-- #endregion template -->

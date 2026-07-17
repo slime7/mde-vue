@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 import { snackbar, toast } from 'mdu-ui/functions';
@@ -32,7 +33,9 @@ async function showToast() {
   result.value = 'toast() 已关闭';
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="snackbar-function-example">
     <mat-btn @click="showSnackbar">
@@ -46,7 +49,9 @@ async function showToast() {
     <span>{{ result }}</span>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .snackbar-function-example {
   display: flex;
@@ -55,3 +60,4 @@ async function showToast() {
   align-items: center;
 }
 </style>
+<!-- #endregion style -->

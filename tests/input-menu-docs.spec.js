@@ -17,7 +17,7 @@ describe('文本输入与菜单文档', () => {
       expect(source).toContain('## API');
       expect(source).toContain('## 事件');
       expect(source).toContain('## Slots');
-      expect(source).toMatch(/^<<< @\/examples\/.+\.vue$/m);
+      expect(source).toMatch(/^<<< @\/examples\/[^\s]+\.vue/m);
       expect(source).toContain('<DocsPreview');
     });
   });

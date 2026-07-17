@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <p>语义 tertiary 色</p>
   <mat-loader
@@ -14,3 +15,4 @@
     aria-label="紫色进度 60%"
   />
 </template>
+<!-- #endregion template -->

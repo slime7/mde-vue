@@ -15,9 +15,15 @@ order: 110
 
 ### 三种缩进
 
-::: details 查看示例代码
-<<< @/examples/divider/DividerInsetsExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/divider/DividerInsetsExample.vue#template [template]
+
+<<< @/examples/divider/DividerInsetsExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Divider 三种缩进预览" stacked>
@@ -27,9 +33,15 @@ order: 110
 
 ### List 中使用
 
-::: details 查看示例代码
-<<< @/examples/divider/DividerListExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/divider/DividerListExample.vue#template [template]
+
+<<< @/examples/divider/DividerListExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Divider 在 List 中的预览">

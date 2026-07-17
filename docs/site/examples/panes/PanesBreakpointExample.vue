@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
@@ -15,7 +16,9 @@ function updateBreakpoint(nextBreakpoint) {
   }
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="panes-breakpoint-example">
     <output>当前断点：{{ breakpoint }}</output>
@@ -48,7 +51,9 @@ function updateBreakpoint(nextBreakpoint) {
     </div>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .panes-breakpoint-example {
   display: grid;
@@ -67,3 +72,4 @@ function updateBreakpoint(nextBreakpoint) {
   background: var(--mat-sys-color-surface-container-low);
 }
 </style>
+<!-- #endregion style -->

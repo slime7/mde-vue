@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const balance = ref(-20);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example">
     <mat-slider
@@ -18,7 +21,9 @@ const balance = ref(-20);
     <output>平衡：{{ balance }}</output>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example {
   display: grid;
@@ -26,3 +31,4 @@ const balance = ref(-20);
   inline-size: min(100%, 480px);
 }
 </style>
+<!-- #endregion style -->

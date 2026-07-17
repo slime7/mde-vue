@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <div class="example-row">
     <mat-icon icon="favorite" size="small" aria-hidden="true" />
@@ -7,7 +8,9 @@
     <mat-icon icon="favorite" size="32px" aria-hidden="true" />
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-row {
   display: flex;
@@ -16,3 +19,4 @@
   flex-wrap: wrap;
 }
 </style>
+<!-- #endregion style -->

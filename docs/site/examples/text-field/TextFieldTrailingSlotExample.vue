@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <mat-text-field label="搜索">
     <template #trailing>
@@ -5,3 +6,4 @@
     </template>
   </mat-text-field>
 </template>
+<!-- #endregion template -->

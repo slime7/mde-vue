@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const open = ref(false);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn @click="open = true">
     使用 text
@@ -16,3 +19,4 @@ const open = ref(false);
     text="text 属性提供简短的纯文本通知。"
   />
 </template>
+<!-- #endregion template -->

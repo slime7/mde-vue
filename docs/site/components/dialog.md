@@ -15,9 +15,15 @@ order: 100
 
 ### `modelValue`、`title` 与 `content`
 
-::: details 查看示例代码
-<<< @/examples/dialog/DialogModelValueExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogModelValueExample.vue#template [template]
+
+<<< @/examples/dialog/DialogModelValueExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog modelValue 预览">
@@ -27,9 +33,15 @@ order: 100
 
 ### `full-screen` 与 `close-label`
 
-::: details 查看示例代码
-<<< @/examples/dialog/DialogFullScreenExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogFullScreenExample.vue#template [template]
+
+<<< @/examples/dialog/DialogFullScreenExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog full-screen 预览">
@@ -39,9 +51,17 @@ order: 100
 
 ### `attach`
 
-::: details 查看示例代码
-<<< @/examples/dialog/DialogAttachExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogAttachExample.vue#template [template]
+
+<<< @/examples/dialog/DialogAttachExample.vue#script [script]
+
+<<< @/examples/dialog/DialogAttachExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog attach 预览">
@@ -51,9 +71,15 @@ order: 100
 
 ### `scrim`
 
-::: details 查看示例代码
-<<< @/examples/dialog/DialogScrimExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogScrimExample.vue#template [template]
+
+<<< @/examples/dialog/DialogScrimExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog scrim 预览">
@@ -63,9 +89,15 @@ order: 100
 
 ### `close-on-back`
 
-::: details 查看示例代码
-<<< @/examples/dialog/DialogCloseOnBackExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogCloseOnBackExample.vue#template [template]
+
+<<< @/examples/dialog/DialogCloseOnBackExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog close-on-back 预览">
@@ -75,9 +107,15 @@ order: 100
 
 ### `icon` 与 `color`
 
-::: details 查看示例代码
-<<< @/examples/dialog/DialogIconColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogIconColorExample.vue#template [template]
+
+<<< @/examples/dialog/DialogIconColorExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog icon 与 color 预览">
@@ -87,9 +125,15 @@ order: 100
 
 ### `title` Slot
 
-::: details 查看示例代码
-<<< @/examples/dialog/DialogTitleSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogTitleSlotExample.vue#template [template]
+
+<<< @/examples/dialog/DialogTitleSlotExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog title Slot 预览">
@@ -99,9 +143,15 @@ order: 100
 
 ### 默认 Slot
 
-::: details 查看示例代码
-<<< @/examples/dialog/DialogContentSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogContentSlotExample.vue#template [template]
+
+<<< @/examples/dialog/DialogContentSlotExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog 默认 Slot 预览">
@@ -111,9 +161,17 @@ order: 100
 
 ### `icon` Slot
 
-::: details 查看示例代码
-<<< @/examples/dialog/DialogIconSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogIconSlotExample.vue#template [template]
+
+<<< @/examples/dialog/DialogIconSlotExample.vue#script [script]
+
+<<< @/examples/dialog/DialogIconSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog icon Slot 预览">
@@ -123,9 +181,17 @@ order: 100
 
 ### `actions` Slot
 
-::: details 查看示例代码
-<<< @/examples/dialog/DialogActionsSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogActionsSlotExample.vue#template [template]
+
+<<< @/examples/dialog/DialogActionsSlotExample.vue#script [script]
+
+<<< @/examples/dialog/DialogActionsSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog actions Slot 预览">
@@ -135,9 +201,17 @@ order: 100
 
 ### `dialog()`
 
-::: details 查看示例代码
-<<< @/examples/dialog/DialogFunctionExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogFunctionExample.vue#template [template]
+
+<<< @/examples/dialog/DialogFunctionExample.vue#script [script]
+
+<<< @/examples/dialog/DialogFunctionExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="dialog 函数预览">
@@ -147,9 +221,17 @@ order: 100
 
 ### `alert()`
 
-::: details 查看示例代码
-<<< @/examples/dialog/DialogAlertFunctionExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogAlertFunctionExample.vue#template [template]
+
+<<< @/examples/dialog/DialogAlertFunctionExample.vue#script [script]
+
+<<< @/examples/dialog/DialogAlertFunctionExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="alert 函数预览">
@@ -159,9 +241,17 @@ order: 100
 
 ### `confirm()`
 
-::: details 查看示例代码
-<<< @/examples/dialog/DialogConfirmFunctionExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogConfirmFunctionExample.vue#template [template]
+
+<<< @/examples/dialog/DialogConfirmFunctionExample.vue#script [script]
+
+<<< @/examples/dialog/DialogConfirmFunctionExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="confirm 函数预览">
@@ -171,9 +261,17 @@ order: 100
 
 ### `prompt()`
 
-::: details 查看示例代码
-<<< @/examples/dialog/DialogPromptFunctionExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogPromptFunctionExample.vue#template [template]
+
+<<< @/examples/dialog/DialogPromptFunctionExample.vue#script [script]
+
+<<< @/examples/dialog/DialogPromptFunctionExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="prompt 函数预览">

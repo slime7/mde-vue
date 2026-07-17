@@ -15,7 +15,7 @@ const pages = pagePaths.map((pagePath) => ({
 describe('选择控件文档示例', () => {
   it('代码块与预览引用同一个 Vue 示例文件', () => {
     pages.forEach(({ pagePath, source }) => {
-      const snippetPaths = [...source.matchAll(/^<<< @\/(.+\.vue)$/gm)]
+      const snippetPaths = [...source.matchAll(/^<<< @\/([^\s]+\.vue)/gm)]
         .map((match) => match[1]);
 
       expect(snippetPaths.length, pagePath).toBeGreaterThan(0);
@@ -43,12 +43,19 @@ describe('选择控件文档示例', () => {
 
   it('AI 完整文档展开 Vue 示例源码', () => {
     const llmsFull = readFileSync(resolve('llms-full.txt'), 'utf8');
-    const switchExample = readFileSync(
+    const switchSource = readFileSync(
       resolve('docs/site/examples/selection/SwitchIconsExample.vue'),
       'utf8',
-    ).trim();
+    );
+    const regions = ['template', 'script', 'style']
+      .map((region) => switchSource.match(
+        new RegExp(`<!-- #region ${region} -->\\n([\\s\\S]*?)\\n<!-- #endregion ${region} -->`),
+      )?.[1]?.trim())
+      .filter(Boolean);
 
     expect(llmsFull).not.toContain('<<< @/examples/selection/');
-    expect(llmsFull).toContain(`\`\`\`vue\n${switchExample}\n\`\`\``);
+    regions.forEach((region) => {
+      expect(llmsFull).toContain(`\`\`\`vue\n${region}\n\`\`\``);
+    });
   });
 });

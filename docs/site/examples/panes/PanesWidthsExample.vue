@@ -1,10 +1,13 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const sizes = ref({ first: 1, second: 2 });
 const widths = ref({});
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="panes-widths-example">
     <div class="panes-widths-example__status">
@@ -38,7 +41,9 @@ const widths = ref({});
     </div>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .panes-widths-example {
   display: grid;
@@ -62,3 +67,4 @@ const widths = ref({});
   background: var(--mat-sys-color-surface-container-low);
 }
 </style>
+<!-- #endregion style -->

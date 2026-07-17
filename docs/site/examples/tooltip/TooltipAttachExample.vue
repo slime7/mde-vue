@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const attach = ref(null);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn id="tooltip-attach-example" variant="outlined">
     自定义挂载目标
@@ -19,7 +22,9 @@ const attach = ref(null);
     target="#tooltip-attach-example"
   />
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .tooltip-attach-target {
   margin-block-start: 16px;
@@ -29,3 +34,4 @@ const attach = ref(null);
   border-radius: var(--mat-sys-shape-corner-medium);
 }
 </style>
+<!-- #endregion style -->

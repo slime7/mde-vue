@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const thickness = ref(4);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn-group
     variant="connected"
@@ -37,3 +40,4 @@ const thickness = ref(4);
     aria-label="波浪环进度 60%"
   />
 </template>
+<!-- #endregion template -->

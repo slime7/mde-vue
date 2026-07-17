@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const price = ref([20, 75]);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example">
     <mat-range-slider
@@ -17,7 +20,9 @@ const price = ref([20, 75]);
     <output>价格区间：{{ price[0] }} — {{ price[1] }}</output>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example {
   display: grid;
@@ -25,3 +30,4 @@ const price = ref([20, 75]);
   inline-size: min(100%, 480px);
 }
 </style>
+<!-- #endregion style -->

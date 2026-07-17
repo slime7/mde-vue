@@ -17,9 +17,17 @@ order: 80
 
 ### 布尔值
 
-::: details 查看示例代码
-<<< @/examples/selection/CheckboxBooleanExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/selection/CheckboxBooleanExample.vue#template [template]
+
+<<< @/examples/selection/CheckboxBooleanExample.vue#script [script]
+
+<<< @/examples/selection/CheckboxBooleanExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Checkbox 布尔值预览" stacked>
@@ -31,9 +39,17 @@ order: 80
 
 每个实例用 `value` 声明自己的候选值。组件添加或移除项目时返回新数组，不修改原数组。
 
-::: details 查看示例代码
-<<< @/examples/selection/CheckboxArrayExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/selection/CheckboxArrayExample.vue#template [template]
+
+<<< @/examples/selection/CheckboxArrayExample.vue#script [script]
+
+<<< @/examples/selection/CheckboxArrayExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Checkbox 数组绑定预览" stacked>
@@ -43,9 +59,17 @@ order: 80
 
 ### 父子选择与不确定态
 
-::: details 查看示例代码
-<<< @/examples/selection/CheckboxIndeterminateExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/selection/CheckboxIndeterminateExample.vue#template [template]
+
+<<< @/examples/selection/CheckboxIndeterminateExample.vue#script [script]
+
+<<< @/examples/selection/CheckboxIndeterminateExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Checkbox 不确定态预览" stacked>
@@ -55,9 +79,15 @@ order: 80
 
 ### `color`
 
-::: details 查看示例代码
-<<< @/examples/selection/CheckboxColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/selection/CheckboxColorExample.vue#template [template]
+
+<<< @/examples/selection/CheckboxColorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Checkbox color 预览" stacked>
@@ -67,9 +97,15 @@ order: 80
 
 ### `disabled`
 
-::: details 查看示例代码
-<<< @/examples/selection/CheckboxDisabledExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/selection/CheckboxDisabledExample.vue#template [template]
+
+<<< @/examples/selection/CheckboxDisabledExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Checkbox disabled 预览" stacked>

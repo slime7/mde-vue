@@ -1,10 +1,13 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const singleSelected = ref('day');
 const multipleSelected = ref(['bold']);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-btn-group
@@ -33,7 +36,9 @@ const multipleSelected = ref(['bold']);
     </mat-btn-group>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -42,3 +47,4 @@ const multipleSelected = ref(['bold']);
   align-items: flex-start;
 }
 </style>
+<!-- #endregion style -->

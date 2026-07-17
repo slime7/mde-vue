@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const selected = ref(false);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn
     toggle
@@ -13,3 +16,4 @@ const selected = ref(false);
     切换收藏
   </mat-btn>
 </template>
+<!-- #endregion template -->

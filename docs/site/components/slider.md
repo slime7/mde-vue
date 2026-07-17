@@ -19,9 +19,17 @@ order: 87
 
 ### `modelValue`、`min`、`max` 与 `step`
 
-::: details 查看示例代码
-<<< @/examples/slider/SliderModelValueExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/SliderModelValueExample.vue#template [template]
+
+<<< @/examples/slider/SliderModelValueExample.vue#script [script]
+
+<<< @/examples/slider/SliderModelValueExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 数值模型预览" stacked>
@@ -31,9 +39,17 @@ order: 87
 
 ### `variant` 与 `center`
 
-::: details 查看示例代码
-<<< @/examples/slider/SliderVariantExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/SliderVariantExample.vue#template [template]
+
+<<< @/examples/slider/SliderVariantExample.vue#script [script]
+
+<<< @/examples/slider/SliderVariantExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 居中变体预览" stacked>
@@ -43,9 +59,17 @@ order: 87
 
 ### `orientation`
 
-::: details 查看示例代码
-<<< @/examples/slider/SliderOrientationExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/SliderOrientationExample.vue#template [template]
+
+<<< @/examples/slider/SliderOrientationExample.vue#script [script]
+
+<<< @/examples/slider/SliderOrientationExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 横竖方向预览" stacked>
@@ -55,9 +79,17 @@ order: 87
 
 ### `size`
 
-::: details 查看示例代码
-<<< @/examples/slider/SliderSizeExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/SliderSizeExample.vue#template [template]
+
+<<< @/examples/slider/SliderSizeExample.vue#script [script]
+
+<<< @/examples/slider/SliderSizeExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 五档尺寸预览" stacked>
@@ -67,9 +99,17 @@ order: 87
 
 ### `insetIcon`
 
-::: details 查看示例代码
-<<< @/examples/slider/SliderInsetIconExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/SliderInsetIconExample.vue#template [template]
+
+<<< @/examples/slider/SliderInsetIconExample.vue#script [script]
+
+<<< @/examples/slider/SliderInsetIconExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 内嵌图标预览" stacked>
@@ -79,9 +119,17 @@ order: 87
 
 ### `showStopIndicator`
 
-::: details 查看示例代码
-<<< @/examples/slider/SliderShowStopIndicatorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/SliderShowStopIndicatorExample.vue#template [template]
+
+<<< @/examples/slider/SliderShowStopIndicatorExample.vue#script [script]
+
+<<< @/examples/slider/SliderShowStopIndicatorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 停靠点预览" stacked>
@@ -91,9 +139,17 @@ order: 87
 
 ### `showValueIndicator`
 
-::: details 查看示例代码
-<<< @/examples/slider/SliderShowValueIndicatorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/SliderShowValueIndicatorExample.vue#template [template]
+
+<<< @/examples/slider/SliderShowValueIndicatorExample.vue#script [script]
+
+<<< @/examples/slider/SliderShowValueIndicatorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 数值指示预览" stacked>
@@ -103,9 +159,13 @@ order: 87
 
 ### `disabled`
 
-::: details 查看示例代码
-<<< @/examples/slider/SliderDisabledExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/SliderDisabledExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 禁用状态预览" stacked>
@@ -115,9 +175,17 @@ order: 87
 
 ### `color`
 
-::: details 查看示例代码
-<<< @/examples/slider/SliderColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/SliderColorExample.vue#template [template]
+
+<<< @/examples/slider/SliderColorExample.vue#script [script]
+
+<<< @/examples/slider/SliderColorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 局部配色预览" stacked>

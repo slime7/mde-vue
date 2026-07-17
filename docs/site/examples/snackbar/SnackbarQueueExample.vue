@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
@@ -11,7 +12,9 @@ function showAll() {
   third.value = true;
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn @click="showAll">
     连续显示三条通知
@@ -35,3 +38,4 @@ function showAll() {
     text="第三条通知"
   />
 </template>
+<!-- #endregion template -->

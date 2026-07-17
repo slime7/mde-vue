@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
@@ -7,7 +8,9 @@ const touched = ref(false);
 const verificationCode = ref('');
 const verificationTouched = ref(false);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="text-input-example">
     <mat-text-field
@@ -74,7 +77,9 @@ const verificationTouched = ref(false);
     </p>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .text-input-example {
   display: grid;
@@ -92,3 +97,4 @@ const verificationTouched = ref(false);
   line-height: var(--mat-sys-typescale-body-small-line-height);
 }
 </style>
+<!-- #endregion style -->

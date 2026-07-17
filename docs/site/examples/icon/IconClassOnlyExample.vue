@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <div class="example-row">
     <mat-icon
@@ -10,7 +11,9 @@
     <span>由自定义 class 的伪元素生成</span>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-row {
   display: flex;
@@ -22,3 +25,4 @@
   content: '◆';
 }
 </style>
+<!-- #endregion style -->

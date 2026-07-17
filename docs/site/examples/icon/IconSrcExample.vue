@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -5,7 +6,10 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
   </svg>
 `)}`;
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-icon :src="sourceIcon" role="img" aria-label="立方体" />
 </template>
+<!-- #endregion template -->

@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const rating = ref(3);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example">
     <mat-slider
@@ -16,7 +19,9 @@ const rating = ref(3);
     <output>评分：{{ rating }}</output>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example {
   display: grid;
@@ -24,3 +29,4 @@ const rating = ref(3);
   inline-size: min(100%, 480px);
 }
 </style>
+<!-- #endregion style -->

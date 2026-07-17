@@ -1,10 +1,13 @@
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-text-field label="outlined" variant="outlined" />
     <mat-text-field label="filled" variant="filled" />
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -13,3 +16,4 @@
   inline-size: min(100%, 360px);
 }
 </style>
+<!-- #endregion style -->

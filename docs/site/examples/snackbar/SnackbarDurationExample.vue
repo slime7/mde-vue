@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
@@ -9,7 +10,9 @@ function show(nextDuration) {
   open.value = true;
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="snackbar-duration-example">
     <mat-btn variant="outlined" @click="show(1500)">
@@ -28,7 +31,9 @@ function show(nextDuration) {
     :text="duration === 0 ? '常驻通知，需要手动关闭。' : '这条通知将在 1.5 秒后关闭。'"
   />
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .snackbar-duration-example {
   display: flex;
@@ -36,3 +41,4 @@ function show(nextDuration) {
   gap: 12px;
 }
 </style>
+<!-- #endregion style -->

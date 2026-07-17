@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
@@ -12,7 +13,9 @@ function undo(action) {
   action();
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn @click="open = true">
     自定义 action Slot
@@ -33,7 +36,9 @@ function undo(action) {
     </template>
   </mat-snackbar>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .slot-action {
   box-sizing: border-box;
@@ -47,3 +52,4 @@ function undo(action) {
   border: 0;
 }
 </style>
+<!-- #endregion style -->

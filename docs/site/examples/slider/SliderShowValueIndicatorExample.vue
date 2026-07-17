@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const temperature = ref(22);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example">
     <mat-slider
@@ -16,7 +19,9 @@ const temperature = ref(22);
     <output>聚焦或拖动手柄即可显示：{{ temperature }} ℃</output>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example {
   display: grid;
@@ -24,3 +29,4 @@ const temperature = ref(22);
   inline-size: min(100%, 480px);
 }
 </style>
+<!-- #endregion style -->

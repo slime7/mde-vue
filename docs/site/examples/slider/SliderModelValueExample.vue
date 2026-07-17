@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const volume = ref(35);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example">
     <mat-slider
@@ -16,7 +19,9 @@ const volume = ref(35);
     <output>音量：{{ volume }}</output>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example {
   display: grid;
@@ -24,3 +29,4 @@ const volume = ref(35);
   inline-size: min(100%, 480px);
 }
 </style>
+<!-- #endregion style -->

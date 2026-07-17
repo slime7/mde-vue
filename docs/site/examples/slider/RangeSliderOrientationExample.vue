@@ -1,10 +1,13 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const horizontal = ref([25, 70]);
 const vertical = ref([30, 85]);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example">
     <div class="example__horizontal">
@@ -27,7 +30,9 @@ const vertical = ref([30, 85]);
     </div>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example {
   display: flex;
@@ -48,3 +53,4 @@ const vertical = ref([30, 85]);
   gap: 12px;
 }
 </style>
+<!-- #endregion style -->

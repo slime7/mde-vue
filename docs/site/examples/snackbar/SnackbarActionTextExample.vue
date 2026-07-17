@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
@@ -8,7 +9,9 @@ function undo() {
   result.value = '已撤销归档';
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn @click="open = true">
     显示带 action 的通知
@@ -24,3 +27,4 @@ function undo() {
     @action="undo"
   />
 </template>
+<!-- #endregion template -->

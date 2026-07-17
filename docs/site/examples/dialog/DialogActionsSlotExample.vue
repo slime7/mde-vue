@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
@@ -9,7 +10,9 @@ function choose(value) {
   open.value = false;
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="dialog-actions-example">
     <mat-btn @click="open = true">
@@ -30,7 +33,9 @@ function choose(value) {
     </template>
   </mat-dialog>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .dialog-actions-example {
   display: flex;
@@ -38,3 +43,4 @@ function choose(value) {
   align-items: center;
 }
 </style>
+<!-- #endregion style -->

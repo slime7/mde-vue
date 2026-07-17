@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const expanded = ref(false);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-split-btn
     :expanded="expanded"
@@ -17,3 +20,4 @@ const expanded = ref(false);
     </template>
   </mat-split-btn>
 </template>
+<!-- #endregion template -->

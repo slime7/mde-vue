@@ -17,9 +17,15 @@ order: 86
 
 ### 无图标与内置图标
 
-::: details 查看示例代码
-<<< @/examples/selection/SwitchIconsExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/selection/SwitchIconsExample.vue#template [template]
+
+<<< @/examples/selection/SwitchIconsExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Switch 图标配置预览" stacked>
@@ -29,9 +35,15 @@ order: 86
 
 ### `modelValue`
 
-::: details 查看示例代码
-<<< @/examples/selection/SwitchModelValueExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/selection/SwitchModelValueExample.vue#template [template]
+
+<<< @/examples/selection/SwitchModelValueExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Switch modelValue 预览" stacked>
@@ -41,9 +53,15 @@ order: 86
 
 ### `disabled`
 
-::: details 查看示例代码
-<<< @/examples/selection/SwitchDisabledExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/selection/SwitchDisabledExample.vue#template [template]
+
+<<< @/examples/selection/SwitchDisabledExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Switch disabled 预览" stacked>
@@ -53,9 +71,15 @@ order: 86
 
 ### `color`
 
-::: details 查看示例代码
-<<< @/examples/selection/SwitchColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/selection/SwitchColorExample.vue#template [template]
+
+<<< @/examples/selection/SwitchColorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Switch color 预览" stacked>

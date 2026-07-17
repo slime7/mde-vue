@@ -1,10 +1,13 @@
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-text-field label="有标签的输入框" />
     <mat-text-field label="带占位提示" placeholder="请输入内容" />
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -13,3 +16,4 @@
   inline-size: min(100%, 360px);
 }
 </style>
+<!-- #endregion style -->

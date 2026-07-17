@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const density = ref('comfortable');
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-radio v-model="density" value="compact">
@@ -15,7 +18,9 @@ const density = ref('comfortable');
     <span>当前值：{{ density }}</span>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -24,3 +29,4 @@ const density = ref('comfortable');
   align-items: flex-start;
 }
 </style>
+<!-- #endregion style -->

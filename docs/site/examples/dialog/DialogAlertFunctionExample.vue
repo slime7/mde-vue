@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 import { alert } from 'mdu-ui/functions';
@@ -15,7 +16,9 @@ async function showAlert() {
   closed.value = true;
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="dialog-function-example">
     <mat-btn variant="outlined" @click="showAlert">
@@ -24,7 +27,9 @@ async function showAlert() {
     <span>{{ closed ? 'Dialog 已关闭' : '等待打开' }}</span>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .dialog-function-example {
   display: flex;
@@ -32,3 +37,4 @@ async function showAlert() {
   align-items: center;
 }
 </style>
+<!-- #endregion style -->

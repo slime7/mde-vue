@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <div class="example-grid">
     <section>
@@ -16,7 +17,9 @@
     </section>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-grid {
   display: grid;
@@ -32,3 +35,4 @@ section {
   min-inline-size: 0;
 }
 </style>
+<!-- #endregion style -->

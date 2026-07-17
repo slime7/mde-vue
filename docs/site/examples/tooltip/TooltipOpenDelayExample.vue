@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <mat-tooltip
     content="指针进入 600ms 后显示"
@@ -10,3 +11,4 @@
     </template>
   </mat-tooltip>
 </template>
+<!-- #endregion template -->

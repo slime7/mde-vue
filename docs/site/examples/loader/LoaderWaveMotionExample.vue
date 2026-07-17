@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const waveMotion = ref(false);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-switch v-model="waveMotion">
     播放波动效果
@@ -26,3 +29,4 @@ const waveMotion = ref(false);
     aria-label="波浪环进度 60%"
   />
 </template>
+<!-- #endregion template -->

@@ -1,10 +1,13 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const open = ref(false);
 const target = ref(null);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn variant="outlined" @click="open = true">
     挂载到指定元素
@@ -28,7 +31,9 @@ const target = ref(null);
     </template>
   </mat-dialog>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .dialog-target {
   margin-block-start: 16px;
@@ -38,3 +43,4 @@ const target = ref(null);
   border-radius: var(--mat-sys-shape-corner-medium);
 }
 </style>
+<!-- #endregion style -->

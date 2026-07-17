@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <mat-split-btn>
     <template #leading>
@@ -8,3 +9,4 @@
     </template>
   </mat-split-btn>
 </template>
+<!-- #endregion template -->

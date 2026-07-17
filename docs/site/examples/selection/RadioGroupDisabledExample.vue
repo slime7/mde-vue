@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <mat-radio-group model-value="enabled" label="通知方式">
     <mat-radio value="enabled">
@@ -8,3 +9,4 @@
     </mat-radio>
   </mat-radio-group>
 </template>
+<!-- #endregion template -->

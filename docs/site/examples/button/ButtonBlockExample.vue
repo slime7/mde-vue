@@ -1,9 +1,3 @@
-<!-- #region script -->
-<script setup>
-// 此示例不需要脚本逻辑。
-</script>
-<!-- #endregion script -->
-
 <!-- #region template -->
 <template>
   <div class="example-stack">

@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const selected = ref('one');
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-btn-group>
@@ -25,7 +28,9 @@ const selected = ref('one');
     </mat-btn-group>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -34,3 +39,4 @@ const selected = ref('one');
   align-items: flex-start;
 }
 </style>
+<!-- #endregion style -->

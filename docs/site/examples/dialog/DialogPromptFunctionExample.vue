@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 import { prompt } from 'mdu-ui/functions';
@@ -16,7 +17,9 @@ async function showPrompt() {
   result.value = value ?? '已取消';
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="dialog-function-example">
     <mat-btn variant="outlined" @click="showPrompt">
@@ -25,7 +28,9 @@ async function showPrompt() {
     <span>结果：{{ result }}</span>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .dialog-function-example {
   display: flex;
@@ -33,3 +38,4 @@ async function showPrompt() {
   align-items: center;
 }
 </style>
+<!-- #endregion style -->

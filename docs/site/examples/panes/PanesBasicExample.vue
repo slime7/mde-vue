@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
@@ -7,7 +8,9 @@ function updateSizes(nextSizes) {
   sizes.value = nextSizes;
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="panes-example">
     <mat-panes
@@ -43,7 +46,9 @@ function updateSizes(nextSizes) {
     </mat-panes>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .panes-example {
   block-size: 180px;
@@ -60,3 +65,4 @@ function updateSizes(nextSizes) {
   background: var(--mat-sys-color-surface-container-low);
 }
 </style>
+<!-- #endregion style -->

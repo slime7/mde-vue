@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { computed, ref } from 'vue';
 
@@ -11,7 +12,9 @@ function toggleAll(checked) {
   permissions.value = checked ? ['read', 'write'] : [];
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-checkbox
@@ -32,7 +35,9 @@ function toggleAll(checked) {
     </div>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack,
 .example-children {
@@ -50,3 +55,4 @@ function toggleAll(checked) {
   padding-inline-start: 24px;
 }
 </style>
+<!-- #endregion style -->

@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-textarea label="两行" :rows="2" />
@@ -5,7 +6,9 @@
     <mat-textarea label="六行" :rows="6" />
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -14,3 +17,4 @@
   inline-size: min(100%, 360px);
 }
 </style>
+<!-- #endregion style -->

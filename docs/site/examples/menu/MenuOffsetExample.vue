@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const open = ref(true);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example-menu">
     <mat-btn id="offset-menu-trigger" @click="open = !open">
@@ -18,9 +21,12 @@ const open = ref(true);
     </mat-menu>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-menu {
   min-block-size: 140px;
 }
 </style>
+<!-- #endregion style -->

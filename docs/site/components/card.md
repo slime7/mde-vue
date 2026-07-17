@@ -15,9 +15,15 @@ order: 90
 
 ### `variant`
 
-::: details 查看示例代码
-<<< @/examples/card/CardVariantExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/card/CardVariantExample.vue#template [template]
+
+<<< @/examples/card/CardVariantExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Card variant 预览">
@@ -27,9 +33,15 @@ order: 90
 
 ### `color`
 
-::: details 查看示例代码
-<<< @/examples/card/CardColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/card/CardColorExample.vue#template [template]
+
+<<< @/examples/card/CardColorExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Card color 预览">
@@ -39,9 +51,15 @@ order: 90
 
 ### `as`
 
-::: details 查看示例代码
-<<< @/examples/card/CardAsExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/card/CardAsExample.vue#template [template]
+
+<<< @/examples/card/CardAsExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Card as 预览">
@@ -51,9 +69,15 @@ order: 90
 
 ### ActionArea 的 `href`
 
-::: details 查看示例代码
-<<< @/examples/card/CardActionHrefExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/card/CardActionHrefExample.vue#template [template]
+
+<<< @/examples/card/CardActionHrefExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Card ActionArea href 预览">
@@ -63,9 +87,15 @@ order: 90
 
 ### ActionArea 的 `disabled`
 
-::: details 查看示例代码
-<<< @/examples/card/CardActionDisabledExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/card/CardActionDisabledExample.vue#template [template]
+
+<<< @/examples/card/CardActionDisabledExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Card ActionArea disabled 预览">
@@ -75,9 +105,15 @@ order: 90
 
 ### ActionArea 的 `type`
 
-::: details 查看示例代码
-<<< @/examples/card/CardActionTypeExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/card/CardActionTypeExample.vue#template [template]
+
+<<< @/examples/card/CardActionTypeExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Card ActionArea type 预览">
@@ -87,9 +123,15 @@ order: 90
 
 ### MatCardContent 默认 Slot
 
-::: details 查看示例代码
-<<< @/examples/card/CardContentSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/card/CardContentSlotExample.vue#template [template]
+
+<<< @/examples/card/CardContentSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="CardContent 默认 Slot 预览">
@@ -99,9 +141,15 @@ order: 90
 
 ### MatCardActions 默认 Slot
 
-::: details 查看示例代码
-<<< @/examples/card/CardActionsSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/card/CardActionsSlotExample.vue#template [template]
+
+<<< @/examples/card/CardActionsSlotExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="CardActions 默认 Slot 预览">

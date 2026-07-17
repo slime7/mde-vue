@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <mat-btn>
     <template #prefix>
@@ -6,3 +7,4 @@
     前置 Slot
   </mat-btn>
 </template>
+<!-- #endregion template -->

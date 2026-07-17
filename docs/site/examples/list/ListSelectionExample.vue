@@ -1,10 +1,13 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const singleSelected = ref('recent');
 const multipleSelected = ref(['offline']);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-list
@@ -76,7 +79,9 @@ const multipleSelected = ref(['offline']);
     </mat-list>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -94,3 +99,4 @@ const multipleSelected = ref(['offline']);
   pointer-events: none;
 }
 </style>
+<!-- #endregion style -->

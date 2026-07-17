@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const submitted = ref('尚未提交');
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <form class="example-stack" @submit.prevent="submitted = 'submit 已触发'">
     <div class="example-row">
@@ -17,7 +20,9 @@ const submitted = ref('尚未提交');
     <span>{{ submitted }}</span>
   </form>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -31,3 +36,4 @@ const submitted = ref('尚未提交');
   gap: 12px;
 }
 </style>
+<!-- #endregion style -->

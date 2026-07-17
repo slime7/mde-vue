@@ -17,9 +17,17 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 
 ### 受控尺寸与默认 Slot
 
-::: details 查看示例代码
-<<< @/examples/panes/PanesBasicExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/panes/PanesBasicExample.vue#template [template]
+
+<<< @/examples/panes/PanesBasicExample.vue#script [script]
+
+<<< @/examples/panes/PanesBasicExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Panes 受控尺寸预览" stacked>
@@ -29,9 +37,17 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 
 ### 等高与 Pane 内滚动
 
-::: details 查看示例代码
-<<< @/examples/panes/PanesScrollExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/panes/PanesScrollExample.vue#template [template]
+
+<<< @/examples/panes/PanesScrollExample.vue#script [script]
+
+<<< @/examples/panes/PanesScrollExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Panes 等高滚动预览" stacked>
@@ -41,9 +57,17 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 
 ### `resizable`
 
-::: details 查看示例代码
-<<< @/examples/panes/PanesResizableExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/panes/PanesResizableExample.vue#template [template]
+
+<<< @/examples/panes/PanesResizableExample.vue#script [script]
+
+<<< @/examples/panes/PanesResizableExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Panes 开关调整预览" stacked>
@@ -55,9 +79,17 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 
 断点事件只报告浏览器视口等级。示例中的 `v-if` 是使用方自行决定的显隐策略，组件不会自动隐藏 Pane。
 
-::: details 查看示例代码
-<<< @/examples/panes/PanesBreakpointExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/panes/PanesBreakpointExample.vue#template [template]
+
+<<< @/examples/panes/PanesBreakpointExample.vue#script [script]
+
+<<< @/examples/panes/PanesBreakpointExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Panes 断点与显隐预览" stacked>
@@ -69,9 +101,17 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 
 实际宽度信息使用尾端防抖，避免拖动和窗口变化造成过于频繁的外部更新。
 
-::: details 查看示例代码
-<<< @/examples/panes/PanesWidthsExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/panes/PanesWidthsExample.vue#template [template]
+
+<<< @/examples/panes/PanesWidthsExample.vue#script [script]
+
+<<< @/examples/panes/PanesWidthsExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Panes 宽度信息预览" stacked>

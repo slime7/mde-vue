@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <mat-text-field label="邮箱">
     <template #leading>
@@ -5,3 +6,4 @@
     </template>
   </mat-text-field>
 </template>
+<!-- #endregion template -->

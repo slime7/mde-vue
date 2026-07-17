@@ -1,10 +1,13 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const standardSelected = ref(null);
 const segmentedSelected = ref(null);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example-grid">
     <section class="example-stack">
@@ -80,7 +83,9 @@ const segmentedSelected = ref(null);
     </section>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-grid {
   display: grid;
@@ -100,3 +105,4 @@ const segmentedSelected = ref(null);
   pointer-events: none;
 }
 </style>
+<!-- #endregion style -->

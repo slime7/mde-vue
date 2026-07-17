@@ -1,10 +1,13 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const semanticValue = ref(45);
 const seededValue = ref(70);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example">
     <mat-slider
@@ -19,7 +22,9 @@ const seededValue = ref(70);
     />
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example {
   display: grid;
@@ -27,3 +32,4 @@ const seededValue = ref(70);
   inline-size: min(100%, 480px);
 }
 </style>
+<!-- #endregion style -->

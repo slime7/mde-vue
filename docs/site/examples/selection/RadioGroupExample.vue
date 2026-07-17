@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const themeMode = ref('system');
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <mat-radio-group v-model="themeMode" label="主题模式" color="#6750a4">
@@ -23,7 +26,9 @@ const themeMode = ref('system');
     <span>当前值：{{ themeMode }}</span>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -32,3 +37,4 @@ const themeMode = ref('system');
   align-items: flex-start;
 }
 </style>
+<!-- #endregion style -->

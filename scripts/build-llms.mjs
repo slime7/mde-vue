@@ -114,7 +114,7 @@ function parseDocument(source, absolutePath) {
 }
 
 /**
- * 将 VitePress 的简单代码片段包含指令展开为 Markdown 代码块。
+ * 将 VitePress 的代码片段包含指令展开为 Markdown 代码块，支持 VS Code region。
  *
  * @param {string} content Markdown 正文。
  * @param {string} documentPath Markdown 文件绝对路径。
@@ -122,7 +122,9 @@ function parseDocument(source, absolutePath) {
  * @throws {Error} 代码片段位于文档目录之外或无法读取时抛出。
  */
 async function expandCodeSnippets(content, documentPath) {
-  const matches = [...content.matchAll(/^<<<\s+([^\s{#[\]]+)\s*$/gm)];
+  const matches = [...content.matchAll(
+    /^<<<\s+([^\s{#[\]]+)(?:#([^\s{#[\]]+))?(?:\s+\[[^\]]+\])?\s*$/gm,
+  )];
   const replacements = await Promise.all(matches.map(async (match) => {
     const sourcePath = match[1].startsWith('@/')
       ? path.resolve(docsDirectory, match[1].slice(2))
@@ -133,13 +135,24 @@ async function expandCodeSnippets(content, documentPath) {
       throw new Error(`${match[1]} 不在 VitePress 文档目录中。`);
     }
 
-    const source = (await readFile(sourcePath, 'utf8')).trimEnd();
+    const fullSource = await readFile(sourcePath, 'utf8');
+    const region = match[2];
+    const source = region
+      ? fullSource.match(
+        new RegExp(`<!-- #region ${region} -->\\r?\\n([\\s\\S]*?)\\r?\\n<!-- #endregion ${region} -->`),
+      )?.[1]
+      : fullSource;
+
+    if (source === undefined) {
+      throw new Error(`${match[1]} 缺少名为 ${region} 的代码 region。`);
+    }
+
     const language = path.extname(sourcePath).slice(1) || 'text';
 
     return {
       end: match.index + match[0].length,
       start: match.index,
-      value: `\`\`\`${language}\n${source}\n\`\`\``,
+      value: `\`\`\`${language}\n${source.trimEnd()}\n\`\`\``,
     };
   }));
 

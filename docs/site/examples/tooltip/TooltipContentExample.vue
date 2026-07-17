@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <mat-btn id="tooltip-content-target" variant="outlined">
     保存
@@ -8,3 +9,4 @@
     target="#tooltip-content-target"
   />
 </template>
+<!-- #endregion template -->

@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <mat-slider
     aria-label="不可用的音量"
@@ -5,3 +6,4 @@
     model-value="45"
   />
 </template>
+<!-- #endregion template -->

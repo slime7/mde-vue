@@ -377,7 +377,9 @@ matUi.theme.dispose();
 
 ### `icon`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -386,7 +388,8 @@ matUi.theme.dispose();
     <mat-icon icon="settings" aria-hidden="true" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -396,6 +399,7 @@ matUi.theme.dispose();
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon icon 预览">
@@ -405,7 +409,14 @@ matUi.theme.dispose();
 
 ### `src`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-icon :src="sourceIcon" role="img" aria-label="立方体" />
+</template>
+```
 ```vue
 <script setup>
 const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
@@ -414,12 +425,9 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
   </svg>
 `)}`;
 </script>
-
-<template>
-  <mat-icon :src="sourceIcon" role="img" aria-label="立方体" />
-</template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon src 预览">
@@ -429,7 +437,9 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 
 ### 默认 Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-icon font-color="rebeccapurple" aria-hidden="true">
@@ -440,6 +450,7 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon 默认 Slot 预览">
@@ -449,7 +460,9 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 
 ### `size`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -460,7 +473,8 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
     <mat-icon icon="favorite" size="32px" aria-hidden="true" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -471,6 +485,7 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon size 预览">
@@ -480,7 +495,9 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 
 ### `fill`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -489,7 +506,8 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
     <mat-icon icon="favorite" :fill="1" aria-hidden="true" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -499,6 +517,7 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon fill 预览">
@@ -508,7 +527,9 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 
 ### `weight`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -517,7 +538,8 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
     <mat-icon icon="favorite" :weight="700" aria-hidden="true" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -527,6 +549,7 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon weight 预览">
@@ -536,7 +559,9 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 
 ### `grade`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -545,7 +570,8 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
     <mat-icon icon="favorite" :grade="200" aria-hidden="true" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -555,6 +581,7 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon grade 预览">
@@ -564,7 +591,9 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 
 ### `optical-size`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -573,7 +602,8 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
     <mat-icon icon="favorite" :optical-size="48" aria-hidden="true" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -583,6 +613,7 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon optical-size 预览">
@@ -592,7 +623,9 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 
 ### `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -603,7 +636,8 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
     <mat-icon icon="favorite" color="#6750a4" aria-hidden="true" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -614,6 +648,7 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon color 预览">
@@ -623,7 +658,9 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 
 ### `font-color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -632,7 +669,8 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
     <mat-icon icon="favorite" font-color="seagreen" aria-hidden="true" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -642,6 +680,7 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon font-color 预览">
@@ -651,7 +690,9 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 
 ### `as`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -660,7 +701,8 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
     <mat-icon as="div" icon="home" aria-hidden="true" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -670,6 +712,7 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon as 预览">
@@ -679,7 +722,9 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 
 ### `icon-class`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -693,7 +738,8 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
     <span>由自定义 class 的伪元素生成</span>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -707,6 +753,7 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Icon icon-class 预览">
@@ -954,13 +1001,16 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 ### 默认内容
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-btn>确认</mat-btn>
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button 默认内容预览">
@@ -970,17 +1020,32 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 ### `block`
 
-::: details 查看示例代码
+:::: details 查看示例代码
 ::: code-group
 
-<<< @/examples/button/ButtonBlockExample.vue#script [script]
-
-<<< @/examples/button/ButtonBlockExample.vue#template [template]
-
-<<< @/examples/button/ButtonBlockExample.vue#style [style]
-
+```vue
+<template>
+  <div class="example-stack">
+    <mat-btn>普通宽度</mat-btn>
+    <mat-btn block>
+      块级宽度
+    </mat-btn>
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  inline-size: min(100%, 360px);
+}
+</style>
+```
 :::
-:::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button block 预览">
@@ -990,7 +1055,9 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 ### `variant`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -1014,7 +1081,8 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
     </mat-btn>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -1025,6 +1093,7 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button variant 预览">
@@ -1034,7 +1103,9 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 ### `size`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -1055,7 +1126,8 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
     </mat-btn>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -1066,6 +1138,7 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button size 预览">
@@ -1075,7 +1148,9 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 ### `shape`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -1087,7 +1162,8 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
     </mat-btn>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -1098,6 +1174,7 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button shape 预览">
@@ -1109,7 +1186,9 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 图标模式必须提供 `label`，它是展示 `width` 的必要依赖。
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -1118,7 +1197,8 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
     <mat-btn icon="star" label="宽宽度" width="wide" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -1129,6 +1209,7 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button width 预览">
@@ -1138,14 +1219,17 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 ### `icon` 与 `label`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
     <mat-btn icon="home" label="主页" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -1155,6 +1239,7 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button icon 预览">
@@ -1164,7 +1249,9 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 ### `prefix`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-btn prefix="add">
@@ -1173,6 +1260,7 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button prefix 预览">
@@ -1182,7 +1270,9 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 ### `suffix`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-btn suffix="arrow_forward">
@@ -1191,6 +1281,7 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button suffix 预览">
@@ -1200,7 +1291,9 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 ### `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -1221,7 +1314,8 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
     </mat-btn>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -1232,6 +1326,7 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button color 预览">
@@ -1243,14 +1338,10 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 `selected` 是 toggle 的必要受控状态；组件不自行修改它。
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const selected = ref(false);
-</script>
-
 <template>
   <mat-btn
     toggle
@@ -1261,7 +1352,15 @@ const selected = ref(false);
   </mat-btn>
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const selected = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button toggle 与 selected 预览">
@@ -1271,7 +1370,9 @@ const selected = ref(false);
 
 ### `disabled`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -1281,7 +1382,8 @@ const selected = ref(false);
     </mat-btn>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -1291,6 +1393,7 @@ const selected = ref(false);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button disabled 预览">
@@ -1300,14 +1403,10 @@ const selected = ref(false);
 
 ### `type`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const submitted = ref('尚未提交');
-</script>
-
 <template>
   <form class="example-stack" @submit.prevent="submitted = 'submit 已触发'">
     <div class="example-row">
@@ -1321,7 +1420,15 @@ const submitted = ref('尚未提交');
     <span>{{ submitted }}</span>
   </form>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const submitted = ref('尚未提交');
+</script>
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -1337,6 +1444,7 @@ const submitted = ref('尚未提交');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button type 预览">
@@ -1348,18 +1456,10 @@ const submitted = ref('尚未提交');
 
 `value` 需要放在 `MatBtnGroup` 的选择模式中才有可见作用。
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const selected = ref(['bold']);
-
-function updateSelection({ nextSelected }) {
-  selected.value = nextSelected;
-}
-</script>
-
 <template>
   <mat-btn-group
     selection="multiple"
@@ -1375,7 +1475,19 @@ function updateSelection({ nextSelected }) {
   </mat-btn-group>
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const selected = ref(['bold']);
+
+function updateSelection({ nextSelected }) {
+  selected.value = nextSelected;
+}
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button value 预览">
@@ -1385,13 +1497,16 @@ function updateSelection({ nextSelected }) {
 
 ### 默认 Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-btn>默认 Slot 标签</mat-btn>
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button 默认 Slot 预览">
@@ -1401,7 +1516,9 @@ function updateSelection({ nextSelected }) {
 
 ### `prefix` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-btn>
@@ -1413,6 +1530,7 @@ function updateSelection({ nextSelected }) {
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button prefix Slot 预览">
@@ -1422,7 +1540,9 @@ function updateSelection({ nextSelected }) {
 
 ### `suffix` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-btn>
@@ -1434,6 +1554,7 @@ function updateSelection({ nextSelected }) {
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button suffix Slot 预览">
@@ -1443,7 +1564,9 @@ function updateSelection({ nextSelected }) {
 
 ### `selected` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-btn toggle :selected="true">
@@ -1455,6 +1578,7 @@ function updateSelection({ nextSelected }) {
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button selected Slot 预览">
@@ -1552,7 +1676,9 @@ import ButtonWidthExample from '../examples/button/ButtonWidthExample.vue';
 
 ### `block`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -1566,7 +1692,8 @@ import ButtonWidthExample from '../examples/button/ButtonWidthExample.vue';
     </mat-btn-group>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -1578,6 +1705,7 @@ import ButtonWidthExample from '../examples/button/ButtonWidthExample.vue';
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group block 预览">
@@ -1587,14 +1715,10 @@ import ButtonWidthExample from '../examples/button/ButtonWidthExample.vue';
 
 ### `variant`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const selected = ref('one');
-</script>
-
 <template>
   <div class="example-stack">
     <mat-btn-group>
@@ -1616,7 +1740,15 @@ const selected = ref('one');
     </mat-btn-group>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const selected = ref('one');
+</script>
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -1627,6 +1759,7 @@ const selected = ref('one');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group variant 预览">
@@ -1636,7 +1769,9 @@ const selected = ref('one');
 
 ### `size`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -1657,7 +1792,8 @@ const selected = ref('one');
     </mat-btn-group>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -1668,6 +1804,7 @@ const selected = ref('one');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group size 预览">
@@ -1677,7 +1814,9 @@ const selected = ref('one');
 
 ### `shape`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -1689,7 +1828,8 @@ const selected = ref('one');
     </mat-btn-group>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -1700,6 +1840,7 @@ const selected = ref('one');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group shape 预览">
@@ -1709,7 +1850,9 @@ const selected = ref('one');
 
 ### `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -1724,7 +1867,8 @@ const selected = ref('one');
     </mat-btn-group>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -1735,6 +1879,7 @@ const selected = ref('one');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group color 预览">
@@ -1744,7 +1889,9 @@ const selected = ref('one');
 
 ### `disabled`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -1758,7 +1905,8 @@ const selected = ref('one');
     </mat-btn-group>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -1769,6 +1917,7 @@ const selected = ref('one');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group disabled 预览">
@@ -1780,15 +1929,10 @@ const selected = ref('one');
 
 选择模式必须给每个子按钮提供 `value`，并在 `select` 事件中回写 `selected`。
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const singleSelected = ref('day');
-const multipleSelected = ref(['bold']);
-</script>
-
 <template>
   <div class="example-stack">
     <mat-btn-group
@@ -1817,7 +1961,16 @@ const multipleSelected = ref(['bold']);
     </mat-btn-group>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const singleSelected = ref('day');
+const multipleSelected = ref(['bold']);
+</script>
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -1828,6 +1981,7 @@ const multipleSelected = ref(['bold']);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group selection 与 selected 预览">
@@ -1837,14 +1991,10 @@ const multipleSelected = ref(['bold']);
 
 ### `required`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const selected = ref(['bold']);
-</script>
-
 <template>
   <mat-btn-group
     selection="multiple"
@@ -1861,7 +2011,15 @@ const selected = ref(['bold']);
   </mat-btn-group>
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const selected = ref(['bold']);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group required 预览">
@@ -1873,7 +2031,9 @@ const selected = ref(['bold']);
 
 `fullWidth` 只在 connected 形态中生效。
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-btn-group variant="connected" full-width>
@@ -1883,6 +2043,7 @@ const selected = ref(['bold']);
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group fullWidth 预览">
@@ -1892,7 +2053,9 @@ const selected = ref(['bold']);
 
 ### 默认 Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-btn-group>
@@ -1902,6 +2065,7 @@ const selected = ref(['bold']);
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Button group 默认 Slot 预览">
@@ -1996,7 +2160,9 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
 
 ### `block`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -2018,7 +2184,8 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
     </mat-split-btn>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -2030,6 +2197,7 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button block 预览">
@@ -2039,7 +2207,9 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
 
 ### `variant`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -2077,7 +2247,8 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
     </mat-split-btn>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -2088,6 +2259,7 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button variant 预览">
@@ -2097,14 +2269,17 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
 
 ### `size`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
     <mat-split-btn size="extra-small">
       <template #leading>
         <mat-btn>XS</mat-btn>
-      </template><template #trailing>
+      </template>
+      <template #trailing>
         <mat-btn icon="arrow_drop_down" label="展开" />
       </template>
     </mat-split-btn>
@@ -2138,7 +2313,8 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
     </mat-split-btn>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -2149,6 +2325,7 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button size 预览">
@@ -2158,14 +2335,17 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
 
 ### `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
     <mat-split-btn color="primary">
       <template #leading>
         <mat-btn>primary</mat-btn>
-      </template><template #trailing>
+      </template>
+      <template #trailing>
         <mat-btn icon="arrow_drop_down" label="展开" />
       </template>
     </mat-split-btn>
@@ -2185,7 +2365,8 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
     </mat-split-btn>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -2196,6 +2377,7 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button color 预览">
@@ -2205,7 +2387,9 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
 
 ### `disabled`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-split-btn disabled>
@@ -2219,6 +2403,7 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button disabled 预览">
@@ -2228,14 +2413,10 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
 
 ### `expanded`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const expanded = ref(false);
-</script>
-
 <template>
   <mat-split-btn
     :expanded="expanded"
@@ -2250,7 +2431,15 @@ const expanded = ref(false);
   </mat-split-btn>
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const expanded = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button expanded 预览">
@@ -2262,14 +2451,10 @@ const expanded = ref(false);
 
 `controls` 与菜单的 `modelValue`、`anchor` 共同建立展开按钮和菜单之间的 ARIA 与定位关系。
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <div class="example-stack">
     <mat-split-btn
@@ -2294,7 +2479,15 @@ const open = ref(false);
     </mat-menu>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(false);
+</script>
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -2305,6 +2498,7 @@ const open = ref(false);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button controls 预览">
@@ -2314,7 +2508,9 @@ const open = ref(false);
 
 ### `leading` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-split-btn>
@@ -2328,6 +2524,7 @@ const open = ref(false);
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button leading Slot 预览">
@@ -2337,7 +2534,9 @@ const open = ref(false);
 
 ### `trailing` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-split-btn>
@@ -2351,6 +2550,7 @@ const open = ref(false);
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Split button trailing Slot 预览">
@@ -2427,14 +2627,10 @@ import SplitButtonVariantExample from '../examples/button/SplitButtonVariantExam
 
 ### 布尔值
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const newsletter = ref(true);
-</script>
-
 <template>
   <div class="example-stack">
     <mat-checkbox v-model="newsletter">
@@ -2443,7 +2639,15 @@ const newsletter = ref(true);
     <span>当前值：{{ newsletter }}</span>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const newsletter = ref(true);
+</script>
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -2454,6 +2658,7 @@ const newsletter = ref(true);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Checkbox 布尔值预览" stacked>
@@ -2465,14 +2670,10 @@ const newsletter = ref(true);
 
 每个实例用 `value` 声明自己的候选值。组件添加或移除项目时返回新数组，不修改原数组。
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const filters = ref(['offline']);
-</script>
-
 <template>
   <div class="example-stack">
     <mat-checkbox v-model="filters" value="offline">
@@ -2484,7 +2685,15 @@ const filters = ref(['offline']);
     <span>当前值：{{ filters.join('、') || '无' }}</span>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const filters = ref(['offline']);
+</script>
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -2495,6 +2704,7 @@ const filters = ref(['offline']);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Checkbox 数组绑定预览" stacked>
@@ -2504,22 +2714,10 @@ const filters = ref(['offline']);
 
 ### 父子选择与不确定态
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { computed, ref } from 'vue';
-
-const permissions = ref(['read']);
-const allChecked = computed(() => permissions.value.length === 2);
-const partiallyChecked = computed(() => (
-  permissions.value.length > 0 && !allChecked.value
-));
-
-function toggleAll(checked) {
-  permissions.value = checked ? ['read', 'write'] : [];
-}
-</script>
-
 <template>
   <div class="example-stack">
     <mat-checkbox
@@ -2540,7 +2738,23 @@ function toggleAll(checked) {
     </div>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { computed, ref } from 'vue';
 
+const permissions = ref(['read']);
+const allChecked = computed(() => permissions.value.length === 2);
+const partiallyChecked = computed(() => (
+  permissions.value.length > 0 && !allChecked.value
+));
+
+function toggleAll(checked) {
+  permissions.value = checked ? ['read', 'write'] : [];
+}
+</script>
+```
+```vue
 <style scoped>
 .example-stack,
 .example-children {
@@ -2560,6 +2774,7 @@ function toggleAll(checked) {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Checkbox 不确定态预览" stacked>
@@ -2569,7 +2784,9 @@ function toggleAll(checked) {
 
 ### `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -2590,7 +2807,8 @@ function toggleAll(checked) {
     </mat-checkbox>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -2601,6 +2819,7 @@ function toggleAll(checked) {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Checkbox color 预览" stacked>
@@ -2610,7 +2829,9 @@ function toggleAll(checked) {
 
 ### `disabled`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -2622,7 +2843,8 @@ function toggleAll(checked) {
     </mat-checkbox>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -2633,6 +2855,7 @@ function toggleAll(checked) {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Checkbox disabled 预览" stacked>
@@ -2698,14 +2921,10 @@ Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互
 
 ### 独立绑定
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const density = ref('comfortable');
-</script>
-
 <template>
   <div class="example-stack">
     <mat-radio v-model="density" value="compact">
@@ -2717,7 +2936,15 @@ const density = ref('comfortable');
     <span>当前值：{{ density }}</span>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const density = ref('comfortable');
+</script>
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -2728,6 +2955,7 @@ const density = ref('comfortable');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Radio 独立绑定预览" stacked>
@@ -2739,14 +2967,10 @@ const density = ref('comfortable');
 
 ### Radio Group
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const themeMode = ref('system');
-</script>
-
 <template>
   <div class="example-stack">
     <mat-radio-group v-model="themeMode" label="主题模式" color="#6750a4">
@@ -2766,7 +2990,15 @@ const themeMode = ref('system');
     <span>当前值：{{ themeMode }}</span>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const themeMode = ref('system');
+</script>
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -2777,6 +3009,7 @@ const themeMode = ref('system');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Radio group 受控单选预览" stacked>
@@ -2786,7 +3019,9 @@ const themeMode = ref('system');
 
 ### MatRadio `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -2807,7 +3042,8 @@ const themeMode = ref('system');
     </mat-radio>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -2818,6 +3054,7 @@ const themeMode = ref('system');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Radio color 预览" stacked>
@@ -2827,7 +3064,9 @@ const themeMode = ref('system');
 
 ### MatRadio `disabled`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -2839,7 +3078,8 @@ const themeMode = ref('system');
     </mat-radio>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -2850,6 +3090,7 @@ const themeMode = ref('system');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Radio disabled 预览" stacked>
@@ -2859,7 +3100,9 @@ const themeMode = ref('system');
 
 ### MatRadioGroup `disabled`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-radio-group model-value="enabled" label="通知方式">
@@ -2873,6 +3116,7 @@ const themeMode = ref('system');
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Radio group disabled 预览" stacked>
@@ -2882,7 +3126,9 @@ const themeMode = ref('system');
 
 ### MatRadioGroup `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-radio-group model-value="email" label="通知方式" color="secondary">
@@ -2896,6 +3142,7 @@ const themeMode = ref('system');
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Radio group color 预览" stacked>
@@ -2993,7 +3240,9 @@ import RadioStandaloneExample from '../examples/selection/RadioStandaloneExample
 
 ### 无图标与内置图标
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -3008,7 +3257,8 @@ import RadioStandaloneExample from '../examples/selection/RadioStandaloneExample
     </mat-switch>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -3018,6 +3268,7 @@ import RadioStandaloneExample from '../examples/selection/RadioStandaloneExample
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Switch 图标配置预览" stacked>
@@ -3027,21 +3278,25 @@ import RadioStandaloneExample from '../examples/selection/RadioStandaloneExample
 
 ### `modelValue`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const enabled = ref(false);
-</script>
-
 <template>
   <mat-switch v-model="enabled">
     {{ enabled ? '已开启' : '已关闭' }}
   </mat-switch>
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const enabled = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Switch modelValue 预览" stacked>
@@ -3051,7 +3306,9 @@ const enabled = ref(false);
 
 ### `disabled`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -3063,7 +3320,8 @@ const enabled = ref(false);
     </mat-switch>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -3074,6 +3332,7 @@ const enabled = ref(false);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Switch disabled 预览" stacked>
@@ -3083,7 +3342,9 @@ const enabled = ref(false);
 
 ### `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -3104,7 +3365,8 @@ const enabled = ref(false);
     </mat-switch>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -3115,6 +3377,7 @@ const enabled = ref(false);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Switch color 预览" stacked>
@@ -3177,14 +3440,10 @@ import SwitchModelValueExample from '../examples/selection/SwitchModelValueExamp
 
 ### `modelValue`、`min`、`max` 与 `step`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const volume = ref(35);
-</script>
-
 <template>
   <div class="example">
     <mat-slider
@@ -3197,7 +3456,15 @@ const volume = ref(35);
     <output>音量：{{ volume }}</output>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const volume = ref(35);
+</script>
+```
+```vue
 <style scoped>
 .example {
   display: grid;
@@ -3207,6 +3474,7 @@ const volume = ref(35);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 数值模型预览" stacked>
@@ -3216,14 +3484,10 @@ const volume = ref(35);
 
 ### `variant` 与 `center`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const balance = ref(-20);
-</script>
-
 <template>
   <div class="example">
     <mat-slider
@@ -3238,7 +3502,15 @@ const balance = ref(-20);
     <output>平衡：{{ balance }}</output>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const balance = ref(-20);
+</script>
+```
+```vue
 <style scoped>
 .example {
   display: grid;
@@ -3248,6 +3520,7 @@ const balance = ref(-20);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 居中变体预览" stacked>
@@ -3257,15 +3530,10 @@ const balance = ref(-20);
 
 ### `orientation`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const horizontal = ref(40);
-const vertical = ref(70);
-</script>
-
 <template>
   <div class="example">
     <div class="example__horizontal">
@@ -3286,7 +3554,16 @@ const vertical = ref(70);
     </div>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const horizontal = ref(40);
+const vertical = ref(70);
+</script>
+```
+```vue
 <style scoped>
 .example {
   display: flex;
@@ -3309,6 +3586,7 @@ const vertical = ref(70);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 横竖方向预览" stacked>
@@ -3318,14 +3596,10 @@ const vertical = ref(70);
 
 ### `size`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const value = ref(50);
-</script>
-
 <template>
   <div class="example">
     <mat-slider
@@ -3355,7 +3629,15 @@ const value = ref(50);
     />
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const value = ref(50);
+</script>
+```
+```vue
 <style scoped>
 .example {
   display: grid;
@@ -3365,6 +3647,7 @@ const value = ref(50);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 五档尺寸预览" stacked>
@@ -3374,16 +3657,10 @@ const value = ref(50);
 
 ### `insetIcon`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const altitude = ref(85);
-const brightness = ref(70);
-const volume = ref(55);
-</script>
-
 <template>
   <div class="example">
     <mat-slider
@@ -3406,7 +3683,17 @@ const volume = ref(55);
     />
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const altitude = ref(85);
+const brightness = ref(70);
+const volume = ref(55);
+</script>
+```
+```vue
 <style scoped>
 .example {
   display: grid;
@@ -3416,6 +3703,7 @@ const volume = ref(55);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 内嵌图标预览" stacked>
@@ -3425,14 +3713,10 @@ const volume = ref(55);
 
 ### `showStopIndicator`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const rating = ref(3);
-</script>
-
 <template>
   <div class="example">
     <mat-slider
@@ -3445,7 +3729,15 @@ const rating = ref(3);
     <output>评分：{{ rating }}</output>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const rating = ref(3);
+</script>
+```
+```vue
 <style scoped>
 .example {
   display: grid;
@@ -3455,6 +3747,7 @@ const rating = ref(3);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 停靠点预览" stacked>
@@ -3464,14 +3757,10 @@ const rating = ref(3);
 
 ### `showValueIndicator`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const temperature = ref(22);
-</script>
-
 <template>
   <div class="example">
     <mat-slider
@@ -3484,7 +3773,15 @@ const temperature = ref(22);
     <output>聚焦或拖动手柄即可显示：{{ temperature }} ℃</output>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const temperature = ref(22);
+</script>
+```
+```vue
 <style scoped>
 .example {
   display: grid;
@@ -3494,6 +3791,7 @@ const temperature = ref(22);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 数值指示预览" stacked>
@@ -3503,7 +3801,9 @@ const temperature = ref(22);
 
 ### `disabled`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-slider
@@ -3514,6 +3814,7 @@ const temperature = ref(22);
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 禁用状态预览" stacked>
@@ -3523,15 +3824,10 @@ const temperature = ref(22);
 
 ### `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const semanticValue = ref(45);
-const seededValue = ref(70);
-</script>
-
 <template>
   <div class="example">
     <mat-slider
@@ -3546,7 +3842,16 @@ const seededValue = ref(70);
     />
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const semanticValue = ref(45);
+const seededValue = ref(70);
+</script>
+```
+```vue
 <style scoped>
 .example {
   display: grid;
@@ -3556,6 +3861,7 @@ const seededValue = ref(70);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Slider 局部配色预览" stacked>
@@ -3631,14 +3937,10 @@ import SliderVariantExample from '../examples/slider/SliderVariantExample.vue';
 
 ### `modelValue`、`min`、`max` 与 `step`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const price = ref([20, 75]);
-</script>
-
 <template>
   <div class="example">
     <mat-range-slider
@@ -3652,7 +3954,15 @@ const price = ref([20, 75]);
     <output>价格区间：{{ price[0] }} — {{ price[1] }}</output>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const price = ref([20, 75]);
+</script>
+```
+```vue
 <style scoped>
 .example {
   display: grid;
@@ -3662,6 +3972,7 @@ const price = ref([20, 75]);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Range slider 区间模型预览" stacked>
@@ -3671,15 +3982,10 @@ const price = ref([20, 75]);
 
 ### `orientation`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const horizontal = ref([25, 70]);
-const vertical = ref([30, 85]);
-</script>
-
 <template>
   <div class="example">
     <div class="example__horizontal">
@@ -3702,7 +4008,16 @@ const vertical = ref([30, 85]);
     </div>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const horizontal = ref([25, 70]);
+const vertical = ref([30, 85]);
+</script>
+```
+```vue
 <style scoped>
 .example {
   display: flex;
@@ -3725,6 +4040,7 @@ const vertical = ref([30, 85]);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Range slider 横竖方向预览" stacked>
@@ -3734,14 +4050,10 @@ const vertical = ref([30, 85]);
 
 ### `size`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const range = ref([30, 70]);
-</script>
-
 <template>
   <div class="example">
     <mat-range-slider
@@ -3776,7 +4088,15 @@ const range = ref([30, 70]);
     />
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const range = ref([30, 70]);
+</script>
+```
+```vue
 <style scoped>
 .example {
   display: grid;
@@ -3786,6 +4106,7 @@ const range = ref([30, 70]);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Range slider 五档尺寸预览" stacked>
@@ -3795,14 +4116,10 @@ const range = ref([30, 70]);
 
 ### `showStopIndicator`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const hours = ref([2, 6]);
-</script>
-
 <template>
   <div class="example">
     <mat-range-slider
@@ -3816,7 +4133,15 @@ const hours = ref([2, 6]);
     <output>时段：{{ hours[0] }} — {{ hours[1] }} 点</output>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const hours = ref([2, 6]);
+</script>
+```
+```vue
 <style scoped>
 .example {
   display: grid;
@@ -3826,6 +4151,7 @@ const hours = ref([2, 6]);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Range slider 停靠点预览" stacked>
@@ -3835,14 +4161,10 @@ const hours = ref([2, 6]);
 
 ### `showValueIndicator`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const range = ref([30, 70]);
-</script>
-
 <template>
   <div class="example">
     <mat-range-slider
@@ -3854,7 +4176,15 @@ const range = ref([30, 70]);
     <output>聚焦或拖动的端点会显示数值：{{ range[0] }} — {{ range[1] }}</output>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const range = ref([30, 70]);
+</script>
+```
+```vue
 <style scoped>
 .example {
   display: grid;
@@ -3864,6 +4194,7 @@ const range = ref([30, 70]);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Range slider 数值指示预览" stacked>
@@ -3873,7 +4204,9 @@ const range = ref([30, 70]);
 
 ### `disabled`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-range-slider
@@ -3885,6 +4218,7 @@ const range = ref([30, 70]);
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Range slider 禁用状态预览" stacked>
@@ -3894,15 +4228,10 @@ const range = ref([30, 70]);
 
 ### `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const semanticRange = ref([20, 65]);
-const seededRange = ref([35, 80]);
-</script>
-
 <template>
   <div class="example">
     <mat-range-slider
@@ -3919,7 +4248,16 @@ const seededRange = ref([35, 80]);
     />
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const semanticRange = ref([20, 65]);
+const seededRange = ref([35, 80]);
+</script>
+```
+```vue
 <style scoped>
 .example {
   display: grid;
@@ -3929,6 +4267,7 @@ const seededRange = ref([35, 80]);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Range slider 局部配色预览" stacked>
@@ -4001,7 +4340,9 @@ import RangeSliderSizeExample from '../examples/slider/RangeSliderSizeExample.vu
 
 ### `value` 与 `max`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <p>0 / 100</p>
@@ -4028,6 +4369,7 @@ import RangeSliderSizeExample from '../examples/slider/RangeSliderSizeExample.vu
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Loader 确定进度预览" stacked>
@@ -4037,7 +4379,9 @@ import RangeSliderSizeExample from '../examples/slider/RangeSliderSizeExample.vu
 
 ### `variant`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <p>线条形</p>
@@ -4055,6 +4399,7 @@ import RangeSliderSizeExample from '../examples/slider/RangeSliderSizeExample.vu
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Loader 形态预览" stacked>
@@ -4064,7 +4409,9 @@ import RangeSliderSizeExample from '../examples/slider/RangeSliderSizeExample.vu
 
 ### `indeterminate`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <p>线条形加载中</p>
@@ -4095,6 +4442,7 @@ import RangeSliderSizeExample from '../examples/slider/RangeSliderSizeExample.vu
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Loader 不确定加载预览" stacked>
@@ -4104,14 +4452,10 @@ import RangeSliderSizeExample from '../examples/slider/RangeSliderSizeExample.vu
 
 ### `shape`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const shape = ref('flat');
-</script>
-
 <template>
   <mat-btn-group
     variant="connected"
@@ -4144,7 +4488,15 @@ const shape = ref('flat');
   />
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const shape = ref('flat');
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Loader 直线与波浪形预览" stacked>
@@ -4154,14 +4506,10 @@ const shape = ref('flat');
 
 ### `waveMotion`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const waveMotion = ref(false);
-</script>
-
 <template>
   <mat-switch v-model="waveMotion">
     播放波动效果
@@ -4185,7 +4533,15 @@ const waveMotion = ref(false);
   />
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const waveMotion = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Loader 波浪运动预览" stacked>
@@ -4195,14 +4551,10 @@ const waveMotion = ref(false);
 
 ### `thickness`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const thickness = ref(4);
-</script>
-
 <template>
   <mat-btn-group
     variant="connected"
@@ -4237,7 +4589,15 @@ const thickness = ref(4);
   />
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const thickness = ref(4);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Loader 厚度预览" stacked>
@@ -4247,7 +4607,9 @@ const thickness = ref(4);
 
 ### `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <p>语义 tertiary 色</p>
@@ -4267,6 +4629,7 @@ const thickness = ref(4);
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Loader 配色预览" stacked>
@@ -4346,7 +4709,9 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
 
 ### `variant`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -4361,7 +4726,8 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
     </mat-card>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -4375,6 +4741,7 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Card variant 预览">
@@ -4384,7 +4751,9 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
 
 ### `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -4405,7 +4774,8 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
     </mat-card>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -4419,6 +4789,7 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Card color 预览">
@@ -4428,7 +4799,9 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
 
 ### `as`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-row">
@@ -4443,7 +4816,8 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
     </mat-card>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -4457,6 +4831,7 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Card as 预览">
@@ -4466,7 +4841,9 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
 
 ### ActionArea 的 `href`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-card class="example-card">
@@ -4475,7 +4852,8 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
     </mat-card-action-area>
   </mat-card>
 </template>
-
+```
+```vue
 <style scoped>
 .example-card {
   inline-size: min(100%, 320px);
@@ -4483,6 +4861,7 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Card ActionArea href 预览">
@@ -4492,7 +4871,9 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
 
 ### ActionArea 的 `disabled`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-card class="example-card">
@@ -4501,7 +4882,8 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
     </mat-card-action-area>
   </mat-card>
 </template>
-
+```
+```vue
 <style scoped>
 .example-card {
   inline-size: min(100%, 320px);
@@ -4509,6 +4891,7 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Card ActionArea disabled 预览">
@@ -4518,7 +4901,9 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
 
 ### ActionArea 的 `type`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <form class="example-row" @submit.prevent>
@@ -4534,7 +4919,8 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
     </mat-card>
   </form>
 </template>
-
+```
+```vue
 <style scoped>
 .example-row {
   display: flex;
@@ -4548,6 +4934,7 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Card ActionArea type 预览">
@@ -4557,7 +4944,9 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
 
 ### MatCardContent 默认 Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-card class="example-card">
@@ -4567,7 +4956,8 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
     </mat-card-content>
   </mat-card>
 </template>
-
+```
+```vue
 <style scoped>
 .example-card {
   inline-size: min(100%, 320px);
@@ -4579,6 +4969,7 @@ p {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="CardContent 默认 Slot 预览">
@@ -4588,7 +4979,9 @@ p {
 
 ### MatCardActions 默认 Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-card class="example-card">
@@ -4601,7 +4994,8 @@ p {
     </mat-card-actions>
   </mat-card>
 </template>
-
+```
+```vue
 <style scoped>
 .example-card {
   inline-size: min(100%, 320px);
@@ -4609,6 +5003,7 @@ p {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="CardActions 默认 Slot 预览">
@@ -4688,7 +5083,9 @@ import CardVariantExample from '../examples/card/CardVariantExample.vue';
 
 ### `block`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="text-field-block-example">
@@ -4706,7 +5103,8 @@ import CardVariantExample from '../examples/card/CardVariantExample.vue';
     />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .text-field-block-example {
   box-sizing: border-box;
@@ -4721,6 +5119,7 @@ import CardVariantExample from '../examples/card/CardVariantExample.vue';
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field 与 Textarea block 预览">
@@ -4730,19 +5129,23 @@ import CardVariantExample from '../examples/card/CardVariantExample.vue';
 
 ### `modelValue`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-text-field v-model="value" label="名称" />
+</template>
+```
 ```vue
 <script setup>
 import { ref } from 'vue';
 
 const value = ref('可编辑内容');
 </script>
-
-<template>
-  <mat-text-field v-model="value" label="名称" />
-</template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field modelValue 预览">
@@ -4752,7 +5155,9 @@ const value = ref('可编辑内容');
 
 ### `label`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -4760,7 +5165,8 @@ const value = ref('可编辑内容');
     <mat-text-field label="带占位提示" placeholder="请输入内容" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -4771,6 +5177,7 @@ const value = ref('可编辑内容');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field label 预览">
@@ -4780,7 +5187,9 @@ const value = ref('可编辑内容');
 
 ### `variant`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -4788,7 +5197,8 @@ const value = ref('可编辑内容');
     <mat-text-field label="filled" variant="filled" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -4799,6 +5209,7 @@ const value = ref('可编辑内容');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field variant 预览">
@@ -4808,7 +5219,9 @@ const value = ref('可编辑内容');
 
 ### `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -4819,7 +5232,8 @@ const value = ref('可编辑内容');
     <mat-text-field label="局部种子色" color="#6750a4" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -4830,6 +5244,7 @@ const value = ref('可编辑内容');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field color 预览">
@@ -4839,7 +5254,9 @@ const value = ref('可编辑内容');
 
 ### `supportingText`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-text-field
@@ -4849,6 +5266,7 @@ const value = ref('可编辑内容');
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field supportingText 预览">
@@ -4860,14 +5278,10 @@ const value = ref('可编辑内容');
 
 `errorText` 只有在 `error` 为 true 时才显示，因此两者是必要依赖。
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const value = ref('');
-</script>
-
 <template>
   <mat-text-field
     v-model="value"
@@ -4877,7 +5291,15 @@ const value = ref('');
   />
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const value = ref('');
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field error 预览">
@@ -4889,7 +5311,9 @@ const value = ref('');
 
 空值且未聚焦时隐藏前缀，避免与停留在输入行的标签重叠；输入获得焦点、已有值或标签因 placeholder 浮动后显示。
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-text-field
@@ -4899,6 +5323,7 @@ const value = ref('');
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field prefixText 预览">
@@ -4910,7 +5335,9 @@ const value = ref('');
 
 后缀与前缀使用相同的可见条件。
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-text-field
@@ -4920,6 +5347,7 @@ const value = ref('');
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field suffixText 预览">
@@ -4929,14 +5357,10 @@ const value = ref('');
 
 ### `maxLength`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const value = ref('输入内容');
-</script>
-
 <template>
   <mat-text-field
     v-model="value"
@@ -4945,7 +5369,15 @@ const value = ref('输入内容');
   />
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const value = ref('输入内容');
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field maxLength 预览">
@@ -4955,7 +5387,9 @@ const value = ref('输入内容');
 
 ### `disabled`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-text-field
@@ -4966,6 +5400,7 @@ const value = ref('输入内容');
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field disabled 预览">
@@ -4975,7 +5410,9 @@ const value = ref('输入内容');
 
 ### `readonly`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-text-field
@@ -4986,6 +5423,7 @@ const value = ref('输入内容');
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field readonly 预览">
@@ -4995,7 +5433,9 @@ const value = ref('输入内容');
 
 ### `required`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-text-field
@@ -5005,6 +5445,7 @@ const value = ref('输入内容');
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field required 预览">
@@ -5014,7 +5455,9 @@ const value = ref('输入内容');
 
 ### `type`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -5023,7 +5466,8 @@ const value = ref('输入内容');
     <mat-text-field label="搜索" type="search" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -5034,6 +5478,7 @@ const value = ref('输入内容');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field type 预览">
@@ -5043,7 +5488,9 @@ const value = ref('输入内容');
 
 ### Textarea 的 `rows`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -5052,7 +5499,8 @@ const value = ref('输入内容');
     <mat-textarea label="六行" :rows="6" />
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -5063,6 +5511,7 @@ const value = ref('输入内容');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Textarea rows 预览">
@@ -5072,7 +5521,9 @@ const value = ref('输入内容');
 
 ### `leading` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-text-field label="邮箱">
@@ -5083,6 +5534,7 @@ const value = ref('输入内容');
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field leading Slot 预览">
@@ -5092,7 +5544,9 @@ const value = ref('输入内容');
 
 ### `trailing` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-text-field label="搜索">
@@ -5103,6 +5557,7 @@ const value = ref('输入内容');
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Text field trailing Slot 预览">
@@ -5211,14 +5666,10 @@ import TextareaRowsExample from '../examples/text-field/TextareaRowsExample.vue'
 
 ### `modelValue` 与元素 `anchor`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <div class="example-menu">
     <mat-btn
@@ -5240,7 +5691,15 @@ const open = ref(false);
     </mat-menu>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(false);
+</script>
+```
+```vue
 <style scoped>
 .example-menu {
   min-block-size: 120px;
@@ -5248,6 +5707,7 @@ const open = ref(false);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Menu modelValue 与元素 anchor 预览">
@@ -5257,14 +5717,10 @@ const open = ref(false);
 
 ### MatMenuGroup 分组与 `label`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(true);
-</script>
-
 <template>
   <div class="example-menu">
     <mat-btn id="group-menu-trigger" @click="open = !open">
@@ -5287,7 +5743,15 @@ const open = ref(true);
     </mat-menu>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(true);
+</script>
+```
+```vue
 <style scoped>
 .example-menu {
   min-block-size: 300px;
@@ -5295,6 +5759,7 @@ const open = ref(true);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="MenuGroup 分组与 label 预览">
@@ -5304,21 +5769,10 @@ const open = ref(true);
 
 ### 右键坐标菜单
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-const position = ref([0, 0]);
-
-function showContextMenu(event) {
-  event.currentTarget.focus();
-  position.value = [event.clientX, event.clientY];
-  open.value = true;
-}
-</script>
-
 <template>
   <div
     class="context-target"
@@ -5335,7 +5789,22 @@ function showContextMenu(event) {
     <mat-menu-item>查看详情</mat-menu-item>
   </mat-menu>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(false);
+const position = ref([0, 0]);
+
+function showContextMenu(event) {
+  event.currentTarget.focus();
+  position.value = [event.clientX, event.clientY];
+  open.value = true;
+}
+</script>
+```
+```vue
 <style scoped>
 .context-target {
   display: grid;
@@ -5349,6 +5818,7 @@ function showContextMenu(event) {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Menu 右键坐标预览">
@@ -5360,14 +5830,10 @@ function showContextMenu(event) {
 
 ### `offset`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(true);
-</script>
-
 <template>
   <div class="example-menu">
     <mat-btn id="offset-menu-trigger" @click="open = !open">
@@ -5382,7 +5848,15 @@ const open = ref(true);
     </mat-menu>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(true);
+</script>
+```
+```vue
 <style scoped>
 .example-menu {
   min-block-size: 140px;
@@ -5390,6 +5864,7 @@ const open = ref(true);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Menu offset 预览">
@@ -5399,14 +5874,10 @@ const open = ref(true);
 
 ### `variant`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(true);
-</script>
-
 <template>
   <div class="example-menu">
     <mat-btn
@@ -5428,7 +5899,15 @@ const open = ref(true);
     </mat-menu>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(true);
+</script>
+```
+```vue
 <style scoped>
 .example-menu {
   min-block-size: 160px;
@@ -5436,6 +5915,7 @@ const open = ref(true);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Menu variant 预览">
@@ -5445,14 +5925,10 @@ const open = ref(true);
 
 ### `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(true);
-</script>
-
 <template>
   <div class="example-menu">
     <mat-btn
@@ -5475,7 +5951,15 @@ const open = ref(true);
     </mat-menu>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(true);
+</script>
+```
+```vue
 <style scoped>
 .example-menu {
   min-block-size: 160px;
@@ -5483,6 +5967,7 @@ const open = ref(true);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Menu color 预览">
@@ -5492,14 +5977,10 @@ const open = ref(true);
 
 ### MenuItem 的 `disabled`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(true);
-</script>
-
 <template>
   <div class="example-menu">
     <mat-btn
@@ -5523,7 +6004,15 @@ const open = ref(true);
     </mat-menu>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(true);
+</script>
+```
+```vue
 <style scoped>
 .example-menu {
   min-block-size: 160px;
@@ -5531,6 +6020,7 @@ const open = ref(true);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="MenuItem disabled 预览">
@@ -5540,14 +6030,10 @@ const open = ref(true);
 
 ### MatMenu 默认 Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(true);
-</script>
-
 <template>
   <div class="example-menu">
     <mat-btn id="default-slot-menu-trigger" @click="open = !open">
@@ -5564,7 +6050,15 @@ const open = ref(true);
     </mat-menu>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(true);
+</script>
+```
+```vue
 <style scoped>
 .example-menu {
   min-block-size: 180px;
@@ -5572,6 +6066,7 @@ const open = ref(true);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Menu 默认 Slot 预览">
@@ -5581,14 +6076,10 @@ const open = ref(true);
 
 ### MatMenuItem 默认 Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(true);
-</script>
-
 <template>
   <div class="example-menu">
     <mat-btn id="item-default-slot-menu-trigger" @click="open = !open">
@@ -5603,7 +6094,15 @@ const open = ref(true);
     </mat-menu>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(true);
+</script>
+```
+```vue
 <style scoped>
 .example-menu {
   min-block-size: 160px;
@@ -5611,6 +6110,7 @@ const open = ref(true);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="MenuItem 默认 Slot 预览">
@@ -5620,14 +6120,10 @@ const open = ref(true);
 
 ### `leading` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(true);
-</script>
-
 <template>
   <div class="example-menu">
     <mat-btn id="leading-slot-menu-trigger" @click="open = !open">
@@ -5647,7 +6143,15 @@ const open = ref(true);
     </mat-menu>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(true);
+</script>
+```
+```vue
 <style scoped>
 .example-menu {
   min-block-size: 160px;
@@ -5655,6 +6159,7 @@ const open = ref(true);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="MenuItem leading Slot 预览">
@@ -5664,14 +6169,10 @@ const open = ref(true);
 
 ### `supporting` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(true);
-</script>
-
 <template>
   <div class="example-menu">
     <mat-btn id="supporting-slot-menu-trigger" @click="open = !open">
@@ -5691,7 +6192,15 @@ const open = ref(true);
     </mat-menu>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(true);
+</script>
+```
+```vue
 <style scoped>
 .example-menu {
   min-block-size: 160px;
@@ -5699,6 +6208,7 @@ const open = ref(true);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="MenuItem supporting Slot 预览">
@@ -5708,14 +6218,10 @@ const open = ref(true);
 
 ### `trailing` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(true);
-</script>
-
 <template>
   <div class="example-menu">
     <mat-btn id="trailing-slot-menu-trigger" @click="open = !open">
@@ -5735,7 +6241,15 @@ const open = ref(true);
     </mat-menu>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(true);
+</script>
+```
+```vue
 <style scoped>
 .example-menu {
   min-block-size: 160px;
@@ -5743,6 +6257,7 @@ const open = ref(true);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="MenuItem trailing Slot 预览">
@@ -5752,14 +6267,10 @@ const open = ref(true);
 
 ### `submenu` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(true);
-</script>
-
 <template>
   <div class="example-menu">
     <mat-btn id="submenu-slot-menu-trigger" @click="open = !open">
@@ -5782,7 +6293,15 @@ const open = ref(true);
     </mat-menu>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(true);
+</script>
+```
+```vue
 <style scoped>
 .example-menu {
   min-block-size: 180px;
@@ -5790,6 +6309,7 @@ const open = ref(true);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="MenuItem submenu Slot 预览">
@@ -5894,14 +6414,10 @@ import MenuVariantExample from '../examples/menu/MenuVariantExample.vue';
 
 ### `modelValue`、`title` 与 `content`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <mat-btn @click="open = true">
     打开 Dialog
@@ -5924,7 +6440,15 @@ const open = ref(false);
   </mat-dialog>
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog modelValue 预览">
@@ -5934,14 +6458,10 @@ const open = ref(false);
 
 ### `full-screen` 与 `close-label`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <mat-btn variant="outlined" @click="open = true">
     全屏编辑
@@ -5967,7 +6487,15 @@ const open = ref(false);
   </mat-dialog>
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog full-screen 预览">
@@ -5977,15 +6505,10 @@ const open = ref(false);
 
 ### `attach`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-const target = ref(null);
-</script>
-
 <template>
   <mat-btn variant="outlined" @click="open = true">
     挂载到指定元素
@@ -6009,7 +6532,16 @@ const target = ref(null);
     </template>
   </mat-dialog>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(false);
+const target = ref(null);
+</script>
+```
+```vue
 <style scoped>
 .dialog-target {
   margin-block-start: 16px;
@@ -6021,6 +6553,7 @@ const target = ref(null);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog attach 预览">
@@ -6030,14 +6563,10 @@ const target = ref(null);
 
 ### `scrim`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <mat-btn variant="outlined" @click="open = true">
     打开透明帷幕 Dialog
@@ -6058,7 +6587,15 @@ const open = ref(false);
   </mat-dialog>
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog scrim 预览">
@@ -6068,14 +6605,10 @@ const open = ref(false);
 
 ### `close-on-back`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <mat-btn variant="outlined" @click="open = true">
     点击帷幕关闭
@@ -6096,7 +6629,15 @@ const open = ref(false);
   </mat-dialog>
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog close-on-back 预览">
@@ -6106,14 +6647,10 @@ const open = ref(false);
 
 ### `icon` 与 `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <mat-btn color="tertiary" @click="open = true">
     显示图标
@@ -6135,7 +6672,15 @@ const open = ref(false);
   </mat-dialog>
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog icon 与 color 预览">
@@ -6145,14 +6690,10 @@ const open = ref(false);
 
 ### `title` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <mat-btn variant="outlined" @click="open = true">
     丰富标题
@@ -6172,7 +6713,15 @@ const open = ref(false);
   </mat-dialog>
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog title Slot 预览">
@@ -6182,14 +6731,10 @@ const open = ref(false);
 
 ### 默认 Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <mat-btn variant="outlined" @click="open = true">
     丰富正文
@@ -6210,7 +6755,15 @@ const open = ref(false);
   </mat-dialog>
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog 默认 Slot 预览">
@@ -6220,14 +6773,10 @@ const open = ref(false);
 
 ### `icon` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <mat-btn variant="outlined" @click="open = true">
     自定义图标
@@ -6252,7 +6801,15 @@ const open = ref(false);
     </template>
   </mat-dialog>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(false);
+</script>
+```
+```vue
 <style scoped>
 svg {
   inline-size: 24px;
@@ -6261,6 +6818,7 @@ svg {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog icon Slot 预览">
@@ -6270,20 +6828,10 @@ svg {
 
 ### `actions` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-const result = ref('尚未选择');
-
-function choose(value) {
-  result.value = value;
-  open.value = false;
-}
-</script>
-
 <template>
   <div class="dialog-actions-example">
     <mat-btn @click="open = true">
@@ -6304,7 +6852,21 @@ function choose(value) {
     </template>
   </mat-dialog>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(false);
+const result = ref('尚未选择');
+
+function choose(value) {
+  result.value = value;
+  open.value = false;
+}
+</script>
+```
+```vue
 <style scoped>
 .dialog-actions-example {
   display: flex;
@@ -6314,6 +6876,7 @@ function choose(value) {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Dialog actions Slot 预览">
@@ -6323,7 +6886,19 @@ function choose(value) {
 
 ### `dialog()`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="dialog-function-example">
+    <mat-btn @click="openDialog">
+      dialog()
+    </mat-btn>
+    <span>结果：{{ result }}</span>
+  </div>
+</template>
+```
 ```vue
 <script setup>
 import { ref } from 'vue';
@@ -6342,16 +6917,8 @@ async function openDialog() {
   }) ?? '已取消';
 }
 </script>
-
-<template>
-  <div class="dialog-function-example">
-    <mat-btn @click="openDialog">
-      dialog()
-    </mat-btn>
-    <span>结果：{{ result }}</span>
-  </div>
-</template>
-
+```
+```vue
 <style scoped>
 .dialog-function-example {
   display: flex;
@@ -6361,6 +6928,7 @@ async function openDialog() {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="dialog 函数预览">
@@ -6370,7 +6938,19 @@ async function openDialog() {
 
 ### `alert()`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="dialog-function-example">
+    <mat-btn variant="outlined" @click="showAlert">
+      alert()
+    </mat-btn>
+    <span>{{ closed ? 'Dialog 已关闭' : '等待打开' }}</span>
+  </div>
+</template>
+```
 ```vue
 <script setup>
 import { ref } from 'vue';
@@ -6389,16 +6969,8 @@ async function showAlert() {
   closed.value = true;
 }
 </script>
-
-<template>
-  <div class="dialog-function-example">
-    <mat-btn variant="outlined" @click="showAlert">
-      alert()
-    </mat-btn>
-    <span>{{ closed ? 'Dialog 已关闭' : '等待打开' }}</span>
-  </div>
-</template>
-
+```
+```vue
 <style scoped>
 .dialog-function-example {
   display: flex;
@@ -6408,6 +6980,7 @@ async function showAlert() {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="alert 函数预览">
@@ -6417,7 +6990,19 @@ async function showAlert() {
 
 ### `confirm()`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="dialog-function-example">
+    <mat-btn variant="outlined" @click="showConfirm">
+      confirm()
+    </mat-btn>
+    <span>{{ result }}</span>
+  </div>
+</template>
+```
 ```vue
 <script setup>
 import { ref } from 'vue';
@@ -6434,16 +7019,8 @@ async function showConfirm() {
   }) ? '已确认' : '已取消';
 }
 </script>
-
-<template>
-  <div class="dialog-function-example">
-    <mat-btn variant="outlined" @click="showConfirm">
-      confirm()
-    </mat-btn>
-    <span>{{ result }}</span>
-  </div>
-</template>
-
+```
+```vue
 <style scoped>
 .dialog-function-example {
   display: flex;
@@ -6453,6 +7030,7 @@ async function showConfirm() {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="confirm 函数预览">
@@ -6462,7 +7040,19 @@ async function showConfirm() {
 
 ### `prompt()`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="dialog-function-example">
+    <mat-btn variant="outlined" @click="showPrompt">
+      prompt()
+    </mat-btn>
+    <span>结果：{{ result }}</span>
+  </div>
+</template>
+```
 ```vue
 <script setup>
 import { ref } from 'vue';
@@ -6482,16 +7072,8 @@ async function showPrompt() {
   result.value = value ?? '已取消';
 }
 </script>
-
-<template>
-  <div class="dialog-function-example">
-    <mat-btn variant="outlined" @click="showPrompt">
-      prompt()
-    </mat-btn>
-    <span>结果：{{ result }}</span>
-  </div>
-</template>
-
+```
+```vue
 <style scoped>
 .dialog-function-example {
   display: flex;
@@ -6501,6 +7083,7 @@ async function showPrompt() {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="prompt 函数预览">
@@ -6617,7 +7200,9 @@ import DialogTitleSlotExample from '../examples/dialog/DialogTitleSlotExample.vu
 
 ### `variant`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-grid">
@@ -6637,7 +7222,8 @@ import DialogTitleSlotExample from '../examples/dialog/DialogTitleSlotExample.vu
     </section>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-grid {
   display: grid;
@@ -6655,6 +7241,7 @@ section {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="List variant 预览">
@@ -6664,7 +7251,9 @@ section {
 
 ### `interaction`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -6682,7 +7271,8 @@ section {
     </mat-list>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -6697,6 +7287,7 @@ section {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="List interaction 预览" stacked>
@@ -6708,14 +7299,10 @@ section {
 
 选择模式必须同时提供 `interaction`、项目 `value`，并在 `select` 事件中回写值。
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const selected = ref('recent');
-</script>
-
 <template>
   <mat-list
     interaction="single-select"
@@ -6738,7 +7325,15 @@ const selected = ref('recent');
     </mat-list-item>
   </mat-list>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const selected = ref('recent');
+</script>
+```
+```vue
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
@@ -6746,6 +7341,7 @@ const selected = ref('recent');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="List selected 预览" stacked>
@@ -6755,14 +7351,10 @@ const selected = ref('recent');
 
 ### `color`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const selected = ref('primary');
-</script>
-
 <template>
   <mat-list
     interaction="single-select"
@@ -6780,7 +7372,15 @@ const selected = ref('primary');
     </mat-list-item>
   </mat-list>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const selected = ref('primary');
+</script>
+```
+```vue
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
@@ -6788,6 +7388,7 @@ const selected = ref('primary');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="List color 预览" stacked>
@@ -6797,14 +7398,10 @@ const selected = ref('primary');
 
 ### ListItem 的 `value`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const selected = ref('two');
-</script>
-
 <template>
   <mat-list
     interaction="single-select"
@@ -6821,7 +7418,15 @@ const selected = ref('two');
     </mat-list-item>
   </mat-list>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const selected = ref('two');
+</script>
+```
+```vue
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
@@ -6829,6 +7434,7 @@ const selected = ref('two');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem value 预览">
@@ -6838,7 +7444,9 @@ const selected = ref('two');
 
 ### ListItem 的 `href`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-list interaction="single-action" aria-label="链接列表" class="example-list">
@@ -6847,7 +7455,8 @@ const selected = ref('two');
     </mat-list-item>
   </mat-list>
 </template>
-
+```
+```vue
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
@@ -6855,6 +7464,7 @@ const selected = ref('two');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem href 预览">
@@ -6864,7 +7474,9 @@ const selected = ref('two');
 
 ### ListItem 的 `type`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <form class="example-row" @submit.prevent>
@@ -6878,7 +7490,8 @@ const selected = ref('two');
     </mat-list>
   </form>
 </template>
-
+```
+```vue
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
@@ -6886,6 +7499,7 @@ const selected = ref('two');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem type 预览">
@@ -6895,7 +7509,9 @@ const selected = ref('two');
 
 ### ListItem 的 `disabled`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-list interaction="single-action" aria-label="禁用项目" class="example-list">
@@ -6905,7 +7521,8 @@ const selected = ref('two');
     </mat-list-item>
   </mat-list>
 </template>
-
+```
+```vue
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
@@ -6913,6 +7530,7 @@ const selected = ref('two');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem disabled 预览">
@@ -6922,7 +7540,9 @@ const selected = ref('two');
 
 ### ListItem 的 `lines`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-list variant="standard" aria-label="行数列表" class="example-list">
@@ -6949,7 +7569,8 @@ const selected = ref('two');
     </mat-list-item>
   </mat-list>
 </template>
-
+```
+```vue
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
@@ -6957,6 +7578,7 @@ const selected = ref('two');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem lines 预览">
@@ -6966,7 +7588,9 @@ const selected = ref('two');
 
 ### MatList 默认 Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-list aria-label="默认 Slot 列表" class="example-list">
@@ -6975,7 +7599,8 @@ const selected = ref('two');
     <mat-list-item>直接放置的分隔线</mat-list-item>
   </mat-list>
 </template>
-
+```
+```vue
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
@@ -6983,6 +7608,7 @@ const selected = ref('two');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="List 默认 Slot 预览">
@@ -6992,14 +7618,17 @@ const selected = ref('two');
 
 ### MatListItem 默认 Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-list aria-label="项目默认 Slot" class="example-list">
     <mat-list-item>默认 Slot 提供主要标签文字</mat-list-item>
   </mat-list>
 </template>
-
+```
+```vue
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
@@ -7007,6 +7636,7 @@ const selected = ref('two');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem 默认 Slot 预览">
@@ -7016,7 +7646,9 @@ const selected = ref('two');
 
 ### `leading` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-list aria-label="leading Slot" class="example-list">
@@ -7028,7 +7660,8 @@ const selected = ref('two');
     </mat-list-item>
   </mat-list>
 </template>
-
+```
+```vue
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
@@ -7036,6 +7669,7 @@ const selected = ref('two');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem leading Slot 预览">
@@ -7045,7 +7679,9 @@ const selected = ref('two');
 
 ### `overline` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-list variant="standard" aria-label="overline Slot" class="example-list">
@@ -7057,7 +7693,8 @@ const selected = ref('two');
     </mat-list-item>
   </mat-list>
 </template>
-
+```
+```vue
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
@@ -7065,6 +7702,7 @@ const selected = ref('two');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem overline Slot 预览">
@@ -7074,7 +7712,9 @@ const selected = ref('two');
 
 ### `supporting` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-list aria-label="supporting Slot" class="example-list">
@@ -7086,7 +7726,8 @@ const selected = ref('two');
     </mat-list-item>
   </mat-list>
 </template>
-
+```
+```vue
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
@@ -7094,6 +7735,7 @@ const selected = ref('two');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem supporting Slot 预览">
@@ -7103,7 +7745,9 @@ const selected = ref('two');
 
 ### `trailing` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-list aria-label="trailing Slot" class="example-list">
@@ -7115,7 +7759,8 @@ const selected = ref('two');
     </mat-list-item>
   </mat-list>
 </template>
-
+```
+```vue
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
@@ -7123,6 +7768,7 @@ const selected = ref('two');
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="ListItem trailing Slot 预览">
@@ -7223,7 +7869,9 @@ import ListVariantExample from '../examples/list/ListVariantExample.vue';
 
 ### content
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-btn id="tooltip-content-target" variant="outlined">
@@ -7237,6 +7885,7 @@ import ListVariantExample from '../examples/list/ListVariantExample.vue';
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip content 预览">
@@ -7246,7 +7895,9 @@ import ListVariantExample from '../examples/list/ListVariantExample.vue';
 
 ### 默认 Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-btn id="tooltip-default-slot-target" variant="outlined">
@@ -7259,6 +7910,7 @@ import ListVariantExample from '../examples/list/ListVariantExample.vue';
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip 默认 Slot 预览">
@@ -7268,7 +7920,9 @@ import ListVariantExample from '../examples/list/ListVariantExample.vue';
 
 ### activator Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-tooltip content="使用 activator Slot 指定展示元素">
@@ -7281,6 +7935,7 @@ import ListVariantExample from '../examples/list/ListVariantExample.vue';
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip activator Slot 预览">
@@ -7290,7 +7945,9 @@ import ListVariantExample from '../examples/list/ListVariantExample.vue';
 
 ### target
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-btn id="tooltip-target-example" variant="outlined">
@@ -7304,6 +7961,7 @@ import ListVariantExample from '../examples/list/ListVariantExample.vue';
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip target 预览">
@@ -7313,14 +7971,10 @@ import ListVariantExample from '../examples/list/ListVariantExample.vue';
 
 ### attach
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const attach = ref(null);
-</script>
-
 <template>
   <mat-btn id="tooltip-attach-example" variant="outlined">
     自定义挂载目标
@@ -7336,7 +7990,15 @@ const attach = ref(null);
     target="#tooltip-attach-example"
   />
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const attach = ref(null);
+</script>
+```
+```vue
 <style scoped>
 .tooltip-attach-target {
   margin-block-start: 16px;
@@ -7348,6 +8010,7 @@ const attach = ref(null);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip attach 预览">
@@ -7357,25 +8020,10 @@ const attach = ref(null);
 
 ### location
 
-::: details 查看示例代码
-```vue
-<script setup>
-const locations = [
-  { name: 'top', target: '#tooltip-location-top' },
-  { name: 'top-start', target: '#tooltip-location-top-start' },
-  { name: 'top-end', target: '#tooltip-location-top-end' },
-  { name: 'right', target: '#tooltip-location-right' },
-  { name: 'right-start', target: '#tooltip-location-right-start' },
-  { name: 'right-end', target: '#tooltip-location-right-end' },
-  { name: 'bottom', target: '#tooltip-location-bottom' },
-  { name: 'bottom-start', target: '#tooltip-location-bottom-start' },
-  { name: 'bottom-end', target: '#tooltip-location-bottom-end' },
-  { name: 'left', target: '#tooltip-location-left' },
-  { name: 'left-start', target: '#tooltip-location-left-start' },
-  { name: 'left-end', target: '#tooltip-location-left-end' },
-];
-</script>
+:::: details 查看示例代码
+::: code-group
 
+```vue
 <template>
   <div class="tooltip-location-grid">
     <div
@@ -7397,7 +8045,26 @@ const locations = [
     </div>
   </div>
 </template>
-
+```
+```vue
+<script setup>
+const locations = [
+  { name: 'top', target: '#tooltip-location-top' },
+  { name: 'top-start', target: '#tooltip-location-top-start' },
+  { name: 'top-end', target: '#tooltip-location-top-end' },
+  { name: 'right', target: '#tooltip-location-right' },
+  { name: 'right-start', target: '#tooltip-location-right-start' },
+  { name: 'right-end', target: '#tooltip-location-right-end' },
+  { name: 'bottom', target: '#tooltip-location-bottom' },
+  { name: 'bottom-start', target: '#tooltip-location-bottom-start' },
+  { name: 'bottom-end', target: '#tooltip-location-bottom-end' },
+  { name: 'left', target: '#tooltip-location-left' },
+  { name: 'left-start', target: '#tooltip-location-left-start' },
+  { name: 'left-end', target: '#tooltip-location-left-end' },
+];
+</script>
+```
+```vue
 <style scoped>
 .tooltip-location-grid {
   display: grid;
@@ -7412,6 +8079,7 @@ const locations = [
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip location 预览">
@@ -7421,7 +8089,9 @@ const locations = [
 
 ### open-delay
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-tooltip
@@ -7437,6 +8107,7 @@ const locations = [
 </template>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip open-delay 预览">
@@ -7446,14 +8117,10 @@ const locations = [
 
 ### v-model
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <mat-btn
     id="tooltip-model-value-target"
@@ -7471,7 +8138,15 @@ const open = ref(false);
   />
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip v-model 预览">
@@ -7544,7 +8219,9 @@ import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
 
 ### 三种缩进
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="example-stack">
@@ -7562,7 +8239,8 @@ import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
     </section>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .example-stack {
   display: flex;
@@ -7582,6 +8260,7 @@ import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Divider 三种缩进预览" stacked>
@@ -7591,7 +8270,9 @@ import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
 
 ### List 中使用
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <mat-list variant="standard" class="example-list">
@@ -7600,7 +8281,8 @@ import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
     <mat-list-item>设置</mat-list-item>
   </mat-list>
 </template>
-
+```
+```vue
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
@@ -7608,6 +8290,7 @@ import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Divider 在 List 中的预览">
@@ -7660,14 +8343,10 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 
 ### `v-model`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <mat-btn @click="open = true">
     显示通知
@@ -7679,7 +8358,15 @@ const open = ref(false);
   />
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar v-model 预览">
@@ -7689,14 +8376,10 @@ const open = ref(false);
 
 ### `text`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <mat-btn @click="open = true">
     使用 text
@@ -7710,7 +8393,15 @@ const open = ref(false);
   />
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar text 预览">
@@ -7720,14 +8411,10 @@ const open = ref(false);
 
 ### 默认 Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <mat-btn @click="open = true">
     使用默认 Slot
@@ -7743,7 +8430,15 @@ const open = ref(false);
   </mat-snackbar>
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar 默认 Slot 预览">
@@ -7755,19 +8450,10 @@ const open = ref(false);
 
 两行由内容自然换行触发，不需要额外属性。此示例同时展示双行内容中的 action 与关闭入口；使用 `duration=0` 以便观察布局。
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-const result = ref('尚未执行操作');
-
-function undo() {
-  result.value = '已撤销归档，邮件已恢复到收件箱。';
-}
-</script>
-
 <template>
   <mat-btn @click="open = true">
     显示两行通知
@@ -7785,7 +8471,20 @@ function undo() {
   />
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+const result = ref('尚未执行操作');
+
+function undo() {
+  result.value = '已撤销归档，邮件已恢复到收件箱。';
+}
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar 两行内容预览">
@@ -7795,14 +8494,10 @@ function undo() {
 
 ### `closable`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <mat-btn @click="open = true">
     显示可关闭通知
@@ -7816,7 +8511,15 @@ const open = ref(false);
   />
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar closable 预览">
@@ -7826,14 +8529,10 @@ const open = ref(false);
 
 ### `close-label`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <mat-btn @click="open = true">
     自定义关闭名称
@@ -7848,7 +8547,15 @@ const open = ref(false);
   />
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar close-label 预览">
@@ -7858,14 +8565,10 @@ const open = ref(false);
 
 ### `close` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-</script>
-
 <template>
   <mat-btn @click="open = true">
     自定义关闭 Slot
@@ -7888,7 +8591,15 @@ const open = ref(false);
   </mat-snackbar>
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar close Slot 预览">
@@ -7898,19 +8609,10 @@ const open = ref(false);
 
 ### `action-text`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-const result = ref('尚未执行操作');
-
-function undo() {
-  result.value = '已撤销归档';
-}
-</script>
-
 <template>
   <mat-btn @click="open = true">
     显示带 action 的通知
@@ -7927,7 +8629,20 @@ function undo() {
   />
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+const result = ref('尚未执行操作');
+
+function undo() {
+  result.value = '已撤销归档';
+}
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar action-text 预览">
@@ -7937,23 +8652,10 @@ function undo() {
 
 ### `action` Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-const result = ref('尚未执行操作');
-
-/**
- * @param {() => void} action
- */
-function undo(action) {
-  result.value = '已撤销删除';
-  action();
-}
-</script>
-
 <template>
   <mat-btn @click="open = true">
     自定义 action Slot
@@ -7974,7 +8676,24 @@ function undo(action) {
     </template>
   </mat-snackbar>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(false);
+const result = ref('尚未执行操作');
+
+/**
+ * @param {() => void} action
+ */
+function undo(action) {
+  result.value = '已撤销删除';
+  action();
+}
+</script>
+```
+```vue
 <style scoped>
 .slot-action {
   box-sizing: border-box;
@@ -7990,6 +8709,7 @@ function undo(action) {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar action Slot 预览">
@@ -7999,20 +8719,10 @@ function undo(action) {
 
 ### `position`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const open = ref(false);
-const position = ref('center');
-
-function show(nextPosition) {
-  position.value = nextPosition;
-  open.value = true;
-}
-</script>
-
 <template>
   <div class="snackbar-position-example">
     <mat-btn variant="outlined" @click="show('left')">
@@ -8036,7 +8746,21 @@ function show(nextPosition) {
     :text="`当前在底部${position === 'center' ? '居中' : position === 'left' ? '左侧' : '右侧'}显示。`"
   />
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const open = ref(false);
+const position = ref('center');
+
+function show(nextPosition) {
+  position.value = nextPosition;
+  open.value = true;
+}
+</script>
+```
+```vue
 <style scoped>
 .snackbar-position-example {
   display: flex;
@@ -8046,6 +8770,7 @@ function show(nextPosition) {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar position 预览">
@@ -8055,20 +8780,10 @@ function show(nextPosition) {
 
 ### `duration`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const duration = ref(1500);
-const open = ref(false);
-
-function show(nextDuration) {
-  duration.value = nextDuration;
-  open.value = true;
-}
-</script>
-
 <template>
   <div class="snackbar-duration-example">
     <mat-btn variant="outlined" @click="show(1500)">
@@ -8087,7 +8802,21 @@ function show(nextDuration) {
     :text="duration === 0 ? '常驻通知，需要手动关闭。' : '这条通知将在 1.5 秒后关闭。'"
   />
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const duration = ref(1500);
+const open = ref(false);
+
+function show(nextDuration) {
+  duration.value = nextDuration;
+  open.value = true;
+}
+</script>
+```
+```vue
 <style scoped>
 .snackbar-duration-example {
   display: flex;
@@ -8097,6 +8826,7 @@ function show(nextDuration) {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar duration 预览">
@@ -8106,7 +8836,24 @@ function show(nextDuration) {
 
 ### `snackbar()` 与 `toast()`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="snackbar-function-example">
+    <mat-btn @click="showSnackbar">
+      snackbar()
+    </mat-btn>
+
+    <mat-btn variant="outlined" @click="showToast">
+      toast()
+    </mat-btn>
+
+    <span>{{ result }}</span>
+  </div>
+</template>
+```
 ```vue
 <script setup>
 import { ref } from 'vue';
@@ -8142,21 +8889,8 @@ async function showToast() {
   result.value = 'toast() 已关闭';
 }
 </script>
-
-<template>
-  <div class="snackbar-function-example">
-    <mat-btn @click="showSnackbar">
-      snackbar()
-    </mat-btn>
-
-    <mat-btn variant="outlined" @click="showToast">
-      toast()
-    </mat-btn>
-
-    <span>{{ result }}</span>
-  </div>
-</template>
-
+```
+```vue
 <style scoped>
 .snackbar-function-example {
   display: flex;
@@ -8167,6 +8901,7 @@ async function showToast() {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar 函数式调用预览">
@@ -8176,22 +8911,10 @@ async function showToast() {
 
 ### 全局队列
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const first = ref(false);
-const second = ref(false);
-const third = ref(false);
-
-function showAll() {
-  first.value = true;
-  second.value = true;
-  third.value = true;
-}
-</script>
-
 <template>
   <mat-btn @click="showAll">
     连续显示三条通知
@@ -8216,7 +8939,23 @@ function showAll() {
   />
 </template>
 ```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const first = ref(false);
+const second = ref(false);
+const third = ref(false);
+
+function showAll() {
+  first.value = true;
+  second.value = true;
+  third.value = true;
+}
+</script>
+```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Snackbar 全局队列预览">
@@ -8321,7 +9060,9 @@ import SnackbarTextExample from '../examples/snackbar/SnackbarTextExample.vue';
 
 ### Flex 操作栏
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
 <template>
   <div class="spacer-example">
@@ -8334,7 +9075,8 @@ import SnackbarTextExample from '../examples/snackbar/SnackbarTextExample.vue';
     </mat-btn>
   </div>
 </template>
-
+```
+```vue
 <style scoped>
 .spacer-example {
   display: flex;
@@ -8345,6 +9087,7 @@ import SnackbarTextExample from '../examples/snackbar/SnackbarTextExample.vue';
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Spacer flex 布局预览">
@@ -8386,18 +9129,10 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 
 ### 受控尺寸与默认 Slot
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const sizes = ref({ navigation: 1, content: 2, details: 1 });
-
-function updateSizes(nextSizes) {
-  sizes.value = nextSizes;
-}
-</script>
-
 <template>
   <div class="panes-example">
     <mat-panes
@@ -8433,7 +9168,19 @@ function updateSizes(nextSizes) {
     </mat-panes>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const sizes = ref({ navigation: 1, content: 2, details: 1 });
+
+function updateSizes(nextSizes) {
+  sizes.value = nextSizes;
+}
+</script>
+```
+```vue
 <style scoped>
 .panes-example {
   block-size: 180px;
@@ -8452,6 +9199,7 @@ function updateSizes(nextSizes) {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Panes 受控尺寸预览" stacked>
@@ -8461,15 +9209,10 @@ function updateSizes(nextSizes) {
 
 ### 等高与 Pane 内滚动
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const sizes = ref({ first: 1, second: 1 });
-const rows = Array.from({ length: 12 }, (_, index) => `可滚动内容 ${index + 1}`);
-</script>
-
 <template>
   <div class="panes-scroll-example">
     <mat-panes :sizes="sizes">
@@ -8498,7 +9241,16 @@ const rows = Array.from({ length: 12 }, (_, index) => `可滚动内容 ${index +
     </mat-panes>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const sizes = ref({ first: 1, second: 1 });
+const rows = Array.from({ length: 12 }, (_, index) => `可滚动内容 ${index + 1}`);
+</script>
+```
+```vue
 <style scoped>
 .panes-scroll-example {
   block-size: 180px;
@@ -8519,6 +9271,7 @@ const rows = Array.from({ length: 12 }, (_, index) => `可滚动内容 ${index +
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Panes 等高滚动预览" stacked>
@@ -8528,15 +9281,10 @@ const rows = Array.from({ length: 12 }, (_, index) => `可滚动内容 ${index +
 
 ### `resizable`
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const sizes = ref({ first: 1, second: 1 });
-const resizable = ref(true);
-</script>
-
 <template>
   <div class="panes-resizable-example">
     <mat-btn
@@ -8569,7 +9317,16 @@ const resizable = ref(true);
     </div>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const sizes = ref({ first: 1, second: 1 });
+const resizable = ref(true);
+</script>
+```
+```vue
 <style scoped>
 .panes-resizable-example {
   display: grid;
@@ -8590,6 +9347,7 @@ const resizable = ref(true);
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Panes 开关调整预览" stacked>
@@ -8601,26 +9359,10 @@ const resizable = ref(true);
 
 断点事件只报告浏览器视口等级。示例中的 `v-if` 是使用方自行决定的显隐策略，组件不会自动隐藏 Pane。
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const sizes = ref({ primary: 2, supporting: 1 });
-const breakpoint = ref('等待测量');
-const showSupporting = ref(true);
-
-function updateBreakpoint(nextBreakpoint) {
-  breakpoint.value = nextBreakpoint;
-
-  if (nextBreakpoint === 'compact') {
-    showSupporting.value = false;
-  } else {
-    showSupporting.value = true;
-  }
-}
-</script>
-
 <template>
   <div class="panes-breakpoint-example">
     <output>当前断点：{{ breakpoint }}</output>
@@ -8653,7 +9395,27 @@ function updateBreakpoint(nextBreakpoint) {
     </div>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const sizes = ref({ primary: 2, supporting: 1 });
+const breakpoint = ref('等待测量');
+const showSupporting = ref(true);
+
+function updateBreakpoint(nextBreakpoint) {
+  breakpoint.value = nextBreakpoint;
+
+  if (nextBreakpoint === 'compact') {
+    showSupporting.value = false;
+  } else {
+    showSupporting.value = true;
+  }
+}
+</script>
+```
+```vue
 <style scoped>
 .panes-breakpoint-example {
   display: grid;
@@ -8674,6 +9436,7 @@ function updateBreakpoint(nextBreakpoint) {
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Panes 断点与显隐预览" stacked>
@@ -8685,15 +9448,10 @@ function updateBreakpoint(nextBreakpoint) {
 
 实际宽度信息使用尾端防抖，避免拖动和窗口变化造成过于频繁的外部更新。
 
-::: details 查看示例代码
+:::: details 查看示例代码
+::: code-group
+
 ```vue
-<script setup>
-import { ref } from 'vue';
-
-const sizes = ref({ first: 1, second: 2 });
-const widths = ref({});
-</script>
-
 <template>
   <div class="panes-widths-example">
     <div class="panes-widths-example__status">
@@ -8727,7 +9485,16 @@ const widths = ref({});
     </div>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
 
+const sizes = ref({ first: 1, second: 2 });
+const widths = ref({});
+</script>
+```
+```vue
 <style scoped>
 .panes-widths-example {
   display: grid;
@@ -8753,6 +9520,7 @@ const widths = ref({});
 </style>
 ```
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Panes 宽度信息预览" stacked>

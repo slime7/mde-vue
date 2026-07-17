@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <form class="example-row" @submit.prevent>
     <mat-card class="example-card">
@@ -12,7 +13,9 @@
     </mat-card>
   </form>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-row {
   display: flex;
@@ -24,3 +27,4 @@
   inline-size: min(100%, 220px);
 }
 </style>
+<!-- #endregion style -->

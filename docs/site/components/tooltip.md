@@ -15,9 +15,13 @@ order: 105
 
 ### content
 
-::: details 查看示例代码
-<<< @/examples/tooltip/TooltipContentExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/tooltip/TooltipContentExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip content 预览">
@@ -27,9 +31,13 @@ order: 105
 
 ### 默认 Slot
 
-::: details 查看示例代码
-<<< @/examples/tooltip/TooltipDefaultSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/tooltip/TooltipDefaultSlotExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip 默认 Slot 预览">
@@ -39,9 +47,13 @@ order: 105
 
 ### activator Slot
 
-::: details 查看示例代码
-<<< @/examples/tooltip/TooltipActivatorSlotExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/tooltip/TooltipActivatorSlotExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip activator Slot 预览">
@@ -51,9 +63,13 @@ order: 105
 
 ### target
 
-::: details 查看示例代码
-<<< @/examples/tooltip/TooltipTargetExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/tooltip/TooltipTargetExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip target 预览">
@@ -63,9 +79,17 @@ order: 105
 
 ### attach
 
-::: details 查看示例代码
-<<< @/examples/tooltip/TooltipAttachExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/tooltip/TooltipAttachExample.vue#template [template]
+
+<<< @/examples/tooltip/TooltipAttachExample.vue#script [script]
+
+<<< @/examples/tooltip/TooltipAttachExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip attach 预览">
@@ -75,9 +99,17 @@ order: 105
 
 ### location
 
-::: details 查看示例代码
-<<< @/examples/tooltip/TooltipLocationExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/tooltip/TooltipLocationExample.vue#template [template]
+
+<<< @/examples/tooltip/TooltipLocationExample.vue#script [script]
+
+<<< @/examples/tooltip/TooltipLocationExample.vue#style [style]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip location 预览">
@@ -87,9 +119,13 @@ order: 105
 
 ### open-delay
 
-::: details 查看示例代码
-<<< @/examples/tooltip/TooltipOpenDelayExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/tooltip/TooltipOpenDelayExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip open-delay 预览">
@@ -99,9 +135,15 @@ order: 105
 
 ### v-model
 
-::: details 查看示例代码
-<<< @/examples/tooltip/TooltipModelValueExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/tooltip/TooltipModelValueExample.vue#template [template]
+
+<<< @/examples/tooltip/TooltipModelValueExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Tooltip v-model 预览">

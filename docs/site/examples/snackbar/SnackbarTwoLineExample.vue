@@ -1,3 +1,4 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
@@ -8,7 +9,9 @@ function undo() {
   result.value = '已撤销归档，邮件已恢复到收件箱。';
 }
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn @click="open = true">
     显示两行通知
@@ -25,3 +28,4 @@ function undo() {
     @action="undo"
   />
 </template>
+<!-- #endregion template -->

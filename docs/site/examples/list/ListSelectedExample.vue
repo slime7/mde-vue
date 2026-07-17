@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const selected = ref('recent');
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-list
     interaction="single-select"
@@ -26,9 +29,12 @@ const selected = ref('recent');
     </mat-list-item>
   </mat-list>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-list {
   inline-size: min(100%, 420px);
 }
 </style>
+<!-- #endregion style -->

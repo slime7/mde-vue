@@ -19,9 +19,13 @@ order: 88
 
 ### `value` 与 `max`
 
-::: details 查看示例代码
-<<< @/examples/loader/LoaderProgressExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/loader/LoaderProgressExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Loader 确定进度预览" stacked>
@@ -31,9 +35,13 @@ order: 88
 
 ### `variant`
 
-::: details 查看示例代码
-<<< @/examples/loader/LoaderVariantExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/loader/LoaderVariantExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Loader 形态预览" stacked>
@@ -43,9 +51,13 @@ order: 88
 
 ### `indeterminate`
 
-::: details 查看示例代码
-<<< @/examples/loader/LoaderIndeterminateExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/loader/LoaderIndeterminateExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Loader 不确定加载预览" stacked>
@@ -55,9 +67,15 @@ order: 88
 
 ### `shape`
 
-::: details 查看示例代码
-<<< @/examples/loader/LoaderShapeExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/loader/LoaderShapeExample.vue#template [template]
+
+<<< @/examples/loader/LoaderShapeExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Loader 直线与波浪形预览" stacked>
@@ -67,9 +85,15 @@ order: 88
 
 ### `waveMotion`
 
-::: details 查看示例代码
-<<< @/examples/loader/LoaderWaveMotionExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/loader/LoaderWaveMotionExample.vue#template [template]
+
+<<< @/examples/loader/LoaderWaveMotionExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Loader 波浪运动预览" stacked>
@@ -79,9 +103,15 @@ order: 88
 
 ### `thickness`
 
-::: details 查看示例代码
-<<< @/examples/loader/LoaderThicknessExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/loader/LoaderThicknessExample.vue#template [template]
+
+<<< @/examples/loader/LoaderThicknessExample.vue#script [script]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Loader 厚度预览" stacked>
@@ -91,9 +121,13 @@ order: 88
 
 ### `color`
 
-::: details 查看示例代码
-<<< @/examples/loader/LoaderColorExample.vue
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/loader/LoaderColorExample.vue#template [template]
+
 :::
+::::
 
 <ClientOnly>
   <DocsPreview label="Loader 配色预览" stacked>

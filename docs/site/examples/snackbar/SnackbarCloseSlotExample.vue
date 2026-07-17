@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const open = ref(false);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn @click="open = true">
     自定义关闭 Slot
@@ -25,3 +28,4 @@ const open = ref(false);
     </template>
   </mat-snackbar>
 </template>
+<!-- #endregion template -->

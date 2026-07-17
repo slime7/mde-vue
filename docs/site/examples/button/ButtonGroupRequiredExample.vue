@@ -1,9 +1,12 @@
+<!-- #region script -->
 <script setup>
 import { ref } from 'vue';
 
 const selected = ref(['bold']);
 </script>
+<!-- #endregion script -->
 
+<!-- #region template -->
 <template>
   <mat-btn-group
     selection="multiple"
@@ -19,3 +22,4 @@ const selected = ref(['bold']);
     </mat-btn>
   </mat-btn-group>
 </template>
+<!-- #endregion template -->

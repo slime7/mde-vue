@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <div class="example-stack">
     <section>
@@ -14,7 +15,9 @@
     </section>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-stack {
   display: flex;
@@ -32,3 +35,4 @@
   margin: 0 16px 8px;
 }
 </style>
+<!-- #endregion style -->

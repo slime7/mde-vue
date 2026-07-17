@@ -1,3 +1,4 @@
+<!-- #region template -->
 <template>
   <div class="example-row">
     <mat-card color="primary">
@@ -17,7 +18,9 @@
     </mat-card>
   </div>
 </template>
+<!-- #endregion template -->
 
+<!-- #region style -->
 <style scoped>
 .example-row {
   display: flex;
@@ -29,3 +32,4 @@
   inline-size: min(100%, 180px);
 }
 </style>
+<!-- #endregion style -->
