@@ -655,7 +655,7 @@ watch(tooltipId, () => {
 </script>
 
 <template>
-  <span ref="activatorHost" class="mat-tooltip__activator">
+  <span v-if="hasActivatorSlot || !target" ref="activatorHost" class="mat-tooltip__activator">
     <slot name="activator" />
   </span>
 

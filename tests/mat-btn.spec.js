@@ -200,11 +200,12 @@ describe('MatBtn', () => {
     expect(wrapper.classes()).toContain('mat-btn--width-uniform');
     expect(wrapper.classes()).toContain('mat-btn--shape-round');
     expect(wrapper.attributes('aria-label')).toBe('更多操作');
-    expect(wrapper.attributes('title')).toBe('打开更多操作');
+    expect(wrapper.attributes('title')).toBeUndefined();
+    expect(wrapper.findComponent({ name: 'MatTooltip' }).props('content')).toBe('打开更多操作');
     expect(wrapper.text()).toBe('more_vert');
   });
 
-  it('图标模式默认使用 label 作为 title，缺少 label 时发出警告', () => {
+  it('图标模式将 label 交给 Tooltip，并在缺少 label 时发出警告', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const labelled = mount(MatBtn, {
       props: {
@@ -218,7 +219,8 @@ describe('MatBtn', () => {
       },
     });
 
-    expect(labelled.attributes('title')).toBe('设置');
+    expect(labelled.attributes('title')).toBeUndefined();
+    expect(labelled.findComponent({ name: 'MatTooltip' }).props('content')).toBe('设置');
     expect(warn).toHaveBeenCalledWith('MatBtn: 图标模式必须提供非空 label');
   });
 

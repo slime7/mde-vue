@@ -94,7 +94,7 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 
 按钮的 `variant` 接受 `elevated`、`filled`、`filled-tonal`、`outlined`、`text` 和 `standard`，默认 `filled`；尺寸使用 `extra-small`、`small`、`medium`、`large`、`extra-large`，形状使用 `round` 或 `square`。普通模式渲染默认 Slot，可使用字符串 `prefix`、`suffix` 或同名 Slots 提供前后图标，prop 存在时优先于 Slot；`selected` Slot 可替换选中时的标签内容。
 
-非空字符串 `icon` 把 `<mat-btn>` 切换为图标模式。该模式只渲染共享 `MatIcon`，忽略默认、`prefix` 和 `suffix` 内容；`label` 必须是非空字符串，用作可访问名称，并在没有显式 `title` 时提供原生提示。图标模式的 `width` 接受 `narrow`、`uniform` 和 `wide`，默认 `uniform`；默认 `round` 形状在等宽时呈圆形。`toggle` 与 `selected` 只表达受控状态，图标模式选中时复用同一图标并切换 FILL 轴；`text` 不支持 toggle。
+非空字符串 `icon` 把 `<mat-btn>` 切换为图标模式。该模式只渲染共享 `MatIcon`，忽略默认、`prefix` 和 `suffix` 内容；`label` 必须是非空字符串，用作可访问名称，并作为 Tooltip 默认文本。显式 `title` 只作为 Tooltip 文本，不生成原生 HTML `title` 提示。图标模式的 `width` 接受 `narrow`、`uniform` 和 `wide`，默认 `uniform`；默认 `round` 形状在等宽时呈圆形。`toggle` 与 `selected` 只表达受控状态，图标模式选中时复用同一图标并切换 FILL 轴；`text` 不支持 toggle。
 
 `<mat-btn-group>` 只接收 `<mat-btn>`，负责 standard/connected 布局以及受控 single/multiple 选择；组容器不进入 Tab 顺序，子按钮保持独立停靠点。图标模式的显式 `width` 不根据组内子项数量变化，connected `fullWidth` 仍按组规则等分子项。`<mat-split-btn>` 的 leading 和 trailing 都接收 `<mat-btn>`，trailing 必须是同时带非空 `icon` 和 `label` 的图标模式按钮；split button 只协调视觉、事件、`aria-haspopup`、`aria-expanded` 与可选 `aria-controls`，菜单始终由应用管理。
 

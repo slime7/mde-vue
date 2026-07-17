@@ -1,9 +1,10 @@
 <script setup>
 import {
-  computed, useSlots, watchEffect,
+  computed, ref, useAttrs, useId, useSlots, watchEffect,
 } from 'vue';
 import MatButtonBase from '../MatButtonBase.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
+import MatTooltip from '../mat-tooltip/MatTooltip.vue';
 import {
   BUTTON_SHAPES,
   BUTTON_SIZES,
@@ -104,7 +105,10 @@ const emit = defineEmits({
     return payload instanceof MouseEvent;
   },
 });
+const $attrs = useAttrs();
 const slots = useSlots();
+const buttonElement = ref(null);
+const generatedId = useId();
 const {
   colorStyle,
   effectiveDisabled,
@@ -121,6 +125,9 @@ const {
 const isToggle = computed(() => effectiveToggle.value && effectiveVariant.value !== 'text');
 const isSelected = computed(() => isToggle.value && effectiveSelected.value);
 const isIcon = computed(() => typeof props.icon === 'string' && props.icon.trim().length > 0);
+const tooltipContent = computed(() => (
+  isIcon.value ? ($attrs.title ?? props.label) : undefined
+));
 const hasPrefix = computed(() => !isIcon.value && (
   props.prefix !== undefined || Boolean(slots.prefix)
 ));
@@ -148,6 +155,7 @@ watchEffect(() => {
 
 <template>
   <MatButtonBase
+    ref="buttonElement"
     v-bind="$attrs"
     class="mat-btn"
     :class="[
@@ -171,7 +179,7 @@ watchEffect(() => {
     :aria-pressed="isToggle ? isSelected : undefined"
     :block="block"
     :disabled="effectiveDisabled"
-    :title="isIcon ? ($attrs.title ?? label) : $attrs.title"
+    :title="isIcon ? undefined : $attrs.title"
     :type="type"
     :use-cursor="useCursor"
     @click="handleClick"
@@ -222,6 +230,13 @@ watchEffect(() => {
       </template>
       <slot v-else name="suffix" />
     </MatIcon>
+
+    <MatTooltip
+      v-if="isIcon && tooltipContent"
+      :content="tooltipContent"
+      :id="`${generatedId}-tooltip`"
+      :target="buttonElement"
+    />
   </MatButtonBase>
 </template>
 
