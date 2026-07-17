@@ -31,12 +31,12 @@ describe('VitePress 文档自定义主题', () => {
     expect(source).toContain('<mat-slider');
   });
 
-  it('将默认主题右上角外观开关引导到主题设置页', () => {
-    const source = readThemeFile('Layout.vue');
+  it('移除容易误解的默认外观开关并提供文字主题入口', () => {
+    const config = readFileSync(resolve('docs/site/.vitepress/config.mjs'), 'utf8');
 
-    expect(source).toContain('useRouter');
-    expect(source).toContain('\'/guide/theme\'');
-    expect(source).toContain('toggle-appearance');
+    expect(config).toContain('appearance: false');
+    expect(config).toContain('{ text: \'主题设置\', link: \'/guide/theme\' }');
+    expect(readThemeFile('index.js')).not.toContain("import Layout from './Layout.vue';");
   });
 
   it('主题设置页使用 mdu-ui 组件展示可交互预览', () => {

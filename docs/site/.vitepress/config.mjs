@@ -42,8 +42,10 @@ export default defineConfig({
     nav: [
       { text: '指南', link: '/guide/overview' },
       { text: '组件', link: '/components/button' },
+      { text: '主题设置', link: '/guide/theme' },
       { text: 'AI', link: '/ai/llms' },
     ],
+    appearance: false,
     sidebar: [
       {
         text: '指南',
