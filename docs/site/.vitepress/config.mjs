@@ -25,6 +25,7 @@ export default defineConfig({
   description: '面向现代浏览器的私有 Vue 3 组件库',
   lang: 'zh-CN',
   cleanUrls: true,
+  appearance: false,
   head: [
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     [
@@ -45,7 +46,6 @@ export default defineConfig({
       { text: '主题设置', link: '/guide/theme' },
       { text: 'AI', link: '/ai/llms' },
     ],
-    appearance: false,
     sidebar: [
       {
         text: '指南',

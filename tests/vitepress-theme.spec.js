@@ -34,7 +34,7 @@ describe('VitePress 文档自定义主题', () => {
   it('移除容易误解的默认外观开关并提供文字主题入口', () => {
     const config = readFileSync(resolve('docs/site/.vitepress/config.mjs'), 'utf8');
 
-    expect(config).toContain('appearance: false');
+    expect(config).toContain('  appearance: false,\n  head:');
     expect(config).toContain('{ text: \'主题设置\', link: \'/guide/theme\' }');
     expect(readThemeFile('index.js')).not.toContain("import Layout from './Layout.vue';");
   });
