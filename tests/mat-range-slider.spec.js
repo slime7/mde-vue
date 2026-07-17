@@ -228,6 +228,28 @@ describe('MatRangeSlider', () => {
     expect(componentSource).toContain('var(--mat-slider-track-gap-corner)');
   });
 
+  it('只在键盘聚焦的活跃手柄外层显示胶囊轮廓', () => {
+    const handleStyles = componentSource.match(
+      /\.mat-range-slider__handle \{(?<body>[\s\S]*?)\n\}/,
+    )?.groups?.body;
+    const focusStyles = componentSource.match(
+      /\.mat-range-slider:has\(\.mat-range-slider__native-input:focus-visible\) \.mat-range-slider__handle--active \{(?<body>[\s\S]*?)\n\}/,
+    )?.groups?.body;
+
+    expect(handleStyles).toContain(
+      'border-radius: var(--mat-range-slider-current-track-corner)',
+    );
+    expect(focusStyles).toContain(
+      'outline: var(--mat-slider-focus-indicator-width) solid var(--mat-slider-focus-indicator-color)',
+    );
+    expect(focusStyles).toContain(
+      'outline-offset: var(--mat-slider-focus-indicator-offset)',
+    );
+    expect(componentSource).not.toContain(
+      ':focus-visible) .mat-range-slider__handle--active .mat-range-slider__handle-shape',
+    );
+  });
+
   it('纵向范围轨道重置横向定位，并让尺寸示例共享可交互区间', () => {
     expect(componentSource).toMatch(/\.mat-range-slider--vertical \.mat-range-slider__track \{[\s\S]*?inset-inline: 50% auto;/);
     expect(componentSource).toMatch(/\.mat-range-slider--vertical \.mat-range-slider__active-track \{[\s\S]*?inset-block: auto var\(--mat-range-slider-active-visible-start\);/);

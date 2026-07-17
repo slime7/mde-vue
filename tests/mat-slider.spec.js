@@ -319,6 +319,37 @@ describe('MatSlider', () => {
     expect(componentSource).toContain('.mat-slider--vertical.mat-slider--dragging .mat-slider__handle {');
   });
 
+  it('使用独立的次要色胶囊轮廓显示键盘焦点', () => {
+    const handleStyles = componentSource.match(
+      /\.mat-slider__handle \{(?<body>[\s\S]*?)\n\}/,
+    )?.groups?.body;
+    const focusStyles = componentSource.match(
+      /\.mat-slider:has\(\.mat-slider__native-input:focus-visible\) \.mat-slider__handle \{(?<body>[\s\S]*?)\n\}/,
+    )?.groups?.body;
+
+    expect(stylesSource).toContain(
+      '--mat-slider-focus-indicator-width: var(--mat-sys-interaction-focus-ring-width)',
+    );
+    expect(stylesSource).toContain(
+      '--mat-slider-focus-indicator-offset: var(--mat-sys-interaction-focus-ring-offset)',
+    );
+    expect(stylesSource).toContain(
+      '--mat-slider-focus-indicator-color: var(--mat-sys-color-secondary)',
+    );
+    expect(handleStyles).toContain(
+      'border-radius: var(--mat-slider-current-track-corner)',
+    );
+    expect(focusStyles).toContain(
+      'outline: var(--mat-slider-focus-indicator-width) solid var(--mat-slider-focus-indicator-color)',
+    );
+    expect(focusStyles).toContain(
+      'outline-offset: var(--mat-slider-focus-indicator-offset)',
+    );
+    expect(componentSource).not.toContain(
+      ':focus-visible) .mat-slider__handle-shape',
+    );
+  });
+
   it('始终在固定端部保护区域内显示终点，断口使用 2px 圆角且不绘制手柄背景层', () => {
     const continuous = mount(MatSlider, {
       props: {

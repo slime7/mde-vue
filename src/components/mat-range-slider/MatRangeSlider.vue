@@ -564,6 +564,7 @@ function setHandleElement(index, element) {
   display: block;
   inline-size: var(--mat-slider-handle-width);
   block-size: var(--mat-range-slider-current-handle-height);
+  border-radius: var(--mat-range-slider-current-track-corner);
   transform: translate(-50%, -50%);
   transition: inset-inline-start var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), inline-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), block-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized);
 }
@@ -611,8 +612,8 @@ function setHandleElement(index, element) {
   white-space: nowrap;
 }
 
-.mat-range-slider:has(.mat-range-slider__native-input:focus-visible) .mat-range-slider__handle--active .mat-range-slider__handle-shape {
-  outline: var(--mat-slider-focus-indicator-width) solid var(--mat-accent-color, var(--mat-slider-focus-indicator-color));
+.mat-range-slider:has(.mat-range-slider__native-input:focus-visible) .mat-range-slider__handle--active {
+  outline: var(--mat-slider-focus-indicator-width) solid var(--mat-slider-focus-indicator-color);
   outline-offset: var(--mat-slider-focus-indicator-offset);
 }
 

@@ -573,6 +573,7 @@ function handleKeyDown(event) {
   display: block;
   inline-size: var(--mat-slider-handle-width);
   block-size: var(--mat-slider-current-handle-height);
+  border-radius: var(--mat-slider-current-track-corner);
   transform: translate(-50%, -50%);
   transition: inset-inline-start var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), inline-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), block-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized);
 }
@@ -631,8 +632,8 @@ function handleKeyDown(event) {
   white-space: nowrap;
 }
 
-.mat-slider:has(.mat-slider__native-input:focus-visible) .mat-slider__handle-shape {
-  outline: var(--mat-slider-focus-indicator-width) solid var(--mat-accent-color, var(--mat-slider-focus-indicator-color));
+.mat-slider:has(.mat-slider__native-input:focus-visible) .mat-slider__handle {
+  outline: var(--mat-slider-focus-indicator-width) solid var(--mat-slider-focus-indicator-color);
   outline-offset: var(--mat-slider-focus-indicator-offset);
 }
 

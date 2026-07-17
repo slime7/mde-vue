@@ -161,7 +161,7 @@ order: 87
 
 ## 状态与交互
 
-组件支持 focus-visible、pressed、disabled 和减少动态效果偏好。键盘焦点使用手柄轮廓表示，不绘制圆形背景状态层；按下或拖动时，当前手柄会由 4px 收窄至 2px，轨道在手柄两侧保留 6px 断口且断口圆角为 2px。指针默认使用 `default`，并遵循 `createMatUi()` 的全局 `useCursor` 设置。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至最小和最大可对齐值。纵向滑块以底部为最小值、顶部为最大值。组件没有公开方法。
+组件支持 focus-visible、pressed、disabled 和减少动态效果偏好。键盘焦点使用 `secondary` 语义色的 3px 胶囊轮廓表示，轮廓与手柄相隔 2px，不绘制圆形背景状态层；按下或拖动时，当前手柄会由 4px 收窄至 2px，轨道在手柄两侧保留 6px 断口且断口圆角为 2px。指针默认使用 `default`，并遵循 `createMatUi()` 的全局 `useCursor` 设置。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至最小和最大可对齐值。纵向滑块以底部为最小值、顶部为最大值。组件没有公开方法。
 
 ## 参考来源
 
