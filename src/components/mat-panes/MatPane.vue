@@ -100,7 +100,6 @@ onBeforeUnmount(() => unregister?.());
   min-block-size: 0;
   block-size: 100%;
   overflow: auto;
-  scrollbar-gutter: stable;
 }
 
 .mat-pane__separator {

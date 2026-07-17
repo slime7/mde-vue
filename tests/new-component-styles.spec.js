@@ -197,5 +197,6 @@ describe('新增组件现代 CSS', () => {
     expect(source).toContain('var(--mat-panes-handle-dragged-height)');
     expect(source).toContain('.mat-pane__handle:focus-visible::before');
     expect(source).not.toContain('.mat-pane__handle::after');
+    expect(source).not.toContain('scrollbar-gutter: stable');
   });
 });
