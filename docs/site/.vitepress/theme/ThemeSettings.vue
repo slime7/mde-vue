@@ -9,6 +9,7 @@ const { isDark } = useData();
 const theme = useMatTheme();
 const seedColorInput = ref(theme.seedColor.value);
 const seedColorError = ref('');
+const colorPicker = ref(null);
 
 const resolvedModeLabel = computed(() => (
   theme.resolvedMode.value === 'dark' ? '暗色' : '亮色'
@@ -29,6 +30,19 @@ function applySeedColor() {
   } catch (error) {
     seedColorError.value = error instanceof Error ? error.message : '请输入合法的十六进制颜色';
   }
+}
+
+function openColorPicker() {
+  colorPicker.value?.click();
+}
+
+/**
+ * @param {Event} event
+ */
+function handleColorPickerInput(event) {
+  const input = /** @type {HTMLInputElement} */ (event.target);
+  seedColorInput.value = input.value;
+  applySeedColor();
 }
 
 function resetTheme() {
@@ -83,7 +97,32 @@ function resetTheme() {
           :error-text="seedColorError"
           @blur="applySeedColor"
           @change="applySeedColor"
-        />
+        >
+          <template #trailing>
+            <mat-btn
+              class="theme-settings__color-button"
+              variant="text"
+              type="button"
+              aria-label="打开种子色选择器"
+              title="选择种子色"
+              @click="openColorPicker"
+            >
+              <span
+                class="theme-settings__color-swatch"
+                :style="{ backgroundColor: theme.seedColor.value }"
+                aria-hidden="true"
+              />
+            </mat-btn>
+            <input
+              ref="colorPicker"
+              class="theme-settings__color-input"
+              type="color"
+              :value="theme.seedColor.value"
+              aria-label="选择种子色"
+              @input="handleColorPickerInput"
+            >
+          </template>
+        </mat-text-field>
 
         <mat-radio-group
           :model-value="theme.schemeVariant.value"
@@ -171,5 +210,27 @@ function resetTheme() {
 .theme-settings__slider output {
   color: var(--mat-sys-color-primary);
   font-variant-numeric: tabular-nums;
+}
+
+.theme-settings__color-button {
+  min-inline-size: 40px;
+  padding-inline: 8px;
+}
+
+.theme-settings__color-swatch {
+  display: block;
+  inline-size: 24px;
+  block-size: 24px;
+  border: 2px solid var(--mat-sys-color-on-surface);
+  border-radius: var(--mat-sys-shape-corner-full);
+  box-shadow: 0 0 0 1px var(--mat-sys-color-outline-variant);
+}
+
+.theme-settings__color-input {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  opacity: 0;
+  pointer-events: none;
 }
 </style>

@@ -28,6 +28,9 @@ describe('VitePress 文档自定义主题', () => {
     expect(source).toContain('setContrastLevel');
     expect(source).toContain('<mat-radio-group');
     expect(source).toContain('<mat-text-field');
+    expect(source).toContain('type="color"');
+    expect(source).toContain('openColorPicker');
+    expect(source).toContain('#trailing');
     expect(source).toContain('<mat-slider');
   });
 
