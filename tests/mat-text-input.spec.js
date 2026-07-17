@@ -82,11 +82,13 @@ describe('文本输入组件', () => {
       },
     });
     const input = wrapper.get('input');
-    const label = wrapper.get('label.mat-text-input__label');
+    const label = wrapper.get('.mat-text-input__label');
+    const labelControl = wrapper.get('label.mat-text-input__main');
     const outline = wrapper.get('fieldset.mat-text-input__outline');
 
     expect(input.attributes('id')).toBeTruthy();
-    expect(label.attributes('for')).toBe(input.attributes('id'));
+    expect(labelControl.attributes('for')).toBe(input.attributes('id'));
+    expect(label.element.tagName).toBe('SPAN');
     expect(outline.attributes('aria-hidden')).toBe('true');
     expect(outline.get('legend').text()).toBe('邮箱');
   });
@@ -158,6 +160,30 @@ describe('文本输入组件', () => {
     await input.trigger('focus');
 
     expect(wrapper.classes()).toContain('mat-text-input--floating');
+  });
+
+  it('点击 prefixText 和 suffixText 时聚焦输入框', async () => {
+    const wrapper = mount(MatTextField, {
+      attachTo: document.body,
+      props: {
+        modelValue: 'example',
+        label: '网址',
+        prefixText: 'https://',
+        suffixText: '.example.com',
+      },
+    });
+    const input = wrapper.get('input');
+
+    await wrapper.get('.mat-text-input__prefix').trigger('click');
+
+    expect(document.activeElement).toBe(input.element);
+
+    await input.trigger('blur');
+    await wrapper.get('.mat-text-input__suffix').trigger('click');
+
+    expect(document.activeElement).toBe(input.element);
+
+    wrapper.unmount();
   });
 
   it('MatTextarea 渲染固定行数的原生 textarea 并支持模型更新', async () => {

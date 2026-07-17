@@ -88,6 +88,7 @@ const emit = defineEmits({
 });
 const attrs = useAttrs();
 const focused = ref(false);
+const controlElement = ref();
 const generatedId = useId();
 const supportingId = `${generatedId}-supporting`;
 const controlId = computed(() => attrs.id || generatedId);
@@ -122,6 +123,10 @@ const nativeAttrs = computed(() => Object.fromEntries(
  */
 function handleInput(event) {
   emit('update:modelValue', event.target.value);
+}
+
+function focusControl() {
+  controlElement.value?.focus();
 }
 </script>
 
@@ -171,14 +176,17 @@ function handleInput(event) {
         <slot name="leading" />
       </MatIcon>
 
-      <span class="mat-text-input__main">
-        <label
+      <label
+        class="mat-text-input__main"
+        :for="controlId"
+        @click="focusControl"
+      >
+        <span
           v-if="label"
           class="mat-text-input__label"
-          :for="controlId"
         >
           {{ label }}<span v-if="required" aria-hidden="true"> *</span>
-        </label>
+        </span>
 
         <span class="mat-text-input__control-row">
           <span v-if="prefixText" class="mat-text-input__affix mat-text-input__prefix">
@@ -187,6 +195,7 @@ function handleInput(event) {
 
           <component
             :is="control"
+            ref="controlElement"
             v-bind="nativeAttrs"
             class="mat-text-input__control"
             :aria-describedby="describedBy"
@@ -208,7 +217,7 @@ function handleInput(event) {
             {{ suffixText }}
           </span>
         </span>
-      </span>
+      </label>
 
       <MatIcon
         v-if="$slots.trailing"
