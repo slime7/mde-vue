@@ -31,6 +31,7 @@ let unregister;
 const paneStyle = computed(() => context?.getPaneStyle(props.id) ?? {
   '--mat-pane-weight': 1,
 });
+const hasSeparator = computed(() => Boolean(context?.hasBoundary(props.id)));
 const hasHandle = computed(() => Boolean(context?.isHandleVisible(props.id)));
 const handleAttributes = computed(() => context?.getHandleAttributes(props.id) ?? {});
 const isActive = computed(() => Boolean(context?.isBoundaryActive(props.id)));
@@ -65,10 +66,11 @@ onBeforeUnmount(() => unregister?.());
   </div>
 
   <div
-    v-if="hasHandle"
+    v-if="hasSeparator"
     class="mat-pane__separator"
   >
     <div
+      v-if="hasHandle"
       class="mat-pane__handle"
       :class="{ 'mat-pane__handle--active': isActive }"
       role="separator"
@@ -109,6 +111,10 @@ onBeforeUnmount(() => unregister?.());
 }
 
 .mat-pane__handle {
+  --mat-panes-handle-current-width: var(--mat-panes-handle-indicator-width);
+  --mat-panes-handle-current-height: var(--mat-panes-handle-indicator-height);
+  --mat-panes-handle-current-color: var(--mat-sys-color-outline);
+  --mat-panes-handle-current-shape: var(--mat-sys-shape-corner-full);
   position: absolute;
   inset-block-start: 50%;
   inset-inline-start: 50%;
@@ -116,65 +122,48 @@ onBeforeUnmount(() => unregister?.());
   inline-size: var(--mat-panes-handle-size);
   block-size: var(--mat-panes-handle-size);
   padding: 0;
-  cursor: col-resize;
-  background: transparent;
+  cursor: default;
   border: 0;
   border-radius: var(--mat-sys-shape-corner-full);
   transform: translate(-50%, -50%);
   touch-action: none;
   user-select: none;
-  isolation: isolate;
 }
 
-.mat-pane__handle::before,
-.mat-pane__handle::after {
+.mat-pane__handle::before {
   position: absolute;
   inset: 50% auto auto 50%;
   content: '';
   pointer-events: none;
-  border-radius: var(--mat-sys-shape-corner-full);
+  inline-size: var(--mat-panes-handle-current-width);
+  block-size: var(--mat-panes-handle-current-height);
+  background: var(--mat-panes-handle-current-color);
+  border-radius: var(--mat-panes-handle-current-shape);
   transform: translate(-50%, -50%);
+  transition: background-color var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), border-radius var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), block-size var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), inline-size var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
 }
 
-.mat-pane__handle::before {
-  z-index: 1;
-  inline-size: var(--mat-panes-handle-indicator-width);
-  block-size: var(--mat-panes-handle-indicator-height);
-  background: var(--mat-sys-color-outline);
-  transition: background-color var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
-}
-
-.mat-pane__handle::after {
-  z-index: -1;
-  inline-size: var(--mat-panes-handle-state-layer-size);
-  block-size: var(--mat-panes-handle-state-layer-size);
-  background: var(--mat-sys-color-on-surface);
-  opacity: 0;
-  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
-}
-
-.mat-pane__handle:focus-visible {
+.mat-pane__handle:focus-visible::before {
   outline: var(--mat-sys-interaction-focus-ring-width) solid var(--mat-sys-color-primary);
   outline-offset: var(--mat-sys-interaction-focus-ring-offset);
 }
 
-.mat-pane__handle--active::before {
-  background: var(--mat-sys-color-primary);
+.mat-pane__handle:active {
+  --mat-panes-handle-current-width: var(--mat-panes-handle-pressed-width);
+  --mat-panes-handle-current-height: var(--mat-panes-handle-pressed-height);
+  --mat-panes-handle-current-color: var(--mat-sys-color-on-surface);
+  --mat-panes-handle-current-shape: var(--mat-sys-shape-corner-medium);
 }
 
-.mat-pane__handle--active::after {
-  opacity: var(--mat-sys-state-dragged-state-layer-opacity);
-}
-
-@media (hover: hover) {
-  .mat-pane__handle:hover::after {
-    opacity: var(--mat-sys-state-hover-state-layer-opacity);
-  }
+.mat-pane__handle--active {
+  --mat-panes-handle-current-width: var(--mat-panes-handle-dragged-width);
+  --mat-panes-handle-current-height: var(--mat-panes-handle-dragged-height);
+  --mat-panes-handle-current-color: var(--mat-sys-color-on-surface);
+  --mat-panes-handle-current-shape: var(--mat-sys-shape-corner-medium);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mat-pane__handle::before,
-  .mat-pane__handle::after {
+  .mat-pane__handle::before {
     transition-duration: 0s;
   }
 }

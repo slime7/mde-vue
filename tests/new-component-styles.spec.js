@@ -176,4 +176,26 @@ describe('新增组件现代 CSS', () => {
       '.mat-action-base:disabled,\n.mat-action-base--disabled { cursor: not-allowed; }',
     );
   });
+
+  it('Panes 使用 Material 3 拖拽控件的间距、状态尺寸和焦点形状', () => {
+    const source = readFileSync('src/components/mat-panes/MatPane.vue', 'utf8');
+    const tokens = readFileSync('src/styles/index.css', 'utf8');
+
+    expect(tokens).toContain('--mat-panes-divider-space: 24px');
+    expect(tokens).toContain('--mat-panes-handle-indicator-width: 4px');
+    expect(tokens).toContain('--mat-panes-handle-indicator-height: 48px');
+    expect(tokens).toContain('--mat-panes-handle-pressed-width: 12px');
+    expect(tokens).toContain('--mat-panes-handle-pressed-height: 52px');
+    expect(tokens).toContain('--mat-panes-handle-dragged-width: 12px');
+    expect(tokens).toContain('--mat-panes-handle-dragged-height: 52px');
+    expect(source).toContain('cursor: default');
+    expect(source).toContain('.mat-pane__handle:active');
+    expect(source).toContain('var(--mat-panes-handle-pressed-width)');
+    expect(source).toContain('var(--mat-panes-handle-pressed-height)');
+    expect(source).toContain('.mat-pane__handle--active');
+    expect(source).toContain('var(--mat-panes-handle-dragged-width)');
+    expect(source).toContain('var(--mat-panes-handle-dragged-height)');
+    expect(source).toContain('.mat-pane__handle:focus-visible::before');
+    expect(source).not.toContain('.mat-pane__handle::after');
+  });
 });

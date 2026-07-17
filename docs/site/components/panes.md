@@ -86,7 +86,7 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `sizes` | `Record<string, number>` | 必填 | 以 `MatPane.id` 为键的受控权重对象；值必须是非负有限数。可保留暂时隐藏 Pane 的键 |
-| `resizable` | `boolean` | `true` | 是否在相邻 Pane 之间显示调整控件 |
+| `resizable` | `boolean` | `true` | 是否在相邻 Pane 之间显示调整控件；设为 `false` 时仍保留 24px 的 Pane 间距 |
 
 权重只决定可见 Pane 的相对宽度，调整空间本身不计入 Pane 权重。缺少可见 Pane 权重时组件会发出开发警告并临时使用等分权重；重复 `id` 也会发出开发警告。
 
@@ -120,7 +120,7 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 
 ## 状态与键盘
 
-调整控件在普通、hover、focus-visible、按下和拖动状态之间切换，交互目标为 48px，并在 `MatPanes` 高度方向垂直居中。控件使用 `role="separator"` 与垂直方向语义；左右键每次调整 16px，Shift 加速为 64px，Home/End 移到边界，Enter 在折叠左侧 Pane 与最近一次非零比例间切换。指针拖动期间只更新内部预览，释放后才触发 `update:sizes`。
+相邻 Pane 之间的分隔空间为 24px；调整控件交互目标为 48px，并在 `MatPanes` 高度方向垂直居中。Material 3 的默认指示条为 4×48px 胶囊，悬停时不增加独立背景层，按下或拖动时切换为 12×52px、圆角为 `corner-medium` 的 `on-surface` 形状；分隔空间本身不绘制额外背景，指针使用默认样式，键盘焦点轮廓跟随指示条形状。控件使用 `role="separator"` 与垂直方向语义；左右键每次调整 16px，Shift 加速为 64px，Home/End 移到边界，Enter 在折叠左侧 Pane 与最近一次非零比例间切换。指针拖动期间只更新内部预览，释放后才触发 `update:sizes`。
 
 Material 3 Panes 通常建议不超过三个可见 Pane，并根据窗口等级选择单 Pane、双 Pane 或三 Pane；这是布局使用规范，组件不会限制 Pane 数量。fixed、temporary、floating、docked Pane、自动折叠和尺寸持久化不属于当前能力，应用可自行在外部实现。
 

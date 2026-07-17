@@ -180,9 +180,24 @@ describe('MatPanes', () => {
     expect(wrapper.emitted('update:sizes')).toBeUndefined();
   });
 
-  it('可以关闭自动调整控件', () => {
+  it('可以关闭自动调整控件', async () => {
     const wrapper = mountPanes({ resizable: false });
+    await nextTick();
 
+    expect(wrapper.findAll('.mat-pane__handle')).toHaveLength(0);
+    expect(wrapper.findAll('.mat-pane__separator')).toHaveLength(2);
+  });
+
+  it('关闭调整时保留 Pane 之间的分隔空间', async () => {
+    const wrapper = mountPanes();
+
+    await nextTick();
+    expect(wrapper.findAll('.mat-pane__separator')).toHaveLength(2);
+
+    await wrapper.setProps({ resizable: false });
+    await nextTick();
+
+    expect(wrapper.findAll('.mat-pane__separator')).toHaveLength(2);
     expect(wrapper.findAll('.mat-pane__handle')).toHaveLength(0);
   });
 

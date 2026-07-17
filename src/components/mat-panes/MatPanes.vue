@@ -185,6 +185,14 @@ function isHandleVisible(id) {
  * @param {string} id
  * @returns {boolean}
  */
+function hasBoundary(id) {
+  return getBoundary(id) !== null;
+}
+
+/**
+ * @param {string} id
+ * @returns {boolean}
+ */
 function isBoundaryActive(id) {
   return getBoundary(id)?.key === activeBoundaryKey.value;
 }
@@ -592,6 +600,7 @@ function handleWindowResize() {
 const context = {
   getHandleAttributes,
   getPaneStyle,
+  hasBoundary,
   handleKeyDown,
   handlePointerDown,
   handlePointerMove,
