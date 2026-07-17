@@ -95,6 +95,8 @@ import { MatSpacer } from 'mdu-ui/components/mat-spacer';
 import { MatLoader } from 'mdu-ui/components/mat-loader';
 import { MatTooltip } from 'mdu-ui/components/mat-tooltip';
 import { MatSnackbar } from 'mdu-ui/components/mat-snackbar';
+import { MatPanes } from 'mdu-ui/components/mat-panes';
+import { MatPane } from 'mdu-ui/components/mat-pane';
 import {
   alert,
   confirm,

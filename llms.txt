@@ -30,3 +30,4 @@
 - [Divider 分隔线](docs/site/components/divider.md): mat-divider 的 Material 3 全宽、起始缩进和两侧缩进样式。
 - [Snackbar 消息提示](docs/site/components/snackbar.md): mat-snackbar 的 Material 3 底部消息提示、文字 action、全局 FIFO 队列和 Promise 函数。
 - [Spacer 弹性占位](docs/site/components/spacer.md): mat-spacer 在 flex 布局中占据主轴剩余空间。
+- [Panes 布局面板](docs/site/components/panes.md): mat-panes 与 mat-pane 的横向多窗口布局、受控宽度调整、断点事件和低频宽度信息。

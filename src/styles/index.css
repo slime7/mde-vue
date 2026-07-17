@@ -326,6 +326,13 @@
   --mat-menu-group-space: 2px;
   --mat-menu-group-label-height: 32px;
 
+  /* Panes component tokens */
+  --mat-panes-divider-space: 8px;
+  --mat-panes-handle-size: 48px;
+  --mat-panes-handle-state-layer-size: 40px;
+  --mat-panes-handle-indicator-width: 4px;
+  --mat-panes-handle-indicator-height: 24px;
+
   /* List and divider component tokens */
   --mat-list-container-shape: var(--mat-sys-shape-corner-large);
   --mat-list-segmented-gap: 2px;

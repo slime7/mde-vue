@@ -154,6 +154,12 @@ Tooltip 只实现 Material 3 Plain tooltip，不提供 color、Rich 内容、操
 
 `snackbar(options)` 与别名 `toast` 只从 `mdu-ui/functions` 导入，必须接收包含非空 `text` 的对象；可选 `actionText` 和 `onAction` 分别提供文字 action 与其回调，`onAction` 必须是函数。函数返回在退出动画和单个命令式宿主清理完成后结算的 `Promise<void>`。命令式请求没有 Slots 或取消句柄，但与模板组件使用同一个全局队列，并读取最后安装的插件图标与主题上下文。Snackbar 固定为 `role="status"`、`aria-live="polite"`，从不主动移动焦点。
 
+## Panes 布局面板
+
+`<mat-panes>` 与 `<mat-pane>` 组成横向 flexible Pane 布局。`MatPane.id` 是当前实例中的唯一稳定键，同时对应 `sizes` 与根 DOM id；`MatPanes.sizes` 始终由使用方受控，组件只预览拖动结果并在释放或键盘操作后发出 `update:sizes`。相邻 Pane 的权重总和保持不变，零权重允许 Pane 折叠但不代替应用执行 `v-if`。
+
+Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父级必须提供确定的块轴尺寸才能形成内部滚动边界。调整控件占用 8px 分隔空间，48px 交互目标在 Pane 高度方向居中，使用 `role="separator"`、垂直方向和左右键语义。`resizeLabel` 由使用方提供给后方分隔控件作为可访问名称；Pane 数量、内容顺序、断点后的显隐和尺寸持久化属于使用方责任。
+
 ## 文档权威关系
 
 `docs/site/` 中人工编辑的 Markdown 使用页面是组件说明的权威来源。`llms.txt` 只提供适合 AI 发现内容的索引，`llms-full.txt` 是这些页面的合并文本；两者均为可重复生成的派生文件，不接受手工修补。
