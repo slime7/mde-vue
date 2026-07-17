@@ -5748,7 +5748,7 @@ const open = ref(false);
 <script setup>
 import { ref } from 'vue';
 
-const open = ref(true);
+const open = ref(false);
 </script>
 ```
 ```vue
@@ -5854,7 +5854,7 @@ function showContextMenu(event) {
 <script setup>
 import { ref } from 'vue';
 
-const open = ref(true);
+const open = ref(false);
 </script>
 ```
 ```vue
@@ -5905,7 +5905,7 @@ const open = ref(true);
 <script setup>
 import { ref } from 'vue';
 
-const open = ref(true);
+const open = ref(false);
 </script>
 ```
 ```vue
@@ -5957,7 +5957,7 @@ const open = ref(true);
 <script setup>
 import { ref } from 'vue';
 
-const open = ref(true);
+const open = ref(false);
 </script>
 ```
 ```vue
@@ -6010,7 +6010,7 @@ const open = ref(true);
 <script setup>
 import { ref } from 'vue';
 
-const open = ref(true);
+const open = ref(false);
 </script>
 ```
 ```vue
@@ -6056,7 +6056,7 @@ const open = ref(true);
 <script setup>
 import { ref } from 'vue';
 
-const open = ref(true);
+const open = ref(false);
 </script>
 ```
 ```vue
@@ -6100,7 +6100,7 @@ const open = ref(true);
 <script setup>
 import { ref } from 'vue';
 
-const open = ref(true);
+const open = ref(false);
 </script>
 ```
 ```vue
@@ -6149,7 +6149,7 @@ const open = ref(true);
 <script setup>
 import { ref } from 'vue';
 
-const open = ref(true);
+const open = ref(false);
 </script>
 ```
 ```vue
@@ -6198,7 +6198,7 @@ const open = ref(true);
 <script setup>
 import { ref } from 'vue';
 
-const open = ref(true);
+const open = ref(false);
 </script>
 ```
 ```vue
@@ -6247,7 +6247,7 @@ const open = ref(true);
 <script setup>
 import { ref } from 'vue';
 
-const open = ref(true);
+const open = ref(false);
 </script>
 ```
 ```vue
@@ -6299,7 +6299,7 @@ const open = ref(true);
 <script setup>
 import { ref } from 'vue';
 
-const open = ref(true);
+const open = ref(false);
 </script>
 ```
 ```vue

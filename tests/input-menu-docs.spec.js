@@ -69,6 +69,29 @@ describe('文本输入与菜单文档', () => {
     expect(source).toContain('color="#6750a4"');
   });
 
+  it('Menu 页面示例默认关闭菜单，避免加载时抢占焦点', () => {
+    [
+      'MenuColorExample.vue',
+      'MenuDefaultSlotExample.vue',
+      'MenuGroupExample.vue',
+      'MenuItemDefaultSlotExample.vue',
+      'MenuItemDisabledExample.vue',
+      'MenuItemLeadingSlotExample.vue',
+      'MenuItemSubmenuSlotExample.vue',
+      'MenuItemSupportingSlotExample.vue',
+      'MenuItemTrailingSlotExample.vue',
+      'MenuOffsetExample.vue',
+      'MenuVariantExample.vue',
+    ].forEach((fileName) => {
+      const source = readFileSync(
+        resolve('docs/site/examples/menu', fileName),
+        'utf8',
+      );
+
+      expect(source, fileName).toContain('const open = ref(false);');
+    });
+  });
+
   it('窄屏文档表格在自身内部滚动', () => {
     const source = readFileSync(
       resolve('docs/site/.vitepress/theme/custom.css'),
