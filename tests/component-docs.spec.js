@@ -13,21 +13,36 @@ const componentDocs = readdirSync(componentsDirectory)
 describe('组件文档约束', () => {
   it('所有实际预览都与源码包含指令一一对应', () => {
     componentDocs.forEach(({ fileName, source }) => {
-      const snippetPaths = [...source.matchAll(/^<<< @\/(.+\.vue)$/gm)]
+      const snippetMatches = [...source.matchAll(
+        /^<<< @\/([^\s]+\.vue)(?:#[^\s]+)?(?:\s+\[[^\]]+\])?$/gm,
+      )];
+      const snippetPaths = snippetMatches.map((match) => match[1]);
+      const codeGroupBlocks = [...source.matchAll(/::: code-group([\s\S]*?):::/g)]
         .map((match) => match[1]);
+      const codeGroupSnippetMatches = codeGroupBlocks.flatMap((block) => (
+        [...block.matchAll(/^<<< @\/([^\s]+\.vue)/gm)].map((match) => match[1])
+      ));
+      const codeGroupSnippetPaths = new Set(codeGroupSnippetMatches);
       const previewCount = [...source.matchAll(/<DocsPreview\b/g)].length;
 
       expect(source, fileName).not.toContain('```vue');
-      expect(snippetPaths.length, fileName).toBe(previewCount);
+      expect(
+        snippetPaths.length - codeGroupSnippetMatches.length + codeGroupBlocks.length,
+        fileName,
+      ).toBe(previewCount);
       expect(previewCount, fileName).toBeGreaterThan(0);
 
-      snippetPaths.forEach((snippetPath) => {
-        const componentName = basename(snippetPath, '.vue');
-        const relativeImportPath = `../${snippetPath}`;
-
+      snippetMatches.forEach((match) => {
+        const snippetPath = match[1];
         expect(existsSync(resolve('docs/site', snippetPath)), snippetPath).toBe(true);
-        expect(source).toContain(`import ${componentName} from '${relativeImportPath}';`);
-        expect(source).toContain(`<${componentName} />`);
+
+        if (!codeGroupSnippetPaths.has(snippetPath)) {
+          const componentName = basename(snippetPath, '.vue');
+          const relativeImportPath = `../${snippetPath}`;
+
+          expect(source).toContain(`import ${componentName} from '${relativeImportPath}';`);
+          expect(source).toContain(`<${componentName} />`);
+        }
       });
     });
   });

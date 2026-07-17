@@ -30,7 +30,15 @@ order: 50
 ### `block`
 
 ::: details 查看示例代码
-<<< @/examples/button/ButtonBlockExample.vue
+::: code-group
+
+<<< @/examples/button/ButtonBlockExample.vue#script [script]
+
+<<< @/examples/button/ButtonBlockExample.vue#template [template]
+
+<<< @/examples/button/ButtonBlockExample.vue#style [style]
+
+:::
 :::
 
 <ClientOnly>

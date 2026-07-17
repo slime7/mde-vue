@@ -971,26 +971,15 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 ### `block`
 
 ::: details 查看示例代码
-```vue
-<template>
-  <div class="example-stack">
-    <mat-btn>普通宽度</mat-btn>
-    <mat-btn block>
-      块级宽度
-    </mat-btn>
-  </div>
-</template>
+::: code-group
 
-<style scoped>
-.example-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: flex-start;
-  inline-size: min(100%, 360px);
-}
-</style>
-```
+<<< @/examples/button/ButtonBlockExample.vue#script [script]
+
+<<< @/examples/button/ButtonBlockExample.vue#template [template]
+
+<<< @/examples/button/ButtonBlockExample.vue#style [style]
+
+:::
 :::
 
 <ClientOnly>
