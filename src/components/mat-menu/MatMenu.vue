@@ -16,6 +16,8 @@ defineOptions({
   inheritAttrs: false,
 });
 
+const CLOSE_DURATION = 200;
+
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -69,6 +71,7 @@ const generatedId = useId().replace(/[^\w-]/g, '-');
 const menuId = computed(() => attrs.id ?? `${generatedId}-menu`);
 const anchorName = `--mat-menu-anchor-${generatedId}`;
 const nestedOpen = ref(false);
+const phase = ref('closed');
 const pointerHistory = parentMenu?.pointerHistory ?? {
   current: { x: 0, y: 0 },
   previous: { x: 0, y: 0 },
@@ -79,6 +82,7 @@ let attachedAnchor = null;
 let previousAnchorName = '';
 let popoverShown = false;
 let programmaticClose = false;
+let phaseTimer;
 let viewportFrame;
 let sizeObserver;
 let returnFocusElement = null;
@@ -203,14 +207,51 @@ function attachAnchor() {
   return anchorElement;
 }
 
-function hidePopover() {
+function clearPhaseTimer() {
+  if (phaseTimer !== undefined) {
+    window.clearTimeout(phaseTimer);
+    phaseTimer = undefined;
+  }
+}
+
+function prefersReducedMotion() {
+  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+}
+
+function finishClose() {
+  if (root.value && popoverShown) {
+    popoverShown = false;
+    programmaticClose = true;
+    root.value.hidePopover?.();
+  }
+
+  phase.value = 'closed';
+}
+
+function hidePopover({ immediate = false } = {}) {
   if (!root.value || !popoverShown) {
     return;
   }
 
-  popoverShown = false;
   programmaticClose = true;
-  root.value.hidePopover?.();
+  closeDescendants({ immediate: true });
+
+  if (immediate || prefersReducedMotion()) {
+    clearPhaseTimer();
+    finishClose();
+    return;
+  }
+
+  if (phase.value === 'closing') {
+    return;
+  }
+
+  phase.value = 'closing';
+  clearPhaseTimer();
+  phaseTimer = window.setTimeout(() => {
+    phaseTimer = undefined;
+    finishClose();
+  }, CLOSE_DURATION);
 }
 
 function clampToViewport() {
@@ -266,6 +307,8 @@ function scheduleViewportClamp() {
 }
 
 async function showPopover() {
+  clearPhaseTimer();
+  programmaticClose = false;
   await nextTick();
   const anchorElement = isCoordinateAnchor.value ? null : attachAnchor();
   const hasAnchor = isCoordinateAnchor.value || Boolean(anchorElement);
@@ -291,6 +334,8 @@ async function showPopover() {
     root.value.showPopover?.();
   }
 
+  phase.value = 'open';
+
   if (isNested.value) {
     itemParent.submenuOpen.value = true;
   }
@@ -307,12 +352,12 @@ function focusAnchor() {
   nextTick(() => focusTarget?.focus());
 }
 
-function closeDescendants() {
-  itemApis.forEach((api) => api.closeSubmenu());
+function closeDescendants({ immediate = false } = {}) {
+  itemApis.forEach((api) => api.closeSubmenu({ immediate }));
 }
 
-function closeSelf({ focus = true } = {}) {
-  closeDescendants();
+function closeSelf({ focus = true, immediate = false } = {}) {
+  closeDescendants({ immediate });
 
   if (isNested.value) {
     nestedOpen.value = false;
@@ -321,7 +366,7 @@ function closeSelf({ focus = true } = {}) {
     emit('update:modelValue', false);
   }
 
-  hidePopover();
+  hidePopover({ immediate });
 
   if (focus) {
     focusAnchor();
@@ -494,6 +539,7 @@ onUpdated(() => {
   }
 });
 onBeforeUnmount(() => {
+  clearPhaseTimer();
   if (viewportFrame !== undefined) {
     cancelAnimationFrame(viewportFrame);
   }
@@ -501,7 +547,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', scheduleViewportClamp);
   window.removeEventListener('scroll', scheduleViewportClamp, { capture: true });
   unbindPointerListener();
-  hidePopover();
+  hidePopover({ immediate: true });
   detachAnchor();
   itemParent?.unregisterSubmenu();
 });
@@ -572,6 +618,7 @@ watch(() => props.offset, async () => {
         'mat-menu--coordinate': isCoordinateAnchor,
         'mat-menu--grouped': isGrouped,
         'mat-menu--nested': isNested,
+        'mat-menu--closing': phase === 'closing',
       },
     ]"
     :style="rootStyle"
@@ -628,6 +675,13 @@ watch(() => props.offset, async () => {
   transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), transform var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized-decelerate);
 }
 
+.mat-menu--closing {
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(.96);
+  transition-duration: var(--mat-sys-motion-duration-short4);
+}
+
 .mat-menu__surface {
   display: block;
   box-sizing: border-box;
@@ -639,6 +693,11 @@ watch(() => props.offset, async () => {
   border-radius: inherit;
   clip-path: inset(0 round var(--mat-sys-shape-corner-large));
   transition: clip-path var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized-decelerate);
+}
+
+.mat-menu--closing:not(.mat-menu--grouped) .mat-menu__surface {
+  clip-path: inset(46% 8% round var(--mat-sys-shape-corner-extra-large));
+  transition-duration: var(--mat-sys-motion-duration-short4);
 }
 
 .mat-menu--coordinate {

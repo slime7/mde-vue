@@ -17,6 +17,7 @@ import { getTooltipPosition, TOOLTIP_LOCATIONS } from '../tooltip-position';
 import { activateTooltip, deactivateTooltip } from '../tooltip-stack';
 
 const CLOSE_DELAY = 1500;
+const CLOSE_DURATION = 150;
 
 defineOptions({
   name: 'MatTooltip',
@@ -71,8 +72,10 @@ const activatorHost = ref(null);
 const targetElement = shallowRef(null);
 const teleportTarget = shallowRef(null);
 const tooltipElement = ref(null);
+const rendered = ref(false);
 const isDisplayed = ref(false);
 const isPositioned = ref(false);
+const phase = ref('closed');
 const appliedLocation = ref('top');
 const positionStyle = ref({});
 const suppressed = ref(false);
@@ -94,6 +97,7 @@ const isControlled = Object.prototype.hasOwnProperty.call(rawVNodeProps, 'modelV
 
 let closeTimer;
 let openTimer;
+let phaseTimer;
 let positionFrame;
 let positionFrameUsesAnimation = false;
 let resizeObserver;
@@ -225,6 +229,35 @@ function clearCloseTimer() {
   }
 }
 
+function clearPhaseTimer() {
+  if (phaseTimer !== undefined) {
+    window.clearTimeout(phaseTimer);
+    phaseTimer = undefined;
+  }
+}
+
+function prefersReducedMotion() {
+  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+}
+
+/**
+ * @param {number} duration
+ * @param {() => void} callback
+ */
+function waitForPhase(duration, callback) {
+  clearPhaseTimer();
+
+  if (prefersReducedMotion()) {
+    callback();
+    return;
+  }
+
+  phaseTimer = window.setTimeout(() => {
+    phaseTimer = undefined;
+    callback();
+  }, duration);
+}
+
 function clearPositionFrame() {
   if (positionFrame === undefined) {
     return;
@@ -347,15 +380,39 @@ function startPositioning() {
   }
 }
 
-function hideTooltip() {
+function finishClose() {
+  rendered.value = false;
+  phase.value = 'closed';
+  isDisplayed.value = false;
+  isPositioned.value = false;
+  teleportTarget.value = null;
+}
+
+function hideTooltip({ immediate = false } = {}) {
   clearOpenTimer();
   clearCloseTimer();
   stopPositioning();
   restoreDescribedBy();
   deactivateTooltip(stackEntry);
+
+  if (!rendered.value) {
+    finishClose();
+    return;
+  }
+
+  if (!immediate && phase.value === 'closing') {
+    return;
+  }
+
+  if (immediate) {
+    clearPhaseTimer();
+    finishClose();
+    return;
+  }
+
   isDisplayed.value = false;
-  isPositioned.value = false;
-  teleportTarget.value = null;
+  phase.value = 'closing';
+  waitForPhase(CLOSE_DURATION, finishClose);
 }
 
 function requestClose() {
@@ -556,11 +613,14 @@ async function showTooltip() {
 
   clearOpenTimer();
   clearCloseTimer();
+  clearPhaseTimer();
   activateTooltip(stackEntry);
   teleportTarget.value = attach;
   appliedLocation.value = props.location;
   positionStyle.value = { left: '0px', top: '0px' };
   isPositioned.value = false;
+  phase.value = 'opening';
+  rendered.value = true;
   isDisplayed.value = true;
   await nextTick();
 
@@ -590,8 +650,9 @@ onUpdated(() => {
 });
 onBeforeUnmount(() => {
   mounted = false;
+  clearPhaseTimer();
   unbindTargetListeners();
-  hideTooltip();
+  hideTooltip({ immediate: true });
 });
 watch(() => props.modelValue, (open) => {
   if (!mounted || !isControlled) {
@@ -659,13 +720,16 @@ watch(tooltipId, () => {
     <slot name="activator" />
   </span>
 
-  <Teleport v-if="isDisplayed && teleportTarget" :to="teleportTarget">
+  <Teleport v-if="rendered && teleportTarget" :to="teleportTarget">
     <span
       v-bind="$attrs"
       :id="tooltipId"
       ref="tooltipElement"
       class="mat-tooltip"
-      :class="{ 'mat-tooltip--positioned': isPositioned }"
+      :class="[
+        `mat-tooltip--${phase}`,
+        { 'mat-tooltip--positioned': isPositioned },
+      ]"
       :data-location="appliedLocation"
       :style="[positionStyle, $attrs.style]"
       role="tooltip"
@@ -715,6 +779,27 @@ watch(tooltipId, () => {
 
 .mat-tooltip--positioned {
   visibility: visible;
+}
+
+.mat-tooltip--closing {
+  visibility: visible;
+  opacity: 0;
+}
+
+.mat-tooltip--closing[data-location^='top'] {
+  transform: translateY(4px);
+}
+
+.mat-tooltip--closing[data-location^='right'] {
+  transform: translateX(-4px);
+}
+
+.mat-tooltip--closing[data-location^='bottom'] {
+  transform: translateY(-4px);
+}
+
+.mat-tooltip--closing[data-location^='left'] {
+  transform: translateX(4px);
 }
 
 .mat-tooltip[data-slider-value-indicator] {

@@ -39,19 +39,19 @@ let submenuApi;
 let closeTimer;
 const hasSubmenu = computed(() => Boolean(slots.submenu));
 
-function closeSubmenu({ delay = 0, focus = false } = {}) {
+function closeSubmenu({ delay = 0, focus = false, immediate = false } = {}) {
   cancelSubmenuClose();
 
   if (delay > 0) {
     closeTimer = setTimeout(() => {
       submenuOpen.value = false;
-      submenuApi?.close({ focus });
+      submenuApi?.close({ focus, immediate });
     }, delay);
     return;
   }
 
   submenuOpen.value = false;
-  submenuApi?.close({ focus });
+  submenuApi?.close({ focus, immediate });
 }
 
 function cancelSubmenuClose() {
@@ -70,7 +70,7 @@ async function openSubmenu({ pointer = false } = {}) {
 }
 
 /**
- * @param {{close: (options?: {focus?: boolean}) => void, element: import('vue').ComputedRef<HTMLElement | null>, id: import('vue').ComputedRef<string>, open: () => Promise<void>}} api
+ * @param {{close: (options?: {focus?: boolean, immediate?: boolean}) => void, element: import('vue').ComputedRef<HTMLElement | null>, id: import('vue').ComputedRef<string>, open: () => Promise<void>}} api
  */
 function registerSubmenu(api) {
   submenuApi = api;

@@ -268,6 +268,9 @@ describe('MatTooltip', () => {
     await vi.advanceTimersByTimeAsync(1);
     await settleRender();
 
+    await vi.advanceTimersByTimeAsync(150);
+    await settleRender();
+
     expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
 
     wrapper.unmount();
@@ -326,6 +329,16 @@ describe('MatTooltip', () => {
     await wrapper.setProps({ modelValue: false });
     await settleRender();
 
+    const closingTooltip = document.body.querySelector('[role="tooltip"]');
+
+    expect(closingTooltip).not.toBeNull();
+    expect(closingTooltip.classList).toContain('mat-tooltip--closing');
+
+    await vi.advanceTimersByTimeAsync(149);
+    expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
+
+    await vi.advanceTimersByTimeAsync(1);
+    await settleRender();
     expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
 
     wrapper.unmount();
@@ -375,8 +388,12 @@ describe('MatTooltip', () => {
     target.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     await settleRender();
 
-    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+    expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
     expect(target.getAttribute('aria-describedby')).toBe('existing-description');
+
+    await vi.advanceTimersByTimeAsync(150);
+    await settleRender();
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
 
     wrapper.unmount();
   });
@@ -404,8 +421,10 @@ describe('MatTooltip', () => {
 
     const tooltips = [...document.body.querySelectorAll('[role="tooltip"]')];
 
-    expect(tooltips).toHaveLength(1);
-    expect(tooltips[0].textContent).toContain('第二个');
+    expect(tooltips).toHaveLength(2);
+    expect(tooltips.find((tooltip) => tooltip.textContent.includes('第一个'))
+      .classList).toContain('mat-tooltip--closing');
+    expect(tooltips.find((tooltip) => tooltip.textContent.includes('第二个'))).not.toBeNull();
 
     first.unmount();
     second.unmount();
@@ -436,7 +455,8 @@ describe('MatTooltip', () => {
     await hover(secondTarget);
 
     expect(first.emitted('update:modelValue')).toEqual([[false]]);
-    expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('第二个');
+    expect([...document.body.querySelectorAll('[role="tooltip"]')]
+      .find((tooltip) => tooltip.textContent.includes('第二个'))).not.toBeNull();
 
     first.unmount();
     second.unmount();

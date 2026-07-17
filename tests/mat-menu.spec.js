@@ -173,6 +173,42 @@ describe('MatMenu', () => {
     expect(document.activeElement).toBe(anchor);
   });
 
+  it('程序化关闭时保留菜单直到消失动画完成', async () => {
+    vi.useFakeTimers();
+
+    try {
+      const anchor = document.createElement('button');
+
+      anchor.id = 'animated-dismiss-trigger';
+      document.body.append(anchor);
+      const wrapper = mount(MatMenu, {
+        attachTo: document.body,
+        props: { modelValue: true, anchor: 'animated-dismiss-trigger' },
+        slots: { default: () => h(MatMenuItem, null, () => '动画菜单') },
+      });
+
+      await nextTick();
+      const menu = wrapper.get('[role="menu"]');
+
+      await wrapper.setProps({ modelValue: false });
+      await nextTick();
+
+      expect(menu.classes()).toContain('mat-menu--closing');
+      expect(menu.element.dataset.popoverOpen).toBe('');
+
+      await vi.advanceTimersByTimeAsync(199);
+      expect(menu.element.dataset.popoverOpen).toBe('');
+
+      await vi.advanceTimersByTimeAsync(1);
+      await nextTick();
+      expect(menu.element.dataset.popoverOpen).toBeUndefined();
+
+      wrapper.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('程序化关闭并重开后仍响应浏览器发起的关闭', async () => {
     const anchor = document.createElement('button');
 
