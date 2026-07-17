@@ -79,4 +79,18 @@ describe('组件文档约束', () => {
       expect(source, filePath).toContain('先写测试，再改代码');
     });
   });
+
+  it('需要占满预览区的网格示例声明完整宽度', () => {
+    [
+      'docs/site/examples/panes/PanesBreakpointExample.vue',
+      'docs/site/examples/panes/PanesResizableExample.vue',
+      'docs/site/examples/panes/PanesWidthsExample.vue',
+      'docs/site/examples/tooltip/TooltipLocationExample.vue',
+      'docs/site/examples/menu/MenuContextExample.vue',
+    ].forEach((filePath) => {
+      const source = readFileSync(resolve(filePath), 'utf8');
+
+      expect(source, filePath).toContain('inline-size: 100%;');
+    });
+  });
 });

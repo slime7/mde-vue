@@ -58,6 +58,7 @@ function updateBreakpoint(nextBreakpoint) {
 .panes-breakpoint-example {
   display: grid;
   gap: 12px;
+  inline-size: 100%;
 }
 
 .panes-breakpoint-example__layout {

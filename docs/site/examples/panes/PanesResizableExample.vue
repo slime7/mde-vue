@@ -47,6 +47,7 @@ const resizable = ref(true);
 .panes-resizable-example {
   display: grid;
   gap: 12px;
+  inline-size: 100%;
 }
 
 .panes-resizable-example__layout {

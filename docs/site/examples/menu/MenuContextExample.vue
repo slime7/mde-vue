@@ -38,6 +38,7 @@ function showContextMenu(event) {
   display: grid;
   min-block-size: 160px;
   place-items: center;
+  inline-size: 100%;
   color: var(--mat-sys-color-on-surface-variant);
   background: var(--mat-sys-color-surface-container);
   border: 1px dashed var(--mat-sys-color-outline);

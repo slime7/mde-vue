@@ -5810,6 +5810,7 @@ function showContextMenu(event) {
   display: grid;
   min-block-size: 160px;
   place-items: center;
+  inline-size: 100%;
   color: var(--mat-sys-color-on-surface-variant);
   background: var(--mat-sys-color-surface-container);
   border: 1px dashed var(--mat-sys-color-outline);
@@ -8070,6 +8071,7 @@ const locations = [
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
+  inline-size: 100%;
 }
 
 .tooltip-location-item {
@@ -9331,6 +9333,7 @@ const resizable = ref(true);
 .panes-resizable-example {
   display: grid;
   gap: 12px;
+  inline-size: 100%;
 }
 
 .panes-resizable-example__layout {
@@ -9420,6 +9423,7 @@ function updateBreakpoint(nextBreakpoint) {
 .panes-breakpoint-example {
   display: grid;
   gap: 12px;
+  inline-size: 100%;
 }
 
 .panes-breakpoint-example__layout {
@@ -9499,6 +9503,7 @@ const widths = ref({});
 .panes-widths-example {
   display: grid;
   gap: 12px;
+  inline-size: 100%;
 }
 
 .panes-widths-example__status {

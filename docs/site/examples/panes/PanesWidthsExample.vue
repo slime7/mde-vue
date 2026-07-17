@@ -48,6 +48,7 @@ const widths = ref({});
 .panes-widths-example {
   display: grid;
   gap: 12px;
+  inline-size: 100%;
 }
 
 .panes-widths-example__status {
