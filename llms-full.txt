@@ -234,6 +234,16 @@ matUi.theme.dispose();
 
 `createMatUi()` 接受可选的 `theme` 配置。所有颜色按 Material 2025 phone 规格生成。默认种子色是 `#20a6fc`，默认模式是 `system`，默认配色变体是 `tonal-spot`，默认对比度是 `0`。其他插件选项见 [`createMatUi`](/guide/create-mat-ui)。
 
+<script setup>
+import ThemeSettings from '../.vitepress/theme/ThemeSettings.vue';
+</script>
+
+<ClientOnly>
+  <ThemeSettings />
+</ClientOnly>
+
+上方设置会直接作用于当前文档站：种子色、亮暗模式、配色变体和对比度变化后，页面中的所有 `mat-*` 组件都会读取同一组主题令牌。右上角的外观开关也会跳转到本页，方便进行完整设置。
+
 ## 初始化
 
 在应用入口导入基础样式，并把插件传给 Vue 应用的 `.use()`：
@@ -7969,9 +7979,9 @@ function undo(action) {
     text="项目已删除。"
   >
     <template #action="{ action }">
-      <button class="slot-action" type="button" @click="undo(action)">
+      <mat-btn variant="text" @click="undo(action)">
         恢复项目
-      </button>
+      </mat-btn>
     </template>
   </mat-snackbar>
 </template>

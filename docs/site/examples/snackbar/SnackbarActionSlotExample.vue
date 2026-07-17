@@ -27,9 +27,9 @@ function undo(action) {
     text="项目已删除。"
   >
     <template #action="{ action }">
-      <button class="slot-action" type="button" @click="undo(action)">
+      <mat-btn variant="text" @click="undo(action)">
         恢复项目
-      </button>
+      </mat-btn>
     </template>
   </mat-snackbar>
 </template>

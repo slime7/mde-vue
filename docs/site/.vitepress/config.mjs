@@ -111,7 +111,7 @@ export default defineConfig({
     },
     returnToTopLabel: '返回顶部',
     sidebarMenuLabel: '菜单',
-    darkModeSwitchLabel: '外观',
+    darkModeSwitchLabel: '主题设置',
   },
   vite: {
     plugins: [tailwindcss(), createLlmsArtifactsPlugin()],
