@@ -314,6 +314,82 @@ describe('MatMenu', () => {
     expect(document.activeElement).toBe(parentItem.element);
   });
 
+  it('指针沿三角安全区进入同级项目时延迟关闭原子菜单', async () => {
+    vi.useFakeTimers();
+
+    try {
+      const anchor = document.createElement('button');
+      anchor.id = 'safe-triangle-trigger';
+      document.body.append(anchor);
+      const wrapper = mount(MatMenu, {
+        attachTo: document.body,
+        props: { modelValue: true, anchor: 'safe-triangle-trigger' },
+        slots: {
+          default: () => [
+            h(MatMenuItem, null, {
+              default: () => '文件',
+              submenu: () => h(MatMenu, null, {
+                default: () => h(MatMenuItem, null, () => '打开'),
+              }),
+            }),
+            h(MatMenuItem, null, {
+              default: () => '编辑',
+              submenu: () => h(MatMenu, null, {
+                default: () => h(MatMenuItem, null, () => '撤销'),
+              }),
+            }),
+          ],
+        },
+      });
+
+      await nextTick();
+      const rootMenu = wrapper.findAll('[role="menu"]')[0];
+      const items = rootMenu.findAll('[role="menuitem"]');
+      const firstItem = items[0];
+      const secondItem = items[1];
+      firstItem.element.getBoundingClientRect = () => ({
+        left: 100,
+        top: 100,
+        right: 180,
+        bottom: 140,
+        width: 80,
+        height: 40,
+      });
+
+      await firstItem.trigger('pointerenter');
+      await nextTick();
+      const firstSubmenu = wrapper.findAll('[role="menu"]')[1];
+      firstSubmenu.element.getBoundingClientRect = () => ({
+        left: 180,
+        top: 80,
+        right: 340,
+        bottom: 260,
+        width: 160,
+        height: 180,
+      });
+      rootMenu.element.dispatchEvent(new PointerEvent('pointermove', {
+        clientX: 120,
+        clientY: 120,
+      }));
+      rootMenu.element.dispatchEvent(new PointerEvent('pointermove', {
+        clientX: 170,
+        clientY: 130,
+      }));
+
+      await secondItem.trigger('pointerenter');
+      await nextTick();
+
+      expect(wrapper.findAll('[role="menu"]')).toHaveLength(3);
+      expect(firstItem.attributes('aria-expanded')).toBe('true');
+      await firstSubmenu.trigger('pointerenter');
+      await vi.advanceTimersByTimeAsync(299);
+      await vi.advanceTimersByTimeAsync(301);
+      expect(firstItem.attributes('aria-expanded')).toBe('true');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('关闭根菜单时递归清除所有后代菜单的展开状态', async () => {
     const anchor = document.createElement('button');
 

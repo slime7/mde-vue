@@ -66,6 +66,10 @@ const generatedId = useId().replace(/[^\w-]/g, '-');
 const menuId = computed(() => attrs.id ?? `${generatedId}-menu`);
 const anchorName = `--mat-menu-anchor-${generatedId}`;
 const nestedOpen = ref(false);
+const pointerHistory = parentMenu?.pointerHistory ?? {
+  current: { x: 0, y: 0 },
+  previous: { x: 0, y: 0 },
+};
 const groupCount = ref(0);
 const itemApis = new Map();
 let attachedAnchor = null;
@@ -75,6 +79,7 @@ let programmaticClose = false;
 let viewportFrame;
 let sizeObserver;
 let returnFocusElement = null;
+let pointerListenerAttached = false;
 
 const isNested = computed(() => Boolean(itemParent));
 const isCoordinateAnchor = computed(() => (
@@ -350,10 +355,13 @@ function unregisterGroup() {
 /**
  * @param {object} activeApi
  */
-function closeOtherSubmenus(activeApi) {
+function closeOtherSubmenus(activeApi, { pointer = false } = {}) {
   itemApis.forEach((api) => {
     if (api !== activeApi) {
-      api.closeSubmenu();
+      api.closeSubmenu({
+        delay: pointer ? api.getSubmenuCloseDelay?.() : 0,
+        focus: false,
+      });
     }
   });
 }
@@ -423,12 +431,14 @@ provide(MAT_MENU_KEY, {
   registerGroup,
   unregisterItem,
   unregisterGroup,
+  pointerHistory,
   variant: effectiveVariant,
 });
 
 if (itemParent) {
   itemParent.registerSubmenu({
     close: closeSelf,
+    element: root,
     id: menuId,
     open: showPopover,
   });
@@ -438,6 +448,10 @@ onMounted(() => {
   roving.observe();
   window.addEventListener('resize', scheduleViewportClamp);
   window.addEventListener('scroll', scheduleViewportClamp, { capture: true, passive: true });
+
+  if (effectiveOpen.value) {
+    bindPointerListener();
+  }
 
   if (typeof ResizeObserver !== 'undefined') {
     sizeObserver = new ResizeObserver(scheduleViewportClamp);
@@ -455,14 +469,44 @@ onBeforeUnmount(() => {
   sizeObserver?.disconnect();
   window.removeEventListener('resize', scheduleViewportClamp);
   window.removeEventListener('scroll', scheduleViewportClamp, { capture: true });
+  unbindPointerListener();
   hidePopover();
   detachAnchor();
   itemParent?.unregisterSubmenu();
 });
+
+/**
+ * @param {PointerEvent} event
+ * @returns {void}
+ */
+function trackPointer(event) {
+  pointerHistory.previous = pointerHistory.current;
+  pointerHistory.current = { x: event.clientX, y: event.clientY };
+}
+
+function bindPointerListener() {
+  if (parentMenu || pointerListenerAttached) {
+    return;
+  }
+
+  document.addEventListener('pointermove', trackPointer, true);
+  pointerListenerAttached = true;
+}
+
+function unbindPointerListener() {
+  if (!pointerListenerAttached) {
+    return;
+  }
+
+  document.removeEventListener('pointermove', trackPointer, true);
+  pointerListenerAttached = false;
+}
 watch(effectiveOpen, (open) => {
   if (open) {
+    bindPointerListener();
     showPopover();
   } else {
+    unbindPointerListener();
     hidePopover();
   }
 });
@@ -498,6 +542,7 @@ watch(() => props.offset, async () => {
     :style="rootStyle"
     popover="auto"
     role="menu"
+    @pointerenter="itemParent?.cancelSubmenuClose()"
     @focusin="roving.handleFocusIn"
     @keydown="handleKeyDown"
     @toggle="handleToggle"

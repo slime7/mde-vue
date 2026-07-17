@@ -7,13 +7,15 @@ import MatActionBase from '../MatActionBase.vue';
 import MatItemContentBase from '../MatItemContentBase.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
 import {
-  MAT_MENU_GROUP_KEY, MAT_MENU_ITEM_KEY, MAT_MENU_KEY,
+  isPointInMenuSafeTriangle, MAT_MENU_GROUP_KEY, MAT_MENU_ITEM_KEY, MAT_MENU_KEY,
 } from '../menu-context';
 
 defineOptions({
   name: 'MatMenuItem',
   inheritAttrs: false,
 });
+
+const SUBMENU_SAFE_CLOSE_DELAY = 300;
 
 const props = defineProps({
   disabled: {
@@ -34,25 +36,41 @@ const submenuOpen = ref(false);
 const submenuId = ref(undefined);
 const position = ref('only');
 let submenuApi;
+let closeTimer;
 const hasSubmenu = computed(() => Boolean(slots.submenu));
 
-function closeSubmenu() {
+function closeSubmenu({ delay = 0, focus = false } = {}) {
+  cancelSubmenuClose();
+
+  if (delay > 0) {
+    closeTimer = setTimeout(() => {
+      submenuOpen.value = false;
+      submenuApi?.close({ focus });
+    }, delay);
+    return;
+  }
+
   submenuOpen.value = false;
-  submenuApi?.close({ focus: false });
+  submenuApi?.close({ focus });
 }
 
-async function openSubmenu() {
+function cancelSubmenuClose() {
+  clearTimeout(closeTimer);
+  closeTimer = undefined;
+}
+
+async function openSubmenu({ pointer = false } = {}) {
   if (!hasSubmenu.value || props.disabled) {
     return;
   }
 
-  menu?.closeOtherSubmenus(itemApi);
+  menu?.closeOtherSubmenus(itemApi, { pointer });
   submenuOpen.value = true;
   await submenuApi?.open();
 }
 
 /**
- * @param {{close: (options?: {focus?: boolean}) => void, id: import('vue').ComputedRef<string>, open: () => Promise<void>}} api
+ * @param {{close: (options?: {focus?: boolean}) => void, element: import('vue').ComputedRef<HTMLElement | null>, id: import('vue').ComputedRef<string>, open: () => Promise<void>}} api
  */
 function registerSubmenu(api) {
   submenuApi = api;
@@ -71,6 +89,22 @@ const itemApi = {
   grouped: Boolean(group),
   setPosition(value) {
     position.value = value;
+  },
+  getSubmenuCloseDelay() {
+    if (!submenuApi?.element?.value || !menu?.pointerHistory || !element.value) {
+      return 0;
+    }
+
+    const itemRect = element.value.getBoundingClientRect();
+    const submenuRect = submenuApi.element.value.getBoundingClientRect();
+    const side = submenuRect.left < itemRect.left ? 'left' : 'right';
+
+    return isPointInMenuSafeTriangle(
+      menu.pointerHistory.current,
+      menu.pointerHistory.previous,
+      submenuRect,
+      side,
+    ) ? SUBMENU_SAFE_CLOSE_DELAY : 0;
   },
 };
 
@@ -105,6 +139,7 @@ function handleKeyDown(event) {
 }
 
 provide(MAT_MENU_ITEM_KEY, {
+  cancelSubmenuClose,
   element,
   registerSubmenu,
   submenuOpen,
@@ -116,6 +151,7 @@ onMounted(() => {
   menu?.registerItem(itemApi);
 });
 onBeforeUnmount(() => {
+  clearTimeout(closeTimer);
   group?.unregisterItem(itemApi);
   menu?.unregisterItem(itemApi);
 });
@@ -140,7 +176,7 @@ onBeforeUnmount(() => {
       :use-cursor="matUi.useCursor"
       @click="handleClick"
       @keydown="handleKeyDown"
-      @pointerenter="openSubmenu"
+      @pointerenter="openSubmenu({ pointer: true })"
     >
       <MatItemContentBase
         namespace="mat-menu-item-content"
