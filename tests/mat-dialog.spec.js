@@ -219,6 +219,71 @@ describe('MatDialog', () => {
     );
   });
 
+  it('支持数字和 CSS 宽度值，并在小屏保留视口限制', async () => {
+    const wide = mount(MatDialog, {
+      props: {
+        modelValue: true,
+        title: '宽 Dialog',
+        width: 720,
+      },
+    });
+
+    await settleRender();
+
+    const wideElement = document.body.querySelector('dialog');
+
+    expect(wideElement.getAttribute('style')).toContain(
+      'inline-size: min(720px, calc(100dvi - 48px));',
+    );
+    expect(wideElement.getAttribute('style')).toContain(
+      'max-inline-size: calc(100dvi - 48px);',
+    );
+
+    await wide.setProps({ modelValue: false });
+    await vi.advanceTimersByTimeAsync(200);
+
+    const cssWidth = mount(MatDialog, {
+      props: {
+        modelValue: true,
+        title: 'CSS 宽度',
+        width: '45rem',
+      },
+    });
+
+    await settleRender();
+
+    expect(document.body.querySelector('dialog').getAttribute('style')).toContain(
+      'inline-size: min(45rem, calc(100dvi - 48px));',
+    );
+
+    cssWidth.unmount();
+  });
+
+  it('全屏 Dialog 忽略 width，且 width 校验只接受正数或非空 CSS 值', async () => {
+    expect(MatDialog.props.width.validator(720)).toBe(true);
+    expect(MatDialog.props.width.validator('calc(100% - 32px)')).toBe(true);
+    expect(MatDialog.props.width.validator(0)).toBe(false);
+    expect(MatDialog.props.width.validator(Number.POSITIVE_INFINITY)).toBe(false);
+    expect(MatDialog.props.width.validator('')).toBe(false);
+
+    const wrapper = mount(MatDialog, {
+      props: {
+        fullScreen: true,
+        modelValue: true,
+        title: '全屏 Dialog',
+        width: 720,
+      },
+    });
+
+    await settleRender();
+
+    const element = document.querySelector('.mat-dialog');
+
+    expect(element).not.toBeNull();
+    expect(element.getAttribute('style') ?? '').not.toContain('720px');
+    wrapper.unmount();
+  });
+
   it('prop 内容优先于同名 Slot', async () => {
     mount(MatDialog, {
       props: {

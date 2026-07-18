@@ -136,7 +136,7 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 ## Dialog
 
-`<mat-dialog>` 通过 `modelValue` 受控显示，使用原生 modal dialog 和 Teleport。`activator` Slot 必须只产生一个当前 document 中的 HTMLElement 根节点，作为触发元素和关闭后的焦点恢复目标。`fullScreen` 只接受显式布尔值，不根据视口自动切换；基础和全屏布局都只允许 content 区域滚动，打开期间由共享堆叠管理器锁定页面根滚动。`scrim=false` 只把帷幕变透明，不允许背景接收指针事件；`closeOnBack` 只控制点击帷幕关闭，Escape 始终请求关闭。多个实例只显示顶层帷幕，最后一层关闭后才恢复页面滚动。
+`<mat-dialog>` 通过 `modelValue` 受控显示，使用原生 modal dialog 和 Teleport。`activator` Slot 必须只产生一个当前 document 中的 HTMLElement 根节点，作为触发元素和关闭后的焦点恢复目标。`width` 接受数字 px 值或 CSS 宽度值，只影响基础布局并在小屏按视口限制；`fullScreen` 只接受显式布尔值并忽略 width，不根据视口自动切换；基础和全屏布局都只允许 content 区域滚动，打开期间由共享堆叠管理器锁定页面根滚动。`scrim=false` 只把帷幕变透明，不允许背景接收指针事件；`closeOnBack` 只控制点击帷幕关闭，Escape 始终请求关闭。多个实例只显示顶层帷幕，最后一层关闭后才恢复页面滚动。
 
 标题、正文和图标都遵循 prop 优先于同名 Slot；无标题时必须由使用者提供 `aria-label` 或 `aria-labelledby`。关闭期间 DOM 保留到退出动画完成，随后触发 `closed` 并恢复原焦点。
 
@@ -144,7 +144,7 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 ## Tooltip
 
-`<mat-tooltip>` 的 `content` prop 优先于默认 Slot，`activator` Slot 优先于 `target`；activator 必须只产生一个当前 document 中的 HTMLElement 根节点。没有显式传入 `modelValue` 时，组件只在桌面 hover 或键盘 focus 下自动展示，并在两个状态都离开 1.5 秒后关闭；显式传入时改为完全受控，忽略自动触发和 `openDelay`。
+`<mat-tooltip>` 的 `content` prop 优先于默认 Slot，`activator` Slot 优先于 `target`；activator 必须只产生一个当前 document 中的 HTMLElement 根节点。选择器 target 初次未解析时不立即警告，并在 Vue 更新或实际展示请求时继续解析；只有展示请求仍无法解析时才警告。没有显式传入 `modelValue` 时，组件只在桌面 hover 或键盘 focus 下自动展示，并在两个状态都离开 1.5 秒后关闭；显式传入时改为完全受控，忽略自动触发和 `openDelay`。
 
 Tooltip 只实现 Material 3 Plain tooltip，不提供 color、Rich 内容、操作、箭头或触屏长按。模块级协调器保证同一时间只有一个实例可见；展示期间将唯一 tooltip id 无损合并到展示元素的 `aria-describedby`，关闭、换锚点或卸载时恢复原有属性。定位始终使用固定视口坐标，按首选方向翻转并在 8px 视口安全边距内夹紧。
 

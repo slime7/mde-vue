@@ -23,6 +23,14 @@ defineOptions({
   inheritAttrs: false,
 });
 
+/**
+ * @param {number|string} value
+ * @returns {string}
+ */
+function resolveDialogWidth(value) {
+  return typeof value === 'number' ? `${value}px` : value.trim();
+}
+
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -31,6 +39,17 @@ const props = defineProps({
   fullScreen: {
     type: Boolean,
     default: false,
+  },
+  width: {
+    type: [Number, String],
+    default: undefined,
+    validator(value) {
+      if (typeof value === 'number') {
+        return Number.isFinite(value) && value > 0;
+      }
+
+      return typeof value === 'string' && value.trim().length > 0;
+    },
   },
   attach: {
     type: [String, Object],
@@ -88,7 +107,19 @@ const hasIcon = computed(() => !props.fullScreen && (
 const hasActivatorSlot = computed(() => Boolean(slots.activator));
 const isTop = computed(() => dialogStack.value.at(-1) === root.value);
 const { colorStyle } = useComponentColor(computed(() => props.color));
-const rootStyle = computed(() => [colorStyle.value, attrs.style]);
+const dialogWidthStyle = computed(() => {
+  if (props.fullScreen || props.width === undefined) {
+    return undefined;
+  }
+
+  const width = resolveDialogWidth(props.width);
+
+  return {
+    inlineSize: `min(${width}, calc(100dvi - 48px))`,
+    maxInlineSize: 'calc(100dvi - 48px)',
+  };
+});
+const rootStyle = computed(() => [colorStyle.value, attrs.style, dialogWidthStyle.value]);
 let mounted = false;
 let phaseTimer;
 let previousFocus = null;

@@ -437,11 +437,14 @@ function warnForInvalidTarget() {
   );
 }
 
-function syncTargetElement() {
+/**
+ * @param {{warn?: boolean}} [options]
+ */
+function syncTargetElement({ warn = true } = {}) {
   const nextTarget = resolveTarget();
 
   if (nextTarget === targetElement.value) {
-    if (!nextTarget && hasContent.value) {
+    if (!nextTarget && hasContent.value && warn) {
       warnForInvalidTarget();
     }
 
@@ -455,7 +458,7 @@ function syncTargetElement() {
   targetElement.value = nextTarget;
   warnedAboutTarget = false;
 
-  if (!nextTarget && hasContent.value) {
+  if (!nextTarget && hasContent.value && warn) {
     warnForInvalidTarget();
   }
 
@@ -596,7 +599,7 @@ async function showTooltip() {
     return;
   }
 
-  syncTargetElement();
+  syncTargetElement({ warn: true });
 
   if (!targetElement.value) {
     requestClose();
@@ -633,16 +636,24 @@ async function showTooltip() {
   startPositioning();
 }
 
-onMounted(() => {
+onMounted(async () => {
   mounted = true;
-  syncTargetElement();
+  syncTargetElement({ warn: false });
+
+  await nextTick();
+
+  if (!mounted) {
+    return;
+  }
+
+  syncTargetElement({ warn: false });
 
   if (isControlled && props.modelValue) {
     showTooltip();
   }
 });
 onUpdated(() => {
-  syncTargetElement();
+  syncTargetElement({ warn: false });
 
   if (isDisplayed.value) {
     schedulePositionUpdate();
@@ -672,7 +683,7 @@ watch([() => props.content, () => props.target], async () => {
   await nextTick();
   const previousTarget = targetElement.value;
 
-  syncTargetElement();
+  syncTargetElement({ warn: false });
 
   if (targetElement.value === previousTarget) {
     unbindTargetListeners();

@@ -56,6 +56,33 @@ describe('Dialog 命令式函数', () => {
     expect(document.body.querySelector('[data-mat-dialog-host]')).toBeNull();
   });
 
+  it('命令式 Dialog 支持 width，并拒绝无效宽度', async () => {
+    const result = dialog({
+      title: '宽度选项',
+      width: 720,
+    });
+
+    await settleRender();
+
+    expect(document.body.querySelector('dialog').getAttribute('style')).toContain(
+      'inline-size: min(720px, calc(100dvi - 48px));',
+    );
+    document.body.querySelector('.mat-dialog__actions button').click();
+    await closeAnimation();
+    await expect(result).resolves.toBeUndefined();
+
+    const invalid = dialog({
+      title: '无效宽度',
+      width: 0,
+    });
+    const rejection = expect(invalid).rejects.toThrow('dialog width 无效');
+
+    await settleRender();
+    document.body.querySelector('.mat-dialog__actions button')?.click();
+    await closeAnimation();
+    await rejection;
+  });
+
   it('dialog 返回所选动作的 value', async () => {
     const result = dialog({
       title: '选择',

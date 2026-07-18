@@ -164,7 +164,7 @@ order: 105
 | location | top、right、bottom、left 及其 -start、-end 形式 | top | Tooltip 相对展示元素的首选位置 |
 | openDelay | number | 0 | 自动模式的打开延迟，单位为毫秒；可直接写为 open-delay="600"，动态数值使用 :open-delay；负数、空字符串或非有限数字按 0 处理，并触发 Vue prop 校验警告 |
 
-activator Slot 存在时优先于 target，且必须只渲染一个属于当前 document 的 HTMLElement 根节点。两者都无法解析时，组件给出警告且不显示。attach 无法解析时同样给出警告并抑制显示。
+activator Slot 存在时优先于 target，且必须只渲染一个属于当前 document 的 HTMLElement 根节点。选择器目标在初次挂载时尚未出现，会在后续 Vue 更新中继续解析；只有实际请求展示时仍无法解析，组件才给出警告且不显示。attach 无法解析时同样给出警告并抑制显示。
 
 未消费的 class、style、id、aria-* 和原生事件监听器传递给 Teleport 后的 tooltip 根节点；根节点的 role 固定为 tooltip。组件没有 color 属性、Rich tooltip 内容、公共方法或操作按钮。
 

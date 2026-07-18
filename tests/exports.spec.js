@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { createApp } from 'vue';
 /* eslint-disable import-x/no-named-as-default -- 验证子入口默认导出和具名导出相同。 */
@@ -61,6 +61,13 @@ import {
 } from '../src';
 
 describe('公共组件导出', () => {
+  it('根入口使用可由 Node/Vitest 直接解析的 plugin.js 路径', () => {
+    const source = readFileSync('src/index.js', 'utf8');
+
+    expect(source).toContain("from './plugin.js'");
+    expect(source).not.toContain("from './plugin'");
+  });
+
   it.each([
     ['MatCard', RootMatCard, NamedMatCard, MatCard],
     ['MatBtn', RootMatBtn, NamedMatBtn, MatBtn],

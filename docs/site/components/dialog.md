@@ -31,6 +31,26 @@ order: 100
   </DocsPreview>
 </ClientOnly>
 
+### `width`
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/dialog/DialogWidthExample.vue#template [template]
+
+<<< @/examples/dialog/DialogWidthExample.vue#script [script]
+
+<<< @/examples/dialog/DialogWidthExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Dialog width 预览">
+    <DialogWidthExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `activator` Slot
 
 :::: details 查看示例代码
@@ -305,6 +325,7 @@ order: 100
 | --- | --- | --- | --- |
 | `modelValue` | `boolean` | `false` | 受控打开状态，使用 `v-model` |
 | `fullScreen` | `boolean` | `false` | 模板属性为 `full-screen`；显式切换全屏布局，不自动响应视口 |
+| `width` | `number \| string` | 未设置 | 基础 Dialog 的首选宽度；数字按 px 处理，字符串接受 CSS 宽度值；小屏按视口可用宽度限制，全屏布局忽略此属性 |
 | `attach` | `string \| HTMLElement` | `'body'` | Teleport 目标；字符串按当前 document 的 CSS 选择器解析 |
 | `scrim` | `boolean` | `true` | 是否显示顶层帷幕；`false` 时帷幕透明但仍阻止背景交互 |
 | `closeOnBack` | `boolean` | `false` | 模板属性为 `close-on-back`；点击 Dialog 外帷幕时是否请求关闭 |
@@ -340,7 +361,7 @@ import {
 | `confirm(options)` | `confirmText`、`cancelText` | `Promise<boolean>`；确认返回 `true`，其他关闭返回 `false` |
 | `prompt(options)` | `confirmText`、`cancelText`、`defaultValue`、`label`、`placeholder`、`required` | `Promise<string \| null>`；确认返回字符串，取消返回 `null` |
 
-公共选项与组件属性基本一致，使用 JavaScript 驼峰名称 `fullScreen`、`closeOnBack`，并增加 `ariaLabel`。命令式内容只接受字符串。`dialog()` 的动作格式如下：
+公共选项与组件属性基本一致，使用 JavaScript 驼峰名称 `fullScreen`、`width`、`closeOnBack`，并增加 `ariaLabel`。`width` 接受数字 px 值或非空 CSS 宽度值。命令式内容只接受字符串。`dialog()` 的动作格式如下：
 
 | 动作字段 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -374,7 +395,7 @@ import {
 | `icon` | 基础 Dialog 的图标内容；`icon` prop 存在时忽略，全屏布局不显示 |
 | `actions` | 基础布局底部或全屏固定头部中的操作；容器只提供 flex、换行和间距，可添加 `<mat-spacer>` 控制操作组对齐 |
 
-Dialog 打开期间锁定页面根滚动，最后一层关闭后恢复原有内联样式。标题和动作区固定，正文过长时只有 content 区域滚动，并预留稳定的滚动条空间。基础 Dialog 宽度限制为 280–560px；全屏 Dialog 占满视口并使用固定 56px 头部。
+Dialog 打开期间锁定页面根滚动，最后一层关闭后恢复原有内联样式。标题和动作区固定，正文过长时只有 content 区域滚动，并预留稳定的滚动条空间。未设置 `width` 时基础 Dialog 宽度限制为 280–560px；设置后使用指定首选宽度，但小屏仍限制在视口可用范围内。全屏 Dialog 占满视口并使用固定 56px 头部，忽略 `width`。
 
 ## 参考来源
 
@@ -396,4 +417,5 @@ import DialogModelValueExample from '../examples/dialog/DialogModelValueExample.
 import DialogPromptFunctionExample from '../examples/dialog/DialogPromptFunctionExample.vue';
 import DialogScrimExample from '../examples/dialog/DialogScrimExample.vue';
 import DialogTitleSlotExample from '../examples/dialog/DialogTitleSlotExample.vue';
+import DialogWidthExample from '../examples/dialog/DialogWidthExample.vue';
 </script>

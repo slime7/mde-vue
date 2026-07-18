@@ -87,6 +87,32 @@ describe('MatTooltip', () => {
     wrapper.unmount();
   });
 
+  it('选择器目标稍后挂载时不在初次挂载阶段误报，并可正常展示', async () => {
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      props: {
+        content: '延迟目标',
+        target: '#late-tooltip-target',
+      },
+    });
+    const target = createTarget('late-tooltip-target');
+
+    expect(warning).not.toHaveBeenCalledWith(
+      'MatTooltip: target 必须指向当前 document 中存在的 HTMLElement',
+    );
+
+    await settleRender();
+    await hover(target);
+
+    expect(warning).not.toHaveBeenCalledWith(
+      'MatTooltip: target 必须指向当前 document 中存在的 HTMLElement',
+    );
+    expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
+
+    wrapper.unmount();
+  });
+
   it('activator Slot 优先于 target prop', async () => {
     const externalTarget = createTarget('external-target');
     const wrapper = mount(MatTooltip, {

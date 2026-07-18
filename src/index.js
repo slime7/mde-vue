@@ -27,4 +27,6 @@ export { default as MatTooltip } from './components/mat-tooltip/MatTooltip.vue';
 export { default as MatSnackbar } from './components/mat-snackbar/MatSnackbar.vue';
 export { default as MatPanes } from './components/mat-panes/MatPanes.vue';
 export { default as MatPane } from './components/mat-panes/MatPane.vue';
-export { createMatUi, useMatTheme } from './plugin';
+// Node/Vitest 直接解析包源码时需要保留 JavaScript 扩展名。
+// eslint-disable-next-line import-x/extensions
+export { createMatUi, useMatTheme } from './plugin.js';

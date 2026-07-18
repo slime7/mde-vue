@@ -6526,6 +6526,78 @@ const open = ref(false);
   </DocsPreview>
 </ClientOnly>
 
+### `width`
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="dialog-width-example">
+    <mat-btn @click="openTheme = true">
+      打开 720px 主题 Dialog
+    </mat-btn>
+
+    <mat-btn variant="outlined" @click="openExport = true">
+      打开 520px 导出 Dialog
+    </mat-btn>
+  </div>
+
+  <mat-dialog
+    v-model="openTheme"
+    title="主题设置"
+    content="较宽的 Dialog 适合展示主题预览和多列设置。"
+    :width="720"
+  >
+    <template #actions>
+      <mat-spacer />
+      <mat-btn variant="text" @click="openTheme = false">
+        关闭
+      </mat-btn>
+    </template>
+  </mat-dialog>
+
+  <mat-dialog
+    v-model="openExport"
+    title="导出设置"
+    content="520px 宽度适合展示导出选项和确认操作。"
+    width="520px"
+  >
+    <template #actions>
+      <mat-spacer />
+      <mat-btn variant="text" @click="openExport = false">
+        关闭
+      </mat-btn>
+    </template>
+  </mat-dialog>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const openTheme = ref(false);
+const openExport = ref(false);
+</script>
+```
+```vue
+<style scoped>
+.dialog-width-example {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Dialog width 预览">
+    <DialogWidthExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `activator` Slot
 
 :::: details 查看示例代码
@@ -7215,6 +7287,7 @@ async function showPrompt() {
 | --- | --- | --- | --- |
 | `modelValue` | `boolean` | `false` | 受控打开状态，使用 `v-model` |
 | `fullScreen` | `boolean` | `false` | 模板属性为 `full-screen`；显式切换全屏布局，不自动响应视口 |
+| `width` | `number \| string` | 未设置 | 基础 Dialog 的首选宽度；数字按 px 处理，字符串接受 CSS 宽度值；小屏按视口可用宽度限制，全屏布局忽略此属性 |
 | `attach` | `string \| HTMLElement` | `'body'` | Teleport 目标；字符串按当前 document 的 CSS 选择器解析 |
 | `scrim` | `boolean` | `true` | 是否显示顶层帷幕；`false` 时帷幕透明但仍阻止背景交互 |
 | `closeOnBack` | `boolean` | `false` | 模板属性为 `close-on-back`；点击 Dialog 外帷幕时是否请求关闭 |
@@ -7250,7 +7323,7 @@ import {
 | `confirm(options)` | `confirmText`、`cancelText` | `Promise<boolean>`；确认返回 `true`，其他关闭返回 `false` |
 | `prompt(options)` | `confirmText`、`cancelText`、`defaultValue`、`label`、`placeholder`、`required` | `Promise<string \| null>`；确认返回字符串，取消返回 `null` |
 
-公共选项与组件属性基本一致，使用 JavaScript 驼峰名称 `fullScreen`、`closeOnBack`，并增加 `ariaLabel`。命令式内容只接受字符串。`dialog()` 的动作格式如下：
+公共选项与组件属性基本一致，使用 JavaScript 驼峰名称 `fullScreen`、`width`、`closeOnBack`，并增加 `ariaLabel`。`width` 接受数字 px 值或非空 CSS 宽度值。命令式内容只接受字符串。`dialog()` 的动作格式如下：
 
 | 动作字段 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -7284,7 +7357,7 @@ import {
 | `icon` | 基础 Dialog 的图标内容；`icon` prop 存在时忽略，全屏布局不显示 |
 | `actions` | 基础布局底部或全屏固定头部中的操作；容器只提供 flex、换行和间距，可添加 `<mat-spacer>` 控制操作组对齐 |
 
-Dialog 打开期间锁定页面根滚动，最后一层关闭后恢复原有内联样式。标题和动作区固定，正文过长时只有 content 区域滚动，并预留稳定的滚动条空间。基础 Dialog 宽度限制为 280–560px；全屏 Dialog 占满视口并使用固定 56px 头部。
+Dialog 打开期间锁定页面根滚动，最后一层关闭后恢复原有内联样式。标题和动作区固定，正文过长时只有 content 区域滚动，并预留稳定的滚动条空间。未设置 `width` 时基础 Dialog 宽度限制为 280–560px；设置后使用指定首选宽度，但小屏仍限制在视口可用范围内。全屏 Dialog 占满视口并使用固定 56px 头部，忽略 `width`。
 
 ## 参考来源
 
@@ -7306,6 +7379,7 @@ import DialogModelValueExample from '../examples/dialog/DialogModelValueExample.
 import DialogPromptFunctionExample from '../examples/dialog/DialogPromptFunctionExample.vue';
 import DialogScrimExample from '../examples/dialog/DialogScrimExample.vue';
 import DialogTitleSlotExample from '../examples/dialog/DialogTitleSlotExample.vue';
+import DialogWidthExample from '../examples/dialog/DialogWidthExample.vue';
 </script>
 
 # List 列表
@@ -8288,7 +8362,7 @@ const open = ref(false);
 | location | top、right、bottom、left 及其 -start、-end 形式 | top | Tooltip 相对展示元素的首选位置 |
 | openDelay | number | 0 | 自动模式的打开延迟，单位为毫秒；可直接写为 open-delay="600"，动态数值使用 :open-delay；负数、空字符串或非有限数字按 0 处理，并触发 Vue prop 校验警告 |
 
-activator Slot 存在时优先于 target，且必须只渲染一个属于当前 document 的 HTMLElement 根节点。两者都无法解析时，组件给出警告且不显示。attach 无法解析时同样给出警告并抑制显示。
+activator Slot 存在时优先于 target，且必须只渲染一个属于当前 document 的 HTMLElement 根节点。选择器目标在初次挂载时尚未出现，会在后续 Vue 更新中继续解析；只有实际请求展示时仍无法解析，组件才给出警告且不显示。attach 无法解析时同样给出警告并抑制显示。
 
 未消费的 class、style、id、aria-* 和原生事件监听器传递给 Teleport 后的 tooltip 根节点；根节点的 role 固定为 tooltip。组件没有 color 属性、Rich tooltip 内容、公共方法或操作按钮。
 

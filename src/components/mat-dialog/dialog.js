@@ -9,6 +9,18 @@ const BOOLEAN_OPTIONS = ['fullScreen', 'scrim', 'closeOnBack'];
 const STRING_OPTIONS = ['title', 'content', 'icon', 'closeLabel', 'ariaLabel'];
 
 /**
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+function isDialogWidth(value) {
+  if (typeof value === 'number') {
+    return Number.isFinite(value) && value > 0;
+  }
+
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+/**
  * @typedef {object} DialogAction
  * @property {string} text
  * @property {*} [value]
@@ -21,6 +33,7 @@ const STRING_OPTIONS = ['title', 'content', 'icon', 'closeLabel', 'ariaLabel'];
  * @typedef {object} DialogOptions
  * @property {string|HTMLElement} [attach='body']
  * @property {boolean} [fullScreen=false]
+ * @property {number|string} [width]
  * @property {boolean} [scrim=true]
  * @property {boolean} [closeOnBack=false]
  * @property {string} [title]
@@ -132,6 +145,10 @@ function normalizeOptions(options) {
     throw new TypeError('dialog color 无效');
   }
 
+  if (options.width !== undefined && !isDialogWidth(options.width)) {
+    throw new TypeError('dialog width 无效');
+  }
+
   if (options.actions !== undefined && !Array.isArray(options.actions)) {
     throw new TypeError('dialog actions 必须是数组');
   }
@@ -141,7 +158,7 @@ function normalizeOptions(options) {
     attach: resolveAttach(options.attach),
   };
 
-  [...BOOLEAN_OPTIONS, ...STRING_OPTIONS, 'color'].forEach((name) => {
+  [...BOOLEAN_OPTIONS, ...STRING_OPTIONS, 'color', 'width'].forEach((name) => {
     if (options[name] !== undefined) {
       normalized[name] = options[name];
     }
