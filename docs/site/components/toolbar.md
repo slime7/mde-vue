@@ -57,6 +57,8 @@ Toolbar 默认固定显示，使用 `modelValue` 或 `v-model` 可以播放进�
 
 ### `bottomPlaceholder`
 
+此示例分别提供 docked 与 floating-bottom 两个独立开关；两者共用同一滑块，方便观察 `bottomPlaceholder` 在停靠条内部与悬浮条下方的差异。
+
 :::: details 查看示例代码
 ::: code-group
 

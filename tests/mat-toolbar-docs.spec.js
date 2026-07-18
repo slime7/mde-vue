@@ -101,4 +101,16 @@ describe('Toolbar 文档', () => {
     expect(example).toContain(':bottom-placeholder="bottomPlaceholder"');
     expect(example).toContain('{{ bottomPlaceholder }}px');
   });
+
+  it('在 bottomPlaceholder 示例中同时演示 docked 与 floating Toolbar', () => {
+    const example = readFileSync(
+      resolve('docs/site/examples/toolbar/ToolbarBottomPlaceholderExample.vue'),
+      'utf8',
+    );
+
+    expect(example).toContain('const floatingActive = ref(false);');
+    expect(example).toContain('v-model="floatingActive"');
+    expect(example).toContain('variant="floating-bottom"');
+    expect(example).toContain('position="end"');
+  });
 });

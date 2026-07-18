@@ -8284,15 +8284,22 @@ const placeholderEnabled = ref(true);
 
 ### `bottomPlaceholder`
 
+此示例分别提供 docked 与 floating-bottom 两个独立开关；两者共用同一滑块，方便观察 `bottomPlaceholder` 在停靠条内部与悬浮条下方的差异。
+
 :::: details 查看示例代码
 ::: code-group
 
 ```vue
 <template>
   <div class="toolbar-bottom-placeholder-example">
-    <mat-btn variant="outlined" @click="active = !active">
-      {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
-    </mat-btn>
+    <div class="toolbar-bottom-placeholder-example__actions">
+      <mat-btn variant="outlined" @click="active = !active">
+        {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
+      </mat-btn>
+      <mat-btn variant="outlined" @click="floatingActive = !floatingActive">
+        {{ floatingActive ? '隐藏 floating Toolbar' : '展示 floating Toolbar' }}
+      </mat-btn>
+    </div>
     <div class="toolbar-bottom-placeholder-example__slider">
       <mat-slider
         v-model="bottomPlaceholder"
@@ -8303,7 +8310,7 @@ const placeholderEnabled = ref(true);
       />
       <output>底部额外占位：{{ bottomPlaceholder }}px</output>
     </div>
-    <p>bottomPlaceholder 只增加底部手势条或安全区空间，不会开启自然布局占位。</p>
+    <p>bottomPlaceholder 只增加底部手势条或安全区空间：docked 留在 Toolbar 内，floating 留在悬浮条下方；两者都不会开启自然布局占位。</p>
 
     <mat-toolbar
       v-model="active"
@@ -8317,6 +8324,21 @@ const placeholderEnabled = ref(true);
         保存
       </mat-btn>
     </mat-toolbar>
+
+    <mat-toolbar
+      v-model="floatingActive"
+      variant="floating-bottom"
+      position="end"
+      :bottom-placeholder="bottomPlaceholder"
+    >
+      <mat-btn variant="standard">
+        取消
+      </mat-btn>
+      <mat-spacer />
+      <mat-btn variant="standard">
+        应用
+      </mat-btn>
+    </mat-toolbar>
   </div>
 </template>
 ```
@@ -8325,13 +8347,20 @@ const placeholderEnabled = ref(true);
 import { ref } from 'vue';
 
 const active = ref(false);
+const floatingActive = ref(false);
 const bottomPlaceholder = ref(0);
 </script>
 ```
 ```vue
 <style scoped>
 .toolbar-bottom-placeholder-example {
-  min-block-size: 180px;
+  min-block-size: 220px;
+}
+
+.toolbar-bottom-placeholder-example__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .toolbar-bottom-placeholder-example__slider {
