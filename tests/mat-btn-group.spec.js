@@ -238,6 +238,16 @@ describe('MatBtnGroup', () => {
     expect(shapeRule).toBeDefined();
     expect(shapeRule).toContain('--mat-btn-group-connected-selected-inner-corner-size:');
     expect(shapeRule).toContain('--mat-btn-group-connected-selected-pressed-inner-corner-size:');
+    expect(shapeRule).toContain(
+      shape === 'round'
+        ? '--mat-btn-group-connected-selected-inner-corner-size: var(--mat-btn-square-container-shape);'
+        : '--mat-btn-group-connected-selected-inner-corner-size: var(--mat-button-full-radius);',
+    );
+    expect(shapeRule).toContain(
+      shape === 'round'
+        ? '--mat-btn-group-connected-selected-pressed-inner-corner-size: var(--mat-button-pressed-radius);'
+        : '--mat-btn-group-connected-selected-pressed-inner-corner-size: var(--mat-button-full-radius);',
+    );
     expect(buttonGroupSource).toContain(
       `.mat-btn-group--connected.mat-btn-group--shape-${shape} :deep(.mat-button-base) {`,
     );

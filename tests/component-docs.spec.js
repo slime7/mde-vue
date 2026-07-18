@@ -68,6 +68,26 @@ describe('组件文档约束', () => {
     });
   });
 
+  it('Button 与 Button group 尺寸示例明确表达视觉层级矩阵', () => {
+    [
+      'docs/site/examples/button/ButtonSizeExample.vue',
+      'docs/site/examples/button/ButtonGroupSizeExample.vue',
+    ].forEach((filePath) => {
+      const source = readFileSync(resolve(filePath), 'utf8');
+
+      ['standard', 'outlined', 'filled', 'filled-tonal'].forEach((variant) => {
+        expect(source, filePath).toContain(`variant="${variant}"`);
+      });
+      ['round', 'square'].forEach((shape) => {
+        expect(source, filePath).toContain(`shape="${shape}"`);
+      });
+      expect(source, filePath).toContain('color="secondary"');
+      expect(source, filePath).toContain('color="tertiary"');
+      expect(source, filePath).toContain('color="primary"');
+      expect(source, filePath).toContain('width="uniform"');
+    });
+  });
+
   it('项目规则明确要求先写测试再改代码', () => {
     [
       'AGENTS.md',
