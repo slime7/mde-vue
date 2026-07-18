@@ -4,6 +4,8 @@ import { ref } from 'vue';
 
 const roundSelected = ref('two');
 const squareSelected = ref('two');
+const connectedRoundSelected = ref('two');
+const connectedSquareSelected = ref('two');
 </script>
 <!-- #endregion script -->
 
@@ -126,6 +128,44 @@ const squareSelected = ref('two');
           @click="squareSelected = 'three'"
         >
           Label
+        </mat-btn>
+      </mat-btn-group>
+    </div>
+
+    <div class="example-shape">
+      <mat-btn-group
+        variant="connected"
+        selection="single"
+        shape="round"
+        :selected="connectedRoundSelected"
+        @select="connectedRoundSelected = $event.nextSelected"
+      >
+        <mat-btn value="one">
+          connected round one
+        </mat-btn>
+        <mat-btn value="two">
+          connected round two
+        </mat-btn>
+        <mat-btn value="three">
+          connected round three
+        </mat-btn>
+      </mat-btn-group>
+
+      <mat-btn-group
+        variant="connected"
+        selection="single"
+        shape="square"
+        :selected="connectedSquareSelected"
+        @select="connectedSquareSelected = $event.nextSelected"
+      >
+        <mat-btn value="one">
+          connected square one
+        </mat-btn>
+        <mat-btn value="two">
+          connected square two
+        </mat-btn>
+        <mat-btn value="three">
+          connected square three
         </mat-btn>
       </mat-btn-group>
     </div>

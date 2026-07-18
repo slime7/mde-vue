@@ -70,6 +70,26 @@ describe('MatSplitBtn', () => {
     expect(wrapper.find('[role="menu"]').exists()).toBe(false);
   });
 
+  it('trailing 接受 icon=true 默认 Slot 和 icon 字符串两种图标按钮写法', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const booleanIcon = mount(MatSplitBtn, {
+      slots: {
+        leading: () => h(MatBtn, null, () => '新建'),
+        trailing: () => h(MatBtn, { icon: true, label: '更多' }, () => 'arrow_drop_down'),
+      },
+    });
+    const stringIcon = mount(MatSplitBtn, {
+      slots: {
+        leading: () => h(MatBtn, null, () => '新建'),
+        trailing: () => h(MatBtn, { icon: 'arrow_drop_down', label: '更多' }),
+      },
+    });
+
+    expect(booleanIcon.find('.mat-split-btn__trailing .mat-btn--icon').exists()).toBe(true);
+    expect(stringIcon.find('.mat-split-btn__trailing .mat-btn--icon').exists()).toBe(true);
+    expect(warn).not.toHaveBeenCalledWith('MatSplitBtn: trailing slot 必须提供一个图标模式 MatBtn');
+  });
+
   it('拒绝旧尺寸缩写和 tonal 变体', () => {
     expect(MatSplitBtn.props.size.validator('s')).toBe(false);
     expect(MatSplitBtn.props.variant.validator('tonal')).toBe(false);

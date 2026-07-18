@@ -9,7 +9,7 @@ order: 50
 
 ## 组件简介
 
-`<mat-btn>` 的组件导出名是 `MatBtn`。它统一渲染普通按钮和图标按钮：省略 `icon` 时由默认 Slot 提供可见标签；传入 Material Symbols 字符串 `icon` 时切换为只包含图标的按钮。两种模式都渲染原生 `<button>`。
+`<mat-btn>` 的组件导出名是 `MatBtn`。它统一渲染普通按钮和图标按钮：省略 `icon` 时由默认 Slot 提供内容；`icon` 为 `true` 时把默认 Slot 文本解析为 Material Symbols，传入字符串时使用 prop 文本作为图标。没有使用 `icon` 时，也可以直接在默认 Slot 放置 `MatIcon`，此时仍按普通按钮处理。两种模式都渲染原生 `<button>`。
 
 ## 示例
 
@@ -125,10 +125,16 @@ order: 50
 
 ### `icon` 与 `label`
 
+`icon` 可以使用 `true` 加默认 Slot 文本，也可以直接传入 Material Symbols 字符串。字符串 prop 优先于默认 Slot。显式 `aria-label` 优先于 `label`，`title` 只覆盖 Tooltip 文本。
+
 :::: details 查看示例代码
 ::: code-group
 
 <<< @/examples/button/ButtonIconExample.vue#template [template]
+
+<<< @/examples/button/ButtonIconStringExample.vue#template [template]
+
+<<< @/examples/button/ButtonIconComponentSlotExample.vue#template [template]
 
 <<< @/examples/button/ButtonIconExample.vue#style [style]
 
@@ -138,6 +144,8 @@ order: 50
 <ClientOnly>
   <DocsPreview label="Button icon 预览">
     <ButtonIconExample />
+    <ButtonIconStringExample />
+    <ButtonIconComponentSlotExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -333,7 +341,7 @@ order: 50
   </DocsPreview>
 </ClientOnly>
 
-组件不自行修改 `selected`，也不触发 `update:selected`。图标模式必须提供 `label`；普通按钮可以通过 `prefix`、`suffix` 属性或同名 Slot 放置前后图标，属性和 Slot 同时存在时属性优先。完整配色规则见[组件配色](/guide/component-color)。
+组件不自行修改 `selected`，也不触发 `update:selected`。图标模式必须提供非空 `label` 或 `aria-label`；`label` 同时是默认的无障碍名称和 Tooltip 文本，显式 `aria-label` 优先。普通按钮可以通过 `prefix`、`suffix` 属性或同名 Slot 放置前后图标，属性和 Slot 同时存在时属性优先。完整配色规则见[组件配色](/guide/component-color)。
 
 ## API
 
@@ -346,10 +354,10 @@ order: 50
 | `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'small'` | 容器、排版、图标、间距和圆角尺寸 |
 | `shape` | `'round' \| 'square'` | `'round'` | 静止形状；toggle 选中时在 round 与 square 之间切换 |
 | `width` | `'narrow' \| 'uniform' \| 'wide'` | `'uniform'` | 图标模式的容器宽度；普通模式忽略 |
-| `icon` | `string` | 未设置 | 非空 Material Symbols 字符；设置后切换为图标模式 |
+| `icon` | `boolean \| string` | 未设置 | `true` 从默认 Slot 读取 Material Symbols；字符串直接指定图标且优先于默认 Slot；`false` 等同于未设置 |
 | `prefix` | `string` | 未设置 | 普通按钮前置图标，优先于 prefix Slot |
 | `suffix` | `string` | 未设置 | 普通按钮后置图标，优先于 suffix Slot |
-| `label` | `string` | 未设置 | 图标模式必填，写入 `aria-label` 并作为默认 Tooltip 文本 |
+| `label` | `string` | 未设置 | 图标模式的无障碍名称和默认 Tooltip 文本；可由显式 `aria-label` 覆盖 |
 | `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| #RRGGBB` | 未设置 | 语义色族或局部 Material 2025 种子色 |
 | `toggle` | `boolean` | `false` | 启用可选择外观和 `aria-pressed`；text 会忽略该值并发出开发警告 |
 | `selected` | `boolean` | `false` | 受控选中状态，仅在 toggle 或选择组中生效 |
@@ -367,7 +375,7 @@ order: 50
 
 | 名称 | 内容约束 |
 | --- | --- |
-| 默认 | 普通模式的简短按钮标签；图标模式忽略 |
+| 默认 | 普通模式的按钮内容；`icon=true` 时要求其中有非空 Material Symbols 文本并只显示该图标，字符串 `icon` 模式忽略 |
 | `prefix` | 普通模式的前置 SVG 或自定义图标；同名 prop 存在时忽略 |
 | `suffix` | 普通模式的后置 SVG 或自定义图标；同名 prop 存在时忽略 |
 | `selected` | 普通模式 toggle 选中时替换默认标签；图标模式忽略 |
@@ -379,7 +387,7 @@ order: 50
 | hover | 显示 8% 状态层；elevated、filled 和 filled-tonal 按规格调整海拔 |
 | focus-visible | 显示焦点环和 12% 状态层 |
 | pressed | 显示 12% 状态层并按尺寸改变圆角；快速点击仍会完成一次可见的圆角往返过渡 |
-| selected | 切换形状和颜色；图标模式同时切换 FILL 轴，设置 `aria-pressed="true"` |
+| selected | 切换形状和颜色；图标模式复用同一图标并切换 FILL 轴，设置 `aria-pressed="true"` |
 | disabled | 容器使用 `on-surface` 10%，内容使用 38%，取消阴影和点击 |
 
 `extra-small` 与 `small` 的视觉高度分别是 32px 和 40px，但交互目标至少为 48px。减少动态效果偏好下保留最终状态并取消过渡。
@@ -397,6 +405,8 @@ import ButtonDefaultOnlyExample from '../examples/button/ButtonDefaultOnlyExampl
 import ButtonDefaultSlotExample from '../examples/button/ButtonDefaultSlotExample.vue';
 import ButtonDisabledExample from '../examples/button/ButtonDisabledExample.vue';
 import ButtonIconExample from '../examples/button/ButtonIconExample.vue';
+import ButtonIconComponentSlotExample from '../examples/button/ButtonIconComponentSlotExample.vue';
+import ButtonIconStringExample from '../examples/button/ButtonIconStringExample.vue';
 import ButtonPrefixExample from '../examples/button/ButtonPrefixExample.vue';
 import ButtonPrefixSlotExample from '../examples/button/ButtonPrefixSlotExample.vue';
 import ButtonSelectedSlotExample from '../examples/button/ButtonSelectedSlotExample.vue';

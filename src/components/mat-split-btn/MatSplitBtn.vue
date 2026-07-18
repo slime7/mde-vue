@@ -100,8 +100,12 @@ function validateSlots() {
     console.warn('MatSplitBtn: leading slot 必须提供一个 MatBtn');
   }
 
-  if (!slots.trailing || root.value.querySelectorAll('.mat-split-btn__trailing .mat-btn--icon').length !== 1) {
-    console.warn('MatSplitBtn: trailing slot 必须提供一个带 icon 和 label 的 MatBtn');
+  const trailingIconButtons = root.value.querySelectorAll(
+    '.mat-split-btn__trailing .mat-btn--icon',
+  );
+
+  if (!slots.trailing || trailingIconButtons.length !== 1) {
+    console.warn('MatSplitBtn: trailing slot 必须提供一个图标模式 MatBtn');
   }
 }
 

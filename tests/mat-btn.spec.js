@@ -1,8 +1,9 @@
 import { mount } from '@vue/test-utils';
+import { h } from 'vue';
 import {
   afterEach, describe, expect, it, vi,
 } from 'vitest';
-import { MatBtn } from '../src';
+import { MatBtn, MatIcon } from '../src';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -205,7 +206,70 @@ describe('MatBtn', () => {
     expect(wrapper.text()).toBe('more_vert');
   });
 
-  it('图标模式将 label 交给 Tooltip，并在缺少 label 时发出警告', () => {
+  it('icon=true 从默认 Slot 读取 Material Symbols 文本', () => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        icon: true,
+        label: '主页',
+      },
+      slots: {
+        default: 'home',
+      },
+    });
+
+    expect(wrapper.classes()).toContain('mat-btn--icon');
+    expect(wrapper.attributes('aria-label')).toBe('主页');
+    expect(wrapper.findComponent(MatIcon).text()).toBe('home');
+  });
+
+  it('icon 字符串优先于默认 Slot 文本', () => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        icon: 'settings',
+        label: '设置',
+      },
+      slots: {
+        default: '不应渲染的图标',
+      },
+    });
+
+    expect(wrapper.findComponent(MatIcon).text()).toBe('settings');
+    expect(wrapper.text()).not.toContain('不应渲染的图标');
+  });
+
+  it('不使用 icon 时允许默认 Slot 直接放置 MatIcon', () => {
+    const wrapper = mount(MatBtn, {
+      slots: {
+        default: () => h(MatIcon, {
+          icon: 'home',
+          'aria-hidden': 'true',
+        }),
+      },
+    });
+
+    expect(wrapper.classes()).not.toContain('mat-btn--icon');
+    expect(wrapper.findComponent(MatIcon).exists()).toBe(true);
+    expect(wrapper.findComponent(MatIcon).text()).toBe('home');
+  });
+
+  it('图标模式优先使用显式 aria-label，title 覆盖 Tooltip 文本', () => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        icon: 'settings',
+        label: '设置',
+      },
+      attrs: {
+        'aria-label': '打开设置',
+        title: '设置说明',
+      },
+    });
+
+    expect(wrapper.attributes('aria-label')).toBe('打开设置');
+    expect(wrapper.attributes('title')).toBeUndefined();
+    expect(wrapper.findComponent({ name: 'MatTooltip' }).props('content')).toBe('设置说明');
+  });
+
+  it('图标模式将 label 交给 Tooltip，并在缺少可访问名称时发出警告', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const labelled = mount(MatBtn, {
       props: {
@@ -221,7 +285,20 @@ describe('MatBtn', () => {
 
     expect(labelled.attributes('title')).toBeUndefined();
     expect(labelled.findComponent({ name: 'MatTooltip' }).props('content')).toBe('设置');
-    expect(warn).toHaveBeenCalledWith('MatBtn: 图标模式必须提供非空 label');
+    expect(warn).toHaveBeenCalledWith('MatBtn: 图标模式必须提供非空 label 或 aria-label');
+  });
+
+  it('icon=true 缺少默认 Slot 图标文本时发出警告', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    mount(MatBtn, {
+      props: {
+        icon: true,
+        label: '主页',
+      },
+    });
+
+    expect(warn).toHaveBeenCalledWith('MatBtn: icon=true 必须在默认 Slot 提供非空 Material Symbols 文本');
   });
 
   it.each(['narrow', 'uniform', 'wide'])('图标模式支持 %s 宽度', (width) => {
@@ -249,6 +326,42 @@ describe('MatBtn', () => {
     expect(wrapper.classes()).toContain('mat-btn--selected');
     expect(wrapper.attributes('aria-pressed')).toBe('true');
     expect(wrapper.get('.mat-btn__icon').attributes('style')).toContain("'FILL' 1");
+  });
+
+  it.each([
+    {
+      name: '普通按钮',
+      props: { shape: 'square', toggle: true, selected: true },
+      slots: { default: '保存' },
+    },
+    {
+      name: '图标按钮',
+      props: {
+        icon: true,
+        label: '收藏',
+        shape: 'square',
+        toggle: true,
+        selected: true,
+      },
+      slots: { default: 'favorite' },
+    },
+  ])('%s 与普通按钮复用选择、形状和事件状态', ({ props, slots }) => {
+    const handleClick = vi.fn();
+    const wrapper = mount(MatBtn, {
+      props,
+      slots,
+      attrs: { onClick: handleClick },
+    });
+
+    wrapper.element.click();
+
+    expect(wrapper.classes()).toEqual(expect.arrayContaining([
+      'mat-btn--shape-square',
+      'mat-btn--toggle',
+      'mat-btn--selected',
+    ]));
+    expect(wrapper.attributes('aria-pressed')).toBe('true');
+    expect(handleClick).toHaveBeenCalledOnce();
   });
 
   it('语义 color 映射项目令牌，自定义种子色生成局部亮暗配色', () => {

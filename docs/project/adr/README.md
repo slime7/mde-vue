@@ -15,9 +15,10 @@
 | [0007](0007-internal-component-tokens-without-public-customization.md) | active | 保留内部组件令牌但不提供公共定制入口 |
 | [0008](0008-surface-action.md) | active | 采用共享 Surface 与 Action 内部基础层 |
 | [0009](0009-public-icon-and-configurable-icon-class.md) | active | 采用公共 Icon 与可配置图标类 |
-| [0010](0010-merge-button-and-icon-button.md) | active | 合并 Button 与 Icon button |
+| [0010](0010-merge-button-and-icon-button.md) | superseded | 合并 Button 与 Icon button |
 | [0011](0011-dialog-imperative-host-and-promise-settlement.md) | active | 采用共享 Dialog 宿主与关闭后 Promise 结算 |
 | [0012](0012-toolbar-overlay-geometry-registry.md) | active | 使用内部 Toolbar 几何注册协调覆盖层 |
+| [0013](0013-button-icon-group-semantics.md) | active | 重构按钮组与图标按钮语义 |
 
 ## 何时创建 ADR
 

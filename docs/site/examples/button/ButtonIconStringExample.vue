@@ -1,9 +1,7 @@
 <!-- #region template -->
 <template>
   <div class="example-row">
-    <mat-btn icon label="主页">
-      home
-    </mat-btn>
+    <mat-btn icon="home" label="主页" />
   </div>
 </template>
 <!-- #endregion template -->

@@ -1,9 +1,16 @@
 import { mount } from '@vue/test-utils';
 import { h } from 'vue';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import {
   afterEach, describe, expect, it, vi,
 } from 'vitest';
 import { MatBtn, MatBtnGroup } from '../src';
+
+const buttonGroupSource = readFileSync(
+  resolve('src/components/mat-btn-group/MatBtnGroup.vue'),
+  'utf8',
+);
 
 afterEach(() => {
   vi.useRealTimers();
@@ -172,6 +179,86 @@ describe('MatBtnGroup', () => {
     await required.setProps({ selected: ['one', 'two'] });
     await required.find('button').trigger('click');
     expect(required.emitted('select')[0][0].nextSelected).toEqual(['two']);
+  });
+
+  it.each(['standard', 'connected'])('%s 支持 none、single 和 multiple 选择模式', (variant) => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const none = mount(MatBtnGroup, {
+      props: { variant, selection: 'none' },
+      slots: {
+        default: () => h(MatBtn, { value: 'one' }, () => '一'),
+      },
+    });
+    const single = mount(MatBtnGroup, {
+      props: { variant, selection: 'single', selected: 'one' },
+      slots: {
+        default: () => h(MatBtn, { value: 'one' }, () => '一'),
+      },
+    });
+    const multiple = mount(MatBtnGroup, {
+      props: { variant, selection: 'multiple', selected: ['one'] },
+      slots: {
+        default: () => h(MatBtn, { value: 'one' }, () => '一'),
+      },
+    });
+
+    expect(none.find('button').attributes('aria-pressed')).toBeUndefined();
+    expect(single.find('button').attributes('aria-pressed')).toBe('true');
+    expect(multiple.find('button').attributes('aria-pressed')).toBe('true');
+
+    if (variant === 'connected') {
+      expect(warn).toHaveBeenCalledWith('MatBtnGroup: connected 形态应配合 single 或 multiple 选择模式使用');
+    } else {
+      expect(warn).not.toHaveBeenCalled();
+    }
+  });
+
+  it('single required 阻止取消唯一选中项', async () => {
+    const wrapper = mount(MatBtnGroup, {
+      props: {
+        selection: 'single',
+        selected: 'one',
+        required: true,
+      },
+      slots: {
+        default: () => h(MatBtn, { value: 'one' }, () => '一'),
+      },
+    });
+
+    await wrapper.find('button').trigger('click');
+
+    expect(wrapper.emitted('select')).toBeUndefined();
+  });
+
+  it.each(['round', 'square'])('connected %s 组为选中按钮保留外部组轮廓并反转内部形状', (shape) => {
+    const shapeRule = buttonGroupSource.match(
+      new RegExp(`\\.mat-btn-group--connected\\.mat-btn-group--shape-${shape}[^}]*\\{([\\s\\S]*?)\\n\\}`),
+    )?.[1];
+
+    expect(shapeRule).toBeDefined();
+    expect(shapeRule).toContain('--mat-btn-group-connected-selected-inner-corner-size:');
+    expect(shapeRule).toContain('--mat-btn-group-connected-selected-pressed-inner-corner-size:');
+    expect(buttonGroupSource).toContain('.mat-btn-group--connected :deep(.mat-button-base:first-child.mat-btn--selected)');
+    expect(buttonGroupSource).toContain('.mat-btn-group--connected :deep(.mat-button-base:last-child.mat-btn--selected)');
+  });
+
+  it('connected 混用子按钮颜色时发出开发警告', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    mount(MatBtnGroup, {
+      props: {
+        variant: 'connected',
+        selection: 'single',
+      },
+      slots: {
+        default: () => [
+          h(MatBtn, { color: 'primary', value: 'one' }, () => '一'),
+          h(MatBtn, { color: 'secondary', value: 'two' }, () => '二'),
+        ],
+      },
+    });
+
+    expect(warn).toHaveBeenCalledWith('MatBtnGroup: connected 形态中的子按钮应使用相同颜色');
   });
 
   it('standard 首尾项和中间项按 15% 同步调整相邻项宽度', async () => {
@@ -419,7 +506,7 @@ describe('MatBtnGroup', () => {
     const wrapper = mount(MatBtnGroup, {
       slots: {
         default: () => [
-          h(MatBtn, { icon: 'one', label: '一' }),
+          h(MatBtn, { icon: true, label: '一' }, () => 'one'),
           h(MatBtn, { icon: 'two', label: '二', width: 'narrow' }),
           h(MatBtn, { icon: 'three', label: '三', width: 'wide' }),
         ],

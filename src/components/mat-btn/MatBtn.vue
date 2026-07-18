@@ -1,6 +1,6 @@
 <script setup>
 import {
-  computed, ref, useAttrs, useId, useSlots, watchEffect,
+  computed, Fragment, isVNode, onMounted, ref, useAttrs, useId, useSlots, watchEffect,
 } from 'vue';
 import MatButtonBase from '../MatButtonBase.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
@@ -52,10 +52,12 @@ const props = defineProps({
     },
   },
   icon: {
-    type: String,
+    type: [Boolean, String],
     default: undefined,
     validator(value) {
-      return value === undefined || value.trim().length > 0;
+      return value === undefined
+        || typeof value === 'boolean'
+        || value.trim().length > 0;
     },
   },
   prefix: {
@@ -124,7 +126,53 @@ const {
 } = useButton(props, emit);
 const isToggle = computed(() => effectiveToggle.value && effectiveVariant.value !== 'text');
 const isSelected = computed(() => isToggle.value && effectiveSelected.value);
-const isIcon = computed(() => typeof props.icon === 'string' && props.icon.trim().length > 0);
+const isIcon = computed(() => props.icon === true
+  || (typeof props.icon === 'string' && props.icon.trim().length > 0));
+
+/**
+ * @param {unknown[]} nodes
+ * @returns {string}
+ */
+function getSlotText(nodes) {
+  return nodes
+    .flatMap((node) => {
+      if (typeof node === 'string' || typeof node === 'number') {
+        return [String(node)];
+      }
+
+      if (!isVNode(node)) {
+        return [];
+      }
+
+      if (node.type === Fragment && Array.isArray(node.children)) {
+        return getSlotText(node.children);
+      }
+
+      if (typeof node.children === 'string' || typeof node.children === 'number') {
+        return [String(node.children)];
+      }
+
+      if (Array.isArray(node.children)) {
+        return getSlotText(node.children);
+      }
+
+      return [];
+    })
+    .join('')
+    .trim();
+}
+
+const defaultSlotIconText = computed(() => {
+  if (props.icon !== true) {
+    return '';
+  }
+
+  return getSlotText(slots.default?.() ?? []);
+});
+const iconText = computed(() => (
+  typeof props.icon === 'string' ? props.icon.trim() : defaultSlotIconText.value
+));
+const accessibleLabel = computed(() => $attrs['aria-label'] ?? props.label);
 const tooltipContent = computed(() => (
   isIcon.value ? ($attrs.title ?? props.label) : undefined
 ));
@@ -142,13 +190,18 @@ const iconOpticalSize = computed(() => ({
   large: 32,
   'extra-large': 40,
 })[effectiveSize.value]);
+onMounted(() => {
+  if (props.icon === true && !defaultSlotIconText.value) {
+    console.warn('MatBtn: icon=true 必须在默认 Slot 提供非空 Material Symbols 文本');
+  }
+});
 watchEffect(() => {
   if (props.toggle && props.variant === 'text') {
     console.warn('MatBtn: text 形态不支持 toggle，当前按普通文本按钮处理');
   }
 
-  if (isIcon.value && (!props.label || props.label.trim().length === 0)) {
-    console.warn('MatBtn: 图标模式必须提供非空 label');
+  if (isIcon.value && (!accessibleLabel.value || accessibleLabel.value.trim().length === 0)) {
+    console.warn('MatBtn: 图标模式必须提供非空 label 或 aria-label');
   }
 });
 </script>
@@ -172,7 +225,7 @@ watchEffect(() => {
       },
     ]"
     :style="colorStyle"
-    :aria-label="isIcon ? label : $attrs['aria-label']"
+    :aria-label="isIcon ? accessibleLabel : $attrs['aria-label']"
     :aria-controls="split?.role === 'trailing' ? split.controls.value : undefined"
     :aria-expanded="split?.role === 'trailing' ? split.expanded.value : undefined"
     :aria-haspopup="split?.role === 'trailing' ? 'menu' : undefined"
@@ -193,7 +246,7 @@ watchEffect(() => {
       size="var(--mat-btn-icon-size)"
       aria-hidden="true"
     >
-      {{ icon }}
+      {{ iconText }}
     </MatIcon>
 
     <MatIcon

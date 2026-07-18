@@ -9,7 +9,7 @@ order: 60
 
 ## 组件简介
 
-`<mat-btn-group>` 的组件导出名是 `MatBtnGroup`。它在单行中组织普通或图标模式的 `MatBtn`。standard 形态保留独立按钮间距，connected 形态连接可选择按钮。组容器不聚焦，每个子按钮保持独立 Tab 停靠点。
+`<mat-btn-group>` 的组件导出名是 `MatBtnGroup`。它在单行中组织普通或图标模式的 `MatBtn`。standard 与 connected 都支持 `none`、`single` 和 `multiple` 选择模式；connected 使用 `none` 时会发出开发警告。standard 保留独立按钮间距，connected 按连接规则排列。组容器不聚焦，每个子按钮保持独立 Tab 停靠点。
 
 ## 示例
 
@@ -201,7 +201,7 @@ order: 60
   </DocsPreview>
 </ClientOnly>
 
-按下 standard 子项时，该项宽度临时增大，直接相邻项同步缩窄；connected 形态不联动子项宽度。组的 `size`、`shape`、`color` 只作为未显式设置子项的默认值，组 `disabled` 与子项 `disabled` 取或。
+按下 standard 子项时，该项宽度临时增大，直接相邻项同步缩窄；connected 只改变当前按钮的按压形状，不联动相邻宽度。两种形态的选中按钮都会把 `round` 与 `square` 反转；connected 同时保持组外部首尾圆角的轮廓。组的 `size`、`shape`、`color` 只作为未显式设置子项的默认值，组 `disabled` 与子项 `disabled` 取或。
 
 ## API
 
@@ -215,16 +215,16 @@ order: 60
 | `shape` | `'round' \| 'square'` | `'round'` | 子按钮形状和 connected 外角形状 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 级联给未显式设置 `color` 的子按钮 |
 | `disabled` | `boolean` | `false` | 为 true 时禁用全部子按钮；子按钮仍可单独禁用 |
-| `selection` | `'none' \| 'single' \| 'multiple'` | `'none'` | 是否按子按钮 `value` 计算选择候选值 |
+| `selection` | `'none' \| 'single' \| 'multiple'` | `'none'` | standard 与 connected 都支持的选择模式；connected 使用 `none` 时发出开发警告 |
 | `selected` | 基础值、基础值数组或 `null` | `null` | 受控当前值；single 使用单值，multiple 使用数组 |
 | `required` | `boolean` | `false` | 阻止取消 single 当前项或 multiple 最后一项 |
 | `fullWidth` | `boolean` | `false` | connected 形态下铺满父容器并等分子项；standard 中忽略 |
 
 `block` 只控制组根的外部布局；`fullWidth` 还会让 connected 的直接子按钮等分整行。connected 可以只设置 `block` 并保留内容宽度，也可以只设置 `fullWidth` 直接启用铺满与等分。standard 始终忽略 `fullWidth`。
 
-组的 `size`、`shape`、`color` 只作为默认值，子组件显式 prop 优先。组 `disabled` 与子组件 `disabled` 取或。选择模式下每个直接子按钮都必须有唯一 `value`；缺少时发出开发警告并忽略该次选择。
+组的 `size`、`shape`、`color` 只作为默认值，子组件显式 prop 优先。组 `disabled` 与子组件 `disabled` 取或。选择模式下每个直接子按钮都必须有唯一 `value`；缺少时发出开发警告并忽略该次选择。standard 的宽度由内容决定并保留按钮间距，`fullWidth` 对它无效；connected 使用 `fullWidth` 时由父容器等分直接子按钮。
 
-connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色形态，不使用 text 或 standard Button。违反这些组合约束时开发环境会警告。
+connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色和视觉层级，不使用 `text` 或 `standard` Button。违反这些组合约束时开发环境会警告。
 
 ### 事件
 
@@ -242,13 +242,13 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 
 ### 状态与键盘
 
-组根节点使用 `role="group"`，没有 `tabindex`。Tab 依次进入每个子按钮，Space 和 Enter 使用原生按钮激活；不实现方向键或 roving tabindex。connected 选择项使用 `aria-pressed`，不模拟 radio/radiogroup。
+组根节点使用 `role="group"`，没有 `tabindex`。Tab 依次进入每个子按钮，Space 和 Enter 使用原生按钮激活；不实现方向键或 roving tabindex。standard 与 connected 的选择项都使用 `aria-pressed`，不模拟 radio/radiogroup。`required` 阻止取消最后一个选中项。
 
 组件没有公开方法。
 
 ## 参考来源
 
-参数与交互依据 [Material 3 Button group specs](https://m3.material.io/components/button-groups/specs)。
+参数与交互依据 [Material 3 Button groups guidelines](https://m3.material.io/components/button-groups/guidelines) 与 [Button group specs](https://m3.material.io/components/button-groups/specs)。
 
 <script setup>
 import ButtonGroupBlockExample from '../examples/button/ButtonGroupBlockExample.vue';

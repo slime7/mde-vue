@@ -54,7 +54,7 @@
 
 ### 组件
 
-每个组件拥有自己的 Vue SFC、公开入口、样式与测试。`MatSpacer` 是不进入无障碍树的空 flex 子元素，只通过增长分配父容器主轴剩余空间。`MatBtn` 以同一个原生 `<button>` 组件提供普通按钮和图标模式：非空 `icon` 切换为图标模式，普通模式可使用 `prefix`、`suffix` 或同名 Slots。`MatFab` 以同一个原生 `<button>` 组件提供纯图标 FAB 和 Extended FAB：默认 Slot 有非空内容时显示 Extended 标签，否则要求 `icon` 与 `label` 并显示 Tooltip。两者共享 `MatButtonBase` 的原生交互和状态逻辑。按钮组与 split button 使用 Vue provide/inject 协调 `MatBtn` 子按钮，不复制交互协议。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
+每个组件拥有自己的 Vue SFC、公开入口、样式与测试。`MatSpacer` 是不进入无障碍树的空 flex 子元素，只通过增长分配父容器主轴剩余空间。`MatBtn` 以同一个原生 `<button>` 组件提供普通按钮和图标模式：`icon=true` 解析默认 Slot 的 Material Symbols 文本，字符串 `icon` 使用 prop 文本，未设置 `icon` 时仍按普通按钮渲染并允许默认 Slot 直接放置 `MatIcon`；普通模式也可使用 `prefix`、`suffix` 或同名 Slots。`MatFab` 以同一个原生 `<button>` 组件提供纯图标 FAB 和 Extended FAB：默认 Slot 有非空内容时显示 Extended 标签，否则要求 `icon` 与 `label` 并显示 Tooltip。两者共享 `MatButtonBase` 的原生交互和状态逻辑。按钮组与 split button 使用 Vue provide/inject 协调 `MatBtn` 子按钮，不复制交互协议。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
 
 Icon 统一字体字形、SVG 资源和默认 Slot 中的 SVG 元素，负责 Material Symbols 经典四轴、尺寸、内容颜色和动态根标签。内容来源优先级固定为 `src`、`icon`、默认 Slot；组件级 `iconClass` 可覆盖或关闭插件全局值。按钮、List、Menu 和文本输入复用同一公共 Icon 实现，但各自负责上下文尺寸、颜色和无障碍语义。
 

@@ -801,7 +801,7 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 
 ## 状态与无障碍
 
-Icon 本身不提供交互语义。装饰性图标应传入 `aria-hidden="true"`；承担信息含义时，应按所在上下文为根元素提供 `role` 和可访问名称。图标模式的 `MatBtn` 仍由必填 `label` 提供操作名称。
+Icon 本身不提供交互语义。装饰性图标应传入 `aria-hidden="true"`；承担信息含义时，应按所在上下文为根元素提供 `role` 和可访问名称。图标模式的 `MatBtn` 由 `label` 提供默认操作名称，也可由显式 `aria-label` 覆盖。
 
 ## 参考来源
 
@@ -1001,7 +1001,7 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 ## 组件简介
 
-`<mat-btn>` 的组件导出名是 `MatBtn`。它统一渲染普通按钮和图标按钮：省略 `icon` 时由默认 Slot 提供可见标签；传入 Material Symbols 字符串 `icon` 时切换为只包含图标的按钮。两种模式都渲染原生 `<button>`。
+`<mat-btn>` 的组件导出名是 `MatBtn`。它统一渲染普通按钮和图标按钮：省略 `icon` 时由默认 Slot 提供内容；`icon` 为 `true` 时把默认 Slot 文本解析为 Material Symbols，传入字符串时使用 prop 文本作为图标。没有使用 `icon` 时，也可以直接在默认 Slot 放置 `MatIcon`，此时仍按普通按钮处理。两种模式都渲染原生 `<button>`。
 
 ## 示例
 
@@ -1227,13 +1227,33 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 ### `icon` 与 `label`
 
+`icon` 可以使用 `true` 加默认 Slot 文本，也可以直接传入 Material Symbols 字符串。字符串 prop 优先于默认 Slot。显式 `aria-label` 优先于 `label`，`title` 只覆盖 Tooltip 文本。
+
 :::: details 查看示例代码
 ::: code-group
 
 ```vue
 <template>
   <div class="example-row">
+    <mat-btn icon label="主页">
+      home
+    </mat-btn>
+  </div>
+</template>
+```
+```vue
+<template>
+  <div class="example-row">
     <mat-btn icon="home" label="主页" />
+  </div>
+</template>
+```
+```vue
+<template>
+  <div class="example-row">
+    <mat-btn aria-label="打开主页">
+      <mat-icon icon="home" aria-hidden="true" />
+    </mat-btn>
   </div>
 </template>
 ```
@@ -1252,6 +1272,8 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 <ClientOnly>
   <DocsPreview label="Button icon 预览">
     <ButtonIconExample />
+    <ButtonIconStringExample />
+    <ButtonIconComponentSlotExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -1594,7 +1616,7 @@ function updateSelection({ nextSelected }) {
   </DocsPreview>
 </ClientOnly>
 
-组件不自行修改 `selected`，也不触发 `update:selected`。图标模式必须提供 `label`；普通按钮可以通过 `prefix`、`suffix` 属性或同名 Slot 放置前后图标，属性和 Slot 同时存在时属性优先。完整配色规则见[组件配色](/guide/component-color)。
+组件不自行修改 `selected`，也不触发 `update:selected`。图标模式必须提供非空 `label` 或 `aria-label`；`label` 同时是默认的无障碍名称和 Tooltip 文本，显式 `aria-label` 优先。普通按钮可以通过 `prefix`、`suffix` 属性或同名 Slot 放置前后图标，属性和 Slot 同时存在时属性优先。完整配色规则见[组件配色](/guide/component-color)。
 
 ## API
 
@@ -1607,10 +1629,10 @@ function updateSelection({ nextSelected }) {
 | `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'small'` | 容器、排版、图标、间距和圆角尺寸 |
 | `shape` | `'round' \| 'square'` | `'round'` | 静止形状；toggle 选中时在 round 与 square 之间切换 |
 | `width` | `'narrow' \| 'uniform' \| 'wide'` | `'uniform'` | 图标模式的容器宽度；普通模式忽略 |
-| `icon` | `string` | 未设置 | 非空 Material Symbols 字符；设置后切换为图标模式 |
+| `icon` | `boolean \| string` | 未设置 | `true` 从默认 Slot 读取 Material Symbols；字符串直接指定图标且优先于默认 Slot；`false` 等同于未设置 |
 | `prefix` | `string` | 未设置 | 普通按钮前置图标，优先于 prefix Slot |
 | `suffix` | `string` | 未设置 | 普通按钮后置图标，优先于 suffix Slot |
-| `label` | `string` | 未设置 | 图标模式必填，写入 `aria-label` 并作为默认 Tooltip 文本 |
+| `label` | `string` | 未设置 | 图标模式的无障碍名称和默认 Tooltip 文本；可由显式 `aria-label` 覆盖 |
 | `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| #RRGGBB` | 未设置 | 语义色族或局部 Material 2025 种子色 |
 | `toggle` | `boolean` | `false` | 启用可选择外观和 `aria-pressed`；text 会忽略该值并发出开发警告 |
 | `selected` | `boolean` | `false` | 受控选中状态，仅在 toggle 或选择组中生效 |
@@ -1628,7 +1650,7 @@ function updateSelection({ nextSelected }) {
 
 | 名称 | 内容约束 |
 | --- | --- |
-| 默认 | 普通模式的简短按钮标签；图标模式忽略 |
+| 默认 | 普通模式的按钮内容；`icon=true` 时要求其中有非空 Material Symbols 文本并只显示该图标，字符串 `icon` 模式忽略 |
 | `prefix` | 普通模式的前置 SVG 或自定义图标；同名 prop 存在时忽略 |
 | `suffix` | 普通模式的后置 SVG 或自定义图标；同名 prop 存在时忽略 |
 | `selected` | 普通模式 toggle 选中时替换默认标签；图标模式忽略 |
@@ -1640,7 +1662,7 @@ function updateSelection({ nextSelected }) {
 | hover | 显示 8% 状态层；elevated、filled 和 filled-tonal 按规格调整海拔 |
 | focus-visible | 显示焦点环和 12% 状态层 |
 | pressed | 显示 12% 状态层并按尺寸改变圆角；快速点击仍会完成一次可见的圆角往返过渡 |
-| selected | 切换形状和颜色；图标模式同时切换 FILL 轴，设置 `aria-pressed="true"` |
+| selected | 切换形状和颜色；图标模式复用同一图标并切换 FILL 轴，设置 `aria-pressed="true"` |
 | disabled | 容器使用 `on-surface` 10%，内容使用 38%，取消阴影和点击 |
 
 `extra-small` 与 `small` 的视觉高度分别是 32px 和 40px，但交互目标至少为 48px。减少动态效果偏好下保留最终状态并取消过渡。
@@ -1658,6 +1680,8 @@ import ButtonDefaultOnlyExample from '../examples/button/ButtonDefaultOnlyExampl
 import ButtonDefaultSlotExample from '../examples/button/ButtonDefaultSlotExample.vue';
 import ButtonDisabledExample from '../examples/button/ButtonDisabledExample.vue';
 import ButtonIconExample from '../examples/button/ButtonIconExample.vue';
+import ButtonIconComponentSlotExample from '../examples/button/ButtonIconComponentSlotExample.vue';
+import ButtonIconStringExample from '../examples/button/ButtonIconStringExample.vue';
 import ButtonPrefixExample from '../examples/button/ButtonPrefixExample.vue';
 import ButtonPrefixSlotExample from '../examples/button/ButtonPrefixSlotExample.vue';
 import ButtonSelectedSlotExample from '../examples/button/ButtonSelectedSlotExample.vue';
@@ -2007,7 +2031,7 @@ import FabSizeExample from '../examples/fab/FabSizeExample.vue';
 
 ## 组件简介
 
-`<mat-btn-group>` 的组件导出名是 `MatBtnGroup`。它在单行中组织普通或图标模式的 `MatBtn`。standard 形态保留独立按钮间距，connected 形态连接可选择按钮。组容器不聚焦，每个子按钮保持独立 Tab 停靠点。
+`<mat-btn-group>` 的组件导出名是 `MatBtnGroup`。它在单行中组织普通或图标模式的 `MatBtn`。standard 与 connected 都支持 `none`、`single` 和 `multiple` 选择模式；connected 使用 `none` 时会发出开发警告。standard 保留独立按钮间距，connected 按连接规则排列。组容器不聚焦，每个子按钮保持独立 Tab 停靠点。
 
 ## 示例
 
@@ -2377,6 +2401,44 @@ const connectedMixedSelected = ref('two');
         </mat-btn>
       </mat-btn-group>
     </div>
+
+    <div class="example-shape">
+      <mat-btn-group
+        variant="connected"
+        selection="single"
+        shape="round"
+        :selected="connectedRoundSelected"
+        @select="connectedRoundSelected = $event.nextSelected"
+      >
+        <mat-btn value="one">
+          connected round one
+        </mat-btn>
+        <mat-btn value="two">
+          connected round two
+        </mat-btn>
+        <mat-btn value="three">
+          connected round three
+        </mat-btn>
+      </mat-btn-group>
+
+      <mat-btn-group
+        variant="connected"
+        selection="single"
+        shape="square"
+        :selected="connectedSquareSelected"
+        @select="connectedSquareSelected = $event.nextSelected"
+      >
+        <mat-btn value="one">
+          connected square one
+        </mat-btn>
+        <mat-btn value="two">
+          connected square two
+        </mat-btn>
+        <mat-btn value="three">
+          connected square three
+        </mat-btn>
+      </mat-btn-group>
+    </div>
   </div>
 </template>
 ```
@@ -2386,6 +2448,8 @@ import { ref } from 'vue';
 
 const roundSelected = ref('two');
 const squareSelected = ref('two');
+const connectedRoundSelected = ref('two');
+const connectedSquareSelected = ref('two');
 </script>
 ```
 ```vue
@@ -2502,6 +2566,38 @@ const squareSelected = ref('two');
 <template>
   <div class="example-stack">
     <mat-btn-group
+      selection="single"
+      :selected="standardSingleSelected"
+      @select="standardSingleSelected = $event.nextSelected"
+    >
+      <mat-btn prefix="star" value="one">
+        standard one
+      </mat-btn>
+      <mat-btn prefix="star" value="two">
+        standard two
+      </mat-btn>
+      <mat-btn prefix="star" value="three">
+        standard three
+      </mat-btn>
+    </mat-btn-group>
+
+    <mat-btn-group
+      selection="multiple"
+      :selected="standardMultipleSelected"
+      @select="standardMultipleSelected = $event.nextSelected"
+    >
+      <mat-btn prefix="star" value="one">
+        standard one
+      </mat-btn>
+      <mat-btn prefix="star" value="two">
+        standard two
+      </mat-btn>
+      <mat-btn prefix="star" value="three">
+        standard three
+      </mat-btn>
+    </mat-btn-group>
+
+    <mat-btn-group
       variant="connected"
       selection="single"
       :selected="singleSelected"
@@ -2549,6 +2645,8 @@ import { ref } from 'vue';
 
 const multipleSelected = ref(['two', 'three', 'four']);
 const singleSelected = ref('two');
+const standardMultipleSelected = ref(['one', 'three']);
+const standardSingleSelected = ref('two');
 </script>
 ```
 ```vue
@@ -2654,7 +2752,7 @@ const selected = ref(['bold']);
   </DocsPreview>
 </ClientOnly>
 
-按下 standard 子项时，该项宽度临时增大，直接相邻项同步缩窄；connected 形态不联动子项宽度。组的 `size`、`shape`、`color` 只作为未显式设置子项的默认值，组 `disabled` 与子项 `disabled` 取或。
+按下 standard 子项时，该项宽度临时增大，直接相邻项同步缩窄；connected 只改变当前按钮的按压形状，不联动相邻宽度。两种形态的选中按钮都会把 `round` 与 `square` 反转；connected 同时保持组外部首尾圆角的轮廓。组的 `size`、`shape`、`color` 只作为未显式设置子项的默认值，组 `disabled` 与子项 `disabled` 取或。
 
 ## API
 
@@ -2668,16 +2766,16 @@ const selected = ref(['bold']);
 | `shape` | `'round' \| 'square'` | `'round'` | 子按钮形状和 connected 外角形状 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 级联给未显式设置 `color` 的子按钮 |
 | `disabled` | `boolean` | `false` | 为 true 时禁用全部子按钮；子按钮仍可单独禁用 |
-| `selection` | `'none' \| 'single' \| 'multiple'` | `'none'` | 是否按子按钮 `value` 计算选择候选值 |
+| `selection` | `'none' \| 'single' \| 'multiple'` | `'none'` | standard 与 connected 都支持的选择模式；connected 使用 `none` 时发出开发警告 |
 | `selected` | 基础值、基础值数组或 `null` | `null` | 受控当前值；single 使用单值，multiple 使用数组 |
 | `required` | `boolean` | `false` | 阻止取消 single 当前项或 multiple 最后一项 |
 | `fullWidth` | `boolean` | `false` | connected 形态下铺满父容器并等分子项；standard 中忽略 |
 
 `block` 只控制组根的外部布局；`fullWidth` 还会让 connected 的直接子按钮等分整行。connected 可以只设置 `block` 并保留内容宽度，也可以只设置 `fullWidth` 直接启用铺满与等分。standard 始终忽略 `fullWidth`。
 
-组的 `size`、`shape`、`color` 只作为默认值，子组件显式 prop 优先。组 `disabled` 与子组件 `disabled` 取或。选择模式下每个直接子按钮都必须有唯一 `value`；缺少时发出开发警告并忽略该次选择。
+组的 `size`、`shape`、`color` 只作为默认值，子组件显式 prop 优先。组 `disabled` 与子组件 `disabled` 取或。选择模式下每个直接子按钮都必须有唯一 `value`；缺少时发出开发警告并忽略该次选择。standard 的宽度由内容决定并保留按钮间距，`fullWidth` 对它无效；connected 使用 `fullWidth` 时由父容器等分直接子按钮。
 
-connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色形态，不使用 text 或 standard Button。违反这些组合约束时开发环境会警告。
+connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色和视觉层级，不使用 `text` 或 `standard` Button。违反这些组合约束时开发环境会警告。
 
 ### 事件
 
@@ -2695,13 +2793,13 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 
 ### 状态与键盘
 
-组根节点使用 `role="group"`，没有 `tabindex`。Tab 依次进入每个子按钮，Space 和 Enter 使用原生按钮激活；不实现方向键或 roving tabindex。connected 选择项使用 `aria-pressed`，不模拟 radio/radiogroup。
+组根节点使用 `role="group"`，没有 `tabindex`。Tab 依次进入每个子按钮，Space 和 Enter 使用原生按钮激活；不实现方向键或 roving tabindex。standard 与 connected 的选择项都使用 `aria-pressed`，不模拟 radio/radiogroup。`required` 阻止取消最后一个选中项。
 
 组件没有公开方法。
 
 ## 参考来源
 
-参数与交互依据 [Material 3 Button group specs](https://m3.material.io/components/button-groups/specs)。
+参数与交互依据 [Material 3 Button groups guidelines](https://m3.material.io/components/button-groups/guidelines) 与 [Button group specs](https://m3.material.io/components/button-groups/specs)。
 
 <script setup>
 import ButtonGroupBlockExample from '../examples/button/ButtonGroupBlockExample.vue';
@@ -3125,7 +3223,9 @@ const open = ref(false);
       <mat-btn>主要操作</mat-btn>
     </template>
     <template #trailing>
-      <mat-btn icon="more_vert" label="更多操作" />
+      <mat-btn icon label="更多操作">
+        more_vert
+      </mat-btn>
     </template>
   </mat-split-btn>
 </template>
@@ -3170,9 +3270,9 @@ slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展
 | 名称 | 内容约束 |
 | --- | --- |
 | `leading` | 一个 `MatBtn`，提供主要操作内容和原生属性 |
-| `trailing` | 一个带非空 `icon` 和必填 `label` 的 `MatBtn`，提供展开/收起图标 |
+| `trailing` | 一个图标模式 `MatBtn`，可用 `icon=true` 加默认 Slot Material Symbols 文本，或使用 `icon="symbol"`；应提供 `label` 或 `aria-label` |
 
-每个 slot 只渲染首个有效按钮。缺少或类型不符时开发环境会警告。trailing 自动获得 `aria-haspopup="menu"`、`aria-expanded`、可选 `aria-controls` 和受控 `aria-pressed`。
+每个 slot 只渲染首个有效按钮。缺少或类型不符时开发环境会警告；`icon=true` 与字符串 `icon` 都会被识别为合法 trailing 图标按钮。trailing 自动获得 `aria-haspopup="menu"`、`aria-expanded`、可选 `aria-controls` 和受控 `aria-pressed`。
 
 ### 状态与键盘
 
@@ -8640,7 +8740,7 @@ import ListVariantExample from '../examples/list/ListVariantExample.vue';
 
 ## 组件简介
 
-`<mat-toolbar>` 的组件导出名是 `MatToolbar`。它提供 Material 3 Expressive 的 docked 和 floating 两类 Toolbar：停靠模式固定在底部，悬浮模式支持底部横向和左右垂直布局。默认 Slot 可放置按钮、按钮组和自定义内容，悬浮模式可通过 `fab` Slot 放置外置主操作；当前示例使用接近 Toolbar 高度的 `size="small"`、带 `icon` 和 `label` 的 `<mat-fab>`。
+`<mat-toolbar>` 的组件导出名是 `MatToolbar`。它提供 Material 3 Expressive 的 docked 和 floating 两类 Toolbar：停靠模式固定在底部，悬浮模式支持底部横向和左右垂直布局。默认 Slot 可放置按钮、按钮组和自定义内容，悬浮模式可通过 `fab` Slot 放置外置主操作；当前示例使用接近 Toolbar 高度的 `size="small"`、带 `icon` 和 `label` 的宽图标 `<mat-btn>`。
 
 Toolbar 默认固定显示，使用 `modelValue` 或 `v-model` 可以播放进入、退出动画并隐藏 Toolbar；不负责随滚动自动隐藏。Material 不建议同时显示 Toolbar 与 Navigation bar。
 
@@ -8723,8 +8823,9 @@ Toolbar 默认固定显示，使用 `modelValue` 或 `v-model` 可以播放进�
       </mat-btn>
 
       <template v-if="isFloating" #fab>
-        <mat-fab
+        <mat-btn
           size="small"
+          width="wide"
           icon="add"
           label="新建"
         />

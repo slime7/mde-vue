@@ -1,8 +1,8 @@
 <!-- #region template -->
 <template>
   <div class="example-row">
-    <mat-btn icon label="主页">
-      home
+    <mat-btn aria-label="打开主页">
+      <mat-icon icon="home" aria-hidden="true" />
     </mat-btn>
   </div>
 </template>
