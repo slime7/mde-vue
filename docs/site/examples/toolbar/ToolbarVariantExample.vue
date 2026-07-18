@@ -94,6 +94,7 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
 
       <template v-if="isFloating" #fab>
         <mat-fab
+          size="small"
           icon="add"
           label="新建"
         />
