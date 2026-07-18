@@ -2,8 +2,8 @@
 <script setup>
 import { ref } from 'vue';
 
-const singleSelected = ref('day');
-const multipleSelected = ref(['bold']);
+const multipleSelected = ref(['two', 'three', 'four']);
+const singleSelected = ref('two');
 </script>
 <!-- #endregion script -->
 
@@ -11,27 +11,42 @@ const multipleSelected = ref(['bold']);
 <template>
   <div class="example-stack">
     <mat-btn-group
+      variant="connected"
       selection="single"
       :selected="singleSelected"
       @select="singleSelected = $event.nextSelected"
     >
-      <mat-btn value="day">
-        日间
+      <mat-btn prefix="star" value="one">
+        Label
       </mat-btn>
-      <mat-btn value="night">
-        夜间
+      <mat-btn prefix="star" value="two">
+        Label
+      </mat-btn>
+      <mat-btn prefix="star" value="three">
+        Label
+      </mat-btn>
+      <mat-btn prefix="star" value="four">
+        Label
       </mat-btn>
     </mat-btn-group>
+
     <mat-btn-group
+      variant="connected"
       selection="multiple"
       :selected="multipleSelected"
       @select="multipleSelected = $event.nextSelected"
     >
-      <mat-btn value="bold">
-        粗体
+      <mat-btn prefix="star" value="one">
+        Label
       </mat-btn>
-      <mat-btn value="italic">
-        斜体
+      <mat-btn prefix="star" value="two">
+        Label
+      </mat-btn>
+      <mat-btn prefix="star" value="three">
+        Label
+      </mat-btn>
+      <mat-btn prefix="star" value="four">
+        Label
       </mat-btn>
     </mat-btn-group>
   </div>

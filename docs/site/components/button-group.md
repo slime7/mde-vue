@@ -78,6 +78,8 @@ order: 60
 
 <<< @/examples/button/ButtonGroupShapeExample.vue#template [template]
 
+<<< @/examples/button/ButtonGroupShapeExample.vue#script [script]
+
 <<< @/examples/button/ButtonGroupShapeExample.vue#style [style]
 
 :::

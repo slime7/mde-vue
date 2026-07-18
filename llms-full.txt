@@ -2060,23 +2060,90 @@ import FabSizeExample from '../examples/fab/FabSizeExample.vue';
 ```vue
 <template>
   <div class="example-stack">
-    <mat-btn-group>
-      <mat-btn>standard</mat-btn>
-      <mat-btn>组</mat-btn>
-    </mat-btn-group>
-    <mat-btn-group
-      variant="connected"
-      selection="single"
-      :selected="selected"
-      @select="selected = $event.nextSelected"
-    >
-      <mat-btn value="one">
+    <section class="example-section">
+      <p class="example-label">
+        standard
+      </p>
+
+      <mat-btn-group>
+        <mat-btn icon="bluetooth" label="蓝牙" />
+        <mat-btn icon="alarm" label="闹钟" />
+        <mat-btn icon="link" label="链接" />
+        <mat-btn icon="wifi" label="无线网络" />
+      </mat-btn-group>
+
+      <mat-btn-group>
+        <mat-btn variant="filled-tonal">
+          Label
+        </mat-btn>
+        <mat-btn prefix="edit">
+          Label
+        </mat-btn>
+        <mat-btn variant="filled-tonal">
+          Label
+        </mat-btn>
+        <mat-btn variant="filled-tonal" icon="delete" label="删除" />
+      </mat-btn-group>
+
+      <mat-btn-group>
+        <mat-btn variant="filled-tonal" icon="star" label="收藏一" />
+        <mat-btn variant="filled-tonal" icon="star" label="收藏二" />
+        <mat-btn prefix="star" toggle selected>
+          Label
+        </mat-btn>
+        <mat-btn variant="filled-tonal" icon="star" label="收藏四" />
+        <mat-btn variant="filled-tonal" icon="star" label="收藏五" />
+      </mat-btn-group>
+    </section>
+
+    <section class="example-section">
+      <p class="example-label">
         connected
-      </mat-btn>
-      <mat-btn value="two">
-        组
-      </mat-btn>
-    </mat-btn-group>
+      </p>
+
+      <mat-btn-group
+        variant="connected"
+        selection="single"
+        :selected="connectedIconSelected"
+        @select="connectedIconSelected = $event.nextSelected"
+      >
+        <mat-btn icon="star" label="收藏一" value="one" />
+        <mat-btn icon="star" label="收藏二" value="two" />
+        <mat-btn icon="star" label="收藏三" value="three" />
+        <mat-btn icon="star" label="收藏四" value="four" />
+        <mat-btn icon="star" label="收藏五" value="five" />
+      </mat-btn-group>
+
+      <mat-btn-group
+        variant="connected"
+        selection="single"
+        :selected="connectedLabelSelected"
+        @select="connectedLabelSelected = $event.nextSelected"
+      >
+        <mat-btn prefix="star" value="one">
+          Label
+        </mat-btn>
+        <mat-btn prefix="star" value="two">
+          Label
+        </mat-btn>
+        <mat-btn prefix="star" value="three">
+          Label
+        </mat-btn>
+      </mat-btn-group>
+
+      <mat-btn-group
+        variant="connected"
+        selection="single"
+        :selected="connectedMixedSelected"
+        @select="connectedMixedSelected = $event.nextSelected"
+      >
+        <mat-btn icon="star" label="收藏一" value="one" />
+        <mat-btn prefix="star" value="two">
+          Label
+        </mat-btn>
+        <mat-btn icon="star" label="收藏三" value="three" />
+      </mat-btn-group>
+    </section>
   </div>
 </template>
 ```
@@ -2084,7 +2151,9 @@ import FabSizeExample from '../examples/fab/FabSizeExample.vue';
 <script setup>
 import { ref } from 'vue';
 
-const selected = ref('one');
+const connectedIconSelected = ref('two');
+const connectedLabelSelected = ref('two');
+const connectedMixedSelected = ref('two');
 </script>
 ```
 ```vue
@@ -2094,6 +2163,19 @@ const selected = ref('one');
   flex-direction: column;
   gap: 16px;
   align-items: flex-start;
+}
+
+.example-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.example-label {
+  margin: 0;
+  color: var(--mat-sys-color-on-surface-variant);
+  font-weight: 600;
 }
 </style>
 ```
@@ -2113,32 +2195,49 @@ const selected = ref('one');
 
 ```vue
 <template>
-  <div class="example-row">
+  <div class="example-stack">
     <mat-btn-group size="extra-small">
-      <mat-btn>XS</mat-btn><mat-btn>组</mat-btn>
+      <mat-btn icon="bluetooth" label="蓝牙" />
+      <mat-btn icon="alarm" label="闹钟" />
+      <mat-btn icon="link" label="链接" />
+      <mat-btn icon="wifi" label="无线网络" />
     </mat-btn-group>
+
     <mat-btn-group size="small">
-      <mat-btn>S</mat-btn><mat-btn>组</mat-btn>
+      <mat-btn icon="bluetooth" label="蓝牙" />
+      <mat-btn icon="alarm" label="闹钟" />
+      <mat-btn icon="link" label="链接" />
+      <mat-btn icon="wifi" label="无线网络" />
     </mat-btn-group>
+
     <mat-btn-group size="medium">
-      <mat-btn>M</mat-btn><mat-btn>组</mat-btn>
+      <mat-btn icon="bluetooth" label="蓝牙" />
+      <mat-btn icon="alarm" label="闹钟" />
+      <mat-btn icon="link" label="链接" />
+      <mat-btn icon="wifi" label="无线网络" />
     </mat-btn-group>
+
     <mat-btn-group size="large">
-      <mat-btn>L</mat-btn><mat-btn>组</mat-btn>
+      <mat-btn icon="bluetooth" label="蓝牙" />
+      <mat-btn icon="alarm" label="闹钟" />
+      <mat-btn icon="link" label="链接" />
     </mat-btn-group>
+
     <mat-btn-group size="extra-large">
-      <mat-btn>XL</mat-btn><mat-btn>组</mat-btn>
+      <mat-btn icon="bluetooth" label="蓝牙" />
+      <mat-btn icon="alarm" label="闹钟" />
+      <mat-btn icon="link" label="链接" />
     </mat-btn-group>
   </div>
 </template>
 ```
 ```vue
 <style scoped>
-.example-row {
+.example-stack {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
 }
 </style>
 ```
@@ -2158,23 +2257,151 @@ const selected = ref('one');
 
 ```vue
 <template>
-  <div class="example-row">
-    <mat-btn-group shape="round">
-      <mat-btn>round</mat-btn><mat-btn>组</mat-btn>
-    </mat-btn-group>
-    <mat-btn-group shape="square">
-      <mat-btn>square</mat-btn><mat-btn>组</mat-btn>
-    </mat-btn-group>
+  <div class="example-stack">
+    <div class="example-shape">
+      <mat-btn-group shape="round">
+        <mat-btn
+          icon="edit"
+          label="编辑一"
+          toggle
+          :selected="roundSelected === 'one'"
+          @click="roundSelected = 'one'"
+        />
+        <mat-btn
+          icon="edit"
+          label="编辑二"
+          toggle
+          :selected="roundSelected === 'two'"
+          @click="roundSelected = 'two'"
+        />
+        <mat-btn
+          icon="edit"
+          label="编辑三"
+          toggle
+          :selected="roundSelected === 'three'"
+          @click="roundSelected = 'three'"
+        />
+        <mat-btn
+          icon="edit"
+          label="编辑四"
+          toggle
+          :selected="roundSelected === 'four'"
+          @click="roundSelected = 'four'"
+        />
+      </mat-btn-group>
+
+      <mat-btn-group shape="round">
+        <mat-btn
+          prefix="edit"
+          toggle
+          :selected="roundSelected === 'one'"
+          @click="roundSelected = 'one'"
+        >
+          Label
+        </mat-btn>
+        <mat-btn
+          prefix="edit"
+          toggle
+          :selected="roundSelected === 'two'"
+          @click="roundSelected = 'two'"
+        >
+          Label
+        </mat-btn>
+        <mat-btn
+          prefix="edit"
+          toggle
+          :selected="roundSelected === 'three'"
+          @click="roundSelected = 'three'"
+        >
+          Label
+        </mat-btn>
+      </mat-btn-group>
+    </div>
+
+    <div class="example-shape">
+      <mat-btn-group shape="square">
+        <mat-btn
+          icon="edit"
+          label="编辑一"
+          toggle
+          :selected="squareSelected === 'one'"
+          @click="squareSelected = 'one'"
+        />
+        <mat-btn
+          icon="edit"
+          label="编辑二"
+          toggle
+          :selected="squareSelected === 'two'"
+          @click="squareSelected = 'two'"
+        />
+        <mat-btn
+          icon="edit"
+          label="编辑三"
+          toggle
+          :selected="squareSelected === 'three'"
+          @click="squareSelected = 'three'"
+        />
+        <mat-btn
+          icon="edit"
+          label="编辑四"
+          toggle
+          :selected="squareSelected === 'four'"
+          @click="squareSelected = 'four'"
+        />
+      </mat-btn-group>
+
+      <mat-btn-group shape="square">
+        <mat-btn
+          prefix="edit"
+          toggle
+          :selected="squareSelected === 'one'"
+          @click="squareSelected = 'one'"
+        >
+          Label
+        </mat-btn>
+        <mat-btn
+          prefix="edit"
+          toggle
+          :selected="squareSelected === 'two'"
+          @click="squareSelected = 'two'"
+        >
+          Label
+        </mat-btn>
+        <mat-btn
+          prefix="edit"
+          toggle
+          :selected="squareSelected === 'three'"
+          @click="squareSelected = 'three'"
+        >
+          Label
+        </mat-btn>
+      </mat-btn-group>
+    </div>
   </div>
 </template>
 ```
 ```vue
+<script setup>
+import { ref } from 'vue';
+
+const roundSelected = ref('two');
+const squareSelected = ref('two');
+</script>
+```
+```vue
 <style scoped>
-.example-row {
+.example-stack {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.example-shape {
+  display: flex;
+  flex-direction: column;
   gap: 12px;
-  align-items: center;
+  align-items: flex-start;
 }
 </style>
 ```
@@ -2275,27 +2502,42 @@ const selected = ref('one');
 <template>
   <div class="example-stack">
     <mat-btn-group
+      variant="connected"
       selection="single"
       :selected="singleSelected"
       @select="singleSelected = $event.nextSelected"
     >
-      <mat-btn value="day">
-        日间
+      <mat-btn prefix="star" value="one">
+        Label
       </mat-btn>
-      <mat-btn value="night">
-        夜间
+      <mat-btn prefix="star" value="two">
+        Label
+      </mat-btn>
+      <mat-btn prefix="star" value="three">
+        Label
+      </mat-btn>
+      <mat-btn prefix="star" value="four">
+        Label
       </mat-btn>
     </mat-btn-group>
+
     <mat-btn-group
+      variant="connected"
       selection="multiple"
       :selected="multipleSelected"
       @select="multipleSelected = $event.nextSelected"
     >
-      <mat-btn value="bold">
-        粗体
+      <mat-btn prefix="star" value="one">
+        Label
       </mat-btn>
-      <mat-btn value="italic">
-        斜体
+      <mat-btn prefix="star" value="two">
+        Label
+      </mat-btn>
+      <mat-btn prefix="star" value="three">
+        Label
+      </mat-btn>
+      <mat-btn prefix="star" value="four">
+        Label
       </mat-btn>
     </mat-btn-group>
   </div>
@@ -2305,8 +2547,8 @@ const selected = ref('one');
 <script setup>
 import { ref } from 'vue';
 
-const singleSelected = ref('day');
-const multipleSelected = ref(['bold']);
+const multipleSelected = ref(['two', 'three', 'four']);
+const singleSelected = ref('two');
 </script>
 ```
 ```vue

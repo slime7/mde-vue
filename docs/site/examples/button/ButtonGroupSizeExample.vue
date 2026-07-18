@@ -1,20 +1,37 @@
 <!-- #region template -->
 <template>
-  <div class="example-row">
+  <div class="example-stack">
     <mat-btn-group size="extra-small">
-      <mat-btn>XS</mat-btn><mat-btn>组</mat-btn>
+      <mat-btn icon="bluetooth" label="蓝牙" />
+      <mat-btn icon="alarm" label="闹钟" />
+      <mat-btn icon="link" label="链接" />
+      <mat-btn icon="wifi" label="无线网络" />
     </mat-btn-group>
+
     <mat-btn-group size="small">
-      <mat-btn>S</mat-btn><mat-btn>组</mat-btn>
+      <mat-btn icon="bluetooth" label="蓝牙" />
+      <mat-btn icon="alarm" label="闹钟" />
+      <mat-btn icon="link" label="链接" />
+      <mat-btn icon="wifi" label="无线网络" />
     </mat-btn-group>
+
     <mat-btn-group size="medium">
-      <mat-btn>M</mat-btn><mat-btn>组</mat-btn>
+      <mat-btn icon="bluetooth" label="蓝牙" />
+      <mat-btn icon="alarm" label="闹钟" />
+      <mat-btn icon="link" label="链接" />
+      <mat-btn icon="wifi" label="无线网络" />
     </mat-btn-group>
+
     <mat-btn-group size="large">
-      <mat-btn>L</mat-btn><mat-btn>组</mat-btn>
+      <mat-btn icon="bluetooth" label="蓝牙" />
+      <mat-btn icon="alarm" label="闹钟" />
+      <mat-btn icon="link" label="链接" />
     </mat-btn-group>
+
     <mat-btn-group size="extra-large">
-      <mat-btn>XL</mat-btn><mat-btn>组</mat-btn>
+      <mat-btn icon="bluetooth" label="蓝牙" />
+      <mat-btn icon="alarm" label="闹钟" />
+      <mat-btn icon="link" label="链接" />
     </mat-btn-group>
   </div>
 </template>
@@ -22,11 +39,11 @@
 
 <!-- #region style -->
 <style scoped>
-.example-row {
+.example-stack {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
 }
 </style>
 <!-- #endregion style -->
