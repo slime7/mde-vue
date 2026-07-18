@@ -87,6 +87,7 @@ export default defineConfig({
           { text: 'Loader 加载器', link: '/components/loader' },
           { text: 'Menu 菜单', link: '/components/menu' },
           { text: 'Dialog 对话框', link: '/components/dialog' },
+          { text: 'Toolbar 工具栏', link: '/components/toolbar' },
           { text: 'Tooltip 文字提示', link: '/components/tooltip' },
           { text: 'Snackbar 消息提示', link: '/components/snackbar' },
           { text: 'Card 卡片', link: '/components/card' },

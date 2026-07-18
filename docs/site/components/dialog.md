@@ -11,6 +11,8 @@ order: 100
 
 `<mat-dialog>` 的组件导出名是 `MatDialog`。组件使用原生 modal dialog 与 Vue Teleport，在基础或全屏布局中展示需要使用者确认、输入或选择的内容，并可通过 `activator` Slot 放置触发元素。Dialog 支持受控开关、进入和退出动画、焦点恢复、多个实例的顶层帷幕合并，以及 `dialog()`、`alert()`、`confirm()`、`prompt()` 四个 Promise 函数。
 
+Dialog 通过原生 `showModal()` 进入浏览器 top layer，位于 Toolbar、Snackbar 和 Tooltip 等普通覆盖层之上；不需要额外设置 z-index。
+
 ## 示例
 
 ### `modelValue`、`title` 与 `content`

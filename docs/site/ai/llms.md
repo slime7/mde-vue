@@ -46,6 +46,7 @@ llms: false
 - Split button：`docs/site/components/split-button.md`
 - Text field 与 Textarea：`docs/site/components/text-field.md`
 - Menu 与 Menu item：`docs/site/components/menu.md`
+- Toolbar：`docs/site/components/toolbar.md`
 - Tooltip：`docs/site/components/tooltip.md`
 - Snackbar：`docs/site/components/snackbar.md`
 - Spacer：`docs/site/components/spacer.md`

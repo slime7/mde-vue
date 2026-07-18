@@ -25,6 +25,7 @@ export { default as MatSpacer } from './components/mat-spacer/MatSpacer.vue';
 export { default as MatLoader } from './components/mat-loader/MatLoader.vue';
 export { default as MatTooltip } from './components/mat-tooltip/MatTooltip.vue';
 export { default as MatSnackbar } from './components/mat-snackbar/MatSnackbar.vue';
+export { default as MatToolbar } from './components/mat-toolbar/MatToolbar.vue';
 export { default as MatPanes } from './components/mat-panes/MatPanes.vue';
 export { default as MatPane } from './components/mat-panes/MatPane.vue';
 // Node/Vitest 直接解析包源码时需要保留 JavaScript 扩展名。

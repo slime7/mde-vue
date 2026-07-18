@@ -239,6 +239,11 @@
   --mat-sys-elevation-level4: 0 6px 10px 4px rgb(0 0 0 / 15%), 0 2px 3px rgb(0 0 0 / 30%);
   --mat-sys-elevation-level5: 0 8px 12px 6px rgb(0 0 0 / 15%), 0 4px 4px rgb(0 0 0 / 30%);
 
+  /* Overlay stacking */
+  --mat-sys-z-index-toolbar: 100;
+  --mat-sys-z-index-snackbar: 200;
+  --mat-sys-z-index-tooltip: 300;
+
   /* Motion */
   --mat-sys-motion-duration-short1: 50ms;
   --mat-sys-motion-duration-short2: 100ms;
@@ -427,6 +432,15 @@
   --mat-tooltip-container-shape: var(--mat-sys-shape-corner-extra-small);
   --mat-tooltip-container-elevation: var(--mat-sys-elevation-level0);
   --mat-tooltip-viewport-margin: 8px;
+
+  /* Toolbar component tokens */
+  --mat-toolbar-container-height: 64px;
+  --mat-toolbar-container-padding: 16px;
+  --mat-toolbar-content-gap: 8px;
+  --mat-toolbar-floating-edge-space: 16px;
+  --mat-toolbar-vertical-edge-space: 24px;
+  --mat-toolbar-container-shape: var(--mat-sys-shape-corner-full);
+  --mat-toolbar-container-elevation: var(--mat-sys-elevation-level2);
 
   /* Snackbar component tokens */
   --mat-snackbar-container-color: var(--mat-sys-color-inverse-surface);

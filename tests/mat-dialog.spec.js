@@ -4,6 +4,7 @@ import {
 } from 'vitest';
 import { h, nextTick } from 'vue';
 import MatDialog from '../src/components/mat-dialog/MatDialog.vue';
+import MatToolbar from '../src/components/mat-toolbar/MatToolbar.vue';
 
 beforeAll(() => {
   Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {
@@ -422,6 +423,32 @@ describe('MatDialog', () => {
 
     await first.setProps({ modelValue: false });
     await vi.advanceTimersByTimeAsync(200);
+  });
+
+  it('与 Toolbar 同时存在时仍通过原生 showModal 保持 top layer', async () => {
+    const toolbar = mount(MatToolbar, {
+      attachTo: document.body,
+    });
+    const dialog = mount(MatDialog, {
+      props: {
+        modelValue: true,
+        title: '高于 Toolbar 的 Dialog',
+      },
+    });
+
+    await settleRender();
+
+    const dialogElement = document.body.querySelector('dialog');
+
+    expect(document.body.querySelector('.mat-toolbar')).not.toBeNull();
+    expect(dialogElement).not.toBeNull();
+    expect(dialogElement.open).toBe(true);
+    expect(dialogElement.style.zIndex).toBe('');
+
+    await dialog.setProps({ modelValue: false });
+    await vi.advanceTimersByTimeAsync(200);
+    toolbar.unmount();
+    dialog.unmount();
   });
 
   it('打开时聚焦首个操作，关闭完成后恢复原焦点', async () => {

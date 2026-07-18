@@ -17,6 +17,10 @@ import {
   completeSnackbar,
   enqueueSnackbar,
 } from '../snackbar-queue';
+import {
+  getBottomToolbarClearance,
+  subscribeToolbarOverlay,
+} from '../toolbar-overlay';
 import MatIcon from '../mat-icon/MatIcon.vue';
 
 defineOptions({
@@ -85,6 +89,7 @@ const hasAction = computed(() => Boolean(slots.action) || (
 ));
 const hasClose = computed(() => Boolean(slots.close) || props.closable);
 const hasTrailing = computed(() => hasAction.value || hasClose.value);
+const toolbarBottomClearance = ref(0);
 const resolvedCloseLabel = computed(() => (
   typeof props.closeLabel === 'string' && props.closeLabel.trim().length > 0
     ? props.closeLabel
@@ -94,6 +99,15 @@ let mounted = false;
 let durationTimer;
 let phaseTimer;
 let warnedForMissingContent = false;
+let removeToolbarListener = null;
+
+const rootStyle = computed(() => ({
+  '--mat-snackbar-toolbar-clearance': `${toolbarBottomClearance.value}px`,
+}));
+
+function syncToolbarClearance() {
+  toolbarBottomClearance.value = getBottomToolbarClearance();
+}
 
 const queueEntry = {
   activate: openSnackbar,
@@ -277,6 +291,8 @@ function requestOpen() {
 
 onMounted(() => {
   mounted = true;
+  removeToolbarListener = subscribeToolbarOverlay(syncToolbarClearance);
+  syncToolbarClearance();
 
   if (props.modelValue) {
     requestOpen();
@@ -284,6 +300,8 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   mounted = false;
+  removeToolbarListener?.();
+  removeToolbarListener = null;
   clearDurationTimer();
   clearPhaseTimer();
 
@@ -343,6 +361,7 @@ watch(() => props.duration, () => {
         `mat-snackbar--${position}`,
         { 'mat-snackbar--with-trailing': hasTrailing },
       ]"
+      :style="rootStyle"
       aria-atomic="true"
       aria-live="polite"
       role="status"
@@ -401,8 +420,11 @@ watch(() => props.duration, () => {
   --mat-snackbar-close-target-size: 48px;
   --mat-snackbar-close-icon-size: 24px;
   position: fixed;
-  z-index: 1000;
-  inset-block-end: calc(var(--mat-snackbar-viewport-margin) + env(safe-area-inset-bottom));
+  z-index: var(--mat-sys-z-index-snackbar);
+  inset-block-end: calc(
+    var(--mat-snackbar-viewport-margin)
+    + max(env(safe-area-inset-bottom), var(--mat-snackbar-toolbar-clearance))
+  );
   box-sizing: border-box;
   display: flex;
   align-items: center;

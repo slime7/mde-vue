@@ -9,7 +9,7 @@ order: 105
 
 ## 组件简介
 
-`<mat-tooltip>` 的组件导出名是 `MatTooltip`。它实现 Material 3 Plain tooltip：用于补充展示元素的简短、非交互说明。组件以固定定位 Teleport 到指定容器，默认显示在展示元素上方；不包含 Rich tooltip、操作按钮、箭头或触屏长按。
+`<mat-tooltip>` 的组件导出名是 `MatTooltip`。它实现 Material 3 Plain tooltip：用于补充展示元素的简短、非交互说明。组件以固定定位 Teleport 到指定容器，默认显示在展示元素上方；不包含 Rich tooltip、操作按钮、箭头或触屏长按。页面存在 Toolbar 时，Tooltip 会把 Toolbar 作为避让区域，必要时自动换边。
 
 ## 示例
 

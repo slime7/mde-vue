@@ -15,6 +15,10 @@ import {
 } from 'vue';
 import { getTooltipPosition, TOOLTIP_LOCATIONS } from '../tooltip-position';
 import { activateTooltip, deactivateTooltip } from '../tooltip-stack';
+import {
+  getToolbarRects,
+  subscribeToolbarOverlay,
+} from '../toolbar-overlay';
 
 const CLOSE_DELAY = 1500;
 const CLOSE_DURATION = 150;
@@ -103,6 +107,7 @@ let positionFrameUsesAnimation = false;
 let resizeObserver;
 let removeTargetListeners = null;
 let removeViewportListeners = null;
+let removeToolbarListener = null;
 let describedTarget = null;
 let previousDescribedBy = null;
 let mounted = false;
@@ -316,6 +321,11 @@ function stopPositioning() {
     removeViewportListeners();
     removeViewportListeners = null;
   }
+
+  if (removeToolbarListener) {
+    removeToolbarListener();
+    removeToolbarListener = null;
+  }
 }
 
 function updatePosition() {
@@ -327,6 +337,7 @@ function updatePosition() {
     location: props.location,
     targetRect: targetElement.value.getBoundingClientRect(),
     tooltipRect: tooltipElement.value.getBoundingClientRect(),
+    avoidRects: getToolbarRects(),
     viewport: {
       height: window.innerHeight,
       width: window.innerWidth,
@@ -372,6 +383,7 @@ function startPositioning() {
     window.removeEventListener('resize', schedulePositionUpdate);
     document.removeEventListener('scroll', schedulePositionUpdate, true);
   };
+  removeToolbarListener = subscribeToolbarOverlay(schedulePositionUpdate);
 
   if (typeof ResizeObserver !== 'undefined') {
     resizeObserver = new ResizeObserver(schedulePositionUpdate);
@@ -760,7 +772,7 @@ watch(tooltipId, () => {
 
 .mat-tooltip {
   position: fixed;
-  z-index: 1000;
+  z-index: var(--mat-sys-z-index-tooltip);
   box-sizing: border-box;
   display: flex;
   align-items: center;

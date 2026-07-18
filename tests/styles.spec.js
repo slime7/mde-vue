@@ -11,6 +11,10 @@ const tooltipComponent = readFileSync(
   resolve('src/components/mat-tooltip/MatTooltip.vue'),
   'utf8',
 );
+const toolbarComponent = readFileSync(
+  resolve('src/components/mat-toolbar/MatToolbar.vue'),
+  'utf8',
+);
 const typeStyles = [
   'display-large', 'display-medium', 'display-small',
   'headline-large', 'headline-medium', 'headline-small',
@@ -112,6 +116,9 @@ describe('公共样式令牌', () => {
     expect(styles).toContain('--mat-sys-state-pressed-state-layer-opacity: .12;');
     expect(styles).toContain('--mat-sys-state-dragged-state-layer-opacity: .16;');
     expect(styles).toContain('--mat-sys-interaction-target-min-size: 48px;');
+    expect(styles).toContain('--mat-sys-z-index-toolbar: 100;');
+    expect(styles).toContain('--mat-sys-z-index-snackbar: 200;');
+    expect(styles).toContain('--mat-sys-z-index-tooltip: 300;');
   });
 });
 
@@ -146,5 +153,18 @@ describe('Tooltip 样式', () => {
     expect(tooltipComponent).toContain('box-shadow: var(--mat-tooltip-container-elevation);');
     expect(tooltipComponent).toContain('pointer-events: none;');
     expect(tooltipComponent).toContain('@media (prefers-reduced-motion: reduce)');
+  });
+});
+
+describe('Toolbar 样式', () => {
+  it('使用 64px 容器、浮动边距和覆盖层令牌', () => {
+    expect(styles).toContain('--mat-toolbar-container-height: 64px;');
+    expect(styles).toContain('--mat-toolbar-container-padding: 16px;');
+    expect(styles).toContain('--mat-toolbar-content-gap: 8px;');
+    expect(styles).toContain('--mat-toolbar-floating-edge-space: 16px;');
+    expect(styles).toContain('--mat-toolbar-vertical-edge-space: 24px;');
+    expect(toolbarComponent).toContain('z-index: var(--mat-sys-z-index-toolbar);');
+    expect(toolbarComponent).toContain('border-radius: var(--mat-toolbar-container-shape);');
+    expect(toolbarComponent).toContain('padding-block-end: var(--mat-toolbar-bottom-placeholder);');
   });
 });

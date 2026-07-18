@@ -5,6 +5,7 @@ import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
 import { h, nextTick } from 'vue';
+import MatToolbar from '../src/components/mat-toolbar/MatToolbar.vue';
 import MatSnackbar from '../src/components/mat-snackbar/MatSnackbar.vue';
 
 const componentSource = readFileSync(
@@ -14,6 +15,7 @@ const componentSource = readFileSync(
 const stylesSource = readFileSync(resolve('src/styles/index.css'), 'utf8');
 
 const wrappers = [];
+const innerHeightDescriptor = Object.getOwnPropertyDescriptor(window, 'innerHeight');
 
 async function settleRender() {
   await nextTick();
@@ -48,6 +50,9 @@ describe('MatSnackbar', () => {
 
   afterEach(() => {
     wrappers.splice(0).reverse().forEach((wrapper) => wrapper.unmount());
+    if (innerHeightDescriptor) {
+      Object.defineProperty(window, 'innerHeight', innerHeightDescriptor);
+    }
     vi.useRealTimers();
   });
 
@@ -331,5 +336,46 @@ describe('MatSnackbar', () => {
       'padding-inline-end: var(--mat-snackbar-action-trailing-space);',
     );
     expect(componentSource).toContain('@media (prefers-reduced-motion: reduce)');
+  });
+
+  it('底部 Toolbar 存在时通过实际矩形自动上移', async () => {
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: 600,
+    });
+    const toolbarWrapper = mount(MatToolbar, {
+      attachTo: document.body,
+      props: {
+        bottomPlaceholder: 24,
+        variant: 'floating-bottom',
+      },
+    });
+    const toolbar = document.body.querySelector('.mat-toolbar');
+
+    vi.spyOn(toolbar, 'getBoundingClientRect').mockReturnValue({
+      bottom: 560,
+      height: 80,
+      left: 120,
+      right: 680,
+      top: 480,
+      width: 560,
+    });
+    window.dispatchEvent(new Event('resize'));
+
+    const snackbar = mountSnackbar({
+      props: {
+        duration: 0,
+        modelValue: true,
+        text: '位于 Toolbar 上方',
+      },
+    });
+
+    await settleRender();
+
+    expect(snackbarElement().style.getPropertyValue('--mat-snackbar-toolbar-clearance')).toBe('120px');
+    expect(componentSource).toContain('max(env(safe-area-inset-bottom)');
+
+    snackbar.unmount();
+    toolbarWrapper.unmount();
   });
 });

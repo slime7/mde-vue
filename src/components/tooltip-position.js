@@ -141,9 +141,91 @@ function getBasePosition(side, alignment, target, tooltip, gap) {
 }
 
 /**
+ * @param {'top' | 'right' | 'bottom' | 'left'} preferredSide
+ * @returns {Array<'top' | 'right' | 'bottom' | 'left'>}
+ */
+function getCandidateSides(preferredSide) {
+  return [
+    preferredSide,
+    OPPOSITE_SIDES[preferredSide],
+    ...['top', 'right', 'bottom', 'left'].filter((side) => (
+      side !== preferredSide && side !== OPPOSITE_SIDES[preferredSide]
+    )),
+  ];
+}
+
+/**
+ * @param {{ left: number, top: number }} position
+ * @param {{ height: number, width: number }} tooltip
+ * @returns {{ bottom: number, left: number, right: number, top: number }}
+ */
+function getPositionRect(position, tooltip) {
+  return {
+    bottom: position.top + tooltip.height,
+    left: position.left,
+    right: position.left + tooltip.width,
+    top: position.top,
+  };
+}
+
+/**
+ * @param {{ bottom: number, left: number, right: number, top: number }} first
+ * @param {{ bottom: number, left: number, right: number, top: number }} second
+ * @returns {boolean}
+ */
+function intersects(first, second) {
+  return first.left < second.right
+    && first.right > second.left
+    && first.top < second.bottom
+    && first.bottom > second.top;
+}
+
+/**
+ * @param {'top' | 'right' | 'bottom' | 'left'} side
+ * @param {'start' | 'center' | 'end'} alignment
+ * @param {{ bottom: number, height: number, left: number, right: number, top: number, width: number }} target
+ * @param {{ height: number, width: number }} tooltip
+ * @param {{ height: number, width: number }} viewport
+ * @param {number} margin
+ * @param {number} gap
+ * @param {object[]} avoidRects
+ * @returns {{ left: number, top: number } | null}
+ */
+function findClearPosition(
+  side,
+  alignment,
+  target,
+  tooltip,
+  viewport,
+  margin,
+  gap,
+  avoidRects,
+) {
+  const basePosition = getBasePosition(side, alignment, target, tooltip, gap);
+  const maxLeft = Math.max(margin, viewport.width - tooltip.width - margin);
+  const maxTop = Math.max(margin, viewport.height - tooltip.height - margin);
+  const position = {
+    left: clamp(basePosition.left, margin, maxLeft),
+    top: clamp(basePosition.top, margin, maxTop),
+  };
+  const tooltipPositionRect = getPositionRect(position, tooltip);
+
+  if (intersects(tooltipPositionRect, target)) {
+    return null;
+  }
+
+  if (avoidRects.some((rect) => intersects(tooltipPositionRect, normalizeRect(rect)))) {
+    return null;
+  }
+
+  return position;
+}
+
+/**
  * 计算 Tooltip 的固定定位坐标，并在主轴不足时翻转、在交叉轴超出时夹紧。
  *
  * @param {object} options
+ * @param {object[]} [options.avoidRects=[]]
  * @param {number} [options.gap=4]
  * @param {string} [options.location='top']
  * @param {number} [options.margin=8]
@@ -153,6 +235,7 @@ function getBasePosition(side, alignment, target, tooltip, gap) {
  * @returns {{ left: number, location: string, top: number }}
  */
 export function getTooltipPosition({
+  avoidRects = [],
   gap = 4,
   location = 'top',
   margin = 8,
@@ -179,10 +262,41 @@ export function getTooltipPosition({
   const side = tooltipMainSize > preferredSpace && oppositeSpace > preferredSpace
     ? oppositeSide
     : preferredSide;
-  const appliedLocation = alignment === 'center' ? side : `${side}-${alignment}`;
-  const position = getBasePosition(side, alignment, target, tooltip, gap);
   const maxLeft = Math.max(margin, viewport.width - tooltip.width - margin);
   const maxTop = Math.max(margin, viewport.height - tooltip.height - margin);
+  const candidateSides = getCandidateSides(side);
+  const normalizedAvoidRects = avoidRects.map((rect) => normalizeRect(rect));
+  const fittingSide = candidateSides.find((candidateSide) => (
+    getAvailableSpace(candidateSide, target, viewport, margin, gap)
+      >= tooltipMainSize
+    && findClearPosition(
+      candidateSide,
+      alignment,
+      target,
+      tooltip,
+      viewport,
+      margin,
+      gap,
+      normalizedAvoidRects,
+    )
+  ));
+  const clearSide = fittingSide ?? candidateSides.find((candidateSide) => (
+    findClearPosition(
+      candidateSide,
+      alignment,
+      target,
+      tooltip,
+      viewport,
+      margin,
+      gap,
+      normalizedAvoidRects,
+    )
+  ));
+  const appliedSide = clearSide ?? side;
+  const appliedLocation = alignment === 'center'
+    ? appliedSide
+    : `${appliedSide}-${alignment}`;
+  const position = getBasePosition(appliedSide, alignment, target, tooltip, gap);
 
   return {
     left: Math.round(clamp(position.left, margin, maxLeft)),

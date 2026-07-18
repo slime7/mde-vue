@@ -13,6 +13,8 @@ order: 110
 
 Snackbar 适合“保存完成”“已复制链接”这类无需立即作答的反馈。可选文字 action 适合与这条反馈直接相关的简短操作，例如“撤销”；一次只提供一个 action。它不提供多操作菜单、图标、颜色或挂载目标。需要用户决定、输入或确认时应使用 Dialog。
 
+当页面存在 `mat-toolbar` 的底部停靠或悬浮模式时，Snackbar 会自动向上避让 Toolbar 及其 `bottomPlaceholder` 空间；不需要额外设置 z-index 或底部偏移。没有 Toolbar 时继续使用视口底部安全区。
+
 ## 示例
 
 ### `v-model`

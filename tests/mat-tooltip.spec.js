@@ -3,6 +3,7 @@ import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
 import { h, nextTick } from 'vue';
+import MatToolbar from '../src/components/mat-toolbar/MatToolbar.vue';
 import MatTooltip from '../src/components/mat-tooltip/MatTooltip.vue';
 
 async function settleRender() {
@@ -571,5 +572,64 @@ describe('MatTooltip', () => {
     expect(tooltip.style.top).toBe('146px');
 
     wrapper.unmount();
+  });
+
+  it('Toolbar 占用首选位置时重新计算到无遮挡方向', async () => {
+    const toolbarWrapper = mount(MatToolbar, {
+      attachTo: document.body,
+      props: {
+        variant: 'floating-bottom',
+      },
+    });
+    const toolbar = document.body.querySelector('.mat-toolbar');
+    const target = createTarget('toolbar-tooltip-target');
+    const targetRect = {
+      bottom: 480,
+      height: 20,
+      left: 380,
+      right: 420,
+      top: 460,
+      width: 40,
+    };
+    const tooltipRect = {
+      bottom: 10,
+      height: 10,
+      left: 0,
+      right: 20,
+      top: 0,
+      width: 20,
+    };
+
+    vi.spyOn(toolbar, 'getBoundingClientRect').mockReturnValue({
+      bottom: 600,
+      height: 110,
+      left: 0,
+      right: 800,
+      top: 490,
+      width: 800,
+    });
+    vi.spyOn(target, 'getBoundingClientRect').mockReturnValue(targetRect);
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      props: {
+        content: '避让 Toolbar',
+        location: 'bottom',
+        target,
+      },
+    });
+
+    await hover(target);
+
+    const tooltip = document.body.querySelector('[role="tooltip"]');
+
+    vi.spyOn(tooltip, 'getBoundingClientRect').mockReturnValue(tooltipRect);
+    window.dispatchEvent(new Event('resize'));
+    await vi.advanceTimersByTimeAsync(20);
+    await settleRender();
+
+    expect(tooltip.dataset.location).toBe('top');
+
+    wrapper.unmount();
+    toolbarWrapper.unmount();
   });
 });
