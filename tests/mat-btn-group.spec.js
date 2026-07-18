@@ -230,7 +230,7 @@ describe('MatBtnGroup', () => {
     expect(wrapper.emitted('select')).toBeUndefined();
   });
 
-  it.each(['round', 'square'])('connected %s 组为选中按钮保留外部组轮廓并反转内部形状', (shape) => {
+  it.each(['round', 'square'])('connected %s 组让选中按钮使用 round 内角并保留外部组轮廓', (shape) => {
     const shapeRule = buttonGroupSource.match(
       new RegExp(`\\.mat-btn-group--connected\\.mat-btn-group--shape-${shape}[^}]*\\{([\\s\\S]*?)\\n\\}`),
     )?.[1];
@@ -239,14 +239,10 @@ describe('MatBtnGroup', () => {
     expect(shapeRule).toContain('--mat-btn-group-connected-selected-inner-corner-size:');
     expect(shapeRule).toContain('--mat-btn-group-connected-selected-pressed-inner-corner-size:');
     expect(shapeRule).toContain(
-      shape === 'round'
-        ? '--mat-btn-group-connected-selected-inner-corner-size: var(--mat-btn-square-container-shape);'
-        : '--mat-btn-group-connected-selected-inner-corner-size: var(--mat-button-full-radius);',
+      '--mat-btn-group-connected-selected-inner-corner-size: var(--mat-button-full-radius);',
     );
     expect(shapeRule).toContain(
-      shape === 'round'
-        ? '--mat-btn-group-connected-selected-pressed-inner-corner-size: var(--mat-button-pressed-radius);'
-        : '--mat-btn-group-connected-selected-pressed-inner-corner-size: var(--mat-button-full-radius);',
+      '--mat-btn-group-connected-selected-pressed-inner-corner-size: var(--mat-btn-group-connected-pressed-inner-corner-size);',
     );
     expect(buttonGroupSource).toContain(
       `.mat-btn-group--connected.mat-btn-group--shape-${shape} :deep(.mat-button-base) {`,

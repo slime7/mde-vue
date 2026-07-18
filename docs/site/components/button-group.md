@@ -201,7 +201,7 @@ order: 60
   </DocsPreview>
 </ClientOnly>
 
-按下 standard 子项时，该项宽度临时增大，直接相邻项同步缩窄；connected 只改变当前按钮的按压形状，不联动相邻宽度。两种形态的选中按钮都会把 `round` 与 `square` 反转；connected 同时保持组外部首尾圆角的轮廓。组的 `size`、`shape`、`color` 只作为未显式设置子项的默认值，组 `disabled` 与子项 `disabled` 取或。
+按下 standard 子项时，该项宽度临时增大，直接相邻项同步缩窄；connected 只改变当前按钮的按压形状，不联动相邻宽度。standard 的选中按钮会把 `round` 与 `square` 反转；connected 的选中按钮使用 round 内角，`shape` 只改变未选中组的外部轮廓，并保持首尾选中按钮的组外侧轮廓。组的 `size`、`shape`、`color` 只作为未显式设置子项的默认值，组 `disabled` 与子项 `disabled` 取或。
 
 ## API
 
@@ -212,7 +212,7 @@ order: 60
 | `block` | `boolean` | `false` | 使用块级 flex 组根，在普通文档流中铺满父元素；不改变子按钮宽度分配 |
 | `variant` | `'standard' \| 'connected'` | `'standard'` | 组布局形态 |
 | `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'small'` | 未显式设置尺寸的子按钮继承该值 |
-| `shape` | `'round' \| 'square'` | `'round'` | 子按钮形状和 connected 外角形状 |
+| `shape` | `'round' \| 'square'` | `'round'` | standard 子按钮形状；connected 未选中组的外角形状，选中按钮内角为 round |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 级联给未显式设置 `color` 的子按钮 |
 | `disabled` | `boolean` | `false` | 为 true 时禁用全部子按钮；子按钮仍可单独禁用 |
 | `selection` | `'none' \| 'single' \| 'multiple'` | `'none'` | standard 与 connected 都支持的选择模式；connected 使用 `none` 时发出开发警告 |

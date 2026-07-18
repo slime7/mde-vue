@@ -18,7 +18,8 @@
 | [0010](0010-merge-button-and-icon-button.md) | superseded | 合并 Button 与 Icon button |
 | [0011](0011-dialog-imperative-host-and-promise-settlement.md) | active | 采用共享 Dialog 宿主与关闭后 Promise 结算 |
 | [0012](0012-toolbar-overlay-geometry-registry.md) | active | 使用内部 Toolbar 几何注册协调覆盖层 |
-| [0013](0013-button-icon-group-semantics.md) | active | 重构按钮组与图标按钮语义 |
+| [0013](0013-button-icon-group-semantics.md) | superseded | 重构按钮组与图标按钮语义 |
+| [0014](0014-connected-button-group-checked-shape.md) | active | 连接按钮组选中态使用全圆形状 |
 
 ## 何时创建 ADR
 
