@@ -6,6 +6,17 @@ const variant = ref('docked');
 const position = ref('center');
 const vibrant = ref(false);
 const active = ref(false);
+const variantOptions = [
+  { label: 'docked', value: 'docked' },
+  { label: 'floating-bottom', value: 'floating-bottom' },
+  { label: 'floating-left', value: 'floating-left' },
+  { label: 'floating-right', value: 'floating-right' },
+];
+const positionOptions = [
+  { label: 'start', value: 'start' },
+  { label: 'center', value: 'center' },
+  { label: 'end', value: 'end' },
+];
 const isFloating = computed(() => variant.value.startsWith('floating'));
 </script>
 <!-- #endregion script -->
@@ -14,37 +25,58 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
 <template>
   <div class="toolbar-variant-example">
     <div class="toolbar-variant-example__controls">
-      <mat-btn
-        v-for="item in ['docked', 'floating-bottom', 'floating-left', 'floating-right']"
-        :key="item"
-        variant="outlined"
-        :selected="variant === item"
-        @click="variant = item"
+      <div class="toolbar-variant-example__control-group">
+        <span class="toolbar-variant-example__control-label">variant</span>
+        <mat-btn-group
+          aria-label="Toolbar variant"
+          variant="connected"
+          selection="single"
+          required
+          :selected="variant"
+          @select="variant = $event.nextSelected"
+        >
+          <mat-btn
+            v-for="item in variantOptions"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ item.label }}
+          </mat-btn>
+        </mat-btn-group>
+      </div>
+
+      <div class="toolbar-variant-example__control-group">
+        <span class="toolbar-variant-example__control-label">position</span>
+        <mat-btn-group
+          aria-label="Toolbar position"
+          variant="connected"
+          selection="single"
+          required
+          :selected="position"
+          @select="position = $event.nextSelected"
+        >
+          <mat-btn
+            v-for="item in positionOptions"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ item.label }}
+          </mat-btn>
+        </mat-btn-group>
+      </div>
+
+      <div
+        class="toolbar-variant-example__control-group toolbar-variant-example__control-group--switches"
+        role="group"
+        aria-label="Toolbar 状态"
       >
-        {{ item }}
-      </mat-btn>
-      <mat-btn
-        variant="text"
-        :selected="vibrant"
-        @click="vibrant = !vibrant"
-      >
-        {{ vibrant ? 'standard' : 'vibrant' }}
-      </mat-btn>
-      <mat-btn
-        v-for="item in ['start', 'center', 'end']"
-        :key="`position-${item}`"
-        variant="text"
-        :selected="position === item"
-        @click="position = item"
-      >
-        position: {{ item }}
-      </mat-btn>
-      <mat-btn
-        variant="outlined"
-        @click="active = !active"
-      >
-        {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
-      </mat-btn>
+        <mat-switch v-model="vibrant">
+          vibrant
+        </mat-switch>
+        <mat-switch v-model="active">
+          {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
+        </mat-switch>
+      </div>
     </div>
 
     <mat-toolbar
@@ -81,9 +113,28 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
 
 .toolbar-variant-example__controls {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
 }
 
+.toolbar-variant-example__control-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  max-inline-size: 100%;
+}
+
+.toolbar-variant-example__control-label {
+  flex: 0 0 72px;
+  color: var(--mat-sys-color-on-surface-variant);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.toolbar-variant-example__control-group--switches {
+  gap: 16px;
+}
 </style>
 <!-- #endregion style -->

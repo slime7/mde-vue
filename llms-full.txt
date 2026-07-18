@@ -8066,7 +8066,7 @@ Toolbar 默认固定显示，使用 `modelValue` 或 `v-model` 可以播放进�
 
 ## 示例
 
-### `variant`、`position`、`vibrant` 与 `fab` Slot
+### `variant`、`position`、`vibrant`、显示状态与 `fab` Slot
 
 :::: details 查看示例代码
 ::: code-group
@@ -8075,37 +8075,58 @@ Toolbar 默认固定显示，使用 `modelValue` 或 `v-model` 可以播放进�
 <template>
   <div class="toolbar-variant-example">
     <div class="toolbar-variant-example__controls">
-      <mat-btn
-        v-for="item in ['docked', 'floating-bottom', 'floating-left', 'floating-right']"
-        :key="item"
-        variant="outlined"
-        :selected="variant === item"
-        @click="variant = item"
+      <div class="toolbar-variant-example__control-group">
+        <span class="toolbar-variant-example__control-label">variant</span>
+        <mat-btn-group
+          aria-label="Toolbar variant"
+          variant="connected"
+          selection="single"
+          required
+          :selected="variant"
+          @select="variant = $event.nextSelected"
+        >
+          <mat-btn
+            v-for="item in variantOptions"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ item.label }}
+          </mat-btn>
+        </mat-btn-group>
+      </div>
+
+      <div class="toolbar-variant-example__control-group">
+        <span class="toolbar-variant-example__control-label">position</span>
+        <mat-btn-group
+          aria-label="Toolbar position"
+          variant="connected"
+          selection="single"
+          required
+          :selected="position"
+          @select="position = $event.nextSelected"
+        >
+          <mat-btn
+            v-for="item in positionOptions"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ item.label }}
+          </mat-btn>
+        </mat-btn-group>
+      </div>
+
+      <div
+        class="toolbar-variant-example__control-group toolbar-variant-example__control-group--switches"
+        role="group"
+        aria-label="Toolbar 状态"
       >
-        {{ item }}
-      </mat-btn>
-      <mat-btn
-        variant="text"
-        :selected="vibrant"
-        @click="vibrant = !vibrant"
-      >
-        {{ vibrant ? 'standard' : 'vibrant' }}
-      </mat-btn>
-      <mat-btn
-        v-for="item in ['start', 'center', 'end']"
-        :key="`position-${item}`"
-        variant="text"
-        :selected="position === item"
-        @click="position = item"
-      >
-        position: {{ item }}
-      </mat-btn>
-      <mat-btn
-        variant="outlined"
-        @click="active = !active"
-      >
-        {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
-      </mat-btn>
+        <mat-switch v-model="vibrant">
+          vibrant
+        </mat-switch>
+        <mat-switch v-model="active">
+          {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
+        </mat-switch>
+      </div>
     </div>
 
     <mat-toolbar
@@ -8141,6 +8162,17 @@ const variant = ref('docked');
 const position = ref('center');
 const vibrant = ref(false);
 const active = ref(false);
+const variantOptions = [
+  { label: 'docked', value: 'docked' },
+  { label: 'floating-bottom', value: 'floating-bottom' },
+  { label: 'floating-left', value: 'floating-left' },
+  { label: 'floating-right', value: 'floating-right' },
+];
+const positionOptions = [
+  { label: 'start', value: 'start' },
+  { label: 'center', value: 'center' },
+  { label: 'end', value: 'end' },
+];
 const isFloating = computed(() => variant.value.startsWith('floating'));
 </script>
 ```
@@ -8152,17 +8184,36 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
 
 .toolbar-variant-example__controls {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
 }
 
+.toolbar-variant-example__control-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  max-inline-size: 100%;
+}
+
+.toolbar-variant-example__control-label {
+  flex: 0 0 72px;
+  color: var(--mat-sys-color-on-surface-variant);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.toolbar-variant-example__control-group--switches {
+  gap: 16px;
+}
 </style>
 ```
 :::
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Toolbar variant、position、vibrant 与 fab Slot 预览">
+  <DocsPreview label="Toolbar 分组控制与 fab Slot 预览">
     <ToolbarVariantExample />
   </DocsPreview>
 </ClientOnly>
@@ -8242,11 +8293,21 @@ const placeholderEnabled = ref(true);
     <mat-btn variant="outlined" @click="active = !active">
       {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
     </mat-btn>
+    <div class="toolbar-bottom-placeholder-example__slider">
+      <mat-slider
+        v-model="bottomPlaceholder"
+        aria-label="底部额外占位"
+        :max="40"
+        :min="0"
+        :step="1"
+      />
+      <output>底部额外占位：{{ bottomPlaceholder }}px</output>
+    </div>
     <p>bottomPlaceholder 只增加底部手势条或安全区空间，不会开启自然布局占位。</p>
 
     <mat-toolbar
       v-model="active"
-      bottom-placeholder="env(safe-area-inset-bottom)"
+      :bottom-placeholder="bottomPlaceholder"
     >
       <mat-btn variant="standard">
         取消
@@ -8264,6 +8325,7 @@ const placeholderEnabled = ref(true);
 import { ref } from 'vue';
 
 const active = ref(false);
+const bottomPlaceholder = ref(0);
 </script>
 ```
 ```vue
@@ -8271,13 +8333,31 @@ const active = ref(false);
 .toolbar-bottom-placeholder-example {
   min-block-size: 180px;
 }
+
+.toolbar-bottom-placeholder-example__slider {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  inline-size: min(100%, 480px);
+}
+
+.toolbar-bottom-placeholder-example__slider .mat-slider {
+  flex: 1 1 280px;
+  min-inline-size: 220px;
+}
+
+.toolbar-bottom-placeholder-example__slider output {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+}
 </style>
 ```
 :::
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Toolbar 底部安全区预览">
+  <DocsPreview label="Toolbar 底部安全区滑块预览">
     <ToolbarBottomPlaceholderExample />
   </DocsPreview>
 </ClientOnly>

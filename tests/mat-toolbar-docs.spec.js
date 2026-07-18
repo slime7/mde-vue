@@ -72,4 +72,33 @@ describe('Toolbar 文档', () => {
     expect(example).toContain('width="wide"');
     expect(example).not.toContain('toolbar-variant-example__fab');
   });
+
+  it('将 Variant 示例的选项按功能分组', () => {
+    const example = readFileSync(
+      resolve('docs/site/examples/toolbar/ToolbarVariantExample.vue'),
+      'utf8',
+    );
+
+    expect(example).toContain('<mat-btn-group');
+    expect(example).toContain('variant="connected"');
+    expect(example).toContain('selection="single"');
+    expect(example).toContain('@select="variant = $event.nextSelected"');
+    expect(example).toContain('@select="position = $event.nextSelected"');
+    expect(example).toContain('<mat-switch v-model="vibrant">');
+    expect(example).toContain('<mat-switch v-model="active">');
+  });
+
+  it('使用 0 到 40px 的 Slider 调节 bottomPlaceholder 示例', () => {
+    const example = readFileSync(
+      resolve('docs/site/examples/toolbar/ToolbarBottomPlaceholderExample.vue'),
+      'utf8',
+    );
+
+    expect(example).toContain('const bottomPlaceholder = ref(0);');
+    expect(example).toContain('<mat-slider');
+    expect(example).toContain(':min="0"');
+    expect(example).toContain(':max="40"');
+    expect(example).toContain(':bottom-placeholder="bottomPlaceholder"');
+    expect(example).toContain('{{ bottomPlaceholder }}px');
+  });
 });

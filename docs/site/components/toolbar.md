@@ -15,7 +15,7 @@ Toolbar 默认固定显示，使用 `modelValue` 或 `v-model` 可以播放进�
 
 ## 示例
 
-### `variant`、`position`、`vibrant` 与 `fab` Slot
+### `variant`、`position`、`vibrant`、显示状态与 `fab` Slot
 
 :::: details 查看示例代码
 ::: code-group
@@ -30,7 +30,7 @@ Toolbar 默认固定显示，使用 `modelValue` 或 `v-model` 可以播放进�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Toolbar variant、position、vibrant 与 fab Slot 预览">
+  <DocsPreview label="Toolbar 分组控制与 fab Slot 预览">
     <ToolbarVariantExample />
   </DocsPreview>
 </ClientOnly>
@@ -70,7 +70,7 @@ Toolbar 默认固定显示，使用 `modelValue` 或 `v-model` 可以播放进�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Toolbar 底部安全区预览">
+  <DocsPreview label="Toolbar 底部安全区滑块预览">
     <ToolbarBottomPlaceholderExample />
   </DocsPreview>
 </ClientOnly>
