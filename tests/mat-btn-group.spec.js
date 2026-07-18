@@ -298,6 +298,52 @@ describe('MatBtnGroup', () => {
     expect(getInlineSizes(buttons)).toEqual([92.5, 115, 92.5]);
   });
 
+  it('同组按钮间的焦点迁移不结束 standard 按压', async () => {
+    vi.useFakeTimers();
+    mockWidthTransitionDuration();
+    const wrapper = mount(MatBtnGroup, {
+      slots: {
+        default: () => [
+          h(MatBtn, null, () => '一'),
+          h(MatBtn, null, () => '二'),
+        ],
+      },
+    });
+    const buttons = wrapper.findAll('button');
+    mockButtonWidths(buttons, [100, 100]);
+
+    await buttons[0].trigger('pointerdown', { pointerId: 1 });
+    vi.advanceTimersByTime(113);
+    await buttons[0].trigger('focusout', { relatedTarget: buttons[1].element });
+
+    expect(getInlineSizes(buttons)).toEqual([115, 85]);
+  });
+
+  it('standard 复用按钮基础层的单次指针捕获', async () => {
+    const wrapper = mount(MatBtnGroup, {
+      slots: {
+        default: () => [
+          h(MatBtn, null, () => '一'),
+          h(MatBtn, null, () => '二'),
+        ],
+      },
+    });
+    const buttons = wrapper.findAll('button');
+    mockButtonWidths(buttons, [100, 100]);
+    const setPointerCapture = vi.fn();
+
+    Object.defineProperty(buttons[0].element, 'setPointerCapture', {
+      configurable: true,
+      value: setPointerCapture,
+    });
+
+    await buttons[0].trigger('pointerdown', { pointerId: 1 });
+
+    expect(setPointerCapture).toHaveBeenCalledOnce();
+    expect(setPointerCapture).toHaveBeenCalledWith(1);
+    expect(getInlineSizes(buttons)).toEqual([115, 85]);
+  });
+
   it('宽度变化先提交像素起点，再写入可插值的像素终点', async () => {
     mockWidthTransitionDuration(1000);
     const wrapper = mount(MatBtnGroup, {

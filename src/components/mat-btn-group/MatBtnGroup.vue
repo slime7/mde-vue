@@ -401,9 +401,19 @@ async function handlePointerDown(event) {
     return;
   }
 
-  button.setPointerCapture?.(event.pointerId);
   await nextTick();
   expandButton(button);
+}
+
+/**
+ * @param {FocusEvent} event
+ */
+function handleFocusOut(event) {
+  if (event.relatedTarget instanceof Node && root.value?.contains(event.relatedTarget)) {
+    return;
+  }
+
+  requestPressedButtonRestore();
 }
 
 /**
@@ -485,7 +495,7 @@ watch(
     ]"
     :style="colorStyle"
     role="group"
-    @focusout="requestPressedButtonRestore"
+    @focusout="handleFocusOut"
     @keydown="handleKeyDown"
     @keyup.capture="requestPressedButtonRestore"
     @lostpointercapture.capture="requestPressedButtonRestore"
