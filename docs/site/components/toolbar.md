@@ -62,6 +62,8 @@ Toolbar 默认固定显示，不负责滚动隐藏。Material 不建议同时显
 
 <<< @/examples/toolbar/ToolbarBottomPlaceholderExample.vue#template [template]
 
+<<< @/examples/toolbar/ToolbarBottomPlaceholderExample.vue#script [script]
+
 <<< @/examples/toolbar/ToolbarBottomPlaceholderExample.vue#style [style]
 
 :::

@@ -2,21 +2,31 @@
 <script setup>
 import { ref } from 'vue';
 
-const enabled = ref(true);
+const active = ref(false);
+const placeholderEnabled = ref(true);
 </script>
 <!-- #endregion script -->
 
 <!-- #region template -->
 <template>
   <div class="toolbar-placeholder-example">
-    <mat-btn variant="outlined" @click="enabled = !enabled">
-      {{ enabled ? '关闭自然占位' : '开启自然占位' }}
+    <mat-btn variant="outlined" @click="active = !active">
+      {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
+    </mat-btn>
+    <mat-btn
+      variant="text"
+      @click="placeholderEnabled = !placeholderEnabled"
+    >
+      {{ placeholderEnabled ? '关闭自然占位' : '开启自然占位' }}
     </mat-btn>
     <p v-for="index in 5" :key="index">
       页面内容 {{ index }}：开启占位后，滚动到底部时不会被固定 Toolbar 遮挡。
     </p>
 
-    <mat-toolbar :placeholder="enabled">
+    <mat-toolbar
+      v-if="active"
+      :placeholder="placeholderEnabled"
+    >
       <mat-btn variant="standard">
         返回
       </mat-btn>

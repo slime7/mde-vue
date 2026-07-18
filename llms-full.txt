@@ -8091,9 +8091,16 @@ Toolbar 默认固定显示，不负责滚动隐藏。Material 不建议同时显
       >
         {{ vibrant ? 'standard' : 'vibrant' }}
       </mat-btn>
+      <mat-btn
+        variant="outlined"
+        @click="active = !active"
+      >
+        {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
+      </mat-btn>
     </div>
 
     <mat-toolbar
+      v-if="active"
       :variant="variant"
       :vibrant="vibrant"
     >
@@ -8119,6 +8126,7 @@ import { computed, ref } from 'vue';
 
 const variant = ref('docked');
 const vibrant = ref(false);
+const active = ref(false);
 const isFloating = computed(() => variant.value.startsWith('floating'));
 </script>
 ```
@@ -8164,14 +8172,23 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
 ```vue
 <template>
   <div class="toolbar-placeholder-example">
-    <mat-btn variant="outlined" @click="enabled = !enabled">
-      {{ enabled ? '关闭自然占位' : '开启自然占位' }}
+    <mat-btn variant="outlined" @click="active = !active">
+      {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
+    </mat-btn>
+    <mat-btn
+      variant="text"
+      @click="placeholderEnabled = !placeholderEnabled"
+    >
+      {{ placeholderEnabled ? '关闭自然占位' : '开启自然占位' }}
     </mat-btn>
     <p v-for="index in 5" :key="index">
       页面内容 {{ index }}：开启占位后，滚动到底部时不会被固定 Toolbar 遮挡。
     </p>
 
-    <mat-toolbar :placeholder="enabled">
+    <mat-toolbar
+      v-if="active"
+      :placeholder="placeholderEnabled"
+    >
       <mat-btn variant="standard">
         返回
       </mat-btn>
@@ -8187,7 +8204,8 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
 <script setup>
 import { ref } from 'vue';
 
-const enabled = ref(true);
+const active = ref(false);
+const placeholderEnabled = ref(true);
 </script>
 ```
 ```vue
@@ -8218,9 +8236,15 @@ const enabled = ref(true);
 ```vue
 <template>
   <div class="toolbar-bottom-placeholder-example">
+    <mat-btn variant="outlined" @click="active = !active">
+      {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
+    </mat-btn>
     <p>bottomPlaceholder 只增加底部手势条或安全区空间，不会开启自然布局占位。</p>
 
-    <mat-toolbar bottom-placeholder="env(safe-area-inset-bottom)">
+    <mat-toolbar
+      v-if="active"
+      bottom-placeholder="env(safe-area-inset-bottom)"
+    >
       <mat-btn variant="standard">
         取消
       </mat-btn>
@@ -8231,6 +8255,13 @@ const enabled = ref(true);
     </mat-toolbar>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const active = ref(false);
+</script>
 ```
 ```vue
 <style scoped>

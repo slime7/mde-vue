@@ -43,4 +43,19 @@ describe('Toolbar 文档', () => {
       expect(page).toContain(`<${exampleName} />`);
     });
   });
+
+  it('示例默认隐藏 Toolbar，并提供当前示例的独立激活开关', () => {
+    exampleNames.forEach((exampleName) => {
+      const examplePath = resolve(
+        'docs/site/examples/toolbar',
+        `${exampleName}.vue`,
+      );
+      const example = readFileSync(examplePath, 'utf8');
+
+      expect(example, exampleName).toContain('const active = ref(false);');
+      expect(example, exampleName).toContain('v-if="active"');
+      expect(example, exampleName).toContain('展示 Toolbar');
+      expect(example, exampleName).toContain('隐藏 Toolbar');
+    });
+  });
 });

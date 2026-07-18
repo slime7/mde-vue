@@ -4,6 +4,7 @@ import { computed, ref } from 'vue';
 
 const variant = ref('docked');
 const vibrant = ref(false);
+const active = ref(false);
 const isFloating = computed(() => variant.value.startsWith('floating'));
 </script>
 <!-- #endregion script -->
@@ -28,9 +29,16 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
       >
         {{ vibrant ? 'standard' : 'vibrant' }}
       </mat-btn>
+      <mat-btn
+        variant="outlined"
+        @click="active = !active"
+      >
+        {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
+      </mat-btn>
     </div>
 
     <mat-toolbar
+      v-if="active"
       :variant="variant"
       :vibrant="vibrant"
     >
