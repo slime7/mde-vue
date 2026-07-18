@@ -238,6 +238,9 @@ describe('MatBtnGroup', () => {
     expect(shapeRule).toBeDefined();
     expect(shapeRule).toContain('--mat-btn-group-connected-selected-inner-corner-size:');
     expect(shapeRule).toContain('--mat-btn-group-connected-selected-pressed-inner-corner-size:');
+    expect(buttonGroupSource).toContain(
+      `.mat-btn-group--connected.mat-btn-group--shape-${shape} :deep(.mat-button-base) {`,
+    );
     expect(buttonGroupSource).toContain('.mat-btn-group--connected :deep(.mat-button-base:first-child.mat-btn--selected)');
     expect(buttonGroupSource).toContain('.mat-btn-group--connected :deep(.mat-button-base:last-child.mat-btn--selected)');
   });

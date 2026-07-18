@@ -578,13 +578,13 @@ watch(
   --mat-button-pressed-end-end-radius: var(--mat-btn-group-outer-corner-size);
 }
 
-.mat-btn-group--connected.mat-btn-group--shape-round {
+.mat-btn-group--connected.mat-btn-group--shape-round :deep(.mat-button-base) {
   --mat-btn-group-outer-corner-size: var(--mat-button-full-radius);
   --mat-btn-group-connected-selected-inner-corner-size: var(--mat-btn-group-connected-square-outer-corner-size);
   --mat-btn-group-connected-selected-pressed-inner-corner-size: var(--mat-btn-group-connected-pressed-inner-corner-size);
 }
 
-.mat-btn-group--connected.mat-btn-group--shape-square {
+.mat-btn-group--connected.mat-btn-group--shape-square :deep(.mat-button-base) {
   --mat-btn-group-outer-corner-size: var(--mat-btn-group-connected-square-outer-corner-size);
   --mat-btn-group-connected-selected-inner-corner-size: var(--mat-button-full-radius);
   --mat-btn-group-connected-selected-pressed-inner-corner-size: var(--mat-button-full-radius);
