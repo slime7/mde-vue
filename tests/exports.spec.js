@@ -5,6 +5,7 @@ import { createApp } from 'vue';
 import MatCard, { MatCard as NamedMatCard } from 'mdu-ui/components/mat-card';
 import MatBtn, { MatBtn as NamedMatBtn } from 'mdu-ui/components/mat-btn';
 import MatBtnGroup, { MatBtnGroup as NamedMatBtnGroup } from 'mdu-ui/components/mat-btn-group';
+import MatFab, { MatFab as NamedMatFab } from 'mdu-ui/components/mat-fab';
 import MatIcon, { MatIcon as NamedMatIcon } from 'mdu-ui/components/mat-icon';
 import MatSplitBtn, { MatSplitBtn as NamedMatSplitBtn } from 'mdu-ui/components/mat-split-btn';
 import MatList, { MatList as NamedMatList } from 'mdu-ui/components/mat-list';
@@ -40,6 +41,7 @@ import {
   MatCheckbox as RootMatCheckbox,
   MatDialog as RootMatDialog,
   MatDivider as RootMatDivider,
+  MatFab as RootMatFab,
   MatIcon as RootMatIcon,
   MatList as RootMatList,
   MatListItem as RootMatListItem,
@@ -74,6 +76,7 @@ describe('公共组件导出', () => {
     ['MatCard', RootMatCard, NamedMatCard, MatCard],
     ['MatBtn', RootMatBtn, NamedMatBtn, MatBtn],
     ['MatBtnGroup', RootMatBtnGroup, NamedMatBtnGroup, MatBtnGroup],
+    ['MatFab', RootMatFab, NamedMatFab, MatFab],
     ['MatIcon', RootMatIcon, NamedMatIcon, MatIcon],
     ['MatSplitBtn', RootMatSplitBtn, NamedMatSplitBtn, MatSplitBtn],
     ['MatList', RootMatList, NamedMatList, MatList],
@@ -134,6 +137,7 @@ describe('公共组件导出', () => {
     expect(app.component('mat-toolbar')).toBe(RootMatToolbar);
     expect(app.component('mat-panes')).toBe(RootMatPanes);
     expect(app.component('mat-pane')).toBe(RootMatPane);
+    expect(app.component('mat-fab')).toBe(RootMatFab);
     expect(app.component('mat-icon')).toBe(RootMatIcon);
     expect(app.component('mat-icon-btn')).toBeUndefined();
 
@@ -156,5 +160,13 @@ describe('公共组件导出', () => {
 
   it('不再提供 MatIconBtn 单组件入口', () => {
     expect(existsSync(new URL('../src/components/mat-icon-btn', import.meta.url))).toBe(false);
+  });
+
+  it('统一提供 MatFab，不另设 MatExtendedFab 或 40px FAB 入口', () => {
+    const source = readFileSync('src/index.js', 'utf8');
+
+    expect(source).toContain('MatFab');
+    expect(source).not.toContain('MatExtendedFab');
+    expect(existsSync(new URL('../src/components/mat-extended-fab', import.meta.url))).toBe(false);
   });
 });

@@ -452,6 +452,41 @@
   --mat-snackbar-container-elevation: var(--mat-sys-elevation-level3);
   --mat-snackbar-viewport-margin: 16px;
 
+  /* FAB component tokens */
+  --mat-fab-container-shape: var(--mat-sys-shape-corner-medium);
+  --mat-fab-rest-container-elevation: var(--mat-sys-elevation-level3);
+  --mat-fab-hover-container-elevation: var(--mat-sys-elevation-level4);
+  --mat-fab-small-container-height: 56px;
+  --mat-fab-small-icon-size: 24px;
+  --mat-fab-small-leading-space: 16px;
+  --mat-fab-small-trailing-space: 16px;
+  --mat-fab-small-icon-label-space: 8px;
+  --mat-fab-small-label-text-font: var(--mat-sys-typescale-title-medium-font);
+  --mat-fab-small-label-text-weight: var(--mat-sys-typescale-title-medium-weight);
+  --mat-fab-small-label-text-size: var(--mat-sys-typescale-title-medium-size);
+  --mat-fab-small-label-text-line-height: var(--mat-sys-typescale-title-medium-line-height);
+  --mat-fab-small-label-text-tracking: var(--mat-sys-typescale-title-medium-tracking);
+  --mat-fab-medium-container-height: 80px;
+  --mat-fab-medium-icon-size: 28px;
+  --mat-fab-medium-leading-space: 26px;
+  --mat-fab-medium-trailing-space: 26px;
+  --mat-fab-medium-icon-label-space: 12px;
+  --mat-fab-medium-label-text-font: var(--mat-sys-typescale-title-large-font);
+  --mat-fab-medium-label-text-weight: var(--mat-sys-typescale-title-large-weight);
+  --mat-fab-medium-label-text-size: var(--mat-sys-typescale-title-large-size);
+  --mat-fab-medium-label-text-line-height: var(--mat-sys-typescale-title-large-line-height);
+  --mat-fab-medium-label-text-tracking: var(--mat-sys-typescale-title-large-tracking);
+  --mat-fab-large-container-height: 96px;
+  --mat-fab-large-icon-size: 36px;
+  --mat-fab-large-leading-space: 28px;
+  --mat-fab-large-trailing-space: 28px;
+  --mat-fab-large-icon-label-space: 16px;
+  --mat-fab-large-label-text-font: var(--mat-sys-typescale-headline-small-font);
+  --mat-fab-large-label-text-weight: var(--mat-sys-typescale-headline-small-weight);
+  --mat-fab-large-label-text-size: var(--mat-sys-typescale-headline-small-size);
+  --mat-fab-large-label-text-line-height: var(--mat-sys-typescale-headline-small-line-height);
+  --mat-fab-large-label-text-tracking: var(--mat-sys-typescale-headline-small-tracking);
+
   /* Button component tokens */
   --mat-btn-extra-small-container-height: 32px;
   --mat-btn-extra-small-leading-space: 12px;

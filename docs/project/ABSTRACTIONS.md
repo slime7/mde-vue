@@ -17,7 +17,7 @@
 
 ## Mat UI 插件
 
-`MatSurfaceBase`、`MatActionBase`、`MatSelectionControlBase`、`MatTextInputBase`、`MatItemContentBase` 与 `useRovingFocus` 是内部结构复用层，不属于公共 API。它们分别负责表面根节点、原生 button/link 交互、选择控件结构、文本输入视觉、无语义项目内容排列和 tabindex 管理；公共组件不得要求使用者依赖其 class、文件路径或内部 CSS 变量。
+`MatSurfaceBase`、`MatActionBase`、`MatButtonBase`、`MatSelectionControlBase`、`MatTextInputBase`、`MatItemContentBase` 与 `useRovingFocus` 是内部结构复用层，不属于公共 API。它们分别负责表面根节点、原生 button/link 交互、按钮交互状态、选择控件结构、文本输入视觉、无语义项目内容排列和 tabindex 管理；公共组件不得要求使用者依赖其 class、文件路径或内部 CSS 变量。
 
 `createMatUi({ theme, useCursor, iconClass })` 创建一次 Vue 插件安装单元。插件负责全局注册 `mat-*` 组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
 
@@ -71,6 +71,7 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 - 省略时使用组件形态在 Material 规格中规定的语义角色，不强制改成 primary。
 - `primary`、`secondary`、`tertiary`、`error` 引用当前项目主题中同名的 base、on-base、container 和 on-container 令牌。
 - 严格六位 `#RRGGBB` 值作为局部种子色，按当前主题方案与对比度生成 Material 2025 亮暗 primary 色族；三位色值和其他 CSS 颜色写法不属于公共输入。
+- `MatFab` 遵循官方 FAB 角色输入：只接受 `primary`、`secondary`、`tertiary`、`primary-container`、`secondary-container`、`tertiary-container`、`error` 和 `error-container`，默认 `primary-container`，不接受十六进制种子色。
 - 显式 `color` 只覆盖强调色族，中性表面、边框和禁用角色不随种子色改变，也不得写入全局主题或影响兄弟组件。
 - 组合组件可以级联 `color`，子组件显式 prop 优先；由 prop 生成的局部变量优先于组件的默认角色映射。
 
@@ -99,6 +100,12 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 `<mat-btn-group>` 只接收 `<mat-btn>`，负责 standard/connected 布局以及受控 single/multiple 选择；组容器不进入 Tab 顺序，子按钮保持独立停靠点。图标模式的显式 `width` 不根据组内子项数量变化，connected `fullWidth` 仍按组规则等分子项。`<mat-split-btn>` 的 leading 和 trailing 都接收 `<mat-btn>`，trailing 必须是同时带非空 `icon` 和 `label` 的图标模式按钮；split button 只协调视觉、事件、`aria-haspopup`、`aria-expanded` 与可选 `aria-controls`，菜单始终由应用管理。
 
 当前按钮体系不包含 loading、链接模式、涟漪、密度参数、内置菜单或完整表单代理方法。
+
+## `<mat-fab>`
+
+`<mat-fab>` 的导出名是 `MatFab`，默认 Slot 没有非空内容时表现为纯图标 FAB，有内容时表现为 Extended FAB；不另设 `MatExtendedFab`。尺寸只接受 `small`、`medium`、`large`，高度分别为 56px、80px、96px，`small` 统一普通 FAB 与 small Extended FAB 的 56px 规格。纯图标模式要求非空 `icon` 和 `label`；label 写入 `aria-label` 并作为默认 Tooltip，Extended FAB 可以没有 icon 但默认 Slot 标签仍然有效。
+
+FAB 复用 `MatButtonBase` 的原生 button、disabled、焦点、按下状态、交互目标和事件处理；组件本身只负责尺寸、颜色角色、图标/标签内容和无障碍名称。它不负责固定定位、滚动收缩、FAB menu 或页面级动效。颜色直接使用所选 `--mat-sys-color-*` 和同组 `--mat-sys-color-on-*` 令牌，状态层沿用同组内容色。
 
 ## `<mat-icon>`
 

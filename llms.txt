@@ -12,6 +12,7 @@
 - [组件配色](docs/site/guide/component-color.md): 按 Material 3 颜色角色为组件选择容器、内容、表面、边界和状态配色。
 - [Tailwind CSS](docs/site/guide/tailwind.md): 将 mdu-ui 运行时令牌接入 Tailwind CSS v4，并使用带 mat 前缀的语义工具类。
 - [Button 按钮](docs/site/components/button.md): mat-btn 的普通与图标模式、尺寸、宽度、形态、配色、受控切换、事件和 slots。
+- [FAB 浮动操作按钮](docs/site/components/fab.md): mat-fab 的纯图标 FAB 与 Extended FAB、尺寸、官方颜色角色、禁用状态和无障碍名称。
 - [Button group 按钮组](docs/site/components/button-group.md): mat-btn-group 的标准与连接布局、级联属性、受控单选多选和事件。
 - [限制](docs/site/guide/limitations.md): 记录 mdu-ui 当前明确不支持的运行环境、分发方式和按钮能力。
 - [Split button 拆分按钮](docs/site/components/split-button.md): mat-split-btn 的双按钮组合、受控展开、事件、菜单 ARIA 和 slots。

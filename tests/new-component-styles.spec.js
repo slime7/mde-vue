@@ -37,6 +37,28 @@ describe('新增组件现代 CSS', () => {
     expect(source).toContain('--mat-menu-group-label-height: 32px');
   });
 
+  it('FAB 使用推荐的三种尺寸、间距和共享海拔令牌', () => {
+    const source = readFileSync('src/styles/index.css', 'utf8');
+    const componentSource = readFileSync('src/components/mat-fab/MatFab.vue', 'utf8');
+
+    expect(source).toContain('--mat-fab-small-container-height: 56px');
+    expect(source).toContain('--mat-fab-medium-container-height: 80px');
+    expect(source).toContain('--mat-fab-large-container-height: 96px');
+    expect(source).toContain('--mat-fab-small-icon-size: 24px');
+    expect(source).toContain('--mat-fab-medium-icon-size: 28px');
+    expect(source).toContain('--mat-fab-large-icon-size: 36px');
+    expect(source).toContain('--mat-fab-small-leading-space: 16px');
+    expect(source).toContain('--mat-fab-medium-leading-space: 26px');
+    expect(source).toContain('--mat-fab-large-leading-space: 28px');
+    expect(source).toContain('--mat-fab-small-icon-label-space: 8px');
+    expect(source).toContain('--mat-fab-medium-icon-label-space: 12px');
+    expect(source).toContain('--mat-fab-large-icon-label-space: 16px');
+    expect(source).not.toContain('--mat-fab-small-container-height: 40px');
+    expect(componentSource).toContain('<MatButtonBase');
+    expect(componentSource).toContain('var(--mat-fab-rest-container-elevation)');
+    expect(componentSource).toContain('var(--mat-fab-hover-container-elevation)');
+  });
+
   it('文本输入使用透明 outline 缺口、单层聚焦描边和原生 textarea 行高', () => {
     const source = readFileSync('src/components/MatTextInputBase.vue', 'utf8');
 

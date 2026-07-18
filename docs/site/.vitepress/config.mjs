@@ -69,6 +69,7 @@ export default defineConfig({
               { text: 'Button 按钮', link: '/components/button' },
               { text: 'Button group 按钮组', link: '/components/button-group' },
               { text: 'Split button 拆分按钮', link: '/components/split-button' },
+              { text: 'FAB 浮动操作按钮', link: '/components/fab' },
             ],
           },
           { text: 'Icon 图标', link: '/components/icon' },

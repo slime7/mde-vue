@@ -47,6 +47,7 @@ createApp(App)
 <template>
   <main>
     <mat-btn @click="save">保存</mat-btn>
+    <mat-fab icon="add" label="创建" />
   </main>
 </template>
 
@@ -57,7 +58,7 @@ function save() {
 </script>
 ```
 
-全局注册后的模板标签统一使用 kebab-case，例如 `<mat-btn>`、`<mat-card>` 和 `<mat-list>`。
+全局注册后的模板标签统一使用 kebab-case，例如 `<mat-btn>`、`<mat-fab>`、`<mat-card>` 和 `<mat-list>`。
 
 ## 按需导入
 
@@ -66,11 +67,13 @@ function save() {
 ```vue
 <script setup>
 import { MatBtn } from 'mdu-ui/components/mat-btn';
+import { MatFab } from 'mdu-ui/components/mat-fab';
 import 'mdu-ui/styles.css';
 </script>
 
 <template>
   <MatBtn>保存</MatBtn>
+  <MatFab icon="add" label="创建" />
 </template>
 ```
 
@@ -78,6 +81,7 @@ import 'mdu-ui/styles.css';
 
 ```js
 import { MatCard } from 'mdu-ui/components/mat-card';
+import { MatFab } from 'mdu-ui/components/mat-fab';
 import { MatIcon } from 'mdu-ui/components/mat-icon';
 import { MatList } from 'mdu-ui/components/mat-list';
 import { MatListItem } from 'mdu-ui/components/mat-list-item';
@@ -108,7 +112,7 @@ import {
 } from 'mdu-ui/functions';
 ```
 
-复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatIcon>`、`<MatTextField>`、`<MatMenu>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。命令式 Snackbar 使用 `snackbar()` 或同一函数引用的 `toast()`，只从 `mdu-ui/functions` 导入。
+复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatTextField>`、`<MatMenu>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。命令式 Snackbar 使用 `snackbar()` 或同一函数引用的 `toast()`，只从 `mdu-ui/functions` 导入。
 
 ## 如何选择
 

@@ -8,7 +8,7 @@
 
 当前公共能力包括：
 
-- Button、Card、List、Checkbox、Radio、Switch、Dialog、Tooltip 和 Snackbar 等 Material 组件；
+- Button、FAB、Card、List、Checkbox、Radio、Switch、Dialog、Tooltip 和 Snackbar 等 Material 组件；
 - Material 2025 动态颜色主题和组件级 `color` 配色；
 - 可选的 Tailwind CSS v4 语义工具类；
 - 面向开发者与 AI 的同源 Markdown 文档。
@@ -24,6 +24,7 @@ import { createApp } from 'vue';
 import {
   createMatUi,
   MatBtn,
+  MatFab,
   MatCard,
 } from 'mdu-ui';
 import 'mdu-ui/styles.css';
@@ -75,6 +76,7 @@ createApp(App)
 <template>
   <main>
     <mat-btn @click="save">保存</mat-btn>
+    <mat-fab icon="add" label="创建" />
   </main>
 </template>
 
@@ -85,7 +87,7 @@ function save() {
 </script>
 ```
 
-全局注册后的模板标签统一使用 kebab-case，例如 `<mat-btn>`、`<mat-card>` 和 `<mat-list>`。
+全局注册后的模板标签统一使用 kebab-case，例如 `<mat-btn>`、`<mat-fab>`、`<mat-card>` 和 `<mat-list>`。
 
 ## 按需导入
 
@@ -94,11 +96,13 @@ function save() {
 ```vue
 <script setup>
 import { MatBtn } from 'mdu-ui/components/mat-btn';
+import { MatFab } from 'mdu-ui/components/mat-fab';
 import 'mdu-ui/styles.css';
 </script>
 
 <template>
   <MatBtn>保存</MatBtn>
+  <MatFab icon="add" label="创建" />
 </template>
 ```
 
@@ -106,6 +110,7 @@ import 'mdu-ui/styles.css';
 
 ```js
 import { MatCard } from 'mdu-ui/components/mat-card';
+import { MatFab } from 'mdu-ui/components/mat-fab';
 import { MatIcon } from 'mdu-ui/components/mat-icon';
 import { MatList } from 'mdu-ui/components/mat-list';
 import { MatListItem } from 'mdu-ui/components/mat-list-item';
@@ -136,7 +141,7 @@ import {
 } from 'mdu-ui/functions';
 ```
 
-复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatIcon>`、`<MatTextField>`、`<MatMenu>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。命令式 Snackbar 使用 `snackbar()` 或同一函数引用的 `toast()`，只从 `mdu-ui/functions` 导入。
+复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatTextField>`、`<MatMenu>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。命令式 Snackbar 使用 `snackbar()` 或同一函数引用的 `toast()`，只从 `mdu-ui/functions` 导入。
 
 ## 如何选择
 
@@ -838,6 +843,8 @@ import IconWeightExample from '../examples/icon/IconWeightExample.vue';
 三位十六进制、带透明度的十六进制、`rgb()`、颜色名称和任意 CSS 值都不是合法 `color` prop。组件内部颜色变量不是公共 API，不应由应用直接覆盖。
 
 `MatIcon` 是内容颜色例外：省略 `color` 时继承 `currentColor`；需要绕过动态色板直接使用 CSS 颜色时可传入 `font-color`，它接受 `rgb()`、颜色名称、CSS 变量等合法颜色，并优先于 `color`。该例外不扩展其他组件的 `color` 输入格式。
+
+`MatFab` 是官方颜色角色输入例外：它的 `color` 只接受 `primary`、`secondary`、`tertiary`、`primary-container`、`secondary-container`、`tertiary-container`、`error` 和 `error-container`。默认角色是 `primary-container`，不接受十六进制种子色；容器、内容和状态层分别使用所选角色及同组的 `on-*` 令牌。
 
 ## 基本方法
 
@@ -1663,6 +1670,337 @@ import ButtonTypeExample from '../examples/button/ButtonTypeExample.vue';
 import ButtonValueExample from '../examples/button/ButtonValueExample.vue';
 import ButtonVariantExample from '../examples/button/ButtonVariantExample.vue';
 import ButtonWidthExample from '../examples/button/ButtonWidthExample.vue';
+</script>
+
+# FAB 浮动操作按钮
+
+## 组件简介
+
+`<mat-fab>` 的组件导出名是 `MatFab`。它使用同一个组件表达普通 FAB 和 Extended FAB：没有默认 Slot 文本时渲染纯图标 FAB；有默认 Slot 文本时渲染带标签的 Extended FAB。组件不负责固定定位、滚动收缩、FAB menu 或页面级动效。
+
+纯图标模式需要传入非空 `icon` 和 `label`。`label` 同时作为按钮的可访问名称和默认 Tooltip 文本；Extended FAB 可以省略图标，默认 Slot 标签仍然有效。标签保持单行，组件不会自动截断或换行。
+
+## 示例
+
+### `icon` 与 `label`
+
+没有默认 Slot 时，`mat-fab` 是纯图标 FAB。`label` 提供可访问名称，`title` 可以覆盖 Tooltip 文本。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-fab
+    icon="add"
+    label="创建"
+    title="创建新项目"
+  />
+</template>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="FAB 默认图标模式预览">
+    <FabDefaultExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 默认 Slot 与无图标标签
+
+默认 Slot 有内容时切换为 Extended FAB。图标是可选的，没有图标时仍然保留标签和完整的操作语义。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example-row">
+    <mat-fab
+      color="secondary"
+      icon="edit"
+    >
+      编辑
+    </mat-fab>
+    <mat-fab
+      size="small"
+      color="tertiary"
+    >
+      继续
+    </mat-fab>
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="FAB Extended 与无图标标签预览">
+    <FabExtendedExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `size`
+
+`small`、`medium` 和 `large` 分别使用 56px、80px 和 96px 高度。纯图标模式的宽度与高度相等，Extended FAB 的宽度随内容增长。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example-groups">
+    <div class="example-group">
+      <mat-fab
+        size="small"
+        icon="add"
+        label="小号创建"
+      />
+      <mat-fab
+        size="medium"
+        icon="add"
+        label="中号创建"
+      />
+      <mat-fab
+        size="large"
+        icon="add"
+        label="大号创建"
+      />
+    </div>
+    <div class="example-group">
+      <mat-fab size="small" icon="add">
+        小号创建
+      </mat-fab>
+      <mat-fab size="medium" icon="add">
+        中号创建
+      </mat-fab>
+      <mat-fab size="large" icon="add">
+        大号创建
+      </mat-fab>
+    </div>
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.example-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.example-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="FAB 三种尺寸预览">
+    <FabSizeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+FAB 只接受当前主题中的八组官方颜色角色，不接受十六进制种子色。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example-grid">
+    <mat-fab
+      v-for="color in colors"
+      :key="color"
+      :color="color"
+      icon="palette"
+    >
+      {{ color }}
+    </mat-fab>
+  </div>
+</template>
+```
+```vue
+<script setup>
+const colors = [
+  'primary',
+  'secondary',
+  'tertiary',
+  'primary-container',
+  'secondary-container',
+  'tertiary-container',
+  'error',
+  'error-container',
+];
+</script>
+```
+```vue
+<style scoped>
+.example-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="FAB 八组颜色角色预览">
+    <FabColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+禁用状态使用原生 `disabled`，浏览器不会触发 click；基础按钮层同时移除阴影并保留禁用内容对比。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example-row">
+    <mat-fab
+      disabled
+      icon="add"
+      label="创建"
+    />
+    <mat-fab
+      disabled
+      icon="edit"
+    >
+      编辑
+    </mat-fab>
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="FAB 禁用状态预览">
+    <FabDisabledExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 无障碍名称与 Tooltip
+
+纯图标 FAB 必须使用非空 `label`。显式 `title` 只作为 Tooltip 文本，不会在按钮上保留原生 HTML `title` 提示。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example-row">
+    <mat-fab
+      icon="settings"
+      label="打开设置"
+      title="打开设置面板"
+    />
+    <mat-fab icon="help" label="获取帮助" />
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="FAB 无障碍名称与 Tooltip 预览">
+    <FabAccessibilityExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `size` | `'small' \| 'medium' \| 'large'` | `'medium'` | FAB 高度和内容尺寸；分别为 56px、80px、96px，`small` 不是已废弃的 40px FAB |
+| `icon` | `string` | 未设置 | Material Symbols 图标；Extended FAB 可以省略；非空时显示为填充图标 |
+| `label` | `string` | 未设置 | 纯图标模式的无障碍名称和默认 Tooltip 文本；纯图标模式必须提供非空值 |
+| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'primary-container' \| 'secondary-container' \| 'tertiary-container' \| 'error' \| 'error-container'` | `'primary-container'` | 当前主题的官方颜色角色；不接受十六进制种子色 |
+| `disabled` | `boolean` | `false` | 原生禁用状态 |
+| `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 原生按钮类型 |
+
+没有默认 Slot 时，`aria-label` 取 `label`；有默认 Slot 时，默认 Slot 提供可见名称并保留调用方传入的 `aria-label`。未消费的 `name`、`form`、`aria-*`、`data-*` 等原生属性和事件继续传给内部 `<button>`。
+
+### 事件
+
+组件发出原生 `click`，载荷为 `MouseEvent`。`focus`、`blur` 和其他未消费的原生按钮事件按 Vue 属性透传规则生效；禁用时浏览器不会触发 click。
+
+### Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 可选的单行 Extended FAB 标签；存在非空内容时切换为 Extended FAB，不自动截断或换行 |
+
+组件没有其他 Slots，也没有公共方法。
+
+### 状态
+
+| 状态 | 用户可观察行为 |
+| --- | --- |
+| hover | 显示 8% 状态层并从系统 level 3 升至 level 4 海拔 |
+| focus-visible | 显示共享焦点环和状态层 |
+| pressed | 使用基础按钮层的按下状态层和状态处理 |
+| disabled | 使用原生禁用语义、禁用内容对比并移除阴影 |
+
+组件不实现固定定位、滚动收缩、FAB menu 或页面级动效。减少动态效果偏好下，基础按钮层和图标过渡会被取消。
+
+## 参考来源
+
+尺寸、形状、标签排版、颜色和使用边界依据 Material 3 的 [FAB overview](https://m3.material.io/components/floating-action-button/overview)、[FAB specs](https://m3.material.io/components/floating-action-button/specs)、[FAB guidelines](https://m3.material.io/components/floating-action-button/guidelines)、[Extended FAB overview](https://m3.material.io/components/extended-fab/overview)、[Extended FAB specs](https://m3.material.io/components/extended-fab/specs) 与 [Extended FAB guidelines](https://m3.material.io/components/extended-fab/guidelines)。
+
+<script setup>
+import FabAccessibilityExample from '../examples/fab/FabAccessibilityExample.vue';
+import FabColorExample from '../examples/fab/FabColorExample.vue';
+import FabDefaultExample from '../examples/fab/FabDefaultExample.vue';
+import FabDisabledExample from '../examples/fab/FabDisabledExample.vue';
+import FabExtendedExample from '../examples/fab/FabExtendedExample.vue';
+import FabSizeExample from '../examples/fab/FabSizeExample.vue';
 </script>
 
 # Button group 按钮组

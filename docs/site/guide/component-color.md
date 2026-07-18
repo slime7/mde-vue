@@ -27,6 +27,8 @@ order: 35
 
 `MatIcon` 是内容颜色例外：省略 `color` 时继承 `currentColor`；需要绕过动态色板直接使用 CSS 颜色时可传入 `font-color`，它接受 `rgb()`、颜色名称、CSS 变量等合法颜色，并优先于 `color`。该例外不扩展其他组件的 `color` 输入格式。
 
+`MatFab` 是官方颜色角色输入例外：它的 `color` 只接受 `primary`、`secondary`、`tertiary`、`primary-container`、`secondary-container`、`tertiary-container`、`error` 和 `error-container`。默认角色是 `primary-container`，不接受十六进制种子色；容器、内容和状态层分别使用所选角色及同组的 `on-*` 令牌。
+
 ## 基本方法
 
 1. 先确定元素的用途、重要程度和所在表面，再选择颜色角色。
