@@ -43,7 +43,8 @@ defineProps({
 }
 
 .docs-preview > :deep(*) {
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-inline-size: 0;
 }
 
 .docs-preview :deep(.docs-preview-menu) {
