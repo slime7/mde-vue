@@ -230,12 +230,16 @@ describe('MatBtnGroup', () => {
     expect(wrapper.emitted('select')).toBeUndefined();
   });
 
-  it.each(['round', 'square'])('connected %s 组让选中按钮使用 round 内角并保留外部组轮廓', (shape) => {
+  it.each(['round', 'square'])('connected %s 组选中按钮的四角都使用 round checked shape', (shape) => {
     const shapeRule = buttonGroupSource.match(
       new RegExp(`\\.mat-btn-group--connected\\.mat-btn-group--shape-${shape}[^}]*\\{([\\s\\S]*?)\\n\\}`),
     )?.[1];
+    const selectedRule = buttonGroupSource.match(
+      /\.mat-btn-group--connected :deep\(\.mat-button-base\.mat-btn--selected\) \{([\s\S]*?)\n\}/,
+    )?.[1];
 
     expect(shapeRule).toBeDefined();
+    expect(selectedRule).toBeDefined();
     expect(shapeRule).toContain('--mat-btn-group-connected-selected-inner-corner-size:');
     expect(shapeRule).toContain('--mat-btn-group-connected-selected-pressed-inner-corner-size:');
     expect(shapeRule).toContain(
@@ -247,8 +251,24 @@ describe('MatBtnGroup', () => {
     expect(buttonGroupSource).toContain(
       `.mat-btn-group--connected.mat-btn-group--shape-${shape} :deep(.mat-button-base) {`,
     );
-    expect(buttonGroupSource).toContain('.mat-btn-group--connected :deep(.mat-button-base:first-child.mat-btn--selected)');
-    expect(buttonGroupSource).toContain('.mat-btn-group--connected :deep(.mat-button-base:last-child.mat-btn--selected)');
+    expect(selectedRule).toContain(
+      '--mat-button-start-start-radius: var(--mat-btn-group-connected-selected-inner-corner-size);',
+    );
+    expect(selectedRule).toContain(
+      '--mat-button-start-end-radius: var(--mat-btn-group-connected-selected-inner-corner-size);',
+    );
+    expect(selectedRule).toContain(
+      '--mat-button-end-start-radius: var(--mat-btn-group-connected-selected-inner-corner-size);',
+    );
+    expect(selectedRule).toContain(
+      '--mat-button-end-end-radius: var(--mat-btn-group-connected-selected-inner-corner-size);',
+    );
+    expect(buttonGroupSource).not.toContain(
+      '.mat-btn-group--connected :deep(.mat-button-base:first-child.mat-btn--selected)',
+    );
+    expect(buttonGroupSource).not.toContain(
+      '.mat-btn-group--connected :deep(.mat-button-base:last-child.mat-btn--selected)',
+    );
   });
 
   it('connected 混用子按钮颜色时发出开发警告', () => {

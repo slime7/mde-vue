@@ -611,20 +611,6 @@ watch(
   --mat-button-pressed-end-end-radius: var(--mat-btn-group-connected-selected-pressed-inner-corner-size);
 }
 
-.mat-btn-group--connected :deep(.mat-button-base:first-child.mat-btn--selected) {
-  --mat-button-start-start-radius: var(--mat-btn-group-outer-corner-size);
-  --mat-button-end-start-radius: var(--mat-btn-group-outer-corner-size);
-  --mat-button-pressed-start-start-radius: var(--mat-btn-group-outer-corner-size);
-  --mat-button-pressed-end-start-radius: var(--mat-btn-group-outer-corner-size);
-}
-
-.mat-btn-group--connected :deep(.mat-button-base:last-child.mat-btn--selected) {
-  --mat-button-start-end-radius: var(--mat-btn-group-outer-corner-size);
-  --mat-button-end-end-radius: var(--mat-btn-group-outer-corner-size);
-  --mat-button-pressed-start-end-radius: var(--mat-btn-group-outer-corner-size);
-  --mat-button-pressed-end-end-radius: var(--mat-btn-group-outer-corner-size);
-}
-
 .mat-btn-group--full-width {
   display: flex;
   inline-size: 100%;
