@@ -19,6 +19,11 @@ function dispatchToggle(element, newState) {
   element.dispatchEvent(event);
 }
 
+function dispatchNativeClose(element) {
+  element.removeAttribute('data-popover-open');
+  dispatchToggle(element, 'closed');
+}
+
 describe('MatMenu', () => {
   beforeEach(() => {
     HTMLElement.prototype.showPopover = vi.fn(function showPopover() {
@@ -229,6 +234,98 @@ describe('MatMenu', () => {
     await nextTick();
 
     expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([false]);
+  });
+
+  it('菜单操作、Escape 与 Tab 关闭时保留菜单直到动画完成', async () => {
+    vi.useFakeTimers();
+
+    try {
+      const anchor = document.createElement('button');
+
+      anchor.id = 'action-dismiss-trigger';
+      document.body.append(anchor);
+      const wrapper = mount(MatMenu, {
+        attachTo: document.body,
+        props: { modelValue: true, anchor: 'action-dismiss-trigger' },
+        slots: { default: () => h(MatMenuItem, null, () => '动画菜单') },
+      });
+
+      await nextTick();
+      const menu = wrapper.get('[role="menu"]');
+      const item = menu.get('[role="menuitem"]');
+
+      await item.trigger('click');
+      await nextTick();
+
+      expect(menu.classes()).toContain('mat-menu--closing');
+      expect(menu.element.dataset.popoverOpen).toBe('');
+
+      await vi.advanceTimersByTimeAsync(200);
+      await nextTick();
+      await wrapper.setProps({ modelValue: false });
+      await nextTick();
+      await wrapper.setProps({ modelValue: true });
+      await nextTick();
+
+      await menu.trigger('keydown', { key: 'Escape' });
+      await nextTick();
+
+      expect(menu.classes()).toContain('mat-menu--closing');
+      expect(menu.element.dataset.popoverOpen).toBe('');
+
+      await vi.advanceTimersByTimeAsync(200);
+      await nextTick();
+      await wrapper.setProps({ modelValue: false });
+      await nextTick();
+      await wrapper.setProps({ modelValue: true });
+      await nextTick();
+
+      await menu.trigger('keydown', { key: 'Tab' });
+      await nextTick();
+
+      expect(menu.classes()).toContain('mat-menu--closing');
+      expect(menu.element.dataset.popoverOpen).toBe('');
+
+      wrapper.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('浏览器原生关闭 Popover 时也进入退出动画状态', async () => {
+    vi.useFakeTimers();
+
+    try {
+      const anchor = document.createElement('button');
+
+      anchor.id = 'native-dismiss-trigger';
+      document.body.append(anchor);
+      const wrapper = mount(MatMenu, {
+        attachTo: document.body,
+        props: { modelValue: true, anchor: 'native-dismiss-trigger' },
+        slots: { default: () => h(MatMenuItem, null, () => '原生关闭') },
+      });
+
+      await nextTick();
+      const menu = wrapper.get('[role="menu"]');
+
+      dispatchNativeClose(menu.element);
+      await nextTick();
+
+      expect(menu.classes()).toContain('mat-menu--closing');
+      expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([false]);
+
+      await vi.advanceTimersByTimeAsync(199);
+      expect(menu.classes()).toContain('mat-menu--closing');
+
+      await vi.advanceTimersByTimeAsync(1);
+      await nextTick();
+      expect(menu.classes()).not.toContain('mat-menu--closing');
+
+      wrapper.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('在 CSS 换边后把最终菜单矩形夹紧到视口安全间距', async () => {

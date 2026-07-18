@@ -228,6 +228,23 @@ function finishClose() {
   phase.value = 'closed';
 }
 
+function finishNativeClose() {
+  phaseTimer = undefined;
+  phase.value = 'closed';
+}
+
+function animateNativeClose() {
+  clearPhaseTimer();
+
+  if (prefersReducedMotion()) {
+    phase.value = 'closed';
+    return;
+  }
+
+  phase.value = 'closing';
+  phaseTimer = window.setTimeout(finishNativeClose, CLOSE_DURATION);
+}
+
 function hidePopover({ immediate = false } = {}) {
   if (!root.value || !popoverShown) {
     return;
@@ -480,6 +497,8 @@ function handleToggle(event) {
     return;
   }
 
+  animateNativeClose();
+
   if (!isNested.value) {
     emit('update:modelValue', false);
   }
@@ -672,7 +691,15 @@ watch(() => props.offset, async () => {
     calc(var(--mat-menu-offset-y, 0px) + var(--mat-menu-viewport-shift-y, 0px));
   transform: scale(1);
   transform-origin: top left;
-  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), transform var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized-decelerate);
+  transition-property: opacity, transform, display, overlay;
+  transition-duration: var(--mat-sys-motion-duration-short3), var(--mat-sys-motion-duration-medium1), var(--mat-sys-motion-duration-short4), var(--mat-sys-motion-duration-short4);
+  transition-timing-function: var(--mat-sys-motion-easing-standard), var(--mat-sys-motion-easing-emphasized-decelerate), linear, linear;
+  transition-behavior: allow-discrete;
+}
+
+.mat-menu:not(:popover-open) {
+  opacity: 0;
+  transform: scale(.96);
 }
 
 .mat-menu--closing {
@@ -698,6 +725,10 @@ watch(() => props.offset, async () => {
 .mat-menu--closing:not(.mat-menu--grouped) .mat-menu__surface {
   clip-path: inset(46% 8% round var(--mat-sys-shape-corner-extra-large));
   transition-duration: var(--mat-sys-motion-duration-short4);
+}
+
+.mat-menu:not(:popover-open):not(.mat-menu--grouped) .mat-menu__surface {
+  clip-path: inset(46% 8% round var(--mat-sys-shape-corner-extra-large));
 }
 
 .mat-menu--coordinate {

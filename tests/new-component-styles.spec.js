@@ -110,10 +110,13 @@ describe('新增组件现代 CSS', () => {
 
     expect(rootStyles).toContain('box-shadow: var(--mat-sys-elevation-level2)');
     expect(rootStyles).not.toContain('clip-path:');
+    expect(rootStyles).toContain('transition-property: opacity, transform, display, overlay');
+    expect(rootStyles).toContain('transition-behavior: allow-discrete');
     expect(surfaceStyles).toContain('clip-path: inset(');
     expect(surfaceStyles).toContain('overflow: hidden auto');
     expect(surfaceStyles).not.toContain('overflow: auto');
     expect(source).toContain('@starting-style');
+    expect(source).toContain('.mat-menu:not(:popover-open)');
     expect(source).toContain('clip-path: inset(');
     expect(source).toContain('@supports (border-shape:');
     expect(source).toContain('prefers-reduced-motion: reduce');
