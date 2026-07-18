@@ -9,13 +9,13 @@ order: 100
 
 ## 组件简介
 
-`<mat-toolbar>` 的组件导出名是 `MatToolbar`。它提供 Material 3 Expressive 的 docked 和 floating 两类 Toolbar：停靠模式固定在底部，悬浮模式支持底部横向和左右垂直布局。默认 Slot 可放置按钮、按钮组和自定义内容，悬浮模式可通过 `fab` Slot 放置 FAB 内容。
+`<mat-toolbar>` 的组件导出名是 `MatToolbar`。它提供 Material 3 Expressive 的 docked 和 floating 两类 Toolbar：停靠模式固定在底部，悬浮模式支持底部横向和左右垂直布局。默认 Slot 可放置按钮、按钮组和自定义内容，悬浮模式可通过 `fab` Slot 放置外置主操作；当前示例使用带 `icon` 和 `width="wide"` 的 `<mat-btn>`。
 
-Toolbar 默认固定显示，不负责滚动隐藏。Material 不建议同时显示 Toolbar 与 Navigation bar。
+Toolbar 默认固定显示，使用 `modelValue` 或 `v-model` 可以播放进入、退出动画并隐藏 Toolbar；不负责随滚动自动隐藏。Material 不建议同时显示 Toolbar 与 Navigation bar。
 
 ## 示例
 
-### `variant`、`vibrant` 与 `fab` Slot
+### `variant`、`position`、`vibrant` 与 `fab` Slot
 
 :::: details 查看示例代码
 ::: code-group
@@ -30,7 +30,7 @@ Toolbar 默认固定显示，不负责滚动隐藏。Material 不建议同时显
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Toolbar variant、vibrant 与 fab Slot 预览">
+  <DocsPreview label="Toolbar variant、position、vibrant 与 fab Slot 预览">
     <ToolbarVariantExample />
   </DocsPreview>
 </ClientOnly>
@@ -81,25 +81,27 @@ Toolbar 默认固定显示，不负责滚动隐藏。Material 不建议同时显
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `modelValue` | `boolean` | `true` | 控制 Toolbar 是否显示；设为 `false` 时保留至退出动画结束，适合使用 `v-model` 控制 |
 | `variant` | `'docked' \| 'floating' \| 'floating-bottom' \| 'floating-left' \| 'floating-right'` | `'docked'` | `floating` 是 `floating-bottom` 的别名；左右悬浮模式为垂直 Toolbar |
+| `position` | `'start' \| 'center' \| 'end'` | `'center'` | 浮动底部模式按水平方向、左右模式按垂直方向对齐；停靠模式忽略 |
 | `vibrant` | `boolean` | `false` | 使用高强调的 primary container 配色 |
 | `placeholder` | `boolean` | `false` | 开启后在组件自然布局位置生成占位，避免固定 Toolbar 遮挡内容 |
 | `bottomPlaceholder` | `number \| string` | `0` | 额外底部安全区；数字按 px 处理，可传入 `env(safe-area-inset-bottom)` 或 `calc(...)`；不负责生成自然布局占位 |
 
-`placeholder=true` 时，横向 Toolbar 占用实际 Toolbar 的 block-size，垂直 Toolbar 占用实际 Toolbar 的 inline-size；占位尺寸包含有效的 `bottomPlaceholder`。无效的 `bottomPlaceholder` 不产生额外空间。`fab` Slot 在 docked 模式不会渲染并会给出警告。
+`placeholder=true` 时，横向 Toolbar 占用实际 Toolbar 的 block-size，垂直 Toolbar 占用实际 Toolbar 的 inline-size；占位尺寸包含有效的 `bottomPlaceholder`。无效的 `bottomPlaceholder` 不产生额外空间。`placeholder=false` 时，即使设置 `bottomPlaceholder` 也不会生成自然布局占位。`fab` Slot 在 docked 模式不会渲染并会给出警告。
 
 组件没有公开方法。
 
 ## 事件
 
-组件不定义自定义事件。未消费的属性、`class`、`style`、`id` 和 ARIA 属性传递给 Teleport 到 `body` 的 Toolbar 根节点。
+组件不定义自定义事件；显示状态由 `modelValue` 或 `v-model` 控制。未消费的属性、`class`、`style`、`id` 和 ARIA 属性传递给 Teleport 到 `body` 的 Toolbar 根节点。
 
 ## Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
 | 默认 | Toolbar 主内容，可放置按钮、按钮组、`MatSpacer` 和自定义内容 |
-| `fab` | FAB 或其他主操作内容；仅在 floating variant 中渲染 |
+| `fab` | FAB 或其他主操作内容；仅在 floating variant 中渲染，位于 Toolbar 主表面外侧 |
 
 ## 覆盖层与避让
 

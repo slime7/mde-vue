@@ -3,6 +3,7 @@
 import { computed, ref } from 'vue';
 
 const variant = ref('docked');
+const position = ref('center');
 const vibrant = ref(false);
 const active = ref(false);
 const isFloating = computed(() => variant.value.startsWith('floating'));
@@ -30,6 +31,15 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
         {{ vibrant ? 'standard' : 'vibrant' }}
       </mat-btn>
       <mat-btn
+        v-for="item in ['start', 'center', 'end']"
+        :key="`position-${item}`"
+        variant="text"
+        :selected="position === item"
+        @click="position = item"
+      >
+        position: {{ item }}
+      </mat-btn>
+      <mat-btn
         variant="outlined"
         @click="active = !active"
       >
@@ -38,8 +48,9 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
     </div>
 
     <mat-toolbar
-      v-if="active"
+      v-model="active"
       :variant="variant"
+      :position="position"
       :vibrant="vibrant"
     >
       <mat-btn variant="standard">
@@ -50,9 +61,12 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
       </mat-btn>
 
       <template v-if="isFloating" #fab>
-        <button class="toolbar-variant-example__fab" type="button">
-          +
-        </button>
+        <mat-btn
+          icon="add"
+          label="新建"
+          width="wide"
+          variant="filled"
+        />
       </template>
     </mat-toolbar>
   </div>
@@ -71,16 +85,5 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
   gap: 8px;
 }
 
-.toolbar-variant-example__fab {
-  inline-size: 56px;
-  block-size: 56px;
-  color: var(--mat-sys-color-on-primary);
-  background: var(--mat-sys-color-primary);
-  border: 0;
-  border-radius: var(--mat-sys-shape-corner-full);
-  box-shadow: var(--mat-sys-elevation-level3);
-  font-size: 24px;
-  cursor: pointer;
-}
 </style>
 <!-- #endregion style -->

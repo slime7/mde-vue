@@ -18,6 +18,7 @@ const TOOLBAR_VARIANTS = [
   'floating-left',
   'floating-right',
 ];
+const TOOLBAR_ANIMATION_DURATION = 200;
 
 defineOptions({
   name: 'MatToolbar',
@@ -67,6 +68,10 @@ function normalizeBottomPlaceholder(value) {
 }
 
 const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    default: true,
+  },
   variant: {
     type: String,
     default: 'docked',
@@ -78,6 +83,13 @@ const props = defineProps({
         'floating-left',
         'floating-right',
       ].includes(value);
+    },
+  },
+  position: {
+    type: String,
+    default: 'center',
+    validator(value) {
+      return ['start', 'center', 'end'].includes(value);
     },
   },
   vibrant: {
@@ -114,10 +126,16 @@ const props = defineProps({
     },
   },
 });
+defineEmits({
+  'update:modelValue': (value) => typeof value === 'boolean',
+});
 
 const attrs = useAttrs();
 const slots = useSlots();
+const rendered = ref(props.modelValue);
+const phase = ref(props.modelValue ? 'open' : 'closed');
 const toolbarElement = ref(null);
+const fabElement = ref(null);
 const toolbarSize = ref({
   blockSize: 0,
   inlineSize: 0,
@@ -129,6 +147,9 @@ const normalizedVariant = computed(() => {
 
   return props.variant === 'floating' ? 'floating-bottom' : props.variant;
 });
+const normalizedPosition = computed(() => (
+  ['start', 'center', 'end'].includes(props.position) ? props.position : 'center'
+));
 const isFloating = computed(() => normalizedVariant.value.startsWith('floating'));
 const isVertical = computed(() => (
   normalizedVariant.value === 'floating-left'
@@ -156,6 +177,7 @@ const placeholderStyle = computed(() => ({
 }));
 const toolbarClass = computed(() => [
   `mat-toolbar--${normalizedVariant.value}`,
+  `mat-toolbar--position-${normalizedPosition.value}`,
   {
     'mat-toolbar--vertical': isVertical.value,
     'mat-toolbar--vibrant': props.vibrant,
@@ -165,25 +187,113 @@ const toolbarClass = computed(() => [
 let registration;
 let resizeObserver;
 let mounted = false;
+let phaseTimer;
+let warnedForFabSlot = false;
 
-function validateFabSlot() {
-  if (slots.fab && !isFloating.value) {
-    console.warn('MatToolbar: fab Slot 仅支持 floating variant');
+function clearPhaseTimer() {
+  if (phaseTimer !== undefined) {
+    window.clearTimeout(phaseTimer);
+    phaseTimer = undefined;
   }
 }
 
-function syncToolbarSize() {
-  if (!toolbarElement.value) {
+function prefersReducedMotion() {
+  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+}
+
+/**
+ * @param {() => void} callback
+ */
+function waitForAnimation(callback) {
+  clearPhaseTimer();
+
+  if (prefersReducedMotion()) {
+    callback();
     return;
   }
 
-  const rect = toolbarElement.value.getBoundingClientRect();
+  phaseTimer = window.setTimeout(() => {
+    phaseTimer = undefined;
+    callback();
+  }, TOOLBAR_ANIMATION_DURATION);
+}
+
+function openToolbar() {
+  clearPhaseTimer();
+  rendered.value = true;
+  phase.value = 'opening';
+  waitForAnimation(() => {
+    if (rendered.value && props.modelValue) {
+      phase.value = 'open';
+    }
+  });
+}
+
+function closeToolbar() {
+  clearPhaseTimer();
+
+  if (!rendered.value) {
+    phase.value = 'closed';
+    return;
+  }
+
+  phase.value = 'closing';
+  waitForAnimation(() => {
+    if (!props.modelValue) {
+      rendered.value = false;
+      phase.value = 'closed';
+    }
+  });
+}
+
+function validateFabSlot() {
+  if (warnedForFabSlot || !slots.fab || isFloating.value) {
+    return;
+  }
+
+  warnedForFabSlot = true;
+  console.warn('MatToolbar: fab Slot 仅支持 floating variant');
+}
+
+function syncToolbarSize() {
+  const rect = toolbarElement.value?.getBoundingClientRect();
+
+  if (!rect) {
+    return;
+  }
 
   toolbarSize.value = {
     blockSize: Math.max(0, Math.ceil(Number(rect.height) || 0)),
     inlineSize: Math.max(0, Math.ceil(Number(rect.width) || 0)),
   };
   registration?.update();
+}
+
+function getToolbarRect() {
+  if (!toolbarElement.value) {
+    return null;
+  }
+
+  const toolbarRect = toolbarElement.value.getBoundingClientRect();
+  const fabRect = fabElement.value?.getBoundingClientRect();
+
+  if (!fabRect || (fabRect.width === 0 && fabRect.height === 0)) {
+    return toolbarRect;
+  }
+
+  const left = Math.min(toolbarRect.left, fabRect.left);
+  const right = Math.max(toolbarRect.right, fabRect.right);
+  const top = Math.min(toolbarRect.top, fabRect.top);
+  const bottom = Math.max(toolbarRect.bottom, fabRect.bottom);
+
+  return {
+    bottom,
+    height: bottom - top,
+    left,
+    right,
+    top,
+    width: right - left,
+  };
 }
 
 async function scheduleToolbarSize() {
@@ -195,40 +305,79 @@ async function scheduleToolbarSize() {
   syncToolbarSize();
 }
 
-onMounted(async () => {
-  mounted = true;
+function stopToolbarRegistration() {
+  resizeObserver?.disconnect();
+  resizeObserver = undefined;
+  window.removeEventListener('resize', syncToolbarSize);
+  registration?.unregister();
+  registration = undefined;
+}
+
+async function syncToolbarRegistration() {
   await nextTick();
 
-  if (!toolbarElement.value) {
+  if (!mounted) {
     return;
   }
 
-  registration = registerToolbar(toolbarElement.value, {
-    isBottom: () => isBottomVariant.value,
-  });
-  resizeObserver = typeof ResizeObserver === 'undefined'
-    ? undefined
-    : new ResizeObserver(syncToolbarSize);
-  resizeObserver?.observe(toolbarElement.value);
-  window.addEventListener('resize', syncToolbarSize);
+  if (!rendered.value || !toolbarElement.value) {
+    stopToolbarRegistration();
+    return;
+  }
+
+  if (!registration) {
+    registration = registerToolbar(toolbarElement.value, {
+      getRect: getToolbarRect,
+      isBottom: () => isBottomVariant.value,
+    });
+    resizeObserver = typeof ResizeObserver === 'undefined'
+      ? undefined
+      : new ResizeObserver(syncToolbarSize);
+    resizeObserver?.observe(toolbarElement.value);
+    window.addEventListener('resize', syncToolbarSize);
+  }
+
+  if (fabElement.value) {
+    resizeObserver?.observe(fabElement.value);
+  }
+
   syncToolbarSize();
   validateFabSlot();
+}
+
+onMounted(() => {
+  mounted = true;
+  syncToolbarRegistration();
 });
 
 onBeforeUnmount(() => {
   mounted = false;
-  resizeObserver?.disconnect();
-  window.removeEventListener('resize', syncToolbarSize);
-  registration?.unregister();
-  registration = undefined;
+  clearPhaseTimer();
+  stopToolbarRegistration();
 });
 
-watch([normalizedVariant, normalizedBottomPlaceholder], scheduleToolbarSize);
+watch(() => props.modelValue, (value) => {
+  if (!mounted) {
+    return;
+  }
+
+  if (value) {
+    openToolbar();
+    return;
+  }
+
+  closeToolbar();
+});
+watch(rendered, syncToolbarRegistration);
+watch([normalizedVariant, normalizedPosition, normalizedBottomPlaceholder], () => {
+  scheduleToolbarSize();
+  syncToolbarRegistration();
+});
 </script>
 
 <template>
   <span
-    v-if="placeholder"
+    v-if="placeholder && rendered"
     class="mat-toolbar__placeholder"
     :style="placeholderStyle"
     aria-hidden="true"
@@ -236,10 +385,11 @@ watch([normalizedVariant, normalizedBottomPlaceholder], scheduleToolbarSize);
 
   <Teleport to="body">
     <div
+      v-if="rendered"
       ref="toolbarElement"
       v-bind="$attrs"
       class="mat-toolbar"
-      :class="toolbarClass"
+      :class="[toolbarClass, `mat-toolbar--${phase}`]"
       :style="toolbarStyle"
       role="toolbar"
       :aria-orientation="isVertical ? 'vertical' : undefined"
@@ -248,10 +398,14 @@ watch([normalizedVariant, normalizedBottomPlaceholder], scheduleToolbarSize);
         <div class="mat-toolbar__content">
           <slot />
         </div>
+      </div>
 
-        <div v-if="isFloating && slots.fab" class="mat-toolbar__fab">
-          <slot name="fab" />
-        </div>
+      <div
+        v-if="isFloating && slots.fab"
+        ref="fabElement"
+        class="mat-toolbar__fab"
+      >
+        <slot name="fab" />
       </div>
     </div>
   </Teleport>
@@ -270,11 +424,23 @@ watch([normalizedVariant, normalizedBottomPlaceholder], scheduleToolbarSize);
 .mat-toolbar {
   --mat-toolbar-container-color: var(--mat-sys-color-surface-container);
   --mat-toolbar-content-color: var(--mat-sys-color-on-surface);
+  --mat-toolbar-position-translate-x: 0;
+  --mat-toolbar-position-translate-y: 0;
   position: fixed;
   z-index: var(--mat-sys-z-index-toolbar);
   box-sizing: border-box;
-  display: block;
+  display: flex;
+  gap: var(--mat-toolbar-content-gap);
+  align-items: center;
   color: var(--mat-toolbar-content-color);
+  pointer-events: none;
+}
+
+.mat-toolbar--closing .mat-toolbar__surface {
+  pointer-events: none;
+}
+
+.mat-toolbar--closing .mat-toolbar__fab {
   pointer-events: none;
 }
 
@@ -311,6 +477,7 @@ watch([normalizedVariant, normalizedBottomPlaceholder], scheduleToolbarSize);
   display: flex;
   flex: 0 0 auto;
   align-items: center;
+  pointer-events: auto;
 }
 
 .mat-toolbar--docked {
@@ -327,22 +494,58 @@ watch([normalizedVariant, normalizedBottomPlaceholder], scheduleToolbarSize);
 }
 
 .mat-toolbar--floating-bottom {
-  inset-inline-start: 50%;
+  inset-inline: 50% auto;
   inset-block-end: var(--mat-toolbar-floating-edge-space);
   inline-size: fit-content;
   max-inline-size: calc(100dvi - (var(--mat-toolbar-floating-edge-space) * 2));
   padding-block-end: var(--mat-toolbar-bottom-placeholder);
-  translate: -50% 0;
+  translate: var(--mat-toolbar-position-translate-x) 0;
+}
+
+.mat-toolbar--floating-bottom.mat-toolbar--position-start {
+  inset-inline: var(--mat-toolbar-floating-edge-space) auto;
+
+  --mat-toolbar-position-translate-x: 0;
+}
+
+.mat-toolbar--floating-bottom.mat-toolbar--position-center {
+  --mat-toolbar-position-translate-x: -50%;
+}
+
+.mat-toolbar--floating-bottom.mat-toolbar--position-end {
+  inset-inline: auto var(--mat-toolbar-floating-edge-space);
+
+  --mat-toolbar-position-translate-x: 0;
 }
 
 .mat-toolbar--floating-bottom .mat-toolbar__surface {
+  flex: 1 1 auto;
+  min-inline-size: 0;
   max-inline-size: 100%;
 }
 
 .mat-toolbar--vertical {
-  inset-block-start: 50%;
+  inset-block: 50% auto;
+  flex-direction: column;
+  align-items: center;
   max-block-size: calc(100dvb - (var(--mat-toolbar-vertical-edge-space) * 2));
-  translate: 0 -50%;
+  translate: 0 var(--mat-toolbar-position-translate-y);
+}
+
+.mat-toolbar--vertical.mat-toolbar--position-start {
+  inset-block: var(--mat-toolbar-vertical-edge-space) auto;
+
+  --mat-toolbar-position-translate-y: 0;
+}
+
+.mat-toolbar--vertical.mat-toolbar--position-center {
+  --mat-toolbar-position-translate-y: -50%;
+}
+
+.mat-toolbar--vertical.mat-toolbar--position-end {
+  inset-block: auto var(--mat-toolbar-vertical-edge-space);
+
+  --mat-toolbar-position-translate-y: 0;
 }
 
 .mat-toolbar--floating-left {
@@ -354,7 +557,9 @@ watch([normalizedVariant, normalizedBottomPlaceholder], scheduleToolbarSize);
 }
 
 .mat-toolbar--vertical .mat-toolbar__surface {
+  flex: 1 1 auto;
   flex-direction: column;
+  min-block-size: 0;
   max-block-size: inherit;
   padding-block: var(--mat-toolbar-container-padding);
   overflow: auto;
@@ -366,13 +571,126 @@ watch([normalizedVariant, normalizedBottomPlaceholder], scheduleToolbarSize);
   inline-size: 100%;
 }
 
-.mat-toolbar--vertical .mat-toolbar__fab {
-  align-self: center;
+.mat-toolbar--docked.mat-toolbar--opening {
+  animation: mat-toolbar-docked-enter var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-decelerate) both;
+}
+
+.mat-toolbar--docked.mat-toolbar--closing {
+  animation: mat-toolbar-docked-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) both;
+}
+
+.mat-toolbar--floating-bottom.mat-toolbar--opening {
+  animation: mat-toolbar-floating-bottom-enter var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-decelerate) both;
+}
+
+.mat-toolbar--floating-bottom.mat-toolbar--closing {
+  animation: mat-toolbar-floating-bottom-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) both;
+}
+
+.mat-toolbar--floating-left.mat-toolbar--opening {
+  animation: mat-toolbar-floating-left-enter var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-decelerate) both;
+}
+
+.mat-toolbar--floating-left.mat-toolbar--closing {
+  animation: mat-toolbar-floating-left-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) both;
+}
+
+.mat-toolbar--floating-right.mat-toolbar--opening {
+  animation: mat-toolbar-floating-right-enter var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-decelerate) both;
+}
+
+.mat-toolbar--floating-right.mat-toolbar--closing {
+  animation: mat-toolbar-floating-right-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) both;
+}
+
+@keyframes mat-toolbar-docked-enter {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes mat-toolbar-docked-exit {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes mat-toolbar-floating-bottom-enter {
+  from {
+    translate: var(--mat-toolbar-position-translate-x) 100%;
+  }
+
+  to {
+    translate: var(--mat-toolbar-position-translate-x) 0;
+  }
+}
+
+@keyframes mat-toolbar-floating-bottom-exit {
+  from {
+    translate: var(--mat-toolbar-position-translate-x) 0;
+  }
+
+  to {
+    translate: var(--mat-toolbar-position-translate-x) 100%;
+  }
+}
+
+@keyframes mat-toolbar-floating-left-enter {
+  from {
+    translate: -100% var(--mat-toolbar-position-translate-y);
+  }
+
+  to {
+    translate: 0 var(--mat-toolbar-position-translate-y);
+  }
+}
+
+@keyframes mat-toolbar-floating-left-exit {
+  from {
+    translate: 0 var(--mat-toolbar-position-translate-y);
+  }
+
+  to {
+    translate: -100% var(--mat-toolbar-position-translate-y);
+  }
+}
+
+@keyframes mat-toolbar-floating-right-enter {
+  from {
+    translate: 100% var(--mat-toolbar-position-translate-y);
+  }
+
+  to {
+    translate: 0 var(--mat-toolbar-position-translate-y);
+  }
+}
+
+@keyframes mat-toolbar-floating-right-exit {
+  from {
+    translate: 0 var(--mat-toolbar-position-translate-y);
+  }
+
+  to {
+    translate: 100% var(--mat-toolbar-position-translate-y);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .mat-toolbar {
     scroll-behavior: auto;
+  }
+
+  .mat-toolbar--opening,
+  .mat-toolbar--closing {
+    animation: none;
   }
 }
 </style>

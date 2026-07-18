@@ -15,7 +15,7 @@ const active = ref(false);
     <p>bottomPlaceholder 只增加底部手势条或安全区空间，不会开启自然布局占位。</p>
 
     <mat-toolbar
-      v-if="active"
+      v-model="active"
       bottom-placeholder="env(safe-area-inset-bottom)"
     >
       <mat-btn variant="standard">

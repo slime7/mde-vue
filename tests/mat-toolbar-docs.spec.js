@@ -22,6 +22,8 @@ describe('Toolbar 文档', () => {
     expect(page).toContain('`<mat-toolbar>` 的组件导出名是 `MatToolbar`');
     expect(page).toContain('`placeholder`');
     expect(page).toContain('`bottomPlaceholder`');
+    expect(page).toContain('`modelValue`');
+    expect(page).toContain('`position`');
     expect(page).toContain('| `fab` |');
     ['## 组件简介', '## 示例', '## API', '## 事件', '## Slots'].forEach((heading) => {
       expect(page).toContain(heading);
@@ -53,9 +55,21 @@ describe('Toolbar 文档', () => {
       const example = readFileSync(examplePath, 'utf8');
 
       expect(example, exampleName).toContain('const active = ref(false);');
-      expect(example, exampleName).toContain('v-if="active"');
+      expect(example, exampleName).toContain('v-model="active"');
       expect(example, exampleName).toContain('展示 Toolbar');
       expect(example, exampleName).toContain('隐藏 Toolbar');
     });
+  });
+
+  it('使用现有 MatBtn 的图标模式作为 fab 示例', () => {
+    const example = readFileSync(
+      resolve('docs/site/examples/toolbar/ToolbarVariantExample.vue'),
+      'utf8',
+    );
+
+    expect(example).toContain('<mat-btn');
+    expect(example).toContain('icon="add"');
+    expect(example).toContain('width="wide"');
+    expect(example).not.toContain('toolbar-variant-example__fab');
   });
 });
