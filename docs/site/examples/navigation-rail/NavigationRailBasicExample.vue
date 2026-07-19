@@ -10,9 +10,8 @@ const selected = ref('home');
 <template>
   <div class="navigation-rail-example-shell">
     <mat-navigation-rail
-      :selected="selected"
+      v-model="selected"
       aria-label="主导航"
-      @select="selected = $event.nextSelected"
     >
       <mat-navigation-rail-item value="home" icon="home">
         首页
@@ -36,6 +35,7 @@ const selected = ref('home');
 <style scoped>
 .navigation-rail-example-shell {
   display: flex;
+  inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
   border: 1px solid var(--mat-sys-color-outline-variant);

@@ -1,18 +1,26 @@
+<!-- #region script -->
+<script setup>
+import { ref } from 'vue';
+
+const selected = ref('home');
+</script>
+<!-- #endregion script -->
+
 <!-- #region template -->
 <template>
   <div class="navigation-bar-example-shell">
     <mat-navigation-rail
-      expanded
+      v-model="selected"
       orientation="horizontal"
       aria-label="底部导航"
     >
-      <mat-navigation-rail-item icon="home">
+      <mat-navigation-rail-item value="home" icon="home">
         首页
       </mat-navigation-rail-item>
-      <mat-navigation-rail-item icon="search">
+      <mat-navigation-rail-item value="search" icon="search">
         搜索
       </mat-navigation-rail-item>
-      <mat-navigation-rail-item icon="person">
+      <mat-navigation-rail-item value="profile" icon="person">
         我的
       </mat-navigation-rail-item>
     </mat-navigation-rail>
@@ -24,7 +32,8 @@
 <style scoped>
 .navigation-bar-example-shell {
   display: flex;
-  min-block-size: 120px;
+  inline-size: 100%;
+  min-block-size: 112px;
   align-items: end;
   overflow: hidden;
   border: 1px solid var(--mat-sys-color-outline-variant);

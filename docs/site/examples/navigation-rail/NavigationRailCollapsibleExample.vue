@@ -3,6 +3,7 @@
 import { ref } from 'vue';
 
 const expanded = ref(false);
+const selected = ref('overview');
 </script>
 <!-- #endregion script -->
 
@@ -10,16 +11,17 @@ const expanded = ref(false);
 <template>
   <div class="navigation-rail-example-shell">
     <mat-navigation-rail
+      v-model="selected"
       v-model:expanded="expanded"
       collapsible
       close-icon="keyboard_double_arrow_left"
       open-icon="keyboard_double_arrow_right"
       aria-label="可展开导航"
     >
-      <mat-navigation-rail-item icon="dashboard">
+      <mat-navigation-rail-item value="overview" icon="dashboard">
         概览
       </mat-navigation-rail-item>
-      <mat-navigation-rail-item icon="analytics">
+      <mat-navigation-rail-item value="analytics" icon="analytics">
         分析
       </mat-navigation-rail-item>
     </mat-navigation-rail>
@@ -35,6 +37,7 @@ const expanded = ref(false);
 <style scoped>
 .navigation-rail-example-shell {
   display: flex;
+  inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
   border: 1px solid var(--mat-sys-color-outline-variant);

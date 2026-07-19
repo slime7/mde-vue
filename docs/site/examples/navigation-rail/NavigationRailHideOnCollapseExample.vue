@@ -35,6 +35,7 @@ const expanded = ref(false);
 <style scoped>
 .navigation-rail-example-shell {
   position: relative;
+  inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
   border: 1px solid var(--mat-sys-color-outline-variant);

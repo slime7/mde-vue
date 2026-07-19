@@ -35,21 +35,27 @@ const emit = defineEmits({
 const slots = useSlots();
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const navigation = inject(MAT_NAVIGATION_RAIL_KEY, null);
-const orientation = computed(() => navigation?.orientation.value ?? 'vertical');
 const expanded = computed(() => navigation?.expanded.value ?? false);
+const isHorizontal = computed(() => navigation?.orientation.value === 'horizontal');
+const horizontalContent = computed(() => isHorizontal.value || expanded.value);
 const selected = computed(() => navigation?.isSelected(props.value) ?? false);
+const hasIcon = computed(() => Boolean(props.icon || slots.icon));
 const itemClasses = computed(() => ({
   'mat-navigation-rail-item--selected': selected.value,
   'mat-navigation-rail-item--disabled': props.disabled,
-  [`mat-navigation-rail-item--${orientation.value}-${expanded.value ? 'expanded' : 'collapsed'}`]: true,
+  'mat-navigation-rail-item--expanded': expanded.value,
+  'mat-navigation-rail-item--collapsed': !expanded.value && !isHorizontal.value,
+  'mat-navigation-rail-item--horizontal': isHorizontal.value,
 }));
-const hasLabel = computed(() => Boolean(slots.default));
 
 /**
  * @param {MouseEvent} event
  */
 function handleClick(event) {
-  navigation?.requestSelection(props.value, event);
+  if (!props.disabled) {
+    navigation?.requestSelection(props.value);
+  }
+
   emit('click', event);
 }
 </script>
@@ -61,23 +67,39 @@ function handleClick(event) {
     :class="itemClasses"
     :aria-current="selected ? 'page' : undefined"
     :disabled="disabled"
-    :focus-ring="true"
+    :focus-ring="false"
     :href="href"
     :use-cursor="matUi.useCursor"
     @click="handleClick"
   >
-    <span class="mat-navigation-rail-item__indicator" aria-hidden="true" />
+    <span class="mat-navigation-rail-item__indicator">
+      <span class="mat-navigation-rail-item__icon-wrap">
+        <slot
+          v-if="slots.icon"
+          name="icon"
+          :selected="selected"
+        />
 
-    <MatIcon
-      v-if="icon"
-      :fill="selected ? 1 : 0"
-      :icon="icon"
-      class="mat-navigation-rail-item__icon"
-      aria-hidden="true"
-    />
+        <MatIcon
+          v-else-if="hasIcon"
+          :fill="selected ? 1 : 0"
+          :icon="icon"
+          class="mat-navigation-rail-item__icon"
+          aria-hidden="true"
+        />
+
+      </span>
+
+      <span
+        v-if="horizontalContent"
+        class="mat-navigation-rail-item__label"
+      >
+        <slot />
+      </span>
+    </span>
 
     <span
-      v-if="hasLabel"
+      v-if="!horizontalContent"
       class="mat-navigation-rail-item__label"
     >
       <slot />
@@ -87,80 +109,110 @@ function handleClick(event) {
 
 <style scoped>
 .mat-navigation-rail-item {
-  --mat-action-state-color: var(--mat-navigation-rail-item-state-color);
+  --mat-action-state-color: transparent;
   position: relative;
-  z-index: 0;
   display: flex;
   box-sizing: border-box;
+  inline-size: 100%;
   min-inline-size: 0;
-  min-block-size: var(--mat-navigation-rail-item-target-size);
   align-items: center;
-  justify-content: center;
   color: var(--mat-navigation-rail-item-content-color);
   text-align: start;
   text-decoration: none;
   background: transparent;
   border: 0;
-  border-radius: var(--mat-navigation-rail-item-shape);
+}
+
+.mat-navigation-rail-item--collapsed {
+  min-block-size: var(--mat-navigation-rail-collapsed-item-height);
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--mat-navigation-rail-vertical-icon-label-space);
+  padding-block: var(--mat-navigation-rail-item-space);
+}
+
+.mat-navigation-rail-item--expanded {
+  min-block-size: var(--mat-navigation-rail-expanded-item-height);
+  justify-content: flex-start;
+  padding-inline: var(--mat-navigation-rail-expanded-side-space);
+}
+
+.mat-navigation-rail-item--horizontal {
+  flex: 0 1 var(--mat-navigation-bar-horizontal-item-width);
+  min-block-size: 100%;
+  justify-content: center;
+  padding-inline: 0;
 }
 
 .mat-navigation-rail-item__indicator {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border-radius: var(--mat-sys-shape-corner-full);
+}
+
+.mat-navigation-rail-item__indicator::before,
+.mat-navigation-rail-item__indicator::after {
   position: absolute;
   z-index: -1;
-  inset: 50% auto auto 50%;
-  inline-size: var(--mat-navigation-rail-item-indicator-size);
-  block-size: var(--mat-navigation-rail-item-indicator-size);
+  inset: 0;
+  border-radius: inherit;
+  content: '';
+  pointer-events: none;
+}
+
+.mat-navigation-rail-item__indicator::before {
   background: var(--mat-navigation-rail-item-selected-container-color);
-  border-radius: var(--mat-navigation-rail-item-selected-shape);
   opacity: 0;
-  translate: -50% -50%;
-  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), inline-size var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-emphasized), border-radius var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-emphasized);
+  scale: 0 1;
+  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), scale var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized);
 }
 
-.mat-navigation-rail-item--selected {
-  --mat-navigation-rail-item-content-color: var(--mat-navigation-rail-item-selected-content-color);
+.mat-navigation-rail-item__indicator::after {
+  background: var(--mat-navigation-rail-item-state-color);
+  opacity: 0;
+  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
 }
 
-.mat-navigation-rail-item--selected .mat-navigation-rail-item__indicator {
+.mat-navigation-rail-item--selected .mat-navigation-rail-item__indicator::before {
   opacity: 1;
+  scale: 1;
 }
 
-.mat-navigation-rail-item--vertical-collapsed {
-  flex-direction: column;
-  gap: var(--mat-navigation-rail-item-icon-label-gap);
-  inline-size: var(--mat-navigation-rail-collapsed-item-width);
-  min-block-size: var(--mat-navigation-rail-collapsed-item-height);
-  padding-block: var(--mat-navigation-rail-item-vertical-padding);
-  margin-inline: auto;
+.mat-navigation-rail-item--collapsed .mat-navigation-rail-item__indicator {
+  inline-size: var(--mat-navigation-rail-vertical-indicator-width);
+  block-size: var(--mat-navigation-rail-vertical-indicator-height);
 }
 
-.mat-navigation-rail-item--vertical-expanded {
-  justify-content: flex-start;
-  gap: var(--mat-navigation-rail-item-icon-label-gap);
-  inline-size: 100%;
-  padding-inline: var(--mat-navigation-rail-item-expanded-padding);
+.mat-navigation-rail-item--expanded .mat-navigation-rail-item__indicator {
+  min-block-size: var(--mat-navigation-rail-horizontal-indicator-height);
+  max-inline-size: 100%;
+  gap: var(--mat-navigation-rail-horizontal-icon-label-space);
+  padding-inline: var(--mat-navigation-rail-horizontal-leading-space);
 }
 
-.mat-navigation-rail-item--horizontal-collapsed {
-  flex: 1 1 0;
-  flex-direction: column;
-  gap: var(--mat-navigation-rail-item-icon-label-gap);
-  min-inline-size: var(--mat-navigation-bar-item-min-width);
-  padding-block: var(--mat-navigation-rail-item-horizontal-padding);
+.mat-navigation-rail-item--horizontal .mat-navigation-rail-item__indicator {
+  min-block-size: var(--mat-navigation-bar-horizontal-indicator-height);
+  max-inline-size: 100%;
+  gap: var(--mat-navigation-bar-horizontal-icon-label-space);
+  padding-inline: var(--mat-navigation-bar-horizontal-indicator-space);
 }
 
-.mat-navigation-rail-item--horizontal-expanded {
+.mat-navigation-rail-item__icon-wrap {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
   flex: 0 0 auto;
-  justify-content: flex-start;
-  gap: var(--mat-navigation-rail-item-icon-label-gap);
-  min-inline-size: var(--mat-navigation-bar-expanded-item-width);
-  padding-inline: var(--mat-navigation-rail-item-expanded-padding);
+  align-items: center;
+  justify-content: center;
 }
 
 .mat-navigation-rail-item__icon {
-  position: relative;
-  z-index: 1;
-  flex: 0 0 auto;
   color: inherit;
 }
 
@@ -168,14 +220,60 @@ function handleClick(event) {
   position: relative;
   z-index: 1;
   min-inline-size: 0;
-  overflow: hidden;
+  color: inherit;
   font-family: var(--mat-navigation-rail-item-label-font);
   font-size: var(--mat-navigation-rail-item-label-size);
   font-weight: var(--mat-navigation-rail-item-label-weight);
   line-height: var(--mat-navigation-rail-item-label-line-height);
   letter-spacing: var(--mat-navigation-rail-item-label-tracking);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.mat-navigation-rail-item--collapsed > .mat-navigation-rail-item__label {
+  max-inline-size: calc(100% - var(--mat-navigation-rail-collapsed-label-space));
+  color: var(--mat-navigation-rail-item-content-color);
+  text-align: center;
+}
+
+.mat-navigation-rail-item--expanded .mat-navigation-rail-item__label {
+  font-family: var(--mat-navigation-rail-expanded-label-font);
+  font-size: var(--mat-navigation-rail-expanded-label-size);
+  font-weight: var(--mat-navigation-rail-expanded-label-weight);
+  line-height: var(--mat-navigation-rail-expanded-label-line-height);
+  letter-spacing: var(--mat-navigation-rail-expanded-label-tracking);
+}
+
+.mat-navigation-rail-item--selected {
+  color: var(--mat-navigation-rail-item-selected-content-color);
+}
+
+.mat-navigation-rail-item--selected.mat-navigation-rail-item--collapsed > .mat-navigation-rail-item__label {
+  color: var(--mat-navigation-rail-item-selected-label-color);
+}
+
+.mat-navigation-rail-item--horizontal.mat-navigation-rail-item--selected .mat-navigation-rail-item__label {
+  color: var(--mat-navigation-bar-item-selected-label-color);
+}
+
+.mat-navigation-rail-item:focus-visible {
+  outline: 0;
+}
+
+.mat-navigation-rail-item:focus-visible .mat-navigation-rail-item__indicator {
+  outline: var(--mat-sys-interaction-focus-ring-width) solid var(--mat-sys-color-secondary);
+  outline-offset: var(--mat-sys-interaction-focus-ring-offset);
+}
+
+.mat-navigation-rail-item:focus-visible .mat-navigation-rail-item__indicator::after,
+.mat-navigation-rail-item:active .mat-navigation-rail-item__indicator::after {
+  opacity: var(--mat-sys-state-focus-state-layer-opacity);
+}
+
+@media (hover: hover) {
+  .mat-navigation-rail-item:not(:disabled):hover .mat-navigation-rail-item__indicator::after {
+    opacity: var(--mat-sys-state-hover-state-layer-opacity);
+  }
 }
 
 .mat-navigation-rail-item--disabled {
@@ -183,7 +281,8 @@ function handleClick(event) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mat-navigation-rail-item__indicator {
+  .mat-navigation-rail-item__indicator::before,
+  .mat-navigation-rail-item__indicator::after {
     transition-duration: 0s;
   }
 }

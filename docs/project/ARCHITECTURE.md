@@ -68,6 +68,8 @@ Dialog 组合 `MatSurfaceBase` 与原生 modal dialog，通过 Teleport 挂载�
 
 Snackbar 通过 Teleport 固定在视口底部，使用 `modelValue` 请求展示而不移动焦点。它提供一个可选的文字 action 与可选关闭入口；`actionText` 与 `action` Slot、`closable` 与 `close` Slot 分别遵守 Slot 优先规则，action 触发后关闭当前通知。模块级 FIFO 调度器同时协调所有模板实例和 `snackbar()` / `toast()` 命令式请求；活动项只在退出动画完成后释放下一项，排队模板项可由 `modelValue=false` 或卸载取消。命令式 Snackbar 使用单个可复用 Vue 宿主并注入最后安装插件的组件设置与主题控制器；`onAction` 回调在 action 触发时调用，宿主没有待显示内容时移除，Promise 在退出与清理完成后结算。
 
+Navigation 以 `MatNavigationRail` 与 `MatNavigationRailItem` 组合纵向 Expressive navigation rail 和横向 Flexible navigation bar。纵向模式提供 collapsed/expanded、standard/modal、可隐藏 expanded 容器以及顶部或居中的目的地组；横向模式固定使用 bar 的 horizontal items，并忽略 rail 专属状态。父组件通过 provide/inject 统一受控单选、展开状态和布局类型，Item 保留原生按钮或链接语义；窗口断点切换由使用方负责。
+
 Loader 以单个组件的 `linear` 与 `circular` variant 表达两种 Progress indicator 形态。确定状态在根元素上提供 progressbar ARIA 值，不确定状态仅保留进度语义和动画；波浪形活动指示器由内联 SVG 绘制，轨道保持平直。组件只读取系统 primary 与 secondary container 颜色角色，显式 `color` 通过共享局部配色模块替换活动与停止指示器色。
 
 Checkbox 以布尔值或基础值数组表达受控选择，数组更新始终返回新数组。Radio 可以独立受控；进入 Radio group 后由 provide/inject 上下文统一选中值、禁用、配色和按 DOM 顺序维护的 roving tabindex。Switch 只表达立即生效的布尔状态。三类控件保留原生 input 语义，但不承诺表单提交、原生校验、重置或表单代理方法。

@@ -1,3 +1,11 @@
+<!-- #region script -->
+<script setup>
+import { ref } from 'vue';
+
+const modalExpanded = ref(true);
+</script>
+<!-- #endregion script -->
+
 <!-- #region template -->
 <template>
   <div class="navigation-rail-layout-example">
@@ -26,7 +34,8 @@
       <h3>modal：覆盖正文</h3>
       <div class="navigation-rail-example-shell">
         <mat-navigation-rail
-          expanded
+          v-model:expanded="modalExpanded"
+          collapsible
           layout="modal"
           aria-label="模态导航"
         >
@@ -50,6 +59,7 @@
 <style scoped>
 .navigation-rail-layout-example {
   display: grid;
+  inline-size: 100%;
   gap: 16px;
 }
 
@@ -60,6 +70,7 @@
 
 .navigation-rail-example-shell {
   display: flex;
+  inline-size: 100%;
   min-block-size: 220px;
   overflow: hidden;
   border: 1px solid var(--mat-sys-color-outline-variant);

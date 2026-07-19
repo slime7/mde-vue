@@ -1,23 +1,25 @@
 ---
-title: Navigation Rail 导航栏
-description: mat-navigation-rail 的纵向 Navigation Rail、横向 Navigation Bar、standard/modal 布局与可选展开状态。
+title: Navigation 导航
+description: mat-navigation-rail 的 Expressive collapsed/expanded rail 与 horizontal flexible navigation bar。
 llms: true
 order: 105
 ---
 
-# Navigation Rail 导航栏
+# Navigation 导航
 
 ## 组件简介
 
-`<mat-navigation-rail>` 的组件导出名是 `MatNavigationRail`，`<mat-navigation-rail-item>` 的组件导出名是 `MatNavigationRailItem`。组件纵向使用 Material 3 Expressive Navigation Rail；设置 `orientation="horizontal"` 时复用为 Navigation Bar，不需要另行添加导航栏组件。
+`<mat-navigation-rail>` 的组件导出名是 `MatNavigationRail`，`<mat-navigation-rail-item>` 的组件导出名是 `MatNavigationRailItem`。这组组件组合两种外观相近的 Material 3 Expressive 导航：默认的纵向 collapsed / expanded Navigation rail，以及 `orientation="horizontal"` 的 Flexible navigation bar。
 
-纵向展开状态支持两种布局：`standard` 会占据容器空间并推动正文，`modal` 会保留折叠 Rail 的宽度并覆盖正文。`hide-on-collapse` 可用于沉浸式的 Modal Rail，使折叠状态只保留展开按钮。
+官方把 Navigation rail 和 Navigation bar 定义为独立组件。本组件为减少重复 API 暂时组合两者，但仍保持规范边界：纵向模式只实现 rail；横向模式只实现 Navigation bar 的 horizontal items，不提供 vertical navigation bar，也不把横向模式称为 Navigation rail。
+
+纵向 rail 支持 3–7 个主要目的地、可选菜单、Header 与 FAB。collapsed rail 保持可见；expanded rail 可以使用占据正文空间的 `standard` 布局或覆盖正文的 `modal` 布局。横向 bar 适合较小或中等窗口中的少量目的地，始终使用图标左、标签右的固定宽度 Item。
 
 ## 示例
 
 ### 基础导航与受控选择
 
-`selected` 由父组件控制，Item 的 `value` 用于识别当前页面。
+`v-model` 保存当前目的地，Item 的 `value` 用于匹配选中状态。选中目的地使用填充图标、活动指示器和更醒目的标签颜色。
 
 :::: details 查看示例代码
 ::: code-group
@@ -32,14 +34,14 @@ order: 105
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation Rail 基础导航预览">
+  <DocsPreview label="Navigation rail 基础导航预览">
     <NavigationRailBasicExample />
   </DocsPreview>
 </ClientOnly>
 
-### `collapsible`、`expanded`、`open-icon` 与 `close-icon`
+### `collapsible` 与 `expanded`
 
-纵向 Rail 的展开按钮由 `collapsible` 启用，`expanded` 支持 `v-model:expanded`。展开后 Item 为左侧图标、右侧标签；折叠后为上方图标、下方标签。
+`collapsible` 为纵向 rail 添加菜单按钮，`expanded` 支持 `v-model:expanded`。collapsed Item 为图标上、标签下；expanded Item 的图标与标签位于同一个 56px 高活动指示器中。`open-icon` 和 `close-icon` 可以替换菜单按钮图标。
 
 :::: details 查看示例代码
 ::: code-group
@@ -54,19 +56,21 @@ order: 105
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation Rail 展开与自定义图标预览">
+  <DocsPreview label="Navigation rail 展开与折叠预览">
     <NavigationRailCollapsibleExample />
   </DocsPreview>
 </ClientOnly>
 
 ### `layout="standard"` 与 `layout="modal"`
 
-`standard` 适合空间充足的窗口，展开后正文让位；`modal` 适合空间有限或信息密集的布局，展开面板悬浮覆盖正文。
+`standard` expanded rail 位于正文旁并占据布局空间。`modal` expanded rail 保留 collapsed rail 的布局宽度，在其布局容器内覆盖正文，并显示可点击遮罩；点击遮罩或按 Escape 会请求收起。
 
 :::: details 查看示例代码
 ::: code-group
 
 <<< @/examples/navigation-rail/NavigationRailLayoutExample.vue#template [template]
+
+<<< @/examples/navigation-rail/NavigationRailLayoutExample.vue#script [script]
 
 <<< @/examples/navigation-rail/NavigationRailLayoutExample.vue#style [style]
 
@@ -74,14 +78,14 @@ order: 105
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation Rail standard 与 modal 预览">
+  <DocsPreview label="Navigation rail standard 与 modal 预览">
     <NavigationRailLayoutExample />
   </DocsPreview>
 </ClientOnly>
 
 ### `hide-on-collapse`
 
-仅对纵向 `modal` Rail 生效。折叠时 Rail 不占用空间，只显示展开按钮；展开后显示完整面板。
+沉浸式布局可以隐藏 expanded rail 的容器，同时在布局起始侧保留菜单按钮。该配置不会把普通 collapsed rail 作为可隐藏变体；应仅与可展开的导航入口组合使用。
 
 :::: details 查看示例代码
 ::: code-group
@@ -96,19 +100,21 @@ order: 105
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation Rail 隐藏折叠预览">
+  <DocsPreview label="隐藏 expanded rail 预览">
     <NavigationRailHideOnCollapseExample />
   </DocsPreview>
 </ClientOnly>
 
-### 横向复用为 Navigation Bar
+### Horizontal flexible Navigation bar
 
-设置 `orientation="horizontal"` 后，组件使用 Navigation Bar 的横向布局。`expanded` 仅控制 Item 是否采用左图标右标签，不显示 Rail 展开按钮；`layout` 和 `hide-on-collapse` 在横向时不生效。
+设置 `orientation="horizontal"` 后使用 64px 高的 Flexible navigation bar，并只提供 horizontal items。此模式忽略 `expanded`、`collapsible`、`layout`、`hide-on-collapse`、`alignment`、Header 和 FAB。
 
 :::: details 查看示例代码
 ::: code-group
 
 <<< @/examples/navigation-rail/NavigationRailHorizontalExample.vue#template [template]
+
+<<< @/examples/navigation-rail/NavigationRailHorizontalExample.vue#script [script]
 
 <<< @/examples/navigation-rail/NavigationRailHorizontalExample.vue#style [style]
 
@@ -116,14 +122,14 @@ order: 105
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation Bar 横向复用预览">
+  <DocsPreview label="Horizontal flexible Navigation bar 预览">
     <NavigationRailHorizontalExample />
   </DocsPreview>
 </ClientOnly>
 
-### `fab` 与 `end` Slots
+### Header 与 FAB Slots
 
-`fab` Slot 用于纵向 Rail 的 FAB 或 Extended FAB；`end` Slot 用于尾部自定义按钮或其他内容。
+Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互品牌标识；不要把容易被误认为按钮的图形放入其中。FAB 应位于目的地之前。
 
 :::: details 查看示例代码
 ::: code-group
@@ -136,7 +142,7 @@ order: 105
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation Rail fab 与 end Slot 预览">
+  <DocsPreview label="Navigation rail Header 与 FAB 预览">
     <NavigationRailSlotsExample />
   </DocsPreview>
 </ClientOnly>
@@ -149,27 +155,26 @@ order: 105
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | 纵向 Navigation Rail 或横向 Navigation Bar |
-| `expanded` | `boolean` | `false` | 受控展开状态，支持 `v-model:expanded` |
-| `collapsible` | `boolean` | `false` | 纵向显示展开/折叠按钮；横向忽略 |
-| `layout` | `'standard' \| 'modal'` | `'standard'` | 纵向展开布局；standard 占据空间，modal 覆盖正文 |
-| `hide-on-collapse` | `boolean` | `false` | 纵向 modal 折叠时隐藏 Rail，仅保留展开按钮 |
-| `selected` | `string \| number \| boolean \| null` | `null` | 父组件控制的当前 Item `value` |
-| `open-icon` | `string` | `'menu'` | 折叠状态下展开按钮的图标 |
-| `close-icon` | `string` | `'menu_open'` | 展开状态下折叠按钮的图标 |
-| `open-label` | `string` | `'展开导航'` | 展开按钮的无障碍名称 |
-| `close-label` | `string` | `'收起导航'` | 折叠按钮的无障碍名称 |
+| `model-value` | `string \| number \| boolean \| null` | `null` | 受控的当前 Item `value`，支持 `v-model` |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | 纵向 Expressive rail 或 horizontal Flexible navigation bar |
+| `expanded` | `boolean` | `false` | 纵向 rail 的受控展开状态，支持 `v-model:expanded` |
+| `collapsible` | `boolean` | `false` | 为纵向 rail 显示展开/收起菜单按钮 |
+| `layout` | `'standard' \| 'modal'` | `'standard'` | 纵向 expanded rail 占据空间或覆盖正文 |
+| `hide-on-collapse` | `boolean` | `false` | 未展开时隐藏 rail 容器并保留菜单按钮 |
+| `alignment` | `'top' \| 'center'` | `'top'` | 纵向目的地组靠上或居中；菜单、Header 与 FAB 始终靠上 |
+| `open-icon` | `string` | `'menu'` | 未展开时的菜单按钮图标 |
+| `close-icon` | `string` | `'menu_open'` | 展开时的菜单按钮图标 |
+| `open-label` | `string` | `'展开导航'` | 未展开时菜单按钮的无障碍名称 |
+| `close-label` | `string` | `'收起导航'` | 展开时菜单按钮和 modal 遮罩的无障碍名称 |
 
 #### `MatNavigationRailItem`
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `value` | `string \| number \| boolean` | `undefined` | 供父组件匹配 `selected`；省略时不会成为选中项 |
-| `icon` | `string` | `undefined` | Material Symbols 图标名称 |
-| `href` | `string` | `undefined` | 提供后渲染为链接 |
-| `disabled` | `boolean` | `false` | 禁用交互并降低内容强调 |
-
-Label 使用 Item 默认 Slot，可省略。省略 Label 时必须通过 `aria-label` 为图标模式提供可访问名称。
+| `value` | `string \| number \| boolean` | `undefined` | 供父组件匹配 `model-value`；省略时不参与受控选择 |
+| `icon` | `string` | `undefined` | Material Symbols 图标名称；`icon` Slot 存在时忽略 |
+| `href` | `string` | `undefined` | 提供后渲染为原生链接，否则渲染为按钮 |
+| `disabled` | `boolean` | `false` | 禁用原生交互和选择请求，并降低内容强调 |
 
 组件没有公开方法。
 
@@ -177,28 +182,29 @@ Label 使用 Item 默认 Slot，可省略。省略 Label 时必须通过 `aria-l
 
 | 组件 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- | --- |
-| `MatNavigationRail` | `update:expanded` | `boolean` | 展开按钮被激活或 Modal Rail 按下 Escape |
-| `MatNavigationRail` | `select` | `{ value, selected, nextSelected, originalEvent }` | 带 `value` 且未禁用的 Item 被激活；组件不会修改 `selected` |
-| `MatNavigationRailItem` | `click` | `MouseEvent` | Item 被激活 |
+| `MatNavigationRail` | `update:modelValue` | `string \| number \| boolean` | 未禁用、带 `value` 且尚未选中的 Item 被激活 |
+| `MatNavigationRail` | `update:expanded` | `boolean` | 菜单按钮、modal 遮罩或 modal 状态下的 Escape 请求改变展开状态 |
+| `MatNavigationRailItem` | `click` | `MouseEvent` | Item 的原生按钮或链接被激活 |
 
 ## Slots
 
 | 名称 | 组件 | 内容约束 |
 | --- | --- | --- |
-| 默认 | `MatNavigationRail` | `MatNavigationRailItem` 列表 |
-| `fab` | `MatNavigationRail` | FAB 或 Extended FAB；纵向显示，Slot 参数为 `{ expanded }` |
-| `end` | `MatNavigationRail` | 自定义按钮或其他尾部内容；Slot 参数为 `{ expanded, orientation }` |
-| 默认 | `MatNavigationRailItem` | Item 标签，可省略 |
+| 默认 | `MatNavigationRail` | `MatNavigationRailItem` 列表；Slot 参数为 `{ expanded, orientation }` |
+| `header` | `MatNavigationRail` | 纵向 rail 顶部的非交互品牌标识；Slot 参数为 `{ expanded }` |
+| `fab` | `MatNavigationRail` | 纵向 rail 顶部、目的地之前的 FAB 或 Extended FAB；Slot 参数为 `{ expanded }` |
+| 默认 | `MatNavigationRailItem` | 必填的简短目的地标签；避免截断，必要时最多换为两行 |
+| `icon` | `MatNavigationRailItem` | 自定义图标内容；Slot 参数为 `{ selected }` |
 
 ## 无障碍与布局说明
 
-根节点使用 `<nav>` 和 `aria-orientation`。选中且带 `value` 的链接或按钮使用 `aria-current="page"`。Rail 不接管页面焦点；子 Item 保持原生按钮或链接的 Tab 顺序。
+根导航使用原生 `<nav>`；应用应通过 `aria-label` 或 `aria-labelledby` 区分页面中的多个导航区域。选中 Item 使用 `aria-current="page"`。Item 保留原生按钮或链接的 Tab 顺序，完整 Item 宽度都是命中区域，焦点环和状态层显示在活动指示器上。
 
-Modal Rail 是所在布局容器内的覆盖层，不会移动到 `body`，使用时应让外层容器提供需要的高度。折叠 Rail 按 Material 指南保持可见；只有启用 `hide-on-collapse` 时才会进入隐藏折叠模式。
+纵向 rail 应位于窗口或应用布局的起始侧，并保持固定，不随正文纵向滚动。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 只负责组件外观，不自动监听窗口宽度，应用负责在断点处切换。
 
 ## 参考来源
 
-布局、展开行为、standard/modal 与隐藏折叠依据 Material 3 [Navigation rail overview](https://m3.material.io/components/navigation-rail/overview)、[Navigation rail specs](https://m3.material.io/components/navigation-rail/specs) 和 [Navigation rail guidelines](https://m3.material.io/components/navigation-rail/guidelines)。横向布局依据 [Navigation bar specs](https://m3.material.io/components/navigation-bar/specs)。
+官方明确规定 collapsed / expanded rail、3–7 个目的地、standard / modal、目的地对齐、Header、FAB、指示器和自适应使用方式，详见 [Navigation rail overview](https://m3.material.io/components/navigation-rail/overview)、[Navigation rail specs](https://m3.material.io/components/navigation-rail/specs) 与 [Navigation rail guidelines](https://m3.material.io/components/navigation-rail/guidelines)。Flexible bar 的 64px 容器和 horizontal items 依据 [Navigation bar specs](https://m3.material.io/components/navigation-bar/specs)。把两种官方组件组合为同一 Vue API 是本项目的实现选择。
 
 <script setup>
 import NavigationRailBasicExample from '../examples/navigation-rail/NavigationRailBasicExample.vue';

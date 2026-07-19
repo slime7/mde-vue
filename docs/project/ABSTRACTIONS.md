@@ -167,6 +167,12 @@ Tooltip 只实现 Material 3 Plain tooltip，不提供 color、Rich 内容、操
 
 Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父级必须提供确定的块轴尺寸才能形成内部滚动边界。调整控件占用 8px 分隔空间，48px 交互目标在 Pane 高度方向居中，使用 `role="separator"`、垂直方向和左右键语义。`resizeLabel` 由使用方提供给后方分隔控件作为可访问名称；Pane 数量、内容顺序、断点后的显隐和尺寸持久化属于使用方责任。
 
+## Navigation 导航
+
+`<mat-navigation-rail>` 通过 `modelValue` 受控选择唯一目的地，直接子级 `<mat-navigation-rail-item>` 使用稳定 `value` 请求更新。纵向模式表达 Material 3 Expressive collapsed/expanded rail；`expanded` 只由使用方控制，`layout="standard"` 占据正文空间，`layout="modal"` 在当前布局容器内覆盖正文并通过遮罩或 Escape 请求收起。collapsed rail 默认保持可见；`hideOnCollapse` 只用于保留外部可达菜单入口的沉浸式 expanded rail。
+
+`orientation="horizontal"` 表达 Flexible navigation bar，并固定使用 horizontal items；它不提供 vertical bar，也不响应 `expanded`、`collapsible`、`layout`、`hideOnCollapse`、`alignment`、Header 或 FAB。组件不自动监听窗口尺寸，应用负责在 compact、medium 及更大断点间切换 bar 与 rail，且同一布局不得同时显示两者。Item 使用原生按钮或链接、`aria-current="page"`、完整宽度命中区域和指示器状态层；标签必须简短且不得通过省略号截断。
+
 ## 文档权威关系
 
 `docs/site/` 中人工编辑的 Markdown 使用页面是组件说明的权威来源。`llms.txt` 只提供适合 AI 发现内容的索引，`llms-full.txt` 是这些页面的合并文本；两者均为可重复生成的派生文件，不接受手工修补。
