@@ -29,6 +29,10 @@ import MatTooltip, { MatTooltip as NamedMatTooltip } from 'mdu-ui/components/mat
 import MatToolbar, { MatToolbar as NamedMatToolbar } from 'mdu-ui/components/mat-toolbar';
 import MatPanes, { MatPanes as NamedMatPanes } from 'mdu-ui/components/mat-panes';
 import MatPane, { MatPane as NamedMatPane } from 'mdu-ui/components/mat-pane';
+import MatNavigationRail, {
+  MatNavigationRail as NamedMatNavigationRail,
+  MatNavigationRailItem as NamedMatNavigationRailItem,
+} from 'mdu-ui/components/mat-navigation-rail';
 /* eslint-enable import-x/no-named-as-default */
 import {
   alert, confirm, dialog, prompt,
@@ -49,6 +53,8 @@ import {
   MatMenu as RootMatMenu,
   MatMenuGroup as RootMatMenuGroup,
   MatMenuItem as RootMatMenuItem,
+  MatNavigationRail as RootMatNavigationRail,
+  MatNavigationRailItem as RootMatNavigationRailItem,
   MatPane as RootMatPane,
   MatPanes as RootMatPanes,
   MatRadio as RootMatRadio,
@@ -100,6 +106,7 @@ describe('公共组件导出', () => {
     ['MatToolbar', RootMatToolbar, NamedMatToolbar, MatToolbar],
     ['MatPanes', RootMatPanes, NamedMatPanes, MatPanes],
     ['MatPane', RootMatPane, NamedMatPane, MatPane],
+    ['MatNavigationRail', RootMatNavigationRail, NamedMatNavigationRail, MatNavigationRail],
   ])('%s 的根入口、具名子入口和默认子入口指向同一组件', (
     name,
     rootExport,
@@ -108,6 +115,10 @@ describe('公共组件导出', () => {
   ) => {
     expect(rootExport).toBe(namedExport);
     expect(defaultExport).toBe(namedExport);
+  });
+
+  it('MatNavigationRailItem 的根入口和具名子入口指向同一组件', () => {
+    expect(RootMatNavigationRailItem).toBe(NamedMatNavigationRailItem);
   });
 
   it('createMatUi 全局注册选择控件组件族', () => {
@@ -137,6 +148,8 @@ describe('公共组件导出', () => {
     expect(app.component('mat-toolbar')).toBe(RootMatToolbar);
     expect(app.component('mat-panes')).toBe(RootMatPanes);
     expect(app.component('mat-pane')).toBe(RootMatPane);
+    expect(app.component('mat-navigation-rail')).toBe(RootMatNavigationRail);
+    expect(app.component('mat-navigation-rail-item')).toBe(RootMatNavigationRailItem);
     expect(app.component('mat-fab')).toBe(RootMatFab);
     expect(app.component('mat-icon')).toBe(RootMatIcon);
     expect(app.component('mat-icon-btn')).toBeUndefined();

@@ -370,6 +370,43 @@
   --mat-divider-thickness: 1px;
   --mat-divider-inset-space: 16px;
 
+  /* Navigation rail and navigation bar component tokens */
+  --mat-navigation-rail-collapsed-width: 80px;
+  --mat-navigation-rail-expanded-width: 256px;
+  --mat-navigation-rail-container-color: var(--mat-sys-color-surface);
+  --mat-navigation-rail-content-color: var(--mat-sys-color-on-surface-variant);
+  --mat-navigation-rail-space: 12px;
+  --mat-navigation-rail-padding: 12px;
+  --mat-navigation-rail-toggle-size: 56px;
+  --mat-navigation-rail-toggle-shape: var(--mat-sys-shape-corner-full);
+  --mat-navigation-rail-hidden-toggle-offset: 12px;
+  --mat-navigation-rail-modal-elevation: var(--mat-sys-elevation-level2);
+  --mat-navigation-rail-item-gap: 4px;
+  --mat-navigation-rail-item-target-size: 56px;
+  --mat-navigation-rail-collapsed-item-width: 64px;
+  --mat-navigation-rail-collapsed-item-height: 64px;
+  --mat-navigation-rail-item-icon-label-gap: 4px;
+  --mat-navigation-rail-item-vertical-padding: 4px;
+  --mat-navigation-rail-item-horizontal-padding: 8px;
+  --mat-navigation-rail-item-expanded-padding: 16px;
+  --mat-navigation-rail-item-shape: var(--mat-sys-shape-corner-full);
+  --mat-navigation-rail-item-indicator-size: 56px;
+  --mat-navigation-rail-item-selected-shape: var(--mat-sys-shape-corner-full);
+  --mat-navigation-rail-item-selected-container-color: var(--mat-sys-color-secondary-container);
+  --mat-navigation-rail-item-content-color: var(--mat-sys-color-on-surface-variant);
+  --mat-navigation-rail-item-selected-content-color: var(--mat-sys-color-on-secondary-container);
+  --mat-navigation-rail-item-state-color: var(--mat-sys-color-on-surface);
+  --mat-navigation-rail-item-label-font: var(--mat-sys-typescale-label-medium-font);
+  --mat-navigation-rail-item-label-size: var(--mat-sys-typescale-label-medium-size);
+  --mat-navigation-rail-item-label-weight: var(--mat-sys-typescale-label-medium-weight);
+  --mat-navigation-rail-item-label-line-height: var(--mat-sys-typescale-label-medium-line-height);
+  --mat-navigation-rail-item-label-tracking: var(--mat-sys-typescale-label-medium-tracking);
+  --mat-navigation-bar-height: 80px;
+  --mat-navigation-bar-padding: 8px;
+  --mat-navigation-bar-content-gap: 8px;
+  --mat-navigation-bar-item-min-width: 64px;
+  --mat-navigation-bar-expanded-item-width: 128px;
+
   /* Loader component tokens */
   --mat-loader-thickness: 4px;
   --mat-loader-linear-size: 4px;

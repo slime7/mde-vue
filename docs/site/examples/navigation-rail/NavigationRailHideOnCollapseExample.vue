@@ -1,0 +1,52 @@
+<!-- #region script -->
+<script setup>
+import { ref } from 'vue';
+
+const expanded = ref(false);
+</script>
+<!-- #endregion script -->
+
+<!-- #region template -->
+<template>
+  <div class="navigation-rail-example-shell">
+    <mat-navigation-rail
+      v-model:expanded="expanded"
+      collapsible
+      hide-on-collapse
+      layout="modal"
+      aria-label="沉浸式导航"
+    >
+      <mat-navigation-rail-item icon="home">
+        首页
+      </mat-navigation-rail-item>
+      <mat-navigation-rail-item icon="settings">
+        设置
+      </mat-navigation-rail-item>
+    </mat-navigation-rail>
+
+    <div class="navigation-rail-example-content">
+      点击左上角菜单按钮{{ expanded ? '收起' : '展开' }}导航
+    </div>
+  </div>
+</template>
+<!-- #endregion template -->
+
+<!-- #region style -->
+<style scoped>
+.navigation-rail-example-shell {
+  position: relative;
+  min-block-size: 280px;
+  overflow: hidden;
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.navigation-rail-example-content {
+  display: grid;
+  min-block-size: 280px;
+  place-items: center;
+  color: var(--mat-sys-color-on-surface-variant);
+  background: var(--mat-sys-color-surface-container-low);
+}
+</style>
+<!-- #endregion style -->

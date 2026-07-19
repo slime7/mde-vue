@@ -29,6 +29,8 @@ export { default as MatSnackbar } from './components/mat-snackbar/MatSnackbar.vu
 export { default as MatToolbar } from './components/mat-toolbar/MatToolbar.vue';
 export { default as MatPanes } from './components/mat-panes/MatPanes.vue';
 export { default as MatPane } from './components/mat-panes/MatPane.vue';
+export { default as MatNavigationRail } from './components/mat-navigation-rail/MatNavigationRail.vue';
+export { default as MatNavigationRailItem } from './components/mat-navigation-rail/MatNavigationRailItem.vue';
 // Node/Vitest 直接解析包源码时需要保留 JavaScript 扩展名。
 // eslint-disable-next-line import-x/extensions
 export { createMatUi, useMatTheme } from './plugin.js';

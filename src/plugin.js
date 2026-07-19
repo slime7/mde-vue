@@ -30,6 +30,8 @@ import MatSnackbar from './components/mat-snackbar/MatSnackbar.vue';
 import MatToolbar from './components/mat-toolbar/MatToolbar.vue';
 import MatPanes from './components/mat-panes/MatPanes.vue';
 import MatPane from './components/mat-panes/MatPane.vue';
+import MatNavigationRail from './components/mat-navigation-rail/MatNavigationRail.vue';
+import MatNavigationRailItem from './components/mat-navigation-rail/MatNavigationRailItem.vue';
 import { setImperativeContext } from './imperative-context';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from './mat-ui-context';
 import createThemeController from './theme';
@@ -156,6 +158,10 @@ export function createMatUi(options = {}) {
       app.component('mat-panes', MatPanes);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-pane', MatPane);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-navigation-rail', MatNavigationRail);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-navigation-rail-item', MatNavigationRailItem);
       app.provide(MAT_UI_KEY, componentOptions);
       app.provide(MAT_THEME_KEY, theme);
       setImperativeContext(componentOptions, theme);
