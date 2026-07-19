@@ -2,6 +2,7 @@
 import {
   computed, ref, useAttrs, useId,
 } from 'vue';
+import MatInputBase from './MatInputBase.vue';
 import MatIcon from './mat-icon/MatIcon.vue';
 import useComponentColor from './use-component-color';
 
@@ -118,15 +119,8 @@ const nativeAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([name]) => !ROOT_ATTRIBUTES.has(name)),
 ));
 
-/**
- * @param {Event} event
- */
-function handleInput(event) {
-  emit('update:modelValue', event.target.value);
-}
-
 function focusControl() {
-  controlElement.value?.focus();
+  controlElement.value?.focusInput();
 }
 </script>
 
@@ -193,8 +187,7 @@ function focusControl() {
             {{ prefixText }}
           </span>
 
-          <component
-            :is="control"
+          <MatInputBase
             ref="controlElement"
             v-bind="nativeAttrs"
             class="mat-text-input__control"
@@ -202,15 +195,16 @@ function focusControl() {
             :aria-invalid="error ? 'true' : undefined"
             :disabled="disabled"
             :id="controlId"
-            :maxlength="maxLength"
+            :max-length="maxLength"
             :readonly="readonly"
             :required="required"
             :rows="control === 'textarea' ? rows : undefined"
             :type="control === 'input' ? type : undefined"
-            :value="modelValue"
+            :control="control"
+            :model-value="modelValue"
             @blur="focused = false"
             @focus="focused = true"
-            @input="handleInput"
+            @update:model-value="emit('update:modelValue', $event)"
           />
 
           <span v-if="suffixText" class="mat-text-input__affix mat-text-input__suffix">

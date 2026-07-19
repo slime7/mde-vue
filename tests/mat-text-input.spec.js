@@ -2,11 +2,68 @@ import { mount } from '@vue/test-utils';
 import {
   describe, expect, it, vi,
 } from 'vitest';
+import MatInputBase from '../src/components/MatInputBase.vue';
 import MatTextField from '../src/components/mat-text-field/MatTextField.vue';
 import MatTextarea from '../src/components/mat-textarea/MatTextarea.vue';
 import MAT_UI_KEY from '../src/mat-ui-context';
 
 describe('文本输入组件', () => {
+  it('MatInputBase 渲染无边框原生 input，透传属性并请求模型更新', async () => {
+    const change = vi.fn();
+    const wrapper = mount(MatInputBase, {
+      attrs: {
+        id: 'search-input',
+        name: 'query',
+        class: 'consumer-input',
+        placeholder: '搜索',
+        onChange: change,
+      },
+      props: {
+        control: 'input',
+        modelValue: '初始值',
+      },
+    });
+    const input = wrapper.get('input');
+
+    expect(wrapper.element).toBe(input.element);
+    expect(input.attributes()).toMatchObject({
+      id: 'search-input',
+      name: 'query',
+      placeholder: '搜索',
+      value: '初始值',
+    });
+    expect(input.classes()).toEqual(expect.arrayContaining(['mat-input-base', 'consumer-input']));
+    expect(input.attributes('control')).toBeUndefined();
+    expect(input.attributes('modelvalue')).toBeUndefined();
+
+    await input.setValue('更新值');
+
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['更新值']);
+    expect(change).toHaveBeenCalledOnce();
+  });
+
+  it('MatInputBase 将 textarea 的 rows 透传到原生控件并暴露聚焦方法', async () => {
+    const wrapper = mount(MatInputBase, {
+      attachTo: document.body,
+      props: {
+        control: 'textarea',
+        modelValue: '',
+        rows: 3,
+      },
+    });
+
+    expect(wrapper.get('textarea').attributes('rows')).toBe('3');
+    expect(wrapper.get('textarea').attributes('type')).toBeUndefined();
+
+    wrapper.vm.focusInput();
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.vm.getInput()).toBe(wrapper.element);
+    expect(document.activeElement).toBe(wrapper.element);
+
+    wrapper.unmount();
+  });
+
   it('Text field 和 Textarea 仅在 block 启用时切换根布局且不透传属性', () => {
     [MatTextField, MatTextarea].forEach((component) => {
       const defaultInput = mount(component);

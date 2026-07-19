@@ -15,6 +15,16 @@ function getComponentSources(directory) {
 }
 
 describe('新增组件现代 CSS', () => {
+  it('MatInputBase 使用透明背景和无边框原生控件基础样式', () => {
+    const source = readFileSync('src/components/MatInputBase.vue', 'utf8');
+
+    expect(source).toContain('class="mat-input-base"');
+    expect(source).toContain('background: transparent');
+    expect(source).toContain('border: 0');
+    expect(source).toContain('outline: 0');
+    expect(source).toContain('appearance: none');
+  });
+
   it('block Button 使用块级 flex 并铺满父元素', () => {
     const source = readFileSync('src/components/MatButtonBase.vue', 'utf8');
     const blockStyles = source.match(
