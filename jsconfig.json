@@ -1,16 +1,23 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "checkJs": true,
+    "checkJs": false,
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "noEmit": true,
     "target": "ESNext",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "baseUrl": ".",
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "paths": {
-      "mdu-ui": ["./src/index.js"],
-      "mdu-ui/*": ["./src/*"]
+      "mdu-ui": [
+        "./src/index.js"
+      ],
+      "mdu-ui/*": [
+        "./src/*"
+      ]
     }
   },
   "include": [
