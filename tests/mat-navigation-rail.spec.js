@@ -119,6 +119,12 @@ describe('MatNavigationRail', () => {
       .toContain('mat-navigation-rail-item--end');
   });
 
+  it('collapsed Item 为图标和标签保留完整的水平可读区域', () => {
+    expect(navigationItemSource).toContain('padding-inline: var(--mat-navigation-rail-collapsed-side-space);');
+    expect(navigationItemSource).toContain('inline-size: var(--mat-navigation-rail-vertical-indicator-width);');
+    expect(navigationItemSource).toContain('text-align: center;');
+  });
+
   it('选中指示器只过渡背景色，不改变自身形状', () => {
     const indicatorRule = navigationItemSource.match(
       /\.mat-navigation-rail-item__indicator::before \{([\s\S]*?)\n\}/,

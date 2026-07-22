@@ -132,6 +132,7 @@ function handleClick(event) {
   justify-content: center;
   gap: var(--mat-navigation-rail-vertical-icon-label-space);
   padding-block: var(--mat-navigation-rail-item-space);
+  padding-inline: var(--mat-navigation-rail-collapsed-side-space);
 }
 
 .mat-navigation-rail-item--expanded {
@@ -242,7 +243,8 @@ function handleClick(event) {
 }
 
 .mat-navigation-rail-item--collapsed > .mat-navigation-rail-item__label {
-  max-inline-size: calc(100% - var(--mat-navigation-rail-collapsed-label-space));
+  inline-size: var(--mat-navigation-rail-vertical-indicator-width);
+  max-inline-size: 100%;
   color: var(--mat-navigation-rail-item-content-color);
   text-align: center;
 }
