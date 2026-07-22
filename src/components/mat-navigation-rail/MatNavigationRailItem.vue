@@ -142,13 +142,11 @@ function handleClick(event) {
 }
 
 .mat-navigation-rail-item--horizontal {
-  flex: 1 1 0;
-  min-block-size: 100%;
-  padding-inline: 0;
-}
-
-.mat-navigation-rail-item--horizontal.mat-navigation-rail-item--expanded {
   flex: 0 0 var(--mat-navigation-bar-horizontal-item-width);
+  min-block-size: 100%;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 0;
 }
 
 .mat-navigation-rail-item__indicator {

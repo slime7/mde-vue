@@ -12,6 +12,10 @@ const navigationItemSource = readFileSync(
   resolve(process.cwd(), 'src/components/mat-navigation-rail/MatNavigationRailItem.vue'),
   'utf8',
 );
+const navigationSource = readFileSync(
+  resolve(process.cwd(), 'src/components/mat-navigation-rail/MatNavigationRail.vue'),
+  'utf8',
+);
 
 async function settleRender() {
   await nextTick();
@@ -119,10 +123,36 @@ describe('MatNavigationRail', () => {
       .toContain('mat-navigation-rail-item--end');
   });
 
+  it('菜单按钮在展开和收回时保持与 Item 相同的侧边锚点', () => {
+    const headerRule = navigationSource.match(
+      /\.mat-navigation-rail__header \{([\s\S]*?)\n\}/,
+    )?.[1] ?? '';
+    const expandedHeaderRule = navigationSource.match(
+      /\.mat-navigation-rail--expanded \.mat-navigation-rail__header \{([\s\S]*?)\n\}/,
+    )?.[1] ?? '';
+
+    expect(headerRule).toContain('align-items: var(--mat-navigation-rail-item-inline-alignment);');
+    expect(headerRule).toContain('padding-inline: var(--mat-navigation-rail-collapsed-side-space);');
+    expect(expandedHeaderRule).toContain('align-items: var(--mat-navigation-rail-item-inline-alignment);');
+    expect(expandedHeaderRule).not.toContain('align-items: flex-start;');
+  });
+
   it('collapsed Item 为图标和标签保留完整的水平可读区域', () => {
     expect(navigationItemSource).toContain('padding-inline: var(--mat-navigation-rail-collapsed-side-space);');
     expect(navigationItemSource).toContain('inline-size: var(--mat-navigation-rail-vertical-indicator-width);');
     expect(navigationItemSource).toContain('text-align: center;');
+  });
+
+  it('horizontal 的两种 Item 方向使用相同的固定宽度横向排列', () => {
+    const horizontalRule = navigationItemSource.match(
+      /\.mat-navigation-rail-item--horizontal \{([\s\S]*?)\n\}/,
+    )?.[1] ?? '';
+
+    expect(horizontalRule).toContain('flex: 0 0 var(--mat-navigation-bar-horizontal-item-width);');
+    expect(horizontalRule).toContain('align-items: center;');
+    expect(navigationItemSource).not.toContain(
+      '.mat-navigation-rail-item--horizontal.mat-navigation-rail-item--expanded',
+    );
   });
 
   it('选中指示器只过渡背景色，不改变自身形状', () => {

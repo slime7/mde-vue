@@ -351,13 +351,14 @@ onBeforeUnmount(() => {
   flex: 0 0 auto;
   min-inline-size: 0;
   flex-direction: column;
-  align-items: center;
+  align-items: var(--mat-navigation-rail-item-inline-alignment);
   gap: var(--mat-navigation-rail-header-gap);
   padding-block-start: var(--mat-navigation-rail-top-space);
+  padding-inline: var(--mat-navigation-rail-collapsed-side-space);
 }
 
 .mat-navigation-rail--expanded .mat-navigation-rail__header {
-  align-items: flex-start;
+  align-items: var(--mat-navigation-rail-item-inline-alignment);
   padding-inline: var(--mat-navigation-rail-expanded-side-space);
 }
 
