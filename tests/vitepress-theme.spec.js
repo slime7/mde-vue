@@ -15,7 +15,32 @@ describe('VitePress 文档自定义主题', () => {
     expect(source).toContain('import DefaultTheme from \'vitepress/theme-without-fonts\';');
     expect(source).toContain('extends: DefaultTheme');
     expect(source).toContain('createMatUi');
-    expect(source).toContain('app.use(createMatUi({');
+    expect(source).toContain('const matUi = createMatUi({');
+    expect(source).toContain('app.use(matUi);');
+  });
+
+  it('在主题插件初始化时同步 VitePress 的高亮配色模式', () => {
+    const source = readThemeFile('index.js');
+    const settingsSource = readThemeFile('ThemeSettings.vue');
+
+    expect(source).toContain("classList.toggle('dark', mode === 'dark')");
+    expect(source).toContain('matUi.theme.resolvedMode.value');
+    expect(settingsSource).not.toContain("classList.toggle('dark'");
+  });
+
+  it('读取并持久化文档站的完整主题配置', () => {
+    const source = readThemeFile('index.js');
+
+    expect(source).toContain('DOCS_THEME_STORAGE_KEY');
+    expect(source).toContain('localStorage.getItem(DOCS_THEME_STORAGE_KEY)');
+    expect(source).toContain('localStorage.setItem(DOCS_THEME_STORAGE_KEY');
+    expect(source).toContain('theme: readStoredThemeOptions()');
+    expect(source).toContain('matUi.theme.mode.value');
+    expect(source).toContain('matUi.theme.seedColor.value');
+    expect(source).toContain('matUi.theme.schemeVariant.value');
+    expect(source).toContain('matUi.theme.contrastLevel.value');
+    expect(source).toContain('schemeVariant');
+    expect(source).toContain('contrastLevel');
   });
 
   it('提供主题设置页面组件并覆盖所有主题选项', () => {
@@ -56,6 +81,6 @@ describe('VitePress 文档自定义主题', () => {
     expect(source).toContain('--vp-c-bg: var(--mat-sys-color-background)');
     expect(source).toContain('--vp-c-text-1: var(--mat-sys-color-on-background)');
     expect(source).not.toContain('--vp-code-block-bg: var(--mat-sys-color-surface-container)');
-    expect(readThemeFile('ThemeSettings.vue')).toContain("classList.toggle('dark'");
+    expect(readThemeFile('index.js')).toContain("classList.toggle('dark'");
   });
 });
