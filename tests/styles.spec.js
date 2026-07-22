@@ -6,6 +6,10 @@ import { MAT_COLOR_ROLES } from '../src/material-color';
 const styles = readFileSync(resolve('src/styles/index.css'), 'utf8');
 const tailwindStyles = readFileSync(resolve('src/styles/tailwind.css'), 'utf8');
 const listComponent = readFileSync(resolve('src/components/mat-list/MatList.vue'), 'utf8');
+const listGroupComponent = readFileSync(
+  resolve('src/components/mat-list-group/MatListGroup.vue'),
+  'utf8',
+);
 const listItemComponent = readFileSync(resolve('src/components/mat-list/MatListItem.vue'), 'utf8');
 const tooltipComponent = readFileSync(
   resolve('src/components/mat-tooltip/MatTooltip.vue'),
@@ -124,10 +128,14 @@ describe('公共样式令牌', () => {
 
 describe('List 形状', () => {
   it('列表边界使用容器圆角，相邻项目保持项目圆角', () => {
-    expect(listComponent).toContain('.mat-list :deep(.mat-list-item:first-child)');
-    expect(listComponent).toContain('.mat-list :deep(.mat-list-item:last-child)');
+    expect(listComponent).toContain('.mat-list > :deep(.mat-list-item:first-child)');
+    expect(listComponent).toContain('.mat-list > :deep(.mat-list-group:first-child)');
+    expect(listComponent).toContain('.mat-list > :deep(.mat-list-item:last-child)');
+    expect(listComponent).toContain('.mat-list > :deep(.mat-list-group:last-child)');
     expect(listComponent).toContain('--mat-list-item-start-start-shape: var(--mat-list-container-shape);');
     expect(listComponent).toContain('--mat-list-item-end-end-shape: var(--mat-list-container-shape);');
+    expect(listGroupComponent).toContain('--mat-list-item-start-start-shape: var(--mat-list-group-start-start-shape);');
+    expect(listGroupComponent).toContain('--mat-list-item-end-end-shape: var(--mat-list-group-end-end-shape);');
     expect(listItemComponent).toContain('border-start-start-radius: var(--mat-list-item-start-start-shape);');
     expect(listItemComponent).toContain('border-end-end-radius: var(--mat-list-item-end-end-shape);');
   });
