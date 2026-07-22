@@ -8,6 +8,7 @@ import {
 } from '../list-context';
 import useComponentColor from '../use-component-color';
 import useRovingFocus from '../use-roving-focus';
+import { isSelectionValue } from '../selection-control';
 
 defineOptions({
   name: 'MatList',
@@ -33,6 +34,13 @@ const props = defineProps({
     type: [String, Number, Boolean, Array],
     default: null,
   },
+  expanded: {
+    type: Array,
+    default: () => [],
+    validator(value) {
+      return value.every(isSelectionValue);
+    },
+  },
   color: {
     type: String,
     default: undefined,
@@ -47,11 +55,15 @@ const emit = defineEmits({
       && Object.hasOwn(payload, 'nextSelected')
       && payload.originalEvent instanceof Event;
   },
+  'update:expanded'(payload) {
+    return Array.isArray(payload) && payload.every(isSelectionValue);
+  },
 });
 const root = ref(null);
 const isSelectable = computed(() => isSelectableInteraction(props.interaction));
 const rootTag = computed(() => (isSelectable.value ? 'div' : 'ul'));
 const { colorStyle } = useComponentColor(computed(() => props.color));
+const groupRecords = [];
 
 const FOCUSABLE_SELECTOR = [
   '[data-mat-list-primary]',
@@ -122,6 +134,58 @@ function requestSelection(value, originalEvent) {
 }
 
 /**
+ * @param {string | number | boolean} value
+ * @returns {boolean}
+ */
+function isGroupExpanded(value) {
+  return props.expanded.some((expandedValue) => Object.is(expandedValue, value));
+}
+
+/**
+ * @param {string | number | boolean} value
+ * @param {boolean} expanded
+ */
+function requestGroupExpanded(value, expanded) {
+  const currentlyExpanded = isGroupExpanded(value);
+
+  if (currentlyExpanded === expanded) {
+    return;
+  }
+
+  emit(
+    'update:expanded',
+    expanded
+      ? [...props.expanded, value]
+      : props.expanded.filter((expandedValue) => !Object.is(expandedValue, value)),
+  );
+}
+
+/**
+ * @param {symbol} token
+ * @param {string | number | boolean} value
+ */
+function registerGroupValue(token, value) {
+  if (groupRecords.some((record) => (
+    record.token !== token && Object.is(record.value, value)
+  ))) {
+    console.warn(`MatListGroup: 同一 MatList 中的 value 必须唯一，重复值为 ${String(value)}`);
+  }
+
+  groupRecords.push({ token, value });
+}
+
+/**
+ * @param {symbol} token
+ */
+function unregisterGroupValue(token) {
+  const index = groupRecords.findIndex((record) => record.token === token);
+
+  if (index !== -1) {
+    groupRecords.splice(index, 1);
+  }
+}
+
+/**
  * @param {Element} element
  * @returns {boolean}
  */
@@ -134,8 +198,16 @@ function isAvailableFocusable(element) {
     return false;
   }
 
+  if (element.closest('[data-mat-list-group-content][inert]')) {
+    return false;
+  }
+
   if (element.matches(':disabled') || element.getAttribute('aria-disabled') === 'true') {
     return false;
+  }
+
+  if (element.hasAttribute('data-mat-list-group-activator')) {
+    return true;
   }
 
   if (!element.hasAttribute('data-mat-list-primary')
@@ -169,7 +241,7 @@ const roving = useRovingFocus({
   selector: FOCUSABLE_SELECTOR,
   isAvailable: isAvailableFocusable,
   findInitial: findInitialFocusable,
-  observedAttributes: ['aria-disabled', 'disabled', 'href'],
+  observedAttributes: ['aria-disabled', 'aria-hidden', 'disabled', 'href', 'inert'],
 });
 
 /**
@@ -194,9 +266,14 @@ function handleKeyDown(event) {
 provide(MAT_LIST_KEY, {
   interaction: computed(() => props.interaction),
   isSelectable,
+  variant: computed(() => props.variant),
+  isGroupExpanded,
   isSelected,
+  registerGroupValue,
   requestFocusRefresh: roving.queueRefresh,
+  requestGroupExpanded,
   requestSelection,
+  unregisterGroupValue,
 });
 
 onMounted(roving.observe);
@@ -266,13 +343,19 @@ watch(
   gap: var(--mat-list-segmented-gap);
 }
 
-.mat-list :deep(.mat-list-item:first-child) {
+.mat-list > :deep(.mat-list-item:first-child),
+.mat-list > :deep(.mat-list-group:first-child) {
   --mat-list-item-start-start-shape: var(--mat-list-container-shape);
   --mat-list-item-start-end-shape: var(--mat-list-container-shape);
+  --mat-list-group-start-start-shape: var(--mat-list-container-shape);
+  --mat-list-group-start-end-shape: var(--mat-list-container-shape);
 }
 
-.mat-list :deep(.mat-list-item:last-child) {
+.mat-list > :deep(.mat-list-item:last-child),
+.mat-list > :deep(.mat-list-group:last-child) {
   --mat-list-item-end-start-shape: var(--mat-list-container-shape);
   --mat-list-item-end-end-shape: var(--mat-list-container-shape);
+  --mat-list-group-end-start-shape: var(--mat-list-container-shape);
+  --mat-list-group-end-end-shape: var(--mat-list-container-shape);
 }
 </style>

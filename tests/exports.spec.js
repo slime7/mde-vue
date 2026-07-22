@@ -9,6 +9,7 @@ import MatFab, { MatFab as NamedMatFab } from 'mdu-ui/components/mat-fab';
 import MatIcon, { MatIcon as NamedMatIcon } from 'mdu-ui/components/mat-icon';
 import MatSplitBtn, { MatSplitBtn as NamedMatSplitBtn } from 'mdu-ui/components/mat-split-btn';
 import MatList, { MatList as NamedMatList } from 'mdu-ui/components/mat-list';
+import MatListGroup, { MatListGroup as NamedMatListGroup } from 'mdu-ui/components/mat-list-group';
 import MatListItem, { MatListItem as NamedMatListItem } from 'mdu-ui/components/mat-list-item';
 import MatDivider, { MatDivider as NamedMatDivider } from 'mdu-ui/components/mat-divider';
 import MatCheckbox, { MatCheckbox as NamedMatCheckbox } from 'mdu-ui/components/mat-checkbox';
@@ -48,6 +49,7 @@ import {
   MatFab as RootMatFab,
   MatIcon as RootMatIcon,
   MatList as RootMatList,
+  MatListGroup as RootMatListGroup,
   MatListItem as RootMatListItem,
   MatLoader as RootMatLoader,
   MatMenu as RootMatMenu,
@@ -86,6 +88,7 @@ describe('公共组件导出', () => {
     ['MatIcon', RootMatIcon, NamedMatIcon, MatIcon],
     ['MatSplitBtn', RootMatSplitBtn, NamedMatSplitBtn, MatSplitBtn],
     ['MatList', RootMatList, NamedMatList, MatList],
+    ['MatListGroup', RootMatListGroup, NamedMatListGroup, MatListGroup],
     ['MatListItem', RootMatListItem, NamedMatListItem, MatListItem],
     ['MatDivider', RootMatDivider, NamedMatDivider, MatDivider],
     ['MatCheckbox', RootMatCheckbox, NamedMatCheckbox, MatCheckbox],

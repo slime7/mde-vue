@@ -5,7 +5,7 @@ import {
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatActionBase from '../MatActionBase.vue';
 import { BUTTON_TYPES } from '../button-props';
-import { MAT_LIST_KEY } from '../list-context';
+import { MAT_LIST_GROUP_ACTIVATOR_KEY, MAT_LIST_KEY } from '../list-context';
 import MatListItemContent from './MatListItemContent.vue';
 
 defineOptions({
@@ -49,6 +49,7 @@ const emit = defineEmits({
 });
 const slots = useSlots();
 const list = inject(MAT_LIST_KEY, null);
+const groupActivator = inject(MAT_LIST_GROUP_ACTIVATOR_KEY, null);
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const interaction = computed(() => list?.interaction.value ?? 'none');
 const isAction = computed(() => (
@@ -87,6 +88,12 @@ function handlePrimaryClick(event) {
   }
 }
 
+function handleGroupActivatorClick() {
+  if (!props.disabled) {
+    groupActivator?.toggle();
+  }
+}
+
 /**
  * @param {KeyboardEvent} event
  */
@@ -100,7 +107,7 @@ function handleOptionKeyDown(event) {
 }
 
 function validateProps() {
-  if (props.href !== undefined && !isAction.value) {
+  if (props.href !== undefined && !groupActivator && !isAction.value) {
     console.warn('MatListItem: href 仅在 single-action 或 multi-action 模式下生效');
   }
 }
@@ -121,8 +128,74 @@ watch(
 </script>
 
 <template>
+  <div
+    v-if="groupActivator?.static.value"
+    v-bind="$attrs"
+    :id="groupActivator.labelId"
+    class="mat-list-item mat-list-item__surface mat-list-item--static"
+    :class="surfaceClasses"
+    data-mat-list-group-label
+    :aria-disabled="disabled ? 'true' : undefined"
+    :data-mat-list-disabled="disabled ? 'true' : undefined"
+  >
+    <MatListItemContent
+      :line-count="lineCount"
+      :presentation-slots="false"
+    >
+      <template v-if="$slots.leading" #leading>
+        <slot name="leading" />
+      </template>
+      <template v-if="$slots.overline" #overline>
+        <slot name="overline" />
+      </template>
+      <slot />
+      <template v-if="$slots.supporting" #supporting>
+        <slot name="supporting" />
+      </template>
+      <template v-if="$slots.trailing" #trailing>
+        <slot name="trailing" />
+      </template>
+    </MatListItemContent>
+  </div>
+
+  <MatActionBase
+    v-else-if="groupActivator"
+    v-bind="$attrs"
+    class="mat-list-item mat-list-item__surface mat-list-item__primary mat-list-item--group-activator"
+    :class="surfaceClasses"
+    data-mat-list-primary
+    data-mat-list-group-activator
+    :aria-controls="groupActivator.contentId"
+    :aria-expanded="groupActivator.expanded.value ? 'true' : 'false'"
+    :data-mat-list-disabled="disabled ? 'true' : undefined"
+    :disabled="disabled"
+    :focus-ring="true"
+    type="button"
+    :use-cursor="matUi.useCursor"
+    @click="handleGroupActivatorClick"
+  >
+    <MatListItemContent
+      :line-count="lineCount"
+      :presentation-slots="false"
+    >
+      <template v-if="$slots.leading" #leading>
+        <slot name="leading" />
+      </template>
+      <template v-if="$slots.overline" #overline>
+        <slot name="overline" />
+      </template>
+      <slot />
+      <template v-if="$slots.supporting" #supporting>
+        <slot name="supporting" />
+      </template>
+      <template v-if="$slots.trailing" #trailing>
+        <slot name="trailing" />
+      </template>
+    </MatListItemContent>
+  </MatActionBase>
+
   <li
-    v-if="interaction === 'none'"
+    v-else-if="interaction === 'none'"
     v-bind="$attrs"
     class="mat-list-item mat-list-item__surface mat-list-item--static"
     :class="surfaceClasses"

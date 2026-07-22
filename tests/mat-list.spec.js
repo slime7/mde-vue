@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { mount } from '@vue/test-utils';
 import {
   createApp, h, nextTick,
@@ -6,7 +7,7 @@ import {
   describe, expect, it, vi,
 } from 'vitest';
 import {
-  createMatUi, MatBtn, MatList, MatListItem,
+  createMatUi, MatBtn, MatList, MatListGroup, MatListItem,
 } from '../src';
 
 async function flushFocusManagement() {
@@ -219,7 +220,258 @@ describe('MatList', () => {
 
     app.use(createMatUi());
     expect(app.component('mat-list')).toBe(MatList);
+    expect(app.component('mat-list-group')).toBe(MatListGroup);
     expect(app.component('mat-list-item')).toBe(MatListItem);
     expect(app.component('mat-divider')).toBeDefined();
+  });
+
+  it('有值 Group 通过 expanded 数组受控并返回不可变的新数组', async () => {
+    const expanded = ['unknown', false, 0];
+    const wrapper = mount(MatList, {
+      props: { expanded },
+      slots: {
+        default: () => [
+          h(MatListGroup, { value: false }, {
+            activator: ({ expanded: isExpanded }) => h(
+              MatListItem,
+              null,
+              () => `布尔值 ${isExpanded}`,
+            ),
+            default: () => h(MatListItem, null, () => '布尔值内容'),
+          }),
+          h(MatListGroup, { value: 1 }, {
+            activator: () => h(MatListItem, null, () => '数字值'),
+            default: () => h(MatListItem, null, () => '数字值内容'),
+          }),
+        ],
+      },
+    });
+
+    const activators = wrapper.findAll('[data-mat-list-group-activator]');
+
+    expect(activators[0].attributes('aria-expanded')).toBe('true');
+    expect(activators[0].text()).toContain('布尔值 true');
+    await activators[0].trigger('click');
+    expect(expanded).toEqual(['unknown', false, 0]);
+    expect(wrapper.emitted('update:expanded')[0][0]).toEqual(['unknown', 0]);
+    expect(wrapper.emitted('update:expanded')[0][0]).not.toBe(expanded);
+
+    await activators[1].trigger('click');
+    expect(wrapper.emitted('update:expanded')[1][0]).toEqual(['unknown', false, 0, 1]);
+  });
+
+  it('有值 Group 完全受控且多个 Group 可同时展开', async () => {
+    const wrapper = mount(MatList, {
+      props: { expanded: ['one', 'two'] },
+      slots: {
+        default: () => ['one', 'two'].map((value) => h(MatListGroup, { value }, {
+          activator: ({ expanded }) => h(MatListItem, null, () => `${value}:${expanded}`),
+          default: () => h(MatListItem, null, () => `${value} 内容`),
+        })),
+      },
+    });
+    const groups = wrapper.findAll('.mat-list-group');
+    const activators = wrapper.findAll('[data-mat-list-group-activator]');
+
+    expect(groups.every((group) => group.classes('mat-list-group--expanded'))).toBe(true);
+    await activators[0].trigger('click');
+    expect(activators[0].attributes('aria-expanded')).toBe('true');
+    expect(wrapper.emitted('update:expanded')[0][0]).toEqual(['two']);
+
+    await wrapper.setProps({ expanded: ['two'] });
+    expect(activators[0].attributes('aria-expanded')).toBe('false');
+    expect(activators[1].attributes('aria-expanded')).toBe('true');
+  });
+
+  it('无值 Group 使用初始折叠的内部状态且不更新根 expanded', async () => {
+    const wrapper = mount(MatList, {
+      slots: {
+        default: () => h(MatListGroup, null, {
+          activator: ({ expanded }) => h(MatListItem, null, {
+            default: () => String(expanded),
+            trailing: () => (expanded ? 'expand_less' : 'expand_more'),
+          }),
+          default: () => h(MatListItem, null, () => '内容'),
+        }),
+      },
+    });
+    const activator = wrapper.find('[data-mat-list-group-activator]');
+    const content = wrapper.find('[data-mat-list-group-content]');
+
+    expect(activator.attributes('aria-expanded')).toBe('false');
+    expect(activator.text()).toContain('expand_more');
+    expect(content.attributes()).toHaveProperty('inert');
+    expect(content.attributes('aria-hidden')).toBe('true');
+    await activator.trigger('click');
+    expect(activator.attributes('aria-expanded')).toBe('true');
+    expect(activator.text()).toContain('expand_less');
+    expect(content.attributes()).not.toHaveProperty('inert');
+    expect(wrapper.emitted('update:expanded')).toBeUndefined();
+  });
+
+  it('Activator 是单一按钮并抑制叶子 click、链接和选择值语义', async () => {
+    const click = vi.fn();
+    const wrapper = mount(MatList, {
+      props: { interaction: 'multi-action' },
+      slots: {
+        default: () => h(MatListGroup, { value: 'group' }, {
+          activator: () => h(MatListItem, {
+            value: 'ignored',
+            href: '/ignored',
+            onClick: click,
+          }, {
+            default: () => '触发器',
+            trailing: () => h('span', '自定义箭头'),
+          }),
+          default: () => h(MatListItem, null, () => '内容'),
+        }),
+      },
+    });
+    const activator = wrapper.find('[data-mat-list-group-activator]');
+
+    expect(activator.element.tagName).toBe('BUTTON');
+    expect(activator.attributes('href')).toBeUndefined();
+    expect(activator.attributes('aria-controls')).toBeTruthy();
+    expect(wrapper.findAll('[data-mat-list-trailing]')).toHaveLength(0);
+    await activator.trigger('click');
+    expect(click).not.toHaveBeenCalled();
+    expect(wrapper.emitted('update:expanded')[0][0]).toEqual(['group']);
+  });
+
+  it('禁用 Activator 不切换，Enter 和 Space 使用原生按钮切换', async () => {
+    const wrapper = mount(MatList, {
+      props: { expanded: [] },
+      slots: {
+        default: () => [
+          h(MatListGroup, { value: 'disabled' }, {
+            activator: () => h(MatListItem, { disabled: true }, () => '禁用'),
+            default: () => h(MatListItem, null, () => '禁用内容'),
+          }),
+          h(MatListGroup, { value: 'keyboard' }, {
+            activator: () => h(MatListItem, null, () => '键盘'),
+            default: () => h(MatListItem, null, () => '键盘内容'),
+          }),
+        ],
+      },
+    });
+    const activators = wrapper.findAll('[data-mat-list-group-activator]');
+
+    await activators[0].trigger('click');
+    expect(wrapper.emitted('update:expanded')).toBeUndefined();
+    await activators[1].trigger('keydown', { key: 'Enter' });
+    await activators[1].trigger('click');
+    expect(wrapper.emitted('update:expanded')).toHaveLength(1);
+    expect(wrapper.emitted('update:expanded')[0][0]).toEqual(['keyboard']);
+  });
+
+  it('生成嵌套 ul/li 并与普通直属 Item 混排', () => {
+    const wrapper = mount(MatList, {
+      props: { expanded: ['group'] },
+      slots: {
+        default: () => [
+          h(MatListItem, null, () => '直属一'),
+          h(MatListGroup, { value: 'group' }, {
+            activator: () => h(MatListItem, null, () => '组'),
+            default: () => h(MatListItem, null, () => '组内'),
+          }),
+          h(MatListItem, null, () => '直属二'),
+        ],
+      },
+    });
+    const children = Array.from(wrapper.element.children);
+    const group = wrapper.find('.mat-list-group');
+
+    expect(children.map((element) => element.tagName)).toEqual(['LI', 'LI', 'LI']);
+    expect(group.element.parentElement).toBe(wrapper.element);
+    expect(group.find('ul').element.parentElement?.hasAttribute('data-mat-list-group-content')).toBe(true);
+    expect(group.find('ul > li').text()).toBe('组内');
+  });
+
+  it('使用 grid、medium2 emphasized motion 和减少动态效果分支', () => {
+    const source = readFileSync('src/components/mat-list-group/MatListGroup.vue', 'utf8');
+
+    expect(source).toContain('grid-template-rows: 0fr');
+    expect(source).toContain('grid-template-rows: 1fr');
+    expect(source).toContain('--mat-sys-motion-duration-medium2');
+    expect(source).toContain('--mat-sys-motion-easing-emphasized');
+    expect(source).toContain('@media (prefers-reduced-motion: reduce)');
+    expect(source).toContain('gap: var(--mat-list-group-gap)');
+  });
+
+  it('roving focus 跳过折叠内容并在收起时恢复到 Activator', async () => {
+    const wrapper = mount(MatList, {
+      attachTo: document.body,
+      props: {
+        interaction: 'single-action',
+        expanded: ['group'],
+      },
+      slots: {
+        default: () => [
+          h(MatListItem, null, () => '之前'),
+          h(MatListGroup, { value: 'group' }, {
+            activator: () => h(MatListItem, null, () => '组'),
+            default: () => h(MatListItem, null, () => '组内'),
+          }),
+          h(MatListItem, null, () => '之后'),
+        ],
+      },
+    });
+    await flushFocusManagement();
+    const focusables = wrapper.findAll('[data-mat-list-primary]');
+    const activator = wrapper.find('[data-mat-list-group-activator]');
+    const child = focusables.find((item) => item.text() === '组内');
+
+    expect(focusables.map((item) => item.attributes('tabindex'))).toEqual(['0', '-1', '-1', '-1']);
+    child.element.focus();
+    await wrapper.setProps({ expanded: [] });
+    await flushFocusManagement();
+    expect(document.activeElement).toBe(activator.element);
+    expect(child.attributes('tabindex')).toBeUndefined();
+    wrapper.unmount();
+  });
+
+  it.each(['single-select', 'multi-select'])('%s 模式警告并降级为静态展开分组', (interaction) => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const wrapper = mount(MatList, {
+      props: { interaction },
+      slots: {
+        default: () => h(MatListGroup, { value: 'group' }, {
+          activator: () => h(MatListItem, null, () => '静态标签'),
+          default: () => h(MatListItem, { value: 'child' }, () => '选项'),
+        }),
+      },
+    });
+    const group = wrapper.find('[role="group"]');
+
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('选择模式'));
+    expect(group.exists()).toBe(true);
+    expect(group.attributes('aria-labelledby')).toBeTruthy();
+    expect(group.find('[data-mat-list-group-label]').element.tagName).toBe('DIV');
+    expect(group.find('[role="option"]').exists()).toBe(true);
+    expect(wrapper.find('[data-mat-list-group-content]').attributes()).not.toHaveProperty('inert');
+    warn.mockRestore();
+  });
+
+  it('Activator 无效和重复 value 时警告，并让无效组始终展开', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const wrapper = mount(MatList, {
+      slots: {
+        default: () => [
+          h(MatListGroup, { value: 'duplicate' }, {
+            activator: () => h('span', '错误触发器'),
+            default: () => h(MatListItem, null, () => '仍可访问'),
+          }),
+          h(MatListGroup, { value: 'duplicate' }, {
+            activator: () => h(MatListItem, null, () => '重复'),
+            default: () => h(MatListItem, null, () => '内容'),
+          }),
+        ],
+      },
+    });
+
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('activator Slot'));
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('value 必须唯一'));
+    expect(wrapper.findAll('[data-mat-list-group-content]')[0].attributes()).not.toHaveProperty('inert');
+    warn.mockRestore();
   });
 });

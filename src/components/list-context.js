@@ -7,6 +7,7 @@ export const LIST_INTERACTIONS = [
 ];
 
 export const MAT_LIST_KEY = Symbol('mat-list');
+export const MAT_LIST_GROUP_ACTIVATOR_KEY = Symbol('mat-list-group-activator');
 
 /**
  * @param {string} interaction

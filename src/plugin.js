@@ -9,6 +9,7 @@ import MatCardActionArea from './components/mat-card/MatCardActionArea.vue';
 import MatCardContent from './components/mat-card/MatCardContent.vue';
 import MatCardActions from './components/mat-card/MatCardActions.vue';
 import MatList from './components/mat-list/MatList.vue';
+import MatListGroup from './components/mat-list-group/MatListGroup.vue';
 import MatListItem from './components/mat-list/MatListItem.vue';
 import MatDivider from './components/mat-divider/MatDivider.vue';
 import MatCheckbox from './components/mat-checkbox/MatCheckbox.vue';
@@ -116,6 +117,8 @@ export function createMatUi(options = {}) {
       app.component('mat-card-actions', MatCardActions);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-list', MatList);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-list-group', MatListGroup);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-list-item', MatListItem);
       // eslint-disable-next-line vue/component-definition-name-casing
