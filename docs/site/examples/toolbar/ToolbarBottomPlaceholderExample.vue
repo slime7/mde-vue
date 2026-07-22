@@ -33,6 +33,7 @@ const bottomPlaceholder = ref(0);
 
     <mat-toolbar
       v-model="active"
+      app
       :bottom-placeholder="bottomPlaceholder"
     >
       <mat-btn variant="standard">
@@ -46,6 +47,7 @@ const bottomPlaceholder = ref(0);
 
     <mat-toolbar
       v-model="floatingActive"
+      app
       variant="floating-bottom"
       position="end"
       :bottom-placeholder="bottomPlaceholder"

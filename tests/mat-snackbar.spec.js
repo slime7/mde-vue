@@ -346,6 +346,7 @@ describe('MatSnackbar', () => {
     const toolbarWrapper = mount(MatToolbar, {
       attachTo: document.body,
       props: {
+        app: true,
         bottomPlaceholder: 24,
         variant: 'floating-bottom',
       },

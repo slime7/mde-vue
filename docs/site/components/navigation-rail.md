@@ -13,7 +13,7 @@ order: 105
 
 官方把 Navigation rail 和 Navigation bar 定义为独立组件。本组件为减少重复 API 暂时组合两者，但仍保持规范边界：纵向模式只实现 rail；横向模式只实现 Navigation bar 的 horizontal items，不提供 vertical navigation bar，也不把横向模式称为 Navigation rail。
 
-纵向 rail 支持 3–7 个主要目的地、可选菜单、Header、FAB 与底部自定义内容。collapsed rail 保持可见；expanded rail 可以使用占据正文空间的 `standard` 布局或覆盖正文的 `modal` 布局。横向 bar 适合较小或中等窗口中的少量目的地：`expanded` 为 `false` 时图标在上、标签在下，为 `true` 时使用图标在左、标签在右的固定宽度 Item。
+纵向 rail 支持 3–7 个主要目的地、可选菜单、Header、FAB 与底部自定义内容。默认在声明位置参与父容器布局；expanded rail 可以使用占据正文空间的 `standard` 布局或覆盖当前布局容器的 `modal` 布局。设置 `app` 后会固定到视口并挂载至 `attach`，横向 bar 固定在视口底部。横向 bar 适合较小或中等窗口中的少量目的地：`expanded` 为 `false` 时图标在上、标签在下，为 `true` 时使用图标在左、标签在右的固定宽度 Item。
 
 ## 示例
 
@@ -36,6 +36,72 @@ order: 105
 <ClientOnly>
   <DocsPreview label="Navigation rail 基础导航预览">
     <NavigationRailBasicExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `app` 与 `attach`
+
+`app=true` 将 Navigation rail 作为应用级固定导航挂载到 `attach`，默认挂载到 `body`。纵向 rail 按 `position` 固定在视口起始或末尾侧；horizontal bar 固定在底部。`app=false` 时 `attach` 不生效，组件保留在声明位置。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/navigation-rail/NavigationRailAppExample.vue#template [template]
+
+<<< @/examples/navigation-rail/NavigationRailAppExample.vue#script [script]
+
+<<< @/examples/navigation-rail/NavigationRailAppExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail 应用挂载预览">
+    <NavigationRailAppExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `placeholder`
+
+`placeholder` 只在 `app=true` 时有效。它在声明位置按实际应用级 rail 或 bar 尺寸保留空间，避免固定导航遮挡相邻正文。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/navigation-rail/NavigationRailPlaceholderExample.vue#template [template]
+
+<<< @/examples/navigation-rail/NavigationRailPlaceholderExample.vue#script [script]
+
+<<< @/examples/navigation-rail/NavigationRailPlaceholderExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail 自然占位预览">
+    <NavigationRailPlaceholderExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `bottomPlaceholder`
+
+`bottomPlaceholder` 只在 `app=true` 时预留底部手势区或安全区。它会抬高纵向 rail 的底部内容，并在 horizontal bar 底部增加同等空间。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/navigation-rail/NavigationRailBottomPlaceholderExample.vue#template [template]
+
+<<< @/examples/navigation-rail/NavigationRailBottomPlaceholderExample.vue#script [script]
+
+<<< @/examples/navigation-rail/NavigationRailBottomPlaceholderExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail 底部安全区预览">
+    <NavigationRailBottomPlaceholderExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -212,6 +278,10 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 | `close-icon` | `string` | `'menu_open'` | 展开时的菜单按钮图标 |
 | `open-label` | `string` | `'展开导航'` | 未展开时菜单按钮的无障碍名称 |
 | `close-label` | `string` | `'收起导航'` | 展开时菜单按钮和 modal 遮罩的无障碍名称 |
+| `app` | `boolean` | `false` | 开启后固定到视口并 Teleport 到 `attach`；关闭时在声明位置参与父容器布局 |
+| `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的 Teleport 目标；字符串按当前 document 的 CSS 选择器解析 |
+| `placeholder` | `boolean` | `false` | 仅 `app=true` 有效；在声明位置为固定 rail 或 bar 预留实际尺寸 |
+| `bottom-placeholder` | `number \| string` | `0` | 仅 `app=true` 有效；数字按 px 处理，字符串可使用 `env(safe-area-inset-bottom)` 或 `calc(...)` |
 
 #### `MatNavigationRailItem`
 
@@ -247,7 +317,7 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 
 根导航使用原生 `<nav>`；应用应通过 `aria-label` 或 `aria-labelledby` 区分页面中的多个导航区域。选中 Item 使用 `aria-current="page"`。Item 保留原生按钮或链接的 Tab 顺序，完整 Item 宽度都是命中区域，焦点环和状态层显示在活动指示器上。
 
-纵向 rail 应位于窗口或应用布局的起始侧，并保持固定，不随正文纵向滚动。需要放在另一侧时设置 `position="end"`，Item 会在所有排列变化中保持末尾侧对齐。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 只负责组件外观，不自动监听窗口宽度，应用负责在断点处切换。
+默认纵向 rail 位于应用布局容器的起始侧，由父容器决定滚动边界；需要作为固定应用导航时设置 `app`。应用模式下 `position="end"` 同时将 rail 固定到视口末尾侧，并保持 Item 的末尾侧对齐。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 不自动监听窗口宽度，应用负责在断点处切换。`attach` 无法解析时组件给出警告且不渲染应用布局。
 
 ## 参考来源
 
@@ -255,11 +325,14 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 
 <script setup>
 import NavigationRailBasicExample from '../examples/navigation-rail/NavigationRailBasicExample.vue';
+import NavigationRailAppExample from '../examples/navigation-rail/NavigationRailAppExample.vue';
+import NavigationRailBottomPlaceholderExample from '../examples/navigation-rail/NavigationRailBottomPlaceholderExample.vue';
 import NavigationRailCollapsibleExample from '../examples/navigation-rail/NavigationRailCollapsibleExample.vue';
 import NavigationRailHideOnCollapseExample from '../examples/navigation-rail/NavigationRailHideOnCollapseExample.vue';
 import NavigationRailHorizontalExample from '../examples/navigation-rail/NavigationRailHorizontalExample.vue';
 import NavigationRailLayoutExample from '../examples/navigation-rail/NavigationRailLayoutExample.vue';
 import NavigationRailPositionExample from '../examples/navigation-rail/NavigationRailPositionExample.vue';
+import NavigationRailPlaceholderExample from '../examples/navigation-rail/NavigationRailPlaceholderExample.vue';
 import NavigationRailSlotsExample from '../examples/navigation-rail/NavigationRailSlotsExample.vue';
 import NavigationRailWidthExample from '../examples/navigation-rail/NavigationRailWidthExample.vue';
 </script>

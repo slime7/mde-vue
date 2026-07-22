@@ -25,6 +25,7 @@ const placeholderEnabled = ref(true);
 
     <mat-toolbar
       v-model="active"
+      app
       :placeholder="placeholderEnabled"
     >
       <mat-btn variant="standard">

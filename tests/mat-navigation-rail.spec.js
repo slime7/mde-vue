@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
-  describe, expect, it,
+  describe, expect, it, vi,
 } from 'vitest';
 import MatNavigationRail from '../src/components/mat-navigation-rail/MatNavigationRail.vue';
 import MatNavigationRailItem from '../src/components/mat-navigation-rail/MatNavigationRailItem.vue';
@@ -31,6 +31,8 @@ function navigationItems() {
 
 describe('MatNavigationRail', () => {
   it('默认渲染只用于纵向布局的 collapsed Expressive rail', () => {
+    expect(MatNavigationRail.props.app.default).toBe(false);
+
     const wrapper = mount(MatNavigationRail, {
       props: { modelValue: 'home' },
       slots: { default: navigationItems },
@@ -45,6 +47,148 @@ describe('MatNavigationRail', () => {
       .toBe(false);
     expect(wrapper.find('.mat-navigation-rail-item > .mat-navigation-rail-item__label').text())
       .toBe('首页');
+  });
+
+  it('默认在声明容器布局，app=true 时 Teleport 到 attach', async () => {
+    const source = document.createElement('section');
+    const attach = document.createElement('main');
+    attach.id = 'navigation-rail-app-target';
+    document.body.append(source, attach);
+    const wrapper = mount(MatNavigationRail, {
+      attachTo: source,
+      props: {
+        attach: '#navigation-rail-app-target',
+      },
+      slots: { default: navigationItems },
+    });
+
+    expect(source.querySelector('.mat-navigation-rail')).not.toBeNull();
+    expect(attach.querySelector('.mat-navigation-rail')).toBeNull();
+
+    await wrapper.setProps({ app: true });
+    await settleRender();
+
+    expect(source.querySelector('.mat-navigation-rail')).toBeNull();
+    expect(attach.querySelector('.mat-navigation-rail')).not.toBeNull();
+
+    wrapper.unmount();
+    source.remove();
+    attach.remove();
+  });
+
+  it('只在 app=true 时生成 Navigation rail 占位与底部安全区', async () => {
+    const wrapper = mount(MatNavigationRail, {
+      attachTo: document.body,
+      props: {
+        bottomPlaceholder: 24,
+        placeholder: true,
+      },
+      slots: { default: navigationItems },
+    });
+
+    expect(document.body.querySelector('.mat-navigation-rail__placeholder')).toBeNull();
+    expect(wrapper.find('nav').element.style.getPropertyValue(
+      '--mat-navigation-rail-bottom-placeholder',
+    )).toBe('0px');
+
+    await wrapper.setProps({ app: true });
+    await settleRender();
+
+    expect(document.body.querySelector('.mat-navigation-rail__placeholder')).not.toBeNull();
+    expect(document.body.querySelector('nav').style.getPropertyValue(
+      '--mat-navigation-rail-bottom-placeholder',
+    )).toBe('24px');
+
+    wrapper.unmount();
+  });
+
+  it('应用模式使用实际 Navigation rail 尺寸更新占位并在卸载时清理观察器', async () => {
+    const observers = [];
+    const ResizeObserverMock = class {
+      constructor(callback) {
+        this.callback = callback;
+        this.disconnect = vi.fn();
+        this.observe = vi.fn();
+        observers.push(this);
+      }
+    };
+    vi.stubGlobal('ResizeObserver', ResizeObserverMock);
+    const wrapper = mount(MatNavigationRail, {
+      attachTo: document.body,
+      props: {
+        app: true,
+        placeholder: true,
+      },
+      slots: { default: navigationItems },
+    });
+
+    await settleRender();
+
+    const rail = document.body.querySelector('.mat-navigation-rail');
+    const placeholder = document.body.querySelector('.mat-navigation-rail__placeholder');
+    vi.spyOn(rail, 'getBoundingClientRect').mockReturnValue({
+      bottom: 600,
+      height: 480,
+      left: 0,
+      right: 96,
+      top: 120,
+      width: 96,
+    });
+    observers[0].callback();
+    await settleRender();
+
+    expect(observers[0].observe).toHaveBeenCalledWith(rail);
+    expect(placeholder.style.blockSize).toBe('480px');
+    expect(placeholder.style.inlineSize).toBe('96px');
+
+    wrapper.unmount();
+    expect(observers[0].disconnect).toHaveBeenCalled();
+    vi.unstubAllGlobals();
+  });
+
+  it('应用模式固定 vertical rail 与 horizontal bar，并按 position 固定到对应侧', async () => {
+    const wrapper = mount(MatNavigationRail, {
+      attachTo: document.body,
+      props: {
+        app: true,
+        position: 'end',
+      },
+      slots: { default: navigationItems },
+    });
+
+    await settleRender();
+
+    expect(document.body.querySelector('.mat-navigation-rail-host').classList)
+      .toContain('mat-navigation-rail-host--app');
+    expect(navigationSource).toContain('position: fixed;');
+    expect(navigationSource).toContain('inset-inline: auto 0;');
+    expect(navigationSource).toContain('inset: auto 0 0;');
+    expect(navigationSource).toContain(
+      '.mat-navigation-rail-host--app.mat-navigation-rail-host--end .mat-navigation-rail--modal',
+    );
+
+    wrapper.unmount();
+  });
+
+  it('app=true 的无效 attach 给出警告且不渲染 Navigation rail', async () => {
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const wrapper = mount(MatNavigationRail, {
+      attachTo: document.body,
+      props: {
+        app: true,
+        attach: '#missing-navigation-rail-app-target',
+      },
+      slots: { default: navigationItems },
+    });
+
+    await settleRender();
+
+    expect(document.body.querySelector('.mat-navigation-rail')).toBeNull();
+    expect(warning).toHaveBeenCalledWith(
+      'MatNavigationRail: attach 必须指向当前 document 中存在的 HTMLElement',
+    );
+
+    wrapper.unmount();
   });
 
   it('expanded rail 把图标和标签放在同一个内容指示器中', () => {
@@ -70,11 +214,13 @@ describe('MatNavigationRail', () => {
       },
     });
 
-    expect(wrapper.attributes('style')).toContain('--mat-navigation-rail-expanded-width: 280px');
+    expect(wrapper.find('.mat-navigation-rail-host').attributes('style'))
+      .toContain('--mat-navigation-rail-expanded-width: 280px');
 
     await wrapper.setProps({ width: 'min(80vw, 360px)' });
 
-    expect(wrapper.attributes('style')).toContain('--mat-navigation-rail-expanded-width: min(80vw, 360px)');
+    expect(wrapper.find('.mat-navigation-rail-host').attributes('style'))
+      .toContain('--mat-navigation-rail-expanded-width: min(80vw, 360px)');
   });
 
   it('horizontal 模式由 expanded 在纵向 Item 与当前横向 Item 间切换', async () => {
@@ -89,7 +235,8 @@ describe('MatNavigationRail', () => {
       slots: { default: navigationItems },
     });
 
-    expect(wrapper.classes()).toContain('mat-navigation-rail-host--horizontal');
+    expect(wrapper.find('.mat-navigation-rail-host').classes())
+      .toContain('mat-navigation-rail-host--horizontal');
     expect(wrapper.find('nav').classes()).toContain('mat-navigation-rail--bar');
     expect(wrapper.find('.mat-navigation-rail__menu').exists()).toBe(false);
     expect(wrapper.find('.mat-navigation-rail__scrim').exists()).toBe(false);
@@ -102,7 +249,8 @@ describe('MatNavigationRail', () => {
 
     await wrapper.setProps({ expanded: true });
 
-    expect(wrapper.classes()).toContain('mat-navigation-rail-host--expanded');
+    expect(wrapper.find('.mat-navigation-rail-host').classes())
+      .toContain('mat-navigation-rail-host--expanded');
     expect(wrapper.find('.mat-navigation-rail-item').classes())
       .toContain('mat-navigation-rail-item--expanded');
     expect(wrapper.find('.mat-navigation-rail-item__indicator .mat-navigation-rail-item__label').text())
@@ -118,7 +266,8 @@ describe('MatNavigationRail', () => {
       slots: { default: navigationItems },
     });
 
-    expect(wrapper.classes()).toContain('mat-navigation-rail-host--end');
+    expect(wrapper.find('.mat-navigation-rail-host').classes())
+      .toContain('mat-navigation-rail-host--end');
     expect(wrapper.find('.mat-navigation-rail-item').classes())
       .toContain('mat-navigation-rail-item--end');
   });
@@ -245,7 +394,8 @@ describe('MatNavigationRail', () => {
       },
     });
 
-    expect(wrapper.classes()).toContain('mat-navigation-rail-host--hidden');
+    expect(wrapper.find('.mat-navigation-rail-host').classes())
+      .toContain('mat-navigation-rail-host--hidden');
     expect(wrapper.find('.mat-navigation-rail__content').exists()).toBe(false);
     expect(wrapper.find('.test-hidden-header').exists()).toBe(false);
     expect(wrapper.find('.mat-navigation-rail__menu').attributes('aria-expanded')).toBe('false');

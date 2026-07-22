@@ -9010,9 +9010,9 @@ import ListVariantExample from '../examples/list/ListVariantExample.vue';
 
 ## 组件简介
 
-`<mat-toolbar>` 的组件导出名是 `MatToolbar`。它提供 Material 3 Expressive 的 docked 和 floating 两类 Toolbar：停靠模式固定在底部，悬浮模式支持底部横向和左右垂直布局。默认 Slot 可放置按钮、按钮组和自定义内容，悬浮模式可通过 `fab` Slot 放置外置主操作；当前示例使用接近 Toolbar 高度的 `size="small"`、带 `icon` 和 `label` 的宽图标 `<mat-btn>`。
+`<mat-toolbar>` 的组件导出名是 `MatToolbar`。它提供 Material 3 Expressive 的 docked 和 floating 两类 Toolbar：默认在声明位置参与父容器布局，docked 保持横向完整宽度，floating 保留悬浮外观与横竖内容方向。设置 `app` 后，Toolbar 才会固定在视口并挂载到 `attach` 指定节点。默认 Slot 可放置按钮、按钮组和自定义内容，悬浮模式可通过 `fab` Slot 放置外置主操作；当前示例使用接近 Toolbar 高度的 `size="small"`、带 `icon` 和 `label` 的宽图标 `<mat-btn>`。
 
-Toolbar 默认固定显示，使用 `modelValue` 或 `v-model` 可以播放进入、退出动画并隐藏 Toolbar；不负责随滚动自动隐藏。Material 不建议同时显示 Toolbar 与 Navigation bar。
+Toolbar 默认显示，使用 `modelValue` 或 `v-model` 可以播放进入、退出动画并隐藏 Toolbar；不负责随滚动自动隐藏。Material 不建议同时显示应用模式的 Toolbar 与 Navigation bar。
 
 ## 示例
 
@@ -9191,6 +9191,7 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
 
     <mat-toolbar
       v-model="active"
+      app
       :placeholder="placeholderEnabled"
     >
       <mat-btn variant="standard">
@@ -9264,6 +9265,7 @@ const placeholderEnabled = ref(true);
 
     <mat-toolbar
       v-model="active"
+      app
       :bottom-placeholder="bottomPlaceholder"
     >
       <mat-btn variant="standard">
@@ -9277,6 +9279,7 @@ const placeholderEnabled = ref(true);
 
     <mat-toolbar
       v-model="floatingActive"
+      app
       variant="floating-bottom"
       position="end"
       :bottom-placeholder="bottomPlaceholder"
@@ -9351,16 +9354,18 @@ const bottomPlaceholder = ref(0);
 | `variant` | `'docked' \| 'floating' \| 'floating-bottom' \| 'floating-left' \| 'floating-right'` | `'docked'` | `floating` 是 `floating-bottom` 的别名；左右悬浮模式为垂直 Toolbar |
 | `position` | `'start' \| 'center' \| 'end'` | `'center'` | 浮动底部模式按水平方向、左右模式按垂直方向对齐；停靠模式忽略 |
 | `vibrant` | `boolean` | `false` | 使用高强调的 primary container 配色 |
-| `placeholder` | `boolean` | `false` | 开启后在组件自然布局位置生成占位，避免固定 Toolbar 遮挡内容 |
-| `bottomPlaceholder` | `number \| string` | `0` | 额外底部安全区；数字按 px 处理，可传入 `env(safe-area-inset-bottom)` 或 `calc(...)`；不负责生成自然布局占位 |
+| `app` | `boolean` | `false` | 开启后固定到视口并 Teleport 到 `attach`；关闭时在声明位置参与父容器布局 |
+| `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的 Teleport 目标；字符串按当前 document 的 CSS 选择器解析 |
+| `placeholder` | `boolean` | `false` | 仅 `app=true` 有效；在组件自然布局位置生成占位，避免固定 Toolbar 遮挡内容 |
+| `bottomPlaceholder` | `number \| string` | `0` | 仅 `app=true` 有效的额外底部安全区；数字按 px 处理，可传入 `env(safe-area-inset-bottom)` 或 `calc(...)`；不负责生成自然布局占位 |
 
-`placeholder=true` 时，横向 Toolbar 占用实际 Toolbar 的 block-size，垂直 Toolbar 占用实际 Toolbar 的 inline-size；占位尺寸包含有效的 `bottomPlaceholder`。无效的 `bottomPlaceholder` 不产生额外空间。`placeholder=false` 时，即使设置 `bottomPlaceholder` 也不会生成自然布局占位。`fab` Slot 在 docked 模式不会渲染并会给出警告。
+`app=true` 且 `placeholder=true` 时，横向 Toolbar 占用实际 Toolbar 的 block-size，垂直 Toolbar 占用实际 Toolbar 的 inline-size；占位尺寸包含有效的 `bottomPlaceholder`。无效的 `bottomPlaceholder` 不产生额外空间。`app=false` 时这两个属性都忽略。`attach` 无法解析时组件给出警告且不渲染应用布局。`fab` Slot 在 docked 模式不会渲染并会给出警告。
 
 组件没有公开方法。
 
 ## 事件
 
-组件不定义自定义事件；显示状态由 `modelValue` 或 `v-model` 控制。未消费的属性、`class`、`style`、`id` 和 ARIA 属性传递给 Teleport 到 `body` 的 Toolbar 根节点。
+组件不定义自定义事件；显示状态由 `modelValue` 或 `v-model` 控制。未消费的属性、`class`、`style`、`id` 和 ARIA 属性传递给 Toolbar 根节点；`app=true` 时该根节点 Teleport 到 `attach`。
 
 ## Slots
 
@@ -9395,7 +9400,7 @@ import ToolbarVariantExample from '../examples/toolbar/ToolbarVariantExample.vue
 
 官方把 Navigation rail 和 Navigation bar 定义为独立组件。本组件为减少重复 API 暂时组合两者，但仍保持规范边界：纵向模式只实现 rail；横向模式只实现 Navigation bar 的 horizontal items，不提供 vertical navigation bar，也不把横向模式称为 Navigation rail。
 
-纵向 rail 支持 3–7 个主要目的地、可选菜单、Header、FAB 与底部自定义内容。collapsed rail 保持可见；expanded rail 可以使用占据正文空间的 `standard` 布局或覆盖正文的 `modal` 布局。横向 bar 适合较小或中等窗口中的少量目的地：`expanded` 为 `false` 时图标在上、标签在下，为 `true` 时使用图标在左、标签在右的固定宽度 Item。
+纵向 rail 支持 3–7 个主要目的地、可选菜单、Header、FAB 与底部自定义内容。默认在声明位置参与父容器布局；expanded rail 可以使用占据正文空间的 `standard` 布局或覆盖当前布局容器的 `modal` 布局。设置 `app` 后会固定到视口并挂载至 `attach`，横向 bar 固定在视口底部。横向 bar 适合较小或中等窗口中的少量目的地：`expanded` 为 `false` 时图标在上、标签在下，为 `true` 时使用图标在左、标签在右的固定宽度 Item。
 
 ## 示例
 
@@ -9464,6 +9469,194 @@ const selected = ref('home');
 <ClientOnly>
   <DocsPreview label="Navigation rail 基础导航预览">
     <NavigationRailBasicExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `app` 与 `attach`
+
+`app=true` 将 Navigation rail 作为应用级固定导航挂载到 `attach`，默认挂载到 `body`。纵向 rail 按 `position` 固定在视口起始或末尾侧；horizontal bar 固定在底部。`app=false` 时 `attach` 不生效，组件保留在声明位置。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <section
+    id="navigation-rail-app-example"
+    class="navigation-rail-app-example"
+  >
+    <mat-btn variant="outlined" @click="active = !active">
+      {{ active ? '隐藏应用导航' : '显示应用导航' }}
+    </mat-btn>
+    <mat-navigation-rail
+      v-if="active"
+      app
+      attach="#navigation-rail-app-example"
+      aria-label="应用导航"
+    >
+      <mat-navigation-rail-item icon="home">
+        首页
+      </mat-navigation-rail-item>
+      <mat-navigation-rail-item icon="settings">
+        设置
+      </mat-navigation-rail-item>
+    </mat-navigation-rail>
+    <p>应用模式的 rail 固定在视口起始侧，并挂载到本示例容器。</p>
+  </section>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const active = ref(false);
+</script>
+```
+```vue
+<style scoped>
+.navigation-rail-app-example {
+  min-block-size: 160px;
+}
+
+.navigation-rail-app-example p {
+  margin-block: 12px 0;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail 应用挂载预览">
+    <NavigationRailAppExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `placeholder`
+
+`placeholder` 只在 `app=true` 时有效。它在声明位置按实际应用级 rail 或 bar 尺寸保留空间，避免固定导航遮挡相邻正文。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <section
+    id="navigation-rail-placeholder-example"
+    class="navigation-rail-placeholder-example"
+  >
+    <mat-btn variant="outlined" @click="active = !active">
+      {{ active ? '隐藏应用导航' : '显示应用导航' }}
+    </mat-btn>
+    <mat-navigation-rail
+      v-if="active"
+      app
+      attach="#navigation-rail-placeholder-example"
+      placeholder
+      aria-label="占位导航"
+    >
+      <mat-navigation-rail-item icon="home">
+        首页
+      </mat-navigation-rail-item>
+      <mat-navigation-rail-item icon="folder">
+        项目
+      </mat-navigation-rail-item>
+    </mat-navigation-rail>
+    <p>占位保留固定 rail 的宽度，正文不会从其声明位置穿过。</p>
+  </section>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const active = ref(false);
+</script>
+```
+```vue
+<style scoped>
+.navigation-rail-placeholder-example {
+  display: flex;
+  gap: 16px;
+  min-block-size: 180px;
+}
+
+.navigation-rail-placeholder-example p {
+  align-self: center;
+  margin: 0;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail 自然占位预览">
+    <NavigationRailPlaceholderExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `bottomPlaceholder`
+
+`bottomPlaceholder` 只在 `app=true` 时预留底部手势区或安全区。它会抬高纵向 rail 的底部内容，并在 horizontal bar 底部增加同等空间。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <section
+    id="navigation-rail-bottom-placeholder-example"
+    class="navigation-rail-bottom-placeholder-example"
+  >
+    <mat-btn variant="outlined" @click="active = !active">
+      {{ active ? '隐藏应用导航' : '显示应用导航' }}
+    </mat-btn>
+    <mat-navigation-rail
+      v-if="active"
+      app
+      attach="#navigation-rail-bottom-placeholder-example"
+      bottom-placeholder="env(safe-area-inset-bottom)"
+      aria-label="底部安全区导航"
+    >
+      <mat-navigation-rail-item icon="home">
+        首页
+      </mat-navigation-rail-item>
+      <template #end>
+        <mat-btn icon="settings" label="设置" />
+      </template>
+    </mat-navigation-rail>
+    <p>纵向 rail 的 end 内容会在底部安全区上方保持可访问。</p>
+  </section>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const active = ref(false);
+</script>
+```
+```vue
+<style scoped>
+.navigation-rail-bottom-placeholder-example {
+  min-block-size: 160px;
+}
+
+.navigation-rail-bottom-placeholder-example p {
+  margin-block: 12px 0;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail 底部安全区预览">
+    <NavigationRailBottomPlaceholderExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -10083,6 +10276,10 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 | `close-icon` | `string` | `'menu_open'` | 展开时的菜单按钮图标 |
 | `open-label` | `string` | `'展开导航'` | 未展开时菜单按钮的无障碍名称 |
 | `close-label` | `string` | `'收起导航'` | 展开时菜单按钮和 modal 遮罩的无障碍名称 |
+| `app` | `boolean` | `false` | 开启后固定到视口并 Teleport 到 `attach`；关闭时在声明位置参与父容器布局 |
+| `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的 Teleport 目标；字符串按当前 document 的 CSS 选择器解析 |
+| `placeholder` | `boolean` | `false` | 仅 `app=true` 有效；在声明位置为固定 rail 或 bar 预留实际尺寸 |
+| `bottom-placeholder` | `number \| string` | `0` | 仅 `app=true` 有效；数字按 px 处理，字符串可使用 `env(safe-area-inset-bottom)` 或 `calc(...)` |
 
 #### `MatNavigationRailItem`
 
@@ -10118,7 +10315,7 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 
 根导航使用原生 `<nav>`；应用应通过 `aria-label` 或 `aria-labelledby` 区分页面中的多个导航区域。选中 Item 使用 `aria-current="page"`。Item 保留原生按钮或链接的 Tab 顺序，完整 Item 宽度都是命中区域，焦点环和状态层显示在活动指示器上。
 
-纵向 rail 应位于窗口或应用布局的起始侧，并保持固定，不随正文纵向滚动。需要放在另一侧时设置 `position="end"`，Item 会在所有排列变化中保持末尾侧对齐。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 只负责组件外观，不自动监听窗口宽度，应用负责在断点处切换。
+默认纵向 rail 位于应用布局容器的起始侧，由父容器决定滚动边界；需要作为固定应用导航时设置 `app`。应用模式下 `position="end"` 同时将 rail 固定到视口末尾侧，并保持 Item 的末尾侧对齐。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 不自动监听窗口宽度，应用负责在断点处切换。`attach` 无法解析时组件给出警告且不渲染应用布局。
 
 ## 参考来源
 
@@ -10126,11 +10323,14 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 
 <script setup>
 import NavigationRailBasicExample from '../examples/navigation-rail/NavigationRailBasicExample.vue';
+import NavigationRailAppExample from '../examples/navigation-rail/NavigationRailAppExample.vue';
+import NavigationRailBottomPlaceholderExample from '../examples/navigation-rail/NavigationRailBottomPlaceholderExample.vue';
 import NavigationRailCollapsibleExample from '../examples/navigation-rail/NavigationRailCollapsibleExample.vue';
 import NavigationRailHideOnCollapseExample from '../examples/navigation-rail/NavigationRailHideOnCollapseExample.vue';
 import NavigationRailHorizontalExample from '../examples/navigation-rail/NavigationRailHorizontalExample.vue';
 import NavigationRailLayoutExample from '../examples/navigation-rail/NavigationRailLayoutExample.vue';
 import NavigationRailPositionExample from '../examples/navigation-rail/NavigationRailPositionExample.vue';
+import NavigationRailPlaceholderExample from '../examples/navigation-rail/NavigationRailPlaceholderExample.vue';
 import NavigationRailSlotsExample from '../examples/navigation-rail/NavigationRailSlotsExample.vue';
 import NavigationRailWidthExample from '../examples/navigation-rail/NavigationRailWidthExample.vue';
 </script>

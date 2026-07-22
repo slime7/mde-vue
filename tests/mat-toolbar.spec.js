@@ -50,6 +50,76 @@ describe('MatToolbar', () => {
     wrapper.unmount();
   });
 
+  it('默认保留在声明容器内，app=true 时才挂载到应用目标', async () => {
+    const source = document.createElement('section');
+    const attach = document.createElement('main');
+    attach.id = 'toolbar-app-target';
+    document.body.append(source, attach);
+    const wrapper = mount(MatToolbar, {
+      attachTo: source,
+      props: {
+        attach: '#toolbar-app-target',
+      },
+    });
+
+    await settleRender();
+    expect(source.querySelector('.mat-toolbar')).not.toBeNull();
+    expect(attach.querySelector('.mat-toolbar')).toBeNull();
+
+    await wrapper.setProps({ app: true });
+    await settleRender();
+
+    expect(source.querySelector('.mat-toolbar')).toBeNull();
+    expect(attach.querySelector('.mat-toolbar')).not.toBeNull();
+
+    wrapper.unmount();
+    source.remove();
+    attach.remove();
+  });
+
+  it('只在 app=true 时启用自然占位与底部安全区', async () => {
+    const wrapper = mount(MatToolbar, {
+      attachTo: document.body,
+      props: {
+        bottomPlaceholder: 24,
+        placeholder: true,
+      },
+    });
+
+    await settleRender();
+
+    expect(document.body.querySelector('.mat-toolbar__placeholder')).toBeNull();
+    expect(toolbarElement().style.getPropertyValue('--mat-toolbar-bottom-placeholder')).toBe('0px');
+
+    await wrapper.setProps({ app: true });
+    await settleRender();
+
+    expect(document.body.querySelector('.mat-toolbar__placeholder')).not.toBeNull();
+    expect(toolbarElement().style.getPropertyValue('--mat-toolbar-bottom-placeholder')).toBe('24px');
+
+    wrapper.unmount();
+  });
+
+  it('app=true 的无效 attach 给出警告且不渲染 Toolbar', async () => {
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const wrapper = mount(MatToolbar, {
+      attachTo: document.body,
+      props: {
+        app: true,
+        attach: '#missing-toolbar-app-target',
+      },
+    });
+
+    await settleRender();
+
+    expect(toolbarElement()).toBeNull();
+    expect(warning).toHaveBeenCalledWith(
+      'MatToolbar: attach 必须指向当前 document 中存在的 HTMLElement',
+    );
+
+    wrapper.unmount();
+  });
+
   it('将 floating 规范化为 floating-bottom，并在悬浮模式渲染 fab Slot', async () => {
     const wrapper = mount(MatToolbar, {
       attachTo: document.body,
@@ -78,6 +148,7 @@ describe('MatToolbar', () => {
     const wrapper = mount(MatToolbar, {
       attachTo: document.body,
       props: {
+        app: true,
         variant: 'floating-bottom',
       },
       slots: {
@@ -126,6 +197,7 @@ describe('MatToolbar', () => {
       const wrapper = mount(MatToolbar, {
         attachTo: document.body,
         props: {
+          app: true,
           modelValue: false,
           placeholder: true,
         },
@@ -252,6 +324,7 @@ describe('MatToolbar', () => {
     const wrapper = mount(MatToolbar, {
       attachTo: document.body,
       props: {
+        app: true,
         bottomPlaceholder: 24,
         placeholder: false,
       },
@@ -269,6 +342,7 @@ describe('MatToolbar', () => {
     const wrapper = mount(MatToolbar, {
       attachTo: document.body,
       props: {
+        app: true,
         bottomPlaceholder: 24,
         variant: 'floating-left',
       },
@@ -285,6 +359,7 @@ describe('MatToolbar', () => {
     const wrapper = mount(MatToolbar, {
       attachTo: document.body,
       props: {
+        app: true,
         bottomPlaceholder: 16,
         placeholder: true,
       },
@@ -317,6 +392,7 @@ describe('MatToolbar', () => {
     const wrapper = mount(MatToolbar, {
       attachTo: document.body,
       props: {
+        app: true,
         placeholder: true,
         variant: 'floating-left',
       },
@@ -359,6 +435,7 @@ describe('MatToolbar', () => {
     const wrapper = mount(MatToolbar, {
       attachTo: document.body,
       props: {
+        app: true,
         placeholder: true,
       },
     });
@@ -389,6 +466,7 @@ describe('MatToolbar', () => {
 
   it('校验 variant、bottomPlaceholder 和 fab Slot 约束', () => {
     expect(MatToolbar.props.modelValue.default).toBe(true);
+    expect(MatToolbar.props.app.default).toBe(false);
     expect(MatToolbar.emits['update:modelValue'](true)).toBe(true);
     expect(MatToolbar.emits['update:modelValue']('true')).toBe(false);
     expect(MatToolbar.props.position.default).toBe('center');

@@ -67,6 +67,18 @@ function normalizeBottomPlaceholder(value) {
   return '0px';
 }
 
+/**
+ * @param {unknown} value
+ * @returns {HTMLElement | null}
+ */
+function normalizeAttach(value) {
+  if (value instanceof HTMLElement && value.ownerDocument === document) {
+    return value;
+  }
+
+  return null;
+}
+
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -95,6 +107,14 @@ const props = defineProps({
   vibrant: {
     type: Boolean,
     default: false,
+  },
+  app: {
+    type: Boolean,
+    default: false,
+  },
+  attach: {
+    type: [String, Object],
+    default: 'body',
   },
   placeholder: {
     type: Boolean,
@@ -159,11 +179,26 @@ const isBottomVariant = computed(() => (
   normalizedVariant.value === 'docked'
   || normalizedVariant.value === 'floating-bottom'
 ));
+const attachTarget = computed(() => {
+  if (!props.app) {
+    return null;
+  }
+
+  if (typeof props.attach === 'string') {
+    try {
+      return document.querySelector(props.attach);
+    } catch {
+      return null;
+    }
+  }
+
+  return normalizeAttach(props.attach);
+});
 const normalizedBottomPlaceholder = computed(() => (
   normalizeBottomPlaceholder(props.bottomPlaceholder)
 ));
 const effectiveBottomPlaceholder = computed(() => (
-  isBottomVariant.value ? normalizedBottomPlaceholder.value : '0px'
+  props.app && isBottomVariant.value ? normalizedBottomPlaceholder.value : '0px'
 ));
 const toolbarStyle = computed(() => [
   attrs.style,
@@ -179,6 +214,7 @@ const toolbarClass = computed(() => [
   `mat-toolbar--${normalizedVariant.value}`,
   `mat-toolbar--position-${normalizedPosition.value}`,
   {
+    'mat-toolbar--app': props.app,
     'mat-toolbar--vertical': isVertical.value,
     'mat-toolbar--vibrant': props.vibrant,
   },
@@ -320,7 +356,7 @@ async function syncToolbarRegistration() {
     return;
   }
 
-  if (!rendered.value || !toolbarElement.value) {
+  if (!props.app || !rendered.value || !toolbarElement.value) {
     stopToolbarRegistration();
     return;
   }
@@ -347,6 +383,8 @@ async function syncToolbarRegistration() {
 
 onMounted(() => {
   mounted = true;
+  warnForInvalidAttach();
+  validateFabSlot();
   syncToolbarRegistration();
 });
 
@@ -369,23 +407,39 @@ watch(() => props.modelValue, (value) => {
   closeToolbar();
 });
 watch(rendered, syncToolbarRegistration);
-watch([normalizedVariant, normalizedPosition, normalizedBottomPlaceholder], () => {
+watch([
+  normalizedVariant,
+  normalizedPosition,
+  normalizedBottomPlaceholder,
+  () => props.app,
+  () => props.attach,
+], () => {
+  warnForInvalidAttach();
   scheduleToolbarSize();
   syncToolbarRegistration();
 });
+
+function warnForInvalidAttach() {
+  if (props.app && !attachTarget.value) {
+    console.warn('MatToolbar: attach 必须指向当前 document 中存在的 HTMLElement');
+  }
+}
 </script>
 
 <template>
   <span
-    v-if="placeholder && rendered"
+    v-if="app && attachTarget && placeholder && rendered"
     class="mat-toolbar__placeholder"
     :style="placeholderStyle"
     aria-hidden="true"
   />
 
-  <Teleport to="body">
+  <Teleport
+    :to="attachTarget ?? 'body'"
+    :disabled="!app"
+  >
     <div
-      v-if="rendered"
+      v-if="rendered && (!app || attachTarget)"
       ref="toolbarElement"
       v-bind="$attrs"
       class="mat-toolbar"
@@ -426,7 +480,7 @@ watch([normalizedVariant, normalizedPosition, normalizedBottomPlaceholder], () =
   --mat-toolbar-content-color: var(--mat-sys-color-on-surface);
   --mat-toolbar-position-translate-x: 0;
   --mat-toolbar-position-translate-y: 0;
-  position: fixed;
+  position: relative;
   z-index: var(--mat-sys-z-index-toolbar);
   box-sizing: border-box;
   display: flex;
@@ -434,6 +488,10 @@ watch([normalizedVariant, normalizedPosition, normalizedBottomPlaceholder], () =
   align-items: center;
   color: var(--mat-toolbar-content-color);
   pointer-events: none;
+}
+
+.mat-toolbar--app {
+  position: fixed;
 }
 
 .mat-toolbar--closing .mat-toolbar__surface {
@@ -569,6 +627,12 @@ watch([normalizedVariant, normalizedPosition, normalizedBottomPlaceholder], () =
   flex-direction: column;
   align-items: stretch;
   inline-size: 100%;
+}
+
+.mat-toolbar:not(.mat-toolbar--app) {
+  inset: auto;
+  max-block-size: none;
+  translate: none;
 }
 
 .mat-toolbar--docked.mat-toolbar--opening {

@@ -578,6 +578,7 @@ describe('MatTooltip', () => {
     const toolbarWrapper = mount(MatToolbar, {
       attachTo: document.body,
       props: {
+        app: true,
         variant: 'floating-bottom',
       },
     });
