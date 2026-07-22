@@ -9,6 +9,7 @@ import {
 import {
   createMatUi, MatBtn, MatList, MatListGroup, MatListItem,
 } from '../src';
+import ListExpandedExample from '../docs/site/examples/list/ListExpandedExample.vue';
 
 async function flushFocusManagement() {
   await nextTick();
@@ -307,6 +308,39 @@ describe('MatList', () => {
     expect(activator.text()).toContain('expand_less');
     expect(content.attributes()).not.toHaveProperty('inert');
     expect(wrapper.emitted('update:expanded')).toBeUndefined();
+  });
+
+  it('文档模板中的全局组件 Activator 可以收起受控分组', async () => {
+    const target = document.createElement('div');
+    const plugin = createMatUi({ theme: { target } });
+    const wrapper = mount(ListExpandedExample, {
+      global: { plugins: [plugin] },
+    });
+    const activator = wrapper.find('[data-mat-list-group-activator]');
+
+    expect(activator.attributes('aria-expanded')).toBe('true');
+    await activator.trigger('click');
+    expect(activator.attributes('aria-expanded')).toBe('false');
+    wrapper.unmount();
+    plugin.theme.dispose();
+  });
+
+  it('开发热更新改变组件对象身份后仍能识别 MatListItem Activator', async () => {
+    const HotReloadedMatListItem = { ...MatListItem };
+    const wrapper = mount(MatList, {
+      props: { expanded: ['group'] },
+      slots: {
+        default: () => h(MatListGroup, { value: 'group' }, {
+          activator: () => h(HotReloadedMatListItem, null, () => '热更新触发器'),
+          default: () => h(MatListItem, null, () => '内容'),
+        }),
+      },
+    });
+    const activator = wrapper.find('[data-mat-list-group-activator]');
+
+    expect(activator.attributes('aria-expanded')).toBe('true');
+    await activator.trigger('click');
+    expect(wrapper.emitted('update:expanded')[0][0]).toEqual([]);
   });
 
   it('Activator 是单一按钮并抑制叶子 click、链接和选择值语义', async () => {

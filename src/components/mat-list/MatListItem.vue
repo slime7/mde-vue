@@ -409,7 +409,6 @@ watch(
   color: inherit;
   text-align: start;
   text-decoration: none;
-  background: transparent;
   border: 0;
   border-radius: inherit;
 }
@@ -423,6 +422,7 @@ watch(
 
 .mat-list-item--multi-action .mat-list-item__primary {
   flex: 1 1 auto;
+  background: transparent;
 }
 
 .mat-list-item__separate-trailing {

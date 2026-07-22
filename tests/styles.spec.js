@@ -146,6 +146,16 @@ describe('List 形状', () => {
     expect(listItemComponent).toContain('z-index: 2;');
     expect(listItemComponent).toContain('.mat-list-item--multi-action {\n  overflow: visible;');
   });
+
+  it('单操作和 Group Activator 保留容器背景，仅多操作内层主操作透明', () => {
+    const primaryRule = listItemComponent.match(/\.mat-list-item__primary \{(?<rule>[^}]+)\}/u);
+    const multiActionPrimaryRule = listItemComponent.match(
+      /\.mat-list-item--multi-action \.mat-list-item__primary \{(?<rule>[^}]+)\}/u,
+    );
+
+    expect(primaryRule?.groups?.rule).not.toContain('background: transparent;');
+    expect(multiActionPrimaryRule?.groups?.rule).toContain('background: transparent;');
+  });
 });
 
 describe('Tooltip 样式', () => {

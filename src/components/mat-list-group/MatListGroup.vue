@@ -34,6 +34,7 @@ const list = inject(MAT_LIST_KEY, null);
 const slots = useSlots();
 const root = ref(null);
 const internalExpanded = ref(false);
+const renderedActivatorValid = ref(null);
 const token = Symbol('mat-list-group');
 const generatedId = useId().replace(/[^\w-]/g, '-');
 const contentId = `mat-list-group-${generatedId}-content`;
@@ -73,13 +74,25 @@ function getSignificantNodes(nodes) {
   });
 }
 
-const hasValidActivator = computed(() => {
+const vnodeActivatorValid = computed(() => {
   const nodes = getSignificantNodes(slots.activator?.({
     expanded: requestedExpanded.value,
   }) ?? []);
 
-  return nodes.length === 1 && nodes[0].type === MatListItem;
+  if (nodes.length !== 1 || !isVNode(nodes[0])) {
+    return false;
+  }
+
+  const component = nodes[0].type;
+
+  return component === MatListItem
+    || (typeof component === 'object' && (
+      component.name === 'MatListItem' || component.__name === 'MatListItem'
+    ));
 });
+const hasValidActivator = computed(() => (
+  renderedActivatorValid.value ?? vnodeActivatorValid.value
+));
 const expanded = computed(() => (
   isSelectableFallback.value
   || !hasValidActivator.value
@@ -131,6 +144,27 @@ function warnInvalidActivator() {
   }
 }
 
+function validateRenderedActivator() {
+  if (!root.value) {
+    return;
+  }
+
+  const attribute = isSelectableFallback.value
+    ? 'data-mat-list-group-label'
+    : 'data-mat-list-group-activator';
+  const valid = Array.from(root.value.children)
+    .filter((element) => element.hasAttribute(attribute)).length === 1;
+
+  if (renderedActivatorValid.value !== valid) {
+    renderedActivatorValid.value = valid;
+  }
+}
+
+function validateAndWarnActivator() {
+  validateRenderedActivator();
+  warnInvalidActivator();
+}
+
 function registerValue(value) {
   if (value === undefined) {
     return;
@@ -159,10 +193,10 @@ onMounted(() => {
   }
 
   registerValue(props.value);
-  warnInvalidActivator();
+  validateAndWarnActivator();
   list?.requestFocusRefresh();
 });
-onUpdated(warnInvalidActivator);
+onUpdated(validateAndWarnActivator);
 onBeforeUnmount(() => {
   unregisterValue();
   list?.requestFocusRefresh();
