@@ -13,7 +13,7 @@ order: 105
 
 官方把 Navigation rail 和 Navigation bar 定义为独立组件。本组件为减少重复 API 暂时组合两者，但仍保持规范边界：纵向模式只实现 rail；横向模式只实现 Navigation bar 的 horizontal items，不提供 vertical navigation bar，也不把横向模式称为 Navigation rail。
 
-纵向 rail 支持 3–7 个主要目的地、可选菜单、Header 与 FAB。collapsed rail 保持可见；expanded rail 可以使用占据正文空间的 `standard` 布局或覆盖正文的 `modal` 布局。横向 bar 适合较小或中等窗口中的少量目的地，始终使用图标左、标签右的固定宽度 Item。
+纵向 rail 支持 3–7 个主要目的地、可选菜单、Header、FAB 与底部自定义内容。collapsed rail 保持可见；expanded rail 可以使用占据正文空间的 `standard` 布局或覆盖正文的 `modal` 布局。横向 bar 适合较小或中等窗口中的少量目的地：`expanded` 为 `false` 时图标在上、标签在下，为 `true` 时使用图标在左、标签在右的固定宽度 Item。
 
 ## 示例
 
@@ -58,6 +58,50 @@ order: 105
 <ClientOnly>
   <DocsPreview label="Navigation rail 展开与折叠预览">
     <NavigationRailCollapsibleExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `width`
+
+`width` 只影响 expanded rail 的行内宽度。数字按像素处理；字符串直接作为 CSS 宽度值，因此可以使用 `clamp()`、`min()` 或百分比等现代 CSS 表达式。未传入时使用组件默认宽度。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/navigation-rail/NavigationRailWidthExample.vue#template [template]
+
+<<< @/examples/navigation-rail/NavigationRailWidthExample.vue#script [script]
+
+<<< @/examples/navigation-rail/NavigationRailWidthExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail 自定义展开宽度预览">
+    <NavigationRailWidthExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `position`
+
+`position="start"` 使 Item 在每种状态下贴近起始侧；`position="end"` 使其贴近末尾侧。展开、收回及横向布局切换时，Item 不会先移动到中心再播放动画。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/navigation-rail/NavigationRailPositionExample.vue#template [template]
+
+<<< @/examples/navigation-rail/NavigationRailPositionExample.vue#script [script]
+
+<<< @/examples/navigation-rail/NavigationRailPositionExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail 固定侧对齐预览">
+    <NavigationRailPositionExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -107,7 +151,7 @@ order: 105
 
 ### Horizontal flexible Navigation bar
 
-设置 `orientation="horizontal"` 后使用 64px 高的 Flexible navigation bar，并只提供 horizontal items。此模式忽略 `expanded`、`collapsible`、`layout`、`hide-on-collapse`、`alignment`、Header 和 FAB。
+设置 `orientation="horizontal"` 后使用 Flexible navigation bar。`expanded` 为 `false` 时显示 80px 高的图标上、标签下 Item；`expanded` 为 `true` 时显示 64px 高的图标左、标签右 Item。此模式仍忽略 `collapsible`、`layout`、`hide-on-collapse`、`alignment`、Header、FAB 和 `end`。
 
 :::: details 查看示例代码
 ::: code-group
@@ -127,9 +171,9 @@ order: 105
   </DocsPreview>
 </ClientOnly>
 
-### Header 与 FAB Slots
+### Header、FAB 与底部内容 Slots
 
-Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互品牌标识；不要把容易被误认为按钮的图形放入其中。FAB 应位于目的地之前。
+Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互品牌标识；不要把容易被误认为按钮的图形放入其中。FAB 应位于目的地之前；`end` 则固定在 rail 底部，适合帮助、设置或账户操作等自定义元素。
 
 :::: details 查看示例代码
 ::: code-group
@@ -157,7 +201,9 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 | --- | --- | --- | --- |
 | `model-value` | `string \| number \| boolean \| null` | `null` | 受控的当前 Item `value`，支持 `v-model` |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | 纵向 Expressive rail 或 horizontal Flexible navigation bar |
-| `expanded` | `boolean` | `false` | 纵向 rail 的受控展开状态，支持 `v-model:expanded` |
+| `expanded` | `boolean` | `false` | 受控展开状态，支持 `v-model:expanded`；horizontal 模式中决定纵向或横向 Item 排列 |
+| `width` | `number \| string` | `undefined` | expanded rail 宽度；数字按 px 处理，字符串作为 CSS 宽度值 |
+| `position` | `'start' \| 'end'` | `'start'` | Item 在展开、收回和横向切换期间固定在起始或末尾侧，避免从居中位置开始动画 |
 | `collapsible` | `boolean` | `false` | 为纵向 rail 显示展开/收起菜单按钮 |
 | `layout` | `'standard' \| 'modal'` | `'standard'` | 纵向 expanded rail 占据空间或覆盖正文 |
 | `hide-on-collapse` | `boolean` | `false` | 未展开时隐藏 rail 容器并保留菜单按钮 |
@@ -193,6 +239,7 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 | 默认 | `MatNavigationRail` | `MatNavigationRailItem` 列表；Slot 参数为 `{ expanded, orientation }` |
 | `header` | `MatNavigationRail` | 纵向 rail 顶部的非交互品牌标识；Slot 参数为 `{ expanded }` |
 | `fab` | `MatNavigationRail` | 纵向 rail 顶部、目的地之前的 FAB 或 Extended FAB；Slot 参数为 `{ expanded }` |
+| `end` | `MatNavigationRail` | 纵向 rail 底部的自定义内容；Slot 参数为 `{ expanded }` |
 | 默认 | `MatNavigationRailItem` | 必填的简短目的地标签；避免截断，必要时最多换为两行 |
 | `icon` | `MatNavigationRailItem` | 自定义图标内容；Slot 参数为 `{ selected }` |
 
@@ -200,7 +247,7 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 
 根导航使用原生 `<nav>`；应用应通过 `aria-label` 或 `aria-labelledby` 区分页面中的多个导航区域。选中 Item 使用 `aria-current="page"`。Item 保留原生按钮或链接的 Tab 顺序，完整 Item 宽度都是命中区域，焦点环和状态层显示在活动指示器上。
 
-纵向 rail 应位于窗口或应用布局的起始侧，并保持固定，不随正文纵向滚动。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 只负责组件外观，不自动监听窗口宽度，应用负责在断点处切换。
+纵向 rail 应位于窗口或应用布局的起始侧，并保持固定，不随正文纵向滚动。需要放在另一侧时设置 `position="end"`，Item 会在所有排列变化中保持末尾侧对齐。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 只负责组件外观，不自动监听窗口宽度，应用负责在断点处切换。
 
 ## 参考来源
 
@@ -212,5 +259,7 @@ import NavigationRailCollapsibleExample from '../examples/navigation-rail/Naviga
 import NavigationRailHideOnCollapseExample from '../examples/navigation-rail/NavigationRailHideOnCollapseExample.vue';
 import NavigationRailHorizontalExample from '../examples/navigation-rail/NavigationRailHorizontalExample.vue';
 import NavigationRailLayoutExample from '../examples/navigation-rail/NavigationRailLayoutExample.vue';
+import NavigationRailPositionExample from '../examples/navigation-rail/NavigationRailPositionExample.vue';
 import NavigationRailSlotsExample from '../examples/navigation-rail/NavigationRailSlotsExample.vue';
+import NavigationRailWidthExample from '../examples/navigation-rail/NavigationRailWidthExample.vue';
 </script>

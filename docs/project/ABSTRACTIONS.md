@@ -171,7 +171,7 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 
 `<mat-navigation-rail>` 通过 `modelValue` 受控选择唯一目的地，直接子级 `<mat-navigation-rail-item>` 使用稳定 `value` 请求更新。纵向模式表达 Material 3 Expressive collapsed/expanded rail；`expanded` 只由使用方控制，`layout="standard"` 占据正文空间，`layout="modal"` 在当前布局容器内覆盖正文并通过遮罩或 Escape 请求收起。collapsed rail 默认保持可见；`hideOnCollapse` 只用于保留外部可达菜单入口的沉浸式 expanded rail。
 
-`orientation="horizontal"` 表达 Flexible navigation bar，并固定使用 horizontal items；它不提供 vertical bar，也不响应 `expanded`、`collapsible`、`layout`、`hideOnCollapse`、`alignment`、Header 或 FAB。组件不自动监听窗口尺寸，应用负责在 compact、medium 及更大断点间切换 bar 与 rail，且同一布局不得同时显示两者。Item 使用原生按钮或链接、`aria-current="page"`、完整宽度命中区域和指示器状态层；标签必须简短且不得通过省略号截断。
+`width` 只覆写 expanded rail 的宽度：数字转换为 px，CSS 字符串原样使用；`position` 决定 Item 在起始或末尾侧对齐，并在展开/收回时保持该对齐。`orientation="horizontal"` 表达 Flexible navigation bar；`expanded=false` 使用图标上、标签下的纵向 Item，`expanded=true` 使用图标左、标签右的横向 Item。它不响应 `collapsible`、`layout`、`hideOnCollapse`、`alignment`、Header、FAB 或 `end`。纵向 rail 的 `end` Slot 固定于底部。组件不自动监听窗口尺寸，应用负责在 compact、medium 及更大断点间切换 bar 与 rail，且同一布局不得同时显示两者。Item 使用原生按钮或链接、`aria-current="page"`、完整宽度命中区域和指示器状态层；选中时只过渡背景色，标签必须简短且不得通过省略号截断。
 
 ## 文档权威关系
 

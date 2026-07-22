@@ -28,6 +28,21 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  width: {
+    type: [Number, String],
+    default: undefined,
+    validator(value) {
+      return (typeof value === 'number' && Number.isFinite(value) && value >= 0)
+        || (typeof value === 'string' && value.trim().length > 0);
+    },
+  },
+  position: {
+    type: String,
+    default: 'start',
+    validator(value) {
+      return ['start', 'end'].includes(value);
+    },
+  },
   collapsible: {
     type: Boolean,
     default: false,
@@ -75,7 +90,7 @@ const emit = defineEmits({
 
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const isHorizontal = computed(() => props.orientation === 'horizontal');
-const effectiveExpanded = computed(() => !isHorizontal.value && props.expanded);
+const effectiveExpanded = computed(() => props.expanded);
 const isModal = computed(() => !isHorizontal.value && props.layout === 'modal');
 const isHidden = computed(() => !isHorizontal.value && props.hideOnCollapse && !props.expanded);
 const menuIcon = computed(() => (props.expanded ? props.closeIcon : props.openIcon));
@@ -84,17 +99,28 @@ const hostClasses = computed(() => ({
   'mat-navigation-rail-host--vertical': !isHorizontal.value,
   'mat-navigation-rail-host--horizontal': isHorizontal.value,
   'mat-navigation-rail-host--expanded': effectiveExpanded.value,
-  'mat-navigation-rail-host--collapsed': !isHorizontal.value && !props.expanded,
+  'mat-navigation-rail-host--collapsed': !props.expanded,
+  [`mat-navigation-rail-host--${props.position}`]: true,
   'mat-navigation-rail-host--modal': isModal.value,
   'mat-navigation-rail-host--hidden': isHidden.value,
 }));
 const railClasses = computed(() => ({
   'mat-navigation-rail--expanded': effectiveExpanded.value,
-  'mat-navigation-rail--collapsed': !isHorizontal.value && !props.expanded,
+  'mat-navigation-rail--collapsed': !props.expanded,
   'mat-navigation-rail--bar': isHorizontal.value,
   'mat-navigation-rail--modal': isModal.value && props.expanded,
   'mat-navigation-rail--hidden': isHidden.value,
 }));
+
+const expandedWidthStyle = computed(() => {
+  if (props.width === undefined) {
+    return undefined;
+  }
+
+  const width = typeof props.width === 'number' ? `${props.width}px` : props.width;
+
+  return { '--mat-navigation-rail-expanded-width': width };
+});
 
 /**
  * @param {unknown} value
@@ -136,6 +162,7 @@ provide(MAT_NAVIGATION_RAIL_KEY, {
   expanded: effectiveExpanded,
   isSelected,
   orientation: computed(() => props.orientation),
+  position: computed(() => props.position),
   requestSelection,
   useCursor: matUi.useCursor,
 });
@@ -153,6 +180,7 @@ onBeforeUnmount(() => {
   <div
     class="mat-navigation-rail-host"
     :class="hostClasses"
+    :style="expandedWidthStyle"
   >
     <button
       v-if="isModal && expanded"
@@ -217,17 +245,32 @@ onBeforeUnmount(() => {
           />
         </div>
       </div>
+
+      <div
+        v-if="$slots.end && !isHidden && !isHorizontal"
+        class="mat-navigation-rail__end"
+      >
+        <slot
+          name="end"
+          :expanded="expanded"
+        />
+      </div>
     </nav>
   </div>
 </template>
 
 <style scoped>
 .mat-navigation-rail-host {
+  --mat-navigation-rail-item-inline-alignment: flex-start;
   position: relative;
   flex: 0 0 auto;
   inline-size: var(--mat-navigation-rail-collapsed-width);
   min-block-size: 100%;
   transition: inline-size var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized);
+}
+
+.mat-navigation-rail-host--end {
+  --mat-navigation-rail-item-inline-alignment: flex-end;
 }
 
 .mat-navigation-rail-host--horizontal {
@@ -236,7 +279,11 @@ onBeforeUnmount(() => {
   block-size: var(--mat-navigation-bar-height);
 }
 
-.mat-navigation-rail-host--expanded:not(.mat-navigation-rail-host--modal) {
+.mat-navigation-rail-host--horizontal.mat-navigation-rail-host--collapsed {
+  block-size: var(--mat-navigation-bar-collapsed-height);
+}
+
+.mat-navigation-rail-host--vertical.mat-navigation-rail-host--expanded:not(.mat-navigation-rail-host--modal) {
   inline-size: var(--mat-navigation-rail-expanded-width);
 }
 
@@ -353,6 +400,19 @@ onBeforeUnmount(() => {
   min-block-size: 0;
   flex-direction: column;
   padding-block: var(--mat-navigation-rail-item-space);
+}
+
+.mat-navigation-rail__end {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: var(--mat-navigation-rail-end-space);
+}
+
+.mat-navigation-rail--expanded .mat-navigation-rail__end {
+  justify-content: var(--mat-navigation-rail-item-inline-alignment);
+  padding-inline: var(--mat-navigation-rail-expanded-side-space);
 }
 
 .mat-navigation-rail--bar .mat-navigation-rail__content {

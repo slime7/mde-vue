@@ -1,10 +1,17 @@
 import { h, nextTick } from 'vue';
 import { mount } from '@vue/test-utils';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import {
   describe, expect, it,
 } from 'vitest';
 import MatNavigationRail from '../src/components/mat-navigation-rail/MatNavigationRail.vue';
 import MatNavigationRailItem from '../src/components/mat-navigation-rail/MatNavigationRailItem.vue';
+
+const navigationItemSource = readFileSync(
+  resolve(process.cwd(), 'src/components/mat-navigation-rail/MatNavigationRailItem.vue'),
+  'utf8',
+);
 
 async function settleRender() {
   await nextTick();
@@ -51,7 +58,22 @@ describe('MatNavigationRail', () => {
     expect(items[1].attributes('aria-current')).toBe('page');
   });
 
-  it('horizontal 模式渲染 flexible navigation bar，始终使用横向 Item', () => {
+  it('width 接受数字像素值和 CSS 宽度字符串，并只作为展开宽度使用', async () => {
+    const wrapper = mount(MatNavigationRail, {
+      props: {
+        expanded: true,
+        width: 280,
+      },
+    });
+
+    expect(wrapper.attributes('style')).toContain('--mat-navigation-rail-expanded-width: 280px');
+
+    await wrapper.setProps({ width: 'min(80vw, 360px)' });
+
+    expect(wrapper.attributes('style')).toContain('--mat-navigation-rail-expanded-width: min(80vw, 360px)');
+  });
+
+  it('horizontal 模式由 expanded 在纵向 Item 与当前横向 Item 间切换', async () => {
     const wrapper = mount(MatNavigationRail, {
       props: {
         orientation: 'horizontal',
@@ -68,9 +90,44 @@ describe('MatNavigationRail', () => {
     expect(wrapper.find('.mat-navigation-rail__menu').exists()).toBe(false);
     expect(wrapper.find('.mat-navigation-rail__scrim').exists()).toBe(false);
     expect(wrapper.find('.mat-navigation-rail-item').classes())
-      .toContain('mat-navigation-rail-item--horizontal');
+      .toContain('mat-navigation-rail-item--collapsed');
+    expect(wrapper.find('.mat-navigation-rail-item__indicator .mat-navigation-rail-item__label').exists())
+      .toBe(false);
+    expect(wrapper.find('.mat-navigation-rail-item > .mat-navigation-rail-item__label').text())
+      .toBe('首页');
+
+    await wrapper.setProps({ expanded: true });
+
+    expect(wrapper.classes()).toContain('mat-navigation-rail-host--expanded');
+    expect(wrapper.find('.mat-navigation-rail-item').classes())
+      .toContain('mat-navigation-rail-item--expanded');
     expect(wrapper.find('.mat-navigation-rail-item__indicator .mat-navigation-rail-item__label').text())
       .toBe('首页');
+  });
+
+  it('收回导航时 Item 根据 position 固定在起始或末尾侧', () => {
+    const wrapper = mount(MatNavigationRail, {
+      props: {
+        expanded: false,
+        position: 'end',
+      },
+      slots: { default: navigationItems },
+    });
+
+    expect(wrapper.classes()).toContain('mat-navigation-rail-host--end');
+    expect(wrapper.find('.mat-navigation-rail-item').classes())
+      .toContain('mat-navigation-rail-item--end');
+  });
+
+  it('选中指示器只过渡背景色，不改变自身形状', () => {
+    const indicatorRule = navigationItemSource.match(
+      /\.mat-navigation-rail-item__indicator::before \{([\s\S]*?)\n\}/,
+    )?.[1] ?? '';
+
+    expect(indicatorRule).toContain('background: var(--mat-navigation-rail-item-selected-container-color);');
+    expect(indicatorRule).toContain('transition: opacity');
+    expect(indicatorRule).not.toContain('scale:');
+    expect(indicatorRule).not.toContain('border-radius');
   });
 
   it('Item 通过 update:modelValue 请求单选，并保留原生 click 事件', async () => {
@@ -172,5 +229,18 @@ describe('MatNavigationRail', () => {
       .toContain('mat-navigation-rail__destinations--center');
     expect(wrapper.find('.test-header').text()).toBe('true');
     expect(wrapper.find('.test-fab').text()).toBe('true');
+  });
+
+  it('end Slot 固定在纵向导航底部并接收展开状态', () => {
+    const wrapper = mount(MatNavigationRail, {
+      props: { expanded: true },
+      slots: {
+        default: navigationItems,
+        end: ({ expanded }) => h('button', { class: 'test-end' }, String(expanded)),
+      },
+    });
+
+    expect(wrapper.find('.mat-navigation-rail__end').exists()).toBe(true);
+    expect(wrapper.find('.test-end').text()).toBe('true');
   });
 });

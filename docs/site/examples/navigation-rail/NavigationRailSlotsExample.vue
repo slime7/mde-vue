@@ -19,6 +19,10 @@
       <mat-navigation-rail-item icon="star">
         收藏
       </mat-navigation-rail-item>
+
+      <template #end>
+        <mat-btn icon="help" label="帮助" />
+      </template>
     </mat-navigation-rail>
   </div>
 </template>

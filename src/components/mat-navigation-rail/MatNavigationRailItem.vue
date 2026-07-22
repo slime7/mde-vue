@@ -37,15 +37,17 @@ const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const navigation = inject(MAT_NAVIGATION_RAIL_KEY, null);
 const expanded = computed(() => navigation?.expanded.value ?? false);
 const isHorizontal = computed(() => navigation?.orientation.value === 'horizontal');
-const horizontalContent = computed(() => isHorizontal.value || expanded.value);
+const position = computed(() => navigation?.position.value ?? 'start');
+const horizontalContent = computed(() => expanded.value);
 const selected = computed(() => navigation?.isSelected(props.value) ?? false);
 const hasIcon = computed(() => Boolean(props.icon || slots.icon));
 const itemClasses = computed(() => ({
   'mat-navigation-rail-item--selected': selected.value,
   'mat-navigation-rail-item--disabled': props.disabled,
   'mat-navigation-rail-item--expanded': expanded.value,
-  'mat-navigation-rail-item--collapsed': !expanded.value && !isHorizontal.value,
+  'mat-navigation-rail-item--collapsed': !expanded.value,
   'mat-navigation-rail-item--horizontal': isHorizontal.value,
+  [`mat-navigation-rail-item--${position.value}`]: true,
 }));
 
 /**
@@ -126,6 +128,7 @@ function handleClick(event) {
 .mat-navigation-rail-item--collapsed {
   min-block-size: var(--mat-navigation-rail-collapsed-item-height);
   flex-direction: column;
+  align-items: var(--mat-navigation-rail-item-inline-alignment, center);
   justify-content: center;
   gap: var(--mat-navigation-rail-vertical-icon-label-space);
   padding-block: var(--mat-navigation-rail-item-space);
@@ -133,15 +136,18 @@ function handleClick(event) {
 
 .mat-navigation-rail-item--expanded {
   min-block-size: var(--mat-navigation-rail-expanded-item-height);
-  justify-content: flex-start;
+  justify-content: var(--mat-navigation-rail-item-inline-alignment, flex-start);
   padding-inline: var(--mat-navigation-rail-expanded-side-space);
 }
 
 .mat-navigation-rail-item--horizontal {
-  flex: 0 1 var(--mat-navigation-bar-horizontal-item-width);
+  flex: 1 1 0;
   min-block-size: 100%;
-  justify-content: center;
   padding-inline: 0;
+}
+
+.mat-navigation-rail-item--horizontal.mat-navigation-rail-item--expanded {
+  flex: 0 0 var(--mat-navigation-bar-horizontal-item-width);
 }
 
 .mat-navigation-rail-item__indicator {
@@ -169,8 +175,7 @@ function handleClick(event) {
 .mat-navigation-rail-item__indicator::before {
   background: var(--mat-navigation-rail-item-selected-container-color);
   opacity: 0;
-  scale: 0 1;
-  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), scale var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized);
+  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
 }
 
 .mat-navigation-rail-item__indicator::after {
@@ -181,7 +186,6 @@ function handleClick(event) {
 
 .mat-navigation-rail-item--selected .mat-navigation-rail-item__indicator::before {
   opacity: 1;
-  scale: 1;
 }
 
 .mat-navigation-rail-item--collapsed .mat-navigation-rail-item__indicator {
@@ -201,6 +205,13 @@ function handleClick(event) {
   max-inline-size: 100%;
   gap: var(--mat-navigation-bar-horizontal-icon-label-space);
   padding-inline: var(--mat-navigation-bar-horizontal-indicator-space);
+}
+
+.mat-navigation-rail-item--horizontal.mat-navigation-rail-item--collapsed .mat-navigation-rail-item__indicator {
+  inline-size: var(--mat-navigation-rail-vertical-indicator-width);
+  block-size: var(--mat-navigation-rail-vertical-indicator-height);
+  min-block-size: 0;
+  padding-inline: 0;
 }
 
 .mat-navigation-rail-item__icon-wrap {
@@ -242,6 +253,14 @@ function handleClick(event) {
   font-weight: var(--mat-navigation-rail-expanded-label-weight);
   line-height: var(--mat-navigation-rail-expanded-label-line-height);
   letter-spacing: var(--mat-navigation-rail-expanded-label-tracking);
+}
+
+.mat-navigation-rail-item--horizontal .mat-navigation-rail-item__label {
+  font-family: var(--mat-navigation-rail-item-label-font);
+  font-size: var(--mat-navigation-rail-item-label-size);
+  font-weight: var(--mat-navigation-rail-item-label-weight);
+  line-height: var(--mat-navigation-rail-item-label-line-height);
+  letter-spacing: var(--mat-navigation-rail-item-label-tracking);
 }
 
 .mat-navigation-rail-item--selected {

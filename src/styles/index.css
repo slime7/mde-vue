@@ -378,6 +378,7 @@
   --mat-navigation-rail-content-color: var(--mat-sys-color-on-surface-variant);
   --mat-navigation-rail-top-space: 44px;
   --mat-navigation-rail-header-gap: 12px;
+  --mat-navigation-rail-end-space: 12px;
   --mat-navigation-rail-menu-size: 48px;
   --mat-navigation-rail-hidden-menu-space: 24px;
   --mat-navigation-rail-expanded-side-space: 16px;
@@ -411,6 +412,7 @@
   --mat-navigation-rail-expanded-label-line-height: var(--mat-sys-typescale-label-large-line-height);
   --mat-navigation-rail-expanded-label-tracking: var(--mat-sys-typescale-label-large-tracking);
   --mat-navigation-bar-height: 64px;
+  --mat-navigation-bar-collapsed-height: 80px;
   --mat-navigation-bar-container-color: var(--mat-sys-color-surface-container);
   --mat-navigation-bar-elevation: var(--mat-sys-elevation-level2);
   --mat-navigation-bar-edge-space: 16px;
