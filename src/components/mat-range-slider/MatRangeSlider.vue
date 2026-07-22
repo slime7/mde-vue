@@ -617,10 +617,6 @@ function setHandleElement(index, element) {
   outline-offset: var(--mat-slider-focus-indicator-offset);
 }
 
-.mat-range-slider--dragging .mat-range-slider__handle--active {
-  inline-size: var(--mat-slider-pressed-handle-width);
-}
-
 .mat-range-slider--disabled {
   --mat-range-slider-current-active-track-color: var(--mat-slider-disabled-track-color);
   --mat-range-slider-current-handle-color: var(--mat-slider-disabled-handle-color);
@@ -705,6 +701,16 @@ function setHandleElement(index, element) {
 
 .mat-range-slider--vertical .mat-range-slider__handle--end {
   inset-block-end: var(--mat-range-slider-end-position);
+}
+
+.mat-range-slider--dragging .mat-range-slider__active-track,
+.mat-range-slider--dragging .mat-range-slider__inactive-track {
+  transition-property: background-color;
+}
+
+.mat-range-slider--dragging .mat-range-slider__handle--active {
+  inline-size: var(--mat-slider-pressed-handle-width);
+  transition-property: inline-size, block-size;
 }
 
 @supports (border-shape: inset(0 round 1px)) {

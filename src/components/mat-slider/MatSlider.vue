@@ -637,10 +637,6 @@ function handleKeyDown(event) {
   outline-offset: var(--mat-slider-focus-indicator-offset);
 }
 
-.mat-slider--dragging .mat-slider__handle {
-  inline-size: var(--mat-slider-pressed-handle-width);
-}
-
 .mat-slider--disabled {
   --mat-slider-current-active-track-color: var(--mat-slider-disabled-track-color);
   --mat-slider-current-handle-color: var(--mat-slider-disabled-handle-color);
@@ -733,6 +729,16 @@ function handleKeyDown(event) {
   inset-block: auto var(--mat-slider-inset-icon-offset);
   inset-inline-start: 50%;
   transform: translateX(-50%);
+}
+
+.mat-slider--dragging .mat-slider__active-track,
+.mat-slider--dragging .mat-slider__inactive-track {
+  transition-property: background-color;
+}
+
+.mat-slider--dragging .mat-slider__handle {
+  inline-size: var(--mat-slider-pressed-handle-width);
+  transition-property: inline-size, block-size;
 }
 
 @supports (border-shape: inset(0 round 1px)) {

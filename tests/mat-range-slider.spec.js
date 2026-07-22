@@ -228,6 +228,15 @@ describe('MatRangeSlider', () => {
     expect(componentSource).toContain('var(--mat-slider-track-gap-corner)');
   });
 
+  it('拖动期间让轨道和当前手柄的位置立即跟随数值，同时保留状态尺寸过渡', () => {
+    expect(componentSource).toMatch(
+      /\.mat-range-slider--dragging \.mat-range-slider__active-track,[\s\S]*?\.mat-range-slider--dragging \.mat-range-slider__inactive-track \{[\s\S]*?transition-property: background-color;/,
+    );
+    expect(componentSource).toMatch(
+      /\.mat-range-slider--dragging \.mat-range-slider__handle--active \{[\s\S]*?transition-property: inline-size, block-size;/,
+    );
+  });
+
   it('只在键盘聚焦的活跃手柄外层显示胶囊轮廓', () => {
     const handleStyles = componentSource.match(
       /\.mat-range-slider__handle \{(?<body>[\s\S]*?)\n\}/,

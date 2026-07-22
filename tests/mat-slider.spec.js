@@ -319,6 +319,15 @@ describe('MatSlider', () => {
     expect(componentSource).toContain('.mat-slider--vertical.mat-slider--dragging .mat-slider__handle {');
   });
 
+  it('拖动期间让轨道和手柄的位置立即跟随数值，同时保留状态尺寸过渡', () => {
+    expect(componentSource).toMatch(
+      /\.mat-slider--dragging \.mat-slider__active-track,[\s\S]*?\.mat-slider--dragging \.mat-slider__inactive-track \{[\s\S]*?transition-property: background-color;/,
+    );
+    expect(componentSource).toMatch(
+      /\.mat-slider--dragging \.mat-slider__handle \{[\s\S]*?transition-property: inline-size, block-size;/,
+    );
+  });
+
   it('使用独立的次要色胶囊轮廓显示键盘焦点', () => {
     const handleStyles = componentSource.match(
       /\.mat-slider__handle \{(?<body>[\s\S]*?)\n\}/,
