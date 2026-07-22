@@ -58,7 +58,7 @@
 
 Icon 统一字体字形、SVG 资源和默认 Slot 中的 SVG 元素，负责 Material Symbols 经典四轴、尺寸、内容颜色和动态根标签。内容来源优先级固定为 `src`、`icon`、默认 Slot；组件级 `iconClass` 可覆盖或关闭插件全局值。按钮、List、Menu 和文本输入复用同一公共 Icon 实现，但各自负责上下文尺寸、颜色和无障碍语义。
 
-List 通过内部 provide/inject 上下文统一交互模式、受控选择和焦点刷新。普通与操作模式保留 `ul/li`，选择模式使用 `listbox/option`；roving tabindex 注册表按 DOM 顺序协调项目主操作和 multi-action trailing 控件，并在模式切换或卸载时恢复使用方原有的 tabindex。Divider 根据 List 上下文切换合法的根语义，不参与选择与焦点顺序。
+List 通过内部 provide/inject 上下文统一交互模式、受控选择、折叠值和焦点刷新。普通与操作模式保留 `ul/li`；MatListGroup 作为根列表的 `li`，在其中组合 Activator 按钮、可惰化的内容容器和嵌套 `ul`。有值分组由根 List 的 `expanded` 数组控制，无值分组保存内部状态。选择模式使用 `listbox/option`，折叠分组在该模式下降级为始终展开的静态 `group`，避免把 disclosure 按钮放入 listbox。roving tabindex 注册表按 DOM 顺序协调直属项目、分组 Activator、展开项目和 multi-action trailing 控件，并在模式切换或卸载时恢复使用方原有的 tabindex。Divider 根据 List 上下文切换合法的根语义，不参与选择与焦点顺序。
 
 Panes 通过内部 provide/inject 注册直接的 `MatPane` 子项，按受控权重使用横向 flex 布局，并由每个相邻 Pane 的子级渲染垂直 separator 调整控件。父组件只在指针释放或键盘调整后发出下一组权重；ResizeObserver 的宽度通知使用尾端防抖，浏览器断点只报告视口等级变化。Pane 默认填满父级块轴高度并在自身内容溢出时滚动，显隐由使用方通过 `v-if` 管理。
 

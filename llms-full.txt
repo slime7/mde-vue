@@ -8339,7 +8339,7 @@ import DialogWidthExample from '../examples/dialog/DialogWidthExample.vue';
 
 ## 组件简介
 
-`<mat-list>` 的组件导出名是 `MatList`，子组件 `<mat-list-item>` 的导出名是 `MatListItem`。List 纵向组织相关内容，提供 `standard` 与 `segmented` 两种 Material 3 Expressive 外观，默认使用 `segmented`，并支持非交互、单操作、多操作、单选和多选五种互斥的交互模式。
+`<mat-list>` 的组件导出名是 `MatList`，折叠分组 `<mat-list-group>` 的导出名是 `MatListGroup`，项目 `<mat-list-item>` 的导出名是 `MatListItem`。List 纵向组织相关内容，提供 `standard` 与 `segmented` 两种 Material 3 Expressive 外观，默认使用 `segmented`，并支持非交互、单操作、多操作、单选和多选五种互斥的交互模式。MatListGroup 可与直属 MatListItem 混排，其 Activator 仍使用普通 MatListItem。
 
 ## 示例
 
@@ -8393,6 +8393,92 @@ section {
 <ClientOnly>
   <DocsPreview label="List variant 预览">
     <ListVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `expanded` 与 MatListGroup
+
+有 `value` 的分组由根 List 的 `v-model:expanded` 完全控制；省略 `value` 的分组保存自己的展开状态。Activator Slot 提供当前 `expanded`，箭头和其他 trailing 内容由使用方决定。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-list
+    v-model:expanded="expanded"
+    class="example-list"
+  >
+    <mat-list-item>
+      最近使用
+      <template #leading>
+        <mat-icon>schedule</mat-icon>
+      </template>
+    </mat-list-item>
+
+    <mat-list-group value="favorites">
+      <template #activator="{ expanded: isExpanded }">
+        <mat-list-item>
+          收藏
+          <template #leading>
+            <mat-icon>star</mat-icon>
+          </template>
+          <template #trailing>
+            <mat-icon>{{ isExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </template>
+        </mat-list-item>
+      </template>
+
+      <mat-list-item>设计资料</mat-list-item>
+      <mat-list-item>项目计划</mat-list-item>
+    </mat-list-group>
+
+    <mat-list-group>
+      <template #activator="{ expanded: isExpanded }">
+        <mat-list-item>
+          本地分组
+          <template #leading>
+            <mat-icon>folder</mat-icon>
+          </template>
+          <template #trailing>
+            <mat-icon>{{ isExpanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+          </template>
+        </mat-list-item>
+      </template>
+
+      <mat-list-item>下载</mat-list-item>
+      <mat-list-item>文档</mat-list-item>
+    </mat-list-group>
+
+    <mat-list-item>
+      回收站
+      <template #leading>
+        <mat-icon>delete</mat-icon>
+      </template>
+    </mat-list-item>
+  </mat-list>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const expanded = ref(['favorites']);
+</script>
+```
+```vue
+<style scoped>
+.example-list {
+  inline-size: min(100%, 420px);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="List 折叠分组预览">
+    <ListExpandedExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -8934,9 +9020,20 @@ const selected = ref('two');
 | `variant` | `'standard' \| 'segmented'` | `'segmented'` | 项目连续排列或以 2px 间隔分段 |
 | `interaction` | `'none' \| 'single-action' \| 'multi-action' \| 'single-select' \| 'multi-select'` | `'none'` | 整个 List 唯一的交互模式 |
 | `selected` | 基础值、基础值数组或 `null` | `null` | 受控选择值；single-select 使用单值，multi-select 使用数组 |
+| `expanded` | `(string \| number \| boolean)[]` | `[]` | 有值 MatListGroup 的受控展开值，可同时包含多个值 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 选择项的局部 container/on-container 色对；省略时使用 secondary 色族 |
 
 选择模式的根元素使用 `role="listbox"`，应通过 `aria-label` 或 `aria-labelledby` 提供可访问名称。其他未消费的原生属性传递给根 `ul` 或 listbox `div`。
+
+`expanded` 的成员使用 `Object.is()` 比较。分组请求展开或收起时会返回一个新数组，不修改传入数组，也不会移除当前没有对应分组的值。
+
+### MatListGroup 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `value` | `string \| number \| boolean` | 未设置 | 在根 List 的 `expanded` 数组中标识受控分组；省略时使用初始折叠的内部状态 |
+
+同一 MatList 中有值分组的 `value` 必须稳定且唯一；重复值会发出开发警告。MatListGroup 应直接放置在 MatList 中。
 
 ### MatListItem 属性
 
@@ -8955,15 +9052,18 @@ const selected = ref('two');
 | 组件 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- | --- |
 | `MatList` | `select` | `{ value, selected, nextSelected, originalEvent }` | 启用的选择项通过指针、Space 或 Enter 请求改变选择 |
+| `MatList` | `update:expanded` | `(string \| number \| boolean)[]` | 有值分组请求展开或收起，用于 `v-model:expanded` |
 | `MatListItem` | `click` | 原生 `MouseEvent` | 单操作或多操作模式中的启用主操作被激活 |
 
-single-select 再次激活当前项不会取消选择，也不会发出 `select`。multi-select 每次激活都返回不修改原数组的新数组。`originalEvent` 是实际的 `MouseEvent` 或 `KeyboardEvent`。非交互模式没有自定义事件，trailing 中的独立控件使用自己的事件。
+single-select 再次激活当前项不会取消选择，也不会发出 `select`。multi-select 每次激活都返回不修改原数组的新数组。`originalEvent` 是实际的 `MouseEvent` 或 `KeyboardEvent`。非交互模式没有自定义事件，trailing 中的独立控件使用自己的事件。MatListGroup 没有自定义事件；无值分组不会触发根 List 的 `update:expanded`。
 
 ## Slots
 
 | 组件 | 名称 | 内容约束 |
 | --- | --- | --- |
-| `MatList` | 默认 | 直接放置 `MatListItem` 和 `MatDivider` |
+| `MatList` | 默认 | 直接放置 `MatListItem`、`MatListGroup` 和 `MatDivider` |
+| `MatListGroup` | `activator` | 必须且只能放置一个 `MatListItem`；接收 `{ expanded: boolean }`，trailing 只放展示内容 |
+| `MatListGroup` | 默认 | 直接放置该组的 `MatListItem` 和 `MatDivider` |
 | `MatListItem` | 默认 | 必需的主要标签文字 |
 | `MatListItem` | `leading` | 图标、40px 头像、56px 图片、媒体或非交互选择标记 |
 | `MatListItem` | `overline` | 标签上方的短文本 |
@@ -8972,10 +9072,15 @@ single-select 再次激活当前项不会取消选择，也不会发出 `select`
 
 single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌套其他交互元素。选择模式中的 leading 和 trailing 作为展示内容处理，选择状态由 `aria-selected` 表达。
 
+作为 Activator 的 MatListItem 会变成单一 disclosure 按钮：组件忽略其 `href`、选择 `value` 和普通叶子 `click`，自动设置 `aria-expanded` 与 `aria-controls`。组件不会自动添加箭头或改写 trailing。Activator 缺失或不是单个 MatListItem 时会发出开发警告，并让内容保持展开。
+
 ## 状态与键盘
 
 - 静止时首项顶部和末项底部使用 16px 外角，相邻项目之间保持 4px 内角；仅有一项时四角均为 16px。
 - List 使用 roving tabindex，Tab 进入当前停靠项，再次 Tab 离开 List。
+- 在 `none`、`single-action` 和 `multi-action` 模式中，点击 Activator 或按 Enter、Space 可切换分组；禁用 Activator 不响应。方向键顺序包含 Activator 和已展开的可操作项目，并跳过折叠内容。
+- 折叠内容使用 `inert` 和 `aria-hidden` 离开交互与无障碍顺序。若收起时焦点仍在组内，焦点会先回到 Activator。
+- `single-select` 和 `multi-select` 暂不支持折叠。此时组件发出开发警告，把 Activator 降级为静态分组标签并始终展示内容，保留 listbox 的 group/option 结构。
 - `ArrowDown`、`ArrowRight` 移至下一项，`ArrowUp`、`ArrowLeft` 移至上一项；到边界后循环并跳过禁用项。
 - 选择模式优先以第一个选中项作为初始停靠点；方向键只移动焦点，不自动改变选择。
 - 选择模式使用 Space 或 Enter 请求选择。多操作模式把主操作与 trailing 内的启用控件纳入同一方向键顺序。
@@ -8986,11 +9091,12 @@ single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌�
 
 ## 参考来源
 
-外观、内容结构和交互依据 Material 3 [List overview](https://m3.material.io/components/lists/overview)、[List specs](https://m3.material.io/components/lists/specs) 与 [List guidelines](https://m3.material.io/components/lists/guidelines)。选择模式的语义限制参考 [WAI-ARIA Listbox Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/)。
+外观、内容结构和交互依据 Material 3 [List overview](https://m3.material.io/components/lists/overview)、[List specs](https://m3.material.io/components/lists/specs) 与 [List guidelines](https://m3.material.io/components/lists/guidelines)。折叠效果参考官方 Lists specs 的 [Expand 演示](https://m3.material.io/components/lists/specs#43f774a6-b1fb-4719-9376-f706c7b82eac)：官方页面说明 Android List 可以展开和折叠，本组件的受控数组、Vue Slots 和 Web 无障碍语义是面向浏览器的适配。选择模式的语义限制参考 [WAI-ARIA Listbox Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/)。
 
 <script setup>
 import ListColorExample from '../examples/list/ListColorExample.vue';
 import ListDefaultSlotExample from '../examples/list/ListDefaultSlotExample.vue';
+import ListExpandedExample from '../examples/list/ListExpandedExample.vue';
 import ListInteractionExample from '../examples/list/ListInteractionExample.vue';
 import ListItemDefaultSlotExample from '../examples/list/ListItemDefaultSlotExample.vue';
 import ListItemDisabledExample from '../examples/list/ListItemDisabledExample.vue';

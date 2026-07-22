@@ -26,7 +26,7 @@
 - [Text field 文本输入](docs/site/components/text-field.md): mat-text-field 与 mat-textarea 的输入、校验提示、计数、局部配色和原生事件。
 - [Menu 菜单](docs/site/components/menu.md): mat-menu、mat-menu-group 与 mat-menu-item 的分组、坐标定位、多级展开、键盘焦点和局部配色。
 - [Dialog 对话框](docs/site/components/dialog.md): mat-dialog 的模态展示、全屏布局、帷幕、动画、滚动区域和 Promise 命令式函数。
-- [List 列表](docs/site/components/list.md): mat-list 与 mat-list-item 的 Material 3 Expressive 外观、内容结构、操作和受控选择。
+- [List 列表](docs/site/components/list.md): mat-list、mat-list-group 与 mat-list-item 的 Material 3 Expressive 外观、折叠分组、操作和受控选择。
 - [Toolbar 工具栏](docs/site/components/toolbar.md): mat-toolbar 的停靠、悬浮、自然布局占位、安全区和覆盖层避让。
 - [Navigation 导航](docs/site/components/navigation-rail.md): mat-navigation-rail 的 Expressive collapsed/expanded rail 与 horizontal flexible navigation bar。
 - [Tooltip 文字提示](docs/site/components/tooltip.md): mat-tooltip 的 Material 3 Plain tooltip、展示元素、固定定位、延迟和无障碍说明。

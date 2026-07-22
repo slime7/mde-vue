@@ -135,6 +135,8 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 `<mat-divider>` 独立使用时保持原生 `hr`；进入普通 List 后使用合法的 `li` separator，进入选择 List 后成为不参与 listbox 语义的展示元素。Divider 不进入 Tab 顺序，也不提供强调色。
 
+`<mat-list-group>` 只在普通或操作 List 中提供折叠：Activator Slot 必须是单个普通 MatListItem，该 Item 只承担 disclosure 按钮语义，不再承担链接、选择或叶子点击。根 List 的 `expanded` 数组以 `Object.is()` 管理有值分组，并允许多个值同时展开；无值分组使用独立内部状态。折叠内容必须同时离开焦点顺序和无障碍树。选择 List 中的分组固定为静态标签与始终展开的 `group/option` 结构，不混入 disclosure 交互。
+
 ## 文本输入与菜单
 
 `MatInputBase` 是文本输入族的无边框基础层，渲染调用方选择的原生 `input` 或 `textarea`，负责受控字符串值、`update:modelValue`、原生属性透传以及 `focusInput`、`getInput` 方法；它不提供标签、描边、填充、辅助文字或校验语义。`<mat-text-field>` 和 `<mat-textarea>` 在其上共享 outlined/filled 外观、局部配色、辅助或错误文字、字符计数与属性路由，但分别保留 input 和 textarea 原生语义。错误角色始终覆盖 color 强调；Textarea 只提供固定初始行数与纵向调整，不自动增高。其他输入类型可以复用该基础层并自行定义容器语义。
