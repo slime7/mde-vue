@@ -25,7 +25,7 @@ const lastAction = ref('尚未点击项目');
       id="persistent-root-menu"
       v-model="persistentRootOpen"
       anchor="persistent-root-menu-trigger"
-      close-on-click="false"
+      :close-on-click="false"
     >
       <mat-menu-item @click="lastAction = '根菜单保持开启'">
         根菜单保持开启
@@ -50,7 +50,7 @@ const lastAction = ref('尚未点击项目');
       <mat-menu-item>
         导出
         <template #submenu>
-          <mat-menu close-on-click="false">
+          <mat-menu :close-on-click="false">
             <mat-menu-item @click="lastAction = '子菜单保持开启'">
               子菜单保持开启
             </mat-menu-item>

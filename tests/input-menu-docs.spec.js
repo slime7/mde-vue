@@ -70,7 +70,7 @@ describe('文本输入与菜单文档', () => {
     expect(page).toContain('`closeOnClick`');
     expect(page).toContain('MenuCloseOnClickExample.vue');
     expect(page).toContain('<MenuCloseOnClickExample />');
-    expect(example).toContain('close-on-click="false"');
+    expect(example).toContain(':close-on-click="false"');
     expect(example).toContain('子菜单保持开启');
   });
 
