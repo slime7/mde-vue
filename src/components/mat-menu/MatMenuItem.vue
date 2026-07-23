@@ -118,7 +118,10 @@ function handleClick(event) {
   }
 
   emit('click', event);
-  menu?.closeTree();
+
+  if (menu?.closeOnClick.value) {
+    menu.closeTree();
+  }
 }
 
 /**

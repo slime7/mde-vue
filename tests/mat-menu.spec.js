@@ -462,6 +462,99 @@ describe('MatMenu', () => {
     expect(document.activeElement).toBe(anchor);
   });
 
+  it('closeOnClick 为 false 时叶子项目保持根菜单开启', async () => {
+    const anchor = document.createElement('button');
+
+    anchor.id = 'persistent-root-trigger';
+    document.body.append(anchor);
+    const click = vi.fn();
+    const wrapper = mount(MatMenu, {
+      attachTo: document.body,
+      props: {
+        modelValue: true,
+        anchor: 'persistent-root-trigger',
+        closeOnClick: false,
+      },
+      slots: {
+        default: () => h(MatMenuItem, { onClick: click }, () => '固定菜单'),
+      },
+    });
+
+    await nextTick();
+    await wrapper.get('[role="menuitem"]').trigger('click');
+    await nextTick();
+
+    expect(click).toHaveBeenCalledOnce();
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+    expect(wrapper.get('[role="menu"]').element.dataset.popoverOpen).toBe('');
+  });
+
+  it('父菜单的 closeOnClick 不影响子菜单的默认关闭行为', async () => {
+    const anchor = document.createElement('button');
+
+    anchor.id = 'nested-default-close-trigger';
+    document.body.append(anchor);
+    const wrapper = mount(MatMenu, {
+      attachTo: document.body,
+      props: {
+        modelValue: true,
+        anchor: 'nested-default-close-trigger',
+        closeOnClick: false,
+      },
+      slots: {
+        default: () => h(MatMenuItem, null, {
+          default: () => '导出',
+          submenu: () => h(MatMenu, null, {
+            default: () => h(MatMenuItem, null, () => 'PDF'),
+          }),
+        }),
+      },
+    });
+
+    await nextTick();
+    const parentItem = wrapper.get('[role="menuitem"]');
+
+    await parentItem.trigger('click');
+    await nextTick();
+    await wrapper.findAll('[role="menu"]')[1].get('[role="menuitem"]').trigger('click');
+    await nextTick();
+
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([false]);
+  });
+
+  it('子菜单的 closeOnClick 为 false 时不受父菜单默认值影响', async () => {
+    const anchor = document.createElement('button');
+
+    anchor.id = 'nested-persistent-trigger';
+    document.body.append(anchor);
+    const wrapper = mount(MatMenu, {
+      attachTo: document.body,
+      props: { modelValue: true, anchor: 'nested-persistent-trigger' },
+      slots: {
+        default: () => h(MatMenuItem, null, {
+          default: () => '导出',
+          submenu: () => h(MatMenu, { closeOnClick: false }, {
+            default: () => h(MatMenuItem, null, () => 'PDF'),
+          }),
+        }),
+      },
+    });
+
+    await nextTick();
+    const parentItem = wrapper.get('[role="menuitem"]');
+
+    await parentItem.trigger('click');
+    await nextTick();
+    const submenu = wrapper.findAll('[role="menu"]')[1];
+
+    await submenu.get('[role="menuitem"]').trigger('click');
+    await nextTick();
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+    expect(parentItem.attributes('aria-expanded')).toBe('true');
+    expect(submenu.element.dataset.popoverOpen).toBe('');
+  });
+
   it('submenu slot 展开嵌套菜单并支持返回父项目', async () => {
     const anchor = document.createElement('button');
 

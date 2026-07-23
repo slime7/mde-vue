@@ -56,6 +56,10 @@ const props = defineProps({
     default: undefined,
     validator: isComponentColor,
   },
+  closeOnClick: {
+    type: Boolean,
+    default: true,
+  },
 });
 const emit = defineEmits({
   'update:modelValue': (payload) => typeof payload === 'boolean',
@@ -103,6 +107,7 @@ const effectiveVariant = computed(() => (
 const effectiveColor = computed(() => (
   props.color ?? parentMenu?.color.value
 ));
+const closeOnClick = computed(() => props.closeOnClick);
 const { colorStyle } = useComponentColor(effectiveColor);
 const positionStyle = computed(() => {
   const [offsetX, offsetY] = isCoordinatePair(props.offset) ? props.offset : [0, 0];
@@ -509,6 +514,7 @@ function handleToggle(event) {
 provide(MAT_MENU_KEY, {
   closeOtherSubmenus,
   closeTree,
+  closeOnClick,
   color: effectiveColor,
   registerItem,
   registerGroup,

@@ -60,6 +60,20 @@ describe('文本输入与菜单文档', () => {
     expect(contextExample).toContain('@contextmenu.prevent="showContextMenu"');
   });
 
+  it('Menu 文档说明 closeOnClick 并提供父子菜单独立配置示例', () => {
+    const page = readFileSync(resolve('docs/site/components/menu.md'), 'utf8');
+    const example = readFileSync(
+      resolve('docs/site/examples/menu/MenuCloseOnClickExample.vue'),
+      'utf8',
+    );
+
+    expect(page).toContain('`closeOnClick`');
+    expect(page).toContain('MenuCloseOnClickExample.vue');
+    expect(page).toContain('<MenuCloseOnClickExample />');
+    expect(example).toContain('close-on-click="false"');
+    expect(example).toContain('子菜单保持开启');
+  });
+
   it('Dialog 文档覆盖 activator Slot，并与示例保持同源', () => {
     const page = readFileSync(resolve('docs/site/components/dialog.md'), 'utf8');
     const example = readFileSync(
@@ -86,6 +100,7 @@ describe('文本输入与菜单文档', () => {
   it('Menu 页面示例默认关闭菜单，避免加载时抢占焦点', () => {
     [
       'MenuColorExample.vue',
+      'MenuCloseOnClickExample.vue',
       'MenuDefaultSlotExample.vue',
       'MenuGroupExample.vue',
       'MenuItemDefaultSlotExample.vue',
@@ -102,7 +117,7 @@ describe('文本输入与菜单文档', () => {
         'utf8',
       );
 
-      expect(source, fileName).toContain('const open = ref(false);');
+      expect(source, fileName).toMatch(/const \w*Open = ref\(false\);|const open = ref\(false\);/);
     });
   });
 

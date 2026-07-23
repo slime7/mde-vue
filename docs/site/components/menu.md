@@ -117,6 +117,28 @@ order: 95
   </DocsPreview>
 </ClientOnly>
 
+### `closeOnClick`
+
+`closeOnClick` 默认为 `true`，启用时叶子项目被点击后关闭整条菜单链。设为 `false` 时，该菜单中的叶子项目只触发 `click`，菜单保持开启。每个嵌套的 MatMenu 独立读取自身属性，不继承父菜单设置。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuCloseOnClickExample.vue#template [template]
+
+<<< @/examples/menu/MenuCloseOnClickExample.vue#script [script]
+
+<<< @/examples/menu/MenuCloseOnClickExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Menu closeOnClick 预览">
+    <MenuCloseOnClickExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `variant`
 
 :::: details 查看示例代码
@@ -310,8 +332,9 @@ Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项
 | `offset` | `[number, number]` | `[0, 0]` | 在基础位置之后增加 `[x, y]` 偏移；正值向右、向下 |
 | `variant` | `'standard' \| 'vibrant'` | `'standard'` | 中性表面或更高强调的 tertiary 表面 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 活动项目与 vibrant 表面的局部配色 |
+| `closeOnClick` | `boolean` | `true` | 叶子项目点击后是否关闭整条菜单链；设为 `false` 时保持开启 |
 
-字符串 anchor 必须能在当前 document 中找到对应 id。`activator` Slot 存在时优先使用其唯一的 HTMLElement 根节点，并忽略 `anchor`；多根节点或非 HTMLElement 根节点会给出警告并请求关闭。坐标 anchor 使用 fixed 定位，适合 `contextmenu`；坐标或 offset 改变时，已打开的菜单立即重新定位。根菜单缺少有效 anchor 时会请求关闭。嵌套在 `submenu` Slot 中的 MatMenu 自动以父 MatMenuItem 为 anchor，并继承父菜单的 color 与 variant；嵌套菜单显式设置的 color、variant 或 offset 优先，自身 anchor 被忽略。未消费的属性传给 `role="menu"` 的 Popover 根元素。
+字符串 anchor 必须能在当前 document 中找到对应 id。`activator` Slot 存在时优先使用其唯一的 HTMLElement 根节点，并忽略 `anchor`；多根节点或非 HTMLElement 根节点会给出警告并请求关闭。坐标 anchor 使用 fixed 定位，适合 `contextmenu`；坐标或 offset 改变时，已打开的菜单立即重新定位。根菜单缺少有效 anchor 时会请求关闭。嵌套在 `submenu` Slot 中的 MatMenu 自动以父 MatMenuItem 为 anchor，并继承父菜单的 color 与 variant；嵌套菜单显式设置的 color、variant 或 offset 优先，自身 anchor 被忽略。`closeOnClick` 不会继承，父菜单和每个子菜单分别决定其叶子项目是否关闭菜单链。未消费的属性传给 `role="menu"` 的 Popover 根元素。
 
 ### MatMenuGroup 属性
 
@@ -334,7 +357,7 @@ Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项
 | 组件 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- | --- |
 | `MatMenu` | `update:modelValue` | `boolean` | 根菜单请求关闭，或浏览器通过 Escape、轻触外部等方式关闭 Popover |
-| `MatMenuItem` | `click` | 原生 `MouseEvent` | 启用的叶子项目被激活；随后关闭整条菜单链 |
+| `MatMenuItem` | `click` | 原生 `MouseEvent` | 启用的叶子项目被激活；`closeOnClick=true` 时随后关闭整条菜单链 |
 
 MatMenuGroup 没有自定义事件。包含 submenu 的项目把点击、Enter、Space 和朝子菜单方向的方向键用于展开，不发出叶子 click。元素锚点菜单关闭后把焦点还给 anchor；坐标菜单恢复打开前的焦点元素。
 
@@ -372,6 +395,7 @@ MenuItem 的 Slots 只构成一个操作，不应嵌套按钮、开关或其他�
 <script setup>
 import MenuActivatorSlotExample from '../examples/menu/MenuActivatorSlotExample.vue';
 import MenuColorExample from '../examples/menu/MenuColorExample.vue';
+import MenuCloseOnClickExample from '../examples/menu/MenuCloseOnClickExample.vue';
 import MenuContextExample from '../examples/menu/MenuContextExample.vue';
 import MenuDefaultSlotExample from '../examples/menu/MenuDefaultSlotExample.vue';
 import MenuGroupExample from '../examples/menu/MenuGroupExample.vue';
