@@ -505,9 +505,9 @@ watchEffect(() => {
   min-inline-size: min(280px, calc(100dvi - 48px));
   max-inline-size: min(560px, calc(100dvi - 48px));
   max-block-size: calc(100dvb - 48px);
-  padding: 24px;
+  padding: 0;
   margin: auto;
-  overflow: hidden;
+  overflow: visible;
   color: var(--mat-dialog-content-color);
   background: var(--mat-dialog-container-color);
   border: 0;
@@ -548,6 +548,10 @@ watchEffect(() => {
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  inline-size: 100%;
+  padding-block-start: 24px;
+  padding-inline: 24px;
   margin-block-end: 16px;
   color: var(--mat-dialog-icon-color);
 }
@@ -555,6 +559,9 @@ watchEffect(() => {
 .mat-dialog__title {
   flex: 0 0 auto;
   min-inline-size: 0;
+  box-sizing: border-box;
+  inline-size: 100%;
+  padding-inline: 24px;
   margin: 0;
   color: var(--mat-dialog-headline-color);
   font-family: var(--mat-sys-typescale-headline-small-font);
@@ -568,14 +575,30 @@ watchEffect(() => {
   text-align: center;
 }
 
+.mat-dialog:not(.mat-dialog--full-screen) > .mat-dialog__icon:last-child {
+  padding-block-end: 24px;
+  margin-block-end: 0;
+}
+
+.mat-dialog:not(.mat-dialog--full-screen) > .mat-dialog__title:first-child {
+  padding-block-start: 24px;
+}
+
+.mat-dialog:not(.mat-dialog--full-screen) > .mat-dialog__title:last-child {
+  padding-block-end: 24px;
+}
+
 .mat-dialog__title + .mat-dialog__content {
-  margin-block-start: 16px;
+  padding-block-start: 16px;
 }
 
 .mat-dialog__content {
   flex: 0 1 auto;
   min-block-size: 0;
-  overflow: auto;
+  box-sizing: border-box;
+  inline-size: 100%;
+  padding-inline: 24px;
+  overflow-y: auto;
   scrollbar-gutter: stable;
   font-family: var(--mat-sys-typescale-body-medium-font);
   font-size: var(--mat-sys-typescale-body-medium-size);
@@ -585,13 +608,23 @@ watchEffect(() => {
   overscroll-behavior: contain;
 }
 
+.mat-dialog:not(.mat-dialog--full-screen) > .mat-dialog__content:first-child {
+  padding-block-start: 24px;
+}
+
+.mat-dialog:not(.mat-dialog--full-screen) > .mat-dialog__content:last-child {
+  padding-block-end: 24px;
+}
+
 .mat-dialog__actions {
   display: flex;
   flex: 0 0 auto;
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
-  margin-block-start: 24px;
+  box-sizing: border-box;
+  inline-size: 100%;
+  padding: 24px;
 }
 
 .mat-dialog--full-screen {
@@ -624,6 +657,8 @@ watchEffect(() => {
 
 .mat-dialog__header .mat-dialog__title {
   flex: 0 1 auto;
+  inline-size: auto;
+  padding: 0;
   overflow: hidden;
   font-family: var(--mat-sys-typescale-title-large-font);
   font-size: var(--mat-sys-typescale-title-large-size);
@@ -638,6 +673,7 @@ watchEffect(() => {
   flex: 1 1 auto;
   flex-wrap: nowrap;
   min-inline-size: 0;
+  padding: 0;
   margin: 0;
 }
 

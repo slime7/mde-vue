@@ -721,7 +721,7 @@ watch(() => props.offset, async () => {
   min-inline-size: 100%;
   max-block-size: inherit;
   padding: var(--mat-menu-container-padding);
-  overflow: hidden auto;
+  overflow-y: auto;
   background: var(--mat-menu-container-color);
   border-radius: inherit;
   clip-path: inset(0 round var(--mat-sys-shape-corner-large));

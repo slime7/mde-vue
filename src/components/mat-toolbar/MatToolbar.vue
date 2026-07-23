@@ -620,7 +620,7 @@ function warnForInvalidAttach() {
   min-block-size: 0;
   max-block-size: inherit;
   padding-block: var(--mat-toolbar-container-padding);
-  overflow: auto;
+  overflow-y: auto;
 }
 
 .mat-toolbar--vertical .mat-toolbar__content {

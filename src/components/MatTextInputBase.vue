@@ -260,7 +260,6 @@ function focusControl() {
   box-sizing: border-box;
   min-block-size: var(--mat-text-input-container-height);
   inline-size: 100%;
-  overflow: visible;
   background: transparent;
   border-radius: var(--mat-sys-shape-corner-small);
 }

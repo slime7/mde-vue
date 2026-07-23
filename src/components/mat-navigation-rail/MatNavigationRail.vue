@@ -560,7 +560,6 @@ watch([
 
 .mat-navigation-rail--hidden {
   inline-size: 0;
-  overflow: visible;
   background: transparent;
 }
 

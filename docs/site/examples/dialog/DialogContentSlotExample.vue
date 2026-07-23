@@ -18,6 +18,10 @@ const open = ref(false);
       <li>四个命令式函数</li>
     </ul>
 
+    <p v-for="index in 80" :key="index">
+      正文段落 {{ index }}
+    </p>
+
     <template #actions>
       <mat-spacer />
       <mat-btn variant="text" @click="open = false">

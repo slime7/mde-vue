@@ -116,8 +116,17 @@ describe('新增组件现代 CSS', () => {
     expect(source).toContain('prefers-reduced-motion: reduce');
   });
 
-  it('Dialog 仅让 content 滚动且不强制 actions 末端对齐', () => {
+  it('Dialog 由各内容区域提供间距且仅让 content 纵向滚动', () => {
     const source = readFileSync('src/components/mat-dialog/MatDialog.vue', 'utf8');
+    const rootStyles = source.match(
+      /\n\.mat-dialog \{(?<body>[\s\S]*?)\n\}/,
+    )?.groups?.body;
+    const iconStyles = source.match(
+      /\n\.mat-dialog__icon \{(?<body>[\s\S]*?)\n\}/,
+    )?.groups?.body;
+    const titleStyles = source.match(
+      /\n\.mat-dialog__title \{(?<body>[\s\S]*?)\n\}/,
+    )?.groups?.body;
     const contentStyles = source.match(
       /\n\.mat-dialog__content \{(?<body>[\s\S]*?)\n\}/,
     )?.groups?.body;
@@ -125,9 +134,20 @@ describe('新增组件现代 CSS', () => {
       /\n\.mat-dialog__actions \{(?<body>[\s\S]*?)\n\}/,
     )?.groups?.body;
 
-    expect(contentStyles).toContain('overflow: auto');
+    expect(rootStyles).toContain('padding: 0');
+    expect(rootStyles).toContain('overflow: visible');
+    expect(rootStyles).not.toContain('padding: 24px');
+    expect(rootStyles).not.toContain('overflow: hidden');
+    expect(iconStyles).toContain('padding-block-start: 24px');
+    expect(iconStyles).toContain('padding-inline: 24px');
+    expect(titleStyles).toContain('padding-inline: 24px');
+    expect(contentStyles).toContain('padding-inline: 24px');
+    expect(contentStyles).toContain('overflow-y: auto');
+    expect(contentStyles).not.toContain('overflow: auto');
     expect(contentStyles).toContain('scrollbar-gutter: stable');
     expect(actionStyles).toContain('display: flex');
+    expect(actionStyles).toContain('padding: 24px');
+    expect(actionStyles).not.toContain('margin-block-start');
     expect(actionStyles).not.toContain('justify-content: flex-end');
   });
 
@@ -147,7 +167,8 @@ describe('新增组件现代 CSS', () => {
     expect(rootStyles).toContain('transition-property: opacity, transform, display, overlay');
     expect(rootStyles).toContain('transition-behavior: allow-discrete');
     expect(surfaceStyles).toContain('clip-path: inset(');
-    expect(surfaceStyles).toContain('overflow: hidden auto');
+    expect(surfaceStyles).toContain('overflow-y: auto');
+    expect(surfaceStyles).not.toContain('overflow: hidden auto');
     expect(surfaceStyles).not.toContain('overflow: auto');
     expect(source).toContain('@starting-style');
     expect(source).toContain('.mat-menu:not(:popover-open)');
@@ -204,6 +225,23 @@ describe('新增组件现代 CSS', () => {
       'drop-shadow(0 2px 6px rgb(from var(--mat-sys-color-shadow) r g b / 15%))',
     );
     expect(menuSource).not.toContain('overflow: visible;\n  background: transparent;');
+  });
+
+  it('滚动组件只声明实际需要的方向，普通容器不声明默认 visible', () => {
+    const textInputSource = readFileSync('src/components/MatTextInputBase.vue', 'utf8');
+    const navigationSource = readFileSync(
+      'src/components/mat-navigation-rail/MatNavigationRail.vue',
+      'utf8',
+    );
+    const toolbarSource = readFileSync('src/components/mat-toolbar/MatToolbar.vue', 'utf8');
+    const toolbarStyles = toolbarSource.match(
+      /\n\.mat-toolbar--vertical \.mat-toolbar__surface \{(?<body>[\s\S]*?)\n\}/,
+    )?.groups?.body;
+
+    expect(textInputSource).not.toContain('overflow: visible;');
+    expect(navigationSource).not.toContain('overflow: visible;');
+    expect(toolbarStyles).toContain('overflow-y: auto');
+    expect(toolbarStyles).not.toContain('overflow: auto');
   });
 
   it('原生与模拟禁用操作都显示禁用指针', () => {
