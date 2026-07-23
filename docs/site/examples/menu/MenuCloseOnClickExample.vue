@@ -57,6 +57,12 @@ const lastAction = ref('尚未点击项目');
           </mat-menu>
         </template>
       </mat-menu-item>
+      <mat-menu-item @click="lastAction = '关闭菜单：新建文件'">
+        关闭菜单：新建文件
+      </mat-menu-item>
+      <mat-menu-item @click="lastAction = '关闭菜单：删除文件'">
+        关闭菜单：删除文件
+      </mat-menu-item>
     </mat-menu>
 
     <p class="example-menu__status">

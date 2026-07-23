@@ -72,6 +72,8 @@ describe('文本输入与菜单文档', () => {
     expect(page).toContain('<MenuCloseOnClickExample />');
     expect(example).toContain(':close-on-click="false"');
     expect(example).toContain('子菜单保持开启');
+    expect(example).toContain('关闭菜单：新建文件');
+    expect(example).toContain('关闭菜单：删除文件');
   });
 
   it('Dialog 文档覆盖 activator Slot，并与示例保持同源', () => {
