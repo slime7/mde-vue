@@ -64,14 +64,14 @@ describe('文本输入组件', () => {
     wrapper.unmount();
   });
 
-  it('Text field 和 Textarea 仅在 block 启用时切换根布局且不透传属性', () => {
+  it('Text field 和 Textarea 使用块级 flex 根且忽略已移除的 block 属性', () => {
     [MatTextField, MatTextarea].forEach((component) => {
-      const defaultInput = mount(component);
-      const blockInput = mount(component, { props: { block: true } });
+      const wrapper = mount(component, { attrs: { block: true } });
 
-      expect(defaultInput.classes()).not.toContain('mat-text-input--block');
-      expect(blockInput.classes()).toContain('mat-text-input--block');
-      expect(blockInput.attributes('block')).toBeUndefined();
+      expect(component.props.block).toBeUndefined();
+      expect(wrapper.classes()).not.toContain('mat-text-input--block');
+      expect(wrapper.attributes('block')).toBeUndefined();
+      expect(wrapper.get('input, textarea').attributes('block')).toBeUndefined();
     });
   });
 

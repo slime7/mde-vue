@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils';
 import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
+import { readFileSync } from 'node:fs';
 import { h, nextTick, ref } from 'vue';
 import { MatPane, MatPanes } from '../src';
 
@@ -107,6 +108,12 @@ describe('MatPanes', () => {
 
     expect(paneSource).toContain('First');
     expect(wrapper.find('.mat-panes').attributes('style')).toBeUndefined();
+  });
+
+  it('Pane 调整手柄不声明无效的 grid 布局', () => {
+    const source = readFileSync('src/components/mat-panes/MatPane.vue', 'utf8');
+
+    expect(source).not.toContain('display: grid;');
   });
 
   it('使用 separator ARIA 语义和 Pane 的调整名称', async () => {

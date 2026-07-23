@@ -3,10 +3,6 @@ import { isComponentColor } from './button-props';
 export const TEXT_INPUT_VARIANTS = ['filled', 'outlined'];
 
 export const TEXT_INPUT_PROPS = {
-  block: {
-    type: Boolean,
-    default: false,
-  },
   modelValue: {
     type: String,
     default: '',

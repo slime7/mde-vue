@@ -72,6 +72,8 @@ describe('新增组件现代 CSS', () => {
   it('文本输入使用透明 outline 缺口、单层聚焦描边和原生 textarea 行高', () => {
     const source = readFileSync('src/components/MatTextInputBase.vue', 'utf8');
 
+    expect(source).toContain('display: flex;');
+    expect(source).not.toContain('mat-text-input--block');
     expect(source).toContain('<fieldset');
     expect(source).toContain('class="mat-text-input__outline"');
     expect(source).toContain('<legend');

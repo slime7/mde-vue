@@ -286,6 +286,14 @@ describe('MatNavigationRail', () => {
     expect(expandedHeaderRule).not.toContain('align-items: flex-start;');
   });
 
+  it('模态导航使用逻辑动态视口单位覆盖可用视口', () => {
+    expect(navigationSource).toContain(
+      'max-inline-size: calc(100dvi - var(--mat-navigation-rail-modal-edge-space));',
+    );
+    expect(navigationSource).toContain('inline-size: 100dvi;');
+    expect(navigationSource).not.toContain('100vw');
+  });
+
   it('collapsed Item 为图标和标签保留完整的水平可读区域', () => {
     expect(navigationItemSource).toContain('padding-inline: var(--mat-navigation-rail-collapsed-side-space);');
     expect(navigationItemSource).toContain('inline-size: var(--mat-navigation-rail-vertical-indicator-width);');

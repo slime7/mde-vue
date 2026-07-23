@@ -95,7 +95,6 @@ function finish() {
       <MatTextField
         v-model="inputValue"
         autofocus
-        block
         :label="options.promptConfig.label"
         :placeholder="options.promptConfig.placeholder"
         :required="options.promptConfig.required"

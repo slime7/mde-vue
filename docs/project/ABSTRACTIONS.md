@@ -85,7 +85,7 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 - 原生元素语义优先于自造交互协议；`<mat-btn>` 渲染原生 `<button>`。
 - 未被组件消费的原生属性和事件应继续传递到根原生元素。
 - 带标签容器的选择控件把 `class`、`style`、`inert`、`aria-hidden` 传给外层标签，其余未消费属性和监听器传给内部原生 input。
-- Button、Button group、Split button、Text field 与 Textarea 的 `block` 默认 `false`；启用后只把组件根切换为块级 flex 布局，不替使用方定义 flex 或 grid 父布局中的伸缩规则。Card 与 List 的根本身是块级布局，不提供该属性。
+- Button、Button group 和 Split button 的 `block` 默认 `false`；启用后只把组件根切换为块级 flex 布局，不替使用方定义 flex 或 grid 父布局中的伸缩规则。Text field、Textarea、Card 与 List 的根本身是块级布局，不提供该属性。
 - `disabled` 必须使用原生禁用语义；默认按钮 `type` 是 `button`，避免意外提交表单。
 - 交互组件默认使用 `cursor: default`；只在插件明确启用 `useCursor` 时为可用组件使用 `cursor: pointer`。
 - 组件必须提供可见的键盘焦点状态，并为 hover、focus、pressed 和 disabled 使用共享状态令牌。

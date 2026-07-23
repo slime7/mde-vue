@@ -117,7 +117,6 @@ onBeforeUnmount(() => unregister?.());
   position: absolute;
   inset-block-start: 50%;
   inset-inline-start: 50%;
-  display: grid;
   inline-size: var(--mat-panes-handle-size);
   block-size: var(--mat-panes-handle-size);
   padding: 0;

@@ -534,7 +534,7 @@ watch([
   inset-block: 0;
   inset-inline-start: 0;
   inline-size: var(--mat-navigation-rail-expanded-width);
-  max-inline-size: calc(100vw - var(--mat-navigation-rail-modal-edge-space));
+  max-inline-size: calc(100dvi - var(--mat-navigation-rail-modal-edge-space));
   background: var(--mat-navigation-rail-modal-container-color);
   border-start-end-radius: var(--mat-navigation-rail-modal-shape);
   border-end-end-radius: var(--mat-navigation-rail-modal-shape);
@@ -569,7 +569,7 @@ watch([
   z-index: 10;
   inset-block: 0;
   inset-inline-start: 0;
-  inline-size: 100vw;
+  inline-size: 100dvi;
   block-size: 100%;
   padding: 0;
   background: var(--mat-navigation-rail-scrim-color);

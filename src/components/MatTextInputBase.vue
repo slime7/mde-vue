@@ -12,10 +12,6 @@ defineOptions({
 });
 
 const props = defineProps({
-  block: {
-    type: Boolean,
-    required: true,
-  },
   control: {
     type: String,
     required: true,
@@ -114,9 +110,16 @@ const describedBy = computed(() => {
   return ids.filter(Boolean).join(' ') || undefined;
 });
 const rootStyle = computed(() => [colorStyle.value, attrs.style]);
-const ROOT_ATTRIBUTES = new Set(['aria-describedby', 'aria-hidden', 'class', 'inert', 'style']);
+const NON_NATIVE_ATTRIBUTES = new Set([
+  'aria-describedby',
+  'aria-hidden',
+  'block',
+  'class',
+  'inert',
+  'style',
+]);
 const nativeAttrs = computed(() => Object.fromEntries(
-  Object.entries(attrs).filter(([name]) => !ROOT_ATTRIBUTES.has(name)),
+  Object.entries(attrs).filter(([name]) => !NON_NATIVE_ATTRIBUTES.has(name)),
 ));
 
 function focusControl() {
@@ -136,7 +139,6 @@ function focusControl() {
         'mat-text-input--focused': focused,
         'mat-text-input--error': error,
         'mat-text-input--disabled': disabled,
-        'mat-text-input--block': block,
       },
     ]"
     :style="rootStyle"
@@ -243,7 +245,7 @@ function focusControl() {
   --mat-text-input-label-color: var(--mat-sys-color-on-surface-variant);
   --mat-text-input-outline-color: var(--mat-sys-color-outline);
   --mat-text-input-supporting-color: var(--mat-sys-color-on-surface-variant);
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   min-inline-size: 0;
   inline-size: 100%;
@@ -261,10 +263,6 @@ function focusControl() {
   overflow: visible;
   background: transparent;
   border-radius: var(--mat-sys-shape-corner-small);
-}
-
-.mat-text-input--block {
-  display: flex;
 }
 
 .mat-text-input__outline {
