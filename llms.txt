@@ -4,33 +4,33 @@
 
 ## 文档
 
-- [概述](docs/site/guide/overview.md): 了解 mdu-ui 的定位、支持范围、导入方式和 Material 组件体系。
-- [安装](docs/site/guide/installation.md): 从 GitHub 私有仓库固定提交安装 mdu-ui，并选择全局注册或按需导入组件。
-- [createMatUi](docs/site/guide/create-mat-ui.md): 配置 mdu-ui 的全局组件注册、交互指针、图标 class 和主题控制器。
-- [主题](docs/site/guide/theme.md): 配置 Material 3 种子色、亮暗模式、配色变体和对比度，并在运行时切换主题。
-- [Icon 图标](docs/site/components/icon.md): mat-icon 的 Material Symbols 字形、SVG 资源、内联 SVG、尺寸、字体轴和配色。
-- [组件配色](docs/site/guide/component-color.md): 按 Material 3 颜色角色为组件选择容器、内容、表面、边界和状态配色。
-- [Tailwind CSS](docs/site/guide/tailwind.md): 将 mdu-ui 运行时令牌接入 Tailwind CSS v4，并使用带 mat 前缀的语义工具类。
-- [Button 按钮](docs/site/components/button.md): mat-btn 的普通与图标模式、尺寸、宽度、形态、配色、受控切换、事件和 slots。
-- [FAB 浮动操作按钮](docs/site/components/fab.md): mat-fab 的纯图标 FAB 与 Extended FAB、尺寸、官方颜色角色、禁用状态和无障碍名称。
-- [Button group 按钮组](docs/site/components/button-group.md): mat-btn-group 的标准与连接布局、级联属性、受控单选多选和事件。
-- [限制](docs/site/guide/limitations.md): 记录 mdu-ui 当前明确不支持的运行环境、分发方式和按钮能力。
-- [Split button 拆分按钮](docs/site/components/split-button.md): mat-split-btn 的双按钮组合、受控展开、事件、菜单 ARIA 和 slots。
-- [Checkbox 复选框](docs/site/components/checkbox.md): mat-checkbox 的布尔与数组 v-model、不确定态、配色、事件和默认 slot。
-- [Radio 单选按钮与单选组](docs/site/components/radio.md): mat-radio 与 mat-radio-group 的独立或成组 v-model、标签、禁用、配色和键盘交互。
-- [Switch 开关](docs/site/components/switch.md): mat-switch 的布尔 v-model、三档内置图标、配色、事件和默认 slot。
-- [Slider 滑块](docs/site/components/slider.md): mat-slider 的单数值 v-model、标准与居中变体、尺寸、方向、图标和数值指示。
-- [Range slider 范围滑块](docs/site/components/range-slider.md): mat-range-slider 的不可变区间 v-model、端点名称、方向、尺寸、停靠点和数值指示。
-- [Loader 加载器](docs/site/components/loader.md): mat-loader 的线条与环形进度、确定与不确定状态、波浪形及其运动开关、厚度和配色。
-- [Card 卡片](docs/site/components/card.md): mat-card 的 Material 3 外观、局部配色、内容、操作区与链接式交互。
-- [Text field 文本输入](docs/site/components/text-field.md): mat-text-field 与 mat-textarea 的输入、校验提示、计数、局部配色和原生事件。
-- [Menu 菜单](docs/site/components/menu.md): mat-menu、mat-menu-group 与 mat-menu-item 的分组、坐标定位、多级展开、键盘焦点和局部配色。
-- [Dialog 对话框](docs/site/components/dialog.md): mat-dialog 的模态展示、全屏布局、帷幕、动画、滚动区域和 Promise 命令式函数。
-- [List 列表](docs/site/components/list.md): mat-list、mat-list-group 与 mat-list-item 的 Material 3 Expressive 外观、折叠分组、操作和受控选择。
-- [Toolbar 工具栏](docs/site/components/toolbar.md): mat-toolbar 的停靠、悬浮、自然布局占位、安全区和覆盖层避让。
-- [Navigation 导航](docs/site/components/navigation-rail.md): mat-navigation-rail 的 Expressive collapsed/expanded rail 与 horizontal flexible navigation bar。
-- [Tooltip 文字提示](docs/site/components/tooltip.md): mat-tooltip 的 Material 3 Plain tooltip、展示元素、固定定位、延迟和无障碍说明。
-- [Divider 分隔线](docs/site/components/divider.md): mat-divider 的 Material 3 全宽、起始缩进和两侧缩进样式。
-- [Snackbar 消息提示](docs/site/components/snackbar.md): mat-snackbar 的 Material 3 底部消息提示、文字 action、全局 FIFO 队列和 Promise 函数。
-- [Spacer 弹性占位](docs/site/components/spacer.md): mat-spacer 在 flex 布局中占据主轴剩余空间。
-- [Panes 布局面板](docs/site/components/panes.md): mat-panes 与 mat-pane 的横向多窗口布局、受控宽度调整、断点事件和低频宽度信息。
+- [概述](guide/overview.md): 了解 mdu-ui 的定位、支持范围、导入方式和 Material 组件体系。
+- [安装](guide/installation.md): 从 GitHub 私有仓库固定提交安装 mdu-ui，并选择全局注册或按需导入组件。
+- [createMatUi](guide/create-mat-ui.md): 配置 mdu-ui 的全局组件注册、交互指针、图标 class 和主题控制器。
+- [主题](guide/theme.md): 配置 Material 3 种子色、亮暗模式、配色变体和对比度，并在运行时切换主题。
+- [Icon 图标](components/icon.md): mat-icon 的 Material Symbols 字形、SVG 资源、内联 SVG、尺寸、字体轴和配色。
+- [组件配色](guide/component-color.md): 按 Material 3 颜色角色为组件选择容器、内容、表面、边界和状态配色。
+- [Tailwind CSS](guide/tailwind.md): 将 mdu-ui 运行时令牌接入 Tailwind CSS v4，并使用带 mat 前缀的语义工具类。
+- [Button 按钮](components/button.md): mat-btn 的普通与图标模式、尺寸、宽度、形态、配色、受控切换、事件和 slots。
+- [FAB 浮动操作按钮](components/fab.md): mat-fab 的纯图标 FAB 与 Extended FAB、尺寸、官方颜色角色、禁用状态和无障碍名称。
+- [Button group 按钮组](components/button-group.md): mat-btn-group 的标准与连接布局、级联属性、受控单选多选和事件。
+- [限制](guide/limitations.md): 记录 mdu-ui 当前明确不支持的运行环境、分发方式和按钮能力。
+- [Split button 拆分按钮](components/split-button.md): mat-split-btn 的双按钮组合、受控展开、事件、菜单 ARIA 和 slots。
+- [Checkbox 复选框](components/checkbox.md): mat-checkbox 的布尔与数组 v-model、不确定态、配色、事件和默认 slot。
+- [Radio 单选按钮与单选组](components/radio.md): mat-radio 与 mat-radio-group 的独立或成组 v-model、标签、禁用、配色和键盘交互。
+- [Switch 开关](components/switch.md): mat-switch 的布尔 v-model、三档内置图标、配色、事件和默认 slot。
+- [Slider 滑块](components/slider.md): mat-slider 的单数值 v-model、标准与居中变体、尺寸、方向、图标和数值指示。
+- [Range slider 范围滑块](components/range-slider.md): mat-range-slider 的不可变区间 v-model、端点名称、方向、尺寸、停靠点和数值指示。
+- [Loader 加载器](components/loader.md): mat-loader 的线条与环形进度、确定与不确定状态、波浪形及其运动开关、厚度和配色。
+- [Card 卡片](components/card.md): mat-card 的 Material 3 外观、局部配色、内容、操作区与链接式交互。
+- [Text field 文本输入](components/text-field.md): mat-text-field 与 mat-textarea 的输入、校验提示、计数、局部配色和原生事件。
+- [Menu 菜单](components/menu.md): mat-menu、mat-menu-group 与 mat-menu-item 的分组、坐标定位、多级展开、键盘焦点和局部配色。
+- [Dialog 对话框](components/dialog.md): mat-dialog 的模态展示、全屏布局、帷幕、动画、滚动区域和 Promise 命令式函数。
+- [List 列表](components/list.md): mat-list、mat-list-group 与 mat-list-item 的 Material 3 Expressive 外观、折叠分组、操作和受控选择。
+- [Toolbar 工具栏](components/toolbar.md): mat-toolbar 的停靠、悬浮、自然布局占位、安全区和覆盖层避让。
+- [Navigation 导航](components/navigation-rail.md): mat-navigation-rail 的 Expressive collapsed/expanded rail 与 horizontal flexible navigation bar。
+- [Tooltip 文字提示](components/tooltip.md): mat-tooltip 的 Material 3 Plain tooltip、展示元素、固定定位、延迟和无障碍说明。
+- [Divider 分隔线](components/divider.md): mat-divider 的 Material 3 全宽、起始缩进和两侧缩进样式。
+- [Snackbar 消息提示](components/snackbar.md): mat-snackbar 的 Material 3 底部消息提示、文字 action、全局 FIFO 队列和 Promise 函数。
+- [Spacer 弹性占位](components/spacer.md): mat-spacer 在 flex 布局中占据主轴剩余空间。
+- [Panes 布局面板](components/panes.md): mat-panes 与 mat-pane 的横向多窗口布局、受控宽度调整、断点事件和低频宽度信息。

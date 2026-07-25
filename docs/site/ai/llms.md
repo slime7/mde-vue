@@ -35,23 +35,23 @@ llms: false
 
 ## 按页面提供上下文
 
-`llms.txt` 中的链接指向仓库内的 Markdown 来源。常用页面包括：
+`llms.txt` 中的链接以 VitePress 文档根目录为基准，指向可直接访问的 Markdown 页面。常用页面包括：
 
-- 安装：`docs/site/guide/installation.md`
-- 主题：`docs/site/guide/theme.md`
-- 组件配色：`docs/site/guide/component-color.md`
-- Tailwind CSS：`docs/site/guide/tailwind.md`
-- Button：`docs/site/components/button.md`
-- Button group：`docs/site/components/button-group.md`
-- Split button：`docs/site/components/split-button.md`
-- FAB：`docs/site/components/fab.md`
-- Text field 与 Textarea：`docs/site/components/text-field.md`
-- Menu 与 Menu item：`docs/site/components/menu.md`
-- Toolbar：`docs/site/components/toolbar.md`
-- Tooltip：`docs/site/components/tooltip.md`
-- Snackbar：`docs/site/components/snackbar.md`
-- Spacer：`docs/site/components/spacer.md`
-- 支持范围：`docs/site/guide/limitations.md`
+- 安装：`guide/installation.md`
+- 主题：`guide/theme.md`
+- 组件配色：`guide/component-color.md`
+- Tailwind CSS：`guide/tailwind.md`
+- Button：`components/button.md`
+- Button group：`components/button-group.md`
+- Split button：`components/split-button.md`
+- FAB：`components/fab.md`
+- Text field 与 Textarea：`components/text-field.md`
+- Menu 与 Menu item：`components/menu.md`
+- Toolbar：`components/toolbar.md`
+- Tooltip：`components/tooltip.md`
+- Snackbar：`components/snackbar.md`
+- Spacer：`components/spacer.md`
+- 支持范围：`guide/limitations.md`
 
 只提供单个页面时，可以使用以下提示：
 

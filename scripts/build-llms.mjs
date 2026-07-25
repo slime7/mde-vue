@@ -24,7 +24,7 @@ const llmsArtifacts = new Map([
 /**
  * @typedef {object} DocumentEntry
  * @property {string} absolutePath 文件绝对路径。
- * @property {string} relativePath 相对仓库根目录的 POSIX 路径。
+ * @property {string} relativePath 相对 VitePress 文档根目录的 POSIX 路径。
  * @property {string} title 文档标题。
  * @property {string} description 文档简介。
  * @property {number} order 排序值。
@@ -105,7 +105,7 @@ function parseDocument(source, absolutePath) {
 
   return {
     absolutePath,
-    relativePath: path.relative(projectRoot, absolutePath).split(path.sep).join('/'),
+    relativePath: path.relative(docsDirectory, absolutePath).split(path.sep).join('/'),
     title,
     description: metadata.description,
     order,
