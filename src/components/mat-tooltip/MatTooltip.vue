@@ -13,6 +13,7 @@ import {
   useSlots,
   watch,
 } from 'vue';
+import MatHover from '../mat-hover/MatHover.vue';
 import { getTooltipPosition, TOOLTIP_LOCATIONS } from '../tooltip-position';
 import { activateTooltip, deactivateTooltip } from '../tooltip-stack';
 import {
@@ -74,6 +75,7 @@ const slots = useSlots();
 const instance = getCurrentInstance();
 const activatorHost = ref(null);
 const targetElement = shallowRef(null);
+const hoverTarget = { value: targetElement };
 const teleportTarget = shallowRef(null);
 const tooltipElement = ref(null);
 const rendered = ref(false);
@@ -531,13 +533,11 @@ function updateAutomaticVisibility() {
   scheduleClose();
 }
 
-function handleMouseEnter() {
-  pointerInside = true;
-  updateAutomaticVisibility();
-}
-
-function handleMouseLeave() {
-  pointerInside = false;
+/**
+ * @param {boolean} isHovering
+ */
+function handleHoverChange(isHovering) {
+  pointerInside = isHovering;
   updateAutomaticVisibility();
 }
 
@@ -591,16 +591,12 @@ function bindTargetListeners() {
   target.addEventListener('keydown', handleKeyDown);
 
   if (!isControlled && hasContent.value) {
-    target.addEventListener('mouseenter', handleMouseEnter);
-    target.addEventListener('mouseleave', handleMouseLeave);
     target.addEventListener('focusin', handleFocusIn);
     target.addEventListener('focusout', handleFocusOut);
   }
 
   removeTargetListeners = () => {
     target.removeEventListener('keydown', handleKeyDown);
-    target.removeEventListener('mouseenter', handleMouseEnter);
-    target.removeEventListener('mouseleave', handleMouseLeave);
     target.removeEventListener('focusin', handleFocusIn);
     target.removeEventListener('focusout', handleFocusOut);
   };
@@ -739,6 +735,12 @@ watch(tooltipId, () => {
 </script>
 
 <template>
+  <MatHover
+    v-if="!isControlled && hasContent"
+    :target="hoverTarget"
+    @update:model-value="handleHoverChange"
+  />
+
   <span v-if="hasActivatorSlot || !target" ref="activatorHost" class="mat-tooltip__activator">
     <slot name="activator" />
   </span>

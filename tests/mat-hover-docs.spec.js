@@ -7,6 +7,7 @@ const exampleNames = [
   'HoverDefaultExample',
   'HoverDelayExample',
   'HoverControlledExample',
+  'HoverTargetExample',
 ];
 
 describe('Hover 文档', () => {
@@ -19,6 +20,7 @@ describe('Hover 文档', () => {
 
     expect(page).toContain('llms: true');
     expect(page).toContain('`<mat-hover>` 的组件导出名是 `MatHover`');
+    expect(page).toContain('`target`');
     ['## 组件简介', '## 示例', '## API', '## 事件', '## Slots'].forEach((heading) => {
       expect(page).toContain(heading);
     });

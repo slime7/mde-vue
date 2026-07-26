@@ -3,6 +3,7 @@ import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
 import { h, nextTick } from 'vue';
+import MatHover from '../src/components/mat-hover/MatHover.vue';
 import MatToolbar from '../src/components/mat-toolbar/MatToolbar.vue';
 import MatTooltip from '../src/components/mat-tooltip/MatTooltip.vue';
 
@@ -43,6 +44,27 @@ describe('MatTooltip', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+  });
+
+  it('非受控 hover 通过 MatHover 观察目标元素', async () => {
+    const target = createTarget('hover-component-target');
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      props: {
+        content: 'Hover 组件触发',
+        target,
+      },
+    });
+
+    await settleRender();
+
+    expect(wrapper.findComponent(MatHover).exists()).toBe(true);
+
+    await hover(target);
+
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('Hover 组件触发');
+
+    wrapper.unmount();
   });
 
   it('content prop 优先于默认 Slot，并在 hover 后展示 Plain tooltip', async () => {

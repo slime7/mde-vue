@@ -106,6 +106,30 @@ describe('MatHover', () => {
     expect(wrapper.emitted('update:modelValue')).toEqual([[true]]);
   });
 
+  it('target 指向元素时直接观察该元素，不渲染额外包装元素', async () => {
+    const target = document.createElement('button');
+    const handleUpdate = vi.fn();
+
+    document.body.append(target);
+    const wrapper = mount(MatHover, {
+      props: {
+        target,
+        'onUpdate:modelValue': handleUpdate,
+      },
+    });
+
+    await wrapper.vm.$nextTick();
+    target.dispatchEvent(new MouseEvent('mouseenter'));
+
+    expect(handleUpdate).toHaveBeenCalledWith(true);
+    expect(wrapper.findAll('.mat-hover')).toHaveLength(0);
+
+    wrapper.unmount();
+    target.dispatchEvent(new MouseEvent('mouseleave'));
+
+    expect(handleUpdate).toHaveBeenCalledTimes(1);
+  });
+
   it('卸载时清理延迟任务', async () => {
     const wrapper = mountTarget({ openDelay: 100 });
     await wrapper.find('button').trigger('mouseenter');

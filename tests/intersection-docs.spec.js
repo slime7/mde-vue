@@ -39,4 +39,17 @@ describe('Intersection 指令文档', () => {
       expect(page).toContain(`<${exampleName} />`);
     });
   });
+
+  it('每个示例都提供固定高度的内部滚动观察区域', () => {
+    exampleNames.forEach((exampleName) => {
+      const example = readFileSync(
+        resolve('docs/site/examples/intersection', `${exampleName}.vue`),
+        'utf8',
+      );
+
+      expect(example).toContain('class="intersection-example__viewport"');
+      expect(example).toContain('block-size: 240px;');
+      expect(example).toContain('overflow-block: auto;');
+    });
+  });
 });

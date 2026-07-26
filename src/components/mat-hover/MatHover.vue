@@ -3,7 +3,10 @@ import {
   computed,
   getCurrentInstance,
   onBeforeUnmount,
+  onMounted,
+  onUpdated,
   ref,
+  shallowRef,
   useSlots,
   watch,
 } from 'vue';
@@ -30,6 +33,10 @@ const props = defineProps({
     type: [Number, String],
     default: 0,
   },
+  target: {
+    type: [String, Object],
+    default: undefined,
+  },
 });
 const emit = defineEmits({
   'update:modelValue': (payload) => typeof payload === 'boolean',
@@ -41,10 +48,12 @@ const isControlled = Object.prototype.hasOwnProperty.call(vnodeProps, 'modelValu
   || Object.prototype.hasOwnProperty.call(vnodeProps, 'model-value');
 const internalHovering = ref(false);
 const uncontrolledHovering = ref(null);
+const targetElement = shallowRef(null);
 const renderedHovering = computed(() => (
   isControlled ? props.modelValue : uncontrolledHovering.value
 ));
 let delayTimer;
+let removeTargetListeners = null;
 
 function clearDelay() {
   if (delayTimer === undefined) {
@@ -117,6 +126,80 @@ function handleMouseleave() {
   scheduleHovering(false, props.closeDelay);
 }
 
+/**
+ * @param {unknown} value
+ * @returns {HTMLElement | null}
+ */
+function normalizeElement(value) {
+  if (!value || typeof HTMLElement === 'undefined') {
+    return null;
+  }
+
+  if (value instanceof HTMLElement && value.ownerDocument === document) {
+    return value;
+  }
+
+  if (typeof value !== 'object') {
+    return null;
+  }
+
+  if ('value' in value) {
+    return normalizeElement(value.value);
+  }
+
+  if ('$el' in value) {
+    return normalizeElement(value.$el);
+  }
+
+  return null;
+}
+
+/**
+ * @returns {HTMLElement | null}
+ */
+function resolveTarget() {
+  if (typeof props.target !== 'string') {
+    return normalizeElement(props.target);
+  }
+
+  try {
+    return normalizeElement(document.querySelector(props.target));
+  } catch {
+    return null;
+  }
+}
+
+function unbindTargetListeners() {
+  if (!removeTargetListeners) {
+    return;
+  }
+
+  removeTargetListeners();
+  removeTargetListeners = null;
+}
+
+function syncTargetElement() {
+  const nextTarget = resolveTarget();
+
+  if (nextTarget === targetElement.value) {
+    return;
+  }
+
+  unbindTargetListeners();
+  targetElement.value = nextTarget;
+
+  if (!nextTarget) {
+    return;
+  }
+
+  nextTarget.addEventListener('mouseenter', handleMouseenter);
+  nextTarget.addEventListener('mouseleave', handleMouseleave);
+  removeTargetListeners = () => {
+    nextTarget.removeEventListener('mouseenter', handleMouseenter);
+    nextTarget.removeEventListener('mouseleave', handleMouseleave);
+  };
+}
+
 const targetProps = {
   onMouseenter: handleMouseenter,
   onMouseleave: handleMouseleave,
@@ -133,9 +216,13 @@ watch(() => props.disabled, (disabled, previousDisabled) => {
     emit('update:modelValue', internalHovering.value);
   }
 });
+watch(resolveTarget, syncTargetElement, { flush: 'sync' });
 
+onMounted(syncTargetElement);
+onUpdated(syncTargetElement);
 onBeforeUnmount(() => {
   clearDelay();
+  unbindTargetListeners();
 });
 </script>
 

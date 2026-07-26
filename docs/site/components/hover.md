@@ -69,6 +69,26 @@ order: 119
   </DocsPreview>
 </ClientOnly>
 
+### target 外部目标
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/hover/HoverTargetExample.vue#template [template]
+
+<<< @/examples/hover/HoverTargetExample.vue#script [script]
+
+<<< @/examples/hover/HoverTargetExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Hover 外部目标预览">
+    <HoverTargetExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -79,6 +99,7 @@ order: 119
 | `disabled` | `boolean` | `false` | 禁止向外同步 hover 状态，但组件仍记录真实指针状态。重新启用时同步当前状态。 |
 | `openDelay` | `number \| string` | `0` | 进入目标后等待的毫秒数；非有限或负值按 `0` 处理。 |
 | `closeDelay` | `number \| string` | `0` | 离开目标后等待的毫秒数；非有限或负值按 `0` 处理。 |
+| `target` | `HTMLElement \| string \| Ref<HTMLElement \| null>` | — | 指定时由组件直接监听目标元素或选择器；适合目标元素无法绑定默认 Slot 的场景。 |
 
 组件没有公开方法。
 
@@ -92,14 +113,15 @@ order: 119
 
 | Slot | 参数 | 内容约束 |
 | --- | --- | --- |
-| 默认 Slot | `{ isHovering: boolean \| null, props: { onMouseenter, onMouseleave } }` | 使用 `props` 绑定到需要观察 hover 的目标元素；组件不要求固定根元素。 |
+| 默认 Slot | `{ isHovering: boolean \| null, props: { onMouseenter, onMouseleave } }` | 未传 `target` 时，将 `props` 绑定到需要观察 hover 的目标元素；组件不要求固定根元素。 |
 
 ### 状态行为
 
-省略 `modelValue` 时，Slot 初始收到 `null`，首次进入或离开完成后变为 `true` 或 `false`。显式传入 `modelValue` 后，组件只通过 `update:modelValue` 请求父级更新，Slot 状态以父级传入值为准。新的进入或离开操作会取消相反方向尚未完成的延迟。
+省略 `modelValue` 时，Slot 初始收到 `null`，首次进入或离开完成后变为 `true` 或 `false`。传入 `target` 后，组件直接为该元素注册同一组进入和离开监听，不额外渲染包装元素。显式传入 `modelValue` 后，组件只通过 `update:modelValue` 请求父级更新，Slot 状态以父级传入值为准。新的进入或离开操作会取消相反方向尚未完成的延迟。
 
 <script setup>
 import HoverControlledExample from '../examples/hover/HoverControlledExample.vue';
 import HoverDefaultExample from '../examples/hover/HoverDefaultExample.vue';
 import HoverDelayExample from '../examples/hover/HoverDelayExample.vue';
+import HoverTargetExample from '../examples/hover/HoverTargetExample.vue';
 </script>
