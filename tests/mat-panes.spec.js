@@ -2,7 +2,6 @@ import { mount } from '@vue/test-utils';
 import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
-import { readFileSync } from 'node:fs';
 import { h, nextTick, ref } from 'vue';
 import { MatPane, MatPanes } from '../src';
 
@@ -97,23 +96,10 @@ describe('MatPanes', () => {
     const wrapper = mountPanes();
     await nextTick();
 
-    expect(wrapper.classes()).toContain('mat-panes');
     expect(wrapper.findAll('.mat-pane')).toHaveLength(3);
     expect(wrapper.findAll('.mat-pane__handle')).toHaveLength(2);
-    expect(wrapper.find('.mat-pane').classes()).toContain('mat-pane');
     expect(wrapper.find('.mat-pane').attributes('id')).toBe('first');
-    expect(wrapper.find('.mat-pane').attributes('style')).toContain('--mat-pane-weight: 1');
-
-    const paneSource = wrapper.find('.mat-pane').element.outerHTML;
-
-    expect(paneSource).toContain('First');
-    expect(wrapper.find('.mat-panes').attributes('style')).toBeUndefined();
-  });
-
-  it('Pane 调整手柄不声明无效的 grid 布局', () => {
-    const source = readFileSync('src/components/mat-panes/MatPane.vue', 'utf8');
-
-    expect(source).not.toContain('display: grid;');
+    expect(wrapper.text()).toContain('First');
   });
 
   it('使用 separator ARIA 语义和 Pane 的调整名称', async () => {

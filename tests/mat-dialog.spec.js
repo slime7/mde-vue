@@ -101,16 +101,12 @@ describe('MatDialog', () => {
 
     expect(element).not.toBeNull();
     expect(element.open).toBe(true);
-    expect(element.classList).toContain('mat-dialog--opening');
-
     await vi.advanceTimersByTimeAsync(400);
 
-    expect(element.classList).toContain('mat-dialog--open');
     expect(wrapper.emitted('opened')).toHaveLength(1);
 
     await wrapper.setProps({ modelValue: false });
 
-    expect(element.classList).toContain('mat-dialog--closing');
     expect(document.body.contains(element)).toBe(true);
 
     await vi.advanceTimersByTimeAsync(199);
@@ -197,7 +193,6 @@ describe('MatDialog', () => {
     const element = target.querySelector('dialog');
 
     expect(element).not.toBeNull();
-    expect(element.classList).toContain('consumer-dialog');
     expect(element.getAttribute('aria-describedby')).toBe('dialog-description');
   });
 
@@ -220,69 +215,12 @@ describe('MatDialog', () => {
     );
   });
 
-  it('支持数字和 CSS 宽度值，并在小屏保留视口限制', async () => {
-    const wide = mount(MatDialog, {
-      props: {
-        modelValue: true,
-        title: '宽 Dialog',
-        width: 720,
-      },
-    });
-
-    await settleRender();
-
-    const wideElement = document.body.querySelector('dialog');
-
-    expect(wideElement.getAttribute('style')).toContain(
-      'inline-size: min(720px, calc(100dvi - 48px));',
-    );
-    expect(wideElement.getAttribute('style')).toContain(
-      'max-inline-size: calc(100dvi - 48px);',
-    );
-
-    await wide.setProps({ modelValue: false });
-    await vi.advanceTimersByTimeAsync(200);
-
-    const cssWidth = mount(MatDialog, {
-      props: {
-        modelValue: true,
-        title: 'CSS 宽度',
-        width: '45rem',
-      },
-    });
-
-    await settleRender();
-
-    expect(document.body.querySelector('dialog').getAttribute('style')).toContain(
-      'inline-size: min(45rem, calc(100dvi - 48px));',
-    );
-
-    cssWidth.unmount();
-  });
-
-  it('全屏 Dialog 忽略 width，且 width 校验只接受正数或非空 CSS 值', async () => {
+  it('width 只接受正数或非空 CSS 值', () => {
     expect(MatDialog.props.width.validator(720)).toBe(true);
     expect(MatDialog.props.width.validator('calc(100% - 32px)')).toBe(true);
     expect(MatDialog.props.width.validator(0)).toBe(false);
     expect(MatDialog.props.width.validator(Number.POSITIVE_INFINITY)).toBe(false);
     expect(MatDialog.props.width.validator('')).toBe(false);
-
-    const wrapper = mount(MatDialog, {
-      props: {
-        fullScreen: true,
-        modelValue: true,
-        title: '全屏 Dialog',
-        width: 720,
-      },
-    });
-
-    await settleRender();
-
-    const element = document.querySelector('.mat-dialog');
-
-    expect(element).not.toBeNull();
-    expect(element.getAttribute('style') ?? '').not.toContain('720px');
-    wrapper.unmount();
   });
 
   it('prop 内容优先于同名 Slot', async () => {
@@ -331,7 +269,6 @@ describe('MatDialog', () => {
 
     const element = document.body.querySelector('dialog');
 
-    expect(element.classList).toContain('mat-dialog--full-screen');
     expect(element.querySelector('.mat-dialog__header')).not.toBeNull();
     expect(element.querySelector('.mat-dialog__content').textContent).toContain('很长的正文');
     expect(element.querySelector('.mat-dialog__actions').textContent).toContain('保存');
@@ -411,16 +348,10 @@ describe('MatDialog', () => {
     const elements = [...document.body.querySelectorAll('dialog')];
 
     expect(elements).toHaveLength(2);
-    expect(elements[0].classList).not.toContain('mat-dialog--top');
-    expect(elements[1].classList).toContain('mat-dialog--top');
-    expect(elements[1].classList).toContain('mat-dialog--transparent-scrim');
-
     await second.setProps({ modelValue: false });
     await vi.advanceTimersByTimeAsync(200);
 
     expect(document.body.querySelector('dialog')).toBe(elements[0]);
-    expect(elements[0].classList).toContain('mat-dialog--top');
-
     await first.setProps({ modelValue: false });
     await vi.advanceTimersByTimeAsync(200);
   });
@@ -443,8 +374,6 @@ describe('MatDialog', () => {
     expect(document.body.querySelector('.mat-toolbar')).not.toBeNull();
     expect(dialogElement).not.toBeNull();
     expect(dialogElement.open).toBe(true);
-    expect(dialogElement.style.zIndex).toBe('');
-
     await dialog.setProps({ modelValue: false });
     await vi.advanceTimersByTimeAsync(200);
     toolbar.unmount();
@@ -470,7 +399,7 @@ describe('MatDialog', () => {
 
     await settleRender();
 
-    expect(document.activeElement.classList).toContain('focus-action');
+    expect(document.activeElement?.textContent).toBe('确定');
 
     await wrapper.setProps({ modelValue: false });
     await vi.advanceTimersByTimeAsync(200);

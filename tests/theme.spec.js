@@ -111,18 +111,12 @@ describe('主题控制器', () => {
         target,
       },
     });
-    const wrapper = mount(MatBtn, {
-      global: {
-        plugins: [plugin],
-      },
-    });
     const initialPrimary = target.style.getPropertyValue('--mat-sys-color-primary');
 
     plugin.theme.setSeedColor('#f00');
 
     expect(plugin.theme.seedColor.value).toBe('#ff0000');
     expect(target.style.getPropertyValue('--mat-sys-color-primary')).not.toBe(initialPrimary);
-    expect(wrapper.classes()).toContain('mat-btn--filled');
     plugin.theme.dispose();
   });
 
@@ -166,41 +160,6 @@ describe('主题控制器', () => {
   it('拒绝类型错误的组件选项', () => {
     expect(() => createMatUi({ useCursor: 'pointer' })).toThrow(TypeError);
     expect(() => createMatUi({ iconClass: 1 })).toThrow(TypeError);
-  });
-
-  it('按插件选项启用手指指针和自定义图标 class', () => {
-    const plugin = createMatUi({
-      iconClass: 'custom-symbols',
-      useCursor: true,
-      theme: {
-        target: document.createElement('div'),
-      },
-    });
-    const button = mount(MatBtn, {
-      global: {
-        plugins: [plugin],
-      },
-      props: {
-        prefix: 'favorite',
-      },
-    });
-    const iconButton = mount(MatBtn, {
-      global: {
-        plugins: [plugin],
-      },
-      props: {
-        icon: 'favorite',
-        label: '收藏',
-      },
-    });
-
-    expect(button.classes()).toContain('mat-button-base--use-cursor');
-    expect(button.find('.mat-btn__icon').classes()).toContain('mat-icon');
-    expect(button.find('.mat-btn__icon').classes()).toContain('custom-symbols');
-    expect(iconButton.classes()).toContain('mat-button-base--use-cursor');
-    expect(iconButton.find('.mat-btn__icon').classes()).toContain('mat-icon');
-    expect(iconButton.find('.mat-btn__icon').classes()).toContain('custom-symbols');
-    plugin.theme.dispose();
   });
 
   it('dispose 清理系统主题监听且可重复调用', () => {

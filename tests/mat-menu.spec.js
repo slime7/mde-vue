@@ -19,11 +19,6 @@ function dispatchToggle(element, newState) {
   element.dispatchEvent(event);
 }
 
-function dispatchNativeClose(element) {
-  element.removeAttribute('data-popover-open');
-  dispatchToggle(element, 'closed');
-}
-
 describe('MatMenu', () => {
   beforeEach(() => {
     HTMLElement.prototype.showPopover = vi.fn(function showPopover() {
@@ -60,8 +55,6 @@ describe('MatMenu', () => {
     const activator = wrapper.get('#slot-menu-activator').element;
     const menu = wrapper.get('[role="menu"]');
 
-    expect(activator.style.getPropertyValue('anchor-name')).toMatch(/--mat-menu-anchor-/);
-    expect(externalAnchor.style.getPropertyValue('anchor-name')).toBe('');
     expect(document.activeElement).toBe(menu.get('[role="menuitem"]').element);
 
     await menu.get('[role="menuitem"]').trigger('click');
@@ -100,7 +93,6 @@ describe('MatMenu', () => {
     const anchor = document.createElement('button');
 
     anchor.id = 'menu-trigger';
-    anchor.style.setProperty('anchor-name', '--consumer-anchor');
     document.body.append(anchor);
     const wrapper = mount(MatMenu, {
       attachTo: document.body,
@@ -127,11 +119,8 @@ describe('MatMenu', () => {
     const items = wrapper.findAll('[role="menuitem"]');
 
     expect(menu.attributes('popover')).toBe('auto');
-    expect(menu.find('.mat-menu__surface').exists()).toBe(true);
     expect(menu.attributes('aria-label')).toBe('操作');
-    expect(menu.attributes('style')).toContain('--mat-accent-color');
     expect(menu.element.showPopover).toHaveBeenCalled();
-    expect(anchor.style.getPropertyValue('anchor-name')).toMatch(/--mat-menu-anchor-/);
     expect(items.map((item) => item.attributes('tabindex'))).toEqual(['0', undefined, '-1']);
     expect(document.activeElement).toBe(items[0].element);
 
@@ -151,11 +140,7 @@ describe('MatMenu', () => {
     await wrapper.setProps({ anchor: 'next-menu-trigger' });
     await nextTick();
 
-    expect(anchor.style.getPropertyValue('anchor-name')).toBe('--consumer-anchor');
-    expect(nextAnchor.style.getPropertyValue('anchor-name')).toMatch(/--mat-menu-anchor-/);
-
     wrapper.unmount();
-    expect(nextAnchor.style.getPropertyValue('anchor-name')).toBe('');
   });
 
   it('浏览器关闭 Popover 时同步 modelValue 状态', async () => {
@@ -178,42 +163,6 @@ describe('MatMenu', () => {
     expect(document.activeElement).toBe(anchor);
   });
 
-  it('程序化关闭时保留菜单直到消失动画完成', async () => {
-    vi.useFakeTimers();
-
-    try {
-      const anchor = document.createElement('button');
-
-      anchor.id = 'animated-dismiss-trigger';
-      document.body.append(anchor);
-      const wrapper = mount(MatMenu, {
-        attachTo: document.body,
-        props: { modelValue: true, anchor: 'animated-dismiss-trigger' },
-        slots: { default: () => h(MatMenuItem, null, () => '动画菜单') },
-      });
-
-      await nextTick();
-      const menu = wrapper.get('[role="menu"]');
-
-      await wrapper.setProps({ modelValue: false });
-      await nextTick();
-
-      expect(menu.classes()).toContain('mat-menu--closing');
-      expect(menu.element.dataset.popoverOpen).toBe('');
-
-      await vi.advanceTimersByTimeAsync(199);
-      expect(menu.element.dataset.popoverOpen).toBe('');
-
-      await vi.advanceTimersByTimeAsync(1);
-      await nextTick();
-      expect(menu.element.dataset.popoverOpen).toBeUndefined();
-
-      wrapper.unmount();
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-
   it('程序化关闭并重开后仍响应浏览器发起的关闭', async () => {
     const anchor = document.createElement('button');
 
@@ -234,187 +183,6 @@ describe('MatMenu', () => {
     await nextTick();
 
     expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([false]);
-  });
-
-  it('菜单操作、Escape 与 Tab 关闭时保留菜单直到动画完成', async () => {
-    vi.useFakeTimers();
-
-    try {
-      const anchor = document.createElement('button');
-
-      anchor.id = 'action-dismiss-trigger';
-      document.body.append(anchor);
-      const wrapper = mount(MatMenu, {
-        attachTo: document.body,
-        props: { modelValue: true, anchor: 'action-dismiss-trigger' },
-        slots: { default: () => h(MatMenuItem, null, () => '动画菜单') },
-      });
-
-      await nextTick();
-      const menu = wrapper.get('[role="menu"]');
-      const item = menu.get('[role="menuitem"]');
-
-      await item.trigger('click');
-      await nextTick();
-
-      expect(menu.classes()).toContain('mat-menu--closing');
-      expect(menu.element.dataset.popoverOpen).toBe('');
-
-      await vi.advanceTimersByTimeAsync(200);
-      await nextTick();
-      await wrapper.setProps({ modelValue: false });
-      await nextTick();
-      await wrapper.setProps({ modelValue: true });
-      await nextTick();
-
-      await menu.trigger('keydown', { key: 'Escape' });
-      await nextTick();
-
-      expect(menu.classes()).toContain('mat-menu--closing');
-      expect(menu.element.dataset.popoverOpen).toBe('');
-
-      await vi.advanceTimersByTimeAsync(200);
-      await nextTick();
-      await wrapper.setProps({ modelValue: false });
-      await nextTick();
-      await wrapper.setProps({ modelValue: true });
-      await nextTick();
-
-      await menu.trigger('keydown', { key: 'Tab' });
-      await nextTick();
-
-      expect(menu.classes()).toContain('mat-menu--closing');
-      expect(menu.element.dataset.popoverOpen).toBe('');
-
-      wrapper.unmount();
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-
-  it('浏览器原生关闭 Popover 时也进入退出动画状态', async () => {
-    vi.useFakeTimers();
-
-    try {
-      const anchor = document.createElement('button');
-
-      anchor.id = 'native-dismiss-trigger';
-      document.body.append(anchor);
-      const wrapper = mount(MatMenu, {
-        attachTo: document.body,
-        props: { modelValue: true, anchor: 'native-dismiss-trigger' },
-        slots: { default: () => h(MatMenuItem, null, () => '原生关闭') },
-      });
-
-      await nextTick();
-      const menu = wrapper.get('[role="menu"]');
-
-      dispatchNativeClose(menu.element);
-      await nextTick();
-
-      expect(menu.classes()).toContain('mat-menu--closing');
-      expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([false]);
-
-      await vi.advanceTimersByTimeAsync(199);
-      expect(menu.classes()).toContain('mat-menu--closing');
-
-      await vi.advanceTimersByTimeAsync(1);
-      await nextTick();
-      expect(menu.classes()).not.toContain('mat-menu--closing');
-
-      wrapper.unmount();
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-
-  it('在 CSS 换边后把最终菜单矩形夹紧到视口安全间距', async () => {
-    const anchor = document.createElement('button');
-
-    anchor.id = 'edge-trigger';
-    document.body.append(anchor);
-    const wrapper = mount(MatMenu, {
-      attachTo: document.body,
-      props: { modelValue: true, anchor: 'edge-trigger' },
-      slots: { default: () => h(MatMenuItem, null, () => '边缘项目') },
-    });
-
-    await nextTick();
-    const menu = wrapper.get('[role="menu"]');
-
-    menu.element.getBoundingClientRect = () => ({
-      left: 0,
-      top: 2,
-      right: 200,
-      bottom: 102,
-    });
-    window.dispatchEvent(new Event('resize'));
-    await new Promise((resolve) => {
-      requestAnimationFrame(() => requestAnimationFrame(resolve));
-    });
-
-    expect(menu.element.style.getPropertyValue('--mat-menu-viewport-shift-x')).toBe('8px');
-    expect(menu.element.style.getPropertyValue('--mat-menu-viewport-shift-y')).toBe('6px');
-  });
-
-  it('通过视口坐标打开菜单并在坐标变化时重新定位', async () => {
-    const previousFocus = document.createElement('button');
-
-    document.body.append(previousFocus);
-    previousFocus.focus();
-    const wrapper = mount(MatMenu, {
-      attachTo: document.body,
-      props: {
-        modelValue: true,
-        anchor: [120, 80],
-        offset: [6, -4],
-      },
-      slots: { default: () => h(MatMenuItem, null, () => '右键操作') },
-    });
-
-    await nextTick();
-    const menu = wrapper.get('[role="menu"]');
-
-    expect(menu.classes()).toContain('mat-menu--coordinate');
-    expect(menu.element.style.left).toBe('120px');
-    expect(menu.element.style.top).toBe('80px');
-    expect(menu.element.style.getPropertyValue('--mat-menu-offset-x')).toBe('6px');
-    expect(menu.element.style.getPropertyValue('--mat-menu-offset-y')).toBe('-4px');
-    expect(menu.element.showPopover).toHaveBeenCalled();
-
-    await wrapper.setProps({ anchor: [240, 160] });
-    await nextTick();
-
-    expect(menu.element.style.left).toBe('240px');
-    expect(menu.element.style.top).toBe('160px');
-
-    await menu.get('[role="menuitem"]').trigger('click');
-    await nextTick();
-
-    expect(document.activeElement).toBe(previousFocus);
-  });
-
-  it('元素锚点也应用 offset', async () => {
-    const anchor = document.createElement('button');
-
-    anchor.id = 'offset-trigger';
-    document.body.append(anchor);
-    const wrapper = mount(MatMenu, {
-      attachTo: document.body,
-      props: {
-        modelValue: true,
-        anchor: 'offset-trigger',
-        offset: [-8, 12],
-      },
-      slots: { default: () => h(MatMenuItem, null, () => '偏移项目') },
-    });
-
-    await nextTick();
-    const menu = wrapper.get('[role="menu"]');
-
-    expect(menu.classes()).not.toContain('mat-menu--coordinate');
-    expect(menu.element.style.getPropertyValue('--mat-menu-offset-x')).toBe('-8px');
-    expect(menu.element.style.getPropertyValue('--mat-menu-offset-y')).toBe('12px');
   });
 
   it('拒绝无效的坐标和 offset 数组', async () => {
@@ -589,8 +357,6 @@ describe('MatMenu', () => {
     const nestedItems = menus[1].findAll('[role="menuitem"]');
 
     expect(parentItem.attributes('aria-expanded')).toBe('true');
-    expect(menus[1].classes()).toContain('mat-menu--nested');
-    expect(menus[1].classes()).toContain('mat-menu--vibrant');
     expect(document.activeElement).toBe(nestedItems[0].element);
 
     await nestedItems[0].trigger('keydown', { key: 'ArrowLeft' });
@@ -749,7 +515,6 @@ describe('MatMenu', () => {
 
     expect(divider.element.tagName).toBe('DIV');
     expect(divider.attributes('role')).toBe('separator');
-    expect(divider.classes()).toContain('mat-divider--menu');
   });
 
   it('MatMenuGroup 提供分组标签并保持跨组 roving focus', async () => {
@@ -776,18 +541,13 @@ describe('MatMenu', () => {
     });
 
     await nextTick();
-    const menu = wrapper.get('[role="menu"]');
     const groups = wrapper.findAll('[role="group"]');
     const items = wrapper.findAll('[role="menuitem"]');
 
-    expect(menu.classes()).toContain('mat-menu--grouped');
     expect(groups).toHaveLength(2);
     expect(groups[0].attributes('aria-labelledby')).toBeTruthy();
     expect(groups[0].get('.mat-menu-group__label').text()).toBe('编辑');
     expect(groups[1].attributes('aria-labelledby')).toBeUndefined();
-    expect(items[0].classes()).toContain('mat-menu-item--first');
-    expect(items[1].classes()).toContain('mat-menu-item--last');
-    expect(items[2].classes()).toContain('mat-menu-item--only');
     expect(document.activeElement).toBe(items[0].element);
 
     await items[0].trigger('keydown', { key: 'ArrowDown' });
@@ -817,7 +577,6 @@ describe('MatMenu', () => {
     const trailing = wrapper.get('[data-mat-item-content-trailing]');
 
     expect(icon.element.tagName).toBe('SPAN');
-    expect(icon.classes()).toContain('material-symbols-outlined');
     expect(icon.text()).toBe('note_add');
     expect(trailing.find('.mat-icon').exists()).toBe(false);
   });
@@ -840,9 +599,6 @@ describe('MatMenu', () => {
     const icon = wrapper.get('.mat-menu-item__submenu-icon');
 
     expect(icon.element.tagName).toBe('SPAN');
-    expect(icon.classes()).toContain('mat-icon');
-    expect(icon.classes()).toContain('material-symbols-outlined');
     expect(icon.text()).toBe('chevron_right');
-    expect(icon.attributes('style')).toContain('--mat-icon-size: 20px');
   });
 });

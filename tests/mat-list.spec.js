@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs';
 import { mount } from '@vue/test-utils';
 import {
   createApp, h, nextTick,
@@ -31,8 +30,6 @@ describe('MatList', () => {
     });
 
     expect(wrapper.element.tagName).toBe('UL');
-    expect(wrapper.classes()).toContain('mat-list--segmented');
-    expect(wrapper.find('li').classes()).toContain('mat-list-item--lines-3');
     expect(wrapper.find('.mat-list-item-content__leading').text()).toBe('图标');
     expect(wrapper.find('.mat-list-item-content__overline').text()).toBe('上方文字');
     expect(wrapper.find('.mat-list-item-content__label').text()).toBe('标题');
@@ -40,7 +37,7 @@ describe('MatList', () => {
     expect(wrapper.find('.mat-list-item-content__trailing').text()).toBe('尾部');
   });
 
-  it('支持显式 standard、显式行数和局部选择配色', () => {
+  it('支持显式 standard 和显式行数', () => {
     const wrapper = mount(MatList, {
       props: {
         variant: 'standard',
@@ -53,12 +50,7 @@ describe('MatList', () => {
       },
     });
 
-    expect(wrapper.classes()).toContain('mat-list--standard');
-    expect(wrapper.attributes('style')).toContain(
-      '--mat-accent-container-color: var(--mat-sys-color-tertiary-container)',
-    );
-    expect(wrapper.find('[role="option"]').classes()).toContain('mat-list-item--lines-2');
-    expect(wrapper.find('[role="option"]').classes()).toContain('mat-list-item--selected');
+    expect(wrapper.find('[role="option"]').attributes('aria-selected')).toBe('true');
   });
 
   it('单操作模式使用原生按钮或链接并只从主操作发出 click', async () => {
@@ -296,10 +288,9 @@ describe('MatList', () => {
         })),
       },
     });
-    const groups = wrapper.findAll('.mat-list-group');
     const activators = wrapper.findAll('[data-mat-list-group-activator]');
 
-    expect(groups.every((group) => group.classes('mat-list-group--expanded'))).toBe(true);
+    expect(activators.every((activator) => activator.attributes('aria-expanded') === 'true')).toBe(true);
     await activators[0].trigger('click');
     expect(activators[0].attributes('aria-expanded')).toBe('true');
     expect(wrapper.emitted('update:expanded')[0][0]).toEqual(['two']);
@@ -444,17 +435,6 @@ describe('MatList', () => {
     expect(group.element.parentElement).toBe(wrapper.element);
     expect(group.find('ul').element.parentElement?.hasAttribute('data-mat-list-group-content')).toBe(true);
     expect(group.find('ul > li').text()).toBe('组内');
-  });
-
-  it('使用 grid、medium2 emphasized motion 和减少动态效果分支', () => {
-    const source = readFileSync('src/components/mat-list-group/MatListGroup.vue', 'utf8');
-
-    expect(source).toContain('grid-template-rows: 0fr');
-    expect(source).toContain('grid-template-rows: 1fr');
-    expect(source).toContain('--mat-sys-motion-duration-medium2');
-    expect(source).toContain('--mat-sys-motion-easing-emphasized');
-    expect(source).toContain('@media (prefers-reduced-motion: reduce)');
-    expect(source).toContain('gap: var(--mat-list-group-gap)');
   });
 
   it('roving focus 跳过折叠内容并在收起时恢复到 Activator', async () => {

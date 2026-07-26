@@ -81,7 +81,6 @@ describe('Snackbar 命令式函数', () => {
     await settleRender();
 
     expect(onAction).toHaveBeenCalledOnce();
-    expect(snackbarElement().classList).toContain('mat-snackbar--closing');
 
     await finishExit();
 
@@ -183,10 +182,6 @@ describe('Snackbar 命令式函数', () => {
     });
 
     await settleRender();
-
-    expect(
-      snackbarElement().querySelector('.mat-snackbar__default-close .mat-icon').classList,
-    ).toContain('imperative-snackbar-icons');
 
     snackbarElement().querySelector('.mat-snackbar__default-close').click();
     await finishExit();

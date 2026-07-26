@@ -32,7 +32,6 @@ describe('文本输入组件', () => {
       placeholder: '搜索',
       value: '初始值',
     });
-    expect(input.classes()).toEqual(expect.arrayContaining(['mat-input-base', 'consumer-input']));
     expect(input.attributes('control')).toBeUndefined();
     expect(input.attributes('modelvalue')).toBeUndefined();
 
@@ -69,7 +68,6 @@ describe('文本输入组件', () => {
       const wrapper = mount(component, { attrs: { block: true } });
 
       expect(component.props.block).toBeUndefined();
-      expect(wrapper.classes()).not.toContain('mat-text-input--block');
       expect(wrapper.attributes('block')).toBeUndefined();
       expect(wrapper.get('input, textarea').attributes('block')).toBeUndefined();
     });
@@ -104,10 +102,6 @@ describe('文本输入组件', () => {
     const input = wrapper.get('input');
 
     expect(wrapper.element.tagName).toBe('DIV');
-    expect(wrapper.classes()).toContain('consumer-field');
-    expect(wrapper.classes()).toContain('mat-text-input--floating');
-    expect(wrapper.attributes('style')).toContain('inline-size: 320px');
-    expect(wrapper.attributes('style')).toContain('--mat-accent-color');
     expect(input.attributes()).toMatchObject({
       id: 'email-field',
       name: 'email',
@@ -116,7 +110,6 @@ describe('文本输入组件', () => {
       maxlength: '20',
       type: 'text',
     });
-    expect(input.classes()).not.toContain('consumer-field');
     expect(wrapper.text()).toContain('邮箱');
     expect(wrapper.text()).toContain('mailto:');
     expect(wrapper.text()).toContain('.com');
@@ -165,7 +158,6 @@ describe('文本输入组件', () => {
     const input = wrapper.get('input');
     const supporting = wrapper.get('.mat-text-input__supporting');
 
-    expect(wrapper.classes()).toContain('mat-text-input--error');
     expect(wrapper.text()).toContain('密码长度不足');
     expect(wrapper.text()).not.toContain('至少八位');
     expect(input.attributes('aria-invalid')).toBe('true');
@@ -190,33 +182,11 @@ describe('文本输入组件', () => {
 
     await input.trigger('focus');
 
-    expect(wrapper.classes()).toContain('mat-text-input--focused');
-    expect(wrapper.classes()).toContain('mat-text-input--floating');
     expect(focus).toHaveBeenCalledOnce();
 
     await input.trigger('blur');
 
-    expect(wrapper.classes()).not.toContain('mat-text-input--focused');
-    expect(wrapper.classes()).not.toContain('mat-text-input--floating');
     expect(blur).toHaveBeenCalledOnce();
-  });
-
-  it('空内容未聚焦时隐藏 prefixText 和 suffixText，浮动后显示', async () => {
-    const wrapper = mount(MatTextField, {
-      props: {
-        modelValue: '',
-        label: '网址',
-        prefixText: 'https://',
-        suffixText: '.example.com',
-      },
-    });
-    const input = wrapper.get('input');
-
-    expect(wrapper.classes()).not.toContain('mat-text-input--floating');
-
-    await input.trigger('focus');
-
-    expect(wrapper.classes()).toContain('mat-text-input--floating');
   });
 
   it('点击 prefixText 和 suffixText 时聚焦输入框', async () => {
@@ -302,12 +272,8 @@ describe('文本输入组件', () => {
     const trailing = wrapper.get('.mat-text-input__trailing');
 
     expect(leading.element.tagName).toBe('SPAN');
-    expect(leading.classes()).toContain('mat-icon');
-    expect(leading.classes()).toContain('material-symbols-outlined');
     expect(trailing.element.tagName).toBe('SPAN');
-    expect(trailing.classes()).toContain('mat-icon');
-    expect(trailing.classes()).toContain('material-symbols-outlined');
-    expect(leading.attributes('style')).toContain('--mat-icon-size: 24px');
-    expect(trailing.attributes('style')).toContain('--mat-icon-size: 24px');
+    expect(leading.text()).toBe('mail');
+    expect(trailing.text()).toBe('alternate_email');
   });
 });

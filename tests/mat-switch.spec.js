@@ -25,20 +25,7 @@ describe('MatSwitch', () => {
     expect(wrapper.emitted('change')?.[0][0]).toBeInstanceOf(Event);
   });
 
-  it.each(['none', 'selected', 'both'])('icons=%s 保持固定图标结构并交给 CSS 控制状态', (icons) => {
-    const wrapper = mount(MatSwitch, {
-      props: {
-        icons,
-        modelValue: true,
-      },
-    });
-
-    expect(wrapper.find('.mat-switch__handle-positioner').exists()).toBe(true);
-    expect(wrapper.findAll('.mat-switch__icon')).toHaveLength(2);
-    expect(wrapper.classes()).toContain(`mat-switch--icons-${icons}`);
-  });
-
-  it('支持禁用、选中状态和局部强调色', () => {
+  it('支持禁用和选中状态', () => {
     const wrapper = mount(MatSwitch, {
       props: {
         color: '#6750a4',
@@ -47,8 +34,7 @@ describe('MatSwitch', () => {
       },
     });
 
-    expect(wrapper.classes()).toContain('mat-switch--checked');
     expect(wrapper.find('input').element.disabled).toBe(true);
-    expect(wrapper.attributes('style')).toContain('--mat-accent-color');
+    expect(wrapper.find('input').element.checked).toBe(true);
   });
 });

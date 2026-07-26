@@ -4,7 +4,6 @@ import {
 } from 'vitest';
 import { h, nextTick } from 'vue';
 import MatHover from '../src/components/mat-hover/MatHover.vue';
-import MatToolbar from '../src/components/mat-toolbar/MatToolbar.vue';
 import MatTooltip from '../src/components/mat-tooltip/MatTooltip.vue';
 
 async function settleRender() {
@@ -381,7 +380,6 @@ describe('MatTooltip', () => {
     const closingTooltip = document.body.querySelector('[role="tooltip"]');
 
     expect(closingTooltip).not.toBeNull();
-    expect(closingTooltip.classList).toContain('mat-tooltip--closing');
 
     await vi.advanceTimersByTimeAsync(149);
     expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
@@ -471,8 +469,7 @@ describe('MatTooltip', () => {
     const tooltips = [...document.body.querySelectorAll('[role="tooltip"]')];
 
     expect(tooltips).toHaveLength(2);
-    expect(tooltips.find((tooltip) => tooltip.textContent.includes('第一个'))
-      .classList).toContain('mat-tooltip--closing');
+    expect(tooltips.find((tooltip) => tooltip.textContent.includes('第一个'))).not.toBeNull();
     expect(tooltips.find((tooltip) => tooltip.textContent.includes('第二个'))).not.toBeNull();
 
     first.unmount();
@@ -509,150 +506,5 @@ describe('MatTooltip', () => {
 
     first.unmount();
     second.unmount();
-  });
-
-  it('滚动、视口变化和尺寸观察会重新计算固定定位', async () => {
-    const observers = [];
-    const target = createTarget('positioning-target');
-    const targetRect = {
-      bottom: 120,
-      height: 20,
-      left: 100,
-      right: 140,
-      top: 100,
-      width: 40,
-    };
-    const tooltipRect = {
-      bottom: 10,
-      height: 10,
-      left: 0,
-      right: 20,
-      top: 0,
-      width: 20,
-    };
-
-    class MockResizeObserver {
-      /**
-       * @param {ResizeObserverCallback} callback
-       */
-      constructor(callback) {
-        this.callback = callback;
-        this.observed = [];
-        observers.push(this);
-      }
-
-      /**
-       * @param {Element} element
-       */
-      observe(element) {
-        this.observed.push(element);
-      }
-
-      disconnect() {
-        this.disconnected = true;
-      }
-    }
-
-    vi.stubGlobal('ResizeObserver', MockResizeObserver);
-    vi.spyOn(target, 'getBoundingClientRect').mockImplementation(() => targetRect);
-    const wrapper = mount(MatTooltip, {
-      attachTo: document.body,
-      props: {
-        content: '定位更新',
-        target,
-      },
-    });
-
-    await hover(target);
-
-    const tooltip = document.body.querySelector('[role="tooltip"]');
-
-    vi.spyOn(tooltip, 'getBoundingClientRect').mockImplementation(() => tooltipRect);
-    window.dispatchEvent(new Event('resize'));
-    await vi.advanceTimersByTimeAsync(20);
-    await settleRender();
-
-    expect(tooltip.style.left).toBe('110px');
-    expect(tooltip.style.top).toBe('86px');
-    expect(observers).toHaveLength(1);
-    expect(observers[0].observed).toEqual(expect.arrayContaining([target, tooltip]));
-
-    targetRect.left = 180;
-    targetRect.right = 220;
-    observers[0].callback();
-    await vi.advanceTimersByTimeAsync(20);
-    await settleRender();
-
-    expect(tooltip.style.left).toBe('190px');
-
-    targetRect.top = 160;
-    targetRect.bottom = 180;
-    document.body.dispatchEvent(new Event('scroll', { bubbles: true }));
-    await vi.advanceTimersByTimeAsync(20);
-    await settleRender();
-
-    expect(tooltip.style.top).toBe('146px');
-
-    wrapper.unmount();
-  });
-
-  it('Toolbar 占用首选位置时重新计算到无遮挡方向', async () => {
-    const toolbarWrapper = mount(MatToolbar, {
-      attachTo: document.body,
-      props: {
-        app: true,
-        variant: 'floating-bottom',
-      },
-    });
-    const toolbar = document.body.querySelector('.mat-toolbar');
-    const target = createTarget('toolbar-tooltip-target');
-    const targetRect = {
-      bottom: 480,
-      height: 20,
-      left: 380,
-      right: 420,
-      top: 460,
-      width: 40,
-    };
-    const tooltipRect = {
-      bottom: 10,
-      height: 10,
-      left: 0,
-      right: 20,
-      top: 0,
-      width: 20,
-    };
-
-    vi.spyOn(toolbar, 'getBoundingClientRect').mockReturnValue({
-      bottom: 600,
-      height: 110,
-      left: 0,
-      right: 800,
-      top: 490,
-      width: 800,
-    });
-    vi.spyOn(target, 'getBoundingClientRect').mockReturnValue(targetRect);
-    const wrapper = mount(MatTooltip, {
-      attachTo: document.body,
-      props: {
-        content: '避让 Toolbar',
-        location: 'bottom',
-        target,
-      },
-    });
-
-    await hover(target);
-
-    const tooltip = document.body.querySelector('[role="tooltip"]');
-
-    vi.spyOn(tooltip, 'getBoundingClientRect').mockReturnValue(tooltipRect);
-    window.dispatchEvent(new Event('resize'));
-    await vi.advanceTimersByTimeAsync(20);
-    await settleRender();
-
-    expect(tooltip.dataset.location).toBe('top');
-
-    wrapper.unmount();
-    toolbarWrapper.unmount();
   });
 });

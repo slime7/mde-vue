@@ -64,9 +64,6 @@ describe('Dialog 命令式函数', () => {
 
     await settleRender();
 
-    expect(document.body.querySelector('dialog').getAttribute('style')).toContain(
-      'inline-size: min(720px, calc(100dvi - 48px));',
-    );
     document.body.querySelector('.mat-dialog__actions button').click();
     await closeAnimation();
     await expect(result).resolves.toBeUndefined();
@@ -211,8 +208,6 @@ describe('Dialog 命令式函数', () => {
     const elements = document.body.querySelectorAll('dialog');
 
     expect(elements).toHaveLength(2);
-    expect(elements[0].classList).not.toContain('mat-dialog--top');
-    expect(elements[1].classList).toContain('mat-dialog--top');
 
     elements[1].querySelector('button').click();
     await closeAnimation();

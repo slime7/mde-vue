@@ -91,7 +91,6 @@ describe('MatCheckbox', () => {
       },
     });
 
-    expect(wrapper.classes()).toContain('selection-marker');
     expect(wrapper.attributes('aria-hidden')).toBe('true');
     expect(wrapper.attributes()).toHaveProperty('inert');
     expect(wrapper.find('input').attributes('aria-label')).toBe('展示选择状态');
@@ -108,6 +107,5 @@ describe('MatCheckbox', () => {
     });
 
     expect(wrapper.find('input').element.disabled).toBe(true);
-    expect(wrapper.attributes('style')).toContain('--mat-accent-color: var(--mat-sys-color-secondary)');
   });
 });

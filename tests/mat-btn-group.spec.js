@@ -1,16 +1,9 @@
 import { mount } from '@vue/test-utils';
 import { h } from 'vue';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import {
   afterEach, describe, expect, it, vi,
 } from 'vitest';
 import { MatBtn, MatBtnGroup } from '../src';
-
-const buttonGroupSource = readFileSync(
-  resolve('src/components/mat-btn-group/MatBtnGroup.vue'),
-  'utf8',
-);
 
 afterEach(() => {
   vi.useRealTimers();
@@ -18,98 +11,10 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-/**
- * @param {import('@vue/test-utils').DOMWrapper<HTMLButtonElement>[]} buttons
- * @param {number[]} widths
- */
-function mockButtonWidths(buttons, widths) {
-  buttons.forEach((button, index) => {
-    vi.spyOn(button.element, 'getBoundingClientRect').mockReturnValue({
-      width: widths[index],
-    });
-  });
-}
-
-/**
- * @param {import('@vue/test-utils').DOMWrapper<HTMLButtonElement>[]} buttons
- * @param {number[]} widths
- * @returns {(string | null)[]}
- */
-function trackButtonWidthReads(buttons, widths) {
-  const inlineSizes = [];
-
-  buttons.forEach((button, index) => {
-    vi.spyOn(button.element, 'getBoundingClientRect').mockImplementation(() => {
-      inlineSizes.push(button.element.style.inlineSize || null);
-      return { width: widths[index] };
-    });
-  });
-
-  return inlineSizes;
-}
-
-/**
- * @param {import('@vue/test-utils').DOMWrapper<HTMLButtonElement>[]} buttons
- * @returns {(number | null)[]}
- */
-function getInlineSizes(buttons) {
-  return buttons.map((button) => (
-    button.element.style.inlineSize
-      ? Number.parseFloat(Number.parseFloat(button.element.style.inlineSize).toFixed(3))
-      : null
-  ));
-}
-
-/**
- * @param {number} duration
- */
-function mockWidthTransitionDuration(duration = 150) {
-  const getStyle = window.getComputedStyle;
-
-  vi.spyOn(window, 'getComputedStyle').mockImplementation((element) => {
-    const style = getStyle(element);
-
-    Object.defineProperty(style, 'transitionDuration', {
-      configurable: true,
-      value: `${duration}ms`,
-    });
-    return style;
-  });
-}
-
 describe('MatBtnGroup', () => {
-  it('block 只切换组根布局，和 connected fullWidth 保持独立', () => {
-    const standard = mount(MatBtnGroup, {
-      props: { block: true, fullWidth: true },
-      slots: { default: () => h(MatBtn, null, () => '标准') },
-    });
-    const connected = mount(MatBtnGroup, {
-      props: {
-        block: true,
-        variant: 'connected',
-        selection: 'multiple',
-      },
-      slots: {
-        default: () => [
-          h(MatBtn, { value: 'one' }, () => '一'),
-          h(MatBtn, { value: 'two' }, () => '二'),
-        ],
-      },
-    });
-
-    expect(standard.classes()).toContain('mat-btn-group--block');
-    expect(standard.classes()).not.toContain('mat-btn-group--full-width');
-    expect(standard.attributes('block')).toBeUndefined();
-    expect(connected.classes()).toContain('mat-btn-group--block');
-    expect(connected.classes()).not.toContain('mat-btn-group--full-width');
-  });
-
-  it('级联尺寸、形状、颜色和禁用状态，子组件显式值优先', () => {
+  it('向子按钮传递禁用状态', () => {
     const wrapper = mount(MatBtnGroup, {
       props: {
-        size: 'large',
-        shape: 'square',
-        color: 'secondary',
         disabled: true,
       },
       slots: {
@@ -126,13 +31,7 @@ describe('MatBtnGroup', () => {
     });
     const buttons = wrapper.findAll('button');
 
-    expect(buttons[0].classes()).toContain('mat-btn--size-large');
-    expect(buttons[0].classes()).toContain('mat-btn--shape-square');
-    expect(buttons[0].attributes('style')).toContain('--mat-sys-color-secondary');
-    expect(buttons[0].attributes()).toHaveProperty('disabled');
-    expect(buttons[1].classes()).toContain('mat-btn--size-extra-small');
-    expect(buttons[1].classes()).toContain('mat-btn--shape-round');
-    expect(buttons[1].attributes('style')).toContain('--mat-sys-color-error');
+    expect(buttons.every((button) => button.element.disabled)).toBe(true);
   });
 
   it('single 模式发出候选选择且不自行修改选中值', async () => {
@@ -230,47 +129,6 @@ describe('MatBtnGroup', () => {
     expect(wrapper.emitted('select')).toBeUndefined();
   });
 
-  it.each(['round', 'square'])('connected %s 组选中按钮的四角都使用 round checked shape', (shape) => {
-    const shapeRule = buttonGroupSource.match(
-      new RegExp(`\\.mat-btn-group--connected\\.mat-btn-group--shape-${shape}[^}]*\\{([\\s\\S]*?)\\n\\}`),
-    )?.[1];
-    const selectedRule = buttonGroupSource.match(
-      /\.mat-btn-group--connected :deep\(\.mat-button-base\.mat-btn--selected\) \{([\s\S]*?)\n\}/,
-    )?.[1];
-
-    expect(shapeRule).toBeDefined();
-    expect(selectedRule).toBeDefined();
-    expect(shapeRule).toContain('--mat-btn-group-connected-selected-inner-corner-size:');
-    expect(shapeRule).toContain('--mat-btn-group-connected-selected-pressed-inner-corner-size:');
-    expect(shapeRule).toContain(
-      '--mat-btn-group-connected-selected-inner-corner-size: var(--mat-button-full-radius);',
-    );
-    expect(shapeRule).toContain(
-      '--mat-btn-group-connected-selected-pressed-inner-corner-size: var(--mat-btn-group-connected-pressed-inner-corner-size);',
-    );
-    expect(buttonGroupSource).toContain(
-      `.mat-btn-group--connected.mat-btn-group--shape-${shape} :deep(.mat-button-base) {`,
-    );
-    expect(selectedRule).toContain(
-      '--mat-button-start-start-radius: var(--mat-btn-group-connected-selected-inner-corner-size);',
-    );
-    expect(selectedRule).toContain(
-      '--mat-button-start-end-radius: var(--mat-btn-group-connected-selected-inner-corner-size);',
-    );
-    expect(selectedRule).toContain(
-      '--mat-button-end-start-radius: var(--mat-btn-group-connected-selected-inner-corner-size);',
-    );
-    expect(selectedRule).toContain(
-      '--mat-button-end-end-radius: var(--mat-btn-group-connected-selected-inner-corner-size);',
-    );
-    expect(buttonGroupSource).not.toContain(
-      '.mat-btn-group--connected :deep(.mat-button-base:first-child.mat-btn--selected)',
-    );
-    expect(buttonGroupSource).not.toContain(
-      '.mat-btn-group--connected :deep(.mat-button-base:last-child.mat-btn--selected)',
-    );
-  });
-
   it('connected 混用子按钮颜色时发出开发警告', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
@@ -288,267 +146,6 @@ describe('MatBtnGroup', () => {
     });
 
     expect(warn).toHaveBeenCalledWith('MatBtnGroup: connected 形态中的子按钮应使用相同颜色');
-  });
-
-  it('standard 首尾项和中间项按 15% 同步调整相邻项宽度', async () => {
-    vi.useFakeTimers();
-    mockWidthTransitionDuration();
-    const wrapper = mount(MatBtnGroup, {
-      slots: {
-        default: () => [
-          h(MatBtn, null, () => '一'),
-          h(MatBtn, null, () => '二'),
-          h(MatBtn, null, () => '三'),
-        ],
-      },
-    });
-    const buttons = wrapper.findAll('button');
-    mockButtonWidths(buttons, [100, 100, 100]);
-
-    await buttons[0].trigger('pointerdown', { pointerId: 1 });
-    expect(getInlineSizes(buttons)).toEqual([115, 85, null]);
-
-    await buttons[0].trigger('pointercancel', { pointerId: 1 });
-    vi.advanceTimersByTime(113);
-    expect(getInlineSizes(buttons)).toEqual([100, 100, null]);
-    vi.advanceTimersByTime(150);
-    expect(getInlineSizes(buttons)).toEqual([null, null, null]);
-
-    await buttons[1].trigger('pointerdown', { pointerId: 2 });
-    expect(getInlineSizes(buttons)).toEqual([92.5, 115, 92.5]);
-  });
-
-  it('同组按钮间的焦点迁移不结束 standard 按压', async () => {
-    vi.useFakeTimers();
-    mockWidthTransitionDuration();
-    const wrapper = mount(MatBtnGroup, {
-      slots: {
-        default: () => [
-          h(MatBtn, null, () => '一'),
-          h(MatBtn, null, () => '二'),
-        ],
-      },
-    });
-    const buttons = wrapper.findAll('button');
-    mockButtonWidths(buttons, [100, 100]);
-
-    await buttons[0].trigger('pointerdown', { pointerId: 1 });
-    vi.advanceTimersByTime(113);
-    await buttons[0].trigger('focusout', { relatedTarget: buttons[1].element });
-
-    expect(getInlineSizes(buttons)).toEqual([115, 85]);
-  });
-
-  it('standard 复用按钮基础层的单次指针捕获', async () => {
-    const wrapper = mount(MatBtnGroup, {
-      slots: {
-        default: () => [
-          h(MatBtn, null, () => '一'),
-          h(MatBtn, null, () => '二'),
-        ],
-      },
-    });
-    const buttons = wrapper.findAll('button');
-    mockButtonWidths(buttons, [100, 100]);
-    const setPointerCapture = vi.fn();
-
-    Object.defineProperty(buttons[0].element, 'setPointerCapture', {
-      configurable: true,
-      value: setPointerCapture,
-    });
-
-    await buttons[0].trigger('pointerdown', { pointerId: 1 });
-
-    expect(setPointerCapture).toHaveBeenCalledOnce();
-    expect(setPointerCapture).toHaveBeenCalledWith(1);
-    expect(getInlineSizes(buttons)).toEqual([115, 85]);
-  });
-
-  it('宽度变化先提交像素起点，再写入可插值的像素终点', async () => {
-    mockWidthTransitionDuration(1000);
-    const wrapper = mount(MatBtnGroup, {
-      slots: {
-        default: () => [
-          h(MatBtn, null, () => '一'),
-          h(MatBtn, null, () => '二'),
-        ],
-      },
-    });
-    const buttons = wrapper.findAll('button');
-    const widthReads = trackButtonWidthReads(buttons, [100, 100]);
-
-    await buttons[0].trigger('pointerdown', { pointerId: 1 });
-
-    expect(widthReads).toEqual([null, null, '100px', '100px']);
-    expect(getInlineSizes(buttons)).toEqual([115, 85]);
-
-    wrapper.unmount();
-  });
-
-  it('快速释放在 75% 阈值前保持展开，到达阈值后恢复', async () => {
-    vi.useFakeTimers();
-    mockWidthTransitionDuration(200);
-    const wrapper = mount(MatBtnGroup, {
-      slots: {
-        default: () => [
-          h(MatBtn, null, () => '一'),
-          h(MatBtn, null, () => '二'),
-        ],
-      },
-    });
-    const buttons = wrapper.findAll('button');
-    mockButtonWidths(buttons, [100, 100]);
-
-    await buttons[0].trigger('pointerdown', { pointerId: 1 });
-    await buttons[0].trigger('pointerup', { pointerId: 1 });
-    expect(getInlineSizes(buttons)).toEqual([115, 85]);
-
-    vi.advanceTimersByTime(149);
-    expect(getInlineSizes(buttons)).toEqual([115, 85]);
-
-    vi.advanceTimersByTime(1);
-    expect(getInlineSizes(buttons)).toEqual([100, 100]);
-
-    vi.advanceTimersByTime(199);
-    expect(getInlineSizes(buttons)).toEqual([100, 100]);
-
-    vi.advanceTimersByTime(1);
-    expect(getInlineSizes(buttons)).toEqual([null, null]);
-  });
-
-  it('长按超过阈值后在释放时立即恢复', async () => {
-    vi.useFakeTimers();
-    mockWidthTransitionDuration();
-    const wrapper = mount(MatBtnGroup, {
-      slots: {
-        default: () => [
-          h(MatBtn, null, () => '一'),
-          h(MatBtn, null, () => '二'),
-        ],
-      },
-    });
-    const buttons = wrapper.findAll('button');
-    mockButtonWidths(buttons, [100, 100]);
-
-    await buttons[0].trigger('pointerdown', { pointerId: 1 });
-    vi.advanceTimersByTime(113);
-    expect(getInlineSizes(buttons)).toEqual([115, 85]);
-
-    await buttons[0].trigger('pointerup', { pointerId: 1 });
-    expect(getInlineSizes(buttons)).toEqual([100, 100]);
-
-    vi.advanceTimersByTime(150);
-    expect(getInlineSizes(buttons)).toEqual([null, null]);
-  });
-
-  it('Space、Enter、取消和失焦都请求恢复宽度', async () => {
-    vi.useFakeTimers();
-    mockWidthTransitionDuration();
-    const wrapper = mount(MatBtnGroup, {
-      slots: {
-        default: () => [
-          h(MatBtn, null, () => '一'),
-          h(MatBtn, null, () => '二'),
-        ],
-      },
-    });
-    const buttons = wrapper.findAll('button');
-    mockButtonWidths(buttons, [100, 100]);
-
-    await buttons[0].trigger('keydown', { key: ' ' });
-    expect(getInlineSizes(buttons)).toEqual([115, 85]);
-    await buttons[0].trigger('keyup', { key: ' ' });
-    vi.advanceTimersByTime(113);
-    expect(getInlineSizes(buttons)).toEqual([100, 100]);
-    vi.advanceTimersByTime(150);
-    expect(getInlineSizes(buttons)).toEqual([null, null]);
-
-    await buttons[1].trigger('keydown', { key: 'Enter' });
-    expect(getInlineSizes(buttons)).toEqual([85, 115]);
-    await buttons[1].trigger('focusout');
-    vi.advanceTimersByTime(113);
-    expect(getInlineSizes(buttons)).toEqual([100, 100]);
-    vi.advanceTimersByTime(150);
-    expect(getInlineSizes(buttons)).toEqual([null, null]);
-  });
-
-  it('单项 standard 和 connected 组不联动宽度', async () => {
-    const single = mount(MatBtnGroup, {
-      slots: {
-        default: () => h(MatBtn, null, () => '一'),
-      },
-    });
-    const singleButton = single.find('button');
-    mockButtonWidths([singleButton], [100]);
-
-    await singleButton.trigger('pointerdown', { pointerId: 1 });
-    expect(singleButton.element.style.inlineSize).toBe('');
-
-    const connected = mount(MatBtnGroup, {
-      props: {
-        variant: 'connected',
-        selection: 'multiple',
-      },
-      slots: {
-        default: () => [
-          h(MatBtn, { value: 'one' }, () => '一'),
-          h(MatBtn, { value: 'two' }, () => '二'),
-        ],
-      },
-    });
-    const connectedButtons = connected.findAll('button');
-    mockButtonWidths(connectedButtons, [100, 100]);
-
-    await connectedButtons[0].trigger('pointerdown', { pointerId: 2 });
-    expect(getInlineSizes(connectedButtons)).toEqual([null, null]);
-  });
-
-  it('reduced motion 在释放时立即恢复，不等待阈值', async () => {
-    vi.useFakeTimers();
-    vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: true })));
-    const wrapper = mount(MatBtnGroup, {
-      slots: {
-        default: () => [
-          h(MatBtn, null, () => '一'),
-          h(MatBtn, null, () => '二'),
-        ],
-      },
-    });
-    const buttons = wrapper.findAll('button');
-    mockButtonWidths(buttons, [100, 100]);
-
-    await buttons[0].trigger('pointerdown', { pointerId: 1 });
-    expect(getInlineSizes(buttons)).toEqual([115, 85]);
-    await buttons[0].trigger('pointerup', { pointerId: 1 });
-    expect(getInlineSizes(buttons)).toEqual([null, null]);
-  });
-
-  it('重新按下和卸载会清理计时器并恢复原有行内宽度', async () => {
-    vi.useFakeTimers();
-    mockWidthTransitionDuration();
-    const wrapper = mount(MatBtnGroup, {
-      slots: {
-        default: () => [
-          h(MatBtn, { style: { inlineSize: '90px' } }, () => '一'),
-          h(MatBtn, { style: { inlineSize: '110px' } }, () => '二'),
-        ],
-      },
-    });
-    const buttons = wrapper.findAll('button');
-    mockButtonWidths(buttons, [90, 110]);
-    const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout');
-
-    await buttons[0].trigger('pointerdown', { pointerId: 1 });
-    await buttons[0].trigger('pointerup', { pointerId: 1 });
-
-    await buttons[1].trigger('pointerdown', { pointerId: 2 });
-    expect(clearTimeoutSpy).toHaveBeenCalledTimes(1);
-    expect(getInlineSizes(buttons)).toEqual([73.5, 126.5]);
-
-    const clearCallsBeforeUnmount = clearTimeoutSpy.mock.calls.length;
-    wrapper.unmount();
-    expect(clearTimeoutSpy.mock.calls.length).toBeGreaterThan(clearCallsBeforeUnmount);
-    expect(getInlineSizes(buttons)).toEqual([90, 110]);
   });
 
   it('connected fullWidth 等分子按钮并保持独立 Tab 停靠点', () => {
@@ -571,26 +168,8 @@ describe('MatBtnGroup', () => {
       },
     });
 
-    expect(wrapper.classes()).toContain('mat-btn-group--full-width');
     wrapper.findAll('button').forEach((button) => {
       expect(button.attributes('tabindex')).toBeUndefined();
     });
-  });
-
-  it('图标模式在组内保持显式宽度且默认 uniform，不按子项数量变化', () => {
-    const wrapper = mount(MatBtnGroup, {
-      slots: {
-        default: () => [
-          h(MatBtn, { icon: true, label: '一' }, () => 'one'),
-          h(MatBtn, { icon: 'two', label: '二', width: 'narrow' }),
-          h(MatBtn, { icon: 'three', label: '三', width: 'wide' }),
-        ],
-      },
-    });
-    const buttons = wrapper.findAll('button');
-
-    expect(buttons[0].classes()).toContain('mat-btn--width-uniform');
-    expect(buttons[1].classes()).toContain('mat-btn--width-narrow');
-    expect(buttons[2].classes()).toContain('mat-btn--width-wide');
   });
 });

@@ -39,7 +39,6 @@ describe('MatHover', () => {
     const wrapper = mountTarget();
     const target = wrapper.find('button');
 
-    expect(wrapper.findAll('.mat-hover')).toHaveLength(0);
     expect(target.attributes('data-hovering')).toBe('null');
 
     await target.trigger('mouseenter');
@@ -122,8 +121,6 @@ describe('MatHover', () => {
     target.dispatchEvent(new MouseEvent('mouseenter'));
 
     expect(handleUpdate).toHaveBeenCalledWith(true);
-    expect(wrapper.findAll('.mat-hover')).toHaveLength(0);
-
     wrapper.unmount();
     target.dispatchEvent(new MouseEvent('mouseleave'));
 

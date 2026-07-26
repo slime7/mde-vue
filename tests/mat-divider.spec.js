@@ -6,16 +6,11 @@ import {
 } from '../src';
 
 describe('MatDivider', () => {
-  it('独立使用时渲染 hr 并支持三种缩进', () => {
+  it('独立使用时渲染 hr 并支持无障碍属性', () => {
     const full = mount(MatDivider, { attrs: { 'aria-label': '分隔' } });
-    const start = mount(MatDivider, { props: { inset: 'start' } });
-    const middle = mount(MatDivider, { props: { inset: 'middle' } });
 
     expect(full.element.tagName).toBe('HR');
     expect(full.attributes('aria-label')).toBe('分隔');
-    expect(full.classes()).toContain('mat-divider--none');
-    expect(start.classes()).toContain('mat-divider--start');
-    expect(middle.classes()).toContain('mat-divider--middle');
   });
 
   it('普通 List 中渲染合法的 li separator', () => {

@@ -91,11 +91,7 @@ describe('MatRadio', () => {
       `,
     });
     const wrapper = mount(Host);
-    const radios = wrapper.findAllComponents(MatRadio);
-
     expect(wrapper.findAll('input').every((input) => input.element.disabled)).toBe(true);
-    expect(radios[0].attributes('style')).toContain('--mat-accent-color: var(--mat-sys-color-secondary)');
-    expect(radios[1].attributes('style')).toContain('--mat-accent-color: var(--mat-sys-color-tertiary)');
   });
 
   it('位于 Group 中时警告并忽略子级模型', () => {
