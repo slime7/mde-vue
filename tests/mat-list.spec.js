@@ -216,6 +216,31 @@ describe('MatList', () => {
     expect(secondaryElement.getAttribute('tabindex')).toBe('2');
   });
 
+  it('多操作模式为长标签和 supporting 文本保留 trailing 操作区', () => {
+    const wrapper = mount(MatList, {
+      props: { interaction: 'multi-action' },
+      slots: {
+        default: () => h(MatListItem, { lines: 2 }, {
+          default: () => h(
+            'span',
+            { class: 'ellipsis' },
+            '这是一个非常非常长的文件名，用于验证文本是否会在操作按钮前正确省略.mp4',
+          ),
+          supporting: () => h(
+            'span',
+            { class: 'ellipsis' },
+            'C:\\这是一个非常非常长的目录\\这是一个非常非常长的文件路径.mp4',
+          ),
+          trailing: () => h(MatBtn, { variant: 'text' }, () => '移除'),
+        }),
+      },
+    });
+
+    expect(wrapper.find('.mat-list-item-content__label .ellipsis').exists()).toBe(true);
+    expect(wrapper.find('.mat-list-item-content__supporting .ellipsis').exists()).toBe(true);
+    expect(wrapper.find('[data-mat-list-trailing]').text()).toBe('移除');
+  });
+
   it('插件全局注册 List、ListItem 和 Divider', () => {
     const app = createApp({});
 

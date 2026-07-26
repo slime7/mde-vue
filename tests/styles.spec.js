@@ -11,6 +11,10 @@ const listGroupComponent = readFileSync(
   'utf8',
 );
 const listItemComponent = readFileSync(resolve('src/components/mat-list/MatListItem.vue'), 'utf8');
+const itemContentBaseComponent = readFileSync(
+  resolve('src/components/MatItemContentBase.vue'),
+  'utf8',
+);
 const tooltipComponent = readFileSync(
   resolve('src/components/mat-tooltip/MatTooltip.vue'),
   'utf8',
@@ -155,6 +159,17 @@ describe('List 形状', () => {
 
     expect(primaryRule?.groups?.rule).not.toContain('background: transparent;');
     expect(multiActionPrimaryRule?.groups?.rule).toContain('background: transparent;');
+  });
+});
+
+describe('List 文本布局', () => {
+  it('标签和辅助文本占满文本列并允许插槽内容收缩', () => {
+    const textRule = itemContentBaseComponent.match(
+      /\[data-mat-item-content-label\],\n\[data-mat-item-content-supporting\] \{(?<rule>[^}]+)\}/u,
+    );
+
+    expect(textRule?.groups?.rule).toContain('align-self: stretch;');
+    expect(textRule?.groups?.rule).toContain('min-inline-size: 0;');
   });
 });
 

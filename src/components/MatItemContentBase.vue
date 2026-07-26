@@ -136,6 +136,12 @@ defineProps({
   min-inline-size: 0;
 }
 
+[data-mat-item-content-label],
+[data-mat-item-content-supporting] {
+  align-self: stretch;
+  min-inline-size: 0;
+}
+
 [data-mat-item-content-label] {
   color: var(--mat-item-label-color);
   font-family: var(--mat-item-label-font);
