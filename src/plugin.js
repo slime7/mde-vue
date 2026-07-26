@@ -24,6 +24,7 @@ import MatMenu from './components/mat-menu/MatMenu.vue';
 import MatMenuGroup from './components/mat-menu-group/MatMenuGroup.vue';
 import MatMenuItem from './components/mat-menu/MatMenuItem.vue';
 import MatDialog from './components/mat-dialog/MatDialog.vue';
+import MatHover from './components/mat-hover/MatHover.vue';
 import MatSpacer from './components/mat-spacer/MatSpacer.vue';
 import MatLoader from './components/mat-loader/MatLoader.vue';
 import MatTooltip from './components/mat-tooltip/MatTooltip.vue';
@@ -37,6 +38,7 @@ import { setImperativeContext } from './imperative-context';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from './mat-ui-context';
 import createThemeController from './theme';
 import MAT_THEME_KEY from './theme-context';
+import { Intersection } from './directives/intersection';
 
 /**
  * @typedef {object} MatUiOptions
@@ -148,6 +150,8 @@ export function createMatUi(options = {}) {
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-dialog', MatDialog);
       // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-hover', MatHover);
+      // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-spacer', MatSpacer);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-loader', MatLoader);
@@ -165,6 +169,7 @@ export function createMatUi(options = {}) {
       app.component('mat-navigation-rail', MatNavigationRail);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-navigation-rail-item', MatNavigationRailItem);
+      app.directive('intersection', Intersection);
       app.provide(MAT_UI_KEY, componentOptions);
       app.provide(MAT_THEME_KEY, theme);
       setImperativeContext(componentOptions, theme);

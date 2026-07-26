@@ -24,9 +24,11 @@ import MatMenu, { MatMenu as NamedMatMenu } from 'mdu-ui/components/mat-menu';
 import MatMenuGroup, { MatMenuGroup as NamedMatMenuGroup } from 'mdu-ui/components/mat-menu-group';
 import MatMenuItem, { MatMenuItem as NamedMatMenuItem } from 'mdu-ui/components/mat-menu-item';
 import MatDialog, { MatDialog as NamedMatDialog } from 'mdu-ui/components/mat-dialog';
+import MatHover, { MatHover as NamedMatHover } from 'mdu-ui/components/mat-hover';
 import MatSpacer, { MatSpacer as NamedMatSpacer } from 'mdu-ui/components/mat-spacer';
 import MatLoader, { MatLoader as NamedMatLoader } from 'mdu-ui/components/mat-loader';
 import MatTooltip, { MatTooltip as NamedMatTooltip } from 'mdu-ui/components/mat-tooltip';
+import Intersection, { Intersection as NamedIntersection } from 'mdu-ui/directives/intersection';
 import MatToolbar, { MatToolbar as NamedMatToolbar } from 'mdu-ui/components/mat-toolbar';
 import MatPanes, { MatPanes as NamedMatPanes } from 'mdu-ui/components/mat-panes';
 import MatPane, { MatPane as NamedMatPane } from 'mdu-ui/components/mat-pane';
@@ -40,6 +42,7 @@ import {
 } from 'mdu-ui/functions';
 import {
   createMatUi,
+  Intersection as RootIntersection,
   MatBtn as RootMatBtn,
   MatBtnGroup as RootMatBtnGroup,
   MatCard as RootMatCard,
@@ -47,6 +50,7 @@ import {
   MatDialog as RootMatDialog,
   MatDivider as RootMatDivider,
   MatFab as RootMatFab,
+  MatHover as RootMatHover,
   MatIcon as RootMatIcon,
   MatList as RootMatList,
   MatListGroup as RootMatListGroup,
@@ -103,6 +107,7 @@ describe('公共组件导出', () => {
     ['MatMenuGroup', RootMatMenuGroup, NamedMatMenuGroup, MatMenuGroup],
     ['MatMenuItem', RootMatMenuItem, NamedMatMenuItem, MatMenuItem],
     ['MatDialog', RootMatDialog, NamedMatDialog, MatDialog],
+    ['MatHover', RootMatHover, NamedMatHover, MatHover],
     ['MatSpacer', RootMatSpacer, NamedMatSpacer, MatSpacer],
     ['MatLoader', RootMatLoader, NamedMatLoader, MatLoader],
     ['MatTooltip', RootMatTooltip, NamedMatTooltip, MatTooltip],
@@ -122,6 +127,11 @@ describe('公共组件导出', () => {
 
   it('MatNavigationRailItem 的根入口和具名子入口指向同一组件', () => {
     expect(RootMatNavigationRailItem).toBe(NamedMatNavigationRailItem);
+  });
+
+  it('Intersection 指令的根入口、具名子入口和默认子入口指向同一对象', () => {
+    expect(RootIntersection).toBe(NamedIntersection);
+    expect(Intersection).toBe(NamedIntersection);
   });
 
   it('createMatUi 全局注册选择控件组件族', () => {
@@ -145,6 +155,8 @@ describe('公共组件导出', () => {
     expect(app.component('mat-menu-group')).toBe(RootMatMenuGroup);
     expect(app.component('mat-menu-item')).toBe(RootMatMenuItem);
     expect(app.component('mat-dialog')).toBe(RootMatDialog);
+    expect(app.component('mat-hover')).toBe(RootMatHover);
+    expect(app.directive('intersection')).toBe(RootIntersection);
     expect(app.component('mat-spacer')).toBe(RootMatSpacer);
     expect(app.component('mat-loader')).toBe(RootMatLoader);
     expect(app.component('mat-tooltip')).toBe(RootMatTooltip);

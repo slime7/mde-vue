@@ -50,7 +50,7 @@ pnpm add "mdu-ui@git+ssh://git@github.com/slime7/mdu-ui.git#<commit>"
 
 ## 全局注册：推荐用法
 
-大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，并全局注册所有 `mat-*` 组件。基础样式必须显式导入。
+大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，全局注册所有 `mat-*` 组件，并注册 `v-intersection` 指令。基础样式必须显式导入。
 
 应用入口 `src/main.js`：
 
@@ -77,12 +77,22 @@ createApp(App)
   <main>
     <mat-btn @click="save">保存</mat-btn>
     <mat-fab icon="add" label="创建" />
+    <mat-hover v-slot="{ isHovering, props }">
+      <button v-bind="props" type="button">
+        {{ isHovering ? '悬停中' : '悬停查看' }}
+      </button>
+    </mat-hover>
+    <div v-intersection="handleIntersection">观察目标</div>
   </main>
 </template>
 
 <script setup>
 function save() {
   // 执行应用的保存操作。
+}
+
+function handleIntersection(isIntersecting) {
+  console.log(isIntersecting);
 }
 </script>
 ```
@@ -97,13 +107,26 @@ function save() {
 <script setup>
 import { MatBtn } from 'mdu-ui/components/mat-btn';
 import { MatFab } from 'mdu-ui/components/mat-fab';
+import { MatHover } from 'mdu-ui/components/mat-hover';
+import { Intersection as vIntersection } from 'mdu-ui/directives/intersection';
 import 'mdu-ui/styles.css';
+
+function handleIntersection(isIntersecting) {
+  console.log(isIntersecting);
+}
 </script>
 
 <template>
   <MatBtn>保存</MatBtn>
   <MatFab icon="add" label="创建" />
+  <MatHover v-slot="{ isHovering, props }">
+    <button v-bind="props" type="button">
+      {{ isHovering ? '悬停中' : '悬停查看' }}
+    </button>
+  </MatHover>
+  <div v-intersection="handleIntersection">观察目标</div>
 </template>
+
 ```
 
 其他组件的按需入口遵循相同规则，例如：
@@ -124,10 +147,12 @@ import { MatTextarea } from 'mdu-ui/components/mat-textarea';
 import { MatMenu } from 'mdu-ui/components/mat-menu';
 import { MatMenuItem } from 'mdu-ui/components/mat-menu-item';
 import { MatDialog } from 'mdu-ui/components/mat-dialog';
+import { MatHover } from 'mdu-ui/components/mat-hover';
 import { MatToolbar } from 'mdu-ui/components/mat-toolbar';
 import { MatSpacer } from 'mdu-ui/components/mat-spacer';
 import { MatLoader } from 'mdu-ui/components/mat-loader';
 import { MatTooltip } from 'mdu-ui/components/mat-tooltip';
+import { Intersection as vIntersection } from 'mdu-ui/directives/intersection';
 import { MatSnackbar } from 'mdu-ui/components/mat-snackbar';
 import { MatPanes } from 'mdu-ui/components/mat-panes';
 import { MatPane } from 'mdu-ui/components/mat-pane';
@@ -141,17 +166,17 @@ import {
 } from 'mdu-ui/functions';
 ```
 
-复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatTextField>`、`<MatMenu>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。命令式 Snackbar 使用 `snackbar()` 或同一函数引用的 `toast()`，只从 `mdu-ui/functions` 导入。
+复合组件的父子入口相互独立；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatTextField>`、`<MatMenu>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`。命令式 Snackbar 使用 `snackbar()` 或同一函数引用的 `toast()`，只从 `mdu-ui/functions` 导入。
 
 ## 如何选择
 
 | 需求 | 推荐方式 |
 | --- | --- |
-| 使用动态主题或 `useMatTheme()` | 安装 `createMatUi()`，使用全局 `mat-*` 标签 |
+| 使用动态主题、`useMatTheme()` 或 `v-intersection` | 安装 `createMatUi()`，使用全局 `mat-*` 标签和 `v-intersection` |
 | 应用会使用多个 mdu-ui 组件 | 安装 `createMatUi()`，统一全局注册 |
 | 只使用少量组件，并接受基础样式的默认主题 | 从 `mdu-ui/components/<组件目录>` 按需导入 |
 
-`createMatUi()` 同时负责主题初始化、组件设置和全局注册。已经安装插件时，不需要再局部导入同一个组件。交互指针、图标 class 与主题入口见 [`createMatUi` 配置](/guide/create-mat-ui)。
+`createMatUi()` 同时负责主题初始化、组件设置、`mat-*` 组件和 `v-intersection` 指令的全局注册。已经安装插件时，不需要再局部导入同一个组件或指令。交互指针、图标 class 与主题入口见 [`createMatUi` 配置](/guide/create-mat-ui)。
 
 # createMatUi
 
@@ -3093,9 +3118,6 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
 - 不发布 npm 包，不提供预编译 `dist`，也不提供 TypeScript 声明；
 - 使用方的构建工具必须能够处理 `.vue` 源文件和 CSS；
 - 主题不会自动持久化，也不会自动写入应用状态；
-- 当前公共按钮组件集中在 Button、Button group 与 Split button；Button 同时提供普通模式和图标模式。
-
-按钮体系不提供 loading、链接模式、涟漪、密度参数或完整的原生表单方法代理。`<mat-split-btn>` 不渲染菜单；应用负责菜单内容、焦点移动、Escape、外部点击和焦点返回。Button 图标模式默认使用原生 `title` 提示；需要符合 Material 3 的可见说明时，可组合 `<mat-tooltip>`。不要依赖未记录的内部 class 或 DOM 结构补充这些能力。
 
 # Split button 拆分按钮
 
@@ -12232,4 +12254,382 @@ import PanesBreakpointExample from '../examples/panes/PanesBreakpointExample.vue
 import PanesResizableExample from '../examples/panes/PanesResizableExample.vue';
 import PanesScrollExample from '../examples/panes/PanesScrollExample.vue';
 import PanesWidthsExample from '../examples/panes/PanesWidthsExample.vue';
+</script>
+
+# Hover 悬停状态
+
+## 组件简介
+
+`<mat-hover>` 的组件导出名是 `MatHover`。它不渲染包装元素，通过默认作用域 Slot 为使用方提供 `isHovering` 状态和目标元素事件 props，适合把悬停状态交给任意原生元素或组件。
+
+## 示例
+
+### 默认 Slot
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-hover v-slot="{ isHovering, props }">
+    <button
+      v-bind="props"
+      class="hover-example__target"
+      type="button"
+      :data-hovering="isHovering"
+    >
+      {{ isHovering ? '正在悬停' : '悬停查看状态' }}
+    </button>
+  </mat-hover>
+</template>
+```
+```vue
+<style scoped>
+.hover-example__target {
+  min-inline-size: 180px;
+  min-block-size: 48px;
+  padding-inline: 20px;
+  color: var(--mat-sys-color-on-primary-container);
+  background: var(--mat-sys-color-primary-container);
+  border: 0;
+  border-radius: var(--mat-sys-shape-corner-medium);
+  cursor: pointer;
+  transition: transform 160ms var(--mat-sys-motion-easing-standard);
+}
+
+.hover-example__target[data-hovering='true'] {
+  transform: scale(1.04);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Hover 默认 Slot 预览">
+    <HoverDefaultExample />
+  </DocsPreview>
+</ClientOnly>
+
+### openDelay 与 closeDelay
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-hover
+    :close-delay="300"
+    :open-delay="300"
+    v-slot="{ isHovering, props }"
+  >
+    <button
+      v-bind="props"
+      class="hover-example__target"
+      type="button"
+    >
+      {{ isHovering ? '延迟状态已开启' : '停留 300ms' }}
+    </button>
+  </mat-hover>
+</template>
+```
+```vue
+<style scoped>
+.hover-example__target {
+  min-inline-size: 180px;
+  min-block-size: 48px;
+  padding-inline: 20px;
+  color: var(--mat-sys-color-on-secondary-container);
+  background: var(--mat-sys-color-secondary-container);
+  border: 0;
+  border-radius: var(--mat-sys-shape-corner-medium);
+  cursor: pointer;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Hover 延迟预览">
+    <HoverDelayExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 受控 modelValue
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-hover
+    v-model="isHovering"
+    v-slot="{ isHovering: slotHovering, props }"
+  >
+    <button
+      v-bind="props"
+      class="hover-example__target"
+      type="button"
+    >
+      {{ slotHovering ? '受控状态：开启' : '受控状态：关闭' }}
+    </button>
+  </mat-hover>
+
+  <p>父级 modelValue：{{ isHovering ? 'true' : 'false' }}</p>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const isHovering = ref(false);
+</script>
+```
+```vue
+<style scoped>
+.hover-example__target {
+  min-inline-size: 180px;
+  min-block-size: 48px;
+  padding-inline: 20px;
+  color: var(--mat-sys-color-on-tertiary-container);
+  background: var(--mat-sys-color-tertiary-container);
+  border: 0;
+  border-radius: var(--mat-sys-shape-corner-medium);
+  cursor: pointer;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Hover 受控状态预览">
+    <HoverControlledExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `modelValue` | `boolean \| null` | `null` | 显式传入时使用受控状态；省略时由组件根据进入和离开事件维护状态。 |
+| `disabled` | `boolean` | `false` | 禁止向外同步 hover 状态，但组件仍记录真实指针状态。重新启用时同步当前状态。 |
+| `openDelay` | `number \| string` | `0` | 进入目标后等待的毫秒数；非有限或负值按 `0` 处理。 |
+| `closeDelay` | `number \| string` | `0` | 离开目标后等待的毫秒数；非有限或负值按 `0` 处理。 |
+
+组件没有公开方法。
+
+### 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `boolean` | 非 disabled 状态下，进入或离开延迟完成，或 disabled 重新启用时触发。 |
+
+### Slots
+
+| Slot | 参数 | 内容约束 |
+| --- | --- | --- |
+| 默认 Slot | `{ isHovering: boolean \| null, props: { onMouseenter, onMouseleave } }` | 使用 `props` 绑定到需要观察 hover 的目标元素；组件不要求固定根元素。 |
+
+### 状态行为
+
+省略 `modelValue` 时，Slot 初始收到 `null`，首次进入或离开完成后变为 `true` 或 `false`。显式传入 `modelValue` 后，组件只通过 `update:modelValue` 请求父级更新，Slot 状态以父级传入值为准。新的进入或离开操作会取消相反方向尚未完成的延迟。
+
+<script setup>
+import HoverControlledExample from '../examples/hover/HoverControlledExample.vue';
+import HoverDefaultExample from '../examples/hover/HoverDefaultExample.vue';
+import HoverDelayExample from '../examples/hover/HoverDelayExample.vue';
+</script>
+
+# Intersection 指令
+
+## 指令简介
+
+`v-intersection` 的 JavaScript 导出名是 `Intersection`。它把元素连接到原生 `IntersectionObserver`，在相交状态改变时调用处理函数，不渲染额外元素，也不定义 Vue 组件事件或 Slots。
+
+## 示例
+
+### 处理函数
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div
+    v-intersection="handleIntersection"
+    class="intersection-example__target"
+  >
+    <strong>{{ isIntersecting ? '元素正在视口内' : '元素不在视口内' }}</strong>
+    <span>滚动文档可以触发 handler。</span>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const isIntersecting = ref(false);
+
+function handleIntersection(value) {
+  isIntersecting.value = value;
+}
+</script>
+```
+```vue
+<style scoped>
+.intersection-example__target {
+  display: grid;
+  min-block-size: 120px;
+  place-content: center;
+  gap: 8px;
+  color: var(--mat-sys-color-on-primary-container);
+  text-align: center;
+  background: var(--mat-sys-color-primary-container);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+
+.intersection-example__target span {
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Intersection 处理函数预览">
+    <IntersectionHandlerExample />
+  </DocsPreview>
+</ClientOnly>
+
+### IntersectionObserver 选项
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div
+    v-intersection="binding"
+    class="intersection-example__target"
+  >
+    threshold 0.5：{{ isIntersecting ? '相交' : '未相交' }}
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const isIntersecting = ref(false);
+const binding = {
+  handler(value) {
+    isIntersecting.value = value;
+  },
+  options: {
+    threshold: 0.5,
+  },
+};
+</script>
+```
+```vue
+<style scoped>
+.intersection-example__target {
+  display: grid;
+  min-block-size: 120px;
+  place-items: center;
+  color: var(--mat-sys-color-on-secondary-container);
+  background: var(--mat-sys-color-secondary-container);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Intersection options 预览">
+    <IntersectionOptionsExample />
+  </DocsPreview>
+</ClientOnly>
+
+### quiet 与 once
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div
+    v-intersection.quiet.once="handleIntersection"
+    class="intersection-example__target"
+  >
+    quiet + once：{{ count }} 次相交回调
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const count = ref(0);
+
+function handleIntersection() {
+  count.value += 1;
+}
+</script>
+```
+```vue
+<style scoped>
+.intersection-example__target {
+  display: grid;
+  min-block-size: 120px;
+  place-items: center;
+  color: var(--mat-sys-color-on-tertiary-container);
+  background: var(--mat-sys-color-tertiary-container);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Intersection 修饰符预览">
+    <IntersectionModifiersExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 绑定值
+
+| 形式 | 类型 | 说明 |
+| --- | --- | --- |
+| 处理函数 | `(isIntersecting, entries, observer) => void` | 直接作为回调使用。 |
+| 对象 | `{ handler, options? }` | `handler` 是回调；`options` 原样传给 `IntersectionObserver`。 |
+
+### 修饰符
+
+| 修饰符 | 说明 |
+| --- | --- |
+| `.quiet` | 跳过观察器首次投递的回调，后续投递仍会调用处理函数。 |
+| `.once` | 首次出现相交项后解除观察；不相交投递不会结束观察。 |
+
+### 回调
+
+处理函数接收三个参数：`isIntersecting` 是当前投递中是否至少有一个 entry 相交，`entries` 是本次原生 `IntersectionObserverEntry[]`，`observer` 是当前 `IntersectionObserver` 实例。指令没有 Vue 自定义事件和 Slots。
+
+### 生命周期
+
+指令挂载时创建观察器，绑定更新时重新创建，卸载时解除观察。浏览器没有 `IntersectionObserver` 时指令保持静默，不执行处理函数。
+
+<script setup>
+import IntersectionHandlerExample from '../examples/intersection/IntersectionHandlerExample.vue';
+import IntersectionModifiersExample from '../examples/intersection/IntersectionModifiersExample.vue';
+import IntersectionOptionsExample from '../examples/intersection/IntersectionOptionsExample.vue';
 </script>

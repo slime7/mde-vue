@@ -36,7 +36,7 @@
 
 ### 公共入口
 
-`src/index.js` 是完整组件包入口，导出 Icon、Button、FAB、Card、List、Divider、Spacer、Loader、Tooltip、Snackbar、选择控件、Text field、Textarea、Menu、Dialog 组件族以及 `createMatUi()` 和 `useMatTheme()`。Dialog 与 Snackbar 命令式函数由独立的 `mdu-ui/functions` 入口导出，不从根入口或对应组件子入口重复导出。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口，复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
+`src/index.js` 是完整组件包入口，导出 Icon、Button、FAB、Card、List、Divider、Spacer、Loader、Tooltip、Snackbar、Hover、选择控件、Text field、Textarea、Menu、Dialog 组件族、`Intersection` 指令以及 `createMatUi()` 和 `useMatTheme()`。Dialog 与 Snackbar 命令式函数由独立的 `mdu-ui/functions` 入口导出，不从根入口或对应组件子入口重复导出。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口；`Intersection` 指令通过 `mdu-ui/directives/intersection` 单独入口导出。复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -50,11 +50,12 @@
 
 ### 插件配置
 
-`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针，以及组件图标容器使用的全局 `iconClass`。顶层选项不会写入主题控制器；未安装插件的按需组件使用同一组默认设置。
+`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针，以及组件图标容器使用的全局 `iconClass`。插件全局注册 `mat-*` 组件，并以 `intersection` 名称注册 `v-intersection` 指令。顶层选项不会写入主题控制器；未安装插件的按需组件和指令使用同一组默认设置。
 
 ### 组件
 
 每个组件拥有自己的 Vue SFC、公开入口、样式与测试。`MatSpacer` 是不进入无障碍树的空 flex 子元素，只通过增长分配父容器主轴剩余空间。`MatBtn` 以同一个原生 `<button>` 组件提供普通按钮和图标模式：`icon=true` 解析默认 Slot 的 Material Symbols 文本，字符串 `icon` 使用 prop 文本，未设置 `icon` 时仍按普通按钮渲染并允许默认 Slot 直接放置 `MatIcon`；普通模式也可使用 `prefix`、`suffix` 或同名 Slots。`MatFab` 以同一个原生 `<button>` 组件提供纯图标 FAB 和 Extended FAB：默认 Slot 有非空内容时显示 Extended 标签，否则要求 `icon` 与 `label` 并显示 Tooltip。两者共享 `MatButtonBase` 的原生交互和状态逻辑。按钮组与 split button 使用 Vue provide/inject 协调 `MatBtn` 子按钮，不复制交互协议；standard 选中态沿用普通按钮的 round/square 反转，connected 选中态使用覆盖四角的全圆 checked shape。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
+每个组件拥有自己的 Vue SFC、公开入口、样式与测试。`MatHover` 是无渲染交互组件，通过作用域 Slot 向使用方提供 hover 状态和目标事件 props，不引入包装元素；它只处理鼠标进入、离开及可取消的开放/关闭延迟。`v-intersection` 是独立的原生观察指令，绑定值直接映射 `IntersectionObserver` 回调和初始化选项，使用元素级 WeakMap 管理生命周期，不向 DOM 写入私有字段。`MatSpacer` 是不进入无障碍树的空 flex 子元素，只通过增长分配父容器主轴剩余空间。`MatBtn` 以同一个原生 `<button>` 组件提供普通按钮和图标模式：`icon=true` 解析默认 Slot 的 Material Symbols 文本，字符串 `icon` 使用 prop 文本，未设置 `icon` 时仍按普通按钮渲染并允许默认 Slot 直接放置 `MatIcon`；普通模式也可使用 `prefix`、`suffix` 或同名 Slots。`MatFab` 以同一个原生 `<button>` 组件提供纯图标 FAB 和 Extended FAB：默认 Slot 有非空内容时显示 Extended 标签，否则要求 `icon` 与 `label` 并显示 Tooltip。两者共享 `MatButtonBase` 的原生交互和状态逻辑。按钮组与 split button 使用 Vue provide/inject 协调 `MatBtn` 子按钮，不复制交互协议；standard 选中态沿用普通按钮的 round/square 反转，connected 选中态使用覆盖四角的全圆 checked shape。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
 
 Icon 统一字体字形、SVG 资源和默认 Slot 中的 SVG 元素，负责 Material Symbols 经典四轴、尺寸、内容颜色和动态根标签。内容来源优先级固定为 `src`、`icon`、默认 Slot；组件级 `iconClass` 可覆盖或关闭插件全局值。按钮、List、Menu 和文本输入复用同一公共 Icon 实现，但各自负责上下文尺寸、颜色和无障碍语义。
 

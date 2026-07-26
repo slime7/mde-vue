@@ -5,7 +5,7 @@
 ## 文档
 
 - [概述](guide/overview.md): 了解 mdu-ui 的定位、支持范围、导入方式和 Material 组件体系。
-- [安装](guide/installation.md): 从 GitHub 私有仓库固定提交安装 mdu-ui，并选择全局注册或按需导入组件。
+- [安装](guide/installation.md): 从 GitHub 私有仓库固定提交安装 mdu-ui，并选择全局注册或按需导入组件与指令。
 - [createMatUi](guide/create-mat-ui.md): 配置 mdu-ui 的全局组件注册、交互指针、图标 class 和主题控制器。
 - [主题](guide/theme.md): 配置 Material 3 种子色、亮暗模式、配色变体和对比度，并在运行时切换主题。
 - [Icon 图标](components/icon.md): mat-icon 的 Material Symbols 字形、SVG 资源、内联 SVG、尺寸、字体轴和配色。
@@ -14,7 +14,7 @@
 - [Button 按钮](components/button.md): mat-btn 的普通与图标模式、尺寸、宽度、形态、配色、受控切换、事件和 slots。
 - [FAB 浮动操作按钮](components/fab.md): mat-fab 的纯图标 FAB 与 Extended FAB、尺寸、官方颜色角色、禁用状态和无障碍名称。
 - [Button group 按钮组](components/button-group.md): mat-btn-group 的标准与连接布局、级联属性、受控单选多选和事件。
-- [限制](guide/limitations.md): 记录 mdu-ui 当前明确不支持的运行环境、分发方式和按钮能力。
+- [限制](guide/limitations.md): 记录 mdu-ui 当前明确不支持的运行环境、分发方式。
 - [Split button 拆分按钮](components/split-button.md): mat-split-btn 的双按钮组合、受控展开、事件、菜单 ARIA 和 slots。
 - [Checkbox 复选框](components/checkbox.md): mat-checkbox 的布尔与数组 v-model、不确定态、配色、事件和默认 slot。
 - [Radio 单选按钮与单选组](components/radio.md): mat-radio 与 mat-radio-group 的独立或成组 v-model、标签、禁用、配色和键盘交互。
@@ -34,3 +34,5 @@
 - [Snackbar 消息提示](components/snackbar.md): mat-snackbar 的 Material 3 底部消息提示、文字 action、全局 FIFO 队列和 Promise 函数。
 - [Spacer 弹性占位](components/spacer.md): mat-spacer 在 flex 布局中占据主轴剩余空间。
 - [Panes 布局面板](components/panes.md): mat-panes 与 mat-pane 的横向多窗口布局、受控宽度调整、断点事件和低频宽度信息。
+- [Hover 悬停状态](components/hover.md): mat-hover 的作用域 Slot、受控状态和进入离开延迟。
+- [Intersection 指令](directives/intersection.md): v-intersection 的 IntersectionObserver 绑定值、选项和修饰符。

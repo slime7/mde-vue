@@ -90,6 +90,7 @@ export default defineConfig({
           { text: 'Dialog 对话框', link: '/components/dialog' },
           { text: 'Toolbar 工具栏', link: '/components/toolbar' },
           { text: 'Navigation 导航', link: '/components/navigation-rail' },
+          { text: 'Hover 悬停状态', link: '/components/hover' },
           { text: 'Tooltip 文字提示', link: '/components/tooltip' },
           { text: 'Snackbar 消息提示', link: '/components/snackbar' },
           { text: 'Card 卡片', link: '/components/card' },
@@ -97,6 +98,12 @@ export default defineConfig({
           { text: 'Divider 分隔线', link: '/components/divider' },
           { text: 'Panes 布局面板', link: '/components/panes' },
           { text: 'Spacer 弹性占位', link: '/components/spacer' },
+        ],
+      },
+      {
+        text: '指令',
+        items: [
+          { text: 'Intersection 相交观察', link: '/directives/intersection' },
         ],
       },
       {

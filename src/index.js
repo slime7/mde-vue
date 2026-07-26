@@ -23,6 +23,7 @@ export { default as MatMenu } from './components/mat-menu/MatMenu.vue';
 export { default as MatMenuGroup } from './components/mat-menu-group/MatMenuGroup.vue';
 export { default as MatMenuItem } from './components/mat-menu/MatMenuItem.vue';
 export { default as MatDialog } from './components/mat-dialog/MatDialog.vue';
+export { default as MatHover } from './components/mat-hover/MatHover.vue';
 export { default as MatSpacer } from './components/mat-spacer/MatSpacer.vue';
 export { default as MatLoader } from './components/mat-loader/MatLoader.vue';
 export { default as MatTooltip } from './components/mat-tooltip/MatTooltip.vue';
@@ -32,6 +33,7 @@ export { default as MatPanes } from './components/mat-panes/MatPanes.vue';
 export { default as MatPane } from './components/mat-panes/MatPane.vue';
 export { default as MatNavigationRail } from './components/mat-navigation-rail/MatNavigationRail.vue';
 export { default as MatNavigationRailItem } from './components/mat-navigation-rail/MatNavigationRailItem.vue';
+export { default as Intersection } from './directives/intersection';
 // Node/Vitest 直接解析包源码时需要保留 JavaScript 扩展名。
 // eslint-disable-next-line import-x/extensions
 export { createMatUi, useMatTheme } from './plugin.js';

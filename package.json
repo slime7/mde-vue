@@ -18,6 +18,7 @@
   "exports": {
     ".": "./src/index.js",
     "./components/*": "./src/components/*/index.js",
+    "./directives/*": "./src/directives/*/index.js",
     "./functions": "./src/functions/index.js",
     "./styles.css": "./src/styles/index.css",
     "./tailwind.css": "./src/styles/tailwind.css"

@@ -25,6 +25,10 @@
 
 `useMatTheme()` 只能读取当前 Vue 应用提供的主题上下文。组件不得自行创建第二套主题状态；应用级主题控制器是运行时配置的权威来源。
 
+`MatHover` 是无渲染作用域 Slot 组件，`isHovering` 初始为 `null`，并通过 Slot 参数中的 `props` 把鼠标进入和离开监听交给使用方目标元素。显式 `modelValue` 时由父级控制状态；`disabled` 只暂停对外同步，不丢失内部真实 hover 状态。`openDelay` 和 `closeDelay` 共享可取消的单个计时器。
+
+`v-intersection` 是客户端原生 `IntersectionObserver` 指令，不渲染包装元素。绑定值可以是处理函数或带 `handler`、`options` 的对象；`options` 保持原生观察器配置，回调的 `isIntersecting` 取本次 entries 是否存在相交项。`.quiet` 只跳过首次投递，`.once` 在首次相交后解除观察；观察器不支持时保持静默，卸载和绑定更新必须清理旧实例。
+
 ## 主题配置
 
 主题配置由以下值组成：
