@@ -17,7 +17,7 @@
 
 ## Mat UI 插件
 
-`MatSurfaceBase`、`MatActionBase`、`MatButtonBase`、`MatSelectionControlBase`、`MatInputBase`、`MatTextInputBase`、`MatItemContentBase` 与 `useRovingFocus` 是内部结构复用层，不属于公共 API。它们分别负责表面根节点、原生 button/link 交互、按钮交互状态、选择控件结构、无边框原生 input/textarea、文本输入视觉、无语义项目内容排列和 tabindex 管理；公共组件不得要求使用者依赖其 class、文件路径或内部 CSS 变量。
+`MatSurfaceBase`、`MatActionBase`、`MatButtonBase`、`MatSelectionControlBase`、`MatTextInputBase`、`MatItemContentBase` 与 `useRovingFocus` 是内部结构复用层，不属于公共 API。它们分别负责表面根节点、原生 button/link 交互、按钮交互状态、选择控件结构、文本输入视觉、无语义项目内容排列和 tabindex 管理；公共组件不得要求使用者依赖其 class、文件路径或内部 CSS 变量。`MatInputBase` 是公共例外，提供无边框原生 input/textarea、受控字符串值、`update:modelValue`、原生属性透传以及 `focusInput`、`getInput` 方法；它不提供标签、描边、填充、辅助文字或校验语义。
 
 `createMatUi({ theme, useCursor, iconClass })` 创建一次 Vue 插件安装单元。插件负责全局注册 `mat-*` 组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
 

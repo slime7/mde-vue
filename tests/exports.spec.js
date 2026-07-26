@@ -20,6 +20,7 @@ import MatSlider, { MatSlider as NamedMatSlider } from 'mdu-ui/components/mat-sl
 import MatRangeSlider, { MatRangeSlider as NamedMatRangeSlider } from 'mdu-ui/components/mat-range-slider';
 import MatTextField, { MatTextField as NamedMatTextField } from 'mdu-ui/components/mat-text-field';
 import MatTextarea, { MatTextarea as NamedMatTextarea } from 'mdu-ui/components/mat-textarea';
+import MatInputBase, { MatInputBase as NamedMatInputBase } from 'mdu-ui/components/mat-input-base';
 import MatMenu, { MatMenu as NamedMatMenu } from 'mdu-ui/components/mat-menu';
 import MatMenuGroup, { MatMenuGroup as NamedMatMenuGroup } from 'mdu-ui/components/mat-menu-group';
 import MatMenuItem, { MatMenuItem as NamedMatMenuItem } from 'mdu-ui/components/mat-menu-item';
@@ -52,6 +53,7 @@ import {
   MatFab as RootMatFab,
   MatHover as RootMatHover,
   MatIcon as RootMatIcon,
+  MatInputBase as RootMatInputBase,
   MatList as RootMatList,
   MatListGroup as RootMatListGroup,
   MatListItem as RootMatListItem,
@@ -103,6 +105,7 @@ describe('公共组件导出', () => {
     ['MatRangeSlider', RootMatRangeSlider, NamedMatRangeSlider, MatRangeSlider],
     ['MatTextField', RootMatTextField, NamedMatTextField, MatTextField],
     ['MatTextarea', RootMatTextarea, NamedMatTextarea, MatTextarea],
+    ['MatInputBase', RootMatInputBase, NamedMatInputBase, MatInputBase],
     ['MatMenu', RootMatMenu, NamedMatMenu, MatMenu],
     ['MatMenuGroup', RootMatMenuGroup, NamedMatMenuGroup, MatMenuGroup],
     ['MatMenuItem', RootMatMenuItem, NamedMatMenuItem, MatMenuItem],
@@ -151,6 +154,7 @@ describe('公共组件导出', () => {
     expect(app.component('mat-range-slider')).toBe(RootMatRangeSlider);
     expect(app.component('mat-text-field')).toBe(RootMatTextField);
     expect(app.component('mat-textarea')).toBe(RootMatTextarea);
+    expect(app.component('mat-input-base')).toBe(RootMatInputBase);
     expect(app.component('mat-menu')).toBe(RootMatMenu);
     expect(app.component('mat-menu-group')).toBe(RootMatMenuGroup);
     expect(app.component('mat-menu-item')).toBe(RootMatMenuItem);

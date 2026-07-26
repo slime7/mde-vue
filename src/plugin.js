@@ -20,6 +20,7 @@ import MatSlider from './components/mat-slider/MatSlider.vue';
 import MatRangeSlider from './components/mat-range-slider/MatRangeSlider.vue';
 import MatTextField from './components/mat-text-field/MatTextField.vue';
 import MatTextarea from './components/mat-textarea/MatTextarea.vue';
+import MatInputBase from './components/MatInputBase.vue';
 import MatMenu from './components/mat-menu/MatMenu.vue';
 import MatMenuGroup from './components/mat-menu-group/MatMenuGroup.vue';
 import MatMenuItem from './components/mat-menu/MatMenuItem.vue';
@@ -141,6 +142,8 @@ export function createMatUi(options = {}) {
       app.component('mat-text-field', MatTextField);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-textarea', MatTextarea);
+      // eslint-disable-next-line vue/component-definition-name-casing
+      app.component('mat-input-base', MatInputBase);
       // eslint-disable-next-line vue/component-definition-name-casing
       app.component('mat-menu', MatMenu);
       // eslint-disable-next-line vue/component-definition-name-casing

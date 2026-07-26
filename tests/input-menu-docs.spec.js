@@ -6,6 +6,7 @@ describe('文本输入与菜单文档', () => {
   it('提供纳入 AI 文档的中文组件页面和同源示例', () => {
     [
       'docs/site/components/text-field.md',
+      'docs/site/components/input-base.md',
       'docs/site/components/menu.md',
     ].forEach((pagePath) => {
       expect(existsSync(resolve(pagePath)), pagePath).toBe(true);

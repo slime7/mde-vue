@@ -46,6 +46,7 @@ llms: false
 - Split button：`docs/site/components/split-button.md`
 - FAB：`docs/site/components/fab.md`
 - Hover：`docs/site/components/hover.md`
+- Input base：`docs/site/components/input-base.md`
 - Text field 与 Textarea：`docs/site/components/text-field.md`
 - Menu 与 Menu item：`docs/site/components/menu.md`
 - Toolbar：`docs/site/components/toolbar.md`

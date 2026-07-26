@@ -17,7 +17,7 @@
 
 ## 共享组件基础层
 
-`MatSurfaceBase` 负责表面组件的动态原生根元素和属性透传；`MatActionBase` 统一处理 button/link 及内部可聚焦宿主的禁用、状态层和键盘指针交互；`MatButtonBase` 在此基础上统一按钮根节点、原生属性、48px 交互目标、焦点和按下状态，供 `MatBtn` 与 `MatFab` 复用；`MatSelectionControlBase` 统一处理选择控件的原生 input、标签、48px 目标区、40px 状态层、属性路由和插件指针设置；`MatInputBase` 统一无边框原生 input/textarea、模型更新、属性透传和聚焦方法，供文本输入及搜索等输入类型复用；`MatTextInputBase` 在此基础上提供浮动标签和辅助信息。`MatItemContentBase` 统一 List 与 MenuItem 的无语义内容排列，`useRovingFocus` 只管理 DOM 顺序和 tabindex，不定义组件键盘含义。这些基础层均为内部实现，不作为公共入口导出。
+`MatSurfaceBase` 负责表面组件的动态原生根元素和属性透传；`MatActionBase` 统一处理 button/link 及内部可聚焦宿主的禁用、状态层和键盘指针交互；`MatButtonBase` 在此基础上统一按钮根节点、原生属性、48px 交互目标、焦点和按下状态，供 `MatBtn` 与 `MatFab` 复用；`MatSelectionControlBase` 统一处理选择控件的原生 input、标签、48px 目标区、40px 状态层、属性路由和插件指针设置；`MatTextInputBase` 在此基础上提供浮动标签和辅助信息。`MatItemContentBase` 统一 List 与 MenuItem 的无语义内容排列，`useRovingFocus` 只管理 DOM 顺序和 tabindex，不定义组件键盘含义。这些基础层均为内部实现，不作为公共入口导出。`MatInputBase` 是例外：它作为公共的无边框原生 input/textarea 基础组件，供使用方自定义外层 UI。
 
 ## 技术栈
 
@@ -36,7 +36,7 @@
 
 ### 公共入口
 
-`src/index.js` 是完整组件包入口，导出 Icon、Button、FAB、Card、List、Divider、Spacer、Loader、Tooltip、Snackbar、Hover、选择控件、Text field、Textarea、Menu、Dialog 组件族、`Intersection` 指令以及 `createMatUi()` 和 `useMatTheme()`。Dialog 与 Snackbar 命令式函数由独立的 `mdu-ui/functions` 入口导出，不从根入口或对应组件子入口重复导出。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口；`Intersection` 指令通过 `mdu-ui/directives/intersection` 单独入口导出。复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
+`src/index.js` 是完整组件包入口，导出 Icon、Button、FAB、Card、List、Divider、Spacer、Loader、Tooltip、Snackbar、Hover、选择控件、`MatInputBase`、Text field、Textarea、Menu、Dialog 组件族、`Intersection` 指令以及 `createMatUi()` 和 `useMatTheme()`。Dialog 与 Snackbar 命令式函数由独立的 `mdu-ui/functions` 入口导出，不从根入口或对应组件子入口重复导出。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口；`Intersection` 指令通过 `mdu-ui/directives/intersection` 单独入口导出。复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -157,3 +157,4 @@ Vite 构建检查从公开 `exports` 导入 `.vue` 和 CSS，验证普通 Vue/Vi
 - [0013 — 重构按钮组与图标按钮语义（已由 0014 替代）](adr/0013-button-icon-group-semantics.md)
 - [0014 — 连接按钮组选中态使用全圆形状（已由 0015 替代）](adr/0014-connected-button-group-checked-shape.md)
 - [0015 — 连接按钮组选中态完整覆盖组外轮廓](adr/0015-connected-button-group-checked-shape-overrides-outer-shape.md)
+- [0016 — 公开 MatInputBase 作为可组合文本输入基础组件](adr/0016-public-input-base.md)

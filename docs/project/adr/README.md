@@ -21,6 +21,7 @@
 | [0013](0013-button-icon-group-semantics.md) | superseded | 重构按钮组与图标按钮语义 |
 | [0014](0014-connected-button-group-checked-shape.md) | superseded | 连接按钮组选中态使用全圆形状 |
 | [0015](0015-connected-button-group-checked-shape-overrides-outer-shape.md) | active | 连接按钮组选中态完整覆盖组外轮廓 |
+| [0016](0016-public-input-base.md) | active | 公开 MatInputBase 作为可组合文本输入基础组件 |
 
 ## 何时创建 ADR
 
