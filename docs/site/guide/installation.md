@@ -21,7 +21,7 @@ pnpm add "mdu-ui@git+ssh://git@github.com/slime7/mdu-ui.git#<commit>"
 
 ## 全局注册：推荐用法
 
-大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，全局注册所有 `mat-*` 组件，并注册 `v-intersection` 指令。基础样式必须显式导入。
+大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，以 kebab-case `mat-*` 和 PascalCase `Mat*` 两种名称全局注册所有组件，并注册 `v-intersection` 指令。基础样式必须显式导入。
 
 应用入口 `src/main.js`：
 
@@ -47,6 +47,7 @@ createApp(App)
 <template>
   <main>
     <mat-btn @click="save">保存</mat-btn>
+    <MatBtn variant="outlined" @click="save">另存</MatBtn>
     <mat-fab icon="add" label="创建" />
     <mat-hover v-slot="{ isHovering, props }">
       <button v-bind="props" type="button">
@@ -68,7 +69,7 @@ function handleIntersection(isIntersecting) {
 </script>
 ```
 
-全局注册后的模板标签统一使用 kebab-case，例如 `<mat-btn>`、`<mat-fab>`、`<mat-card>` 和 `<mat-list>`。
+全局注册后的模板标签可使用 kebab-case 或 PascalCase，例如 `<mat-btn>` 与 `<MatBtn>`、`<mat-fab>` 与 `<MatFab>`。安装包提供 Vue 全局组件声明；启用 Vue Language Features 的编辑器可为两种名称提供相同的组件提示。
 
 ## 按需导入
 
@@ -144,8 +145,8 @@ import {
 
 | 需求 | 推荐方式 |
 | --- | --- |
-| 使用动态主题、`useMatTheme()` 或 `v-intersection` | 安装 `createMatUi()`，使用全局 `mat-*` 标签和 `v-intersection` |
+| 使用动态主题、`useMatTheme()` 或 `v-intersection` | 安装 `createMatUi()`，使用全局 `mat-*` 或 `Mat*` 标签和 `v-intersection` |
 | 应用会使用多个 mdu-ui 组件 | 安装 `createMatUi()`，统一全局注册 |
 | 只使用少量组件，并接受基础样式的默认主题 | 从 `mdu-ui/components/<组件目录>` 按需导入 |
 
-`createMatUi()` 同时负责主题初始化、组件设置、`mat-*` 组件和 `v-intersection` 指令的全局注册。已经安装插件时，不需要再局部导入同一个组件或指令。交互指针、图标 class 与主题入口见 [`createMatUi` 配置](/guide/create-mat-ui)。
+`createMatUi()` 同时负责主题初始化、组件设置、`mat-*` 与 `Mat*` 组件和 `v-intersection` 指令的全局注册。已经安装插件时，不需要再局部导入同一个组件或指令。交互指针、图标 class 与主题入口见 [`createMatUi` 配置](/guide/create-mat-ui)。

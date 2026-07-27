@@ -19,7 +19,7 @@
 
 `MatSurfaceBase`、`MatActionBase`、`MatButtonBase`、`MatSelectionControlBase`、`MatTextInputBase`、`MatItemContentBase` 与 `useRovingFocus` 是内部结构复用层，不属于公共 API。它们分别负责表面根节点、原生 button/link 交互、按钮交互状态、选择控件结构、文本输入视觉、无语义项目内容排列和 tabindex 管理；公共组件不得要求使用者依赖其 class、文件路径或内部 CSS 变量。`MatInputBase` 是公共例外，提供无边框原生 input/textarea、受控字符串值、`update:modelValue`、原生属性透传以及 `focusInput`、`getInput` 方法；它不提供标签、描边、填充、辅助文字或校验语义。
 
-`createMatUi({ theme, useCursor, iconClass })` 创建一次 Vue 插件安装单元。插件负责全局注册 `mat-*` 组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
+`createMatUi({ theme, useCursor, iconClass })` 创建一次 Vue 插件安装单元。插件负责以 `mat-*` 和对应 `Mat*` 名称全局注册组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
 
 `useCursor` 必须是 boolean，默认 `false`，控制可用交互组件是否从 `cursor: default` 改为 `cursor: pointer`。`iconClass` 必须是 string，默认 `material-symbols-outlined`，作为公共 Icon 与组件图标容器的全局 class；组件级 `iconClass` 可以覆盖或以空字符串关闭它。插件不下载字体或图标资源，未安装插件的按需组件使用相同默认值。
 
@@ -83,7 +83,7 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 
 ## 组件公共模型
 
-- Vue 组件导出使用 PascalCase，例如 `MatBtn`；模板标签使用 `mat-*`，例如 `<mat-btn>`。
+- Vue 组件导出使用 PascalCase，例如 `MatBtn`；安装 `createMatUi()` 后，模板可使用 `mat-*`（如 `<mat-btn>`）或对应 PascalCase（如 `<MatBtn>`）。
 - `<mat-spacer>` 是无内容、无交互且固定从无障碍树隐藏的 flex 子元素，只负责增长占据父容器主轴剩余空间，不定义父级方向、对齐或间距。
 - 完整包入口和单组件入口必须导出同一个组件对象与同一套行为。
 - 原生元素语义优先于自造交互协议；`<mat-btn>` 渲染原生 `<button>`。

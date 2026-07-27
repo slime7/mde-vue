@@ -47,6 +47,9 @@ import {
   MatBtn as RootMatBtn,
   MatBtnGroup as RootMatBtnGroup,
   MatCard as RootMatCard,
+  MatCardActionArea as RootMatCardActionArea,
+  MatCardActions as RootMatCardActions,
+  MatCardContent as RootMatCardContent,
   MatCheckbox as RootMatCheckbox,
   MatDialog as RootMatDialog,
   MatDivider as RootMatDivider,
@@ -69,6 +72,7 @@ import {
   MatRadioGroup as RootMatRadioGroup,
   MatRangeSlider as RootMatRangeSlider,
   MatSlider as RootMatSlider,
+  MatSnackbar as RootMatSnackbar,
   MatSpacer as RootMatSpacer,
   MatSplitBtn as RootMatSplitBtn,
   MatSwitch as RootMatSwitch,
@@ -77,6 +81,45 @@ import {
   MatToolbar as RootMatToolbar,
   MatTooltip as RootMatTooltip,
 } from '../src';
+
+const globalComponents = [
+  ['MatBtn', 'mat-btn', RootMatBtn],
+  ['MatBtnGroup', 'mat-btn-group', RootMatBtnGroup],
+  ['MatFab', 'mat-fab', RootMatFab],
+  ['MatIcon', 'mat-icon', RootMatIcon],
+  ['MatSplitBtn', 'mat-split-btn', RootMatSplitBtn],
+  ['MatCard', 'mat-card', RootMatCard],
+  ['MatCardActionArea', 'mat-card-action-area', RootMatCardActionArea],
+  ['MatCardContent', 'mat-card-content', RootMatCardContent],
+  ['MatCardActions', 'mat-card-actions', RootMatCardActions],
+  ['MatList', 'mat-list', RootMatList],
+  ['MatListGroup', 'mat-list-group', RootMatListGroup],
+  ['MatListItem', 'mat-list-item', RootMatListItem],
+  ['MatDivider', 'mat-divider', RootMatDivider],
+  ['MatCheckbox', 'mat-checkbox', RootMatCheckbox],
+  ['MatRadio', 'mat-radio', RootMatRadio],
+  ['MatRadioGroup', 'mat-radio-group', RootMatRadioGroup],
+  ['MatSwitch', 'mat-switch', RootMatSwitch],
+  ['MatSlider', 'mat-slider', RootMatSlider],
+  ['MatRangeSlider', 'mat-range-slider', RootMatRangeSlider],
+  ['MatTextField', 'mat-text-field', RootMatTextField],
+  ['MatTextarea', 'mat-textarea', RootMatTextarea],
+  ['MatInputBase', 'mat-input-base', RootMatInputBase],
+  ['MatMenu', 'mat-menu', RootMatMenu],
+  ['MatMenuGroup', 'mat-menu-group', RootMatMenuGroup],
+  ['MatMenuItem', 'mat-menu-item', RootMatMenuItem],
+  ['MatDialog', 'mat-dialog', RootMatDialog],
+  ['MatHover', 'mat-hover', RootMatHover],
+  ['MatSpacer', 'mat-spacer', RootMatSpacer],
+  ['MatLoader', 'mat-loader', RootMatLoader],
+  ['MatTooltip', 'mat-tooltip', RootMatTooltip],
+  ['MatSnackbar', 'mat-snackbar', RootMatSnackbar],
+  ['MatToolbar', 'mat-toolbar', RootMatToolbar],
+  ['MatPanes', 'mat-panes', RootMatPanes],
+  ['MatPane', 'mat-pane', RootMatPane],
+  ['MatNavigationRail', 'mat-navigation-rail', RootMatNavigationRail],
+  ['MatNavigationRailItem', 'mat-navigation-rail-item', RootMatNavigationRailItem],
+];
 
 describe('公共组件导出', () => {
   it('根入口使用可由 Node/Vitest 直接解析的 plugin.js 路径', () => {
@@ -174,6 +217,39 @@ describe('公共组件导出', () => {
     expect(app.component('mat-icon-btn')).toBeUndefined();
 
     plugin.theme.dispose();
+  });
+
+  it('createMatUi 为每个组件注册 PascalCase 与 kebab-case 别名', () => {
+    const target = document.createElement('div');
+    const plugin = createMatUi({
+      theme: { target },
+    });
+    const app = createApp({});
+
+    app.use(plugin);
+
+    globalComponents.forEach(([pascalName, kebabName, component]) => {
+      expect(app.component(pascalName)).toBe(component);
+      expect(app.component(kebabName)).toBe(component);
+    });
+
+    plugin.theme.dispose();
+  });
+
+  it('包入口提供与全局注册同步的 Vue 类型声明', () => {
+    const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
+    const declarationPath = 'src/index.d.ts';
+
+    expect(packageJson.types).toBe(`./${declarationPath}`);
+    expect(packageJson.exports['.'].types).toBe(`./${declarationPath}`);
+    expect(existsSync(declarationPath)).toBe(true);
+
+    const declaration = readFileSync(declarationPath, 'utf8');
+
+    globalComponents.forEach(([pascalName, kebabName]) => {
+      expect(declaration).toContain(`  ${pascalName}: typeof ${pascalName};`);
+      expect(declaration).toContain(`  '${kebabName}': typeof ${pascalName};`);
+    });
   });
 
   it('只从 functions 入口导出命令式函数', async () => {

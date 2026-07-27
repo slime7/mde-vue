@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "types": "./src/index.d.ts",
   "packageManager": "pnpm@10.28.0",
   "engines": {
     "node": ">=24 <25",
@@ -16,7 +17,10 @@
     }
   },
   "exports": {
-    ".": "./src/index.js",
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
     "./components/*": "./src/components/*/index.js",
     "./directives/*": "./src/directives/*/index.js",
     "./functions": "./src/functions/index.js",

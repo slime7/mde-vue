@@ -41,6 +41,45 @@ import createThemeController from './theme';
 import MAT_THEME_KEY from './theme-context';
 import { Intersection } from './directives/intersection';
 
+const GLOBAL_COMPONENTS = [
+  ['MatBtn', 'mat-btn', MatBtn],
+  ['MatBtnGroup', 'mat-btn-group', MatBtnGroup],
+  ['MatFab', 'mat-fab', MatFab],
+  ['MatIcon', 'mat-icon', MatIcon],
+  ['MatSplitBtn', 'mat-split-btn', MatSplitBtn],
+  ['MatCard', 'mat-card', MatCard],
+  ['MatCardActionArea', 'mat-card-action-area', MatCardActionArea],
+  ['MatCardContent', 'mat-card-content', MatCardContent],
+  ['MatCardActions', 'mat-card-actions', MatCardActions],
+  ['MatList', 'mat-list', MatList],
+  ['MatListGroup', 'mat-list-group', MatListGroup],
+  ['MatListItem', 'mat-list-item', MatListItem],
+  ['MatDivider', 'mat-divider', MatDivider],
+  ['MatCheckbox', 'mat-checkbox', MatCheckbox],
+  ['MatRadio', 'mat-radio', MatRadio],
+  ['MatRadioGroup', 'mat-radio-group', MatRadioGroup],
+  ['MatSwitch', 'mat-switch', MatSwitch],
+  ['MatSlider', 'mat-slider', MatSlider],
+  ['MatRangeSlider', 'mat-range-slider', MatRangeSlider],
+  ['MatTextField', 'mat-text-field', MatTextField],
+  ['MatTextarea', 'mat-textarea', MatTextarea],
+  ['MatInputBase', 'mat-input-base', MatInputBase],
+  ['MatMenu', 'mat-menu', MatMenu],
+  ['MatMenuGroup', 'mat-menu-group', MatMenuGroup],
+  ['MatMenuItem', 'mat-menu-item', MatMenuItem],
+  ['MatDialog', 'mat-dialog', MatDialog],
+  ['MatHover', 'mat-hover', MatHover],
+  ['MatSpacer', 'mat-spacer', MatSpacer],
+  ['MatLoader', 'mat-loader', MatLoader],
+  ['MatTooltip', 'mat-tooltip', MatTooltip],
+  ['MatSnackbar', 'mat-snackbar', MatSnackbar],
+  ['MatToolbar', 'mat-toolbar', MatToolbar],
+  ['MatPanes', 'mat-panes', MatPanes],
+  ['MatPane', 'mat-pane', MatPane],
+  ['MatNavigationRail', 'mat-navigation-rail', MatNavigationRail],
+  ['MatNavigationRailItem', 'mat-navigation-rail-item', MatNavigationRailItem],
+];
+
 /**
  * @typedef {object} MatUiOptions
  * @property {import('./theme.js').MatThemeOptions} [theme]
@@ -99,79 +138,10 @@ export function createMatUi(options = {}) {
   return {
     theme,
     install(app) {
-      // 公共标签遵循 mat-* 命名约定。
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-btn', MatBtn);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-btn-group', MatBtnGroup);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-fab', MatFab);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-icon', MatIcon);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-split-btn', MatSplitBtn);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-card', MatCard);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-card-action-area', MatCardActionArea);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-card-content', MatCardContent);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-card-actions', MatCardActions);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-list', MatList);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-list-group', MatListGroup);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-list-item', MatListItem);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-divider', MatDivider);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-checkbox', MatCheckbox);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-radio', MatRadio);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-radio-group', MatRadioGroup);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-switch', MatSwitch);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-slider', MatSlider);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-range-slider', MatRangeSlider);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-text-field', MatTextField);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-textarea', MatTextarea);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-input-base', MatInputBase);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-menu', MatMenu);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-menu-group', MatMenuGroup);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-menu-item', MatMenuItem);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-dialog', MatDialog);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-hover', MatHover);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-spacer', MatSpacer);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-loader', MatLoader);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-tooltip', MatTooltip);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-snackbar', MatSnackbar);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-toolbar', MatToolbar);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-panes', MatPanes);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-pane', MatPane);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-navigation-rail', MatNavigationRail);
-      // eslint-disable-next-line vue/component-definition-name-casing
-      app.component('mat-navigation-rail-item', MatNavigationRailItem);
+      GLOBAL_COMPONENTS.forEach(([pascalName, kebabName, component]) => {
+        app.component(pascalName, component);
+        app.component(kebabName, component);
+      });
       app.directive('intersection', Intersection);
       app.provide(MAT_UI_KEY, componentOptions);
       app.provide(MAT_THEME_KEY, theme);

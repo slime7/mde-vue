@@ -36,7 +36,7 @@
 
 ### 公共入口
 
-`src/index.js` 是完整组件包入口，导出 Icon、Button、FAB、Card、List、Divider、Spacer、Loader、Tooltip、Snackbar、Hover、选择控件、`MatInputBase`、Text field、Textarea、Menu、Dialog 组件族、`Intersection` 指令以及 `createMatUi()` 和 `useMatTheme()`。Dialog 与 Snackbar 命令式函数由独立的 `mdu-ui/functions` 入口导出，不从根入口或对应组件子入口重复导出。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口；`Intersection` 指令通过 `mdu-ui/directives/intersection` 单独入口导出。复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
+`src/index.js` 是完整组件包入口，导出 Icon、Button、FAB、Card、List、Divider、Spacer、Loader、Tooltip、Snackbar、Hover、选择控件、`MatInputBase`、Text field、Textarea、Menu、Dialog 组件族、`Intersection` 指令以及 `createMatUi()` 和 `useMatTheme()`。`src/index.d.ts` 是对应的类型入口，复用 Vue SFC 类型并声明全局组件。Dialog 与 Snackbar 命令式函数由独立的 `mdu-ui/functions` 入口导出，不从根入口或对应组件子入口重复导出。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口；`Intersection` 指令通过 `mdu-ui/directives/intersection` 单独入口导出。复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -50,7 +50,7 @@
 
 ### 插件配置
 
-`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针，以及组件图标容器使用的全局 `iconClass`。插件全局注册 `mat-*` 组件，并以 `intersection` 名称注册 `v-intersection` 指令。顶层选项不会写入主题控制器；未安装插件的按需组件和指令使用同一组默认设置。
+`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针，以及组件图标容器使用的全局 `iconClass`。插件以 `mat-*` 和对应 `Mat*` 名称全局注册组件，并以 `intersection` 名称注册 `v-intersection` 指令。顶层选项不会写入主题控制器；未安装插件的按需组件和指令使用同一组默认设置。
 
 ### 组件
 
