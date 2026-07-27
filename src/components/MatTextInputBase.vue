@@ -1,6 +1,6 @@
 <script setup>
 import {
-  computed, ref, useAttrs, useId,
+  computed, ref, useAttrs, useId, watch,
 } from 'vue';
 import MatInputBase from './MatInputBase.vue';
 import MatIcon from './mat-icon/MatIcon.vue';
@@ -85,6 +85,7 @@ const emit = defineEmits({
 });
 const attrs = useAttrs();
 const focused = ref(false);
+const inputValue = ref(props.modelValue);
 const controlElement = ref();
 const generatedId = useId();
 const supportingId = `${generatedId}-supporting`;
@@ -92,7 +93,7 @@ const controlId = computed(() => attrs.id || generatedId);
 const { colorStyle } = useComponentColor(computed(() => props.color));
 const hasPlaceholder = computed(() => Boolean(attrs.placeholder));
 const isFloating = computed(() => (
-  focused.value || props.modelValue.length > 0 || hasPlaceholder.value
+  focused.value || inputValue.value.length > 0 || hasPlaceholder.value
 ));
 const visibleSupportingText = computed(() => (
   props.error ? props.errorText : props.supportingText
@@ -122,8 +123,20 @@ const nativeAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([name]) => !NON_NATIVE_ATTRIBUTES.has(name)),
 ));
 
+watch(() => props.modelValue, (value) => {
+  inputValue.value = value;
+});
+
 function focusControl() {
   controlElement.value?.focusInput();
+}
+
+/**
+ * @param {string} value
+ */
+function handleModelValue(value) {
+  inputValue.value = value;
+  emit('update:modelValue', value);
 }
 </script>
 
@@ -206,7 +219,7 @@ function focusControl() {
             :model-value="modelValue"
             @blur="focused = false"
             @focus="focused = true"
-            @update:model-value="emit('update:modelValue', $event)"
+            @update:model-value="handleModelValue"
           />
 
           <span v-if="suffixText" class="mat-text-input__affix mat-text-input__suffix">
@@ -346,10 +359,11 @@ function focusControl() {
 }
 
 .mat-text-input__control {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   box-sizing: border-box;
   min-inline-size: 0;
-  inline-size: 100%;
+  inline-size: auto;
+  max-inline-size: 100%;
   min-block-size: 24px;
   padding: 0;
   color: inherit;
@@ -368,9 +382,43 @@ function focusControl() {
   align-items: flex-start;
 }
 
+.mat-text-input--textarea .mat-text-input__control-row {
+  align-items: flex-start;
+  padding-block-end: 0;
+}
+
 .mat-text-input--textarea .mat-text-input__control {
   min-block-size: 0;
+  padding-block-end: 8px;
   resize: vertical;
+}
+
+.mat-text-input--textarea .mat-text-input__container:not(:has(.mat-text-input__leading)) .mat-text-input__main {
+  margin-inline-start: 0;
+}
+
+.mat-text-input--textarea .mat-text-input__container:not(:has(.mat-text-input__trailing)) .mat-text-input__main {
+  margin-inline-end: 0;
+}
+
+.mat-text-input--textarea .mat-text-input__container:not(:has(.mat-text-input__leading)) .mat-text-input__control {
+  padding-inline-start: 16px;
+}
+
+.mat-text-input--textarea .mat-text-input__container:not(:has(.mat-text-input__trailing)) .mat-text-input__control {
+  padding-inline-end: 16px;
+}
+
+.mat-text-input--textarea .mat-text-input__label {
+  max-inline-size: calc(100% - 32px);
+}
+
+.mat-text-input--textarea .mat-text-input__container:not(:has(.mat-text-input__leading)) .mat-text-input__label {
+  inset-inline-start: 16px;
+}
+
+.mat-text-input--outlined.mat-text-input--textarea:has(.mat-text-input__label) .mat-text-input__control-row {
+  padding-block-start: 24px;
 }
 
 .mat-text-input__label {
@@ -413,6 +461,10 @@ function focusControl() {
 
 .mat-text-input--filled:has(.mat-text-input__label) .mat-text-input__control-row {
   padding-block: 24px 8px;
+}
+
+.mat-text-input--filled.mat-text-input--textarea:has(.mat-text-input__label) .mat-text-input__control-row {
+  padding-block-end: 0;
 }
 
 .mat-text-input__icon,
@@ -505,16 +557,6 @@ function focusControl() {
 .mat-text-input--disabled {
   cursor: not-allowed;
   opacity: var(--mat-sys-state-disabled-content-opacity);
-}
-
-@supports (border-shape: inset(0 round 1px)) {
-  .mat-text-input__outline {
-    border-shape: inset(0 round var(--mat-sys-shape-corner-small));
-  }
-
-  .mat-text-input--filled .mat-text-input__container {
-    border-shape: inset(0 round var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small) 0 0);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

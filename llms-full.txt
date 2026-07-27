@@ -6581,7 +6581,7 @@ const value = ref('输入内容');
 ```vue
 <template>
   <div class="example-stack">
-    <mat-textarea label="两行" :rows="2" />
+    <mat-textarea label="两行" variant="filled" :rows="2" />
     <mat-textarea label="四行" :rows="4" />
     <mat-textarea label="六行" :rows="6" />
   </div>
@@ -6713,7 +6713,7 @@ const value = ref('输入内容');
 - error 状态把 `aria-invalid` 设为 true，并通过 `aria-describedby` 关联错误文字和字符计数区域。
 - 调用方已有的 `aria-describedby` 会与组件说明区域合并。
 - filled 和 outlined 在同一区域内应保持一致，不应在同一个表单内交替使用。
-- textarea 默认允许纵向调整尺寸，初始内容区高度严格按 `rows` 与正文行高计算；单行输入不会因长内容扩高。
+- textarea 默认允许纵向调整尺寸，初始内容区高度严格按 `rows` 与正文行高计算；调整手柄位于输入外框右下角，文字与外框保留内边距；单行输入不会因长内容扩高。
 - 减少动态效果偏好下关闭标签、描边与活动指示器的非必要过渡。
 
 ## 参考来源

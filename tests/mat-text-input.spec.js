@@ -237,6 +237,21 @@ describe('文本输入组件', () => {
     expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['更新后的说明']);
   });
 
+  it('MatTextarea 在输入内容后失焦时保持浮动标签', async () => {
+    const wrapper = mount(MatTextarea, {
+      props: {
+        modelValue: '',
+        label: '说明',
+      },
+    });
+    const textarea = wrapper.get('textarea');
+
+    await textarea.setValue('用户输入');
+    await textarea.trigger('blur');
+
+    expect(wrapper.get('fieldset').get('legend').text()).toBe('说明');
+  });
+
   it('MatTextarea 把显式 rows 原样交给原生 textarea', () => {
     const wrapper = mount(MatTextarea, {
       props: {

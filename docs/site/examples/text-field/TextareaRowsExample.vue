@@ -1,7 +1,7 @@
 <!-- #region template -->
 <template>
   <div class="example-stack">
-    <mat-textarea label="两行" :rows="2" />
+    <mat-textarea label="两行" variant="filled" :rows="2" />
     <mat-textarea label="四行" :rows="4" />
     <mat-textarea label="六行" :rows="6" />
   </div>
