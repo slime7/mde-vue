@@ -41,6 +41,8 @@ pnpm docs:dev
 | `pnpm lint` | 运行 JavaScript、Vue 和 CSS 静态检查 |
 | `pnpm test` | 以监视模式运行 Vitest 组件与主题测试 |
 | `pnpm test:run` | 单次运行全部 Vitest 测试 |
+| `pnpm types:build` | 根据公共组件 JSDoc 生成 `src/index.d.ts` |
+| `pnpm types:check` | 检查 `src/index.d.ts` 是否与公共组件 JSDoc 同步 |
 | `pnpm build:check` | 从包公开出口执行 Vue/Vite 源码编译检查 |
 | `pnpm docs:llms` | 从带标记的 Markdown 生成 AI 文档 |
 | `pnpm docs:check` | 检查 `llms.txt` 和 `llms-full.txt` 是否与 Markdown 来源一致 |

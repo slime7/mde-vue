@@ -48,6 +48,8 @@
 ```text
 pnpm lint
 pnpm test:run
+pnpm types:build
+pnpm types:check
 pnpm build:check
 pnpm docs:llms
 pnpm docs:check
@@ -61,6 +63,7 @@ pnpm validate:agent-docs
 
 - 根目录 `llms.txt` 和 `llms-full.txt` 由带 AI 文档标记的 Markdown 页面生成，禁止直接编辑。
 - 修改 AI 文档时先编辑对应 Markdown 来源，再运行 `pnpm docs:llms`，并用 `pnpm docs:check` 检查生成结果。
+- `src/index.d.ts` 由 `scripts/build-types.mjs` 根据公共组件 JSDoc 生成，禁止直接编辑；修改组件公共接口注释后运行 `pnpm types:build`。
 - 不提交 `dist/`、VitePress 缓存或测试覆盖率等本地产物。
 
 ## 文档维护映射
