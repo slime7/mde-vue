@@ -22,6 +22,7 @@ export default [
       'coverage/**/*',
       'docs/site/.vitepress/cache/**/*',
       'docs/site/.vitepress/dist/**/*',
+      '**/*.d.ts',
       'llms.txt',
       'llms-full.txt',
     ],
