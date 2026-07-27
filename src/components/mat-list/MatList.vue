@@ -16,6 +16,12 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 列表布局形态；可选值为 `standard`、`segmented`。
+   *
+   * @type {'standard' | 'segmented'}
+   * @default 'segmented'
+   */
   variant: {
     type: String,
     default: 'segmented',
@@ -23,6 +29,12 @@ const props = defineProps({
       return ['standard', 'segmented'].includes(value);
     },
   },
+  /**
+   * 交互模式；可选值为 `none`、`single-select`、`multi-select`。
+   *
+   * @type {string}
+   * @default 'none'
+   */
   interaction: {
     type: String,
     default: 'none',
@@ -30,10 +42,22 @@ const props = defineProps({
       return LIST_INTERACTIONS.includes(value);
     },
   },
+  /**
+   * 受控选中值；single-select 使用单值，multi-select 使用数组。
+   *
+   * @type {string | number | boolean | Array<string | number | boolean> | null}
+   * @default null
+   */
   selected: {
     type: [String, Number, Boolean, Array],
     default: null,
   },
+  /**
+   * 受控展开分组的 value 数组。
+   *
+   * @type {Array<string | number | boolean>}
+   * @default []
+   */
   expanded: {
     type: Array,
     default: () => [],
@@ -41,6 +65,12 @@ const props = defineProps({
       return value.every(isSelectionValue);
     },
   },
+  /**
+   * 语义色或六位十六进制种子色 `#RRGGBB`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   color: {
     type: String,
     default: undefined,
@@ -49,12 +79,18 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
+  /**
+   * 选择规则允许变化时触发，载荷包含 value、selected、nextSelected 和 originalEvent。
+   */
   select(payload) {
     return payload
       && Object.hasOwn(payload, 'value')
       && Object.hasOwn(payload, 'nextSelected')
       && payload.originalEvent instanceof Event;
   },
+  /**
+   * 分组展开状态变化时触发，载荷为新的 value 数组。
+   */
   'update:expanded'(payload) {
     return Array.isArray(payload) && payload.every(isSelectionValue);
   },

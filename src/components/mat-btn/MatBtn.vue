@@ -19,10 +19,22 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 使用块级 flex 根布局，在普通文档流中铺满父元素。
+   *
+   * @type {boolean}
+   * @default false
+   */
   block: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 按钮视觉层级。可选值为 `elevated`、`filled`、`filled-tonal`、`outlined`、`text`、`standard`。
+   *
+   * @type {'elevated' | 'filled' | 'filled-tonal' | 'outlined' | 'text' | 'standard'}
+   * @default 'filled'
+   */
   variant: {
     type: String,
     default: 'filled',
@@ -30,6 +42,12 @@ const props = defineProps({
       return ['elevated', 'filled', 'filled-tonal', 'outlined', 'text', 'standard'].includes(value);
     },
   },
+  /**
+   * 按钮容器、排版、图标、间距和圆角尺寸；可选值为 `extra-small`、`small`、`medium`、`large`、`extra-large`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   size: {
     type: String,
     default: undefined,
@@ -37,6 +55,12 @@ const props = defineProps({
       return BUTTON_SIZES.includes(value);
     },
   },
+  /**
+   * 静止形状；可选值为 `round`、`square`。
+   *
+   * @type {'round' | 'square' | undefined}
+   * @default undefined
+   */
   shape: {
     type: String,
     default: undefined,
@@ -44,6 +68,12 @@ const props = defineProps({
       return BUTTON_SHAPES.includes(value);
     },
   },
+  /**
+   * 图标模式的容器宽度；可选值为 `narrow`、`uniform`、`wide`，普通模式忽略。
+   *
+   * @type {'narrow' | 'uniform' | 'wide'}
+   * @default 'uniform'
+   */
   width: {
     type: String,
     default: 'uniform',
@@ -51,6 +81,12 @@ const props = defineProps({
       return ['narrow', 'uniform', 'wide'].includes(value);
     },
   },
+  /**
+   * 图标模式；`true` 从默认 Slot 读取 Material Symbols，字符串直接指定图标。
+   *
+   * @type {boolean | string | undefined}
+   * @default undefined
+   */
   icon: {
     type: [Boolean, String],
     default: undefined,
@@ -60,39 +96,93 @@ const props = defineProps({
         || value.trim().length > 0;
     },
   },
+  /**
+   * 普通按钮前置图标，优先于 prefix Slot。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   prefix: {
     type: String,
     default: undefined,
   },
+  /**
+   * 普通按钮后置图标，优先于 suffix Slot。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   suffix: {
     type: String,
     default: undefined,
   },
+  /**
+   * 图标模式的无障碍名称和默认 Tooltip 文本。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   label: {
     type: String,
     default: undefined,
   },
+  /**
+   * 语义色或六位十六进制种子色 `#RRGGBB`。可选语义色为 `primary`、`secondary`、`tertiary`、`error`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   color: {
     type: String,
     default: undefined,
     validator: isComponentColor,
   },
+  /**
+   * 启用可选择外观和 `aria-pressed`。
+   *
+   * @type {boolean}
+   * @default false
+   */
   toggle: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 受控选中状态，仅在 toggle 或选择组中生效。
+   *
+   * @type {boolean}
+   * @default false
+   */
   selected: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 在 MatBtnGroup 选择模式中的项目值。
+   *
+   * @type {string | number | boolean | undefined}
+   * @default undefined
+   */
   value: {
     type: [String, Number, Boolean],
     default: undefined,
   },
+  /**
+   * 原生禁用状态。
+   *
+   * @type {boolean}
+   * @default false
+   */
   disabled: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 原生按钮类型；可选值为 `button`、`submit`、`reset`。
+   *
+   * @type {'button' | 'submit' | 'reset'}
+   * @default 'button'
+   */
   type: {
     type: String,
     default: 'button',
@@ -103,6 +193,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
+  /**
+   * 启用的按钮被用户激活时转发原生点击事件。载荷为 `MouseEvent`。
+   */
   click(payload) {
     return payload instanceof MouseEvent;
   },

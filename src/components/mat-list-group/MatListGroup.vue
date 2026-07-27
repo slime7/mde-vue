@@ -24,6 +24,12 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 分组稳定值；提供后由 MatList 的 expanded 控制展开状态。
+   *
+   * @type {string | number | boolean | undefined}
+   * @default undefined
+   */
   value: {
     type: [String, Number, Boolean],
     default: undefined,

@@ -6,8 +6,26 @@ import useComponentColor from '../use-component-color';
 
 defineOptions({ name: 'MatCard', inheritAttrs: false });
 const props = defineProps({
+  /**
+   * 卡片的层级和边框外观；可选值为 `elevated`、`filled`、`outlined`。
+   *
+   * @type {'elevated' | 'filled' | 'outlined'}
+   * @default 'filled'
+   */
   variant: { type: String, default: 'filled', validator: (value) => ['elevated', 'filled', 'outlined'].includes(value) },
+  /**
+   * 语义色或六位十六进制种子色 `#RRGGBB`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   color: { type: String, default: undefined, validator: isComponentColor },
+  /**
+   * 根元素语义；可选值为 `div`、`article`、`section`、`li`。
+   *
+   * @type {'div' | 'article' | 'section' | 'li'}
+   * @default 'div'
+   */
   as: { type: String, default: 'div', validator: (value) => ['div', 'article', 'section', 'li'].includes(value) },
 });
 const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => props.color));

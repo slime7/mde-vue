@@ -30,22 +30,54 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 显式传入时启用受控模式，可使用 v-model。
+   *
+   * @type {boolean}
+   * @default false
+   */
   modelValue: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 简短纯文本内容；存在时优先于默认 Slot。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   content: {
     type: String,
     default: undefined,
   },
+  /**
+   * 展示元素的选择器或 HTMLElement。
+   *
+   * @type {string | HTMLElement | undefined}
+   * @default undefined
+   */
   target: {
     type: [String, Object],
     default: undefined,
   },
+  /**
+   * Teleport 目标；字符串按当前 document 的 CSS 选择器解析。
+   *
+   * @type {string | HTMLElement}
+   * @default 'body'
+   */
   attach: {
     type: [String, Object],
     default: 'body',
   },
+  /**
+   * 相对展示元素的首选位置。
+   *
+   * 可选值为 `top`、`right`、`bottom`、`left` 及其 `-start`、`-end` 形式。
+   *
+   * @type {string}
+   * @default 'top'
+   */
   location: {
     type: String,
     default: 'top',
@@ -53,6 +85,12 @@ const props = defineProps({
       return TOOLTIP_LOCATIONS.includes(value);
     },
   },
+  /**
+   * 自动模式的打开延迟，单位为毫秒；无效值按 0 处理。
+   *
+   * @type {number | string}
+   * @default 0
+   */
   openDelay: {
     type: [Number, String],
     default: 0,
@@ -68,6 +106,9 @@ const props = defineProps({
   },
 });
 const emit = defineEmits({
+  /**
+   * 受控模式请求关闭时发出 false。
+   */
   'update:modelValue': (payload) => typeof payload === 'boolean',
 });
 const attrs = useAttrs();

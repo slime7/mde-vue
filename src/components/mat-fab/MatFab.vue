@@ -25,6 +25,12 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * FAB 尺寸；可选值为 `small`、`medium`、`large`。
+   *
+   * @type {'small' | 'medium' | 'large'}
+   * @default 'medium'
+   */
   size: {
     type: String,
     default: 'medium',
@@ -32,6 +38,12 @@ const props = defineProps({
       return FAB_SIZES.includes(value);
     },
   },
+  /**
+   * FAB 图标的 Material Symbols 文本。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   icon: {
     type: String,
     default: undefined,
@@ -39,19 +51,43 @@ const props = defineProps({
       return value === undefined || value.trim().length > 0;
     },
   },
+  /**
+   * Extended FAB 的按钮标签；图标模式用作无障碍名称。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   label: {
     type: String,
     default: undefined,
   },
+  /**
+   * FAB 颜色角色；可选值为 `primary`、`secondary`、`tertiary`、`primary-container`、`secondary-container`、`tertiary-container`、`error`、`error-container`。
+   *
+   * @type {string}
+   * @default 'primary-container'
+   */
   color: {
     type: String,
     default: 'primary-container',
     validator: isFabColor,
   },
+  /**
+   * 禁用原生按钮交互。
+   *
+   * @type {boolean}
+   * @default false
+   */
   disabled: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 原生按钮类型；可选值为 `button`、`submit`、`reset`。
+   *
+   * @type {'button' | 'submit' | 'reset'}
+   * @default 'button'
+   */
   type: {
     type: String,
     default: 'button',
@@ -62,6 +98,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
+  /**
+   * 启用的 FAB 被用户激活时转发原生点击事件，载荷为 `MouseEvent`。
+   */
   click(payload) {
     return payload instanceof MouseEvent;
   },

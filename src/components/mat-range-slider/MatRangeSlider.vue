@@ -28,6 +28,12 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * `v-model` 当前范围，格式为 `[start, end]`。
+   *
+   * @type {[number, number]}
+   * @default [0, 100]
+   */
   modelValue: {
     type: Array,
     default() {
@@ -35,48 +41,108 @@ const props = defineProps({
     },
     validator: isRangeSliderModelValue,
   },
+  /**
+   * 可选范围最小值。
+   *
+   * @type {number}
+   * @default 0
+   */
   min: {
     type: Number,
     default: 0,
     validator: isFiniteNumber,
   },
+  /**
+   * 可选范围最大值。
+   *
+   * @type {number}
+   * @default 100
+   */
   max: {
     type: Number,
     default: 100,
     validator: isFiniteNumber,
   },
+  /**
+   * 每次键盘或指针调整的步长，必须为正数。
+   *
+   * @type {number}
+   * @default 1
+   */
   step: {
     type: Number,
     default: 1,
     validator: isPositiveNumber,
   },
+  /**
+   * 禁止指针与键盘交互。
+   *
+   * @type {boolean}
+   * @default false
+   */
   disabled: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 语义色或六位十六进制种子色 `#RRGGBB`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   color: {
     type: String,
     default: undefined,
     validator: isComponentColor,
   },
+  /**
+   * 滑块方向；可选值为 `horizontal`、`vertical`。
+   *
+   * @type {string}
+   * @default 'horizontal'
+   */
   orientation: {
     type: String,
     default: 'horizontal',
     validator: isSliderOrientation,
   },
+  /**
+   * 滑块尺寸；可选值为 `extra-small`、`small`、`medium`、`large`、`extra-large`。
+   *
+   * @type {string}
+   * @default 'extra-small'
+   */
   size: {
     type: String,
     default: 'extra-small',
     validator: isSliderSize,
   },
+  /**
+   * 是否显示停靠点指示器。
+   *
+   * @type {boolean}
+   * @default false
+   */
   showStopIndicator: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 是否显示当前值指示器。
+   *
+   * @type {boolean}
+   * @default false
+   */
   showValueIndicator: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 起始手柄的无障碍名称。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   ariaLabelStart: {
     type: String,
     default: undefined,
@@ -84,6 +150,12 @@ const props = defineProps({
       return value === undefined || typeof value === 'string';
     },
   },
+  /**
+   * 结束手柄的无障碍名称。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   ariaLabelEnd: {
     type: String,
     default: undefined,
@@ -94,12 +166,21 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
+  /**
+   * 任一端点发生变化时发出新的 `[start, end]` 数组。
+   */
   'update:modelValue'(value) {
     return isRangeSliderModelValue(value);
   },
+  /**
+   * 数值变化时转发原生 input 事件。
+   */
   input(event) {
     return event instanceof Event;
   },
+  /**
+   * 数值变化完成时转发原生 change 事件。
+   */
   change(event) {
     return event instanceof Event;
   },

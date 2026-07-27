@@ -29,14 +29,32 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 受控展示状态，可使用 v-model。
+   *
+   * @type {boolean}
+   * @default false
+   */
   modelValue: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 简短纯文本内容；默认 Slot 存在时由 Slot 优先提供。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   text: {
     type: String,
     default: undefined,
   },
+  /**
+   * 文字 action 内容，必须为非空字符串。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   actionText: {
     type: String,
     default: undefined,
@@ -44,10 +62,22 @@ const props = defineProps({
       return typeof value === 'string' && value.trim().length > 0;
     },
   },
+  /**
+   * 是否显示内置关闭按钮。
+   *
+   * @type {boolean}
+   * @default false
+   */
   closable: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 内置关闭按钮的非空可访问名称。
+   *
+   * @type {string}
+   * @default '关闭'
+   */
   closeLabel: {
     type: String,
     default: '关闭',
@@ -55,6 +85,12 @@ const props = defineProps({
       return typeof value === 'string' && value.trim().length > 0;
     },
   },
+  /**
+   * Snackbar 水平位置；可选值为 `left`、`center`、`right`。
+   *
+   * @type {'left' | 'center' | 'right'}
+   * @default 'center'
+   */
   position: {
     type: String,
     default: 'center',
@@ -62,6 +98,12 @@ const props = defineProps({
       return ['left', 'center', 'right'].includes(value);
     },
   },
+  /**
+   * 自动关闭时长，单位为毫秒；0 表示常驻。
+   *
+   * @type {number}
+   * @default 4000
+   */
   duration: {
     type: Number,
     default: 4000,
@@ -71,8 +113,17 @@ const props = defineProps({
   },
 });
 const emit = defineEmits({
+  /**
+   * action 控件被激活时触发。
+   */
   action: () => true,
+  /**
+   * Snackbar 请求关闭时发出 false。
+   */
   'update:modelValue': (value) => typeof value === 'boolean',
+  /**
+   * 退出动画和清理完成后触发。
+   */
   closed: () => true,
 });
 const slots = useSlots();

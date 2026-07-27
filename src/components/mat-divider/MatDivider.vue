@@ -9,6 +9,12 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 分隔线的缩进方式；可选值为 `none`、`start`、`middle`。
+   *
+   * @type {'none' | 'start' | 'middle'}
+   * @default 'none'
+   */
   inset: {
     type: String,
     default: 'none',

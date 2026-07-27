@@ -7,6 +7,12 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 要渲染的原生控件；可选值为 `input`、`textarea`。
+   *
+   * @type {'input' | 'textarea'}
+   * @required
+   */
   control: {
     type: String,
     required: true,
@@ -14,30 +20,72 @@ const props = defineProps({
       return ['input', 'textarea'].includes(value);
     },
   },
+  /**
+   * 受控字符串值，可使用 v-model。
+   *
+   * @type {string}
+   * @required
+   */
   modelValue: {
     type: String,
     required: true,
   },
+  /**
+   * 使用原生禁用语义。
+   *
+   * @type {boolean}
+   * @default false
+   */
   disabled: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 原生最大字符数。
+   *
+   * @type {number | undefined}
+   * @default undefined
+   */
   maxLength: {
     type: Number,
     default: undefined,
   },
+  /**
+   * 使用原生只读语义。
+   *
+   * @type {boolean}
+   * @default false
+   */
   readonly: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 设置原生 required。
+   *
+   * @type {boolean}
+   * @default false
+   */
   required: {
     type: Boolean,
     default: false,
   },
+  /**
+   * textarea 的初始行数；control 为 input 时忽略。
+   *
+   * @type {number | undefined}
+   * @default undefined
+   */
   rows: {
     type: Number,
     default: undefined,
   },
+  /**
+   * input 的原生 type；control 为 textarea 时忽略。常用值包括 `text`、`number`、`password`、`url`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   type: {
     type: String,
     default: undefined,
@@ -45,6 +93,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
+  /**
+   * 原生 input 事件产生新值，用于 v-model；载荷为 string。
+   */
   'update:modelValue': (payload) => typeof payload === 'string',
 });
 const input = ref(null);

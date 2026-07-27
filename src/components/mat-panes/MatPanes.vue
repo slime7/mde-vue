@@ -10,6 +10,12 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 受控 Pane 权重映射，键为 MatPane.id，值为非负有限数字。
+   *
+   * @type {Record<string, number>}
+   * @required
+   */
   sizes: {
     type: Object,
     required: true,
@@ -21,6 +27,12 @@ const props = defineProps({
         ));
     },
   },
+  /**
+   * 是否允许通过分隔控件调整 Pane 权重。
+   *
+   * @type {boolean}
+   * @default true
+   */
   resizable: {
     type: Boolean,
     default: true,
@@ -28,6 +40,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
+  /**
+   * 拖动或键盘调整提交后发出新的权重映射。
+   */
   'update:sizes': (payload) => (
     payload !== null
       && !Array.isArray(payload)
@@ -35,6 +50,9 @@ const emit = defineEmits({
         typeof item === 'number' && Number.isFinite(item) && item >= 0
       ))
   ),
+  /**
+   * 实际 Pane 宽度稳定后发出取整像素宽度映射。
+   */
   'update:widths': (payload) => (
     payload !== null
       && !Array.isArray(payload)
@@ -42,6 +60,9 @@ const emit = defineEmits({
         typeof item === 'number' && Number.isInteger(item) && item >= 0
       ))
   ),
+  /**
+   * 视口跨越响应式断点时发出断点名称。
+   */
   'update:breakpoint': (payload) => MAT_PANES_BREAKPOINTS.includes(payload),
 });
 

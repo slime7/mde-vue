@@ -14,10 +14,22 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 使用块级 flex 组根，在普通文档流中铺满父元素。
+   *
+   * @type {boolean}
+   * @default false
+   */
   block: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 组布局形态；可选值为 `standard`、`connected`。
+   *
+   * @type {'standard' | 'connected'}
+   * @default 'standard'
+   */
   variant: {
     type: String,
     default: 'standard',
@@ -25,6 +37,12 @@ const props = defineProps({
       return ['standard', 'connected'].includes(value);
     },
   },
+  /**
+   * 未显式设置尺寸的子按钮继承的尺寸。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   size: {
     type: String,
     default: 'small',
@@ -32,6 +50,12 @@ const props = defineProps({
       return BUTTON_SIZES.includes(value);
     },
   },
+  /**
+   * standard 子按钮形状；可选值为 `round`、`square`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   shape: {
     type: String,
     default: 'round',
@@ -39,15 +63,33 @@ const props = defineProps({
       return BUTTON_SHAPES.includes(value);
     },
   },
+  /**
+   * 级联给未显式设置 color 的子按钮。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   color: {
     type: String,
     default: undefined,
     validator: isComponentColor,
   },
+  /**
+   * 为 true 时禁用全部子按钮。
+   *
+   * @type {boolean}
+   * @default false
+   */
   disabled: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 选择模式；可选值为 `none`、`single`、`multiple`。
+   *
+   * @type {'none' | 'single' | 'multiple'}
+   * @default 'none'
+   */
   selection: {
     type: String,
     default: 'none',
@@ -55,14 +97,32 @@ const props = defineProps({
       return ['none', 'single', 'multiple'].includes(value);
     },
   },
+  /**
+   * 受控当前选择值；single 使用单值，multiple 使用数组。
+   *
+   * @type {string | number | boolean | Array<string | number | boolean> | null}
+   * @default null
+   */
   selected: {
     type: [String, Number, Boolean, Array],
     default: null,
   },
+  /**
+   * 阻止取消 single 当前项或 multiple 最后一项。
+   *
+   * @type {boolean}
+   * @default false
+   */
   required: {
     type: Boolean,
     default: false,
   },
+  /**
+   * connected 形态下铺满父容器并等分子项；standard 中忽略。
+   *
+   * @type {boolean}
+   * @default false
+   */
   fullWidth: {
     type: Boolean,
     default: false,
@@ -70,6 +130,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
+  /**
+   * 选择规则允许变化时触发，载荷为 `{ value, selected, nextSelected, originalEvent }`。
+   */
   select(payload) {
     return payload
       && Object.hasOwn(payload, 'value')

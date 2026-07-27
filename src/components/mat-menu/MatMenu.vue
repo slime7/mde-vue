@@ -19,10 +19,22 @@ defineOptions({
 const CLOSE_DURATION = 200;
 
 const props = defineProps({
+  /**
+   * 受控打开状态，可使用 v-model。
+   *
+   * @type {boolean}
+   * @default false
+   */
   modelValue: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 元素选择器或 `[clientX, clientY]` 视口坐标；未设置时使用 activator Slot。
+   *
+   * @type {string | [number, number] | undefined}
+   * @default undefined
+   */
   anchor: {
     type: [String, Array],
     default: undefined,
@@ -36,6 +48,12 @@ const props = defineProps({
         );
     },
   },
+  /**
+   * 菜单相对锚点的 `[x, y]` 偏移像素。
+   *
+   * @type {[number, number]}
+   * @default [0, 0]
+   */
   offset: {
     type: Array,
     default: () => [0, 0],
@@ -44,6 +62,12 @@ const props = defineProps({
         && value.every((coordinate) => Number.isFinite(coordinate));
     },
   },
+  /**
+   * 菜单配色形态；可选值为 `standard`、`vibrant`。
+   *
+   * @type {'standard' | 'vibrant' | undefined}
+   * @default undefined
+   */
   variant: {
     type: String,
     default: undefined,
@@ -51,17 +75,32 @@ const props = defineProps({
       return value === undefined || ['standard', 'vibrant'].includes(value);
     },
   },
+  /**
+   * 语义色或六位十六进制种子色 `#RRGGBB`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   color: {
     type: String,
     default: undefined,
     validator: isComponentColor,
   },
+  /**
+   * 点击菜单项后是否关闭菜单。
+   *
+   * @type {boolean}
+   * @default true
+   */
   closeOnClick: {
     type: Boolean,
     default: true,
   },
 });
 const emit = defineEmits({
+  /**
+   * 菜单请求关闭时发出 false。
+   */
   'update:modelValue': (payload) => typeof payload === 'boolean',
 });
 const attrs = useAttrs();

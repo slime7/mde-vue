@@ -67,6 +67,12 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 导航方向；可选值为 `vertical`、`horizontal`。
+   *
+   * @type {'vertical' | 'horizontal'}
+   * @default 'vertical'
+   */
   orientation: {
     type: String,
     default: 'vertical',
@@ -74,14 +80,32 @@ const props = defineProps({
       return ['vertical', 'horizontal'].includes(value);
     },
   },
+  /**
+   * 受控当前目的地值。
+   *
+   * @type {string | number | boolean | null}
+   * @default null
+   */
   modelValue: {
     type: [String, Number, Boolean],
     default: null,
   },
+  /**
+   * 是否展开纵向 Rail。
+   *
+   * @type {boolean}
+   * @default false
+   */
   expanded: {
     type: Boolean,
     default: false,
   },
+  /**
+   * expanded Rail 的宽度；数字按 px 处理，字符串原样使用。
+   *
+   * @type {number | string | undefined}
+   * @default undefined
+   */
   width: {
     type: [Number, String],
     default: undefined,
@@ -90,6 +114,12 @@ const props = defineProps({
         || (typeof value === 'string' && value.trim().length > 0);
     },
   },
+  /**
+   * 应用模式的固定侧；可选值为 `start`、`end`。
+   *
+   * @type {'start' | 'end'}
+   * @default 'start'
+   */
   position: {
     type: String,
     default: 'start',
@@ -97,10 +127,22 @@ const props = defineProps({
       return ['start', 'end'].includes(value);
     },
   },
+  /**
+   * 是否允许通过内部菜单入口切换展开状态。
+   *
+   * @type {boolean}
+   * @default false
+   */
   collapsible: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 纵向 Rail 布局；可选值为 `standard`、`modal`。
+   *
+   * @type {'standard' | 'modal'}
+   * @default 'standard'
+   */
   layout: {
     type: String,
     default: 'standard',
@@ -108,10 +150,22 @@ const props = defineProps({
       return ['standard', 'modal'].includes(value);
     },
   },
+  /**
+   * collapsed 时是否隐藏 Rail。
+   *
+   * @type {boolean}
+   * @default false
+   */
   hideOnCollapse: {
     type: Boolean,
     default: false,
   },
+  /**
+   * Item 对齐方式；可选值为 `top`、`center`。
+   *
+   * @type {'top' | 'center'}
+   * @default 'top'
+   */
   alignment: {
     type: String,
     default: 'top',
@@ -119,34 +173,82 @@ const props = defineProps({
       return ['top', 'center'].includes(value);
     },
   },
+  /**
+   * 收起状态菜单入口的 Material Symbols 图标。
+   *
+   * @type {string}
+   * @default 'menu'
+   */
   openIcon: {
     type: String,
     default: 'menu',
   },
+  /**
+   * 展开状态菜单入口的 Material Symbols 图标。
+   *
+   * @type {string}
+   * @default 'menu_open'
+   */
   closeIcon: {
     type: String,
     default: 'menu_open',
   },
+  /**
+   * 收起状态菜单入口的非空可访问名称。
+   *
+   * @type {string}
+   * @default '展开导航'
+   */
   openLabel: {
     type: String,
     default: '展开导航',
   },
+  /**
+   * 展开状态菜单入口的非空可访问名称。
+   *
+   * @type {string}
+   * @default '收起导航'
+   */
   closeLabel: {
     type: String,
     default: '收起导航',
   },
+  /**
+   * 是否 Teleport 到 attach 并固定到视口。
+   *
+   * @type {boolean}
+   * @default false
+   */
   app: {
     type: Boolean,
     default: false,
   },
+  /**
+   * app=true 时的固定挂载目标。
+   *
+   * @type {string | HTMLElement}
+   * @default 'body'
+   */
   attach: {
     type: [String, Object],
     default: 'body',
   },
+  /**
+   * app=true 时在自然布局位置生成占位。
+   *
+   * @type {boolean}
+   * @default false
+   */
   placeholder: {
     type: Boolean,
     default: false,
   },
+  /**
+   * app=true 时的额外底部安全区；数字按 px 处理，也可传 CSS block-size 值。
+   *
+   * @type {number | string}
+   * @default 0
+   */
   bottomPlaceholder: {
     type: [Number, String],
     default: 0,
@@ -175,7 +277,13 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
+  /**
+   * 子 Item 请求切换目的地时发出新的 value。
+   */
   'update:modelValue': (value) => ['string', 'number', 'boolean'].includes(typeof value),
+  /**
+   * Rail 请求切换展开状态时发出新的 boolean。
+   */
   'update:expanded': (value) => typeof value === 'boolean',
 });
 

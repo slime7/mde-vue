@@ -13,6 +13,12 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * `v-model` 当前选中值；独立 Radio 选中时更新为 value。
+   *
+   * @type {string | number | boolean | null | undefined}
+   * @default undefined
+   */
   modelValue: {
     type: [String, Number, Boolean],
     default: undefined,
@@ -20,15 +26,33 @@ const props = defineProps({
       return value === null || value === undefined || isSelectionValue(value);
     },
   },
+  /**
+   * 当前 Radio 的候选值。
+   *
+   * @type {string | number | boolean}
+   * @default undefined
+   */
   value: {
     type: [String, Number, Boolean],
     required: true,
     validator: isSelectionValue,
   },
+  /**
+   * 禁止指针与键盘交互。
+   *
+   * @type {boolean}
+   * @default false
+   */
   disabled: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 语义色或六位十六进制种子色 `#RRGGBB`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   color: {
     type: String,
     default: undefined,
@@ -37,9 +61,15 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
+  /**
+   * Radio 被选中时发出新的 value。
+   */
   'update:modelValue'(value) {
     return value === null || isSelectionValue(value);
   },
+  /**
+   * 内部 radio 发生 change 时转发原生 `Event`。
+   */
   change(event) {
     return event instanceof Event;
   },

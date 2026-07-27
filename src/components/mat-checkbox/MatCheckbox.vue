@@ -10,24 +10,54 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * `v-model` 当前值；数组模式按 value 增删项目。
+   *
+   * @type {boolean | Array<string | number | boolean>}
+   * @default false
+   */
   modelValue: {
     type: [Boolean, Array],
     default: false,
     validator: isCheckboxModelValue,
   },
+  /**
+   * 数组模式中的候选值；布尔模式忽略。
+   *
+   * @type {string | number | boolean}
+   * @default true
+   */
   value: {
     type: [String, Number, Boolean],
     default: true,
     validator: isSelectionValue,
   },
+  /**
+   * 显示父级部分选中的不确定状态。
+   *
+   * @type {boolean}
+   * @default false
+   */
   indeterminate: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 禁止指针与键盘交互。
+   *
+   * @type {boolean}
+   * @default false
+   */
   disabled: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 语义色或六位十六进制种子色 `#RRGGBB`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   color: {
     type: String,
     default: undefined,
@@ -36,10 +66,19 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
+  /**
+   * 使用者切换选中状态时触发，载荷为下一布尔值或新数组。
+   */
   'update:modelValue': isCheckboxModelValue,
+  /**
+   * 使用者操作当前 Checkbox 后请求关闭不确定状态，载荷为 `false`。
+   */
   'update:indeterminate'(value) {
     return typeof value === 'boolean';
   },
+  /**
+   * 内部 checkbox 发生 change 时转发原生 `Event`。
+   */
   change(event) {
     return event instanceof Event;
   },

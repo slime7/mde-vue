@@ -12,6 +12,12 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 可选的分组标签；未设置时不渲染标签。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   label: {
     type: String,
     default: undefined,

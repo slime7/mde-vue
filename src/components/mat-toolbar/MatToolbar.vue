@@ -80,10 +80,24 @@ function normalizeAttach(value) {
 }
 
 const props = defineProps({
+  /**
+   * 控制 Toolbar 是否显示，可使用 v-model。
+   *
+   * @type {boolean}
+   * @default true
+   */
   modelValue: {
     type: Boolean,
     default: true,
   },
+  /**
+   * Toolbar 形态。
+   *
+   * 可选值为 `docked`、`floating`、`floating-bottom`、`floating-left`、`floating-right`。
+   *
+   * @type {string}
+   * @default 'docked'
+   */
   variant: {
     type: String,
     default: 'docked',
@@ -97,6 +111,14 @@ const props = defineProps({
       ].includes(value);
     },
   },
+  /**
+   * 浮动模式的对齐位置。
+   *
+   * 可选值为 `start`、`center`、`end`。
+   *
+   * @type {'start' | 'center' | 'end'}
+   * @default 'center'
+   */
   position: {
     type: String,
     default: 'center',
@@ -104,22 +126,52 @@ const props = defineProps({
       return ['start', 'center', 'end'].includes(value);
     },
   },
+  /**
+   * 使用高强调的 primary container 配色。
+   *
+   * @type {boolean}
+   * @default false
+   */
   vibrant: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 固定到视口并 Teleport 到 attach。
+   *
+   * @type {boolean}
+   * @default false
+   */
   app: {
     type: Boolean,
     default: false,
   },
+  /**
+   * app=true 时的 Teleport 目标；可传选择器或 HTMLElement。
+   *
+   * @type {string | HTMLElement}
+   * @default 'body'
+   */
   attach: {
     type: [String, Object],
     default: 'body',
   },
+  /**
+   * app=true 时在自然布局位置生成占位。
+   *
+   * @type {boolean}
+   * @default false
+   */
   placeholder: {
     type: Boolean,
     default: false,
   },
+  /**
+   * app=true 时的额外底部安全区；数字按 px 处理，也可传 CSS block-size 值。
+   *
+   * @type {number | string}
+   * @default 0
+   */
   bottomPlaceholder: {
     type: [Number, String],
     default: 0,
@@ -147,6 +199,9 @@ const props = defineProps({
   },
 });
 defineEmits({
+  /**
+   * Toolbar 显示状态请求变化时发出新的 boolean。
+   */
   'update:modelValue': (value) => typeof value === 'boolean',
 });
 

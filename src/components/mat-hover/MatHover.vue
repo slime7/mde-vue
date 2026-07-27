@@ -17,28 +17,61 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 禁止自动 hover 状态变化。
+   *
+   * @type {boolean}
+   * @default false
+   */
   disabled: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 受控 hover 状态；省略时由组件自动维护。
+   *
+   * @type {boolean | null}
+   * @default null
+   */
   modelValue: {
     type: Boolean,
     default: null,
   },
+  /**
+   * 关闭延迟，单位为毫秒；无效值按 0 处理。
+   *
+   * @type {number | string}
+   * @default 0
+   */
   closeDelay: {
     type: [Number, String],
     default: 0,
   },
+  /**
+   * 打开延迟，单位为毫秒；无效值按 0 处理。
+   *
+   * @type {number | string}
+   * @default 0
+   */
   openDelay: {
     type: [Number, String],
     default: 0,
   },
+  /**
+   * 直接绑定 hover 监听的元素选择器或 HTMLElement。
+   *
+   * @type {string | HTMLElement | undefined}
+   * @default undefined
+   */
   target: {
     type: [String, Object],
     default: undefined,
   },
 });
 const emit = defineEmits({
+  /**
+   * hover 状态变化时发出新的 boolean。
+   */
   'update:modelValue': (payload) => typeof payload === 'boolean',
 });
 const slots = useSlots();

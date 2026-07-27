@@ -19,10 +19,22 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * Material Symbols 字形文本；优先级低于 src。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   icon: {
     type: String,
     default: undefined,
   },
+  /**
+   * SVG、图片或字体资源地址；优先于 icon 和默认 Slot。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   src: {
     type: String,
     default: undefined,
@@ -30,45 +42,99 @@ const props = defineProps({
       return value === undefined || value.length > 0;
     },
   },
+  /**
+   * 图标尺寸，可使用 `extra-small`、`small`、`medium`、`large`、`extra-large` 或 CSS 长度值。
+   *
+   * @type {string}
+   * @default 'medium'
+   */
   size: {
     type: String,
     default: 'medium',
     validator: isIconSize,
   },
+  /**
+   * Material Symbols FILL 轴，范围为 0 到 1。
+   *
+   * @type {number}
+   * @default 0
+   */
   fill: {
     type: Number,
     default: 0,
     validator: isUnitInterval,
   },
+  /**
+   * Material Symbols wght 轴，范围为 100 到 700 的步进值。
+   *
+   * @type {number}
+   * @default 400
+   */
   weight: {
     type: Number,
     default: 400,
     validator: isWeight,
   },
+  /**
+   * Material Symbols GRAD 轴，可选值为 -25、0、200。
+   *
+   * @type {number}
+   * @default 0
+   */
   grade: {
     type: Number,
     default: 0,
     validator: isGrade,
   },
+  /**
+   * Material Symbols opsz 轴，范围为 20 到 48 的整数。
+   *
+   * @type {number | undefined}
+   * @default undefined
+   */
   opticalSize: {
     type: Number,
     default: undefined,
     validator: isOpticalSize,
   },
+  /**
+   * 语义色或六位十六进制种子色 `#RRGGBB`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   color: {
     type: String,
     default: undefined,
     validator: isComponentColor,
   },
+  /**
+   * 直接设置图标内容颜色的 CSS 值。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   fontColor: {
     type: String,
     default: undefined,
   },
+  /**
+   * 图标根元素标签名。
+   *
+   * @type {string}
+   * @default 'i'
+   */
   as: {
     type: String,
     default: 'i',
     validator: isHtmlTagName,
   },
+  /**
+   * 覆盖全局图标字体 class。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   iconClass: {
     type: String,
     default: undefined,

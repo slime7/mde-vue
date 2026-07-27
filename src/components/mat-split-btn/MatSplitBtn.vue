@@ -13,10 +13,22 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 使用块级 flex 组根，在普通文档流中铺满父元素。
+   *
+   * @type {boolean}
+   * @default false
+   */
   block: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 两侧按钮统一视觉层级；可选值为 `elevated`、`filled`、`filled-tonal`、`outlined`。
+   *
+   * @type {string}
+   * @default 'filled'
+   */
   variant: {
     type: String,
     default: 'filled',
@@ -24,6 +36,12 @@ const props = defineProps({
       return ['elevated', 'filled', 'filled-tonal', 'outlined'].includes(value);
     },
   },
+  /**
+   * 两侧按钮统一尺寸；可选值为 `extra-small`、`small`、`medium`、`large`、`extra-large`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   size: {
     type: String,
     default: 'small',
@@ -31,19 +49,43 @@ const props = defineProps({
       return BUTTON_SIZES.includes(value);
     },
   },
+  /**
+   * 两侧按钮统一配色，可使用语义色或 `#RRGGBB`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   color: {
     type: String,
     default: undefined,
     validator: isComponentColor,
   },
+  /**
+   * 禁用两侧原生按钮。
+   *
+   * @type {boolean}
+   * @default false
+   */
   disabled: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 受控菜单展开状态。
+   *
+   * @type {boolean}
+   * @default false
+   */
   expanded: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 写入 trailing 按钮的 `aria-controls`，通常是外部菜单 id。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   controls: {
     type: String,
     default: undefined,
@@ -51,8 +93,17 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
+  /**
+   * 主要按钮激活时触发，载荷为 `MouseEvent`。
+   */
   'leading-click': (payload) => payload instanceof MouseEvent,
+  /**
+   * 展开按钮激活时触发，载荷为 `MouseEvent`。
+   */
   'trailing-click': (payload) => payload instanceof MouseEvent,
+  /**
+   * 展开按钮激活时触发，载荷为当前 expanded 的相反值。
+   */
   'update:expanded': (payload) => typeof payload === 'boolean',
 });
 const root = ref(null);

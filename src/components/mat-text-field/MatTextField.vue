@@ -9,12 +9,23 @@ defineOptions({
 
 const props = defineProps({
   ...TEXT_INPUT_PROPS,
+  /**
+   * 原生 input 类型。
+   *
+   * 常用值包括 `text`、`email`、`number`、`password`、`search`、`tel`、`url`。
+   *
+   * @type {string}
+   * @default 'text'
+   */
   type: {
     type: String,
     default: 'text',
   },
 });
 const emit = defineEmits({
+  /**
+   * 原生 input 事件产生新值，用于 v-model；载荷为 string。
+   */
   'update:modelValue': (payload) => typeof payload === 'string',
 });
 </script>

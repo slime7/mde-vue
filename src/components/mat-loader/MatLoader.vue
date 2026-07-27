@@ -118,6 +118,12 @@ function createCircularPath(center, radius, amplitude, phase) {
 }
 
 const props = defineProps({
+  /**
+   * 加载器形态；可选值为 `linear`、`circular`。
+   *
+   * @type {'linear' | 'circular'}
+   * @default 'linear'
+   */
   variant: {
     type: String,
     default: 'linear',
@@ -125,6 +131,12 @@ const props = defineProps({
       return ['linear', 'circular'].includes(value);
     },
   },
+  /**
+   * 当前确定进度值；会限制在 0 与 max 之间。
+   *
+   * @type {number}
+   * @default 0
+   */
   value: {
     type: Number,
     default: 0,
@@ -132,6 +144,12 @@ const props = defineProps({
       return typeof value === 'number' && Number.isFinite(value);
     },
   },
+  /**
+   * 确定进度的最大值。
+   *
+   * @type {number}
+   * @default 1
+   */
   max: {
     type: Number,
     default: 1,
@@ -139,10 +157,22 @@ const props = defineProps({
       return typeof value === 'number' && Number.isFinite(value) && value > 0;
     },
   },
+  /**
+   * 是否显示不确定进度动画。
+   *
+   * @type {boolean}
+   * @default false
+   */
   indeterminate: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 轨道厚度，必须为正数。
+   *
+   * @type {number}
+   * @default 4
+   */
   thickness: {
     type: Number,
     default: 4,
@@ -150,6 +180,12 @@ const props = defineProps({
       return typeof value === 'number' && Number.isFinite(value) && value > 0;
     },
   },
+  /**
+   * 轨道形状；可选值为 `flat`、`wavy`。
+   *
+   * @type {'flat' | 'wavy'}
+   * @default 'flat'
+   */
   shape: {
     type: String,
     default: 'flat',
@@ -157,10 +193,22 @@ const props = defineProps({
       return ['flat', 'wavy'].includes(value);
     },
   },
+  /**
+   * 是否让 wavy 形状持续运动。
+   *
+   * @type {boolean}
+   * @default false
+   */
   waveMotion: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 语义色或六位十六进制种子色 `#RRGGBB`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   color: {
     type: String,
     default: undefined,

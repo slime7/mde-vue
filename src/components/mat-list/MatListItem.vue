@@ -14,14 +14,32 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 选择模式中的项目值。
+   *
+   * @type {string | number | boolean | undefined}
+   * @default undefined
+   */
   value: {
     type: [String, Number, Boolean],
     default: undefined,
   },
+  /**
+   * 设置后渲染原生链接，否则渲染 button。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   href: {
     type: String,
     default: undefined,
   },
+  /**
+   * button 模式下的原生类型；可选值为 `button`、`submit`、`reset`。
+   *
+   * @type {'button' | 'submit' | 'reset'}
+   * @default 'button'
+   */
   type: {
     type: String,
     default: 'button',
@@ -29,10 +47,22 @@ const props = defineProps({
       return BUTTON_TYPES.includes(value);
     },
   },
+  /**
+   * 禁止项目被激活。
+   *
+   * @type {boolean}
+   * @default false
+   */
   disabled: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 内容行数；可选值为 `1`、`2`、`3`。
+   *
+   * @type {1 | 2 | 3 | undefined}
+   * @default undefined
+   */
   lines: {
     type: Number,
     default: undefined,
@@ -43,6 +73,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
+  /**
+   * 启用的列表项被用户激活时转发原生点击事件，载荷为 `MouseEvent`。
+   */
   click(payload) {
     return payload instanceof MouseEvent;
   },

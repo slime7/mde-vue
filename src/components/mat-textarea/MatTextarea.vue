@@ -9,6 +9,12 @@ defineOptions({
 
 const props = defineProps({
   ...TEXT_INPUT_PROPS,
+  /**
+   * textarea 的初始可见行数，必须为正整数。
+   *
+   * @type {number}
+   * @default 4
+   */
   rows: {
     type: Number,
     default: 4,
@@ -18,6 +24,9 @@ const props = defineProps({
   },
 });
 const emit = defineEmits({
+  /**
+   * 原生 input 事件产生新值，用于 v-model；载荷为 string。
+   */
   'update:modelValue': (payload) => typeof payload === 'string',
 });
 </script>

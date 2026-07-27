@@ -18,12 +18,21 @@ defineOptions({
 const SUBMENU_SAFE_CLOSE_DELAY = 300;
 
 const props = defineProps({
+  /**
+   * 禁止项目激活和打开子菜单。
+   *
+   * @type {boolean}
+   * @default false
+   */
   disabled: {
     type: Boolean,
     default: false,
   },
 });
 const emit = defineEmits({
+  /**
+   * 叶子菜单项被激活时触发，载荷为 `MouseEvent`。
+   */
   click: (payload) => payload instanceof MouseEvent,
 });
 const slots = useSlots();

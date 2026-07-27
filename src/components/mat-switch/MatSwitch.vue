@@ -8,10 +8,24 @@ defineOptions({
 });
 
 defineProps({
+  /**
+   * `v-model` 当前开关状态。
+   *
+   * @type {boolean}
+   * @default false
+   */
   modelValue: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 图标显示方式。
+   *
+   * 可选值为 `none`、`selected`、`both`。
+   *
+   * @type {'none' | 'selected' | 'both'}
+   * @default 'none'
+   */
   icons: {
     type: String,
     default: 'none',
@@ -19,10 +33,22 @@ defineProps({
       return ['none', 'selected', 'both'].includes(value);
     },
   },
+  /**
+   * 禁止指针与键盘交互。
+   *
+   * @type {boolean}
+   * @default false
+   */
   disabled: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 语义色或六位十六进制种子色 `#RRGGBB`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   color: {
     type: String,
     default: undefined,
@@ -31,9 +57,15 @@ defineProps({
 });
 
 const emit = defineEmits({
+  /**
+   * 使用者切换开关时发出下一布尔值。
+   */
   'update:modelValue'(value) {
     return typeof value === 'boolean';
   },
+  /**
+   * 内部 checkbox 发生 change 时转发原生 `Event`。
+   */
   change(event) {
     return event instanceof Event;
   },

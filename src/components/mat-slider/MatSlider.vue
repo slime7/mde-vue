@@ -30,31 +30,67 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * `v-model` 当前数值。
+   *
+   * @type {number}
+   * @default 0
+   */
   modelValue: {
     type: Number,
     default: 0,
     validator: isFiniteNumber,
   },
+  /**
+   * 可选范围最小值。
+   *
+   * @type {number}
+   * @default 0
+   */
   min: {
     type: Number,
     default: 0,
     validator: isFiniteNumber,
   },
+  /**
+   * 可选范围最大值。
+   *
+   * @type {number}
+   * @default 100
+   */
   max: {
     type: Number,
     default: 100,
     validator: isFiniteNumber,
   },
+  /**
+   * 每次键盘或指针调整的步长，必须为正数。
+   *
+   * @type {number}
+   * @default 1
+   */
   step: {
     type: Number,
     default: 1,
     validator: isPositiveNumber,
   },
+  /**
+   * 轨道外观；可选值为 `standard`、`centered`。
+   *
+   * @type {string}
+   * @default 'standard'
+   */
   variant: {
     type: String,
     default: 'standard',
     validator: isSliderVariant,
   },
+  /**
+   * 中心值；未设置时不显示中心分割。
+   *
+   * @type {number | undefined}
+   * @default undefined
+   */
   center: {
     type: Number,
     default: undefined,
@@ -62,25 +98,55 @@ const props = defineProps({
       return value === undefined || isFiniteNumber(value);
     },
   },
+  /**
+   * 禁止指针与键盘交互。
+   *
+   * @type {boolean}
+   * @default false
+   */
   disabled: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 语义色或六位十六进制种子色 `#RRGGBB`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   color: {
     type: String,
     default: undefined,
     validator: isComponentColor,
   },
+  /**
+   * 滑块方向；可选值为 `horizontal`、`vertical`。
+   *
+   * @type {string}
+   * @default 'horizontal'
+   */
   orientation: {
     type: String,
     default: 'horizontal',
     validator: isSliderOrientation,
   },
+  /**
+   * 滑块尺寸；可选值为 `extra-small`、`small`、`medium`、`large`、`extra-large`。
+   *
+   * @type {string}
+   * @default 'extra-small'
+   */
   size: {
     type: String,
     default: 'extra-small',
     validator: isSliderSize,
   },
+  /**
+   * 滑块内的 Material Symbols 图标文本。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   insetIcon: {
     type: String,
     default: undefined,
@@ -88,10 +154,22 @@ const props = defineProps({
       return value === undefined || value.length > 0;
     },
   },
+  /**
+   * 是否显示停靠点指示器。
+   *
+   * @type {boolean}
+   * @default false
+   */
   showStopIndicator: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 是否显示当前值指示器。
+   *
+   * @type {boolean}
+   * @default false
+   */
   showValueIndicator: {
     type: Boolean,
     default: false,
@@ -99,12 +177,21 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
+  /**
+   * 数值因指针或键盘交互发生变化时发出下一 number。
+   */
   'update:modelValue'(value) {
     return isFiniteNumber(value);
   },
+  /**
+   * 数值变化时转发原生 input 事件。
+   */
   input(event) {
     return event instanceof Event;
   },
+  /**
+   * 数值变化完成时转发原生 change 事件。
+   */
   change(event) {
     return event instanceof Event;
   },

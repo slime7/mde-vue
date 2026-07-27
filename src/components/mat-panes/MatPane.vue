@@ -10,6 +10,12 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 当前实例中的唯一稳定键，同时对应 sizes 的键和根 DOM id。
+   *
+   * @type {string}
+   * @required
+   */
   id: {
     type: String,
     required: true,
@@ -17,6 +23,12 @@ const props = defineProps({
       return value.length > 0;
     },
   },
+  /**
+   * 后方可访问分隔控件的名称。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   resizeLabel: {
     type: String,
     default: undefined,

@@ -32,14 +32,32 @@ function resolveDialogWidth(value) {
 }
 
 const props = defineProps({
+  /**
+   * 受控打开状态，可使用 v-model。
+   *
+   * @type {boolean}
+   * @default false
+   */
   modelValue: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 是否使用全屏布局；模板属性为 full-screen。
+   *
+   * @type {boolean}
+   * @default false
+   */
   fullScreen: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 首选宽度；数字按 px 处理，字符串接受 CSS 宽度值。
+   *
+   * @type {number | string | undefined}
+   * @default undefined
+   */
   width: {
     type: [Number, String],
     default: undefined,
@@ -51,34 +69,82 @@ const props = defineProps({
       return typeof value === 'string' && value.trim().length > 0;
     },
   },
+  /**
+   * Teleport 目标；字符串按当前 document 的 CSS 选择器解析。
+   *
+   * @type {string | HTMLElement}
+   * @default 'body'
+   */
   attach: {
     type: [String, Object],
     default: 'body',
   },
+  /**
+   * 是否显示顶层帷幕。
+   *
+   * @type {boolean}
+   * @default true
+   */
   scrim: {
     type: Boolean,
     default: true,
   },
+  /**
+   * 点击 Dialog 外帷幕时是否请求关闭。
+   *
+   * @type {boolean}
+   * @default false
+   */
   closeOnBack: {
     type: Boolean,
     default: false,
   },
+  /**
+   * 简单标题；设置后优先于 title Slot。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   title: {
     type: String,
     default: undefined,
   },
+  /**
+   * 简单正文；设置后优先于默认 Slot。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   content: {
     type: String,
     default: undefined,
   },
+  /**
+   * Material Symbols 字形；设置后优先于 icon Slot。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   icon: {
     type: String,
     default: undefined,
   },
+  /**
+   * 全屏头部关闭按钮的非空可访问名称。
+   *
+   * @type {string}
+   * @default '关闭'
+   */
   closeLabel: {
     type: String,
     default: '关闭',
   },
+  /**
+   * 基础 Dialog 装饰图标的语义色或 `#RRGGBB`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   color: {
     type: String,
     default: undefined,
@@ -86,8 +152,17 @@ const props = defineProps({
   },
 });
 const emit = defineEmits({
+  /**
+   * 请求关闭时发出 false。
+   */
   'update:modelValue': (payload) => typeof payload === 'boolean',
+  /**
+   * 进入动画完成后触发。
+   */
   opened: () => true,
+  /**
+   * 退出动画和 DOM 清理完成后触发。
+   */
   closed: () => true,
 });
 const attrs = useAttrs();

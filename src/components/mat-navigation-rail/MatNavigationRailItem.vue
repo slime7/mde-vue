@@ -11,18 +11,42 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 当前导航目的地的稳定值。
+   *
+   * @type {string | number | boolean | undefined}
+   * @default undefined
+   */
   value: {
     type: [String, Number, Boolean],
     default: undefined,
   },
+  /**
+   * Material Symbols 图标文本。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   icon: {
     type: String,
     default: undefined,
   },
+  /**
+   * 设置后渲染原生链接。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
   href: {
     type: String,
     default: undefined,
   },
+  /**
+   * 禁止导航交互。
+   *
+   * @type {boolean}
+   * @default false
+   */
   disabled: {
     type: Boolean,
     default: false,
@@ -30,6 +54,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
+  /**
+   * 启用的导航项被用户激活时转发原生点击事件，载荷为 `MouseEvent`。
+   */
   click: (payload) => payload instanceof MouseEvent,
 });
 const slots = useSlots();
