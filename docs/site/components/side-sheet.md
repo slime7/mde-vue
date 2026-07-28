@@ -105,7 +105,7 @@ order: 102
 | `variant` | `'auto' \| 'standard' \| 'modal'` | `'auto'` | 布局变体；auto 根据 `breakpoint` 选择 |
 | `breakpoint` | `number` | `840` | auto 切换到 standard 的最小视口宽度，单位为 CSS px |
 | `position` | `'start' \| 'end'` | `'end'` | Sheet 依附的逻辑边缘 |
-| `width` | `number \| string` | `400` | 首选宽度；数字按 px 处理；modal 在窄屏保留 56px 可见背景 |
+| `width` | `number \| string` | `400` | 首选宽度；数字按 px 处理，数值范围大于 0 且不超过 400；CSS 字符串最终也会限制在 400px 内 |
 | `attach` | `string \| HTMLElement` | `'body'` | modal 的 Teleport 目标；standard 忽略 |
 | `scrim` | `boolean` | `true` | modal 是否显示帷幕；false 时仍阻止背景指针交互 |
 | `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否允许点击 modal 帷幕关闭 |
@@ -117,7 +117,7 @@ order: 102
 
 未消费的属性、原生事件、`class` 和 `style` 传给根元素。Modal 根为原生 `<dialog>`，standard 根为原生 `<aside>`。Modal 没有标题时必须提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。
 
-Standard 必须放在横向 flex 父容器中才能与主内容并排；主内容通常使用 `flex: 1` 和 `min-inline-size: 0`，Side sheet 保持自身固定宽度。内容过长时只滚动内容区，头部和底部区域保持可见。组件没有公共方法。
+Standard 必须放在横向 flex 父容器中才能与主内容并排；主内容通常使用 `flex: 1` 和 `min-inline-size: 0`，Side sheet 保持自身固定宽度。Side sheet 最大宽度为 400px；窄屏 modal 至少保留 16px 背景空间。内容过长时只滚动内容区，头部和底部区域保持可见。组件没有公共方法。
 
 ## 事件
 

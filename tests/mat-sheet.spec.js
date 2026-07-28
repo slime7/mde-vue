@@ -215,6 +215,140 @@ describe('MatBottomSheet', () => {
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
   });
 
+  it('从预览状态向上拖动把手达到阈值时请求展开', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        modelValue: true,
+        title: '向上展开',
+        variant: 'standard',
+      },
+    });
+
+    await settleRender();
+
+    const handle = wrapper.get('button[aria-label="展开底部面板"]').element;
+
+    dispatchPointer(handle, 'pointerdown', {
+      button: 0,
+      clientY: 300,
+      pointerId: 4,
+      pointerType: 'touch',
+    });
+    dispatchPointer(window, 'pointermove', {
+      clientY: 180,
+      pointerId: 4,
+    });
+    dispatchPointer(window, 'pointerup', {
+      clientY: 180,
+      pointerId: 4,
+    });
+
+    expect(wrapper.emitted('update:expanded')).toEqual([[true]]);
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+  });
+
+  it('standard 把手可以通过点击和键盘在预览与全屏状态间循环', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        modelValue: true,
+        title: '高度状态',
+        variant: 'standard',
+      },
+    });
+
+    await settleRender();
+
+    const handle = wrapper.get('button[aria-label="展开底部面板"]');
+
+    await handle.trigger('click');
+
+    expect(wrapper.emitted('update:expanded')).toEqual([[true]]);
+
+    await wrapper.setProps({ expanded: true });
+
+    expect(wrapper.get('button[aria-label="折叠底部面板"]')).toBeTruthy();
+    await wrapper.get('button[aria-label="折叠底部面板"]').trigger('keydown', { key: 'Enter' });
+
+    expect(wrapper.emitted('update:expanded')).toEqual([[true], [false]]);
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+  });
+
+  it('全屏状态向下拖动时先回到预览状态', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        expanded: true,
+        modelValue: true,
+        title: '全屏内容',
+        variant: 'standard',
+      },
+    });
+
+    await settleRender();
+
+    const handle = wrapper.get('button[aria-label="折叠底部面板"]').element;
+
+    dispatchPointer(handle, 'pointerdown', {
+      button: 0,
+      clientY: 100,
+      pointerId: 3,
+      pointerType: 'touch',
+    });
+    dispatchPointer(window, 'pointermove', {
+      clientY: 220,
+      pointerId: 3,
+    });
+    dispatchPointer(window, 'pointerup', {
+      clientY: 220,
+      pointerId: 3,
+    });
+
+    expect(wrapper.emitted('update:expanded')).toEqual([[false]]);
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+  });
+
+  it('展开的 modal 即使隐藏把手也提供关闭入口', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      props: {
+        dragHandle: false,
+        expanded: true,
+        modelValue: true,
+        title: '全屏详情',
+        variant: 'modal',
+      },
+    });
+
+    await settleRender();
+
+    const closeButton = document.body.querySelector('dialog button[aria-label="关闭"]');
+
+    expect(closeButton).not.toBeNull();
+    closeButton.click();
+
+    expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
+  });
+
+  it('展开的 modal 把手通过键盘请求关闭', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      props: {
+        expanded: true,
+        modelValue: true,
+        title: '全屏详情',
+        variant: 'modal',
+      },
+    });
+
+    await settleRender();
+
+    const handle = document.body.querySelector('dialog button[aria-label="关闭底部面板"]');
+
+    handle.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+
+    expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
+  });
+
   it('Escape 与帷幕点击按公共关闭规则请求更新', async () => {
     const wrapper = mount(MatBottomSheet, {
       props: {
@@ -381,6 +515,7 @@ describe('MatSideSheet', () => {
     expect(MatSideSheet.props.position.validator('start')).toBe(true);
     expect(MatSideSheet.props.position.validator('left')).toBe(false);
     expect(MatSideSheet.props.width.validator(400)).toBe(true);
+    expect(MatSideSheet.props.width.validator(401)).toBe(false);
     expect(MatSideSheet.props.width.validator('min(400px, 100%)')).toBe(true);
     expect(MatSideSheet.props.width.validator('')).toBe(false);
   });

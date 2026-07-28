@@ -13,6 +13,8 @@ order: 101
 
 默认 `variant="auto"`：视口宽度小于 `breakpoint` 时使用 modal，达到断点后使用 standard。默认断点为 840px。自动模式只改变 Bottom sheet 自身的布局方式，不会把它替换成 Side sheet。
 
+Modal 默认以不超过视口高度 50% 的预览状态打开。`expanded` 可受控切换到展开状态；默认把手是原生按钮，也可使用键盘操作。预览状态向上拖动或选择把手会请求展开；展开后向下拖动会请求折叠，standard 选择把手也会请求折叠，modal 选择把手则请求关闭。预览状态向下拖动会请求关闭。展开的 modal 始终显示内置关闭按钮，即使 `closable=false` 或隐藏了把手。
+
 ## 示例
 
 ### `standard` 与 `modal`
@@ -32,6 +34,24 @@ order: 101
 <ClientOnly>
   <DocsPreview label="Bottom sheet 变体预览">
     <BottomSheetVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `expanded` 预设高度
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/bottom-sheet/BottomSheetExpandedExample.vue#template [template]
+
+<<< @/examples/bottom-sheet/BottomSheetExpandedExample.vue#script [script]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Bottom sheet 预设高度预览">
+    <BottomSheetExpandedExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -89,21 +109,26 @@ order: 101
 | `scrim` | `boolean` | `true` | modal 是否显示帷幕；false 时仍阻止背景指针交互 |
 | `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否允许点击 modal 帷幕关闭 |
 | `dragHandle` | `boolean` | `true` | 模板属性为 `drag-handle`；是否显示顶部拖动把手 |
-| `draggable` | `boolean` | `true` | 是否允许从把手向下拖动关闭 |
-| `closable` | `boolean` | `false` | 是否在默认头部显示内置关闭按钮 |
+| `expanded` | `boolean` | `false` | 受控预设高度；false 为 modal 半屏预览状态，true 为展开状态，可使用 `v-model:expanded` |
+| `dragHandleLabel` | `string` | `'展开底部面板'` | 模板属性为 `drag-handle-label`；预览状态下把手的可访问名称 |
+| `collapseDragHandleLabel` | `string` | `'折叠底部面板'` | 模板属性为 `collapse-drag-handle-label`；展开的 standard 状态下把手的可访问名称 |
+| `expandedDragHandleLabel` | `string` | `'关闭底部面板'` | 模板属性为 `expanded-drag-handle-label`；展开的 modal 状态下把手的可访问名称 |
+| `draggable` | `boolean` | `true` | 是否允许通过把手向上展开，以及向下折叠或关闭 |
+| `closable` | `boolean` | `false` | 是否在默认头部显示内置关闭按钮；展开的 modal 始终显示关闭按钮 |
 | `closeLabel` | `string` | `'关闭'` | 模板属性为 `close-label`；内置关闭按钮的非空可访问名称 |
 | `title` | `string` | 未设置 | 简单标题；优先于 `title` Slot |
 | `content` | `string` | 未设置 | 简单正文；优先于默认 Slot |
 
 未消费的属性、原生事件、`class` 和 `style` 传给根元素。Modal 根为原生 `<dialog>`，standard 根为原生 `<aside>`。Modal 没有标题时必须提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。
 
-Bottom sheet 的宽度不超过 640px；窄屏可占满视口宽度。内容过长时只滚动内容区，顶部把手、标题和底部区域保持可见。组件没有公共方法，也不暴露拖动过程中的内部位移。
+Bottom sheet 的宽度不超过 640px；窄屏可占满视口宽度，宽于 640px 的视口在两侧至少保留 56px。宽屏顶部至少保留 56px，窄屏展开状态顶部至少保留 72px。内容过长时只滚动内容区，顶部把手、标题和底部区域保持可见。组件没有公共方法，也不暴露拖动过程中的内部位移。
 
 ## 事件
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
-| `update:modelValue` | `boolean` | Escape、允许的帷幕点击、关闭按钮或达到阈值的向下拖动请求关闭时发出 `false` |
+| `update:modelValue` | `boolean` | Escape、允许的帷幕点击、关闭按钮，或预览状态达到阈值的向下拖动请求关闭时发出 `false` |
+| `update:expanded` | `boolean` | 预览状态向上拖动或选择把手请求展开，standard 选择把手请求折叠，或展开状态向下拖动请求折叠时触发 |
 | `opened` | 无 | 进入动画完成后触发 |
 | `closed` | 无 | 退出动画完成且 DOM 清理后触发 |
 
@@ -114,7 +139,7 @@ Bottom sheet 的宽度不超过 640px；窄屏可占满视口宽度。内容过�
 | 名称 | 内容约束 |
 | --- | --- |
 | `activator` | 唯一的当前 document 中 HTMLElement 根节点，作为 modal 关闭后的焦点恢复目标 |
-| `drag-handle` | 替换默认拖动把手的视觉内容；只有 `drag-handle=true` 时渲染 |
+| `drag-handle` | 替换默认拖动把手按钮内的视觉内容；不能放置其他交互元素，只有 `drag-handle=true` 时渲染 |
 | `header` | 完整替换默认头部；使用后 `title`、`actions` 和内置关闭按钮不会自动渲染 |
 | `title` | 标题中的丰富 Vue 内容；`title` prop 存在时忽略 |
 | 默认 | 可滚动正文中的丰富 Vue 内容；`content` prop 存在时忽略 |
@@ -127,6 +152,7 @@ Bottom sheet 的宽度不超过 640px；窄屏可占满视口宽度。内容过�
 
 <script setup>
 import BottomSheetResponsiveExample from '../examples/bottom-sheet/BottomSheetResponsiveExample.vue';
+import BottomSheetExpandedExample from '../examples/bottom-sheet/BottomSheetExpandedExample.vue';
 import BottomSheetSlotsExample from '../examples/bottom-sheet/BottomSheetSlotsExample.vue';
 import BottomSheetVariantExample from '../examples/bottom-sheet/BottomSheetVariantExample.vue';
 </script>

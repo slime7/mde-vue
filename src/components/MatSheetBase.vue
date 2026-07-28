@@ -36,6 +36,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  collapseDragHandleLabel: {
+    type: String,
+    default: '折叠底部面板',
+  },
   closable: {
     type: Boolean,
     default: false,
@@ -56,9 +60,21 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  dragHandleLabel: {
+    type: String,
+    default: '展开底部面板',
+  },
   draggable: {
     type: Boolean,
     default: true,
+  },
+  expanded: {
+    type: Boolean,
+    default: false,
+  },
+  expandedDragHandleLabel: {
+    type: String,
+    default: '关闭底部面板',
   },
   modelValue: {
     type: Boolean,
@@ -89,6 +105,7 @@ const props = defineProps({
 const emit = defineEmits({
   closed: () => true,
   opened: () => true,
+  'update:expanded': (payload) => typeof payload === 'boolean',
   'update:modelValue': (payload) => typeof payload === 'boolean',
 });
 const attrs = useAttrs();
@@ -100,6 +117,7 @@ const phase = ref('closed');
 const teleportTarget = ref(null);
 const viewportWidth = ref(typeof window === 'undefined' ? 0 : window.innerWidth);
 const dragOffset = ref(0);
+const dragSize = ref(null);
 const dragging = ref(false);
 const titleId = `${useId().replace(/[^\w-]/g, '-')}-title`;
 const root = computed(() => surface.value?.root ?? surface.value?.$el ?? null);
@@ -115,8 +133,17 @@ const isTop = computed(() => isModal.value && dialogStack.value.at(-1) === root.
 const hasActivatorSlot = computed(() => Boolean(slots.activator));
 const hasTitle = computed(() => props.title !== undefined || Boolean(slots.title));
 const hasContent = computed(() => props.content !== undefined || Boolean(slots.default));
+const showCloseButton = computed(() => props.closable
+  || (props.direction === 'bottom' && isModal.value && props.expanded));
+const resolvedDragHandleLabel = computed(() => {
+  if (!props.expanded) {
+    return props.dragHandleLabel;
+  }
+
+  return isModal.value ? props.expandedDragHandleLabel : props.collapseDragHandleLabel;
+});
 const hasHeader = computed(() => hasTitle.value
-  || props.closable
+  || showCloseButton.value
   || Boolean(slots.header)
   || Boolean(slots.actions));
 const rootTag = computed(() => (isModal.value ? 'dialog' : 'aside'));
@@ -138,6 +165,9 @@ const sizeStyle = computed(() => {
 });
 const dragStyle = computed(() => ({
   '--mat-sheet-drag-offset': `${dragOffset.value}px`,
+  ...(dragSize.value === null
+    ? {}
+    : { '--mat-sheet-drag-size': `${dragSize.value}px` }),
 }));
 const rootStyle = computed(() => [attrs.style, sizeStyle.value, dragStyle.value]);
 let mounted = false;
@@ -146,7 +176,10 @@ let previousFocus = null;
 let previousWasModal = false;
 let activePointerId = null;
 let dragStart = 0;
+let dragStartExtent = 0;
 let dragStartedAt = 0;
+let dragDistance = 0;
+let suppressHandleClick = false;
 
 function clearPhaseTimer() {
   if (phaseTimer === undefined) {
@@ -216,6 +249,37 @@ function requestClose() {
   emit('update:modelValue', false);
 }
 
+function handleDragHandleClick() {
+  if (suppressHandleClick) {
+    suppressHandleClick = false;
+    return;
+  }
+
+  if (props.expanded) {
+    if (isModal.value) {
+      requestClose();
+      return;
+    }
+
+    emit('update:expanded', false);
+    return;
+  }
+
+  emit('update:expanded', true);
+}
+
+/**
+ * @param {KeyboardEvent} event
+ */
+function handleDragHandleKeydown(event) {
+  if (event.key !== 'Enter' && event.key !== ' ') {
+    return;
+  }
+
+  event.preventDefault();
+  handleDragHandleClick();
+}
+
 function warnForInvalidActivator() {
   console.warn(
     `${props.componentName}: activator Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点`,
@@ -245,7 +309,7 @@ function focusInitialElement() {
 
   const focusTarget = element.querySelector([
     '[autofocus]',
-    'button:not([disabled])',
+    'button:not([disabled]):not([data-sheet-drag-handle])',
     'input:not([disabled])',
     'textarea:not([disabled])',
     'select:not([disabled])',
@@ -351,6 +415,7 @@ function finishClose() {
   rendered.value = false;
   phase.value = 'closed';
   dragOffset.value = 0;
+  dragSize.value = null;
   nextTick(() => {
     restoreFocus();
     emit('closed');
@@ -414,7 +479,17 @@ function updateDrag(event) {
   }
 
   if (props.direction === 'bottom') {
-    dragOffset.value = Math.max(0, event.clientY - dragStart);
+    dragDistance = event.clientY - dragStart;
+
+    if ((!props.expanded && dragDistance < 0)
+      || (props.expanded && dragDistance > 0)) {
+      dragOffset.value = 0;
+      dragSize.value = Math.max(0, dragStartExtent - dragDistance);
+      return;
+    }
+
+    dragOffset.value = Math.max(0, dragDistance);
+    dragSize.value = dragStartExtent;
     return;
   }
 
@@ -444,22 +519,52 @@ function finishDrag(event) {
     ? element?.getBoundingClientRect().height ?? 0
     : element?.getBoundingClientRect().width ?? 0;
   const elapsed = Math.max(1, performance.now() - dragStartedAt);
-  const velocity = dragOffset.value / elapsed;
+  const distance = props.direction === 'bottom'
+    ? Math.abs(dragDistance)
+    : dragOffset.value;
+  const velocity = distance / elapsed;
   const threshold = Math.min(160, Math.max(80, extent * 0.3));
-  const shouldClose = dragOffset.value >= threshold
-    || (dragOffset.value >= 24 && velocity >= 0.5);
+  const reachedThreshold = distance >= threshold
+    || (distance >= 24 && velocity >= 0.5);
 
+  suppressHandleClick = distance >= 4;
   stopDragging();
-  dragOffset.value = 0;
 
-  if (shouldClose) {
-    requestClose();
+  if (props.direction === 'bottom' && reachedThreshold) {
+    if (!props.expanded && dragDistance < 0) {
+      dragOffset.value = 0;
+      dragSize.value = null;
+      emit('update:expanded', true);
+      return;
+    }
+
+    if (props.expanded && dragDistance > 0) {
+      dragOffset.value = 0;
+      dragSize.value = null;
+      emit('update:expanded', false);
+      return;
+    }
+
+    if (!props.expanded && dragDistance > 0) {
+      dragSize.value = null;
+      requestClose();
+      return;
+    }
   }
+
+  if (props.direction === 'side' && reachedThreshold) {
+    requestClose();
+    return;
+  }
+
+  dragOffset.value = 0;
+  dragSize.value = null;
 }
 
 function cancelDrag() {
   stopDragging();
   dragOffset.value = 0;
+  dragSize.value = null;
 }
 
 /**
@@ -472,7 +577,12 @@ function startDrag(event) {
 
   activePointerId = event.pointerId;
   dragStart = props.direction === 'bottom' ? event.clientY : event.clientX;
+  dragStartExtent = props.direction === 'bottom'
+    ? root.value?.getBoundingClientRect().height ?? 0
+    : root.value?.getBoundingClientRect().width ?? 0;
   dragStartedAt = performance.now();
+  dragDistance = 0;
+  dragSize.value = props.direction === 'bottom' ? dragStartExtent : null;
   dragging.value = true;
   window.addEventListener('pointermove', updateDrag);
   window.addEventListener('pointerup', finishDrag);
@@ -617,6 +727,7 @@ watch(() => props.closeLabel, (value) => {
         `mat-sheet--position-${position}`,
         {
           'mat-sheet--dragging': dragging,
+          'mat-sheet--expanded': direction === 'bottom' && expanded,
           'mat-sheet--top': isTop,
           'mat-sheet--transparent-scrim': !scrim,
         },
@@ -629,16 +740,20 @@ watch(() => props.closeLabel, (value) => {
       @keydown="handleKeyDown"
       @pointerdown="handleRootPointerDown"
     >
-      <div
+      <button
         v-if="direction === 'bottom' && dragHandle"
         class="mat-sheet__drag-handle-target"
-        aria-hidden="true"
+        type="button"
+        data-sheet-drag-handle
+        :aria-label="resolvedDragHandleLabel"
+        @click="handleDragHandleClick"
+        @keydown="handleDragHandleKeydown"
         @pointerdown.stop="startDrag"
       >
         <slot name="drag-handle">
           <span class="mat-sheet__drag-handle" />
         </slot>
-      </div>
+      </button>
 
       <header v-if="hasHeader" class="mat-sheet__header">
         <slot name="header">
@@ -654,7 +769,7 @@ watch(() => props.closeLabel, (value) => {
           </div>
 
           <MatBtn
-            v-if="closable"
+            v-if="showCloseButton"
             class="mat-sheet__close"
             icon="close"
             :label="closeLabel"
@@ -686,7 +801,7 @@ watch(() => props.closeLabel, (value) => {
 
 .mat-sheet {
   --mat-sheet-container-color: var(--mat-sys-color-surface-container-low);
-  --mat-sheet-content-color: var(--mat-sys-color-on-surface);
+  --mat-sheet-content-color: var(--mat-sys-color-on-surface-variant);
   --mat-sheet-preferred-width: 100%;
   --mat-sheet-drag-offset: 0;
   display: flex;
@@ -719,6 +834,7 @@ watch(() => props.closeLabel, (value) => {
 }
 
 .mat-sheet--bottom {
+  interpolate-size: allow-keywords;
   align-self: center;
   inline-size: min(var(--mat-sheet-preferred-width), 100%);
   max-inline-size: min(640px, 100%);
@@ -729,6 +845,8 @@ watch(() => props.closeLabel, (value) => {
     var(--mat-sys-shape-corner-none);
   box-shadow: var(--mat-sys-elevation-level1);
   transform: translateY(var(--mat-sheet-drag-offset));
+  transition: block-size var(--mat-sys-motion-duration-short4)
+    var(--mat-sys-motion-easing-emphasized);
 }
 
 .mat-sheet--bottom.mat-sheet--modal {
@@ -738,10 +856,18 @@ watch(() => props.closeLabel, (value) => {
   margin: 0 auto;
 }
 
+.mat-sheet--bottom.mat-sheet--modal:not(.mat-sheet--expanded) {
+  max-block-size: 50dvb;
+}
+
+.mat-sheet--bottom.mat-sheet--expanded {
+  block-size: calc(100dvb - 72px);
+}
+
 .mat-sheet--side {
   align-self: stretch;
   inline-size: min(var(--mat-sheet-preferred-width), 100%);
-  max-inline-size: 100%;
+  max-inline-size: min(400px, 100%);
   min-block-size: 0;
   block-size: 100%;
   border-radius: var(--mat-sys-shape-corner-large);
@@ -766,8 +892,8 @@ watch(() => props.closeLabel, (value) => {
 
 .mat-sheet--side.mat-sheet--modal {
   inset-block: 0;
-  inline-size: min(var(--mat-sheet-preferred-width), calc(100dvi - 56px));
-  max-inline-size: calc(100dvi - 56px);
+  inline-size: min(var(--mat-sheet-preferred-width), calc(100dvi - 16px), 400px);
+  max-inline-size: min(calc(100dvi - 16px), 400px);
   min-block-size: 100dvb;
   block-size: 100dvb;
   max-block-size: 100dvb;
@@ -787,12 +913,26 @@ watch(() => props.closeLabel, (value) => {
 
 .mat-sheet__drag-handle-target {
   display: flex;
-  flex: 0 0 32px;
+  flex: 0 0 48px;
   align-items: center;
   justify-content: center;
   inline-size: 100%;
+  padding: 0;
   touch-action: none;
   user-select: none;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  cursor: grab;
+}
+
+.mat-sheet__drag-handle-target:active {
+  cursor: grabbing;
+}
+
+.mat-sheet__drag-handle-target:focus-visible {
+  outline: 2px solid var(--mat-sys-color-primary);
+  outline-offset: -4px;
 }
 
 .mat-sheet__drag-handle {
@@ -815,6 +955,10 @@ watch(() => props.closeLabel, (value) => {
   padding: 12px 16px 12px 24px;
 }
 
+.mat-sheet--side .mat-sheet__header {
+  padding-inline: 24px;
+}
+
 .mat-sheet--bottom .mat-sheet__drag-handle-target + .mat-sheet__header {
   padding-block-start: 0;
 }
@@ -823,7 +967,9 @@ watch(() => props.closeLabel, (value) => {
   flex: 1 1 auto;
   min-inline-size: 0;
   margin: 0;
+  padding: 0;
   color: var(--mat-sys-color-on-surface);
+  border: 0;
   font-family: var(--mat-sys-typescale-title-large-font);
   font-size: var(--mat-sys-typescale-title-large-size);
   font-weight: var(--mat-sys-typescale-title-large-weight);
@@ -873,7 +1019,28 @@ watch(() => props.closeLabel, (value) => {
   align-items: center;
   box-sizing: border-box;
   inline-size: 100%;
+  min-block-size: 72px;
   padding: 16px 24px 24px;
+}
+
+@media (width >= 641px) {
+  .mat-sheet--bottom {
+    max-inline-size: min(640px, calc(100% - 112px));
+    max-block-size: calc(100dvb - 56px);
+  }
+
+  .mat-sheet--bottom.mat-sheet--expanded {
+    block-size: calc(100dvb - 56px);
+  }
+
+  .mat-sheet--bottom.mat-sheet--modal {
+    max-inline-size: min(640px, calc(100dvi - 112px));
+  }
+}
+
+.mat-sheet--bottom.mat-sheet--dragging {
+  block-size: var(--mat-sheet-drag-size);
+  transition: none;
 }
 
 .mat-sheet--opening.mat-sheet--bottom {
@@ -972,6 +1139,7 @@ watch(() => props.closeLabel, (value) => {
   .mat-sheet,
   .mat-sheet::backdrop {
     animation-duration: .01ms;
+    transition-duration: .01ms;
   }
 }
 </style>

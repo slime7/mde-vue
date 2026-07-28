@@ -1583,7 +1583,35 @@ export interface MatBottomSheetProps {
   */
   dragHandle?: boolean;
   /**
-  * 是否允许从把手向下拖动关闭。
+  * 展开的 standard 状态下拖动把手的可访问名称。
+  *
+  * @type {string}
+  * @default '折叠底部面板'
+  */
+  collapseDragHandleLabel?: string;
+  /**
+  * 预设高度状态；false 为不超过半屏的预览状态，true 为展开状态。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  expanded?: boolean;
+  /**
+  * 预览状态下拖动把手的可访问名称。
+  *
+  * @type {string}
+  * @default '展开底部面板'
+  */
+  dragHandleLabel?: string;
+  /**
+  * 展开的 modal 状态下拖动把手的可访问名称。
+  *
+  * @type {string}
+  * @default '关闭底部面板'
+  */
+  expandedDragHandleLabel?: string;
+  /**
+  * 是否允许通过把手向上展开，以及向下折叠或关闭。
   *
   * @type {boolean}
   * @default true
@@ -1624,6 +1652,10 @@ export interface MatBottomSheetEmits {
   * 请求关闭时发出 false。
   */
   "update:modelValue": (payload: unknown) => unknown;
+  /**
+  * 通过把手请求切换预设高度时发出。
+  */
+  "update:expanded": (payload: unknown) => unknown;
   /**
   * 进入动画完成后触发。
   */
@@ -1667,7 +1699,7 @@ export interface MatSideSheetProps {
   */
   position?: 'start'|'end';
   /**
-  * 首选宽度；数字按 px 处理，字符串接受 CSS 宽度值。
+  * 首选宽度；数字按 px 处理，最终不超过 400px。
   *
   * @type {number | string}
   * @default 400

@@ -69,7 +69,7 @@ Text field 与 Textarea 共享 `MatInputBase` 的无边框原生控件基础层�
 
 Dialog 组合 `MatSurfaceBase` 与原生 modal dialog，通过 Teleport 挂载到 body 或指定元素；模板实例可通过 `activator` Slot 渲染唯一触发元素并在关闭后恢复焦点。组件在退出动画期间保留原生模态状态和 DOM；共享堆叠管理器只显示顶层帷幕。`dialog()`、`alert()`、`confirm()` 与 `prompt()` 使用一次性 Vue 宿主复用同一组件，关闭动画完成并清理宿主后再结算 Promise。命令式宿主读取最后安装的插件组件设置与主题控制器；未安装插件时使用默认设置。
 
-Bottom sheet 与 Side sheet 通过内部 `MatSheetBase` 复用受控开关、standard/modal/auto 变体、进入退出阶段、原生 modal dialog、Teleport、焦点恢复、帷幕、Escape、滚动锁、堆叠和触摸拖动关闭。Standard 根使用原生 `aside` 并在声明位置参与父级 flex 布局，不锁滚动或移动焦点；modal 根进入浏览器 top layer。Auto 默认在 840px 以下使用 modal、在更宽视口使用 standard，并在窗口尺寸跨越断点时切换根语义。Bottom sheet 固定在块轴末端、最大宽度 640px并提供可选拖动把手；Side sheet 使用 start/end 逻辑边缘、独立宽度和默认关闭入口。两个公共组件不互相替换。
+Bottom sheet 与 Side sheet 通过内部 `MatSheetBase` 复用受控开关、standard/modal/auto 变体、进入退出阶段、原生 modal dialog、Teleport、焦点恢复、帷幕、Escape、滚动锁、堆叠和触摸拖动关闭。Standard 根使用原生 `aside` 并在声明位置参与父级 flex 布局，不锁滚动或移动焦点；modal 根进入浏览器 top layer。Auto 默认在 840px 以下使用 modal、在更宽视口使用 standard，并在窗口尺寸跨越断点时切换根语义。Bottom sheet 固定在块轴末端、最大宽度 640px，通过受控 `expanded` 状态、可操作把手和拖动表达预览与展开高度；Side sheet 使用 start/end 逻辑边缘、400px 最大宽度和默认关闭入口。两个公共组件不互相替换。
 
 Snackbar 通过 Teleport 固定在视口底部，使用 `modelValue` 请求展示而不移动焦点。它提供一个可选的文字 action 与可选关闭入口；`actionText` 与 `action` Slot、`closable` 与 `close` Slot 分别遵守 Slot 优先规则，action 触发后关闭当前通知。模块级 FIFO 调度器同时协调所有模板实例和 `snackbar()` / `toast()` 命令式请求；活动项只在退出动画完成后释放下一项，排队模板项可由 `modelValue=false` 或卸载取消。命令式 Snackbar 使用单个可复用 Vue 宿主并注入最后安装插件的组件设置与主题控制器；`onAction` 回调在 action 触发时调用，宿主没有待显示内容时移除，Promise 在退出与清理完成后结算。
 

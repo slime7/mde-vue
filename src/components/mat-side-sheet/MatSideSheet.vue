@@ -51,7 +51,7 @@ const props = defineProps({
     validator: (value) => ['start', 'end'].includes(value),
   },
   /**
-   * 首选宽度；数字按 px 处理，字符串接受 CSS 宽度值。
+   * 首选宽度；数字按 px 处理，最终不超过 400px。
    *
    * @type {number | string}
    * @default 400
@@ -61,7 +61,7 @@ const props = defineProps({
     default: 400,
     validator(value) {
       if (typeof value === 'number') {
-        return Number.isFinite(value) && value > 0;
+        return Number.isFinite(value) && value > 0 && value <= 400;
       }
 
       return typeof value === 'string' && value.trim().length > 0;

@@ -97,7 +97,47 @@ const props = defineProps({
     default: true,
   },
   /**
-   * 是否允许从把手向下拖动关闭。
+   * 展开的 standard 状态下拖动把手的可访问名称。
+   *
+   * @type {string}
+   * @default '折叠底部面板'
+   */
+  collapseDragHandleLabel: {
+    type: String,
+    default: '折叠底部面板',
+  },
+  /**
+   * 预设高度状态；false 为不超过半屏的预览状态，true 为展开状态。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  expanded: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * 预览状态下拖动把手的可访问名称。
+   *
+   * @type {string}
+   * @default '展开底部面板'
+   */
+  dragHandleLabel: {
+    type: String,
+    default: '展开底部面板',
+  },
+  /**
+   * 展开的 modal 状态下拖动把手的可访问名称。
+   *
+   * @type {string}
+   * @default '关闭底部面板'
+   */
+  expandedDragHandleLabel: {
+    type: String,
+    default: '关闭底部面板',
+  },
+  /**
+   * 是否允许通过把手向上展开，以及向下折叠或关闭。
    *
    * @type {boolean}
    * @default true
@@ -154,6 +194,10 @@ const emit = defineEmits({
    */
   'update:modelValue': (payload) => typeof payload === 'boolean',
   /**
+   * 通过把手请求切换预设高度时发出。
+   */
+  'update:expanded': (payload) => typeof payload === 'boolean',
+  /**
    * 进入动画完成后触发。
    */
   opened: () => true,
@@ -170,6 +214,7 @@ const emit = defineEmits({
     component-name="MatBottomSheet"
     direction="bottom"
     @update:model-value="emit('update:modelValue', $event)"
+    @update:expanded="emit('update:expanded', $event)"
     @opened="emit('opened')"
     @closed="emit('closed')"
   >

@@ -36,7 +36,6 @@ const open = ref(false);
   min-block-size: 320px;
   overflow: hidden;
   background: var(--mat-sys-color-surface-container-lowest);
-  border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-large);
 }
 
