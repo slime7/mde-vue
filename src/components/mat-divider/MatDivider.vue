@@ -10,16 +10,16 @@ defineOptions({
 
 const props = defineProps({
   /**
-   * 分隔线的缩进方式；可选值为 `none`、`start`、`middle`。
+   * 分隔线的缩进方式。`true` 表示两侧缩进；字符串值兼容 `none`、`start`、`middle`。
    *
-   * @type {'none' | 'start' | 'middle'}
-   * @default 'none'
+   * @type {boolean | 'none' | 'start' | 'middle'}
+   * @default false
    */
   inset: {
-    type: String,
-    default: 'none',
+    type: [Boolean, String],
+    default: false,
     validator(value) {
-      return ['none', 'start', 'middle'].includes(value);
+      return typeof value === 'boolean' || ['none', 'start', 'middle'].includes(value);
     },
   },
 });
@@ -28,6 +28,17 @@ const menu = inject(MAT_MENU_KEY, null);
 const isInList = computed(() => Boolean(list));
 const isInMenu = computed(() => Boolean(menu));
 const isInListbox = computed(() => list?.isSelectable.value ?? false);
+const insetMode = computed(() => {
+  if (props.inset === true) {
+    return 'middle';
+  }
+
+  if (props.inset === false) {
+    return 'none';
+  }
+
+  return props.inset;
+});
 const tag = computed(() => {
   if (!isInList.value) {
     return isInMenu.value ? 'div' : 'hr';
@@ -43,7 +54,7 @@ const tag = computed(() => {
     v-bind="$attrs"
     class="mat-divider"
     :class="[
-      `mat-divider--${props.inset}`,
+      `mat-divider--${insetMode}`,
       { 'mat-divider--menu': isInMenu },
     ]"
     :aria-hidden="isInListbox ? 'true' : $attrs['aria-hidden']"
@@ -57,6 +68,7 @@ const tag = computed(() => {
   flex: 0 0 auto;
   box-sizing: border-box;
   block-size: var(--mat-divider-thickness);
+  inline-size: 100%;
   padding: 0;
   margin-block: 0;
   margin-inline: 0;
@@ -66,10 +78,12 @@ const tag = computed(() => {
 }
 
 .mat-divider--start {
+  inline-size: calc(100% - var(--mat-divider-inset-space));
   margin-inline-start: var(--mat-divider-inset-space);
 }
 
 .mat-divider--middle {
+  inline-size: calc(100% - 2 * var(--mat-divider-inset-space));
   margin-inline: var(--mat-divider-inset-space);
 }
 

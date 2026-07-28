@@ -23,7 +23,7 @@
 - [Range slider 范围滑块](components/range-slider.md): mat-range-slider 的不可变区间 v-model、端点名称、方向、尺寸、停靠点和数值指示。
 - [Loader 加载器](components/loader.md): mat-loader 的线条与环形进度、确定与不确定状态、波浪形及其运动开关、厚度和配色。
 - [Input base 输入基础层](components/input-base.md): mat-input-base 与 MatInputBase 提供可自定义输入 UI 的无边框原生 input 或 textarea 基础层。
-- [Card 卡片](components/card.md): mat-card 的 Material 3 外观、局部配色、内容、操作区与链接式交互。
+- [Card 卡片](components/card.md): mat-card 的 Material 3 外观、标题、副标题、媒体、内容、操作区与链接式交互。
 - [Text field 文本输入](components/text-field.md): mat-text-field 与 mat-textarea 的输入、校验提示、计数、局部配色和原生事件。
 - [Menu 菜单](components/menu.md): mat-menu、mat-menu-group 与 mat-menu-item 的分组、坐标定位、多级展开、键盘焦点和局部配色。
 - [Dialog 对话框](components/dialog.md): mat-dialog 的模态展示、全屏布局、帷幕、动画、滚动区域和 Promise 命令式函数。
@@ -31,7 +31,7 @@
 - [Toolbar 工具栏](components/toolbar.md): mat-toolbar 的停靠、悬浮、自然布局占位、安全区和覆盖层避让。
 - [Navigation 导航](components/navigation-rail.md): mat-navigation-rail 的 Expressive collapsed/expanded rail 与 horizontal flexible navigation bar。
 - [Tooltip 文字提示](components/tooltip.md): mat-tooltip 的 Material 3 Plain tooltip、展示元素、固定定位、延迟和无障碍说明。
-- [Divider 分隔线](components/divider.md): mat-divider 的 Material 3 全宽、起始缩进和两侧缩进样式。
+- [Divider 分隔线](components/divider.md): mat-divider 的 Material 3 全宽、起始缩进、两侧 inset 与 Card Actions 分隔方式。
 - [Snackbar 消息提示](components/snackbar.md): mat-snackbar 的 Material 3 底部消息提示、文字 action、全局 FIFO 队列和 Promise 函数。
 - [Spacer 弹性占位](components/spacer.md): mat-spacer 在 flex 布局中占据主轴剩余空间。
 - [Panes 布局面板](components/panes.md): mat-panes 与 mat-pane 的横向多窗口布局、受控宽度调整、断点事件和低频宽度信息。

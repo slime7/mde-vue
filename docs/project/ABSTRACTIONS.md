@@ -119,6 +119,14 @@ Icon 尺寸使用 `small`、`medium`、`large`、`extra-large` 四档，分别�
 
 Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `currentColor`；`fontColor` 直接接受任意 CSS 颜色并优先于 `color`。Slot SVG 只有使用 `currentColor` 时继承颜色，`src` 资源保留内部颜色。其他组件复用 MatIcon 时负责传入所在组件的尺寸、光学尺寸、内容颜色和无障碍属性。
 
+## `<mat-card>`
+
+`<mat-card>` 的导出名是 `MatCard`，以 `filled`、`elevated`、`outlined` 表达三种 Material 3 层级，默认 filled。根元素可以使用 `div`、`article`、`section` 或 `li`，并继续透传未消费的原生属性。`color` 遵循统一组件配色约定；省略时保持官方中性表面角色。
+
+Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCardHeadline`、`MatCardSubhead`、`MatCardMedia` 渲染；三者也可以通过 `<mat-card-headline>`、`<mat-card-subhead>`、`<mat-card-media>` 直接组合。Headline 使用 title-large，Subhead 使用较低强调的 body-medium；Media 占满可用横向空间并保持图片或视频自身比例。`MatCardContent` 提供 16px 内边距，`MatCardActions` 使用末端对齐、可换行的横向布局、8px 间距和 16px 内边距。
+
+`MatCardActionArea` 使用原生 button 或 link 语义，使整块内容成为主要操作区域；独立按钮、链接和选择控件必须放在同级 Actions 中。只有启用的 ActionArea 才驱动 Card 的 hover、focus 和 pressed 状态，pressed 必须恢复各变体的静止海拔，不能停留在 hover 海拔。`MatDivider` 直接位于 Card 和 Actions 之间时完整分隔两个区域；布尔 `inset` 表达两侧各 16px 的相关内容分隔，`start` 与旧 `middle` 字符串继续兼容。
+
 ## `<mat-loader>`
 
 `<mat-loader>` 的导出名是 `MatLoader`，以 `variant='linear' | 'circular'` 统一线条和环形 Progress indicator。默认是确定进度：`value` 会限制在 `0` 与正数 `max` 之间，根元素提供 progressbar ARIA 最小值、最大值和当前值；`indeterminate` 时省略当前值并展示加载动画。组件根始终为块级元素。
@@ -137,7 +145,7 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 `<mat-list>` 在同一实例中只允许一种 `interaction`。`none`、`single-action`、`multi-action` 使用原生列表结构；`single-select`、`multi-select` 使用 listbox/option，并由父组件以受控 `selected` 和 `select` 事件协调选择。方向键只移动 roving tabindex 焦点，不隐式修改选择。选择 option 内不得放置可聚焦后代，多操作项的附加操作只能位于 trailing Slot。
 
-`<mat-divider>` 独立使用时保持原生 `hr`；进入普通 List 后使用合法的 `li` separator，进入选择 List 后成为不参与 listbox 语义的展示元素。Divider 不进入 Tab 顺序，也不提供强调色。
+`<mat-divider>` 独立使用时保持原生 `hr`；进入普通 List 后使用合法的 `li` separator，进入选择 List 后成为不参与 listbox 语义的展示元素。Divider 不进入 Tab 顺序，也不提供强调色。默认 Divider 明确占满可用横向空间；`inset=true` 或兼容值 `middle` 表示两侧各缩进 16px，`start` 只缩进逻辑起始侧。
 
 `<mat-list-group>` 只在普通或操作 List 中提供折叠：Activator Slot 必须是单个普通 MatListItem，该 Item 只承担 disclosure 按钮语义，不再承担链接、选择或叶子点击。根 List 的 `expanded` 数组以 `Object.is()` 管理有值分组，并允许多个值同时展开；无值分组使用独立内部状态。折叠内容必须同时离开焦点顺序和无障碍树。选择 List 中的分组固定为静态标签与始终展开的 `group/option` 结构，不混入 disclosure 交互。
 

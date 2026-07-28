@@ -36,7 +36,7 @@
 
 ### 公共入口
 
-`src/index.js` 是完整组件包入口，导出 Icon、Button、FAB、Card、List、Divider、Spacer、Loader、Tooltip、Snackbar、Hover、选择控件、`MatInputBase`、Text field、Textarea、Menu、Dialog 组件族、`Intersection` 指令以及 `createMatUi()` 和 `useMatTheme()`。`src/index.d.ts` 是对应的类型入口，复用 Vue SFC 类型并声明全局组件。Dialog 与 Snackbar 命令式函数由独立的 `mdu-ui/functions` 入口导出，不从根入口或对应组件子入口重复导出。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口；`Intersection` 指令通过 `mdu-ui/directives/intersection` 单独入口导出。复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
+`src/index.js` 是完整组件包入口，导出 Icon、Button、FAB、Card、List、Divider、Spacer、Loader、Tooltip、Snackbar、Hover、选择控件、`MatInputBase`、Text field、Textarea、Menu、Dialog 组件族、`Intersection` 指令以及 `createMatUi()` 和 `useMatTheme()`。Card 组件族包括容器、ActionArea、Content、Actions、Headline、Subhead 和 Media。`src/index.d.ts` 是对应的类型入口，复用 Vue SFC 类型并声明全局组件。Dialog 与 Snackbar 命令式函数由独立的 `mdu-ui/functions` 入口导出，不从根入口或对应组件子入口重复导出。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口；`Intersection` 指令通过 `mdu-ui/directives/intersection` 单独入口导出。复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -58,6 +58,8 @@
 每个组件拥有自己的 Vue SFC、公开入口、样式与测试。`MatHover` 是无渲染交互组件，通过作用域 Slot 向使用方提供 hover 状态和目标事件 props，不引入包装元素；它只处理鼠标进入、离开及可取消的开放/关闭延迟。`v-intersection` 是独立的原生观察指令，绑定值直接映射 `IntersectionObserver` 回调和初始化选项，使用元素级 WeakMap 管理生命周期，不向 DOM 写入私有字段。`MatSpacer` 是不进入无障碍树的空 flex 子元素，只通过增长分配父容器主轴剩余空间。`MatBtn` 以同一个原生 `<button>` 组件提供普通按钮和图标模式：`icon=true` 解析默认 Slot 的 Material Symbols 文本，字符串 `icon` 使用 prop 文本，未设置 `icon` 时仍按普通按钮渲染并允许默认 Slot 直接放置 `MatIcon`；普通模式也可使用 `prefix`、`suffix` 或同名 Slots。`MatFab` 以同一个原生 `<button>` 组件提供纯图标 FAB 和 Extended FAB：默认 Slot 有非空内容时显示 Extended 标签，否则要求 `icon` 与 `label` 并显示 Tooltip。两者共享 `MatButtonBase` 的原生交互和状态逻辑。按钮组与 split button 使用 Vue provide/inject 协调 `MatBtn` 子按钮，不复制交互协议；standard 选中态沿用普通按钮的 round/square 反转，connected 选中态使用覆盖四角的全圆 checked shape。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
 
 Icon 统一字体字形、SVG 资源和默认 Slot 中的 SVG 元素，负责 Material Symbols 经典四轴、尺寸、内容颜色和动态根标签。内容来源优先级固定为 `src`、`icon`、默认 Slot；组件级 `iconClass` 可覆盖或关闭插件全局值。按钮、List、Menu 和文本输入复用同一公共 Icon 实现，但各自负责上下文尺寸、颜色和无障碍语义。
+
+Card 组合 `MatSurfaceBase` 与可选 `MatCardActionArea`，提供 filled、elevated、outlined 三种中性表面和局部种子配色。Headline、Subhead 与 Media 既可以由 Card 的同名具名 Slot 自动创建，也可以作为 `MatCardHeadline`、`MatCardSubhead`、`MatCardMedia` 子组件直接组合；Content 与 Actions 继续负责 16px 内容内边距和末端对齐的操作布局。Divider 作为 Card 直接子项时以明确横向尺寸完整分隔区域，布尔 inset 模式在两侧保留系统缩进。
 
 List 通过内部 provide/inject 上下文统一交互模式、受控选择、折叠值和焦点刷新。普通与操作模式保留 `ul/li`；MatListGroup 作为根列表的 `li`，在其中组合 Activator 按钮、可惰化的内容容器和嵌套 `ul`。有值分组由根 List 的 `expanded` 数组控制，无值分组保存内部状态。选择模式使用 `listbox/option`，折叠分组在该模式下降级为始终展开的静态 `group`，避免把 disclosure 按钮放入 listbox。roving tabindex 注册表按 DOM 顺序协调直属项目、分组 Activator、展开项目和 multi-action trailing 控件，并在模式切换或卸载时恢复使用方原有的 tabindex。Divider 根据 List 上下文切换合法的根语义，不参与选择与焦点顺序。
 

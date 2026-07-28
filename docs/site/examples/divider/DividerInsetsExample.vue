@@ -11,7 +11,7 @@
     </section>
     <section>
       <p>两侧缩进</p>
-      <mat-divider inset="middle" />
+      <mat-divider inset />
     </section>
   </div>
 </template>

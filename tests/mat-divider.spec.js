@@ -13,6 +13,17 @@ describe('MatDivider', () => {
     expect(full.attributes('aria-label')).toBe('分隔');
   });
 
+  it('支持布尔 inset 模式并兼容已有字符串缩进值', () => {
+    const inset = mount(MatDivider, { props: { inset: true } });
+
+    expect(inset.element.tagName).toBe('HR');
+    expect(MatDivider.props.inset.validator(true)).toBe(true);
+    expect(MatDivider.props.inset.validator(false)).toBe(true);
+    expect(MatDivider.props.inset.validator('start')).toBe(true);
+    expect(MatDivider.props.inset.validator('middle')).toBe(true);
+    expect(MatDivider.props.inset.validator('invalid')).toBe(false);
+  });
+
   it('普通 List 中渲染合法的 li separator', () => {
     const wrapper = mount(MatList, {
       slots: {

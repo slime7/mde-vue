@@ -484,6 +484,24 @@ export interface MatCardActionsProps {
 export type MatCardActionsComponent = DefineComponent<MatCardActionsProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatCardActions: MatCardActionsComponent;
 
+export interface MatCardHeadlineProps {
+}
+
+export type MatCardHeadlineComponent = DefineComponent<MatCardHeadlineProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatCardHeadline: MatCardHeadlineComponent;
+
+export interface MatCardSubheadProps {
+}
+
+export type MatCardSubheadComponent = DefineComponent<MatCardSubheadProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatCardSubhead: MatCardSubheadComponent;
+
+export interface MatCardMediaProps {
+}
+
+export type MatCardMediaComponent = DefineComponent<MatCardMediaProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatCardMedia: MatCardMediaComponent;
+
 export interface MatListProps {
   /**
   * 列表布局形态；可选值为 `standard`、`segmented`。
@@ -599,12 +617,12 @@ export declare const MatListItem: MatListItemComponent;
 
 export interface MatDividerProps {
   /**
-  * 分隔线的缩进方式；可选值为 `none`、`start`、`middle`。
+  * 分隔线的缩进方式。`true` 表示两侧缩进；字符串值兼容 `none`、`start`、`middle`。
   *
-  * @type {'none' | 'start' | 'middle'}
-  * @default 'none'
+  * @type {boolean | 'none' | 'start' | 'middle'}
+  * @default false
   */
-  inset?: 'none' | 'start' | 'middle';
+  inset?: boolean | 'none' | 'start' | 'middle';
 }
 
 export type MatDividerComponent = DefineComponent<MatDividerProps, {}, {}, {}, {}, {}, {}, {}>;
@@ -2078,6 +2096,12 @@ declare module 'vue' {
     'mat-card-content': typeof MatCardContent;
     MatCardActions: typeof MatCardActions;
     'mat-card-actions': typeof MatCardActions;
+    MatCardHeadline: typeof MatCardHeadline;
+    'mat-card-headline': typeof MatCardHeadline;
+    MatCardSubhead: typeof MatCardSubhead;
+    'mat-card-subhead': typeof MatCardSubhead;
+    MatCardMedia: typeof MatCardMedia;
+    'mat-card-media': typeof MatCardMedia;
     MatList: typeof MatList;
     'mat-list': typeof MatList;
     MatListGroup: typeof MatListGroup;

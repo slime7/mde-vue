@@ -8,6 +8,9 @@ import MatCard from './components/mat-card/MatCard.vue';
 import MatCardActionArea from './components/mat-card/MatCardActionArea.vue';
 import MatCardContent from './components/mat-card/MatCardContent.vue';
 import MatCardActions from './components/mat-card/MatCardActions.vue';
+import MatCardHeadline from './components/mat-card/MatCardHeadline.vue';
+import MatCardSubhead from './components/mat-card/MatCardSubhead.vue';
+import MatCardMedia from './components/mat-card/MatCardMedia.vue';
 import MatList from './components/mat-list/MatList.vue';
 import MatListGroup from './components/mat-list-group/MatListGroup.vue';
 import MatListItem from './components/mat-list/MatListItem.vue';
@@ -51,6 +54,9 @@ const GLOBAL_COMPONENTS = [
   ['MatCardActionArea', 'mat-card-action-area', MatCardActionArea],
   ['MatCardContent', 'mat-card-content', MatCardContent],
   ['MatCardActions', 'mat-card-actions', MatCardActions],
+  ['MatCardHeadline', 'mat-card-headline', MatCardHeadline],
+  ['MatCardSubhead', 'mat-card-subhead', MatCardSubhead],
+  ['MatCardMedia', 'mat-card-media', MatCardMedia],
   ['MatList', 'mat-list', MatList],
   ['MatListGroup', 'mat-list-group', MatListGroup],
   ['MatListItem', 'mat-list-item', MatListItem],

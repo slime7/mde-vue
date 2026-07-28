@@ -3,6 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { createApp } from 'vue';
 /* eslint-disable import-x/no-named-as-default -- 验证子入口默认导出和具名导出相同。 */
 import MatCard, { MatCard as NamedMatCard } from 'mdu-ui/components/mat-card';
+import MatCardHeadline, { MatCardHeadline as NamedMatCardHeadline } from 'mdu-ui/components/mat-card-headline';
+import MatCardMedia, { MatCardMedia as NamedMatCardMedia } from 'mdu-ui/components/mat-card-media';
+import MatCardSubhead, { MatCardSubhead as NamedMatCardSubhead } from 'mdu-ui/components/mat-card-subhead';
 import MatBtn, { MatBtn as NamedMatBtn } from 'mdu-ui/components/mat-btn';
 import MatBtnGroup, { MatBtnGroup as NamedMatBtnGroup } from 'mdu-ui/components/mat-btn-group';
 import MatFab, { MatFab as NamedMatFab } from 'mdu-ui/components/mat-fab';
@@ -50,6 +53,9 @@ import {
   MatCardActionArea as RootMatCardActionArea,
   MatCardActions as RootMatCardActions,
   MatCardContent as RootMatCardContent,
+  MatCardHeadline as RootMatCardHeadline,
+  MatCardMedia as RootMatCardMedia,
+  MatCardSubhead as RootMatCardSubhead,
   MatCheckbox as RootMatCheckbox,
   MatDialog as RootMatDialog,
   MatDivider as RootMatDivider,
@@ -92,6 +98,9 @@ const globalComponents = [
   ['MatCardActionArea', 'mat-card-action-area', RootMatCardActionArea],
   ['MatCardContent', 'mat-card-content', RootMatCardContent],
   ['MatCardActions', 'mat-card-actions', RootMatCardActions],
+  ['MatCardHeadline', 'mat-card-headline', RootMatCardHeadline],
+  ['MatCardSubhead', 'mat-card-subhead', RootMatCardSubhead],
+  ['MatCardMedia', 'mat-card-media', RootMatCardMedia],
   ['MatList', 'mat-list', RootMatList],
   ['MatListGroup', 'mat-list-group', RootMatListGroup],
   ['MatListItem', 'mat-list-item', RootMatListItem],
@@ -131,6 +140,9 @@ describe('公共组件导出', () => {
 
   it.each([
     ['MatCard', RootMatCard, NamedMatCard, MatCard],
+    ['MatCardHeadline', RootMatCardHeadline, NamedMatCardHeadline, MatCardHeadline],
+    ['MatCardSubhead', RootMatCardSubhead, NamedMatCardSubhead, MatCardSubhead],
+    ['MatCardMedia', RootMatCardMedia, NamedMatCardMedia, MatCardMedia],
     ['MatBtn', RootMatBtn, NamedMatBtn, MatBtn],
     ['MatBtnGroup', RootMatBtnGroup, NamedMatBtnGroup, MatBtnGroup],
     ['MatFab', RootMatFab, NamedMatFab, MatFab],

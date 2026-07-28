@@ -3,6 +3,9 @@ import { computed } from 'vue';
 import MatSurfaceBase from '../MatSurfaceBase.vue';
 import { isComponentColor } from '../button-props';
 import useComponentColor from '../use-component-color';
+import MatCardHeadline from './MatCardHeadline.vue';
+import MatCardMedia from './MatCardMedia.vue';
+import MatCardSubhead from './MatCardSubhead.vue';
 
 defineOptions({ name: 'MatCard', inheritAttrs: false });
 const props = defineProps({
@@ -39,6 +42,18 @@ const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => props.
     :style="colorStyle"
     :as="as"
   >
+    <MatCardMedia v-if="$slots.media">
+      <slot name="media" />
+    </MatCardMedia>
+
+    <MatCardHeadline v-if="$slots.headline">
+      <slot name="headline" />
+    </MatCardHeadline>
+
+    <MatCardSubhead v-if="$slots.subhead">
+      <slot name="subhead" />
+    </MatCardSubhead>
+
     <slot />
   </MatSurfaceBase>
 </template>
@@ -48,12 +63,15 @@ const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => props.
   --mat-card-container-color: var(--mat-sys-color-surface-container-highest);
   --mat-card-content-color: var(--mat-sys-color-on-surface);
   --mat-card-outline-color: transparent;
+  --mat-card-outline-width: 0;
   --mat-card-elevation: var(--mat-sys-elevation-level0);
+  --mat-card-subhead-color: var(--mat-sys-color-on-surface-variant);
   position: relative;
   overflow: clip;
+  box-sizing: border-box;
   color: var(--mat-card-content-color);
   background: var(--mat-card-container-color);
-  border: 1px solid var(--mat-card-outline-color);
+  border: var(--mat-card-outline-width) solid var(--mat-card-outline-color);
   border-radius: var(--mat-sys-shape-corner-medium);
   box-shadow: var(--mat-card-elevation);
   transition: box-shadow var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
@@ -67,11 +85,28 @@ const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => props.
 .mat-card--outlined {
   --mat-card-container-color: var(--mat-sys-color-surface);
   --mat-card-outline-color: var(--mat-sys-color-outline-variant);
+  --mat-card-outline-width: 1px;
 }
 
 .mat-card--explicit-color {
   --mat-card-container-color: var(--mat-accent-container-color);
   --mat-card-content-color: var(--mat-on-accent-container-color);
+  --mat-card-subhead-color: var(--mat-on-accent-container-color);
+}
+
+.mat-card > :deep(.mat-card-headline) {
+  margin-block-start: 16px;
+  margin-inline: 16px;
+}
+
+.mat-card > :deep(.mat-card-subhead) {
+  margin-block-start: 4px;
+  margin-inline: 16px;
+}
+
+.mat-card > :deep(.mat-card-headline:last-child),
+.mat-card > :deep(.mat-card-subhead:last-child) {
+  margin-block-end: 16px;
 }
 
 .mat-card:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):focus-visible) {
@@ -88,5 +123,18 @@ const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => props.
   .mat-card--elevated:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover) {
     --mat-card-elevation: var(--mat-sys-elevation-level2);
   }
+}
+
+.mat-card--filled:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, .mat-action-base--pressed)),
+.mat-card--outlined:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, .mat-action-base--pressed)) {
+  --mat-card-elevation: var(--mat-sys-elevation-level0);
+}
+
+.mat-card--elevated:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, .mat-action-base--pressed)) {
+  --mat-card-elevation: var(--mat-sys-elevation-level1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mat-card { transition-duration: 0s; }
 }
 </style>

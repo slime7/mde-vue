@@ -6,4 +6,8 @@ defineOptions({ name: 'MatCardContent' });
     <slot />
   </div>
 </template>
-<style scoped>.mat-card-content { padding: 16px; }</style>
+<style scoped>
+.mat-card-content { padding: 16px; }
+
+.mat-card-content > :deep(.mat-card-headline + .mat-card-subhead) { margin-block-start: 4px; }
+</style>
