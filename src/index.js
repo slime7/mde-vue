@@ -27,6 +27,8 @@ export { default as MatMenu } from './components/mat-menu/MatMenu.vue';
 export { default as MatMenuGroup } from './components/mat-menu-group/MatMenuGroup.vue';
 export { default as MatMenuItem } from './components/mat-menu/MatMenuItem.vue';
 export { default as MatDialog } from './components/mat-dialog/MatDialog.vue';
+export { default as MatBottomSheet } from './components/mat-bottom-sheet/MatBottomSheet.vue';
+export { default as MatSideSheet } from './components/mat-side-sheet/MatSideSheet.vue';
 export { default as MatHover } from './components/mat-hover/MatHover.vue';
 export { default as MatSpacer } from './components/mat-spacer/MatSpacer.vue';
 export { default as MatLoader } from './components/mat-loader/MatLoader.vue';

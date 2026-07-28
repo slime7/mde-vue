@@ -28,6 +28,10 @@ import MatMenu, { MatMenu as NamedMatMenu } from 'mdu-ui/components/mat-menu';
 import MatMenuGroup, { MatMenuGroup as NamedMatMenuGroup } from 'mdu-ui/components/mat-menu-group';
 import MatMenuItem, { MatMenuItem as NamedMatMenuItem } from 'mdu-ui/components/mat-menu-item';
 import MatDialog, { MatDialog as NamedMatDialog } from 'mdu-ui/components/mat-dialog';
+import MatBottomSheet, {
+  MatBottomSheet as NamedMatBottomSheet,
+} from 'mdu-ui/components/mat-bottom-sheet';
+import MatSideSheet, { MatSideSheet as NamedMatSideSheet } from 'mdu-ui/components/mat-side-sheet';
 import MatHover, { MatHover as NamedMatHover } from 'mdu-ui/components/mat-hover';
 import MatSpacer, { MatSpacer as NamedMatSpacer } from 'mdu-ui/components/mat-spacer';
 import MatLoader, { MatLoader as NamedMatLoader } from 'mdu-ui/components/mat-loader';
@@ -47,6 +51,7 @@ import {
 import {
   createMatUi,
   Intersection as RootIntersection,
+  MatBottomSheet as RootMatBottomSheet,
   MatBtn as RootMatBtn,
   MatBtnGroup as RootMatBtnGroup,
   MatCard as RootMatCard,
@@ -77,6 +82,7 @@ import {
   MatRadio as RootMatRadio,
   MatRadioGroup as RootMatRadioGroup,
   MatRangeSlider as RootMatRangeSlider,
+  MatSideSheet as RootMatSideSheet,
   MatSlider as RootMatSlider,
   MatSnackbar as RootMatSnackbar,
   MatSpacer as RootMatSpacer,
@@ -118,6 +124,8 @@ const globalComponents = [
   ['MatMenuGroup', 'mat-menu-group', RootMatMenuGroup],
   ['MatMenuItem', 'mat-menu-item', RootMatMenuItem],
   ['MatDialog', 'mat-dialog', RootMatDialog],
+  ['MatBottomSheet', 'mat-bottom-sheet', RootMatBottomSheet],
+  ['MatSideSheet', 'mat-side-sheet', RootMatSideSheet],
   ['MatHover', 'mat-hover', RootMatHover],
   ['MatSpacer', 'mat-spacer', RootMatSpacer],
   ['MatLoader', 'mat-loader', RootMatLoader],
@@ -165,6 +173,8 @@ describe('公共组件导出', () => {
     ['MatMenuGroup', RootMatMenuGroup, NamedMatMenuGroup, MatMenuGroup],
     ['MatMenuItem', RootMatMenuItem, NamedMatMenuItem, MatMenuItem],
     ['MatDialog', RootMatDialog, NamedMatDialog, MatDialog],
+    ['MatBottomSheet', RootMatBottomSheet, NamedMatBottomSheet, MatBottomSheet],
+    ['MatSideSheet', RootMatSideSheet, NamedMatSideSheet, MatSideSheet],
     ['MatHover', RootMatHover, NamedMatHover, MatHover],
     ['MatSpacer', RootMatSpacer, NamedMatSpacer, MatSpacer],
     ['MatLoader', RootMatLoader, NamedMatLoader, MatLoader],
@@ -214,6 +224,8 @@ describe('公共组件导出', () => {
     expect(app.component('mat-menu-group')).toBe(RootMatMenuGroup);
     expect(app.component('mat-menu-item')).toBe(RootMatMenuItem);
     expect(app.component('mat-dialog')).toBe(RootMatDialog);
+    expect(app.component('mat-bottom-sheet')).toBe(RootMatBottomSheet);
+    expect(app.component('mat-side-sheet')).toBe(RootMatSideSheet);
     expect(app.component('mat-hover')).toBe(RootMatHover);
     expect(app.directive('intersection')).toBe(RootIntersection);
     expect(app.component('mat-spacer')).toBe(RootMatSpacer);

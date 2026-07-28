@@ -36,7 +36,7 @@
 
 ### 公共入口
 
-`src/index.js` 是完整组件包入口，导出 Icon、Button、FAB、Card、List、Divider、Spacer、Loader、Tooltip、Snackbar、Hover、选择控件、`MatInputBase`、Text field、Textarea、Menu、Dialog 组件族、`Intersection` 指令以及 `createMatUi()` 和 `useMatTheme()`。Card 组件族包括容器、ActionArea、Content、Actions、Headline、Subhead 和 Media。`src/index.d.ts` 是对应的类型入口，复用 Vue SFC 类型并声明全局组件。Dialog 与 Snackbar 命令式函数由独立的 `mdu-ui/functions` 入口导出，不从根入口或对应组件子入口重复导出。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口；`Intersection` 指令通过 `mdu-ui/directives/intersection` 单独入口导出。复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
+`src/index.js` 是完整组件包入口，导出 Icon、Button、FAB、Card、List、Divider、Spacer、Loader、Tooltip、Snackbar、Hover、选择控件、`MatInputBase`、Text field、Textarea、Menu、Dialog、Bottom sheet、Side sheet 组件族、`Intersection` 指令以及 `createMatUi()` 和 `useMatTheme()`。Card 组件族包括容器、ActionArea、Content、Actions、Headline、Subhead 和 Media。`src/index.d.ts` 是对应的类型入口，复用 Vue SFC 类型并声明全局组件。Dialog 与 Snackbar 命令式函数由独立的 `mdu-ui/functions` 入口导出，不从根入口或对应组件子入口重复导出。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口；`Intersection` 指令通过 `mdu-ui/directives/intersection` 单独入口导出。复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -68,6 +68,8 @@ Panes 通过内部 provide/inject 注册直接的 `MatPane` 子项，按受控�
 Text field 与 Textarea 共享 `MatInputBase` 的无边框原生控件基础层，但分别保留 input 和 textarea 原生语义；`MatTextInputBase` 只负责它们的 outlined/filled 外观、标签、前后缀、辅助信息和字符计数。其他输入类型可以直接组合 `MatInputBase`，自行提供容器和交互语义。Menu 组合 `MatSurfaceBase` 与 Popover，通过受控 `modelValue` 管理显示，支持 `activator` Slot 或元素 id 的 CSS anchor 定位和 `[clientX, clientY]` 视口坐标定位，并负责 offset、视口夹紧、多级开关和 menu/menuitem 键盘语义；MenuItem 组合 `MatActionBase`。MatMenuGroup 提供带可选标签的 `role="group"`、独立 level 2 表面和 expressive 间隙分组。Menu 与 List 只共享无语义内容排列和 roving focus 工具，不共享选择模型或根语义。Divider 在 Menu 中切换为 separator。
 
 Dialog 组合 `MatSurfaceBase` 与原生 modal dialog，通过 Teleport 挂载到 body 或指定元素；模板实例可通过 `activator` Slot 渲染唯一触发元素并在关闭后恢复焦点。组件在退出动画期间保留原生模态状态和 DOM；共享堆叠管理器只显示顶层帷幕。`dialog()`、`alert()`、`confirm()` 与 `prompt()` 使用一次性 Vue 宿主复用同一组件，关闭动画完成并清理宿主后再结算 Promise。命令式宿主读取最后安装的插件组件设置与主题控制器；未安装插件时使用默认设置。
+
+Bottom sheet 与 Side sheet 通过内部 `MatSheetBase` 复用受控开关、standard/modal/auto 变体、进入退出阶段、原生 modal dialog、Teleport、焦点恢复、帷幕、Escape、滚动锁、堆叠和触摸拖动关闭。Standard 根使用原生 `aside` 并在声明位置参与父级 flex 布局，不锁滚动或移动焦点；modal 根进入浏览器 top layer。Auto 默认在 840px 以下使用 modal、在更宽视口使用 standard，并在窗口尺寸跨越断点时切换根语义。Bottom sheet 固定在块轴末端、最大宽度 640px并提供可选拖动把手；Side sheet 使用 start/end 逻辑边缘、独立宽度和默认关闭入口。两个公共组件不互相替换。
 
 Snackbar 通过 Teleport 固定在视口底部，使用 `modelValue` 请求展示而不移动焦点。它提供一个可选的文字 action 与可选关闭入口；`actionText` 与 `action` Slot、`closable` 与 `close` Slot 分别遵守 Slot 优先规则，action 触发后关闭当前通知。模块级 FIFO 调度器同时协调所有模板实例和 `snackbar()` / `toast()` 命令式请求；活动项只在退出动画完成后释放下一项，排队模板项可由 `modelValue=false` 或卸载取消。命令式 Snackbar 使用单个可复用 Vue 宿主并注入最后安装插件的组件设置与主题控制器；`onAction` 回调在 action 触发时调用，宿主没有待显示内容时移除，Promise 在退出与清理完成后结算。
 

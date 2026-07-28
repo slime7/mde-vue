@@ -29,6 +29,8 @@
 - [Dialog 对话框](components/dialog.md): mat-dialog 的模态展示、全屏布局、帷幕、动画、滚动区域和 Promise 命令式函数。
 - [List 列表](components/list.md): mat-list、mat-list-group 与 mat-list-item 的 Material 3 Expressive 外观、折叠分组、操作和受控选择。
 - [Toolbar 工具栏](components/toolbar.md): mat-toolbar 的停靠、悬浮、自然布局占位、安全区和覆盖层避让。
+- [Bottom sheet 底部面板](components/bottom-sheet.md): mat-bottom-sheet 的 standard、modal、自适应布局、拖动关闭、帷幕和焦点行为。
+- [Side sheet 侧边面板](components/side-sheet.md): mat-side-sheet 的 standard、modal、自适应布局、start/end 位置、帷幕和焦点行为。
 - [Navigation 导航](components/navigation-rail.md): mat-navigation-rail 的 Expressive collapsed/expanded rail 与 horizontal flexible navigation bar。
 - [Tooltip 文字提示](components/tooltip.md): mat-tooltip 的 Material 3 Plain tooltip、展示元素、固定定位、延迟和无障碍说明。
 - [Divider 分隔线](components/divider.md): mat-divider 的 Material 3 全宽、起始缩进、两侧 inset 与 Card Actions 分隔方式。

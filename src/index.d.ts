@@ -1525,6 +1525,230 @@ export interface MatDialogEmits {
 export type MatDialogComponent = DefineComponent<MatDialogProps, {}, {}, {}, {}, {}, {}, MatDialogEmits>;
 export declare const MatDialog: MatDialogComponent;
 
+export interface MatBottomSheetProps {
+  /**
+  * 受控打开状态，可使用 v-model。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  modelValue?: boolean;
+  /**
+  * 布局变体；auto 在窄于 breakpoint 时使用 modal，否则使用 standard。
+  *
+  * @type {'auto'|'standard'|'modal'}
+  * @default 'auto'
+  */
+  variant?: 'auto'|'standard'|'modal';
+  /**
+  * auto 变体切换为 standard 的最小视口宽度，单位为 CSS px。
+  *
+  * @type {number}
+  * @default 840
+  */
+  breakpoint?: number;
+  /**
+  * 首选宽度；最终仍受 Material 3 的 640px 最大宽度约束。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  width?: number | string | undefined;
+  /**
+  * modal 的 Teleport 目标；字符串按当前 document 的 CSS 选择器解析。
+  *
+  * @type {string | HTMLElement}
+  * @default 'body'
+  */
+  attach?: string | HTMLElement;
+  /**
+  * modal 是否显示顶层帷幕。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  scrim?: boolean;
+  /**
+  * 点击 modal 帷幕时是否请求关闭。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  closeOnBack?: boolean;
+  /**
+  * 是否显示可拖动的顶部把手。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  dragHandle?: boolean;
+  /**
+  * 是否允许从把手向下拖动关闭。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  draggable?: boolean;
+  /**
+  * 是否显示内置关闭按钮。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  closable?: boolean;
+  /**
+  * 内置关闭按钮的非空可访问名称。
+  *
+  * @type {string}
+  * @default '关闭'
+  */
+  closeLabel?: string;
+  /**
+  * 简单标题；设置后优先于 title Slot。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  title?: string | undefined;
+  /**
+  * 简单正文；设置后优先于默认 Slot。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  content?: string | undefined;
+}
+
+export interface MatBottomSheetEmits {
+  /**
+  * 请求关闭时发出 false。
+  */
+  "update:modelValue": (payload: unknown) => unknown;
+  /**
+  * 进入动画完成后触发。
+  */
+  "opened": (payload: unknown) => unknown;
+  /**
+  * 退出动画和 DOM 清理完成后触发。
+  */
+  "closed": (payload: unknown) => unknown;
+}
+
+export type MatBottomSheetComponent = DefineComponent<MatBottomSheetProps, {}, {}, {}, {}, {}, {}, MatBottomSheetEmits>;
+export declare const MatBottomSheet: MatBottomSheetComponent;
+
+export interface MatSideSheetProps {
+  /**
+  * 受控打开状态，可使用 v-model。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  modelValue?: boolean;
+  /**
+  * 布局变体；auto 在窄于 breakpoint 时使用 modal，否则使用 standard。
+  *
+  * @type {'auto'|'standard'|'modal'}
+  * @default 'auto'
+  */
+  variant?: 'auto'|'standard'|'modal';
+  /**
+  * auto 变体切换为 standard 的最小视口宽度，单位为 CSS px。
+  *
+  * @type {number}
+  * @default 840
+  */
+  breakpoint?: number;
+  /**
+  * Sheet 所依附的逻辑边缘。
+  *
+  * @type {'start'|'end'}
+  * @default 'end'
+  */
+  position?: 'start'|'end';
+  /**
+  * 首选宽度；数字按 px 处理，字符串接受 CSS 宽度值。
+  *
+  * @type {number | string}
+  * @default 400
+  */
+  width?: number | string;
+  /**
+  * modal 的 Teleport 目标；字符串按当前 document 的 CSS 选择器解析。
+  *
+  * @type {string | HTMLElement}
+  * @default 'body'
+  */
+  attach?: string | HTMLElement;
+  /**
+  * modal 是否显示顶层帷幕。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  scrim?: boolean;
+  /**
+  * 点击 modal 帷幕时是否请求关闭。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  closeOnBack?: boolean;
+  /**
+  * 是否允许在触摸设备上向依附边缘滑动关闭。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  draggable?: boolean;
+  /**
+  * 是否显示内置关闭按钮。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  closable?: boolean;
+  /**
+  * 内置关闭按钮的非空可访问名称。
+  *
+  * @type {string}
+  * @default '关闭'
+  */
+  closeLabel?: string;
+  /**
+  * 简单标题；设置后优先于 title Slot。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  title?: string | undefined;
+  /**
+  * 简单正文；设置后优先于默认 Slot。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  content?: string | undefined;
+}
+
+export interface MatSideSheetEmits {
+  /**
+  * 请求关闭时发出 false。
+  */
+  "update:modelValue": (payload: unknown) => unknown;
+  /**
+  * 进入动画完成后触发。
+  */
+  "opened": (payload: unknown) => unknown;
+  /**
+  * 退出动画和 DOM 清理完成后触发。
+  */
+  "closed": (payload: unknown) => unknown;
+}
+
+export type MatSideSheetComponent = DefineComponent<MatSideSheetProps, {}, {}, {}, {}, {}, {}, MatSideSheetEmits>;
+export declare const MatSideSheet: MatSideSheetComponent;
+
 export interface MatHoverProps {
   /**
   * 禁止自动 hover 状态变化。
@@ -2136,6 +2360,10 @@ declare module 'vue' {
     'mat-menu-item': typeof MatMenuItem;
     MatDialog: typeof MatDialog;
     'mat-dialog': typeof MatDialog;
+    MatBottomSheet: typeof MatBottomSheet;
+    'mat-bottom-sheet': typeof MatBottomSheet;
+    MatSideSheet: typeof MatSideSheet;
+    'mat-side-sheet': typeof MatSideSheet;
     MatHover: typeof MatHover;
     'mat-hover': typeof MatHover;
     MatSpacer: typeof MatSpacer;

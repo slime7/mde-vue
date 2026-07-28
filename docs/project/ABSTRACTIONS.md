@@ -163,6 +163,14 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 `dialog()`、`alert()`、`confirm()` 和 `prompt()` 统一从 `mdu-ui/functions` 导入，并且只在客户端调用。正常取消分别返回 `undefined`、`undefined`、`false` 和 `null`，不拒绝 Promise；参数、挂载目标或运行环境错误使用 rejected Promise。Promise 只在退出动画、原生关闭和一次性宿主清理全部完成后结算。多个命令式实例可以并行存在；最后安装的 `createMatUi()` 配置为后续命令式实例提供主题和组件设置。
 
+## Bottom sheet 与 Side sheet
+
+`<mat-bottom-sheet>` 与 `<mat-side-sheet>` 分别导出 `MatBottomSheet` 和 `MatSideSheet`，共享内部 `MatSheetBase`，但保持独立公共入口与方向能力。两者都通过 `modelValue` 受控显示，`variant` 接受 `auto`、`standard`、`modal`。Auto 默认以 840px 为断点：窄屏使用 modal，宽屏使用 standard；`breakpoint` 可以覆盖断点。自动模式只切换当前组件的布局，不把 Bottom sheet 与 Side sheet 相互替换。
+
+Standard 使用原生 `aside`，在声明位置参与父级布局，不使用 Teleport、不锁页面滚动且不主动移动焦点；Bottom sheet 适合作为纵向 flex 容器末端区域，Side sheet 适合作为横向 flex 容器的不可压缩侧栏。Modal 使用原生 `<dialog>.showModal()`、Teleport、共享 Dialog 堆叠和滚动锁；只有顶层模态表面显示帷幕颜色，关闭完成后恢复打开前焦点。Escape 始终请求关闭，`closeOnBack` 只控制帷幕点击，`scrim=false` 只隐藏颜色而不恢复背景交互。
+
+Bottom sheet 最大宽度固定为 640px，使用顶部 extra-large 圆角、可选 drag handle 和向下拖动关闭。Side sheet 使用 start/end 逻辑边缘，默认宽度 400px、默认显示关闭入口，并允许触摸用户向依附边缘滑动关闭。标题、正文、header、actions、footer 和 activator 由两者共享；Side sheet 不提供 Bottom sheet 的 drag-handle Slot。
+
 ## Tooltip
 
 `<mat-tooltip>` 的 `content` prop 优先于默认 Slot，`activator` Slot 优先于 `target`；activator 必须只产生一个当前 document 中的 HTMLElement 根节点。选择器 target 初次未解析时不立即警告，并在 Vue 更新或实际展示请求时继续解析；只有展示请求仍无法解析时才警告。没有显式传入 `modelValue` 时，组件只在桌面 hover 或键盘 focus 下自动展示，并在两个状态都离开 1.5 秒后关闭；显式传入时改为完全受控，忽略自动触发和 `openDelay`。

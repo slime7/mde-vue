@@ -94,9 +94,11 @@ export default defineConfig({
             text: '导航与布局',
             collapsed: true,
             items: [
+              { text: 'Bottom sheet 底部面板', link: '/components/bottom-sheet' },
               { text: 'Menu 菜单', link: '/components/menu' },
               { text: 'Navigation 导航', link: '/components/navigation-rail' },
               { text: 'Panes 布局面板', link: '/components/panes' },
+              { text: 'Side sheet 侧边面板', link: '/components/side-sheet' },
               { text: 'Spacer 弹性占位', link: '/components/spacer' },
               { text: 'Toolbar 工具栏', link: '/components/toolbar' },
             ],

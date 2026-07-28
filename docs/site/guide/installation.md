@@ -123,6 +123,8 @@ import { MatInputBase } from 'mdu-ui/components/mat-input-base';
 import { MatMenu } from 'mdu-ui/components/mat-menu';
 import { MatMenuItem } from 'mdu-ui/components/mat-menu-item';
 import { MatDialog } from 'mdu-ui/components/mat-dialog';
+import { MatBottomSheet } from 'mdu-ui/components/mat-bottom-sheet';
+import { MatSideSheet } from 'mdu-ui/components/mat-side-sheet';
 import { MatHover } from 'mdu-ui/components/mat-hover';
 import { MatToolbar } from 'mdu-ui/components/mat-toolbar';
 import { MatSpacer } from 'mdu-ui/components/mat-spacer';
@@ -142,7 +144,7 @@ import {
 } from 'mdu-ui/functions';
 ```
 
-复合组件的父子入口相互独立；按需使用 Card 子组件时，应导入实际使用的 `MatCardHeadline`、`MatCardSubhead`、`MatCardMedia` 等入口；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatCard>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`。命令式 Snackbar 使用 `snackbar()` 或同一函数引用的 `toast()`，只从 `mdu-ui/functions` 导入。
+复合组件的父子入口相互独立；按需使用 Card 子组件时，应导入实际使用的 `MatCardHeadline`、`MatCardSubhead`、`MatCardMedia` 等入口；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatCard>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`。命令式 Snackbar 使用 `snackbar()` 或同一函数引用的 `toast()`，只从 `mdu-ui/functions` 导入。
 
 ## 如何选择
 

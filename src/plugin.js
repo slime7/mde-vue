@@ -28,6 +28,8 @@ import MatMenu from './components/mat-menu/MatMenu.vue';
 import MatMenuGroup from './components/mat-menu-group/MatMenuGroup.vue';
 import MatMenuItem from './components/mat-menu/MatMenuItem.vue';
 import MatDialog from './components/mat-dialog/MatDialog.vue';
+import MatBottomSheet from './components/mat-bottom-sheet/MatBottomSheet.vue';
+import MatSideSheet from './components/mat-side-sheet/MatSideSheet.vue';
 import MatHover from './components/mat-hover/MatHover.vue';
 import MatSpacer from './components/mat-spacer/MatSpacer.vue';
 import MatLoader from './components/mat-loader/MatLoader.vue';
@@ -74,6 +76,8 @@ const GLOBAL_COMPONENTS = [
   ['MatMenuGroup', 'mat-menu-group', MatMenuGroup],
   ['MatMenuItem', 'mat-menu-item', MatMenuItem],
   ['MatDialog', 'mat-dialog', MatDialog],
+  ['MatBottomSheet', 'mat-bottom-sheet', MatBottomSheet],
+  ['MatSideSheet', 'mat-side-sheet', MatSideSheet],
   ['MatHover', 'mat-hover', MatHover],
   ['MatSpacer', 'mat-spacer', MatSpacer],
   ['MatLoader', 'mat-loader', MatLoader],
