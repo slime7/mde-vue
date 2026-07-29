@@ -998,12 +998,27 @@ watch(() => props.closeLabel, (value) => {
   padding: 16px 24px 24px;
   overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--mat-sys-color-outline) transparent;
   font-family: var(--mat-sys-typescale-body-medium-font);
   font-size: var(--mat-sys-typescale-body-medium-size);
   font-weight: var(--mat-sys-typescale-body-medium-weight);
   letter-spacing: var(--mat-sys-typescale-body-medium-tracking);
   line-height: var(--mat-sys-typescale-body-medium-line-height);
+}
+
+.mat-sheet__content::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.mat-sheet__content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mat-sheet__content::-webkit-scrollbar-thumb {
+  background: var(--mat-sys-color-outline);
+  border-radius: var(--mat-sys-shape-corner-full);
 }
 
 .mat-sheet__drag-handle-target + .mat-sheet__content,

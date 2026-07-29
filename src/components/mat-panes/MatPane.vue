@@ -112,6 +112,23 @@ onBeforeUnmount(() => unregister?.());
   min-block-size: 0;
   block-size: 100%;
   overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--mat-sys-color-outline) transparent;
+}
+
+.mat-pane::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.mat-pane::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mat-pane::-webkit-scrollbar-thumb {
+  background: var(--mat-sys-color-outline);
+  border-radius: var(--mat-sys-shape-corner-full);
 }
 
 .mat-pane__separator {

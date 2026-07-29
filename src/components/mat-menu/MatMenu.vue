@@ -761,10 +761,16 @@ watch(() => props.offset, async () => {
   max-block-size: inherit;
   padding: var(--mat-menu-container-padding);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
   background: var(--mat-menu-container-color);
   border-radius: inherit;
   clip-path: inset(0 round var(--mat-sys-shape-corner-large));
   transition: clip-path var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized-decelerate);
+}
+
+.mat-menu__surface::-webkit-scrollbar {
+  display: none;
 }
 
 .mat-menu--closing:not(.mat-menu--grouped) .mat-menu__surface {

@@ -674,13 +674,28 @@ watchEffect(() => {
   inline-size: 100%;
   padding-inline: 24px;
   overflow-y: auto;
-  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--mat-sys-color-outline) transparent;
   font-family: var(--mat-sys-typescale-body-medium-font);
   font-size: var(--mat-sys-typescale-body-medium-size);
   font-weight: var(--mat-sys-typescale-body-medium-weight);
   letter-spacing: var(--mat-sys-typescale-body-medium-tracking);
   line-height: var(--mat-sys-typescale-body-medium-line-height);
   overscroll-behavior: contain;
+}
+
+.mat-dialog__content::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.mat-dialog__content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mat-dialog__content::-webkit-scrollbar-thumb {
+  background: var(--mat-sys-color-outline);
+  border-radius: var(--mat-sys-shape-corner-full);
 }
 
 .mat-dialog:not(.mat-dialog--full-screen) > .mat-dialog__content:first-child {

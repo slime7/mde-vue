@@ -157,7 +157,7 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 ## Dialog
 
-`<mat-dialog>` 通过 `modelValue` 受控显示，使用原生 modal dialog 和 Teleport。`activator` Slot 必须只产生一个当前 document 中的 HTMLElement 根节点，作为触发元素和关闭后的焦点恢复目标。`width` 接受数字 px 值或 CSS 宽度值，只影响基础布局并在小屏按视口限制；`fullScreen` 只接受显式布尔值并忽略 width，不根据视口自动切换；基础和全屏布局都只允许 content 区域滚动，打开期间由共享堆叠管理器锁定页面根滚动。`scrim=false` 只把帷幕变透明，不允许背景接收指针事件；`closeOnBack` 只控制点击帷幕关闭，Escape 始终请求关闭。多个实例只显示顶层帷幕，最后一层关闭后才恢复页面滚动。
+`<mat-dialog>` 通过 `modelValue` 受控显示，使用原生 modal dialog 和 Teleport。`activator` Slot 必须只产生一个当前 document 中的 HTMLElement 根节点，作为触发元素和关闭后的焦点恢复目标。`width` 接受数字 px 值或 CSS 宽度值，只影响基础布局并在小屏按视口限制；`fullScreen` 只接受显式布尔值并忽略 width，不根据视口自动切换；基础和全屏布局都只允许 content 区域滚动，打开期间由共享堆叠管理器锁定页面根滚动。页面原本存在占据布局宽度的经典滚动条时，锁定期间临时使用稳定滚动条槽位保持页面宽度；没有经典滚动条时不额外预留空间。`scrim=false` 只把帷幕变透明，不允许背景接收指针事件；`closeOnBack` 只控制点击帷幕关闭，Escape 始终请求关闭。多个实例只显示顶层帷幕，最后一层关闭后才恢复页面滚动和根元素原有内联样式。
 
 标题、正文和图标都遵循 prop 优先于同名 Slot；无标题时必须由使用者提供 `aria-label` 或 `aria-labelledby`。关闭期间 DOM 保留到退出动画完成，随后触发 `closed` 并恢复原焦点。
 
@@ -167,7 +167,7 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 `<mat-bottom-sheet>` 与 `<mat-side-sheet>` 分别导出 `MatBottomSheet` 和 `MatSideSheet`，共享内部 `MatSheetBase`，但保持独立公共入口与方向能力。两者都通过 `modelValue` 受控显示，`variant` 接受 `auto`、`standard`、`modal`。Auto 默认以 840px 为断点：窄屏使用 modal，宽屏使用 standard；`breakpoint` 可以覆盖断点。自动模式只切换当前组件的布局，不把 Bottom sheet 与 Side sheet 相互替换。
 
-Standard 使用原生 `aside`，在声明位置参与父级布局，不使用 Teleport、不锁页面滚动且不主动移动焦点；Bottom sheet 适合作为纵向 flex 容器末端区域，Side sheet 适合作为横向 flex 容器的不可压缩侧栏。Modal 使用原生 `<dialog>.showModal()`、Teleport、共享 Dialog 堆叠和滚动锁；只有顶层模态表面显示帷幕颜色，关闭完成后恢复打开前焦点。Escape 始终请求关闭，`closeOnBack` 只控制帷幕点击，`scrim=false` 只隐藏颜色而不恢复背景交互。
+Standard 使用原生 `aside`，在声明位置参与父级布局，不使用 Teleport、不锁页面滚动且不主动移动焦点；Bottom sheet 适合作为纵向 flex 容器末端区域，Side sheet 适合作为横向 flex 容器的不可压缩侧栏。Modal 使用原生 `<dialog>.showModal()`、Teleport、共享 Dialog 堆叠和滚动锁；页面存在经典滚动条时临时保留其槽位，避免锁定根滚动造成页面横向位移，没有经典滚动条时不预留额外空间。只有顶层模态表面显示帷幕颜色，关闭完成后恢复打开前焦点。Escape 始终请求关闭，`closeOnBack` 只控制帷幕点击，`scrim=false` 只隐藏颜色而不恢复背景交互。
 
 Bottom sheet 最大宽度固定为 640px，使用顶部 extra-large 圆角和可选 drag handle。Modal 默认处于不超过半屏的预览高度，`expanded` 表达展开预设高度；预览状态向上拖动或通过键盘选择把手请求展开，展开状态向下拖动请求折叠，展开的 standard 选择把手也请求折叠，展开的 modal 则请求关闭；预览状态向下拖动请求关闭。拖动时面板高度或位移连续跟随指针，关闭动画从释放位置继续。展开的 modal 始终提供内置关闭按钮。Side sheet 使用 start/end 逻辑边缘，默认及最大宽度均为 400px、默认显示关闭入口，并允许触摸用户向依附边缘滑动关闭。标题、正文、header、actions、footer 和 activator 由两者共享；Side sheet 不提供 Bottom sheet 的 drag-handle Slot。
 

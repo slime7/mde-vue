@@ -9,16 +9,16 @@ function unlockPageScroll() {
   }
 
   const {
-    lockedPaddingInlineEnd, overflow, paddingInlineEnd, root,
+    lockedScrollbarGutter, overflow, root, scrollbarGutter,
   } = scrollLockState;
 
   if (root.style.overflow === 'hidden') {
     root.style.overflow = overflow;
   }
 
-  if (lockedPaddingInlineEnd !== null
-    && root.style.paddingInlineEnd === lockedPaddingInlineEnd) {
-    root.style.paddingInlineEnd = paddingInlineEnd;
+  if (lockedScrollbarGutter !== null
+    && root.style.scrollbarGutter === lockedScrollbarGutter) {
+    root.style.scrollbarGutter = scrollbarGutter;
   }
   scrollLockState = null;
 }
@@ -32,21 +32,22 @@ function lockPageScroll() {
   const scrollbarWidth = root.clientWidth > 0
     ? Math.max(0, window.innerWidth - root.clientWidth)
     : 0;
-  const computedPadding = Number.parseFloat(getComputedStyle(root).paddingInlineEnd) || 0;
+  const computedScrollbarGutter = getComputedStyle(root).scrollbarGutter;
+  const shouldStabilizeScrollbar = scrollbarWidth > 0
+    && !computedScrollbarGutter.includes('stable');
 
   scrollLockState = {
-    lockedPaddingInlineEnd: scrollbarWidth > 0
-      ? `${computedPadding + scrollbarWidth}px`
-      : null,
+    lockedScrollbarGutter: shouldStabilizeScrollbar ? 'stable' : null,
     overflow: root.style.overflow,
-    paddingInlineEnd: root.style.paddingInlineEnd,
     root,
+    scrollbarGutter: root.style.scrollbarGutter,
   };
-  root.style.overflow = 'hidden';
 
-  if (scrollbarWidth > 0) {
-    root.style.paddingInlineEnd = scrollLockState.lockedPaddingInlineEnd;
+  if (shouldStabilizeScrollbar) {
+    root.style.scrollbarGutter = scrollLockState.lockedScrollbarGutter;
   }
+
+  root.style.overflow = 'hidden';
 }
 
 /**

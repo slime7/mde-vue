@@ -676,6 +676,23 @@ function warnForInvalidAttach() {
   max-block-size: inherit;
   padding-block: var(--mat-toolbar-container-padding);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--mat-sys-color-outline) transparent;
+}
+
+.mat-toolbar--vertical .mat-toolbar__surface::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.mat-toolbar--vertical .mat-toolbar__surface::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mat-toolbar--vertical .mat-toolbar__surface::-webkit-scrollbar-thumb {
+  background: var(--mat-sys-color-outline);
+  border-radius: var(--mat-sys-shape-corner-full);
 }
 
 .mat-toolbar--vertical .mat-toolbar__content {

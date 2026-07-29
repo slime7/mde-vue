@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import {
-  beforeAll, beforeEach, describe, expect, it, vi,
+  afterEach, beforeAll, beforeEach, describe, expect, it, vi,
 } from 'vitest';
 import { h, nextTick } from 'vue';
 import MatDialog from '../src/components/mat-dialog/MatDialog.vue';
@@ -26,9 +26,17 @@ async function settleRender() {
   await nextTick();
 }
 
+function mockRootScrollbarWidth(width) {
+  vi.spyOn(document.documentElement, 'clientWidth', 'get').mockReturnValue(1000);
+  vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(1000 + width);
+}
+
 describe('MatDialog', () => {
   beforeEach(() => {
     vi.useFakeTimers();
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('渲染 activator Slot，并在关闭完成后恢复触发器焦点', async () => {
@@ -140,8 +148,10 @@ describe('MatDialog', () => {
   });
 
   it('Dialog 堆叠期间锁定页面滚动，并在最后一层关闭后恢复根样式', async () => {
+    mockRootScrollbarWidth(16);
     document.documentElement.style.overflow = 'scroll';
     document.documentElement.style.paddingInlineEnd = '7px';
+    document.documentElement.style.scrollbarGutter = 'auto';
     const first = mount(MatDialog, {
       props: {
         modelValue: true,
@@ -158,17 +168,42 @@ describe('MatDialog', () => {
     await settleRender();
 
     expect(document.documentElement.style.overflow).toBe('hidden');
+    expect(document.documentElement.style.paddingInlineEnd).toBe('7px');
+    expect(document.documentElement.style.scrollbarGutter).toBe('stable');
 
     await second.setProps({ modelValue: false });
     await vi.advanceTimersByTimeAsync(200);
 
     expect(document.documentElement.style.overflow).toBe('hidden');
+    expect(document.documentElement.style.scrollbarGutter).toBe('stable');
 
     await first.setProps({ modelValue: false });
     await vi.advanceTimersByTimeAsync(200);
 
     expect(document.documentElement.style.overflow).toBe('scroll');
     expect(document.documentElement.style.paddingInlineEnd).toBe('7px');
+    expect(document.documentElement.style.scrollbarGutter).toBe('auto');
+  });
+
+  it('页面没有经典滚动条时不预留根滚动条槽位', async () => {
+    mockRootScrollbarWidth(0);
+    document.documentElement.style.scrollbarGutter = 'auto';
+    const wrapper = mount(MatDialog, {
+      props: {
+        modelValue: true,
+        title: '无页面滚动条',
+      },
+    });
+
+    await settleRender();
+
+    expect(document.documentElement.style.overflow).toBe('hidden');
+    expect(document.documentElement.style.scrollbarGutter).toBe('auto');
+
+    await wrapper.setProps({ modelValue: false });
+    await vi.advanceTimersByTimeAsync(200);
+
+    expect(document.documentElement.style.scrollbarGutter).toBe('auto');
   });
 
   it('支持 attach，并将未消费属性透传给原生 dialog', async () => {
