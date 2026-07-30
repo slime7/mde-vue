@@ -2093,7 +2093,7 @@ export interface MatToolbarProps {
   */
   vibrant?: boolean;
   /**
-  * 是否将 Toolbar Teleport 到 attach。
+  * 是否将 Toolbar Teleport 到 attach 并固定到视口。
   *
   * @type {boolean}
   * @default false

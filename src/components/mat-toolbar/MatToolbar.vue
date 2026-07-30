@@ -140,7 +140,7 @@ const props = defineProps({
     default: false,
   },
   /**
-   * 是否将 Toolbar Teleport 到 attach。
+   * 是否将 Toolbar Teleport 到 attach 并固定到视口。
    *
    * @type {boolean}
    * @default false
@@ -273,6 +273,7 @@ const toolbarClass = computed(() => [
   `mat-toolbar--${normalizedVariant.value}`,
   `mat-toolbar--position-${normalizedPosition.value}`,
   {
+    'mat-toolbar--app': props.app,
     'mat-toolbar--vertical': isVertical.value,
     'mat-toolbar--vibrant': props.vibrant,
   },
@@ -548,6 +549,10 @@ function warnForInvalidAttach() {
   pointer-events: none;
 }
 
+.mat-toolbar--app {
+  position: fixed;
+}
+
 .mat-toolbar--closing .mat-toolbar__surface {
   pointer-events: none;
 }
@@ -613,6 +618,11 @@ function warnForInvalidAttach() {
   translate: var(--mat-toolbar-position-translate-x) 0;
 }
 
+.mat-toolbar--app.mat-toolbar--floating-top,
+.mat-toolbar--app.mat-toolbar--floating-bottom {
+  max-inline-size: calc(100dvi - (var(--mat-toolbar-floating-edge-space) * 2));
+}
+
 .mat-toolbar--floating-top {
   inset-block-start: var(--mat-toolbar-floating-edge-space);
 }
@@ -654,6 +664,10 @@ function warnForInvalidAttach() {
   align-items: center;
   max-block-size: calc(100% - (var(--mat-toolbar-vertical-edge-space) * 2));
   translate: 0 var(--mat-toolbar-position-translate-y);
+}
+
+.mat-toolbar--app.mat-toolbar--vertical {
+  max-block-size: calc(100dvb - (var(--mat-toolbar-vertical-edge-space) * 2));
 }
 
 .mat-toolbar--vertical.mat-toolbar--position-start {

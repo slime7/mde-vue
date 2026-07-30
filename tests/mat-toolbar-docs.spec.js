@@ -26,6 +26,7 @@ describe('Toolbar 文档', () => {
     expect(page).toContain('`position`');
     expect(page).toContain('floating-top');
     expect(page).toContain('是否将 Toolbar Teleport 到 `attach`');
+    expect(page).toContain('固定到视口');
     expect(page).toContain('| `fab` |');
     ['## 组件简介', '## 示例', '## API', '## 事件', '## Slots'].forEach((heading) => {
       expect(page).toContain(heading);
