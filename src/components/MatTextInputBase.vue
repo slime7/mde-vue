@@ -79,6 +79,10 @@ const props = defineProps({
     type: Number,
     default: undefined,
   },
+  resizeMinRows: {
+    type: Number,
+    default: 1,
+  },
   autoGrow: {
     type: Boolean,
     default: false,
@@ -154,6 +158,13 @@ function syncTextareaSize() {
 
   textarea.style.resize = props.noResize ? 'none' : '';
 
+  const styles = getComputedStyle(textarea);
+  const lineHeight = parseCssLength(styles.lineHeight) || 24;
+  const paddingBlock = parseCssLength(styles.paddingBlockStart || styles.paddingTop)
+    + parseCssLength(styles.paddingBlockEnd || styles.paddingBottom);
+
+  textarea.style.minBlockSize = `${props.resizeMinRows * lineHeight + paddingBlock}px`;
+
   if (!props.autoGrow) {
     textarea.style.blockSize = '';
     textarea.style.height = '';
@@ -161,10 +172,6 @@ function syncTextareaSize() {
     return;
   }
 
-  const styles = getComputedStyle(textarea);
-  const lineHeight = parseCssLength(styles.lineHeight) || 24;
-  const paddingBlock = parseCssLength(styles.paddingBlockStart || styles.paddingTop)
-    + parseCssLength(styles.paddingBlockEnd || styles.paddingBottom);
   const minimumRows = props.rows ?? 1;
   const maximumRows = props.maxRows === undefined
     ? Number.POSITIVE_INFINITY
@@ -208,7 +215,14 @@ watch(() => props.modelValue, (value) => {
   scheduleTextareaSize();
 });
 watch(
-  () => [props.autoGrow, props.maxRows, props.noResize, props.rows],
+  () => [
+    props.autoGrow,
+    props.label,
+    props.maxRows,
+    props.noResize,
+    props.resizeMinRows,
+    props.rows,
+  ],
   scheduleTextareaSize,
 );
 

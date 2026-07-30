@@ -387,7 +387,7 @@ order: 90
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `rows` | 正整数 | `4` | textarea 的初始可见行数；启用 autoGrow 后也是自动增高的最小行数 |
+| `rows` | 正整数 | `4` | textarea 的初始可见行数；启用 autoGrow 后也是自动增高的最小行数；显式设置时同时限制手动调整的最小行数 |
 | `autoGrow` | `boolean` | `false` | 根据内容自动增高，并在内容减少时缩回到 rows 指定的最小高度 |
 | `maxRows` | 正整数 | 未设置 | autoGrow 的最大行数；小于 rows 时按 rows 处理，达到上限后内容在控件内滚动 |
 | `noResize` | `boolean` | `false` | 隐藏浏览器尺寸调整手柄，禁止使用者拖动改变 textarea 大小 |
@@ -419,7 +419,7 @@ order: 90
 - error 状态把 `aria-invalid` 设为 true，并通过 `aria-describedby` 关联错误文字和字符计数区域。
 - 调用方已有的 `aria-describedby` 会与组件说明区域合并。
 - filled 和 outlined 在同一区域内应保持一致，不应在同一个表单内交替使用。
-- textarea 默认允许纵向调整尺寸，初始内容区高度严格按 `rows` 与正文行高计算；`noResize` 可以关闭手动调整。
+- textarea 默认允许纵向调整尺寸，初始内容区高度严格按 `rows` 与正文行高计算；未显式设置 `rows` 时最小可调整到一行，显式设置后不能低于该行数；`noResize` 可以关闭手动调整。
 - `autoGrow` 以 `rows` 为下限重新测量内容高度；`maxRows` 未设置时不限制增长，设置后在达到上限时改为内部滚动。自动增高不会隐式关闭手动调整，下一次内容或宽度变化会重新按内容计算高度。
 - Text field 的 multi-line 形态来自 Material 3；`autoGrow`、`maxRows` 和 `noResize` 是 mdu-ui 扩展 API。
 - 减少动态效果偏好下关闭标签、描边与活动指示器的非必要过渡。
