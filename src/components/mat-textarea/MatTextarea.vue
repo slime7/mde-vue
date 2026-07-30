@@ -10,6 +10,39 @@ defineOptions({
 const props = defineProps({
   ...TEXT_INPUT_PROPS,
   /**
+   * 根据内容自动调整 textarea 高度。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  autoGrow: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * 自动增高的最大行数；小于 rows 时按 rows 处理。
+   *
+   * @type {number | undefined}
+   * @default undefined
+   */
+  maxRows: {
+    type: Number,
+    default: undefined,
+    validator(value) {
+      return Number.isInteger(value) && value > 0;
+    },
+  },
+  /**
+   * 禁止使用浏览器手柄调整 textarea 大小。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  noResize: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * textarea 的初始可见行数，必须为正整数。
    *
    * @type {number}

@@ -7,6 +7,23 @@ import MatTextField from '../src/components/mat-text-field/MatTextField.vue';
 import MatTextarea from '../src/components/mat-textarea/MatTextarea.vue';
 import MAT_UI_KEY from '../src/mat-ui-context';
 
+function mockTextareaLayout(initialScrollHeight) {
+  let scrollHeight = initialScrollHeight;
+
+  vi.spyOn(HTMLTextAreaElement.prototype, 'scrollHeight', 'get').mockImplementation(() => (
+    scrollHeight
+  ));
+  vi.spyOn(globalThis, 'getComputedStyle').mockReturnValue({
+    lineHeight: '24px',
+    paddingBlockEnd: '8px',
+    paddingBlockStart: '0px',
+  });
+
+  return (value) => {
+    scrollHeight = value;
+  };
+}
+
 describe('文本输入组件', () => {
   it('MatInputBase 渲染无边框原生 input，透传属性并请求模型更新', async () => {
     const change = vi.fn();
@@ -261,6 +278,138 @@ describe('文本输入组件', () => {
     });
 
     expect(wrapper.get('textarea').attributes('rows')).toBe('2');
+  });
+
+  it('MatTextarea 自动增高时以 rows 为下限并随输入增长和收缩', async () => {
+    const setScrollHeight = mockTextareaLayout(40);
+    const wrapper = mount(MatTextarea, {
+      props: {
+        autoGrow: true,
+        modelValue: '',
+        rows: 2,
+      },
+    });
+    const textarea = wrapper.get('textarea');
+
+    await wrapper.vm.$nextTick();
+
+    expect(textarea.element.style.blockSize).toBe('56px');
+    expect(textarea.element.style.overflowY).toBe('hidden');
+
+    setScrollHeight(104);
+    await textarea.setValue('第一行\n第二行\n第三行\n第四行');
+    await wrapper.vm.$nextTick();
+
+    expect(textarea.element.style.blockSize).toBe('104px');
+
+    setScrollHeight(32);
+    await textarea.setValue('缩短');
+    await wrapper.vm.$nextTick();
+
+    expect(textarea.element.style.blockSize).toBe('56px');
+  });
+
+  it('MatTextarea 响应外部模型更新并在 maxRows 后启用内部滚动', async () => {
+    const setScrollHeight = mockTextareaLayout(80);
+    const wrapper = mount(MatTextarea, {
+      props: {
+        autoGrow: true,
+        maxRows: 3,
+        modelValue: '三行内容',
+        rows: 2,
+      },
+    });
+    const textarea = wrapper.get('textarea');
+
+    await wrapper.vm.$nextTick();
+
+    expect(textarea.element.style.blockSize).toBe('80px');
+    expect(textarea.element.style.overflowY).toBe('hidden');
+
+    setScrollHeight(128);
+    await wrapper.setProps({ modelValue: '超过三行的外部更新内容' });
+    await wrapper.vm.$nextTick();
+
+    expect(textarea.element.style.blockSize).toBe('80px');
+    expect(textarea.element.style.overflowY).toBe('auto');
+  });
+
+  it('MatTextarea 将小于 rows 的 maxRows 按 rows 处理', async () => {
+    mockTextareaLayout(200);
+    const wrapper = mount(MatTextarea, {
+      props: {
+        autoGrow: true,
+        maxRows: 2,
+        rows: 4,
+      },
+    });
+    const textarea = wrapper.get('textarea');
+
+    await wrapper.vm.$nextTick();
+
+    expect(textarea.element.style.blockSize).toBe('104px');
+    expect(textarea.element.style.overflowY).toBe('auto');
+  });
+
+  it('MatTextarea 动态切换自动增高并在宽度变化后重新测量', async () => {
+    const setScrollHeight = mockTextareaLayout(104);
+    let resizeCallback;
+    const disconnect = vi.fn();
+    const observe = vi.fn();
+
+    vi.stubGlobal('ResizeObserver', class {
+      constructor(callback) {
+        resizeCallback = callback;
+      }
+
+      observe = observe;
+
+      disconnect = disconnect;
+    });
+
+    const wrapper = mount(MatTextarea, {
+      props: {
+        autoGrow: false,
+        rows: 2,
+      },
+    });
+    const textarea = wrapper.get('textarea');
+
+    expect(observe).toHaveBeenCalledWith(textarea.element);
+    expect(textarea.element.style.blockSize).toBe('');
+
+    await wrapper.setProps({ autoGrow: true });
+    await wrapper.vm.$nextTick();
+
+    expect(textarea.element.style.blockSize).toBe('104px');
+
+    setScrollHeight(200);
+    await wrapper.setProps({ maxRows: 3, rows: 4 });
+    await wrapper.vm.$nextTick();
+
+    expect(textarea.element.style.blockSize).toBe('104px');
+    expect(textarea.element.style.overflowY).toBe('auto');
+
+    await wrapper.setProps({ maxRows: 6 });
+    await wrapper.vm.$nextTick();
+
+    expect(textarea.element.style.blockSize).toBe('152px');
+
+    setScrollHeight(152);
+    resizeCallback([{ contentRect: { width: 240 } }]);
+    await wrapper.vm.$nextTick();
+
+    expect(textarea.element.style.blockSize).toBe('152px');
+
+    await wrapper.setProps({ autoGrow: false });
+    await wrapper.vm.$nextTick();
+
+    expect(textarea.element.style.blockSize).toBe('');
+    expect(textarea.element.style.overflowY).toBe('');
+
+    wrapper.unmount();
+
+    expect(disconnect).toHaveBeenCalledOnce();
   });
 
   it('用统一 MatIcon 承载前后图标 Slot', () => {

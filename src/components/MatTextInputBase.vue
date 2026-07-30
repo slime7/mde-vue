@@ -1,6 +1,6 @@
 <script setup>
 import {
-  computed, ref, useAttrs, useId, watch,
+  computed, nextTick, onBeforeUnmount, onMounted, ref, useAttrs, useId, watch,
 } from 'vue';
 import MatInputBase from './MatInputBase.vue';
 import MatIcon from './mat-icon/MatIcon.vue';
@@ -79,6 +79,18 @@ const props = defineProps({
     type: Number,
     default: undefined,
   },
+  autoGrow: {
+    type: Boolean,
+    default: false,
+  },
+  maxRows: {
+    type: Number,
+    default: undefined,
+  },
+  noResize: {
+    type: Boolean,
+    default: false,
+  },
 });
 const emit = defineEmits({
   'update:modelValue': (payload) => typeof payload === 'string',
@@ -122,9 +134,95 @@ const NON_NATIVE_ATTRIBUTES = new Set([
 const nativeAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([name]) => !NON_NATIVE_ATTRIBUTES.has(name)),
 ));
+let resizeObserver;
+let observedInlineSize;
+
+/**
+ * @param {string} value
+ * @returns {number}
+ */
+function parseCssLength(value) {
+  return Number.parseFloat(value) || 0;
+}
+
+function syncTextareaSize() {
+  const textarea = controlElement.value?.getInput();
+
+  if (!(textarea instanceof HTMLTextAreaElement)) {
+    return;
+  }
+
+  textarea.style.resize = props.noResize ? 'none' : '';
+
+  if (!props.autoGrow) {
+    textarea.style.blockSize = '';
+    textarea.style.overflowY = '';
+    return;
+  }
+
+  const styles = getComputedStyle(textarea);
+  const lineHeight = parseCssLength(styles.lineHeight) || 24;
+  const paddingBlock = parseCssLength(styles.paddingBlockStart || styles.paddingTop)
+    + parseCssLength(styles.paddingBlockEnd || styles.paddingBottom);
+  const minimumRows = props.rows ?? 1;
+  const maximumRows = props.maxRows === undefined
+    ? Number.POSITIVE_INFINITY
+    : Math.max(minimumRows, props.maxRows);
+  const minimumBlockSize = minimumRows * lineHeight + paddingBlock;
+  const maximumBlockSize = maximumRows * lineHeight + paddingBlock;
+
+  textarea.style.blockSize = 'auto';
+
+  const contentBlockSize = textarea.scrollHeight;
+  const blockSize = Math.max(
+    minimumBlockSize,
+    Math.min(contentBlockSize, maximumBlockSize),
+  );
+
+  textarea.style.blockSize = `${blockSize}px`;
+  textarea.style.overflowY = contentBlockSize > maximumBlockSize ? 'auto' : 'hidden';
+}
+
+function scheduleTextareaSize() {
+  nextTick(syncTextareaSize);
+}
+
+/**
+ * @param {ResizeObserverEntry[]} entries
+ */
+function handleTextareaResize(entries) {
+  const inlineSize = entries[0]?.contentRect.width;
+
+  if (inlineSize === observedInlineSize) {
+    return;
+  }
+
+  observedInlineSize = inlineSize;
+  scheduleTextareaSize();
+}
 
 watch(() => props.modelValue, (value) => {
   inputValue.value = value;
+  scheduleTextareaSize();
+});
+watch(
+  () => [props.autoGrow, props.maxRows, props.noResize, props.rows],
+  scheduleTextareaSize,
+);
+
+onMounted(() => {
+  syncTextareaSize();
+
+  if (typeof globalThis.ResizeObserver !== 'function') {
+    return;
+  }
+
+  resizeObserver = new globalThis.ResizeObserver(handleTextareaResize);
+  resizeObserver.observe(controlElement.value.getInput());
+});
+
+onBeforeUnmount(() => {
+  resizeObserver?.disconnect();
 });
 
 function focusControl() {
@@ -137,6 +235,7 @@ function focusControl() {
 function handleModelValue(value) {
   inputValue.value = value;
   emit('update:modelValue', value);
+  scheduleTextareaSize();
 }
 </script>
 
