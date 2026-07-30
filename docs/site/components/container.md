@@ -9,7 +9,7 @@ order: 116
 
 ## 组件简介
 
-`<mat-container>` 的组件导出名是 `MatContainer`。它的外层始终铺满父容器，并根据浏览器视口在窄于 600px 时使用 16px、其他宽度使用 24px 的水平内边距。默认 Slot 位于正文区域；正文默认最大宽度为 1040px，空间更宽时自动居中。
+`<mat-container>` 的组件导出名是 `MatContainer`。它的外层始终铺满父容器，并根据浏览器视口在窄于 600px 时使用 16px、其他宽度使用 24px 的水平内边距。默认 Slot 位于正文区域；正文默认最大宽度为 1040px，空间更宽时自动居中。外层具有确定高度时，正文区域同步铺满高度；未确定高度时仍由内容自然撑开。
 
 ## 示例
 
@@ -51,6 +51,26 @@ order: 116
   </DocsPreview>
 </ClientOnly>
 
+### 确定高度布局
+
+当 Container 作为 Flex 或 Grid 布局中的弹性区域并获得确定高度时，正文区域会同步铺满高度。Slot 内的内容可以直接建立纵向 Flex 高度链，将剩余空间交给局部滚动区域，并让底部区域保持可见。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/container/ContainerHeightExample.vue#template [template]
+
+<<< @/examples/container/ContainerHeightExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Container 确定高度布局预览" stacked>
+    <ContainerHeightExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -74,4 +94,5 @@ order: 116
 <script setup>
 import ContainerDefaultExample from '../examples/container/ContainerDefaultExample.vue';
 import ContainerFluidExample from '../examples/container/ContainerFluidExample.vue';
+import ContainerHeightExample from '../examples/container/ContainerHeightExample.vue';
 </script>

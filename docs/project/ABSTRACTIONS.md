@@ -85,7 +85,7 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 
 - Vue 组件导出使用 PascalCase，例如 `MatBtn`；安装 `createMatUi()` 后，模板可使用 `mat-*`（如 `<mat-btn>`）或对应 PascalCase（如 `<MatBtn>`）。
 - `<mat-spacer>` 是无内容、无交互且固定从无障碍树隐藏的 flex 子元素，只负责增长占据父容器主轴剩余空间，不定义父级方向、对齐或间距。
-- `<mat-container>` 的外层始终铺满父容器，使用视口宽度在 `<600px` 时提供 16px、其他宽度提供 24px 的水平内边距。默认 Slot 位于内部正文层；正文层默认以 1040px 最大宽度和 `margin-inline: auto` 居中，`fluid=true` 只取消该最大宽度，不改变外层边距或尺寸。
+- `<mat-container>` 的外层始终铺满父容器，使用视口宽度在 `<600px` 时提供 16px、其他宽度提供 24px 的水平内边距。默认 Slot 位于内部正文层；正文层默认以 1040px 最大宽度和 `margin-inline: auto` 居中，在外层具有确定块轴尺寸时同步铺满高度，外层尺寸未确定时仍由内容自然撑开。`fluid=true` 只取消正文层的最大宽度，不改变外层边距或尺寸。
 - 完整包入口和单组件入口必须导出同一个组件对象与同一套行为。
 - 原生元素语义优先于自造交互协议；`<mat-btn>` 渲染原生 `<button>`。
 - 未被组件消费的原生属性和事件应继续传递到根原生元素。

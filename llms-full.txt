@@ -12996,7 +12996,7 @@ import SpacerFlexExample from '../examples/spacer/SpacerFlexExample.vue';
 
 ## 组件简介
 
-`<mat-container>` 的组件导出名是 `MatContainer`。它的外层始终铺满父容器，并根据浏览器视口在窄于 600px 时使用 16px、其他宽度使用 24px 的水平内边距。默认 Slot 位于正文区域；正文默认最大宽度为 1040px，空间更宽时自动居中。
+`<mat-container>` 的组件导出名是 `MatContainer`。它的外层始终铺满父容器，并根据浏览器视口在窄于 600px 时使用 16px、其他宽度使用 24px 的水平内边距。默认 Slot 位于正文区域；正文默认最大宽度为 1040px，空间更宽时自动居中。外层具有确定高度时，正文区域同步铺满高度；未确定高度时仍由内容自然撑开。
 
 ## 示例
 
@@ -13103,6 +13103,115 @@ import SpacerFlexExample from '../examples/spacer/SpacerFlexExample.vue';
   </DocsPreview>
 </ClientOnly>
 
+### 确定高度布局
+
+当 Container 作为 Flex 或 Grid 布局中的弹性区域并获得确定高度时，正文区域会同步铺满高度。Slot 内的内容可以直接建立纵向 Flex 高度链，将剩余空间交给局部滚动区域，并让底部区域保持可见。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="container-height-example">
+    <header class="container-height-example__header">
+      页面工具栏
+    </header>
+
+    <mat-container class="container-height-example__container">
+      <section class="container-height-example__content">
+        <div class="container-height-example__workspace">
+          <h3>弹性工作区</h3>
+
+          <p>此区域占据剩余高度，并在内容溢出时独立滚动。</p>
+
+          <ul>
+            <li>工作区内容 1</li>
+            <li>工作区内容 2</li>
+            <li>工作区内容 3</li>
+            <li>工作区内容 4</li>
+            <li>工作区内容 5</li>
+            <li>工作区内容 6</li>
+          </ul>
+        </div>
+
+        <footer class="container-height-example__footer">
+          底部固定区域
+        </footer>
+      </section>
+    </mat-container>
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.container-height-example {
+  display: flex;
+  flex-direction: column;
+  block-size: 320px;
+  overflow: hidden;
+  background: var(--mat-sys-color-surface-container-low);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.container-height-example__header {
+  flex-shrink: 0;
+  padding: 16px 24px;
+  color: var(--mat-sys-color-on-primary-container);
+  background: var(--mat-sys-color-primary-container);
+  font: var(--mat-sys-typescale-title-medium);
+}
+
+.container-height-example__container {
+  flex: 1;
+  min-block-size: 0;
+}
+
+.container-height-example__content {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+  min-block-size: 0;
+  color: var(--mat-sys-color-on-surface);
+  background: var(--mat-sys-color-surface-container-highest);
+}
+
+.container-height-example__workspace {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-block-size: 0;
+  padding: 20px 24px;
+  overflow: auto;
+}
+
+.container-height-example__workspace h3,
+.container-height-example__workspace p {
+  margin: 0;
+}
+
+.container-height-example__workspace ul {
+  margin: 0;
+  padding-inline-start: 24px;
+}
+
+.container-height-example__footer {
+  flex-shrink: 0;
+  padding: 12px 24px;
+  color: var(--mat-sys-color-on-secondary-container);
+  background: var(--mat-sys-color-secondary-container);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Container 确定高度布局预览" stacked>
+    <ContainerHeightExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -13126,6 +13235,7 @@ import SpacerFlexExample from '../examples/spacer/SpacerFlexExample.vue';
 <script setup>
 import ContainerDefaultExample from '../examples/container/ContainerDefaultExample.vue';
 import ContainerFluidExample from '../examples/container/ContainerFluidExample.vue';
+import ContainerHeightExample from '../examples/container/ContainerHeightExample.vue';
 </script>
 
 # Panes 布局面板

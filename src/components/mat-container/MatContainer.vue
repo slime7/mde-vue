@@ -39,6 +39,8 @@ const props = defineProps({
 
 .mat-container__content {
   inline-size: 100%;
+  block-size: 100%;
+  min-block-size: 0;
   max-inline-size: 1040px;
   margin-inline: auto;
 }
