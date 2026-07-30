@@ -155,6 +155,7 @@ import { MatDialog } from 'mdu-ui/components/mat-dialog';
 import { MatBottomSheet } from 'mdu-ui/components/mat-bottom-sheet';
 import { MatSideSheet } from 'mdu-ui/components/mat-side-sheet';
 import { MatHover } from 'mdu-ui/components/mat-hover';
+import { MatContainer } from 'mdu-ui/components/mat-container';
 import { MatToolbar } from 'mdu-ui/components/mat-toolbar';
 import { MatSpacer } from 'mdu-ui/components/mat-spacer';
 import { MatLoader } from 'mdu-ui/components/mat-loader';
@@ -173,7 +174,7 @@ import {
 } from 'mdu-ui/functions';
 ```
 
-复合组件的父子入口相互独立；按需使用 Card 子组件时，应导入实际使用的 `MatCardHeadline`、`MatCardSubhead`、`MatCardMedia` 等入口；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatCard>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`。命令式 Snackbar 使用 `snackbar()` 或同一函数引用的 `toast()`，只从 `mdu-ui/functions` 导入。
+复合组件的父子入口相互独立；按需使用 Card 子组件时，应导入实际使用的 `MatCardHeadline`、`MatCardSubhead`、`MatCardMedia` 等入口；按需使用 List 时，应同时导入实际使用的 `MatListItem` 和 `MatDivider`，按需使用单选组时应导入 `MatRadioGroup` 和 `MatRadio`，按需使用 Menu 时应导入 `MatMenu` 和 `MatMenuItem`。局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatCard>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`。命令式 Snackbar 使用 `snackbar()` 或同一函数引用的 `toast()`，只从 `mdu-ui/functions` 导入。
 
 ## 如何选择
 
@@ -12971,6 +12972,142 @@ Spacer 使用 `flex-grow: 1`，可同时用于横向和纵向 flex 容器。多�
 
 <script setup>
 import SpacerFlexExample from '../examples/spacer/SpacerFlexExample.vue';
+</script>
+
+# Container 响应式容器
+
+## 组件简介
+
+`<mat-container>` 的组件导出名是 `MatContainer`。它的外层始终铺满父容器，并根据浏览器视口在窄于 600px 时使用 16px、其他宽度使用 24px 的水平内边距。默认 Slot 位于正文区域；正文默认最大宽度为 1040px，空间更宽时自动居中。
+
+## 示例
+
+### 默认正文宽度
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-container class="container-default-example">
+    <section class="container-default-example__body">
+      <h3>受限的正文区域</h3>
+
+      <p>
+        默认 Container 在宽屏将正文限制在 1040px 内，并在两侧保留可用空间。
+      </p>
+    </section>
+  </mat-container>
+</template>
+```
+```vue
+<style scoped>
+.container-default-example {
+  background: var(--mat-sys-color-surface-container-low);
+}
+
+.container-default-example__body {
+  padding: 24px;
+  color: var(--mat-sys-color-on-surface);
+  background: var(--mat-sys-color-surface-container-highest);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.container-default-example__body h3,
+.container-default-example__body p {
+  margin: 0;
+}
+
+.container-default-example__body p {
+  margin-block-start: 8px;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Container 默认正文宽度预览" stacked>
+    <ContainerDefaultExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `fluid`
+
+`fluid` 只取消正文区域的 1040px 最大宽度，不改变外层尺寸和响应式水平内边距。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-container fluid class="container-fluid-example">
+    <section class="container-fluid-example__body">
+      <h3>铺满的正文区域</h3>
+
+      <p>
+        fluid 仅取消正文最大宽度，外层仍按视口断点保留水平内边距。
+      </p>
+    </section>
+  </mat-container>
+</template>
+```
+```vue
+<style scoped>
+.container-fluid-example {
+  background: var(--mat-sys-color-surface-container-low);
+}
+
+.container-fluid-example__body {
+  padding: 24px;
+  color: var(--mat-sys-color-on-secondary-container);
+  background: var(--mat-sys-color-secondary-container);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.container-fluid-example__body h3,
+.container-fluid-example__body p {
+  margin: 0;
+}
+
+.container-fluid-example__body p {
+  margin-block-start: 8px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Container fluid 预览" stacked>
+    <ContainerFluidExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 名称 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `fluid` | `boolean` | `false` | 为 `false` 时正文最大宽度为 1040px，超过时居中；为 `true` 时正文铺满外层扣除水平内边距后的可用宽度。 |
+
+组件没有公开方法。未被消费的原生属性、`class`、`style` 和事件监听器传给铺满父容器的外层 `div`。
+
+## 事件
+
+组件不定义自定义事件。传入的原生事件监听器作用于外层 `div`。
+
+## Slots
+
+| 名称 | 说明 |
+| --- | --- |
+| 默认 Slot | 正文区域内容。 |
+
+<script setup>
+import ContainerDefaultExample from '../examples/container/ContainerDefaultExample.vue';
+import ContainerFluidExample from '../examples/container/ContainerFluidExample.vue';
 </script>
 
 # Panes 布局面板

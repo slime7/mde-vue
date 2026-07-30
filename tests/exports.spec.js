@@ -33,6 +33,7 @@ import MatBottomSheet, {
 } from 'mdu-ui/components/mat-bottom-sheet';
 import MatSideSheet, { MatSideSheet as NamedMatSideSheet } from 'mdu-ui/components/mat-side-sheet';
 import MatHover, { MatHover as NamedMatHover } from 'mdu-ui/components/mat-hover';
+import MatContainer, { MatContainer as NamedMatContainer } from 'mdu-ui/components/mat-container';
 import MatSpacer, { MatSpacer as NamedMatSpacer } from 'mdu-ui/components/mat-spacer';
 import MatLoader, { MatLoader as NamedMatLoader } from 'mdu-ui/components/mat-loader';
 import MatTooltip, { MatTooltip as NamedMatTooltip } from 'mdu-ui/components/mat-tooltip';
@@ -62,6 +63,7 @@ import {
   MatCardMedia as RootMatCardMedia,
   MatCardSubhead as RootMatCardSubhead,
   MatCheckbox as RootMatCheckbox,
+  MatContainer as RootMatContainer,
   MatDialog as RootMatDialog,
   MatDivider as RootMatDivider,
   MatFab as RootMatFab,
@@ -127,6 +129,7 @@ const globalComponents = [
   ['MatBottomSheet', 'mat-bottom-sheet', RootMatBottomSheet],
   ['MatSideSheet', 'mat-side-sheet', RootMatSideSheet],
   ['MatHover', 'mat-hover', RootMatHover],
+  ['MatContainer', 'mat-container', RootMatContainer],
   ['MatSpacer', 'mat-spacer', RootMatSpacer],
   ['MatLoader', 'mat-loader', RootMatLoader],
   ['MatTooltip', 'mat-tooltip', RootMatTooltip],
@@ -176,6 +179,7 @@ describe('公共组件导出', () => {
     ['MatBottomSheet', RootMatBottomSheet, NamedMatBottomSheet, MatBottomSheet],
     ['MatSideSheet', RootMatSideSheet, NamedMatSideSheet, MatSideSheet],
     ['MatHover', RootMatHover, NamedMatHover, MatHover],
+    ['MatContainer', RootMatContainer, NamedMatContainer, MatContainer],
     ['MatSpacer', RootMatSpacer, NamedMatSpacer, MatSpacer],
     ['MatLoader', RootMatLoader, NamedMatLoader, MatLoader],
     ['MatTooltip', RootMatTooltip, NamedMatTooltip, MatTooltip],
@@ -228,6 +232,7 @@ describe('公共组件导出', () => {
     expect(app.component('mat-bottom-sheet')).toBe(RootMatBottomSheet);
     expect(app.component('mat-side-sheet')).toBe(RootMatSideSheet);
     expect(app.component('mat-hover')).toBe(RootMatHover);
+    expect(app.component('mat-container')).toBe(RootMatContainer);
     expect(app.directive('intersection')).toBe(RootIntersection);
     expect(app.component('mat-spacer')).toBe(RootMatSpacer);
     expect(app.component('mat-loader')).toBe(RootMatLoader);

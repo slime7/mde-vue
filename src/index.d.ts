@@ -1850,6 +1850,19 @@ export interface MatHoverEmits {
 export type MatHoverComponent = DefineComponent<MatHoverProps, {}, {}, {}, {}, {}, {}, MatHoverEmits>;
 export declare const MatHover: MatHoverComponent;
 
+export interface MatContainerProps {
+  /**
+  * 是否取消正文区域的最大宽度限制。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  fluid?: boolean;
+}
+
+export type MatContainerComponent = DefineComponent<MatContainerProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatContainer: MatContainerComponent;
+
 export interface MatSpacerProps {
 }
 
@@ -2419,6 +2432,8 @@ declare module 'vue' {
     'mat-side-sheet': typeof MatSideSheet;
     MatHover: typeof MatHover;
     'mat-hover': typeof MatHover;
+    MatContainer: typeof MatContainer;
+    'mat-container': typeof MatContainer;
     MatSpacer: typeof MatSpacer;
     'mat-spacer': typeof MatSpacer;
     MatLoader: typeof MatLoader;

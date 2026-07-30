@@ -30,6 +30,7 @@ export { default as MatDialog } from './components/mat-dialog/MatDialog.vue';
 export { default as MatBottomSheet } from './components/mat-bottom-sheet/MatBottomSheet.vue';
 export { default as MatSideSheet } from './components/mat-side-sheet/MatSideSheet.vue';
 export { default as MatHover } from './components/mat-hover/MatHover.vue';
+export { default as MatContainer } from './components/mat-container/MatContainer.vue';
 export { default as MatSpacer } from './components/mat-spacer/MatSpacer.vue';
 export { default as MatLoader } from './components/mat-loader/MatLoader.vue';
 export { default as MatTooltip } from './components/mat-tooltip/MatTooltip.vue';
