@@ -156,6 +156,7 @@ function syncTextareaSize() {
 
   if (!props.autoGrow) {
     textarea.style.blockSize = '';
+    textarea.style.height = '';
     textarea.style.overflowY = '';
     return;
   }
@@ -172,6 +173,7 @@ function syncTextareaSize() {
   const maximumBlockSize = maximumRows * lineHeight + paddingBlock;
 
   textarea.style.blockSize = 'auto';
+  textarea.style.height = '';
 
   const contentBlockSize = textarea.scrollHeight;
   const blockSize = Math.max(

@@ -302,6 +302,14 @@ describe('文本输入组件', () => {
 
     expect(textarea.element.style.blockSize).toBe('104px');
 
+    textarea.element.style.height = '300px';
+    setScrollHeight(128);
+    await textarea.setValue('手动调整后继续输入');
+    await wrapper.vm.$nextTick();
+
+    expect(textarea.element.style.height).toBe('');
+    expect(textarea.element.style.blockSize).toBe('128px');
+
     setScrollHeight(32);
     await textarea.setValue('缩短');
     await wrapper.vm.$nextTick();
