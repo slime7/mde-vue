@@ -39,7 +39,7 @@
 }
 
 .example-row > * {
-  inline-size: min(100%, 320px);
+  inline-size: 100%;
 }
 </style>
 <!-- #endregion style -->

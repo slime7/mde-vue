@@ -21,7 +21,7 @@ const description = ref('第一行\n第二行\n第三行\n第四行\n第五行')
 <!-- #region style -->
 <style scoped>
 .example-textarea {
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 </style>
 <!-- #endregion style -->

@@ -27,7 +27,7 @@ const value = ref('使用方可以完全自定义输入容器、标签和校验�
   display: flex;
   flex-direction: column;
   gap: 8px;
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 
 .input-base-example-control > span {

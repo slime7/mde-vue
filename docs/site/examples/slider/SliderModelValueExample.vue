@@ -26,7 +26,7 @@ const volume = ref(35);
 .example {
   display: grid;
   gap: 12px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 </style>
 <!-- #endregion style -->

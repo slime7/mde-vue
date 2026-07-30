@@ -27,7 +27,7 @@ const value = ref('Material');
   display: flex;
   flex-direction: column;
   gap: 8px;
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 
 .input-base-example-control > span {

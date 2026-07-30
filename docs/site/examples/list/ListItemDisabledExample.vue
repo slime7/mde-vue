@@ -12,7 +12,7 @@
 <!-- #region style -->
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 <!-- #endregion style -->

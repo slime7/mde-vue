@@ -1081,7 +1081,7 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
   flex-direction: column;
   gap: 12px;
   align-items: flex-start;
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -2252,7 +2252,7 @@ import FabSizeExample from '../examples/fab/FabSizeExample.vue';
   flex-direction: column;
   gap: 12px;
   align-items: flex-start;
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -3171,7 +3171,7 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
   flex-direction: column;
   gap: 12px;
   align-items: flex-start;
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -4450,7 +4450,7 @@ const volume = ref(35);
 .example {
   display: grid;
   gap: 12px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -4496,7 +4496,7 @@ const balance = ref(-20);
 .example {
   display: grid;
   gap: 12px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -4550,7 +4550,7 @@ const vertical = ref(70);
   display: flex;
   align-items: center;
   gap: 32px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 
 .example__horizontal {
@@ -4623,7 +4623,7 @@ const value = ref(50);
 .example {
   display: grid;
   gap: 20px;
-  inline-size: min(100%, 560px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -4679,7 +4679,7 @@ const volume = ref(55);
 .example {
   display: grid;
   gap: 20px;
-  inline-size: min(100%, 560px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -4723,7 +4723,7 @@ const rating = ref(3);
 .example {
   display: grid;
   gap: 12px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -4767,7 +4767,7 @@ const temperature = ref(22);
 .example {
   display: grid;
   gap: 12px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -4837,7 +4837,7 @@ const seededValue = ref(70);
 .example {
   display: grid;
   gap: 16px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -4948,7 +4948,7 @@ const price = ref([20, 75]);
 .example {
   display: grid;
   gap: 12px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -5004,7 +5004,7 @@ const vertical = ref([30, 85]);
   display: flex;
   align-items: center;
   gap: 32px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 
 .example__horizontal {
@@ -5082,7 +5082,7 @@ const range = ref([30, 70]);
 .example {
   display: grid;
   gap: 20px;
-  inline-size: min(100%, 560px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -5127,7 +5127,7 @@ const hours = ref([2, 6]);
 .example {
   display: grid;
   gap: 12px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -5170,7 +5170,7 @@ const range = ref([30, 70]);
 .example {
   display: grid;
   gap: 12px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -5243,7 +5243,7 @@ const seededRange = ref([35, 80]);
 .example {
   display: grid;
   gap: 16px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -5720,7 +5720,7 @@ const value = ref('Material');
   display: flex;
   flex-direction: column;
   gap: 8px;
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 
 .input-base-example-control > span {
@@ -5775,7 +5775,7 @@ const value = ref('使用方可以完全自定义输入容器、标签和校验�
   display: flex;
   flex-direction: column;
   gap: 8px;
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 
 .input-base-example-control > span {
@@ -5879,7 +5879,7 @@ import InputBaseTextareaExample from '../examples/input-base/InputBaseTextareaEx
 }
 
 .example-row > * {
-  inline-size: min(100%, 180px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -5927,7 +5927,7 @@ import InputBaseTextareaExample from '../examples/input-base/InputBaseTextareaEx
 }
 
 .example-row > * {
-  inline-size: min(100%, 180px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -5969,7 +5969,7 @@ import InputBaseTextareaExample from '../examples/input-base/InputBaseTextareaEx
 }
 
 .example-row > * {
-  inline-size: min(100%, 180px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -6013,7 +6013,7 @@ import InputBaseTextareaExample from '../examples/input-base/InputBaseTextareaEx
 }
 
 .example-row > * {
-  inline-size: min(100%, 280px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -6057,7 +6057,7 @@ import InputBaseTextareaExample from '../examples/input-base/InputBaseTextareaEx
 }
 
 .example-row > * {
-  inline-size: min(100%, 280px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -6107,7 +6107,7 @@ import InputBaseTextareaExample from '../examples/input-base/InputBaseTextareaEx
 }
 
 .example-row > * {
-  inline-size: min(100%, 280px);
+  inline-size: 100%;
 }
 
 .media-placeholder {
@@ -6146,7 +6146,7 @@ import InputBaseTextareaExample from '../examples/input-base/InputBaseTextareaEx
 ```vue
 <style scoped>
 .example-card {
-  inline-size: min(100%, 320px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -6176,7 +6176,7 @@ import InputBaseTextareaExample from '../examples/input-base/InputBaseTextareaEx
 ```vue
 <style scoped>
 .example-card {
-  inline-size: min(100%, 320px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -6219,7 +6219,7 @@ import InputBaseTextareaExample from '../examples/input-base/InputBaseTextareaEx
 }
 
 .example-card {
-  inline-size: min(100%, 220px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -6250,7 +6250,7 @@ import InputBaseTextareaExample from '../examples/input-base/InputBaseTextareaEx
 ```vue
 <style scoped>
 .example-card {
-  inline-size: min(100%, 320px);
+  inline-size: 100%;
 }
 
 p {
@@ -6288,7 +6288,7 @@ p {
 ```vue
 <style scoped>
 .example-card {
-  inline-size: min(100%, 320px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -6436,7 +6436,7 @@ const value = ref('可编辑内容');
   display: flex;
   flex-direction: column;
   gap: 16px;
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -6468,7 +6468,7 @@ const value = ref('可编辑内容');
   display: flex;
   flex-direction: column;
   gap: 16px;
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -6503,7 +6503,7 @@ const value = ref('可编辑内容');
   display: flex;
   flex-direction: column;
   gap: 16px;
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -6737,7 +6737,7 @@ const value = ref('输入内容');
   display: flex;
   flex-direction: column;
   gap: 16px;
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -6770,7 +6770,7 @@ const value = ref('输入内容');
   display: flex;
   flex-direction: column;
   gap: 16px;
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -6811,7 +6811,7 @@ const description = ref('第一行\n第二行\n第三行\n第四行\n第五行')
 ```vue
 <style scoped>
 .example-textarea {
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -6853,7 +6853,7 @@ const description = ref('第一行\n第二行\n第三行\n第四行\n第五行\n
 ```vue
 <style scoped>
 .example-textarea {
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -6884,7 +6884,7 @@ const description = ref('第一行\n第二行\n第三行\n第四行\n第五行\n
 ```vue
 <style scoped>
 .example-textarea {
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9012,7 +9012,7 @@ const expanded = ref(['favorites']);
 ```vue
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9058,7 +9058,7 @@ const expanded = ref(['favorites']);
 }
 
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9112,7 +9112,7 @@ const selected = ref('recent');
 ```vue
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9159,7 +9159,7 @@ const selected = ref('primary');
 ```vue
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9205,7 +9205,7 @@ const selected = ref('two');
 ```vue
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9235,7 +9235,7 @@ const selected = ref('two');
 ```vue
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9270,7 +9270,7 @@ const selected = ref('two');
 ```vue
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9301,7 +9301,7 @@ const selected = ref('two');
 ```vue
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9358,7 +9358,7 @@ const selected = ref('two');
 ```vue
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9388,7 +9388,7 @@ const selected = ref('two');
 ```vue
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9416,7 +9416,7 @@ const selected = ref('two');
 ```vue
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9449,7 +9449,7 @@ const selected = ref('two');
 ```vue
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9482,7 +9482,7 @@ const selected = ref('two');
 ```vue
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9515,7 +9515,7 @@ const selected = ref('two');
 ```vue
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9548,7 +9548,7 @@ const selected = ref('two');
 ```vue
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -9988,7 +9988,7 @@ const bottomPlaceholder = ref(0);
   flex-wrap: wrap;
   gap: 8px 16px;
   align-items: center;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 
 .toolbar-bottom-placeholder-example__slider .mat-slider {
@@ -12058,7 +12058,7 @@ import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
   display: flex;
   flex-direction: column;
   gap: 20px;
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
   padding-block: 12px;
 }
 
@@ -12097,7 +12097,7 @@ import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
 ```vue
 <style scoped>
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -12157,7 +12157,7 @@ import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
 }
 
 .example-row > * {
-  inline-size: min(100%, 320px);
+  inline-size: 100%;
 }
 </style>
 ```
@@ -13895,7 +13895,7 @@ function handleIntersection(value) {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
   block-size: 240px;
   padding: 16px;
   overflow-block: auto;
@@ -13985,7 +13985,7 @@ const binding = {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
   block-size: 240px;
   padding: 16px;
   overflow-block: auto;
@@ -14065,7 +14065,7 @@ function handleIntersection() {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
   block-size: 240px;
   padding: 16px;
   overflow-block: auto;

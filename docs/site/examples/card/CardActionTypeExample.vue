@@ -24,7 +24,7 @@
 }
 
 .example-card {
-  inline-size: min(100%, 220px);
+  inline-size: 100%;
 }
 </style>
 <!-- #endregion style -->

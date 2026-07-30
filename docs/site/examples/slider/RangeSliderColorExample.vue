@@ -31,7 +31,7 @@ const seededRange = ref([35, 80]);
 .example {
   display: grid;
   gap: 16px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 </style>
 <!-- #endregion style -->

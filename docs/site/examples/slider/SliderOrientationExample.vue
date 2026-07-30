@@ -36,7 +36,7 @@ const vertical = ref(70);
   display: flex;
   align-items: center;
   gap: 32px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 
 .example__horizontal {

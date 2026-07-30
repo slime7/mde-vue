@@ -92,7 +92,7 @@ const multipleSelected = ref(['offline']);
 }
 
 .example-list {
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
 }
 
 .selection-indicator {

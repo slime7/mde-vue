@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 </style>
 <!-- #endregion style -->

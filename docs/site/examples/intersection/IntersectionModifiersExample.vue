@@ -36,7 +36,7 @@ function handleIntersection() {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
   block-size: 240px;
   padding: 16px;
   overflow-block: auto;

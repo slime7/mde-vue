@@ -12,7 +12,7 @@
 <!-- #region style -->
 <style scoped>
 .example-textarea {
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 </style>
 <!-- #endregion style -->

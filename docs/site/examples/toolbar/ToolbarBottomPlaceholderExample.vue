@@ -81,7 +81,7 @@ const bottomPlaceholder = ref(0);
   flex-wrap: wrap;
   gap: 8px 16px;
   align-items: center;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 
 .toolbar-bottom-placeholder-example__slider .mat-slider {

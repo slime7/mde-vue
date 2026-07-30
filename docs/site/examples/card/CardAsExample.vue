@@ -23,7 +23,7 @@
 }
 
 .example-row > * {
-  inline-size: min(100%, 180px);
+  inline-size: 100%;
 }
 </style>
 <!-- #endregion style -->

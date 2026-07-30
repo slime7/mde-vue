@@ -38,7 +38,7 @@ const vertical = ref([30, 85]);
   display: flex;
   align-items: center;
   gap: 32px;
-  inline-size: min(100%, 480px);
+  inline-size: 100%;
 }
 
 .example__horizontal {

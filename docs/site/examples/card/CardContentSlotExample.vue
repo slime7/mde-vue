@@ -12,7 +12,7 @@
 <!-- #region style -->
 <style scoped>
 .example-card {
-  inline-size: min(100%, 320px);
+  inline-size: 100%;
 }
 
 p {

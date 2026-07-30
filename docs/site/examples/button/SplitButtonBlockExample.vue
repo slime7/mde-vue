@@ -28,7 +28,7 @@
   flex-direction: column;
   gap: 12px;
   align-items: flex-start;
-  inline-size: min(100%, 360px);
+  inline-size: 100%;
 }
 </style>
 <!-- #endregion style -->

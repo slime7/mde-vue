@@ -23,7 +23,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  inline-size: min(100%, 420px);
+  inline-size: 100%;
   padding-block: 12px;
 }
 
