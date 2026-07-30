@@ -207,6 +207,7 @@ describe('公共组件导出', () => {
     const plugin = createMatUi({
       theme: { target },
     });
+    // eslint-disable-next-line vue/one-component-per-file -- 此根组件仅用于隔离全局注册表。
     const app = createApp({});
 
     app.use(plugin);
@@ -248,6 +249,7 @@ describe('公共组件导出', () => {
     const plugin = createMatUi({
       theme: { target },
     });
+    // eslint-disable-next-line vue/one-component-per-file -- 此根组件仅用于隔离全局注册表。
     const app = createApp({});
 
     app.use(plugin);
