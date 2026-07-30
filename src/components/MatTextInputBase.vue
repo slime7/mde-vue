@@ -485,13 +485,35 @@ function handleModelValue(value) {
 
 .mat-text-input--textarea .mat-text-input__control-row {
   align-items: flex-start;
-  padding-block-end: 0;
+  padding-block: 0;
 }
 
 .mat-text-input--textarea .mat-text-input__control {
   min-block-size: 0;
-  padding-block-end: 8px;
+  padding-block: 8px;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--mat-sys-color-outline) transparent;
   resize: vertical;
+}
+
+.mat-text-input--textarea:has(.mat-text-input__label) .mat-text-input__control {
+  padding-block-start: 24px;
+}
+
+.mat-text-input--textarea .mat-text-input__control::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.mat-text-input--textarea .mat-text-input__control::-webkit-scrollbar-track,
+.mat-text-input--textarea .mat-text-input__control::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.mat-text-input--textarea .mat-text-input__control::-webkit-scrollbar-thumb {
+  background: var(--mat-sys-color-outline);
+  border-radius: var(--mat-sys-shape-corner-full);
 }
 
 .mat-text-input--textarea .mat-text-input__container:not(:has(.mat-text-input__leading)) .mat-text-input__main {
@@ -516,10 +538,6 @@ function handleModelValue(value) {
 
 .mat-text-input--textarea .mat-text-input__container:not(:has(.mat-text-input__leading)) .mat-text-input__label {
   inset-inline-start: 16px;
-}
-
-.mat-text-input--outlined.mat-text-input--textarea:has(.mat-text-input__label) .mat-text-input__control-row {
-  padding-block-start: 24px;
 }
 
 .mat-text-input__label {
@@ -560,12 +578,8 @@ function handleModelValue(value) {
   transform: translateY(calc(-100% - 8px));
 }
 
-.mat-text-input--filled:has(.mat-text-input__label) .mat-text-input__control-row {
+.mat-text-input--filled:not(.mat-text-input--textarea):has(.mat-text-input__label) .mat-text-input__control-row {
   padding-block: 24px 8px;
-}
-
-.mat-text-input--filled.mat-text-input--textarea:has(.mat-text-input__label) .mat-text-input__control-row {
-  padding-block-end: 0;
 }
 
 .mat-text-input__icon,
