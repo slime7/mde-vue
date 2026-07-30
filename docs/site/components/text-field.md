@@ -9,7 +9,7 @@ order: 90
 
 ## 组件简介
 
-`<mat-text-field>` 的组件导出名是 `MatTextField`，渲染单行原生 `input`；`<mat-textarea>` 的组件导出名是 `MatTextarea`，渲染固定初始高度的原生 `textarea`。两者共享 outlined、filled 外观、浮动标签、辅助或错误文字、字符计数、前后缀和局部 `color` 配色，但不执行表单校验或自动调整 textarea 高度。有标签的 outlined 外观会在顶部保留浮动标签空间，并以透明缺口裁剪描边，因此可以放在任意主题表面色上。
+`<mat-text-field>` 的组件导出名是 `MatTextField`，渲染单行原生 `input`；`<mat-textarea>` 的组件导出名是 `MatTextarea`，渲染多行原生 `textarea`，并可根据内容自动增高、限制最大行数或禁止手动调整尺寸。两者共享 outlined、filled 外观、浮动标签、辅助或错误文字、字符计数、前后缀和局部 `color` 配色，但不执行表单校验。有标签的 outlined 外观会在顶部保留浮动标签空间，并以透明缺口裁剪描边，因此可以放在任意主题表面色上。
 
 ## 示例
 
@@ -261,6 +261,68 @@ order: 90
   </DocsPreview>
 </ClientOnly>
 
+### Textarea 的 `autoGrow`
+
+启用后，textarea 以 `rows` 为最小行数，根据输入内容增长或收缩。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextareaAutoGrowExample.vue#template [template]
+
+<<< @/examples/text-field/TextareaAutoGrowExample.vue#script [script]
+
+<<< @/examples/text-field/TextareaAutoGrowExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Textarea autoGrow 预览">
+    <TextareaAutoGrowExample />
+  </DocsPreview>
+</ClientOnly>
+
+### Textarea 的 `maxRows`
+
+`maxRows` 只在 `autoGrow` 启用时生效，因此示例同时设置两者。内容超过上限后在 textarea 内滚动。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextareaMaxRowsExample.vue#template [template]
+
+<<< @/examples/text-field/TextareaMaxRowsExample.vue#script [script]
+
+<<< @/examples/text-field/TextareaMaxRowsExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Textarea maxRows 预览">
+    <TextareaMaxRowsExample />
+  </DocsPreview>
+</ClientOnly>
+
+### Textarea 的 `noResize`
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextareaNoResizeExample.vue#template [template]
+
+<<< @/examples/text-field/TextareaNoResizeExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Textarea noResize 预览">
+    <TextareaNoResizeExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `leading` Slot
 
 :::: details 查看示例代码
@@ -325,7 +387,10 @@ order: 90
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `rows` | 正整数 | `4` | textarea 的初始可见行数；内容不会令组件自动增高 |
+| `rows` | 正整数 | `4` | textarea 的初始可见行数；启用 autoGrow 后也是自动增高的最小行数 |
+| `autoGrow` | `boolean` | `false` | 根据内容自动增高，并在内容减少时缩回到 rows 指定的最小高度 |
+| `maxRows` | 正整数 | 未设置 | autoGrow 的最大行数；小于 rows 时按 rows 处理，达到上限后内容在控件内滚动 |
+| `noResize` | `boolean` | `false` | 隐藏浏览器尺寸调整手柄，禁止使用者拖动改变 textarea 大小 |
 
 组件没有公开方法。
 
@@ -354,7 +419,9 @@ order: 90
 - error 状态把 `aria-invalid` 设为 true，并通过 `aria-describedby` 关联错误文字和字符计数区域。
 - 调用方已有的 `aria-describedby` 会与组件说明区域合并。
 - filled 和 outlined 在同一区域内应保持一致，不应在同一个表单内交替使用。
-- textarea 默认允许纵向调整尺寸，初始内容区高度严格按 `rows` 与正文行高计算；调整手柄位于输入外框右下角，文字与外框保留内边距；单行输入不会因长内容扩高。
+- textarea 默认允许纵向调整尺寸，初始内容区高度严格按 `rows` 与正文行高计算；`noResize` 可以关闭手动调整。
+- `autoGrow` 以 `rows` 为下限重新测量内容高度；`maxRows` 未设置时不限制增长，设置后在达到上限时改为内部滚动。自动增高不会隐式关闭手动调整，下一次内容或宽度变化会重新按内容计算高度。
+- Text field 的 multi-line 形态来自 Material 3；`autoGrow`、`maxRows` 和 `noResize` 是 mdu-ui 扩展 API。
 - 减少动态效果偏好下关闭标签、描边与活动指示器的非必要过渡。
 
 ## 参考来源
@@ -377,5 +444,8 @@ import TextFieldSuffixTextExample from '../examples/text-field/TextFieldSuffixTe
 import TextFieldTrailingSlotExample from '../examples/text-field/TextFieldTrailingSlotExample.vue';
 import TextFieldTypeExample from '../examples/text-field/TextFieldTypeExample.vue';
 import TextFieldVariantExample from '../examples/text-field/TextFieldVariantExample.vue';
+import TextareaAutoGrowExample from '../examples/text-field/TextareaAutoGrowExample.vue';
+import TextareaMaxRowsExample from '../examples/text-field/TextareaMaxRowsExample.vue';
+import TextareaNoResizeExample from '../examples/text-field/TextareaNoResizeExample.vue';
 import TextareaRowsExample from '../examples/text-field/TextareaRowsExample.vue';
 </script>
