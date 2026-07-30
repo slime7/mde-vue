@@ -6,11 +6,17 @@
       <template #supporting>
         lines=1
       </template>
+      <template #trailing>
+        <mat-icon icon="more_vert" aria-hidden="true" />
+      </template>
     </mat-list-item>
     <mat-list-item :lines="2">
       两行内容
       <template #supporting>
         lines=2
+      </template>
+      <template #trailing>
+        <mat-icon icon="more_vert" aria-hidden="true" />
       </template>
     </mat-list-item>
     <mat-list-item :lines="3">
@@ -20,6 +26,9 @@
       </template>
       <template #supporting>
         lines=3 的辅助文字
+      </template>
+      <template #trailing>
+        <mat-icon icon="more_vert" aria-hidden="true" />
       </template>
     </mat-list-item>
   </mat-list>
