@@ -8,6 +8,7 @@ const vibrant = ref(false);
 const active = ref(false);
 const variantOptions = [
   { label: 'docked', value: 'docked' },
+  { label: 'floating-top', value: 'floating-top' },
   { label: 'floating-bottom', value: 'floating-bottom' },
   { label: 'floating-left', value: 'floating-left' },
   { label: 'floating-right', value: 'floating-right' },
@@ -79,28 +80,30 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
       </div>
     </div>
 
-    <mat-toolbar
-      v-model="active"
-      :variant="variant"
-      :position="position"
-      :vibrant="vibrant"
-    >
-      <mat-btn variant="standard">
-        编辑
-      </mat-btn>
-      <mat-btn variant="standard">
-        分享
-      </mat-btn>
+    <div class="toolbar-variant-example__preview">
+      <mat-toolbar
+        v-model="active"
+        :variant="variant"
+        :position="position"
+        :vibrant="vibrant"
+      >
+        <mat-btn variant="standard">
+          编辑
+        </mat-btn>
+        <mat-btn variant="standard">
+          分享
+        </mat-btn>
 
-      <template v-if="isFloating" #fab>
-        <mat-btn
-          size="small"
-          width="wide"
-          icon="add"
-          label="新建"
-        />
-      </template>
-    </mat-toolbar>
+        <template v-if="isFloating" #fab>
+          <mat-btn
+            size="small"
+            width="wide"
+            icon="add"
+            label="新建"
+          />
+        </template>
+      </mat-toolbar>
+    </div>
   </div>
 </template>
 <!-- #endregion template -->
@@ -108,7 +111,7 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
 <!-- #region style -->
 <style scoped>
 .toolbar-variant-example {
-  min-block-size: 240px;
+  min-block-size: 320px;
 }
 
 .toolbar-variant-example__controls {
@@ -135,6 +138,12 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
 
 .toolbar-variant-example__control-group--switches {
   gap: 16px;
+}
+
+.toolbar-variant-example__preview {
+  position: relative;
+  min-block-size: 160px;
+  margin-block-start: 16px;
 }
 </style>
 <!-- #endregion style -->

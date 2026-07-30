@@ -4,6 +4,10 @@ import {
 } from 'vitest';
 import { h, nextTick } from 'vue';
 import MatToolbar from '../src/components/mat-toolbar/MatToolbar.vue';
+import {
+  getBottomToolbarClearance,
+  getToolbarRects,
+} from '../src/components/toolbar-overlay';
 
 async function settleRender() {
   await nextTick();
@@ -52,14 +56,18 @@ describe('MatToolbar', () => {
     });
 
     await settleRender();
-    expect(source.querySelector('.mat-toolbar')).not.toBeNull();
+    const localToolbar = source.querySelector('.mat-toolbar');
+
+    expect(localToolbar).not.toBeNull();
     expect(attach.querySelector('.mat-toolbar')).toBeNull();
 
     await wrapper.setProps({ app: true });
     await settleRender();
 
     expect(source.querySelector('.mat-toolbar')).toBeNull();
-    expect(attach.querySelector('.mat-toolbar')).not.toBeNull();
+    const teleportedToolbar = attach.querySelector('.mat-toolbar');
+
+    expect(teleportedToolbar).not.toBeNull();
 
     wrapper.unmount();
     source.remove();
@@ -173,6 +181,42 @@ describe('MatToolbar', () => {
     const toolbar = toolbarElement();
 
     expect(toolbar.getAttribute('aria-orientation')).toBe('vertical');
+
+    wrapper.unmount();
+  });
+
+  it('floating-top 使用横向方向、顶部定位和 fab Slot，且不计入底部避让', async () => {
+    const wrapper = mount(MatToolbar, {
+      attachTo: document.body,
+      props: {
+        position: 'end',
+        variant: 'floating-top',
+      },
+      slots: {
+        default: () => h('button', { type: 'button' }, '更多'),
+        fab: () => h('button', { type: 'button' }, '新增'),
+      },
+    });
+
+    await settleRender();
+
+    const toolbar = toolbarElement();
+
+    vi.spyOn(toolbar, 'getBoundingClientRect').mockReturnValue({
+      bottom: 88,
+      height: 64,
+      left: 200,
+      right: 400,
+      top: 24,
+      width: 200,
+    });
+    window.dispatchEvent(new Event('resize'));
+    await settleRender();
+
+    expect(toolbar.getAttribute('aria-orientation')).toBeNull();
+    expect(toolbar.textContent).toContain('新增');
+    expect(getToolbarRects()).toHaveLength(1);
+    expect(getBottomToolbarClearance(600)).toBe(0);
 
     wrapper.unmount();
   });

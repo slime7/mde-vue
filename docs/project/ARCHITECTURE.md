@@ -77,6 +77,8 @@ Snackbar 通过 Teleport 固定在视口底部，使用 `modelValue` 请求展�
 
 Navigation 以 `MatNavigationRail` 与 `MatNavigationRailItem` 组合纵向 Expressive navigation rail 和横向 Flexible navigation bar。两种模式默认在声明位置参与父容器布局；设置 `app` 后才通过 Teleport 挂载到 `attach` 并固定到视口，`placeholder` 与 `bottomPlaceholder` 也只在此模式下生效。纵向模式提供 collapsed/expanded、可配置展开宽度、起始/末尾侧 Item 对齐、standard/modal、可隐藏 expanded 容器、顶部或居中的目的地组与底部内容 Slot；横向模式由同一个 `expanded` 状态切换纵向或横向 Item。父组件通过 provide/inject 统一受控单选、展开状态、导航方向与 Item 对齐，Item 保留原生按钮或链接语义；窗口断点切换由使用方负责。
 
+Toolbar 以绝对定位表达底部 docked，以及顶部、底部和左右 floating 布局，并由 `position` 在对应轴上对齐。`app` 只控制是否 Teleport 到 `attach`，不改变定位、占位、安全区和覆盖层注册；未 Teleport 时相对声明位置所属的定位容器布局。`placeholder` 在声明位置提供可选占位，`bottomPlaceholder` 只扩展 docked 和底部 floating 的安全区。
+
 Loader 以单个组件的 `linear` 与 `circular` variant 表达两种 Progress indicator 形态。确定状态在根元素上提供 progressbar ARIA 值，不确定状态仅保留进度语义和动画；波浪形活动指示器由内联 SVG 绘制，轨道保持平直。组件只读取系统 primary 与 secondary container 颜色角色，显式 `color` 通过共享局部配色模块替换活动与停止指示器色。
 
 Checkbox 以布尔值或基础值数组表达受控选择，数组更新始终返回新数组。Radio 可以独立受控；进入 Radio group 后由 provide/inject 上下文统一选中值、禁用、配色和按 DOM 顺序维护的 roving tabindex。Switch 只表达立即生效的布尔状态。三类控件保留原生 input 语义，但不承诺表单提交、原生校验、重置或表单代理方法。

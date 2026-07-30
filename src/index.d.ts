@@ -2069,12 +2069,13 @@ export interface MatToolbarProps {
   /**
   * Toolbar 形态。
   *
-  * 可选值为 `docked`、`floating`、`floating-bottom`、`floating-left`、`floating-right`。
+  * 可选值为 `docked`、`floating`、`floating-top`、`floating-bottom`、
+  * `floating-left`、`floating-right`。
   *
-  * @type {string}
+  * @type {'docked' | 'floating' | 'floating-top' | 'floating-bottom' | 'floating-left' | 'floating-right'}
   * @default 'docked'
   */
-  variant?: string;
+  variant?: 'docked' | 'floating' | 'floating-top' | 'floating-bottom' | 'floating-left' | 'floating-right';
   /**
   * 浮动模式的对齐位置。
   *
@@ -2092,7 +2093,7 @@ export interface MatToolbarProps {
   */
   vibrant?: boolean;
   /**
-  * 固定到视口并 Teleport 到 attach。
+  * 是否将 Toolbar Teleport 到 attach。
   *
   * @type {boolean}
   * @default false
@@ -2106,14 +2107,15 @@ export interface MatToolbarProps {
   */
   attach?: string | HTMLElement;
   /**
-  * app=true 时在自然布局位置生成占位。
+  * 是否在声明位置生成占位。
   *
   * @type {boolean}
   * @default false
   */
   placeholder?: boolean;
   /**
-  * app=true 时的额外底部安全区；数字按 px 处理，也可传 CSS block-size 值。
+  * docked 与 floating-bottom 的额外底部安全区；数字按 px 处理，
+  * 也可传 CSS block-size 值。
   *
   * @type {number | string}
   * @default 0

@@ -24,6 +24,8 @@ describe('Toolbar 文档', () => {
     expect(page).toContain('`bottomPlaceholder`');
     expect(page).toContain('`modelValue`');
     expect(page).toContain('`position`');
+    expect(page).toContain('floating-top');
+    expect(page).toContain('是否将 Toolbar Teleport 到 `attach`');
     expect(page).toContain('| `fab` |');
     ['## 组件简介', '## 示例', '## API', '## 事件', '## Slots'].forEach((heading) => {
       expect(page).toContain(heading);
@@ -84,6 +86,8 @@ describe('Toolbar 文档', () => {
     expect(example).toContain('selection="single"');
     expect(example).toContain('@select="variant = $event.nextSelected"');
     expect(example).toContain('@select="position = $event.nextSelected"');
+    expect(example).toContain("{ label: 'floating-top', value: 'floating-top' }");
+    expect(example).toContain('position: relative;');
     expect(example).toContain('<mat-switch v-model="vibrant">');
     expect(example).toContain('<mat-switch v-model="active">');
   });

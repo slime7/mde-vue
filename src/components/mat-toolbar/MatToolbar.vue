@@ -14,6 +14,7 @@ import { registerToolbar } from '../toolbar-overlay';
 const TOOLBAR_VARIANTS = [
   'docked',
   'floating',
+  'floating-top',
   'floating-bottom',
   'floating-left',
   'floating-right',
@@ -93,9 +94,10 @@ const props = defineProps({
   /**
    * Toolbar 形态。
    *
-   * 可选值为 `docked`、`floating`、`floating-bottom`、`floating-left`、`floating-right`。
+   * 可选值为 `docked`、`floating`、`floating-top`、`floating-bottom`、
+   * `floating-left`、`floating-right`。
    *
-   * @type {string}
+   * @type {'docked' | 'floating' | 'floating-top' | 'floating-bottom' | 'floating-left' | 'floating-right'}
    * @default 'docked'
    */
   variant: {
@@ -105,6 +107,7 @@ const props = defineProps({
       return [
         'docked',
         'floating',
+        'floating-top',
         'floating-bottom',
         'floating-left',
         'floating-right',
@@ -137,7 +140,7 @@ const props = defineProps({
     default: false,
   },
   /**
-   * 固定到视口并 Teleport 到 attach。
+   * 是否将 Toolbar Teleport 到 attach。
    *
    * @type {boolean}
    * @default false
@@ -157,7 +160,7 @@ const props = defineProps({
     default: 'body',
   },
   /**
-   * app=true 时在自然布局位置生成占位。
+   * 是否在声明位置生成占位。
    *
    * @type {boolean}
    * @default false
@@ -167,7 +170,8 @@ const props = defineProps({
     default: false,
   },
   /**
-   * app=true 时的额外底部安全区；数字按 px 处理，也可传 CSS block-size 值。
+   * docked 与 floating-bottom 的额外底部安全区；数字按 px 处理，
+   * 也可传 CSS block-size 值。
    *
    * @type {number | string}
    * @default 0
@@ -253,7 +257,7 @@ const normalizedBottomPlaceholder = computed(() => (
   normalizeBottomPlaceholder(props.bottomPlaceholder)
 ));
 const effectiveBottomPlaceholder = computed(() => (
-  props.app && isBottomVariant.value ? normalizedBottomPlaceholder.value : '0px'
+  isBottomVariant.value ? normalizedBottomPlaceholder.value : '0px'
 ));
 const toolbarStyle = computed(() => [
   attrs.style,
@@ -269,7 +273,6 @@ const toolbarClass = computed(() => [
   `mat-toolbar--${normalizedVariant.value}`,
   `mat-toolbar--position-${normalizedPosition.value}`,
   {
-    'mat-toolbar--app': props.app,
     'mat-toolbar--vertical': isVertical.value,
     'mat-toolbar--vibrant': props.vibrant,
   },
@@ -411,7 +414,7 @@ async function syncToolbarRegistration() {
     return;
   }
 
-  if (!props.app || !rendered.value || !toolbarElement.value) {
+  if (!rendered.value || !toolbarElement.value) {
     stopToolbarRegistration();
     return;
   }
@@ -483,7 +486,7 @@ function warnForInvalidAttach() {
 
 <template>
   <span
-    v-if="app && attachTarget && placeholder && rendered"
+    v-if="placeholder && rendered && (!app || attachTarget)"
     class="mat-toolbar__placeholder"
     :style="placeholderStyle"
     aria-hidden="true"
@@ -535,7 +538,7 @@ function warnForInvalidAttach() {
   --mat-toolbar-content-color: var(--mat-sys-color-on-surface);
   --mat-toolbar-position-translate-x: 0;
   --mat-toolbar-position-translate-y: 0;
-  position: relative;
+  position: absolute;
   z-index: var(--mat-sys-z-index-toolbar);
   box-sizing: border-box;
   display: flex;
@@ -543,10 +546,6 @@ function warnForInvalidAttach() {
   align-items: center;
   color: var(--mat-toolbar-content-color);
   pointer-events: none;
-}
-
-.mat-toolbar--app {
-  position: fixed;
 }
 
 .mat-toolbar--closing .mat-toolbar__surface {
@@ -606,31 +605,43 @@ function warnForInvalidAttach() {
   box-shadow: none;
 }
 
+.mat-toolbar--floating-top,
 .mat-toolbar--floating-bottom {
   inset-inline: 50% auto;
-  inset-block-end: var(--mat-toolbar-floating-edge-space);
   inline-size: fit-content;
-  max-inline-size: calc(100dvi - (var(--mat-toolbar-floating-edge-space) * 2));
-  padding-block-end: var(--mat-toolbar-bottom-placeholder);
+  max-inline-size: calc(100% - (var(--mat-toolbar-floating-edge-space) * 2));
   translate: var(--mat-toolbar-position-translate-x) 0;
 }
 
+.mat-toolbar--floating-top {
+  inset-block-start: var(--mat-toolbar-floating-edge-space);
+}
+
+.mat-toolbar--floating-bottom {
+  inset-block-end: var(--mat-toolbar-floating-edge-space);
+  padding-block-end: var(--mat-toolbar-bottom-placeholder);
+}
+
+.mat-toolbar--floating-top.mat-toolbar--position-start,
 .mat-toolbar--floating-bottom.mat-toolbar--position-start {
   inset-inline: var(--mat-toolbar-floating-edge-space) auto;
 
   --mat-toolbar-position-translate-x: 0;
 }
 
+.mat-toolbar--floating-top.mat-toolbar--position-center,
 .mat-toolbar--floating-bottom.mat-toolbar--position-center {
   --mat-toolbar-position-translate-x: -50%;
 }
 
+.mat-toolbar--floating-top.mat-toolbar--position-end,
 .mat-toolbar--floating-bottom.mat-toolbar--position-end {
   inset-inline: auto var(--mat-toolbar-floating-edge-space);
 
   --mat-toolbar-position-translate-x: 0;
 }
 
+.mat-toolbar--floating-top .mat-toolbar__surface,
 .mat-toolbar--floating-bottom .mat-toolbar__surface {
   flex: 1 1 auto;
   min-inline-size: 0;
@@ -641,7 +652,7 @@ function warnForInvalidAttach() {
   inset-block: 50% auto;
   flex-direction: column;
   align-items: center;
-  max-block-size: calc(100dvb - (var(--mat-toolbar-vertical-edge-space) * 2));
+  max-block-size: calc(100% - (var(--mat-toolbar-vertical-edge-space) * 2));
   translate: 0 var(--mat-toolbar-position-translate-y);
 }
 
@@ -701,18 +712,20 @@ function warnForInvalidAttach() {
   inline-size: 100%;
 }
 
-.mat-toolbar:not(.mat-toolbar--app) {
-  inset: auto;
-  max-block-size: none;
-  translate: none;
-}
-
 .mat-toolbar--docked.mat-toolbar--opening {
   animation: mat-toolbar-docked-enter var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-decelerate) both;
 }
 
 .mat-toolbar--docked.mat-toolbar--closing {
   animation: mat-toolbar-docked-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) both;
+}
+
+.mat-toolbar--floating-top.mat-toolbar--opening {
+  animation: mat-toolbar-floating-top-enter var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-decelerate) both;
+}
+
+.mat-toolbar--floating-top.mat-toolbar--closing {
+  animation: mat-toolbar-floating-top-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) both;
 }
 
 .mat-toolbar--floating-bottom.mat-toolbar--opening {
@@ -766,6 +779,26 @@ function warnForInvalidAttach() {
 
   to {
     translate: var(--mat-toolbar-position-translate-x) 0;
+  }
+}
+
+@keyframes mat-toolbar-floating-top-enter {
+  from {
+    translate: var(--mat-toolbar-position-translate-x) -100%;
+  }
+
+  to {
+    translate: var(--mat-toolbar-position-translate-x) 0;
+  }
+}
+
+@keyframes mat-toolbar-floating-top-exit {
+  from {
+    translate: var(--mat-toolbar-position-translate-x) 0;
+  }
+
+  to {
+    translate: var(--mat-toolbar-position-translate-x) -100%;
   }
 }
 

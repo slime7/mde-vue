@@ -20,7 +20,7 @@ const placeholderEnabled = ref(true);
       {{ placeholderEnabled ? '关闭自然占位' : '开启自然占位' }}
     </mat-btn>
     <p v-for="index in 5" :key="index">
-      页面内容 {{ index }}：开启占位后，滚动到底部时不会被固定 Toolbar 遮挡。
+      页面内容 {{ index }}：开启占位后，后续内容不会被绝对定位的 Toolbar 遮挡。
     </p>
 
     <mat-toolbar
