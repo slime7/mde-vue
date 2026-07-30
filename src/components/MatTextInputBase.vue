@@ -189,7 +189,7 @@ function syncTextareaSize() {
   );
 
   textarea.style.blockSize = `${blockSize}px`;
-  textarea.style.overflowY = contentBlockSize > maximumBlockSize ? 'auto' : 'hidden';
+  textarea.style.overflowY = 'auto';
 }
 
 function scheduleTextareaSize() {

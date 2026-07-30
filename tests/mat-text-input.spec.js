@@ -294,7 +294,7 @@ describe('文本输入组件', () => {
     await wrapper.vm.$nextTick();
 
     expect(textarea.element.style.blockSize).toBe('56px');
-    expect(textarea.element.style.overflowY).toBe('hidden');
+    expect(textarea.element.style.overflowY).toBe('auto');
 
     setScrollHeight(104);
     await textarea.setValue('第一行\n第二行\n第三行\n第四行');
@@ -332,7 +332,7 @@ describe('文本输入组件', () => {
     await wrapper.vm.$nextTick();
 
     expect(textarea.element.style.blockSize).toBe('80px');
-    expect(textarea.element.style.overflowY).toBe('hidden');
+    expect(textarea.element.style.overflowY).toBe('auto');
 
     setScrollHeight(128);
     await wrapper.setProps({ modelValue: '超过三行的外部更新内容' });
