@@ -6757,7 +6757,7 @@ const value = ref('输入内容');
 ```vue
 <template>
   <div class="example-stack">
-    <mat-textarea label="两行" variant="filled" :rows="2" />
+    <mat-textarea aria-label="两行" variant="filled" :rows="2" />
     <mat-textarea label="四行" :rows="4" />
     <mat-textarea label="六行" :rows="6" />
   </div>
@@ -7008,6 +7008,7 @@ const description = ref('第一行\n第二行\n第三行\n第四行\n第五行\n
 - filled 和 outlined 在同一区域内应保持一致，不应在同一个表单内交替使用。
 - textarea 默认允许纵向调整尺寸，初始内容区高度严格按 `rows` 与正文行高计算；未显式设置 `rows` 时最小可调整到一行，显式设置后不能低于该行数；`noResize` 可以关闭手动调整。
 - `autoGrow` 以 `rows` 为下限重新测量内容高度；`maxRows` 未设置时不限制增长，设置后在达到上限时改为内部滚动。自动增高不会隐式关闭手动调整；手动缩小到内容无法完整显示时出现内部滚动条，下一次内容或宽度变化会重新按内容计算高度。
+- textarea 在顶部内边距区域渐隐滚动内容，同时保持右侧滚动条和调整手柄完整可见；带标签时渐隐区域覆盖标签留白，避免文字与标签重叠。
 - Text field 的 multi-line 形态来自 Material 3；`autoGrow`、`maxRows` 和 `noResize` 是 mdu-ui 扩展 API。
 - 减少动态效果偏好下关闭标签、描边与活动指示器的非必要过渡。
 

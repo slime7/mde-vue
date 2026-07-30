@@ -503,16 +503,19 @@ function handleModelValue(value) {
 }
 
 .mat-text-input--textarea .mat-text-input__control {
+  --mat-text-input-textarea-padding-block-start: 8px;
+  --mat-text-input-textarea-scrollbar-space: 16px;
   min-block-size: 0;
-  padding-block: 8px;
+  padding-block: var(--mat-text-input-textarea-padding-block-start) 8px;
   overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: var(--mat-sys-color-outline) transparent;
+  mask-image: linear-gradient(to bottom, transparent 0 calc(var(--mat-text-input-textarea-padding-block-start) - 6px), black calc(var(--mat-text-input-textarea-padding-block-start) + 4px) 100%), linear-gradient(to right, transparent 0 calc(100% - var(--mat-text-input-textarea-scrollbar-space)), black calc(100% - var(--mat-text-input-textarea-scrollbar-space)) 100%);
   resize: vertical;
 }
 
 .mat-text-input--textarea:has(.mat-text-input__label) .mat-text-input__control {
-  padding-block-start: 24px;
+  --mat-text-input-textarea-padding-block-start: 24px;
 }
 
 .mat-text-input--textarea .mat-text-input__control::-webkit-scrollbar {
