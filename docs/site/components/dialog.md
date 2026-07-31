@@ -345,7 +345,7 @@ Dialog 通过原生 `showModal()` 进入浏览器 top layer，位于 Toolbar、S
 
 ### 命令式函数
 
-四个函数统一从 `mdu-ui/functions` 导入，只接受简单字符串内容，不接受 HTML 字符串、VNode 或 Slots：
+四个函数统一从 `mdu-ui` 根入口导入，只接受简单字符串内容，不接受 HTML 字符串、VNode 或 Slots：
 
 ```js
 import {
@@ -353,7 +353,7 @@ import {
   confirm,
   dialog,
   prompt,
-} from 'mdu-ui/functions';
+} from 'mdu-ui';
 ```
 
 | 函数 | 主要附加选项 | 返回值 |

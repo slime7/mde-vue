@@ -23,7 +23,8 @@
 | [0015](0015-connected-button-group-checked-shape-overrides-outer-shape.md) | active | 连接按钮组选中态完整覆盖组外轮廓 |
 | [0016](0016-public-input-base.md) | active | 公开 MatInputBase 作为可组合文本输入基础组件 |
 | [0017](0017-tooltip-delay-groups.md) | active | 使用应用配置与显式容器协调 Tooltip 延迟 |
-| [0018](0018-distribute-prebuilt-esm-from-private-git.md) | active | 通过私有 Git 分发预构建 ESM |
+| [0018](0018-distribute-prebuilt-esm-from-private-git.md) | superseded | 通过私有 Git 分发预构建 ESM |
+| [0019](0019-minimize-esm-distribution-files.md) | active | 将 ESM 分发压缩为三个文件 |
 
 ## 何时创建 ADR
 

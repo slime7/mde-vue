@@ -281,10 +281,10 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 
 ### 命令式函数
 
-从 `mdu-ui/functions` 导入函数：
+从 `mdu-ui` 根入口导入函数：
 
 ```js
-import { snackbar, toast } from 'mdu-ui/functions';
+import { snackbar, toast } from 'mdu-ui';
 
 await snackbar({
   actionText: '撤销',

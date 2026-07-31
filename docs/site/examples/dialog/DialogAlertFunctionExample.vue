@@ -1,7 +1,7 @@
 <!-- #region script -->
 <script setup>
 import { ref } from 'vue';
-import { alert } from 'mdu-ui/functions';
+import { alert } from 'mdu-ui';
 
 const closed = ref(false);
 

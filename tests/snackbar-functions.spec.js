@@ -3,7 +3,7 @@ import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
 import { createApp, nextTick } from 'vue';
-import { snackbar, toast } from 'mdu-ui/functions';
+import { snackbar, toast } from 'mdu-ui';
 import { createMatUi, MatSnackbar } from '../src';
 
 const wrappers = [];

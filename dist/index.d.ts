@@ -2367,8 +2367,76 @@ export interface MatNavigationRailItemEmits {
 export type MatNavigationRailItemComponent = DefineComponent<MatNavigationRailItemProps, {}, {}, {}, {}, {}, {}, MatNavigationRailItemEmits>;
 export declare const MatNavigationRailItem: MatNavigationRailItemComponent;
 
-export { createMatUi, useMatTheme } from './plugin.js';
-export { default as Intersection } from './directives/intersection/index.js';
+export type MatThemeMode = 'light' | 'dark' | 'system';
+export type MatResolvedThemeMode = 'light' | 'dark';
+export type MatSchemeVariant = 'tonal-spot' | 'neutral' | 'vibrant' | 'expressive';
+export interface MatThemeOptions {
+  mode?: MatThemeMode;
+  seedColor?: string;
+  schemeVariant?: MatSchemeVariant;
+  contrastLevel?: number;
+  target?: HTMLElement;
+}
+export interface MatThemeController {
+  mode: Readonly<import('vue').Ref<MatThemeMode>>;
+  resolvedMode: Readonly<import('vue').Ref<MatResolvedThemeMode>>;
+  seedColor: Readonly<import('vue').Ref<string>>;
+  schemeVariant: Readonly<import('vue').Ref<MatSchemeVariant>>;
+  contrastLevel: Readonly<import('vue').Ref<number>>;
+  target: HTMLElement;
+  setMode(value: MatThemeMode): void;
+  setSeedColor(value: string): void;
+  setSchemeVariant(value: MatSchemeVariant): void;
+  setContrastLevel(value: number): void;
+  dispose(): void;
+}
+export interface MatUiOptions {
+  theme?: MatThemeOptions;
+  iconClass?: string;
+  tooltip?: { openDelay?: number; skipDelayDuration?: number };
+  useCursor?: boolean;
+}
+export declare function createMatUi(options?: MatUiOptions): import('vue').Plugin & { theme: MatThemeController };
+export declare function useMatTheme(): MatThemeController;
+export declare const Intersection: import('vue').ObjectDirective<HTMLElement>;
+
+export type DialogActionVariant = 'elevated' | 'filled' | 'filled-tonal' | 'outlined' | 'standard' | 'text';
+export interface DialogAction<T = unknown> {
+  text: string;
+  value?: T;
+  variant?: DialogActionVariant;
+  color?: string;
+  disabled?: boolean;
+}
+export interface DialogOptions<T = unknown> {
+  attach?: string | HTMLElement;
+  fullScreen?: boolean;
+  width?: number | string;
+  scrim?: boolean;
+  closeOnBack?: boolean;
+  title?: string;
+  content?: string;
+  icon?: string;
+  closeLabel?: string;
+  color?: string;
+  ariaLabel?: string;
+  actions?: DialogAction<T>[];
+}
+export declare function dialog<T = unknown>(options?: DialogOptions<T>): Promise<T | undefined>;
+export declare function alert(options?: Omit<DialogOptions<void>, 'actions'> & { confirmText?: string }): Promise<void>;
+export declare function confirm(options?: Omit<DialogOptions<boolean>, 'actions'> & { confirmText?: string; cancelText?: string }): Promise<boolean>;
+export declare function prompt(options?: Omit<DialogOptions<string | null>, 'actions'> & { confirmText?: string; cancelText?: string; defaultValue?: string; label?: string; placeholder?: string; required?: boolean }): Promise<string | null>;
+export interface SnackbarOptions {
+  text: string;
+  actionText?: string;
+  onAction?: () => void;
+  closable?: boolean;
+  closeLabel?: string;
+  position?: 'left' | 'center' | 'right';
+  duration?: number;
+}
+export declare function snackbar(options: SnackbarOptions): Promise<void>;
+export declare const toast: typeof snackbar;
 
 declare module 'vue' {
   export interface GlobalComponents {

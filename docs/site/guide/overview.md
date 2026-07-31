@@ -33,6 +33,6 @@ import {
 import 'mdu-ui/styles.css';
 ```
 
-完整入口提供 `createMatUi()`、`useMatTheme()` 和组件具名导出。组件也可从各自的独立入口按需导入，例如 `mdu-ui/components/mat-card`。
+唯一根入口提供 `createMatUi()`、`useMatTheme()`、全部组件、指令和命令式函数的具名导出。构建工具仍可对未使用的具名导出执行 tree shaking。
 
-需要动态主题或多个组件时，推荐安装 `createMatUi()` 并使用全局 `mat-*` 标签。仅使用少量组件且接受默认主题时，推荐从单组件入口按需导入。两种方式的完整代码见[安装](/guide/installation)，插件的组件设置见 [`createMatUi`](/guide/create-mat-ui)。
+需要动态主题或多个组件时，推荐安装 `createMatUi()` 并使用全局 `mat-*` 标签。仅使用少量组件且接受默认主题时，从同一根入口具名导入并局部注册。两种方式的完整代码见[安装](/guide/installation)，插件的组件设置见 [`createMatUi`](/guide/create-mat-ui)。

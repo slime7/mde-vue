@@ -19,13 +19,9 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/mdu-ui.js"
     },
-    "./components/*": "./dist/components/*/index.js",
-    "./directives/*": "./dist/directives/*/index.js",
-    "./functions": "./dist/functions/index.js",
-    "./styles.css": "./dist/styles.css",
-    "./tailwind.css": "./dist/tailwind.css"
+    "./styles.css": "./dist/styles.css"
   },
   "scripts": {
     "dev": "vitepress dev docs/site",

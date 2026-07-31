@@ -1,15 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { createApp } from 'vue';
-import MatToolbar, { MatToolbar as NamedMatToolbar } from 'mdu-ui/components/mat-toolbar';
 import {
   createMatUi,
-  MatToolbar as RootMatToolbar,
+  MatToolbar,
 } from 'mdu-ui';
 
 describe('Toolbar 公共导出', () => {
-  it('根入口、具名子入口和默认子入口导出同一个组件', () => {
-    expect(RootMatToolbar).toBe(NamedMatToolbar);
-    expect(MatToolbar).toBe(NamedMatToolbar);
+  it('根入口导出 Toolbar', () => {
+    expect(MatToolbar).toBeTypeOf('object');
   });
 
   it('createMatUi 全局注册 mat-toolbar', () => {
@@ -19,7 +17,7 @@ describe('Toolbar 公共导出', () => {
 
     app.use(plugin);
 
-    expect(app.component('mat-toolbar')).toBe(RootMatToolbar);
+    expect(app.component('mat-toolbar')).toBe(MatToolbar);
     plugin.theme.dispose();
   });
 });

@@ -43,7 +43,7 @@ pnpm docs:dev
 | `pnpm test:run` | 单次运行全部 Vitest 测试 |
 | `pnpm types:build` | 根据公共组件 JSDoc 生成 `src/index.d.ts` |
 | `pnpm types:check` | 检查 `src/index.d.ts` 是否与公共组件 JSDoc 同步 |
-| `pnpm build` | 生成类型声明、单一核心 ESM、入口转发文件、CSS 与类型产物 |
+| `pnpm build` | 生成单一 ESM、合并 CSS 和根入口类型声明三个分发文件 |
 | `pnpm build:check` | 重新生成完整分发产物，用于检查公开入口可构建性 |
 | `pnpm docs:llms` | 从带标记的 Markdown 生成 AI 文档 |
 | `pnpm docs:check` | 检查 `llms.txt` 和 `llms-full.txt` 是否与 Markdown 来源一致 |
@@ -57,7 +57,7 @@ pnpm docs:dev
 | 路径 | 内容 |
 | --- | --- |
 | `src/` | 组件、指令、主题、公共入口和基础样式 |
-| `dist/` | 由 `pnpm build` 生成并提交的单一核心 ESM、入口转发文件、CSS 与类型产物 |
+| `dist/` | 由 `pnpm build` 生成并提交的 `mdu-ui.js`、`styles.css`、`index.d.ts` |
 | `docs/site/` | VitePress 使用文档、AI 使用指南和组件实时预览 |
 | `docs/project/` | 产品愿景、架构、公共抽象、开发入门和 ADR |
 | `tests/` | 主题及跨入口的测试辅助内容 |
@@ -96,7 +96,7 @@ pnpm docs:dev
 ### 增加或修改组件
 
 1. 添加或更新 props、原生属性、事件、组合上下文、组件 `color` 和主题响应测试，并确认新增断言按预期失败。
-2. 在 `src/` 中维护组件 SFC、样式和单组件入口，使测试通过。
+2. 在 `src/` 中维护组件 SFC、样式和唯一根入口，使测试通过。
 3. 同步完整包入口，保持 PascalCase 导出与 `mat-*` 模板标签对应。
 4. 在组件文档的同源实时预览中覆盖主要变体、状态和主题组合。
 5. 更新对应 Markdown API 页面，并按下方的组件文档结构检查内容。
@@ -105,13 +105,13 @@ pnpm docs:dev
 ### 增加或修改公共指令
 
 1. 先添加能覆盖绑定值、修饰符、观察器生命周期和不支持环境的测试，并确认测试按预期失败。
-2. 在 `src/directives/<directive>/` 中维护指令实现和子入口。
-3. 同步根入口、`package.json` 的 `exports`、插件全局注册和按需导入文档。
+2. 在 `src/directives/<directive>/` 中维护指令实现并同步唯一根入口。
+3. 同步插件全局注册和根入口导入文档。
 4. 在 `docs/site/` 中补充带实时预览的指令使用页面，随后重新生成 AI 文档。
 
 ### 编写组件文档
 
-每个公共组件在 `docs/site/components/` 中对应一个纳入 AI 文档的 Markdown 页面。页面必须依次提供组件简介、示例、API、事件和 Slots。介绍需同时写明 `mat-*` 模板标签和 PascalCase 组件导出名，方便使用者从安装文档的按需入口选择正确名称。
+每个公共组件在 `docs/site/components/` 中对应一个纳入 AI 文档的 Markdown 页面。页面必须依次提供组件简介、示例、API、事件和 Slots。介绍需同时写明 `mat-*` 模板标签和 PascalCase 组件导出名，方便使用者从根入口选择正确名称。
 
 全局注册与按需导入的完整写法统一在安装文档中维护，不在每个组件页面重复。安装文档中的入口必须与包 `exports` 一致，并分别展示 `mat-*` 标签与局部导入组件名。
 
@@ -155,7 +155,7 @@ pnpm docs:dev
 import 'mdu-ui/styles.css';
 ```
 
-使用 Tailwind CSS v4 时再导入 `mdu-ui/tailwind.css`。消费方只会加载 `dist/` 中的 ESM 和 CSS，不会编译组件库的 Vue SFC。修改源码或公开入口后运行 `pnpm build`，确认生成产物不含 `.vue` 导入，并将 `dist/` 与源码一同提交。
+`mdu-ui/styles.css` 已包含 Tailwind CSS v4 映射，不再导入其他样式子入口。消费方只会加载 `dist/` 中的 ESM 和 CSS，不会编译组件库的 Vue SFC。修改源码或公开入口后运行 `pnpm build`，确认 `dist/` 只有三个文件且 ESM 不含 `.vue` 导入，并将产物与源码一同提交。
 
 ## 常见问题
 

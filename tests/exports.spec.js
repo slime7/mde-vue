@@ -4,54 +4,12 @@ import {
 } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createApp, nextTick } from 'vue';
-import MatCard, { MatCard as NamedMatCard } from 'mdu-ui/components/mat-card';
-import MatCardHeadline, { MatCardHeadline as NamedMatCardHeadline } from 'mdu-ui/components/mat-card-headline';
-import MatCardMedia, { MatCardMedia as NamedMatCardMedia } from 'mdu-ui/components/mat-card-media';
-import MatCardSubhead, { MatCardSubhead as NamedMatCardSubhead } from 'mdu-ui/components/mat-card-subhead';
-import MatBtn, { MatBtn as NamedMatBtn } from 'mdu-ui/components/mat-btn';
-import MatBtnGroup, { MatBtnGroup as NamedMatBtnGroup } from 'mdu-ui/components/mat-btn-group';
-import MatFab, { MatFab as NamedMatFab } from 'mdu-ui/components/mat-fab';
-import MatIcon, { MatIcon as NamedMatIcon } from 'mdu-ui/components/mat-icon';
-import MatSplitBtn, { MatSplitBtn as NamedMatSplitBtn } from 'mdu-ui/components/mat-split-btn';
-import MatList, { MatList as NamedMatList } from 'mdu-ui/components/mat-list';
-import MatListGroup, { MatListGroup as NamedMatListGroup } from 'mdu-ui/components/mat-list-group';
-import MatListItem, { MatListItem as NamedMatListItem } from 'mdu-ui/components/mat-list-item';
-import MatDivider, { MatDivider as NamedMatDivider } from 'mdu-ui/components/mat-divider';
-import MatCheckbox, { MatCheckbox as NamedMatCheckbox } from 'mdu-ui/components/mat-checkbox';
-import MatRadio, { MatRadio as NamedMatRadio } from 'mdu-ui/components/mat-radio';
-import MatRadioGroup, { MatRadioGroup as NamedMatRadioGroup } from 'mdu-ui/components/mat-radio-group';
-import MatSwitch, { MatSwitch as NamedMatSwitch } from 'mdu-ui/components/mat-switch';
-import MatSlider, { MatSlider as NamedMatSlider } from 'mdu-ui/components/mat-slider';
-import MatRangeSlider, { MatRangeSlider as NamedMatRangeSlider } from 'mdu-ui/components/mat-range-slider';
-import MatTextField, { MatTextField as NamedMatTextField } from 'mdu-ui/components/mat-text-field';
-import MatTextarea, { MatTextarea as NamedMatTextarea } from 'mdu-ui/components/mat-textarea';
-import MatInputBase, { MatInputBase as NamedMatInputBase } from 'mdu-ui/components/mat-input-base';
-import MatMenu, { MatMenu as NamedMatMenu } from 'mdu-ui/components/mat-menu';
-import MatMenuGroup, { MatMenuGroup as NamedMatMenuGroup } from 'mdu-ui/components/mat-menu-group';
-import MatMenuItem, { MatMenuItem as NamedMatMenuItem } from 'mdu-ui/components/mat-menu-item';
-import MatDialog, { MatDialog as NamedMatDialog } from 'mdu-ui/components/mat-dialog';
-import MatBottomSheet, {
-  MatBottomSheet as NamedMatBottomSheet,
-} from 'mdu-ui/components/mat-bottom-sheet';
-import MatSideSheet, { MatSideSheet as NamedMatSideSheet } from 'mdu-ui/components/mat-side-sheet';
-import MatHover, { MatHover as NamedMatHover } from 'mdu-ui/components/mat-hover';
-import MatContainer, { MatContainer as NamedMatContainer } from 'mdu-ui/components/mat-container';
-import MatSpacer, { MatSpacer as NamedMatSpacer } from 'mdu-ui/components/mat-spacer';
-import MatLoader, { MatLoader as NamedMatLoader } from 'mdu-ui/components/mat-loader';
-import MatTooltip, { MatTooltip as NamedMatTooltip } from 'mdu-ui/components/mat-tooltip';
-import Intersection, { Intersection as NamedIntersection } from 'mdu-ui/directives/intersection';
-import MatToolbar, { MatToolbar as NamedMatToolbar } from 'mdu-ui/components/mat-toolbar';
-import MatPanes, { MatPanes as NamedMatPanes } from 'mdu-ui/components/mat-panes';
-import MatPane, { MatPane as NamedMatPane } from 'mdu-ui/components/mat-pane';
-import MatNavigationRail, {
-  MatNavigationRail as NamedMatNavigationRail,
-  MatNavigationRailItem as NamedMatNavigationRailItem,
-} from 'mdu-ui/components/mat-navigation-rail';
 import {
-  alert, confirm, dialog, prompt,
-} from 'mdu-ui/functions';
-import {
+  alert,
+  confirm,
   createMatUi,
+  dialog,
+  prompt,
   Intersection as RootIntersection,
   MatBottomSheet as RootMatBottomSheet,
   MatBtn as RootMatBtn,
@@ -150,60 +108,12 @@ describe('公共组件导出', () => {
     expect(source).not.toContain("from './plugin'");
   });
 
-  it.each([
-    ['MatCard', RootMatCard, NamedMatCard, MatCard],
-    ['MatCardHeadline', RootMatCardHeadline, NamedMatCardHeadline, MatCardHeadline],
-    ['MatCardSubhead', RootMatCardSubhead, NamedMatCardSubhead, MatCardSubhead],
-    ['MatCardMedia', RootMatCardMedia, NamedMatCardMedia, MatCardMedia],
-    ['MatBtn', RootMatBtn, NamedMatBtn, MatBtn],
-    ['MatBtnGroup', RootMatBtnGroup, NamedMatBtnGroup, MatBtnGroup],
-    ['MatFab', RootMatFab, NamedMatFab, MatFab],
-    ['MatIcon', RootMatIcon, NamedMatIcon, MatIcon],
-    ['MatSplitBtn', RootMatSplitBtn, NamedMatSplitBtn, MatSplitBtn],
-    ['MatList', RootMatList, NamedMatList, MatList],
-    ['MatListGroup', RootMatListGroup, NamedMatListGroup, MatListGroup],
-    ['MatListItem', RootMatListItem, NamedMatListItem, MatListItem],
-    ['MatDivider', RootMatDivider, NamedMatDivider, MatDivider],
-    ['MatCheckbox', RootMatCheckbox, NamedMatCheckbox, MatCheckbox],
-    ['MatRadio', RootMatRadio, NamedMatRadio, MatRadio],
-    ['MatRadioGroup', RootMatRadioGroup, NamedMatRadioGroup, MatRadioGroup],
-    ['MatSwitch', RootMatSwitch, NamedMatSwitch, MatSwitch],
-    ['MatSlider', RootMatSlider, NamedMatSlider, MatSlider],
-    ['MatRangeSlider', RootMatRangeSlider, NamedMatRangeSlider, MatRangeSlider],
-    ['MatTextField', RootMatTextField, NamedMatTextField, MatTextField],
-    ['MatTextarea', RootMatTextarea, NamedMatTextarea, MatTextarea],
-    ['MatInputBase', RootMatInputBase, NamedMatInputBase, MatInputBase],
-    ['MatMenu', RootMatMenu, NamedMatMenu, MatMenu],
-    ['MatMenuGroup', RootMatMenuGroup, NamedMatMenuGroup, MatMenuGroup],
-    ['MatMenuItem', RootMatMenuItem, NamedMatMenuItem, MatMenuItem],
-    ['MatDialog', RootMatDialog, NamedMatDialog, MatDialog],
-    ['MatBottomSheet', RootMatBottomSheet, NamedMatBottomSheet, MatBottomSheet],
-    ['MatSideSheet', RootMatSideSheet, NamedMatSideSheet, MatSideSheet],
-    ['MatHover', RootMatHover, NamedMatHover, MatHover],
-    ['MatContainer', RootMatContainer, NamedMatContainer, MatContainer],
-    ['MatSpacer', RootMatSpacer, NamedMatSpacer, MatSpacer],
-    ['MatLoader', RootMatLoader, NamedMatLoader, MatLoader],
-    ['MatTooltip', RootMatTooltip, NamedMatTooltip, MatTooltip],
-    ['MatToolbar', RootMatToolbar, NamedMatToolbar, MatToolbar],
-    ['MatPanes', RootMatPanes, NamedMatPanes, MatPanes],
-    ['MatPane', RootMatPane, NamedMatPane, MatPane],
-    ['MatNavigationRail', RootMatNavigationRail, NamedMatNavigationRail, MatNavigationRail],
-  ])('%s 的根入口、具名子入口和默认子入口指向同一组件', (
-    name,
-    rootExport,
-    namedExport,
-    defaultExport,
-  ) => {
-    expect(rootExport).toBe(namedExport);
-    expect(defaultExport).toBe(namedExport);
-  });
-
-  it('构建后的插件配置能被子入口 Tooltip 读取', async () => {
+  it('单一 ESM 中的插件配置能被 Tooltip 读取', async () => {
     vi.useFakeTimers();
     const target = document.createElement('button');
 
     document.body.append(target);
-    const wrapper = mount(NamedMatTooltip, {
+    const wrapper = mount(RootMatTooltip, {
       attachTo: document.body,
       global: {
         plugins: [createMatUi({
@@ -229,15 +139,6 @@ describe('公共组件导出', () => {
     wrapper.unmount();
     target.remove();
     vi.useRealTimers();
-  });
-
-  it('MatNavigationRailItem 的根入口和具名子入口指向同一组件', () => {
-    expect(RootMatNavigationRailItem).toBe(NamedMatNavigationRailItem);
-  });
-
-  it('Intersection 指令的根入口、具名子入口和默认子入口指向同一对象', () => {
-    expect(RootIntersection).toBe(NamedIntersection);
-    expect(Intersection).toBe(NamedIntersection);
   });
 
   it('createMatUi 全局注册选择控件组件族', () => {
@@ -334,29 +235,17 @@ describe('公共组件导出', () => {
     const javascriptFiles = readdirSync('dist', { recursive: true })
       .filter((file) => file.endsWith('.js'));
 
-    expect(javascriptFiles.length).toBeGreaterThan(0);
-    javascriptFiles.forEach((file) => {
-      const source = readFileSync(`dist/${file}`, 'utf8');
-
-      expect(source).not.toMatch(/\.vue(?:['"]|\?)/);
-      if (file !== 'mdu-ui.js') {
-        expect(source).toContain('mdu-ui.js');
-      }
-    });
+    expect(Object.keys(packageJson.exports)).toEqual(['.', './styles.css']);
+    expect(readdirSync('dist').sort()).toEqual(['index.d.ts', 'mdu-ui.js', 'styles.css']);
+    expect(javascriptFiles).toEqual(['mdu-ui.js']);
+    expect(readFileSync('dist/mdu-ui.js', 'utf8')).not.toMatch(/\.vue(?:['"]|\?)/);
   });
 
-  it('只从 functions 入口导出命令式函数', async () => {
-    const [rootExports, dialogComponentExports] = await Promise.all([
-      import('mdu-ui'),
-      import('mdu-ui/components/mat-dialog'),
-    ]);
-
+  it('从唯一根入口导出命令式函数', () => {
     expect(dialog).toBeTypeOf('function');
     expect(alert).toBeTypeOf('function');
     expect(confirm).toBeTypeOf('function');
     expect(prompt).toBeTypeOf('function');
-    expect(rootExports.dialog).toBeUndefined();
-    expect(dialogComponentExports.dialog).toBeUndefined();
   });
 
   it('不再提供 MatIconBtn 单组件入口', () => {

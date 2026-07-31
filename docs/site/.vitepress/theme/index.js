@@ -1,7 +1,6 @@
 import DefaultTheme from 'vitepress/theme-without-fonts';
 import { watch } from 'vue';
 import { createMatUi } from 'mdu-ui';
-import 'mdu-ui/styles.css';
 import './custom.css';
 import DocsPreview from './DocsPreview.vue';
 

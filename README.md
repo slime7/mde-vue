@@ -35,11 +35,11 @@ createApp(App)
 </template>
 ```
 
-Tailwind CSS v4 项目可再导入适配层：
+Tailwind CSS v4 项目可改为在应用 CSS 中一次性导入 Tailwind 和组件库样式，不再从 JavaScript 重复导入：
 
 ```css
 @import 'tailwindcss';
-@import 'mdu-ui/tailwind.css';
+@import 'mdu-ui/styles.css';
 ```
 
 ## 本地开发

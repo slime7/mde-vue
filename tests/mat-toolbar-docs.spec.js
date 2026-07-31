@@ -32,7 +32,7 @@ describe('Toolbar 文档', () => {
       expect(page).toContain(heading);
     });
     expect(config).toContain("{ text: 'Toolbar 工具栏', link: '/components/toolbar' }");
-    expect(installation).toContain("import { MatToolbar } from 'mdu-ui/components/mat-toolbar';");
+    expect(installation).toContain('MatToolbar,');
     expect(llmsGuide).toContain('Toolbar：`docs/site/components/toolbar.md`');
   });
 

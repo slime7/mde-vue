@@ -23,7 +23,7 @@ describe('Intersection 指令文档', () => {
     expect(page).toContain('`.once`');
     expect(page).toContain('`.quiet`');
     expect(config).toContain("{ text: 'Intersection 相交观察', link: '/directives/intersection' }");
-    expect(installation).toContain("import { Intersection as vIntersection } from 'mdu-ui/directives/intersection';");
+    expect(installation).toContain('Intersection as vIntersection,');
     expect(llmsGuide).toContain('Intersection：`docs/site/directives/intersection.md`');
   });
 

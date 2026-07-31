@@ -11,14 +11,10 @@ Tailwind CSS v4 是可选依赖。先按照 Tailwind 文档为 Vite 项目配置
 
 ```css
 @import "tailwindcss";
-@import "mdu-ui/tailwind.css";
+@import "mdu-ui/styles.css";
 ```
 
-应用入口仍需导入基础主题样式：
-
-```js
-import 'mdu-ui/styles.css';
-```
+上述 CSS 导入已经包含基础主题与组件样式，应用 JavaScript 入口不要再次导入同一文件。
 
 适配层使用 `@theme inline`，将运行时令牌映射到带 `mat` 前缀的 Tailwind 主题变量。常见工具类包括：
 

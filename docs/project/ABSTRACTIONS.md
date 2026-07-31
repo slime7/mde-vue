@@ -14,7 +14,7 @@
 | 主题目标 | 接收运行时 CSS 自定义属性的 DOM 元素，默认是 `document.documentElement` |
 | 组件变体 | 同一组件的视觉层级，例如按钮的 `filled` 或 `outlined`；不等于主题配色变体 |
 | AI 文档来源 | frontmatter 明确标记可进入 AI 文档的 Markdown 使用页面 |
-| ESM 分发产物 | 从 `src/` 可重复构建的单一核心 ESM、公共入口转发文件、CSS 和类型声明 |
+| ESM 分发产物 | 从 `src/` 可重复构建的单一 ESM、合并 CSS 和根入口类型声明 |
 
 ## Mat UI 插件
 
@@ -28,9 +28,9 @@ Tooltip 分组由展示元素最近的 `data-mat-tooltip-group` 祖先定义。�
 
 ## ESM 分发边界
 
-`src/` 是组件、插件、指令、函数和样式的维护权威，`dist/` 是使用方唯一可解析的运行时与类型边界。所有运行时实现必须进入同一个 `dist/mdu-ui.js`；根入口、组件子入口、指令入口和函数入口只转发该核心文件中的导出，使内部上下文、队列和协调器只存在一个模块实例。Vue 保持 peer dependency，Material Color Utilities 保持普通外部依赖；分发产物不包含 `.vue` 导入，也不要求使用方执行依赖生命周期脚本。
+`src/` 是组件、插件、指令、函数和样式的维护权威，`dist/` 是使用方唯一可解析的运行时与类型边界。所有运行时实现必须进入同一个 `dist/mdu-ui.js`，公共 JavaScript API 只通过 `mdu-ui` 根入口具名导入，使内部上下文、队列和协调器只存在一个模块实例。Vue 保持 peer dependency，Material Color Utilities 保持普通外部依赖；分发产物不包含 `.vue` 导入，也不要求使用方执行依赖生命周期脚本。
 
-`dist/styles.css` 由基础令牌和全部 SFC 样式合并生成，`dist/tailwind.css` 与 `dist/index.d.ts` 分别来自 Tailwind 映射和生成的源码类型声明。所有 `dist/` 文件只能通过 `pnpm build` 更新，并与造成变化的源码和文档放在同一提交中。
+`dist/styles.css` 由基础令牌、全部 SFC 样式和 Tailwind 映射合并生成，`dist/index.d.ts` 包含根入口的组件、插件、指令和命令式函数声明。`dist/` 必须恰好包含这两个文件与 `mdu-ui.js`，且只能通过 `pnpm build` 更新，并与造成变化的源码和文档放在同一提交中。
 
 `useMatTheme()` 只能读取当前 Vue 应用提供的主题上下文。组件不得自行创建第二套主题状态；应用级主题控制器是运行时配置的权威来源。
 
@@ -95,7 +95,7 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 - Vue 组件导出使用 PascalCase，例如 `MatBtn`；安装 `createMatUi()` 后，模板可使用 `mat-*`（如 `<mat-btn>`）或对应 PascalCase（如 `<MatBtn>`）。
 - `<mat-spacer>` 是无内容、无交互且固定从无障碍树隐藏的 flex 子元素，只负责增长占据父容器主轴剩余空间，不定义父级方向、对齐或间距。
 - `<mat-container>` 的外层始终铺满父容器，使用视口宽度在 `<600px` 时提供 16px、其他宽度提供 24px 的水平内边距。默认 Slot 位于内部正文层；正文层默认以 1040px 最大宽度和 `margin-inline: auto` 居中，在外层具有确定块轴尺寸时同步铺满高度，外层尺寸未确定时仍由内容自然撑开。`fluid=true` 只取消正文层的最大宽度，不改变外层边距或尺寸。
-- 完整包入口和单组件入口必须导出同一个组件对象与同一套行为。
+- 所有组件、插件、指令和命令式函数必须从唯一根入口导出。
 - 原生元素语义优先于自造交互协议；`<mat-btn>` 渲染原生 `<button>`。
 - 未被组件消费的原生属性和事件应继续传递到根原生元素。
 - 带标签容器的选择控件把 `class`、`style`、`inert`、`aria-hidden` 传给外层标签，其余未消费属性和监听器传给内部原生 input。
@@ -171,7 +171,7 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 标题、正文和图标都遵循 prop 优先于同名 Slot；无标题时必须由使用者提供 `aria-label` 或 `aria-labelledby`。关闭期间 DOM 保留到退出动画完成，随后触发 `closed` 并恢复原焦点。
 
-`dialog()`、`alert()`、`confirm()` 和 `prompt()` 统一从 `mdu-ui/functions` 导入，并且只在客户端调用。正常取消分别返回 `undefined`、`undefined`、`false` 和 `null`，不拒绝 Promise；参数、挂载目标或运行环境错误使用 rejected Promise。Promise 只在退出动画、原生关闭和一次性宿主清理全部完成后结算。多个命令式实例可以并行存在；最后安装的 `createMatUi()` 配置为后续命令式实例提供主题和组件设置。
+`dialog()`、`alert()`、`confirm()` 和 `prompt()` 统一从 `mdu-ui` 根入口导入，并且只在客户端调用。正常取消分别返回 `undefined`、`undefined`、`false` 和 `null`，不拒绝 Promise；参数、挂载目标或运行环境错误使用 rejected Promise。Promise 只在退出动画、原生关闭和一次性宿主清理全部完成后结算。多个命令式实例可以并行存在；最后安装的 `createMatUi()` 配置为后续命令式实例提供主题和组件设置。
 
 ## Bottom sheet 与 Side sheet
 
@@ -191,7 +191,7 @@ Tooltip 只实现 Material 3 Plain tooltip，不提供 color、Rich 内容、操
 
 `<mat-snackbar>` 通过 `modelValue` 请求展示底部短暂通知；它使用全局 FIFO 队列，因此任意模板实例与命令式调用合计同一时刻只显示一条。活动项必须先完成退出动画，下一条才可进入；排队模板项收到 `modelValue=false` 或卸载时取消。`text` 与默认 Slot 都能提供内容，默认 Slot 优先；`actionText` 提供唯一可选文字 action，`action` Slot 存在时优先并接收 `{ action }`，调用后派发 `action` 事件并关闭当前通知；`closable` 提供内置关闭按钮，`close` Slot 存在时优先并接收 `{ close }`。默认持续 4000ms，`duration=0` 常驻，`position` 只接受 `left`、`center`、`right`。
 
-`snackbar(options)` 与别名 `toast` 只从 `mdu-ui/functions` 导入，必须接收包含非空 `text` 的对象；可选 `actionText` 和 `onAction` 分别提供文字 action 与其回调，`onAction` 必须是函数。函数返回在退出动画和单个命令式宿主清理完成后结算的 `Promise<void>`。命令式请求没有 Slots 或取消句柄，但与模板组件使用同一个全局队列，并读取最后安装的插件图标与主题上下文。Snackbar 固定为 `role="status"`、`aria-live="polite"`，从不主动移动焦点。
+`snackbar(options)` 与别名 `toast` 只从 `mdu-ui` 根入口导入，必须接收包含非空 `text` 的对象；可选 `actionText` 和 `onAction` 分别提供文字 action 与其回调，`onAction` 必须是函数。函数返回在退出动画和单个命令式宿主清理完成后结算的 `Promise<void>`。命令式请求没有 Slots 或取消句柄，但与模板组件使用同一个全局队列，并读取最后安装的插件图标与主题上下文。Snackbar 固定为 `role="status"`、`aria-live="polite"`，从不主动移动焦点。
 
 ## Panes 布局面板
 

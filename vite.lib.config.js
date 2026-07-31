@@ -9,7 +9,7 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true,
     lib: {
-      entry: resolve(import.meta.dirname, 'src/distribution-entry.js'),
+      entry: resolve(import.meta.dirname, 'src/index.js'),
       formats: ['es'],
       fileName: 'mdu-ui',
       cssFileName: 'components',

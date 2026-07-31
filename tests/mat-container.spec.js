@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils';
 import {
   describe, expect, it, vi,
 } from 'vitest';
-import { MatContainer } from 'mdu-ui/components/mat-container';
+import { MatContainer } from 'mdu-ui';
 
 describe('MatContainer', () => {
   it('渲染默认 Slot，并将原生属性和事件传给铺满父容器的根元素', async () => {

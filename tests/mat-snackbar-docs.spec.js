@@ -37,7 +37,7 @@ describe('Snackbar 文档', () => {
       expect(page).toContain(heading);
     });
     expect(config).toContain("{ text: 'Snackbar 消息提示', link: '/components/snackbar' }");
-    expect(installation).toContain("import { MatSnackbar } from 'mdu-ui/components/mat-snackbar';");
+    expect(installation).toContain('MatSnackbar,');
     expect(installation).toContain('snackbar,');
     expect(installation).toContain('toast,');
     expect(llmsGuide).toContain('Snackbar：`docs/site/components/snackbar.md`');
