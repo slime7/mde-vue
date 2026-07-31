@@ -19,7 +19,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/mdu-ui.js"
+      "import": "./dist/mdu-ui.js",
+      "default": "./dist/mdu-ui.js"
     },
     "./styles.css": "./dist/styles.css"
   },
