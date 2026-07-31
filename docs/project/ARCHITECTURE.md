@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-`mdu-ui` 是一个私有的 Vue 3 单包组件库。源码由包 `exports` 直接暴露给使用方的 Vue/Vite 构建过程；仓库同时包含带实时预览的 VitePress 中文使用文档、项目维护文档、测试和由 Markdown 生成的 AI 文档。
+`mdu-ui` 是一个私有的 Vue 3 单包组件库。源码经 Vite 编译为仓库内提交的 ESM 分发产物，包 `exports` 只向使用方暴露 `dist/`；仓库同时包含带实时预览的 VitePress 中文使用文档、项目维护文档、测试和由 Markdown 生成的 AI 文档。
 
 长期技术选择及原因记录在 [ADR 索引](adr/README.md)；公共概念和不变量见 [核心抽象](ABSTRACTIONS.md)。
 
@@ -13,7 +13,7 @@
 - 组件默认读取语义令牌；显式十六进制 `color` 通过共享配色模块生成局部 Material 配色，不在组件内重复计算规则。
 - 原生 CSS 令牌是运行时权威值；Tailwind 适配层只提供静态名称映射。
 - Markdown 及其直接引用的 Vue 示例文件是人工维护的使用文档权威来源，AI 文本是生成产物。
-- 包不生成或提交用于分发的 `dist/`。
+- `src/` 是维护权威，`dist/` 是由构建生成并随同源码提交的分发边界，不接受手工修改。
 
 ## 共享组件基础层
 
@@ -28,7 +28,7 @@
 | 原生 CSS | 设计令牌、组件样式和状态层 |
 | Material Color Utilities | 从种子色生成 Material 3 动态配色 |
 | Tailwind CSS v4 | 可选的语义工具类适配 |
-| Vite | 公开入口构建检查与 VitePress 开发服务 |
+| Vite | 生成保留模块边界的 ESM 分发产物与提供 VitePress 开发服务 |
 | VitePress | 中文文档和交互示例 |
 | Vitest 与 Vue Test Utils | 组件和主题行为测试 |
 
@@ -36,7 +36,7 @@
 
 ### 公共入口
 
-`src/index.js` 是完整组件包入口，导出 Icon、Button、FAB、Card、List、Divider、Container、Spacer、Loader、Tooltip、Snackbar、Hover、选择控件、`MatInputBase`、Text field、Textarea、Menu、Dialog、Bottom sheet、Side sheet 组件族、`Intersection` 指令以及 `createMatUi()` 和 `useMatTheme()`。Card 组件族包括容器、ActionArea、Content、Actions、Headline、Subhead 和 Media。`src/index.d.ts` 是对应的类型入口，复用 Vue SFC 类型并声明全局组件。Dialog 与 Snackbar 命令式函数由独立的 `mdu-ui/functions` 入口导出，不从根入口或对应组件子入口重复导出。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口；`Intersection` 指令通过 `mdu-ui/directives/intersection` 单独入口导出。复合组件的父子入口导出与根入口相同的组件对象。`mdu-ui/styles.css` 和 `mdu-ui/tailwind.css` 分别暴露基础令牌与可选 Tailwind 映射。
+`src/index.js` 是完整组件源码入口，导出 Icon、Button、FAB、Card、List、Divider、Container、Spacer、Loader、Tooltip、Snackbar、Hover、选择控件、`MatInputBase`、Text field、Textarea、Menu、Dialog、Bottom sheet、Side sheet 组件族、`Intersection` 指令以及 `createMatUi()` 和 `useMatTheme()`。Card 组件族包括容器、ActionArea、Content、Actions、Headline、Subhead 和 Media。构建将根入口、命令式函数、指令和每个单组件入口编译到 `dist/`，并保留共享内部模块，保证根入口与子入口引用同一个组件对象和 Vue 上下文键。`dist/index.d.ts` 是对外类型入口，由源码声明生成。Dialog 与 Snackbar 命令式函数由独立的 `mdu-ui/functions` 入口导出，不从根入口或对应组件子入口重复导出。每个公共组件分别提供 `mdu-ui/components/<组件目录>` 单组件入口；`Intersection` 指令通过 `mdu-ui/directives/intersection` 单独入口导出。`mdu-ui/styles.css` 暴露基础令牌与全部组件样式，`mdu-ui/tailwind.css` 暴露可选 Tailwind 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -143,7 +143,7 @@ flowchart LR
 
 ## 构建与验证
 
-Vite 构建检查从公开 `exports` 导入 `.vue` 和 CSS，验证普通 Vue/Vite 使用方能直接编译源码。VitePress 只构建 `docs/site/`；文档、测试和静态检查在 Node.js 24 环境中运行，构建产物仅用于验证并保持忽略。
+`pnpm build` 先生成类型声明，再以 Vue 为外部 peer dependency 编译保留模块边界的 ESM，将基础令牌与组件样式合并为 `dist/styles.css`，并复制 Tailwind 映射和类型声明。`dist/` 随源码提交，公开入口测试从包自身 `exports` 加载该产物并检查根入口与子入口身份一致。VitePress 只构建 `docs/site/`；文档、测试和静态检查在 Node.js 24 环境中运行。
 
 ## 安全与可靠性边界
 

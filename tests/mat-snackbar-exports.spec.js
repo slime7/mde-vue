@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { createApp } from 'vue';
-/* eslint-disable import-x/no-named-as-default -- 验证子入口默认导出和具名导出相同。 */
+/* eslint-disable import-x/no-named-as-default, import-x/no-rename-default -- 验证子入口默认导出和具名导出相同。 */
 import MatSnackbar, { MatSnackbar as NamedMatSnackbar } from 'mdu-ui/components/mat-snackbar';
-/* eslint-enable import-x/no-named-as-default */
+/* eslint-enable import-x/no-named-as-default, import-x/no-rename-default */
 import { snackbar, toast } from 'mdu-ui/functions';
 import {
   createMatUi,
   MatSnackbar as RootMatSnackbar,
-} from '../src';
+} from 'mdu-ui';
 
 describe('Snackbar 公共导出', () => {
   it('根入口、具名子入口和默认子入口导出同一个组件', () => {
@@ -28,7 +28,7 @@ describe('Snackbar 公共导出', () => {
 
   it('只从 functions 入口导出 snackbar 和 toast', async () => {
     const [rootExports, componentExports] = await Promise.all([
-      import('../src'),
+      import('mdu-ui'),
       import('mdu-ui/components/mat-snackbar'),
     ]);
 

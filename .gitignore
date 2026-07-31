@@ -2,7 +2,6 @@
 node_modules/
 .pnpm-store/
 unpackage/
-dist/
 coverage/
 docs/site/.vitepress/cache/
 docs/site/.vitepress/dist/

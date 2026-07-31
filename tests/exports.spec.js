@@ -1,7 +1,10 @@
-import { existsSync, readFileSync } from 'node:fs';
-import { describe, expect, it } from 'vitest';
-import { createApp } from 'vue';
-/* eslint-disable import-x/no-named-as-default -- 验证子入口默认导出和具名导出相同。 */
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import {
+  describe, expect, it, vi,
+} from 'vitest';
+import { mount } from '@vue/test-utils';
+import { createApp, nextTick } from 'vue';
+/* eslint-disable import-x/no-named-as-default, import-x/no-rename-default -- 验证子入口默认导出和具名导出相同。 */
 import MatCard, { MatCard as NamedMatCard } from 'mdu-ui/components/mat-card';
 import MatCardHeadline, { MatCardHeadline as NamedMatCardHeadline } from 'mdu-ui/components/mat-card-headline';
 import MatCardMedia, { MatCardMedia as NamedMatCardMedia } from 'mdu-ui/components/mat-card-media';
@@ -45,7 +48,7 @@ import MatNavigationRail, {
   MatNavigationRail as NamedMatNavigationRail,
   MatNavigationRailItem as NamedMatNavigationRailItem,
 } from 'mdu-ui/components/mat-navigation-rail';
-/* eslint-enable import-x/no-named-as-default */
+/* eslint-enable import-x/no-named-as-default, import-x/no-rename-default */
 import {
   alert, confirm, dialog, prompt,
 } from 'mdu-ui/functions';
@@ -94,7 +97,7 @@ import {
   MatTextField as RootMatTextField,
   MatToolbar as RootMatToolbar,
   MatTooltip as RootMatTooltip,
-} from '../src';
+} from 'mdu-ui';
 
 const globalComponents = [
   ['MatBtn', 'mat-btn', RootMatBtn],
@@ -197,6 +200,39 @@ describe('公共组件导出', () => {
     expect(defaultExport).toBe(namedExport);
   });
 
+  it('构建后的插件配置能被子入口 Tooltip 读取', async () => {
+    vi.useFakeTimers();
+    const target = document.createElement('button');
+
+    document.body.append(target);
+    const wrapper = mount(NamedMatTooltip, {
+      attachTo: document.body,
+      global: {
+        plugins: [createMatUi({
+          tooltip: { openDelay: 1500 },
+        })],
+      },
+      props: {
+        content: '分发入口延迟',
+        target,
+      },
+    });
+
+    await nextTick();
+    target.dispatchEvent(new MouseEvent('mouseenter'));
+    await nextTick();
+    await vi.advanceTimersByTimeAsync(1499);
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    await vi.advanceTimersByTimeAsync(1);
+    await nextTick();
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('分发入口延迟');
+
+    wrapper.unmount();
+    target.remove();
+    vi.useRealTimers();
+  });
+
   it('MatNavigationRailItem 的根入口和具名子入口指向同一组件', () => {
     expect(RootMatNavigationRailItem).toBe(NamedMatNavigationRailItem);
   });
@@ -269,7 +305,7 @@ describe('公共组件导出', () => {
 
   it('包入口提供与全局注册同步的 Vue 类型声明', () => {
     const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
-    const declarationPath = 'src/index.d.ts';
+    const declarationPath = 'dist/index.d.ts';
 
     expect(packageJson.types).toBe(`./${declarationPath}`);
     expect(packageJson.exports['.'].types).toBe(`./${declarationPath}`);
@@ -283,9 +319,32 @@ describe('公共组件导出', () => {
     });
   });
 
+  it('所有运行时出口只暴露构建后的 ESM 与 CSS', () => {
+    const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
+    const runtimeTargets = Object.values(packageJson.exports).flatMap((exportValue) => (
+      typeof exportValue === 'string'
+        ? [exportValue]
+        : Object.entries(exportValue)
+          .filter(([condition]) => condition !== 'types')
+          .map(([, target]) => target)
+    ));
+
+    runtimeTargets.forEach((target) => {
+      expect(target).toMatch(/^\.\/dist\//);
+    });
+
+    const javascriptFiles = readdirSync('dist', { recursive: true })
+      .filter((file) => file.endsWith('.js'));
+
+    expect(javascriptFiles.length).toBeGreaterThan(0);
+    javascriptFiles.forEach((file) => {
+      expect(readFileSync(`dist/${file}`, 'utf8')).not.toMatch(/\.vue(?:['"]|\?)/);
+    });
+  });
+
   it('只从 functions 入口导出命令式函数', async () => {
     const [rootExports, dialogComponentExports] = await Promise.all([
-      import('../src'),
+      import('mdu-ui'),
       import('mdu-ui/components/mat-dialog'),
     ]);
 

@@ -7,7 +7,7 @@ order: 20
 
 # 安装
 
-`mdu-ui` 不发布到 npm registry，而是直接从私有 GitHub 仓库安装源码。使用方需要 Vue 3、能够编译 Vue SFC 的 Vite 项目，以及访问仓库的 SSH 凭据。
+`mdu-ui` 不发布到 npm registry，而是从私有 GitHub 仓库安装已提交的 ESM 分发产物。使用方需要 Vue 3、支持 ESM 的构建环境，以及访问仓库的 SSH 凭据。
 
 ## 从私有 Git 仓库安装
 
@@ -17,7 +17,7 @@ order: 20
 pnpm add "mdu-ui@git+ssh://git@github.com/slime7/mdu-ui.git#<commit>"
 ```
 
-不要使用会随时间移动的分支名代替提交 SHA，否则不同时间安装可能得到不同源码。仓库的 `package.json` 直接导出 JavaScript、Vue SFC 和 CSS，不需要也不提供预编译 `dist`。
+不要使用会随时间移动的分支名代替提交 SHA，否则不同时间安装可能得到不同产物。仓库的 `package.json` 只导出已提交的 `dist` ESM、CSS 和类型声明；安装时不运行 `prepare`，使用方也不需要编译组件库的 Vue SFC。
 
 ## 全局注册：推荐用法
 

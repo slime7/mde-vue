@@ -6,7 +6,7 @@
 
 | ADR | 状态 | 主题 |
 | --- | --- | --- |
-| [0001](0001-distribute-source-from-private-git.md) | active | 通过私有 Git 直接分发源码 |
+| [0001](0001-distribute-source-from-private-git.md) | superseded | 通过私有 Git 直接分发源码 |
 | [0002](0002-runtime-and-tailwind-theme-layers.md) | superseded | 采用运行时令牌与 Tailwind 适配双层主题 |
 | [0003](0003-generate-ai-docs-from-markdown.md) | active | 从 Markdown 生成 AI 使用文档 |
 | [0004](0004-material-2025-dynamic-color.md) | active | 采用 Material 2025 动态配色规格 |
@@ -23,6 +23,7 @@
 | [0015](0015-connected-button-group-checked-shape-overrides-outer-shape.md) | active | 连接按钮组选中态完整覆盖组外轮廓 |
 | [0016](0016-public-input-base.md) | active | 公开 MatInputBase 作为可组合文本输入基础组件 |
 | [0017](0017-tooltip-delay-groups.md) | active | 使用应用配置与显式容器协调 Tooltip 延迟 |
+| [0018](0018-distribute-prebuilt-esm-from-private-git.md) | active | 通过私有 Git 分发预构建 ESM |
 
 ## 何时创建 ADR
 

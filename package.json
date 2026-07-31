@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "types": "./src/index.d.ts",
+  "types": "./dist/index.d.ts",
   "packageManager": "pnpm@10.28.0",
   "engines": {
     "node": ">=24 <25",
@@ -18,20 +18,20 @@
   },
   "exports": {
     ".": {
-      "types": "./src/index.d.ts",
-      "default": "./src/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
-    "./components/*": "./src/components/*/index.js",
-    "./directives/*": "./src/directives/*/index.js",
-    "./functions": "./src/functions/index.js",
-    "./styles.css": "./src/styles/index.css",
-    "./tailwind.css": "./src/styles/tailwind.css"
+    "./components/*": "./dist/components/*/index.js",
+    "./directives/*": "./dist/directives/*/index.js",
+    "./functions": "./dist/functions/index.js",
+    "./styles.css": "./dist/styles.css",
+    "./tailwind.css": "./dist/tailwind.css"
   },
   "scripts": {
     "dev": "vitepress dev docs/site",
     "docs:dev": "vitepress dev docs/site",
-    "build": "vite build --config vite.lib.config.js",
-    "build:check": "vite build --config vite.lib.config.js",
+    "build": "node scripts/build-types.mjs && node scripts/build-package.mjs",
+    "build:check": "node scripts/build-types.mjs && node scripts/build-package.mjs",
     "types:build": "node scripts/build-types.mjs",
     "types:check": "node scripts/build-types.mjs --check",
     "docs:llms": "node scripts/build-llms.mjs",
@@ -47,7 +47,7 @@
     "test": "vitest",
     "test:run": "vitest run",
     "validate:agent-docs": "python scripts/validate-agent-docs.py .",
-    "check": "eslint . && stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\" && vitest run && vite build --config vite.lib.config.js && node scripts/build-llms.mjs --check && vitepress build docs/site && python scripts/validate-agent-docs.py ."
+    "check": "eslint . && stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\" && node scripts/build-types.mjs && node scripts/build-package.mjs && vitest run && node scripts/build-llms.mjs --check && vitepress build docs/site && python scripts/validate-agent-docs.py ."
   },
   "dependencies": {
     "@material/material-color-utilities": "^0.4.0"

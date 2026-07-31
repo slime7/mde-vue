@@ -14,6 +14,7 @@
 | 主题目标 | 接收运行时 CSS 自定义属性的 DOM 元素，默认是 `document.documentElement` |
 | 组件变体 | 同一组件的视觉层级，例如按钮的 `filled` 或 `outlined`；不等于主题配色变体 |
 | AI 文档来源 | frontmatter 明确标记可进入 AI 文档的 Markdown 使用页面 |
+| ESM 分发产物 | 从 `src/` 可重复构建、由包 `exports` 暴露并与源码同提交的 `dist/` 文件 |
 
 ## Mat UI 插件
 
@@ -24,6 +25,12 @@
 `useCursor` 必须是 boolean，默认 `false`，控制可用交互组件是否从 `cursor: default` 改为 `cursor: pointer`。`iconClass` 必须是 string，默认 `material-symbols-outlined`，作为公共 Icon 与组件图标容器的全局 class；组件级 `iconClass` 可以覆盖或以空字符串关闭它。`tooltip.openDelay` 与 `tooltip.skipDelayDuration` 必须是非负有限数字，默认均为 `0`；前者是未显式设置 `openDelay` 时的自动打开延迟，后者是同组 Tooltip 快速切换窗口。插件不下载字体或图标资源，未安装插件的按需组件使用相同默认值。
 
 Tooltip 分组由展示元素最近的 `data-mat-tooltip-group` 祖先定义。只有首个 Tooltip 实际显示后，其他实例才可在其指针与焦点离开后的配置窗口内跳过延迟；不同组、同一实例、尚未显示和过期状态不得共享延迟。受控 Tooltip 不参与该自动状态。
+
+## ESM 分发边界
+
+`src/` 是组件、插件、指令、函数和样式的维护权威，`dist/` 是使用方唯一可解析的运行时与类型边界。根入口、组件子入口、指令入口和函数入口必须由同一次保留模块构建生成，使内部上下文、队列和协调器只存在一个模块实例。Vue 保持 peer dependency，Material Color Utilities 保持普通外部依赖；分发产物不包含 `.vue` 导入，也不要求使用方执行依赖生命周期脚本。
+
+`dist/styles.css` 由基础令牌和全部 SFC 样式合并生成，`dist/tailwind.css` 与 `dist/index.d.ts` 分别来自 Tailwind 映射和生成的源码类型声明。所有 `dist/` 文件只能通过 `pnpm build` 更新，并与造成变化的源码和文档放在同一提交中。
 
 `useMatTheme()` 只能读取当前 Vue 应用提供的主题上下文。组件不得自行创建第二套主题状态；应用级主题控制器是运行时配置的权威来源。
 
@@ -209,7 +216,7 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 1. 组件不得依赖 Tailwind 才能正确显示；基础 CSS 始终可独立使用。
 2. Tailwind 工具类与组件样式读取同一组运行时语义值。
 3. 主题模式与解析模式分开表达，`system` 不作为最终颜色方案。
-4. 公共源码入口不能依赖仓库内部文档预览或文档实现。
+4. 公共源码和 ESM 分发入口不能依赖仓库内部文档预览或文档实现。
 5. 新组件只有在公共导出、样式、测试、文档实时预览和使用文档同时存在时才算完整。
 6. 不为 SSR、旧浏览器、本地化或 npm 发布加入隐含兼容分支。
 7. 组件文档中的导入路径、模板标签、API 和状态必须能由当前公共实现与测试验证。
