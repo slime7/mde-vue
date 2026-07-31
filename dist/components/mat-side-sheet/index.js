@@ -1,5 +1,2 @@
-import e from "./MatSideSheet.js";
-//#region src/components/mat-side-sheet/index.js
-var t = e;
-//#endregion
-export { e as MatSideSheet, t as default };
+export { MatSideSheet } from '../../mdu-ui.js';
+export { MatSideSheet as default } from '../../mdu-ui.js';

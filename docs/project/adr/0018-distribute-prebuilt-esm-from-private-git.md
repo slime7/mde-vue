@@ -10,7 +10,7 @@
 
 ## 决策
 
-继续通过私有 Git 和完整提交 SHA 安装，但 package exports 只暴露仓库中已提交的 dist ESM、合并 CSS、Tailwind 映射与类型声明。构建保留公共入口和内部模块边界，Vue 与 Material Color Utilities 保持外部依赖；源码是维护权威，dist 由 pnpm build 可重复生成且不得手工修改。
+继续通过私有 Git 和完整提交 SHA 安装，但 package exports 只暴露仓库中已提交的 `dist/`。所有运行时实现编译为一个核心 ESM，根入口与子入口通过轻量文件转发核心导出；合并 CSS、Tailwind 映射与类型声明保持独立。Vue 与 Material Color Utilities 保持外部依赖；源码是维护权威，`dist/` 由 `pnpm build` 可重复生成且不得手工修改。
 
 ## 考虑的方案
 
@@ -20,7 +20,7 @@
 
 ## 影响
 
-- 消费方不再编译 mdu-ui 的 Vue SFC，根入口与子入口共享构建图中的内部模块。
+- 消费方不再编译 mdu-ui 的 Vue SFC，根入口与子入口共享同一个核心 ESM 中的内部状态。
 - Git 提交必须同时包含与源码同步的 `dist/`，评审中需检查生成产物。
 - 新增公共入口时必须纳入构建输入和 `exports`。
 - 仍不发布 npm registry，也不提供 CommonJS 或 SSR 兼容。

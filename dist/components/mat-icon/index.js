@@ -1,5 +1,2 @@
-import e from "./MatIcon.js";
-//#region src/components/mat-icon/index.js
-var t = e;
-//#endregion
-export { e as MatIcon, t as default };
+export { MatIcon } from '../../mdu-ui.js';
+export { MatIcon as default } from '../../mdu-ui.js';

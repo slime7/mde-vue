@@ -1,5 +1,2 @@
-import e from "./MatRadioGroup.js";
-//#region src/components/mat-radio-group/index.js
-var t = e;
-//#endregion
-export { e as MatRadioGroup, t as default };
+export { MatRadioGroup } from '../../mdu-ui.js';
+export { MatRadioGroup as default } from '../../mdu-ui.js';

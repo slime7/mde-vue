@@ -4,7 +4,6 @@ import {
 } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createApp, nextTick } from 'vue';
-/* eslint-disable import-x/no-named-as-default, import-x/no-rename-default -- 验证子入口默认导出和具名导出相同。 */
 import MatCard, { MatCard as NamedMatCard } from 'mdu-ui/components/mat-card';
 import MatCardHeadline, { MatCardHeadline as NamedMatCardHeadline } from 'mdu-ui/components/mat-card-headline';
 import MatCardMedia, { MatCardMedia as NamedMatCardMedia } from 'mdu-ui/components/mat-card-media';
@@ -48,7 +47,6 @@ import MatNavigationRail, {
   MatNavigationRail as NamedMatNavigationRail,
   MatNavigationRailItem as NamedMatNavigationRailItem,
 } from 'mdu-ui/components/mat-navigation-rail';
-/* eslint-enable import-x/no-named-as-default, import-x/no-rename-default */
 import {
   alert, confirm, dialog, prompt,
 } from 'mdu-ui/functions';
@@ -338,7 +336,12 @@ describe('公共组件导出', () => {
 
     expect(javascriptFiles.length).toBeGreaterThan(0);
     javascriptFiles.forEach((file) => {
-      expect(readFileSync(`dist/${file}`, 'utf8')).not.toMatch(/\.vue(?:['"]|\?)/);
+      const source = readFileSync(`dist/${file}`, 'utf8');
+
+      expect(source).not.toMatch(/\.vue(?:['"]|\?)/);
+      if (file !== 'mdu-ui.js') {
+        expect(source).toContain('mdu-ui.js');
+      }
     });
   });
 

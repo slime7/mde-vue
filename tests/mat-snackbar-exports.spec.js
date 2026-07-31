@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createApp } from 'vue';
-/* eslint-disable import-x/no-named-as-default, import-x/no-rename-default -- 验证子入口默认导出和具名导出相同。 */
 import MatSnackbar, { MatSnackbar as NamedMatSnackbar } from 'mdu-ui/components/mat-snackbar';
-/* eslint-enable import-x/no-named-as-default, import-x/no-rename-default */
 import { snackbar, toast } from 'mdu-ui/functions';
 import {
   createMatUi,

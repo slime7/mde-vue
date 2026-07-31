@@ -14,7 +14,7 @@
 | 主题目标 | 接收运行时 CSS 自定义属性的 DOM 元素，默认是 `document.documentElement` |
 | 组件变体 | 同一组件的视觉层级，例如按钮的 `filled` 或 `outlined`；不等于主题配色变体 |
 | AI 文档来源 | frontmatter 明确标记可进入 AI 文档的 Markdown 使用页面 |
-| ESM 分发产物 | 从 `src/` 可重复构建、由包 `exports` 暴露并与源码同提交的 `dist/` 文件 |
+| ESM 分发产物 | 从 `src/` 可重复构建的单一核心 ESM、公共入口转发文件、CSS 和类型声明 |
 
 ## Mat UI 插件
 
@@ -28,7 +28,7 @@ Tooltip 分组由展示元素最近的 `data-mat-tooltip-group` 祖先定义。�
 
 ## ESM 分发边界
 
-`src/` 是组件、插件、指令、函数和样式的维护权威，`dist/` 是使用方唯一可解析的运行时与类型边界。根入口、组件子入口、指令入口和函数入口必须由同一次保留模块构建生成，使内部上下文、队列和协调器只存在一个模块实例。Vue 保持 peer dependency，Material Color Utilities 保持普通外部依赖；分发产物不包含 `.vue` 导入，也不要求使用方执行依赖生命周期脚本。
+`src/` 是组件、插件、指令、函数和样式的维护权威，`dist/` 是使用方唯一可解析的运行时与类型边界。所有运行时实现必须进入同一个 `dist/mdu-ui.js`；根入口、组件子入口、指令入口和函数入口只转发该核心文件中的导出，使内部上下文、队列和协调器只存在一个模块实例。Vue 保持 peer dependency，Material Color Utilities 保持普通外部依赖；分发产物不包含 `.vue` 导入，也不要求使用方执行依赖生命周期脚本。
 
 `dist/styles.css` 由基础令牌和全部 SFC 样式合并生成，`dist/tailwind.css` 与 `dist/index.d.ts` 分别来自 Tailwind 映射和生成的源码类型声明。所有 `dist/` 文件只能通过 `pnpm build` 更新，并与造成变化的源码和文档放在同一提交中。
 

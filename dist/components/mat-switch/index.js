@@ -1,5 +1,2 @@
-import e from "./MatSwitch.js";
-//#region src/components/mat-switch/index.js
-var t = e;
-//#endregion
-export { e as MatSwitch, t as default };
+export { MatSwitch } from '../../mdu-ui.js';
+export { MatSwitch as default } from '../../mdu-ui.js';

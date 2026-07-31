@@ -1,5 +1,2 @@
-import e from "./MatHover.js";
-//#region src/components/mat-hover/index.js
-var t = e;
-//#endregion
-export { e as MatHover, t as default };
+export { MatHover } from '../../mdu-ui.js';
+export { MatHover as default } from '../../mdu-ui.js';

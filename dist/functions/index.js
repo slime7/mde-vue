@@ -1,3 +1,8 @@
-import { alert as e, confirm as t, dialog as n, prompt as r } from "../components/mat-dialog/dialog.js";
-import { snackbar as i, toast as a } from "../components/mat-snackbar/snackbar.js";
-export { e as alert, t as confirm, n as dialog, r as prompt, i as snackbar, a as toast };
+export {
+  __alert as alert,
+  __confirm as confirm,
+  __dialog as dialog,
+  __prompt as prompt,
+  __snackbar as snackbar,
+  __toast as toast,
+} from '../mdu-ui.js';

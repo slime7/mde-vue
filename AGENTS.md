@@ -23,7 +23,7 @@
 - 组件标签统一使用 `mat-*` 前缀，组件目录和导出名称保持一一对应。
 - 组件基于 Vue 实现，不增加 Web Components、React 或其他框架适配层。
 - 样式使用原生 CSS；共享设计值必须通过公开的 `--mat-ref-*` 和 `--mat-sys-*` 令牌表达。组件可以使用 `--mat-<component>-*` 等内部变量组织样式，但这些变量不是公共定制入口。
-- 保持预构建 ESM 分发：公共运行时入口只从包 `exports` 指向已提交的 `dist/`，不添加 npm 发布或 `prepare` 流程。源码是维护权威，`dist/` 必须由 `pnpm build` 生成，禁止手工编辑。
+- 保持单一核心 ESM 分发：全部运行时实现构建到 `dist/mdu-ui.js`，公共根入口与子入口通过轻量转发文件引用该文件；包 `exports` 只指向已提交的 `dist/`，不添加 npm 发布或 `prepare` 流程。源码是维护权威，`dist/` 必须由 `pnpm build` 生成，禁止手工编辑。
 - 只支持最新浏览器和客户端渲染；不要加入旧浏览器兼容层、SSR 分支、本地化或 IDE 插件。
 - 修改公共导出、组件 props、主题选项或公共 CSS 令牌时，同步更新测试、使用文档和 AI 文档来源页面。
 - mdui 改编内容应标注来源；不得删除 `THIRD_PARTY_NOTICES.md` 或 `licenses/mdui-MIT.txt` 中的许可信息。

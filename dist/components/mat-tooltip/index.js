@@ -1,5 +1,2 @@
-import e from "./MatTooltip.js";
-//#region src/components/mat-tooltip/index.js
-var t = e;
-//#endregion
-export { e as MatTooltip, t as default };
+export { MatTooltip } from '../../mdu-ui.js';
+export { MatTooltip as default } from '../../mdu-ui.js';

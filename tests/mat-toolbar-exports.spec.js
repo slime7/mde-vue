@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createApp } from 'vue';
-/* eslint-disable import-x/no-named-as-default, import-x/no-rename-default -- 验证子入口默认导出和具名导出相同。 */
 import MatToolbar, { MatToolbar as NamedMatToolbar } from 'mdu-ui/components/mat-toolbar';
-/* eslint-enable import-x/no-named-as-default, import-x/no-rename-default */
 import {
   createMatUi,
   MatToolbar as RootMatToolbar,

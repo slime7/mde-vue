@@ -1,5 +1,2 @@
-import e from "./MatSplitBtn.js";
-//#region src/components/mat-split-btn/index.js
-var t = e;
-//#endregion
-export { e as MatSplitBtn, t as default };
+export { MatSplitBtn } from '../../mdu-ui.js';
+export { MatSplitBtn as default } from '../../mdu-ui.js';
