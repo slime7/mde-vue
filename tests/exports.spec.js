@@ -235,9 +235,9 @@ describe('公共组件导出', () => {
     const javascriptFiles = readdirSync('dist', { recursive: true })
       .filter((file) => file.endsWith('.js'));
 
-    expect(Object.keys(packageJson.exports)).toEqual(['.', './styles.css']);
+    expect(Object.keys(packageJson.exports)).toEqual(['.', './styles.css', './tailwind.css']);
     expect(packageJson.exports['.'].default).toBe(packageJson.exports['.'].import);
-    expect(readdirSync('dist').sort()).toEqual(['index.d.ts', 'mdu-ui.js', 'styles.css']);
+    expect(readdirSync('dist').sort()).toEqual(['index.d.ts', 'mdu-ui.js', 'styles.css', 'tailwind.css']);
     expect(javascriptFiles).toEqual(['mdu-ui.js']);
     expect(readFileSync('dist/mdu-ui.js', 'utf8')).not.toMatch(/\.vue(?:['"]|\?)/);
   });

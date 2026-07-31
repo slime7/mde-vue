@@ -23,7 +23,7 @@
 - 组件标签统一使用 `mat-*` 前缀，组件目录和导出名称保持一一对应。
 - 组件基于 Vue 实现，不增加 Web Components、React 或其他框架适配层。
 - 样式使用原生 CSS；共享设计值必须通过公开的 `--mat-ref-*` 和 `--mat-sys-*` 令牌表达。组件可以使用 `--mat-<component>-*` 等内部变量组织样式，但这些变量不是公共定制入口。
-- 保持最小 ESM 分发：`dist/` 只包含全部运行时实现的 `mdu-ui.js`、合并样式与 Tailwind 映射的 `styles.css`、根入口类型 `index.d.ts`。公共 JavaScript API 只使用包根入口，不提供组件、指令或函数子入口；不添加 npm 发布或 `prepare` 流程。源码是维护权威，`dist/` 必须由 `pnpm build` 生成，禁止手工编辑。
+- 保持最小 ESM 分发：`dist/` 只包含全部运行时实现的 `mdu-ui.js`、基础令牌与组件样式 `styles.css`、Tailwind v4 映射 `tailwind.css` 以及、根入口类型 `index.d.ts`。公共 JavaScript API 只使用包根入口，不提供组件、指令或函数子入口；不添加 npm 发布或 `prepare` 流程。源码是维护权威，`dist/` 必须由 `pnpm build` 生成，禁止手工编辑。
 - 只支持最新浏览器和客户端渲染；不要加入旧浏览器兼容层、SSR 分支、本地化或 IDE 插件。
 - 修改公共导出、组件 props、主题选项或公共 CSS 令牌时，同步更新测试、使用文档和 AI 文档来源页面。
 - mdui 改编内容应标注来源；不得删除 `THIRD_PARTY_NOTICES.md` 或 `licenses/mdui-MIT.txt` 中的许可信息。
@@ -64,7 +64,7 @@ pnpm validate:agent-docs
 - 根目录 `llms.txt` 和 `llms-full.txt` 由带 AI 文档标记的 Markdown 页面生成，禁止直接编辑。
 - 修改 AI 文档时先编辑对应 Markdown 来源，再运行 `pnpm docs:llms`，并用 `pnpm docs:check` 检查生成结果。
 - `src/index.d.ts` 由 `scripts/build-types.mjs` 根据公共组件 JSDoc 生成，禁止直接编辑；`dist/index.d.ts` 由包构建复制生成。修改组件公共接口注释后运行 `pnpm build`。
-- `dist/` 是必须提交的三文件 ESM 分发产物；修改源码、公共入口或样式后运行 `pnpm build` 并提交同步结果。VitePress 缓存和测试覆盖率等其他本地产物不提交。
+- `dist/` 是必须提交的四文件 ESM 分发产物（包括 `mdu-ui.js`、`styles.css`、`tailwind.css` 和 `index.d.ts`）；修改源码、公共入口或样式后运行 `pnpm build` 并提交同步结果。VitePress 缓存和测试覆盖率等其他本地产物不提交。
 
 ## 文档维护映射
 

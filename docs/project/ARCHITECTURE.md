@@ -36,7 +36,7 @@
 
 ### 公共入口
 
-`src/index.js` 是唯一 JavaScript 公共入口，导出全部组件、`Intersection` 指令、命令式 Dialog 与 Snackbar 函数，以及 `createMatUi()` 和 `useMatTheme()`。构建将该入口编译为唯一运行时文件 `dist/mdu-ui.js`，因此所有组件、Vue 上下文键、队列和协调器只存在一个模块实例。`dist/index.d.ts` 是完整根入口类型声明。包不提供组件、指令、函数或 Tailwind 子入口；`mdu-ui/styles.css` 同时暴露基础令牌、全部组件样式和 Tailwind v4 映射。
+`src/index.js` 是唯一 JavaScript 公共入口，导出全部组件、`Intersection` 指令、命令式 Dialog 与 Snackbar 函数，以及 `createMatUi()` 和 `useMatTheme()`。构建将该入口编译为唯一运行时文件 `dist/mdu-ui.js`，因此所有组件、Vue 上下文键、队列和协调器只存在一个模块实例。`dist/index.d.ts` 是完整根入口类型声明。包不提供组件、指令或函数子入口；`mdu-ui/styles.css` 暴露基础令牌与全部组件样式，`mdu-ui/tailwind.css` 暴露 Tailwind v4 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -143,7 +143,7 @@ flowchart LR
 
 ## 构建与验证
 
-`pnpm build` 先生成完整根入口类型声明，再以 Vue 和 Material Color Utilities 为外部依赖编译单一 `dist/mdu-ui.js`，将基础令牌、组件样式和 Tailwind 映射合并为 `dist/styles.css`，并复制 `dist/index.d.ts`。构建后 `dist/` 必须恰好包含这三个文件。`dist/` 随源码提交，公开入口测试从包自身 `exports` 加载产物并检查文件集合。VitePress 只构建 `docs/site/`；文档、测试和静态检查在 Node.js 24 环境中运行。
+`pnpm build` 先生成完整根入口类型声明，再以 Vue 和 Material Color Utilities 为外部依赖编译单一 `dist/mdu-ui.js`，将基础令牌与组件样式合并为 `dist/styles.css`，复制 `src/styles/tailwind.css` 至 `dist/tailwind.css` 并复制 `dist/index.d.ts`。构建后 `dist/` 必须恰好包含这四个文件。`dist/` 随源码提交，公开入口测试从包自身 `exports` 加载产物并检查文件集合。VitePress 只构建 `docs/site/`；文档、测试和静态检查在 Node.js 24 环境中运行。
 
 ## 安全与可靠性边界
 

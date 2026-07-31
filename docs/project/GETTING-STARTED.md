@@ -43,7 +43,7 @@ pnpm docs:dev
 | `pnpm test:run` | 单次运行全部 Vitest 测试 |
 | `pnpm types:build` | 根据公共组件 JSDoc 生成 `src/index.d.ts` |
 | `pnpm types:check` | 检查 `src/index.d.ts` 是否与公共组件 JSDoc 同步 |
-| `pnpm build` | 生成单一 ESM、合并 CSS 和根入口类型声明三个分发文件 |
+| `pnpm build` | 生成单一 ESM、基础与组件 CSS、Tailwind CSS 映射和根入口类型声明四个分发文件 |
 | `pnpm build:check` | 重新生成完整分发产物，用于检查公开入口可构建性 |
 | `pnpm docs:llms` | 从带标记的 Markdown 生成 AI 文档 |
 | `pnpm docs:check` | 检查 `llms.txt` 和 `llms-full.txt` 是否与 Markdown 来源一致 |
@@ -57,7 +57,7 @@ pnpm docs:dev
 | 路径 | 内容 |
 | --- | --- |
 | `src/` | 组件、指令、主题、公共入口和基础样式 |
-| `dist/` | 由 `pnpm build` 生成并提交的 `mdu-ui.js`、`styles.css`、`index.d.ts` |
+| `dist/` | 由 `pnpm build` 生成并提交的 `mdu-ui.js`、`styles.css`、`tailwind.css`、`index.d.ts` |
 | `docs/site/` | VitePress 使用文档、AI 使用指南和组件实时预览 |
 | `docs/project/` | 产品愿景、架构、公共抽象、开发入门和 ADR |
 | `tests/` | 主题及跨入口的测试辅助内容 |
@@ -155,7 +155,7 @@ pnpm docs:dev
 import 'mdu-ui/styles.css';
 ```
 
-`mdu-ui/styles.css` 已包含 Tailwind CSS v4 映射，不再导入其他样式子入口。消费方只会加载 `dist/` 中的 ESM 和 CSS，不会编译组件库的 Vue SFC。修改源码或公开入口后运行 `pnpm build`，确认 `dist/` 只有三个文件且 ESM 不含 `.vue` 导入，并将产物与源码一同提交。
+Tailwind CSS v4 项目需在应用 CSS 中导入 `mdu-ui/tailwind.css`。消费方只会加载 `dist/` 中的 ESM 和 CSS，不会编译组件库的 Vue SFC。修改源码或公开入口后运行 `pnpm build`，确认 `dist/` 包含这四个文件且 ESM 不含 `.vue` 导入，并将产物与源码一同提交。
 
 ## 常见问题
 

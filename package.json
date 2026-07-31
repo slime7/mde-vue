@@ -22,7 +22,8 @@
       "import": "./dist/mdu-ui.js",
       "default": "./dist/mdu-ui.js"
     },
-    "./styles.css": "./dist/styles.css"
+    "./styles.css": "./dist/styles.css",
+    "./tailwind.css": "./dist/tailwind.css"
   },
   "scripts": {
     "dev": "vitepress dev docs/site",

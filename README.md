@@ -40,6 +40,7 @@ Tailwind CSS v4 项目可改为在应用 CSS 中一次性导入 Tailwind 和组�
 ```css
 @import 'tailwindcss';
 @import 'mdu-ui/styles.css';
+@import 'mdu-ui/tailwind.css';
 ```
 
 ## 本地开发
