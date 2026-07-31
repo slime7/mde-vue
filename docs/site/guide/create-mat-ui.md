@@ -1,6 +1,6 @@
 ---
 title: createMatUi
-description: 配置 mdu-ui 的全局组件注册、交互指针、图标 class 和主题控制器。
+description: 配置 mdu-ui 的全局组件注册、Tooltip 延迟、交互指针、图标 class 和主题控制器。
 llms: true
 order: 25
 ---
@@ -22,6 +22,10 @@ import 'mdu-ui/styles.css';
 const matUi = createMatUi({
   iconClass: 'material-symbols-outlined',
   useCursor: true,
+  tooltip: {
+    openDelay: 600,
+    skipDelayDuration: 600,
+  },
   theme: {
     mode: 'system',
     seedColor: '#20a6fc',
@@ -31,7 +35,7 @@ const matUi = createMatUi({
 createApp(App).use(matUi).mount('#app');
 ```
 
-所有选项都可以省略。传给 `createMatUi()` 的值必须是对象，`useCursor` 必须是 `boolean`，`iconClass` 必须是 `string`，否则会抛出 `TypeError`。
+所有选项都可以省略。传给 `createMatUi()` 的值必须是对象，`useCursor` 必须是 `boolean`，`iconClass` 必须是 `string`，`tooltip` 必须是对象，否则会抛出 `TypeError`。Tooltip 延迟必须是非负有限数字，非法数值会抛出 `RangeError`。
 
 ## 选项
 
@@ -39,7 +43,32 @@ createApp(App).use(matUi).mount('#app');
 | --- | --- | --- | --- |
 | `iconClass` | `string` | `'material-symbols-outlined'` | 应用于 `MatIcon` 和组件图标容器的空格分隔 class |
 | `useCursor` | `boolean` | `false` | 是否为可用交互组件显示 `cursor: pointer` |
+| `tooltip` | `object` | `{ openDelay: 0, skipDelayDuration: 0 }` | Tooltip 自动打开延迟和同组快速切换窗口 |
 | `theme` | `object` | 默认主题配置 | 动态主题的初始模式、种子色、配色变体、对比度和写入目标 |
+
+## Tooltip 延迟
+
+`tooltip.openDelay` 设置未显式传入 `open-delay` 的自动 Tooltip 打开延迟。`tooltip.skipDelayDuration` 设置同组中首个 Tooltip 实际显示并离开后，其他 Tooltip 可以跳过打开延迟的时长。
+
+```js
+createApp(App).use(createMatUi({
+  tooltip: {
+    openDelay: 600,
+    skipDelayDuration: 600,
+  },
+}));
+```
+
+使用 `data-mat-tooltip-group` 标记语义相关的容器。Tooltip 根据展示元素最近的分组容器协调延迟，因此该机制也适用于 `MatBtn` 和 `MatFab` 内部创建的 Tooltip：
+
+```vue
+<div data-mat-tooltip-group>
+  <mat-btn icon="zoom_in" label="放大" />
+  <mat-btn icon="zoom_out" label="缩小" />
+</div>
+```
+
+首个 Tooltip 必须实际显示后才会激活分组。指针和焦点都离开后开始计算快速切换窗口；窗口内进入同组另一个 Tooltip 时立即显示。未分组、跨组、超过窗口、首个尚未显示或重新进入同一 Tooltip 时仍使用完整延迟。受控 Tooltip 不参与自动延迟。
 
 ## 交互指针
 

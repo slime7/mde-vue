@@ -1972,10 +1972,12 @@ export interface MatTooltipProps {
   /**
   * 自动模式的打开延迟，单位为毫秒；无效值按 0 处理。
   *
-  * @type {number | string}
-  * @default 0
+  * 省略时继承 createMatUi() 的 tooltip.openDelay，未安装插件时为 0。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
   */
-  openDelay?: number | string;
+  openDelay?: number | string | undefined;
 }
 
 export interface MatTooltipEmits {

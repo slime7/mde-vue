@@ -2,6 +2,7 @@
 import {
   computed,
   getCurrentInstance,
+  inject,
   nextTick,
   onBeforeUnmount,
   onMounted,
@@ -14,8 +15,15 @@ import {
   watch,
 } from 'vue';
 import MatHover from '../mat-hover/MatHover.vue';
+import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import { getTooltipPosition, TOOLTIP_LOCATIONS } from '../tooltip-position';
-import { activateTooltip, deactivateTooltip } from '../tooltip-stack';
+import {
+  activateTooltip,
+  activateTooltipDelayGroup,
+  deactivateTooltip,
+  leaveTooltipDelayGroup,
+  shouldSkipTooltipDelay,
+} from '../tooltip-stack';
 import {
   getToolbarRects,
   subscribeToolbarOverlay,
@@ -88,12 +96,14 @@ const props = defineProps({
   /**
    * 自动模式的打开延迟，单位为毫秒；无效值按 0 处理。
    *
-   * @type {number | string}
-   * @default 0
+   * 省略时继承 createMatUi() 的 tooltip.openDelay，未安装插件时为 0。
+   *
+   * @type {number | string | undefined}
+   * @default undefined
    */
   openDelay: {
     type: [Number, String],
-    default: 0,
+    default: undefined,
     validator(value) {
       if (typeof value === 'string' && value.trim() === '') {
         return false;
@@ -114,6 +124,7 @@ const emit = defineEmits({
 const attrs = useAttrs();
 const slots = useSlots();
 const instance = getCurrentInstance();
+const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const activatorHost = ref(null);
 const targetElement = shallowRef(null);
 const hoverTarget = { value: targetElement };
@@ -157,10 +168,12 @@ let mounted = false;
 let pointerInside = false;
 let focusInside = false;
 let warnedAboutTarget = false;
+let activeDelayGroup = null;
 
 const stackEntry = {
   close: requestClose,
 };
+const delayGroupOwner = Symbol('mat-tooltip-delay-group-owner');
 
 /**
  * @param {unknown} value
@@ -252,15 +265,23 @@ function resolveAttach() {
  * @returns {number}
  */
 function getOpenDelay() {
-  const delay = typeof props.openDelay === 'string'
-    ? Number(props.openDelay)
-    : props.openDelay;
+  const configuredDelay = props.openDelay ?? matUi.tooltip.openDelay;
+  const delay = typeof configuredDelay === 'string'
+    ? Number(configuredDelay)
+    : configuredDelay;
 
   if (!Number.isFinite(delay) || delay < 0) {
     return 0;
   }
 
   return delay;
+}
+
+/**
+ * @returns {HTMLElement | null}
+ */
+function resolveDelayGroup() {
+  return targetElement.value?.closest('[data-mat-tooltip-group]') ?? null;
 }
 
 function clearOpenTimer() {
@@ -531,7 +552,10 @@ function scheduleOpen() {
     return;
   }
 
-  const delay = getOpenDelay();
+  const delayGroup = resolveDelayGroup();
+  const delay = shouldSkipTooltipDelay(delayGroup, delayGroupOwner)
+    ? 0
+    : getOpenDelay();
 
   if (delay === 0) {
     showTooltip();
@@ -571,6 +595,11 @@ function updateAutomaticVisibility() {
     return;
   }
 
+  leaveTooltipDelayGroup(
+    activeDelayGroup,
+    delayGroupOwner,
+    matUi.tooltip.skipDelayDuration,
+  );
   scheduleClose();
 }
 
@@ -667,6 +696,8 @@ async function showTooltip() {
   clearCloseTimer();
   clearPhaseTimer();
   activateTooltip(stackEntry);
+  activeDelayGroup = resolveDelayGroup();
+  activateTooltipDelayGroup(activeDelayGroup, delayGroupOwner);
   teleportTarget.value = attach;
   appliedLocation.value = props.location;
   positionStyle.value = { left: '0px', top: '0px' };

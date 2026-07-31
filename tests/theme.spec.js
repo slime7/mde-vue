@@ -160,6 +160,11 @@ describe('主题控制器', () => {
   it('拒绝类型错误的组件选项', () => {
     expect(() => createMatUi({ useCursor: 'pointer' })).toThrow(TypeError);
     expect(() => createMatUi({ iconClass: 1 })).toThrow(TypeError);
+    expect(() => createMatUi({ tooltip: null })).toThrow(TypeError);
+    expect(() => createMatUi({ tooltip: [] })).toThrow(TypeError);
+    expect(() => createMatUi({ tooltip: { openDelay: '600' } })).toThrow(TypeError);
+    expect(() => createMatUi({ tooltip: { openDelay: -1 } })).toThrow(RangeError);
+    expect(() => createMatUi({ tooltip: { skipDelayDuration: Number.NaN } })).toThrow(RangeError);
   });
 
   it('dispose 清理系统主题监听且可重复调用', () => {

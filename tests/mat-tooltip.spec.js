@@ -5,6 +5,7 @@ import {
 import { h, nextTick } from 'vue';
 import MatHover from '../src/components/mat-hover/MatHover.vue';
 import MatTooltip from '../src/components/mat-tooltip/MatTooltip.vue';
+import { createMatUi } from '../src/plugin';
 
 async function settleRender() {
   await nextTick();
@@ -23,6 +24,30 @@ function createTarget(id) {
   target.textContent = '展示元素';
   document.body.append(target);
   return target;
+}
+
+/**
+ * @param {string} id
+ * @param {string[]} targetIds
+ * @returns {{ group: HTMLDivElement, targets: HTMLButtonElement[] }}
+ */
+function createTooltipGroup(id, targetIds) {
+  const group = document.createElement('div');
+
+  group.id = id;
+  group.setAttribute('data-mat-tooltip-group', '');
+  const targets = targetIds.map((targetId) => {
+    const target = document.createElement('button');
+
+    target.id = targetId;
+    target.type = 'button';
+    target.textContent = targetId;
+    group.append(target);
+    return target;
+  });
+
+  document.body.append(group);
+  return { group, targets };
 }
 
 /**
@@ -322,6 +347,220 @@ describe('MatTooltip', () => {
     expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
 
     wrapper.unmount();
+  });
+
+  it('未显式设置 openDelay 时使用插件 Tooltip 打开延迟', async () => {
+    const target = createTarget('plugin-delay-target');
+    const plugin = createMatUi({
+      tooltip: {
+        openDelay: 600,
+        skipDelayDuration: 600,
+      },
+    });
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      global: { plugins: [plugin] },
+      props: {
+        content: '插件延迟',
+        target,
+      },
+    });
+
+    target.dispatchEvent(new MouseEvent('mouseenter'));
+    await vi.advanceTimersByTimeAsync(599);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    await vi.advanceTimersByTimeAsync(1);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('插件延迟');
+
+    wrapper.unmount();
+    plugin.theme.dispose();
+  });
+
+  it('显式 openDelay 优先于插件 Tooltip 打开延迟', async () => {
+    const target = createTarget('explicit-delay-target');
+    const plugin = createMatUi({ tooltip: { openDelay: 600 } });
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      global: { plugins: [plugin] },
+      props: {
+        content: '显式延迟',
+        openDelay: 100,
+        target,
+      },
+    });
+
+    target.dispatchEvent(new MouseEvent('mouseenter'));
+    await vi.advanceTimersByTimeAsync(100);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('显式延迟');
+
+    wrapper.unmount();
+    plugin.theme.dispose();
+  });
+
+  it('首个 Tooltip 显示后在有效期内切换同组目标时立即打开', async () => {
+    const { targets } = createTooltipGroup('shared-delay-group', ['group-first', 'group-second']);
+    const plugin = createMatUi({
+      tooltip: {
+        openDelay: 600,
+        skipDelayDuration: 600,
+      },
+    });
+    const first = mount(MatTooltip, {
+      attachTo: document.body,
+      global: { plugins: [plugin] },
+      props: { content: '同组第一个', target: targets[0] },
+    });
+    const second = mount(MatTooltip, {
+      attachTo: document.body,
+      global: { plugins: [plugin] },
+      props: { content: '同组第二个', target: targets[1] },
+    });
+
+    targets[0].dispatchEvent(new MouseEvent('mouseenter'));
+    await vi.advanceTimersByTimeAsync(600);
+    await settleRender();
+    targets[0].dispatchEvent(new MouseEvent('mouseleave'));
+    targets[1].dispatchEvent(new MouseEvent('mouseenter'));
+    await settleRender();
+
+    expect([...document.body.querySelectorAll('[role="tooltip"]')]
+      .some((tooltip) => tooltip.textContent.includes('同组第二个'))).toBe(true);
+
+    first.unmount();
+    second.unmount();
+    plugin.theme.dispose();
+  });
+
+  it('键盘焦点在同组 Tooltip 之间切换时复用快速切换窗口', async () => {
+    const { targets } = createTooltipGroup('focus-delay-group', ['focus-first', 'focus-second']);
+    const plugin = createMatUi({
+      tooltip: {
+        openDelay: 600,
+        skipDelayDuration: 600,
+      },
+    });
+    const first = mount(MatTooltip, {
+      attachTo: document.body,
+      global: { plugins: [plugin] },
+      props: { content: '焦点第一个', target: targets[0] },
+    });
+    const second = mount(MatTooltip, {
+      attachTo: document.body,
+      global: { plugins: [plugin] },
+      props: { content: '焦点第二个', target: targets[1] },
+    });
+
+    targets[0].dispatchEvent(new FocusEvent('focusin'));
+    await vi.advanceTimersByTimeAsync(600);
+    await settleRender();
+    targets[0].dispatchEvent(new FocusEvent('focusout', { relatedTarget: targets[1] }));
+    targets[1].dispatchEvent(new FocusEvent('focusin', { relatedTarget: targets[0] }));
+    await settleRender();
+
+    expect([...document.body.querySelectorAll('[role="tooltip"]')]
+      .some((tooltip) => tooltip.textContent.includes('焦点第二个'))).toBe(true);
+
+    first.unmount();
+    second.unmount();
+    plugin.theme.dispose();
+  });
+
+  it('首个 Tooltip 未显示、切换不同组或有效期结束时保留完整延迟', async () => {
+    const firstGroup = createTooltipGroup('delay-group-a', ['group-a-first', 'group-a-second']);
+    const secondGroup = createTooltipGroup('delay-group-b', ['group-b-first']);
+    const plugin = createMatUi({
+      tooltip: {
+        openDelay: 600,
+        skipDelayDuration: 600,
+      },
+    });
+    const wrappers = [
+      ['同组首个', firstGroup.targets[0]],
+      ['同组第二个', firstGroup.targets[1]],
+      ['不同组', secondGroup.targets[0]],
+    ].map(([content, target]) => mount(MatTooltip, {
+      attachTo: document.body,
+      global: { plugins: [plugin] },
+      props: { content, target },
+    }));
+
+    firstGroup.targets[0].dispatchEvent(new MouseEvent('mouseenter'));
+    await vi.advanceTimersByTimeAsync(300);
+    firstGroup.targets[0].dispatchEvent(new MouseEvent('mouseleave'));
+    firstGroup.targets[1].dispatchEvent(new MouseEvent('mouseenter'));
+    await vi.advanceTimersByTimeAsync(599);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    await vi.advanceTimersByTimeAsync(1);
+    await settleRender();
+    firstGroup.targets[1].dispatchEvent(new MouseEvent('mouseleave'));
+    secondGroup.targets[0].dispatchEvent(new MouseEvent('mouseenter'));
+    await settleRender();
+
+    expect([...document.body.querySelectorAll('[role="tooltip"]')]
+      .some((tooltip) => tooltip.textContent.includes('不同组'))).toBe(false);
+
+    await vi.advanceTimersByTimeAsync(600);
+    await settleRender();
+    secondGroup.targets[0].dispatchEvent(new MouseEvent('mouseleave'));
+    await vi.advanceTimersByTimeAsync(601);
+    firstGroup.targets[0].dispatchEvent(new MouseEvent('mouseenter'));
+    await vi.advanceTimersByTimeAsync(599);
+    await settleRender();
+
+    expect([...document.body.querySelectorAll('[role="tooltip"]')]
+      .some((tooltip) => tooltip.textContent.includes('同组首个'))).toBe(false);
+
+    wrappers.forEach((wrapper) => wrapper.unmount());
+    plugin.theme.dispose();
+  });
+
+  it('同一 Tooltip 在有效期内重新进入时仍等待完整延迟', async () => {
+    const { targets } = createTooltipGroup('same-tooltip-group', ['same-tooltip-target']);
+    const plugin = createMatUi({
+      tooltip: {
+        openDelay: 600,
+        skipDelayDuration: 600,
+      },
+    });
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      global: { plugins: [plugin] },
+      props: { content: '同一实例', target: targets[0] },
+    });
+
+    targets[0].dispatchEvent(new MouseEvent('mouseenter'));
+    await vi.advanceTimersByTimeAsync(600);
+    await settleRender();
+    targets[0].dispatchEvent(new MouseEvent('mouseleave'));
+    targets[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    await vi.advanceTimersByTimeAsync(150);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    targets[0].dispatchEvent(new MouseEvent('mouseenter'));
+    await vi.advanceTimersByTimeAsync(599);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    await vi.advanceTimersByTimeAsync(1);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('同一实例');
+
+    wrapper.unmount();
+    plugin.theme.dispose();
   });
 
   it('将模板中的静态数字 open-delay 解析为毫秒延迟', async () => {

@@ -22,6 +22,7 @@
 | [0014](0014-connected-button-group-checked-shape.md) | superseded | 连接按钮组选中态使用全圆形状 |
 | [0015](0015-connected-button-group-checked-shape-overrides-outer-shape.md) | active | 连接按钮组选中态完整覆盖组外轮廓 |
 | [0016](0016-public-input-base.md) | active | 公开 MatInputBase 作为可组合文本输入基础组件 |
+| [0017](0017-tooltip-delay-groups.md) | active | 使用应用配置与显式容器协调 Tooltip 延迟 |
 
 ## 何时创建 ADR
 

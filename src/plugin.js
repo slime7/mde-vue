@@ -42,7 +42,10 @@ import MatPane from './components/mat-panes/MatPane.vue';
 import MatNavigationRail from './components/mat-navigation-rail/MatNavigationRail.vue';
 import MatNavigationRailItem from './components/mat-navigation-rail/MatNavigationRailItem.vue';
 import { setImperativeContext } from './imperative-context';
-import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from './mat-ui-context';
+import MAT_UI_KEY, {
+  DEFAULT_MAT_UI_OPTIONS,
+  DEFAULT_TOOLTIP_OPTIONS,
+} from './mat-ui-context';
 import createThemeController from './theme';
 import MAT_THEME_KEY from './theme-context';
 import { Intersection } from './directives/intersection';
@@ -96,7 +99,14 @@ const GLOBAL_COMPONENTS = [
  * @typedef {object} MatUiOptions
  * @property {import('./theme.js').MatThemeOptions} [theme]
  * @property {string} [iconClass='material-symbols-outlined']
+ * @property {MatTooltipOptions} [tooltip]
  * @property {boolean} [useCursor=false]
+ */
+
+/**
+ * @typedef {object} MatTooltipOptions
+ * @property {number} [openDelay=0] 自动模式的默认打开延迟，单位为毫秒。
+ * @property {number} [skipDelayDuration=0] 同组 Tooltip 跳过打开延迟的有效时长，单位为毫秒。
  */
 
 /**
@@ -129,6 +139,50 @@ function readIconClass(options) {
 }
 
 /**
+ * @param {MatTooltipOptions} options
+ * @param {'openDelay' | 'skipDelayDuration'} name
+ * @returns {number}
+ */
+function readTooltipDelay(options, name) {
+  const value = options[name];
+
+  if (value === undefined) {
+    return DEFAULT_TOOLTIP_OPTIONS[name];
+  }
+
+  if (typeof value !== 'number') {
+    throw new TypeError(`createMatUi tooltip.${name} 必须是 number`);
+  }
+
+  if (!Number.isFinite(value) || value < 0) {
+    throw new RangeError(`createMatUi tooltip.${name} 必须是非负有限数字`);
+  }
+
+  return value;
+}
+
+/**
+ * @param {MatUiOptions} options
+ * @returns {Readonly<MatTooltipOptions>}
+ */
+function readTooltipOptions(options) {
+  const value = options.tooltip;
+
+  if (value === undefined) {
+    return DEFAULT_TOOLTIP_OPTIONS;
+  }
+
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new TypeError('createMatUi tooltip 必须是对象');
+  }
+
+  return Object.freeze({
+    openDelay: readTooltipDelay(value, 'openDelay'),
+    skipDelayDuration: readTooltipDelay(value, 'skipDelayDuration'),
+  });
+}
+
+/**
  * 建立全局组件插件和对应主题控制器。
  *
  * @param {MatUiOptions} [options]
@@ -143,6 +197,7 @@ export function createMatUi(options = {}) {
 
   const componentOptions = Object.freeze({
     iconClass: readIconClass(options),
+    tooltip: readTooltipOptions(options),
     useCursor: readBooleanOption(options, 'useCursor'),
   });
   const theme = createThemeController(options.theme);

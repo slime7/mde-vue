@@ -162,7 +162,7 @@ order: 105
 | target | string 或 HTMLElement | 未设置 | 展示元素；字符串按当前 document 的 CSS 选择器解析 |
 | attach | string 或 HTMLElement | body | Tooltip 的 Teleport 目标；字符串按当前 document 的 CSS 选择器解析 |
 | location | top、right、bottom、left 及其 -start、-end 形式 | top | Tooltip 相对展示元素的首选位置 |
-| openDelay | number | 0 | 自动模式的打开延迟，单位为毫秒；可直接写为 open-delay="600"，动态数值使用 :open-delay；负数、空字符串或非有限数字按 0 处理，并触发 Vue prop 校验警告 |
+| openDelay | number | 插件配置或 0 | 自动模式的打开延迟，单位为毫秒；显式值优先于 `createMatUi()` 的 `tooltip.openDelay`；可直接写为 open-delay="600"，动态数值使用 :open-delay；负数、空字符串或非有限数字按 0 处理，并触发 Vue prop 校验警告 |
 
 activator Slot 存在时优先于 target，且必须只渲染一个属于当前 document 的 HTMLElement 根节点。选择器目标在初次挂载时尚未出现，会在后续 Vue 更新中继续解析；只有实际请求展示时仍无法解析，组件才给出警告且不显示。attach 无法解析时同样给出警告并抑制显示。
 
@@ -185,7 +185,9 @@ activator Slot 存在时优先于 target，且必须只渲染一个属于当前 
 
 ## 展示行为与无障碍
 
-自动模式在鼠标悬停或键盘焦点进入展示元素时打开，默认没有延迟；指针和焦点都离开后等待 1.5 秒关闭。Escape 会立即请求关闭当前提示，但节点会保留 150ms 以完成消失动画。模块级协调器保证同一时间只显示一个可见 Tooltip；打开新实例会关闭旧实例，并向受控旧实例发出关闭请求。
+自动模式在鼠标悬停或键盘焦点进入展示元素时打开。打开延迟优先读取组件的 `openDelay`，省略时读取 `createMatUi()` 的 `tooltip.openDelay`，未安装插件时为 0；指针和焦点都离开后等待 1.5 秒关闭。Escape 会立即请求关闭当前提示，但节点会保留 150ms 以完成消失动画。模块级协调器保证同一时间只显示一个可见 Tooltip；打开新实例会关闭旧实例，并向受控旧实例发出关闭请求。
+
+应用可以在包含相关展示元素的最近祖先上添加 `data-mat-tooltip-group`。首个 Tooltip 实际显示后，该实例在指针和焦点都离开时启动 `tooltip.skipDelayDuration` 快速切换窗口；窗口内进入同组另一个 Tooltip 会跳过打开延迟。首个尚未显示、跨组、超过窗口和同一实例重新进入不会跳过延迟。该分组通过展示元素的 DOM 祖先识别，因此同样覆盖 Button 和 FAB 内部创建的 Tooltip。
 
 Tooltip 默认位于上方，展示元素边界与提示之间保持 4px 间距。首选方向空间不足时会翻转到对侧并保留 start、end 对齐；最终坐标始终夹紧在距离视口边缘至少 8px 的区域内。窗口缩放、任意滚动容器滚动以及展示元素或 Tooltip 尺寸变化都会重新计算位置。
 
