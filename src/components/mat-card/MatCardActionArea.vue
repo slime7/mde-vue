@@ -66,5 +66,6 @@ const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
   position: relative;
   z-index: 1;
   display: block;
+  overflow-wrap: anywhere;
 }
 </style>

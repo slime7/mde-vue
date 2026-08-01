@@ -665,10 +665,12 @@ function handleModelValue(value) {
 .mat-text-input__supporting-text {
   flex: 1 1 auto;
   min-inline-size: 0;
+  overflow-wrap: anywhere;
 }
 
 .mat-text-input__counter {
   flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .mat-text-input--focused {

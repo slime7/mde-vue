@@ -218,6 +218,7 @@ provide(MAT_RADIO_GROUP_KEY, {
   flex-direction: column;
   gap: var(--mat-radio-group-item-space);
   align-items: flex-start;
+  max-inline-size: 100%;
   min-inline-size: 0;
   margin: 0;
   padding: 0;
@@ -226,8 +227,10 @@ provide(MAT_RADIO_GROUP_KEY, {
 }
 
 .mat-radio-group__label {
+  max-inline-size: 100%;
   margin-block-end: var(--mat-radio-group-label-space);
   padding: 0;
+  overflow-wrap: anywhere;
   color: var(--mat-radio-label-text-color);
   font-family: var(--mat-sys-typescale-title-medium-font);
   font-size: var(--mat-sys-typescale-title-medium-size);

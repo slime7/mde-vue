@@ -258,6 +258,7 @@ onBeforeUnmount(() => {
   align-items: center;
   min-block-size: var(--mat-menu-item-height);
   inline-size: 100%;
+  min-inline-size: 0;
   padding: 0;
   color: var(--mat-menu-content-color);
   text-align: start;

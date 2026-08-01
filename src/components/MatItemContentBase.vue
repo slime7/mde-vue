@@ -140,6 +140,15 @@ defineProps({
 [data-mat-item-content-supporting] {
   align-self: stretch;
   min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+[data-mat-item-content][data-line-count='1'] [data-mat-item-content-label],
+[data-mat-item-content][data-line-count='1'] [data-mat-item-content-overline],
+[data-mat-item-content][data-line-count='1'] [data-mat-item-content-supporting] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 [data-mat-item-content-label] {
@@ -171,5 +180,6 @@ defineProps({
 
 [data-mat-item-content-overline] {
   color: var(--mat-item-supporting-color);
+  overflow-wrap: anywhere;
 }
 </style>

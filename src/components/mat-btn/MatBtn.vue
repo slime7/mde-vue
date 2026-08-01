@@ -406,6 +406,7 @@ watchEffect(() => {
   --mat-button-outline-width: 1px;
   --mat-button-container-elevation: var(--mat-btn-filled-container-elevation);
   gap: var(--mat-btn-icon-label-space);
+  max-inline-size: 100%;
   min-inline-size: calc(var(--mat-btn-leading-space) + var(--mat-btn-trailing-space));
   padding-inline: var(--mat-btn-leading-space) var(--mat-btn-trailing-space);
   font-family: var(--mat-btn-label-text-font);
@@ -722,6 +723,9 @@ watchEffect(() => {
 .mat-btn__label {
   position: relative;
   z-index: 1;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (hover: hover) {

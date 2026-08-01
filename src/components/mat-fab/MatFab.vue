@@ -258,6 +258,7 @@ watchEffect(() => {
 
 .mat-fab--extended {
   --mat-button-container-width: auto;
+  max-inline-size: 100%;
 }
 
 .mat-fab__icon,
@@ -277,7 +278,10 @@ watchEffect(() => {
 }
 
 .mat-fab__label {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 

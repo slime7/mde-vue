@@ -10,6 +10,7 @@ defineOptions({ name: 'MatCardHeadline' });
 
 <style scoped>
 .mat-card-headline {
+  overflow-wrap: anywhere;
   color: inherit;
   font-family: var(--mat-sys-typescale-title-large-font);
   font-size: var(--mat-sys-typescale-title-large-size);

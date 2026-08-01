@@ -162,7 +162,9 @@ defineExpose({
   display: inline-flex;
   gap: var(--mat-selection-control-label-space, 8px);
   align-items: center;
+  max-inline-size: 100%;
   min-block-size: var(--mat-sys-interaction-target-min-size);
+  min-inline-size: 0;
   color: var(--mat-selection-control-label-color, var(--mat-sys-color-on-surface));
   font-family: var(--mat-sys-typescale-body-large-font);
   font-size: var(--mat-sys-typescale-body-large-size);
@@ -251,7 +253,9 @@ defineExpose({
 }
 
 .mat-selection-control__label {
+  flex: 0 1 auto;
   min-inline-size: 0;
+  overflow-wrap: anywhere;
 }
 
 .mat-selection-control--disabled .mat-selection-control__indicator,

@@ -638,6 +638,7 @@ watchEffect(() => {
   inline-size: 100%;
   padding-inline: 24px;
   margin: 0;
+  overflow-wrap: anywhere;
   color: var(--mat-dialog-headline-color);
   font-family: var(--mat-sys-typescale-headline-small-font);
   font-size: var(--mat-sys-typescale-headline-small-size);
@@ -674,6 +675,7 @@ watchEffect(() => {
   inline-size: 100%;
   padding-inline: 24px;
   overflow-y: auto;
+  overflow-wrap: anywhere;
   scrollbar-width: thin;
   scrollbar-color: var(--mat-sys-color-outline) transparent;
   font-family: var(--mat-sys-typescale-body-medium-font);

@@ -11,7 +11,7 @@ order: 53
 
 `<mat-fab>` 的组件导出名是 `MatFab`。它使用同一个组件表达普通 FAB 和 Extended FAB：没有默认 Slot 文本时渲染纯图标 FAB；有默认 Slot 文本时渲染带标签的 Extended FAB。组件不负责固定定位、滚动收缩、FAB menu 或页面级动效。
 
-纯图标模式需要传入非空 `icon` 和 `label`。`label` 同时作为按钮的可访问名称和默认 Tooltip 文本；Extended FAB 可以省略图标，默认 Slot 标签仍然有效。标签保持单行，组件不会自动截断或换行。
+纯图标模式需要传入非空 `icon` 和 `label`。`label` 同时作为按钮的可访问名称和默认 Tooltip 文本；Extended FAB 可以省略图标，默认 Slot 标签仍然有效。标签保持单行，超出可用宽度时以省略号截断。
 
 ## 示例
 
@@ -158,7 +158,7 @@ FAB 只接受当前主题中的八组官方颜色角色，不接受十六进制�
 
 | 名称 | 内容约束 |
 | --- | --- |
-| 默认 | 可选的单行 Extended FAB 标签；存在非空内容时切换为 Extended FAB，不自动截断或换行 |
+| 默认 | 可选的单行 Extended FAB 标签；存在非空内容时切换为 Extended FAB，超出可用宽度时以省略号截断 |
 
 组件没有其他 Slots，也没有公共方法。
 

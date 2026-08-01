@@ -968,6 +968,7 @@ watch(() => props.closeLabel, (value) => {
   min-inline-size: 0;
   margin: 0;
   padding: 0;
+  overflow-wrap: anywhere;
   color: var(--mat-sys-color-on-surface);
   border: 0;
   font-family: var(--mat-sys-typescale-title-large-font);
@@ -997,6 +998,7 @@ watch(() => props.closeLabel, (value) => {
   inline-size: 100%;
   padding: 16px 24px 24px;
   overflow-y: auto;
+  overflow-wrap: anywhere;
   overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: var(--mat-sys-color-outline) transparent;

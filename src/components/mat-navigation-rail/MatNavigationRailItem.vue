@@ -263,7 +263,7 @@ function handleClick(event) {
   font-weight: var(--mat-navigation-rail-item-label-weight);
   line-height: var(--mat-navigation-rail-item-label-line-height);
   letter-spacing: var(--mat-navigation-rail-item-label-tracking);
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   white-space: normal;
 }
 

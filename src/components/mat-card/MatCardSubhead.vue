@@ -10,6 +10,7 @@ defineOptions({ name: 'MatCardSubhead' });
 
 <style scoped>
 .mat-card-subhead {
+  overflow-wrap: anywhere;
   color: var(--mat-card-subhead-color, var(--mat-sys-color-on-surface-variant));
   font-family: var(--mat-sys-typescale-body-medium-font);
   font-size: var(--mat-sys-typescale-body-medium-size);

@@ -69,6 +69,7 @@ const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => props.
   position: relative;
   overflow: clip;
   box-sizing: border-box;
+  min-inline-size: 0;
   color: var(--mat-card-content-color);
   background: var(--mat-card-container-color);
   border: var(--mat-card-outline-width) solid var(--mat-card-outline-color);

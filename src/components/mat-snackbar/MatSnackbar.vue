@@ -551,14 +551,17 @@ watch(() => props.duration, () => {
   justify-content: center;
   box-sizing: border-box;
   min-inline-size: var(--mat-snackbar-action-target-size);
+  max-inline-size: 100%;
   min-block-size: var(--mat-snackbar-action-target-size);
   padding-inline: 12px;
+  overflow: hidden;
   color: var(--mat-snackbar-action-color);
   font-family: var(--mat-sys-typescale-label-large-font);
   font-size: var(--mat-sys-typescale-label-large-size);
   font-weight: var(--mat-sys-typescale-label-large-weight);
   letter-spacing: var(--mat-sys-typescale-label-large-tracking);
   line-height: var(--mat-sys-typescale-label-large-line-height);
+  text-overflow: ellipsis;
   white-space: nowrap;
   background: transparent;
   border: 0;
