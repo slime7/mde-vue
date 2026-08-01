@@ -1954,7 +1954,8 @@ export interface MatTooltipProps {
   */
   target?: string | HTMLElement | undefined;
   /**
-  * Teleport 目标；字符串按当前 document 的 CSS 选择器解析。
+  * Teleport 目标；字符串按当前 document 的 CSS 选择器解析。省略时优先使用展示元素所在的已打开 dialog 或 Popover，
+  * 找不到时使用 body。
   *
   * @type {string | HTMLElement}
   * @default 'body'

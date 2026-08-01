@@ -774,7 +774,7 @@ var ot = ["id", "data-location"], st = 1500, ct = 150, lt = /*#__PURE__*/ J(/* @
 	},
 	emits: { "update:modelValue": (e) => typeof e == "boolean" },
 	setup(e, { emit: c }) {
-		let u = e, f = c, m = P(), _ = I(), v = d(), C = p(Z, te), w = T(null), E = j(null), D = { value: E }, k = j(null), A = T(null), R = T(!1), z = T(!1), B = T(!1), V = T("closed"), H = T("top"), U = T({}), W = T(!1), G = `${F().replace(/[^\w-]/g, "-")}-tooltip`, K = r(() => typeof m.id == "string" ? m.id : G), q = r(() => u.content === void 0 ? !!_.default : u.content.length > 0), J = r(() => !!_.activator), Y = v?.vnode.props ?? {}, X = Object.prototype.hasOwnProperty.call(Y, "modelValue") || Object.prototype.hasOwnProperty.call(Y, "model-value"), ee, Q, ne, re, ie = !1, $, ae = null, oe = null, se = null, ce = null, le = null, ue = !1, de = !1, fe = !1, pe = !1, me = null, he = { close: Be }, ge = Symbol("mat-tooltip-delay-group-owner");
+		let u = e, f = c, m = P(), _ = I(), v = d(), C = p(Z, te), w = T(null), E = j(null), D = { value: E }, k = j(null), A = T(null), R = T(!1), z = T(!1), B = T(!1), V = T("closed"), H = T("top"), U = T({}), W = T(!1), G = `${F().replace(/[^\w-]/g, "-")}-tooltip`, K = r(() => typeof m.id == "string" ? m.id : G), q = r(() => u.content === void 0 ? !!_.default : u.content.length > 0), J = r(() => !!_.activator), Y = v?.vnode.props ?? {}, X = Object.prototype.hasOwnProperty.call(Y, "modelValue") || Object.prototype.hasOwnProperty.call(Y, "model-value"), ee, Q, ne, re, ie = !1, $, ae = null, oe = null, se = null, ce = null, le = null, ue = !1, de = !1, fe = !1, pe = !1, me = null, he = { close: Xe }, ge = Symbol("mat-tooltip-delay-group-owner");
 		function _e(e) {
 			return !e || typeof HTMLElement > "u" ? null : e instanceof HTMLElement && e.ownerDocument === document ? e : typeof e == "object" ? "value" in e ? _e(e.value) : "$el" in e ? _e(e.$el) : null : null;
 		}
@@ -796,29 +796,52 @@ var ot = ["id", "data-location"], st = 1500, ct = 150, lt = /*#__PURE__*/ J(/* @
 			return J.value ? be() : ye();
 		}
 		function Se() {
-			return typeof u.attach == "string" ? ve(u.attach) : _e(u.attach);
+			return Ce() ? typeof u.attach == "string" ? ve(u.attach) : _e(u.attach) : Ee() ?? document.body;
 		}
 		function Ce() {
+			let e = v?.vnode.props ?? {};
+			return Object.prototype.hasOwnProperty.call(e, "attach");
+		}
+		function we(e) {
+			if (!e.hasAttribute("popover")) return !1;
+			try {
+				return e.matches(":popover-open") || e.hasAttribute("data-popover-open");
+			} catch {
+				return e.hasAttribute("data-popover-open");
+			}
+		}
+		function Te(e) {
+			return e.localName === "dialog" && e.hasAttribute("open") || we(e);
+		}
+		function Ee() {
+			let e = E.value;
+			for (; e;) {
+				if (Te(e)) return e;
+				e = e.parentElement;
+			}
+			return null;
+		}
+		function De() {
 			let e = u.openDelay ?? C.tooltip.openDelay, t = typeof e == "string" ? Number(e) : e;
 			return !Number.isFinite(t) || t < 0 ? 0 : t;
 		}
-		function we() {
+		function Oe() {
 			return E.value?.closest("[data-mat-tooltip-group]") ?? null;
 		}
-		function Te() {
+		function Ae() {
 			Q !== void 0 && (window.clearTimeout(Q), Q = void 0);
 		}
-		function Ee() {
+		function je() {
 			ee !== void 0 && (window.clearTimeout(ee), ee = void 0);
 		}
-		function De() {
+		function Me() {
 			ne !== void 0 && (window.clearTimeout(ne), ne = void 0);
 		}
-		function Oe() {
+		function Ne() {
 			return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? !1;
 		}
-		function Ae(e, t) {
-			if (De(), Oe()) {
+		function Pe(e, t) {
+			if (Me(), Ne()) {
 				t();
 				return;
 			}
@@ -826,23 +849,23 @@ var ot = ["id", "data-location"], st = 1500, ct = 150, lt = /*#__PURE__*/ J(/* @
 				ne = void 0, t();
 			}, e);
 		}
-		function je() {
+		function Fe() {
 			re !== void 0 && (ie ? window.cancelAnimationFrame(re) : window.clearTimeout(re), re = void 0, ie = !1);
 		}
-		function Me() {
+		function Ie() {
 			ce && (le === null ? ce.removeAttribute("aria-describedby") : ce.setAttribute("aria-describedby", le), ce = null, le = null);
 		}
-		function Ne() {
+		function Le() {
 			let e = E.value;
 			if (!z.value || !e || ce === e) return;
-			Me(), ce = e, le = e.getAttribute("aria-describedby");
+			Ie(), ce = e, le = e.getAttribute("aria-describedby");
 			let t = (le ?? "").split(/\s+/).filter(Boolean);
 			t.includes(K.value) || t.push(K.value), e.setAttribute("aria-describedby", t.join(" "));
 		}
-		function Pe() {
-			je(), $?.disconnect(), $ = void 0, oe &&= (oe(), null), se &&= (se(), null);
+		function Re() {
+			Fe(), $?.disconnect(), $ = void 0, oe &&= (oe(), null), se &&= (se(), null);
 		}
-		function Fe() {
+		function ze() {
 			if (!z.value || !E.value || !A.value) return;
 			let e = He({
 				location: u.location,
@@ -859,10 +882,10 @@ var ot = ["id", "data-location"], st = 1500, ct = 150, lt = /*#__PURE__*/ J(/* @
 				top: `${e.top}px`
 			}, B.value = !0;
 		}
-		function Ie() {
+		function Be() {
 			if (!z.value || re !== void 0) return;
 			let e = () => {
-				re = void 0, ie = !1, Fe();
+				re = void 0, ie = !1, ze();
 			};
 			if (typeof window.requestAnimationFrame == "function") {
 				ie = !0, re = window.requestAnimationFrame(e);
@@ -870,137 +893,137 @@ var ot = ["id", "data-location"], st = 1500, ct = 150, lt = /*#__PURE__*/ J(/* @
 			}
 			re = window.setTimeout(e, 0);
 		}
-		function Le() {
-			oe || (window.addEventListener("resize", Ie), document.addEventListener("scroll", Ie, !0), oe = () => {
-				window.removeEventListener("resize", Ie), document.removeEventListener("scroll", Ie, !0);
-			}, se = at(Ie), typeof ResizeObserver < "u" && ($ = new ResizeObserver(Ie), $.observe(E.value), $.observe(A.value)));
+		function Ve() {
+			oe || (window.addEventListener("resize", Be), document.addEventListener("scroll", Be, !0), oe = () => {
+				window.removeEventListener("resize", Be), document.removeEventListener("scroll", Be, !0);
+			}, se = at(Be), typeof ResizeObserver < "u" && ($ = new ResizeObserver(Be), $.observe(E.value), $.observe(A.value)));
 		}
-		function Re() {
+		function Ue() {
 			R.value = !1, V.value = "closed", z.value = !1, B.value = !1, k.value = null;
 		}
-		function ze({ immediate: e = !1 } = {}) {
-			if (Te(), Ee(), Pe(), Me(), Ke(he), !R.value) {
-				Re();
+		function We({ immediate: e = !1 } = {}) {
+			if (Ae(), je(), Re(), Ie(), Ke(he), !R.value) {
+				Ue();
 				return;
 			}
 			if (!(!e && V.value === "closing")) {
 				if (e) {
-					De(), Re();
+					Me(), Ue();
 					return;
 				}
-				z.value = !1, V.value = "closing", Ae(ct, Re);
+				z.value = !1, V.value = "closing", Pe(ct, Ue);
 			}
 		}
-		function Be() {
-			X && (W.value = !0, f("update:modelValue", !1)), ze();
+		function Xe() {
+			X && (W.value = !0, f("update:modelValue", !1)), We();
 		}
-		function Ve() {
+		function Ze() {
 			pe || (pe = !0, console.warn(J.value ? "MatTooltip: activator Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点" : "MatTooltip: target 必须指向当前 document 中存在的 HTMLElement"));
 		}
-		function Ue({ warn: e = !0 } = {}) {
+		function Qe({ warn: e = !0 } = {}) {
 			let t = xe();
 			if (t === E.value) {
-				!t && q.value && e && Ve();
+				!t && q.value && e && Ze();
 				return;
 			}
 			let n = E.value !== null;
-			Me(), nt(), E.value = t, pe = !1, !t && q.value && e && Ve(), it(), n && z.value && Be();
+			Ie(), dt(), E.value = t, pe = !1, !t && q.value && e && Ze(), ft(), n && z.value && Xe();
 		}
-		function We() {
-			if (Ee(), X || z.value || W.value || !q.value) return;
-			let e = Ye(we(), ge) ? 0 : Ce();
+		function $e() {
+			if (je(), X || z.value || W.value || !q.value) return;
+			let e = Ye(Oe(), ge) ? 0 : De();
 			if (e === 0) {
-				lt();
+				pt();
 				return;
 			}
 			Q === void 0 && (Q = window.setTimeout(() => {
-				Q = void 0, lt();
+				Q = void 0, pt();
 			}, e));
 		}
-		function Xe() {
-			Te(), !(X || !z.value || de || fe) && ee === void 0 && (ee = window.setTimeout(() => {
-				ee = void 0, Be();
+		function et() {
+			Ae(), !(X || !z.value || de || fe) && ee === void 0 && (ee = window.setTimeout(() => {
+				ee = void 0, Xe();
 			}, st));
 		}
-		function Ze() {
+		function tt() {
 			if (de || fe) {
-				We();
+				$e();
 				return;
 			}
-			Je(me, ge, C.tooltip.skipDelayDuration), Xe();
+			Je(me, ge, C.tooltip.skipDelayDuration), et();
 		}
-		function Qe(e) {
-			de = e, Ze();
-		}
-		function $e() {
-			fe = !0, Ze();
-		}
-		function et(e) {
-			E.value?.contains(e.relatedTarget) || (fe = !1, Ze());
-		}
-		function tt(e) {
-			e.key === "Escape" && (e.preventDefault(), Be());
-		}
-		function nt() {
-			ae && (ae(), ae = null, de = !1, fe = !1);
+		function nt(e) {
+			de = e, tt();
 		}
 		function it() {
+			fe = !0, tt();
+		}
+		function lt(e) {
+			E.value?.contains(e.relatedTarget) || (fe = !1, tt());
+		}
+		function ut(e) {
+			e.key === "Escape" && (e.preventDefault(), Xe());
+		}
+		function dt() {
+			ae && (ae(), ae = null, de = !1, fe = !1);
+		}
+		function ft() {
 			let e = E.value;
-			e && (e.addEventListener("keydown", tt), !X && q.value && (e.addEventListener("focusin", $e), e.addEventListener("focusout", et)), ae = () => {
-				e.removeEventListener("keydown", tt), e.removeEventListener("focusin", $e), e.removeEventListener("focusout", et);
+			e && (e.addEventListener("keydown", ut), !X && q.value && (e.addEventListener("focusin", it), e.addEventListener("focusout", lt)), ae = () => {
+				e.removeEventListener("keydown", ut), e.removeEventListener("focusin", it), e.removeEventListener("focusout", lt);
 			});
 		}
-		async function lt() {
+		async function pt() {
 			if (W.value || !q.value) return;
-			if (Ue({ warn: !0 }), !E.value) {
-				Be();
+			if (Qe({ warn: !0 }), !E.value) {
+				Xe();
 				return;
 			}
 			let e = Se();
 			if (!e) {
-				console.warn("MatTooltip: attach 必须指向当前 document 中存在的 HTMLElement"), Be();
+				console.warn("MatTooltip: attach 必须指向当前 document 中存在的 HTMLElement"), Xe();
 				return;
 			}
-			Te(), Ee(), De(), Ge(he), me = we(), qe(me, ge), k.value = e, H.value = u.location, U.value = {
+			Ae(), je(), Me(), Ge(he), me = Oe(), qe(me, ge), k.value = e, H.value = u.location, U.value = {
 				left: "0px",
 				top: "0px"
-			}, B.value = !1, V.value = "opening", R.value = !0, z.value = !0, await g(), z.value && (Ne(), Fe(), Le());
+			}, B.value = !1, V.value = "opening", R.value = !0, z.value = !0, await g(), z.value && (Le(), ze(), Ve());
 		}
 		return b(async () => {
-			ue = !0, Ue({ warn: !1 }), await g(), ue && (Ue({ warn: !1 }), X && u.modelValue && lt());
+			ue = !0, Qe({ warn: !1 }), await g(), ue && (Qe({ warn: !1 }), X && u.modelValue && pt());
 		}), x(() => {
-			Ue({ warn: !1 }), z.value && Ie();
+			Qe({ warn: !1 }), z.value && Be();
 		}), y(() => {
-			ue = !1, De(), nt(), ze({ immediate: !0 });
+			ue = !1, Me(), dt(), We({ immediate: !0 });
 		}), L(() => u.modelValue, (e) => {
 			if (!(!ue || !X)) {
 				if (e) {
-					W.value = !1, lt();
+					W.value = !1, pt();
 					return;
 				}
-				W.value = !1, ze();
+				W.value = !1, We();
 			}
 		}), L([() => u.content, () => u.target], async () => {
 			await g();
 			let e = E.value;
-			Ue({ warn: !1 }), E.value === e && (nt(), it()), q.value || Be();
+			Qe({ warn: !1 }), E.value === e && (dt(), ft()), q.value || Xe();
 		}), L(() => u.attach, async () => {
 			if (!z.value) return;
 			let e = Se();
 			if (!e) {
-				console.warn("MatTooltip: attach 必须指向当前 document 中存在的 HTMLElement"), Be();
+				console.warn("MatTooltip: attach 必须指向当前 document 中存在的 HTMLElement"), Xe();
 				return;
 			}
-			k.value = e, await g(), Ie();
+			k.value = e, await g(), Be();
 		}), L(() => u.location, () => {
-			z.value && Ie();
+			z.value && Be();
 		}), L(K, () => {
-			!z.value || !ce || (Me(), Ne());
+			!z.value || !ce || (Ie(), Le());
 		}), (r, c) => (S(), o(t, null, [
 			!N(X) && q.value ? (S(), i(ke, {
 				key: 0,
 				target: D,
-				"onUpdate:modelValue": Qe
+				"onUpdate:modelValue": nt
 			})) : a("", !0),
 			J.value || !e.target ? (S(), o("span", {
 				key: 1,
@@ -1022,7 +1045,7 @@ var ot = ["id", "data-location"], st = 1500, ct = 150, lt = /*#__PURE__*/ J(/* @
 			}), [e.content === void 0 ? O(r.$slots, "default", { key: 1 }, void 0, !0) : (S(), o(t, { key: 0 }, [l(M(e.content), 1)], 64))], 16, ot)], 8, ["to"])) : a("", !0)
 		], 64));
 	}
-}), [["__scopeId", "data-v-40b59ab7"]]), ut = Symbol("mdu-ui-button-group"), dt = Symbol("mdu-ui-split-button");
+}), [["__scopeId", "data-v-10f9986d"]]), ut = Symbol("mdu-ui-button-group"), dt = Symbol("mdu-ui-split-button");
 //#endregion
 //#region src/components/use-button.js
 function ft(e, t) {

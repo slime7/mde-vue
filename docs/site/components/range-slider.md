@@ -168,7 +168,7 @@ order: 87.5
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | 横向从左到右递增；纵向从下到上递增 |
 | `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'extra-small'` | 对应 16、24、40、56、96px 轨道高度 |
 | `showStopIndicator` | `boolean` | `false` | 最小值与最大值端始终显示终点；手柄与停靠点共用两端各 6px 的保护区域，开启后再为所有离散步长渲染停靠点 |
-| `showValueIndicator` | `boolean` | `false` | 仅为当前聚焦或拖动的手柄通过受控 `MatTooltip` 显示规范化后的数值 |
+| `showValueIndicator` | `boolean` | `false` | 仅为当前聚焦或拖动的手柄通过受控 `MatTooltip` 显示规范化后的数值；手柄位于已打开的 dialog 或 Popover 内时，数值指示自动留在该容器中 |
 | `ariaLabelStart` | `string` | 未设置 | 起始端点的可访问名称；模板属性写作 `aria-label-start` |
 | `ariaLabelEnd` | `string` | 未设置 | 结束端点的可访问名称；模板属性写作 `aria-label-end` |
 

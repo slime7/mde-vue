@@ -69,7 +69,8 @@ const props = defineProps({
     default: undefined,
   },
   /**
-   * Teleport 目标；字符串按当前 document 的 CSS 选择器解析。
+   * Teleport 目标；字符串按当前 document 的 CSS 选择器解析。省略时优先使用展示元素所在的已打开 dialog 或 Popover，
+   * 找不到时使用 body。
    *
    * @type {string | HTMLElement}
    * @default 'body'
@@ -254,11 +255,63 @@ function resolveTarget() {
  * @returns {HTMLElement | null}
  */
 function resolveAttach() {
+  if (!hasExplicitAttach()) {
+    return resolveTopLayerAttach() ?? document.body;
+  }
+
   if (typeof props.attach === 'string') {
     return resolveSelector(props.attach);
   }
 
   return normalizeElement(props.attach);
+}
+
+function hasExplicitAttach() {
+  const vnodeProps = instance?.vnode.props ?? {};
+
+  return Object.prototype.hasOwnProperty.call(vnodeProps, 'attach');
+}
+
+/**
+ * @param {HTMLElement} element
+ * @returns {boolean}
+ */
+function isOpenPopover(element) {
+  if (!element.hasAttribute('popover')) {
+    return false;
+  }
+
+  try {
+    return element.matches(':popover-open') || element.hasAttribute('data-popover-open');
+  } catch {
+    return element.hasAttribute('data-popover-open');
+  }
+}
+
+/**
+ * @param {HTMLElement} element
+ * @returns {boolean}
+ */
+function isOpenTopLayerElement(element) {
+  return (element.localName === 'dialog' && element.hasAttribute('open'))
+    || isOpenPopover(element);
+}
+
+/**
+ * @returns {HTMLElement | null}
+ */
+function resolveTopLayerAttach() {
+  let element = targetElement.value;
+
+  while (element) {
+    if (isOpenTopLayerElement(element)) {
+      return element;
+    }
+
+    element = element.parentElement;
+  }
+
+  return null;
 }
 
 /**

@@ -211,7 +211,7 @@ order: 87
 | `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'extra-small'` | 对应 16、24、40、56、96px 轨道高度 |
 | `insetIcon` | `string` | 未设置 | Material Symbols 图标名；仅在 `medium`、`large`、`extra-large` 显示，并随活动轨道覆盖范围切换前景色 |
 | `showStopIndicator` | `boolean` | `false` | 标准变体始终显示最大值终点，居中变体始终显示最小值与最大值终点；手柄与停靠点共用两端各 6px 的保护区域，开启后再为所有离散步长渲染停靠点 |
-| `showValueIndicator` | `boolean` | `false` | 当前手柄聚焦或拖动时通过受控 `MatTooltip` 显示规范化后的数值 |
+| `showValueIndicator` | `boolean` | `false` | 当前手柄聚焦或拖动时通过受控 `MatTooltip` 显示规范化后的数值；手柄位于已打开的 dialog 或 Popover 内时，数值指示自动留在该容器中 |
 
 `aria-label` 会透传给内部原生 range 输入。组件使用隐藏的原生输入提供焦点、键盘和 ARIA slider 语义，但不承诺表单提交、原生校验或表单重置代理。
 

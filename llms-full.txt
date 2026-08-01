@@ -4899,7 +4899,7 @@ const seededValue = ref(70);
 | `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'extra-small'` | 对应 16、24、40、56、96px 轨道高度 |
 | `insetIcon` | `string` | 未设置 | Material Symbols 图标名；仅在 `medium`、`large`、`extra-large` 显示，并随活动轨道覆盖范围切换前景色 |
 | `showStopIndicator` | `boolean` | `false` | 标准变体始终显示最大值终点，居中变体始终显示最小值与最大值终点；手柄与停靠点共用两端各 6px 的保护区域，开启后再为所有离散步长渲染停靠点 |
-| `showValueIndicator` | `boolean` | `false` | 当前手柄聚焦或拖动时通过受控 `MatTooltip` 显示规范化后的数值 |
+| `showValueIndicator` | `boolean` | `false` | 当前手柄聚焦或拖动时通过受控 `MatTooltip` 显示规范化后的数值；手柄位于已打开的 dialog 或 Popover 内时，数值指示自动留在该容器中 |
 
 `aria-label` 会透传给内部原生 range 输入。组件使用隐藏的原生输入提供焦点、键盘和 ARIA slider 语义，但不承诺表单提交、原生校验或表单重置代理。
 
@@ -5302,7 +5302,7 @@ const seededRange = ref([35, 80]);
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | 横向从左到右递增；纵向从下到上递增 |
 | `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'extra-small'` | 对应 16、24、40、56、96px 轨道高度 |
 | `showStopIndicator` | `boolean` | `false` | 最小值与最大值端始终显示终点；手柄与停靠点共用两端各 6px 的保护区域，开启后再为所有离散步长渲染停靠点 |
-| `showValueIndicator` | `boolean` | `false` | 仅为当前聚焦或拖动的手柄通过受控 `MatTooltip` 显示规范化后的数值 |
+| `showValueIndicator` | `boolean` | `false` | 仅为当前聚焦或拖动的手柄通过受控 `MatTooltip` 显示规范化后的数值；手柄位于已打开的 dialog 或 Popover 内时，数值指示自动留在该容器中 |
 | `ariaLabelStart` | `string` | 未设置 | 起始端点的可访问名称；模板属性写作 `aria-label-start` |
 | `ariaLabelEnd` | `string` | 未设置 | 结束端点的可访问名称；模板属性写作 `aria-label-end` |
 
@@ -11705,7 +11705,7 @@ import NavigationRailWidthExample from '../examples/navigation-rail/NavigationRa
 
 ## 组件简介
 
-`<mat-tooltip>` 的组件导出名是 `MatTooltip`。它实现 Material 3 Plain tooltip：用于补充展示元素的简短、非交互说明。组件以固定定位 Teleport 到指定容器，默认显示在展示元素上方；不包含 Rich tooltip、操作按钮、箭头或触屏长按。页面存在 Toolbar 时，Tooltip 会把 Toolbar 作为避让区域，必要时自动换边。
+`<mat-tooltip>` 的组件导出名是 `MatTooltip`。它实现 Material 3 Plain tooltip：用于补充展示元素的简短、非交互说明。组件以固定定位 Teleport 到指定容器，默认显示在展示元素上方；省略 `attach` 时，如果展示元素位于已打开的 `dialog` 或 Popover 内，会自动挂载到最近的容器，否则挂载到 `body`。它不包含 Rich tooltip、操作按钮、箭头或触屏长按。页面存在 Toolbar 时，Tooltip 会把 Toolbar 作为避让区域，必要时自动换边。
 
 ## 示例
 
@@ -12006,13 +12006,13 @@ const open = ref(false);
 | modelValue | boolean | false | 显式传入时启用受控模式，可使用 v-model；省略时由 hover 和 focus 自动控制 |
 | content | string | 未设置 | 简短纯文本内容；存在时优先于默认 Slot |
 | target | string 或 HTMLElement | 未设置 | 展示元素；字符串按当前 document 的 CSS 选择器解析 |
-| attach | string 或 HTMLElement | body | Tooltip 的 Teleport 目标；字符串按当前 document 的 CSS 选择器解析 |
+| attach | string 或 HTMLElement | body | Tooltip 的 Teleport 目标；省略时优先使用展示元素所在的已打开 `dialog` 或 Popover，找不到时使用 `body`；字符串按当前 document 的 CSS 选择器解析 |
 | location | top、right、bottom、left 及其 -start、-end 形式 | top | Tooltip 相对展示元素的首选位置 |
 | openDelay | number | 插件配置或 0 | 自动模式的打开延迟，单位为毫秒；显式值优先于 `createMatUi()` 的 `tooltip.openDelay`；可直接写为 open-delay="600"，动态数值使用 :open-delay；负数、空字符串或非有限数字按 0 处理，并触发 Vue prop 校验警告 |
 
 activator Slot 存在时优先于 target，且必须只渲染一个属于当前 document 的 HTMLElement 根节点。选择器目标在初次挂载时尚未出现，会在后续 Vue 更新中继续解析；只有实际请求展示时仍无法解析，组件才给出警告且不显示。attach 无法解析时同样给出警告并抑制显示。
 
-未消费的 class、style、id、aria-* 和原生事件监听器传递给 Teleport 后的 tooltip 根节点；根节点的 role 固定为 tooltip。组件没有 color 属性、Rich tooltip 内容、公共方法或操作按钮。
+未消费的 class、style、id、aria-* 和原生事件监听器传递给 Teleport 后的 tooltip 根节点；根节点的 role 固定为 tooltip。显式传入 `attach` 时始终使用指定目标，不会被 top-layer 自动挂载覆盖。组件没有 color 属性、Rich tooltip 内容、公共方法或操作按钮。
 
 ## 事件
 
@@ -12036,6 +12036,8 @@ activator Slot 存在时优先于 target，且必须只渲染一个属于当前 
 应用可以在包含相关展示元素的最近祖先上添加 `data-mat-tooltip-group`。首个 Tooltip 实际显示后，该实例在指针和焦点都离开时启动 `tooltip.skipDelayDuration` 快速切换窗口；窗口内进入同组另一个 Tooltip 会跳过打开延迟。首个尚未显示、跨组、超过窗口和同一实例重新进入不会跳过延迟。该分组通过展示元素的 DOM 祖先识别，因此同样覆盖 Button 和 FAB 内部创建的 Tooltip。
 
 Tooltip 默认位于上方，展示元素边界与提示之间保持 4px 间距。首选方向空间不足时会翻转到对侧并保留 start、end 对齐；最终坐标始终夹紧在距离视口边缘至少 8px 的区域内。窗口缩放、任意滚动容器滚动以及展示元素或 Tooltip 尺寸变化都会重新计算位置。
+
+当展示元素位于已打开的原生 `dialog`、`mat-dialog`、模态 Bottom/Side sheet 或 Popover（包括 `mat-menu`）内时，省略 `attach` 的 Tooltip 会留在最近的 top-layer 容器中，避免被更高的 top layer 遮挡。该规则同样适用于 Button、FAB 以及 Slider、Range slider 内部创建的 Tooltip；普通页面中的 Tooltip 仍挂载到 `body`。
 
 显示期间组件把 tooltip 的 id 合并到展示元素的 aria-describedby；关闭、切换展示元素或卸载时恢复展示元素原有属性值。内容应帮助理解已可见的界面，不应重复标签、仅承载关键操作说明，或放置链接、按钮等可交互内容。
 
