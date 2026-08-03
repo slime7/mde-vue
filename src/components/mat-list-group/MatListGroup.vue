@@ -330,17 +330,23 @@ watch(isSelectableFallback, async (selectable, wasSelectable) => {
   list-style: none;
 }
 
-.mat-list-group > :deep(.mat-list-item:first-child) {
+.mat-list-group > :deep(.mat-list-item.mat-list-item--group-activator) {
   --mat-list-item-start-start-shape: var(--mat-list-group-start-start-shape);
   --mat-list-item-start-end-shape: var(--mat-list-group-start-end-shape);
   --mat-list-item-end-start-shape: var(--mat-list-group-end-start-shape);
   --mat-list-item-end-end-shape: var(--mat-list-group-end-end-shape);
+  border-start-start-radius: var(--mat-list-group-start-start-shape);
+  border-start-end-radius: var(--mat-list-group-start-end-shape);
+  border-end-start-radius: var(--mat-list-group-end-start-shape);
+  border-end-end-radius: var(--mat-list-group-end-end-shape);
 }
 
-.mat-list-group--expanded > :deep(.mat-list-item:first-child),
-.mat-list-group--selectable-fallback > :deep(.mat-list-item:first-child) {
+.mat-list-group--expanded > :deep(.mat-list-item.mat-list-item--group-activator),
+.mat-list-group--selectable-fallback > :deep(.mat-list-item.mat-list-item--group-activator) {
   --mat-list-item-end-start-shape: var(--mat-list-item-container-shape);
   --mat-list-item-end-end-shape: var(--mat-list-item-container-shape);
+  border-end-start-radius: var(--mat-list-item-container-shape);
+  border-end-end-radius: var(--mat-list-item-container-shape);
 }
 
 .mat-list-group__items > :deep(.mat-list-item:last-child) {
