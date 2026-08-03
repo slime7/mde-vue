@@ -97,6 +97,16 @@ const props = defineProps({
     },
   },
   /**
+   * 图标 FILL 轴，仅在图标模式生效；省略时沿用 toggle 选中态的旧行为。
+   *
+   * @type {number | undefined}
+   * @default undefined
+   */
+  fill: {
+    type: Number,
+    default: undefined,
+  },
+  /**
    * 普通按钮前置图标，优先于 prefix Slot。
    *
    * @type {string | undefined}
@@ -221,6 +231,13 @@ const isToggle = computed(() => effectiveToggle.value && effectiveVariant.value 
 const isSelected = computed(() => isToggle.value && effectiveSelected.value);
 const isIcon = computed(() => props.icon === true
   || (typeof props.icon === 'string' && props.icon.trim().length > 0));
+const iconFill = computed(() => {
+  if (props.fill !== undefined) {
+    return props.fill;
+  }
+
+  return isSelected.value ? 1 : 0;
+});
 
 /**
  * @param {unknown[]} nodes
@@ -334,7 +351,7 @@ watchEffect(() => {
       v-if="isIcon"
       as="span"
       class="mat-btn__icon mat-btn__icon--only"
-      :fill="isSelected ? 1 : 0"
+      :fill="iconFill"
       :optical-size="iconOpticalSize"
       size="var(--mat-btn-icon-size)"
       aria-hidden="true"
@@ -346,7 +363,7 @@ watchEffect(() => {
       v-if="hasPrefix"
       as="span"
       class="mat-btn__icon mat-btn__icon--prefix"
-      :fill="isSelected ? 1 : 0"
+      :fill="iconFill"
       :optical-size="iconOpticalSize"
       size="var(--mat-btn-icon-size)"
       aria-hidden="true"
@@ -366,7 +383,7 @@ watchEffect(() => {
       v-if="hasSuffix"
       as="span"
       class="mat-btn__icon mat-btn__icon--suffix"
-      :fill="isSelected ? 1 : 0"
+      :fill="iconFill"
       :optical-size="iconOpticalSize"
       size="var(--mat-btn-icon-size)"
       aria-hidden="true"

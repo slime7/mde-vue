@@ -394,4 +394,14 @@ watch(
   --mat-list-group-end-start-shape: var(--mat-list-container-shape);
   --mat-list-group-end-end-shape: var(--mat-list-container-shape);
 }
+
+.mat-list > :deep(.mat-list-group:first-child) > :deep(.mat-list-item) {
+  --mat-list-item-start-start-shape: var(--mat-list-container-shape);
+  --mat-list-item-start-end-shape: var(--mat-list-container-shape);
+}
+
+.mat-list > :deep(.mat-list-group:last-child) > :deep(.mat-list-item) {
+  --mat-list-item-end-start-shape: var(--mat-list-container-shape);
+  --mat-list-item-end-end-shape: var(--mat-list-container-shape);
+}
 </style>

@@ -46,6 +46,13 @@ export interface MatBtnProps {
   */
   icon?: boolean | string | undefined;
   /**
+  * 图标 FILL 轴，仅在图标模式生效；省略时沿用 toggle 选中态的旧行为。
+  *
+  * @type {number | undefined}
+  * @default undefined
+  */
+  fill?: number | undefined;
+  /**
   * 普通按钮前置图标，优先于 prefix Slot。
   *
   * @type {string | undefined}

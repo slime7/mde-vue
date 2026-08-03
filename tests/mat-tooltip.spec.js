@@ -746,4 +746,27 @@ describe('MatTooltip', () => {
     first.unmount();
     second.unmount();
   });
+
+  it('target 元素被移除后 tooltip 立即关闭', async () => {
+    const target = createTarget('removed-target');
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      props: {
+        content: '目标会被移除',
+        target,
+      },
+    });
+
+    await hover(target);
+
+    expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
+
+    target.remove();
+    await settleRender();
+    await vi.advanceTimersByTimeAsync(20);
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    wrapper.unmount();
+  });
 });

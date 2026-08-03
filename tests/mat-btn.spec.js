@@ -283,4 +283,49 @@ describe('MatBtn', () => {
     expect(wrapper.attributes('aria-pressed')).toBeUndefined();
     expect(warn).toHaveBeenCalledOnce();
   });
+
+  it.each([
+    ['icon', { icon: 'play_arrow', label: '播放' }],
+    ['prefix', { prefix: 'play_arrow', variant: 'filled' }, { default: '播放' }],
+    ['suffix', { suffix: 'play_arrow', variant: 'filled' }, { default: '播放' }],
+  ])('%s 图标通过 fill prop 强制实心', (slot, props, slots = {}) => {
+    const wrapper = mount(MatBtn, {
+      props: { ...props, fill: 1 },
+      slots,
+    });
+
+    const icon = wrapper.findComponent(MatIcon);
+
+    expect(icon.exists()).toBe(true);
+    expect(icon.props('fill')).toBe(1);
+  });
+
+  it('未传 fill 时非 toggle 按钮图标保持细线（fill=0）', () => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        icon: 'play_arrow',
+        label: '播放',
+      },
+    });
+
+    const icon = wrapper.findComponent(MatIcon);
+
+    expect(icon.props('fill')).toBe(0);
+  });
+
+  it('toggle 选中时未传 fill 仍走实心（向后兼容）', () => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        toggle: true,
+        selected: true,
+        icon: 'play_arrow',
+        label: '播放',
+        variant: 'filled',
+      },
+    });
+
+    const icon = wrapper.findComponent(MatIcon);
+
+    expect(icon.props('fill')).toBe(1);
+  });
 });

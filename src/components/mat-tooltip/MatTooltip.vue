@@ -159,6 +159,7 @@ let openTimer;
 let phaseTimer;
 let positionFrame;
 let positionFrameUsesAnimation = false;
+let connectionFrame;
 let resizeObserver;
 let removeTargetListeners = null;
 let removeViewportListeners = null;
@@ -358,6 +359,38 @@ function clearPhaseTimer() {
   }
 }
 
+function clearConnectionFrame() {
+  if (connectionFrame !== undefined) {
+    window.cancelAnimationFrame(connectionFrame);
+    connectionFrame = undefined;
+  }
+}
+
+function watchTargetConnection() {
+  clearConnectionFrame();
+
+  if (!isDisplayed.value) {
+    return;
+  }
+
+  const check = () => {
+    connectionFrame = undefined;
+
+    if (!isDisplayed.value) {
+      return;
+    }
+
+    if (targetElement.value && !targetElement.value.isConnected) {
+      hideTooltip({ immediate: true });
+      return;
+    }
+
+    watchTargetConnection();
+  };
+
+  connectionFrame = window.requestAnimationFrame(check);
+}
+
 function prefersReducedMotion() {
   return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 }
@@ -520,6 +553,7 @@ function finishClose() {
 function hideTooltip({ immediate = false } = {}) {
   clearOpenTimer();
   clearCloseTimer();
+  clearConnectionFrame();
   stopPositioning();
   restoreDescribedBy();
   deactivateTooltip(stackEntry);
@@ -571,6 +605,10 @@ function warnForInvalidTarget() {
  */
 function syncTargetElement({ warn = true } = {}) {
   const nextTarget = resolveTarget();
+
+  if (!nextTarget && isDisplayed.value) {
+    hideTooltip({ immediate: true });
+  }
 
   if (nextTarget === targetElement.value) {
     if (!nextTarget && hasContent.value && warn) {
@@ -767,6 +805,7 @@ async function showTooltip() {
   syncDescribedBy();
   updatePosition();
   startPositioning();
+  watchTargetConnection();
 }
 
 onMounted(async () => {
@@ -795,8 +834,11 @@ onUpdated(() => {
 onBeforeUnmount(() => {
   mounted = false;
   clearPhaseTimer();
+  clearConnectionFrame();
   unbindTargetListeners();
-  hideTooltip({ immediate: true });
+  if (isDisplayed.value) {
+    hideTooltip({ immediate: true });
+  }
 });
 watch(() => props.modelValue, (open) => {
   if (!mounted || !isControlled) {
