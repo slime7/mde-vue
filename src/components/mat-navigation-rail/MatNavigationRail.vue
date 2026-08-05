@@ -511,7 +511,7 @@ watch([
       ref="hostElement"
       class="mat-navigation-rail-host"
       :class="hostClasses"
-      :style="expandedWidthStyle"
+      :style="railStyle"
     >
       <button
         v-if="isModal && expanded"
@@ -526,7 +526,6 @@ watch([
         v-bind="$attrs"
         class="mat-navigation-rail"
         :class="railClasses"
-        :style="railStyle"
       >
         <div
           v-if="!isHorizontal"
@@ -635,8 +634,12 @@ watch([
 
 .mat-navigation-rail-host--app-root {
   position: absolute;
-  inset-block: var(--mat-navigation-rail-app-start-inset) var(--mat-navigation-rail-app-end-inset);
-  block-size: auto;
+  inset-block: var(--mat-navigation-rail-app-start-inset) auto;
+  block-size: calc(
+    100%
+    - var(--mat-navigation-rail-app-start-inset)
+    - var(--mat-navigation-rail-app-end-inset)
+  );
   min-block-size: 0;
   pointer-events: auto;
 }

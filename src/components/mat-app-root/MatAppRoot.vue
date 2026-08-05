@@ -441,7 +441,7 @@ watch([
 
 <style scoped>
 .mat-app-root {
-  --mat-app-root-floating-edge-space: var(--mat-toolbar-floating-edge-space);
+  --mat-app-root-floating-edge-space: var(--mat-sys-spacing-4, 16px);
   position: relative;
   isolation: isolate;
   box-sizing: border-box;
@@ -464,17 +464,8 @@ watch([
 .mat-app-root__content {
   box-sizing: border-box;
   min-inline-size: 0;
-  padding-block: var(--mat-app-root-padding-top) calc(
-    var(--mat-app-root-padding-bottom)
-    + var(--mat-app-root-floating-edge-space)
-  );
-  padding-inline: calc(
-    var(--mat-app-root-padding-start)
-    + var(--mat-app-root-floating-edge-space)
-  ) calc(
-    var(--mat-app-root-padding-end)
-    + var(--mat-app-root-floating-edge-space)
-  );
+  padding-block: var(--mat-app-root-padding-top) var(--mat-app-root-padding-bottom);
+  padding-inline: var(--mat-app-root-padding-start) var(--mat-app-root-padding-end);
 }
 
 .mat-app-root--fill-viewport .mat-app-root__content {
@@ -506,8 +497,17 @@ watch([
   min-inline-size: 0;
   flex-direction: column;
   gap: var(--mat-sys-spacing-4, 16px);
-  padding-block: var(--mat-app-root-padding-top) var(--mat-app-root-padding-bottom);
-  padding-inline: var(--mat-app-root-padding-start) var(--mat-app-root-padding-end);
+  padding-block: var(--mat-app-root-padding-top) calc(
+    var(--mat-app-root-padding-bottom)
+    + var(--mat-app-root-floating-edge-space)
+  );
+  padding-inline: calc(
+    var(--mat-app-root-padding-start)
+    + var(--mat-app-root-floating-edge-space)
+  ) calc(
+    var(--mat-app-root-padding-end)
+    + var(--mat-app-root-floating-edge-space)
+  );
 }
 
 .mat-app-root__stack-spacer {

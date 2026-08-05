@@ -1677,7 +1677,7 @@ var gt = {
 			}, null, 512)
 		], 16, vt));
 	}
-}), [["__scopeId", "data-v-96ca6efa"]]), Ct = 150, wt = .75, Tt = /*#__PURE__*/ K(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-cfae62cc"]]), Ct = 150, wt = .75, Tt = /*#__PURE__*/ K(/* @__PURE__ */ Object.assign({
 	name: "MatBtnGroup",
 	inheritAttrs: !1
 }, {
@@ -7419,7 +7419,7 @@ var Xi = { class: "mat-snackbar__text" }, Zi = {
 			ref_key: "hostElement",
 			ref: K,
 			class: _(["mat-navigation-rail-host", U.value]),
-			style: v(G.value)
+			style: v(ne.value)
 		}, [F.value && e.expanded ? (S(), o("button", {
 			key: 0,
 			class: "mat-navigation-rail__scrim",
@@ -7429,10 +7429,7 @@ var Xi = { class: "mat-snackbar__text" }, Zi = {
 		}, null, 8, ma)) : a("", !0), s("nav", h({
 			ref_key: "railElement",
 			ref: J
-		}, r.$attrs, {
-			class: ["mat-navigation-rail", W.value],
-			style: ne.value
-		}), [
+		}, r.$attrs, { class: ["mat-navigation-rail", W.value] }), [
 			N.value ? a("", !0) : (S(), o("div", ha, [
 				I.value ? a("", !0) : k(r.$slots, "header", {
 					key: 0,
@@ -7466,7 +7463,7 @@ var Xi = { class: "mat-snackbar__text" }, Zi = {
 			r.$slots.end && !I.value && !N.value ? (S(), o("div", va, [k(r.$slots, "end", { expanded: e.expanded }, void 0, !0)])) : a("", !0)
 		], 16)], 6)) : a("", !0)], 8, ["to", "disabled"]))], 64));
 	}
-}), [["__scopeId", "data-v-504687d0"]]), ba = { class: "mat-navigation-rail-item__indicator" }, xa = { class: "mat-navigation-rail-item__icon-wrap" }, Sa = {
+}), [["__scopeId", "data-v-5ca2ce69"]]), ba = { class: "mat-navigation-rail-item__indicator" }, xa = { class: "mat-navigation-rail-item__icon-wrap" }, Sa = {
 	key: 0,
 	class: "mat-navigation-rail-item__label"
 }, Ca = {

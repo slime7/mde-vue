@@ -28,7 +28,7 @@ const current = ref('home');
 
     <section class="app-root-components-example__content">
       <h3>组件自动接入</h3>
-      <p>Navigation 与 docked Toolbar 登记边缘；FAB、Snackbar 和 Tooltip 自动进入对应浮动层。</p>
+      <p>Navigation 登记侧边；floating Toolbar、FAB、Snackbar 和 Tooltip 自动进入对应浮动层。</p>
       <mat-btn
         id="app-root-tooltip-target"
         @click="snackbarOpen = true"
@@ -41,7 +41,11 @@ const current = ref('home');
       />
     </section>
 
-    <mat-toolbar app>
+    <mat-toolbar
+      app
+      placeholder
+      variant="floating-top"
+    >
       <mat-btn variant="standard">
         取消
       </mat-btn>
@@ -63,6 +67,7 @@ const current = ref('home');
       v-model="snackbarOpen"
       text="AppRoot 已自动排列浮动组件"
       closable
+      position="right"
     />
   </mat-app-root>
 </template>
@@ -79,7 +84,7 @@ const current = ref('home');
 
 .app-root-components-example__content {
   min-block-size: 520px;
-  padding: 24px;
+  padding: 112px 24px 24px;
 }
 
 .app-root-components-example__content h3,

@@ -5,6 +5,7 @@ unpackage/
 coverage/
 docs/site/.vitepress/cache/
 docs/site/.vitepress/dist/
+agent-temp/
 
 # local env files
 .env.local
