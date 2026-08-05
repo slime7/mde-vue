@@ -19,6 +19,15 @@ describe('VitePress 文档自定义主题', () => {
     expect(source).toContain('app.use(matUi);');
   });
 
+  it('文档预览从源码入口加载组件与样式', () => {
+    const config = readFileSync(resolve('docs/site/.vitepress/config.mjs'), 'utf8');
+
+    expect(config).toContain('find: /^mdu-ui$/');
+    expect(config).toContain('new URL(\'../../../src/index.js\', import.meta.url)');
+    expect(config).toContain('find: /^mdu-ui\\/styles\\.css$/');
+    expect(config).toContain('new URL(\'../../../src/styles/index.css\', import.meta.url)');
+  });
+
   it('在主题插件初始化时同步 VitePress 的高亮配色模式', () => {
     const source = readThemeFile('index.js');
     const settingsSource = readThemeFile('ThemeSettings.vue');

@@ -1,3 +1,4 @@
+import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vitepress';
 import tailwindcss from '@tailwindcss/vite';
 /* eslint-disable import-x/extensions */
@@ -144,6 +145,22 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss(), createLlmsArtifactsPlugin()],
+    resolve: {
+      alias: [
+        {
+          find: /^mdu-ui$/,
+          replacement: fileURLToPath(new URL('../../../src/index.js', import.meta.url)),
+        },
+        {
+          find: /^mdu-ui\/styles\.css$/,
+          replacement: fileURLToPath(new URL('../../../src/styles/index.css', import.meta.url)),
+        },
+        {
+          find: /^mdu-ui\/tailwind\.css$/,
+          replacement: fileURLToPath(new URL('../../../src/styles/tailwind.css', import.meta.url)),
+        },
+      ],
+    },
     ssr: {
       noExternal: ['@material/material-color-utilities'],
     },

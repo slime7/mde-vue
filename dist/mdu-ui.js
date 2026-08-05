@@ -1677,7 +1677,7 @@ var gt = {
 			}, null, 512)
 		], 16, vt));
 	}
-}), [["__scopeId", "data-v-cfae62cc"]]), Ct = 150, wt = .75, Tt = /*#__PURE__*/ K(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-8e23dfec"]]), Ct = 150, wt = .75, Tt = /*#__PURE__*/ K(/* @__PURE__ */ Object.assign({
 	name: "MatBtnGroup",
 	inheritAttrs: !1
 }, {

@@ -517,12 +517,14 @@ watch([
 
 .mat-app-root__snackbar-layer,
 .mat-app-root__floating-layer {
+  box-sizing: border-box;
   display: flex;
   flex: 0 0 auto;
   min-inline-size: 0;
   flex-direction: column;
   align-items: stretch;
   gap: var(--mat-sys-spacing-4, 16px);
+  padding-inline: var(--mat-app-root-floating-edge-space);
   pointer-events: none;
 }
 

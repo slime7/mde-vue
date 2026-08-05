@@ -12,7 +12,7 @@
 - 组件渲染、主题计算、CSS 令牌和文档生成保持边界清晰。
 - 组件默认读取语义令牌；显式十六进制 `color` 通过共享配色模块生成局部 Material 配色，不在组件内重复计算规则。
 - 原生 CSS 令牌是运行时权威值；Tailwind 适配层只提供静态名称映射。
-- Markdown 及其直接引用的 Vue 示例文件是人工维护的使用文档权威来源，AI 文本是生成产物。
+- Markdown、其直接引用的 Vue 示例文件与 `src/` 公共入口是使用文档和实时预览的权威来源；AI 文本是生成产物，`dist/` 另由分发检查验证。
 - `src/` 是维护权威，`dist/` 是由构建生成并随同源码提交的分发边界，不接受手工修改。
 
 ## 共享组件基础层
@@ -95,7 +95,7 @@ Tailwind 适配文件通过 `@theme inline` 将公开的 reference 和 system �
 
 ### 文档实时预览与 AI 文档
 
-`docs/site/` 是 VitePress 的唯一源目录，包含中文使用文档、AI 使用指南和组件实时预览。预览从包的公开出口加载组件和样式，不另建独立 demo 页面。`docs/project/` 保存产品愿景、架构、公共抽象、开发入门和 ADR，不进入 VitePress 构建。
+`docs/site/` 是 VitePress 的唯一源目录，包含中文使用文档、AI 使用指南和组件实时预览。预览保持 `mdu-ui` 根入口写法，但由 Vite alias 直接解析到 `src/index.js` 与源码样式，使示例和热更新始终验证维护权威；不另建独立 demo 页面。`docs/project/` 保存产品愿景、架构、公共抽象、开发入门和 ADR，不进入 VitePress 构建。
 
 `docs/site/` 中带 frontmatter 标记的 Markdown 页面按顺序生成根目录 `llms.txt` 和 `llms-full.txt`。组件示例保存在 `docs/site/examples/`，同一 Vue 文件既由 VitePress 作为代码片段展示，也作为页面中的真实组件渲染；AI 文档生成器会把代码片段包含指令展开为完整代码块。项目维护文档和纯交互页面不进入 AI 使用文档。
 
@@ -145,7 +145,7 @@ flowchart LR
 
 ## 构建与验证
 
-`pnpm build` 先生成完整根入口类型声明，再以 Vue 和 Material Color Utilities 为外部依赖编译单一 `dist/mdu-ui.js`，将基础令牌与组件样式合并为 `dist/styles.css`，复制 `src/styles/tailwind.css` 至 `dist/tailwind.css` 并复制 `dist/index.d.ts`。构建后 `dist/` 必须恰好包含这四个文件。`dist/` 随源码提交，公开入口测试从包自身 `exports` 加载产物并检查文件集合。VitePress 只构建 `docs/site/`；文档、测试和静态检查在 Node.js 24 环境中运行。
+`pnpm build` 先生成完整根入口类型声明，再以 Vue 和 Material Color Utilities 为外部依赖编译单一 `dist/mdu-ui.js`，将基础令牌与组件样式合并为 `dist/styles.css`，复制 `src/styles/tailwind.css` 至 `dist/tailwind.css` 并复制 `dist/index.d.ts`。构建后 `dist/` 必须恰好包含这四个文件。`dist/` 随源码提交，公开入口测试从包自身 `exports` 加载产物并检查文件集合。VitePress 只构建 `docs/site/`，并在其 Vite 配置中把公共导入别名解析到 `src/`；文档、测试和静态检查在 Node.js 24 环境中运行。
 
 ## 安全与可靠性边界
 
