@@ -117,7 +117,15 @@ Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat
 
 ## `<mat-fab>`
 
-`<mat-fab>` 的导出名是 `MatFab`，默认 Slot 没有非空内容时表现为纯图标 FAB，有内容时表现为 Extended FAB；不另设 `MatExtendedFab`。尺寸只接受 `small`、`medium`、`large`，高度分别为 56px、80px、96px，`small` 统一普通 FAB 与 small Extended FAB 的 56px 规格。纯图标模式要求非空 `icon` 和 `label`；label 写入 `aria-label` 并作为默认 Tooltip，Extended FAB 可以没有 icon 但默认 Slot 标签仍然有效。
+`<mat-fab>` 的导出名是 `MatFab`，默认 Slot 没有非空内容时表现为纯图标 FAB，有内容时表现为 Extended FAB；不另设 `MatExtendedFab`。尺寸只接受 `small`、`medium`、`large`，高度分别为 56px、80px、96px，`small` 统一普通 FAB 与 small Extended FAB 的 56px 规格。纯图标模式要求非空 `icon` 和 `label`；label 写入 `aria-label` 并作为默认 Tooltip，Extended FAB 可以没有 icon 但默认 Slot 标签仍然有效。`app=true` 时自动进入最近 AppRoot 的普通浮动组，`position` 控制逻辑起点、居中或逻辑终点对齐；AppRoot 外保持声明位置的按钮行为。
+
+## AppRoot 应用布局
+
+`<mat-app-root>` 与导出 `MatAppRoot` 建立应用坐标系。默认 `fillViewport=true` 且 `scrollable=false`：根至少为 `100dvb`，正文增长并由 document/body 滚动；`scrollable=true` 把正文切换为内部滚动容器，`fillViewport=false` 时使用方必须提供确定高度。组件不修改 `html`、`body` 或挂载节点。允许多个同级容器化 AppRoot，不允许嵌套。
+
+`useMatApp()` 只在 AppRoot 后代 setup 中可用，返回同一个深只读响应式 `layout` 与 `registerEdge()`。断点按 AppRoot 宽度的 600/840/1200/1600 边界计算；layout 同时提供布局 size、四向 padding、扣除 padding 的 content、breakpointRange 和四向 edges。安全区由 AppRoot 统一并入 padding。
+
+`registerEdge({ edge, element })` 接受当前 document 中的 HTMLElement，并返回只读响应式 `insets`、`update()`、幂等 `unregister()`。同侧外延取最大值而不累加；正交边缘按登记顺序确定优先级，较晚登记项通过 cross-axis insets 避让较早项。默认 Slot 只承载正文和布局组件，覆盖层不作为公共 Slot 暴露。
 
 FAB 复用 `MatButtonBase` 的原生 button、disabled、焦点、按下状态、交互目标和事件处理；组件本身只负责尺寸、颜色角色、图标/标签内容和无障碍名称。它不负责固定定位、滚动收缩、FAB menu 或页面级动效。颜色直接使用所选 `--mat-sys-color-*` 和同组 `--mat-sys-color-on-*` 令牌，状态层沿用同组内容色。
 
@@ -185,11 +193,11 @@ Bottom sheet 最大宽度固定为 640px，使用顶部 extra-large 圆角和可
 
 `<mat-tooltip>` 的 `content` prop 优先于默认 Slot，`activator` Slot 优先于 `target`；activator 必须只产生一个当前 document 中的 HTMLElement 根节点。选择器 target 初次未解析时不立即警告，并在 Vue 更新或实际展示请求时继续解析；只有展示请求仍无法解析时才警告。没有显式传入 `modelValue` 时，组件只在桌面 hover 或键盘 focus 下自动展示，并在两个状态都离开 1.5 秒后关闭；显式传入时改为完全受控，忽略自动触发和 `openDelay`。
 
-Tooltip 只实现 Material 3 Plain tooltip，不提供 color、Rich 内容、操作、箭头或触屏长按。模块级协调器保证同一时间只有一个实例可见；展示期间将唯一 tooltip id 无损合并到展示元素的 `aria-describedby`，关闭、换锚点或卸载时恢复原有属性。定位始终使用固定视口坐标，按首选方向翻转并在 8px 视口安全边距内夹紧。
+Tooltip 只实现 Material 3 Plain tooltip，不提供 color、Rich 内容、操作、箭头或触屏长按。模块级协调器保证同一时间只有一个实例可见；展示期间将唯一 tooltip id 无损合并到展示元素的 `aria-describedby`，关闭、换锚点或卸载时恢复原有属性。默认按首选方向翻转并在 8px 安全边距内夹紧；AppRoot 内使用应用局部坐标和 layout padding，其他场景使用固定视口坐标与 Toolbar 几何注册表。
 
 ## Snackbar
 
-`<mat-snackbar>` 通过 `modelValue` 请求展示底部短暂通知；它使用全局 FIFO 队列，因此任意模板实例与命令式调用合计同一时刻只显示一条。活动项必须先完成退出动画，下一条才可进入；排队模板项收到 `modelValue=false` 或卸载时取消。`text` 与默认 Slot 都能提供内容，默认 Slot 优先；`actionText` 提供唯一可选文字 action，`action` Slot 存在时优先并接收 `{ action }`，调用后派发 `action` 事件并关闭当前通知；`closable` 提供内置关闭按钮，`close` Slot 存在时优先并接收 `{ close }`。默认持续 4000ms，`duration=0` 常驻，`position` 只接受 `left`、`center`、`right`。
+`<mat-snackbar>` 通过 `modelValue` 请求展示底部短暂通知；AppRoot 内的模板实例自动进入应用 Snackbar 组并排列在普通浮动组上方，其他模板实例固定在 body 视口。它使用全局 FIFO 队列，因此任意模板实例与命令式调用合计同一时刻只显示一条。活动项必须先完成退出动画，下一条才可进入；排队模板项收到 `modelValue=false` 或卸载时取消。`text` 与默认 Slot 都能提供内容，默认 Slot 优先；`actionText` 提供唯一可选文字 action，`action` Slot 存在时优先并接收 `{ action }`，调用后派发 `action` 事件并关闭当前通知；`closable` 提供内置关闭按钮，`close` Slot 存在时优先并接收 `{ close }`。默认持续 4000ms，`duration=0` 常驻，`position` 只接受 `left`、`center`、`right`。
 
 `snackbar(options)` 与别名 `toast` 只从 `mdu-ui` 根入口导入，必须接收包含非空 `text` 的对象；可选 `actionText` 和 `onAction` 分别提供文字 action 与其回调，`onAction` 必须是函数。函数返回在退出动画和单个命令式宿主清理完成后结算的 `Promise<void>`。命令式请求没有 Slots 或取消句柄，但与模板组件使用同一个全局队列，并读取最后安装的插件图标与主题上下文。Snackbar 固定为 `role="status"`、`aria-live="polite"`，从不主动移动焦点。
 
@@ -201,9 +209,13 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 
 ## Navigation 导航
 
-`<mat-navigation-rail>` 通过 `modelValue` 受控选择唯一目的地，直接子级 `<mat-navigation-rail-item>` 使用稳定 `value` 请求更新。纵向模式表达 Material 3 Expressive collapsed/expanded rail；默认在当前容器内布局，`expanded` 只由使用方控制，`layout="standard"` 占据正文空间，`layout="modal"` 在当前布局容器内覆盖正文并通过遮罩或 Escape 请求收起。设置 `app=true` 后组件 Teleport 到 `attach`（默认 `body`）并固定到视口，`placeholder` 和 `bottomPlaceholder` 只在该模式下生效；应用模式的 `position` 同时决定 rail 的固定侧和 Item 对齐。collapsed rail 默认保持可见；`hideOnCollapse` 只用于保留外部可达菜单入口的沉浸式 expanded rail。
+`<mat-navigation-rail>` 通过 `modelValue` 受控选择唯一目的地，直接子级 `<mat-navigation-rail-item>` 使用稳定 `value` 请求更新。纵向模式表达 Material 3 Expressive collapsed/expanded rail；默认在当前容器内布局，`expanded` 只由使用方控制，`layout="standard"` 占据正文空间，`layout="modal"` 在当前布局容器内覆盖正文并通过遮罩或 Escape 请求收起。设置 `app=true` 后组件建立应用导航：省略显式 attach 且位于 AppRoot 时自动登记逻辑边缘，modal 展开只以 collapsed host 宽度参与 padding；否则固定到显式 attach。`placeholder` 和 `bottomPlaceholder` 只在应用模式下生效；`position` 同时决定 rail 的固定侧和 Item 对齐。collapsed rail 默认保持可见；`hideOnCollapse` 只用于保留外部可达菜单入口的沉浸式 expanded rail。
 
 `width` 只覆写 expanded rail 的宽度：数字转换为 px，CSS 字符串原样使用；`position` 决定 Item 在起始或末尾侧对齐，并在展开/收回时保持该对齐。`orientation="horizontal"` 表达 Flexible navigation bar；`expanded=false` 使用图标上、标签下的纵向 Item，`expanded=true` 使用图标左、标签右的横向 Item。它不响应 `collapsible`、`layout`、`hideOnCollapse`、`alignment`、Header、FAB 或 `end`。纵向 rail 的 `end` Slot 固定于底部。组件不自动监听窗口尺寸，应用负责在 compact、medium 及更大断点间切换 bar 与 rail，且同一布局不得同时显示两者。Item 使用原生按钮或链接、`aria-current="page"`、完整宽度命中区域和指示器状态层；选中时只过渡背景色，标签必须简短且不得通过省略号截断。
+
+## Toolbar 工具栏
+
+`<mat-toolbar>` 默认在最近定位容器内绝对定位，`app=true` 才建立应用级挂载。省略显式 attach 且位于 AppRoot 时，docked 登记 bottom 并参与正文 padding；floating 不登记边缘，但读取四向 padding 避让，显式 `placeholder` 仍保留声明位置空间。显式 attach 优先于 AppRoot，组件固定到目标视口并继续发布 Toolbar 几何。`bottomPlaceholder` 在 AppRoot 模式作为安全区之外的额外下限，非 AppRoot 模式保持原有含义。
 
 ## 文档权威关系
 

@@ -9,11 +9,11 @@ order: 110
 
 ## 组件简介
 
-`<mat-snackbar>` 的组件导出名是 `MatSnackbar`。它用于展示短暂、非阻塞的操作结果或状态提示，并固定在视口底部。模板组件和命令式 `snackbar()` 会共同进入全局 FIFO 队列，任意时刻只显示一条通知；`toast` 是同一个函数的别名。
+`<mat-snackbar>` 的组件导出名是 `MatSnackbar`。它用于展示短暂、非阻塞的操作结果或状态提示。模板实例位于 `MatAppRoot` 内时自动进入应用 Snackbar 组，否则固定在视口底部。模板组件和命令式 `snackbar()` 会共同进入全局 FIFO 队列，任意时刻只显示一条通知；`toast` 是同一个函数的别名。
 
 Snackbar 适合“保存完成”“已复制链接”这类无需立即作答的反馈。可选文字 action 适合与这条反馈直接相关的简短操作，例如“撤销”；一次只提供一个 action。它不提供多操作菜单、图标、颜色或挂载目标。需要用户决定、输入或确认时应使用 Dialog。
 
-当页面存在 `mat-toolbar` 的底部停靠或悬浮模式时，Snackbar 会自动向上避让 Toolbar 及其 `bottomPlaceholder` 空间；不需要额外设置 z-index 或底部偏移。没有 Toolbar 时继续使用视口底部安全区。
+AppRoot 内由统一布局 padding 避让 docked Toolbar、Navigation 和安全区，并保证 Snackbar 位于普通 FAB 组上方。AppRoot 外继续使用 Toolbar 几何注册表与视口底部安全区。命令式 `snackbar()`/`toast()` 的宿主始终位于 body，因此也继续使用后一种规则。
 
 ## 示例
 
@@ -275,7 +275,7 @@ Snackbar 适合“保存完成”“已复制链接”这类无需立即作答�
 | `position` | `'left' \| 'center' \| 'right'` | `'center'` | 宽屏时的底部对齐位置；窄屏占满安全边距内的可用宽度 |
 | `duration` | `number` | `4000` | 自动关闭等待时间，单位为毫秒；`0` 表示不自动关闭 |
 
-未消费的 `class`、`style`、`id`、`aria-*` 与原生事件传给 Teleport 后的 Snackbar 根元素；根元素的 `role` 固定为 `status`，并固定使用 `aria-live="polite"`。没有 `text` 和默认 Slot 时组件不会展示，并请求把 `modelValue` 更新为 `false`。
+未消费的 `class`、`style`、`id`、`aria-*` 与原生事件传给 Teleport 后的 Snackbar 根元素；根元素的 `role` 固定为 `status`，并固定使用 `aria-live="polite"`。位于 AppRoot 时挂载目标自动确定，不新增 `attach` prop。没有 `text` 和默认 Slot 时组件不会展示，并请求把 `modelValue` 更新为 `false`。
 
 组件没有公共方法，也不提供多个 action、图标、`color`、`attach` 或其他挂载位置属性。
 

@@ -127,6 +127,26 @@ export interface MatBtnEmits {
 export type MatBtnComponent = DefineComponent<MatBtnProps, {}, {}, {}, {}, {}, {}, MatBtnEmits>;
 export declare const MatBtn: MatBtnComponent;
 
+export interface MatAppRootProps {
+  /**
+  * 是否至少铺满动态视口高度。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  fillViewport?: boolean;
+  /**
+  * 是否让正文层成为内部滚动容器；默认由 document/body 滚动。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  scrollable?: boolean;
+}
+
+export type MatAppRootComponent = DefineComponent<MatAppRootProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatAppRoot: MatAppRootComponent;
+
 export interface MatBtnGroupProps {
   /**
   * 使用块级 flex 组根，在普通文档流中铺满父元素。
@@ -253,6 +273,20 @@ export interface MatFabProps {
   * @default 'button'
   */
   type?: 'button' | 'submit' | 'reset';
+  /**
+  * 是否自动挂载到最近 MatAppRoot 的普通浮动组。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  app?: boolean;
+  /**
+  * app=true 时在浮动组中的逻辑轴对齐位置。
+  *
+  * @type {'start' | 'center' | 'end'}
+  * @default 'end'
+  */
+  position?: 'start' | 'center' | 'end';
 }
 
 export interface MatFabEmits {
@@ -2406,6 +2440,35 @@ export interface MatUiOptions {
 }
 export declare function createMatUi(options?: MatUiOptions): import('vue').Plugin & { theme: MatThemeController };
 export declare function useMatTheme(): MatThemeController;
+export type MatAppEdge = 'top' | 'bottom' | 'start' | 'end';
+export type MatAppBreakpoint = 'compact' | 'medium' | 'expanded' | 'large' | 'extra-large';
+export interface MatAppEdgeInsets {
+  readonly start: number;
+  readonly end: number;
+}
+export interface MatAppEdgeInfo {
+  readonly size: number;
+  readonly startInset: number;
+  readonly endInset: number;
+}
+export interface MatAppLayout {
+  readonly size: Readonly<{ width: number; height: number }>;
+  readonly padding: Readonly<{ top: number; bottom: number; start: number; end: number }>;
+  readonly content: Readonly<{ width: number; height: number }>;
+  readonly breakpoint: MatAppBreakpoint;
+  readonly breakpointRange: Readonly<{ min: number; max: number }>;
+  readonly edges: Readonly<Record<MatAppEdge, MatAppEdgeInfo>>;
+}
+export interface MatAppEdgeRegistration {
+  readonly insets: Readonly<MatAppEdgeInsets>;
+  update(): void;
+  unregister(): void;
+}
+export interface MatAppContext {
+  readonly layout: Readonly<MatAppLayout>;
+  registerEdge(options: { edge: MatAppEdge; element: HTMLElement }): MatAppEdgeRegistration;
+}
+export declare function useMatApp(): MatAppContext;
 export declare const Intersection: import('vue').ObjectDirective<HTMLElement>;
 
 export type DialogActionVariant = 'elevated' | 'filled' | 'filled-tonal' | 'outlined' | 'standard' | 'text';
@@ -2450,6 +2513,8 @@ declare module 'vue' {
   export interface GlobalComponents {
     MatBtn: typeof MatBtn;
     'mat-btn': typeof MatBtn;
+    MatAppRoot: typeof MatAppRoot;
+    'mat-app-root': typeof MatAppRoot;
     MatBtnGroup: typeof MatBtnGroup;
     'mat-btn-group': typeof MatBtnGroup;
     MatFab: typeof MatFab;

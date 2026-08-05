@@ -11,6 +11,7 @@ import {
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatActionBase from '../MatActionBase.vue';
+import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import MAT_SNACKBAR_EXTERNALLY_MANAGED_KEY from '../snackbar-context';
 import {
   cancelSnackbar,
@@ -128,6 +129,7 @@ const emit = defineEmits({
 });
 const slots = useSlots();
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
+const appContext = inject(MAT_APP_ROOT_KEY, null);
 const externallyManaged = inject(MAT_SNACKBAR_EXTERNALLY_MANAGED_KEY, false);
 const rendered = ref(false);
 const phase = ref('closed');
@@ -141,6 +143,9 @@ const hasAction = computed(() => Boolean(slots.action) || (
 const hasClose = computed(() => Boolean(slots.close) || props.closable);
 const hasTrailing = computed(() => hasAction.value || hasClose.value);
 const toolbarBottomClearance = ref(0);
+const teleportTarget = computed(() => (
+  appContext ? appContext.snackbarLayer.value : document.body
+));
 const resolvedCloseLabel = computed(() => (
   typeof props.closeLabel === 'string' && props.closeLabel.trim().length > 0
     ? props.closeLabel
@@ -342,8 +347,11 @@ function requestOpen() {
 
 onMounted(() => {
   mounted = true;
-  removeToolbarListener = subscribeToolbarOverlay(syncToolbarClearance);
-  syncToolbarClearance();
+
+  if (!appContext) {
+    removeToolbarListener = subscribeToolbarOverlay(syncToolbarClearance);
+    syncToolbarClearance();
+  }
 
   if (props.modelValue) {
     requestOpen();
@@ -402,7 +410,7 @@ watch(() => props.duration, () => {
 </script>
 
 <template>
-  <Teleport to="body">
+  <Teleport v-if="teleportTarget" :to="teleportTarget">
     <section
       v-if="rendered"
       v-bind="$attrs"
@@ -410,7 +418,10 @@ watch(() => props.duration, () => {
       :class="[
         `mat-snackbar--${phase}`,
         `mat-snackbar--${position}`,
-        { 'mat-snackbar--with-trailing': hasTrailing },
+        {
+          'mat-snackbar--app-root': appContext,
+          'mat-snackbar--with-trailing': hasTrailing,
+        },
       ]"
       :style="rootStyle"
       aria-atomic="true"
@@ -505,6 +516,27 @@ watch(() => props.duration, () => {
 
 .mat-snackbar--right {
   inset-inline-end: var(--mat-snackbar-viewport-margin);
+}
+
+.mat-snackbar--app-root {
+  position: relative;
+  inset: auto;
+  inline-size: min(560px, 100%);
+  max-inline-size: 100%;
+  pointer-events: auto;
+  translate: 0;
+}
+
+.mat-snackbar--app-root.mat-snackbar--left {
+  align-self: flex-start;
+}
+
+.mat-snackbar--app-root.mat-snackbar--center {
+  align-self: center;
+}
+
+.mat-snackbar--app-root.mat-snackbar--right {
+  align-self: flex-end;
 }
 
 .mat-snackbar--opening {
@@ -622,6 +654,10 @@ watch(() => props.duration, () => {
 
   .mat-snackbar--center {
     translate: 0;
+  }
+
+  .mat-snackbar--app-root {
+    inset-inline: auto;
   }
 }
 

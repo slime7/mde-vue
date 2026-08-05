@@ -50,7 +50,7 @@ pnpm add "mdu-ui@git+ssh://git@github.com/slime7/mdu-ui.git#<commit>"
 
 ## 全局注册：推荐用法
 
-大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，以 kebab-case `mat-*` 和 PascalCase `Mat*` 两种名称全局注册所有组件，并注册 `v-intersection` 指令。基础样式必须显式导入。
+大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，以 kebab-case `mat-*` 和 PascalCase `Mat*` 两种名称全局注册所有组件，并注册 `v-intersection` 指令。基础样式必须显式导入。页面级应用建议用 `<mat-app-root>` 包住应用正文和设置 `app` 的布局组件。
 
 应用入口 `src/main.js`：
 
@@ -74,17 +74,19 @@ createApp(App)
 
 ```vue
 <template>
-  <main>
-    <mat-btn @click="save">保存</mat-btn>
-    <MatBtn variant="outlined" @click="save">另存</MatBtn>
-    <mat-fab icon="add" label="创建" />
-    <mat-hover v-slot="{ isHovering, props }">
-      <button v-bind="props" type="button">
-        {{ isHovering ? '悬停中' : '悬停查看' }}
-      </button>
-    </mat-hover>
-    <div v-intersection="handleIntersection">观察目标</div>
-  </main>
+  <mat-app-root>
+    <main>
+      <mat-btn @click="save">保存</mat-btn>
+      <MatBtn variant="outlined" @click="save">另存</MatBtn>
+      <mat-fab app icon="add" label="创建" />
+      <mat-hover v-slot="{ isHovering, props }">
+        <button v-bind="props" type="button">
+          {{ isHovering ? '悬停中' : '悬停查看' }}
+        </button>
+      </mat-hover>
+      <div v-intersection="handleIntersection">观察目标</div>
+    </main>
+  </mat-app-root>
 </template>
 
 <script setup>
@@ -108,6 +110,7 @@ function handleIntersection(isIntersecting) {
 <script setup>
 import {
   Intersection as vIntersection,
+  MatAppRoot,
   MatBtn,
   MatFab,
   MatHover,
@@ -120,14 +123,16 @@ function handleIntersection(isIntersecting) {
 </script>
 
 <template>
-  <MatBtn>保存</MatBtn>
-  <MatFab icon="add" label="创建" />
-  <MatHover v-slot="{ isHovering, props }">
-    <button v-bind="props" type="button">
-      {{ isHovering ? '悬停中' : '悬停查看' }}
-    </button>
-  </MatHover>
-  <div v-intersection="handleIntersection">观察目标</div>
+  <MatAppRoot>
+    <MatBtn>保存</MatBtn>
+    <MatFab app icon="add" label="创建" />
+    <MatHover v-slot="{ isHovering, props }">
+      <button v-bind="props" type="button">
+        {{ isHovering ? '悬停中' : '悬停查看' }}
+      </button>
+    </MatHover>
+    <div v-intersection="handleIntersection">观察目标</div>
+  </MatAppRoot>
 </template>
 
 ```
@@ -140,6 +145,7 @@ import {
   confirm,
   dialog,
   Intersection as vIntersection,
+  MatAppRoot,
   MatBottomSheet,
   MatCard,
   MatCardHeadline,
@@ -173,10 +179,29 @@ import {
   prompt,
   snackbar,
   toast,
+  useMatApp,
 } from 'mdu-ui';
 ```
 
-局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatCard>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`。
+局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatAppRoot>`、`<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatCard>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`；`useMatApp()` 只能在 `<MatAppRoot>` 的后代组件中调用。
+
+## 页面基础尺寸
+
+`MatAppRoot` 不修改 `html`、`body` 或 Vue 挂载节点。使用默认文档滚动模式时，应用应自行清除浏览器默认 `body` 外边距，并保证页面根节点具有可用高度：
+
+```css
+html,
+body,
+#app {
+  min-block-size: 100%;
+}
+
+body {
+  margin: 0;
+}
+```
+
+如果启用 `scrollable`，AppRoot 会把正文滚动限制在自身内部；`fill-viewport="false"` 时还必须为 AppRoot 或父级提供确定高度。完整布局规则见 [App root 应用布局根](/components/app-root)。
 
 ## 如何选择
 
@@ -1920,7 +1945,7 @@ import ButtonWidthExample from '../examples/button/ButtonWidthExample.vue';
 
 ## 组件简介
 
-`<mat-fab>` 的组件导出名是 `MatFab`。它使用同一个组件表达普通 FAB 和 Extended FAB：没有默认 Slot 文本时渲染纯图标 FAB；有默认 Slot 文本时渲染带标签的 Extended FAB。组件不负责固定定位、滚动收缩、FAB menu 或页面级动效。
+`<mat-fab>` 的组件导出名是 `MatFab`。它使用同一个组件表达普通 FAB 和 Extended FAB：没有默认 Slot 文本时渲染纯图标 FAB；有默认 Slot 文本时渲染带标签的 Extended FAB。默认在声明位置参与普通布局；设置 `app` 后自动进入最近 `MatAppRoot` 的普通浮动组。组件不实现滚动收缩、FAB menu 或页面级动效。
 
 纯图标模式需要传入非空 `icon` 和 `label`。`label` 同时作为按钮的可访问名称和默认 Tooltip 文本；Extended FAB 可以省略图标，默认 Slot 标签仍然有效。标签保持单行，超出可用宽度时以省略号截断。
 
@@ -2196,6 +2221,47 @@ const colors = [
   </DocsPreview>
 </ClientOnly>
 
+### `app` 与 `position`
+
+`app` 需要在 `MatAppRoot` 后代中使用。多个 app FAB 按 DOM 顺序纵向排列，`position` 分别控制逻辑起点、居中和逻辑终点对齐。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-app-root :fill-viewport="false" class="fab-app-example">
+    <p>三个 FAB 自动进入 AppRoot 浮动组，并按逻辑轴对齐。</p>
+    <mat-fab app position="start" icon="format_align_left" label="起始对齐" />
+    <mat-fab app position="center" icon="format_align_center" label="居中对齐" />
+    <mat-fab app position="end" icon="format_align_right" label="末尾对齐" />
+  </mat-app-root>
+</template>
+```
+```vue
+<style scoped>
+.fab-app-example {
+  block-size: 360px;
+  padding: 24px;
+  background: var(--mat-sys-color-surface-container-low);
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.fab-app-example p {
+  margin: 0;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="FAB AppRoot 浮动排列预览">
+    <FabAppExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -2208,6 +2274,8 @@ const colors = [
 | `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'primary-container' \| 'secondary-container' \| 'tertiary-container' \| 'error' \| 'error-container'` | `'primary-container'` | 当前主题的官方颜色角色；不接受十六进制种子色 |
 | `disabled` | `boolean` | `false` | 原生禁用状态 |
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 原生按钮类型 |
+| `app` | `boolean` | `false` | 自动 Teleport 到最近 `MatAppRoot` 的普通浮动组；AppRoot 外保持声明位置并给出普通按钮行为 |
+| `position` | `'start' \| 'center' \| 'end'` | `'end'` | `app=true` 时在浮动组中的逻辑轴对齐位置；普通布局中忽略 |
 
 没有默认 Slot 时，`aria-label` 取 `label`；有默认 Slot 时，默认 Slot 提供可见名称并保留调用方传入的 `aria-label`。未消费的 `name`、`form`、`aria-*`、`data-*` 等原生属性和事件继续传给内部 `<button>`。
 
@@ -2232,7 +2300,7 @@ const colors = [
 | pressed | 使用基础按钮层的按下状态层和状态处理 |
 | disabled | 使用原生禁用语义、禁用内容对比并移除阴影 |
 
-组件不实现固定定位、滚动收缩、FAB menu 或页面级动效。减少动态效果偏好下，基础按钮层和图标过渡会被取消。
+组件不自行计算固定坐标；`app` 模式由 AppRoot 负责布局、边缘避让和安全区。组件不实现滚动收缩、FAB menu 或页面级动效。减少动态效果偏好下，基础按钮层和图标过渡会被取消。
 
 ## 参考来源
 
@@ -2240,6 +2308,7 @@ const colors = [
 
 <script setup>
 import FabAccessibilityExample from '../examples/fab/FabAccessibilityExample.vue';
+import FabAppExample from '../examples/fab/FabAppExample.vue';
 import FabColorExample from '../examples/fab/FabColorExample.vue';
 import FabDefaultExample from '../examples/fab/FabDefaultExample.vue';
 import FabDisabledExample from '../examples/fab/FabDisabledExample.vue';
@@ -3625,6 +3694,451 @@ import SplitButtonLeadingSlotExample from '../examples/button/SplitButtonLeading
 import SplitButtonSizeExample from '../examples/button/SplitButtonSizeExample.vue';
 import SplitButtonTrailingSlotExample from '../examples/button/SplitButtonTrailingSlotExample.vue';
 import SplitButtonVariantExample from '../examples/button/SplitButtonVariantExample.vue';
+</script>
+
+# App root 应用布局根
+
+## 组件简介
+
+`<mat-app-root>` 的组件导出名是 `MatAppRoot`。它在 Vue 应用内承担通常由 `body` 承担的页面布局职责：建立隔离的覆盖层坐标系，统一处理安全区、固定边缘占位、正文避让、浮动组件排列和基于容器宽度的断点。应用通常只放置一个铺满视口的 AppRoot；文档预览等容器化场景可以放置多个同级实例，但 AppRoot 不允许嵌套。
+
+默认模式沿用 Vuetify `VApp`/`VMain` 的文档滚动思路：AppRoot 至少铺满动态视口，内容增长时由 `document`/`body` 滚动，组件不会修改 `html` 或 `body` 的 `overflow`。设置 `scrollable` 后，AppRoot 保持确定高度，正文层改为内部滚动容器；`fillViewport=false` 与 `scrollable=true` 组合使用时，必须通过自身样式或父级布局提供确定的块轴高度。
+
+## 示例
+
+### `fillViewport`
+
+完整页面保留默认 `fillViewport=true`。容器、文档预览和嵌入区域使用 `fillViewport=false`，高度由内容或外部样式决定。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-app-root :fill-viewport="false" class="app-root-basic-example">
+    <section class="app-root-basic-example__content">
+      <h3>容器化应用区域</h3>
+      <p>fillViewport=false 时，AppRoot 的高度由当前容器或内容决定。</p>
+      <mat-btn>主要操作</mat-btn>
+    </section>
+  </mat-app-root>
+</template>
+```
+```vue
+<style scoped>
+.app-root-basic-example {
+  min-block-size: 240px;
+  overflow: hidden;
+  background: var(--mat-sys-color-surface-container-low);
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.app-root-basic-example__content {
+  padding: 24px;
+}
+
+.app-root-basic-example__content h3,
+.app-root-basic-example__content p {
+  margin-block: 0 16px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="AppRoot 容器化布局预览">
+    <AppRootBasicExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `scrollable`
+
+`scrollable` 只改变正文滚动归属，不改变边缘组件和浮动组件的接入方式。下面的预览为 AppRoot 提供了明确高度。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-app-root
+    :fill-viewport="false"
+    scrollable
+    class="app-root-scrollable-example"
+  >
+    <article
+      v-for="index in 8"
+      :key="index"
+      class="app-root-scrollable-example__item"
+    >
+      <h3>内部滚动内容 {{ index }}</h3>
+      <p>滚动发生在 AppRoot 的正文层，外部文档保持原位。</p>
+    </article>
+  </mat-app-root>
+</template>
+```
+```vue
+<style scoped>
+.app-root-scrollable-example {
+  block-size: 280px;
+  background: var(--mat-sys-color-surface-container-low);
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.app-root-scrollable-example__item {
+  margin: 16px;
+  padding: 16px;
+  background: var(--mat-sys-color-surface-container);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+
+.app-root-scrollable-example__item h3,
+.app-root-scrollable-example__item p {
+  margin: 0;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="AppRoot 内部滚动预览">
+    <AppRootScrollableExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `useMatApp()` 与实时布局数据
+
+`useMatApp()` 必须在 AppRoot 的后代组件 `setup()` 中调用。返回的 `layout` 是同一个深只读响应式对象，可以直接用于 `computed()`、`watch()` 或模板渲染。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-app-root :fill-viewport="false" class="app-root-layout-example">
+    <p>调整文档预览宽度时，下面的只读响应式数据会同步变化。</p>
+    <LayoutReadout />
+  </mat-app-root>
+</template>
+```
+```vue
+<script setup>
+import {
+  defineComponent, h,
+} from 'vue';
+import { useMatApp } from 'mdu-ui';
+
+const LayoutReadout = defineComponent({
+  name: 'LayoutReadout',
+  setup() {
+    const { layout } = useMatApp();
+
+    return () => h('pre', { class: 'app-root-layout-example__readout' }, JSON.stringify({
+      breakpoint: layout.breakpoint,
+      breakpointRange: layout.breakpointRange,
+      content: layout.content,
+      padding: layout.padding,
+      size: layout.size,
+    }, null, 2));
+  },
+});
+</script>
+```
+```vue
+<style scoped>
+.app-root-layout-example {
+  min-block-size: 280px;
+  padding: 16px;
+  background: var(--mat-sys-color-surface-container-low);
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.app-root-layout-example p {
+  margin-block: 0 12px;
+}
+
+.app-root-layout-example :deep(.app-root-layout-example__readout) {
+  margin: 0;
+  padding: 16px;
+  overflow: auto;
+  color: var(--mat-sys-color-on-surface-variant);
+  background: var(--mat-sys-color-surface-container);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="AppRoot 实时布局数据预览">
+    <AppRootLayoutExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `registerEdge()` 自定义边缘内容
+
+自定义固定页眉、侧栏等内容通过 `registerEdge()` 加入布局计算。元素可以位于 AppRoot 内，也可以 Teleport 到当前 document 的其他位置。组件卸载时必须调用 `unregister()`；位置或尺寸由无法被 `ResizeObserver` 感知的状态改变时调用 `update()`。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-app-root :fill-viewport="false" class="app-root-register-edge-example">
+    <RegisteredHeader />
+    <section class="app-root-register-edge-example__content">
+      <h3>正文自动避让</h3>
+      <p>页眉尺寸变化后可调用 registration.update() 请求重新测量。</p>
+    </section>
+  </mat-app-root>
+</template>
+```
+```vue
+<script setup>
+import {
+  defineComponent, h, onBeforeUnmount, onMounted, ref,
+} from 'vue';
+import { useMatApp } from 'mdu-ui';
+
+const RegisteredHeader = defineComponent({
+  name: 'RegisteredHeader',
+  setup() {
+    const element = ref(null);
+    const { registerEdge } = useMatApp();
+    let registration;
+
+    onMounted(() => {
+      registration = registerEdge({ edge: 'top', element: element.value });
+    });
+    onBeforeUnmount(() => {
+      registration?.unregister();
+    });
+
+    return () => h('header', {
+      ref: element,
+      class: 'app-root-register-edge-example__header',
+    }, '自定义固定页眉');
+  },
+});
+</script>
+```
+```vue
+<style scoped>
+.app-root-register-edge-example {
+  min-block-size: 280px;
+  overflow: hidden;
+  background: var(--mat-sys-color-surface-container-low);
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.app-root-register-edge-example :deep(.app-root-register-edge-example__header) {
+  position: absolute;
+  z-index: var(--mat-sys-z-index-toolbar);
+  inset-block-start: 0;
+  inset-inline: 0;
+  box-sizing: border-box;
+  min-block-size: 64px;
+  padding: 20px 24px;
+  color: var(--mat-sys-color-on-primary-container);
+  background: var(--mat-sys-color-primary-container);
+}
+
+.app-root-register-edge-example__content {
+  padding: 24px;
+}
+
+.app-root-register-edge-example__content h3,
+.app-root-register-edge-example__content p {
+  margin-block: 0 12px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="AppRoot 自定义边缘登记预览">
+    <AppRootRegisterEdgeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 布局组件自动接入
+
+位于 AppRoot 内且设置 `app` 的 Toolbar、Navigation rail 和 FAB 会自动 Teleport 到当前布局；模板 Snackbar 与目标位于当前布局内的 Tooltip 不需要额外属性。Snackbar 始终排列在普通 FAB 组上方。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-app-root
+    :fill-viewport="false"
+    scrollable
+    class="app-root-components-example"
+  >
+    <mat-navigation-rail
+      v-model="current"
+      app
+    >
+      <mat-navigation-rail-item value="home" icon="home">
+        首页
+      </mat-navigation-rail-item>
+      <mat-navigation-rail-item value="settings" icon="settings">
+        设置
+      </mat-navigation-rail-item>
+    </mat-navigation-rail>
+
+    <section class="app-root-components-example__content">
+      <h3>组件自动接入</h3>
+      <p>Navigation 与 docked Toolbar 登记边缘；FAB、Snackbar 和 Tooltip 自动进入对应浮动层。</p>
+      <mat-btn
+        id="app-root-tooltip-target"
+        @click="snackbarOpen = true"
+      >
+        显示 Snackbar
+      </mat-btn>
+      <mat-tooltip
+        content="这个 Tooltip 属于当前 AppRoot"
+        target="#app-root-tooltip-target"
+      />
+    </section>
+
+    <mat-toolbar app>
+      <mat-btn variant="standard">
+        取消
+      </mat-btn>
+      <mat-spacer />
+      <mat-btn variant="standard">
+        保存
+      </mat-btn>
+    </mat-toolbar>
+
+    <mat-fab
+      app
+      icon="add"
+      label="新建"
+      position="end"
+      @click="snackbarOpen = true"
+    />
+
+    <mat-snackbar
+      v-model="snackbarOpen"
+      text="AppRoot 已自动排列浮动组件"
+      closable
+    />
+  </mat-app-root>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const snackbarOpen = ref(false);
+const current = ref('home');
+</script>
+```
+```vue
+<style scoped>
+.app-root-components-example {
+  block-size: 440px;
+  background: var(--mat-sys-color-surface-container-lowest);
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.app-root-components-example__content {
+  min-block-size: 520px;
+  padding: 24px;
+}
+
+.app-root-components-example__content h3,
+.app-root-components-example__content p {
+  margin-block: 0 16px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="AppRoot 相关组件自动接入预览">
+    <AppRootComponentsExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `fillViewport` | `boolean` | `true` | 至少铺满 `100dvb`；与 `scrollable` 同时启用时使用确定的 `100dvb` 高度 |
+| `scrollable` | `boolean` | `false` | `false` 时内容增长并由 document/body 滚动；`true` 时正文层成为内部滚动容器 |
+
+未消费的原生属性、`class` 和 `style` 传给 AppRoot 根元素。组件不会修改 `html`、`body` 或 Vue 挂载节点；完整页面应用应自行提供基础重置，例如让 `html`、`body` 与挂载节点具有可用的最小高度并清除默认 `body` 外边距。
+
+### `useMatApp()`
+
+```js
+import { useMatApp } from 'mdu-ui';
+
+const { layout, registerEdge } = useMatApp();
+```
+
+在 AppRoot 外调用会抛出 `Error`。返回对象包含：
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `layout` | `Readonly<MatAppLayout>` | 同一个深只读响应式布局对象 |
+| `registerEdge(options)` | `({ edge, element }) => MatAppEdgeRegistration` | 登记固定边缘元素；参数无效时抛出 `TypeError` |
+
+`layout` 字段：
+
+| 字段 | 说明 |
+| --- | --- |
+| `size { width, height }` | 当前应用布局坐标区尺寸；默认文档滚动模式使用视口高度，内部滚动和容器化模式使用 AppRoot 边框盒 |
+| `padding { top, bottom, start, end }` | 安全区与各边缘元素外延共同形成的正文避让值 |
+| `content { width, height }` | `size` 减去对应两侧 `padding` 后的非负尺寸 |
+| `breakpoint` | 按 AppRoot 宽度计算的 `compact`、`medium`、`expanded`、`large` 或 `extra-large` |
+| `breakpointRange { min, max }` | 当前断点的闭区间；五档边界依次为 0、600、840、1200、1600px，最后一档 `max` 为 `Infinity` |
+| `edges` | `top`、`bottom`、`start`、`end` 的 `{ size, startInset, endInset }` 汇总 |
+
+`registerEdge({ edge, element })` 的 `edge` 只接受 `top`、`bottom`、`start`、`end`，`element` 必须是当前 document 中的 `HTMLElement`。返回值包含只读响应式 `insets { start, end }`、`update()` 和幂等的 `unregister()`。
+
+同侧多个登记项取最大外延，不累加，因此同侧固定组件可能互相覆盖；每侧通常只放一个固定组件。正交边缘按登记顺序确定优先级：较早登记的边缘占满自己的方向，后登记组件通过 `insets` 避让它。该顺序与 Vue 挂载顺序一致，动态条件切换时应保持组件顺序稳定。
+
+## 事件
+
+组件不定义自定义事件。正文及浮动子组件的原生事件保持各自行为。
+
+## Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 应用正文与布局组件；AppRoot 不公开覆盖层 Slot，浮动组件通过各自的 app 接入能力自动挂载 |
+
+## 组件接入规则
+
+- `MatToolbar app`：省略 `attach` 时自动进入当前 AppRoot。docked 登记 `bottom`；所有 floating 变体不占布局，但会避让已登记边缘。floating 仍可显式设置 `placeholder`，为声明处的长内容保留滚动末端空间。显式 `attach` 始终优先，并沿用视口固定模式。
+- `MatNavigationRail app`：省略 `attach` 时自动进入当前 AppRoot。纵向按 `position` 登记 `start`/`end`，横向登记 `bottom`；modal 展开层覆盖正文，只以 collapsed host 宽度参与布局。显式 `attach` 保留原行为。
+- `MatSnackbar`：模板实例自动进入当前 AppRoot 的 Snackbar 组，并由 AppRoot 处理安全区和边缘避让；命令式 `snackbar()`/`toast()` 仍挂载到 body，并使用旧 Toolbar 几何注册表。
+- `MatFab app`：自动进入普通浮动组，`position` 控制 `start`、`center`、`end` 对齐；未设置 `app` 时仍是声明位置的原生按钮。
+- `MatTooltip`：省略 `attach` 且展示目标位于当前 AppRoot 时进入应用覆盖层，并避让 `layout.padding`；目标位于 AppRoot 外时回退到 body。已打开的 dialog/Popover 和显式 `attach` 仍具有更高优先级。
+
+Dialog、Menu、Bottom sheet、Side sheet 的挂载与 top layer 语义保持不变。AppRoot 只建立普通应用布局，不替代浏览器 modal dialog 或 Popover 的顶层管理。
+
+<script setup>
+import AppRootBasicExample from '../examples/app-root/AppRootBasicExample.vue';
+import AppRootComponentsExample from '../examples/app-root/AppRootComponentsExample.vue';
+import AppRootLayoutExample from '../examples/app-root/AppRootLayoutExample.vue';
+import AppRootRegisterEdgeExample from '../examples/app-root/AppRootRegisterEdgeExample.vue';
+import AppRootScrollableExample from '../examples/app-root/AppRootScrollableExample.vue';
 </script>
 
 # Checkbox 复选框
@@ -9810,7 +10324,7 @@ import ListVariantExample from '../examples/list/ListVariantExample.vue';
 
 ## 组件简介
 
-`<mat-toolbar>` 的组件导出名是 `MatToolbar`。它提供 Material 3 Expressive 的 docked 和 floating 两类 Toolbar：docked 保持横向完整宽度，floating 支持顶部、底部横向和左右垂直布局。默认使用绝对定位，相对声明位置最近的定位容器布局；设置 `app` 后将 Toolbar 挂载到 `attach` 指定节点，并改为固定定位以贴住视口边缘。默认 Slot 可放置按钮、按钮组和自定义内容，悬浮模式可通过 `fab` Slot 放置外置主操作；当前示例使用接近 Toolbar 高度的 `size="small"`、带 `icon` 和 `label` 的宽图标 `<mat-btn>`。
+`<mat-toolbar>` 的组件导出名是 `MatToolbar`。它提供 Material 3 Expressive 的 docked 和 floating 两类 Toolbar：docked 保持横向完整宽度，floating 支持顶部、底部横向和左右垂直布局。默认使用绝对定位，相对声明位置最近的定位容器布局；设置 `app` 后，省略 `attach` 且位于 `MatAppRoot` 内时自动接入应用布局，否则挂载到 `attach` 并固定到视口。默认 Slot 可放置按钮、按钮组和自定义内容，悬浮模式可通过 `fab` Slot 放置外置主操作；当前示例使用接近 Toolbar 高度的 `size="small"`、带 `icon` 和 `label` 的宽图标 `<mat-btn>`。
 
 Toolbar 默认显示，使用 `modelValue` 或 `v-model` 可以播放进入、退出动画并隐藏 Toolbar；不负责随滚动自动隐藏。非应用模式的父容器需要通过 `position: relative` 等方式建立定位上下文；应用模式固定到视口，不要求 `attach` 建立定位上下文。Material 不建议同时显示 Toolbar 与 Navigation bar。
 
@@ -10163,18 +10677,18 @@ const bottomPlaceholder = ref(0);
 | `variant` | `'docked' \| 'floating' \| 'floating-top' \| 'floating-bottom' \| 'floating-left' \| 'floating-right'` | `'docked'` | `floating` 是 `floating-bottom` 的别名；顶部和底部模式为横向 Toolbar，左右模式为垂直 Toolbar |
 | `position` | `'start' \| 'center' \| 'end'` | `'center'` | 浮动顶部和底部模式按水平方向、左右模式按垂直方向对齐；停靠模式忽略 |
 | `vibrant` | `boolean` | `false` | 使用高强调的 primary container 配色 |
-| `app` | `boolean` | `false` | 是否将 Toolbar Teleport 到 `attach` 并固定到视口；不改变 `position` 对齐、占位、安全区或覆盖层行为 |
-| `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的 Teleport 目标；字符串按当前 document 的 CSS 选择器解析 |
+| `app` | `boolean` | `false` | 启用应用布局模式；位于 `MatAppRoot` 且省略 `attach` 时自动接入，否则固定到 `attach` |
+| `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；一旦显式提供就优先于 AppRoot 自动接入 |
 | `placeholder` | `boolean` | `false` | 在组件声明位置生成占位，避免绝对定位的 Toolbar 遮挡后续内容 |
 | `bottomPlaceholder` | `number \| string` | `0` | docked 和 `floating-bottom` 的额外底部安全区；数字按 px 处理，可传入 `env(safe-area-inset-bottom)` 或 `calc(...)`；不负责生成自然布局占位 |
 
-`placeholder=true` 时，横向 Toolbar 占用实际 Toolbar 的 block-size，垂直 Toolbar 占用实际 Toolbar 的 inline-size；占位尺寸包含有效的 `bottomPlaceholder`。无效的 `bottomPlaceholder` 不产生额外空间。`attach` 只在 `app=true` 时解析；无法解析时组件给出警告且不渲染 Toolbar。`fab` Slot 在 docked 模式不会渲染并会给出警告。
+`placeholder=true` 时，横向 Toolbar 占用实际 Toolbar 的 block-size，垂直 Toolbar 占用实际 Toolbar 的 inline-size；占位尺寸包含有效的 `bottomPlaceholder`。floating Toolbar 不登记 AppRoot 边缘，因此仍可使用显式 placeholder 为声明位置的长滚动内容保留空间。AppRoot 会统一处理安全区，自动接入时 `bottomPlaceholder` 只作为额外下限。无效值不产生额外空间。显式 `attach` 只在 `app=true` 时解析；无法解析时组件给出警告且不渲染 Toolbar。`fab` Slot 在 docked 模式不会渲染并会给出警告。
 
 组件没有公开方法。
 
 ## 事件
 
-组件不定义自定义事件；显示状态由 `modelValue` 或 `v-model` 控制。未消费的属性、`class`、`style`、`id` 和 ARIA 属性传递给 Toolbar 根节点；`app=true` 时该根节点 Teleport 到 `attach` 并使用固定定位，关闭时使用容器内绝对定位。
+组件不定义自定义事件；显示状态由 `modelValue` 或 `v-model` 控制。未消费的属性、`class`、`style`、`id` 和 ARIA 属性传递给 Toolbar 根节点；`app=true` 时该根节点 Teleport 到 AppRoot 或显式 `attach`，前者相对应用覆盖层绝对定位，后者相对视口固定定位。
 
 ## Slots
 
@@ -10185,7 +10699,7 @@ const bottomPlaceholder = ref(0);
 
 ## 覆盖层与避让
 
-Toolbar 使用较低的普通覆盖层级。Snackbar 会自动向上避让底部 Toolbar 及其安全区；Tooltip 会在 Toolbar 占用首选位置时换边；Dialog 使用原生 top layer，始终位于这些普通覆盖层之上。使用方不需要为这三类组件额外设置 z-index 或底部偏移。
+在 AppRoot 内，docked Toolbar 登记 `bottom` 并推动正文与浮动组；floating Toolbar 不占正文布局，但会读取 AppRoot 的四向避让值。非 AppRoot 场景继续使用内部 Toolbar 几何注册表，让 Snackbar 与 Tooltip 避让。Dialog 使用原生 top layer，始终位于这些普通覆盖层之上。
 
 ## 无障碍
 
@@ -10877,7 +11391,7 @@ import SideSheetVariantExample from '../examples/side-sheet/SideSheetVariantExam
 
 官方把 Navigation rail 和 Navigation bar 定义为独立组件。本组件为减少重复 API 暂时组合两者，但仍保持规范边界：纵向模式只实现 rail；横向模式只实现 Navigation bar 的 horizontal items，不提供 vertical navigation bar，也不把横向模式称为 Navigation rail。
 
-纵向 rail 支持 3–7 个主要目的地、可选菜单、Header、FAB 与底部自定义内容。默认在声明位置参与父容器布局；expanded rail 可以使用占据正文空间的 `standard` 布局或覆盖当前布局容器的 `modal` 布局。设置 `app` 后会固定到视口并挂载至 `attach`，横向 bar 固定在视口底部。横向 bar 适合较小或中等窗口中的少量目的地：`expanded` 为 `false` 时图标在上、标签在下，为 `true` 时使用图标在左、标签在右的固定宽度 Item。
+纵向 rail 支持 3–7 个主要目的地、可选菜单、Header、FAB 与底部自定义内容。默认在声明位置参与父容器布局；expanded rail 可以使用占据正文空间的 `standard` 布局或覆盖当前布局容器的 `modal` 布局。设置 `app` 后，省略 `attach` 且位于 `MatAppRoot` 内时自动登记应用边缘，否则固定到视口并挂载至 `attach`。横向 bar 适合较小或中等窗口中的少量目的地：`expanded` 为 `false` 时图标在上、标签在下，为 `true` 时使用图标在左、标签在右的固定宽度 Item。
 
 ## 示例
 
@@ -10951,7 +11465,7 @@ const selected = ref('home');
 
 ### `app` 与 `attach`
 
-`app=true` 将 Navigation rail 作为应用级固定导航挂载到 `attach`，默认挂载到 `body`。纵向 rail 按 `position` 固定在视口起始或末尾侧；horizontal bar 固定在底部。`app=false` 时 `attach` 不生效，组件保留在声明位置。
+`app=true` 将 Navigation rail 作为应用级固定导航。位于 `MatAppRoot` 且省略 `attach` 时，纵向按 `position` 登记 `start`/`end`，horizontal bar 登记 `bottom`；显式 `attach` 时沿用视口固定模式。`app=false` 时 `attach` 不生效，组件保留在声明位置。
 
 :::: details 查看示例代码
 ::: code-group
@@ -11753,8 +12267,8 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 | `close-icon` | `string` | `'menu_open'` | 展开时的菜单按钮图标 |
 | `open-label` | `string` | `'展开导航'` | 未展开时菜单按钮的无障碍名称 |
 | `close-label` | `string` | `'收起导航'` | 展开时菜单按钮和 modal 遮罩的无障碍名称 |
-| `app` | `boolean` | `false` | 开启后固定到视口并 Teleport 到 `attach`；关闭时在声明位置参与父容器布局 |
-| `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的 Teleport 目标；字符串按当前 document 的 CSS 选择器解析 |
+| `app` | `boolean` | `false` | 开启应用布局模式；位于 `MatAppRoot` 且省略 `attach` 时自动登记边缘，否则固定到显式目标 |
+| `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；一旦显式提供就优先于 AppRoot 自动接入 |
 | `placeholder` | `boolean` | `false` | 仅 `app=true` 有效；在声明位置为固定 rail 或 bar 预留实际尺寸 |
 | `bottom-placeholder` | `number \| string` | `0` | 仅 `app=true` 有效；数字按 px 处理，字符串可使用 `env(safe-area-inset-bottom)` 或 `calc(...)` |
 
@@ -11792,7 +12306,7 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 
 根导航使用原生 `<nav>`；应用应通过 `aria-label` 或 `aria-labelledby` 区分页面中的多个导航区域。选中 Item 使用 `aria-current="page"`。Item 保留原生按钮或链接的 Tab 顺序，完整 Item 宽度都是命中区域，焦点环和状态层显示在活动指示器上。
 
-默认纵向 rail 位于应用布局容器的起始侧，由父容器决定滚动边界；需要作为固定应用导航时设置 `app`。应用模式下 `position="end"` 同时将 rail 固定到视口末尾侧，并保持 Item 的末尾侧对齐。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 不自动监听窗口宽度，应用负责在断点处切换。`attach` 无法解析时组件给出警告且不渲染应用布局。
+默认纵向 rail 位于应用布局容器的起始侧，由父容器决定滚动边界；需要作为固定应用导航时设置 `app`。AppRoot 模式会统一处理安全区；`layout="modal"` 展开时只用 collapsed host 宽度推动正文，展开表面覆盖正文。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 不自动监听窗口宽度，应用可读取 AppRoot 断点切换。显式 `attach` 无法解析时组件给出警告且不渲染应用布局。
 
 ## 参考来源
 
@@ -11816,7 +12330,7 @@ import NavigationRailWidthExample from '../examples/navigation-rail/NavigationRa
 
 ## 组件简介
 
-`<mat-tooltip>` 的组件导出名是 `MatTooltip`。它实现 Material 3 Plain tooltip：用于补充展示元素的简短、非交互说明。组件以固定定位 Teleport 到指定容器，默认显示在展示元素上方；省略 `attach` 时，如果展示元素位于已打开的 `dialog` 或 Popover 内，会自动挂载到最近的容器，否则挂载到 `body`。它不包含 Rich tooltip、操作按钮、箭头或触屏长按。页面存在 Toolbar 时，Tooltip 会把 Toolbar 作为避让区域，必要时自动换边。
+`<mat-tooltip>` 的组件导出名是 `MatTooltip`。它实现 Material 3 Plain tooltip：用于补充展示元素的简短、非交互说明。组件以覆盖定位 Teleport 到合适容器，默认显示在展示元素上方；省略 `attach` 时，依次选择展示元素所在的已打开 `dialog`/Popover、目标所属 `MatAppRoot`、`body`。它不包含 Rich tooltip、操作按钮、箭头或触屏长按。AppRoot 内会避让布局边缘，其他场景会把 Toolbar 作为避让区域，必要时自动换边。
 
 ## 示例
 
@@ -12117,7 +12631,7 @@ const open = ref(false);
 | modelValue | boolean | false | 显式传入时启用受控模式，可使用 v-model；省略时由 hover 和 focus 自动控制 |
 | content | string | 未设置 | 简短纯文本内容；存在时优先于默认 Slot |
 | target | string 或 HTMLElement | 未设置 | 展示元素；字符串按当前 document 的 CSS 选择器解析 |
-| attach | string 或 HTMLElement | body | Tooltip 的 Teleport 目标；省略时优先使用展示元素所在的已打开 `dialog` 或 Popover，找不到时使用 `body`；字符串按当前 document 的 CSS 选择器解析 |
+| attach | string 或 HTMLElement | body | Tooltip 的显式 Teleport 目标；省略时依次使用已打开的 `dialog`/Popover、目标所属 AppRoot、`body`；字符串按当前 document 的 CSS 选择器解析 |
 | location | top、right、bottom、left 及其 -start、-end 形式 | top | Tooltip 相对展示元素的首选位置 |
 | openDelay | number | 插件配置或 0 | 自动模式的打开延迟，单位为毫秒；显式值优先于 `createMatUi()` 的 `tooltip.openDelay`；可直接写为 open-delay="600"，动态数值使用 :open-delay；负数、空字符串或非有限数字按 0 处理，并触发 Vue prop 校验警告 |
 
@@ -12354,11 +12868,11 @@ import DividerListExample from '../examples/divider/DividerListExample.vue';
 
 ## 组件简介
 
-`<mat-snackbar>` 的组件导出名是 `MatSnackbar`。它用于展示短暂、非阻塞的操作结果或状态提示，并固定在视口底部。模板组件和命令式 `snackbar()` 会共同进入全局 FIFO 队列，任意时刻只显示一条通知；`toast` 是同一个函数的别名。
+`<mat-snackbar>` 的组件导出名是 `MatSnackbar`。它用于展示短暂、非阻塞的操作结果或状态提示。模板实例位于 `MatAppRoot` 内时自动进入应用 Snackbar 组，否则固定在视口底部。模板组件和命令式 `snackbar()` 会共同进入全局 FIFO 队列，任意时刻只显示一条通知；`toast` 是同一个函数的别名。
 
 Snackbar 适合“保存完成”“已复制链接”这类无需立即作答的反馈。可选文字 action 适合与这条反馈直接相关的简短操作，例如“撤销”；一次只提供一个 action。它不提供多操作菜单、图标、颜色或挂载目标。需要用户决定、输入或确认时应使用 Dialog。
 
-当页面存在 `mat-toolbar` 的底部停靠或悬浮模式时，Snackbar 会自动向上避让 Toolbar 及其 `bottomPlaceholder` 空间；不需要额外设置 z-index 或底部偏移。没有 Toolbar 时继续使用视口底部安全区。
+AppRoot 内由统一布局 padding 避让 docked Toolbar、Navigation 和安全区，并保证 Snackbar 位于普通 FAB 组上方。AppRoot 外继续使用 Toolbar 几何注册表与视口底部安全区。命令式 `snackbar()`/`toast()` 的宿主始终位于 body，因此也继续使用后一种规则。
 
 ## 示例
 
@@ -12998,7 +13512,7 @@ function showAll() {
 | `position` | `'left' \| 'center' \| 'right'` | `'center'` | 宽屏时的底部对齐位置；窄屏占满安全边距内的可用宽度 |
 | `duration` | `number` | `4000` | 自动关闭等待时间，单位为毫秒；`0` 表示不自动关闭 |
 
-未消费的 `class`、`style`、`id`、`aria-*` 与原生事件传给 Teleport 后的 Snackbar 根元素；根元素的 `role` 固定为 `status`，并固定使用 `aria-live="polite"`。没有 `text` 和默认 Slot 时组件不会展示，并请求把 `modelValue` 更新为 `false`。
+未消费的 `class`、`style`、`id`、`aria-*` 与原生事件传给 Teleport 后的 Snackbar 根元素；根元素的 `role` 固定为 `status`，并固定使用 `aria-live="polite"`。位于 AppRoot 时挂载目标自动确定，不新增 `attach` prop。没有 `text` 和默认 Slot 时组件不会展示，并请求把 `modelValue` 更新为 `false`。
 
 组件没有公共方法，也不提供多个 action、图标、`color`、`attach` 或其他挂载位置属性。
 

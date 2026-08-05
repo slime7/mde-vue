@@ -11,6 +11,7 @@ import {
   dialog,
   prompt,
   Intersection as RootIntersection,
+  MatAppRoot as RootMatAppRoot,
   MatBottomSheet as RootMatBottomSheet,
   MatBtn as RootMatBtn,
   MatBtnGroup as RootMatBtnGroup,
@@ -53,9 +54,11 @@ import {
   MatTextField as RootMatTextField,
   MatToolbar as RootMatToolbar,
   MatTooltip as RootMatTooltip,
+  useMatApp,
 } from 'mdu-ui';
 
 const globalComponents = [
+  ['MatAppRoot', 'mat-app-root', RootMatAppRoot],
   ['MatBtn', 'mat-btn', RootMatBtn],
   ['MatBtnGroup', 'mat-btn-group', RootMatBtnGroup],
   ['MatFab', 'mat-fab', RootMatFab],
@@ -101,6 +104,11 @@ const globalComponents = [
 ];
 
 describe('公共组件导出', () => {
+  it('从根入口导出应用布局组件与组合函数', () => {
+    expect(RootMatAppRoot).toBeTruthy();
+    expect(useMatApp).toBeTypeOf('function');
+  });
+
   it('根入口使用可由 Node/Vitest 直接解析的 plugin.js 路径', () => {
     const source = readFileSync('src/index.js', 'utf8');
 
@@ -216,6 +224,9 @@ describe('公共组件导出', () => {
       expect(declaration).toContain(`  ${pascalName}: typeof ${pascalName};`);
       expect(declaration).toContain(`  '${kebabName}': typeof ${pascalName};`);
     });
+    expect(declaration).toContain('export interface MatAppLayout');
+    expect(declaration).toContain('export interface MatAppEdgeRegistration');
+    expect(declaration).toContain('export declare function useMatApp(): MatAppContext;');
   });
 
   it('所有运行时出口只暴露构建后的 ESM 与 CSS', () => {

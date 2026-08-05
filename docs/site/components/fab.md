@@ -9,7 +9,7 @@ order: 53
 
 ## 组件简介
 
-`<mat-fab>` 的组件导出名是 `MatFab`。它使用同一个组件表达普通 FAB 和 Extended FAB：没有默认 Slot 文本时渲染纯图标 FAB；有默认 Slot 文本时渲染带标签的 Extended FAB。组件不负责固定定位、滚动收缩、FAB menu 或页面级动效。
+`<mat-fab>` 的组件导出名是 `MatFab`。它使用同一个组件表达普通 FAB 和 Extended FAB：没有默认 Slot 文本时渲染纯图标 FAB；有默认 Slot 文本时渲染带标签的 Extended FAB。默认在声明位置参与普通布局；设置 `app` 后自动进入最近 `MatAppRoot` 的普通浮动组。组件不实现滚动收缩、FAB menu 或页面级动效。
 
 纯图标模式需要传入非空 `icon` 和 `label`。`label` 同时作为按钮的可访问名称和默认 Tooltip 文本；Extended FAB 可以省略图标，默认 Slot 标签仍然有效。标签保持单行，超出可用宽度时以省略号截断。
 
@@ -135,6 +135,26 @@ FAB 只接受当前主题中的八组官方颜色角色，不接受十六进制�
   </DocsPreview>
 </ClientOnly>
 
+### `app` 与 `position`
+
+`app` 需要在 `MatAppRoot` 后代中使用。多个 app FAB 按 DOM 顺序纵向排列，`position` 分别控制逻辑起点、居中和逻辑终点对齐。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/fab/FabAppExample.vue#template [template]
+
+<<< @/examples/fab/FabAppExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="FAB AppRoot 浮动排列预览">
+    <FabAppExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -147,6 +167,8 @@ FAB 只接受当前主题中的八组官方颜色角色，不接受十六进制�
 | `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'primary-container' \| 'secondary-container' \| 'tertiary-container' \| 'error' \| 'error-container'` | `'primary-container'` | 当前主题的官方颜色角色；不接受十六进制种子色 |
 | `disabled` | `boolean` | `false` | 原生禁用状态 |
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 原生按钮类型 |
+| `app` | `boolean` | `false` | 自动 Teleport 到最近 `MatAppRoot` 的普通浮动组；AppRoot 外保持声明位置并给出普通按钮行为 |
+| `position` | `'start' \| 'center' \| 'end'` | `'end'` | `app=true` 时在浮动组中的逻辑轴对齐位置；普通布局中忽略 |
 
 没有默认 Slot 时，`aria-label` 取 `label`；有默认 Slot 时，默认 Slot 提供可见名称并保留调用方传入的 `aria-label`。未消费的 `name`、`form`、`aria-*`、`data-*` 等原生属性和事件继续传给内部 `<button>`。
 
@@ -171,7 +193,7 @@ FAB 只接受当前主题中的八组官方颜色角色，不接受十六进制�
 | pressed | 使用基础按钮层的按下状态层和状态处理 |
 | disabled | 使用原生禁用语义、禁用内容对比并移除阴影 |
 
-组件不实现固定定位、滚动收缩、FAB menu 或页面级动效。减少动态效果偏好下，基础按钮层和图标过渡会被取消。
+组件不自行计算固定坐标；`app` 模式由 AppRoot 负责布局、边缘避让和安全区。组件不实现滚动收缩、FAB menu 或页面级动效。减少动态效果偏好下，基础按钮层和图标过渡会被取消。
 
 ## 参考来源
 
@@ -179,6 +201,7 @@ FAB 只接受当前主题中的八组官方颜色角色，不接受十六进制�
 
 <script setup>
 import FabAccessibilityExample from '../examples/fab/FabAccessibilityExample.vue';
+import FabAppExample from '../examples/fab/FabAppExample.vue';
 import FabColorExample from '../examples/fab/FabColorExample.vue';
 import FabDefaultExample from '../examples/fab/FabDefaultExample.vue';
 import FabDisabledExample from '../examples/fab/FabDisabledExample.vue';

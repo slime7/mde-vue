@@ -36,7 +36,7 @@
 
 ### 公共入口
 
-`src/index.js` 是唯一 JavaScript 公共入口，导出全部组件、`Intersection` 指令、命令式 Dialog 与 Snackbar 函数，以及 `createMatUi()` 和 `useMatTheme()`。构建将该入口编译为唯一运行时文件 `dist/mdu-ui.js`，因此所有组件、Vue 上下文键、队列和协调器只存在一个模块实例。`dist/index.d.ts` 是完整根入口类型声明。包不提供组件、指令或函数子入口；`mdu-ui/styles.css` 暴露基础令牌与全部组件样式，`mdu-ui/tailwind.css` 暴露 Tailwind v4 映射。
+`src/index.js` 是唯一 JavaScript 公共入口，导出全部组件、`Intersection` 指令、命令式 Dialog 与 Snackbar 函数，以及 `createMatUi()`、`useMatTheme()` 和 `useMatApp()`。构建将该入口编译为唯一运行时文件 `dist/mdu-ui.js`，因此所有组件、Vue 上下文键、队列和协调器只存在一个模块实例。`dist/index.d.ts` 是完整根入口类型声明。包不提供组件、指令或函数子入口；`mdu-ui/styles.css` 暴露基础令牌与全部组件样式，`mdu-ui/tailwind.css` 暴露 Tailwind v4 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -54,10 +54,12 @@
 
 ### 组件
 
-每个组件拥有自己的 Vue SFC、公开入口、样式与测试。`MatSpacer` 是不进入无障碍树的空 flex 子元素，只通过增长分配父容器主轴剩余空间。`MatBtn` 以同一个原生 `<button>` 组件提供普通按钮和图标模式：`icon=true` 解析默认 Slot 的 Material Symbols 文本，字符串 `icon` 使用 prop 文本，未设置 `icon` 时仍按普通按钮渲染并允许默认 Slot 直接放置 `MatIcon`；普通模式也可使用 `prefix`、`suffix` 或同名 Slots。`MatFab` 以同一个原生 `<button>` 组件提供纯图标 FAB 和 Extended FAB：默认 Slot 有非空内容时显示 Extended 标签，否则要求 `icon` 与 `label` 并显示 Tooltip。两者共享 `MatButtonBase` 的原生交互和状态逻辑。按钮组与 split button 使用 Vue provide/inject 协调 `MatBtn` 子按钮，不复制交互协议；standard 选中态沿用普通按钮的 round/square 反转，connected 选中态使用覆盖四角的全圆 checked shape。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
+`MatAppRoot` 建立应用级布局坐标系与隔离覆盖层。默认正文随 document/body 增长和滚动，`scrollable` 切换为确定高度内的正文滚动；组件不修改页面根滚动样式。布局上下文使用 `ResizeObserver`、视口事件和显式 `update()` 测量根与登记元素，汇总安全区、四向 padding、内容尺寸、容器断点和边缘信息。边缘按登记顺序产生正交 inset，同侧外延取最大值。内部覆盖层分别承载固定边缘、自由定位、Snackbar 和普通浮动组件，不公开 Slot；`useMatApp()` 只暴露深只读响应式 layout 与 `registerEdge()`。
+
+每个组件拥有自己的 Vue SFC、公开入口、样式与测试。`MatSpacer` 是不进入无障碍树的空 flex 子元素，只通过增长分配父容器主轴剩余空间。`MatBtn` 以同一个原生 `<button>` 组件提供普通按钮和图标模式：`icon=true` 解析默认 Slot 的 Material Symbols 文本，字符串 `icon` 使用 prop 文本，未设置 `icon` 时仍按普通按钮渲染并允许默认 Slot 直接放置 `MatIcon`；普通模式也可使用 `prefix`、`suffix` 或同名 Slots。`MatFab` 以同一个原生 `<button>` 组件提供纯图标 FAB 和 Extended FAB：默认 Slot 有非空内容时显示 Extended 标签，否则要求 `icon` 与 `label` 并显示 Tooltip；`app` 模式自动进入最近 AppRoot 的普通浮动组。两者共享 `MatButtonBase` 的原生交互和状态逻辑。按钮组与 split button 使用 Vue provide/inject 协调 `MatBtn` 子按钮，不复制交互协议；standard 选中态沿用普通按钮的 round/square 反转，connected 选中态使用覆盖四角的全圆 checked shape。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
 每个组件拥有自己的 Vue SFC、公开入口、样式与测试。`MatHover` 是无渲染交互组件，通过作用域 Slot 向使用方提供 hover 状态和目标事件 props，不引入包装元素；它只处理鼠标进入、离开及可取消的开放/关闭延迟。`v-intersection` 是独立的原生观察指令，绑定值直接映射 `IntersectionObserver` 回调和初始化选项，使用元素级 WeakMap 管理生命周期，不向 DOM 写入私有字段。`MatSpacer` 是不进入无障碍树的空 flex 子元素，只通过增长分配父容器主轴剩余空间。`MatBtn` 以同一个原生 `<button>` 组件提供普通按钮和图标模式：`icon=true` 解析默认 Slot 的 Material Symbols 文本，字符串 `icon` 使用 prop 文本，未设置 `icon` 时仍按普通按钮渲染并允许默认 Slot 直接放置 `MatIcon`；普通模式也可使用 `prefix`、`suffix` 或同名 Slots。`MatFab` 以同一个原生 `<button>` 组件提供纯图标 FAB 和 Extended FAB：默认 Slot 有非空内容时显示 Extended 标签，否则要求 `icon` 与 `label` 并显示 Tooltip。两者共享 `MatButtonBase` 的原生交互和状态逻辑。按钮组与 split button 使用 Vue provide/inject 协调 `MatBtn` 子按钮，不复制交互协议；standard 选中态沿用普通按钮的 round/square 反转，connected 选中态使用覆盖四角的全圆 checked shape。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
 
-Tooltip 的模块级协调器继续保证同一时间只有一个活动实例，并使用以分组容器为键的 WeakMap 保存最近实际显示的实例标识和快速切换有效期。分组由展示元素最近的 `data-mat-tooltip-group` 祖先明确声明，不根据标签名或组件层级推断；未分组或未配置跳过时长时不共享打开状态。
+Tooltip 的模块级协调器继续保证同一时间只有一个活动实例，并使用以分组容器为键的 WeakMap 保存最近实际显示的实例标识和快速切换有效期。分组由展示元素最近的 `data-mat-tooltip-group` 祖先明确声明，不根据标签名或组件层级推断；未分组或未配置跳过时长时不共享打开状态。省略显式 attach 时，已打开的 top-layer 祖先优先，其次使用目标所属 AppRoot 并读取布局 padding 生成避让矩形，目标不属于当前 AppRoot 时回退 body 与 Toolbar 几何注册表。
 
 `MatContainer` 以始终铺满父容器的外层统一视口断点水平内边距，并在内部正文层以 1040px 最大宽度和自动外边距控制可读宽度；正文层在外层具有确定块轴尺寸时同步铺满高度，外层尺寸未确定时仍由内容自然撑开。`fluid` 只取消正文层的最大宽度，不影响外层边距或尺寸。
 
@@ -75,11 +77,11 @@ Dialog 组合 `MatSurfaceBase` 与原生 modal dialog，通过 Teleport 挂载�
 
 Bottom sheet 与 Side sheet 通过内部 `MatSheetBase` 复用受控开关、standard/modal/auto 变体、进入退出阶段、原生 modal dialog、Teleport、焦点恢复、帷幕、Escape、滚动锁、堆叠和触摸拖动关闭。Standard 根使用原生 `aside` 并在声明位置参与父级 flex 布局，不锁滚动或移动焦点；modal 根进入浏览器 top layer。Auto 默认在 840px 以下使用 modal、在更宽视口使用 standard，并在窗口尺寸跨越断点时切换根语义。Bottom sheet 固定在块轴末端、最大宽度 640px，通过受控 `expanded` 状态、可操作把手和拖动表达预览与展开高度；Side sheet 使用 start/end 逻辑边缘、400px 最大宽度和默认关闭入口。两个公共组件不互相替换。
 
-Snackbar 通过 Teleport 固定在视口底部，使用 `modelValue` 请求展示而不移动焦点。它提供一个可选的文字 action 与可选关闭入口；`actionText` 与 `action` Slot、`closable` 与 `close` Slot 分别遵守 Slot 优先规则，action 触发后关闭当前通知。模块级 FIFO 调度器同时协调所有模板实例和 `snackbar()` / `toast()` 命令式请求；活动项只在退出动画完成后释放下一项，排队模板项可由 `modelValue=false` 或卸载取消。命令式 Snackbar 使用单个可复用 Vue 宿主并注入最后安装插件的组件设置与主题控制器；`onAction` 回调在 action 触发时调用，宿主没有待显示内容时移除，Promise 在退出与清理完成后结算。
+Snackbar 使用 `modelValue` 请求展示而不移动焦点。AppRoot 内的模板实例 Teleport 到应用 Snackbar 组并排列在普通浮动组上方；其他模板实例和命令式宿主固定在 body 视口底部。它提供一个可选的文字 action 与可选关闭入口；`actionText` 与 `action` Slot、`closable` 与 `close` Slot 分别遵守 Slot 优先规则，action 触发后关闭当前通知。模块级 FIFO 调度器同时协调所有模板实例和 `snackbar()` / `toast()` 命令式请求；活动项只在退出动画完成后释放下一项，排队模板项可由 `modelValue=false` 或卸载取消。命令式 Snackbar 使用单个可复用 Vue 宿主并注入最后安装插件的组件设置与主题控制器；`onAction` 回调在 action 触发时调用，宿主没有待显示内容时移除，Promise 在退出与清理完成后结算。
 
-Navigation 以 `MatNavigationRail` 与 `MatNavigationRailItem` 组合纵向 Expressive navigation rail 和横向 Flexible navigation bar。两种模式默认在声明位置参与父容器布局；设置 `app` 后才通过 Teleport 挂载到 `attach` 并固定到视口，`placeholder` 与 `bottomPlaceholder` 也只在此模式下生效。纵向模式提供 collapsed/expanded、可配置展开宽度、起始/末尾侧 Item 对齐、standard/modal、可隐藏 expanded 容器、顶部或居中的目的地组与底部内容 Slot；横向模式由同一个 `expanded` 状态切换纵向或横向 Item。父组件通过 provide/inject 统一受控单选、展开状态、导航方向与 Item 对齐，Item 保留原生按钮或链接语义；窗口断点切换由使用方负责。
+Navigation 以 `MatNavigationRail` 与 `MatNavigationRailItem` 组合纵向 Expressive navigation rail 和横向 Flexible navigation bar。两种模式默认在声明位置参与父容器布局；设置 `app` 后才通过 Teleport 建立应用导航。省略显式 attach 且位于 AppRoot 时，纵向登记 start/end、横向登记 bottom，modal 展开只保留 collapsed host 占位；其他场景固定到显式 attach。`placeholder` 与 `bottomPlaceholder` 只在应用模式下生效。纵向模式提供 collapsed/expanded、可配置展开宽度、起始/末尾侧 Item 对齐、standard/modal、可隐藏 expanded 容器、顶部或居中的目的地组与底部内容 Slot；横向模式由同一个 `expanded` 状态切换纵向或横向 Item。父组件通过 provide/inject 统一受控单选、展开状态、导航方向与 Item 对齐，Item 保留原生按钮或链接语义；窗口断点切换由使用方负责。
 
-Toolbar 以容器内绝对定位表达底部 docked，以及顶部、底部和左右 floating 布局，并由 `position` 在对应轴上对齐。`app` 开启后将组件 Teleport 到 `attach` 并切换为视口固定定位；占位、安全区和覆盖层注册不因挂载模式改变。`placeholder` 在声明位置提供可选占位，`bottomPlaceholder` 只扩展 docked 和底部 floating 的安全区。
+Toolbar 以容器内绝对定位表达底部 docked，以及顶部、底部和左右 floating 布局，并由 `position` 在对应轴上对齐。`app` 开启且省略显式 attach 时自动进入最近 AppRoot：docked 登记 bottom，floating 不进入布局但读取四向 padding 避让；其他应用模式仍固定到显式 attach 并使用 Toolbar 几何注册表。`placeholder` 在声明位置提供可选占位，floating 在 AppRoot 内仍可用它保护滚动末端；`bottomPlaceholder` 只扩展 docked 和底部 floating 的安全区。
 
 Loader 以单个组件的 `linear` 与 `circular` variant 表达两种 Progress indicator 形态。确定状态在根元素上提供 progressbar ARIA 值，不确定状态仅保留进度语义和动画；波浪形活动指示器由内联 SVG 绘制，轨道保持平直。组件只读取系统 primary 与 secondary container 颜色角色，显式 `color` 通过共享局部配色模块替换活动与停止指示器色。
 
@@ -169,3 +171,4 @@ flowchart LR
 - [0014 — 连接按钮组选中态使用全圆形状（已由 0015 替代）](adr/0014-connected-button-group-checked-shape.md)
 - [0015 — 连接按钮组选中态完整覆盖组外轮廓](adr/0015-connected-button-group-checked-shape-overrides-outer-shape.md)
 - [0016 — 公开 MatInputBase 作为可组合文本输入基础组件](adr/0016-public-input-base.md)
+- [0021 — 采用 AppRoot 应用布局上下文](adr/0021-app-root-layout-context.md)

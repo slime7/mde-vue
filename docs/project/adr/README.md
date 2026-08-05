@@ -26,6 +26,7 @@
 | [0018](0018-distribute-prebuilt-esm-from-private-git.md) | superseded | 通过私有 Git 分发预构建 ESM |
 | [0019](0019-minimize-esm-distribution-files.md) | superseded | 将 ESM 分发压缩为三个文件 |
 | [0020](0020-tailwind-css.md) | active | 恢复 tailwind.css 独立分发入口 |
+| [0021](0021-app-root-layout-context.md) | active | 采用 AppRoot 应用布局上下文 |
 
 ## 何时创建 ADR
 

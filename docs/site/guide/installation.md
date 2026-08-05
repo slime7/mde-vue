@@ -21,7 +21,7 @@ pnpm add "mdu-ui@git+ssh://git@github.com/slime7/mdu-ui.git#<commit>"
 
 ## 全局注册：推荐用法
 
-大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，以 kebab-case `mat-*` 和 PascalCase `Mat*` 两种名称全局注册所有组件，并注册 `v-intersection` 指令。基础样式必须显式导入。
+大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，以 kebab-case `mat-*` 和 PascalCase `Mat*` 两种名称全局注册所有组件，并注册 `v-intersection` 指令。基础样式必须显式导入。页面级应用建议用 `<mat-app-root>` 包住应用正文和设置 `app` 的布局组件。
 
 应用入口 `src/main.js`：
 
@@ -45,17 +45,19 @@ createApp(App)
 
 ```vue
 <template>
-  <main>
-    <mat-btn @click="save">保存</mat-btn>
-    <MatBtn variant="outlined" @click="save">另存</MatBtn>
-    <mat-fab icon="add" label="创建" />
-    <mat-hover v-slot="{ isHovering, props }">
-      <button v-bind="props" type="button">
-        {{ isHovering ? '悬停中' : '悬停查看' }}
-      </button>
-    </mat-hover>
-    <div v-intersection="handleIntersection">观察目标</div>
-  </main>
+  <mat-app-root>
+    <main>
+      <mat-btn @click="save">保存</mat-btn>
+      <MatBtn variant="outlined" @click="save">另存</MatBtn>
+      <mat-fab app icon="add" label="创建" />
+      <mat-hover v-slot="{ isHovering, props }">
+        <button v-bind="props" type="button">
+          {{ isHovering ? '悬停中' : '悬停查看' }}
+        </button>
+      </mat-hover>
+      <div v-intersection="handleIntersection">观察目标</div>
+    </main>
+  </mat-app-root>
 </template>
 
 <script setup>
@@ -79,6 +81,7 @@ function handleIntersection(isIntersecting) {
 <script setup>
 import {
   Intersection as vIntersection,
+  MatAppRoot,
   MatBtn,
   MatFab,
   MatHover,
@@ -91,14 +94,16 @@ function handleIntersection(isIntersecting) {
 </script>
 
 <template>
-  <MatBtn>保存</MatBtn>
-  <MatFab icon="add" label="创建" />
-  <MatHover v-slot="{ isHovering, props }">
-    <button v-bind="props" type="button">
-      {{ isHovering ? '悬停中' : '悬停查看' }}
-    </button>
-  </MatHover>
-  <div v-intersection="handleIntersection">观察目标</div>
+  <MatAppRoot>
+    <MatBtn>保存</MatBtn>
+    <MatFab app icon="add" label="创建" />
+    <MatHover v-slot="{ isHovering, props }">
+      <button v-bind="props" type="button">
+        {{ isHovering ? '悬停中' : '悬停查看' }}
+      </button>
+    </MatHover>
+    <div v-intersection="handleIntersection">观察目标</div>
+  </MatAppRoot>
 </template>
 
 ```
@@ -111,6 +116,7 @@ import {
   confirm,
   dialog,
   Intersection as vIntersection,
+  MatAppRoot,
   MatBottomSheet,
   MatCard,
   MatCardHeadline,
@@ -144,10 +150,29 @@ import {
   prompt,
   snackbar,
   toast,
+  useMatApp,
 } from 'mdu-ui';
 ```
 
-局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatCard>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`。
+局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatAppRoot>`、`<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatCard>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`；`useMatApp()` 只能在 `<MatAppRoot>` 的后代组件中调用。
+
+## 页面基础尺寸
+
+`MatAppRoot` 不修改 `html`、`body` 或 Vue 挂载节点。使用默认文档滚动模式时，应用应自行清除浏览器默认 `body` 外边距，并保证页面根节点具有可用高度：
+
+```css
+html,
+body,
+#app {
+  min-block-size: 100%;
+}
+
+body {
+  margin: 0;
+}
+```
+
+如果启用 `scrollable`，AppRoot 会把正文滚动限制在自身内部；`fill-viewport="false"` 时还必须为 AppRoot 或父级提供确定高度。完整布局规则见 [App root 应用布局根](/components/app-root)。
 
 ## 如何选择
 

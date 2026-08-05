@@ -1,10 +1,12 @@
 <script setup>
 import {
-  computed, inject, nextTick, onBeforeUnmount, onMounted, provide, ref, watch,
+  computed, getCurrentInstance, inject, nextTick, onBeforeUnmount, onMounted, provide, ref,
+  shallowRef, watch,
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatActionBase from '../MatActionBase.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
+import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import { MAT_NAVIGATION_RAIL_KEY } from './mat-navigation-context';
 
 /**
@@ -288,13 +290,22 @@ const emit = defineEmits({
 });
 
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
+const instance = getCurrentInstance();
+const appContext = inject(MAT_APP_ROOT_KEY, null);
+const rawVNodeProps = instance?.vnode.props ?? {};
+const hasExplicitAttach = Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach');
 const isHorizontal = computed(() => props.orientation === 'horizontal');
 const effectiveExpanded = computed(() => props.expanded);
 const isModal = computed(() => !isHorizontal.value && props.layout === 'modal');
 const isHidden = computed(() => !isHorizontal.value && props.hideOnCollapse && !props.expanded);
+const usesAppRoot = computed(() => props.app && Boolean(appContext) && !hasExplicitAttach);
 const attachTarget = computed(() => {
   if (!props.app) {
     return null;
+  }
+
+  if (usesAppRoot.value) {
+    return appContext.edgeLayer.value;
   }
 
   if (typeof props.attach === 'string') {
@@ -318,6 +329,7 @@ const hostClasses = computed(() => ({
   'mat-navigation-rail-host--modal': isModal.value,
   'mat-navigation-rail-host--hidden': isHidden.value,
   'mat-navigation-rail-host--app': props.app,
+  'mat-navigation-rail-host--app-root': usesAppRoot.value,
 }));
 const railClasses = computed(() => ({
   'mat-navigation-rail--expanded': effectiveExpanded.value,
@@ -326,6 +338,7 @@ const railClasses = computed(() => ({
   'mat-navigation-rail--modal': isModal.value && props.expanded,
   'mat-navigation-rail--hidden': isHidden.value,
   'mat-navigation-rail--app': props.app,
+  'mat-navigation-rail--app-root': usesAppRoot.value,
 }));
 
 const expandedWidthStyle = computed(() => {
@@ -338,12 +351,17 @@ const expandedWidthStyle = computed(() => {
   return { '--mat-navigation-rail-expanded-width': width };
 });
 const effectiveBottomPlaceholder = computed(() => (
-  props.app ? normalizeBottomPlaceholder(props.bottomPlaceholder) : '0px'
+  props.app && !usesAppRoot.value ? normalizeBottomPlaceholder(props.bottomPlaceholder) : '0px'
 ));
 const railStyle = computed(() => [
   expandedWidthStyle.value,
-  { '--mat-navigation-rail-bottom-placeholder': effectiveBottomPlaceholder.value },
+  {
+    '--mat-navigation-rail-app-end-inset': `${edgeRegistration.value?.insets.end ?? 0}px`,
+    '--mat-navigation-rail-app-start-inset': `${edgeRegistration.value?.insets.start ?? 0}px`,
+    '--mat-navigation-rail-bottom-placeholder': effectiveBottomPlaceholder.value,
+  },
 ]);
+const hostElement = ref(null);
 const railElement = ref(null);
 const railSize = ref({
   blockSize: 0,
@@ -354,10 +372,11 @@ const placeholderStyle = computed(() => ({
   inlineSize: `${railSize.value.inlineSize}px`,
 }));
 
+const edgeRegistration = shallowRef(null);
 let resizeObserver;
 
 function syncRailSize() {
-  const rect = railElement.value?.getBoundingClientRect();
+  const rect = hostElement.value?.getBoundingClientRect();
 
   if (!rect) {
     return;
@@ -367,26 +386,37 @@ function syncRailSize() {
     blockSize: Math.max(0, Math.ceil(Number(rect.height) || 0)),
     inlineSize: Math.max(0, Math.ceil(Number(rect.width) || 0)),
   };
+  edgeRegistration.value?.update();
 }
 
 async function syncRailMeasurement() {
   resizeObserver?.disconnect();
   resizeObserver = undefined;
+  edgeRegistration.value?.unregister();
+  edgeRegistration.value = null;
   await nextTick();
 
-  if (!props.app || !railElement.value) {
+  if (!props.app || !hostElement.value) {
     return;
   }
 
   resizeObserver = typeof ResizeObserver === 'undefined'
     ? undefined
     : new ResizeObserver(syncRailSize);
-  resizeObserver?.observe(railElement.value);
+  resizeObserver?.observe(hostElement.value);
+
+  if (usesAppRoot.value) {
+    edgeRegistration.value = appContext.publicContext.registerEdge({
+      edge: isHorizontal.value ? 'bottom' : props.position,
+      element: hostElement.value,
+    });
+  }
+
   syncRailSize();
 }
 
 function warnForInvalidAttach() {
-  if (props.app && !attachTarget.value) {
+  if (props.app && !usesAppRoot.value && !attachTarget.value) {
     console.warn('MatNavigationRail: attach 必须指向当前 document 中存在的 HTMLElement');
   }
 }
@@ -445,6 +475,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleKeydown);
   resizeObserver?.disconnect();
+  edgeRegistration.value?.unregister();
 });
 
 watch([
@@ -456,6 +487,7 @@ watch([
   () => props.layout,
   () => props.orientation,
   () => props.width,
+  usesAppRoot,
 ], () => {
   warnForInvalidAttach();
   syncRailMeasurement();
@@ -476,6 +508,7 @@ watch([
   >
     <div
       v-if="!app || attachTarget"
+      ref="hostElement"
       class="mat-navigation-rail-host"
       :class="hostClasses"
       :style="expandedWidthStyle"
@@ -600,6 +633,14 @@ watch([
   block-size: 100dvb;
 }
 
+.mat-navigation-rail-host--app-root {
+  position: absolute;
+  inset-block: var(--mat-navigation-rail-app-start-inset) var(--mat-navigation-rail-app-end-inset);
+  block-size: auto;
+  min-block-size: 0;
+  pointer-events: auto;
+}
+
 .mat-navigation-rail-host--app.mat-navigation-rail-host--end {
   inset-inline: auto 0;
 }
@@ -610,6 +651,15 @@ watch([
   block-size: calc(
     var(--mat-navigation-rail-app-bar-height)
     + var(--mat-navigation-rail-bottom-placeholder)
+  );
+}
+
+.mat-navigation-rail-host--app-root.mat-navigation-rail-host--horizontal {
+  inset: auto var(--mat-navigation-rail-app-end-inset) 0 var(--mat-navigation-rail-app-start-inset);
+  inline-size: auto;
+  block-size: calc(
+    var(--mat-navigation-rail-app-bar-height)
+    + var(--mat-app-root-safe-area-bottom)
   );
 }
 
@@ -649,6 +699,24 @@ watch([
   box-shadow: var(--mat-navigation-rail-modal-elevation);
 }
 
+.mat-navigation-rail--app-root.mat-navigation-rail--modal {
+  max-inline-size: calc(100% - var(--mat-navigation-rail-modal-edge-space));
+}
+
+.mat-navigation-rail--app-root:not(.mat-navigation-rail--bar) {
+  padding-block: var(--mat-app-root-safe-area-top) max(
+    var(--mat-navigation-rail-bottom-placeholder),
+    var(--mat-app-root-safe-area-bottom)
+  );
+}
+
+.mat-navigation-rail--app-root.mat-navigation-rail--bar {
+  padding-block-end: max(
+    var(--mat-navigation-rail-bottom-placeholder),
+    var(--mat-app-root-safe-area-bottom)
+  );
+}
+
 .mat-navigation-rail-host--app.mat-navigation-rail-host--end .mat-navigation-rail--modal {
   inset-inline: auto 0;
   border-start-start-radius: var(--mat-navigation-rail-modal-shape);
@@ -681,6 +749,10 @@ watch([
   padding: 0;
   background: var(--mat-navigation-rail-scrim-color);
   border: 0;
+}
+
+.mat-navigation-rail-host--app-root .mat-navigation-rail__scrim {
+  inline-size: 100%;
 }
 
 .mat-navigation-rail__header {

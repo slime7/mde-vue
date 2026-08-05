@@ -9,7 +9,7 @@ order: 105
 
 ## 组件简介
 
-`<mat-tooltip>` 的组件导出名是 `MatTooltip`。它实现 Material 3 Plain tooltip：用于补充展示元素的简短、非交互说明。组件以固定定位 Teleport 到指定容器，默认显示在展示元素上方；省略 `attach` 时，如果展示元素位于已打开的 `dialog` 或 Popover 内，会自动挂载到最近的容器，否则挂载到 `body`。它不包含 Rich tooltip、操作按钮、箭头或触屏长按。页面存在 Toolbar 时，Tooltip 会把 Toolbar 作为避让区域，必要时自动换边。
+`<mat-tooltip>` 的组件导出名是 `MatTooltip`。它实现 Material 3 Plain tooltip：用于补充展示元素的简短、非交互说明。组件以覆盖定位 Teleport 到合适容器，默认显示在展示元素上方；省略 `attach` 时，依次选择展示元素所在的已打开 `dialog`/Popover、目标所属 `MatAppRoot`、`body`。它不包含 Rich tooltip、操作按钮、箭头或触屏长按。AppRoot 内会避让布局边缘，其他场景会把 Toolbar 作为避让区域，必要时自动换边。
 
 ## 示例
 
@@ -160,7 +160,7 @@ order: 105
 | modelValue | boolean | false | 显式传入时启用受控模式，可使用 v-model；省略时由 hover 和 focus 自动控制 |
 | content | string | 未设置 | 简短纯文本内容；存在时优先于默认 Slot |
 | target | string 或 HTMLElement | 未设置 | 展示元素；字符串按当前 document 的 CSS 选择器解析 |
-| attach | string 或 HTMLElement | body | Tooltip 的 Teleport 目标；省略时优先使用展示元素所在的已打开 `dialog` 或 Popover，找不到时使用 `body`；字符串按当前 document 的 CSS 选择器解析 |
+| attach | string 或 HTMLElement | body | Tooltip 的显式 Teleport 目标；省略时依次使用已打开的 `dialog`/Popover、目标所属 AppRoot、`body`；字符串按当前 document 的 CSS 选择器解析 |
 | location | top、right、bottom、left 及其 -start、-end 形式 | top | Tooltip 相对展示元素的首选位置 |
 | openDelay | number | 插件配置或 0 | 自动模式的打开延迟，单位为毫秒；显式值优先于 `createMatUi()` 的 `tooltip.openDelay`；可直接写为 open-delay="600"，动态数值使用 :open-delay；负数、空字符串或非有限数字按 0 处理，并触发 Vue prop 校验警告 |
 

@@ -11,6 +11,7 @@ import {
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatButtonBase from '../MatButtonBase.vue';
+import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import MatIcon from '../mat-icon/MatIcon.vue';
 import MatTooltip from '../mat-tooltip/MatTooltip.vue';
 import {
@@ -95,6 +96,29 @@ const props = defineProps({
       return FAB_TYPES.includes(value);
     },
   },
+  /**
+   * 是否自动挂载到最近 MatAppRoot 的普通浮动组。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  app: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * app=true 时在浮动组中的逻辑轴对齐位置。
+   *
+   * @type {'start' | 'center' | 'end'}
+   * @default 'end'
+   */
+  position: {
+    type: String,
+    default: 'end',
+    validator(value) {
+      return ['start', 'center', 'end'].includes(value);
+    },
+  },
 });
 
 const emit = defineEmits({
@@ -108,6 +132,7 @@ const emit = defineEmits({
 const attrs = useAttrs();
 const slots = useSlots();
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
+const appContext = inject(MAT_APP_ROOT_KEY, null);
 const buttonElement = ref(null);
 const generatedId = useId();
 
@@ -138,6 +163,10 @@ const colorStyle = computed(() => ({
   '--mat-fab-content-color': `var(--mat-sys-color-on-${props.color})`,
   '--mat-fab-state-color': `var(--mat-sys-color-on-${props.color})`,
 }));
+const usesAppRoot = computed(() => props.app && Boolean(appContext));
+const teleportTarget = computed(() => (
+  usesAppRoot.value ? appContext.floatingLayer.value : null
+));
 
 watchEffect(() => {
   if (isIconOnly.value && (!isIcon.value || !props.label || props.label.trim().length === 0)) {
@@ -148,6 +177,7 @@ watchEffect(() => {
 
 <template>
   <MatButtonBase
+    v-if="!usesAppRoot"
     ref="buttonElement"
     v-bind="$attrs"
     class="mat-fab"
@@ -189,6 +219,53 @@ watchEffect(() => {
       :target="buttonElement"
     />
   </MatButtonBase>
+
+  <Teleport v-else-if="teleportTarget" :to="teleportTarget">
+    <MatButtonBase
+      ref="buttonElement"
+      v-bind="$attrs"
+      class="mat-fab"
+      :class="[
+        `mat-fab--size-${size}`,
+        `mat-fab--position-${position}`,
+        {
+          'mat-fab--app-root': true,
+          'mat-fab--extended': hasLabel,
+          'mat-fab--icon-only': isIconOnly,
+        },
+      ]"
+      :style="colorStyle"
+      :aria-label="ariaLabel"
+      :disabled="disabled"
+      :title="isIconOnly ? undefined : attrs.title"
+      :type="type"
+      :use-cursor="matUi.useCursor"
+      @click="emit('click', $event)"
+    >
+      <MatIcon
+        v-if="isIcon"
+        as="span"
+        class="mat-fab__icon"
+        :fill="1"
+        :optical-size="iconOpticalSize"
+        size="var(--mat-fab-icon-size)"
+        aria-hidden="true"
+      >
+        {{ icon }}
+      </MatIcon>
+
+      <span v-if="hasLabel" class="mat-fab__label">
+        <slot />
+      </span>
+
+      <MatTooltip
+        v-if="isIconOnly && tooltipContent"
+        :content="tooltipContent"
+        :id="`${generatedId}-tooltip`"
+        :target="buttonElement"
+      />
+    </MatButtonBase>
+  </Teleport>
 </template>
 
 <style scoped>
@@ -209,6 +286,22 @@ watchEffect(() => {
   letter-spacing: var(--mat-fab-label-text-tracking);
   text-align: center;
   text-decoration: none;
+}
+
+.mat-fab--app-root {
+  pointer-events: auto;
+}
+
+.mat-fab--app-root.mat-fab--position-start {
+  align-self: flex-start;
+}
+
+.mat-fab--app-root.mat-fab--position-center {
+  align-self: center;
+}
+
+.mat-fab--app-root.mat-fab--position-end {
+  align-self: flex-end;
 }
 
 .mat-fab--size-small {

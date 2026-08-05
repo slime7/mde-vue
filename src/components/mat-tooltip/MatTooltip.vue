@@ -16,6 +16,7 @@ import {
 } from 'vue';
 import MatHover from '../mat-hover/MatHover.vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
+import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import { getTooltipPosition, TOOLTIP_LOCATIONS } from '../tooltip-position';
 import {
   activateTooltip,
@@ -126,10 +127,12 @@ const attrs = useAttrs();
 const slots = useSlots();
 const instance = getCurrentInstance();
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
+const appContext = inject(MAT_APP_ROOT_KEY, null);
 const activatorHost = ref(null);
 const targetElement = shallowRef(null);
 const hoverTarget = { value: targetElement };
 const teleportTarget = shallowRef(null);
+const isAppRootAttached = ref(false);
 const tooltipElement = ref(null);
 const rendered = ref(false);
 const isDisplayed = ref(false);
@@ -257,7 +260,20 @@ function resolveTarget() {
  */
 function resolveAttach() {
   if (!hasExplicitAttach()) {
-    return resolveTopLayerAttach() ?? document.body;
+    const topLayerAttach = resolveTopLayerAttach();
+
+    if (topLayerAttach) {
+      return topLayerAttach;
+    }
+
+    if (
+      appContext?.rootElement.value?.contains(targetElement.value)
+      && appContext.freeLayer.value
+    ) {
+      return appContext.freeLayer.value;
+    }
+
+    return document.body;
   }
 
   if (typeof props.attach === 'string') {
@@ -483,15 +499,53 @@ function updatePosition() {
     return;
   }
 
+  const appRect = isAppRootAttached.value ? appContext.getLayoutRect() : null;
+  const rawTargetRect = targetElement.value.getBoundingClientRect();
+  const targetRect = appRect
+    ? {
+      bottom: rawTargetRect.bottom - appRect.top,
+      height: rawTargetRect.height,
+      left: rawTargetRect.left - appRect.left,
+      right: rawTargetRect.right - appRect.left,
+      top: rawTargetRect.top - appRect.top,
+      width: rawTargetRect.width,
+    }
+    : rawTargetRect;
+  const appLayout = appContext?.publicContext.layout;
+  const appAvoidRects = appRect ? [
+    {
+      top: 0,
+      bottom: appLayout.padding.top,
+      left: 0,
+      right: appLayout.size.width,
+    },
+    {
+      top: appLayout.size.height - appLayout.padding.bottom,
+      bottom: appLayout.size.height,
+      left: 0,
+      right: appLayout.size.width,
+    },
+    {
+      top: 0,
+      bottom: appLayout.size.height,
+      left: 0,
+      right: appLayout.padding.start,
+    },
+    {
+      top: 0,
+      bottom: appLayout.size.height,
+      left: appLayout.size.width - appLayout.padding.end,
+      right: appLayout.size.width,
+    },
+  ] : getToolbarRects();
   const position = getTooltipPosition({
     location: props.location,
-    targetRect: targetElement.value.getBoundingClientRect(),
+    targetRect,
     tooltipRect: tooltipElement.value.getBoundingClientRect(),
-    avoidRects: getToolbarRects(),
-    viewport: {
-      height: window.innerHeight,
-      width: window.innerWidth,
-    },
+    avoidRects: appAvoidRects,
+    viewport: appRect
+      ? { height: appLayout.size.height, width: appLayout.size.width }
+      : { height: window.innerHeight, width: window.innerWidth },
   });
 
   appliedLocation.value = position.location;
@@ -548,6 +602,7 @@ function finishClose() {
   isDisplayed.value = false;
   isPositioned.value = false;
   teleportTarget.value = null;
+  isAppRootAttached.value = false;
 }
 
 function hideTooltip({ immediate = false } = {}) {
@@ -790,6 +845,7 @@ async function showTooltip() {
   activeDelayGroup = resolveDelayGroup();
   activateTooltipDelayGroup(activeDelayGroup, delayGroupOwner);
   teleportTarget.value = attach;
+  isAppRootAttached.value = attach === appContext?.freeLayer.value;
   appliedLocation.value = props.location;
   positionStyle.value = { left: '0px', top: '0px' };
   isPositioned.value = false;
@@ -883,6 +939,7 @@ watch(() => props.attach, async () => {
   }
 
   teleportTarget.value = attach;
+  isAppRootAttached.value = attach === appContext?.freeLayer.value;
   await nextTick();
   schedulePositionUpdate();
 });
@@ -899,6 +956,9 @@ watch(tooltipId, () => {
   restoreDescribedBy();
   syncDescribedBy();
 });
+if (appContext) {
+  watch(appContext.publicContext.layout, schedulePositionUpdate);
+}
 </script>
 
 <template>
@@ -920,7 +980,10 @@ watch(tooltipId, () => {
       class="mat-tooltip"
       :class="[
         `mat-tooltip--${phase}`,
-        { 'mat-tooltip--positioned': isPositioned },
+        {
+          'mat-tooltip--app-root': isAppRootAttached,
+          'mat-tooltip--positioned': isPositioned,
+        },
       ]"
       :data-location="appliedLocation"
       :style="[positionStyle, $attrs.style]"
@@ -971,6 +1034,11 @@ watch(tooltipId, () => {
 
 .mat-tooltip--positioned {
   visibility: visible;
+}
+
+.mat-tooltip--app-root {
+  position: absolute;
+  max-inline-size: calc(100% - (var(--mat-tooltip-viewport-margin) * 2));
 }
 
 .mat-tooltip--closing {

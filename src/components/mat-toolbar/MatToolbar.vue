@@ -1,14 +1,18 @@
 <script setup>
 import {
   computed,
+  getCurrentInstance,
+  inject,
   nextTick,
   onBeforeUnmount,
   onMounted,
   ref,
+  shallowRef,
   useAttrs,
   useSlots,
   watch,
 } from 'vue';
+import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import { registerToolbar } from '../toolbar-overlay';
 
 const TOOLBAR_VARIANTS = [
@@ -211,6 +215,10 @@ defineEmits({
 
 const attrs = useAttrs();
 const slots = useSlots();
+const instance = getCurrentInstance();
+const appContext = inject(MAT_APP_ROOT_KEY, null);
+const rawVNodeProps = instance?.vnode.props ?? {};
+const hasExplicitAttach = Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach');
 const rendered = ref(props.modelValue);
 const phase = ref(props.modelValue ? 'open' : 'closed');
 const toolbarElement = ref(null);
@@ -238,9 +246,16 @@ const isBottomVariant = computed(() => (
   normalizedVariant.value === 'docked'
   || normalizedVariant.value === 'floating-bottom'
 ));
+const usesAppRoot = computed(() => props.app && Boolean(appContext) && !hasExplicitAttach);
 const attachTarget = computed(() => {
   if (!props.app) {
     return null;
+  }
+
+  if (usesAppRoot.value) {
+    return isFloating.value
+      ? appContext.freeLayer.value
+      : appContext.edgeLayer.value;
   }
 
   if (typeof props.attach === 'string') {
@@ -262,6 +277,8 @@ const effectiveBottomPlaceholder = computed(() => (
 const toolbarStyle = computed(() => [
   attrs.style,
   {
+    '--mat-toolbar-app-end-inset': `${appEdgeRegistration.value?.insets.end ?? 0}px`,
+    '--mat-toolbar-app-start-inset': `${appEdgeRegistration.value?.insets.start ?? 0}px`,
     '--mat-toolbar-bottom-placeholder': effectiveBottomPlaceholder.value,
   },
 ]);
@@ -274,13 +291,16 @@ const toolbarClass = computed(() => [
   `mat-toolbar--position-${normalizedPosition.value}`,
   {
     'mat-toolbar--app': props.app,
+    'mat-toolbar--app-root': usesAppRoot.value,
     'mat-toolbar--vertical': isVertical.value,
     'mat-toolbar--vibrant': props.vibrant,
   },
 ]);
 
-let registration;
+const appEdgeRegistration = shallowRef(null);
+let overlayRegistration;
 let resizeObserver;
+let measuring = false;
 let mounted = false;
 let phaseTimer;
 let warnedForFabSlot = false;
@@ -361,7 +381,8 @@ function syncToolbarSize() {
     blockSize: Math.max(0, Math.ceil(Number(rect.height) || 0)),
     inlineSize: Math.max(0, Math.ceil(Number(rect.width) || 0)),
   };
-  registration?.update();
+  overlayRegistration?.update();
+  appEdgeRegistration.value?.update();
 }
 
 function getToolbarRect() {
@@ -403,9 +424,12 @@ async function scheduleToolbarSize() {
 function stopToolbarRegistration() {
   resizeObserver?.disconnect();
   resizeObserver = undefined;
+  measuring = false;
   window.removeEventListener('resize', syncToolbarSize);
-  registration?.unregister();
-  registration = undefined;
+  overlayRegistration?.unregister();
+  overlayRegistration = undefined;
+  appEdgeRegistration.value?.unregister();
+  appEdgeRegistration.value = null;
 }
 
 async function syncToolbarRegistration() {
@@ -420,16 +444,40 @@ async function syncToolbarRegistration() {
     return;
   }
 
-  if (!registration) {
-    registration = registerToolbar(toolbarElement.value, {
-      getRect: getToolbarRect,
-      isBottom: () => isBottomVariant.value,
-    });
+  if (!measuring) {
+    measuring = true;
     resizeObserver = typeof ResizeObserver === 'undefined'
       ? undefined
       : new ResizeObserver(syncToolbarSize);
     resizeObserver?.observe(toolbarElement.value);
     window.addEventListener('resize', syncToolbarSize);
+  }
+
+  if (usesAppRoot.value) {
+    overlayRegistration?.unregister();
+    overlayRegistration = undefined;
+
+    if (!isFloating.value && !appEdgeRegistration.value) {
+      appEdgeRegistration.value = appContext.publicContext.registerEdge({
+        edge: 'bottom',
+        element: toolbarElement.value,
+      });
+    }
+
+    if (isFloating.value && appEdgeRegistration.value) {
+      appEdgeRegistration.value.unregister();
+      appEdgeRegistration.value = null;
+    }
+  } else {
+    appEdgeRegistration.value?.unregister();
+    appEdgeRegistration.value = null;
+
+    if (!overlayRegistration) {
+      overlayRegistration = registerToolbar(toolbarElement.value, {
+        getRect: getToolbarRect,
+        isBottom: () => isBottomVariant.value,
+      });
+    }
   }
 
   if (fabElement.value) {
@@ -472,6 +520,7 @@ watch([
   normalizedBottomPlaceholder,
   () => props.app,
   () => props.attach,
+  usesAppRoot,
 ], () => {
   warnForInvalidAttach();
   scheduleToolbarSize();
@@ -479,7 +528,7 @@ watch([
 });
 
 function warnForInvalidAttach() {
-  if (props.app && !attachTarget.value) {
+  if (props.app && !usesAppRoot.value && !attachTarget.value) {
     console.warn('MatToolbar: attach 必须指向当前 document 中存在的 HTMLElement');
   }
 }
@@ -553,6 +602,10 @@ function warnForInvalidAttach() {
   position: fixed;
 }
 
+.mat-toolbar--app-root {
+  position: absolute;
+}
+
 .mat-toolbar--closing .mat-toolbar__surface {
   pointer-events: none;
 }
@@ -604,6 +657,14 @@ function warnForInvalidAttach() {
   background: var(--mat-toolbar-container-color);
 }
 
+.mat-toolbar--app-root.mat-toolbar--docked {
+  inset-inline: var(--mat-toolbar-app-start-inset) var(--mat-toolbar-app-end-inset);
+  padding-block-end: max(
+    var(--mat-toolbar-bottom-placeholder),
+    var(--mat-app-root-safe-area-bottom)
+  );
+}
+
 .mat-toolbar--docked .mat-toolbar__surface {
   inline-size: 100%;
   border-radius: var(--mat-sys-shape-corner-none);
@@ -621,6 +682,30 @@ function warnForInvalidAttach() {
 .mat-toolbar--app.mat-toolbar--floating-top,
 .mat-toolbar--app.mat-toolbar--floating-bottom {
   max-inline-size: calc(100dvi - (var(--mat-toolbar-floating-edge-space) * 2));
+}
+
+.mat-toolbar--app-root.mat-toolbar--floating-top,
+.mat-toolbar--app-root.mat-toolbar--floating-bottom {
+  max-inline-size: calc(
+    100%
+    - var(--mat-app-root-padding-start)
+    - var(--mat-app-root-padding-end)
+    - (var(--mat-toolbar-floating-edge-space) * 2)
+  );
+}
+
+.mat-toolbar--app-root.mat-toolbar--floating-top {
+  inset-block-start: calc(
+    var(--mat-app-root-padding-top)
+    + var(--mat-toolbar-floating-edge-space)
+  );
+}
+
+.mat-toolbar--app-root.mat-toolbar--floating-bottom {
+  inset-block-end: calc(
+    var(--mat-app-root-padding-bottom)
+    + var(--mat-toolbar-floating-edge-space)
+  );
 }
 
 .mat-toolbar--floating-top {
@@ -668,6 +753,29 @@ function warnForInvalidAttach() {
 
 .mat-toolbar--app.mat-toolbar--vertical {
   max-block-size: calc(100dvb - (var(--mat-toolbar-vertical-edge-space) * 2));
+}
+
+.mat-toolbar--app-root.mat-toolbar--vertical {
+  max-block-size: calc(
+    100%
+    - var(--mat-app-root-padding-top)
+    - var(--mat-app-root-padding-bottom)
+    - (var(--mat-toolbar-vertical-edge-space) * 2)
+  );
+}
+
+.mat-toolbar--app-root.mat-toolbar--floating-left {
+  inset-inline-start: calc(
+    var(--mat-app-root-padding-start)
+    + var(--mat-toolbar-vertical-edge-space)
+  );
+}
+
+.mat-toolbar--app-root.mat-toolbar--floating-right {
+  inset-inline-end: calc(
+    var(--mat-app-root-padding-end)
+    + var(--mat-toolbar-vertical-edge-space)
+  );
 }
 
 .mat-toolbar--vertical.mat-toolbar--position-start {
