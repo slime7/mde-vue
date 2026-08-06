@@ -4,7 +4,9 @@ import {
   getCurrentInstance,
   inject,
   nextTick,
+  onActivated,
   onBeforeUnmount,
+  onDeactivated,
   onMounted,
   onUpdated,
   ref,
@@ -170,6 +172,7 @@ let removeToolbarListener = null;
 let describedTarget = null;
 let previousDescribedBy = null;
 let mounted = false;
+let active = true;
 let pointerInside = false;
 let focusInside = false;
 let warnedAboutTarget = false;
@@ -819,7 +822,7 @@ function bindTargetListeners() {
 }
 
 async function showTooltip() {
-  if (suppressed.value || !hasContent.value) {
+  if (!mounted || !active || suppressed.value || !hasContent.value) {
     return;
   }
 
@@ -854,7 +857,7 @@ async function showTooltip() {
   isDisplayed.value = true;
   await nextTick();
 
-  if (!isDisplayed.value) {
+  if (!mounted || !active || !isDisplayed.value) {
     return;
   }
 
@@ -887,6 +890,25 @@ onUpdated(() => {
     schedulePositionUpdate();
   }
 });
+onActivated(() => {
+  if (active) {
+    return;
+  }
+
+  active = true;
+  syncTargetElement({ warn: false });
+
+  if (isControlled && props.modelValue) {
+    showTooltip();
+  }
+});
+onDeactivated(() => {
+  active = false;
+  clearPhaseTimer();
+  clearConnectionFrame();
+  unbindTargetListeners();
+  hideTooltip({ immediate: true });
+});
 onBeforeUnmount(() => {
   mounted = false;
   clearPhaseTimer();
@@ -897,7 +919,7 @@ onBeforeUnmount(() => {
   }
 });
 watch(() => props.modelValue, (open) => {
-  if (!mounted || !isControlled) {
+  if (!mounted || !active || !isControlled) {
     return;
   }
 

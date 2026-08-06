@@ -2,7 +2,9 @@ import { mount } from '@vue/test-utils';
 import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
-import { h, nextTick } from 'vue';
+import {
+  h, KeepAlive, nextTick, ref,
+} from 'vue';
 import MatHover from '../src/components/mat-hover/MatHover.vue';
 import MatTooltip from '../src/components/mat-tooltip/MatTooltip.vue';
 import { createMatUi } from '../src/plugin';
@@ -766,6 +768,39 @@ describe('MatTooltip', () => {
     await vi.advanceTimersByTimeAsync(20);
 
     expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    wrapper.unmount();
+  });
+
+  it('缓存页面停用时关闭 Tooltip，并在重新激活后恢复受控展示', async () => {
+    const activePage = ref('tooltip');
+    const wrapper = mount({
+      setup() {
+        return () => h(KeepAlive, null, {
+          default: () => (activePage.value === 'tooltip'
+            ? h(MatTooltip, {
+              content: '缓存页面提示',
+              modelValue: true,
+            }, {
+              activator: () => h('button', { type: 'button' }, '缓存页面展示元素'),
+            })
+            : h(MatHover)),
+        });
+      },
+    }, { attachTo: document.body });
+
+    await settleRender();
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent)
+      .toContain('缓存页面提示');
+
+    activePage.value = 'empty';
+    await settleRender();
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    activePage.value = 'tooltip';
+    await settleRender();
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent)
+      .toContain('缓存页面提示');
 
     wrapper.unmount();
   });
