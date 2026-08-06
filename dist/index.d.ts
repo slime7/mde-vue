@@ -1398,7 +1398,22 @@ export interface MatInputBaseEmits {
   "update:modelValue": (payload: string) => unknown;
 }
 
-export type MatInputBaseComponent = DefineComponent<MatInputBaseProps, {}, {}, {}, {}, {}, {}, MatInputBaseEmits>;
+export interface MatInputBaseExposed {
+  /**
+ * 将焦点移到原生输入控件。
+ *
+ * @returns {void}
+ */
+  focusInput(): void;
+  /**
+ * 获取当前原生输入控件。
+ *
+ * @returns {HTMLInputElement | HTMLTextAreaElement | null}
+ */
+  getInput(): HTMLInputElement | HTMLTextAreaElement | null;
+}
+
+export type MatInputBaseComponent = DefineComponent<MatInputBaseProps, MatInputBaseExposed, {}, {}, {}, {}, {}, MatInputBaseEmits>;
 export declare const MatInputBase: MatInputBaseComponent;
 
 export interface MatMenuProps {
@@ -1909,6 +1924,57 @@ export interface MatSpacerProps {
 
 export type MatSpacerComponent = DefineComponent<MatSpacerProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatSpacer: MatSpacerComponent;
+
+export interface MatScrollAreaProps {
+  /**
+  * 滚动方向；`y`、`v` 是 `vertical` 的别名，`x`、`h` 是 `horizontal` 的别名。
+  *
+  * @type {'vertical' | 'y' | 'v' | 'horizontal' | 'x' | 'h'}
+  * @default 'vertical'
+  */
+  orientation?: 'vertical' | 'y' | 'v' | 'horizontal' | 'x' | 'h';
+  /**
+  * 进入滚动边缘多少像素时触发事件。数字同时用于两端，对象可分别设置 start、end。
+  *
+  * @type {number | { start?: number, end?: number }}
+  * @default 0
+  */
+  reachThreshold?: number | { start?: number, end?: number };
+}
+
+export interface MatScrollAreaEmits {
+  /**
+  * 滚动进入起始边缘阈值时触发；载荷包含当前距离和滚动元素。
+  *
+  * @type {{ distance: number, target: HTMLElement }}
+  */
+  "reach-start": (payload: { distance: number, target: HTMLElement }) => unknown;
+  /**
+  * 滚动进入末端边缘阈值时触发；载荷包含当前距离和滚动元素。
+  *
+  * @type {{ distance: number, target: HTMLElement }}
+  */
+  "reach-end": (payload: { distance: number, target: HTMLElement }) => unknown;
+}
+
+export interface MatScrollAreaExposed {
+  /**
+ * 获取组件拥有的原生滚动元素。
+ *
+ * @returns {HTMLElement | null}
+ */
+  getScroller(): HTMLElement | null;
+  /**
+ * 滚动组件拥有的原生滚动元素。挂载前调用时不执行操作。
+ *
+ * @param {ScrollToOptions} options
+ * @returns {void}
+ */
+  scrollTo(options: ScrollToOptions): void;
+}
+
+export type MatScrollAreaComponent = DefineComponent<MatScrollAreaProps, MatScrollAreaExposed, {}, {}, {}, {}, {}, MatScrollAreaEmits>;
+export declare const MatScrollArea: MatScrollAreaComponent;
 
 export interface MatLoaderProps {
   /**
@@ -2581,6 +2647,8 @@ declare module 'vue' {
     'mat-container': typeof MatContainer;
     MatSpacer: typeof MatSpacer;
     'mat-spacer': typeof MatSpacer;
+    MatScrollArea: typeof MatScrollArea;
+    'mat-scroll-area': typeof MatScrollArea;
     MatLoader: typeof MatLoader;
     'mat-loader': typeof MatLoader;
     MatTooltip: typeof MatTooltip;

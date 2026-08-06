@@ -207,6 +207,12 @@ Tooltip 只实现 Material 3 Plain tooltip，不提供 color、Rich 内容、操
 
 Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父级必须提供确定的块轴尺寸才能形成内部滚动边界。调整控件占用 8px 分隔空间，48px 交互目标在 Pane 高度方向居中，使用 `role="separator"`、垂直方向和左右键语义。`resizeLabel` 由使用方提供给后方分隔控件作为可访问名称；Pane 数量、内容顺序、断点后的显隐和尺寸持久化属于使用方责任。
 
+## Scroll area 滚动区域
+
+`<mat-scroll-area>` 与导出 `MatScrollArea` 拥有一个单轴原生滚动元素。`orientation` 的 `vertical`、`y`、`v` 表示纵向，`horizontal`、`x`、`h` 表示横向；完整值是文档中的规范写法。组件只在实际离开边缘后对对应内容使用真实 mask 渐隐，并保留独立的滚动条保护区域；`fixed-start` 与 `fixed-end` 位于遮罩之外，默认 Slot 中的 sticky 内容不保证避开遮罩。
+
+`reachThreshold` 只设置 `reach-start`、`reach-end` 的非负像素阈值，不改变渐隐。初次布局、尺寸或内容同步、方向和阈值变化均保持静默；只有原生 scroll 从阈值外进入阈值内时派发一次，离开后重新进入才再次派发。事件载荷提供到对应边缘的 `distance` 与原生滚动 `target`。`getScroller()` 和 `scrollTo()` 是公共命令式方法；class 与 style 属于根容器，其他原生属性和监听器属于滚动元素。
+
 ## Navigation 导航
 
 `<mat-navigation-rail>` 通过 `modelValue` 受控选择唯一目的地，直接子级 `<mat-navigation-rail-item>` 使用稳定 `value` 请求更新。纵向模式表达 Material 3 Expressive collapsed/expanded rail；默认在当前容器内布局，`expanded` 只由使用方控制，`layout="standard"` 占据正文空间，`layout="modal"` 在当前布局容器内覆盖正文并通过遮罩或 Escape 请求收起。设置 `app=true` 后组件建立应用导航：省略显式 attach 且位于 AppRoot 时自动登记逻辑边缘，modal 展开只以 collapsed host 宽度参与 padding；否则固定到显式 attach。`placeholder` 和 `bottomPlaceholder` 只在应用模式下生效；`position` 同时决定 rail 的固定侧和 Item 对齐。collapsed rail 默认保持可见；`hideOnCollapse` 只用于保留外部可达菜单入口的沉浸式 expanded rail。
