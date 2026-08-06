@@ -34,6 +34,7 @@ import MatSideSheet from './components/mat-side-sheet/MatSideSheet.vue';
 import MatHover from './components/mat-hover/MatHover.vue';
 import MatContainer from './components/mat-container/MatContainer.vue';
 import MatSpacer from './components/mat-spacer/MatSpacer.vue';
+import MatScrollArea from './components/mat-scroll-area/MatScrollArea.vue';
 import MatLoader from './components/mat-loader/MatLoader.vue';
 import MatTooltip from './components/mat-tooltip/MatTooltip.vue';
 import MatSnackbar from './components/mat-snackbar/MatSnackbar.vue';
@@ -87,6 +88,7 @@ const GLOBAL_COMPONENTS = [
   ['MatHover', 'mat-hover', MatHover],
   ['MatContainer', 'mat-container', MatContainer],
   ['MatSpacer', 'mat-spacer', MatSpacer],
+  ['MatScrollArea', 'mat-scroll-area', MatScrollArea],
   ['MatLoader', 'mat-loader', MatLoader],
   ['MatTooltip', 'mat-tooltip', MatTooltip],
   ['MatSnackbar', 'mat-snackbar', MatSnackbar],

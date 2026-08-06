@@ -313,6 +313,40 @@ function readEvents(source) {
   return events;
 }
 
+function readExposedMethods(source) {
+  const exposedBody = extractCall(source, 'defineExpose');
+
+  if (!exposedBody.trim().startsWith('{')) {
+    return [];
+  }
+
+  return [...exposedBody.matchAll(/^\s*([A-Za-z_$][\w$]*)\s*,?\s*$/gm)]
+    .map((match) => match[1])
+    .map((name) => {
+      const declaration = new RegExp(
+        `/\\*\\*((?:(?!\\*/)[\\s\\S])*)\\*/\\s*function\\s+${name}\\s*\\(([^)]*)\\)`,
+      ).exec(source);
+
+      if (!declaration) {
+        return undefined;
+      }
+
+      const comment = [`/**${declaration[1]}*/`];
+      const parameters = [...declaration[1].matchAll(
+        /@param\s+\{([^}]+)\}\s+([A-Za-z_$][\w$]*)/g,
+      )].map((parameter) => `${parameter[2]}: ${parameter[1]}`);
+      const returnType = declaration[1].match(/@returns?\s+\{([^}]+)\}/)?.[1] ?? 'void';
+
+      return {
+        name,
+        comment,
+        parameters,
+        returnType,
+      };
+    })
+    .filter(Boolean);
+}
+
 function parseComment(lines) {
   const text = lines
     .map((line) => line.replace(/^\s*\/\*\*?/, '').replace(/\*\/$/, '').replace(/^\s*\* ?/, '').trim())
@@ -368,7 +402,12 @@ function propType(prop) {
 }
 
 function eventType(event) {
-  const description = parseComment(event.comment).text;
+  const parsed = parseComment(event.comment);
+  const description = parsed.text;
+
+  if (parsed.type !== 'unknown') {
+    return parsed.type;
+  }
 
   if (/MouseEvent/.test(description)) {
     return 'MouseEvent';
@@ -420,8 +459,10 @@ function generate() {
       ...propType(prop),
     }));
     const events = readEvents(source);
+    const exposedMethods = readExposedMethods(source);
     const propsName = `${component.name}Props`;
     const emitsName = `${component.name}Emits`;
+    const exposedName = `${component.name}Exposed`;
 
     output.push(`export interface ${propsName} {`);
     for (const prop of props) {
@@ -439,8 +480,18 @@ function generate() {
       output.push('}', '');
     }
 
+    if (exposedMethods.length) {
+      output.push(`export interface ${exposedName} {`);
+      for (const method of exposedMethods) {
+        output.push(...formatComment(method.comment));
+        output.push(`  ${method.name}(${method.parameters.join(', ')}): ${method.returnType};`);
+      }
+      output.push('}', '');
+    }
+
     const emitsType = events.length ? emitsName : '{}';
-    output.push(`export type ${component.name}Component = DefineComponent<${propsName}, {}, {}, {}, {}, {}, {}, ${emitsType}>;`);
+    const exposedType = exposedMethods.length ? exposedName : '{}';
+    output.push(`export type ${component.name}Component = DefineComponent<${propsName}, ${exposedType}, {}, {}, {}, {}, {}, ${emitsType}>;`);
     output.push(`export declare const ${component.name}: ${component.name}Component;`, '');
   }
 

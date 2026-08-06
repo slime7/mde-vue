@@ -44,6 +44,7 @@ import {
   MatRadio as RootMatRadio,
   MatRadioGroup as RootMatRadioGroup,
   MatRangeSlider as RootMatRangeSlider,
+  MatScrollArea as RootMatScrollArea,
   MatSideSheet as RootMatSideSheet,
   MatSlider as RootMatSlider,
   MatSnackbar as RootMatSnackbar,
@@ -96,6 +97,7 @@ const globalComponents = [
   ['MatLoader', 'mat-loader', RootMatLoader],
   ['MatTooltip', 'mat-tooltip', RootMatTooltip],
   ['MatSnackbar', 'mat-snackbar', RootMatSnackbar],
+  ['MatScrollArea', 'mat-scroll-area', RootMatScrollArea],
   ['MatToolbar', 'mat-toolbar', RootMatToolbar],
   ['MatPanes', 'mat-panes', RootMatPanes],
   ['MatPane', 'mat-pane', RootMatPane],
@@ -180,6 +182,7 @@ describe('公共组件导出', () => {
     expect(app.component('mat-spacer')).toBe(RootMatSpacer);
     expect(app.component('mat-loader')).toBe(RootMatLoader);
     expect(app.component('mat-tooltip')).toBe(RootMatTooltip);
+    expect(app.component('mat-scroll-area')).toBe(RootMatScrollArea);
     expect(app.component('mat-toolbar')).toBe(RootMatToolbar);
     expect(app.component('mat-panes')).toBe(RootMatPanes);
     expect(app.component('mat-pane')).toBe(RootMatPane);
@@ -227,6 +230,11 @@ describe('公共组件导出', () => {
     expect(declaration).toContain('export interface MatAppLayout');
     expect(declaration).toContain('export interface MatAppEdgeRegistration');
     expect(declaration).toContain('export declare function useMatApp(): MatAppContext;');
+    expect(declaration).toContain("orientation?: 'vertical' | 'y' | 'v' | 'horizontal' | 'x' | 'h';");
+    expect(declaration).toContain('"reach-start": (payload: { distance: number, target: HTMLElement }) => unknown;');
+    expect(declaration).toContain('getScroller(): HTMLElement | null;');
+    expect(declaration).toContain('scrollTo(options: ScrollToOptions): void;');
+    expect(declaration).toContain('getInput(): HTMLInputElement | HTMLTextAreaElement | null;');
   });
 
   it('所有运行时出口只暴露构建后的 ESM 与 CSS', () => {
