@@ -13,7 +13,7 @@ order: 101
 
 默认 `variant="auto"`：视口宽度小于 `breakpoint` 时使用 modal，达到断点后使用 standard。默认断点为 840px。自动模式只改变 Bottom sheet 自身的布局方式，不会把它替换成 Side sheet。
 
-Modal 默认以不超过视口高度 50% 的预览状态打开。`expanded` 可受控切换到展开状态；默认把手是原生按钮，也可使用键盘操作。预览状态向上拖动或选择把手会请求展开；展开后向下拖动会请求折叠，standard 选择把手也会请求折叠，modal 选择把手则请求关闭。预览状态向下拖动会请求关闭。展开的 modal 始终显示内置关闭按钮，即使 `closable=false` 或隐藏了把手。
+Modal 默认以不超过视口高度 50% 的预览状态打开。`expanded` 可受控切换到展开状态；默认把手是原生按钮，也可使用键盘操作。预览状态向上拖动或选择把手会请求展开；展开后向下拖动会请求折叠，standard 选择把手也会请求折叠，modal 选择把手则请求关闭。预览状态向下拖动会请求关闭。内置关闭按钮默认不显示，需要通过 `closable` 显式开启。
 
 ## 示例
 
@@ -114,7 +114,7 @@ Modal 默认以不超过视口高度 50% 的预览状态打开。`expanded` 可�
 | `collapseDragHandleLabel` | `string` | `'折叠底部面板'` | 模板属性为 `collapse-drag-handle-label`；展开的 standard 状态下把手的可访问名称 |
 | `expandedDragHandleLabel` | `string` | `'关闭底部面板'` | 模板属性为 `expanded-drag-handle-label`；展开的 modal 状态下把手的可访问名称 |
 | `draggable` | `boolean` | `true` | 是否允许通过把手向上展开，以及向下折叠或关闭 |
-| `closable` | `boolean` | `false` | 是否在默认头部显示内置关闭按钮；展开的 modal 始终显示关闭按钮 |
+| `closable` | `boolean` | `false` | 是否在默认头部显示内置关闭按钮；默认不显示，包括展开的 modal |
 | `closeLabel` | `string` | `'关闭'` | 模板属性为 `close-label`；内置关闭按钮的非空可访问名称 |
 | `title` | `string` | 未设置 | 简单标题；优先于 `title` Slot |
 | `content` | `string` | 未设置 | 简单正文；优先于默认 Slot |

@@ -210,7 +210,7 @@ const emit = defineEmits({
 
 <template>
   <MatSheetBase
-    v-bind="props"
+    v-bind="{ ...props, ...$attrs }"
     component-name="MatBottomSheet"
     direction="bottom"
     @update:model-value="emit('update:modelValue', $event)"

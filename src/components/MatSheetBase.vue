@@ -133,8 +133,7 @@ const isTop = computed(() => isModal.value && dialogStack.value.at(-1) === root.
 const hasActivatorSlot = computed(() => Boolean(slots.activator));
 const hasTitle = computed(() => props.title !== undefined || Boolean(slots.title));
 const hasContent = computed(() => props.content !== undefined || Boolean(slots.default));
-const showCloseButton = computed(() => props.closable
-  || (props.direction === 'bottom' && isModal.value && props.expanded));
+const showCloseButton = computed(() => props.closable);
 const resolvedDragHandleLabel = computed(() => {
   if (!props.expanded) {
     return props.dragHandleLabel;
@@ -856,7 +855,7 @@ watch(() => props.closeLabel, (value) => {
   margin: 0 auto;
 }
 
-.mat-sheet--bottom.mat-sheet--modal:not(.mat-sheet--expanded) {
+.mat-sheet--bottom.mat-sheet--modal:not(.mat-sheet--expanded):not(.mat-sheet--dragging) {
   max-block-size: 50dvb;
 }
 

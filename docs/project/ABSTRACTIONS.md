@@ -187,7 +187,7 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 Standard 使用原生 `aside`，在声明位置参与父级布局，不使用 Teleport、不锁页面滚动且不主动移动焦点；Bottom sheet 适合作为纵向 flex 容器末端区域，Side sheet 适合作为横向 flex 容器的不可压缩侧栏。Modal 使用原生 `<dialog>.showModal()`、Teleport、共享 Dialog 堆叠和滚动锁；页面存在经典滚动条时临时保留其槽位，避免锁定根滚动造成页面横向位移，没有经典滚动条时不预留额外空间。只有顶层模态表面显示帷幕颜色，关闭完成后恢复打开前焦点。Escape 始终请求关闭，`closeOnBack` 只控制帷幕点击，`scrim=false` 只隐藏颜色而不恢复背景交互。
 
-Bottom sheet 最大宽度固定为 640px，使用顶部 extra-large 圆角和可选 drag handle。Modal 默认处于不超过半屏的预览高度，`expanded` 表达展开预设高度；预览状态向上拖动或通过键盘选择把手请求展开，展开状态向下拖动请求折叠，展开的 standard 选择把手也请求折叠，展开的 modal 则请求关闭；预览状态向下拖动请求关闭。拖动时面板高度或位移连续跟随指针，关闭动画从释放位置继续。展开的 modal 始终提供内置关闭按钮。Side sheet 使用 start/end 逻辑边缘，默认及最大宽度均为 400px、默认显示关闭入口，并允许触摸用户向依附边缘滑动关闭。标题、正文、header、actions、footer 和 activator 由两者共享；Side sheet 不提供 Bottom sheet 的 drag-handle Slot。
+Bottom sheet 最大宽度固定为 640px，使用顶部 extra-large 圆角和可选 drag handle。Modal 默认处于不超过半屏的预览高度，`expanded` 表达展开预设高度；预览状态向上拖动或通过键盘选择把手请求展开，展开状态向下拖动请求折叠，展开的 standard 选择把手也请求折叠，展开的 modal 则请求关闭；预览状态向下拖动请求关闭。拖动时面板高度或位移连续跟随指针，关闭动画从释放位置继续。内置关闭按钮默认不显示，由 `closable` 显式开启。Side sheet 使用 start/end 逻辑边缘，默认及最大宽度均为 400px、默认显示关闭入口，并允许触摸用户向依附边缘滑动关闭。标题、正文、header、actions、footer 和 activator 由两者共享；Side sheet 不提供 Bottom sheet 的 drag-handle Slot。
 
 ## Tooltip
 

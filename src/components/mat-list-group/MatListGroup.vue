@@ -306,16 +306,18 @@ watch(isSelectableFallback, async (selectable, wasSelectable) => {
 }
 
 .mat-list-group__content {
-  display: grid;
+  interpolate-size: allow-keywords;
+  display: block;
+  min-block-size: 0;
   overflow: clip;
-  grid-template-rows: 0fr;
+  block-size: 0;
   opacity: 0;
-  transition: grid-template-rows var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized), opacity var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized);
+  transition: block-size var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized), opacity var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized);
 }
 
 .mat-list-group--expanded > .mat-list-group__content,
 .mat-list-group--selectable-fallback > .mat-list-group__content {
-  grid-template-rows: 1fr;
+  block-size: auto;
   opacity: 1;
 }
 

@@ -3243,7 +3243,7 @@ var an = /*#__PURE__*/ Y(/* @__PURE__ */ Object.assign({
 			"aria-labelledby"
 		]));
 	}
-}), [["__scopeId", "data-v-ae082a1e"]]), yn = Symbol("mat-menu"), bn = Symbol("mat-menu-item"), xn = Symbol("mat-menu-group");
+}), [["__scopeId", "data-v-4fe2a3e4"]]), yn = Symbol("mat-menu"), bn = Symbol("mat-menu-item"), xn = Symbol("mat-menu-group");
 function Sn(e, t, n) {
 	return Math.abs((e.x * (t.y - n.y) + t.x * (n.y - e.y) + n.x * (e.y - t.y)) / 2);
 }
@@ -5609,7 +5609,7 @@ var Zr = { class: "mat-dialog__header" }, Qr = {
 		"update:modelValue": (e) => typeof e == "boolean"
 	},
 	setup(e, { emit: c }) {
-		let d = e, f = c, p = L(), m = z(), _ = O(null), v = O(null), y = O(!1), x = O("closed"), C = O(null), T = O(typeof window > "u" ? 0 : window.innerWidth), E = O(0), D = O(null), k = O(!1), A = `${R().replace(/[^\w-]/g, "-")}-title`, M = r(() => v.value?.root ?? v.value?.$el ?? null), N = r(() => d.variant === "auto" ? T.value < d.breakpoint ? "modal" : "standard" : d.variant), P = r(() => N.value === "modal"), I = r(() => P.value && Gr.value.at(-1) === M.value), V = r(() => !!m.activator), W = r(() => d.title !== void 0 || !!m.title), G = r(() => d.content !== void 0 || !!m.default), K = r(() => d.closable || d.direction === "bottom" && P.value && d.expanded), q = r(() => d.expanded ? P.value ? d.expandedDragHandleLabel : d.collapseDragHandleLabel : d.dragHandleLabel), ee = r(() => W.value || K.value || !!m.header || !!m.actions), te = r(() => P.value ? "dialog" : "aside"), J = r(() => {
+		let d = e, f = c, p = L(), m = z(), _ = O(null), v = O(null), y = O(!1), x = O("closed"), C = O(null), T = O(typeof window > "u" ? 0 : window.innerWidth), E = O(0), D = O(null), k = O(!1), A = `${R().replace(/[^\w-]/g, "-")}-title`, M = r(() => v.value?.root ?? v.value?.$el ?? null), N = r(() => d.variant === "auto" ? T.value < d.breakpoint ? "modal" : "standard" : d.variant), P = r(() => N.value === "modal"), I = r(() => P.value && Gr.value.at(-1) === M.value), V = r(() => !!m.activator), W = r(() => d.title !== void 0 || !!m.title), G = r(() => d.content !== void 0 || !!m.default), K = r(() => d.closable), q = r(() => d.expanded ? P.value ? d.expandedDragHandleLabel : d.collapseDragHandleLabel : d.dragHandleLabel), ee = r(() => W.value || K.value || !!m.header || !!m.actions), te = r(() => P.value ? "dialog" : "aside"), J = r(() => {
 			if (d.width !== void 0) return typeof d.width == "number" ? `${d.width}px` : d.width.trim();
 		}), Y = r(() => {
 			if (J.value) return { "--mat-sheet-preferred-width": J.value };
@@ -5892,7 +5892,7 @@ var Zr = { class: "mat-dialog__header" }, Qr = {
 			"tabindex"
 		])], 8, ["to", "disabled"])) : a("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-17949de9"]]), li = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-9f3ac6ca"]]), li = /*@__PURE__*/ Object.assign({
 	name: "MatBottomSheet",
 	inheritAttrs: !1
 }, {
@@ -5984,7 +5984,10 @@ var Zr = { class: "mat-dialog__header" }, Qr = {
 	},
 	setup(e, { emit: t }) {
 		let n = e, r = t;
-		return (e, t) => (w(), i(ci, h(n, {
+		return (e, t) => (w(), i(ci, h({
+			...n,
+			...e.$attrs
+		}, {
 			"component-name": "MatBottomSheet",
 			direction: "bottom",
 			"onUpdate:modelValue": t[0] ||= (e) => r("update:modelValue", e),
@@ -6105,7 +6108,10 @@ var Zr = { class: "mat-dialog__header" }, Qr = {
 	},
 	setup(e, { emit: t }) {
 		let n = e, r = t;
-		return (e, t) => (w(), i(ci, h(n, {
+		return (e, t) => (w(), i(ci, h({
+			...n,
+			...e.$attrs
+		}, {
 			"component-name": "MatSideSheet",
 			direction: "side",
 			"onUpdate:modelValue": t[0] ||= (e) => r("update:modelValue", e),

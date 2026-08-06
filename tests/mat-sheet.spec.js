@@ -309,13 +309,48 @@ describe('MatBottomSheet', () => {
     expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
 
-  it('展开的 modal 即使隐藏把手也提供关闭入口', async () => {
-    const wrapper = mount(MatBottomSheet, {
+  it('展开的 modal 默认不显示关闭按钮，closable 时显示', async () => {
+    mount(MatBottomSheet, {
       props: {
         dragHandle: false,
         expanded: true,
         modelValue: true,
         title: '全屏详情',
+        variant: 'modal',
+      },
+    });
+
+    await settleRender();
+
+    expect(document.body.querySelector('dialog button[aria-label="关闭"]')).toBeNull();
+
+    const wrapper = mount(MatBottomSheet, {
+      props: {
+        dragHandle: false,
+        expanded: true,
+        modelValue: true,
+        closable: true,
+        title: '全屏详情',
+        variant: 'modal',
+      },
+    });
+
+    await settleRender();
+
+    const closeButton = document.body.querySelector('dialog button[aria-label="关闭"]');
+
+    expect(closeButton).not.toBeNull();
+    closeButton.click();
+
+    expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
+  });
+
+  it('closable 在预览状态下也显示关闭按钮', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      props: {
+        modelValue: true,
+        closable: true,
+        title: '预览详情',
         variant: 'modal',
       },
     });
@@ -390,6 +425,36 @@ describe('MatBottomSheet', () => {
     }));
 
     expect(wrapper.emitted('update:modelValue')).toHaveLength(2);
+  });
+
+  it('非 props 属性透传到 modal 根元素并可用于可访问名称', async () => {
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    mount(MatBottomSheet, {
+      props: {
+        modelValue: true,
+        variant: 'modal',
+      },
+      attrs: {
+        'aria-label': '筛选面板',
+        'data-testid': 'bottom-sheet',
+        class: 'custom-sheet',
+      },
+      slots: {
+        header: '<div>自定义头部</div>',
+      },
+    });
+    await settleRender();
+
+    const sheet = document.body.querySelector('dialog');
+
+    expect(sheet?.getAttribute('aria-label')).toBe('筛选面板');
+    expect(sheet?.getAttribute('data-testid')).toBe('bottom-sheet');
+    expect(sheet?.classList.contains('custom-sheet')).toBe(true);
+    expect(sheet?.textContent).toContain('自定义头部');
+    expect(warning).not.toHaveBeenCalledWith(
+      'MatBottomSheet: 必须通过 title、title Slot、aria-label 或 aria-labelledby 提供可访问名称',
+    );
   });
 });
 
@@ -560,5 +625,25 @@ describe('MatSideSheet', () => {
     await nextTick();
 
     expect(document.activeElement).toBe(activator);
+  });
+
+  it('非 props 属性透传到 modal 根元素', async () => {
+    mount(MatSideSheet, {
+      props: {
+        modelValue: true,
+        title: '属性面板',
+        variant: 'modal',
+      },
+      attrs: {
+        'aria-label': '属性面板',
+        'data-testid': 'side-sheet',
+      },
+    });
+    await settleRender();
+
+    const sheet = document.body.querySelector('dialog');
+
+    expect(sheet?.getAttribute('aria-label')).toBe('属性面板');
+    expect(sheet?.getAttribute('data-testid')).toBe('side-sheet');
   });
 });
