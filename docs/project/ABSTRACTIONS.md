@@ -211,6 +211,8 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 
 `<mat-scroll-area>` 与导出 `MatScrollArea` 拥有一个单轴原生滚动元素。`orientation` 的 `vertical`、`y`、`v` 表示纵向，`horizontal`、`x`、`h` 表示横向；完整值是文档中的规范写法。组件只在实际离开边缘后对对应内容使用真实 mask 渐隐，并保留独立的滚动条保护区域；`fixed-start` 与 `fixed-end` 位于遮罩之外，默认 Slot 中的 sticky 内容不保证避开遮罩。
 
+`snap` 以 `none`、`proximity`、`mandatory` 设置当前物理滚动轴的原生滚动停靠强度，默认关闭；`snapPadding` 以非负像素值设置同一轴两端的停靠内边距。组件不替默认 Slot 内容选择停靠目标，使用方必须在目标元素上声明 `scroll-snap-align`，并按需要选择 `scroll-snap-stop`。
+
 `reachThreshold` 只设置 `reach-start`、`reach-end` 的非负像素阈值，不改变渐隐。初次布局、尺寸或内容同步、方向和阈值变化均保持静默；只有原生 scroll 从阈值外进入阈值内时派发一次，离开后重新进入才再次派发。事件载荷提供到对应边缘的 `distance` 与原生滚动 `target`。`getScroller()` 和 `scrollTo()` 是公共命令式方法；class 与 style 属于根容器，其他原生属性和监听器属于滚动元素。
 
 ## Navigation 导航

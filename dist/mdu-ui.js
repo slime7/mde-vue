@@ -6200,6 +6200,24 @@ var Zr = { class: "mat-dialog__header" }, Qr = {
 				].includes(e);
 			}
 		},
+		snap: {
+			type: String,
+			default: "none",
+			validator(e) {
+				return [
+					"none",
+					"proximity",
+					"mandatory"
+				].includes(e);
+			}
+		},
+		snapPadding: {
+			type: Number,
+			default: 0,
+			validator(e) {
+				return Number.isFinite(e) && e >= 0;
+			}
+		},
 		reachThreshold: {
 			type: [Number, Object],
 			default: 0,
@@ -6226,8 +6244,17 @@ var Zr = { class: "mat-dialog__header" }, Qr = {
 		}), T = r(() => ({
 			class: l.class,
 			style: l.style
-		})), E = r(() => Object.fromEntries(Object.entries(l).filter(([e]) => !["class", "style"].includes(e))));
-		function D() {
+		})), E = r(() => {
+			let e = y.value === "horizontal", t = `${i.snapPadding}px`;
+			return {
+				scrollPaddingBottom: e ? void 0 : t,
+				scrollPaddingLeft: e ? t : void 0,
+				scrollPaddingRight: e ? t : void 0,
+				scrollPaddingTop: e ? void 0 : t,
+				scrollSnapType: i.snap === "none" ? "none" : `${e ? "x" : "y"} ${i.snap}`
+			};
+		}), D = r(() => Object.fromEntries(Object.entries(l).filter(([e]) => !["class", "style"].includes(e))));
+		function k() {
 			let e = u.value;
 			if (!e) return {
 				start: 0,
@@ -6245,10 +6272,10 @@ var Zr = { class: "mat-dialog__header" }, Qr = {
 				end: Math.max(0, e.scrollHeight - e.clientHeight - e.scrollTop)
 			};
 		}
-		function k(e) {
+		function A(e) {
 			let t = u.value;
 			if (!t) return;
-			let n = D(), r = n.start <= x.value.start + 1, i = n.end <= x.value.end + 1;
+			let n = k(), r = n.start <= x.value.start + 1, i = n.end <= x.value.end + 1;
 			d.value = n.start > 1, f.value = n.end > 1, e && r && !p.value && c("reach-start", {
 				distance: n.start,
 				target: t
@@ -6257,50 +6284,51 @@ var Zr = { class: "mat-dialog__header" }, Qr = {
 				target: t
 			}), p.value = r, m.value = i;
 		}
-		function A(e) {
+		function M(e) {
 			_ !== void 0 && cancelAnimationFrame(_), _ = requestAnimationFrame(() => {
-				_ = void 0, k(e);
+				_ = void 0, A(e);
 			});
 		}
-		function M() {
-			A(!0);
-		}
 		function N() {
-			!v || !u.value || (v.disconnect(), v.observe(u.value), Array.from(u.value.children).forEach((e) => {
-				v.observe(e);
-			}), A(!1));
+			M(!0);
 		}
 		function P() {
+			!v || !u.value || (v.disconnect(), v.observe(u.value), Array.from(u.value.children).forEach((e) => {
+				v.observe(e);
+			}), M(!1));
+		}
+		function F() {
 			return u.value;
 		}
-		function F(e) {
+		function I(e) {
 			u.value?.scrollTo(e);
 		}
 		return B([y, x], async () => {
-			await g(), A(!1);
+			await g(), M(!1);
 		}, { deep: !0 }), S(() => {
-			typeof ResizeObserver == "function" && (v = new ResizeObserver(() => A(!1))), N();
-		}), C(N), b(() => {
+			typeof ResizeObserver == "function" && (v = new ResizeObserver(() => M(!1))), P();
+		}), C(P), b(() => {
 			_ !== void 0 && cancelAnimationFrame(_), v?.disconnect();
 		}), t({
-			getScroller: P,
-			scrollTo: F
+			getScroller: F,
+			scrollTo: I
 		}), (e, t) => (w(), o("div", h(T.value, { class: ["mat-scroll-area", `mat-scroll-area--${y.value}`] }), [
 			e.$slots["fixed-start"] ? (w(), o("div", mi, [j(e.$slots, "fixed-start", {}, void 0, !0)])) : a("", !0),
 			s("div", h({
 				ref_key: "scroller",
 				ref: u
-			}, E.value, {
+			}, D.value, {
 				class: ["mat-scroll-area__scroller", {
 					"mat-scroll-area__scroller--start-overflow": d.value,
 					"mat-scroll-area__scroller--end-overflow": f.value
 				}],
-				onScroll: M
+				style: E.value,
+				onScroll: N
 			}), [j(e.$slots, "default", {}, void 0, !0)], 16),
 			e.$slots["fixed-end"] ? (w(), o("div", hi, [j(e.$slots, "fixed-end", {}, void 0, !0)])) : a("", !0)
 		], 16));
 	}
-}), [["__scopeId", "data-v-b2c39f78"]]), _i = ["aria-valuemax", "aria-valuenow"], vi = ["width", "height"], yi = { key: 0 }, bi = ["width", "height"], xi = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Si = ["d"], Ci = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, wi = ["d"], Ti = ["d", "mask"], Ei = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Di = ["d"], Oi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, ki = ["d"], Ai = ["d"], ji = {
+}), [["__scopeId", "data-v-46804c51"]]), _i = ["aria-valuemax", "aria-valuenow"], vi = ["width", "height"], yi = { key: 0 }, bi = ["width", "height"], xi = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Si = ["d"], Ci = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, wi = ["d"], Ti = ["d", "mask"], Ei = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Di = ["d"], Oi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, ki = ["d"], Ai = ["d"], ji = {
 	key: 1,
 	class: "mat-loader__linear-stop"
 }, Mi = ["viewBox"], Ni = { class: "mat-loader__circular-linear-rotate" }, Pi = { class: "mat-loader__circular-rotate-arc" }, Fi = [

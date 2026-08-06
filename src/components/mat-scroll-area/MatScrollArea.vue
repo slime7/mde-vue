@@ -30,6 +30,32 @@ const props = defineProps({
     },
   },
   /**
+   * 滚动停靠强度；`none` 关闭停靠，其他值映射到当前滚动轴。
+   *
+   * @type {'none' | 'proximity' | 'mandatory'}
+   * @default 'none'
+   */
+  snap: {
+    type: String,
+    default: 'none',
+    validator(value) {
+      return ['none', 'proximity', 'mandatory'].includes(value);
+    },
+  },
+  /**
+   * 当前滚动轴起始端和末端的滚动停靠内边距，单位为 px。
+   *
+   * @type {number}
+   * @default 0
+   */
+  snapPadding: {
+    type: Number,
+    default: 0,
+    validator(value) {
+      return Number.isFinite(value) && value >= 0;
+    },
+  },
+  /**
    * 进入滚动边缘多少像素时触发事件。数字同时用于两端，对象可分别设置 start、end。
    *
    * @type {number | { start?: number, end?: number }}
@@ -103,6 +129,20 @@ const rootAttrs = computed(() => ({
   class: attrs.class,
   style: attrs.style,
 }));
+const scrollerStyle = computed(() => {
+  const isHorizontal = normalizedOrientation.value === 'horizontal';
+  const padding = `${props.snapPadding}px`;
+
+  return {
+    scrollPaddingBottom: isHorizontal ? undefined : padding,
+    scrollPaddingLeft: isHorizontal ? padding : undefined,
+    scrollPaddingRight: isHorizontal ? padding : undefined,
+    scrollPaddingTop: isHorizontal ? undefined : padding,
+    scrollSnapType: props.snap === 'none'
+      ? 'none'
+      : `${isHorizontal ? 'x' : 'y'} ${props.snap}`,
+  };
+});
 const scrollerAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([name]) => !['class', 'style'].includes(name)),
 ));
@@ -263,6 +303,7 @@ defineExpose({
       ref="scroller"
       v-bind="scrollerAttrs"
       class="mat-scroll-area__scroller"
+      :style="scrollerStyle"
       :class="{
         'mat-scroll-area__scroller--start-overflow': hasStartOverflow,
         'mat-scroll-area__scroller--end-overflow': hasEndOverflow,

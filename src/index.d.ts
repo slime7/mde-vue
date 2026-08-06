@@ -1934,6 +1934,20 @@ export interface MatScrollAreaProps {
   */
   orientation?: 'vertical' | 'y' | 'v' | 'horizontal' | 'x' | 'h';
   /**
+  * 滚动停靠强度；`none` 关闭停靠，其他值映射到当前滚动轴。
+  *
+  * @type {'none' | 'proximity' | 'mandatory'}
+  * @default 'none'
+  */
+  snap?: 'none' | 'proximity' | 'mandatory';
+  /**
+  * 当前滚动轴起始端和末端的滚动停靠内边距，单位为 px。
+  *
+  * @type {number}
+  * @default 0
+  */
+  snapPadding?: number;
+  /**
   * 进入滚动边缘多少像素时触发事件。数字同时用于两端，对象可分别设置 start、end。
   *
   * @type {number | { start?: number, end?: number }}

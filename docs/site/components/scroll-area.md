@@ -35,6 +35,26 @@ order: 114
   </DocsPreview>
 </ClientOnly>
 
+### 滚动停靠
+
+`snap="proximity"` 在内容接近停靠点时吸附，适合连续浏览；`snap="mandatory"` 要求滚动结束后停到某个停靠点，适合分页式内容。`snapPadding` 设置当前滚动轴两端的像素内边距。组件负责滚动容器，默认 Slot 中作为停靠目标的元素仍需自行设置 `scroll-snap-align`；需要尽量避免快速滚动跳过目标时，可以同时设置 `scroll-snap-stop: always`。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/scroll-area/ScrollAreaSnapExample.vue#template [template]
+
+<<< @/examples/scroll-area/ScrollAreaSnapExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Scroll area 滚动停靠预览">
+    <ScrollAreaSnapExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### 边缘事件与无限滚动
 
 `reachThreshold` 只控制事件阈值，不改变渐隐长度。事件不会在初次挂载、内容尺寸变化或属性变化时自动触发；只有滚动从阈值区域外进入区域内时触发一次，离开后再次进入才会重新触发。
@@ -104,6 +124,8 @@ order: 114
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `orientation` | `'vertical' \| 'y' \| 'v' \| 'horizontal' \| 'x' \| 'h'` | `'vertical'` | 选择组件拥有的滚动轴；简写值映射到对应完整方向 |
+| `snap` | `'none' \| 'proximity' \| 'mandatory'` | `'none'` | 设置当前滚动轴的停靠强度；`none` 关闭滚动停靠 |
+| `snapPadding` | `number` | `0` | 当前滚动轴起始端和末端的停靠内边距，单位为 px，必须是非负有限数字 |
 | `reachThreshold` | `number \| { start?: number, end?: number }` | `0` | 边缘事件的像素阈值；数字用于两端，对象未提供的一端为 `0`，值必须是非负有限数字 |
 
 `class` 和 `style` 作用于组件根容器。其他未被消费的原生属性、ARIA 属性和监听器作用于实际滚动元素；需要键盘聚焦滚动区时，应按场景提供 `tabindex="0"` 和可访问名称。
@@ -140,4 +162,5 @@ import ScrollAreaFixedSlotsExample from '../examples/scroll-area/ScrollAreaFixed
 import ScrollAreaMethodsExample from '../examples/scroll-area/ScrollAreaMethodsExample.vue';
 import ScrollAreaOrientationExample from '../examples/scroll-area/ScrollAreaOrientationExample.vue';
 import ScrollAreaReachExample from '../examples/scroll-area/ScrollAreaReachExample.vue';
+import ScrollAreaSnapExample from '../examples/scroll-area/ScrollAreaSnapExample.vue';
 </script>

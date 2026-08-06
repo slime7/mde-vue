@@ -46,6 +46,61 @@ describe('MatScrollArea', () => {
   });
 
   it.each([
+    ['vertical', 'y mandatory'],
+    ['y', 'y mandatory'],
+    ['v', 'y mandatory'],
+    ['horizontal', 'x mandatory'],
+    ['x', 'x mandatory'],
+    ['h', 'x mandatory'],
+  ])('orientation=%s 为滚动元素设置对应轴的停靠模式', (orientation, expected) => {
+    const wrapper = mount(MatScrollArea, {
+      props: {
+        orientation,
+        snap: 'mandatory',
+      },
+    });
+
+    expect(wrapper.vm.getScroller().style.scrollSnapType).toBe(expected);
+  });
+
+  it('支持切换停靠强度和关闭滚动停靠', async () => {
+    const wrapper = mount(MatScrollArea, {
+      props: { snap: 'proximity' },
+    });
+    const scroller = wrapper.vm.getScroller();
+
+    expect(scroller.style.scrollSnapType).toBe('y proximity');
+
+    await wrapper.setProps({ snap: 'mandatory' });
+    expect(scroller.style.scrollSnapType).toBe('y mandatory');
+
+    await wrapper.setProps({ snap: 'none' });
+    expect(scroller.style.scrollSnapType).toBe('none');
+  });
+
+  it('在当前滚动轴两端设置停靠内边距，并随方向切换', async () => {
+    const wrapper = mount(MatScrollArea, {
+      props: {
+        snap: 'mandatory',
+        snapPadding: 24,
+      },
+    });
+    const scroller = wrapper.vm.getScroller();
+
+    expect(scroller.style.scrollPaddingTop).toBe('24px');
+    expect(scroller.style.scrollPaddingBottom).toBe('24px');
+    expect(scroller.style.scrollPaddingLeft).toBe('');
+    expect(scroller.style.scrollPaddingRight).toBe('');
+
+    await wrapper.setProps({ orientation: 'horizontal' });
+
+    expect(scroller.style.scrollPaddingTop).toBe('');
+    expect(scroller.style.scrollPaddingBottom).toBe('');
+    expect(scroller.style.scrollPaddingLeft).toBe('24px');
+    expect(scroller.style.scrollPaddingRight).toBe('24px');
+  });
+
+  it.each([
     ['vertical', 'scrollTop', 'scrollHeight', 'clientHeight'],
     ['y', 'scrollTop', 'scrollHeight', 'clientHeight'],
     ['v', 'scrollTop', 'scrollHeight', 'clientHeight'],
