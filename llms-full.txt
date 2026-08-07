@@ -110,6 +110,8 @@ function handleIntersection(isIntersecting) {
 <script setup>
 import {
   Intersection as vIntersection,
+  MatAppBar,
+  MatAppBarSearch,
   MatAppRoot,
   MatBtn,
   MatFab,
@@ -184,7 +186,7 @@ import {
 } from 'mde-vue';
 ```
 
-局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatAppRoot>`、`<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatCard>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatScrollArea>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`；`useMatApp()` 只能在 `<MatAppRoot>` 的后代组件中调用。
+局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatAppRoot>`、`<MatAppBar>`、`<MatAppBarSearch>`、`<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatCard>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatScrollArea>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`；`useMatApp()` 只能在 `<MatAppRoot>` 的后代组件中调用。
 
 ## 页面基础尺寸
 
@@ -7703,6 +7705,499 @@ import TextareaAutoGrowExample from '../examples/text-field/TextareaAutoGrowExam
 import TextareaMaxRowsExample from '../examples/text-field/TextareaMaxRowsExample.vue';
 import TextareaNoResizeExample from '../examples/text-field/TextareaNoResizeExample.vue';
 import TextareaRowsExample from '../examples/text-field/TextareaRowsExample.vue';
+</script>
+
+# App bar 应用栏
+
+## 组件简介
+
+`<mat-app-bar>` 的组件导出名是 `MatAppBar`，`<mat-app-bar-search>` 的组件导出名是 `MatAppBarSearch`。前者实现 Material 3 Expressive 的 search、small、medium flexible 和 large flexible 四种 App bar；后者基于 `MatInputBase` 提供适合宽屏桌面应用直接输入的原生搜索框。
+
+App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、`content="image"` 或 `content="search"` 明确内容语义，标题、图像和搜索不会同时占据不同的主区域。`variant="search"` 始终按 search 内容处理。leading 和 trailing 操作区保持固定交互尺寸，主内容区使用剩余宽度；`align="center"` 使用对称侧轨，避免两侧操作数量不同时标题发生视觉偏移。
+
+组件默认在声明位置参与文档布局并粘附到滚动容器顶部。small 与 search 在开始滚动时从 `surface` 连续过渡到 `surface container`；medium flexible 和 large flexible 还会分别在前 48px、56px 滚动距离内折叠到 64px。动画由 CSS `scroll-timeline` 和 `animation-timeline` 驱动，不使用 JavaScript 逐帧计算。不支持这些 CSS 能力的浏览器保持静态展开；减少动态效果时保留展开几何，仅播放表面填色。
+
+## 示例
+
+### `variant`
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="app-bar-variant-example">
+    <mat-app-bar variant="search">
+      <mat-app-bar-search v-model="query" label="搜索项目" />
+    </mat-app-bar>
+
+    <mat-app-bar variant="small">
+      小型应用栏
+    </mat-app-bar>
+
+    <mat-app-bar variant="medium-flexible">
+      中型灵活应用栏
+    </mat-app-bar>
+
+    <mat-app-bar variant="large-flexible">
+      大型灵活应用栏
+    </mat-app-bar>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const query = ref('');
+</script>
+```
+```vue
+<style scoped>
+.app-bar-variant-example {
+  display: flex;
+  inline-size: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  overflow: hidden;
+  background: var(--mat-sys-color-surface-container-low);
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.app-bar-variant-example :deep(.mat-app-bar) {
+  position: static;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="App bar 四种 Expressive 变体预览">
+    <AppBarVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `content` 与默认 Slot
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="app-bar-content-example">
+    <mat-app-bar content="headline">
+      项目
+    </mat-app-bar>
+
+    <mat-app-bar content="image">
+      <svg viewBox="0 0 132 40" role="img" aria-label="MDE 标志">
+        <rect width="40" height="40" rx="12" />
+        <text x="50" y="28">MDE</text>
+      </svg>
+    </mat-app-bar>
+
+    <mat-app-bar content="search">
+      <mat-app-bar-search v-model="query" label="搜索文档" />
+    </mat-app-bar>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const query = ref('');
+</script>
+```
+```vue
+<style scoped>
+.app-bar-content-example {
+  display: flex;
+  inline-size: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  overflow: hidden;
+  background: var(--mat-sys-color-surface-container-low);
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.app-bar-content-example :deep(.mat-app-bar) {
+  position: static;
+}
+
+.app-bar-content-example svg {
+  fill: var(--mat-sys-color-primary);
+}
+
+.app-bar-content-example text {
+  fill: var(--mat-sys-color-on-surface);
+  font: 700 24px var(--mat-ref-typeface-brand);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="标题、图像和搜索主内容预览">
+    <AppBarContentExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `align`
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="app-bar-align-example">
+    <mat-app-bar align="start">
+      起始对齐
+
+      <template #leading>
+        <mat-btn icon="menu" label="菜单" size="small" variant="standard" />
+      </template>
+
+      <template #trailing>
+        <mat-btn icon="more_vert" label="更多" size="small" variant="standard" />
+      </template>
+    </mat-app-bar>
+
+    <mat-app-bar align="center">
+      居中对齐
+
+      <template #leading>
+        <mat-btn icon="arrow_back" label="返回" size="small" variant="standard" />
+      </template>
+
+      <template #trailing>
+        <mat-btn icon="favorite" label="收藏" size="small" variant="standard" />
+      </template>
+    </mat-app-bar>
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.app-bar-align-example {
+  display: flex;
+  inline-size: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  overflow: hidden;
+  background: var(--mat-sys-color-surface-container-low);
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.app-bar-align-example :deep(.mat-app-bar) {
+  position: static;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="App bar 起始和居中对齐预览">
+    <AppBarAlignExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `leading`、`subtitle` 与 `trailing` Slots
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-app-bar class="app-bar-slots-example" variant="medium-flexible">
+    项目工作区
+
+    <template #leading>
+      <mat-btn icon="menu" label="菜单" size="small" variant="standard" />
+    </template>
+
+    <template #subtitle>
+      3 个成员正在编辑
+    </template>
+
+    <template #trailing>
+      <mat-btn icon="share" label="分享" size="small" variant="filled-tonal" />
+      <mat-btn icon="more_vert" label="更多" size="small" variant="standard" />
+    </template>
+  </mat-app-bar>
+</template>
+```
+```vue
+<style scoped>
+.app-bar-slots-example {
+  position: static;
+  overflow: hidden;
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="App bar 内容 Slots 预览">
+    <AppBarSlotsExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `scrollTarget` 与连续折叠
+
+滚动示例把容器元素作为显式 `scrollTarget`。在最新浏览器中缓慢滚动，可以观察高度、标题、subtitle 和背景色共享同一个滚动进度。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div ref="scrollTarget" class="app-bar-scroll-example" tabindex="0">
+    <mat-app-bar
+      variant="large-flexible"
+      :scroll-target="scrollTarget"
+    >
+      最近项目
+
+      <template #leading>
+        <mat-btn icon="menu" label="菜单" size="small" variant="standard" />
+      </template>
+
+      <template #subtitle>
+        向下滚动以观察连续折叠与表面填色
+      </template>
+
+      <template #trailing>
+        <mat-btn icon="search" label="搜索" size="small" variant="standard" />
+        <mat-btn icon="more_vert" label="更多" size="small" variant="standard" />
+      </template>
+    </mat-app-bar>
+
+    <main class="app-bar-scroll-example__content">
+      <article v-for="index in 8" :key="index">
+        <strong>项目 {{ index }}</strong>
+        <span>用于验证应用栏在真实滚动内容上方的折叠表现。</span>
+      </article>
+    </main>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const scrollTarget = ref(null);
+</script>
+```
+```vue
+<style scoped>
+.app-bar-scroll-example {
+  inline-size: 100%;
+  block-size: 420px;
+  overflow: auto;
+  background: var(--mat-sys-color-surface);
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+  overscroll-behavior: contain;
+}
+
+.app-bar-scroll-example__content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  padding: 16px;
+}
+
+.app-bar-scroll-example article {
+  display: flex;
+  min-block-size: 96px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  box-sizing: border-box;
+  padding: 20px;
+  color: var(--mat-sys-color-on-surface);
+  background: var(--mat-sys-color-surface-container-low);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+
+.app-bar-scroll-example span {
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="App bar CSS 时间线折叠预览">
+    <AppBarScrollExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `MatAppBarSearch`
+
+桌面搜索输入实时更新 `v-model`；按 Enter 或使用默认 leading 搜索按钮发出 `search`。此示例还使用 trailing Slot 提供清空操作。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="app-bar-search-example">
+    <mat-app-bar-search
+      v-model="query"
+      autocomplete="off"
+      label="搜索组件"
+      :max-length="48"
+      placeholder="输入组件名称"
+      @search="submittedQuery = $event"
+    >
+      <template #trailing>
+        <mat-btn icon="close" label="清空" size="small" variant="standard" @click="query = ''" />
+      </template>
+    </mat-app-bar-search>
+
+    <span aria-live="polite">
+      当前输入：{{ query || '无' }}；最近提交：{{ submittedQuery || '无' }}
+    </span>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const query = ref('');
+const submittedQuery = ref('');
+</script>
+```
+```vue
+<style scoped>
+.app-bar-search-example {
+  display: flex;
+  inline-size: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.app-bar-search-example > :first-child {
+  inline-size: min(100%, 48rem);
+}
+
+.app-bar-search-example > span {
+  color: var(--mat-sys-color-on-surface-variant);
+  font: var(--mat-sys-typescale-body-medium-weight)
+    var(--mat-sys-typescale-body-medium-size) /
+    var(--mat-sys-typescale-body-medium-line-height)
+    var(--mat-sys-typescale-body-medium-font);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="App bar 直接搜索输入预览">
+    <AppBarSearchExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### `MatAppBar` 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `variant` | `'search' \| 'small' \| 'medium-flexible' \| 'large-flexible'` | `'small'` | Expressive App bar 变体；不提供已不推荐的 baseline medium 和 large |
+| `content` | `'headline' \| 'image' \| 'search'` | `'headline'` | 明确默认 Slot 的主内容类型；`variant="search"` 时有效值固定为 search |
+| `align` | `'start' \| 'center'` | `'start'` | 主内容起始或居中对齐；居中模式使用对称侧轨 |
+| `app` | `boolean` | `false` | 位于 `MatAppRoot` 且省略 `attach` 时登记应用顶边；其他场景固定到 `attach` |
+| `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；显式传入后优先于最近的 `MatAppRoot` |
+| `scrollTarget` | `string \| HTMLElement` | `undefined` | 显式 CSS 时间线滚动源；省略时依次选择可滚动的 AppRoot 正文、最近滚动祖先和 document |
+
+`app=true` 且自动接入 `MatAppRoot` 时，64px 收起高度登记为固定顶边，flexible 变体多出的 48px 或 56px 在声明位置成为可滚走的起始占位，从而避免折叠高度反复改变 AppRoot 正文 padding。显式 `attach` 无法解析时不渲染 App bar。
+
+`MatAppBar` 没有公开方法。未消费的属性、`class`、`style`、`id` 和 ARIA 属性传给原生 `<header>`。
+
+### `MatAppBarSearch` 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `modelValue` | `string` | `''` | 当前搜索文本，可使用 `v-model` |
+| `label` | `string` | `'Search'` | 原生输入和默认搜索按钮的无障碍名称 |
+| `placeholder` | `string` | `'Search'` | 原生输入占位文本 |
+| `disabled` | `boolean` | `false` | 禁用输入和默认搜索按钮，并阻止提交 |
+| `readonly` | `boolean` | `false` | 将原生输入设为只读 |
+| `maxLength` | `number` | `undefined` | 原生最大字符数 |
+
+`class` 与 `style` 传给搜索 `<form role="search">` 容器；其他未消费属性传给内部 `MatInputBase` 的原生 `<input type="search">`。
+
+### `MatAppBarSearch` 方法
+
+| 方法 | 参数 | 返回值 | 说明 |
+| --- | --- | --- | --- |
+| `focusInput()` | 无 | `void` | 将焦点移到原生搜索输入框；未挂载时不抛出错误 |
+| `getInput()` | 无 | `HTMLInputElement \| null` | 返回当前原生搜索输入框，未挂载时返回 `null` |
+
+## 事件
+
+`MatAppBar` 不定义自定义事件。
+
+| `MatAppBarSearch` 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `string` | 原生 input 事件产生新文本时，用于 `v-model` |
+| `search` | `string` | 按 Enter 或点击默认搜索按钮时，载荷为当前受控查询文本；禁用时不触发 |
+
+## Slots
+
+### `MatAppBar` Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 唯一主内容区域；应与 `content` 一致地放置标题、图像或 `MatAppBarSearch` |
+| `leading` | 起始操作，通常是一个具有可访问名称的 48px 目标按钮 |
+| `subtitle` | 标题的辅助文字；flexible 折叠过程中连续淡出，不应与 search 主内容组合 |
+| `trailing` | 末端操作；宽屏可放置最多四个简洁操作，避免挤压主内容 |
+
+### `MatAppBarSearch` Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| `leading` | 替换默认搜索按钮的起始内容；自定义内容负责自身提交语义和可访问名称 |
+| `trailing` | 输入框末端的清空、语音或头像等操作 |
+
+## 无障碍与降级
+
+App bar 使用原生 `<header>`；搜索使用 `<form role="search">` 和原生 search input。所有图标操作都应提供明确的 `label`。sticky App bar 不移动焦点，折叠也不改变 leading 和 trailing 的交互顺序。
+
+组件只面向最新浏览器。CSS scroll timeline 不可用时，App bar 保持展开和 `surface` 背景，不执行定时动画替代方案。`prefers-reduced-motion: reduce` 下保留展开高度和内容，只让滚动后的容器颜色表达内容分隔。
+
+## 参考来源
+
+变体、结构、64px small/search 高度、112px medium flexible 高度、120px large flexible 高度、48px 操作目标、滚动填色与 flexible 压缩行为依据 Material 3 [App bars overview](https://m3.material.io/components/app-bars/overview)、[App bars specs](https://m3.material.io/components/app-bars/specs) 和 [App bars guidelines](https://m3.material.io/components/app-bars/guidelines)。滚动驱动实现采用 W3C [Scroll-driven Animations](https://www.w3.org/TR/scroll-animations-1/) 定义的 CSS timeline；该实现方式是 mde-vue 的 Web API 设计，不是 Material 官方组件 API。
+
+<script setup>
+import AppBarAlignExample from '../examples/app-bar/AppBarAlignExample.vue';
+import AppBarContentExample from '../examples/app-bar/AppBarContentExample.vue';
+import AppBarScrollExample from '../examples/app-bar/AppBarScrollExample.vue';
+import AppBarSearchExample from '../examples/app-bar/AppBarSearchExample.vue';
+import AppBarSlotsExample from '../examples/app-bar/AppBarSlotsExample.vue';
+import AppBarVariantExample from '../examples/app-bar/AppBarVariantExample.vue';
 </script>
 
 # Menu 菜单

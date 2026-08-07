@@ -147,6 +147,124 @@ export interface MatAppRootProps {
 export type MatAppRootComponent = DefineComponent<MatAppRootProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatAppRoot: MatAppRootComponent;
 
+export interface MatAppBarProps {
+  /**
+  * App bar 规格变体。
+  *
+  * @type {'search' | 'small' | 'medium-flexible' | 'large-flexible'}
+  * @default 'small'
+  */
+  variant?: 'search' | 'small' | 'medium-flexible' | 'large-flexible';
+  /**
+  * 默认 Slot 的主内容类型。
+  *
+  * @type {'headline' | 'image' | 'search'}
+  * @default 'headline'
+  */
+  content?: 'headline' | 'image' | 'search';
+  /**
+  * 主内容的水平对齐方式。
+  *
+  * @type {'start' | 'center'}
+  * @default 'start'
+  */
+  align?: 'start' | 'center';
+  /**
+  * 是否接入最近的 MatAppRoot 顶边；不在 MatAppRoot 内时固定到 attach。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  app?: boolean;
+  /**
+  * app=true 时的显式 Teleport 目标。
+  *
+  * @type {string | HTMLElement}
+  * @default 'body'
+  */
+  attach?: string | HTMLElement;
+  /**
+  * CSS scroll timeline 的显式滚动源；省略时依次使用 AppRoot 正文、最近滚动祖先和 document。
+  *
+  * @type {string | HTMLElement | undefined}
+  * @default undefined
+  */
+  scrollTarget?: string | HTMLElement | undefined;
+}
+
+export type MatAppBarComponent = DefineComponent<MatAppBarProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatAppBar: MatAppBarComponent;
+
+export interface MatAppBarSearchProps {
+  /**
+  * 受控搜索文本，可使用 v-model。
+  *
+  * @type {string}
+  * @default ''
+  */
+  modelValue?: string;
+  /**
+  * 搜索输入和默认搜索按钮的无障碍名称。
+  *
+  * @type {string}
+  * @default 'Search'
+  */
+  label?: string;
+  /**
+  * 输入框占位文本。
+  *
+  * @type {string}
+  * @default 'Search'
+  */
+  placeholder?: string;
+  /**
+  * 使用原生禁用语义。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  disabled?: boolean;
+  /**
+  * 使用原生只读语义。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  readonly?: boolean;
+  /**
+  * 原生最大字符数。
+  *
+  * @type {number | undefined}
+  * @default undefined
+  */
+  maxLength?: number | undefined;
+}
+
+export interface MatAppBarSearchEmits {
+  /** 输入内容变化时发出新的字符串。 */
+  "update:modelValue": (payload: unknown) => unknown;
+  /** 提交搜索时发出当前查询字符串。 */
+  "search": (payload: unknown) => unknown;
+}
+
+export interface MatAppBarSearchExposed {
+  /**
+ * 将焦点移到原生搜索输入框。
+ *
+ * @returns {void}
+ */
+  focusInput(): void;
+  /**
+ * 获取原生搜索输入框。
+ *
+ * @returns {HTMLInputElement | null}
+ */
+  getInput(): HTMLInputElement | null;
+}
+
+export type MatAppBarSearchComponent = DefineComponent<MatAppBarSearchProps, MatAppBarSearchExposed, {}, {}, {}, {}, {}, MatAppBarSearchEmits>;
+export declare const MatAppBarSearch: MatAppBarSearchComponent;
+
 export interface MatBtnGroupProps {
   /**
   * 使用块级 flex 组根，在普通文档流中铺满父元素。
@@ -2595,6 +2713,10 @@ declare module 'vue' {
     'mat-btn': typeof MatBtn;
     MatAppRoot: typeof MatAppRoot;
     'mat-app-root': typeof MatAppRoot;
+    MatAppBar: typeof MatAppBar;
+    'mat-app-bar': typeof MatAppBar;
+    MatAppBarSearch: typeof MatAppBarSearch;
+    'mat-app-bar-search': typeof MatAppBarSearch;
     MatBtnGroup: typeof MatBtnGroup;
     'mat-btn-group': typeof MatBtnGroup;
     MatFab: typeof MatFab;

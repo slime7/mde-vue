@@ -42,6 +42,7 @@ llms: false
 - 组件配色：`docs/site/guide/component-color.md`
 - Tailwind CSS：`docs/site/guide/tailwind.md`
 - App root：`docs/site/components/app-root.md`
+- App bar：`docs/site/components/app-bar.md`
 - Button：`docs/site/components/button.md`
 - Button group：`docs/site/components/button-group.md`
 - Split button：`docs/site/components/split-button.md`

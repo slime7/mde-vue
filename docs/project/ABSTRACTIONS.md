@@ -225,6 +225,14 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 
 `<mat-toolbar>` 默认在最近定位容器内绝对定位，`app=true` 才建立应用级挂载。省略显式 attach 且位于 AppRoot 时，docked 登记 bottom 并参与正文 padding；floating 不登记边缘，但读取四向 padding 避让，显式 `placeholder` 仍保留声明位置空间。显式 attach 优先于 AppRoot，组件固定到目标视口并继续发布 Toolbar 几何。`bottomPlaceholder` 在 AppRoot 模式作为安全区之外的额外下限，非 AppRoot 模式保持原有含义。
 
+## App bar 应用栏
+
+`<mat-app-bar>` 与导出 `MatAppBar` 只提供 M3 Expressive 推荐的 `search`、`small`、`medium-flexible`、`large-flexible` 四种 variant。默认 Slot 是唯一主内容区域，`content` 必须显式声明为 `headline`、`image` 或 `search`；`variant="search"` 固定使用 search 内容。leading、subtitle 与 trailing 是独立具名 Slot。默认 sticky 布局参与文档流；`app=true` 且自动接入 AppRoot 时仅以折叠后的 64px 登记 top edge，flexible 展开差值在声明位置随正文滚走。
+
+滚动状态只由 CSS `scroll-timeline` / `animation-timeline` 驱动：small 和 search 在最初 16px 滚动范围内填充 surface container，medium flexible 与 large flexible 分别在 48px、56px 范围内连续折叠为 small。脚本只负责解析滚动源、登记唯一时间线名称和清理共享作用域，不读取滚动位置或逐帧更新样式。不支持该 CSS 能力时保持静态展开；减少动态效果时不改变几何与内容，只保留表面填色。
+
+`<mat-app-bar-search>` 与导出 `MatAppBarSearch` 复用 `MatInputBase` 渲染原生 search input，实时发出 `update:modelValue`，由 Enter 或默认搜索按钮发出 `search(query)`。它不实现 Search View、结果列表、网络请求、防抖或查询持久化。
+
 ## 文档权威关系
 
 `docs/site/` 中人工编辑的 Markdown 使用页面是组件说明的权威来源。`llms.txt` 只提供适合 AI 发现内容的索引，`llms-full.txt` 是这些页面的合并文本；两者均为可重复生成的派生文件，不接受手工修补。

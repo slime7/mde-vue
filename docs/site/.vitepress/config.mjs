@@ -96,6 +96,7 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'App root 应用布局根', link: '/components/app-root' },
+              { text: 'App bar 应用栏', link: '/components/app-bar' },
               { text: 'Bottom sheet 底部面板', link: '/components/bottom-sheet' },
               { text: 'Container 响应式容器', link: '/components/container' },
               { text: 'Menu 菜单', link: '/components/menu' },
