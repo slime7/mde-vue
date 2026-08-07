@@ -27,6 +27,7 @@
 | [0019](0019-minimize-esm-distribution-files.md) | superseded | 将 ESM 分发压缩为三个文件 |
 | [0020](0020-tailwind-css.md) | active | 恢复 tailwind.css 独立分发入口 |
 | [0021](0021-app-root-layout-context.md) | active | 采用 AppRoot 应用布局上下文 |
+| [0022](0022-rename-project-to-mde-vue.md) | active | 项目更名为 mde-vue |
 
 ## 何时创建 ADR
 

@@ -172,3 +172,4 @@ flowchart LR
 - [0015 — 连接按钮组选中态完整覆盖组外轮廓](adr/0015-connected-button-group-checked-shape-overrides-outer-shape.md)
 - [0016 — 公开 MatInputBase 作为可组合文本输入基础组件](adr/0016-public-input-base.md)
 - [0021 — 采用 AppRoot 应用布局上下文](adr/0021-app-root-layout-context.md)
+- [0022 — 项目更名为 mde-vue](adr/0022-rename-project-to-mde-vue.md)
