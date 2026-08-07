@@ -71,10 +71,10 @@ const props = defineProps({
   },
   /**
    * 阴影从对应边缘向内延伸的像素数。数字同时用于两端，对象可分别设置 start、end。
-   * 未设置时，`fade` 使用 16px，`blur` 使用 48px。
+   * 未设置时，`fade` 使用 16px，`blur` 使用 96px。
    *
    * @type {number | { start?: number, end?: number }}
-   * @default 16 for fade, 48 for blur
+   * @default 16 for fade, 96 for blur
    */
   shadowLength: {
     type: [Number, Object],
@@ -223,7 +223,7 @@ const shadowOffsets = computed(() => {
 });
 const shadowLengths = computed(() => resolveEdgeValues(
   props.shadowLength,
-  props.shadowVariant === 'blur' ? 48 : 16,
+  props.shadowVariant === 'blur' ? 96 : 16,
 ));
 const scrollbarSpace = computed(() => (props.barWidth === 'hidden' ? 0 : 16));
 const viewportStyle = computed(() => ({

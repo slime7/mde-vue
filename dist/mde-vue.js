@@ -6585,7 +6585,7 @@ var pi = { class: "mat-dialog__header" }, mi = {
 			"horizontal",
 			"x",
 			"h"
-		].includes(i.orientation) ? "horizontal" : "vertical"), k = r(() => E(i.reachThreshold, 0)), A = r(() => E(i.shadowOffset, 0)), M = r(() => E(i.shadowLength, i.shadowVariant === "blur" ? 48 : 16)), N = r(() => i.barWidth === "hidden" ? 0 : 16), P = r(() => ({
+		].includes(i.orientation) ? "horizontal" : "vertical"), k = r(() => E(i.reachThreshold, 0)), A = r(() => E(i.shadowOffset, 0)), M = r(() => E(i.shadowLength, i.shadowVariant === "blur" ? 96 : 16)), N = r(() => i.barWidth === "hidden" ? 0 : 16), P = r(() => ({
 			"--mat-scroll-area-shadow-length-start": `${M.value.start}px`,
 			"--mat-scroll-area-shadow-length-end": `${M.value.end}px`,
 			"--mat-scroll-area-shadow-offset-start": `${A.value.start}px`,
@@ -6719,7 +6719,7 @@ var pi = { class: "mat-dialog__header" }, mi = {
 			e.$slots["fixed-end"] ? (w(), o("div", ji, [j(e.$slots, "fixed-end", {}, void 0, !0)])) : a("", !0)
 		], 16));
 	}
-}), [["__scopeId", "data-v-62ab29c3"]]), Ni = ["aria-valuemax", "aria-valuenow"], Pi = ["width", "height"], Fi = { key: 0 }, Ii = ["width", "height"], Li = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ri = ["d"], zi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Bi = ["d"], Vi = ["d", "mask"], Hi = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ui = ["d"], Wi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Gi = ["d"], Ki = ["d"], qi = {
+}), [["__scopeId", "data-v-6ef569df"]]), Ni = ["aria-valuemax", "aria-valuenow"], Pi = ["width", "height"], Fi = { key: 0 }, Ii = ["width", "height"], Li = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ri = ["d"], zi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Bi = ["d"], Vi = ["d", "mask"], Hi = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ui = ["d"], Wi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Gi = ["d"], Ki = ["d"], qi = {
 	key: 1,
 	class: "mat-loader__linear-stop"
 }, Ji = ["viewBox"], Yi = { class: "mat-loader__circular-linear-rotate" }, Xi = { class: "mat-loader__circular-rotate-arc" }, Zi = [

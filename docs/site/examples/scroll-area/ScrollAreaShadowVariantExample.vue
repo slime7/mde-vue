@@ -17,7 +17,7 @@
     </section>
 
     <section>
-      <h4>blur（默认 48px）</h4>
+      <h4>blur（默认 96px）</h4>
 
       <mat-scroll-area
         class="scroll-area-shadow-variant-example__area"
