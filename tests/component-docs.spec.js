@@ -22,7 +22,6 @@ describe('组件文档约束', () => {
       const codeGroupSnippetMatches = codeGroupBlocks.flatMap((block) => (
         [...block.matchAll(/^<<< @\/([^\s]+\.vue)/gm)].map((match) => match[1])
       ));
-      const codeGroupSnippetPaths = new Set(codeGroupSnippetMatches);
       const previewCount = [...source.matchAll(/<DocsPreview\b/g)].length;
 
       expect(source, fileName).not.toContain('```vue');
@@ -36,13 +35,11 @@ describe('组件文档约束', () => {
         const snippetPath = match[1];
         expect(existsSync(resolve('docs/site', snippetPath)), snippetPath).toBe(true);
 
-        if (!codeGroupSnippetPaths.has(snippetPath)) {
-          const componentName = basename(snippetPath, '.vue');
-          const relativeImportPath = `../${snippetPath}`;
+        const componentName = basename(snippetPath, '.vue');
+        const relativeImportPath = `../${snippetPath}`;
 
-          expect(source).toContain(`import ${componentName} from '${relativeImportPath}';`);
-          expect(source).toContain(`<${componentName} />`);
-        }
+        expect(source).toContain(`import ${componentName} from '${relativeImportPath}';`);
+        expect(source).toContain(`<${componentName} />`);
       });
     });
   });

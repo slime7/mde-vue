@@ -1495,6 +1495,15 @@ const source = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
 
 `alt` 等原生属性由使用方按图片语义提供；纯装饰图片应传 `alt=""`。组件不改变 `img` 的加载行为，`loading="lazy"`、`srcset` 等属性直接透传。
 
+<script setup>
+import ImageAspectRatioExample from '../examples/image/ImageAspectRatioExample.vue';
+import ImageBasicExample from '../examples/image/ImageBasicExample.vue';
+import ImageClassExample from '../examples/image/ImageClassExample.vue';
+import ImageFitExample from '../examples/image/ImageFitExample.vue';
+import ImageRadiusExample from '../examples/image/ImageRadiusExample.vue';
+import ImageStyleExample from '../examples/image/ImageStyleExample.vue';
+</script>
+
 # Tailwind CSS
 
 Tailwind CSS v4 是可选依赖。先按照 Tailwind 文档为 Vite 项目配置 `tailwindcss` 与 `@tailwindcss/vite`，然后在应用 CSS 中导入 Tailwind 和 mde-vue 适配层：

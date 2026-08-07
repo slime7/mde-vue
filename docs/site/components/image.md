@@ -173,3 +173,12 @@ order: 36
 尺寸动画只覆盖属性或样式驱动的变化：根元素对 `aspect-ratio`、`inline-size`、`block-size` 与 `border-radius` 使用 `--mat-sys-motion-duration-medium2` 时长和 standard 缓动过渡；`fit` 切换为离散值不参与动画。父容器尺寸变化导致的百分比重排不逐帧过渡。
 
 `alt` 等原生属性由使用方按图片语义提供；纯装饰图片应传 `alt=""`。组件不改变 `img` 的加载行为，`loading="lazy"`、`srcset` 等属性直接透传。
+
+<script setup>
+import ImageAspectRatioExample from '../examples/image/ImageAspectRatioExample.vue';
+import ImageBasicExample from '../examples/image/ImageBasicExample.vue';
+import ImageClassExample from '../examples/image/ImageClassExample.vue';
+import ImageFitExample from '../examples/image/ImageFitExample.vue';
+import ImageRadiusExample from '../examples/image/ImageRadiusExample.vue';
+import ImageStyleExample from '../examples/image/ImageStyleExample.vue';
+</script>
