@@ -6526,6 +6526,31 @@ var pi = { class: "mat-dialog__header" }, mi = {
 				return Number.isFinite(e) && e >= 0;
 			}
 		},
+		shadowVariant: {
+			type: String,
+			default: "fade",
+			validator(e) {
+				return ["fade", "blur"].includes(e);
+			}
+		},
+		shadowLength: {
+			type: [Number, Object],
+			default: void 0,
+			validator(e) {
+				return e === void 0 ? !0 : typeof e == "number" ? Number.isFinite(e) && e >= 0 : !e || Array.isArray(e) ? !1 : ["start", "end"].every((t) => e[t] === void 0 || typeof e[t] == "number" && Number.isFinite(e[t]) && e[t] >= 0);
+			}
+		},
+		barWidth: {
+			type: String,
+			default: "thin",
+			validator(e) {
+				return [
+					"default",
+					"thin",
+					"hidden"
+				].includes(e);
+			}
+		},
 		reachThreshold: {
 			type: [Number, Object],
 			default: 0,
@@ -6546,44 +6571,46 @@ var pi = { class: "mat-dialog__header" }, mi = {
 		"reach-end": (e) => typeof e?.distance == "number" && e.target instanceof HTMLElement
 	},
 	setup(e, { expose: t, emit: n }) {
-		let i = e, c = n, l = L(), u = O(null), d = O(!1), f = O(!1), p = O(!1), m = O(!1), _, v, y = r(() => [
+		let i = e, c = n, l = L(), u = O(null), d = O(!1), f = O(!1), p = O(!1), m = O(!1), y, x;
+		function T(e, t) {
+			return typeof e == "number" ? {
+				start: e,
+				end: e
+			} : {
+				start: e?.start ?? t,
+				end: e?.end ?? t
+			};
+		}
+		let E = r(() => [
 			"horizontal",
 			"x",
 			"h"
-		].includes(i.orientation) ? "horizontal" : "vertical"), x = r(() => typeof i.reachThreshold == "number" ? {
-			start: i.reachThreshold,
-			end: i.reachThreshold
-		} : {
-			start: i.reachThreshold?.start ?? 0,
-			end: i.reachThreshold?.end ?? 0
-		}), T = r(() => typeof i.shadowOffset == "number" ? {
-			start: i.shadowOffset,
-			end: i.shadowOffset
-		} : {
-			start: i.shadowOffset?.start ?? 0,
-			end: i.shadowOffset?.end ?? 0
-		}), E = r(() => ({
+		].includes(i.orientation) ? "horizontal" : "vertical"), D = r(() => T(i.reachThreshold, 0)), k = r(() => T(i.shadowOffset, 0)), A = r(() => T(i.shadowLength, i.shadowVariant === "blur" ? 48 : 16)), M = r(() => i.barWidth === "hidden" ? 0 : 16), N = r(() => ({
+			"--mat-scroll-area-shadow-length-start": `${A.value.start}px`,
+			"--mat-scroll-area-shadow-length-end": `${A.value.end}px`,
+			"--mat-scroll-area-shadow-offset-start": `${k.value.start}px`,
+			"--mat-scroll-area-shadow-offset-end": `${k.value.end}px`,
+			"--mat-scroll-area-scrollbar-space": `${M.value}px`
+		})), P = r(() => ({
 			class: l.class,
 			style: l.style
-		})), D = r(() => {
-			let e = y.value === "horizontal", t = `${i.snapPadding}px`;
+		})), F = r(() => {
+			let e = E.value === "horizontal", t = `${i.snapPadding}px`;
 			return {
-				"--mat-scroll-area-fade-offset-start": `${T.value.start}px`,
-				"--mat-scroll-area-fade-offset-end": `${T.value.end}px`,
 				scrollPaddingBottom: e ? void 0 : t,
 				scrollPaddingLeft: e ? t : void 0,
 				scrollPaddingRight: e ? t : void 0,
 				scrollPaddingTop: e ? void 0 : t,
 				scrollSnapType: i.snap === "none" ? "none" : `${e ? "x" : "y"} ${i.snap}`
 			};
-		}), k = r(() => Object.fromEntries(Object.entries(l).filter(([e]) => !["class", "style"].includes(e))));
-		function A() {
+		}), I = r(() => Object.fromEntries(Object.entries(l).filter(([e]) => !["class", "style"].includes(e))));
+		function R() {
 			let e = u.value;
 			if (!e) return {
 				start: 0,
 				end: 0
 			};
-			if (y.value === "horizontal") {
+			if (E.value === "horizontal") {
 				let t = Math.abs(e.scrollLeft);
 				return {
 					start: t,
@@ -6595,10 +6622,10 @@ var pi = { class: "mat-dialog__header" }, mi = {
 				end: Math.max(0, e.scrollHeight - e.clientHeight - e.scrollTop)
 			};
 		}
-		function M(e) {
+		function z(e) {
 			let t = u.value;
 			if (!t) return;
-			let n = A(), r = n.start <= x.value.start + 1, i = n.end <= x.value.end + 1;
+			let n = R(), r = n.start <= D.value.start + 1, i = n.end <= D.value.end + 1;
 			d.value = n.start > 1, f.value = n.end > 1, e && r && !p.value && c("reach-start", {
 				distance: n.start,
 				target: t
@@ -6607,51 +6634,57 @@ var pi = { class: "mat-dialog__header" }, mi = {
 				target: t
 			}), p.value = r, m.value = i;
 		}
-		function N(e) {
-			_ !== void 0 && cancelAnimationFrame(_), _ = requestAnimationFrame(() => {
-				_ = void 0, M(e);
+		function V(e) {
+			y !== void 0 && cancelAnimationFrame(y), y = requestAnimationFrame(() => {
+				y = void 0, z(e);
 			});
 		}
-		function P() {
-			N(!0);
+		function H() {
+			V(!0);
 		}
-		function F() {
-			!v || !u.value || (v.disconnect(), v.observe(u.value), Array.from(u.value.children).forEach((e) => {
-				v.observe(e);
-			}), N(!1));
+		function U() {
+			!x || !u.value || (x.disconnect(), x.observe(u.value), Array.from(u.value.children).forEach((e) => {
+				x.observe(e);
+			}), V(!1));
 		}
-		function I() {
+		function W() {
 			return u.value;
 		}
-		function R(e) {
+		function G(e) {
 			u.value?.scrollTo(e);
 		}
-		return B([y, x], async () => {
-			await g(), N(!1);
+		return B([E, D], async () => {
+			await g(), V(!1);
 		}, { deep: !0 }), S(() => {
-			typeof ResizeObserver == "function" && (v = new ResizeObserver(() => N(!1))), F();
-		}), C(F), b(() => {
-			_ !== void 0 && cancelAnimationFrame(_), v?.disconnect();
+			typeof ResizeObserver == "function" && (x = new ResizeObserver(() => V(!1))), U();
+		}), C(U), b(() => {
+			y !== void 0 && cancelAnimationFrame(y), x?.disconnect();
 		}), t({
-			getScroller: I,
-			scrollTo: R
-		}), (e, t) => (w(), o("div", h(E.value, { class: ["mat-scroll-area", `mat-scroll-area--${y.value}`] }), [
+			getScroller: W,
+			scrollTo: G
+		}), (e, t) => (w(), o("div", h(P.value, { class: ["mat-scroll-area", `mat-scroll-area--${E.value}`] }), [
 			e.$slots["fixed-start"] ? (w(), o("div", Ai, [j(e.$slots, "fixed-start", {}, void 0, !0)])) : a("", !0),
-			s("div", h({
+			s("div", {
+				class: _(["mat-scroll-area__viewport", [`mat-scroll-area__viewport--${i.shadowVariant}`, {
+					"mat-scroll-area__viewport--start-overflow": d.value,
+					"mat-scroll-area__viewport--end-overflow": f.value
+				}]]),
+				style: v(N.value)
+			}, [s("div", h({
 				ref_key: "scroller",
 				ref: u
-			}, k.value, {
-				class: ["mat-scroll-area__scroller", {
+			}, I.value, {
+				class: ["mat-scroll-area__scroller", [`mat-scroll-area__scroller--bar-${i.barWidth}`, {
 					"mat-scroll-area__scroller--start-overflow": d.value,
 					"mat-scroll-area__scroller--end-overflow": f.value
-				}],
-				style: D.value,
-				onScroll: P
-			}), [j(e.$slots, "default", {}, void 0, !0)], 16),
+				}]],
+				style: F.value,
+				onScroll: H
+			}), [j(e.$slots, "default", {}, void 0, !0)], 16)], 6),
 			e.$slots["fixed-end"] ? (w(), o("div", ji, [j(e.$slots, "fixed-end", {}, void 0, !0)])) : a("", !0)
 		], 16));
 	}
-}), [["__scopeId", "data-v-c3c23a1c"]]), Ni = ["aria-valuemax", "aria-valuenow"], Pi = ["width", "height"], Fi = { key: 0 }, Ii = ["width", "height"], Li = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ri = ["d"], zi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Bi = ["d"], Vi = ["d", "mask"], Hi = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ui = ["d"], Wi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Gi = ["d"], Ki = ["d"], qi = {
+}), [["__scopeId", "data-v-41683deb"]]), Ni = ["aria-valuemax", "aria-valuenow"], Pi = ["width", "height"], Fi = { key: 0 }, Ii = ["width", "height"], Li = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ri = ["d"], zi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Bi = ["d"], Vi = ["d", "mask"], Hi = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ui = ["d"], Wi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Gi = ["d"], Ki = ["d"], qi = {
 	key: 1,
 	class: "mat-loader__linear-stop"
 }, Ji = ["viewBox"], Yi = { class: "mat-loader__circular-linear-rotate" }, Xi = { class: "mat-loader__circular-rotate-arc" }, Zi = [

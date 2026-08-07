@@ -1,6 +1,6 @@
 ---
 title: Scroll area 滚动区域
-description: mat-scroll-area 与 MatScrollArea 为单轴内容提供真实边缘渐隐、固定区域和无限滚动事件。
+description: mat-scroll-area 与 MatScrollArea 为单轴内容提供边缘渐隐或模糊、固定区域和无限滚动事件。
 llms: true
 order: 114
 ---
@@ -9,7 +9,7 @@ order: 114
 
 ## 组件简介
 
-`<mat-scroll-area>` 的组件导出名是 `MatScrollArea`。组件拥有一个纵向或横向原生滚动元素，并在仍有内容可滚动时用真实 CSS mask 渐隐对应边缘；渐隐不依赖容器背景色，适合透明表面、图片和任意主题背景。组件保留原生滚动条，并允许把页眉或页脚放在遮罩之外。
+`<mat-scroll-area>` 的组件导出名是 `MatScrollArea`。组件拥有一个纵向或横向原生滚动元素，并在仍有内容可滚动时用真实 CSS mask 渐隐或用 `backdrop-filter` 模糊对应边缘；效果不依赖容器背景色，适合透明表面、图片和任意主题背景。组件保留原生滚动条，并允许把页眉或页脚放在阴影之外。
 
 组件一次只管理一个滚动轴。使用方必须为纵向模式提供确定的块轴尺寸，或为横向模式提供确定的行轴尺寸和不会收缩的内部内容，才能形成滚动边界。
 
@@ -59,7 +59,7 @@ order: 114
 
 ### 边缘事件与无限滚动
 
-`reachThreshold` 只控制事件阈值，不改变渐隐长度。事件不会在初次挂载、内容尺寸变化或属性变化时自动触发；只有滚动从阈值区域外进入区域内时触发一次，离开后再次进入才会重新触发。
+`reachThreshold` 只控制事件阈值，不改变阴影长度。事件不会在初次挂载、内容尺寸变化或属性变化时自动触发；只有滚动从阈值区域外进入区域内时触发一次，离开后再次进入才会重新触发。
 
 :::: details 查看示例代码
 ::: code-group
@@ -81,7 +81,7 @@ order: 114
 
 ### 固定起始与末端区域
 
-固定 Slots 位于滚动元素和遮罩之外，因此内容始终清晰。默认 Slot 中自行设置的 sticky 元素仍属于遮罩内容，不保证避开渐隐。
+固定 Slots 位于滚动元素和阴影覆盖层之外，因此内容始终清晰。默认 Slot 中自行设置的 sticky 元素仍属于滚动内容，不保证避开阴影。
 
 :::: details 查看示例代码
 ::: code-group
@@ -119,6 +119,48 @@ order: 114
   </DocsPreview>
 </ClientOnly>
 
+### 阴影变体与长度
+
+`shadowVariant="fade"` 使用当前的 mask 渐隐，默认两端长度为 16px；`shadowVariant="blur"` 使用范围更广的渐进模糊，默认两端长度为 48px。`shadowLength` 可以用数字同时设置两端，也可以用 `{ start, end }` 分别设置两端；对象未提供的一端回退到当前变体的默认长度。两种变体都支持 `shadowOffset`。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/scroll-area/ScrollAreaShadowVariantExample.vue#template [template]
+
+<<< @/examples/scroll-area/ScrollAreaShadowVariantExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Scroll area 阴影变体预览">
+    <ScrollAreaShadowVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 滚动条宽度
+
+`barWidth` 支持 `default`、`thin` 和 `hidden`。组件默认使用 `thin` 以保持现有外观；`default` 使用浏览器默认宽度，`hidden` 隐藏滚动条但不影响滚动操作。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/scroll-area/ScrollAreaBarWidthExample.vue#template [template]
+
+<<< @/examples/scroll-area/ScrollAreaBarWidthExample.vue#script [script]
+
+<<< @/examples/scroll-area/ScrollAreaBarWidthExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Scroll area 滚动条宽度预览">
+    <ScrollAreaBarWidthExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### 命令式滚动
 
 :::: details 查看示例代码
@@ -149,7 +191,10 @@ order: 114
 | `snap` | `'none' \| 'proximity' \| 'mandatory'` | `'none'` | 设置当前滚动轴的停靠强度；`none` 关闭滚动停靠 |
 | `snapPadding` | `number` | `0` | 当前滚动轴起始端和末端的停靠内边距，单位为 px，必须是非负有限数字 |
 | `reachThreshold` | `number \| { start?: number, end?: number }` | `0` | 边缘事件的像素阈值；数字用于两端，对象未提供的一端为 `0`，值必须是非负有限数字 |
+| `shadowVariant` | `'fade' \| 'blur'` | `'fade'` | 选择 mask 渐隐或范围更广的渐进模糊阴影 |
+| `shadowLength` | `number \| { start?: number, end?: number }` | `fade` 为 `16`，`blur` 为 `48` | 阴影从对应边缘向内延伸的像素数；数字用于两端，对象可分别设置 `start` 与 `end`，值必须是非负有限数字 |
 | `shadowOffset` | `number \| { start?: number, end?: number }` | `0` | 边缘阴影带从对应边缘向内偏移的像素数；数字用于两端，对象未提供的一端为 `0`，值必须是非负有限数字。偏移区内的滚动内容不被遮罩覆盖，适合放置不透明的 sticky 元素 |
+| `barWidth` | `'default' \| 'thin' \| 'hidden'` | `'thin'` | 设置滚动条宽度；`default` 使用浏览器默认值，`hidden` 隐藏滚动条 |
 
 `class` 和 `style` 作用于组件根容器。其他未被消费的原生属性、ARIA 属性和监听器作用于实际滚动元素；需要键盘聚焦滚动区时，应按场景提供 `tabindex="0"` 和可访问名称。
 
@@ -182,9 +227,11 @@ order: 114
 
 <script setup>
 import ScrollAreaFixedSlotsExample from '../examples/scroll-area/ScrollAreaFixedSlotsExample.vue';
+import ScrollAreaBarWidthExample from '../examples/scroll-area/ScrollAreaBarWidthExample.vue';
 import ScrollAreaMethodsExample from '../examples/scroll-area/ScrollAreaMethodsExample.vue';
 import ScrollAreaOrientationExample from '../examples/scroll-area/ScrollAreaOrientationExample.vue';
 import ScrollAreaReachExample from '../examples/scroll-area/ScrollAreaReachExample.vue';
 import ScrollAreaShadowOffsetExample from '../examples/scroll-area/ScrollAreaShadowOffsetExample.vue';
+import ScrollAreaShadowVariantExample from '../examples/scroll-area/ScrollAreaShadowVariantExample.vue';
 import ScrollAreaSnapExample from '../examples/scroll-area/ScrollAreaSnapExample.vue';
 </script>

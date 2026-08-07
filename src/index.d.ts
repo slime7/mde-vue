@@ -2066,6 +2066,28 @@ export interface MatScrollAreaProps {
   */
   snapPadding?: number;
   /**
+  * 阴影的实现变体；`fade` 使用 mask 渐隐，`blur` 使用逐渐模糊的边缘覆盖层。
+  *
+  * @type {'fade' | 'blur'}
+  * @default 'fade'
+  */
+  shadowVariant?: 'fade' | 'blur';
+  /**
+  * 阴影从对应边缘向内延伸的像素数。数字同时用于两端，对象可分别设置 start、end。
+  * 未设置时，`fade` 使用 16px，`blur` 使用 48px。
+  *
+  * @type {number | { start?: number, end?: number }}
+  * @default 16 for fade, 48 for blur
+  */
+  shadowLength?: number | { start?: number, end?: number };
+  /**
+  * 原生滚动条宽度；`default` 使用浏览器默认值，`thin` 使用窄滚动条，`hidden` 隐藏滚动条。
+  *
+  * @type {'default' | 'thin' | 'hidden'}
+  * @default 'thin'
+  */
+  barWidth?: 'default' | 'thin' | 'hidden';
+  /**
   * 进入滚动边缘多少像素时触发事件。数字同时用于两端，对象可分别设置 start、end。
   *
   * @type {number | { start?: number, end?: number }}
