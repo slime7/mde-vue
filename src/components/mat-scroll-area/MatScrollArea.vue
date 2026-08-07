@@ -56,24 +56,11 @@ const props = defineProps({
     },
   },
   /**
-   * 阴影的实现变体；`fade` 使用 mask 渐隐，`blur` 使用逐渐模糊的边缘覆盖层。
-   *
-   * @type {'fade' | 'blur'}
-   * @default 'fade'
-   */
-  shadowVariant: {
-    type: String,
-    default: 'fade',
-    validator(value) {
-      return ['fade', 'blur'].includes(value);
-    },
-  },
-  /**
    * 阴影从对应边缘向内延伸的像素数。数字同时用于两端，对象可分别设置 start、end。
-   * 未设置时，`fade` 使用 16px，`blur` 使用 96px。
+   * 未设置时使用 16px。
    *
    * @type {number | { start?: number, end?: number }}
-   * @default 16 for fade, 96 for blur
+   * @default 16
    */
   shadowLength: {
     type: [Number, Object],
@@ -219,19 +206,20 @@ const thresholds = computed(() => {
 const shadowOffsets = computed(() => {
   return resolveEdgeValues(props.shadowOffset, 0);
 });
-const shadowLengths = computed(() => resolveEdgeValues(
-  props.shadowLength,
-  props.shadowVariant === 'blur' ? 96 : 16,
-));
-const scrollbarSpace = computed(() => (props.barWidth === 'hidden' ? 0 : 16));
+const shadowLengths = computed(() => resolveEdgeValues(props.shadowLength, 16));
+const scrollbarSpace = computed(() => {
+  if (props.barWidth === 'hidden') {
+    return 0;
+  }
+
+  return props.barWidth === 'thin' ? 10 : 16;
+});
 const viewportStyle = computed(() => ({
   '--mat-scroll-area-shadow-length-start': `${shadowLengths.value.start}px`,
   '--mat-scroll-area-shadow-length-end': `${shadowLengths.value.end}px`,
   '--mat-scroll-area-shadow-offset-start': `${shadowOffsets.value.start}px`,
   '--mat-scroll-area-shadow-offset-end': `${shadowOffsets.value.end}px`,
   '--mat-scroll-area-scrollbar-space': `${scrollbarSpace.value}px`,
-  '--mat-scroll-area-blur-radius-start': `${shadowLengths.value.start * 3}px`,
-  '--mat-scroll-area-blur-radius-end': `${shadowLengths.value.end * 3}px`,
 }));
 const rootAttrs = computed(() => ({
   class: attrs.class,
@@ -410,13 +398,10 @@ defineExpose({
     <div
       class="mat-scroll-area__viewport"
       :style="viewportStyle"
-      :class="[
-        `mat-scroll-area__viewport--${props.shadowVariant}`,
-        {
-          'mat-scroll-area__viewport--start-overflow': hasStartOverflow,
-          'mat-scroll-area__viewport--end-overflow': hasEndOverflow,
-        },
-      ]"
+      :class="{
+        'mat-scroll-area__viewport--start-overflow': hasStartOverflow,
+        'mat-scroll-area__viewport--end-overflow': hasEndOverflow,
+      }"
     >
       <div
         ref="scroller"
@@ -467,15 +452,12 @@ defineExpose({
 
 .mat-scroll-area__viewport {
   --mat-scroll-area-scrollbar-space: 16px;
-  position: relative;
   flex-grow: 1;
   min-inline-size: 0;
   min-block-size: 0;
 }
 
 .mat-scroll-area__scroller {
-  position: relative;
-  z-index: 0;
   block-size: 100%;
   inline-size: 100%;
   flex-grow: 1;
@@ -487,9 +469,6 @@ defineExpose({
 
 .mat-scroll-area--vertical .mat-scroll-area__scroller {
   overflow: hidden auto;
-}
-
-.mat-scroll-area--vertical .mat-scroll-area__viewport--fade .mat-scroll-area__scroller {
   mask-image: var(--mat-scroll-area-content-mask, linear-gradient(black, black)), linear-gradient(to right, transparent 0 calc(100% - var(--mat-scroll-area-scrollbar-space)), black calc(100% - var(--mat-scroll-area-scrollbar-space)) 100%);
   mask-composite: add;
 }
@@ -497,9 +476,6 @@ defineExpose({
 .mat-scroll-area--horizontal .mat-scroll-area__scroller {
   overflow: hidden;
   overflow-x: auto;
-}
-
-.mat-scroll-area--horizontal .mat-scroll-area__viewport--fade .mat-scroll-area__scroller {
   mask-image: var(--mat-scroll-area-content-mask, linear-gradient(black, black)), linear-gradient(to bottom, transparent 0 calc(100% - var(--mat-scroll-area-scrollbar-space)), black calc(100% - var(--mat-scroll-area-scrollbar-space)) 100%);
   mask-composite: add;
 }
@@ -516,83 +492,28 @@ defineExpose({
   scrollbar-width: none;
 }
 
-.mat-scroll-area--vertical .mat-scroll-area__viewport--fade .mat-scroll-area__scroller--start-overflow {
+.mat-scroll-area--vertical .mat-scroll-area__scroller--start-overflow {
   --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) 100%);
 }
 
-.mat-scroll-area--vertical .mat-scroll-area__viewport--fade .mat-scroll-area__scroller--end-overflow {
+.mat-scroll-area--vertical .mat-scroll-area__scroller--end-overflow {
   --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
 }
 
-.mat-scroll-area--vertical .mat-scroll-area__viewport--fade .mat-scroll-area__scroller--start-overflow.mat-scroll-area__scroller--end-overflow {
+.mat-scroll-area--vertical .mat-scroll-area__scroller--start-overflow.mat-scroll-area__scroller--end-overflow {
   --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
 }
 
-.mat-scroll-area--horizontal .mat-scroll-area__viewport--fade .mat-scroll-area__scroller--start-overflow {
+.mat-scroll-area--horizontal .mat-scroll-area__scroller--start-overflow {
   --mat-scroll-area-content-mask: linear-gradient(to right, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) 100%);
 }
 
-.mat-scroll-area--horizontal .mat-scroll-area__viewport--fade .mat-scroll-area__scroller--end-overflow {
+.mat-scroll-area--horizontal .mat-scroll-area__scroller--end-overflow {
   --mat-scroll-area-content-mask: linear-gradient(to right, black 0 calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
 }
 
-.mat-scroll-area--horizontal .mat-scroll-area__viewport--fade .mat-scroll-area__scroller--start-overflow.mat-scroll-area__scroller--end-overflow {
+.mat-scroll-area--horizontal .mat-scroll-area__scroller--start-overflow.mat-scroll-area__scroller--end-overflow {
   --mat-scroll-area-content-mask: linear-gradient(to right, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
-}
-
-.mat-scroll-area__viewport--blur::before,
-.mat-scroll-area__viewport--blur::after {
-  position: absolute;
-  z-index: 1;
-  display: none;
-  box-sizing: border-box;
-  content: '';
-  pointer-events: none;
-  background: rgb(255 255 255 / 1%);
-  backdrop-filter: blur(var(--mat-scroll-area-blur-radius-start));
-}
-
-.mat-scroll-area__viewport--blur.mat-scroll-area__viewport--start-overflow::before {
-  display: block;
-}
-
-.mat-scroll-area__viewport--blur.mat-scroll-area__viewport--end-overflow::after {
-  display: block;
-  backdrop-filter: blur(var(--mat-scroll-area-blur-radius-end));
-}
-
-.mat-scroll-area--vertical .mat-scroll-area__viewport--blur::before,
-.mat-scroll-area--vertical .mat-scroll-area__viewport--blur::after {
-  inset-inline: 0 var(--mat-scroll-area-scrollbar-space);
-  block-size: var(--mat-scroll-area-shadow-length-start);
-}
-
-.mat-scroll-area--vertical .mat-scroll-area__viewport--blur::before {
-  inset-block-start: var(--mat-scroll-area-shadow-offset-start);
-  mask-image: linear-gradient(to bottom, black, transparent);
-}
-
-.mat-scroll-area--vertical .mat-scroll-area__viewport--blur::after {
-  inset-block-end: var(--mat-scroll-area-shadow-offset-end);
-  block-size: var(--mat-scroll-area-shadow-length-end);
-  mask-image: linear-gradient(to top, black, transparent);
-}
-
-.mat-scroll-area--horizontal .mat-scroll-area__viewport--blur::before,
-.mat-scroll-area--horizontal .mat-scroll-area__viewport--blur::after {
-  inset-block: 0 var(--mat-scroll-area-scrollbar-space);
-  inline-size: var(--mat-scroll-area-shadow-length-start);
-}
-
-.mat-scroll-area--horizontal .mat-scroll-area__viewport--blur::before {
-  inset-inline-start: var(--mat-scroll-area-shadow-offset-start);
-  mask-image: linear-gradient(to right, black, transparent);
-}
-
-.mat-scroll-area--horizontal .mat-scroll-area__viewport--blur::after {
-  inset-inline-end: var(--mat-scroll-area-shadow-offset-end);
-  inline-size: var(--mat-scroll-area-shadow-length-end);
-  mask-image: linear-gradient(to left, black, transparent);
 }
 
 .mat-scroll-area__scroller::-webkit-scrollbar {

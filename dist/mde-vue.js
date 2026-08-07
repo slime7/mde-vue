@@ -6526,13 +6526,6 @@ var pi = { class: "mat-dialog__header" }, mi = {
 				return Number.isFinite(e) && e >= 0;
 			}
 		},
-		shadowVariant: {
-			type: String,
-			default: "fade",
-			validator(e) {
-				return ["fade", "blur"].includes(e);
-			}
-		},
 		shadowLength: {
 			type: [Number, Object],
 			default: void 0,
@@ -6585,14 +6578,12 @@ var pi = { class: "mat-dialog__header" }, mi = {
 			"horizontal",
 			"x",
 			"h"
-		].includes(i.orientation) ? "horizontal" : "vertical"), D = r(() => T(i.reachThreshold, 0)), k = r(() => T(i.shadowOffset, 0)), A = r(() => T(i.shadowLength, i.shadowVariant === "blur" ? 96 : 16)), M = r(() => i.barWidth === "hidden" ? 0 : 16), N = r(() => ({
+		].includes(i.orientation) ? "horizontal" : "vertical"), D = r(() => T(i.reachThreshold, 0)), k = r(() => T(i.shadowOffset, 0)), A = r(() => T(i.shadowLength, 16)), M = r(() => i.barWidth === "hidden" ? 0 : i.barWidth === "thin" ? 10 : 16), N = r(() => ({
 			"--mat-scroll-area-shadow-length-start": `${A.value.start}px`,
 			"--mat-scroll-area-shadow-length-end": `${A.value.end}px`,
 			"--mat-scroll-area-shadow-offset-start": `${k.value.start}px`,
 			"--mat-scroll-area-shadow-offset-end": `${k.value.end}px`,
-			"--mat-scroll-area-scrollbar-space": `${M.value}px`,
-			"--mat-scroll-area-blur-radius-start": `${A.value.start * 3}px`,
-			"--mat-scroll-area-blur-radius-end": `${A.value.end * 3}px`
+			"--mat-scroll-area-scrollbar-space": `${M.value}px`
 		})), P = r(() => ({
 			class: l.class,
 			style: l.style
@@ -6667,10 +6658,10 @@ var pi = { class: "mat-dialog__header" }, mi = {
 		}), (e, t) => (w(), o("div", h(P.value, { class: ["mat-scroll-area", `mat-scroll-area--${E.value}`] }), [
 			e.$slots["fixed-start"] ? (w(), o("div", Ai, [j(e.$slots, "fixed-start", {}, void 0, !0)])) : a("", !0),
 			s("div", {
-				class: _(["mat-scroll-area__viewport", [`mat-scroll-area__viewport--${i.shadowVariant}`, {
+				class: _(["mat-scroll-area__viewport", {
 					"mat-scroll-area__viewport--start-overflow": d.value,
 					"mat-scroll-area__viewport--end-overflow": f.value
-				}]]),
+				}]),
 				style: v(N.value)
 			}, [s("div", h({
 				ref_key: "scroller",
@@ -6686,7 +6677,7 @@ var pi = { class: "mat-dialog__header" }, mi = {
 			e.$slots["fixed-end"] ? (w(), o("div", ji, [j(e.$slots, "fixed-end", {}, void 0, !0)])) : a("", !0)
 		], 16));
 	}
-}), [["__scopeId", "data-v-3e66e0f5"]]), Ni = ["aria-valuemax", "aria-valuenow"], Pi = ["width", "height"], Fi = { key: 0 }, Ii = ["width", "height"], Li = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ri = ["d"], zi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Bi = ["d"], Vi = ["d", "mask"], Hi = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ui = ["d"], Wi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Gi = ["d"], Ki = ["d"], qi = {
+}), [["__scopeId", "data-v-de69486f"]]), Ni = ["aria-valuemax", "aria-valuenow"], Pi = ["width", "height"], Fi = { key: 0 }, Ii = ["width", "height"], Li = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ri = ["d"], zi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Bi = ["d"], Vi = ["d", "mask"], Hi = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ui = ["d"], Wi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Gi = ["d"], Ki = ["d"], qi = {
 	key: 1,
 	class: "mat-loader__linear-stop"
 }, Ji = ["viewBox"], Yi = { class: "mat-loader__circular-linear-rotate" }, Xi = { class: "mat-loader__circular-rotate-arc" }, Zi = [

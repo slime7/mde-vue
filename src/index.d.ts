@@ -2066,18 +2066,11 @@ export interface MatScrollAreaProps {
   */
   snapPadding?: number;
   /**
-  * 阴影的实现变体；`fade` 使用 mask 渐隐，`blur` 使用逐渐模糊的边缘覆盖层。
-  *
-  * @type {'fade' | 'blur'}
-  * @default 'fade'
-  */
-  shadowVariant?: 'fade' | 'blur';
-  /**
   * 阴影从对应边缘向内延伸的像素数。数字同时用于两端，对象可分别设置 start、end。
-  * 未设置时，`fade` 使用 16px，`blur` 使用 96px。
+  * 未设置时使用 16px。
   *
   * @type {number | { start?: number, end?: number }}
-  * @default 16 for fade, 96 for blur
+  * @default 16
   */
   shadowLength?: number | { start?: number, end?: number };
   /**
