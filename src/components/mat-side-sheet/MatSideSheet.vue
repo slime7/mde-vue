@@ -1,5 +1,6 @@
 <script setup>
 import MatSheetBase from '../MatSheetBase.vue';
+import { isValidCssLength } from '../value-utils';
 
 defineOptions({
   name: 'MatSideSheet',
@@ -37,7 +38,10 @@ const props = defineProps({
   breakpoint: {
     type: Number,
     default: 840,
-    validator: (value) => Number.isFinite(value) && value > 0,
+    validator: (value) => isValidCssLength(value, {
+      positive: true,
+      allowUndefined: false,
+    }),
   },
   /**
    * Sheet 所依附的逻辑边缘。
@@ -51,7 +55,8 @@ const props = defineProps({
     validator: (value) => ['start', 'end'].includes(value),
   },
   /**
-   * 首选宽度；数字按 px 处理，最终不超过 400px。
+   * 首选宽度；数字与纯数字字符串按 px 处理（不超过 400），
+   * 其他字符串 trim 后须为合法 CSS 宽度值。
    *
    * @type {number | string}
    * @default 400
@@ -59,13 +64,11 @@ const props = defineProps({
   width: {
     type: [Number, String],
     default: 400,
-    validator(value) {
-      if (typeof value === 'number') {
-        return Number.isFinite(value) && value > 0 && value <= 400;
-      }
-
-      return typeof value === 'string' && value.trim().length > 0;
-    },
+    validator: (value) => isValidCssLength(value, {
+      property: 'inline-size',
+      positive: true,
+      max: 400,
+    }),
   },
   /**
    * modal 的 Teleport 目标；字符串按当前 document 的 CSS 选择器解析。

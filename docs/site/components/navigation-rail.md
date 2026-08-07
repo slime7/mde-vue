@@ -129,7 +129,7 @@ order: 105
 
 ### `width`
 
-`width` 只影响 expanded rail 的行内宽度。数字按像素处理；字符串直接作为 CSS 宽度值，因此可以使用 `clamp()`、`min()` 或百分比等现代 CSS 表达式。未传入时使用组件默认宽度。
+`width` 只影响 expanded rail 的行内宽度。数字与纯数字字符串按像素处理（0 不带单位）；其他字符串需为 trim 后合法的 CSS 宽度值，因此可以使用 `clamp()`、`min()` 或百分比等现代 CSS 表达式。未传入或非法时使用组件默认宽度。
 
 :::: details 查看示例代码
 ::: code-group
@@ -268,7 +268,7 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 | `model-value` | `string \| number \| boolean \| null` | `null` | 受控的当前 Item `value`，支持 `v-model` |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | 纵向 Expressive rail 或 horizontal Flexible navigation bar |
 | `expanded` | `boolean` | `false` | 受控展开状态，支持 `v-model:expanded`；horizontal 模式中决定纵向或横向 Item 排列 |
-| `width` | `number \| string` | `undefined` | expanded rail 宽度；数字按 px 处理，字符串作为 CSS 宽度值 |
+| `width` | `number \| string` | `undefined` | expanded rail 宽度；数字与纯数字字符串按 px 处理（0 不带单位），其他字符串需为 trim 后合法的 CSS 宽度值，非法时使用默认宽度 |
 | `position` | `'start' \| 'end'` | `'start'` | Item 在展开、收回和横向切换期间固定在起始或末尾侧，避免从居中位置开始动画 |
 | `collapsible` | `boolean` | `false` | 为纵向 rail 显示展开/收起菜单按钮 |
 | `layout` | `'standard' \| 'modal'` | `'standard'` | 纵向 expanded rail 占据空间或覆盖正文 |
@@ -281,7 +281,7 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 | `app` | `boolean` | `false` | 开启应用布局模式；位于 `MatAppRoot` 且省略 `attach` 时自动登记边缘，否则固定到显式目标 |
 | `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；一旦显式提供就优先于 AppRoot 自动接入 |
 | `placeholder` | `boolean` | `false` | 仅 `app=true` 有效；在声明位置为固定 rail 或 bar 预留实际尺寸 |
-| `bottom-placeholder` | `number \| string` | `0` | 仅 `app=true` 有效；数字按 px 处理，字符串可使用 `env(safe-area-inset-bottom)` 或 `calc(...)` |
+| `bottom-placeholder` | `number \| string` | `0` | 仅 `app=true` 有效；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS block-size 值（如 `env(safe-area-inset-bottom)` 或 `calc(...)`），非法时回退 0 |
 
 #### `MatNavigationRailItem`
 

@@ -104,7 +104,7 @@ Modal 默认以不超过视口高度 50% 的预览状态打开。`expanded` 可�
 | `modelValue` | `boolean` | `false` | 受控打开状态，使用 `v-model` |
 | `variant` | `'auto' \| 'standard' \| 'modal'` | `'auto'` | 布局变体；auto 根据 `breakpoint` 选择 |
 | `breakpoint` | `number` | `840` | auto 切换到 standard 的最小视口宽度，单位为 CSS px |
-| `width` | `number \| string` | 未设置 | 首选宽度；数字按 px 处理，最终仍受 640px 最大宽度限制 |
+| `width` | `number \| string` | 未设置 | 首选宽度；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS 宽度值，非法时使用默认宽度；最终仍受 640px 最大宽度限制 |
 | `attach` | `string \| HTMLElement` | `'body'` | modal 的 Teleport 目标；standard 忽略 |
 | `scrim` | `boolean` | `true` | modal 是否显示帷幕；false 时仍阻止背景指针交互 |
 | `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否允许点击 modal 帷幕关闭 |

@@ -189,10 +189,10 @@ order: 114
 | --- | --- | --- | --- |
 | `orientation` | `'vertical' \| 'y' \| 'v' \| 'horizontal' \| 'x' \| 'h'` | `'vertical'` | 选择组件拥有的滚动轴；简写值映射到对应完整方向 |
 | `snap` | `'none' \| 'proximity' \| 'mandatory'` | `'none'` | 设置当前滚动轴的停靠强度；`none` 关闭滚动停靠 |
-| `snapPadding` | `number` | `0` | 当前滚动轴起始端和末端的停靠内边距，单位为 px，必须是非负有限数字 |
-| `reachThreshold` | `number \| { start?: number, end?: number }` | `0` | 边缘事件的像素阈值；数字用于两端，对象未提供的一端为 `0`，值必须是非负有限数字 |
-| `shadowLength` | `number \| { start?: number, end?: number }` | `16` | 阴影从对应边缘向内延伸的像素数；数字用于两端，对象可分别设置 `start` 与 `end`，值必须是非负有限数字 |
-| `shadowOffset` | `number \| { start?: number, end?: number }` | `0` | 边缘阴影带从对应边缘向内偏移的像素数；数字用于两端，对象未提供的一端为 `0`，值必须是非负有限数字。偏移区内的滚动内容不被遮罩覆盖，适合放置不透明的 sticky 元素 |
+| `snapPadding` | `number` | `0` | 当前滚动轴起始端和末端的停靠内边距，单位为 px；数字或纯数字字符串，必须是非负有限值 |
+| `reachThreshold` | `number \| { start?: number, end?: number }` | `0` | 边缘事件的像素阈值；数字或纯数字字符串用于两端，对象成员同样接受，对象未提供的一端为 `0`，值必须是非负有限数字 |
+| `shadowLength` | `number \| { start?: number, end?: number }` | `16` | 阴影从对应边缘向内延伸的像素数；数字或纯数字字符串用于两端，对象可分别设置 `start` 与 `end`，值必须是非负有限数字 |
+| `shadowOffset` | `number \| { start?: number, end?: number }` | `0` | 边缘阴影带从对应边缘向内偏移的像素数；数字或纯数字字符串用于两端，对象未提供的一端为 `0`，值必须是非负有限数字。偏移区内的滚动内容不被遮罩覆盖，适合放置不透明的 sticky 元素 |
 | `barWidth` | `'default' \| 'thin' \| 'hidden'` | `'thin'` | 设置滚动条宽度；`default` 使用浏览器默认值，`hidden` 隐藏滚动条 |
 
 `class` 和 `style` 作用于组件根容器。其他未被消费的原生属性、ARIA 属性和监听器作用于实际滚动元素；需要键盘聚焦滚动区时，应按场景提供 `tabindex="0"` 和可访问名称。

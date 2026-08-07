@@ -10,6 +10,7 @@ import {
   useSlots,
   watch,
 } from 'vue';
+import { isValidMs, normalizeMs } from '../value-utils';
 
 defineOptions({
   name: 'MatHover',
@@ -38,7 +39,7 @@ const props = defineProps({
     default: null,
   },
   /**
-   * 关闭延迟，单位为毫秒；无效值按 0 处理。
+   * 关闭延迟，单位为毫秒；数字或纯数字字符串，非法值触发校验警告并按 0 处理。
    *
    * @type {number | string}
    * @default 0
@@ -46,9 +47,10 @@ const props = defineProps({
   closeDelay: {
     type: [Number, String],
     default: 0,
+    validator: (value) => isValidMs(value, { allowUndefined: false }),
   },
   /**
-   * 打开延迟，单位为毫秒；无效值按 0 处理。
+   * 打开延迟，单位为毫秒；数字或纯数字字符串，非法值触发校验警告并按 0 处理。
    *
    * @type {number | string}
    * @default 0
@@ -56,6 +58,7 @@ const props = defineProps({
   openDelay: {
     type: [Number, String],
     default: 0,
+    validator: (value) => isValidMs(value, { allowUndefined: false }),
   },
   /**
    * 直接绑定 hover 监听的元素选择器或 HTMLElement。
@@ -98,20 +101,6 @@ function clearDelay() {
 }
 
 /**
- * @param {number | string} value
- * @returns {number}
- */
-function normalizeDelay(value) {
-  const delay = Number(value ?? 0);
-
-  if (!Number.isFinite(delay) || delay < 0) {
-    return 0;
-  }
-
-  return delay;
-}
-
-/**
  * @param {boolean} value
  * @returns {void}
  */
@@ -138,7 +127,7 @@ function applyHovering(value) {
  */
 function scheduleHovering(value, delayValue) {
   clearDelay();
-  const delay = normalizeDelay(delayValue);
+  const delay = normalizeMs(delayValue, 0);
 
   if (delay === 0) {
     applyHovering(value);

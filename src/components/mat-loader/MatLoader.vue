@@ -9,6 +9,7 @@ import {
 } from 'vue';
 import { isComponentColor } from '../button-props';
 import useComponentColor from '../use-component-color';
+import { isValidCssLength, normalizeNumber } from '../value-utils';
 
 const INDICATOR_GAP_SIZE = 4;
 const LINEAR_WAVE_AMPLITUDE = 3;
@@ -168,7 +169,7 @@ const props = defineProps({
     default: false,
   },
   /**
-   * 轨道厚度，必须为正数。
+   * 轨道厚度，必须为正数；非法值回退默认 4。
    *
    * @type {number}
    * @default 4
@@ -176,9 +177,10 @@ const props = defineProps({
   thickness: {
     type: Number,
     default: 4,
-    validator(value) {
-      return typeof value === 'number' && Number.isFinite(value) && value > 0;
-    },
+    validator: (value) => isValidCssLength(value, {
+      positive: true,
+      allowUndefined: false,
+    }),
   },
   /**
    * 轨道形状；可选值为 `flat`、`wavy`。
@@ -227,7 +229,9 @@ let waveAnimationFrame;
 let previousFrameTime;
 
 const resolvedMax = computed(() => (isPositiveNumber(props.max) ? props.max : 1));
-const resolvedThickness = computed(() => (isPositiveNumber(props.thickness) ? props.thickness : 4));
+const resolvedThickness = computed(() => (
+  normalizeNumber(props.thickness, { positive: true, fallback: 4 })
+));
 const isCircular = computed(() => props.variant === 'circular');
 const isWavy = computed(() => props.shape === 'wavy');
 const resolvedValue = computed(() => {

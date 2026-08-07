@@ -581,6 +581,8 @@ describe('MatSideSheet', () => {
     expect(MatSideSheet.props.position.validator('left')).toBe(false);
     expect(MatSideSheet.props.width.validator(400)).toBe(true);
     expect(MatSideSheet.props.width.validator(401)).toBe(false);
+    expect(MatSideSheet.props.width.validator('400')).toBe(true);
+    expect(MatSideSheet.props.width.validator('500')).toBe(false);
     expect(MatSideSheet.props.width.validator('min(400px, 100%)')).toBe(true);
     expect(MatSideSheet.props.width.validator('')).toBe(false);
   });

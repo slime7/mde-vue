@@ -139,7 +139,7 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 ## `<mat-image>`
 
-`<mat-image>` 的导出名是 `MatImage`，根元素是包裹内部原生 `<img>` 的 `div`。`radius` 省略时使用 `--mat-sys-shape-corner-extra-large`（28px），数字按 px、字符串原样写入；`fit` 只接受 `cover`（默认）与 `contain`；`aspect-ratio` 接受宽/高比数字或 CSS 字符串，省略时保持图片自然比例；`outline` 默认开启 1px 描边，颜色使用 `--mat-sys-color-outline`，可设置为 `false` 关闭。组件上的 `class` 与 `style` 属于根容器，其余未消费的原生属性和监听器以及 `img-class`、`img-style` 定向到内部 `img`。根元素对 `aspect-ratio`、`inline-size`、`block-size` 和 `border-radius` 使用系统动效令牌过渡，并尊重减少动画偏好；`fit` 切换不参与过渡。组件没有 Slots、自定义事件或公开方法。
+`<mat-image>` 的导出名是 `MatImage`，根元素是包裹内部原生 `<img>` 的 `div`。`radius` 省略时使用 `--mat-sys-shape-corner-extra-large`（28px），数字与纯数字字符串按 px 处理（0 不带单位），其他字符串须为 trim 后合法的 CSS 长度值，非法时回退默认令牌；`fit` 只接受 `cover`（默认）与 `contain`；`aspect-ratio` 接受宽/高比数字或 trim 后合法的 CSS `aspect-ratio` 字符串，省略或非法时保持图片自然比例；`outline` 默认开启 1px 描边，颜色使用 `--mat-sys-color-outline`，可设置为 `false` 关闭。组件上的 `class` 与 `style` 属于根容器，其余未消费的原生属性和监听器以及 `img-class`、`img-style` 定向到内部 `img`。根元素对 `aspect-ratio`、`inline-size`、`block-size` 和 `border-radius` 使用系统动效令牌过渡，并尊重减少动画偏好；`fit` 切换不参与过渡。组件没有 Slots、自定义事件或公开方法。
 
 ## `<mat-card>`
 
@@ -179,7 +179,7 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 ## Dialog
 
-`<mat-dialog>` 通过 `modelValue` 受控显示，使用原生 modal dialog 和 Teleport。`activator` Slot 必须只产生一个当前 document 中的 HTMLElement 根节点，作为触发元素和关闭后的焦点恢复目标。`width` 接受数字 px 值或 CSS 宽度值，只影响基础布局并在小屏按视口限制；`fullScreen` 只接受显式布尔值并忽略 width，不根据视口自动切换；基础和全屏布局都只允许 content 区域滚动，打开期间由共享堆叠管理器锁定页面根滚动。页面原本存在占据布局宽度的经典滚动条时，锁定期间临时使用稳定滚动条槽位保持页面宽度；没有经典滚动条时不额外预留空间。`scrim=false` 只把帷幕变透明，不允许背景接收指针事件；`closeOnBack` 只控制点击帷幕关闭，Escape 始终请求关闭。多个实例只显示顶层帷幕，最后一层关闭后才恢复页面滚动和根元素原有内联样式。
+`<mat-dialog>` 通过 `modelValue` 受控显示，使用原生 modal dialog 和 Teleport。`activator` Slot 必须只产生一个当前 document 中的 HTMLElement 根节点，作为触发元素和关闭后的焦点恢复目标。`width` 接受数字 px 值或 trim 后合法的 CSS 宽度值，只影响基础布局并在小屏按视口限制；`fullScreen` 只接受显式布尔值并忽略 width，不根据视口自动切换；基础和全屏布局都只允许 content 区域滚动，打开期间由共享堆叠管理器锁定页面根滚动。页面原本存在占据布局宽度的经典滚动条时，锁定期间临时使用稳定滚动条槽位保持页面宽度；没有经典滚动条时不额外预留空间。`scrim=false` 只把帷幕变透明，不允许背景接收指针事件；`closeOnBack` 只控制点击帷幕关闭，Escape 始终请求关闭。多个实例只显示顶层帷幕，最后一层关闭后才恢复页面滚动和根元素原有内联样式。
 
 标题、正文和图标都遵循 prop 优先于同名 Slot；无标题时必须由使用者提供 `aria-label` 或 `aria-labelledby`。关闭期间 DOM 保留到退出动画完成，随后触发 `closed` 并恢复原焦点。
 
@@ -223,7 +223,7 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 
 `<mat-navigation-rail>` 通过 `modelValue` 受控选择唯一目的地，直接子级 `<mat-navigation-rail-item>` 使用稳定 `value` 请求更新。纵向模式表达 Material 3 Expressive collapsed/expanded rail；默认在当前容器内布局，`expanded` 只由使用方控制，`layout="standard"` 占据正文空间，`layout="modal"` 在当前布局容器内覆盖正文并通过遮罩或 Escape 请求收起。设置 `app=true` 后组件建立应用导航：省略显式 attach 且位于 AppRoot 时自动登记逻辑边缘，modal 展开只以 collapsed host 宽度参与 padding；否则固定到显式 attach。`placeholder` 和 `bottomPlaceholder` 只在应用模式下生效；`position` 同时决定 rail 的固定侧和 Item 对齐。collapsed rail 默认保持可见；`hideOnCollapse` 只用于保留外部可达菜单入口的沉浸式 expanded rail。
 
-`width` 只覆写 expanded rail 的宽度：数字转换为 px，CSS 字符串原样使用；`position` 决定 Item 在起始或末尾侧对齐，并在展开/收回时保持该对齐。`orientation="horizontal"` 表达 Flexible navigation bar；`expanded=false` 使用图标上、标签下的纵向 Item，`expanded=true` 使用图标左、标签右的横向 Item。它不响应 `collapsible`、`layout`、`hideOnCollapse`、`alignment`、Header、FAB 或 `end`。纵向 rail 的 `end` Slot 固定于底部。组件不自动监听窗口尺寸，应用负责在 compact、medium 及更大断点间切换 bar 与 rail，且同一布局不得同时显示两者。Item 使用原生按钮或链接、`aria-current="page"`、完整宽度命中区域和指示器状态层；选中时只过渡背景色，标签必须简短且不得通过省略号截断。
+`width` 只覆写 expanded rail 的宽度：数字与纯数字字符串转换为 px（0 不带单位），其他字符串须为 trim 后合法的 CSS 宽度值，非法时使用默认宽度；`position` 决定 Item 在起始或末尾侧对齐，并在展开/收回时保持该对齐。`orientation="horizontal"` 表达 Flexible navigation bar；`expanded=false` 使用图标上、标签下的纵向 Item，`expanded=true` 使用图标左、标签右的横向 Item。它不响应 `collapsible`、`layout`、`hideOnCollapse`、`alignment`、Header、FAB 或 `end`。纵向 rail 的 `end` Slot 固定于底部。组件不自动监听窗口尺寸，应用负责在 compact、medium 及更大断点间切换 bar 与 rail，且同一布局不得同时显示两者。Item 使用原生按钮或链接、`aria-current="page"`、完整宽度命中区域和指示器状态层；选中时只过渡背景色，标签必须简短且不得通过省略号截断。
 
 ## Toolbar 工具栏
 

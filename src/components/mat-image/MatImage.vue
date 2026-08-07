@@ -1,5 +1,6 @@
 <script setup>
 import { computed, useAttrs } from 'vue';
+import { isValidCssLength, toCssLength, toCssValue } from '../value-utils';
 
 defineOptions({
   name: 'MatImage',
@@ -21,7 +22,8 @@ const props = defineProps({
     },
   },
   /**
-   * 组件圆角；数字按 px 处理，字符串原样使用。省略时使用 `--mat-sys-shape-corner-extra-large`（默认 28px）。
+   * 组件圆角；数字与纯数字字符串按 px 处理，其他字符串 trim 后须为合法 CSS 长度值。
+   * 省略时使用 `--mat-sys-shape-corner-extra-large`（默认 28px），非法值回退该令牌。
    *
    * @type {number | string | undefined}
    * @default undefined
@@ -29,11 +31,7 @@ const props = defineProps({
   radius: {
     type: [Number, String],
     default: undefined,
-    validator(value) {
-      return value === undefined
-        || (typeof value === 'number' && Number.isFinite(value) && value >= 0)
-        || (typeof value === 'string' && value.length > 0);
-    },
+    validator: (value) => isValidCssLength(value, { property: 'border-radius' }),
   },
   /**
    * 图片填充方式；可选值为 `cover`、`contain`。
@@ -59,7 +57,8 @@ const props = defineProps({
     default: true,
   },
   /**
-   * 组件宽高比；数字表示宽/高比，字符串原样写入 CSS `aspect-ratio`。省略时保持图片自然比例。
+   * 组件宽高比；数字与纯数字字符串表示宽/高比，其他字符串 trim 后须为合法 CSS
+   * `aspect-ratio` 值。省略或非法时保持图片自然比例。
    *
    * @type {number | string | undefined}
    * @default undefined
@@ -67,11 +66,10 @@ const props = defineProps({
   aspectRatio: {
     type: [Number, String],
     default: undefined,
-    validator(value) {
-      return value === undefined
-        || (typeof value === 'number' && Number.isFinite(value) && value > 0)
-        || (typeof value === 'string' && value.length > 0);
-    },
+    validator: (value) => isValidCssLength(value, {
+      property: 'aspect-ratio',
+      positive: true,
+    }),
   },
   /**
    * 合并到内部 img 元素的 class。
@@ -104,10 +102,16 @@ const imgAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([name]) => !['class', 'style'].includes(name)),
 ));
 const rootStyle = computed(() => ({
-  aspectRatio: props.aspectRatio === undefined ? undefined : String(props.aspectRatio),
+  aspectRatio: toCssValue(props.aspectRatio, {
+    property: 'aspect-ratio',
+    positive: true,
+  }),
   borderRadius: props.radius === undefined
     ? 'var(--mat-sys-shape-corner-extra-large)'
-    : (typeof props.radius === 'number' ? `${props.radius}px` : props.radius),
+    : toCssLength(props.radius, {
+      property: 'border-radius',
+      fallback: 'var(--mat-sys-shape-corner-extra-large)',
+    }),
   outline: props.outline ? '1px solid var(--mat-sys-color-outline)' : undefined,
 }));
 const imgStyleValue = computed(() => {

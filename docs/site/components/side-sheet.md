@@ -105,7 +105,7 @@ order: 102
 | `variant` | `'auto' \| 'standard' \| 'modal'` | `'auto'` | 布局变体；auto 根据 `breakpoint` 选择 |
 | `breakpoint` | `number` | `840` | auto 切换到 standard 的最小视口宽度，单位为 CSS px |
 | `position` | `'start' \| 'end'` | `'end'` | Sheet 依附的逻辑边缘 |
-| `width` | `number \| string` | `400` | 首选宽度；数字按 px 处理，数值范围大于 0 且不超过 400；CSS 字符串最终也会限制在 400px 内 |
+| `width` | `number \| string` | `400` | 首选宽度；数字与纯数字字符串按 px 处理（数值大于 0 且不超过 400），其他字符串需为 trim 后合法的 CSS 宽度值，非法时使用默认宽度；最终不超过 400px |
 | `attach` | `string \| HTMLElement` | `'body'` | modal 的 Teleport 目标；standard 忽略 |
 | `scrim` | `boolean` | `true` | modal 是否显示帷幕；false 时仍阻止背景指针交互 |
 | `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否允许点击 modal 帷幕关闭 |

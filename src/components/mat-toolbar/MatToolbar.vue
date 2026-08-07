@@ -14,6 +14,7 @@ import {
 } from 'vue';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import { registerToolbar } from '../toolbar-overlay';
+import { isValidCssLength, toCssLength } from '../value-utils';
 
 const TOOLBAR_VARIANTS = [
   'docked',
@@ -29,48 +30,6 @@ defineOptions({
   name: 'MatToolbar',
   inheritAttrs: false,
 });
-
-/**
- * @param {unknown} value
- * @returns {boolean}
- */
-function isBottomPlaceholder(value) {
-  if (typeof value === 'number') {
-    return Number.isFinite(value) && value >= 0;
-  }
-
-  if (typeof value !== 'string') {
-    return false;
-  }
-
-  const cssValue = value.trim();
-
-  if (!cssValue || /[;{}]/.test(cssValue)) {
-    return false;
-  }
-
-  if (typeof CSS === 'undefined' || typeof CSS.supports !== 'function') {
-    return true;
-  }
-
-  return CSS.supports('block-size', cssValue);
-}
-
-/**
- * @param {unknown} value
- * @returns {string}
- */
-function normalizeBottomPlaceholder(value) {
-  if (typeof value === 'number' && Number.isFinite(value) && value >= 0) {
-    return `${value}px`;
-  }
-
-  if (typeof value === 'string' && isBottomPlaceholder(value)) {
-    return value.trim();
-  }
-
-  return '0px';
-}
 
 /**
  * @param {unknown} value
@@ -174,8 +133,8 @@ const props = defineProps({
     default: false,
   },
   /**
-   * docked 与 floating-bottom 的额外底部安全区；数字按 px 处理，
-   * 也可传 CSS block-size 值。
+   * docked 与 floating-bottom 的额外底部安全区；数字与纯数字字符串按 px 处理，
+   * 其他字符串 trim 后须为合法 CSS block-size 值，非法时回退 0。
    *
    * @type {number | string}
    * @default 0
@@ -183,27 +142,10 @@ const props = defineProps({
   bottomPlaceholder: {
     type: [Number, String],
     default: 0,
-    validator(value) {
-      if (typeof value === 'number') {
-        return Number.isFinite(value) && value >= 0;
-      }
-
-      if (typeof value !== 'string') {
-        return false;
-      }
-
-      const cssValue = value.trim();
-
-      if (!cssValue || /[;{}]/.test(cssValue)) {
-        return false;
-      }
-
-      if (typeof CSS === 'undefined' || typeof CSS.supports !== 'function') {
-        return true;
-      }
-
-      return CSS.supports('block-size', cssValue);
-    },
+    validator: (value) => isValidCssLength(value, {
+      property: 'block-size',
+      allowUndefined: false,
+    }),
   },
 });
 defineEmits({
@@ -269,7 +211,10 @@ const attachTarget = computed(() => {
   return normalizeAttach(props.attach);
 });
 const normalizedBottomPlaceholder = computed(() => (
-  normalizeBottomPlaceholder(props.bottomPlaceholder)
+  toCssLength(props.bottomPlaceholder, {
+    property: 'block-size',
+    fallback: '0',
+  })
 ));
 const effectiveBottomPlaceholder = computed(() => (
   isBottomVariant.value ? normalizedBottomPlaceholder.value : '0px'

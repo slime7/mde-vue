@@ -130,6 +130,39 @@ describe('MatImage', () => {
     expect(ratioWrapper.attributes('style')).toContain('aspect-ratio: 1.5');
   });
 
+  it('radius 与 aspectRatio 的纯数字字符串按数字处理', () => {
+    const radiusWrapper = mount(MatImage, {
+      props: { src: SRC, radius: '12' },
+    });
+
+    expect(radiusWrapper.attributes('style')).toContain('border-radius: 12px');
+
+    const ratioWrapper = mount(MatImage, {
+      props: { src: SRC, aspectRatio: '1.5' },
+    });
+
+    expect(ratioWrapper.attributes('style')).toContain('aspect-ratio: 1.5');
+  });
+
+  it('CSS.supports 拒绝非纯数字字符串时回退默认值，放行时通过', () => {
+    vi.stubGlobal('CSS', { supports: () => true });
+
+    expect(MatImage.props.radius.validator('2rem')).toBe(true);
+    expect(MatImage.props.aspectRatio.validator('16 / 9')).toBe(true);
+
+    vi.stubGlobal('CSS', { supports: () => false });
+
+    expect(MatImage.props.radius.validator('2rem')).toBe(false);
+    expect(MatImage.props.aspectRatio.validator('16 / 9')).toBe(false);
+
+    const wrapper = mount(MatImage, {
+      props: { src: SRC, radius: '2rem' },
+    });
+
+    expect(wrapper.attributes('style'))
+      .toContain('border-radius: var(--mat-sys-shape-corner-extra-large)');
+  });
+
   it('校验公开属性的取值', () => {
     expect(MatImage.props.src.validator(undefined)).toBe(true);
     expect(MatImage.props.src.validator('a.png')).toBe(true);
@@ -139,13 +172,16 @@ describe('MatImage', () => {
     expect(MatImage.props.radius.validator(0)).toBe(true);
     expect(MatImage.props.radius.validator(12)).toBe(true);
     expect(MatImage.props.radius.validator('2rem')).toBe(true);
+    expect(MatImage.props.radius.validator('12')).toBe(true);
     expect(MatImage.props.radius.validator(-1)).toBe(false);
+    expect(MatImage.props.radius.validator('-1')).toBe(false);
     expect(MatImage.props.radius.validator('')).toBe(false);
 
     expect(MatImage.props.aspectRatio.validator(undefined)).toBe(true);
     expect(MatImage.props.aspectRatio.validator('16 / 9')).toBe(true);
     expect(MatImage.props.aspectRatio.validator('auto')).toBe(true);
     expect(MatImage.props.aspectRatio.validator(1.5)).toBe(true);
+    expect(MatImage.props.aspectRatio.validator('1.5')).toBe(true);
     expect(MatImage.props.aspectRatio.validator(0)).toBe(false);
     expect(MatImage.props.aspectRatio.validator('')).toBe(false);
 

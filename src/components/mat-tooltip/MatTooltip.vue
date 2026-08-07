@@ -31,6 +31,7 @@ import {
   getToolbarRects,
   subscribeToolbarOverlay,
 } from '../toolbar-overlay';
+import { isValidMs, normalizeMs } from '../value-utils';
 
 const CLOSE_DELAY = 1500;
 const CLOSE_DURATION = 150;
@@ -108,15 +109,7 @@ const props = defineProps({
   openDelay: {
     type: [Number, String],
     default: undefined,
-    validator(value) {
-      if (typeof value === 'string' && value.trim() === '') {
-        return false;
-      }
-
-      const delay = typeof value === 'string' ? Number(value) : value;
-
-      return Number.isFinite(delay) && delay >= 0;
-    },
+    validator: (value) => isValidMs(value),
   },
 });
 const emit = defineEmits({
@@ -339,15 +332,8 @@ function resolveTopLayerAttach() {
  */
 function getOpenDelay() {
   const configuredDelay = props.openDelay ?? matUi.tooltip.openDelay;
-  const delay = typeof configuredDelay === 'string'
-    ? Number(configuredDelay)
-    : configuredDelay;
 
-  if (!Number.isFinite(delay) || delay < 0) {
-    return 0;
-  }
-
-  return delay;
+  return normalizeMs(configuredDelay, 0);
 }
 
 /**

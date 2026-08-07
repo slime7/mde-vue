@@ -13,6 +13,7 @@ import {
 import { dialogStack, registerDialog, unregisterDialog } from './dialog-stack';
 import MatBtn from './mat-btn/MatBtn.vue';
 import MatSurfaceBase from './MatSurfaceBase.vue';
+import { normalizeNumber, toCssLength } from './value-utils';
 
 defineOptions({
   name: 'MatSheetBase',
@@ -126,7 +127,10 @@ const resolvedVariant = computed(() => {
     return props.variant;
   }
 
-  return viewportWidth.value < props.breakpoint ? 'modal' : 'standard';
+  return viewportWidth.value < normalizeNumber(props.breakpoint, {
+    positive: true,
+    fallback: 840,
+  }) ? 'modal' : 'standard';
 });
 const isModal = computed(() => resolvedVariant.value === 'modal');
 const isTop = computed(() => isModal.value && dialogStack.value.at(-1) === root.value);
@@ -151,7 +155,10 @@ const resolvedWidth = computed(() => {
     return undefined;
   }
 
-  return typeof props.width === 'number' ? `${props.width}px` : props.width.trim();
+  return toCssLength(props.width, {
+    property: 'inline-size',
+    positive: true,
+  });
 });
 const sizeStyle = computed(() => {
   if (!resolvedWidth.value) {

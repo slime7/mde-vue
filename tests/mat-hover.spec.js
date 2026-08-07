@@ -136,4 +136,14 @@ describe('MatHover', () => {
 
     expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
+
+  it('校验 openDelay 与 closeDelay 的取值', () => {
+    expect(MatHover.props.openDelay.validator('300')).toBe(true);
+    expect(MatHover.props.openDelay.validator(100)).toBe(true);
+    expect(MatHover.props.openDelay.validator('abc')).toBe(false);
+    expect(MatHover.props.openDelay.validator(-1)).toBe(false);
+    expect(MatHover.props.closeDelay.validator('300')).toBe(true);
+    expect(MatHover.props.closeDelay.validator('abc')).toBe(false);
+    expect(MatHover.props.closeDelay.validator(-1)).toBe(false);
+  });
 });

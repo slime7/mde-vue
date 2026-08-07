@@ -97,8 +97,8 @@ order: 119
 | --- | --- | --- | --- |
 | `modelValue` | `boolean \| null` | `null` | 显式传入时使用受控状态；省略时由组件根据进入和离开事件维护状态。 |
 | `disabled` | `boolean` | `false` | 禁止向外同步 hover 状态，但组件仍记录真实指针状态。重新启用时同步当前状态。 |
-| `openDelay` | `number \| string` | `0` | 进入目标后等待的毫秒数；非有限或负值按 `0` 处理。 |
-| `closeDelay` | `number \| string` | `0` | 离开目标后等待的毫秒数；非有限或负值按 `0` 处理。 |
+| `openDelay` | `number \| string` | `0` | 进入目标后等待的毫秒数；数字或纯数字字符串，非有限或负值触发 prop 校验警告并按 `0` 处理。 |
+| `closeDelay` | `number \| string` | `0` | 离开目标后等待的毫秒数；数字或纯数字字符串，非有限或负值触发 prop 校验警告并按 `0` 处理。 |
 | `target` | `HTMLElement \| string \| Ref<HTMLElement \| null>` | — | 指定时由组件直接监听目标元素或选择器；适合目标元素无法绑定默认 Slot 的场景。 |
 
 组件没有公开方法。

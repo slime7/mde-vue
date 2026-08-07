@@ -8,48 +8,7 @@ import MatActionBase from '../MatActionBase.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import { MAT_NAVIGATION_RAIL_KEY } from './mat-navigation-context';
-
-/**
- * @param {unknown} value
- * @returns {boolean}
- */
-function isBottomPlaceholder(value) {
-  if (typeof value === 'number') {
-    return Number.isFinite(value) && value >= 0;
-  }
-
-  if (typeof value !== 'string') {
-    return false;
-  }
-
-  const cssValue = value.trim();
-
-  if (!cssValue || /[;{}]/.test(cssValue)) {
-    return false;
-  }
-
-  if (typeof CSS === 'undefined' || typeof CSS.supports !== 'function') {
-    return true;
-  }
-
-  return CSS.supports('block-size', cssValue);
-}
-
-/**
- * @param {unknown} value
- * @returns {string}
- */
-function normalizeBottomPlaceholder(value) {
-  if (typeof value === 'number' && Number.isFinite(value) && value >= 0) {
-    return `${value}px`;
-  }
-
-  if (typeof value === 'string' && isBottomPlaceholder(value)) {
-    return value.trim();
-  }
-
-  return '0px';
-}
+import { isValidCssLength, toCssLength } from '../value-utils';
 
 /**
  * @param {unknown} value
@@ -103,7 +62,8 @@ const props = defineProps({
     default: false,
   },
   /**
-   * expanded Rail 的宽度；数字按 px 处理，字符串原样使用。
+   * expanded Rail 的宽度；数字与纯数字字符串按 px 处理，
+   * 其他字符串 trim 后须为合法 CSS 宽度值，非法时使用默认宽度。
    *
    * @type {number | string | undefined}
    * @default undefined
@@ -111,10 +71,7 @@ const props = defineProps({
   width: {
     type: [Number, String],
     default: undefined,
-    validator(value) {
-      return (typeof value === 'number' && Number.isFinite(value) && value >= 0)
-        || (typeof value === 'string' && value.trim().length > 0);
-    },
+    validator: (value) => isValidCssLength(value, { property: 'inline-size' }),
   },
   /**
    * 应用模式的固定侧；可选值为 `start`、`end`。
@@ -246,7 +203,8 @@ const props = defineProps({
     default: false,
   },
   /**
-   * app=true 时的额外底部安全区；数字按 px 处理，也可传 CSS block-size 值。
+   * app=true 时的额外底部安全区；数字与纯数字字符串按 px 处理，
+   * 其他字符串 trim 后须为合法 CSS block-size 值，非法时回退 0。
    *
    * @type {number | string}
    * @default 0
@@ -254,27 +212,10 @@ const props = defineProps({
   bottomPlaceholder: {
     type: [Number, String],
     default: 0,
-    validator(value) {
-      if (typeof value === 'number') {
-        return Number.isFinite(value) && value >= 0;
-      }
-
-      if (typeof value !== 'string') {
-        return false;
-      }
-
-      const cssValue = value.trim();
-
-      if (!cssValue || /[;{}]/.test(cssValue)) {
-        return false;
-      }
-
-      if (typeof CSS === 'undefined' || typeof CSS.supports !== 'function') {
-        return true;
-      }
-
-      return CSS.supports('block-size', cssValue);
-    },
+    validator: (value) => isValidCssLength(value, {
+      property: 'block-size',
+      allowUndefined: false,
+    }),
   },
 });
 
@@ -342,16 +283,21 @@ const railClasses = computed(() => ({
 }));
 
 const expandedWidthStyle = computed(() => {
-  if (props.width === undefined) {
+  const width = toCssLength(props.width, { property: 'inline-size' });
+
+  if (width === undefined) {
     return undefined;
   }
-
-  const width = typeof props.width === 'number' ? `${props.width}px` : props.width;
 
   return { '--mat-navigation-rail-expanded-width': width };
 });
 const effectiveBottomPlaceholder = computed(() => (
-  props.app && !usesAppRoot.value ? normalizeBottomPlaceholder(props.bottomPlaceholder) : '0px'
+  props.app && !usesAppRoot.value
+    ? toCssLength(props.bottomPlaceholder, {
+      property: 'block-size',
+      fallback: '0',
+    })
+    : '0'
 ));
 const railStyle = computed(() => [
   expandedWidthStyle.value,

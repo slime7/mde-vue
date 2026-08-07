@@ -9,6 +9,12 @@ import {
   useAttrs,
   watch,
 } from 'vue';
+import {
+  isValidCssLength,
+  isValidEdgeValues,
+  resolveEdgeValues,
+  toCssLength,
+} from '../value-utils';
 
 defineOptions({
   name: 'MatScrollArea',
@@ -51,13 +57,11 @@ const props = defineProps({
   snapPadding: {
     type: Number,
     default: 0,
-    validator(value) {
-      return Number.isFinite(value) && value >= 0;
-    },
+    validator: (value) => isValidCssLength(value, { allowUndefined: false }),
   },
   /**
-   * 阴影从对应边缘向内延伸的像素数。数字同时用于两端，对象可分别设置 start、end。
-   * 未设置时使用 16px。
+   * 阴影从对应边缘向内延伸的像素数。数字或纯数字字符串同时用于两端，
+   * 对象可分别设置 start、end。未设置时使用 16px。
    *
    * @type {number | { start?: number, end?: number }}
    * @default 16
@@ -65,24 +69,7 @@ const props = defineProps({
   shadowLength: {
     type: [Number, Object],
     default: undefined,
-    validator(value) {
-      if (value === undefined) {
-        return true;
-      }
-
-      if (typeof value === 'number') {
-        return Number.isFinite(value) && value >= 0;
-      }
-
-      if (!value || Array.isArray(value)) {
-        return false;
-      }
-
-      return ['start', 'end'].every((name) => (
-        value[name] === undefined
-        || (typeof value[name] === 'number' && Number.isFinite(value[name]) && value[name] >= 0)
-      ));
-    },
+    validator: (value) => isValidEdgeValues(value),
   },
   /**
    * 原生滚动条宽度；`default` 使用浏览器默认值，`thin` 使用窄滚动条，`hidden` 隐藏滚动条。
@@ -98,7 +85,8 @@ const props = defineProps({
     },
   },
   /**
-   * 进入滚动边缘多少像素时触发事件。数字同时用于两端，对象可分别设置 start、end。
+   * 进入滚动边缘多少像素时触发事件。数字或纯数字字符串同时用于两端，
+   * 对象成员同样接受，可分别设置 start、end。
    *
    * @type {number | { start?: number, end?: number }}
    * @default 0
@@ -106,24 +94,11 @@ const props = defineProps({
   reachThreshold: {
     type: [Number, Object],
     default: 0,
-    validator(value) {
-      if (typeof value === 'number') {
-        return Number.isFinite(value) && value >= 0;
-      }
-
-      if (!value || Array.isArray(value)) {
-        return false;
-      }
-
-      return ['start', 'end'].every((name) => (
-        value[name] === undefined
-        || (typeof value[name] === 'number' && Number.isFinite(value[name]) && value[name] >= 0)
-      ));
-    },
+    validator: (value) => isValidEdgeValues(value, { allowUndefined: false }),
   },
   /**
-   * 边缘阴影带从对应边缘向内偏移的像素数。数字同时用于两端，对象可分别设置 start、end。
-   * 偏移区内的内容不会被遮罩覆盖，适合放置不透明的 sticky 元素。
+   * 边缘阴影带从对应边缘向内偏移的像素数。数字或纯数字字符串同时用于两端，
+   * 对象可分别设置 start、end。偏移区内的内容不会被遮罩覆盖，适合放置不透明的 sticky 元素。
    *
    * @type {number | { start?: number, end?: number }}
    * @default 0
@@ -131,20 +106,7 @@ const props = defineProps({
   shadowOffset: {
     type: [Number, Object],
     default: 0,
-    validator(value) {
-      if (typeof value === 'number') {
-        return Number.isFinite(value) && value >= 0;
-      }
-
-      if (!value || Array.isArray(value)) {
-        return false;
-      }
-
-      return ['start', 'end'].every((name) => (
-        value[name] === undefined
-        || (typeof value[name] === 'number' && Number.isFinite(value[name]) && value[name] >= 0)
-      ));
-    },
+    validator: (value) => isValidEdgeValues(value, { allowUndefined: false }),
   },
 });
 
@@ -176,27 +138,6 @@ const wasWithinEnd = ref(false);
 let frameId;
 let resizeObserver;
 
-/**
- * 将可同时设置两端的数值解析为完整的起始端和末端值。
- *
- * @param {number | { start?: number, end?: number } | undefined} value
- * @param {number} fallback
- * @returns {{ start: number, end: number }}
- */
-function resolveEdgeValues(value, fallback) {
-  if (typeof value === 'number') {
-    return {
-      start: value,
-      end: value,
-    };
-  }
-
-  return {
-    start: value?.start ?? fallback,
-    end: value?.end ?? fallback,
-  };
-}
-
 const normalizedOrientation = computed(() => (
   ['horizontal', 'x', 'h'].includes(props.orientation) ? 'horizontal' : 'vertical'
 ));
@@ -215,10 +156,10 @@ const scrollbarSpace = computed(() => {
   return props.barWidth === 'thin' ? 10 : 16;
 });
 const viewportStyle = computed(() => ({
-  '--mat-scroll-area-shadow-length-start': `${shadowLengths.value.start}px`,
-  '--mat-scroll-area-shadow-length-end': `${shadowLengths.value.end}px`,
-  '--mat-scroll-area-shadow-offset-start': `${shadowOffsets.value.start}px`,
-  '--mat-scroll-area-shadow-offset-end': `${shadowOffsets.value.end}px`,
+  '--mat-scroll-area-shadow-length-start': toCssLength(shadowLengths.value.start),
+  '--mat-scroll-area-shadow-length-end': toCssLength(shadowLengths.value.end),
+  '--mat-scroll-area-shadow-offset-start': toCssLength(shadowOffsets.value.start),
+  '--mat-scroll-area-shadow-offset-end': toCssLength(shadowOffsets.value.end),
   '--mat-scroll-area-scrollbar-space': `${scrollbarSpace.value}px`,
 }));
 const rootAttrs = computed(() => ({
@@ -227,7 +168,7 @@ const rootAttrs = computed(() => ({
 }));
 const scrollerStyle = computed(() => {
   const isHorizontal = normalizedOrientation.value === 'horizontal';
-  const padding = `${props.snapPadding}px`;
+  const padding = toCssLength(props.snapPadding, { fallback: '0' });
 
   return {
     scrollPaddingBottom: isHorizontal ? undefined : padding,

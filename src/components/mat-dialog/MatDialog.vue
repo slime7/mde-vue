@@ -17,19 +17,12 @@ import { dialogStack, registerDialog, unregisterDialog } from '../dialog-stack';
 import MatBtn from '../mat-btn/MatBtn.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
 import useComponentColor from '../use-component-color';
+import { isValidCssLength, toCssLength } from '../value-utils';
 
 defineOptions({
   name: 'MatDialog',
   inheritAttrs: false,
 });
-
-/**
- * @param {number|string} value
- * @returns {string}
- */
-function resolveDialogWidth(value) {
-  return typeof value === 'number' ? `${value}px` : value.trim();
-}
 
 const props = defineProps({
   /**
@@ -53,7 +46,8 @@ const props = defineProps({
     default: false,
   },
   /**
-   * 首选宽度；数字按 px 处理，字符串接受 CSS 宽度值。
+   * 首选宽度；数字与纯数字字符串按 px 处理，其他字符串 trim 后须为合法 CSS 宽度值，
+   * 非法值时省略宽度样式。
    *
    * @type {number | string | undefined}
    * @default undefined
@@ -61,13 +55,10 @@ const props = defineProps({
   width: {
     type: [Number, String],
     default: undefined,
-    validator(value) {
-      if (typeof value === 'number') {
-        return Number.isFinite(value) && value > 0;
-      }
-
-      return typeof value === 'string' && value.trim().length > 0;
-    },
+    validator: (value) => isValidCssLength(value, {
+      property: 'inline-size',
+      positive: true,
+    }),
   },
   /**
    * Teleport 目标；字符串按当前 document 的 CSS 选择器解析。
@@ -187,7 +178,14 @@ const dialogWidthStyle = computed(() => {
     return undefined;
   }
 
-  const width = resolveDialogWidth(props.width);
+  const width = toCssLength(props.width, {
+    property: 'inline-size',
+    positive: true,
+  });
+
+  if (width === undefined) {
+    return undefined;
+  }
 
   return {
     inlineSize: `min(${width}, calc(100dvi - 48px))`,

@@ -327,7 +327,7 @@ Dialog 通过原生 `showModal()` 进入浏览器 top layer，位于 Toolbar、S
 | --- | --- | --- | --- |
 | `modelValue` | `boolean` | `false` | 受控打开状态，使用 `v-model` |
 | `fullScreen` | `boolean` | `false` | 模板属性为 `full-screen`；显式切换全屏布局，不自动响应视口 |
-| `width` | `number \| string` | 未设置 | 基础 Dialog 的首选宽度；数字按 px 处理，字符串接受 CSS 宽度值；小屏按视口可用宽度限制，全屏布局忽略此属性 |
+| `width` | `number \| string` | 未设置 | 基础 Dialog 的首选宽度；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS 宽度值，非法时省略宽度样式；小屏按视口可用宽度限制，全屏布局忽略此属性 |
 | `attach` | `string \| HTMLElement` | `'body'` | Teleport 目标；字符串按当前 document 的 CSS 选择器解析 |
 | `scrim` | `boolean` | `true` | 是否显示顶层帷幕；`false` 时帷幕透明但仍阻止背景交互 |
 | `closeOnBack` | `boolean` | `false` | 模板属性为 `close-on-back`；点击 Dialog 外帷幕时是否请求关闭 |
@@ -363,7 +363,7 @@ import {
 | `confirm(options)` | `confirmText`、`cancelText` | `Promise<boolean>`；确认返回 `true`，其他关闭返回 `false` |
 | `prompt(options)` | `confirmText`、`cancelText`、`defaultValue`、`label`、`placeholder`、`required` | `Promise<string \| null>`；确认返回字符串，取消返回 `null` |
 
-公共选项与组件属性基本一致，使用 JavaScript 驼峰名称 `fullScreen`、`width`、`closeOnBack`，并增加 `ariaLabel`。`width` 接受数字 px 值或非空 CSS 宽度值。命令式内容只接受字符串。`dialog()` 的动作格式如下：
+公共选项与组件属性基本一致，使用 JavaScript 驼峰名称 `fullScreen`、`width`、`closeOnBack`，并增加 `ariaLabel`。`width` 接受数字 px 值或 trim 后合法的 CSS 宽度值。命令式内容只接受字符串。`dialog()` 的动作格式如下：
 
 | 动作字段 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |

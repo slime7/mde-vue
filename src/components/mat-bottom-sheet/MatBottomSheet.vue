@@ -1,5 +1,6 @@
 <script setup>
 import MatSheetBase from '../MatSheetBase.vue';
+import { isValidCssLength } from '../value-utils';
 
 defineOptions({
   name: 'MatBottomSheet',
@@ -37,10 +38,14 @@ const props = defineProps({
   breakpoint: {
     type: Number,
     default: 840,
-    validator: (value) => Number.isFinite(value) && value > 0,
+    validator: (value) => isValidCssLength(value, {
+      positive: true,
+      allowUndefined: false,
+    }),
   },
   /**
-   * 首选宽度；最终仍受 Material 3 的 640px 最大宽度约束。
+   * 首选宽度；数字与纯数字字符串按 px 处理，其他字符串须为 trim 后合法的 CSS
+   * 宽度值，非法时使用默认宽度；最终仍受 Material 3 的 640px 最大宽度约束。
    *
    * @type {number | string | undefined}
    * @default undefined
@@ -48,13 +53,10 @@ const props = defineProps({
   width: {
     type: [Number, String],
     default: undefined,
-    validator(value) {
-      if (typeof value === 'number') {
-        return Number.isFinite(value) && value > 0;
-      }
-
-      return typeof value === 'string' && value.trim().length > 0;
-    },
+    validator: (value) => isValidCssLength(value, {
+      property: 'inline-size',
+      positive: true,
+    }),
   },
   /**
    * modal 的 Teleport 目标；字符串按当前 document 的 CSS 选择器解析。

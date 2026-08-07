@@ -1241,7 +1241,7 @@ const source = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
 
 ### `radius`
 
-`radius` 控制组件圆角，数字按 px 处理，字符串原样写入 CSS。省略时使用形状令牌 `--mat-sys-shape-corner-extra-large`（默认 28px），主题可以整体调整。
+`radius` 控制组件圆角，数字与纯数字字符串按 px 处理（0 不带单位），其他字符串需为 trim 后合法的 CSS 长度值。省略时使用形状令牌 `--mat-sys-shape-corner-extra-large`（默认 28px），非法值回退该令牌，主题可以整体调整。
 
 :::: details 查看示例代码
 ::: code-group
@@ -1311,7 +1311,7 @@ const source = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
 
 ### `aspect-ratio`
 
-`aspect-ratio` 设置组件宽高比：数字表示宽/高比，字符串原样写入 CSS `aspect-ratio`。省略时保持图片自然比例。切换比例或宽度时，根容器使用系统动效令牌平滑过渡；系统开启“减少动态效果”时过渡时长归零。
+`aspect-ratio` 设置组件宽高比：数字与纯数字字符串表示宽/高比，其他字符串需为 trim 后合法的 CSS `aspect-ratio` 值。省略或非法时保持图片自然比例。切换比例或宽度时，根容器使用系统动效令牌平滑过渡；系统开启“减少动态效果”时过渡时长归零。
 
 :::: details 查看示例代码
 ::: code-group
@@ -1536,10 +1536,10 @@ const source = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `src` | `string` | 必填 | 图片资源地址；必须是非空字符串 |
-| `radius` | `number \| string` | `28px`（`--mat-sys-shape-corner-extra-large`） | 组件圆角；数字按 px 处理，字符串原样写入 CSS |
+| `radius` | `number \| string` | `28px`（`--mat-sys-shape-corner-extra-large`） | 组件圆角；数字与纯数字字符串按 px 处理（0 不带单位），其他字符串需为 trim 后合法的 CSS 长度值，非法时回退默认令牌 |
 | `fit` | `'cover' \| 'contain'` | `'cover'` | 图片在容器中的填充方式 |
 | `outline` | `boolean` | `true` | 是否显示 1px 轮廓描边，颜色使用 `--mat-sys-color-outline` |
-| `aspect-ratio` | `number \| string` | 未设置 | 组件宽高比；数字表示宽/高比，字符串原样写入 CSS `aspect-ratio`，省略时保持图片自然比例 |
+| `aspect-ratio` | `number \| string` | 未设置 | 组件宽高比；数字与纯数字字符串表示宽/高比，其他字符串需为 trim 后合法的 CSS `aspect-ratio` 值，省略或非法时保持图片自然比例 |
 | `img-class` | `string \| array \| object` | 未设置 | 合并到内部 `img` 的 class |
 | `img-style` | `string \| array \| object` | 未设置 | 合并到内部 `img` 的 style |
 
@@ -6710,7 +6710,7 @@ const thickness = ref(4);
 | `indeterminate` | `boolean` | `false` | 省略 `aria-valuenow` 并播放不确定加载动画 |
 | `shape` | `'flat' \| 'wavy'` | `'flat'` | 选择直线或 Material 3 Expressive 波浪形活动指示器 |
 | `waveMotion` | `boolean` | `false` | 让线条或环形波浪的相位沿路径连续流动；不会改变进度端点位置 |
-| `thickness` | 正数 `number` | `4` | 轨道和活动指示器的厚度，单位为 CSS px |
+| `thickness` | 正数 `number` | `4` | 轨道和活动指示器的厚度，单位为 CSS px；非法值回退默认 `4` |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 活动指示器，以及线性确定进度的停止指示器颜色；轨道始终使用 secondary container 语义色 |
 
 未被组件消费的 `aria-*`、`id`、`class`、`style` 和原生事件监听器会传给块级根元素。应通过 `aria-label` 为没有相邻说明文字的加载器提供名称。
@@ -10616,7 +10616,7 @@ async function showPrompt() {
 | --- | --- | --- | --- |
 | `modelValue` | `boolean` | `false` | 受控打开状态，使用 `v-model` |
 | `fullScreen` | `boolean` | `false` | 模板属性为 `full-screen`；显式切换全屏布局，不自动响应视口 |
-| `width` | `number \| string` | 未设置 | 基础 Dialog 的首选宽度；数字按 px 处理，字符串接受 CSS 宽度值；小屏按视口可用宽度限制，全屏布局忽略此属性 |
+| `width` | `number \| string` | 未设置 | 基础 Dialog 的首选宽度；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS 宽度值，非法时省略宽度样式；小屏按视口可用宽度限制，全屏布局忽略此属性 |
 | `attach` | `string \| HTMLElement` | `'body'` | Teleport 目标；字符串按当前 document 的 CSS 选择器解析 |
 | `scrim` | `boolean` | `true` | 是否显示顶层帷幕；`false` 时帷幕透明但仍阻止背景交互 |
 | `closeOnBack` | `boolean` | `false` | 模板属性为 `close-on-back`；点击 Dialog 外帷幕时是否请求关闭 |
@@ -10652,7 +10652,7 @@ import {
 | `confirm(options)` | `confirmText`、`cancelText` | `Promise<boolean>`；确认返回 `true`，其他关闭返回 `false` |
 | `prompt(options)` | `confirmText`、`cancelText`、`defaultValue`、`label`、`placeholder`、`required` | `Promise<string \| null>`；确认返回字符串，取消返回 `null` |
 
-公共选项与组件属性基本一致，使用 JavaScript 驼峰名称 `fullScreen`、`width`、`closeOnBack`，并增加 `ariaLabel`。`width` 接受数字 px 值或非空 CSS 宽度值。命令式内容只接受字符串。`dialog()` 的动作格式如下：
+公共选项与组件属性基本一致，使用 JavaScript 驼峰名称 `fullScreen`、`width`、`closeOnBack`，并增加 `ariaLabel`。`width` 接受数字 px 值或 trim 后合法的 CSS 宽度值。命令式内容只接受字符串。`dialog()` 的动作格式如下：
 
 | 动作字段 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -11857,7 +11857,7 @@ const bottomPlaceholder = ref(0);
 | `app` | `boolean` | `false` | 启用应用布局模式；位于 `MatAppRoot` 且省略 `attach` 时自动接入，否则固定到 `attach` |
 | `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；一旦显式提供就优先于 AppRoot 自动接入 |
 | `placeholder` | `boolean` | `false` | 在组件声明位置生成占位，避免绝对定位的 Toolbar 遮挡后续内容 |
-| `bottomPlaceholder` | `number \| string` | `0` | docked 和 `floating-bottom` 的额外底部安全区；数字按 px 处理，可传入 `env(safe-area-inset-bottom)` 或 `calc(...)`；不负责生成自然布局占位 |
+| `bottomPlaceholder` | `number \| string` | `0` | docked 和 `floating-bottom` 的额外底部安全区；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS block-size 值（如 `env(safe-area-inset-bottom)` 或 `calc(...)`），非法时回退 0；不负责生成自然布局占位 |
 
 `placeholder=true` 时，横向 Toolbar 占用实际 Toolbar 的 block-size，垂直 Toolbar 占用实际 Toolbar 的 inline-size；占位尺寸包含有效的 `bottomPlaceholder`。floating Toolbar 不登记 AppRoot 边缘，因此仍可使用显式 placeholder 为声明位置的长滚动内容保留空间。AppRoot 会统一处理安全区，自动接入时 `bottomPlaceholder` 只作为额外下限。无效值不产生额外空间。显式 `attach` 只在 `app=true` 时解析；无法解析时组件给出警告且不渲染 Toolbar。`fab` Slot 在 docked 模式不会渲染并会给出警告。
 
@@ -12169,7 +12169,7 @@ const open = ref(false);
 | `modelValue` | `boolean` | `false` | 受控打开状态，使用 `v-model` |
 | `variant` | `'auto' \| 'standard' \| 'modal'` | `'auto'` | 布局变体；auto 根据 `breakpoint` 选择 |
 | `breakpoint` | `number` | `840` | auto 切换到 standard 的最小视口宽度，单位为 CSS px |
-| `width` | `number \| string` | 未设置 | 首选宽度；数字按 px 处理，最终仍受 640px 最大宽度限制 |
+| `width` | `number \| string` | 未设置 | 首选宽度；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS 宽度值，非法时使用默认宽度；最终仍受 640px 最大宽度限制 |
 | `attach` | `string \| HTMLElement` | `'body'` | modal 的 Teleport 目标；standard 忽略 |
 | `scrim` | `boolean` | `true` | modal 是否显示帷幕；false 时仍阻止背景指针交互 |
 | `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否允许点击 modal 帷幕关闭 |
@@ -12514,7 +12514,7 @@ const open = ref(false);
 | `variant` | `'auto' \| 'standard' \| 'modal'` | `'auto'` | 布局变体；auto 根据 `breakpoint` 选择 |
 | `breakpoint` | `number` | `840` | auto 切换到 standard 的最小视口宽度，单位为 CSS px |
 | `position` | `'start' \| 'end'` | `'end'` | Sheet 依附的逻辑边缘 |
-| `width` | `number \| string` | `400` | 首选宽度；数字按 px 处理，数值范围大于 0 且不超过 400；CSS 字符串最终也会限制在 400px 内 |
+| `width` | `number \| string` | `400` | 首选宽度；数字与纯数字字符串按 px 处理（数值大于 0 且不超过 400），其他字符串需为 trim 后合法的 CSS 宽度值，非法时使用默认宽度；最终不超过 400px |
 | `attach` | `string \| HTMLElement` | `'body'` | modal 的 Teleport 目标；standard 忽略 |
 | `scrim` | `boolean` | `true` | modal 是否显示帷幕；false 时仍阻止背景指针交互 |
 | `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否允许点击 modal 帷幕关闭 |
@@ -12900,7 +12900,7 @@ const selected = ref('overview');
 
 ### `width`
 
-`width` 只影响 expanded rail 的行内宽度。数字按像素处理；字符串直接作为 CSS 宽度值，因此可以使用 `clamp()`、`min()` 或百分比等现代 CSS 表达式。未传入时使用组件默认宽度。
+`width` 只影响 expanded rail 的行内宽度。数字与纯数字字符串按像素处理（0 不带单位）；其他字符串需为 trim 后合法的 CSS 宽度值，因此可以使用 `clamp()`、`min()` 或百分比等现代 CSS 表达式。未传入或非法时使用组件默认宽度。
 
 :::: details 查看示例代码
 ::: code-group
@@ -13434,7 +13434,7 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 | `model-value` | `string \| number \| boolean \| null` | `null` | 受控的当前 Item `value`，支持 `v-model` |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | 纵向 Expressive rail 或 horizontal Flexible navigation bar |
 | `expanded` | `boolean` | `false` | 受控展开状态，支持 `v-model:expanded`；horizontal 模式中决定纵向或横向 Item 排列 |
-| `width` | `number \| string` | `undefined` | expanded rail 宽度；数字按 px 处理，字符串作为 CSS 宽度值 |
+| `width` | `number \| string` | `undefined` | expanded rail 宽度；数字与纯数字字符串按 px 处理（0 不带单位），其他字符串需为 trim 后合法的 CSS 宽度值，非法时使用默认宽度 |
 | `position` | `'start' \| 'end'` | `'start'` | Item 在展开、收回和横向切换期间固定在起始或末尾侧，避免从居中位置开始动画 |
 | `collapsible` | `boolean` | `false` | 为纵向 rail 显示展开/收起菜单按钮 |
 | `layout` | `'standard' \| 'modal'` | `'standard'` | 纵向 expanded rail 占据空间或覆盖正文 |
@@ -13447,7 +13447,7 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 | `app` | `boolean` | `false` | 开启应用布局模式；位于 `MatAppRoot` 且省略 `attach` 时自动登记边缘，否则固定到显式目标 |
 | `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；一旦显式提供就优先于 AppRoot 自动接入 |
 | `placeholder` | `boolean` | `false` | 仅 `app=true` 有效；在声明位置为固定 rail 或 bar 预留实际尺寸 |
-| `bottom-placeholder` | `number \| string` | `0` | 仅 `app=true` 有效；数字按 px 处理，字符串可使用 `env(safe-area-inset-bottom)` 或 `calc(...)` |
+| `bottom-placeholder` | `number \| string` | `0` | 仅 `app=true` 有效；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS block-size 值（如 `env(safe-area-inset-bottom)` 或 `calc(...)`），非法时回退 0 |
 
 #### `MatNavigationRailItem`
 
@@ -15465,10 +15465,10 @@ function scrollToEnd() {
 | --- | --- | --- | --- |
 | `orientation` | `'vertical' \| 'y' \| 'v' \| 'horizontal' \| 'x' \| 'h'` | `'vertical'` | 选择组件拥有的滚动轴；简写值映射到对应完整方向 |
 | `snap` | `'none' \| 'proximity' \| 'mandatory'` | `'none'` | 设置当前滚动轴的停靠强度；`none` 关闭滚动停靠 |
-| `snapPadding` | `number` | `0` | 当前滚动轴起始端和末端的停靠内边距，单位为 px，必须是非负有限数字 |
-| `reachThreshold` | `number \| { start?: number, end?: number }` | `0` | 边缘事件的像素阈值；数字用于两端，对象未提供的一端为 `0`，值必须是非负有限数字 |
-| `shadowLength` | `number \| { start?: number, end?: number }` | `16` | 阴影从对应边缘向内延伸的像素数；数字用于两端，对象可分别设置 `start` 与 `end`，值必须是非负有限数字 |
-| `shadowOffset` | `number \| { start?: number, end?: number }` | `0` | 边缘阴影带从对应边缘向内偏移的像素数；数字用于两端，对象未提供的一端为 `0`，值必须是非负有限数字。偏移区内的滚动内容不被遮罩覆盖，适合放置不透明的 sticky 元素 |
+| `snapPadding` | `number` | `0` | 当前滚动轴起始端和末端的停靠内边距，单位为 px；数字或纯数字字符串，必须是非负有限值 |
+| `reachThreshold` | `number \| { start?: number, end?: number }` | `0` | 边缘事件的像素阈值；数字或纯数字字符串用于两端，对象成员同样接受，对象未提供的一端为 `0`，值必须是非负有限数字 |
+| `shadowLength` | `number \| { start?: number, end?: number }` | `16` | 阴影从对应边缘向内延伸的像素数；数字或纯数字字符串用于两端，对象可分别设置 `start` 与 `end`，值必须是非负有限数字 |
+| `shadowOffset` | `number \| { start?: number, end?: number }` | `0` | 边缘阴影带从对应边缘向内偏移的像素数；数字或纯数字字符串用于两端，对象未提供的一端为 `0`，值必须是非负有限数字。偏移区内的滚动内容不被遮罩覆盖，适合放置不透明的 sticky 元素 |
 | `barWidth` | `'default' \| 'thin' \| 'hidden'` | `'thin'` | 设置滚动条宽度；`default` 使用浏览器默认值，`hidden` 隐藏滚动条 |
 
 `class` 和 `style` 作用于组件根容器。其他未被消费的原生属性、ARIA 属性和监听器作用于实际滚动元素；需要键盘聚焦滚动区时，应按场景提供 `tabindex="0"` 和可访问名称。
@@ -16512,8 +16512,8 @@ const target = ref(null);
 | --- | --- | --- | --- |
 | `modelValue` | `boolean \| null` | `null` | 显式传入时使用受控状态；省略时由组件根据进入和离开事件维护状态。 |
 | `disabled` | `boolean` | `false` | 禁止向外同步 hover 状态，但组件仍记录真实指针状态。重新启用时同步当前状态。 |
-| `openDelay` | `number \| string` | `0` | 进入目标后等待的毫秒数；非有限或负值按 `0` 处理。 |
-| `closeDelay` | `number \| string` | `0` | 离开目标后等待的毫秒数；非有限或负值按 `0` 处理。 |
+| `openDelay` | `number \| string` | `0` | 进入目标后等待的毫秒数；数字或纯数字字符串，非有限或负值触发 prop 校验警告并按 `0` 处理。 |
+| `closeDelay` | `number \| string` | `0` | 离开目标后等待的毫秒数；数字或纯数字字符串，非有限或负值触发 prop 校验警告并按 `0` 处理。 |
 | `target` | `HTMLElement \| string \| Ref<HTMLElement \| null>` | — | 指定时由组件直接监听目标元素或选择器；适合目标元素无法绑定默认 Slot 的场景。 |
 
 组件没有公开方法。

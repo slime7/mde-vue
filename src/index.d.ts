@@ -509,7 +509,8 @@ export interface MatImageProps {
   */
   src: string;
   /**
-  * 组件圆角；数字按 px 处理，字符串原样使用。省略时使用 `--mat-sys-shape-corner-extra-large`（默认 28px）。
+  * 组件圆角；数字与纯数字字符串按 px 处理，其他字符串 trim 后须为合法 CSS 长度值。
+  * 省略时使用 `--mat-sys-shape-corner-extra-large`（默认 28px），非法值回退该令牌。
   *
   * @type {number | string | undefined}
   * @default undefined
@@ -530,7 +531,8 @@ export interface MatImageProps {
   */
   outline?: boolean;
   /**
-  * 组件宽高比；数字表示宽/高比，字符串原样写入 CSS `aspect-ratio`。省略时保持图片自然比例。
+  * 组件宽高比；数字与纯数字字符串表示宽/高比，其他字符串 trim 后须为合法 CSS
+  * `aspect-ratio` 值。省略或非法时保持图片自然比例。
   *
   * @type {number | string | undefined}
   * @default undefined
@@ -1693,7 +1695,8 @@ export interface MatDialogProps {
   */
   fullScreen?: boolean;
   /**
-  * 首选宽度；数字按 px 处理，字符串接受 CSS 宽度值。
+  * 首选宽度；数字与纯数字字符串按 px 处理，其他字符串 trim 后须为合法 CSS 宽度值，
+  * 非法值时省略宽度样式。
   *
   * @type {number | string | undefined}
   * @default undefined
@@ -1798,7 +1801,8 @@ export interface MatBottomSheetProps {
   */
   breakpoint?: number;
   /**
-  * 首选宽度；最终仍受 Material 3 的 640px 最大宽度约束。
+  * 首选宽度；数字与纯数字字符串按 px 处理，其他字符串须为 trim 后合法的 CSS
+  * 宽度值，非法时使用默认宽度；最终仍受 Material 3 的 640px 最大宽度约束。
   *
   * @type {number | string | undefined}
   * @default undefined
@@ -1949,7 +1953,8 @@ export interface MatSideSheetProps {
   */
   position?: 'start'|'end';
   /**
-  * 首选宽度；数字按 px 处理，最终不超过 400px。
+  * 首选宽度；数字与纯数字字符串按 px 处理（不超过 400），
+  * 其他字符串 trim 后须为合法 CSS 宽度值。
   *
   * @type {number | string}
   * @default 400
@@ -2047,14 +2052,14 @@ export interface MatHoverProps {
   */
   modelValue?: boolean | null;
   /**
-  * 关闭延迟，单位为毫秒；无效值按 0 处理。
+  * 关闭延迟，单位为毫秒；数字或纯数字字符串，非法值触发校验警告并按 0 处理。
   *
   * @type {number | string}
   * @default 0
   */
   closeDelay?: number | string;
   /**
-  * 打开延迟，单位为毫秒；无效值按 0 处理。
+  * 打开延迟，单位为毫秒；数字或纯数字字符串，非法值触发校验警告并按 0 处理。
   *
   * @type {number | string}
   * @default 0
@@ -2121,8 +2126,8 @@ export interface MatScrollAreaProps {
   */
   snapPadding?: number;
   /**
-  * 阴影从对应边缘向内延伸的像素数。数字同时用于两端，对象可分别设置 start、end。
-  * 未设置时使用 16px。
+  * 阴影从对应边缘向内延伸的像素数。数字或纯数字字符串同时用于两端，
+  * 对象可分别设置 start、end。未设置时使用 16px。
   *
   * @type {number | { start?: number, end?: number }}
   * @default 16
@@ -2136,15 +2141,16 @@ export interface MatScrollAreaProps {
   */
   barWidth?: 'default' | 'thin' | 'hidden';
   /**
-  * 进入滚动边缘多少像素时触发事件。数字同时用于两端，对象可分别设置 start、end。
+  * 进入滚动边缘多少像素时触发事件。数字或纯数字字符串同时用于两端，
+  * 对象成员同样接受，可分别设置 start、end。
   *
   * @type {number | { start?: number, end?: number }}
   * @default 0
   */
   reachThreshold?: number | { start?: number, end?: number };
   /**
-  * 边缘阴影带从对应边缘向内偏移的像素数。数字同时用于两端，对象可分别设置 start、end。
-  * 偏移区内的内容不会被遮罩覆盖，适合放置不透明的 sticky 元素。
+  * 边缘阴影带从对应边缘向内偏移的像素数。数字或纯数字字符串同时用于两端，
+  * 对象可分别设置 start、end。偏移区内的内容不会被遮罩覆盖，适合放置不透明的 sticky 元素。
   *
   * @type {number | { start?: number, end?: number }}
   * @default 0
@@ -2216,7 +2222,7 @@ export interface MatLoaderProps {
   */
   indeterminate?: boolean;
   /**
-  * 轨道厚度，必须为正数。
+  * 轨道厚度，必须为正数；非法值回退默认 4。
   *
   * @type {number}
   * @default 4
@@ -2434,8 +2440,8 @@ export interface MatToolbarProps {
   */
   placeholder?: boolean;
   /**
-  * docked 与 floating-bottom 的额外底部安全区；数字按 px 处理，
-  * 也可传 CSS block-size 值。
+  * docked 与 floating-bottom 的额外底部安全区；数字与纯数字字符串按 px 处理，
+  * 其他字符串 trim 后须为合法 CSS block-size 值，非法时回退 0。
   *
   * @type {number | string}
   * @default 0
@@ -2531,7 +2537,8 @@ export interface MatNavigationRailProps {
   */
   expanded?: boolean;
   /**
-  * expanded Rail 的宽度；数字按 px 处理，字符串原样使用。
+  * expanded Rail 的宽度；数字与纯数字字符串按 px 处理，
+  * 其他字符串 trim 后须为合法 CSS 宽度值，非法时使用默认宽度。
   *
   * @type {number | string | undefined}
   * @default undefined
@@ -2622,7 +2629,8 @@ export interface MatNavigationRailProps {
   */
   placeholder?: boolean;
   /**
-  * app=true 时的额外底部安全区；数字按 px 处理，也可传 CSS block-size 值。
+  * app=true 时的额外底部安全区；数字与纯数字字符串按 px 处理，
+  * 其他字符串 trim 后须为合法 CSS block-size 值，非法时回退 0。
   *
   * @type {number | string}
   * @default 0

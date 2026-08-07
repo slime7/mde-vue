@@ -253,9 +253,50 @@ describe('MatDialog', () => {
   it('width 只接受正数或非空 CSS 值', () => {
     expect(MatDialog.props.width.validator(720)).toBe(true);
     expect(MatDialog.props.width.validator('calc(100% - 32px)')).toBe(true);
+    expect(MatDialog.props.width.validator('720')).toBe(true);
     expect(MatDialog.props.width.validator(0)).toBe(false);
+    expect(MatDialog.props.width.validator('-1')).toBe(false);
     expect(MatDialog.props.width.validator(Number.POSITIVE_INFINITY)).toBe(false);
     expect(MatDialog.props.width.validator('')).toBe(false);
+  });
+
+  it('width 纯数字字符串按数字处理为 px', async () => {
+    mount(MatDialog, {
+      props: {
+        modelValue: true,
+        width: '720',
+        title: '数字字符串宽度',
+      },
+    });
+    await settleRender();
+
+    const element = document.body.querySelector('dialog');
+
+    expect(element.style.getPropertyValue('inline-size')).toContain('min(720px');
+  });
+
+  it('CSS.supports 拒绝非纯数字字符串时回退默认宽度，放行时通过', async () => {
+    vi.stubGlobal('CSS', { supports: () => true });
+
+    expect(MatDialog.props.width.validator('calc(100% - 32px)')).toBe(true);
+    expect(MatDialog.props.width.validator('min(560px, 100%)')).toBe(true);
+
+    vi.stubGlobal('CSS', { supports: () => false });
+
+    expect(MatDialog.props.width.validator('calc(100% - 32px)')).toBe(false);
+
+    mount(MatDialog, {
+      props: {
+        modelValue: true,
+        width: 'calc(100% - 32px)',
+        title: '非法宽度',
+      },
+    });
+    await settleRender();
+
+    const element = document.body.querySelector('dialog');
+
+    expect(element.style.getPropertyValue('inline-size')).toBe('');
   });
 
   it('prop 内容优先于同名 Slot', async () => {

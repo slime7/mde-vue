@@ -35,6 +35,16 @@ describe('MatNavigationRail', () => {
       .toBe('首页');
   });
 
+  it('width 为 0 时输出不带单位的 CSS 长度', () => {
+    const wrapper = mount(MatNavigationRail, {
+      props: { expanded: true, width: 0 },
+      slots: { default: navigationItems },
+    });
+    const host = wrapper.find('.mat-navigation-rail-host').element;
+
+    expect(host.style.getPropertyValue('--mat-navigation-rail-expanded-width')).toBe('0');
+  });
+
   it('默认在声明容器布局，app=true 时 Teleport 到 attach', async () => {
     const source = document.createElement('section');
     const attach = document.createElement('main');

@@ -147,7 +147,7 @@ order: 88
 | `indeterminate` | `boolean` | `false` | 省略 `aria-valuenow` 并播放不确定加载动画 |
 | `shape` | `'flat' \| 'wavy'` | `'flat'` | 选择直线或 Material 3 Expressive 波浪形活动指示器 |
 | `waveMotion` | `boolean` | `false` | 让线条或环形波浪的相位沿路径连续流动；不会改变进度端点位置 |
-| `thickness` | 正数 `number` | `4` | 轨道和活动指示器的厚度，单位为 CSS px |
+| `thickness` | 正数 `number` | `4` | 轨道和活动指示器的厚度，单位为 CSS px；非法值回退默认 `4` |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 活动指示器，以及线性确定进度的停止指示器颜色；轨道始终使用 secondary container 语义色 |
 
 未被组件消费的 `aria-*`、`id`、`class`、`style` 和原生事件监听器会传给块级根元素。应通过 `aria-label` 为没有相邻说明文字的加载器提供名称。

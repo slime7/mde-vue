@@ -81,7 +81,7 @@ order: 36
 
 ### `radius`
 
-`radius` 控制组件圆角，数字按 px 处理，字符串原样写入 CSS。省略时使用形状令牌 `--mat-sys-shape-corner-extra-large`（默认 28px），主题可以整体调整。
+`radius` 控制组件圆角，数字与纯数字字符串按 px 处理（0 不带单位），其他字符串需为 trim 后合法的 CSS 长度值。省略时使用形状令牌 `--mat-sys-shape-corner-extra-large`（默认 28px），非法值回退该令牌，主题可以整体调整。
 
 :::: details 查看示例代码
 ::: code-group
@@ -103,7 +103,7 @@ order: 36
 
 ### `aspect-ratio`
 
-`aspect-ratio` 设置组件宽高比：数字表示宽/高比，字符串原样写入 CSS `aspect-ratio`。省略时保持图片自然比例。切换比例或宽度时，根容器使用系统动效令牌平滑过渡；系统开启“减少动态效果”时过渡时长归零。
+`aspect-ratio` 设置组件宽高比：数字与纯数字字符串表示宽/高比，其他字符串需为 trim 后合法的 CSS `aspect-ratio` 值。省略或非法时保持图片自然比例。切换比例或宽度时，根容器使用系统动效令牌平滑过渡；系统开启“减少动态效果”时过渡时长归零。
 
 :::: details 查看示例代码
 ::: code-group
@@ -174,10 +174,10 @@ order: 36
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `src` | `string` | 必填 | 图片资源地址；必须是非空字符串 |
-| `radius` | `number \| string` | `28px`（`--mat-sys-shape-corner-extra-large`） | 组件圆角；数字按 px 处理，字符串原样写入 CSS |
+| `radius` | `number \| string` | `28px`（`--mat-sys-shape-corner-extra-large`） | 组件圆角；数字与纯数字字符串按 px 处理（0 不带单位），其他字符串需为 trim 后合法的 CSS 长度值，非法时回退默认令牌 |
 | `fit` | `'cover' \| 'contain'` | `'cover'` | 图片在容器中的填充方式 |
 | `outline` | `boolean` | `true` | 是否显示 1px 轮廓描边，颜色使用 `--mat-sys-color-outline` |
-| `aspect-ratio` | `number \| string` | 未设置 | 组件宽高比；数字表示宽/高比，字符串原样写入 CSS `aspect-ratio`，省略时保持图片自然比例 |
+| `aspect-ratio` | `number \| string` | 未设置 | 组件宽高比；数字与纯数字字符串表示宽/高比，其他字符串需为 trim 后合法的 CSS `aspect-ratio` 值，省略或非法时保持图片自然比例 |
 | `img-class` | `string \| array \| object` | 未设置 | 合并到内部 `img` 的 class |
 | `img-style` | `string \| array \| object` | 未设置 | 合并到内部 `img` 的 style |
 
