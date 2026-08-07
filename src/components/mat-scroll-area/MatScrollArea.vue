@@ -7,6 +7,7 @@ import {
   onUpdated,
   ref,
   useAttrs,
+  useId,
   watch,
 } from 'vue';
 
@@ -186,6 +187,7 @@ const hasStartOverflow = ref(false);
 const hasEndOverflow = ref(false);
 const wasWithinStart = ref(false);
 const wasWithinEnd = ref(false);
+const blurFilterId = `mat-scroll-area-blur-${useId().replace(/[^\w-]/g, '-')}`;
 let frameId;
 let resizeObserver;
 
@@ -230,6 +232,9 @@ const viewportStyle = computed(() => ({
   '--mat-scroll-area-shadow-offset-start': `${shadowOffsets.value.start}px`,
   '--mat-scroll-area-shadow-offset-end': `${shadowOffsets.value.end}px`,
   '--mat-scroll-area-scrollbar-space': `${scrollbarSpace.value}px`,
+  '--mat-scroll-area-blur-filter': `url(#${blurFilterId})`,
+  '--mat-scroll-area-blur-radius-start': `${shadowLengths.value.start * 3}px`,
+  '--mat-scroll-area-blur-radius-end': `${shadowLengths.value.end * 3}px`,
 }));
 const rootAttrs = computed(() => ({
   class: attrs.class,
@@ -416,6 +421,44 @@ defineExpose({
         },
       ]"
     >
+      <svg
+        class="mat-scroll-area__filter-definitions"
+        aria-hidden="true"
+        focusable="false"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <filter
+            :id="blurFilterId"
+            x="-20%"
+            y="-20%"
+            width="140%"
+            height="140%"
+            color-interpolation-filters="sRGB"
+          >
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.025"
+              numOctaves="2"
+              seed="7"
+              result="mat-scroll-area-noise"
+            />
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="mat-scroll-area-noise"
+              scale="4"
+              xChannelSelector="R"
+              yChannelSelector="G"
+              result="mat-scroll-area-displaced"
+            />
+            <feGaussianBlur
+              in="mat-scroll-area-displaced"
+              stdDeviation="2.5"
+            />
+          </filter>
+        </defs>
+      </svg>
+
       <div
         ref="scroller"
         v-bind="scrollerAttrs"
@@ -469,6 +512,14 @@ defineExpose({
   flex-grow: 1;
   min-inline-size: 0;
   min-block-size: 0;
+}
+
+.mat-scroll-area__filter-definitions {
+  position: absolute;
+  inline-size: 0;
+  block-size: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 .mat-scroll-area__scroller {
@@ -538,7 +589,8 @@ defineExpose({
   box-sizing: border-box;
   content: '';
   pointer-events: none;
-  backdrop-filter: blur(var(--mat-scroll-area-shadow-length-start));
+  background: rgb(255 255 255 / .1%);
+  backdrop-filter: var(--mat-scroll-area-blur-filter) blur(var(--mat-scroll-area-blur-radius-start));
 }
 
 .mat-scroll-area__viewport--blur.mat-scroll-area__viewport--start-overflow::before {
@@ -547,7 +599,7 @@ defineExpose({
 
 .mat-scroll-area__viewport--blur.mat-scroll-area__viewport--end-overflow::after {
   display: block;
-  backdrop-filter: blur(var(--mat-scroll-area-shadow-length-end));
+  backdrop-filter: var(--mat-scroll-area-blur-filter) blur(var(--mat-scroll-area-blur-radius-end));
 }
 
 .mat-scroll-area--vertical .mat-scroll-area__viewport--blur::before,
