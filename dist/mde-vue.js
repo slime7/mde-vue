@@ -1813,7 +1813,10 @@ var Mt = {
 				return null;
 			}
 			return null;
-		}), H = r(() => f.app ? z.value ? R.value - 64 : R.value : 0), U = r(() => [
+		}), H = r(() => {
+			let e = R.value - 64;
+			return !f.app || z.value ? e : R.value;
+		}), U = r(() => [
 			`mat-app-bar--${M.value}`,
 			`mat-app-bar--content-${N.value}`,
 			`mat-app-bar--align-${F.value}`
@@ -1859,13 +1862,8 @@ var Mt = {
 			() => f.attach,
 			() => f.scrollTarget,
 			M
-		], Y), (e, r) => (w(), o(t, null, [H.value > 0 ? (w(), o("span", {
+		], Y), (e, r) => (w(), o(t, null, [!f.app || V.value ? (w(), i(n, {
 			key: 0,
-			"aria-hidden": "true",
-			class: "mat-app-bar__placeholder",
-			style: v({ blockSize: `${H.value}px` })
-		}, null, 4)) : a("", !0), !f.app || V.value ? (w(), i(n, {
-			key: 1,
 			disabled: !f.app,
 			to: V.value
 		}, [s("div", {
@@ -1886,9 +1884,14 @@ var Mt = {
 				"aria-hidden": "true"
 			}, null, -1),
 			e.$slots.trailing ? (w(), o("div", It, [j(e.$slots, "trailing", {}, void 0, !0)])) : a("", !0)
-		], 16)], 2)], 8, ["disabled", "to"])) : a("", !0)], 64));
+		], 16)], 2)], 8, ["disabled", "to"])) : a("", !0), H.value > 0 ? (w(), o("span", {
+			key: 1,
+			"aria-hidden": "true",
+			class: "mat-app-bar__placeholder",
+			style: v({ blockSize: `${H.value}px` })
+		}, null, 4)) : a("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-0fc226f7"]]), Rt = /*#__PURE__*/ X(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-d4fd92ce"]]), Rt = /*#__PURE__*/ X(/* @__PURE__ */ Object.assign({
 	name: "MatInputBase",
 	inheritAttrs: !1
 }, {
@@ -2066,7 +2069,7 @@ var Mt = {
 			e.$slots.trailing ? (w(), o("span", Bt, [j(e.$slots, "trailing", {}, void 0, !0)])) : a("", !0)
 		], 16));
 	}
-}), [["__scopeId", "data-v-174f235a"]]), Ht = 150, Ut = .75, Wt = /*#__PURE__*/ X(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-da2bc317"]]), Ht = 150, Ut = .75, Wt = /*#__PURE__*/ X(/* @__PURE__ */ Object.assign({
 	name: "MatBtnGroup",
 	inheritAttrs: !1
 }, {

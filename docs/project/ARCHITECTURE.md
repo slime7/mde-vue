@@ -83,7 +83,7 @@ Navigation 以 `MatNavigationRail` 与 `MatNavigationRailItem` 组合纵向 Expr
 
 Toolbar 以容器内绝对定位表达底部 docked，以及顶部、底部和左右 floating 布局，并由 `position` 在对应轴上对齐。`app` 开启且省略显式 attach 时自动进入最近 AppRoot：docked 登记 bottom，floating 不进入布局但读取四向 padding 避让；其他应用模式仍固定到显式 attach 并使用 Toolbar 几何注册表。`placeholder` 在声明位置提供可选占位，floating 在 AppRoot 内仍可用它保护滚动末端；`bottomPlaceholder` 只扩展 docked 和底部 floating 的安全区。
 
-App bar 以 `MatAppBar` 根组件组织 leading、唯一主内容区、subtitle 与 trailing，默认 Slot 通过显式 `content` 区分 headline、image 和 search；`MatAppBarSearch` 复用公共 `MatInputBase` 提供直接输入。默认实例在声明位置使用 sticky 布局；`app` 自动接入 AppRoot 时登记固定 64px top edge，并在声明位置保留 flexible 展开差值。具名 CSS scroll timeline 由实例级名称和共享引用计数登记到显式滚动源、AppRoot 正文、最近滚动祖先或 document，`timeline-scope` 使 Teleport 后的 App bar 仍能读取同一进度；运行时不逐帧写入动画样式。
+App bar 以 `MatAppBar` 根组件组织 leading、唯一主内容区、subtitle 与 trailing，默认 Slot 通过显式 `content` 区分 headline、image 和 search；`MatAppBarSearch` 复用公共 `MatInputBase` 提供直接输入。默认实例在声明位置使用 64px sticky 布局壳，flexible 展开背景和内容位于不改变布局高度的视觉层，展开差值由紧随其后的起始占位承担；`app` 自动接入 AppRoot 时同样只登记固定 64px top edge。具名 CSS scroll timeline 由实例级名称和共享引用计数登记到显式滚动源、AppRoot 正文、最近滚动祖先或 document，`timeline-scope` 使 Teleport 后的 App bar 仍能读取同一进度；运行时不逐帧写入动画样式，也不让动画中的几何变化反向改变时间线滚动范围。
 
 Loader 以单个组件的 `linear` 与 `circular` variant 表达两种 Progress indicator 形态。确定状态在根元素上提供 progressbar ARIA 值，不确定状态仅保留进度语义和动画；波浪形活动指示器由内联 SVG 绘制，轨道保持平直。组件只读取系统 primary 与 secondary container 颜色角色，显式 `color` 通过共享局部配色模块替换活动与停止指示器色。
 

@@ -157,11 +157,13 @@ const attachTarget = computed(() => {
   return null;
 });
 const placeholderHeight = computed(() => {
-  if (!props.app) {
-    return 0;
+  const flexibleHeight = expandedHeight.value - 64;
+
+  if (!props.app || usesAppRoot.value) {
+    return flexibleHeight;
   }
 
-  return usesAppRoot.value ? expandedHeight.value - 64 : expandedHeight.value;
+  return expandedHeight.value;
 });
 const headerClass = computed(() => [
   `mat-app-bar--${normalizedVariant.value}`,
@@ -277,13 +279,6 @@ watch([
 </script>
 
 <template>
-  <span
-    v-if="placeholderHeight > 0"
-    aria-hidden="true"
-    class="mat-app-bar__placeholder"
-    :style="{ blockSize: `${placeholderHeight}px` }"
-  />
-
   <Teleport
     v-if="!props.app || attachTarget"
     :disabled="!props.app"
@@ -319,6 +314,13 @@ watch([
       </header>
     </div>
   </Teleport>
+
+  <span
+    v-if="placeholderHeight > 0"
+    aria-hidden="true"
+    class="mat-app-bar__placeholder"
+    :style="{ blockSize: `${placeholderHeight}px` }"
+  />
 </template>
 
 <style scoped>
@@ -349,19 +351,33 @@ watch([
 
 .mat-app-bar {
   --mat-app-bar-expanded-height: 64px;
+  --mat-app-bar-collapsed-inset: 0;
   position: sticky;
   z-index: 8;
   inset-block-start: 0;
+  isolation: isolate;
   box-sizing: border-box;
   display: flex;
   inline-size: 100%;
   min-inline-size: 0;
-  block-size: var(--mat-app-bar-expanded-height);
+  block-size: 64px;
   align-items: center;
   padding-inline: 4px;
   color: var(--mat-sys-color-on-surface);
-  background: var(--mat-sys-color-surface);
   pointer-events: auto;
+}
+
+.mat-app-bar::before {
+  position: absolute;
+  z-index: 0;
+  inset-block-start: 0;
+  inset-inline: 0;
+  box-sizing: border-box;
+  block-size: var(--mat-app-bar-expanded-height);
+  clip-path: inset(0);
+  background: var(--mat-sys-color-surface);
+  content: '';
+  pointer-events: none;
 }
 
 .mat-app-bar__host--app .mat-app-bar {
@@ -371,14 +387,18 @@ watch([
 
 .mat-app-bar--medium-flexible {
   --mat-app-bar-expanded-height: 112px;
+  --mat-app-bar-collapsed-inset: 48px;
 }
 
 .mat-app-bar--large-flexible {
   --mat-app-bar-expanded-height: 120px;
+  --mat-app-bar-collapsed-inset: 56px;
 }
 
 .mat-app-bar__leading,
 .mat-app-bar__trailing {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex: 0 0 auto;
   min-block-size: 48px;
@@ -387,6 +407,8 @@ watch([
 }
 
 .mat-app-bar__main {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-grow: 1;
   min-inline-size: 0;
@@ -420,28 +442,28 @@ watch([
 }
 
 .mat-app-bar__spacer {
+  position: relative;
+  z-index: 1;
   flex-grow: 1;
   min-inline-size: 0;
 }
 
 .mat-app-bar--medium-flexible,
 .mat-app-bar--large-flexible {
-  align-items: flex-start;
-  padding-block-end: 12px;
-}
-
-.mat-app-bar--medium-flexible .mat-app-bar__leading,
-.mat-app-bar--medium-flexible .mat-app-bar__trailing,
-.mat-app-bar--large-flexible .mat-app-bar__leading,
-.mat-app-bar--large-flexible .mat-app-bar__trailing {
-  padding-block-start: 8px;
+  align-items: center;
 }
 
 .mat-app-bar--medium-flexible .mat-app-bar__main,
 .mat-app-bar--large-flexible .mat-app-bar__main {
-  align-self: flex-end;
-  justify-content: flex-end;
   padding-inline-start: 12px;
+}
+
+.mat-app-bar--medium-flexible .mat-app-bar__main {
+  translate: 0 24px;
+}
+
+.mat-app-bar--large-flexible .mat-app-bar__main {
+  translate: 0 28px;
 }
 
 .mat-app-bar--medium-flexible .mat-app-bar__primary,
@@ -451,6 +473,13 @@ watch([
   white-space: normal;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+.mat-app-bar--medium-flexible .mat-app-bar__subtitle,
+.mat-app-bar--large-flexible .mat-app-bar__subtitle {
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline: 12px;
 }
 
 .mat-app-bar--medium-flexible .mat-app-bar__primary {
@@ -522,20 +551,29 @@ watch([
 }
 
 @supports (animation-timeline: scroll()) {
-  .mat-app-bar[data-timeline-active] {
+  .mat-app-bar[data-timeline-active]::before {
     animation: mat-app-bar-small-scroll 1ms linear both;
     animation-range: 0 16px;
     animation-timeline: var(--mat-app-bar-timeline);
   }
 
-  .mat-app-bar--medium-flexible[data-timeline-active] {
-    animation-name: mat-app-bar-medium-scroll;
+  .mat-app-bar--medium-flexible[data-timeline-active]::before,
+  .mat-app-bar--large-flexible[data-timeline-active]::before {
+    animation-name: mat-app-bar-flexible-scroll;
+  }
+
+  .mat-app-bar--medium-flexible[data-timeline-active]::before {
     animation-range: 0 48px;
   }
 
-  .mat-app-bar--large-flexible[data-timeline-active] {
-    animation-name: mat-app-bar-large-scroll;
+  .mat-app-bar--large-flexible[data-timeline-active]::before {
     animation-range: 0 56px;
+  }
+
+  .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__main,
+  .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__main {
+    animation: mat-app-bar-main-scroll 1ms linear both;
+    animation-timeline: var(--mat-app-bar-timeline);
   }
 
   .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__primary,
@@ -558,6 +596,14 @@ watch([
     animation-range: 0 56px;
   }
 
+  .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__main {
+    animation-range: 0 48px;
+  }
+
+  .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__main {
+    animation-range: 0 56px;
+  }
+
   .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__subtitle {
     animation-range: 0 34px;
   }
@@ -577,19 +623,16 @@ watch([
   }
 }
 
-@keyframes mat-app-bar-medium-scroll {
+@keyframes mat-app-bar-flexible-scroll {
   to {
-    block-size: 64px;
-    padding-block-end: 0;
+    clip-path: inset(0 0 var(--mat-app-bar-collapsed-inset));
     background: var(--mat-sys-color-surface-container);
   }
 }
 
-@keyframes mat-app-bar-large-scroll {
+@keyframes mat-app-bar-main-scroll {
   to {
-    block-size: 64px;
-    padding-block-end: 0;
-    background: var(--mat-sys-color-surface-container);
+    translate: 0;
   }
 }
 
@@ -597,7 +640,6 @@ watch([
   to {
     font-size: var(--mat-sys-typescale-title-large-size);
     line-height: var(--mat-sys-typescale-title-large-line-height);
-    translate: 0 -2px;
   }
 }
 
@@ -606,7 +648,6 @@ watch([
     block-size: 40px;
     scale: .84;
     transform-origin: left center;
-    translate: 0 -2px;
   }
 }
 
@@ -619,13 +660,15 @@ watch([
 
 @media (prefers-reduced-motion: reduce) {
   @supports (animation-timeline: scroll()) {
-    .mat-app-bar[data-timeline-active],
-    .mat-app-bar--medium-flexible[data-timeline-active],
-    .mat-app-bar--large-flexible[data-timeline-active] {
+    .mat-app-bar[data-timeline-active]::before,
+    .mat-app-bar--medium-flexible[data-timeline-active]::before,
+    .mat-app-bar--large-flexible[data-timeline-active]::before {
       animation-name: mat-app-bar-small-scroll;
       animation-range: 0 16px;
     }
 
+    .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__main,
+    .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__main,
     .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__primary,
     .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__primary,
     .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__subtitle,

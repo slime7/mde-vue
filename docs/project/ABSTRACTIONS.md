@@ -227,11 +227,11 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 
 ## App bar 应用栏
 
-`<mat-app-bar>` 与导出 `MatAppBar` 只提供 M3 Expressive 推荐的 `search`、`small`、`medium-flexible`、`large-flexible` 四种 variant。默认 Slot 是唯一主内容区域，`content` 必须显式声明为 `headline`、`image` 或 `search`；`variant="search"` 固定使用 search 内容。leading、subtitle 与 trailing 是独立具名 Slot。默认 sticky 布局参与文档流；`app=true` 且自动接入 AppRoot 时仅以折叠后的 64px 登记 top edge，flexible 展开差值在声明位置随正文滚走。
+`<mat-app-bar>` 与导出 `MatAppBar` 只提供 M3 Expressive 推荐的 `search`、`small`、`medium-flexible`、`large-flexible` 四种 variant。默认 Slot 是唯一主内容区域，`content` 必须显式声明为 `headline`、`image` 或 `search`；`variant="search"` 固定使用 search 内容。leading、subtitle 与 trailing 是独立具名 Slot。默认 sticky 布局以稳定的 64px 壳参与文档流，flexible 展开差值由紧随其后的起始占位承担，展开背景和内容变化不改变滚动范围；`app=true` 且自动接入 AppRoot 时仅以折叠后的 64px 登记 top edge，展开差值仍在声明位置随正文滚走。
 
 滚动状态只由 CSS `scroll-timeline` / `animation-timeline` 驱动：small 和 search 在最初 16px 滚动范围内填充 surface container，medium flexible 与 large flexible 分别在 48px、56px 范围内连续折叠为 small。脚本只负责解析滚动源、登记唯一时间线名称和清理共享作用域，不读取滚动位置或逐帧更新样式。不支持该 CSS 能力时保持静态展开；减少动态效果时不改变几何与内容，只保留表面填色。
 
-`<mat-app-bar-search>` 与导出 `MatAppBarSearch` 复用 `MatInputBase` 渲染原生 search input，实时发出 `update:modelValue`，由 Enter 或默认搜索按钮发出 `search(query)`。它不实现 Search View、结果列表、网络请求、防抖或查询持久化。
+`<mat-app-bar-search>` 与导出 `MatAppBarSearch` 复用 `MatInputBase` 渲染原生 search input，实时发出 `update:modelValue`，由 Enter 或默认搜索按钮发出 `search(query)`。浏览器内建的 search 清除按钮被隐藏，清空入口由 trailing Slot 统一提供。它不实现 Search View、结果列表、网络请求、防抖或查询持久化。
 
 ## 文档权威关系
 
