@@ -1,3 +1,3 @@
-const MAT_RADIO_GROUP_KEY = Symbol('mdu-ui-radio-group');
+const MAT_RADIO_GROUP_KEY = Symbol('mde-vue-radio-group');
 
 export default MAT_RADIO_GROUP_KEY;

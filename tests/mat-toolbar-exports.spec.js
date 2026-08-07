@@ -3,7 +3,7 @@ import { createApp } from 'vue';
 import {
   createMatUi,
   MatToolbar,
-} from 'mdu-ui';
+} from 'mde-vue';
 
 describe('Toolbar 公共导出', () => {
   it('根入口导出 Toolbar', () => {

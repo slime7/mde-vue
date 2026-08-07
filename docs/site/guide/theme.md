@@ -25,9 +25,9 @@ import ThemeSettings from '../.vitepress/theme/ThemeSettings.vue';
 
 ```js
 import { createApp } from 'vue';
-import { createMatUi } from 'mdu-ui';
+import { createMatUi } from 'mde-vue';
 import App from './App.vue';
-import 'mdu-ui/styles.css';
+import 'mde-vue/styles.css';
 
 createApp(App)
   .use(createMatUi({
@@ -63,7 +63,7 @@ createApp(App)
 
 ```vue
 <script setup>
-import { useMatTheme } from 'mdu-ui';
+import { useMatTheme } from 'mde-vue';
 
 const theme = useMatTheme();
 

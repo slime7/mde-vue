@@ -1,7 +1,7 @@
 <!-- #region script -->
 <script setup>
 import { ref } from 'vue';
-import { dialog } from 'mdu-ui';
+import { dialog } from 'mde-vue';
 
 const result = ref('尚未选择');
 

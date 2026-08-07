@@ -1,7 +1,7 @@
 <!-- #region script -->
 <script setup>
 import { ref } from 'vue';
-import { prompt } from 'mdu-ui';
+import { prompt } from 'mde-vue';
 
 const result = ref('尚未输入');
 

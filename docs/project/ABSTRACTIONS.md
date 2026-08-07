@@ -28,7 +28,7 @@ Tooltip 分组由展示元素最近的 `data-mat-tooltip-group` 祖先定义。�
 
 ## ESM 分发边界
 
-`src/` 是组件、插件、指令、函数和样式的维护权威，`dist/` 是使用方唯一可解析的运行时与类型边界。所有运行时实现必须进入同一个 `dist/mdu-ui.js`，公共 JavaScript API 只通过 `mdu-ui` 根入口具名导入，使内部上下文、队列和协调器只存在一个模块实例。Vue 保持 peer dependency，Material Color Utilities 保持普通外部依赖；分发产物不包含 `.vue` 导入，也不要求使用方执行依赖生命周期脚本。
+`src/` 是组件、插件、指令、函数和样式的维护权威，`dist/` 是使用方唯一可解析的运行时与类型边界。所有运行时实现必须进入同一个 `dist/mde-vue.js`，公共 JavaScript API 只通过 `mde-vue` 根入口具名导入，使内部上下文、队列和协调器只存在一个模块实例。Vue 保持 peer dependency，Material Color Utilities 保持普通外部依赖；分发产物不包含 `.vue` 导入，也不要求使用方执行依赖生命周期脚本。
 
 `dist/styles.css` 由基础令牌与全部 SFC 样式生成，`dist/tailwind.css` 来自 Tailwind 映射，`dist/index.d.ts` 包含根入口的组件、插件、指令和命令式函数声明。`dist/` 必须恰好包含这四个文件，且只能通过 `pnpm build` 更新，并与造成变化的源码和文档放在同一提交中。
 
@@ -179,7 +179,7 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 标题、正文和图标都遵循 prop 优先于同名 Slot；无标题时必须由使用者提供 `aria-label` 或 `aria-labelledby`。关闭期间 DOM 保留到退出动画完成，随后触发 `closed` 并恢复原焦点。
 
-`dialog()`、`alert()`、`confirm()` 和 `prompt()` 统一从 `mdu-ui` 根入口导入，并且只在客户端调用。正常取消分别返回 `undefined`、`undefined`、`false` 和 `null`，不拒绝 Promise；参数、挂载目标或运行环境错误使用 rejected Promise。Promise 只在退出动画、原生关闭和一次性宿主清理全部完成后结算。多个命令式实例可以并行存在；最后安装的 `createMatUi()` 配置为后续命令式实例提供主题和组件设置。
+`dialog()`、`alert()`、`confirm()` 和 `prompt()` 统一从 `mde-vue` 根入口导入，并且只在客户端调用。正常取消分别返回 `undefined`、`undefined`、`false` 和 `null`，不拒绝 Promise；参数、挂载目标或运行环境错误使用 rejected Promise。Promise 只在退出动画、原生关闭和一次性宿主清理全部完成后结算。多个命令式实例可以并行存在；最后安装的 `createMatUi()` 配置为后续命令式实例提供主题和组件设置。
 
 ## Bottom sheet 与 Side sheet
 
@@ -199,7 +199,7 @@ Tooltip 只实现 Material 3 Plain tooltip，不提供 color、Rich 内容、操
 
 `<mat-snackbar>` 通过 `modelValue` 请求展示底部短暂通知；AppRoot 内的模板实例自动进入应用 Snackbar 组并排列在普通浮动组上方，其他模板实例固定在 body 视口。它使用全局 FIFO 队列，因此任意模板实例与命令式调用合计同一时刻只显示一条。活动项必须先完成退出动画，下一条才可进入；排队模板项收到 `modelValue=false` 或卸载时取消。`text` 与默认 Slot 都能提供内容，默认 Slot 优先；`actionText` 提供唯一可选文字 action，`action` Slot 存在时优先并接收 `{ action }`，调用后派发 `action` 事件并关闭当前通知；`closable` 提供内置关闭按钮，`close` Slot 存在时优先并接收 `{ close }`。默认持续 4000ms，`duration=0` 常驻，`position` 只接受 `left`、`center`、`right`。
 
-`snackbar(options)` 与别名 `toast` 只从 `mdu-ui` 根入口导入，必须接收包含非空 `text` 的对象；可选 `actionText` 和 `onAction` 分别提供文字 action 与其回调，`onAction` 必须是函数。函数返回在退出动画和单个命令式宿主清理完成后结算的 `Promise<void>`。命令式请求没有 Slots 或取消句柄，但与模板组件使用同一个全局队列，并读取最后安装的插件图标与主题上下文。Snackbar 固定为 `role="status"`、`aria-live="polite"`，从不主动移动焦点。
+`snackbar(options)` 与别名 `toast` 只从 `mde-vue` 根入口导入，必须接收包含非空 `text` 的对象；可选 `actionText` 和 `onAction` 分别提供文字 action 与其回调，`onAction` 必须是函数。函数返回在退出动画和单个命令式宿主清理完成后结算的 `Promise<void>`。命令式请求没有 Slots 或取消句柄，但与模板组件使用同一个全局队列，并读取最后安装的插件图标与主题上下文。Snackbar 固定为 `role="status"`、`aria-live="polite"`，从不主动移动焦点。
 
 ## Panes 布局面板
 

@@ -1,10 +1,10 @@
 import DefaultTheme from 'vitepress/theme-without-fonts';
 import { watch } from 'vue';
-import { createMatUi } from 'mdu-ui';
+import { createMatUi } from 'mde-vue';
 import './custom.css';
 import DocsPreview from './DocsPreview.vue';
 
-const DOCS_THEME_STORAGE_KEY = 'mdu-ui.docs.theme';
+const DOCS_THEME_STORAGE_KEY = 'mde-vue.docs.theme';
 const THEME_MODES = ['light', 'dark', 'system'];
 const SCHEME_VARIANTS = ['tonal-spot', 'neutral', 'vibrant', 'expressive'];
 const SEED_COLOR_PATTERN = /^#(?:[\da-f]{3}|[\da-f]{6})$/i;

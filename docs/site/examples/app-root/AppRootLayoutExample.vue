@@ -3,7 +3,7 @@
 import {
   defineComponent, h,
 } from 'vue';
-import { useMatApp } from 'mdu-ui';
+import { useMatApp } from 'mde-vue';
 
 const LayoutReadout = defineComponent({
   name: 'LayoutReadout',

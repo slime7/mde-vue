@@ -230,7 +230,7 @@ export function useMatTheme() {
   const theme = inject(MAT_THEME_KEY, null);
 
   if (!theme) {
-    throw new Error('useMatTheme() 必须在已安装 mdu-ui 插件的 Vue 应用中调用');
+    throw new Error('useMatTheme() 必须在已安装 mde-vue 插件的 Vue 应用中调用');
   }
 
   return theme;

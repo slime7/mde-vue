@@ -9,6 +9,6 @@ export const DEFAULT_MAT_UI_OPTIONS = Object.freeze({
   useCursor: false,
 });
 
-const MAT_UI_KEY = Symbol('mdu-ui-options');
+const MAT_UI_KEY = Symbol('mde-vue-options');
 
 export default MAT_UI_KEY;

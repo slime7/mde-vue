@@ -4,7 +4,7 @@ import {
 import { nextTick } from 'vue';
 import {
   alert, confirm, dialog, prompt,
-} from 'mdu-ui';
+} from 'mde-vue';
 
 beforeAll(() => {
   Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {

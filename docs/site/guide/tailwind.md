@@ -1,23 +1,23 @@
 ---
 title: Tailwind CSS
-description: 将 mdu-ui 运行时令牌接入 Tailwind CSS v4，并使用带 mat 前缀的语义工具类。
+description: 将 mde-vue 运行时令牌接入 Tailwind CSS v4，并使用带 mat 前缀的语义工具类。
 llms: true
 order: 40
 ---
 
 # Tailwind CSS
 
-Tailwind CSS v4 是可选依赖。先按照 Tailwind 文档为 Vite 项目配置 `tailwindcss` 与 `@tailwindcss/vite`，然后在应用 CSS 中导入 Tailwind 和 mdu-ui 适配层：
+Tailwind CSS v4 是可选依赖。先按照 Tailwind 文档为 Vite 项目配置 `tailwindcss` 与 `@tailwindcss/vite`，然后在应用 CSS 中导入 Tailwind 和 mde-vue 适配层：
 
 ```css
 @import "tailwindcss";
-@import "mdu-ui/tailwind.css";
+@import "mde-vue/tailwind.css";
 ```
 
 应用 JavaScript 入口仍需导入基础主题样式：
 
 ``js
-import 'mdu-ui/styles.css';
+import 'mde-vue/styles.css';
 ``
 
 适配层使用 `@theme inline`，将运行时令牌映射到带 `mat` 前缀的 Tailwind 主题变量。常见工具类包括：
@@ -25,7 +25,7 @@ import 'mdu-ui/styles.css';
 ```vue
 <template>
   <section class="bg-mat-primary text-mat-on-primary rounded-mat-large shadow-mat-level2 ease-mat-emphasized">
-    内容会跟随 mdu-ui 主题变化
+    内容会跟随 mde-vue 主题变化
   </section>
 </template>
 ```

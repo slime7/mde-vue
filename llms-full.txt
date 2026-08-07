@@ -1,10 +1,10 @@
-# mdu-ui 完整文档
+# mde-vue 完整文档
 
 > 本文件由 docs/site 中标记 llms: true 的 Markdown 页面生成，请勿手动编辑。
 
 # 概述
 
-`mdu-ui` 是一个仅供个人项目使用的 Vue 3 组件库。它只面向最新浏览器和客户端应用，源码使用 JavaScript、Vue SFC 与原生 CSS。
+`mde-vue` 是一个仅供个人项目使用的 Vue 3 组件库。它只面向最新浏览器和客户端应用，源码使用 JavaScript、Vue SFC 与原生 CSS。
 
 当前公共能力包括：
 
@@ -26,8 +26,8 @@ import {
   MatBtn,
   MatFab,
   MatCard,
-} from 'mdu-ui';
-import 'mdu-ui/styles.css';
+} from 'mde-vue';
+import 'mde-vue/styles.css';
 ```
 
 唯一根入口提供 `createMatUi()`、`useMatTheme()`、全部组件、指令和命令式函数的具名导出。构建工具仍可对未使用的具名导出执行 tree shaking。
@@ -36,14 +36,14 @@ import 'mdu-ui/styles.css';
 
 # 安装
 
-`mdu-ui` 不发布到 npm registry，而是从私有 GitHub 仓库安装已提交的单一核心 ESM 分发产物。使用方需要 Vue 3、支持 ESM 的构建环境，以及访问仓库的 SSH 凭据。
+`mde-vue` 不发布到 npm registry，而是从私有 GitHub 仓库安装已提交的单一核心 ESM 分发产物。使用方需要 Vue 3、支持 ESM 的构建环境，以及访问仓库的 SSH 凭据。
 
 ## 从私有 Git 仓库安装
 
 把 `<commit>` 替换为需要固定的完整 Git 提交 SHA：
 
 ```bash
-pnpm add "mdu-ui@git+ssh://git@github.com/slime7/mdu-ui.git#<commit>"
+pnpm add "mde-vue@git+ssh://git@github.com/slime7/mde-vue.git#<commit>"
 ```
 
 不要使用会随时间移动的分支名代替提交 SHA，否则不同时间安装可能得到不同产物。仓库的 `package.json` 只导出已提交的 `dist`，其中只有一个 JavaScript 文件、一个样式文件和一个类型声明文件。安装时不运行 `prepare`，使用方也不需要编译组件库的 Vue SFC。
@@ -56,9 +56,9 @@ pnpm add "mdu-ui@git+ssh://git@github.com/slime7/mdu-ui.git#<commit>"
 
 ```js
 import { createApp } from 'vue';
-import { createMatUi } from 'mdu-ui';
+import { createMatUi } from 'mde-vue';
 import App from './App.vue';
-import 'mdu-ui/styles.css';
+import 'mde-vue/styles.css';
 
 createApp(App)
   .use(createMatUi({
@@ -104,7 +104,7 @@ function handleIntersection(isIntersecting) {
 
 ## 局部注册
 
-只需要少量组件时，也从唯一的 `mdu-ui` 根入口具名导入。基础样式仍然必须导入；它同时包含默认主题、全部组件样式和 Tailwind CSS v4 语义映射。支持 tree shaking 的构建工具可以移除未使用的具名导出。
+只需要少量组件时，也从唯一的 `mde-vue` 根入口具名导入。基础样式仍然必须导入；它同时包含默认主题、全部组件样式和 Tailwind CSS v4 语义映射。支持 tree shaking 的构建工具可以移除未使用的具名导出。
 
 ```vue
 <script setup>
@@ -114,8 +114,8 @@ import {
   MatBtn,
   MatFab,
   MatHover,
-} from 'mdu-ui';
-import 'mdu-ui/styles.css';
+} from 'mde-vue';
+import 'mde-vue/styles.css';
 
 function handleIntersection(isIntersecting) {
   console.log(isIntersecting);
@@ -181,7 +181,7 @@ import {
   snackbar,
   toast,
   useMatApp,
-} from 'mdu-ui';
+} from 'mde-vue';
 ```
 
 局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatAppRoot>`、`<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatCard>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatScrollArea>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`；`useMatApp()` 只能在 `<MatAppRoot>` 的后代组件中调用。
@@ -209,14 +209,14 @@ body {
 | 需求 | 推荐方式 |
 | --- | --- |
 | 使用动态主题、`useMatTheme()` 或 `v-intersection` | 安装 `createMatUi()`，使用全局 `mat-*` 或 `Mat*` 标签和 `v-intersection` |
-| 应用会使用多个 mdu-ui 组件 | 安装 `createMatUi()`，统一全局注册 |
-| 只使用少量组件，并接受基础样式的默认主题 | 从 `mdu-ui` 根入口具名导入并局部注册 |
+| 应用会使用多个 mde-vue 组件 | 安装 `createMatUi()`，统一全局注册 |
+| 只使用少量组件，并接受基础样式的默认主题 | 从 `mde-vue` 根入口具名导入并局部注册 |
 
 `createMatUi()` 同时负责主题初始化、组件设置、`mat-*` 与 `Mat*` 组件和 `v-intersection` 指令的全局注册。已经安装插件时，不需要再局部导入同一个组件或指令。交互指针、图标 class 与主题入口见 [`createMatUi` 配置](/guide/create-mat-ui)。
 
 # createMatUi
 
-`createMatUi(options)` 创建供 Vue 应用安装的 mdu-ui 插件。插件会全局注册所有 `mat-*` 组件、创建主题控制器，并把组件设置与主题上下文提供给应用后代。
+`createMatUi(options)` 创建供 Vue 应用安装的 mde-vue 插件。插件会全局注册所有 `mat-*` 组件、创建主题控制器，并把组件设置与主题上下文提供给应用后代。
 
 插件安装时还会把当前主题和组件设置提供给随后创建的 `dialog()`、`alert()`、`confirm()`、`prompt()`、`snackbar()` 与 `toast()`。同一页面安装多个 Vue 应用时，命令式 Dialog 和 Snackbar 使用最后安装的插件配置；未安装插件时使用默认图标 class、指针设置和基础主题令牌。
 
@@ -224,9 +224,9 @@ body {
 
 ```js
 import { createApp } from 'vue';
-import { createMatUi } from 'mdu-ui';
+import { createMatUi } from 'mde-vue';
 import App from './App.vue';
-import 'mdu-ui/styles.css';
+import 'mde-vue/styles.css';
 
 const matUi = createMatUi({
   iconClass: 'material-symbols-outlined',
@@ -289,7 +289,7 @@ createApp(App).use(createMatUi({
 }));
 ```
 
-该选项只控制 mdu-ui 组件，不修改页面中的原生按钮或其他应用元素。
+该选项只控制 mde-vue 组件，不修改页面中的原生按钮或其他应用元素。
 
 ## Material Symbols
 
@@ -346,9 +346,9 @@ import ThemeSettings from '../.vitepress/theme/ThemeSettings.vue';
 
 ```js
 import { createApp } from 'vue';
-import { createMatUi } from 'mdu-ui';
+import { createMatUi } from 'mde-vue';
 import App from './App.vue';
-import 'mdu-ui/styles.css';
+import 'mde-vue/styles.css';
 
 createApp(App)
   .use(createMatUi({
@@ -384,7 +384,7 @@ createApp(App)
 
 ```vue
 <script setup>
-import { useMatTheme } from 'mdu-ui';
+import { useMatTheme } from 'mde-vue';
 
 const theme = useMatTheme();
 
@@ -914,7 +914,7 @@ import IconWeightExample from '../examples/icon/IconWeightExample.vue';
 
 # 组件配色
 
-本指南用于实现或审查 `mdu-ui` 组件样式。全局主题和组件级种子色都由共享 Material 2025 配色模块生成，组件负责把交互含义和视觉层级映射到语义角色。不要根据某个种子色下的外观选择十六进制颜色，也不要为亮色和暗色模式分别编写组件结构。
+本指南用于实现或审查 `mde-vue` 组件样式。全局主题和组件级种子色都由共享 Material 2025 配色模块生成，组件负责把交互含义和视觉层级映射到语义角色。不要根据某个种子色下的外观选择十六进制颜色，也不要为亮色和暗色模式分别编写组件结构。
 
 ## 公共 `color` 属性
 
@@ -1046,17 +1046,17 @@ import IconWeightExample from '../examples/icon/IconWeightExample.vue';
 
 # Tailwind CSS
 
-Tailwind CSS v4 是可选依赖。先按照 Tailwind 文档为 Vite 项目配置 `tailwindcss` 与 `@tailwindcss/vite`，然后在应用 CSS 中导入 Tailwind 和 mdu-ui 适配层：
+Tailwind CSS v4 是可选依赖。先按照 Tailwind 文档为 Vite 项目配置 `tailwindcss` 与 `@tailwindcss/vite`，然后在应用 CSS 中导入 Tailwind 和 mde-vue 适配层：
 
 ```css
 @import "tailwindcss";
-@import "mdu-ui/tailwind.css";
+@import "mde-vue/tailwind.css";
 ```
 
 应用 JavaScript 入口仍需导入基础主题样式：
 
 ``js
-import 'mdu-ui/styles.css';
+import 'mde-vue/styles.css';
 ``
 
 适配层使用 `@theme inline`，将运行时令牌映射到带 `mat` 前缀的 Tailwind 主题变量。常见工具类包括：
@@ -1064,7 +1064,7 @@ import 'mdu-ui/styles.css';
 ```vue
 <template>
   <section class="bg-mat-primary text-mat-on-primary rounded-mat-large shadow-mat-level2 ease-mat-emphasized">
-    内容会跟随 mdu-ui 主题变化
+    内容会跟随 mde-vue 主题变化
   </section>
 </template>
 ```
@@ -3830,7 +3830,7 @@ import SplitButtonVariantExample from '../examples/button/SplitButtonVariantExam
 import {
   defineComponent, h,
 } from 'vue';
-import { useMatApp } from 'mdu-ui';
+import { useMatApp } from 'mde-vue';
 
 const LayoutReadout = defineComponent({
   name: 'LayoutReadout',
@@ -3904,7 +3904,7 @@ const LayoutReadout = defineComponent({
 import {
   defineComponent, h, onBeforeUnmount, onMounted, ref,
 } from 'vue';
-import { useMatApp } from 'mdu-ui';
+import { useMatApp } from 'mde-vue';
 
 const RegisteredHeader = defineComponent({
   name: 'RegisteredHeader',
@@ -4092,7 +4092,7 @@ const current = ref('home');
 ### `useMatApp()`
 
 ```js
-import { useMatApp } from 'mdu-ui';
+import { useMatApp } from 'mde-vue';
 
 const { layout, registerEdge } = useMatApp();
 ```
@@ -7676,7 +7676,7 @@ const description = ref('第一行\n第二行\n第三行\n第四行\n第五行\n
 - textarea 默认允许纵向调整尺寸，初始内容区高度严格按 `rows` 与正文行高计算；未显式设置 `rows` 时最小可调整到一行，显式设置后不能低于该行数；`noResize` 可以关闭手动调整。
 - `autoGrow` 以 `rows` 为下限重新测量内容高度；`maxRows` 未设置时不限制增长，设置后在达到上限时改为内部滚动。自动增高不会隐式关闭手动调整；手动缩小到内容无法完整显示时出现内部滚动条，下一次内容或宽度变化会重新按内容计算高度。
 - textarea 在顶部内边距区域渐隐滚动内容，同时保持右侧滚动条和调整手柄完整可见；带标签时渐隐区域覆盖标签留白，避免文字与标签重叠。
-- Text field 的 multi-line 形态来自 Material 3；`autoGrow`、`maxRows` 和 `noResize` 是 mdu-ui 扩展 API。
+- Text field 的 multi-line 形态来自 Material 3；`autoGrow`、`maxRows` 和 `noResize` 是 mde-vue 扩展 API。
 - 减少动态效果偏好下关闭标签、描边与活动指示器的非必要过渡。
 
 ## 参考来源
@@ -9252,7 +9252,7 @@ function choose(value) {
 ```vue
 <script setup>
 import { ref } from 'vue';
-import { dialog } from 'mdu-ui';
+import { dialog } from 'mde-vue';
 
 const result = ref('尚未选择');
 
@@ -9304,7 +9304,7 @@ async function openDialog() {
 ```vue
 <script setup>
 import { ref } from 'vue';
-import { alert } from 'mdu-ui';
+import { alert } from 'mde-vue';
 
 const closed = ref(false);
 
@@ -9356,7 +9356,7 @@ async function showAlert() {
 ```vue
 <script setup>
 import { ref } from 'vue';
-import { confirm } from 'mdu-ui';
+import { confirm } from 'mde-vue';
 
 const result = ref('尚未选择');
 
@@ -9406,7 +9406,7 @@ async function showConfirm() {
 ```vue
 <script setup>
 import { ref } from 'vue';
-import { prompt } from 'mdu-ui';
+import { prompt } from 'mde-vue';
 
 const result = ref('尚未输入');
 
@@ -9467,7 +9467,7 @@ async function showPrompt() {
 
 ### 命令式函数
 
-四个函数统一从 `mdu-ui` 根入口导入，只接受简单字符串内容，不接受 HTML 字符串、VNode 或 Slots：
+四个函数统一从 `mde-vue` 根入口导入，只接受简单字符串内容，不接受 HTML 字符串、VNode 或 Slots：
 
 ```js
 import {
@@ -9475,7 +9475,7 @@ import {
   confirm,
   dialog,
   prompt,
-} from 'mdu-ui';
+} from 'mde-vue';
 ```
 
 | 函数 | 主要附加选项 | 返回值 |
@@ -13402,7 +13402,7 @@ function show(nextDuration) {
 ```vue
 <script setup>
 import { ref } from 'vue';
-import { snackbar, toast } from 'mdu-ui';
+import { snackbar, toast } from 'mde-vue';
 
 const result = ref('尚未展示');
 
@@ -13528,10 +13528,10 @@ function showAll() {
 
 ### 命令式函数
 
-从 `mdu-ui` 根入口导入函数：
+从 `mde-vue` 根入口导入函数：
 
 ```js
-import { snackbar, toast } from 'mdu-ui';
+import { snackbar, toast } from 'mde-vue';
 
 await snackbar({
   actionText: '撤销',

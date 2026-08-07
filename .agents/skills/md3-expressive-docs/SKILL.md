@@ -1,6 +1,6 @@
 ---
 name: md3-expressive-docs
-description: 查找、核对并引用 Google Material 3 Expressive 官方文档与组件参数，或依据官方页面复刻 mdu-ui 的 Web 组件、形状、状态和动画。用户要求浏览 MD3 Expressive 文档、获取官方链接、确认 API/参数、分析视觉细节，或复刻相关组件时使用；不要用于 MD2 或 RTL 内容。
+description: 查找、核对并引用 Google Material 3 Expressive 官方文档与组件参数，或依据官方页面复刻 mde-vue 的 Web 组件、形状、状态和动画。用户要求浏览 MD3 Expressive 文档、获取官方链接、确认 API/参数、分析视觉细节，或复刻相关组件时使用；不要用于 MD2 或 RTL 内容。
 ---
 
 # MD3 Expressive 官方文档与复刻
@@ -10,7 +10,7 @@ description: 查找、核对并引用 Google Material 3 Expressive 官方文档�
 - 以 Google Material 3 官方文档的实际页面为视觉和 API 证据来源；最终回答给出具体官方页面链接。
 - 文档站可能由 AngularJS 动态渲染，不能把搜索摘要、页面源代码或一次性的文本抓取当作完整内容。使用浏览器实际打开并查看页面。
 - 只处理 MD3 Expressive；跳过 MD2、RTL 和与当前问题无关的旧版本说明。
-- mdu-ui 只使用 Vue 3、JavaScript、原生 CSS 和最新浏览器能力。复刻时遵守仓库的组件、主题令牌、测试和中文文档约束。
+- mde-vue 只使用 Vue 3、JavaScript、原生 CSS 和最新浏览器能力。复刻时遵守仓库的组件、主题令牌、测试和中文文档约束。
 
 ## 浏览官方文档
 
@@ -31,7 +31,7 @@ description: 查找、核对并引用 Google Material 3 Expressive 官方文档�
 - 用户需要复刻时，分开说明结构、视觉令牌、交互状态、媒体中观察到的动画和响应式行为。
 - 明确区分“官方页面明确说明”和“根据视觉或交互观察推断”；不要把推断写成官方 API。
 
-## 复刻 mdu-ui 组件
+## 复刻 mde-vue 组件
 
 1. 先检查仓库的 `AGENTS.md` 与 `docs/project/` 权威文档，再检查现有相近组件、基础层、主题令牌、测试和文档模式。
 2. 对改变 `src/` 运行行为的工作遵循测试先行：先写能表达官方观察结果的测试，确认目标能力尚未实现时失败，再修改实现并验证。

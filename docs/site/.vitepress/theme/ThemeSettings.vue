@@ -2,7 +2,7 @@
 import {
   computed, ref, watch,
 } from 'vue';
-import { useMatTheme } from 'mdu-ui';
+import { useMatTheme } from 'mde-vue';
 
 const theme = useMatTheme();
 const seedColorInput = ref(theme.seedColor.value);
@@ -48,13 +48,13 @@ function resetTheme() {
 </script>
 
 <template>
-  <section class="theme-settings" aria-label="mdu-ui 主题设置">
+  <section class="theme-settings" aria-label="mde-vue 主题设置">
     <mat-card variant="elevated">
       <mat-card-content>
         <div class="theme-settings__heading">
           <div>
             <p class="theme-settings__eyebrow">
-              mdu-ui Theme
+              mde-vue Theme
             </p>
             <h2>
               主题设置

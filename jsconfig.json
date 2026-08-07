@@ -12,10 +12,10 @@
       "DOM.Iterable"
     ],
     "paths": {
-      "mdu-ui": [
+      "mde-vue": [
         "./src/index.js"
       ],
-      "mdu-ui/*": [
+      "mde-vue/*": [
         "./src/*"
       ]
     }

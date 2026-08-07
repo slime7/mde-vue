@@ -281,10 +281,10 @@ AppRoot 内由统一布局 padding 避让 docked Toolbar、Navigation 和安全�
 
 ### 命令式函数
 
-从 `mdu-ui` 根入口导入函数：
+从 `mde-vue` 根入口导入函数：
 
 ```js
-import { snackbar, toast } from 'mdu-ui';
+import { snackbar, toast } from 'mde-vue';
 
 await snackbar({
   actionText: '撤销',

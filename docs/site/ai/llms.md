@@ -1,12 +1,12 @@
 ---
 title: LLMs.txt 使用说明
-description: 了解如何把 mdu-ui 的 llms.txt、llms-full.txt 或单个 Markdown 页面提供给 AI。
+description: 了解如何把 mde-vue 的 llms.txt、llms-full.txt 或单个 Markdown 页面提供给 AI。
 llms: false
 ---
 
 # LLMs.txt
 
-`mdu-ui` 提供 `llms.txt` 和 `llms-full.txt`，用于向 AI 提供与当前实现同步的组件、主题和使用限制。两份文件都由使用文档生成，不应手工编辑。
+`mde-vue` 提供 `llms.txt` 和 `llms-full.txt`，用于向 AI 提供与当前实现同步的组件、主题和使用限制。两份文件都由使用文档生成，不应手工编辑。
 
 ## 文件入口
 
@@ -21,7 +21,7 @@ llms: false
 
 根据 AI 是否能够读取仓库文件或上传附件，可以选择以下方式：
 
-1. 上传 `llms-full.txt`，并说明“请以附件中的 mdu-ui 文档为主要依据”。
+1. 上传 `llms-full.txt`，并说明“请以附件中的 mde-vue 文档为主要依据”。
 2. 将 `llms-full.txt` 的内容直接粘贴到对话中，再提出具体问题。
 3. AI 能访问当前仓库时，让它先读取 `llms.txt`，再按索引读取与问题相关的 Markdown 页面。
 4. 只讨论一个组件或主题时，直接提供对应的 Markdown 页面，减少无关上下文。
@@ -61,6 +61,6 @@ llms: false
 只提供单个页面时，可以使用以下提示：
 
 ```text
-请以提供的 mdu-ui Markdown 页面为主要依据回答问题。
+请以提供的 mde-vue Markdown 页面为主要依据回答问题。
 如果需求超出页面记录的公共 API，请明确指出，不要推测内部实现。
 ```

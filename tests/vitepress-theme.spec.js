@@ -9,7 +9,7 @@ function readThemeFile(fileName) {
 }
 
 describe('VitePress 文档自定义主题', () => {
-  it('扩展默认主题并安装 mdu-ui 全局组件', () => {
+  it('扩展默认主题并安装 mde-vue 全局组件', () => {
     const source = readThemeFile('index.js');
 
     expect(source).toContain('import DefaultTheme from \'vitepress/theme-without-fonts\';');
@@ -22,9 +22,9 @@ describe('VitePress 文档自定义主题', () => {
   it('文档预览从源码入口加载组件与样式', () => {
     const config = readFileSync(resolve('docs/site/.vitepress/config.mjs'), 'utf8');
 
-    expect(config).toContain('find: /^mdu-ui$/');
+    expect(config).toContain('find: /^mde-vue$/');
     expect(config).toContain('new URL(\'../../../src/index.js\', import.meta.url)');
-    expect(config).toContain('find: /^mdu-ui\\/styles\\.css$/');
+    expect(config).toContain('find: /^mde-vue\\/styles\\.css$/');
     expect(config).toContain('new URL(\'../../../src/styles/index.css\', import.meta.url)');
   });
 
@@ -76,14 +76,14 @@ describe('VitePress 文档自定义主题', () => {
     expect(readThemeFile('index.js')).not.toContain("import Layout from './Layout.vue';");
   });
 
-  it('主题设置页使用 mdu-ui 组件展示可交互预览', () => {
+  it('主题设置页使用 mde-vue 组件展示可交互预览', () => {
     const source = readFileSync(resolve('docs/site/guide/theme.md'), 'utf8');
 
     expect(source).toContain('<ThemeSettings />');
     expect(source).toContain('import ThemeSettings from \'../.vitepress/theme/ThemeSettings.vue\';');
   });
 
-  it('将 VitePress 页面变量映射到 mdu-ui 主题令牌', () => {
+  it('将 VitePress 页面变量映射到 mde-vue 主题令牌', () => {
     const source = readThemeFile('custom.css');
 
     expect(source).toContain('html[data-mat-theme=\'dark\']');

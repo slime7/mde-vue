@@ -5,7 +5,7 @@ import {
   MatSnackbar,
   snackbar,
   toast,
-} from 'mdu-ui';
+} from 'mde-vue';
 
 describe('Snackbar 公共导出', () => {
   it('根入口导出组件与命令式函数', () => {

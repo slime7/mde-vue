@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-`mdu-ui` 是一个私有的 Vue 3 单包组件库。源码经 Vite 编译为仓库内提交的单一核心 ESM，包 `exports` 只向使用方暴露 `dist/`；仓库同时包含带实时预览的 VitePress 中文使用文档、项目维护文档、测试和由 Markdown 生成的 AI 文档。
+`mde-vue` 是一个私有的 Vue 3 单包组件库。源码经 Vite 编译为仓库内提交的单一核心 ESM，包 `exports` 只向使用方暴露 `dist/`；仓库同时包含带实时预览的 VitePress 中文使用文档、项目维护文档、测试和由 Markdown 生成的 AI 文档。
 
 长期技术选择及原因记录在 [ADR 索引](adr/README.md)；公共概念和不变量见 [核心抽象](ABSTRACTIONS.md)。
 
@@ -36,7 +36,7 @@
 
 ### 公共入口
 
-`src/index.js` 是唯一 JavaScript 公共入口，导出全部组件、`Intersection` 指令、命令式 Dialog 与 Snackbar 函数，以及 `createMatUi()`、`useMatTheme()` 和 `useMatApp()`。构建将该入口编译为唯一运行时文件 `dist/mdu-ui.js`，因此所有组件、Vue 上下文键、队列和协调器只存在一个模块实例。`dist/index.d.ts` 是完整根入口类型声明。包不提供组件、指令或函数子入口；`mdu-ui/styles.css` 暴露基础令牌与全部组件样式，`mdu-ui/tailwind.css` 暴露 Tailwind v4 映射。
+`src/index.js` 是唯一 JavaScript 公共入口，导出全部组件、`Intersection` 指令、命令式 Dialog 与 Snackbar 函数，以及 `createMatUi()`、`useMatTheme()` 和 `useMatApp()`。构建将该入口编译为唯一运行时文件 `dist/mde-vue.js`，因此所有组件、Vue 上下文键、队列和协调器只存在一个模块实例。`dist/index.d.ts` 是完整根入口类型声明。包不提供组件、指令或函数子入口；`mde-vue/styles.css` 暴露基础令牌与全部组件样式，`mde-vue/tailwind.css` 暴露 Tailwind v4 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -95,7 +95,7 @@ Tailwind 适配文件通过 `@theme inline` 将公开的 reference 和 system �
 
 ### 文档实时预览与 AI 文档
 
-`docs/site/` 是 VitePress 的唯一源目录，包含中文使用文档、AI 使用指南和组件实时预览。预览保持 `mdu-ui` 根入口写法，但由 Vite alias 直接解析到 `src/index.js` 与源码样式，使示例和热更新始终验证维护权威；不另建独立 demo 页面。`docs/project/` 保存产品愿景、架构、公共抽象、开发入门和 ADR，不进入 VitePress 构建。
+`docs/site/` 是 VitePress 的唯一源目录，包含中文使用文档、AI 使用指南和组件实时预览。预览保持 `mde-vue` 根入口写法，但由 Vite alias 直接解析到 `src/index.js` 与源码样式，使示例和热更新始终验证维护权威；不另建独立 demo 页面。`docs/project/` 保存产品愿景、架构、公共抽象、开发入门和 ADR，不进入 VitePress 构建。
 
 `docs/site/` 中带 frontmatter 标记的 Markdown 页面按顺序生成根目录 `llms.txt` 和 `llms-full.txt`。组件示例保存在 `docs/site/examples/`，同一 Vue 文件既由 VitePress 作为代码片段展示，也作为页面中的真实组件渲染；AI 文档生成器会把代码片段包含指令展开为完整代码块。项目维护文档和纯交互页面不进入 AI 使用文档。
 
@@ -145,7 +145,7 @@ flowchart LR
 
 ## 构建与验证
 
-`pnpm build` 先生成完整根入口类型声明，再以 Vue 和 Material Color Utilities 为外部依赖编译单一 `dist/mdu-ui.js`，将基础令牌与组件样式合并为 `dist/styles.css`，复制 `src/styles/tailwind.css` 至 `dist/tailwind.css` 并复制 `dist/index.d.ts`。构建后 `dist/` 必须恰好包含这四个文件。`dist/` 随源码提交，公开入口测试从包自身 `exports` 加载产物并检查文件集合。VitePress 只构建 `docs/site/`，并在其 Vite 配置中把公共导入别名解析到 `src/`；文档、测试和静态检查在 Node.js 24 环境中运行。
+`pnpm build` 先生成完整根入口类型声明，再以 Vue 和 Material Color Utilities 为外部依赖编译单一 `dist/mde-vue.js`，将基础令牌与组件样式合并为 `dist/styles.css`，复制 `src/styles/tailwind.css` 至 `dist/tailwind.css` 并复制 `dist/index.d.ts`。构建后 `dist/` 必须恰好包含这四个文件。`dist/` 随源码提交，公开入口测试从包自身 `exports` 加载产物并检查文件集合。VitePress 只构建 `docs/site/`，并在其 Vite 配置中把公共导入别名解析到 `src/`；文档、测试和静态检查在 Node.js 24 环境中运行。
 
 ## 安全与可靠性边界
 

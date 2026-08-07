@@ -170,7 +170,7 @@ var Y = (e, t) => {
 	iconClass: "material-symbols-outlined",
 	tooltip: Z,
 	useCursor: !1
-}), re = Symbol("mdu-ui-options"), ie = [
+}), re = Symbol("mde-vue-options"), ie = [
 	"extra-small",
 	"small",
 	"medium",
@@ -338,7 +338,7 @@ function Te(e, t = "tonal-spot", n = 0) {
 }
 //#endregion
 //#region src/theme-context.js
-var Ee = Symbol("mdu-ui-theme"), De = "tonal-spot", Oe = 0;
+var Ee = Symbol("mde-vue-theme"), De = "tonal-spot", Oe = 0;
 function ke(e) {
 	let t = p(Ee, null), n = r(() => I(e) !== void 0);
 	return {
@@ -1109,7 +1109,7 @@ var dt = ["id", "data-location"], ft = 1500, pt = 150, mt = /*#__PURE__*/ Y(/* @
 			}), [e.content === void 0 ? j(r.$slots, "default", { key: 1 }, void 0, !0) : (w(), o(t, { key: 0 }, [l(F(e.content), 1)], 64))], 16, dt)], 8, ["to"])) : a("", !0)
 		], 64));
 	}
-}), [["__scopeId", "data-v-b9f8f587"]]), ht = Symbol("mdu-ui-button-group"), gt = Symbol("mdu-ui-split-button");
+}), [["__scopeId", "data-v-b9f8f587"]]), ht = Symbol("mde-vue-button-group"), gt = Symbol("mde-vue-split-button");
 //#endregion
 //#region src/components/use-button.js
 function _t(e, t) {
@@ -3502,7 +3502,7 @@ var Tn = /*#__PURE__*/ Y(/* @__PURE__ */ Object.assign({
 			"input-value"
 		]));
 	}
-}), [["__scopeId", "data-v-3d8ac819"]]), Mn = Symbol("mdu-ui-radio-group"), Nn = /*#__PURE__*/ Y(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-3d8ac819"]]), Mn = Symbol("mde-vue-radio-group"), Nn = /*#__PURE__*/ Y(/* @__PURE__ */ Object.assign({
 	name: "MatRadio",
 	inheritAttrs: !1
 }, {
@@ -8102,7 +8102,7 @@ function $a(e = {}) {
 }
 function eo() {
 	let e = p(Ee, null);
-	if (!e) throw Error("useMatTheme() 必须在已安装 mdu-ui 插件的 Vue 应用中调用");
+	if (!e) throw Error("useMatTheme() 必须在已安装 mde-vue 插件的 Vue 应用中调用");
 	return e;
 }
 //#endregion

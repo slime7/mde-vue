@@ -1,13 +1,13 @@
 ---
 title: 概述
-description: 了解 mdu-ui 的定位、支持范围、导入方式和 Material 组件体系。
+description: 了解 mde-vue 的定位、支持范围、导入方式和 Material 组件体系。
 llms: true
 order: 10
 ---
 
 # 概述
 
-`mdu-ui` 是一个仅供个人项目使用的 Vue 3 组件库。它只面向最新浏览器和客户端应用，源码使用 JavaScript、Vue SFC 与原生 CSS。
+`mde-vue` 是一个仅供个人项目使用的 Vue 3 组件库。它只面向最新浏览器和客户端应用，源码使用 JavaScript、Vue SFC 与原生 CSS。
 
 当前公共能力包括：
 
@@ -29,8 +29,8 @@ import {
   MatBtn,
   MatFab,
   MatCard,
-} from 'mdu-ui';
-import 'mdu-ui/styles.css';
+} from 'mde-vue';
+import 'mde-vue/styles.css';
 ```
 
 唯一根入口提供 `createMatUi()`、`useMatTheme()`、全部组件、指令和命令式函数的具名导出。构建工具仍可对未使用的具名导出执行 tree shaking。

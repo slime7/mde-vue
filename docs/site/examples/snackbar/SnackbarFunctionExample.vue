@@ -1,7 +1,7 @@
 <!-- #region script -->
 <script setup>
 import { ref } from 'vue';
-import { snackbar, toast } from 'mdu-ui';
+import { snackbar, toast } from 'mde-vue';
 
 const result = ref('尚未展示');
 

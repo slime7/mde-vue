@@ -56,7 +56,7 @@ import {
   MatToolbar as RootMatToolbar,
   MatTooltip as RootMatTooltip,
   useMatApp,
-} from 'mdu-ui';
+} from 'mde-vue';
 
 const globalComponents = [
   ['MatAppRoot', 'mat-app-root', RootMatAppRoot],
@@ -256,9 +256,9 @@ describe('公共组件导出', () => {
 
     expect(Object.keys(packageJson.exports)).toEqual(['.', './styles.css', './tailwind.css']);
     expect(packageJson.exports['.'].default).toBe(packageJson.exports['.'].import);
-    expect(readdirSync('dist').sort()).toEqual(['index.d.ts', 'mdu-ui.js', 'styles.css', 'tailwind.css']);
-    expect(javascriptFiles).toEqual(['mdu-ui.js']);
-    expect(readFileSync('dist/mdu-ui.js', 'utf8')).not.toMatch(/\.vue(?:['"]|\?)/);
+    expect(readdirSync('dist').sort()).toEqual(['index.d.ts', 'mde-vue.js', 'styles.css', 'tailwind.css']);
+    expect(javascriptFiles).toEqual(['mde-vue.js']);
+    expect(readFileSync('dist/mde-vue.js', 'utf8')).not.toMatch(/\.vue(?:['"]|\?)/);
   });
 
   it('从唯一根入口导出命令式函数', () => {

@@ -3,7 +3,7 @@
 import {
   defineComponent, h, onBeforeUnmount, onMounted, ref,
 } from 'vue';
-import { useMatApp } from 'mdu-ui';
+import { useMatApp } from 'mde-vue';
 
 const RegisteredHeader = defineComponent({
   name: 'RegisteredHeader',

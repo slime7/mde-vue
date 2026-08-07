@@ -11,7 +11,7 @@ export default defineConfig({
     lib: {
       entry: resolve(import.meta.dirname, 'src/index.js'),
       formats: ['es'],
-      fileName: 'mdu-ui',
+      fileName: 'mde-vue',
       cssFileName: 'components',
     },
     rollupOptions: {

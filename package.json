@@ -1,5 +1,5 @@
 {
-  "name": "mdu-ui",
+  "name": "mde-vue",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -19,8 +19,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/mdu-ui.js",
-      "default": "./dist/mdu-ui.js"
+      "import": "./dist/mde-vue.js",
+      "default": "./dist/mde-vue.js"
     },
     "./styles.css": "./dist/styles.css",
     "./tailwind.css": "./dist/tailwind.css"

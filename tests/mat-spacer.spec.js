@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import { MatSpacer } from 'mdu-ui';
+import { MatSpacer } from 'mde-vue';
 
 describe('MatSpacer', () => {
   it('渲染不进入无障碍树的弹性占位元素', () => {

@@ -135,7 +135,7 @@ order: 69
 ### `useMatApp()`
 
 ```js
-import { useMatApp } from 'mdu-ui';
+import { useMatApp } from 'mde-vue';
 
 const { layout, registerEdge } = useMatApp();
 ```

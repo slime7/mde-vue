@@ -1,6 +1,6 @@
 ---
 title: 限制
-description: 记录 mdu-ui 当前明确不支持的运行环境、分发方式。
+description: 记录 mde-vue 当前明确不支持的运行环境、分发方式。
 llms: true
 order: 60
 ---

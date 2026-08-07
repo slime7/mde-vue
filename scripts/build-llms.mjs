@@ -204,7 +204,7 @@ function renderDocuments(documents) {
 
   return {
     llms: [
-      '# mdu-ui',
+      '# mde-vue',
       '',
       '> 面向最新浏览器的私有 Vue 3 组件库。',
       '',
@@ -214,7 +214,7 @@ function renderDocuments(documents) {
       '',
     ].join('\n'),
     llmsFull: [
-      '# mdu-ui 完整文档',
+      '# mde-vue 完整文档',
       '',
       '> 本文件由 docs/site 中标记 llms: true 的 Markdown 页面生成，请勿手动编辑。',
       '',
@@ -306,7 +306,7 @@ export async function copyLlmsArtifacts(outDirectory) {
  */
 export function createLlmsArtifactsPlugin() {
   return {
-    name: 'mdu-ui:llms-artifacts',
+    name: 'mde-vue:llms-artifacts',
     configureServer(server) {
       server.middlewares.use(async (request, response, next) => {
         const requestUrl = new URL(request.url || '/', 'http://localhost');

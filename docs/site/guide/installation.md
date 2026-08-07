@@ -1,20 +1,20 @@
 ---
 title: 安装
-description: 从 GitHub 私有仓库固定提交安装 mdu-ui，并选择全局注册或按需导入组件与指令。
+description: 从 GitHub 私有仓库固定提交安装 mde-vue，并选择全局注册或按需导入组件与指令。
 llms: true
 order: 20
 ---
 
 # 安装
 
-`mdu-ui` 不发布到 npm registry，而是从私有 GitHub 仓库安装已提交的单一核心 ESM 分发产物。使用方需要 Vue 3、支持 ESM 的构建环境，以及访问仓库的 SSH 凭据。
+`mde-vue` 不发布到 npm registry，而是从私有 GitHub 仓库安装已提交的单一核心 ESM 分发产物。使用方需要 Vue 3、支持 ESM 的构建环境，以及访问仓库的 SSH 凭据。
 
 ## 从私有 Git 仓库安装
 
 把 `<commit>` 替换为需要固定的完整 Git 提交 SHA：
 
 ```bash
-pnpm add "mdu-ui@git+ssh://git@github.com/slime7/mdu-ui.git#<commit>"
+pnpm add "mde-vue@git+ssh://git@github.com/slime7/mde-vue.git#<commit>"
 ```
 
 不要使用会随时间移动的分支名代替提交 SHA，否则不同时间安装可能得到不同产物。仓库的 `package.json` 只导出已提交的 `dist`，其中只有一个 JavaScript 文件、一个样式文件和一个类型声明文件。安装时不运行 `prepare`，使用方也不需要编译组件库的 Vue SFC。
@@ -27,9 +27,9 @@ pnpm add "mdu-ui@git+ssh://git@github.com/slime7/mdu-ui.git#<commit>"
 
 ```js
 import { createApp } from 'vue';
-import { createMatUi } from 'mdu-ui';
+import { createMatUi } from 'mde-vue';
 import App from './App.vue';
-import 'mdu-ui/styles.css';
+import 'mde-vue/styles.css';
 
 createApp(App)
   .use(createMatUi({
@@ -75,7 +75,7 @@ function handleIntersection(isIntersecting) {
 
 ## 局部注册
 
-只需要少量组件时，也从唯一的 `mdu-ui` 根入口具名导入。基础样式仍然必须导入；它同时包含默认主题、全部组件样式和 Tailwind CSS v4 语义映射。支持 tree shaking 的构建工具可以移除未使用的具名导出。
+只需要少量组件时，也从唯一的 `mde-vue` 根入口具名导入。基础样式仍然必须导入；它同时包含默认主题、全部组件样式和 Tailwind CSS v4 语义映射。支持 tree shaking 的构建工具可以移除未使用的具名导出。
 
 ```vue
 <script setup>
@@ -85,8 +85,8 @@ import {
   MatBtn,
   MatFab,
   MatHover,
-} from 'mdu-ui';
-import 'mdu-ui/styles.css';
+} from 'mde-vue';
+import 'mde-vue/styles.css';
 
 function handleIntersection(isIntersecting) {
   console.log(isIntersecting);
@@ -152,7 +152,7 @@ import {
   snackbar,
   toast,
   useMatApp,
-} from 'mdu-ui';
+} from 'mde-vue';
 ```
 
 局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatAppRoot>`、`<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatCard>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatScrollArea>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`；`useMatApp()` 只能在 `<MatAppRoot>` 的后代组件中调用。
@@ -180,7 +180,7 @@ body {
 | 需求 | 推荐方式 |
 | --- | --- |
 | 使用动态主题、`useMatTheme()` 或 `v-intersection` | 安装 `createMatUi()`，使用全局 `mat-*` 或 `Mat*` 标签和 `v-intersection` |
-| 应用会使用多个 mdu-ui 组件 | 安装 `createMatUi()`，统一全局注册 |
-| 只使用少量组件，并接受基础样式的默认主题 | 从 `mdu-ui` 根入口具名导入并局部注册 |
+| 应用会使用多个 mde-vue 组件 | 安装 `createMatUi()`，统一全局注册 |
+| 只使用少量组件，并接受基础样式的默认主题 | 从 `mde-vue` 根入口具名导入并局部注册 |
 
 `createMatUi()` 同时负责主题初始化、组件设置、`mat-*` 与 `Mat*` 组件和 `v-intersection` 指令的全局注册。已经安装插件时，不需要再局部导入同一个组件或指令。交互指针、图标 class 与主题入口见 [`createMatUi` 配置](/guide/create-mat-ui)。

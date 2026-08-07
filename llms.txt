@@ -1,20 +1,20 @@
-# mdu-ui
+# mde-vue
 
 > 面向最新浏览器的私有 Vue 3 组件库。
 
 ## 文档
 
-- [概述](guide/overview.md): 了解 mdu-ui 的定位、支持范围、导入方式和 Material 组件体系。
-- [安装](guide/installation.md): 从 GitHub 私有仓库固定提交安装 mdu-ui，并选择全局注册或按需导入组件与指令。
-- [createMatUi](guide/create-mat-ui.md): 配置 mdu-ui 的全局组件注册、Tooltip 延迟、交互指针、图标 class 和主题控制器。
+- [概述](guide/overview.md): 了解 mde-vue 的定位、支持范围、导入方式和 Material 组件体系。
+- [安装](guide/installation.md): 从 GitHub 私有仓库固定提交安装 mde-vue，并选择全局注册或按需导入组件与指令。
+- [createMatUi](guide/create-mat-ui.md): 配置 mde-vue 的全局组件注册、Tooltip 延迟、交互指针、图标 class 和主题控制器。
 - [主题](guide/theme.md): 配置 Material 3 种子色、亮暗模式、配色变体和对比度，并在运行时切换主题。
 - [Icon 图标](components/icon.md): mat-icon 的 Material Symbols 字形、SVG 资源、内联 SVG、尺寸、字体轴和配色。
 - [组件配色](guide/component-color.md): 按 Material 3 颜色角色为组件选择容器、内容、表面、边界和状态配色。
-- [Tailwind CSS](guide/tailwind.md): 将 mdu-ui 运行时令牌接入 Tailwind CSS v4，并使用带 mat 前缀的语义工具类。
+- [Tailwind CSS](guide/tailwind.md): 将 mde-vue 运行时令牌接入 Tailwind CSS v4，并使用带 mat 前缀的语义工具类。
 - [Button 按钮](components/button.md): mat-btn 的普通与图标模式、尺寸、宽度、形态、配色、受控切换、事件和 slots。
 - [FAB 浮动操作按钮](components/fab.md): mat-fab 的纯图标 FAB 与 Extended FAB、尺寸、官方颜色角色、禁用状态和无障碍名称。
 - [Button group 按钮组](components/button-group.md): mat-btn-group 的标准与连接布局、级联属性、受控单选多选和事件。
-- [限制](guide/limitations.md): 记录 mdu-ui 当前明确不支持的运行环境、分发方式。
+- [限制](guide/limitations.md): 记录 mde-vue 当前明确不支持的运行环境、分发方式。
 - [Split button 拆分按钮](components/split-button.md): mat-split-btn 的双按钮组合、受控展开、事件、菜单 ARIA 和 slots。
 - [App root 应用布局根](components/app-root.md): mat-app-root 的应用坐标系、文档与内部滚动模式、边缘登记、响应式布局数据和浮动组件自动接入。
 - [Checkbox 复选框](components/checkbox.md): mat-checkbox 的布尔与数组 v-model、不确定态、配色、事件和默认 slot。

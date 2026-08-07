@@ -59,7 +59,7 @@ pnpm docs:dev
 | 路径 | 内容 |
 | --- | --- |
 | `src/` | 组件、指令、主题、公共入口和基础样式 |
-| `dist/` | 由 `pnpm build` 生成并提交的 `mdu-ui.js`、`styles.css`、`tailwind.css`、`index.d.ts` |
+| `dist/` | 由 `pnpm build` 生成并提交的 `mde-vue.js`、`styles.css`、`tailwind.css`、`index.d.ts` |
 | `docs/site/` | VitePress 使用文档、AI 使用指南和组件实时预览 |
 | `docs/project/` | 产品愿景、架构、公共抽象、开发入门和 ADR |
 | `tests/` | 主题及跨入口的测试辅助内容 |
@@ -154,10 +154,10 @@ pnpm docs:dev
 使用方从私有 Git 固定提交安装，并至少导入：
 
 ```js
-import 'mdu-ui/styles.css';
+import 'mde-vue/styles.css';
 ```
 
-Tailwind CSS v4 项目需在应用 CSS 中导入 `mdu-ui/tailwind.css`。消费方只会加载 `dist/` 中的 ESM 和 CSS，不会编译组件库的 Vue SFC。修改源码或公开入口后运行 `pnpm build`，确认 `dist/` 包含这四个文件且 ESM 不含 `.vue` 导入，并将产物与源码一同提交。
+Tailwind CSS v4 项目需在应用 CSS 中导入 `mde-vue/tailwind.css`。消费方只会加载 `dist/` 中的 ESM 和 CSS，不会编译组件库的 Vue SFC。修改源码或公开入口后运行 `pnpm build`，确认 `dist/` 包含这四个文件且 ESM 不含 `.vue` 导入，并将产物与源码一同提交。
 
 ## 常见问题
 
@@ -167,7 +167,7 @@ Tailwind CSS v4 项目需在应用 CSS 中导入 `mdu-ui/tailwind.css`。消费�
 
 ### 组件没有主题颜色
 
-确认应用已经导入 `mdu-ui/styles.css`，并安装 `createMatUi()` 插件。若指定了自定义 `target`，确认该元素是组件样式令牌可继承到的祖先。
+确认应用已经导入 `mde-vue/styles.css`，并安装 `createMatUi()` 插件。若指定了自定义 `target`，确认该元素是组件样式令牌可继承到的祖先。
 
 ### `system` 模式测试不稳定
 

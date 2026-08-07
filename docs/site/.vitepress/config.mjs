@@ -22,7 +22,7 @@ const materialSymbolsUrl = [
 ].join('');
 
 export default defineConfig({
-  title: 'mdu-ui',
+  title: 'mde-vue',
   description: '面向现代浏览器的私有 Vue 3 组件库',
   lang: 'zh-CN',
   cleanUrls: true,
@@ -149,15 +149,15 @@ export default defineConfig({
     resolve: {
       alias: [
         {
-          find: /^mdu-ui$/,
+          find: /^mde-vue$/,
           replacement: fileURLToPath(new URL('../../../src/index.js', import.meta.url)),
         },
         {
-          find: /^mdu-ui\/styles\.css$/,
+          find: /^mde-vue\/styles\.css$/,
           replacement: fileURLToPath(new URL('../../../src/styles/index.css', import.meta.url)),
         },
         {
-          find: /^mdu-ui\/tailwind\.css$/,
+          find: /^mde-vue\/tailwind\.css$/,
           replacement: fileURLToPath(new URL('../../../src/styles/tailwind.css', import.meta.url)),
         },
       ],

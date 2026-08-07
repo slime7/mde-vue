@@ -1,10 +1,10 @@
 ---
 layout: home
-title: mdu-ui
+title: mde-vue
 llms: false
 
 hero:
-  name: mdu-ui
+  name: mde-vue
   text: 私有 Vue 组件库
   tagline: 面向现代浏览器与个人项目的 Material 3 组件、主题和 AI 文档。
   actions:
