@@ -2,30 +2,33 @@ import { createApp, h, nextTick } from 'vue';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import MatAppBar from '../src/components/mat-app-bar/MatAppBar.vue';
-import MatAppBarSearch from '../src/components/mat-app-bar/MatAppBarSearch.vue';
 import MatAppRoot from '../src/components/mat-app-root/MatAppRoot.vue';
+import MatSearch from '../src/components/mat-search/MatSearch.vue';
 import * as library from '../src';
 import { createMatUi } from '../src/plugin.js';
 
 describe('MatAppBar', () => {
-  it('从包根入口导出，并由 createMatUi 全局注册两种组件名称', () => {
+  it('从包根入口导出，并由 createMatUi 全局注册 App bar 与 Search 名称', () => {
     expect(library.MatAppBar).toBe(MatAppBar);
-    expect(library.MatAppBarSearch).toBe(MatAppBarSearch);
+    expect(library.MatSearch).toBe(MatSearch);
+    expect(Object.hasOwn(library, 'MatAppBarSearch')).toBe(false);
 
     const app = createApp({ render: () => null });
 
     app.use(createMatUi());
     expect(app.component('MatAppBar')).toBe(MatAppBar);
     expect(app.component('mat-app-bar')).toBe(MatAppBar);
-    expect(app.component('MatAppBarSearch')).toBe(MatAppBarSearch);
-    expect(app.component('mat-app-bar-search')).toBe(MatAppBarSearch);
+    expect(app.component('MatSearch')).toBe(MatSearch);
+    expect(app.component('mat-search')).toBe(MatSearch);
+    expect(app.component('MatAppBarSearch')).toBeUndefined();
+    expect(app.component('mat-app-bar-search')).toBeUndefined();
   });
 
   it('在同一个默认 Slot 主内容区承载标题、图片或搜索内容', () => {
     const cases = [
       { content: 'headline', node: h('span', '项目概览') },
       { content: 'image', node: h('img', { alt: '产品标志', src: '/logo.svg' }) },
-      { content: 'search', node: h(MatAppBarSearch, { modelValue: '' }) },
+      { content: 'search', node: h(MatSearch, { modelValue: '' }) },
     ];
 
     cases.forEach(({ content, node }) => {
@@ -86,64 +89,5 @@ describe('MatAppBar', () => {
     await nextTick();
     expect(target.querySelector('header')?.textContent).toContain('显式目标');
     wrapper.unmount();
-  });
-});
-
-describe('MatAppBarSearch', () => {
-  it('实时更新 v-model，并通过 Enter 或搜索按钮提交当前查询', async () => {
-    const wrapper = mount(MatAppBarSearch, {
-      props: { modelValue: '' },
-    });
-    const input = wrapper.get('input[type="search"]');
-
-    await input.setValue('Material Expressive');
-    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['Material Expressive']);
-
-    await wrapper.setProps({ modelValue: 'Material Expressive' });
-    await input.trigger('keydown.enter');
-    expect(wrapper.emitted('search')?.at(-1)).toEqual(['Material Expressive']);
-
-    await wrapper.get('button[type="button"]').trigger('click');
-    expect(wrapper.emitted('search')).toHaveLength(2);
-  });
-
-  it('把输入属性和状态传给原生 input，并把 class 与 style 留在搜索容器', () => {
-    const wrapper = mount(MatAppBarSearch, {
-      attrs: {
-        'aria-describedby': 'search-help',
-        autocomplete: 'off',
-        class: 'page-search',
-        style: 'inline-size: 30rem;',
-      },
-      props: {
-        disabled: true,
-        label: '搜索文档',
-        maxLength: 40,
-        modelValue: '',
-        readonly: true,
-      },
-    });
-    const input = wrapper.get('input');
-
-    expect(wrapper.classes()).toContain('page-search');
-    expect(wrapper.attributes('style')).toContain('inline-size: 30rem');
-    expect(input.attributes('aria-label')).toBe('搜索文档');
-    expect(input.attributes('aria-describedby')).toBe('search-help');
-    expect(input.attributes('autocomplete')).toBe('off');
-    expect(input.attributes('disabled')).toBeDefined();
-    expect(input.attributes('readonly')).toBeDefined();
-    expect(input.attributes('maxlength')).toBe('40');
-  });
-
-  it('公开 focusInput() 与 getInput()', () => {
-    const wrapper = mount(MatAppBarSearch, {
-      attachTo: document.body,
-      props: { modelValue: '' },
-    });
-    const input = wrapper.get('input').element;
-
-    wrapper.vm.focusInput();
-    expect(document.activeElement).toBe(input);
-    expect(wrapper.vm.getInput()).toBe(input);
   });
 });

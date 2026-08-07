@@ -13,7 +13,7 @@
     </mat-app-bar>
 
     <mat-app-bar content="search">
-      <mat-app-bar-search v-model="query" label="搜索文档" />
+      <mat-search v-model="query" label="搜索文档" />
     </mat-app-bar>
   </div>
 </template>

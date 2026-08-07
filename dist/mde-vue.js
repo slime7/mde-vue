@@ -1971,14 +1971,14 @@ var Mt = {
 			"value"
 		]));
 	}
-}), [["__scopeId", "data-v-4243a17b"]]), zt = { class: "mat-app-bar-search__leading" }, Bt = {
+}), [["__scopeId", "data-v-4243a17b"]]), zt = { class: "mat-search__leading" }, Bt = {
 	key: 0,
-	class: "mat-app-bar-search__trailing"
+	class: "mat-search__trailing"
 }, Vt = /*#__PURE__*/ X(/* @__PURE__ */ Object.assign({
-	name: "MatAppBarSearch",
+	name: "MatSearch",
 	inheritAttrs: !1
 }, {
-	__name: "MatAppBarSearch",
+	__name: "MatSearch",
 	props: {
 		modelValue: {
 			type: String,
@@ -2030,7 +2030,7 @@ var Mt = {
 			focusInput: g,
 			getInput: _
 		}), (e, t) => (w(), o("form", h(f.value, {
-			class: "mat-app-bar-search",
+			class: "mat-search",
 			role: "search",
 			onSubmit: W(m, ["prevent"])
 		}), [
@@ -2069,7 +2069,7 @@ var Mt = {
 			e.$slots.trailing ? (w(), o("span", Bt, [j(e.$slots, "trailing", {}, void 0, !0)])) : a("", !0)
 		], 16));
 	}
-}), [["__scopeId", "data-v-174f235a"]]), Ht = 150, Ut = .75, Wt = /*#__PURE__*/ X(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-b49800ec"]]), Ht = 150, Ut = .75, Wt = /*#__PURE__*/ X(/* @__PURE__ */ Object.assign({
 	name: "MatBtnGroup",
 	inheritAttrs: !1
 }, {
@@ -8197,8 +8197,8 @@ var uo = [
 		Lt
 	],
 	[
-		"MatAppBarSearch",
-		"mat-app-bar-search",
+		"MatSearch",
+		"mat-search",
 		Vt
 	],
 	[
@@ -8844,4 +8844,4 @@ function Ho(e) {
 }
 var Uo = Ho;
 //#endregion
-export { Xa as Intersection, Lt as MatAppBar, Vt as MatAppBarSearch, wt as MatAppRoot, Ti as MatBottomSheet, bt as MatBtn, Wt as MatBtnGroup, cn as MatCard, un as MatCardActionArea, mn as MatCardActions, fn as MatCardContent, nn as MatCardHeadline, an as MatCardMedia, sn as MatCardSubhead, Jn as MatCheckbox, Oi as MatContainer, vi as MatDialog, Hn as MatDivider, Zt as MatFab, Ne as MatHover, Me as MatIcon, Rt as MatInputBase, Sn as MatList, Fn as MatListGroup, Mn as MatListItem, la as MatLoader, ti as MatMenu, ri as MatMenuGroup, oi as MatMenuItem, Ba as MatNavigationRail, Ga as MatNavigationRailItem, Na as MatPane, ka as MatPanes, Xn as MatRadio, $n as MatRadioGroup, Nr as MatRangeSlider, Mi as MatScrollArea, Ei as MatSideSheet, kr as MatSlider, xa as MatSnackbar, ki as MatSpacer, $t as MatSplitBtn, er as MatSwitch, Zr as MatTextField, Qr as MatTextarea, Ea as MatToolbar, ht as MatTooltip, jo as alert, Mo as confirm, go as createMatUi, Ao as dialog, No as prompt, Ho as snackbar, Uo as toast, Fe as useMatApp, _o as useMatTheme };
+export { Xa as Intersection, Lt as MatAppBar, wt as MatAppRoot, Ti as MatBottomSheet, bt as MatBtn, Wt as MatBtnGroup, cn as MatCard, un as MatCardActionArea, mn as MatCardActions, fn as MatCardContent, nn as MatCardHeadline, an as MatCardMedia, sn as MatCardSubhead, Jn as MatCheckbox, Oi as MatContainer, vi as MatDialog, Hn as MatDivider, Zt as MatFab, Ne as MatHover, Me as MatIcon, Rt as MatInputBase, Sn as MatList, Fn as MatListGroup, Mn as MatListItem, la as MatLoader, ti as MatMenu, ri as MatMenuGroup, oi as MatMenuItem, Ba as MatNavigationRail, Ga as MatNavigationRailItem, Na as MatPane, ka as MatPanes, Xn as MatRadio, $n as MatRadioGroup, Nr as MatRangeSlider, Mi as MatScrollArea, Vt as MatSearch, Ei as MatSideSheet, kr as MatSlider, xa as MatSnackbar, ki as MatSpacer, $t as MatSplitBtn, er as MatSwitch, Zr as MatTextField, Qr as MatTextarea, Ea as MatToolbar, ht as MatTooltip, jo as alert, Mo as confirm, go as createMatUi, Ao as dialog, No as prompt, Ho as snackbar, Uo as toast, Fe as useMatApp, _o as useMatTheme };

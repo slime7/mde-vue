@@ -9,8 +9,8 @@ const submittedQuery = ref('');
 
 <!-- #region template -->
 <template>
-  <div class="app-bar-search-example">
-    <mat-app-bar-search
+  <div class="search-input-example">
+    <mat-search
       v-model="query"
       autocomplete="off"
       label="搜索组件"
@@ -21,7 +21,7 @@ const submittedQuery = ref('');
       <template #trailing>
         <mat-btn icon="close" label="清空" size="small" variant="standard" @click="query = ''" />
       </template>
-    </mat-app-bar-search>
+    </mat-search>
 
     <span aria-live="polite">
       当前输入：{{ query || '无' }}；最近提交：{{ submittedQuery || '无' }}
@@ -32,7 +32,7 @@ const submittedQuery = ref('');
 
 <!-- #region style -->
 <style scoped>
-.app-bar-search-example {
+.search-input-example {
   display: flex;
   inline-size: 100%;
   flex-direction: column;
@@ -40,11 +40,12 @@ const submittedQuery = ref('');
   gap: 12px;
 }
 
-.app-bar-search-example > :first-child {
-  inline-size: min(100%, 48rem);
+.search-input-example > :first-child {
+  inline-size: 100%;
+  max-inline-size: 48rem;
 }
 
-.app-bar-search-example > span {
+.search-input-example > span {
   color: var(--mat-sys-color-on-surface-variant);
   font: var(--mat-sys-typescale-body-medium-weight)
     var(--mat-sys-typescale-body-medium-size) /

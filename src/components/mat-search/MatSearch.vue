@@ -8,7 +8,7 @@ import MatBtn from '../mat-btn/MatBtn.vue';
 import MatInputBase from '../MatInputBase.vue';
 
 defineOptions({
-  name: 'MatAppBarSearch',
+  name: 'MatSearch',
   inheritAttrs: false,
 });
 
@@ -128,11 +128,11 @@ defineExpose({
 <template>
   <form
     v-bind="rootAttrs"
-    class="mat-app-bar-search"
+    class="mat-search"
     role="search"
     @submit.prevent="submitSearch"
   >
-    <span class="mat-app-bar-search__leading">
+    <span class="mat-search__leading">
       <slot name="leading">
         <MatBtn
           :disabled="props.disabled"
@@ -161,17 +161,17 @@ defineExpose({
       @update:model-value="emit('update:modelValue', $event)"
     />
 
-    <span v-if="$slots.trailing" class="mat-app-bar-search__trailing">
+    <span v-if="$slots.trailing" class="mat-search__trailing">
       <slot name="trailing" />
     </span>
   </form>
 </template>
 
 <style scoped>
-.mat-app-bar-search {
+.mat-search {
   box-sizing: border-box;
   display: flex;
-  flex-grow: 1;
+  inline-size: min(100%, 45rem);
   min-inline-size: 0;
   block-size: 56px;
   align-items: center;
@@ -182,14 +182,14 @@ defineExpose({
   border-radius: 28px;
 }
 
-.mat-app-bar-search__leading,
-.mat-app-bar-search__trailing {
+.mat-search__leading,
+.mat-search__trailing {
   display: flex;
   flex: 0 0 auto;
   align-items: center;
 }
 
-.mat-app-bar-search :deep(.mat-input-base) {
+.mat-search :deep(.mat-input-base) {
   flex-grow: 1;
   min-inline-size: 0;
   font-family: var(--mat-sys-typescale-body-large-font);
@@ -198,17 +198,17 @@ defineExpose({
   letter-spacing: var(--mat-sys-typescale-body-large-tracking);
 }
 
-.mat-app-bar-search :deep(.mat-input-base::placeholder) {
+.mat-search :deep(.mat-input-base::placeholder) {
   color: var(--mat-sys-color-on-surface-variant);
   opacity: 1;
 }
 
-.mat-app-bar-search:has(.mat-input-base:focus-visible) {
+.mat-search:has(.mat-input-base:focus-visible) {
   outline: 3px solid var(--mat-sys-color-primary);
   outline-offset: 2px;
 }
 
-.mat-app-bar-search:has(.mat-input-base:disabled) {
+.mat-search:has(.mat-input-base:disabled) {
   opacity: .38;
 }
 </style>

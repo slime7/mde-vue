@@ -86,6 +86,7 @@ export default defineConfig({
               { text: 'Input base 输入基础层', link: '/components/input-base' },
               { text: 'Radio 单选按钮与单选组', link: '/components/radio' },
               { text: 'Range slider 范围滑块', link: '/components/range-slider' },
+              { text: 'Search 搜索', link: '/components/search' },
               { text: 'Slider 滑块', link: '/components/slider' },
               { text: 'Switch 开关', link: '/components/switch' },
               { text: 'Text field 文本输入', link: '/components/text-field' },

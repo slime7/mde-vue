@@ -2,7 +2,7 @@
 <template>
   <div class="app-bar-variant-example">
     <mat-app-bar variant="search">
-      <mat-app-bar-search v-model="query" label="搜索项目" />
+      <mat-search v-model="query" label="搜索项目" />
     </mat-app-bar>
 
     <mat-app-bar variant="small">

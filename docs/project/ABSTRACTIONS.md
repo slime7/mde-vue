@@ -231,7 +231,7 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 
 滚动状态只由 CSS `scroll-timeline` / `animation-timeline` 驱动：small 和 search 在最初 16px 滚动范围内填充 surface container，medium flexible 与 large flexible 分别在 48px、56px 范围内连续折叠为 small。脚本只负责解析滚动源、登记唯一时间线名称和清理共享作用域，不读取滚动位置或逐帧更新样式。不支持该 CSS 能力时保持静态展开；减少动态效果时不改变几何与内容，只保留表面填色。
 
-`<mat-app-bar-search>` 与导出 `MatAppBarSearch` 复用 `MatInputBase` 渲染原生 search input，实时发出 `update:modelValue`，由 Enter 或默认搜索按钮发出 `search(query)`。浏览器内建的 search 清除按钮被隐藏，清空入口由 trailing Slot 统一提供。它不实现 Search View、结果列表、网络请求、防抖或查询持久化。
+`<mat-search>` 与导出 `MatSearch` 独立复用 `MatInputBase` 渲染原生 search input，实时发出 `update:modelValue`，由 Enter 或默认搜索按钮发出 `search(query)`。浏览器内建的 search 清除按钮被隐藏，清空入口由 trailing Slot 统一提供。它不依赖 App bar，也不实现 Search View、结果列表、网络请求、防抖或查询持久化。
 
 ## 文档权威关系
 

@@ -195,7 +195,7 @@ export interface MatAppBarProps {
 export type MatAppBarComponent = DefineComponent<MatAppBarProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatAppBar: MatAppBarComponent;
 
-export interface MatAppBarSearchProps {
+export interface MatSearchProps {
   /**
   * 受控搜索文本，可使用 v-model。
   *
@@ -240,14 +240,14 @@ export interface MatAppBarSearchProps {
   maxLength?: number | undefined;
 }
 
-export interface MatAppBarSearchEmits {
+export interface MatSearchEmits {
   /** 输入内容变化时发出新的字符串。 */
   "update:modelValue": (payload: unknown) => unknown;
   /** 提交搜索时发出当前查询字符串。 */
   "search": (payload: unknown) => unknown;
 }
 
-export interface MatAppBarSearchExposed {
+export interface MatSearchExposed {
   /**
  * 将焦点移到原生搜索输入框。
  *
@@ -262,8 +262,8 @@ export interface MatAppBarSearchExposed {
   getInput(): HTMLInputElement | null;
 }
 
-export type MatAppBarSearchComponent = DefineComponent<MatAppBarSearchProps, MatAppBarSearchExposed, {}, {}, {}, {}, {}, MatAppBarSearchEmits>;
-export declare const MatAppBarSearch: MatAppBarSearchComponent;
+export type MatSearchComponent = DefineComponent<MatSearchProps, MatSearchExposed, {}, {}, {}, {}, {}, MatSearchEmits>;
+export declare const MatSearch: MatSearchComponent;
 
 export interface MatBtnGroupProps {
   /**
@@ -2738,8 +2738,8 @@ declare module 'vue' {
     'mat-app-root': typeof MatAppRoot;
     MatAppBar: typeof MatAppBar;
     'mat-app-bar': typeof MatAppBar;
-    MatAppBarSearch: typeof MatAppBarSearch;
-    'mat-app-bar-search': typeof MatAppBarSearch;
+    MatSearch: typeof MatSearch;
+    'mat-search': typeof MatSearch;
     MatBtnGroup: typeof MatBtnGroup;
     'mat-btn-group': typeof MatBtnGroup;
     MatFab: typeof MatFab;
