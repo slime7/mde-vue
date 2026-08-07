@@ -66,6 +66,7 @@ export function useMatApp() {
  * @typedef {object} MatAppContext
  * @property {MatAppPublicContext} publicContext
  * @property {Readonly<import('vue').Ref<HTMLElement | null>>} rootElement
+ * @property {Readonly<import('vue').Ref<HTMLElement | null>>} contentElement
  * @property {Readonly<import('vue').Ref<HTMLElement | null>>} edgeLayer
  * @property {Readonly<import('vue').Ref<HTMLElement | null>>} freeLayer
  * @property {Readonly<import('vue').Ref<HTMLElement | null>>} snackbarLayer

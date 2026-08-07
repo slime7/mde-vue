@@ -59,6 +59,7 @@ if (parentApp) {
 
 const attrs = useAttrs();
 const rootElement = ref(null);
+const contentElement = ref(null);
 const edgeLayer = ref(null);
 const freeLayer = ref(null);
 const snackbarLayer = ref(null);
@@ -353,6 +354,7 @@ function getLayoutRect() {
 provide(MAT_APP_ROOT_KEY, {
   publicContext,
   rootElement: readonly(rootElement),
+  contentElement: readonly(contentElement),
   edgeLayer: readonly(edgeLayer),
   freeLayer: readonly(freeLayer),
   snackbarLayer: readonly(snackbarLayer),
@@ -420,7 +422,7 @@ watch([
     :data-scrollable="String(scrollable)"
     :style="rootStyle"
   >
-    <div class="mat-app-root__content">
+    <div ref="contentElement" class="mat-app-root__content">
       <slot />
     </div>
 

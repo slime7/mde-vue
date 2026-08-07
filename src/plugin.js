@@ -1,5 +1,7 @@
 import { inject } from 'vue';
 import MatAppRoot from './components/mat-app-root/MatAppRoot.vue';
+import MatAppBar from './components/mat-app-bar/MatAppBar.vue';
+import MatAppBarSearch from './components/mat-app-bar/MatAppBarSearch.vue';
 import MatBtn from './components/mat-btn/MatBtn.vue';
 import MatBtnGroup from './components/mat-btn-group/MatBtnGroup.vue';
 import MatFab from './components/mat-fab/MatFab.vue';
@@ -54,6 +56,8 @@ import { Intersection } from './directives/intersection';
 
 const GLOBAL_COMPONENTS = [
   ['MatAppRoot', 'mat-app-root', MatAppRoot],
+  ['MatAppBar', 'mat-app-bar', MatAppBar],
+  ['MatAppBarSearch', 'mat-app-bar-search', MatAppBarSearch],
   ['MatBtn', 'mat-btn', MatBtn],
   ['MatBtnGroup', 'mat-btn-group', MatBtnGroup],
   ['MatFab', 'mat-fab', MatFab],
