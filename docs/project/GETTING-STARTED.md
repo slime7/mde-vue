@@ -63,7 +63,7 @@ pnpm docs:dev
 | `docs/site/` | VitePress 使用文档、AI 使用指南和组件实时预览 |
 | `docs/project/` | 产品愿景、架构、公共抽象、开发入门和 ADR |
 | `tests/` | 主题及跨入口的测试辅助内容 |
-| `scripts/` | AI 文档生成与项目验证脚本 |
+| `scripts/` | AI 文档生成、项目验证与 ADR 创建脚本 |
 | `llms.txt`、`llms-full.txt` | 从 Markdown 生成的 AI 文档产物 |
 | `licenses/` | 第三方许可原文 |
 

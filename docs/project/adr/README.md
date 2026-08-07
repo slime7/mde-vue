@@ -37,10 +37,23 @@
 
 修复缺陷、局部样式调整和没有长期取舍的重构通常不需要 ADR。
 
+## 创建 ADR
+
+使用项目内 `scripts/create_adr.py` 创建，该脚本与 init-agent-docs 技能捆绑的版本保持一致，不手工分配编号：
+
+```powershell
+python scripts/create_adr.py . '<决策标题>' --adr-dir docs/project/adr --slug <ascii-slug> --status active --context '<背景>' --decision '<决策>' --option '<候选方案>' --option '<候选方案>' --consequence '<影响>'
+```
+
+- 中文标题必须显式提供 `--slug`；新决策默认 `proposed`，已生效决策传入 `--status active`。
+- 脚本从 `docs/project/adr/` 现有记录自动取下一个编号；带 `--dry-run` 时只打印内容，不创建文件。
+- 替代既有决策时使用 `--supersedes NNNN`，并同步新旧记录的状态。
+- 脚本要求 Python 3.10 或更高版本，且本 README 必须存在。
+
 ## 文件与状态
 
 - 文件名使用 `NNNN-short-title.md`，编号单调递增。
-- 使用技能固定的 `create_adr.py` 创建文件，不手工分配编号。
+- 使用项目内 `scripts/create_adr.py` 创建文件，不手工分配编号。
 - 状态只使用 `proposed`、`active`、`superseded` 或 `retired`。
 - 已生效 ADR 保留历史；改变决策时新增 ADR，并在新旧记录中建立替代关系。
 - 一份 ADR 只记录一个长期决策。

@@ -80,5 +80,5 @@ pnpm validate:agent-docs
 ## ADR 规则
 
 - 仅为会长期影响多个模块或公共接口的技术选择创建 ADR。
-- 使用 `F:\private\dotfile-win\dot-agent\skills\init-agent-docs\scripts\create_adr.py` 创建 ADR，不手工分配编号。
+- 使用项目内 `scripts/create_adr.py` 创建 ADR，不手工分配编号。
 - 已生效 ADR 不覆写历史；改变决策时新增 ADR 并记录替代关系。
