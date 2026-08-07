@@ -6571,8 +6571,8 @@ var pi = { class: "mat-dialog__header" }, mi = {
 		"reach-end": (e) => typeof e?.distance == "number" && e.target instanceof HTMLElement
 	},
 	setup(e, { expose: t, emit: n }) {
-		let i = e, c = n, l = L(), u = O(null), d = O(!1), f = O(!1), p = O(!1), m = O(!1), y = `mat-scroll-area-blur-${R().replace(/[^\w-]/g, "-")}`, x, T;
-		function E(e, t) {
+		let i = e, c = n, l = L(), u = O(null), d = O(!1), f = O(!1), p = O(!1), m = O(!1), y, x;
+		function T(e, t) {
 			return typeof e == "number" ? {
 				start: e,
 				end: e
@@ -6581,24 +6581,23 @@ var pi = { class: "mat-dialog__header" }, mi = {
 				end: e?.end ?? t
 			};
 		}
-		let D = r(() => [
+		let E = r(() => [
 			"horizontal",
 			"x",
 			"h"
-		].includes(i.orientation) ? "horizontal" : "vertical"), k = r(() => E(i.reachThreshold, 0)), A = r(() => E(i.shadowOffset, 0)), M = r(() => E(i.shadowLength, i.shadowVariant === "blur" ? 96 : 16)), N = r(() => i.barWidth === "hidden" ? 0 : 16), P = r(() => ({
-			"--mat-scroll-area-shadow-length-start": `${M.value.start}px`,
-			"--mat-scroll-area-shadow-length-end": `${M.value.end}px`,
-			"--mat-scroll-area-shadow-offset-start": `${A.value.start}px`,
-			"--mat-scroll-area-shadow-offset-end": `${A.value.end}px`,
-			"--mat-scroll-area-scrollbar-space": `${N.value}px`,
-			"--mat-scroll-area-blur-filter": `url(#${y})`,
-			"--mat-scroll-area-blur-radius-start": `${M.value.start * 3}px`,
-			"--mat-scroll-area-blur-radius-end": `${M.value.end * 3}px`
-		})), F = r(() => ({
+		].includes(i.orientation) ? "horizontal" : "vertical"), D = r(() => T(i.reachThreshold, 0)), k = r(() => T(i.shadowOffset, 0)), A = r(() => T(i.shadowLength, i.shadowVariant === "blur" ? 96 : 16)), M = r(() => i.barWidth === "hidden" ? 0 : 16), N = r(() => ({
+			"--mat-scroll-area-shadow-length-start": `${A.value.start}px`,
+			"--mat-scroll-area-shadow-length-end": `${A.value.end}px`,
+			"--mat-scroll-area-shadow-offset-start": `${k.value.start}px`,
+			"--mat-scroll-area-shadow-offset-end": `${k.value.end}px`,
+			"--mat-scroll-area-scrollbar-space": `${M.value}px`,
+			"--mat-scroll-area-blur-radius-start": `${A.value.start * 3}px`,
+			"--mat-scroll-area-blur-radius-end": `${A.value.end * 3}px`
+		})), P = r(() => ({
 			class: l.class,
 			style: l.style
-		})), I = r(() => {
-			let e = D.value === "horizontal", t = `${i.snapPadding}px`;
+		})), F = r(() => {
+			let e = E.value === "horizontal", t = `${i.snapPadding}px`;
 			return {
 				scrollPaddingBottom: e ? void 0 : t,
 				scrollPaddingLeft: e ? t : void 0,
@@ -6606,14 +6605,14 @@ var pi = { class: "mat-dialog__header" }, mi = {
 				scrollPaddingTop: e ? void 0 : t,
 				scrollSnapType: i.snap === "none" ? "none" : `${e ? "x" : "y"} ${i.snap}`
 			};
-		}), z = r(() => Object.fromEntries(Object.entries(l).filter(([e]) => !["class", "style"].includes(e))));
-		function V() {
+		}), I = r(() => Object.fromEntries(Object.entries(l).filter(([e]) => !["class", "style"].includes(e))));
+		function R() {
 			let e = u.value;
 			if (!e) return {
 				start: 0,
 				end: 0
 			};
-			if (D.value === "horizontal") {
+			if (E.value === "horizontal") {
 				let t = Math.abs(e.scrollLeft);
 				return {
 					start: t,
@@ -6625,10 +6624,10 @@ var pi = { class: "mat-dialog__header" }, mi = {
 				end: Math.max(0, e.scrollHeight - e.clientHeight - e.scrollTop)
 			};
 		}
-		function H(e) {
+		function z(e) {
 			let t = u.value;
 			if (!t) return;
-			let n = V(), r = n.start <= k.value.start + 1, i = n.end <= k.value.end + 1;
+			let n = R(), r = n.start <= D.value.start + 1, i = n.end <= D.value.end + 1;
 			d.value = n.start > 1, f.value = n.end > 1, e && r && !p.value && c("reach-start", {
 				distance: n.start,
 				target: t
@@ -6637,89 +6636,57 @@ var pi = { class: "mat-dialog__header" }, mi = {
 				target: t
 			}), p.value = r, m.value = i;
 		}
-		function U(e) {
-			x !== void 0 && cancelAnimationFrame(x), x = requestAnimationFrame(() => {
-				x = void 0, H(e);
+		function V(e) {
+			y !== void 0 && cancelAnimationFrame(y), y = requestAnimationFrame(() => {
+				y = void 0, z(e);
 			});
 		}
+		function H() {
+			V(!0);
+		}
+		function U() {
+			!x || !u.value || (x.disconnect(), x.observe(u.value), Array.from(u.value.children).forEach((e) => {
+				x.observe(e);
+			}), V(!1));
+		}
 		function W() {
-			U(!0);
-		}
-		function G() {
-			!T || !u.value || (T.disconnect(), T.observe(u.value), Array.from(u.value.children).forEach((e) => {
-				T.observe(e);
-			}), U(!1));
-		}
-		function K() {
 			return u.value;
 		}
-		function q(e) {
+		function G(e) {
 			u.value?.scrollTo(e);
 		}
-		return B([D, k], async () => {
-			await g(), U(!1);
+		return B([E, D], async () => {
+			await g(), V(!1);
 		}, { deep: !0 }), S(() => {
-			typeof ResizeObserver == "function" && (T = new ResizeObserver(() => U(!1))), G();
-		}), C(G), b(() => {
-			x !== void 0 && cancelAnimationFrame(x), T?.disconnect();
+			typeof ResizeObserver == "function" && (x = new ResizeObserver(() => V(!1))), U();
+		}), C(U), b(() => {
+			y !== void 0 && cancelAnimationFrame(y), x?.disconnect();
 		}), t({
-			getScroller: K,
-			scrollTo: q
-		}), (e, t) => (w(), o("div", h(F.value, { class: ["mat-scroll-area", `mat-scroll-area--${D.value}`] }), [
+			getScroller: W,
+			scrollTo: G
+		}), (e, t) => (w(), o("div", h(P.value, { class: ["mat-scroll-area", `mat-scroll-area--${E.value}`] }), [
 			e.$slots["fixed-start"] ? (w(), o("div", Ai, [j(e.$slots, "fixed-start", {}, void 0, !0)])) : a("", !0),
 			s("div", {
 				class: _(["mat-scroll-area__viewport", [`mat-scroll-area__viewport--${i.shadowVariant}`, {
 					"mat-scroll-area__viewport--start-overflow": d.value,
 					"mat-scroll-area__viewport--end-overflow": f.value
 				}]]),
-				style: v(P.value)
-			}, [s("svg", {
-				class: "mat-scroll-area__filter-definitions",
-				"aria-hidden": "true",
-				focusable: "false",
-				xmlns: "http://www.w3.org/2000/svg"
-			}, [s("defs", null, [s("filter", {
-				id: y,
-				x: "-20%",
-				y: "-20%",
-				width: "140%",
-				height: "140%",
-				"color-interpolation-filters": "sRGB"
-			}, [...t[0] ||= [
-				s("feTurbulence", {
-					type: "fractalNoise",
-					baseFrequency: "0.025",
-					numOctaves: "2",
-					seed: "7",
-					result: "mat-scroll-area-noise"
-				}, null, -1),
-				s("feDisplacementMap", {
-					in: "SourceGraphic",
-					in2: "mat-scroll-area-noise",
-					scale: "4",
-					xChannelSelector: "R",
-					yChannelSelector: "G",
-					result: "mat-scroll-area-displaced"
-				}, null, -1),
-				s("feGaussianBlur", {
-					in: "mat-scroll-area-displaced",
-					stdDeviation: "2.5"
-				}, null, -1)
-			]])])]), s("div", h({
+				style: v(N.value)
+			}, [s("div", h({
 				ref_key: "scroller",
 				ref: u
-			}, z.value, {
+			}, I.value, {
 				class: ["mat-scroll-area__scroller", [`mat-scroll-area__scroller--bar-${i.barWidth}`, {
 					"mat-scroll-area__scroller--start-overflow": d.value,
 					"mat-scroll-area__scroller--end-overflow": f.value
 				}]],
-				style: I.value,
-				onScroll: W
+				style: F.value,
+				onScroll: H
 			}), [j(e.$slots, "default", {}, void 0, !0)], 16)], 6),
 			e.$slots["fixed-end"] ? (w(), o("div", ji, [j(e.$slots, "fixed-end", {}, void 0, !0)])) : a("", !0)
 		], 16));
 	}
-}), [["__scopeId", "data-v-6ef569df"]]), Ni = ["aria-valuemax", "aria-valuenow"], Pi = ["width", "height"], Fi = { key: 0 }, Ii = ["width", "height"], Li = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ri = ["d"], zi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Bi = ["d"], Vi = ["d", "mask"], Hi = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ui = ["d"], Wi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Gi = ["d"], Ki = ["d"], qi = {
+}), [["__scopeId", "data-v-3e66e0f5"]]), Ni = ["aria-valuemax", "aria-valuenow"], Pi = ["width", "height"], Fi = { key: 0 }, Ii = ["width", "height"], Li = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ri = ["d"], zi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Bi = ["d"], Vi = ["d", "mask"], Hi = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Ui = ["d"], Wi = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, Gi = ["d"], Ki = ["d"], qi = {
 	key: 1,
 	class: "mat-loader__linear-stop"
 }, Ji = ["viewBox"], Yi = { class: "mat-loader__circular-linear-rotate" }, Xi = { class: "mat-loader__circular-rotate-arc" }, Zi = [
