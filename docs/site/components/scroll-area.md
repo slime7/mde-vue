@@ -13,6 +13,8 @@ order: 114
 
 组件一次只管理一个滚动轴。使用方必须为纵向模式提供确定的块轴尺寸，或为横向模式提供确定的行轴尺寸和不会收缩的内部内容，才能形成滚动边界。
 
+边缘阴影带默认紧贴边缘，`shadowOffset` 可以让起始端、末端的阴影带从边缘向内偏移；偏移区内的滚动内容不会被遮罩覆盖，适合放置不透明的 sticky 元素。
+
 ## 示例
 
 ### 滚动方向
@@ -97,6 +99,26 @@ order: 114
   </DocsPreview>
 </ClientOnly>
 
+### 阴影偏移
+
+`shadowOffset` 让阴影带从边缘向内偏移；数字形式同时设置两端，对象形式可分别设置 `start` 与 `end`。偏移区内的滚动内容不会被遮罩覆盖：下方纵向示例使用 `{ start: 48, end: 48 }`，并放置不透明的 sticky 标题与结尾，滚动内容在阴影带内渐隐后滑入 sticky 元素下方；横向示例使用 `48`，并搭配固定首列。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/scroll-area/ScrollAreaShadowOffsetExample.vue#template [template]
+
+<<< @/examples/scroll-area/ScrollAreaShadowOffsetExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Scroll area 阴影偏移预览">
+    <ScrollAreaShadowOffsetExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### 命令式滚动
 
 :::: details 查看示例代码
@@ -127,6 +149,7 @@ order: 114
 | `snap` | `'none' \| 'proximity' \| 'mandatory'` | `'none'` | 设置当前滚动轴的停靠强度；`none` 关闭滚动停靠 |
 | `snapPadding` | `number` | `0` | 当前滚动轴起始端和末端的停靠内边距，单位为 px，必须是非负有限数字 |
 | `reachThreshold` | `number \| { start?: number, end?: number }` | `0` | 边缘事件的像素阈值；数字用于两端，对象未提供的一端为 `0`，值必须是非负有限数字 |
+| `shadowOffset` | `number \| { start?: number, end?: number }` | `0` | 边缘阴影带从对应边缘向内偏移的像素数；数字用于两端，对象未提供的一端为 `0`，值必须是非负有限数字。偏移区内的滚动内容不被遮罩覆盖，适合放置不透明的 sticky 元素 |
 
 `class` 和 `style` 作用于组件根容器。其他未被消费的原生属性、ARIA 属性和监听器作用于实际滚动元素；需要键盘聚焦滚动区时，应按场景提供 `tabindex="0"` 和可访问名称。
 
@@ -162,5 +185,6 @@ import ScrollAreaFixedSlotsExample from '../examples/scroll-area/ScrollAreaFixed
 import ScrollAreaMethodsExample from '../examples/scroll-area/ScrollAreaMethodsExample.vue';
 import ScrollAreaOrientationExample from '../examples/scroll-area/ScrollAreaOrientationExample.vue';
 import ScrollAreaReachExample from '../examples/scroll-area/ScrollAreaReachExample.vue';
+import ScrollAreaShadowOffsetExample from '../examples/scroll-area/ScrollAreaShadowOffsetExample.vue';
 import ScrollAreaSnapExample from '../examples/scroll-area/ScrollAreaSnapExample.vue';
 </script>

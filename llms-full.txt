@@ -6243,9 +6243,13 @@ import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.
 
 `<mat-input-base>` 的组件导出名是 `MatInputBase`。它渲染调用方选择的原生 `input` 或 `textarea`，提供受控字符串值、原生属性透传、模型更新和聚焦方法。组件不提供标签、描边、填充、辅助文字或校验语义，适合由使用方自行绘制输入容器和交互界面。
 
+组件同时隐藏浏览器为 search、number、date/time 等原生控件添加的默认 UI（清除按钮、步进按钮、日历指示器），需要等价操作时由使用方在自己的外层 UI 中提供。
+
 ## 示例
 
 ### 原生 input
+
+示例使用 `type="search"`，浏览器默认的清除按钮已被组件隐藏，清空操作由使用方自行提供。
 
 :::: details 查看示例代码
 ::: code-group
@@ -8050,7 +8054,7 @@ const scrollTarget = ref(null);
 
 ### `MatAppBarSearch`
 
-桌面搜索输入实时更新 `v-model`；按 Enter 或使用默认 leading 搜索按钮发出 `search`。此示例还使用 trailing Slot 提供唯一的清空操作，组件会隐藏浏览器为 `type="search"` 添加的重复清除按钮。
+桌面搜索输入实时更新 `v-model`；按 Enter 或使用默认 leading 搜索按钮发出 `search`。此示例还使用 trailing Slot 提供唯一的清空操作；`MatInputBase` 会隐藏浏览器为 `type="search"` 添加的清除按钮。
 
 :::: details 查看示例代码
 ::: code-group
@@ -8145,7 +8149,7 @@ const submittedQuery = ref('');
 | `readonly` | `boolean` | `false` | 将原生输入设为只读 |
 | `maxLength` | `number` | `undefined` | 原生最大字符数 |
 
-`class` 与 `style` 传给搜索 `<form role="search">` 容器；其他未消费属性传给内部 `MatInputBase` 的原生 `<input type="search">`。原生搜索清除按钮会被隐藏，清空能力由 trailing Slot 中的组件操作明确提供。
+`class` 与 `style` 传给搜索 `<form role="search">` 容器；其他未消费属性传给内部 `MatInputBase` 的原生 `<input type="search">`。原生搜索清除按钮由 `MatInputBase` 隐藏，清空能力由 trailing Slot 中的组件操作明确提供。
 
 ### `MatAppBarSearch` 方法
 
@@ -14098,6 +14102,8 @@ import SnackbarTextExample from '../examples/snackbar/SnackbarTextExample.vue';
 
 组件一次只管理一个滚动轴。使用方必须为纵向模式提供确定的块轴尺寸，或为横向模式提供确定的行轴尺寸和不会收缩的内部内容，才能形成滚动边界。
 
+边缘阴影带默认紧贴边缘，`shadowOffset` 可以让起始端、末端的阴影带从边缘向内偏移；偏移区内的滚动内容不会被遮罩覆盖，适合放置不透明的 sticky 元素。
+
 ## 示例
 
 ### 滚动方向
@@ -14382,6 +14388,130 @@ function loadMore({ distance }) {
   </DocsPreview>
 </ClientOnly>
 
+### 阴影偏移
+
+`shadowOffset` 让阴影带从边缘向内偏移；数字形式同时设置两端，对象形式可分别设置 `start` 与 `end`。偏移区内的滚动内容不会被遮罩覆盖：下方纵向示例使用 `{ start: 48, end: 48 }`，并放置不透明的 sticky 标题与结尾，滚动内容在阴影带内渐隐后滑入 sticky 元素下方；横向示例使用 `48`，并搭配固定首列。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="scroll-area-shadow-offset-example">
+    <mat-scroll-area
+      class="scroll-area-shadow-offset-example__vertical"
+      :shadow-offset="{ start: 48, end: 48 }"
+      aria-label="带固定标题的消息列表"
+      tabindex="0"
+    >
+      <div class="scroll-area-shadow-offset-example__sticky scroll-area-shadow-offset-example__sticky--start">
+        固定标题
+      </div>
+
+      <p v-for="index in 16" :key="index">
+        第 {{ index }} 条消息
+      </p>
+
+      <div class="scroll-area-shadow-offset-example__sticky scroll-area-shadow-offset-example__sticky--end">
+        固定结尾
+      </div>
+    </mat-scroll-area>
+
+    <mat-scroll-area
+      class="scroll-area-shadow-offset-example__horizontal"
+      orientation="horizontal"
+      :shadow-offset="48"
+      aria-label="带固定首列的卡片"
+      tabindex="0"
+    >
+      <div class="scroll-area-shadow-offset-example__row">
+        <div class="scroll-area-shadow-offset-example__sticky scroll-area-shadow-offset-example__sticky--left">
+          固定列
+        </div>
+
+        <article v-for="index in 8" :key="index">
+          卡片 {{ index }}
+        </article>
+      </div>
+    </mat-scroll-area>
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.scroll-area-shadow-offset-example {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  inline-size: 100%;
+}
+
+.scroll-area-shadow-offset-example__vertical {
+  block-size: 260px;
+  padding-inline: 16px;
+  background: var(--mat-sys-color-surface-container);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.scroll-area-shadow-offset-example__vertical p {
+  margin-block: 16px;
+}
+
+.scroll-area-shadow-offset-example__horizontal {
+  inline-size: 100%;
+}
+
+.scroll-area-shadow-offset-example__row {
+  display: flex;
+  gap: 12px;
+  inline-size: max-content;
+  padding-block-end: 8px;
+}
+
+.scroll-area-shadow-offset-example__row article {
+  flex-shrink: 0;
+  inline-size: 152px;
+  padding: 24px 16px;
+  color: var(--mat-sys-color-on-secondary-container);
+  background: var(--mat-sys-color-secondary-container);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+
+.scroll-area-shadow-offset-example__sticky {
+  position: sticky;
+  z-index: 1;
+  background: var(--mat-sys-color-surface-container-high);
+}
+
+.scroll-area-shadow-offset-example__sticky--start {
+  inset-block-start: 0;
+  padding: 12px 16px;
+}
+
+.scroll-area-shadow-offset-example__sticky--end {
+  inset-block-end: 0;
+  padding: 12px 16px;
+}
+
+.scroll-area-shadow-offset-example__sticky--left {
+  display: flex;
+  flex: 0 0 auto;
+  inline-size: 48px;
+  align-items: center;
+  justify-content: center;
+  inset-inline-start: 0;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Scroll area 阴影偏移预览">
+    <ScrollAreaShadowOffsetExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### 命令式滚动
 
 :::: details 查看示例代码
@@ -14470,6 +14600,7 @@ function scrollToEnd() {
 | `snap` | `'none' \| 'proximity' \| 'mandatory'` | `'none'` | 设置当前滚动轴的停靠强度；`none` 关闭滚动停靠 |
 | `snapPadding` | `number` | `0` | 当前滚动轴起始端和末端的停靠内边距，单位为 px，必须是非负有限数字 |
 | `reachThreshold` | `number \| { start?: number, end?: number }` | `0` | 边缘事件的像素阈值；数字用于两端，对象未提供的一端为 `0`，值必须是非负有限数字 |
+| `shadowOffset` | `number \| { start?: number, end?: number }` | `0` | 边缘阴影带从对应边缘向内偏移的像素数；数字用于两端，对象未提供的一端为 `0`，值必须是非负有限数字。偏移区内的滚动内容不被遮罩覆盖，适合放置不透明的 sticky 元素 |
 
 `class` 和 `style` 作用于组件根容器。其他未被消费的原生属性、ARIA 属性和监听器作用于实际滚动元素；需要键盘聚焦滚动区时，应按场景提供 `tabindex="0"` 和可访问名称。
 
@@ -14505,6 +14636,7 @@ import ScrollAreaFixedSlotsExample from '../examples/scroll-area/ScrollAreaFixed
 import ScrollAreaMethodsExample from '../examples/scroll-area/ScrollAreaMethodsExample.vue';
 import ScrollAreaOrientationExample from '../examples/scroll-area/ScrollAreaOrientationExample.vue';
 import ScrollAreaReachExample from '../examples/scroll-area/ScrollAreaReachExample.vue';
+import ScrollAreaShadowOffsetExample from '../examples/scroll-area/ScrollAreaShadowOffsetExample.vue';
 import ScrollAreaSnapExample from '../examples/scroll-area/ScrollAreaSnapExample.vue';
 </script>
 

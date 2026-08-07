@@ -79,6 +79,31 @@ const props = defineProps({
       ));
     },
   },
+  /**
+   * 边缘阴影带从对应边缘向内偏移的像素数。数字同时用于两端，对象可分别设置 start、end。
+   * 偏移区内的内容不会被遮罩覆盖，适合放置不透明的 sticky 元素。
+   *
+   * @type {number | { start?: number, end?: number }}
+   * @default 0
+   */
+  shadowOffset: {
+    type: [Number, Object],
+    default: 0,
+    validator(value) {
+      if (typeof value === 'number') {
+        return Number.isFinite(value) && value >= 0;
+      }
+
+      if (!value || Array.isArray(value)) {
+        return false;
+      }
+
+      return ['start', 'end'].every((name) => (
+        value[name] === undefined
+        || (typeof value[name] === 'number' && Number.isFinite(value[name]) && value[name] >= 0)
+      ));
+    },
+  },
 });
 
 const emit = defineEmits({
@@ -125,6 +150,19 @@ const thresholds = computed(() => {
     end: props.reachThreshold?.end ?? 0,
   };
 });
+const shadowOffsets = computed(() => {
+  if (typeof props.shadowOffset === 'number') {
+    return {
+      start: props.shadowOffset,
+      end: props.shadowOffset,
+    };
+  }
+
+  return {
+    start: props.shadowOffset?.start ?? 0,
+    end: props.shadowOffset?.end ?? 0,
+  };
+});
 const rootAttrs = computed(() => ({
   class: attrs.class,
   style: attrs.style,
@@ -134,6 +172,8 @@ const scrollerStyle = computed(() => {
   const padding = `${props.snapPadding}px`;
 
   return {
+    '--mat-scroll-area-fade-offset-start': `${shadowOffsets.value.start}px`,
+    '--mat-scroll-area-fade-offset-end': `${shadowOffsets.value.end}px`,
     scrollPaddingBottom: isHorizontal ? undefined : padding,
     scrollPaddingLeft: isHorizontal ? padding : undefined,
     scrollPaddingRight: isHorizontal ? padding : undefined,
@@ -344,6 +384,8 @@ defineExpose({
 
 .mat-scroll-area__scroller {
   --mat-scroll-area-fade-size: 16px;
+  --mat-scroll-area-fade-offset-start: 0;
+  --mat-scroll-area-fade-offset-end: 0;
   --mat-scroll-area-scrollbar-space: 16px;
   flex-grow: 1;
   box-sizing: border-box;
@@ -367,27 +409,27 @@ defineExpose({
 }
 
 .mat-scroll-area--vertical .mat-scroll-area__scroller--start-overflow {
-  --mat-scroll-area-content-mask: linear-gradient(to bottom, transparent 0, black var(--mat-scroll-area-fade-size) 100%);
+  --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 var(--mat-scroll-area-fade-offset-start), transparent var(--mat-scroll-area-fade-offset-start), black calc(var(--mat-scroll-area-fade-offset-start) + var(--mat-scroll-area-fade-size)) 100%);
 }
 
 .mat-scroll-area--vertical .mat-scroll-area__scroller--end-overflow {
-  --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 calc(100% - var(--mat-scroll-area-fade-size)), transparent 100%);
+  --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 calc(100% - var(--mat-scroll-area-fade-offset-end) - var(--mat-scroll-area-fade-size)), transparent calc(100% - var(--mat-scroll-area-fade-offset-end)), black calc(100% - var(--mat-scroll-area-fade-offset-end)) 100%);
 }
 
 .mat-scroll-area--vertical .mat-scroll-area__scroller--start-overflow.mat-scroll-area__scroller--end-overflow {
-  --mat-scroll-area-content-mask: linear-gradient(to bottom, transparent 0, black var(--mat-scroll-area-fade-size) calc(100% - var(--mat-scroll-area-fade-size)), transparent 100%);
+  --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 var(--mat-scroll-area-fade-offset-start), transparent var(--mat-scroll-area-fade-offset-start), black calc(var(--mat-scroll-area-fade-offset-start) + var(--mat-scroll-area-fade-size)) calc(100% - var(--mat-scroll-area-fade-offset-end) - var(--mat-scroll-area-fade-size)), transparent calc(100% - var(--mat-scroll-area-fade-offset-end)), black calc(100% - var(--mat-scroll-area-fade-offset-end)) 100%);
 }
 
 .mat-scroll-area--horizontal .mat-scroll-area__scroller--start-overflow {
-  --mat-scroll-area-content-mask: linear-gradient(to right, transparent 0, black var(--mat-scroll-area-fade-size) 100%);
+  --mat-scroll-area-content-mask: linear-gradient(to right, black 0 var(--mat-scroll-area-fade-offset-start), transparent var(--mat-scroll-area-fade-offset-start), black calc(var(--mat-scroll-area-fade-offset-start) + var(--mat-scroll-area-fade-size)) 100%);
 }
 
 .mat-scroll-area--horizontal .mat-scroll-area__scroller--end-overflow {
-  --mat-scroll-area-content-mask: linear-gradient(to right, black 0 calc(100% - var(--mat-scroll-area-fade-size)), transparent 100%);
+  --mat-scroll-area-content-mask: linear-gradient(to right, black 0 calc(100% - var(--mat-scroll-area-fade-offset-end) - var(--mat-scroll-area-fade-size)), transparent calc(100% - var(--mat-scroll-area-fade-offset-end)), black calc(100% - var(--mat-scroll-area-fade-offset-end)) 100%);
 }
 
 .mat-scroll-area--horizontal .mat-scroll-area__scroller--start-overflow.mat-scroll-area__scroller--end-overflow {
-  --mat-scroll-area-content-mask: linear-gradient(to right, transparent 0, black var(--mat-scroll-area-fade-size) calc(100% - var(--mat-scroll-area-fade-size)), transparent 100%);
+  --mat-scroll-area-content-mask: linear-gradient(to right, black 0 var(--mat-scroll-area-fade-offset-start), transparent var(--mat-scroll-area-fade-offset-start), black calc(var(--mat-scroll-area-fade-offset-start) + var(--mat-scroll-area-fade-size)) calc(100% - var(--mat-scroll-area-fade-offset-end) - var(--mat-scroll-area-fade-size)), transparent calc(100% - var(--mat-scroll-area-fade-offset-end)), black calc(100% - var(--mat-scroll-area-fade-offset-end)) 100%);
 }
 
 .mat-scroll-area__scroller::-webkit-scrollbar {

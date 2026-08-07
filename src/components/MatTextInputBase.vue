@@ -475,22 +475,14 @@ function handleModelValue(value) {
 
 .mat-text-input__control {
   flex: 1 1 0;
-  box-sizing: border-box;
-  min-inline-size: 0;
-  inline-size: auto;
   max-inline-size: 100%;
   min-block-size: 24px;
-  padding: 0;
-  color: inherit;
   font-family: var(--mat-sys-typescale-body-large-font);
   font-size: var(--mat-sys-typescale-body-large-size);
   font-weight: var(--mat-sys-typescale-body-large-weight);
   letter-spacing: var(--mat-sys-typescale-body-large-tracking);
   line-height: var(--mat-sys-typescale-body-large-line-height);
   caret-color: var(--mat-text-input-accent-color);
-  background: transparent;
-  border: 0;
-  outline: 0;
 }
 
 .mat-text-input--textarea .mat-text-input__container {

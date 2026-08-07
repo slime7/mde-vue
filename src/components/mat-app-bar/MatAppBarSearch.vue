@@ -203,11 +203,6 @@ defineExpose({
   opacity: 1;
 }
 
-.mat-app-bar-search :deep(.mat-input-base::-webkit-search-cancel-button) {
-  display: none;
-  appearance: none;
-}
-
 .mat-app-bar-search:has(.mat-input-base:focus-visible) {
   outline: 3px solid var(--mat-sys-color-primary);
   outline-offset: 2px;

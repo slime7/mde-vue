@@ -166,4 +166,20 @@ defineExpose({
 .mat-input-base:is(textarea) {
   resize: vertical;
 }
+
+.mat-input-base::-webkit-search-cancel-button {
+  display: none;
+  appearance: none;
+}
+
+.mat-input-base::-webkit-inner-spin-button,
+.mat-input-base::-webkit-outer-spin-button {
+  margin: 0;
+  appearance: none;
+}
+
+.mat-input-base::-webkit-calendar-picker-indicator {
+  display: none;
+  appearance: none;
+}
 </style>

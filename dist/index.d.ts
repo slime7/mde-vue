@@ -2072,6 +2072,14 @@ export interface MatScrollAreaProps {
   * @default 0
   */
   reachThreshold?: number | { start?: number, end?: number };
+  /**
+  * 边缘阴影带从对应边缘向内偏移的像素数。数字同时用于两端，对象可分别设置 start、end。
+  * 偏移区内的内容不会被遮罩覆盖，适合放置不透明的 sticky 元素。
+  *
+  * @type {number | { start?: number, end?: number }}
+  * @default 0
+  */
+  shadowOffset?: number | { start?: number, end?: number };
 }
 
 export interface MatScrollAreaEmits {

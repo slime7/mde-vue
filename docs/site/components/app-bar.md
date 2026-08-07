@@ -117,7 +117,7 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 
 ### `MatAppBarSearch`
 
-桌面搜索输入实时更新 `v-model`；按 Enter 或使用默认 leading 搜索按钮发出 `search`。此示例还使用 trailing Slot 提供唯一的清空操作，组件会隐藏浏览器为 `type="search"` 添加的重复清除按钮。
+桌面搜索输入实时更新 `v-model`；按 Enter 或使用默认 leading 搜索按钮发出 `search`。此示例还使用 trailing Slot 提供唯一的清空操作；`MatInputBase` 会隐藏浏览器为 `type="search"` 添加的清除按钮。
 
 :::: details 查看示例代码
 ::: code-group
@@ -165,7 +165,7 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 | `readonly` | `boolean` | `false` | 将原生输入设为只读 |
 | `maxLength` | `number` | `undefined` | 原生最大字符数 |
 
-`class` 与 `style` 传给搜索 `<form role="search">` 容器；其他未消费属性传给内部 `MatInputBase` 的原生 `<input type="search">`。原生搜索清除按钮会被隐藏，清空能力由 trailing Slot 中的组件操作明确提供。
+`class` 与 `style` 传给搜索 `<form role="search">` 容器；其他未消费属性传给内部 `MatInputBase` 的原生 `<input type="search">`。原生搜索清除按钮由 `MatInputBase` 隐藏，清空能力由 trailing Slot 中的组件操作明确提供。
 
 ### `MatAppBarSearch` 方法
 

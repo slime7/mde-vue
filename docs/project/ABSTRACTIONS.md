@@ -169,7 +169,7 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 ## 文本输入与菜单
 
-`MatInputBase` 是文本输入族的无边框基础层，渲染调用方选择的原生 `input` 或 `textarea`，负责受控字符串值、`update:modelValue`、原生属性透传以及 `focusInput`、`getInput` 方法；它不提供标签、描边、填充、辅助文字或校验语义。`<mat-text-field>` 和 `<mat-textarea>` 在其上共享 outlined/filled 外观、局部配色、辅助或错误文字、字符计数与属性路由，但分别保留 input 和 textarea 原生语义。错误角色始终覆盖 color 强调；Textarea 默认使用固定初始行数和纵向调整，也可以按内容自动增高、限制最大行数或禁止手动调整。其他输入类型可以复用该基础层并自行定义容器语义。
+`MatInputBase` 是文本输入族的无边框基础层，渲染调用方选择的原生 `input` 或 `textarea`，负责受控字符串值、`update:modelValue`、原生属性透传以及 `focusInput`、`getInput` 方法；它同时隐藏浏览器为 search、number、date/time 添加的默认控件装饰（清除按钮、步进按钮、日历指示器），等价操作由使用方自行提供；组件不提供标签、描边、填充、辅助文字或校验语义。`<mat-text-field>` 和 `<mat-textarea>` 在其上共享 outlined/filled 外观、局部配色、辅助或错误文字、字符计数与属性路由，但分别保留 input 和 textarea 原生语义。错误角色始终覆盖 color 强调；Textarea 默认使用固定初始行数和纵向调整，也可以按内容自动增高、限制最大行数或禁止手动调整。其他输入类型可以复用该基础层并自行定义容器语义。
 
 `<mat-menu>` 使用受控根 `modelValue` 和 Popover top layer。根 `activator` Slot 优先于 anchor，并且必须只产生一个当前 document 中的 HTMLElement 根节点；没有 Slot 时 anchor 接受触发器 id 或 `[clientX, clientY]` 视口坐标，offset 在基础位置之后、视口夹紧之前生效；元素 anchor 使用 CSS Anchor Positioning，坐标 anchor 使用 fixed 定位。嵌套 Menu 只允许直接位于 MatMenuItem 的 submenu Slot，自动继承父级 color 与 variant，并以父项目为 anchor。MatMenuGroup 以带可选标签的 `role="group"` 和 2px expressive 间隙组织相关项目；同一菜单不得混合分组和未分组的直接子级。MenuItem 是单一操作；叶子 click 关闭整条链，子菜单项只展开。Menu 与 List 可以共享无语义排列和 roving focus，但不得共享 listbox 选择模型、角色或左右键含义。
 
@@ -209,7 +209,7 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 
 ## Scroll area 滚动区域
 
-`<mat-scroll-area>` 与导出 `MatScrollArea` 拥有一个单轴原生滚动元素。`orientation` 的 `vertical`、`y`、`v` 表示纵向，`horizontal`、`x`、`h` 表示横向；完整值是文档中的规范写法。组件只在实际离开边缘后对对应内容使用真实 mask 渐隐，并保留独立的滚动条保护区域；`fixed-start` 与 `fixed-end` 位于遮罩之外，默认 Slot 中的 sticky 内容不保证避开遮罩。
+`<mat-scroll-area>` 与导出 `MatScrollArea` 拥有一个单轴原生滚动元素。`orientation` 的 `vertical`、`y`、`v` 表示纵向，`horizontal`、`x`、`h` 表示横向；完整值是文档中的规范写法。组件只在实际离开边缘后对对应内容使用真实 mask 渐隐，并保留独立的滚动条保护区域；边缘阴影带默认贴边，`shadowOffset` 可以分别设置起始端与末端的向内偏移，偏移区内的滚动内容不被遮罩覆盖，适合放置不透明的 sticky 元素；`fixed-start` 与 `fixed-end` 位于遮罩之外，偏移区外的默认 Slot sticky 内容不保证避开遮罩。
 
 `snap` 以 `none`、`proximity`、`mandatory` 设置当前物理滚动轴的原生滚动停靠强度，默认关闭；`snapPadding` 以非负像素值设置同一轴两端的停靠内边距。组件不替默认 Slot 内容选择停靠目标，使用方必须在目标元素上声明 `scroll-snap-align`，并按需要选择 `scroll-snap-stop`。
 
