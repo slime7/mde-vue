@@ -10,6 +10,7 @@
 - [主题](guide/theme.md): 配置 Material 3 种子色、亮暗模式、配色变体和对比度，并在运行时切换主题。
 - [Icon 图标](components/icon.md): mat-icon 的 Material Symbols 字形、SVG 资源、内联 SVG、尺寸、字体轴和配色。
 - [组件配色](guide/component-color.md): 按 Material 3 颜色角色为组件选择容器、内容、表面、边界和状态配色。
+- [Image 图片](components/image.md): mat-image 的图片填充、圆角、宽高比、尺寸动画与原生属性透传。
 - [Tailwind CSS](guide/tailwind.md): 将 mde-vue 运行时令牌接入 Tailwind CSS v4，并使用带 mat 前缀的语义工具类。
 - [Button 按钮](components/button.md): mat-btn 的普通与图标模式、尺寸、宽度、形态、配色、受控切换、事件和 slots。
 - [FAB 浮动操作按钮](components/fab.md): mat-fab 的纯图标 FAB 与 Extended FAB、尺寸、官方颜色角色、禁用状态和无障碍名称。

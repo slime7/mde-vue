@@ -137,6 +137,10 @@ Icon 尺寸使用 `small`、`medium`、`large`、`extra-large` 四档，分别�
 
 Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `currentColor`；`fontColor` 直接接受任意 CSS 颜色并优先于 `color`。Slot SVG 只有使用 `currentColor` 时继承颜色，`src` 资源保留内部颜色。其他组件复用 MatIcon 时负责传入所在组件的尺寸、光学尺寸、内容颜色和无障碍属性。
 
+## `<mat-image>`
+
+`<mat-image>` 的导出名是 `MatImage`，根元素是包裹内部原生 `<img>` 的 `div`。`radius` 省略时使用 `--mat-sys-shape-corner-extra-large`（28px），数字按 px、字符串原样写入；`fit` 只接受 `cover`（默认）与 `contain`；`aspect-ratio` 接受宽/高比数字或 CSS 字符串，省略时保持图片自然比例。组件上的 `class` 与 `style` 属于根容器，其余未消费的原生属性和监听器以及 `img-class`、`img-style` 定向到内部 `img`。根元素对 `aspect-ratio`、`inline-size`、`block-size` 和 `border-radius` 使用系统动效令牌过渡，并尊重减少动画偏好；`fit` 切换不参与过渡。组件没有 Slots、自定义事件或公开方法。
+
 ## `<mat-card>`
 
 `<mat-card>` 的导出名是 `MatCard`，以 `filled`、`elevated`、`outlined` 表达三种 Material 3 层级，默认 filled。根元素可以使用 `div`、`article`、`section` 或 `li`，并继续透传未消费的原生属性。`color` 遵循统一组件配色约定；省略时保持官方中性表面角色。

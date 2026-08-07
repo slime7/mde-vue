@@ -500,6 +500,54 @@ export interface MatIconProps {
 export type MatIconComponent = DefineComponent<MatIconProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatIcon: MatIconComponent;
 
+export interface MatImageProps {
+  /**
+  * 图片资源地址。
+  *
+  * @type {string}
+  * @required
+  */
+  src: string;
+  /**
+  * 组件圆角；数字按 px 处理，字符串原样使用。省略时使用 `--mat-sys-shape-corner-extra-large`（默认 28px）。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  radius?: number | string | undefined;
+  /**
+  * 图片填充方式；可选值为 `cover`、`contain`。
+  *
+  * @type {'cover' | 'contain'}
+  * @default 'cover'
+  */
+  fit?: 'cover' | 'contain';
+  /**
+  * 组件宽高比；数字表示宽/高比，字符串原样写入 CSS `aspect-ratio`。省略时保持图片自然比例。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  aspectRatio?: number | string | undefined;
+  /**
+  * 合并到内部 img 元素的 class。
+  *
+  * @type {string | Array<unknown> | Record<string, unknown> | undefined}
+  * @default undefined
+  */
+  imgClass?: string | Array<unknown> | Record<string, unknown> | undefined;
+  /**
+  * 合并到内部 img 元素的 style。
+  *
+  * @type {string | Array<unknown> | Record<string, unknown> | undefined}
+  * @default undefined
+  */
+  imgStyle?: string | Array<unknown> | Record<string, unknown> | undefined;
+}
+
+export type MatImageComponent = DefineComponent<MatImageProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatImage: MatImageComponent;
+
 export interface MatSplitBtnProps {
   /**
   * 使用块级 flex 组根，在普通文档流中铺满父元素。
@@ -2746,6 +2794,8 @@ declare module 'vue' {
     'mat-fab': typeof MatFab;
     MatIcon: typeof MatIcon;
     'mat-icon': typeof MatIcon;
+    MatImage: typeof MatImage;
+    'mat-image': typeof MatImage;
     MatSplitBtn: typeof MatSplitBtn;
     'mat-split-btn': typeof MatSplitBtn;
     MatCard: typeof MatCard;
