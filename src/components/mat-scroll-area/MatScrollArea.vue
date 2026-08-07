@@ -156,10 +156,12 @@ const scrollbarSpace = computed(() => {
   return props.barWidth === 'thin' ? 10 : 16;
 });
 const viewportStyle = computed(() => ({
-  '--mat-scroll-area-shadow-length-start': toCssLength(shadowLengths.value.start),
-  '--mat-scroll-area-shadow-length-end': toCssLength(shadowLengths.value.end),
-  '--mat-scroll-area-shadow-offset-start': toCssLength(shadowOffsets.value.start),
-  '--mat-scroll-area-shadow-offset-end': toCssLength(shadowOffsets.value.end),
+  // 阴影变量参与 mask 渐变的 calc() 运算，必须始终携带长度单位；
+  // toCssLength 会把 0 输出为无单位值，导致渐变整体失效。
+  '--mat-scroll-area-shadow-length-start': `${shadowLengths.value.start}px`,
+  '--mat-scroll-area-shadow-length-end': `${shadowLengths.value.end}px`,
+  '--mat-scroll-area-shadow-offset-start': `${shadowOffsets.value.start}px`,
+  '--mat-scroll-area-shadow-offset-end': `${shadowOffsets.value.end}px`,
   '--mat-scroll-area-scrollbar-space': `${scrollbarSpace.value}px`,
 }));
 const rootAttrs = computed(() => ({

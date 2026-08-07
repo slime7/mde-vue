@@ -210,12 +210,16 @@ const attachTarget = computed(() => {
 
   return normalizeAttach(props.attach);
 });
-const normalizedBottomPlaceholder = computed(() => (
-  toCssLength(props.bottomPlaceholder, {
+const normalizedBottomPlaceholder = computed(() => {
+  const css = toCssLength(props.bottomPlaceholder, {
     property: 'block-size',
-    fallback: '0',
-  })
-));
+    fallback: '0px',
+  });
+
+  // 占位高度参与 max()/calc() 运算，必须始终携带长度单位；
+  // toCssLength 会把 0 输出为无单位值，导致整条声明失效。
+  return css === '0' ? '0px' : css;
+});
 const effectiveBottomPlaceholder = computed(() => (
   isBottomVariant.value ? normalizedBottomPlaceholder.value : '0px'
 ));

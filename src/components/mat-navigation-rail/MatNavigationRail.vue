@@ -291,14 +291,20 @@ const expandedWidthStyle = computed(() => {
 
   return { '--mat-navigation-rail-expanded-width': width };
 });
-const effectiveBottomPlaceholder = computed(() => (
-  props.app && !usesAppRoot.value
-    ? toCssLength(props.bottomPlaceholder, {
-      property: 'block-size',
-      fallback: '0',
-    })
-    : '0'
-));
+const effectiveBottomPlaceholder = computed(() => {
+  if (!props.app || usesAppRoot.value) {
+    return '0px';
+  }
+
+  const css = toCssLength(props.bottomPlaceholder, {
+    property: 'block-size',
+    fallback: '0px',
+  });
+
+  // 占位高度参与 max()/calc() 运算，必须始终携带长度单位；
+  // toCssLength 会把 0 输出为无单位值，导致整条声明失效。
+  return css === '0' ? '0px' : css;
+});
 const railStyle = computed(() => [
   expandedWidthStyle.value,
   {

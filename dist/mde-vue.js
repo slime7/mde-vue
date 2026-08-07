@@ -6732,10 +6732,10 @@ var Di = { class: "mat-dialog__header" }, Oi = {
 			"x",
 			"h"
 		].includes(i.orientation) ? "horizontal" : "vertical"), E = r(() => Ve(i.reachThreshold, 0)), D = r(() => Ve(i.shadowOffset, 0)), k = r(() => Ve(i.shadowLength, 16)), A = r(() => i.barWidth === "hidden" ? 0 : i.barWidth === "thin" ? 10 : 16), M = r(() => ({
-			"--mat-scroll-area-shadow-length-start": Re(k.value.start),
-			"--mat-scroll-area-shadow-length-end": Re(k.value.end),
-			"--mat-scroll-area-shadow-offset-start": Re(D.value.start),
-			"--mat-scroll-area-shadow-offset-end": Re(D.value.end),
+			"--mat-scroll-area-shadow-length-start": `${k.value.start}px`,
+			"--mat-scroll-area-shadow-length-end": `${k.value.end}px`,
+			"--mat-scroll-area-shadow-offset-start": `${D.value.start}px`,
+			"--mat-scroll-area-shadow-offset-end": `${D.value.end}px`,
 			"--mat-scroll-area-scrollbar-space": `${A.value}px`
 		})), N = r(() => ({
 			class: l.class,
@@ -6830,7 +6830,7 @@ var Di = { class: "mat-dialog__header" }, Oi = {
 			e.$slots["fixed-end"] ? (w(), o("div", Gi, [j(e.$slots, "fixed-end", {}, void 0, !0)])) : a("", !0)
 		], 16));
 	}
-}), [["__scopeId", "data-v-22d0f1af"]]), qi = ["aria-valuemax", "aria-valuenow"], Ji = ["width", "height"], Yi = { key: 0 }, Xi = ["width", "height"], Zi = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Qi = ["d"], $i = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, ea = ["d"], ta = ["d", "mask"], na = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, ra = ["d"], ia = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, aa = ["d"], oa = ["d"], sa = {
+}), [["__scopeId", "data-v-96c1322d"]]), qi = ["aria-valuemax", "aria-valuenow"], Ji = ["width", "height"], Yi = { key: 0 }, Xi = ["width", "height"], Zi = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, Qi = ["d"], $i = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, ea = ["d"], ta = ["d", "mask"], na = { class: "mat-loader__linear-bar mat-loader__linear-bar--primary" }, ra = ["d"], ia = { class: "mat-loader__linear-bar mat-loader__linear-bar--secondary" }, aa = ["d"], oa = ["d"], sa = {
 	key: 1,
 	class: "mat-loader__linear-stop"
 }, ca = ["viewBox"], la = { class: "mat-loader__circular-linear-rotate" }, ua = { class: "mat-loader__circular-rotate-arc" }, da = [
@@ -7395,10 +7395,13 @@ var ja = { class: "mat-snackbar__text" }, Ma = {
 				return null;
 			}
 			return l(u.attach);
-		}), W = r(() => Re(u.bottomPlaceholder, {
-			property: "block-size",
-			fallback: "0"
-		})), G = r(() => V.value ? W.value : "0px"), K = r(() => [f.style, {
+		}), W = r(() => {
+			let e = Re(u.bottomPlaceholder, {
+				property: "block-size",
+				fallback: "0px"
+			});
+			return e === "0" ? "0px" : e;
+		}), G = r(() => V.value ? W.value : "0px"), K = r(() => [f.style, {
 			"--mat-toolbar-app-end-inset": `${J.value?.insets.end ?? 0}px`,
 			"--mat-toolbar-app-start-inset": `${J.value?.insets.start ?? 0}px`,
 			"--mat-toolbar-bottom-placeholder": G.value
@@ -7538,7 +7541,7 @@ var ja = { class: "mat-snackbar__text" }, Ma = {
 			class: "mat-toolbar__fab"
 		}, [j(r.$slots, "fab", {}, void 0, !0)], 512)) : a("", !0)], 16, Ia)) : a("", !0)], 8, ["to", "disabled"]))], 64));
 	}
-}), [["__scopeId", "data-v-9932e0db"]]), Va = Symbol("mat-panes"), Ha = [
+}), [["__scopeId", "data-v-6a9cbad2"]]), Va = Symbol("mat-panes"), Ha = [
 	"compact",
 	"medium",
 	"expanded",
@@ -7991,10 +7994,14 @@ var ja = { class: "mat-snackbar__text" }, Ma = {
 		})), W = r(() => {
 			let e = Re(f.width, { property: "inline-size" });
 			if (e !== void 0) return { "--mat-navigation-rail-expanded-width": e };
-		}), G = r(() => f.app && !F.value ? Re(f.bottomPlaceholder, {
-			property: "block-size",
-			fallback: "0"
-		}) : "0"), K = r(() => [W.value, {
+		}), G = r(() => {
+			if (!f.app || F.value) return "0px";
+			let e = Re(f.bottomPlaceholder, {
+				property: "block-size",
+				fallback: "0px"
+			});
+			return e === "0" ? "0px" : e;
+		}), K = r(() => [W.value, {
 			"--mat-navigation-rail-app-end-inset": `${X.value?.insets.end ?? 0}px`,
 			"--mat-navigation-rail-app-start-inset": `${X.value?.insets.start ?? 0}px`,
 			"--mat-navigation-rail-bottom-placeholder": G.value
@@ -8116,7 +8123,7 @@ var ja = { class: "mat-snackbar__text" }, Ma = {
 			r.$slots.end && !N.value && !k.value ? (w(), o("div", $a, [j(r.$slots, "end", { expanded: e.expanded }, void 0, !0)])) : a("", !0)
 		], 16)], 6)) : a("", !0)], 8, ["to", "disabled"]))], 64));
 	}
-}), [["__scopeId", "data-v-ad88b0da"]]), to = { class: "mat-navigation-rail-item__indicator" }, no = { class: "mat-navigation-rail-item__icon-wrap" }, ro = {
+}), [["__scopeId", "data-v-5fe85766"]]), to = { class: "mat-navigation-rail-item__indicator" }, no = { class: "mat-navigation-rail-item__icon-wrap" }, ro = {
 	key: 0,
 	class: "mat-navigation-rail-item__label"
 }, io = {
