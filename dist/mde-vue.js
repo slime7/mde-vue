@@ -2554,6 +2554,10 @@ var Yt = {
 				return ["cover", "contain"].includes(e);
 			}
 		},
+		outline: {
+			type: Boolean,
+			default: !0
+		},
 		aspectRatio: {
 			type: [Number, String],
 			default: void 0,
@@ -2584,7 +2588,8 @@ var Yt = {
 			style: n.style
 		})), a = r(() => Object.fromEntries(Object.entries(n).filter(([e]) => !["class", "style"].includes(e)))), c = r(() => ({
 			aspectRatio: t.aspectRatio === void 0 ? void 0 : String(t.aspectRatio),
-			borderRadius: t.radius === void 0 ? "var(--mat-sys-shape-corner-extra-large)" : typeof t.radius == "number" ? `${t.radius}px` : t.radius
+			borderRadius: t.radius === void 0 ? "var(--mat-sys-shape-corner-extra-large)" : typeof t.radius == "number" ? `${t.radius}px` : t.radius,
+			outline: t.outline ? "1px solid var(--mat-sys-color-outline)" : void 0
 		})), l = r(() => {
 			let e = { objectFit: t.fit };
 			return typeof t.imgStyle == "string" ? [e, t.imgStyle] : Array.isArray(t.imgStyle) ? [e, ...t.imgStyle] : {
@@ -2601,7 +2606,7 @@ var Yt = {
 			src: t.src
 		}), null, 16, Qt)], 16));
 	}
-}), [["__scopeId", "data-v-80c9f420"]]), en = /*@__PURE__*/ Object.assign({ name: "MatSplitSegment" }, {
+}), [["__scopeId", "data-v-5f359835"]]), en = /*@__PURE__*/ Object.assign({ name: "MatSplitSegment" }, {
 	__name: "MatSplitSegment",
 	props: { role: {
 		type: String,

@@ -98,6 +98,21 @@ describe('MatImage', () => {
     expect(containWrapper.get('img').attributes('style')).toContain('object-fit: contain');
   });
 
+  it('默认显示 outline 描边，outline=false 时关闭', () => {
+    const outlinedWrapper = mount(MatImage, {
+      props: { src: SRC },
+    });
+
+    expect(outlinedWrapper.attributes('style'))
+      .toContain('outline: 1px solid var(--mat-sys-color-outline)');
+
+    const plainWrapper = mount(MatImage, {
+      props: { src: SRC, outline: false },
+    });
+
+    expect(plainWrapper.attributes('style')).not.toContain('outline');
+  });
+
   it('aspect-ratio 支持数字与 CSS 字符串，未设置时保持自然比例', async () => {
     const naturalWrapper = mount(MatImage, {
       props: { src: SRC },

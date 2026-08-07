@@ -9,7 +9,7 @@ order: 36
 
 ## 组件简介
 
-`<mat-image>` 的组件导出名是 `MatImage`。它以内部原生 `<img>` 提供图片容器，可设置组件圆角（默认 28px）、`cover`/`contain` 填充方式和宽高比；切换宽高比、宽高或圆角时使用 Material 动效令牌平滑过渡。`src` 与其他原生图片属性、事件监听器透传到 `img`，`img-class`、`img-style` 定向到 `img`。
+`<mat-image>` 的组件导出名是 `MatImage`。它以内部原生 `<img>` 提供图片容器，可设置组件圆角（默认 28px）、`cover`/`contain` 填充方式和宽高比，并默认带 1px 轮廓描边；切换宽高比、宽高或圆角时使用 Material 动效令牌平滑过渡。`src` 与其他原生图片属性、事件监听器透传到 `img`，`img-class`、`img-style` 定向到 `img`。
 
 ## 示例
 
@@ -54,6 +54,28 @@ order: 36
 <ClientOnly>
   <DocsPreview label="Image fit 预览">
     <ImageFitExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `outline`
+
+`outline` 控制 1px 轮廓描边，默认开启，颜色使用 `--mat-sys-color-outline` 令牌，随主题变化；设置 `:outline="false"` 可以关闭。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/image/ImageOutlineExample.vue#template [template]
+
+<<< @/examples/image/ImageOutlineExample.vue#script [script]
+
+<<< @/examples/image/ImageOutlineExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Image outline 预览">
+    <ImageOutlineExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -154,6 +176,7 @@ order: 36
 | `src` | `string` | 必填 | 图片资源地址；必须是非空字符串 |
 | `radius` | `number \| string` | `28px`（`--mat-sys-shape-corner-extra-large`） | 组件圆角；数字按 px 处理，字符串原样写入 CSS |
 | `fit` | `'cover' \| 'contain'` | `'cover'` | 图片在容器中的填充方式 |
+| `outline` | `boolean` | `true` | 是否显示 1px 轮廓描边，颜色使用 `--mat-sys-color-outline` |
 | `aspect-ratio` | `number \| string` | 未设置 | 组件宽高比；数字表示宽/高比，字符串原样写入 CSS `aspect-ratio`，省略时保持图片自然比例 |
 | `img-class` | `string \| array \| object` | 未设置 | 合并到内部 `img` 的 class |
 | `img-style` | `string \| array \| object` | 未设置 | 合并到内部 `img` 的 style |
@@ -179,6 +202,7 @@ import ImageAspectRatioExample from '../examples/image/ImageAspectRatioExample.v
 import ImageBasicExample from '../examples/image/ImageBasicExample.vue';
 import ImageClassExample from '../examples/image/ImageClassExample.vue';
 import ImageFitExample from '../examples/image/ImageFitExample.vue';
+import ImageOutlineExample from '../examples/image/ImageOutlineExample.vue';
 import ImageRadiusExample from '../examples/image/ImageRadiusExample.vue';
 import ImageStyleExample from '../examples/image/ImageStyleExample.vue';
 </script>

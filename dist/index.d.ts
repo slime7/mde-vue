@@ -523,6 +523,13 @@ export interface MatImageProps {
   */
   fit?: 'cover' | 'contain';
   /**
+  * 是否显示 1px 描边，颜色使用 `--mat-sys-color-outline`。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  outline?: boolean;
+  /**
   * 组件宽高比；数字表示宽/高比，字符串原样写入 CSS `aspect-ratio`。省略时保持图片自然比例。
   *
   * @type {number | string | undefined}
