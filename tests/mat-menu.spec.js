@@ -118,7 +118,7 @@ describe('MatMenu', () => {
     const menu = wrapper.get('[role="menu"]');
     const items = wrapper.findAll('[role="menuitem"]');
 
-    expect(menu.attributes('popover')).toBe('auto');
+    expect(menu.attributes('popover')).toBe('manual');
     expect(menu.attributes('aria-label')).toBe('操作');
     expect(menu.element.showPopover).toHaveBeenCalled();
     expect(items.map((item) => item.attributes('tabindex'))).toEqual(['0', undefined, '-1']);
@@ -141,6 +141,143 @@ describe('MatMenu', () => {
     await nextTick();
 
     wrapper.unmount();
+  });
+
+  it('maxLength 限制菜单最大高度并接受数字与 CSS 长度', async () => {
+    const anchor = document.createElement('button');
+
+    anchor.id = 'max-length-trigger';
+    document.body.append(anchor);
+    const wrapper = mount(MatMenu, {
+      attachTo: document.body,
+      props: {
+        modelValue: true,
+        anchor: 'max-length-trigger',
+        maxLength: 240,
+      },
+      slots: { default: () => h(MatMenuItem, null, () => '项目') },
+    });
+
+    await nextTick();
+    const menu = wrapper.get('[role="menu"]').element;
+
+    expect(menu.style.maxBlockSize).toBe(
+      'min(240px, calc(100dvb - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)))',
+    );
+
+    vi.stubGlobal('CSS', { supports: () => true });
+    await wrapper.setProps({ maxLength: 'calc(50dvb - 24px)' });
+
+    expect(menu.style.maxBlockSize).toBe(
+      'min(calc(50dvb - 24px), calc(100dvb - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)))',
+    );
+  });
+
+  it('maxLength 拒绝非正数与浏览器不支持的 CSS 长度', () => {
+    vi.stubGlobal('CSS', { supports: () => true });
+
+    expect(MatMenu.props.maxLength.validator(0)).toBe(false);
+    expect(MatMenu.props.maxLength.validator(-1)).toBe(false);
+    expect(MatMenu.props.maxLength.validator('320')).toBe(true);
+    expect(MatMenu.props.maxLength.validator('min(320px, 50dvb)')).toBe(true);
+
+    vi.stubGlobal('CSS', { supports: () => false });
+
+    expect(MatMenu.props.maxLength.validator('not-a-length')).toBe(false);
+  });
+
+  it('默认透明 scrim 拦截外部指针并请求关闭根菜单', async () => {
+    const anchor = document.createElement('button');
+    const outside = document.createElement('button');
+    const outsidePointerDown = vi.fn();
+
+    anchor.id = 'scrim-trigger';
+    outside.addEventListener('pointerdown', outsidePointerDown);
+    document.body.append(anchor, outside);
+    const wrapper = mount(MatMenu, {
+      attachTo: document.body,
+      props: {
+        modelValue: true,
+        anchor: 'scrim-trigger',
+      },
+      slots: { default: () => h(MatMenuItem, null, () => '项目') },
+    });
+
+    await nextTick();
+    const menu = wrapper.get('[role="menu"]');
+    const scrim = document.body.querySelector('[popover="manual"]:not([role="menu"])');
+
+    expect(scrim).not.toBeNull();
+    expect(scrim.dataset.popoverOpen).toBe('');
+    expect(menu.attributes('popover')).toBe('manual');
+
+    scrim.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    await nextTick();
+
+    expect(outsidePointerDown).not.toHaveBeenCalled();
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([false]);
+  });
+
+  it('scrim=false 保留 auto Popover 的外部轻触关闭行为', async () => {
+    const anchor = document.createElement('button');
+
+    anchor.id = 'no-scrim-trigger';
+    document.body.append(anchor);
+    const wrapper = mount(MatMenu, {
+      attachTo: document.body,
+      props: {
+        modelValue: true,
+        anchor: 'no-scrim-trigger',
+        scrim: false,
+      },
+      slots: { default: () => h(MatMenuItem, null, () => '项目') },
+    });
+
+    await nextTick();
+    const menu = wrapper.get('[role="menu"]');
+
+    expect(menu.attributes('popover')).toBe('auto');
+    expect(document.body.querySelector('[popover="manual"]:not([role="menu"])')).toBeNull();
+
+    dispatchToggle(menu.element, 'closed');
+    await nextTick();
+
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([false]);
+  });
+
+  it('打开期间切换 scrim 会重建 Popover 层级并在卸载时清理', async () => {
+    const anchor = document.createElement('button');
+
+    anchor.id = 'toggle-scrim-trigger';
+    document.body.append(anchor);
+    const wrapper = mount(MatMenu, {
+      attachTo: document.body,
+      props: {
+        modelValue: true,
+        anchor: 'toggle-scrim-trigger',
+      },
+      slots: { default: () => h(MatMenuItem, null, () => '项目') },
+    });
+
+    await nextTick();
+    const menu = wrapper.get('[role="menu"]');
+    const scrim = document.body.querySelector('[popover="manual"]:not([role="menu"])');
+
+    await wrapper.setProps({ scrim: false });
+    await nextTick();
+
+    expect(menu.attributes('popover')).toBe('auto');
+    expect(scrim.hidePopover).toHaveBeenCalled();
+
+    await wrapper.setProps({ scrim: true });
+    await nextTick();
+
+    expect(menu.attributes('popover')).toBe('manual');
+    expect(scrim.showPopover).toHaveBeenCalledTimes(2);
+
+    wrapper.unmount();
+
+    expect(scrim.hidePopover).toHaveBeenCalled();
   });
 
   it('浏览器关闭 Popover 时同步 modelValue 状态', async () => {
