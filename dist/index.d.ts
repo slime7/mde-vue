@@ -1634,6 +1634,20 @@ export interface MatMenuProps {
   * @default true
   */
   closeOnClick?: boolean;
+  /**
+  * 菜单最大块轴长度；数字与纯数字字符串按 px 处理，其他字符串须为合法 CSS 长度。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  maxLength?: number | string | undefined;
+  /**
+  * 是否使用透明帷幕拦截菜单外部的指针交互。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  scrim?: boolean;
 }
 
 export interface MatMenuEmits {

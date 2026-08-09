@@ -220,9 +220,12 @@ describe('MatMenu', () => {
 
   it('scrim=false 保留 auto Popover 的外部轻触关闭行为', async () => {
     const anchor = document.createElement('button');
+    const outside = document.createElement('button');
+    const outsidePointerDown = vi.fn();
 
     anchor.id = 'no-scrim-trigger';
-    document.body.append(anchor);
+    outside.addEventListener('pointerdown', outsidePointerDown);
+    document.body.append(anchor, outside);
     const wrapper = mount(MatMenu, {
       attachTo: document.body,
       props: {
@@ -239,9 +242,10 @@ describe('MatMenu', () => {
     expect(menu.attributes('popover')).toBe('auto');
     expect(document.body.querySelector('[popover="manual"]:not([role="menu"])')).toBeNull();
 
-    dispatchToggle(menu.element, 'closed');
+    outside.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
     await nextTick();
 
+    expect(outsidePointerDown).toHaveBeenCalledOnce();
     expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([false]);
   });
 

@@ -158,6 +158,7 @@ let viewportFrame;
 let sizeObserver;
 let returnFocusElement = null;
 let pointerListenerAttached = false;
+let outsidePointerListenerAttached = false;
 
 const isNested = computed(() => Boolean(itemParent));
 const hasActivatorSlot = computed(() => Boolean(slots.activator));
@@ -192,8 +193,11 @@ const maxLengthStyle = computed(() => {
     return undefined;
   }
 
+  const resolvedMaxLength = `min(${maxLength}, calc(100dvb - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)))`;
+
   return {
-    maxBlockSize: `min(${maxLength}, calc(100dvb - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)))`,
+    '--mat-menu-resolved-max-length': resolvedMaxLength,
+    maxBlockSize: resolvedMaxLength,
   };
 });
 const positionStyle = computed(() => {
@@ -522,6 +526,21 @@ function handleScrimPointerDown(event) {
 }
 
 /**
+ * @param {PointerEvent} event
+ */
+function handleDocumentPointerDown(event) {
+  const target = event.target;
+
+  if (!(target instanceof Node)
+    || root.value?.contains(target)
+    || attachedAnchor?.contains(target)) {
+    return;
+  }
+
+  closeSelf();
+}
+
+/**
  * @param {object} api
  * @param {import('vue').Ref<HTMLElement | null>} api.element
  * @param {() => void} api.closeSubmenu
@@ -657,6 +676,7 @@ onMounted(() => {
 
   if (effectiveOpen.value) {
     bindPointerListener();
+    bindOutsidePointerListener();
   }
 
   if (typeof ResizeObserver !== 'undefined') {
@@ -689,6 +709,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', scheduleViewportClamp);
   window.removeEventListener('scroll', scheduleViewportClamp, { capture: true });
   unbindPointerListener();
+  unbindOutsidePointerListener();
   hidePopover({ immediate: true });
   hideScrim();
   detachAnchor();
@@ -721,12 +742,33 @@ function unbindPointerListener() {
   document.removeEventListener('pointermove', trackPointer, true);
   pointerListenerAttached = false;
 }
+
+function bindOutsidePointerListener() {
+  if (parentMenu || usesScrim.value || outsidePointerListenerAttached) {
+    return;
+  }
+
+  document.addEventListener('pointerdown', handleDocumentPointerDown, true);
+  outsidePointerListenerAttached = true;
+}
+
+function unbindOutsidePointerListener() {
+  if (!outsidePointerListenerAttached) {
+    return;
+  }
+
+  document.removeEventListener('pointerdown', handleDocumentPointerDown, true);
+  outsidePointerListenerAttached = false;
+}
+
 watch(effectiveOpen, (open) => {
   if (open) {
     bindPointerListener();
+    bindOutsidePointerListener();
     showPopover();
   } else {
     unbindPointerListener();
+    unbindOutsidePointerListener();
     hidePopover();
   }
 });
@@ -761,9 +803,11 @@ watch(() => props.scrim, async () => {
   }
 
   hideScrim();
+  unbindOutsidePointerListener();
   await nextTick();
 
   if (effectiveOpen.value) {
+    bindOutsidePointerListener();
     await showPopover();
   }
 });
@@ -835,6 +879,9 @@ watch(() => props.scrim, async () => {
   --mat-menu-supporting-color: var(--mat-sys-color-on-surface-variant);
   --mat-menu-active-container-color: var(--mat-accent-container-color, var(--mat-sys-color-tertiary-container));
   --mat-menu-active-content-color: var(--mat-on-accent-container-color, var(--mat-sys-color-on-tertiary-container));
+  --mat-menu-resolved-max-length: calc(
+    100dvb - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)
+  );
   position: fixed;
   inset: auto;
   position-area: block-end span-inline-end;
@@ -895,8 +942,15 @@ watch(() => props.scrim, async () => {
   transition: clip-path var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized-decelerate);
 }
 
-.mat-menu__surface::-webkit-scrollbar {
-  display: none;
+.mat-menu__surface :deep(.mat-scroll-area__viewport) {
+  block-size: 100%;
+}
+
+.mat-menu__surface :deep(.mat-scroll-area__scroller) {
+  max-block-size: calc(
+    var(--mat-menu-resolved-max-length) - var(--mat-menu-container-padding)
+    - var(--mat-menu-container-padding)
+  );
 }
 
 .mat-menu--closing:not(.mat-menu--grouped) .mat-menu__surface {
