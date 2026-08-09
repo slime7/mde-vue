@@ -5,11 +5,13 @@ import {
 } from 'vue';
 import MatSurfaceBase from '../MatSurfaceBase.vue';
 import { isComponentColor } from '../button-props';
+import MatScrollArea from '../mat-scroll-area/MatScrollArea.vue';
 import {
   MAT_MENU_ITEM_KEY, MAT_MENU_KEY, updateMenuItemPositions,
 } from '../menu-context';
 import useComponentColor from '../use-component-color';
 import useRovingFocus from '../use-roving-focus';
+import { isValidCssLength, toCssLength } from '../value-utils';
 
 defineOptions({
   name: 'MatMenu',
@@ -96,6 +98,30 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  /**
+   * 菜单最大块轴长度；数字与纯数字字符串按 px 处理，其他字符串须为合法 CSS 长度。
+   *
+   * @type {number | string | undefined}
+   * @default undefined
+   */
+  maxLength: {
+    type: [Number, String],
+    default: undefined,
+    validator: (value) => isValidCssLength(value, {
+      property: 'max-block-size',
+      positive: true,
+    }),
+  },
+  /**
+   * 是否使用透明帷幕拦截菜单外部的指针交互。
+   *
+   * @type {boolean}
+   * @default true
+   */
+  scrim: {
+    type: Boolean,
+    default: true,
+  },
 });
 const emit = defineEmits({
   /**
@@ -108,6 +134,7 @@ const slots = useSlots();
 const itemParent = inject(MAT_MENU_ITEM_KEY, null);
 const parentMenu = inject(MAT_MENU_KEY, null);
 const activatorHost = ref(null);
+const scrimElement = ref(null);
 const surface = ref(null);
 const root = computed(() => surface.value?.root ?? surface.value?.$el ?? null);
 const generatedId = useId().replace(/[^\w-]/g, '-');
@@ -124,6 +151,7 @@ const itemApis = new Map();
 let attachedAnchor = null;
 let previousAnchorName = '';
 let popoverShown = false;
+let scrimShown = false;
 let programmaticClose = false;
 let phaseTimer;
 let viewportFrame;
@@ -137,6 +165,8 @@ const isCoordinateAnchor = computed(() => (
   !isNested.value && !hasActivatorSlot.value && isCoordinatePair(props.anchor)
 ));
 const isGrouped = computed(() => groupCount.value > 0);
+const usesScrim = computed(() => !isNested.value && props.scrim);
+const popoverMode = computed(() => (usesScrim.value ? 'manual' : 'auto'));
 const effectiveOpen = computed(() => (
   isNested.value ? nestedOpen.value : props.modelValue
 ));
@@ -148,6 +178,24 @@ const effectiveColor = computed(() => (
 ));
 const closeOnClick = computed(() => props.closeOnClick);
 const { colorStyle } = useComponentColor(effectiveColor);
+const maxLengthStyle = computed(() => {
+  if (props.maxLength === undefined) {
+    return undefined;
+  }
+
+  const maxLength = toCssLength(props.maxLength, {
+    property: 'max-block-size',
+    positive: true,
+  });
+
+  if (maxLength === undefined) {
+    return undefined;
+  }
+
+  return {
+    maxBlockSize: `min(${maxLength}, calc(100dvb - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)))`,
+  };
+});
 const positionStyle = computed(() => {
   const [offsetX, offsetY] = isCoordinatePair(props.offset) ? props.offset : [0, 0];
   const style = {
@@ -167,6 +215,7 @@ const rootStyle = computed(() => [
   colorStyle.value,
   positionStyle.value,
   attrs.style,
+  maxLengthStyle.value,
 ]);
 const roving = useRovingFocus({
   root,
@@ -262,6 +311,24 @@ function prefersReducedMotion() {
   return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 }
 
+function showScrim() {
+  if (!usesScrim.value || !scrimElement.value || scrimShown) {
+    return;
+  }
+
+  scrimShown = true;
+  scrimElement.value.showPopover?.();
+}
+
+function hideScrim() {
+  if (!scrimShown) {
+    return;
+  }
+
+  scrimShown = false;
+  scrimElement.value?.hidePopover?.();
+}
+
 function finishClose() {
   if (root.value && popoverShown) {
     popoverShown = false;
@@ -269,11 +336,13 @@ function finishClose() {
     root.value.hidePopover?.();
   }
 
+  hideScrim();
   phase.value = 'closed';
 }
 
 function finishNativeClose() {
   phaseTimer = undefined;
+  hideScrim();
   phase.value = 'closed';
 }
 
@@ -391,6 +460,7 @@ async function showPopover() {
       returnFocusElement = document.activeElement;
     }
 
+    showScrim();
     popoverShown = true;
     root.value.showPopover?.();
   }
@@ -440,6 +510,14 @@ function closeTree() {
     return;
   }
 
+  closeSelf();
+}
+
+/**
+ * @param {PointerEvent} event
+ */
+function handleScrimPointerDown(event) {
+  event.preventDefault();
   closeSelf();
 }
 
@@ -612,6 +690,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('scroll', scheduleViewportClamp, { capture: true });
   unbindPointerListener();
   hidePopover({ immediate: true });
+  hideScrim();
   detachAnchor();
   itemParent?.unregisterSubmenu();
 });
@@ -664,12 +743,45 @@ watch(() => props.offset, async () => {
     scheduleViewportClamp();
   }
 }, { deep: true });
+watch(() => props.maxLength, async () => {
+  if (effectiveOpen.value) {
+    await nextTick();
+    scheduleViewportClamp();
+  }
+});
+watch(() => props.scrim, async () => {
+  if (isNested.value) {
+    return;
+  }
+
+  if (root.value && popoverShown) {
+    popoverShown = false;
+    programmaticClose = true;
+    root.value.hidePopover?.();
+  }
+
+  hideScrim();
+  await nextTick();
+
+  if (effectiveOpen.value) {
+    await showPopover();
+  }
+});
 </script>
 
 <template>
   <span v-if="!isNested && hasActivatorSlot" ref="activatorHost" class="mat-menu__activator">
     <slot name="activator" />
   </span>
+
+  <div
+    v-if="!isNested && scrim"
+    ref="scrimElement"
+    aria-hidden="true"
+    class="mat-menu__scrim"
+    popover="manual"
+    @pointerdown="handleScrimPointerDown"
+  />
 
   <MatSurfaceBase
     :id="menuId"
@@ -686,22 +798,35 @@ watch(() => props.offset, async () => {
       },
     ]"
     :style="rootStyle"
-    popover="auto"
+    :popover="popoverMode"
     role="menu"
     @pointerenter="itemParent?.cancelSubmenuClose()"
     @focusin="roving.handleFocusIn"
     @keydown="handleKeyDown"
     @toggle="handleToggle"
   >
-    <div class="mat-menu__surface">
+    <MatScrollArea class="mat-menu__surface" bar-width="hidden">
       <slot />
-    </div>
+    </MatScrollArea>
   </MatSurfaceBase>
 </template>
 
 <style scoped>
 .mat-menu__activator {
   display: contents;
+}
+
+.mat-menu__scrim {
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
+  inline-size: 100dvi;
+  block-size: 100dvb;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
 }
 
 .mat-menu {
@@ -755,14 +880,15 @@ watch(() => props.offset, async () => {
 }
 
 .mat-menu__surface {
-  display: block;
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
   min-inline-size: 100%;
+  min-block-size: 0;
   max-block-size: inherit;
   padding: var(--mat-menu-container-padding);
-  overflow-y: auto;
+  overflow: hidden;
   overscroll-behavior: contain;
-  scrollbar-width: none;
   background: var(--mat-menu-container-color);
   border-radius: inherit;
   clip-path: inset(0 round var(--mat-sys-shape-corner-large));

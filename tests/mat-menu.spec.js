@@ -271,13 +271,16 @@ describe('MatMenu', () => {
 
     await wrapper.setProps({ scrim: true });
     await nextTick();
+    await nextTick();
+
+    const nextScrim = document.body.querySelector('[popover="manual"]:not([role="menu"])');
 
     expect(menu.attributes('popover')).toBe('manual');
-    expect(scrim.showPopover).toHaveBeenCalledTimes(2);
+    expect(HTMLElement.prototype.showPopover.mock.contexts).toContain(nextScrim);
 
     wrapper.unmount();
 
-    expect(scrim.hidePopover).toHaveBeenCalled();
+    expect(HTMLElement.prototype.hidePopover.mock.contexts).toContain(nextScrim);
   });
 
   it('浏览器关闭 Popover 时同步 modelValue 状态', async () => {
