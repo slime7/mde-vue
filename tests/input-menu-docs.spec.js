@@ -77,6 +77,25 @@ describe('文本输入与菜单文档', () => {
     expect(example).toContain('关闭菜单：删除文件');
   });
 
+  it('Menu 文档提供 maxLength 滚动与透明 scrim 示例', () => {
+    const page = readFileSync(resolve('docs/site/components/menu.md'), 'utf8');
+    const maxLengthExample = readFileSync(
+      resolve('docs/site/examples/menu/MenuMaxLengthExample.vue'),
+      'utf8',
+    );
+    const scrimExample = readFileSync(
+      resolve('docs/site/examples/menu/MenuScrimExample.vue'),
+      'utf8',
+    );
+
+    expect(page).toContain('`maxLength`');
+    expect(page).toContain('`scrim`');
+    expect(page).toContain('MenuMaxLengthExample.vue');
+    expect(page).toContain('MenuScrimExample.vue');
+    expect(maxLengthExample).toContain(':max-length="232"');
+    expect(scrimExample).toContain(':scrim="false"');
+  });
+
   it('Dialog 文档覆盖 activator Slot，并与示例保持同源', () => {
     const page = readFileSync(resolve('docs/site/components/dialog.md'), 'utf8');
     const example = readFileSync(
@@ -112,7 +131,9 @@ describe('文本输入与菜单文档', () => {
       'MenuItemSubmenuSlotExample.vue',
       'MenuItemSupportingSlotExample.vue',
       'MenuItemTrailingSlotExample.vue',
+      'MenuMaxLengthExample.vue',
       'MenuOffsetExample.vue',
+      'MenuScrimExample.vue',
       'MenuVariantExample.vue',
     ].forEach((fileName) => {
       const source = readFileSync(

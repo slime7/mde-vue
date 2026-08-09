@@ -8876,7 +8876,7 @@ import AppBarVariantExample from '../examples/app-bar/AppBarVariantExample.vue';
 
 ## 组件简介
 
-`<mat-menu>` 的组件导出名是 `MatMenu`，使用原生 Popover API 在 top layer 显示临时操作集合；`<mat-menu-group>` 的组件导出名是 `MatMenuGroup`，以带可选标签的独立表面组织相关操作；`<mat-menu-item>` 的组件导出名是 `MatMenuItem`，渲染原生按钮和 `menuitem` 语义。Menu 支持 standard、vibrant 配色、expressive 间隙分组、多级子菜单、局部 `color`、循环键盘焦点、元素锚点换边和右键坐标定位。
+`<mat-menu>` 的组件导出名是 `MatMenu`，使用原生 Popover API 在 top layer 显示临时操作集合；`<mat-menu-group>` 的组件导出名是 `MatMenuGroup`，以带可选标签的独立表面组织相关操作；`<mat-menu-item>` 的组件导出名是 `MatMenuItem`，渲染原生按钮和 `menuitem` 语义。Menu 支持 standard、vibrant 配色、expressive 间隙分组、多级子菜单、局部 `color`、最大高度滚动、默认透明 scrim、循环键盘焦点、元素锚点换边和右键坐标定位。
 
 ## 示例
 
@@ -9140,6 +9140,156 @@ const open = ref(false);
 <ClientOnly>
   <DocsPreview label="Menu offset 预览">
     <MenuOffsetExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `maxLength`
+
+`maxLength` 接受正数、纯数字字符串或合法 CSS 长度。数字按 px 处理；最终最大高度不会超过视口安全范围。内容溢出后在菜单内部纵向滚动，原生滚动条隐藏，并只在仍有内容可滚动的一侧显示 16px 边缘渐隐。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example-menu">
+    <mat-btn
+      id="max-length-menu-trigger"
+      variant="outlined"
+      aria-haspopup="menu"
+      :aria-expanded="open"
+      aria-controls="max-length-menu"
+      @click="open = !open"
+    >
+      打开限高菜单
+    </mat-btn>
+    <mat-menu
+      id="max-length-menu"
+      v-model="open"
+      anchor="max-length-menu-trigger"
+      :max-length="232"
+    >
+      <mat-menu-item>新建文件</mat-menu-item>
+      <mat-menu-item>打开文件</mat-menu-item>
+      <mat-menu-item>保存</mat-menu-item>
+      <mat-menu-item>另存为</mat-menu-item>
+      <mat-menu-item>导入</mat-menu-item>
+      <mat-menu-item>导出</mat-menu-item>
+      <mat-menu-item>打印</mat-menu-item>
+    </mat-menu>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
+```vue
+<style scoped>
+.example-menu {
+  min-block-size: 300px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Menu maxLength 预览">
+    <MenuMaxLengthExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `scrim`
+
+根菜单默认使用完全透明的 scrim。点击菜单外部会关闭菜单，但该次指针操作不会触发背景元素。设为 `false` 后继续使用原生 auto Popover：点击外部仍关闭菜单，同时允许背景元素响应操作。scrim 不锁定页面滚动；子菜单共享根菜单的拦截范围，不创建自己的 scrim。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example-menu">
+    <mat-btn
+      id="scrim-menu-trigger"
+      variant="outlined"
+      aria-haspopup="menu"
+      :aria-expanded="scrimOpen"
+      aria-controls="scrim-menu"
+      @click="scrimOpen = !scrimOpen"
+    >
+      默认透明 scrim
+    </mat-btn>
+    <mat-menu
+      id="scrim-menu"
+      v-model="scrimOpen"
+      anchor="scrim-menu-trigger"
+    >
+      <mat-menu-item>点击菜单外只关闭菜单</mat-menu-item>
+    </mat-menu>
+
+    <mat-btn
+      id="no-scrim-menu-trigger"
+      variant="outlined"
+      aria-haspopup="menu"
+      :aria-expanded="noScrimOpen"
+      aria-controls="no-scrim-menu"
+      @click="noScrimOpen = !noScrimOpen"
+    >
+      scrim=false
+    </mat-btn>
+    <mat-menu
+      id="no-scrim-menu"
+      v-model="noScrimOpen"
+      anchor="no-scrim-menu-trigger"
+      :scrim="false"
+    >
+      <mat-menu-item>外部点击可以继续操作</mat-menu-item>
+    </mat-menu>
+
+    <mat-btn variant="filled-tonal" @click="backgroundCount += 1">
+      背景操作 {{ backgroundCount }}
+    </mat-btn>
+
+    <p class="example-menu__hint">
+      分别打开两个菜单，再点击“背景操作”比较结果。
+    </p>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const scrimOpen = ref(false);
+const noScrimOpen = ref(false);
+const backgroundCount = ref(0);
+</script>
+```
+```vue
+<style scoped>
+.example-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-block-size: 180px;
+}
+
+.example-menu__hint {
+  flex-basis: 100%;
+  margin: 0;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Menu scrim 预览">
+    <MenuScrimExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -9720,8 +9870,10 @@ Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项
 | `variant` | `'standard' \| 'vibrant'` | `'standard'` | 中性表面或更高强调的 tertiary 表面 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 活动项目与 vibrant 表面的局部配色 |
 | `closeOnClick` | `boolean` | `true` | 叶子项目点击后是否关闭整条菜单链；设为 `false` 时保持开启 |
+| `maxLength` | `number \| string` | 未设置 | 单层菜单的最大高度；正数与纯数字字符串按 px 处理，其他字符串须为合法 CSS 长度，并始终受视口安全范围限制 |
+| `scrim` | `boolean` | `true` | 根菜单是否使用透明拦截层；开启时外部指针只关闭菜单，不触发背景元素 |
 
-字符串 anchor 必须能在当前 document 中找到对应 id。`activator` Slot 存在时优先使用其唯一的 HTMLElement 根节点，并忽略 `anchor`；多根节点或非 HTMLElement 根节点会给出警告并请求关闭。坐标 anchor 使用 fixed 定位，适合 `contextmenu`；坐标或 offset 改变时，已打开的菜单立即重新定位。根菜单缺少有效 anchor 时会请求关闭。嵌套在 `submenu` Slot 中的 MatMenu 自动以父 MatMenuItem 为 anchor，并继承父菜单的 color 与 variant；嵌套菜单显式设置的 color、variant 或 offset 优先，自身 anchor 被忽略。`closeOnClick` 不会继承，父菜单和每个子菜单分别决定其叶子项目是否关闭菜单链。未消费的属性传给 `role="menu"` 的 Popover 根元素。
+字符串 anchor 必须能在当前 document 中找到对应 id。`activator` Slot 存在时优先使用其唯一的 HTMLElement 根节点，并忽略 `anchor`；多根节点或非 HTMLElement 根节点会给出警告并请求关闭。坐标 anchor 使用 fixed 定位，适合 `contextmenu`；坐标或 offset 改变时，已打开的菜单立即重新定位。根菜单缺少有效 anchor 时会请求关闭。嵌套在 `submenu` Slot 中的 MatMenu 自动以父 MatMenuItem 为 anchor，并继承父菜单的 color 与 variant；嵌套菜单显式设置的 color、variant、offset 或 maxLength 优先，自身 anchor 被忽略。`maxLength` 和 `closeOnClick` 不会继承；`scrim` 只由根菜单读取。未消费的属性传给 `role="menu"` 的 Popover 根元素。
 
 ### MatMenuGroup 属性
 
@@ -9743,7 +9895,7 @@ Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项
 
 | 组件 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- | --- |
-| `MatMenu` | `update:modelValue` | `boolean` | 根菜单请求关闭，或浏览器通过 Escape、轻触外部等方式关闭 Popover |
+| `MatMenu` | `update:modelValue` | `boolean` | 根菜单请求关闭，透明 scrim 被点击，或 `scrim=false` 时浏览器通过 Escape、轻触外部等方式关闭 Popover |
 | `MatMenuItem` | `click` | 原生 `MouseEvent` | 启用的叶子项目被激活；`closeOnClick=true` 时随后关闭整条菜单链 |
 
 MatMenuGroup 没有自定义事件。包含 submenu 的项目把点击、Enter、Space 和朝子菜单方向的方向键用于展开，不发出叶子 click。元素锚点菜单关闭后把焦点还给 anchor；坐标菜单恢复打开前的焦点元素。
@@ -9770,7 +9922,7 @@ MenuItem 的 Slots 只构成一个操作，不应嵌套按钮、开关或其他�
 - Escape 关闭当前层；Tab 关闭整条菜单链并按浏览器正常焦点顺序继续。程序化关闭、菜单操作以及 Popover 的外部或触发器关闭都会保留菜单 200ms 以完成消失动画，嵌套菜单的状态会立即收起。
 - 元素锚点菜单优先显示在触发器下方；子菜单优先显示在父项目行内末端。空间不足时自动向上、向左或向右换边，并保留视口间距。坐标菜单以视口坐标为左上基准，超出边缘时向内夹紧。
 - `offset` 在基础定位后、视口夹紧前生效。坐标使用 client 坐标，不接受 page/document 坐标；页面滚动后由下一次鼠标事件提供新坐标。
-- 菜单宽度限制为 112–280px，内容过高时在菜单内部滚动。容器内边距为 4px，项目和活动高亮高度为 48px，图标为 20px，项目总水平边缘距离为 12px。
+- 菜单宽度限制为 112–280px。内容超过 `maxLength` 或视口安全高度时在内部滚动，滚动条隐藏，并在尚可滚动的边缘显示渐隐。容器内边距为 4px，项目和活动高亮高度为 48px，图标为 20px，项目总水平边缘距离为 12px。
 - MatMenuGroup 提供 Material 3 expressive 间隙分组；这是本组件库补充的 Web 实现能力，不受 Google 官方 Web 组件暂未提供间隙分组的限制。滚动菜单仍应优先使用 MatDivider，避免间隙削弱连续滚动内容。
 - 使用方负责触发器的点击、`aria-haspopup="menu"`、`aria-expanded` 和 `aria-controls`；Menu 不会接管外部按钮的展开逻辑。
 - 减少动态效果偏好下关闭展开和形状变化的非必要过渡。
@@ -9792,8 +9944,10 @@ import MenuItemLeadingSlotExample from '../examples/menu/MenuItemLeadingSlotExam
 import MenuItemSubmenuSlotExample from '../examples/menu/MenuItemSubmenuSlotExample.vue';
 import MenuItemSupportingSlotExample from '../examples/menu/MenuItemSupportingSlotExample.vue';
 import MenuItemTrailingSlotExample from '../examples/menu/MenuItemTrailingSlotExample.vue';
+import MenuMaxLengthExample from '../examples/menu/MenuMaxLengthExample.vue';
 import MenuOpenAnchorExample from '../examples/menu/MenuOpenAnchorExample.vue';
 import MenuOffsetExample from '../examples/menu/MenuOffsetExample.vue';
+import MenuScrimExample from '../examples/menu/MenuScrimExample.vue';
 import MenuVariantExample from '../examples/menu/MenuVariantExample.vue';
 </script>
 
