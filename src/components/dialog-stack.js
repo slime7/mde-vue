@@ -1,6 +1,7 @@
 import { shallowRef } from 'vue';
 
 export const dialogStack = shallowRef([]);
+export const dialogScrollbarWidth = shallowRef(0);
 let scrollLockState = null;
 
 function unlockPageScroll() {
@@ -20,6 +21,7 @@ function unlockPageScroll() {
     && root.style.scrollbarGutter === lockedScrollbarGutter) {
     root.style.scrollbarGutter = scrollbarGutter;
   }
+  dialogScrollbarWidth.value = 0;
   scrollLockState = null;
 }
 
@@ -36,6 +38,7 @@ function lockPageScroll() {
   const shouldStabilizeScrollbar = scrollbarWidth > 0
     && !computedScrollbarGutter.includes('stable');
 
+  dialogScrollbarWidth.value = scrollbarWidth;
   scrollLockState = {
     lockedScrollbarGutter: shouldStabilizeScrollbar ? 'stable' : null,
     overflow: root.style.overflow,

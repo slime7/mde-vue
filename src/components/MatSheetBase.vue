@@ -10,7 +10,12 @@ import {
   useSlots,
   watch,
 } from 'vue';
-import { dialogStack, registerDialog, unregisterDialog } from './dialog-stack';
+import {
+  dialogScrollbarWidth,
+  dialogStack,
+  registerDialog,
+  unregisterDialog,
+} from './dialog-stack';
 import MatBtn from './mat-btn/MatBtn.vue';
 import MatSurfaceBase from './MatSurfaceBase.vue';
 import { normalizeNumber, toCssLength } from './value-utils';
@@ -175,7 +180,17 @@ const dragStyle = computed(() => ({
     ? {}
     : { '--mat-sheet-drag-size': `${dragSize.value}px` }),
 }));
-const rootStyle = computed(() => [attrs.style, sizeStyle.value, dragStyle.value]);
+const positionStyle = computed(() => (
+  props.direction === 'side' && isModal.value && props.position === 'end'
+    ? { '--mat-sheet-modal-end-offset': `${-dialogScrollbarWidth.value}px` }
+    : {}
+));
+const rootStyle = computed(() => [
+  attrs.style,
+  sizeStyle.value,
+  dragStyle.value,
+  positionStyle.value,
+]);
 let mounted = false;
 let phaseTimer;
 let previousFocus = null;
@@ -875,7 +890,6 @@ watch(() => props.closeLabel, (value) => {
   inline-size: min(var(--mat-sheet-preferred-width), 100%);
   max-inline-size: min(400px, 100%);
   min-block-size: 0;
-  block-size: 100%;
   border-radius: var(--mat-sys-shape-corner-large);
   touch-action: pan-y;
 }
@@ -908,7 +922,7 @@ watch(() => props.closeLabel, (value) => {
 }
 
 .mat-sheet--side.mat-sheet--modal.mat-sheet--position-end {
-  inset-inline: auto 0;
+  inset-inline: auto var(--mat-sheet-modal-end-offset, 0);
   margin-inline: auto 0;
 }
 
