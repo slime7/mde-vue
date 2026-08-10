@@ -923,6 +923,13 @@ export interface MatChipProps {
   */
   selected?: boolean;
   /**
+  * ChipSet 选择模型中的基础值。
+  *
+  * @type {string | number | boolean | undefined}
+  * @default undefined
+  */
+  value?: string | number | boolean | undefined;
+  /**
   * 使用原生按钮禁用语义。
   *
   * @type {boolean}
@@ -950,6 +957,10 @@ export interface MatChipEmits {
   * 启用的 Chip 被激活时转发原生点击事件，载荷为 `MouseEvent`。
   */
   "click": (payload: MouseEvent) => unknown;
+  /**
+  * input 默认关闭图标被点击时触发，载荷为原生 `MouseEvent`。
+  */
+  "remove": (payload: MouseEvent) => unknown;
 }
 
 export type MatChipComponent = DefineComponent<MatChipProps, {}, {}, {}, {}, {}, {}, MatChipEmits>;
@@ -963,9 +974,30 @@ export interface MatChipSetProps {
   * @default 'wrap'
   */
   layout?: 'wrap' | 'scroll';
+  /**
+  * ChipSet 的受控选择模式。
+  *
+  * @type {'none' | 'single' | 'multiple'}
+  * @default 'none'
+  */
+  selection?: 'none' | 'single' | 'multiple';
+  /**
+  * single 使用基础单值或 null，multiple 使用基础值数组。
+  *
+  * @type {string | number | boolean | Array<string | number | boolean> | null}
+  * @default null
+  */
+  modelValue?: string | number | boolean | Array<string | number | boolean> | null;
 }
 
-export type MatChipSetComponent = DefineComponent<MatChipSetProps, {}, {}, {}, {}, {}, {}, {}>;
+export interface MatChipSetEmits {
+  /**
+  * Chip 请求改变选择时发出下一模型值。
+  */
+  "update:modelValue": (payload: unknown) => unknown;
+}
+
+export type MatChipSetComponent = DefineComponent<MatChipSetProps, {}, {}, {}, {}, {}, {}, MatChipSetEmits>;
 export declare const MatChipSet: MatChipSetComponent;
 
 export interface MatRadioProps {

@@ -6,7 +6,9 @@ import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatActionBase from '../MatActionBase.vue';
 import { BUTTON_TYPES, isComponentColor } from '../button-props';
 import MatIcon from '../mat-icon/MatIcon.vue';
+import { isSelectionValue } from '../selection-control';
 import useComponentColor from '../use-component-color';
+import MAT_CHIP_SET_KEY from './chip-context';
 
 defineOptions({
   name: 'MatChip',
@@ -46,6 +48,19 @@ const props = defineProps({
   selected: {
     type: Boolean,
     default: false,
+  },
+  /**
+   * ChipSet 选择模型中的基础值。
+   *
+   * @type {string | number | boolean | undefined}
+   * @default undefined
+   */
+  value: {
+    type: [String, Number, Boolean],
+    default: undefined,
+    validator(value) {
+      return value === undefined || isSelectionValue(value);
+    },
   },
   /**
    * 使用原生按钮禁用语义。
@@ -90,11 +105,30 @@ const emit = defineEmits({
   click(payload) {
     return payload instanceof MouseEvent;
   },
+  /**
+   * input 默认关闭图标被点击时触发，载荷为原生 `MouseEvent`。
+   */
+  remove(payload) {
+    return payload instanceof MouseEvent;
+  },
 });
 const slots = useSlots();
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
+const chipSet = inject(MAT_CHIP_SET_KEY, null);
 const isSelectable = computed(() => ['filter', 'input'].includes(props.variant));
-const isSelected = computed(() => isSelectable.value && props.selected);
+const participatesInSet = computed(() => (
+  Boolean(chipSet)
+  && isSelectable.value
+  && props.value !== undefined
+  && chipSet.selection.value !== 'none'
+));
+const isSelected = computed(() => {
+  if (participatesInSet.value) {
+    return chipSet.isSelected(props.value);
+  }
+
+  return isSelectable.value && props.selected;
+});
 const hasAvatar = computed(() => Boolean(slots.avatar));
 const hasLeading = computed(() => !hasAvatar.value && Boolean(slots.leading));
 const showSelectedIcon = computed(() => (
@@ -108,6 +142,34 @@ const hasLeadingContent = computed(() => (
 ));
 const hasTrailing = computed(() => Boolean(slots.trailing) || props.variant === 'input');
 const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => props.color));
+
+/**
+ * @param {MouseEvent} event
+ * @returns {void}
+ */
+function handleClick(event) {
+  emit('click', event);
+
+  if (participatesInSet.value) {
+    chipSet.requestSelection(props.value, event);
+  }
+}
+
+/**
+ * @param {MouseEvent} event
+ * @returns {void}
+ */
+function handleTrailingClick(event) {
+  if (props.variant !== 'input' || slots.trailing) {
+    return;
+  }
+
+  event.stopPropagation();
+
+  if (!props.disabled) {
+    emit('remove', event);
+  }
+}
 </script>
 
 <template>
@@ -130,7 +192,7 @@ const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => props.
     :disabled="disabled"
     :type="type"
     :use-cursor="matUi.useCursor"
-    @click="emit('click', $event)"
+    @click="handleClick"
   >
     <span
       v-if="hasAvatar"
@@ -165,7 +227,7 @@ const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => props.
       v-if="hasTrailing"
       class="mat-chip__icon mat-chip__icon--trailing"
       aria-hidden="true"
-      inert
+      @click="handleTrailingClick"
     >
       <slot v-if="$slots.trailing" name="trailing" />
       <MatIcon
@@ -262,6 +324,8 @@ const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => props.
   position: relative;
   z-index: 1;
 }
+
+.mat-chip__icon--trailing { z-index: 3; }
 
 .mat-chip__avatar,
 .mat-chip__icon {

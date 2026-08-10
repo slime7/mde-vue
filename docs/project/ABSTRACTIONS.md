@@ -173,9 +173,9 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 ## Chips
 
-`<mat-chip>` 的导出名是 `MatChip`，始终使用单一原生 button 作为交互根。`variant` 只区分 assist、filter、input 与 suggestion 的用途和内容默认值；filter 与 input 的 `selected` 是受控视觉状态和 `aria-pressed`，普通 click 不在组件内部改变它。前置图标、头像和尾随图标都属于同一按钮的展示内容，不形成第二个操作目标。
+`<mat-chip>` 的导出名是 `MatChip`，始终使用单一原生 button 作为交互根。`variant` 只区分 assist、filter、input 与 suggestion 的用途和内容默认值；独立 filter/input 的 `selected` 是受控视觉状态和 `aria-pressed`。input 默认关闭图标的指针点击区域发出 remove 并阻止同次根 click，但不形成第二个键盘操作目标；自定义 trailing 仍只是主按钮的展示内容。remove 只请求应用删除数据，不修改选中值。
 
-`<mat-chip-set>` 的导出名是 `MatChipSet`，只提供 `role="group"`、8px 间距和 wrap/scroll 两种横向布局。选择组、删除、文本转 Chip、键盘删除、编辑、拖拽、菜单和进度等工作流必须由应用组合；ChipSet 不协调子项的选择值、焦点或禁用状态。
+`<mat-chip-set>` 的导出名是 `MatChipSet`，提供 `role="group"`、8px 间距和 wrap/scroll 两种横向布局；scroll 组合横向 MatScrollArea 与 thin 滚动条。selection 以 none、single、multiple 控制受控 v-model，只有带基础 value 的 filter/input 参与，组模型优先于子项 selected；single 允许再次激活为 null，multiple 总是返回新数组。ChipSet 不删除数据，也不协调焦点、子项禁用、文本转 Chip、键盘删除、编辑、拖拽、菜单或进度。
 
 ## 文本输入与菜单
 

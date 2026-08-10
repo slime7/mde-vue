@@ -105,6 +105,54 @@ describe('MatChip', () => {
     expect(slotted.text()).toContain('展开');
     expect(slotted.text()).not.toContain('close');
   });
+
+  it('input 默认关闭图标只触发 remove，不触发根 click', async () => {
+    const wrapper = mount(MatChip, {
+      props: {
+        value: 'contact',
+        variant: 'input',
+      },
+      slots: {
+        default: () => '联系人',
+      },
+    });
+    const closeIcon = wrapper.findAll('span').find((element) => element.text() === 'close');
+
+    await closeIcon.trigger('click');
+
+    expect(wrapper.emitted('remove')?.[0]?.[0]).toBeInstanceOf(MouseEvent);
+    expect(wrapper.emitted('click')).toBeUndefined();
+  });
+
+  it('禁用与自定义 trailing 不触发默认 remove 行为', async () => {
+    const disabled = mount(MatChip, {
+      props: {
+        disabled: true,
+        variant: 'input',
+      },
+      slots: {
+        default: () => '不可移除',
+      },
+    });
+    const custom = mount(MatChip, {
+      props: {
+        variant: 'input',
+      },
+      slots: {
+        default: () => '自定义',
+        trailing: () => h('span', '展开'),
+      },
+    });
+    const disabledClose = disabled.findAll('span')
+      .find((element) => element.text() === 'close');
+
+    await disabledClose.trigger('click');
+    await custom.get('span span').trigger('click');
+
+    expect(disabled.emitted('remove')).toBeUndefined();
+    expect(custom.emitted('remove')).toBeUndefined();
+    expect(custom.emitted('click')).toHaveLength(1);
+  });
 });
 
 describe('MatChipSet', () => {
@@ -126,5 +174,117 @@ describe('MatChipSet', () => {
     expect(wrapper.findAll('button')).toHaveLength(2);
     expect(wrapper.text()).toContain('文档');
     expect(wrapper.text()).toContain('图片');
+  });
+
+  it('single 通过 v-model 请求选择并允许取消当前值', async () => {
+    const wrapper = mount(MatChipSet, {
+      props: {
+        modelValue: 'one',
+        selection: 'single',
+      },
+      slots: {
+        default: () => [
+          h(MatChip, { value: 'one', variant: 'filter' }, () => '一'),
+          h(MatChip, { value: 'two', variant: 'filter' }, () => '二'),
+        ],
+      },
+    });
+    const buttons = wrapper.findAll('button');
+
+    expect(buttons[0].attributes('aria-pressed')).toBe('true');
+    expect(buttons[1].attributes('aria-pressed')).toBe('false');
+
+    await buttons[1].trigger('click');
+    await buttons[0].trigger('click');
+
+    expect(wrapper.emitted('update:modelValue')).toEqual([['two'], [null]]);
+    expect(buttons[0].attributes('aria-pressed')).toBe('true');
+    expect(buttons[1].attributes('aria-pressed')).toBe('false');
+  });
+
+  it('multiple 返回新数组且不修改传入模型', async () => {
+    const modelValue = ['one'];
+    const wrapper = mount(MatChipSet, {
+      props: {
+        modelValue,
+        selection: 'multiple',
+      },
+      slots: {
+        default: () => [
+          h(MatChip, { value: 'one', variant: 'filter' }, () => '一'),
+          h(MatChip, { value: 'two', variant: 'input' }, () => '二'),
+        ],
+      },
+    });
+
+    await wrapper.findAll('button')[1].trigger('click');
+
+    const nextValue = wrapper.emitted('update:modelValue')?.[0]?.[0];
+
+    expect(nextValue).toEqual(['one', 'two']);
+    expect(nextValue).not.toBe(modelValue);
+    expect(modelValue).toEqual(['one']);
+    expect(wrapper.findAll('button')[1].attributes('aria-pressed')).toBe('false');
+  });
+
+  it('组模型覆盖参与项 selected，但忽略不参与选择的 Chip', async () => {
+    const wrapper = mount(MatChipSet, {
+      props: {
+        modelValue: ['selected'],
+        selection: 'multiple',
+      },
+      slots: {
+        default: () => [
+          h(MatChip, {
+            selected: false,
+            value: 'selected',
+            variant: 'filter',
+          }, () => '组选中'),
+          h(MatChip, {
+            selected: true,
+            value: 'local',
+            variant: 'input',
+          }, () => '组未选中'),
+          h(MatChip, { value: 'assist', variant: 'assist' }, () => '辅助'),
+          h(MatChip, { variant: 'filter' }, () => '无值'),
+          h(MatChip, {
+            disabled: true,
+            value: 'disabled',
+            variant: 'filter',
+          }, () => '禁用'),
+        ],
+      },
+    });
+    const buttons = wrapper.findAll('button');
+
+    expect(buttons[0].attributes('aria-pressed')).toBe('true');
+    expect(buttons[1].attributes('aria-pressed')).toBe('false');
+    expect(buttons[2].attributes('aria-pressed')).toBeUndefined();
+
+    await buttons[2].trigger('click');
+    await buttons[3].trigger('click');
+    await buttons[4].trigger('click');
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+  });
+
+  it('input remove 不修改 ChipSet 模型', async () => {
+    const wrapper = mount(MatChipSet, {
+      props: {
+        modelValue: ['contact'],
+        selection: 'multiple',
+      },
+      slots: {
+        default: () => h(MatChip, {
+          value: 'contact',
+          variant: 'input',
+        }, () => '联系人'),
+      },
+    });
+    const closeIcon = wrapper.findAll('span').find((element) => element.text() === 'close');
+
+    await closeIcon.trigger('click');
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
 });
