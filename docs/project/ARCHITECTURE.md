@@ -89,7 +89,7 @@ App bar 以 `MatAppBar` 根组件组织 leading、唯一主内容区、subtitle 
 
 Loader 以单个组件的 `linear` 与 `circular` variant 表达两种 Progress indicator 形态。确定状态在根元素上提供 progressbar ARIA 值，不确定状态仅保留进度语义和动画；波浪形活动指示器由内联 SVG 绘制，轨道保持平直。组件只读取系统 primary 与 secondary container 颜色角色，显式 `color` 通过共享局部配色模块替换活动与停止指示器色。
 
-Checkbox 以布尔值或基础值数组表达受控选择，数组更新始终返回新数组。Radio 可以独立受控；进入 Radio group 后由 provide/inject 上下文统一选中值、禁用、配色和按 DOM 顺序维护的 roving tabindex。Switch 只表达立即生效的布尔状态。三类控件保留原生 input 语义，但不承诺表单提交、原生校验、重置或表单代理方法。Chip 复用 MatActionBase 的单一原生按钮和状态层，以 variant 区分辅助、筛选、输入与建议外观；独立 filter/input 使用受控 selected，input 默认关闭图标区域发出 remove 请求。ChipSet 通过 provide/inject 让带 value 的 filter/input 绑定受控 single/multiple 模型，scroll 布局组合横向 MatScrollArea；它不删除数据，也不建立焦点、编辑或拖拽模型。
+Checkbox 以布尔值或基础值数组表达受控选择，数组更新始终返回新数组。Radio 可以独立受控；进入 Radio group 后由 provide/inject 上下文统一选中值、禁用、配色和按 DOM 顺序维护的 roving tabindex。Switch 只表达立即生效的布尔状态。三类控件保留原生 input 语义，但不承诺表单提交、原生校验、重置或表单代理方法。Chip 复用 MatActionBase 的单一原生按钮和状态层，以 variant 区分辅助、筛选、输入与建议外观；独立 filter/input 使用受控 selected，input 默认关闭图标区域发出 remove 请求。ChipSet 通过 provide/inject 让带 value 的 filter/input 绑定受控 single/multiple 模型，scroll 布局组合横向 MatScrollArea 并选择性启用其拖拽滚动；拖拽阈值、pointer capture、滚动位置、取消清理和 click 抑制均由 ScrollArea 管理。ChipSet 不删除数据，也不建立焦点、编辑或拖拽重排模型。
 
 ### 样式层
 

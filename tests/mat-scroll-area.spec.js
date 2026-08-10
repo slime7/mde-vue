@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils';
+import { h } from 'vue';
 import {
   beforeEach, describe, expect, it, vi,
 } from 'vitest';
@@ -19,6 +20,24 @@ function setScrollLayout(element, values) {
 async function syncLayout(wrapper) {
   resizeCallback?.();
   await wrapper.vm.$nextTick();
+}
+
+function dispatchPointer(target, type, options = {}) {
+  const event = new MouseEvent(type, {
+    bubbles: true,
+    button: options.button ?? 0,
+    buttons: options.buttons ?? (type === 'pointerup' ? 0 : 1),
+    cancelable: true,
+    clientX: options.clientX ?? 0,
+  });
+
+  Object.defineProperties(event, {
+    pointerId: { value: options.pointerId ?? 1 },
+    pointerType: { value: options.pointerType ?? 'mouse' },
+  });
+  target.dispatchEvent(event);
+
+  return event;
 }
 
 describe('MatScrollArea', () => {
@@ -252,5 +271,199 @@ describe('MatScrollArea', () => {
     expect(wrapper.text()).toContain('固定开头');
     expect(wrapper.text()).toContain('固定结尾');
     expect(wrapper.text()).toContain('滚动内容');
+  });
+
+  it('默认不接管横向指针拖拽', () => {
+    const onClick = vi.fn();
+    const wrapper = mount(MatScrollArea, {
+      props: { orientation: 'horizontal' },
+      slots: {
+        default: () => h('button', { onClick }, '内容'),
+      },
+    });
+    const scroller = wrapper.vm.getScroller();
+    const button = wrapper.get('button').element;
+
+    setScrollLayout(scroller, { scrollLeft: 100 });
+    dispatchPointer(button, 'pointerdown', { clientX: 100 });
+    dispatchPointer(button, 'pointermove', { clientX: 60 });
+    dispatchPointer(button, 'pointerup', { clientX: 60 });
+    button.click();
+
+    expect(scroller.scrollLeft).toBe(100);
+    expect(onClick).toHaveBeenCalledOnce();
+  });
+
+  it.each(['mouse', 'pen'])('%s 主操作可按住拖动横向滚动', (pointerType) => {
+    const wrapper = mount(MatScrollArea, {
+      props: {
+        dragScroll: true,
+        orientation: 'horizontal',
+      },
+    });
+    const scroller = wrapper.vm.getScroller();
+    const setPointerCapture = vi.fn();
+
+    scroller.setPointerCapture = setPointerCapture;
+    setScrollLayout(scroller, { scrollLeft: 100 });
+    dispatchPointer(scroller, 'pointerdown', {
+      clientX: 120,
+      pointerId: 4,
+      pointerType,
+    });
+    dispatchPointer(scroller, 'pointermove', {
+      clientX: 90,
+      pointerId: 4,
+      pointerType,
+    });
+
+    expect(scroller.scrollLeft).toBe(130);
+    expect(setPointerCapture).toHaveBeenCalledWith(4);
+  });
+
+  it('只在超过阈值后抑制紧随拖拽的点击', () => {
+    const onClick = vi.fn();
+    const wrapper = mount(MatScrollArea, {
+      props: {
+        dragScroll: true,
+        orientation: 'horizontal',
+      },
+      slots: {
+        default: () => h('button', { onClick }, '内容'),
+      },
+    });
+    const scroller = wrapper.vm.getScroller();
+    const button = wrapper.get('button').element;
+
+    scroller.setPointerCapture = vi.fn();
+    setScrollLayout(scroller, { scrollLeft: 100 });
+    dispatchPointer(button, 'pointerdown', { clientX: 100, pointerId: 1 });
+    dispatchPointer(button, 'pointermove', { clientX: 97, pointerId: 1 });
+    dispatchPointer(button, 'pointerup', { clientX: 97, pointerId: 1 });
+    button.click();
+
+    expect(onClick).toHaveBeenCalledOnce();
+
+    dispatchPointer(button, 'pointerdown', { clientX: 100, pointerId: 2 });
+    dispatchPointer(button, 'pointermove', { clientX: 90, pointerId: 2 });
+    dispatchPointer(scroller, 'pointerup', { clientX: 90, pointerId: 2 });
+    const clickEvent = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+    });
+
+    button.dispatchEvent(clickEvent);
+
+    expect(clickEvent.defaultPrevented).toBe(true);
+    expect(onClick).toHaveBeenCalledOnce();
+
+    button.click();
+    expect(onClick).toHaveBeenCalledTimes(2);
+  });
+
+  it.each([
+    ['touch', 0],
+    ['mouse', 2],
+  ])('忽略 pointerType=%s、button=%s 的拖拽', (pointerType, button) => {
+    const wrapper = mount(MatScrollArea, {
+      props: {
+        dragScroll: true,
+        orientation: 'horizontal',
+      },
+    });
+    const scroller = wrapper.vm.getScroller();
+
+    setScrollLayout(scroller, { scrollLeft: 100 });
+    dispatchPointer(scroller, 'pointerdown', {
+      button,
+      clientX: 100,
+      pointerId: 3,
+      pointerType,
+    });
+    dispatchPointer(scroller, 'pointermove', {
+      button,
+      clientX: 50,
+      pointerId: 3,
+      pointerType,
+    });
+
+    expect(scroller.scrollLeft).toBe(100);
+  });
+
+  it('忽略非活动 pointer，并在取消或关闭能力后允许后续点击', async () => {
+    const onClick = vi.fn();
+    const wrapper = mount(MatScrollArea, {
+      props: {
+        dragScroll: true,
+        orientation: 'horizontal',
+      },
+      slots: {
+        default: () => h('button', { onClick }, '内容'),
+      },
+    });
+    const scroller = wrapper.vm.getScroller();
+    const button = wrapper.get('button').element;
+
+    scroller.setPointerCapture = vi.fn();
+    setScrollLayout(scroller, { scrollLeft: 100 });
+    dispatchPointer(button, 'pointerdown', { clientX: 100, pointerId: 1 });
+    dispatchPointer(button, 'pointermove', { clientX: 50, pointerId: 2 });
+    expect(scroller.scrollLeft).toBe(100);
+
+    dispatchPointer(button, 'pointercancel', { clientX: 100, pointerId: 1 });
+    button.click();
+    expect(onClick).toHaveBeenCalledOnce();
+
+    dispatchPointer(button, 'pointerdown', { clientX: 100, pointerId: 3 });
+    dispatchPointer(button, 'pointermove', { clientX: 80, pointerId: 3 });
+    await wrapper.setProps({ dragScroll: false });
+    button.click();
+
+    expect(onClick).toHaveBeenCalledTimes(2);
+  });
+
+  it('失去 pointer capture 后结束拖拽并只抑制一次点击', () => {
+    const onClick = vi.fn();
+    const wrapper = mount(MatScrollArea, {
+      props: {
+        dragScroll: true,
+        orientation: 'horizontal',
+      },
+      slots: {
+        default: () => h('button', { onClick }, '内容'),
+      },
+    });
+    const scroller = wrapper.vm.getScroller();
+    const button = wrapper.get('button').element;
+
+    scroller.setPointerCapture = vi.fn();
+    setScrollLayout(scroller, { scrollLeft: 100 });
+    dispatchPointer(button, 'pointerdown', { clientX: 100, pointerId: 8 });
+    dispatchPointer(button, 'pointermove', { clientX: 80, pointerId: 8 });
+    dispatchPointer(scroller, 'lostpointercapture', { pointerId: 8 });
+    button.click();
+    button.click();
+
+    expect(onClick).toHaveBeenCalledOnce();
+  });
+
+  it('卸载时释放活动 pointer capture', () => {
+    const wrapper = mount(MatScrollArea, {
+      props: {
+        dragScroll: true,
+        orientation: 'horizontal',
+      },
+    });
+    const scroller = wrapper.vm.getScroller();
+    const releasePointerCapture = vi.fn();
+
+    scroller.setPointerCapture = vi.fn();
+    scroller.hasPointerCapture = () => true;
+    scroller.releasePointerCapture = releasePointerCapture;
+    dispatchPointer(scroller, 'pointerdown', { clientX: 100, pointerId: 9 });
+    dispatchPointer(scroller, 'pointermove', { clientX: 80, pointerId: 9 });
+    wrapper.unmount();
+
+    expect(releasePointerCapture).toHaveBeenCalledWith(9);
   });
 });

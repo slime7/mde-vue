@@ -5295,9 +5295,9 @@ import RadioStandaloneExample from '../examples/selection/RadioStandaloneExample
 
 ## 组件简介
 
-`<mat-chip>` 的组件导出名是 `MatChip`，以单个原生按钮呈现简短操作、筛选条件、输入值或建议。`<mat-chip-set>` 的组件导出名是 `MatChipSet`，为一组 Chip 提供换行或细滚动条横向布局、`group` 语义和可选的受控单选或多选。
+`<mat-chip>` 的组件导出名是 `MatChip`，以单个原生按钮呈现简短操作、筛选条件、输入值或建议。`<mat-chip-set>` 的组件导出名是 `MatChipSet`，为一组 Chip 提供换行或隐藏滚动条的横向拖拽布局、`group` 语义和可选的受控单选或多选。
 
-Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见部分。独立使用时，`selected` 是 filter 与 input 的受控外观；进入启用选择的 ChipSet 后，带 `value` 的 filter/input 改由组 `v-model` 控制。input 默认 X 的图标区域发出 `remove`，但组件不自行删除数据，也不内置编辑、拖拽或菜单工作流。
+Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见部分。独立使用时，`selected` 是 filter 与 input 的受控外观；进入启用选择的 ChipSet 后，带 `value` 的 filter/input 改由组 `v-model` 控制。input 默认 X 的图标区域发出 `remove`，但组件不自行删除数据，也不内置编辑、重排或菜单工作流。
 
 ## 示例
 
@@ -5671,7 +5671,7 @@ const multiple = ref(['文档']);
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `layout` | `'wrap' \| 'scroll'` | `'wrap'` | 换行排列，或保持单行并允许横向滚动 |
+| `layout` | `'wrap' \| 'scroll'` | `'wrap'` | 换行排列，或保持单行、隐藏滚动条并允许按住拖拽 |
 | `selection` | `'none' \| 'single' \| 'multiple'` | `'none'` | 不协调选择，或启用受控单选、多选 |
 | `modelValue` | `string \| number \| boolean \| Array<string \| number \| boolean> \| null` | `null` | single 使用单值或 null，multiple 使用数组 |
 
@@ -5708,7 +5708,7 @@ MatChipSet 不提供额外的 select 或 selected 事件。remove 不自动删�
 
 ## 状态
 
-Chip 支持 hover、focus-visible、pressed、disabled，以及 filter/input 的受控 selected。ChipSet 的 scroll 布局复用横向 MatScrollArea 和 thin 滚动条。描边形态使用 outline variant，升高形态使用 surface container low 和 level 1 海拔；按压只改变状态层。减少动态效果偏好下关闭颜色、阴影和状态层过渡。两个组件均没有公开方法。
+Chip 支持 hover、focus-visible、pressed、disabled，以及 filter/input 的受控 selected。ChipSet 的 scroll 布局复用横向 MatScrollArea，完全隐藏滚动条，并使用 48px 边缘渐隐提示仍有内容可移动；鼠标主键和触控笔可以按住拖拽，触摸保持原生惯性滑动。超过拖拽阈值后不会激活 Chip，短按和键盘激活保持不变。描边形态使用 outline variant，升高形态使用 surface container low 和 level 1 海拔；按压只改变状态层。减少动态效果偏好下关闭颜色、阴影和状态层过渡。两个组件均没有公开方法。
 
 ## 参考来源
 
@@ -15359,7 +15359,7 @@ import SnackbarTextExample from '../examples/snackbar/SnackbarTextExample.vue';
 
 ## 组件简介
 
-`<mat-scroll-area>` 的组件导出名是 `MatScrollArea`。组件拥有一个纵向或横向原生滚动元素，并在仍有内容可滚动时用真实 CSS mask 渐隐对应边缘；效果不依赖容器背景色，适合透明表面、图片和任意主题背景。组件保留原生滚动条，并允许把页眉或页脚放在阴影之外。
+`<mat-scroll-area>` 的组件导出名是 `MatScrollArea`。组件拥有一个纵向或横向原生滚动元素，并在仍有内容可滚动时用真实 CSS mask 渐隐对应边缘；效果不依赖容器背景色，适合透明表面、图片和任意主题背景。组件允许调整或隐藏原生滚动条，并允许把页眉或页脚放在阴影之外。
 
 组件一次只管理一个滚动轴。使用方必须为纵向模式提供确定的块轴尺寸，或为横向模式提供确定的行轴尺寸和不会收缩的内部内容，才能形成滚动边界。
 
@@ -15972,6 +15972,65 @@ const barWidths = ['default', 'thin', 'hidden'];
   </DocsPreview>
 </ClientOnly>
 
+### 按住拖拽
+
+横向模式设置 `dragScroll` 后，鼠标主键和触控笔可以在内容上按住拖拽。移动超过 4px 后才确认拖拽，并阻止这次手势随后产生的点击；短按和键盘激活不受影响。触摸指针不由此能力接管，继续使用浏览器原生滑动与惯性。
+
+该能力默认关闭。下面的示例同时使用 `bar-width="hidden"` 完全隐藏滚动条，仍保留键盘和触摸滚动路径。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-scroll-area
+    class="drag-scroll-example"
+    orientation="horizontal"
+    bar-width="hidden"
+    drag-scroll
+    aria-label="可拖拽横向卡片"
+    tabindex="0"
+  >
+    <div class="drag-scroll-example__row">
+      <mat-card
+        v-for="index in 8"
+        :key="index"
+        variant="outlined"
+      >
+        卡片 {{ index }}
+      </mat-card>
+    </div>
+  </mat-scroll-area>
+</template>
+```
+```vue
+<style scoped>
+.drag-scroll-example {
+  inline-size: 100%;
+}
+
+.drag-scroll-example__row {
+  display: flex;
+  gap: 12px;
+  inline-size: max-content;
+}
+
+.drag-scroll-example__row > * {
+  flex-shrink: 0;
+  inline-size: 152px;
+  padding: 24px 16px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Scroll area 按住拖拽预览">
+    <ScrollAreaDragScrollExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### 命令式滚动
 
 :::: details 查看示例代码
@@ -16063,6 +16122,7 @@ function scrollToEnd() {
 | `shadowLength` | `number \| { start?: number, end?: number }` | `16` | 阴影从对应边缘向内延伸的像素数；数字或纯数字字符串用于两端，对象可分别设置 `start` 与 `end`，值必须是非负有限数字 |
 | `shadowOffset` | `number \| { start?: number, end?: number }` | `0` | 边缘阴影带从对应边缘向内偏移的像素数；数字或纯数字字符串用于两端，对象未提供的一端为 `0`，值必须是非负有限数字。偏移区内的滚动内容不被遮罩覆盖，适合放置不透明的 sticky 元素 |
 | `barWidth` | `'default' \| 'thin' \| 'hidden'` | `'thin'` | 设置滚动条宽度；`default` 使用浏览器默认值，`hidden` 隐藏滚动条 |
+| `dragScroll` | `boolean` | `false` | 横向模式下允许鼠标主键和触控笔按住拖拽；触摸保持原生滑动 |
 
 `class` 和 `style` 作用于组件根容器。其他未被消费的原生属性、ARIA 属性和监听器作用于实际滚动元素；需要键盘聚焦滚动区时，应按场景提供 `tabindex="0"` 和可访问名称。
 
@@ -16096,6 +16156,7 @@ function scrollToEnd() {
 <script setup>
 import ScrollAreaFixedSlotsExample from '../examples/scroll-area/ScrollAreaFixedSlotsExample.vue';
 import ScrollAreaBarWidthExample from '../examples/scroll-area/ScrollAreaBarWidthExample.vue';
+import ScrollAreaDragScrollExample from '../examples/scroll-area/ScrollAreaDragScrollExample.vue';
 import ScrollAreaMethodsExample from '../examples/scroll-area/ScrollAreaMethodsExample.vue';
 import ScrollAreaOrientationExample from '../examples/scroll-area/ScrollAreaOrientationExample.vue';
 import ScrollAreaReachExample from '../examples/scroll-area/ScrollAreaReachExample.vue';

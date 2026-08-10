@@ -120,7 +120,9 @@ provide(MAT_CHIP_SET_KEY, {
       v-if="layout === 'scroll'"
       class="mat-chip-set__scroll-area"
       orientation="horizontal"
-      bar-width="thin"
+      bar-width="hidden"
+      drag-scroll
+      :shadow-length="48"
     >
       <div class="mat-chip-set__scroll-content">
         <slot />

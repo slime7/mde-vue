@@ -1,7 +1,25 @@
 import { mount } from '@vue/test-utils';
 import { h } from 'vue';
-import { describe, expect, it } from 'vitest';
+import {
+  describe, expect, it, vi,
+} from 'vitest';
 import { MatChip, MatChipSet } from '../src';
+
+function dispatchPointer(target, type, options = {}) {
+  const event = new MouseEvent(type, {
+    bubbles: true,
+    button: 0,
+    buttons: type === 'pointerup' ? 0 : 1,
+    cancelable: true,
+    clientX: options.clientX ?? 0,
+  });
+
+  Object.defineProperties(event, {
+    pointerId: { value: options.pointerId ?? 1 },
+    pointerType: { value: 'mouse' },
+  });
+  target.dispatchEvent(event);
+}
 
 describe('MatChip', () => {
   it('使用原生按钮语义并透传属性与点击事件', async () => {
@@ -286,5 +304,44 @@ describe('MatChipSet', () => {
     await closeIcon.trigger('click');
 
     expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+  });
+
+  it('scroll 布局启用隐藏滚动条与拖拽，拖拽不激活 Chip', async () => {
+    const wrapper = mount(MatChipSet, {
+      props: {
+        layout: 'scroll',
+        modelValue: null,
+        selection: 'single',
+      },
+      slots: {
+        default: () => h(MatChip, {
+          value: 'one',
+          variant: 'filter',
+        }, () => '一'),
+      },
+    });
+    const scrollArea = wrapper.findComponent({ name: 'MatScrollArea' });
+    const scroller = scrollArea.vm.getScroller();
+    const button = wrapper.get('button').element;
+
+    expect(scrollArea.props('barWidth')).toBe('hidden');
+    expect(scrollArea.props('dragScroll')).toBe(true);
+
+    scroller.setPointerCapture = vi.fn();
+    Object.defineProperty(scroller, 'scrollLeft', {
+      configurable: true,
+      value: 100,
+      writable: true,
+    });
+    dispatchPointer(button, 'pointerdown', { clientX: 100, pointerId: 1 });
+    dispatchPointer(button, 'pointermove', { clientX: 80, pointerId: 1 });
+    dispatchPointer(scroller, 'pointerup', { clientX: 80, pointerId: 1 });
+    button.click();
+
+    expect(scroller.scrollLeft).toBe(120);
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+
+    button.click();
+    expect(wrapper.emitted('update:modelValue')).toEqual([['one']]);
   });
 });

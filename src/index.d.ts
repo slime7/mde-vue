@@ -2255,6 +2255,13 @@ export interface MatScrollAreaProps {
   */
   barWidth?: 'default' | 'thin' | 'hidden';
   /**
+  * 横向模式下允许使用鼠标主键或触控笔按住拖拽滚动。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  dragScroll?: boolean;
+  /**
   * 进入滚动边缘多少像素时触发事件。数字或纯数字字符串同时用于两端，
   * 对象成员同样接受，可分别设置 start、end。
   *

@@ -85,6 +85,16 @@ const props = defineProps({
     },
   },
   /**
+   * 横向模式下允许使用鼠标主键或触控笔按住拖拽滚动。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  dragScroll: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * 进入滚动边缘多少像素时触发事件。数字或纯数字字符串同时用于两端，
    * 对象成员同样接受，可分别设置 start、end。
    *
@@ -133,13 +143,22 @@ const attrs = useAttrs();
 const scroller = ref(null);
 const hasStartOverflow = ref(false);
 const hasEndOverflow = ref(false);
+const isDragging = ref(false);
 const wasWithinStart = ref(false);
 const wasWithinEnd = ref(false);
 let frameId;
 let resizeObserver;
+let dragPointerId;
+let dragStartX = 0;
+let dragStartScrollLeft = 0;
+let suppressClick = false;
+let suppressClickTimer;
 
 const normalizedOrientation = computed(() => (
   ['horizontal', 'x', 'h'].includes(props.orientation) ? 'horizontal' : 'vertical'
+));
+const canDragScroll = computed(() => (
+  props.dragScroll && normalizedOrientation.value === 'horizontal'
 ));
 const thresholds = computed(() => {
   return resolveEdgeValues(props.reachThreshold, 0);
@@ -260,6 +279,139 @@ function handleScroll() {
   scheduleSync(true);
 }
 
+function clearSuppressClick() {
+  if (suppressClickTimer !== undefined) {
+    globalThis.clearTimeout(suppressClickTimer);
+    suppressClickTimer = undefined;
+  }
+
+  suppressClick = false;
+}
+
+function suppressNextClick() {
+  clearSuppressClick();
+  suppressClick = true;
+  suppressClickTimer = globalThis.setTimeout(() => {
+    suppressClick = false;
+    suppressClickTimer = undefined;
+  }, 0);
+}
+
+/**
+ * @param {boolean} releaseCapture
+ * @returns {void}
+ */
+function resetDrag(releaseCapture = false) {
+  const element = scroller.value;
+  const pointerId = dragPointerId;
+
+  if (releaseCapture
+    && pointerId !== undefined
+    && element?.hasPointerCapture?.(pointerId)) {
+    element.releasePointerCapture(pointerId);
+  }
+
+  dragPointerId = undefined;
+  isDragging.value = false;
+}
+
+/**
+ * @param {PointerEvent} event
+ * @returns {void}
+ */
+function handlePointerDown(event) {
+  if (!canDragScroll.value
+    || dragPointerId !== undefined
+    || event.button !== 0
+    || !['mouse', 'pen'].includes(event.pointerType)) {
+    return;
+  }
+
+  dragPointerId = event.pointerId;
+  dragStartX = event.clientX;
+  dragStartScrollLeft = scroller.value?.scrollLeft ?? 0;
+}
+
+/**
+ * @param {PointerEvent} event
+ * @returns {void}
+ */
+function handlePointerMove(event) {
+  if (event.pointerId !== dragPointerId || !scroller.value) {
+    return;
+  }
+
+  const distance = event.clientX - dragStartX;
+
+  if (!isDragging.value && Math.abs(distance) <= 4) {
+    return;
+  }
+
+  if (!isDragging.value) {
+    isDragging.value = true;
+    scroller.value.setPointerCapture?.(event.pointerId);
+  }
+
+  event.preventDefault();
+  scroller.value.scrollLeft = dragStartScrollLeft - distance;
+}
+
+/**
+ * @param {PointerEvent} event
+ * @returns {void}
+ */
+function handlePointerUp(event) {
+  if (event.pointerId !== dragPointerId) {
+    return;
+  }
+
+  if (isDragging.value) {
+    suppressNextClick();
+  }
+
+  resetDrag(true);
+}
+
+/**
+ * @param {PointerEvent} event
+ * @returns {void}
+ */
+function handlePointerCancel(event) {
+  if (event.pointerId === dragPointerId) {
+    resetDrag(true);
+  }
+}
+
+/**
+ * @param {PointerEvent} event
+ * @returns {void}
+ */
+function handleLostPointerCapture(event) {
+  if (event.target !== scroller.value || event.pointerId !== dragPointerId) {
+    return;
+  }
+
+  if (isDragging.value) {
+    suppressNextClick();
+  }
+
+  resetDrag();
+}
+
+/**
+ * @param {MouseEvent} event
+ * @returns {void}
+ */
+function handleClickCapture(event) {
+  if (!suppressClick) {
+    return;
+  }
+
+  clearSuppressClick();
+  event.preventDefault();
+  event.stopImmediatePropagation();
+}
+
 function observeContent() {
   if (!resizeObserver || !scroller.value) {
     return;
@@ -300,6 +452,12 @@ watch(
   },
   { deep: true },
 );
+watch(canDragScroll, (enabled) => {
+  if (!enabled) {
+    resetDrag(true);
+    clearSuppressClick();
+  }
+});
 
 onMounted(() => {
   if (typeof ResizeObserver === 'function') {
@@ -317,6 +475,8 @@ onBeforeUnmount(() => {
   }
 
   resizeObserver?.disconnect();
+  resetDrag(true);
+  clearSuppressClick();
 });
 
 defineExpose({
@@ -354,10 +514,17 @@ defineExpose({
         :class="[
           `mat-scroll-area__scroller--bar-${props.barWidth}`,
           {
+            'mat-scroll-area__scroller--dragging': isDragging,
             'mat-scroll-area__scroller--start-overflow': hasStartOverflow,
             'mat-scroll-area__scroller--end-overflow': hasEndOverflow,
           },
         ]"
+        @click.capture="handleClickCapture"
+        @lostpointercapture="handleLostPointerCapture"
+        @pointercancel="handlePointerCancel"
+        @pointerdown="handlePointerDown"
+        @pointermove="handlePointerMove"
+        @pointerup="handlePointerUp"
         @scroll="handleScroll"
       >
         <slot />
@@ -409,6 +576,8 @@ defineExpose({
   min-block-size: 0;
   scrollbar-color: var(--mat-sys-color-outline) transparent;
 }
+
+.mat-scroll-area__scroller--dragging { user-select: none; }
 
 .mat-scroll-area--vertical .mat-scroll-area__scroller {
   overflow: hidden auto;

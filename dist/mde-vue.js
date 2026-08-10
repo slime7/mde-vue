@@ -4229,6 +4229,10 @@ var nr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 				].includes(e);
 			}
 		},
+		dragScroll: {
+			type: Boolean,
+			default: !1
+		},
 		reachThreshold: {
 			type: [Number, Object],
 			default: 0,
@@ -4245,21 +4249,21 @@ var nr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 		"reach-end": (e) => typeof e?.distance == "number" && e.target instanceof HTMLElement
 	},
 	setup(e, { expose: t, emit: n }) {
-		let i = e, c = n, l = L(), u = O(null), d = O(!1), f = O(!1), p = O(!1), m = O(!1), y, x, T = r(() => [
+		let i = e, c = n, l = L(), u = O(null), d = O(!1), f = O(!1), p = O(!1), m = O(!1), y = O(!1), x, T, E, D = 0, k = 0, A = !1, M, N = r(() => [
 			"horizontal",
 			"x",
 			"h"
-		].includes(i.orientation) ? "horizontal" : "vertical"), E = r(() => Ve(i.reachThreshold, 0)), D = r(() => Ve(i.shadowOffset, 0)), k = r(() => Ve(i.shadowLength, 16)), A = r(() => i.barWidth === "hidden" ? 0 : i.barWidth === "thin" ? 10 : 16), M = r(() => ({
-			"--mat-scroll-area-shadow-length-start": `${k.value.start}px`,
-			"--mat-scroll-area-shadow-length-end": `${k.value.end}px`,
-			"--mat-scroll-area-shadow-offset-start": `${D.value.start}px`,
-			"--mat-scroll-area-shadow-offset-end": `${D.value.end}px`,
-			"--mat-scroll-area-scrollbar-space": `${A.value}px`
-		})), N = r(() => ({
+		].includes(i.orientation) ? "horizontal" : "vertical"), P = r(() => i.dragScroll && N.value === "horizontal"), F = r(() => Ve(i.reachThreshold, 0)), I = r(() => Ve(i.shadowOffset, 0)), R = r(() => Ve(i.shadowLength, 16)), z = r(() => i.barWidth === "hidden" ? 0 : i.barWidth === "thin" ? 10 : 16), V = r(() => ({
+			"--mat-scroll-area-shadow-length-start": `${R.value.start}px`,
+			"--mat-scroll-area-shadow-length-end": `${R.value.end}px`,
+			"--mat-scroll-area-shadow-offset-start": `${I.value.start}px`,
+			"--mat-scroll-area-shadow-offset-end": `${I.value.end}px`,
+			"--mat-scroll-area-scrollbar-space": `${z.value}px`
+		})), H = r(() => ({
 			class: l.class,
 			style: l.style
-		})), P = r(() => {
-			let e = T.value === "horizontal", t = Re(i.snapPadding, { fallback: "0" });
+		})), U = r(() => {
+			let e = N.value === "horizontal", t = Re(i.snapPadding, { fallback: "0" });
 			return {
 				scrollPaddingBottom: e ? void 0 : t,
 				scrollPaddingLeft: e ? t : void 0,
@@ -4267,14 +4271,14 @@ var nr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 				scrollPaddingTop: e ? void 0 : t,
 				scrollSnapType: i.snap === "none" ? "none" : `${e ? "x" : "y"} ${i.snap}`
 			};
-		}), F = r(() => Object.fromEntries(Object.entries(l).filter(([e]) => !["class", "style"].includes(e))));
-		function I() {
+		}), W = r(() => Object.fromEntries(Object.entries(l).filter(([e]) => !["class", "style"].includes(e))));
+		function G() {
 			let e = u.value;
 			if (!e) return {
 				start: 0,
 				end: 0
 			};
-			if (T.value === "horizontal") {
+			if (N.value === "horizontal") {
 				let t = Math.abs(e.scrollLeft);
 				return {
 					start: t,
@@ -4286,69 +4290,110 @@ var nr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 				end: Math.max(0, e.scrollHeight - e.clientHeight - e.scrollTop)
 			};
 		}
-		function R(e) {
+		function K(e) {
 			let t = u.value;
 			if (!t) return;
-			let n = I(), r = n.start <= E.value.start + 1, i = n.end <= E.value.end + 1;
-			d.value = n.start > 1, f.value = n.end > 1, e && r && !p.value && c("reach-start", {
+			let n = G(), r = n.start <= F.value.start + 1, i = n.end <= F.value.end + 1;
+			d.value = n.start > 1, f.value = n.end > 1, e && r && !m.value && c("reach-start", {
 				distance: n.start,
 				target: t
-			}), e && i && !m.value && c("reach-end", {
+			}), e && i && !y.value && c("reach-end", {
 				distance: n.end,
 				target: t
-			}), p.value = r, m.value = i;
+			}), m.value = r, y.value = i;
 		}
-		function z(e) {
-			y !== void 0 && cancelAnimationFrame(y), y = requestAnimationFrame(() => {
-				y = void 0, R(e);
+		function q(e) {
+			x !== void 0 && cancelAnimationFrame(x), x = requestAnimationFrame(() => {
+				x = void 0, K(e);
 			});
 		}
-		function V() {
-			z(!0);
+		function ee() {
+			q(!0);
 		}
-		function H() {
-			!x || !u.value || (x.disconnect(), x.observe(u.value), Array.from(u.value.children).forEach((e) => {
-				x.observe(e);
-			}), z(!1));
+		function J() {
+			M !== void 0 && (globalThis.clearTimeout(M), M = void 0), A = !1;
 		}
-		function U() {
+		function Y() {
+			J(), A = !0, M = globalThis.setTimeout(() => {
+				A = !1, M = void 0;
+			}, 0);
+		}
+		function X(e = !1) {
+			let t = u.value, n = E;
+			e && n !== void 0 && t?.hasPointerCapture?.(n) && t.releasePointerCapture(n), E = void 0, p.value = !1;
+		}
+		function Z(e) {
+			!P.value || E !== void 0 || e.button !== 0 || !["mouse", "pen"].includes(e.pointerType) || (E = e.pointerId, D = e.clientX, k = u.value?.scrollLeft ?? 0);
+		}
+		function te(e) {
+			if (e.pointerId !== E || !u.value) return;
+			let t = e.clientX - D;
+			!p.value && Math.abs(t) <= 4 || (p.value || (p.value = !0, u.value.setPointerCapture?.(e.pointerId)), e.preventDefault(), u.value.scrollLeft = k - t);
+		}
+		function Q(e) {
+			e.pointerId === E && (p.value && Y(), X(!0));
+		}
+		function ne(e) {
+			e.pointerId === E && X(!0);
+		}
+		function re(e) {
+			e.target !== u.value || e.pointerId !== E || (p.value && Y(), X());
+		}
+		function ie(e) {
+			A && (J(), e.preventDefault(), e.stopImmediatePropagation());
+		}
+		function ae() {
+			!T || !u.value || (T.disconnect(), T.observe(u.value), Array.from(u.value.children).forEach((e) => {
+				T.observe(e);
+			}), q(!1));
+		}
+		function oe() {
 			return u.value;
 		}
-		function W(e) {
+		function se(e) {
 			u.value?.scrollTo(e);
 		}
-		return B([T, E], async () => {
-			await g(), z(!1);
-		}, { deep: !0 }), S(() => {
-			typeof ResizeObserver == "function" && (x = new ResizeObserver(() => z(!1))), H();
-		}), C(H), b(() => {
-			y !== void 0 && cancelAnimationFrame(y), x?.disconnect();
+		return B([N, F], async () => {
+			await g(), q(!1);
+		}, { deep: !0 }), B(P, (e) => {
+			e || (X(!0), J());
+		}), S(() => {
+			typeof ResizeObserver == "function" && (T = new ResizeObserver(() => q(!1))), ae();
+		}), C(ae), b(() => {
+			x !== void 0 && cancelAnimationFrame(x), T?.disconnect(), X(!0), J();
 		}), t({
-			getScroller: U,
-			scrollTo: W
-		}), (e, t) => (w(), o("div", h(N.value, { class: ["mat-scroll-area", `mat-scroll-area--${T.value}`] }), [
+			getScroller: oe,
+			scrollTo: se
+		}), (e, t) => (w(), o("div", h(H.value, { class: ["mat-scroll-area", `mat-scroll-area--${N.value}`] }), [
 			e.$slots["fixed-start"] ? (w(), o("div", mr, [j(e.$slots, "fixed-start", {}, void 0, !0)])) : a("", !0),
 			s("div", {
 				class: _(["mat-scroll-area__viewport", {
 					"mat-scroll-area__viewport--start-overflow": d.value,
 					"mat-scroll-area__viewport--end-overflow": f.value
 				}]),
-				style: v(M.value)
+				style: v(V.value)
 			}, [s("div", h({
 				ref_key: "scroller",
 				ref: u
-			}, F.value, {
+			}, W.value, {
 				class: ["mat-scroll-area__scroller", [`mat-scroll-area__scroller--bar-${i.barWidth}`, {
+					"mat-scroll-area__scroller--dragging": p.value,
 					"mat-scroll-area__scroller--start-overflow": d.value,
 					"mat-scroll-area__scroller--end-overflow": f.value
 				}]],
-				style: P.value,
-				onScroll: V
+				style: U.value,
+				onClickCapture: ie,
+				onLostpointercapture: re,
+				onPointercancel: ne,
+				onPointerdown: Z,
+				onPointermove: te,
+				onPointerup: Q,
+				onScroll: ee
 			}), [j(e.$slots, "default", {}, void 0, !0)], 16)], 6),
 			e.$slots["fixed-end"] ? (w(), o("div", hr, [j(e.$slots, "fixed-end", {}, void 0, !0)])) : a("", !0)
 		], 16));
 	}
-}), [["__scopeId", "data-v-96c1322d"]]), _r = { class: "mat-chip-set__scroll-content" }, vr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({ name: "MatChipSet" }, {
+}), [["__scopeId", "data-v-cfa7449d"]]), _r = { class: "mat-chip-set__scroll-content" }, vr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({ name: "MatChipSet" }, {
 	__name: "MatChipSet",
 	props: {
 		layout: {
@@ -4412,13 +4457,15 @@ var nr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 			key: 0,
 			class: "mat-chip-set__scroll-area",
 			orientation: "horizontal",
-			"bar-width": "thin"
+			"bar-width": "hidden",
+			"drag-scroll": "",
+			"shadow-length": 48
 		}, {
 			default: H(() => [s("div", _r, [j(t.$slots, "default", {}, void 0, !0)])]),
 			_: 3
 		})) : j(t.$slots, "default", { key: 1 }, void 0, !0)], 2));
 	}
-}), [["__scopeId", "data-v-d67c2e0f"]]), yr = Symbol("mde-vue-radio-group"), br = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-67ef15a0"]]), yr = Symbol("mde-vue-radio-group"), br = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 	name: "MatRadio",
 	inheritAttrs: !1
 }, {
