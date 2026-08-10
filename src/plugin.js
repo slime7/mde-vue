@@ -20,6 +20,8 @@ import MatListGroup from './components/mat-list-group/MatListGroup.vue';
 import MatListItem from './components/mat-list/MatListItem.vue';
 import MatDivider from './components/mat-divider/MatDivider.vue';
 import MatCheckbox from './components/mat-checkbox/MatCheckbox.vue';
+import MatChip from './components/mat-chip/MatChip.vue';
+import MatChipSet from './components/mat-chip/MatChipSet.vue';
 import MatRadio from './components/mat-radio/MatRadio.vue';
 import MatRadioGroup from './components/mat-radio-group/MatRadioGroup.vue';
 import MatSwitch from './components/mat-switch/MatSwitch.vue';
@@ -77,6 +79,8 @@ const GLOBAL_COMPONENTS = [
   ['MatListItem', 'mat-list-item', MatListItem],
   ['MatDivider', 'mat-divider', MatDivider],
   ['MatCheckbox', 'mat-checkbox', MatCheckbox],
+  ['MatChip', 'mat-chip', MatChip],
+  ['MatChipSet', 'mat-chip-set', MatChipSet],
   ['MatRadio', 'mat-radio', MatRadio],
   ['MatRadioGroup', 'mat-radio-group', MatRadioGroup],
   ['MatSwitch', 'mat-switch', MatSwitch],

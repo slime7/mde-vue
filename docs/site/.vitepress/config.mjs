@@ -83,6 +83,7 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'Checkbox 复选框', link: '/components/checkbox' },
+              { text: 'Chips 标签', link: '/components/chip' },
               { text: 'Input base 输入基础层', link: '/components/input-base' },
               { text: 'Radio 单选按钮与单选组', link: '/components/radio' },
               { text: 'Range slider 范围滑块', link: '/components/range-slider' },

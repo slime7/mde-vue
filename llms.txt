@@ -20,6 +20,7 @@
 - [App root 应用布局根](components/app-root.md): mat-app-root 的应用坐标系、文档与内部滚动模式、边缘登记、响应式布局数据和浮动组件自动接入。
 - [Checkbox 复选框](components/checkbox.md): mat-checkbox 的布尔与数组 v-model、不确定态、配色、事件和默认 slot。
 - [Radio 单选按钮与单选组](components/radio.md): mat-radio 与 mat-radio-group 的独立或成组 v-model、标签、禁用、配色和键盘交互。
+- [Chips 标签](components/chip.md): mat-chip 与 mat-chip-set 的用途形态、受控选中外观、内容 slot 和布局。
 - [Switch 开关](components/switch.md): mat-switch 的布尔 v-model、三档内置图标、配色、事件和默认 slot。
 - [Slider 滑块](components/slider.md): mat-slider 的单数值 v-model、标准与居中变体、尺寸、方向、图标和数值指示。
 - [Range slider 范围滑块](components/range-slider.md): mat-range-slider 的不可变区间 v-model、端点名称、方向、尺寸、停靠点和数值指示。

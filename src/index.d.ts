@@ -900,6 +900,74 @@ export interface MatCheckboxEmits {
 export type MatCheckboxComponent = DefineComponent<MatCheckboxProps, {}, {}, {}, {}, {}, {}, MatCheckboxEmits>;
 export declare const MatCheckbox: MatCheckboxComponent;
 
+export interface MatChipProps {
+  /**
+  * Chip 的用途形态。
+  *
+  * @type {'assist' | 'filter' | 'input' | 'suggestion'}
+  * @default 'assist'
+  */
+  variant?: 'assist' | 'filter' | 'input' | 'suggestion';
+  /**
+  * 使用 level 1 海拔和 surface container low 表面。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  elevated?: boolean;
+  /**
+  * filter 与 input 的受控选中外观；组件不会自行切换该值。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  selected?: boolean;
+  /**
+  * 使用原生按钮禁用语义。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  disabled?: boolean;
+  /**
+  * 语义色或六位十六进制种子色 `#RRGGBB`。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  color?: string | undefined;
+  /**
+  * 原生按钮类型。
+  *
+  * @type {'button' | 'submit' | 'reset'}
+  * @default 'button'
+  */
+  type?: 'button' | 'submit' | 'reset';
+}
+
+export interface MatChipEmits {
+  /**
+  * 启用的 Chip 被激活时转发原生点击事件，载荷为 `MouseEvent`。
+  */
+  "click": (payload: MouseEvent) => unknown;
+}
+
+export type MatChipComponent = DefineComponent<MatChipProps, {}, {}, {}, {}, {}, {}, MatChipEmits>;
+export declare const MatChip: MatChipComponent;
+
+export interface MatChipSetProps {
+  /**
+  * Chip 的换行或单行横向滚动布局。
+  *
+  * @type {'wrap' | 'scroll'}
+  * @default 'wrap'
+  */
+  layout?: 'wrap' | 'scroll';
+}
+
+export type MatChipSetComponent = DefineComponent<MatChipSetProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatChipSet: MatChipSetComponent;
+
 export interface MatRadioProps {
   /**
   * `v-model` 当前选中值；独立 Radio 选中时更新为 value。
@@ -2851,6 +2919,10 @@ declare module 'vue' {
     'mat-divider': typeof MatDivider;
     MatCheckbox: typeof MatCheckbox;
     'mat-checkbox': typeof MatCheckbox;
+    MatChip: typeof MatChip;
+    'mat-chip': typeof MatChip;
+    MatChipSet: typeof MatChipSet;
+    'mat-chip-set': typeof MatChipSet;
     MatRadio: typeof MatRadio;
     'mat-radio': typeof MatRadio;
     MatRadioGroup: typeof MatRadioGroup;

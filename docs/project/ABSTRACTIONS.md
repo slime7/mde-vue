@@ -171,6 +171,12 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 `<mat-list-group>` 只在普通或操作 List 中提供折叠：Activator Slot 必须是单个普通 MatListItem，该 Item 只承担 disclosure 按钮语义，不再承担链接、选择或叶子点击。根 List 的 `expanded` 数组以 `Object.is()` 管理有值分组，并允许多个值同时展开；无值分组使用独立内部状态。折叠内容必须同时离开焦点顺序和无障碍树。选择 List 中的分组固定为静态标签与始终展开的 `group/option` 结构，不混入 disclosure 交互。
 
+## Chips
+
+`<mat-chip>` 的导出名是 `MatChip`，始终使用单一原生 button 作为交互根。`variant` 只区分 assist、filter、input 与 suggestion 的用途和内容默认值；filter 与 input 的 `selected` 是受控视觉状态和 `aria-pressed`，普通 click 不在组件内部改变它。前置图标、头像和尾随图标都属于同一按钮的展示内容，不形成第二个操作目标。
+
+`<mat-chip-set>` 的导出名是 `MatChipSet`，只提供 `role="group"`、8px 间距和 wrap/scroll 两种横向布局。选择组、删除、文本转 Chip、键盘删除、编辑、拖拽、菜单和进度等工作流必须由应用组合；ChipSet 不协调子项的选择值、焦点或禁用状态。
+
 ## 文本输入与菜单
 
 `MatInputBase` 是文本输入族的无边框基础层，渲染调用方选择的原生 `input` 或 `textarea`，负责受控字符串值、`update:modelValue`、原生属性透传以及 `focusInput`、`getInput` 方法；它同时隐藏浏览器为 search、number、date/time 添加的默认控件装饰（清除按钮、步进按钮、日历指示器），等价操作由使用方自行提供；组件不提供标签、描边、填充、辅助文字或校验语义。`<mat-text-field>` 和 `<mat-textarea>` 在其上共享 outlined/filled 外观、局部配色、辅助或错误文字、字符计数与属性路由，但分别保留 input 和 textarea 原生语义。错误角色始终覆盖 color 强调；Textarea 默认使用固定初始行数和纵向调整，也可以按内容自动增高、限制最大行数或禁止手动调整。其他输入类型可以复用该基础层并自行定义容器语义。

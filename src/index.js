@@ -19,6 +19,8 @@ export { default as MatListGroup } from './components/mat-list-group/MatListGrou
 export { default as MatListItem } from './components/mat-list/MatListItem.vue';
 export { default as MatDivider } from './components/mat-divider/MatDivider.vue';
 export { default as MatCheckbox } from './components/mat-checkbox/MatCheckbox.vue';
+export { default as MatChip } from './components/mat-chip/MatChip.vue';
+export { default as MatChipSet } from './components/mat-chip/MatChipSet.vue';
 export { default as MatRadio } from './components/mat-radio/MatRadio.vue';
 export { default as MatRadioGroup } from './components/mat-radio-group/MatRadioGroup.vue';
 export { default as MatSwitch } from './components/mat-switch/MatSwitch.vue';
