@@ -552,6 +552,7 @@ function setHandleElement(index, element) {
   min-block-size: max(var(--mat-sys-interaction-target-min-size), var(--mat-range-slider-current-track-height));
   color: var(--mat-sys-color-on-surface);
   isolation: isolate;
+  user-select: none;
 }
 
 .mat-range-slider--size-small {

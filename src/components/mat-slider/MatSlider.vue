@@ -558,6 +558,7 @@ function handleKeyDown(event) {
   min-block-size: max(var(--mat-sys-interaction-target-min-size), var(--mat-slider-current-track-height));
   color: var(--mat-sys-color-on-surface);
   isolation: isolate;
+  user-select: none;
 }
 
 .mat-slider--size-small {

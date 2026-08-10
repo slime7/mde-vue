@@ -180,6 +180,7 @@ defineExpose({
   color: var(--mat-sys-color-on-surface);
   background: var(--mat-sys-color-surface-container-high);
   border-radius: 28px;
+  user-select: none;
 }
 
 .mat-search__leading,

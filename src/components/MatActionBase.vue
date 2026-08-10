@@ -133,6 +133,7 @@ defineExpose({ root });
   box-sizing: border-box;
   appearance: none;
   cursor: default;
+  user-select: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }

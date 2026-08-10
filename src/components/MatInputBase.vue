@@ -161,6 +161,7 @@ defineExpose({
   border: 0;
   outline: 0;
   appearance: none;
+  user-select: text;
 }
 
 .mat-input-base:is(textarea) {

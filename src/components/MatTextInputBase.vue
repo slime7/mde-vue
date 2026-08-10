@@ -379,6 +379,7 @@ function handleModelValue(value) {
   inline-size: 100%;
   color: var(--mat-text-input-content-color);
   cursor: text;
+  user-select: none;
 }
 
 .mat-text-input__container {
