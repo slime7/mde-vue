@@ -305,7 +305,7 @@ describe('MatTooltip', () => {
     wrapper.unmount();
   });
 
-  it('在 openDelay 后打开，离开目标前取消打开，并在 1.5 秒后关闭', async () => {
+  it('在 openDelay 后打开，离开目标前取消打开，并在 600ms 后关闭', async () => {
     const target = createTarget('delay-target');
     const wrapper = mount(MatTooltip, {
       attachTo: document.body,
@@ -335,7 +335,7 @@ describe('MatTooltip', () => {
     expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
 
     target.dispatchEvent(new MouseEvent('mouseleave'));
-    await vi.advanceTimersByTimeAsync(1499);
+    await vi.advanceTimersByTimeAsync(599);
     await settleRender();
 
     expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
@@ -599,6 +599,132 @@ describe('MatTooltip', () => {
     expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
     expect(MatTooltip.props.openDelay.validator('300')).toBe(true);
     expect(MatTooltip.props.openDelay.validator('not-a-delay')).toBe(false);
+    expect(warning).not.toHaveBeenCalled();
+
+    wrapper.unmount();
+  });
+
+  it('显式 closeDelay 时按配置的延迟关闭', async () => {
+    const target = createTarget('close-delay-target');
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      props: {
+        closeDelay: 300,
+        content: '自定义关闭延迟',
+        target,
+      },
+    });
+
+    await hover(target);
+    expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
+
+    target.dispatchEvent(new MouseEvent('mouseleave'));
+    await vi.advanceTimersByTimeAsync(299);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
+
+    await vi.advanceTimersByTimeAsync(1);
+    await settleRender();
+    await vi.advanceTimersByTimeAsync(150);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    wrapper.unmount();
+  });
+
+  it('未显式设置 closeDelay 时使用插件 Tooltip 关闭延迟', async () => {
+    const target = createTarget('plugin-close-delay-target');
+    const plugin = createMatUi({ defaults: { tooltip: { closeDelay: 400 } } });
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      global: { plugins: [plugin] },
+      props: {
+        content: '插件关闭延迟',
+        target,
+      },
+    });
+
+    await hover(target);
+
+    target.dispatchEvent(new MouseEvent('mouseleave'));
+    await vi.advanceTimersByTimeAsync(399);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
+
+    await vi.advanceTimersByTimeAsync(1);
+    await settleRender();
+    await vi.advanceTimersByTimeAsync(150);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    wrapper.unmount();
+    plugin.theme.dispose();
+  });
+
+  it('显式 closeDelay 优先于插件 Tooltip 关闭延迟', async () => {
+    const target = createTarget('explicit-close-delay-target');
+    const plugin = createMatUi({ defaults: { tooltip: { closeDelay: 600 } } });
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      global: { plugins: [plugin] },
+      props: {
+        closeDelay: 200,
+        content: '显式关闭延迟',
+        target,
+      },
+    });
+
+    await hover(target);
+
+    target.dispatchEvent(new MouseEvent('mouseleave'));
+    await vi.advanceTimersByTimeAsync(199);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
+
+    await vi.advanceTimersByTimeAsync(1);
+    await settleRender();
+    await vi.advanceTimersByTimeAsync(150);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    wrapper.unmount();
+    plugin.theme.dispose();
+  });
+
+  it('将模板中的静态数字 close-delay 解析为毫秒延迟', async () => {
+    const target = createTarget('static-close-delay-target');
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      props: {
+        closeDelay: '300',
+        content: '静态关闭延迟',
+        target,
+      },
+    });
+
+    await hover(target);
+
+    target.dispatchEvent(new MouseEvent('mouseleave'));
+    await vi.advanceTimersByTimeAsync(299);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
+
+    await vi.advanceTimersByTimeAsync(1);
+    await settleRender();
+    await vi.advanceTimersByTimeAsync(150);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+    expect(MatTooltip.props.closeDelay.validator('300')).toBe(true);
+    expect(MatTooltip.props.closeDelay.validator('not-a-delay')).toBe(false);
     expect(warning).not.toHaveBeenCalled();
 
     wrapper.unmount();

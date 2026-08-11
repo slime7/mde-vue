@@ -2457,6 +2457,15 @@ export interface MatTooltipProps {
   * @default undefined
   */
   openDelay?: number | string | undefined;
+  /**
+  * 自动模式的关闭延迟，单位为毫秒；无效值按 600 处理。
+  *
+  * 省略时继承 createMatUi() 的 defaults.tooltip.closeDelay，未安装插件时为 600。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  closeDelay?: number | string | undefined;
 }
 
 export interface MatTooltipEmits {
@@ -2878,7 +2887,7 @@ export interface MatUiOptions {
   useCursor?: boolean;
 }
 export type MatComponentDefaults = {
-  tooltip?: { openDelay?: number; skipDelayDuration?: number };
+  tooltip?: { closeDelay?: number; openDelay?: number; skipDelayDuration?: number };
 } & Record<string, Record<string, unknown>>;
 export declare function createMatUi(options?: MatUiOptions): import('vue').Plugin & { theme: MatThemeController };
 export declare function useMatProps<T extends Record<string, unknown>>(componentName: string, props: T): T & Record<string, unknown>;

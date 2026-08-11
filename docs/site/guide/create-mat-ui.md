@@ -45,7 +45,7 @@ createApp(App).use(matUi).mount('#app');
 | --- | --- | --- | --- |
 | `iconClass` | `string` | `'material-symbols-outlined'` | 应用于 `MatIcon` 和组件图标容器的空格分隔 class |
 | `useCursor` | `boolean` | `false` | 是否为可用交互组件显示 `cursor: pointer` |
-| `defaults` | `object` | `{ tooltip: { openDelay: 0, skipDelayDuration: 0 } }` | 按组件键设置的默认属性，值为项目内该组件的 prop 默认值 |
+| `defaults` | `object` | `{ tooltip: { openDelay: 0, closeDelay: 600, skipDelayDuration: 0 } }` | 按组件键设置的默认属性，值为项目内该组件的 prop 默认值 |
 | `theme` | `object` | 默认主题配置 | 动态主题的初始模式、种子色、配色变体、对比度和写入目标 |
 
 ## 组件默认属性
@@ -73,13 +73,14 @@ createApp(App).use(createMatUi({
 
 ## Tooltip 延迟
 
-`defaults.tooltip.openDelay` 设置未显式传入 `open-delay` 的自动 Tooltip 打开延迟。`defaults.tooltip.skipDelayDuration` 设置同组中首个 Tooltip 实际显示并离开后，其他 Tooltip 可以跳过打开延迟的时长。
+`defaults.tooltip.openDelay` 设置未显式传入 `open-delay` 的自动 Tooltip 打开延迟；`defaults.tooltip.closeDelay` 设置未显式传入 `close-delay` 的自动 Tooltip 关闭延迟。`defaults.tooltip.skipDelayDuration` 设置同组中首个 Tooltip 实际显示并离开后，其他 Tooltip 可以跳过打开延迟的时长。
 
 ```js
 createApp(App).use(createMatUi({
   defaults: {
     tooltip: {
       openDelay: 600,
+      closeDelay: 800,
       skipDelayDuration: 600,
     },
   },

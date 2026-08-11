@@ -33,7 +33,7 @@ import {
 } from '../toolbar-overlay';
 import { isValidMs, normalizeMs } from '../value-utils';
 
-const CLOSE_DELAY = 1500;
+const CLOSE_DELAY = 600;
 const CLOSE_DURATION = 150;
 
 defineOptions({
@@ -107,6 +107,19 @@ const props = defineProps({
    * @default undefined
    */
   openDelay: {
+    type: [Number, String],
+    default: undefined,
+    validator: (value) => isValidMs(value),
+  },
+  /**
+   * 自动模式的关闭延迟，单位为毫秒；无效值按 600 处理。
+   *
+   * 省略时继承 createMatUi() 的 defaults.tooltip.closeDelay，未安装插件时为 600。
+   *
+   * @type {number | string | undefined}
+   * @default undefined
+   */
+  closeDelay: {
     type: [Number, String],
     default: undefined,
     validator: (value) => isValidMs(value),
@@ -334,6 +347,15 @@ function getOpenDelay() {
   const configuredDelay = propsWithDefaults.openDelay;
 
   return normalizeMs(configuredDelay, 0);
+}
+
+/**
+ * @returns {number}
+ */
+function getCloseDelay() {
+  const configuredDelay = propsWithDefaults.closeDelay;
+
+  return normalizeMs(configuredDelay, CLOSE_DELAY);
 }
 
 /**
@@ -721,7 +743,7 @@ function scheduleClose() {
   closeTimer = window.setTimeout(() => {
     closeTimer = undefined;
     requestClose();
-  }, CLOSE_DELAY);
+  }, getCloseDelay());
 }
 
 function updateAutomaticVisibility() {

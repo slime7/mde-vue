@@ -176,6 +176,8 @@ describe('主题控制器', () => {
     expect(() => createMatUi({ defaults: { tooltip: [] } })).toThrow(TypeError);
     expect(() => createMatUi({ defaults: { tooltip: { openDelay: '600' } } })).toThrow(TypeError);
     expect(() => createMatUi({ defaults: { tooltip: { openDelay: -1 } } })).toThrow(RangeError);
+    expect(() => createMatUi({ defaults: { tooltip: { closeDelay: '600' } } })).toThrow(TypeError);
+    expect(() => createMatUi({ defaults: { tooltip: { closeDelay: -1 } } })).toThrow(RangeError);
     expect(() => createMatUi({ defaults: { tooltip: { skipDelayDuration: Number.NaN } } })).toThrow(RangeError);
   });
 

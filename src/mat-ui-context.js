@@ -1,5 +1,6 @@
 export const DEFAULT_TOOLTIP_OPTIONS = Object.freeze({
   openDelay: 0,
+  closeDelay: 600,
   skipDelayDuration: 0,
 });
 

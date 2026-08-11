@@ -22,7 +22,7 @@
 
 `createMatUi({ theme, useCursor, iconClass, defaults })` 创建一次 Vue 插件安装单元。插件负责以 `mat-*` 和对应 `Mat*` 名称全局注册组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
 
-`useCursor` 必须是 boolean，默认 `false`，控制可用交互组件是否从 `cursor: default` 改为 `cursor: pointer`。`iconClass` 必须是 string，默认 `material-symbols-outlined`，作为公共 Icon 与组件图标容器的全局 class；组件级 `iconClass` 可以覆盖或以空字符串关闭它。`defaults` 按组件键设置公共组件的 prop 默认值，键是 `mat-*` 标签去掉前缀后的 camelCase；显式传入的 prop 优先于 defaults，defaults 优先于组件定义默认值，`v-model` 相关属性不接受 defaults 配置。`defaults.tooltip.openDelay` 与 `defaults.tooltip.skipDelayDuration` 必须是非负有限数字，默认均为 `0`；前者是未显式设置 `openDelay` 时的自动打开延迟，后者是同组 Tooltip 快速切换窗口。插件不下载字体或图标资源，未安装插件的按需组件使用组件定义默认值。
+`useCursor` 必须是 boolean，默认 `false`，控制可用交互组件是否从 `cursor: default` 改为 `cursor: pointer`。`iconClass` 必须是 string，默认 `material-symbols-outlined`，作为公共 Icon 与组件图标容器的全局 class；组件级 `iconClass` 可以覆盖或以空字符串关闭它。`defaults` 按组件键设置公共组件的 prop 默认值，键是 `mat-*` 标签去掉前缀后的 camelCase；显式传入的 prop 优先于 defaults，defaults 优先于组件定义默认值，`v-model` 相关属性不接受 defaults 配置。`defaults.tooltip.openDelay`、`defaults.tooltip.closeDelay` 与 `defaults.tooltip.skipDelayDuration` 必须是非负有限数字，默认分别为 `0`、`600`、`0`；`openDelay` 是未显式设置 `openDelay` 时的自动打开延迟，`closeDelay` 是未显式设置 `closeDelay` 时的自动关闭延迟，`skipDelayDuration` 是同组 Tooltip 快速切换窗口。插件不下载字体或图标资源，未安装插件的按需组件使用组件定义默认值。
 
 Tooltip 分组由展示元素最近的 `data-mat-tooltip-group` 祖先定义。只有首个 Tooltip 实际显示后，其他实例才可在其指针与焦点离开后的配置窗口内跳过延迟；不同组、同一实例、尚未显示和过期状态不得共享延迟。受控 Tooltip 不参与该自动状态。
 
@@ -201,7 +201,7 @@ Bottom sheet 最大宽度固定为 640px，使用顶部 extra-large 圆角和可
 
 ## Tooltip
 
-`<mat-tooltip>` 的 `content` prop 优先于默认 Slot，`activator` Slot 优先于 `target`；activator 必须只产生一个当前 document 中的 HTMLElement 根节点。选择器 target 初次未解析时不立即警告，并在 Vue 更新或实际展示请求时继续解析；只有展示请求仍无法解析时才警告。没有显式传入 `modelValue` 时，组件只在桌面 hover 或键盘 focus 下自动展示，并在两个状态都离开 1.5 秒后关闭；显式传入时改为完全受控，忽略自动触发和 `openDelay`。
+`<mat-tooltip>` 的 `content` prop 优先于默认 Slot，`activator` Slot 优先于 `target`；activator 必须只产生一个当前 document 中的 HTMLElement 根节点。选择器 target 初次未解析时不立即警告，并在 Vue 更新或实际展示请求时继续解析；只有展示请求仍无法解析时才警告。没有显式传入 `modelValue` 时，组件只在桌面 hover 或键盘 focus 下自动展示，并在两个状态都离开默认 600ms 后关闭（可通过 `closeDelay` 或 `defaults.tooltip.closeDelay` 调整）；显式传入时改为完全受控，忽略自动触发、`openDelay` 和 `closeDelay`。
 
 Tooltip 只实现 Material 3 Plain tooltip，不提供 color、Rich 内容、操作、箭头或触屏长按。模块级协调器保证同一时间只有一个实例可见；展示期间将唯一 tooltip id 无损合并到展示元素的 `aria-describedby`，关闭、换锚点或卸载时恢复原有属性。默认按首选方向翻转并在 8px 安全边距内夹紧；AppRoot 内使用应用局部坐标和 layout padding，其他场景使用固定视口坐标与 Toolbar 几何注册表。
 

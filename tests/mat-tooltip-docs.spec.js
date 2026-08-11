@@ -11,6 +11,7 @@ const exampleNames = [
   'TooltipAttachExample',
   'TooltipLocationExample',
   'TooltipOpenDelayExample',
+  'TooltipCloseDelayExample',
   'TooltipModelValueExample',
 ];
 

@@ -128,6 +128,7 @@ const COMPONENT_DEFAULTS_REGISTRY = new Map(
 /**
  * @typedef {object} MatTooltipOptions
  * @property {number} [openDelay=0] 自动模式的默认打开延迟，单位为毫秒。
+ * @property {number} [closeDelay=600] 自动模式的默认关闭延迟，单位为毫秒。
  * @property {number} [skipDelayDuration=0] 同组 Tooltip 跳过打开延迟的有效时长，单位为毫秒。
  */
 
@@ -162,7 +163,7 @@ function readIconClass(options) {
 
 /**
  * @param {MatTooltipOptions} options
- * @param {'openDelay' | 'skipDelayDuration'} name
+ * @param {'openDelay' | 'closeDelay' | 'skipDelayDuration'} name
  * @returns {number}
  */
 function readTooltipDelay(options, name) {
@@ -198,6 +199,7 @@ function readTooltipDefaults(value) {
 
   return Object.freeze({
     openDelay: readTooltipDelay(value, 'openDelay'),
+    closeDelay: readTooltipDelay(value, 'closeDelay'),
     skipDelayDuration: readTooltipDelay(value, 'skipDelayDuration'),
   });
 }

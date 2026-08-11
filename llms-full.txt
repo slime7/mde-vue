@@ -259,7 +259,7 @@ createApp(App).use(matUi).mount('#app');
 | --- | --- | --- | --- |
 | `iconClass` | `string` | `'material-symbols-outlined'` | 应用于 `MatIcon` 和组件图标容器的空格分隔 class |
 | `useCursor` | `boolean` | `false` | 是否为可用交互组件显示 `cursor: pointer` |
-| `defaults` | `object` | `{ tooltip: { openDelay: 0, skipDelayDuration: 0 } }` | 按组件键设置的默认属性，值为项目内该组件的 prop 默认值 |
+| `defaults` | `object` | `{ tooltip: { openDelay: 0, closeDelay: 600, skipDelayDuration: 0 } }` | 按组件键设置的默认属性，值为项目内该组件的 prop 默认值 |
 | `theme` | `object` | 默认主题配置 | 动态主题的初始模式、种子色、配色变体、对比度和写入目标 |
 
 ## 组件默认属性
@@ -287,13 +287,14 @@ createApp(App).use(createMatUi({
 
 ## Tooltip 延迟
 
-`defaults.tooltip.openDelay` 设置未显式传入 `open-delay` 的自动 Tooltip 打开延迟。`defaults.tooltip.skipDelayDuration` 设置同组中首个 Tooltip 实际显示并离开后，其他 Tooltip 可以跳过打开延迟的时长。
+`defaults.tooltip.openDelay` 设置未显式传入 `open-delay` 的自动 Tooltip 打开延迟；`defaults.tooltip.closeDelay` 设置未显式传入 `close-delay` 的自动 Tooltip 关闭延迟。`defaults.tooltip.skipDelayDuration` 设置同组中首个 Tooltip 实际显示并离开后，其他 Tooltip 可以跳过打开延迟的时长。
 
 ```js
 createApp(App).use(createMatUi({
   defaults: {
     tooltip: {
       openDelay: 600,
+      closeDelay: 800,
       skipDelayDuration: 600,
     },
   },
@@ -14624,6 +14625,34 @@ const locations = [
   </DocsPreview>
 </ClientOnly>
 
+### close-delay
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-tooltip
+    content="移开指针 800ms 后关闭"
+    close-delay="800"
+  >
+    <template #activator>
+      <mat-btn variant="outlined">
+        悬停后移开
+      </mat-btn>
+    </template>
+  </mat-tooltip>
+</template>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Tooltip close-delay 预览">
+    <TooltipCloseDelayExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### v-model
 
 :::: details 查看示例代码
@@ -14675,6 +14704,7 @@ const open = ref(false);
 | attach | string 或 HTMLElement | body | Tooltip 的显式 Teleport 目标；省略时依次使用已打开的 `dialog`/Popover、目标所属 AppRoot、`body`；字符串按当前 document 的 CSS 选择器解析 |
 | location | top、right、bottom、left 及其 -start、-end 形式 | top | Tooltip 相对展示元素的首选位置 |
 | openDelay | number | 插件配置或 0 | 自动模式的打开延迟，单位为毫秒；显式值优先于 `createMatUi()` 的 `defaults.tooltip.openDelay`；可直接写为 open-delay="600"，动态数值使用 :open-delay；负数、空字符串或非有限数字按 0 处理，并触发 Vue prop 校验警告 |
+| closeDelay | number | 插件配置或 600 | 自动模式的关闭延迟，单位为毫秒；显式值优先于 `createMatUi()` 的 `defaults.tooltip.closeDelay`；可直接写为 close-delay="800"，动态数值使用 :close-delay；负数、空字符串或非有限数字按 600 处理，并触发 Vue prop 校验警告 |
 
 activator Slot 存在时优先于 target，且必须只渲染一个属于当前 document 的 HTMLElement 根节点。选择器目标在初次挂载时尚未出现，会在后续 Vue 更新中继续解析；只有实际请求展示时仍无法解析，组件才给出警告且不显示。attach 无法解析时同样给出警告并抑制显示。
 
@@ -14686,7 +14716,7 @@ activator Slot 存在时优先于 target，且必须只渲染一个属于当前 
 | --- | --- | --- |
 | update:modelValue | boolean | 受控模式下 Escape、无效挂载目标或被新 Tooltip 替代而请求关闭时发出 false |
 
-自动模式不会发出自定义事件。受控模式忽略 hover、focus 和 open-delay，展示状态由使用者传入的 modelValue 决定。
+自动模式不会发出自定义事件。受控模式忽略 hover、focus、open-delay 和 close-delay，展示状态由使用者传入的 modelValue 决定。
 
 ## Slots
 
@@ -14697,7 +14727,7 @@ activator Slot 存在时优先于 target，且必须只渲染一个属于当前 
 
 ## 展示行为与无障碍
 
-自动模式在鼠标悬停或键盘焦点进入展示元素时打开。打开延迟优先读取组件的 `openDelay`，省略时读取 `createMatUi()` 的 `defaults.tooltip.openDelay`，未安装插件时为 0；指针和焦点都离开后等待 1.5 秒关闭。Escape 会立即请求关闭当前提示，但节点会保留 150ms 以完成消失动画。模块级协调器保证同一时间只显示一个可见 Tooltip；打开新实例会关闭旧实例，并向受控旧实例发出关闭请求。
+自动模式在鼠标悬停或键盘焦点进入展示元素时打开。打开延迟优先读取组件的 `openDelay`，省略时读取 `createMatUi()` 的 `defaults.tooltip.openDelay`，未安装插件时为 0；指针和焦点都离开后默认等待 600ms 关闭，关闭延迟同样可通过 `closeDelay` 或 `defaults.tooltip.closeDelay` 调整。Escape 会立即请求关闭当前提示，但节点会保留 150ms 以完成消失动画。模块级协调器保证同一时间只显示一个可见 Tooltip；打开新实例会关闭旧实例，并向受控旧实例发出关闭请求。
 
 应用可以在包含相关展示元素的最近祖先上添加 `data-mat-tooltip-group`。首个 Tooltip 实际显示后，该实例在指针和焦点都离开时启动 `defaults.tooltip.skipDelayDuration` 快速切换窗口；窗口内进入同组另一个 Tooltip 会跳过打开延迟。首个尚未显示、跨组、超过窗口和同一实例重新进入不会跳过延迟。该分组通过展示元素的 DOM 祖先识别，因此同样覆盖 Button 和 FAB 内部创建的 Tooltip。
 
@@ -14714,6 +14744,7 @@ Tooltip 默认位于上方，展示元素边界与提示之间保持 4px 间距�
 <script setup>
 import TooltipActivatorSlotExample from '../examples/tooltip/TooltipActivatorSlotExample.vue';
 import TooltipAttachExample from '../examples/tooltip/TooltipAttachExample.vue';
+import TooltipCloseDelayExample from '../examples/tooltip/TooltipCloseDelayExample.vue';
 import TooltipContentExample from '../examples/tooltip/TooltipContentExample.vue';
 import TooltipDefaultSlotExample from '../examples/tooltip/TooltipDefaultSlotExample.vue';
 import TooltipLocationExample from '../examples/tooltip/TooltipLocationExample.vue';
