@@ -49,6 +49,12 @@
           on-surface-variant
         </mat-btn>
       </div>
+
+      <div class="example-panel example-panel--tertiary-container">
+        <mat-btn variant="text" color="on-tertiary-container">
+          on-tertiary-container
+        </mat-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -89,6 +95,10 @@
 
 .example-panel--surface-variant {
   background: var(--mat-sys-color-surface-variant);
+}
+
+.example-panel--tertiary-container {
+  background: var(--mat-sys-color-tertiary-container);
 }
 </style>
 <!-- #endregion style -->
