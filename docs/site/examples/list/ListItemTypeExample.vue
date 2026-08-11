@@ -15,6 +15,10 @@
 
 <!-- #region style -->
 <style scoped>
+.example-row {
+  inline-size: 100%;
+}
+
 .example-list {
   inline-size: 100%;
 }

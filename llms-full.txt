@@ -11935,6 +11935,10 @@ const selected = ref('two');
 ```
 ```vue
 <style scoped>
+.example-row {
+  inline-size: 100%;
+}
+
 .example-list {
   inline-size: 100%;
 }

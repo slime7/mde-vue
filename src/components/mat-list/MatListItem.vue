@@ -446,6 +446,13 @@ watch(
   border-radius: inherit;
 }
 
+.mat-list-item__primary.mat-list-item__surface {
+  border-start-start-radius: var(--mat-list-item-start-start-shape);
+  border-start-end-radius: var(--mat-list-item-start-end-shape);
+  border-end-start-radius: var(--mat-list-item-end-start-shape);
+  border-end-end-radius: var(--mat-list-item-end-end-shape);
+}
+
 .mat-list-item--multi-action {
   overflow: visible;
   display: flex;
