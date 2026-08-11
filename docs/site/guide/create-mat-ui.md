@@ -1,6 +1,6 @@
 ---
 title: createMatUi
-description: 配置 mde-vue 的全局组件注册、Tooltip 延迟、交互指针、图标 class 和主题控制器。
+description: 配置 mde-vue 的全局组件注册、组件默认属性、交互指针、图标 class 和主题控制器。
 llms: true
 order: 25
 ---
@@ -22,9 +22,11 @@ import 'mde-vue/styles.css';
 const matUi = createMatUi({
   iconClass: 'material-symbols-outlined',
   useCursor: true,
-  tooltip: {
-    openDelay: 600,
-    skipDelayDuration: 600,
+  defaults: {
+    tooltip: {
+      openDelay: 600,
+      skipDelayDuration: 600,
+    },
   },
   theme: {
     mode: 'system',
@@ -35,7 +37,7 @@ const matUi = createMatUi({
 createApp(App).use(matUi).mount('#app');
 ```
 
-所有选项都可以省略。传给 `createMatUi()` 的值必须是对象，`useCursor` 必须是 `boolean`，`iconClass` 必须是 `string`，`tooltip` 必须是对象，否则会抛出 `TypeError`。Tooltip 延迟必须是非负有限数字，非法数值会抛出 `RangeError`。
+所有选项都可以省略。传给 `createMatUi()` 的值必须是对象，`useCursor` 必须是 `boolean`，`iconClass` 必须是 `string`，`defaults` 必须是对象且每个组件条目必须是对象，否则会抛出 `TypeError`。`defaults` 的组件键必须是现有公共组件，属性键必须是该组件可配置的 prop（v-model 属性除外），否则也会抛出 `TypeError`。Tooltip 延迟必须是非负有限数字，非法数值会抛出 `RangeError`。
 
 ## 选项
 
@@ -43,18 +45,43 @@ createApp(App).use(matUi).mount('#app');
 | --- | --- | --- | --- |
 | `iconClass` | `string` | `'material-symbols-outlined'` | 应用于 `MatIcon` 和组件图标容器的空格分隔 class |
 | `useCursor` | `boolean` | `false` | 是否为可用交互组件显示 `cursor: pointer` |
-| `tooltip` | `object` | `{ openDelay: 0, skipDelayDuration: 0 }` | Tooltip 自动打开延迟和同组快速切换窗口 |
+| `defaults` | `object` | `{ tooltip: { openDelay: 0, skipDelayDuration: 0 } }` | 按组件键设置的默认属性，值为项目内该组件的 prop 默认值 |
 | `theme` | `object` | 默认主题配置 | 动态主题的初始模式、种子色、配色变体、对比度和写入目标 |
 
-## Tooltip 延迟
+## 组件默认属性
 
-`tooltip.openDelay` 设置未显式传入 `open-delay` 的自动 Tooltip 打开延迟。`tooltip.skipDelayDuration` 设置同组中首个 Tooltip 实际显示并离开后，其他 Tooltip 可以跳过打开延迟的时长。
+`defaults` 按组件键设置公共组件的默认属性，值为该组件可配置的 prop 默认值。键名是 `mat-*` 模板标签去掉前缀后的 camelCase，例如 `btn`、`textField`、`rangeSlider`、`navigationRailItem`：
 
 ```js
 createApp(App).use(createMatUi({
-  tooltip: {
-    openDelay: 600,
-    skipDelayDuration: 600,
+  defaults: {
+    btn: {
+      variant: 'text',
+      type: 'submit',
+    },
+    textField: {
+      variant: 'outlined',
+      label: '默认标签',
+    },
+  },
+}));
+```
+
+优先级为「显式传入的 prop > defaults > 组件定义默认值」，因此显式传参仍可覆盖项目默认值；显式传入 `undefined` 视为未设置并回退 defaults。`v-model` 相关属性（`modelValue` 以及 `v-model:arg` 绑定的属性，如 `expanded`、`sizes`）不接受通过 defaults 配置，传入会抛出 `TypeError`。未安装插件的按需组件使用组件定义默认值。
+
+`useMatProps(componentName, props)` 是从根入口导出的公共组合函数，组件内部用它读取注入的 defaults 并返回合并默认值后的响应式 props 对象；必须在组件 `setup` 中调用，否则抛出 `Error`。使用方一般不需要直接调用它。
+
+## Tooltip 延迟
+
+`defaults.tooltip.openDelay` 设置未显式传入 `open-delay` 的自动 Tooltip 打开延迟。`defaults.tooltip.skipDelayDuration` 设置同组中首个 Tooltip 实际显示并离开后，其他 Tooltip 可以跳过打开延迟的时长。
+
+```js
+createApp(App).use(createMatUi({
+  defaults: {
+    tooltip: {
+      openDelay: 600,
+      skipDelayDuration: 600,
+    },
   },
 }));
 ```

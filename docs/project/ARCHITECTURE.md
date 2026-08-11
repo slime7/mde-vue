@@ -50,7 +50,7 @@
 
 ### 插件配置
 
-`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针、组件图标容器使用的全局 `iconClass`，以及 Tooltip 的默认打开延迟和同组快速切换时长。插件以 `mat-*` 和对应 `Mat*` 名称全局注册组件，并以 `intersection` 名称注册 `v-intersection` 指令。顶层选项不会写入主题控制器；未安装插件的按需组件和指令使用同一组默认设置。
+`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针、组件图标容器使用的全局 `iconClass`，以及按组件键配置的默认属性（defaults）。defaults 的键是 `mat-*` 标签去掉前缀后的 camelCase，值为该组件可配置的 prop 默认值；显式传入的 prop 优先，`v-model` 相关属性不接受配置，Tooltip 的打开延迟与同组快速切换时长通过 `defaults.tooltip` 提供。插件以 `mat-*` 和对应 `Mat*` 名称全局注册组件，并以 `intersection` 名称注册 `v-intersection` 指令。顶层选项不会写入主题控制器；未安装插件的按需组件和指令使用组件定义默认值。
 
 ### 组件
 
@@ -123,7 +123,7 @@ flowchart LR
     B --> C["不可变组件设置上下文"]
     C --> D["共享按钮指针"]
     C --> E["组件图标容器"]
-    C --> F["Tooltip 延迟"]
+    C --> F["组件默认属性"]
 ```
 
 ```mermaid
@@ -177,3 +177,4 @@ flowchart LR
 - [0016 — 公开 MatInputBase 作为可组合文本输入基础组件](adr/0016-public-input-base.md)
 - [0021 — 采用 AppRoot 应用布局上下文](adr/0021-app-root-layout-context.md)
 - [0022 — 项目更名为 mde-vue](adr/0022-rename-project-to-mde-vue.md)
+- [0023 — createMatUi 组件默认属性 defaults 配置](adr/0023-mat-ui-component-defaults.md)

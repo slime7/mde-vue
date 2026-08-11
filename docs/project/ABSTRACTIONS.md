@@ -20,9 +20,9 @@
 
 `MatSurfaceBase`、`MatActionBase`、`MatButtonBase`、`MatSelectionControlBase`、`MatTextInputBase`、`MatItemContentBase` 与 `useRovingFocus` 是内部结构复用层，不属于公共 API。它们分别负责表面根节点、原生 button/link 交互、按钮交互状态、选择控件结构、文本输入视觉、无语义项目内容排列和 tabindex 管理；公共组件不得要求使用者依赖其 class、文件路径或内部 CSS 变量。`MatInputBase` 是公共例外，提供无边框原生 input/textarea、受控字符串值、`update:modelValue`、原生属性透传以及 `focusInput`、`getInput` 方法；它不提供标签、描边、填充、辅助文字或校验语义。
 
-`createMatUi({ theme, useCursor, iconClass, tooltip })` 创建一次 Vue 插件安装单元。插件负责以 `mat-*` 和对应 `Mat*` 名称全局注册组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
+`createMatUi({ theme, useCursor, iconClass, defaults })` 创建一次 Vue 插件安装单元。插件负责以 `mat-*` 和对应 `Mat*` 名称全局注册组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
 
-`useCursor` 必须是 boolean，默认 `false`，控制可用交互组件是否从 `cursor: default` 改为 `cursor: pointer`。`iconClass` 必须是 string，默认 `material-symbols-outlined`，作为公共 Icon 与组件图标容器的全局 class；组件级 `iconClass` 可以覆盖或以空字符串关闭它。`tooltip.openDelay` 与 `tooltip.skipDelayDuration` 必须是非负有限数字，默认均为 `0`；前者是未显式设置 `openDelay` 时的自动打开延迟，后者是同组 Tooltip 快速切换窗口。插件不下载字体或图标资源，未安装插件的按需组件使用相同默认值。
+`useCursor` 必须是 boolean，默认 `false`，控制可用交互组件是否从 `cursor: default` 改为 `cursor: pointer`。`iconClass` 必须是 string，默认 `material-symbols-outlined`，作为公共 Icon 与组件图标容器的全局 class；组件级 `iconClass` 可以覆盖或以空字符串关闭它。`defaults` 按组件键设置公共组件的 prop 默认值，键是 `mat-*` 标签去掉前缀后的 camelCase；显式传入的 prop 优先于 defaults，defaults 优先于组件定义默认值，`v-model` 相关属性不接受 defaults 配置。`defaults.tooltip.openDelay` 与 `defaults.tooltip.skipDelayDuration` 必须是非负有限数字，默认均为 `0`；前者是未显式设置 `openDelay` 时的自动打开延迟，后者是同组 Tooltip 快速切换窗口。插件不下载字体或图标资源，未安装插件的按需组件使用组件定义默认值。
 
 Tooltip 分组由展示元素最近的 `data-mat-tooltip-group` 祖先定义。只有首个 Tooltip 实际显示后，其他实例才可在其指针与焦点离开后的配置窗口内跳过延迟；不同组、同一实例、尚未显示和过期状态不得共享延迟。受控 Tooltip 不参与该自动状态。
 

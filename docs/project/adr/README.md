@@ -22,12 +22,13 @@
 | [0014](0014-connected-button-group-checked-shape.md) | superseded | 连接按钮组选中态使用全圆形状 |
 | [0015](0015-connected-button-group-checked-shape-overrides-outer-shape.md) | active | 连接按钮组选中态完整覆盖组外轮廓 |
 | [0016](0016-public-input-base.md) | active | 公开 MatInputBase 作为可组合文本输入基础组件 |
-| [0017](0017-tooltip-delay-groups.md) | active | 使用应用配置与显式容器协调 Tooltip 延迟 |
+| [0017](0017-tooltip-delay-groups.md) | superseded | 使用应用配置与显式容器协调 Tooltip 延迟（已由 0023 替代配置落点） |
 | [0018](0018-distribute-prebuilt-esm-from-private-git.md) | superseded | 通过私有 Git 分发预构建 ESM |
 | [0019](0019-minimize-esm-distribution-files.md) | superseded | 将 ESM 分发压缩为三个文件 |
 | [0020](0020-tailwind-css.md) | active | 恢复 tailwind.css 独立分发入口 |
 | [0021](0021-app-root-layout-context.md) | active | 采用 AppRoot 应用布局上下文 |
 | [0022](0022-rename-project-to-mde-vue.md) | active | 项目更名为 mde-vue |
+| [0023](0023-mat-ui-component-defaults.md) | active | createMatUi 组件默认属性 defaults 配置 |
 
 ## 何时创建 ADR
 
