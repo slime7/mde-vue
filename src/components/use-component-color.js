@@ -24,7 +24,7 @@ export default function useComponentColor(color) {
   const colorStyle = computed(() => {
     const value = unref(color);
 
-    if (!value || !isComponentColor(value)) {
+    if (!value || (!isComponentColor(value) && !isContentColor(value))) {
       return {};
     }
 

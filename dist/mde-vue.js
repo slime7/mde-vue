@@ -393,7 +393,7 @@ function Ie(e) {
 	return {
 		colorStyle: r(() => {
 			let n = I(e);
-			if (!n || !me(n)) return {};
+			if (!n || !me(n) && !pe(n)) return {};
 			if (le.includes(n)) return {
 				"--mat-accent-color": `var(--mat-sys-color-${n})`,
 				"--mat-on-accent-color": `var(--mat-sys-color-on-${n})`,

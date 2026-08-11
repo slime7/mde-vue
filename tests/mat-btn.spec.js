@@ -130,6 +130,7 @@ describe('MatBtn', () => {
     });
 
     expect(wrapper.text()).toBe('保存');
+    expect(wrapper.attributes('style')).toBeDefined();
     expect(warn.mock.calls.flat().join(' ')).not.toContain('on-*');
     warn.mockRestore();
   });
