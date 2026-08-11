@@ -160,11 +160,23 @@ describe('主题控制器', () => {
   it('拒绝类型错误的组件选项', () => {
     expect(() => createMatUi({ useCursor: 'pointer' })).toThrow(TypeError);
     expect(() => createMatUi({ iconClass: 1 })).toThrow(TypeError);
-    expect(() => createMatUi({ tooltip: null })).toThrow(TypeError);
-    expect(() => createMatUi({ tooltip: [] })).toThrow(TypeError);
-    expect(() => createMatUi({ tooltip: { openDelay: '600' } })).toThrow(TypeError);
-    expect(() => createMatUi({ tooltip: { openDelay: -1 } })).toThrow(RangeError);
-    expect(() => createMatUi({ tooltip: { skipDelayDuration: Number.NaN } })).toThrow(RangeError);
+  });
+
+  it('拒绝无效的 defaults 配置', () => {
+    expect(() => createMatUi({ defaults: null })).toThrow(TypeError);
+    expect(() => createMatUi({ defaults: [] })).toThrow(TypeError);
+    expect(() => createMatUi({ defaults: { unknownComponent: {} } })).toThrow(TypeError);
+    expect(() => createMatUi({ defaults: { btn: null } })).toThrow(TypeError);
+    expect(() => createMatUi({ defaults: { btn: [] } })).toThrow(TypeError);
+    expect(() => createMatUi({ defaults: { btn: { unknownProp: 1 } } })).toThrow(TypeError);
+    expect(() => createMatUi({ defaults: { dialog: { modelValue: true } } })).toThrow(TypeError);
+    expect(() => createMatUi({ defaults: { navigationRail: { expanded: true } } })).toThrow(TypeError);
+    expect(() => createMatUi({ defaults: { panes: { sizes: [] } } })).toThrow(TypeError);
+    expect(() => createMatUi({ defaults: { tooltip: null } })).toThrow(TypeError);
+    expect(() => createMatUi({ defaults: { tooltip: [] } })).toThrow(TypeError);
+    expect(() => createMatUi({ defaults: { tooltip: { openDelay: '600' } } })).toThrow(TypeError);
+    expect(() => createMatUi({ defaults: { tooltip: { openDelay: -1 } } })).toThrow(RangeError);
+    expect(() => createMatUi({ defaults: { tooltip: { skipDelayDuration: Number.NaN } } })).toThrow(RangeError);
   });
 
   it('dispose 清理系统主题监听且可重复调用', () => {

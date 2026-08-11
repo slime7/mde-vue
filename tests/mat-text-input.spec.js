@@ -425,6 +425,7 @@ describe('文本输入组件', () => {
       global: {
         provide: {
           [MAT_UI_KEY]: {
+            defaults: {},
             iconClass: 'material-symbols-outlined',
             useCursor: false,
           },

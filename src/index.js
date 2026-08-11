@@ -52,6 +52,8 @@ export { default as Intersection } from './directives/intersection';
 // Node/Vitest 直接解析包源码时需要保留 JavaScript 扩展名。
 // eslint-disable-next-line import-x/extensions
 export { createMatUi, useMatTheme } from './plugin.js';
+// eslint-disable-next-line import-x/extensions
+export { useMatProps } from './components/use-mat-props.js';
 export { useMatApp } from './components/mat-app-root/mat-app-root-context';
 export {
   alert, confirm, dialog, prompt,

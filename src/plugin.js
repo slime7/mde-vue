@@ -53,12 +53,13 @@ import { setImperativeContext } from './imperative-context';
 import MAT_UI_KEY, {
   DEFAULT_MAT_UI_OPTIONS,
   DEFAULT_TOOLTIP_OPTIONS,
+  matComponentKey,
 } from './mat-ui-context';
 import createThemeController from './theme';
 import MAT_THEME_KEY from './theme-context';
 import { Intersection } from './directives/intersection';
 
-const GLOBAL_COMPONENTS = [
+export const GLOBAL_COMPONENTS = [
   ['MatAppRoot', 'mat-app-root', MatAppRoot],
   ['MatAppBar', 'mat-app-bar', MatAppBar],
   ['MatSearch', 'mat-search', MatSearch],
@@ -111,12 +112,17 @@ const GLOBAL_COMPONENTS = [
   ['MatNavigationRailItem', 'mat-navigation-rail-item', MatNavigationRailItem],
 ];
 
+const COMPONENT_DEFAULTS_REGISTRY = new Map(
+  GLOBAL_COMPONENTS.map(([pascalName, , component]) => [matComponentKey(pascalName), component]),
+);
+
 /**
  * @typedef {object} MatUiOptions
  * @property {import('./theme.js').MatThemeOptions} [theme]
  * @property {string} [iconClass='material-symbols-outlined']
- * @property {MatTooltipOptions} [tooltip]
  * @property {boolean} [useCursor=false]
+ * @property {object} [defaults] 按组件键设置的默认属性；键为组件名去掉 mat- 前缀后的 camelCase，
+ *   值为该组件可配置的 prop 默认值。v-model 属性不可配置，tooltip 额外支持 skipDelayDuration。
  */
 
 /**
@@ -178,24 +184,93 @@ function readTooltipDelay(options, name) {
 }
 
 /**
- * @param {MatUiOptions} options
+ * @param {unknown} value
  * @returns {Readonly<MatTooltipOptions>}
  */
-function readTooltipOptions(options) {
-  const value = options.tooltip;
-
+function readTooltipDefaults(value) {
   if (value === undefined) {
     return DEFAULT_TOOLTIP_OPTIONS;
   }
 
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    throw new TypeError('createMatUi tooltip 必须是对象');
+    throw new TypeError('createMatUi defaults.tooltip 必须是对象');
   }
 
   return Object.freeze({
     openDelay: readTooltipDelay(value, 'openDelay'),
     skipDelayDuration: readTooltipDelay(value, 'skipDelayDuration'),
   });
+}
+
+/**
+ * 组件声明了对应 `update:<prop>` 事件时，该 prop 属于 v-model 绑定，不允许通过 defaults 配置。
+ *
+ * @param {import('vue').Component} component
+ * @returns {Set<string>}
+ */
+function getAllowedDefaultsKeys(component) {
+  const propNames = Object.keys(component.props ?? {});
+  const modelProps = new Set(
+    Object.keys(component.emits ?? {})
+      .filter((eventName) => eventName.startsWith('update:'))
+      .map((eventName) => eventName.slice('update:'.length)),
+  );
+  const allowed = new Set(propNames.filter((propName) => !modelProps.has(propName)));
+
+  if (component.name === 'MatTooltip') {
+    allowed.add('skipDelayDuration');
+  }
+
+  return allowed;
+}
+
+/**
+ * @param {MatUiOptions} options
+ * @returns {Readonly<Record<string, Readonly<object>>>}
+ */
+function readDefaults(options) {
+  const value = options.defaults;
+
+  if (value === undefined) {
+    return Object.freeze({ tooltip: DEFAULT_TOOLTIP_OPTIONS });
+  }
+
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new TypeError('createMatUi defaults 必须是对象');
+  }
+
+  const result = { tooltip: readTooltipDefaults(value.tooltip) };
+
+  Object.entries(value).forEach(([componentName, componentDefaults]) => {
+    if (componentName === 'tooltip') {
+      return;
+    }
+
+    const component = COMPONENT_DEFAULTS_REGISTRY.get(componentName);
+
+    if (!component) {
+      throw new TypeError(`createMatUi defaults 未知组件键 ${componentName}`);
+    }
+
+    if (!componentDefaults || typeof componentDefaults !== 'object' || Array.isArray(componentDefaults)) {
+      throw new TypeError(`createMatUi defaults.${componentName} 必须是对象`);
+    }
+
+    const allowedKeys = getAllowedDefaultsKeys(component);
+    const frozenDefaults = {};
+
+    Object.entries(componentDefaults).forEach(([propName, propValue]) => {
+      if (!allowedKeys.has(propName)) {
+        throw new TypeError(`createMatUi defaults.${componentName}.${propName} 不是可配置属性`);
+      }
+
+      frozenDefaults[propName] = propValue;
+    });
+
+    result[componentName] = Object.freeze(frozenDefaults);
+  });
+
+  return Object.freeze(result);
 }
 
 /**
@@ -213,8 +288,8 @@ export function createMatUi(options = {}) {
 
   const componentOptions = Object.freeze({
     iconClass: readIconClass(options),
-    tooltip: readTooltipOptions(options),
     useCursor: readBooleanOption(options, 'useCursor'),
+    defaults: readDefaults(options),
   });
   const theme = createThemeController(options.theme);
 

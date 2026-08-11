@@ -60,6 +60,7 @@ import {
   MatToolbar as RootMatToolbar,
   MatTooltip as RootMatTooltip,
   useMatApp,
+  useMatProps,
 } from 'mde-vue';
 
 const globalComponents = [
@@ -117,6 +118,7 @@ describe('公共组件导出', () => {
   it('从根入口导出应用布局组件与组合函数', () => {
     expect(RootMatAppRoot).toBeTruthy();
     expect(useMatApp).toBeTypeOf('function');
+    expect(useMatProps).toBeTypeOf('function');
   });
 
   it('根入口使用可由 Node/Vitest 直接解析的 plugin.js 路径', () => {
@@ -135,7 +137,7 @@ describe('公共组件导出', () => {
       attachTo: document.body,
       global: {
         plugins: [createMatUi({
-          tooltip: { openDelay: 1500 },
+          defaults: { tooltip: { openDelay: 1500 } },
         })],
       },
       props: {

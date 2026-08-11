@@ -354,9 +354,11 @@ describe('MatTooltip', () => {
   it('未显式设置 openDelay 时使用插件 Tooltip 打开延迟', async () => {
     const target = createTarget('plugin-delay-target');
     const plugin = createMatUi({
-      tooltip: {
-        openDelay: 600,
-        skipDelayDuration: 600,
+      defaults: {
+        tooltip: {
+          openDelay: 600,
+          skipDelayDuration: 600,
+        },
       },
     });
     const wrapper = mount(MatTooltip, {
@@ -385,7 +387,7 @@ describe('MatTooltip', () => {
 
   it('显式 openDelay 优先于插件 Tooltip 打开延迟', async () => {
     const target = createTarget('explicit-delay-target');
-    const plugin = createMatUi({ tooltip: { openDelay: 600 } });
+    const plugin = createMatUi({ defaults: { tooltip: { openDelay: 600 } } });
     const wrapper = mount(MatTooltip, {
       attachTo: document.body,
       global: { plugins: [plugin] },
@@ -409,9 +411,11 @@ describe('MatTooltip', () => {
   it('首个 Tooltip 显示后在有效期内切换同组目标时立即打开', async () => {
     const { targets } = createTooltipGroup('shared-delay-group', ['group-first', 'group-second']);
     const plugin = createMatUi({
-      tooltip: {
-        openDelay: 600,
-        skipDelayDuration: 600,
+      defaults: {
+        tooltip: {
+          openDelay: 600,
+          skipDelayDuration: 600,
+        },
       },
     });
     const first = mount(MatTooltip, {
@@ -443,9 +447,11 @@ describe('MatTooltip', () => {
   it('键盘焦点在同组 Tooltip 之间切换时复用快速切换窗口', async () => {
     const { targets } = createTooltipGroup('focus-delay-group', ['focus-first', 'focus-second']);
     const plugin = createMatUi({
-      tooltip: {
-        openDelay: 600,
-        skipDelayDuration: 600,
+      defaults: {
+        tooltip: {
+          openDelay: 600,
+          skipDelayDuration: 600,
+        },
       },
     });
     const first = mount(MatTooltip, {
@@ -478,9 +484,11 @@ describe('MatTooltip', () => {
     const firstGroup = createTooltipGroup('delay-group-a', ['group-a-first', 'group-a-second']);
     const secondGroup = createTooltipGroup('delay-group-b', ['group-b-first']);
     const plugin = createMatUi({
-      tooltip: {
-        openDelay: 600,
-        skipDelayDuration: 600,
+      defaults: {
+        tooltip: {
+          openDelay: 600,
+          skipDelayDuration: 600,
+        },
       },
     });
     const wrappers = [
@@ -529,9 +537,11 @@ describe('MatTooltip', () => {
   it('同一 Tooltip 在有效期内重新进入时仍等待完整延迟', async () => {
     const { targets } = createTooltipGroup('same-tooltip-group', ['same-tooltip-target']);
     const plugin = createMatUi({
-      tooltip: {
-        openDelay: 600,
-        skipDelayDuration: 600,
+      defaults: {
+        tooltip: {
+          openDelay: 600,
+          skipDelayDuration: 600,
+        },
       },
     });
     const wrapper = mount(MatTooltip, {

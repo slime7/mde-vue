@@ -705,6 +705,7 @@ describe('MatMenu', () => {
       global: {
         provide: {
           [MAT_UI_KEY]: {
+            defaults: {},
             iconClass: 'material-symbols-outlined',
             useCursor: false,
           },
@@ -730,6 +731,7 @@ describe('MatMenu', () => {
       global: {
         provide: {
           [MAT_UI_KEY]: {
+            defaults: {},
             iconClass: 'material-symbols-outlined',
             useCursor: false,
           },
