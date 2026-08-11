@@ -129,6 +129,8 @@ matUi.theme.dispose();
 
 系统排版包含 `display`、`headline`、`title`、`body`、`label` 五组，每组都有 `large`、`medium`、`small`，并分别公开 `font`、`weight`、`size`、`line-height`、`tracking` 五个轴。例如 `--mat-sys-typescale-title-medium-size`。强调样式使用 `--mat-sys-typescale-emphasized-<style>-<axis>`，共提供相同的 15 套样式。
 
+基础样式同时提供 30 个不设置字体族的公共 class。baseline 使用 `.mat-sys-typescale-<type>-<size>`，emphasized 使用 `.mat-sys-typescale-emphasized-<type>-<size>`；它们与上述令牌一一对应。需要动态根元素或通过属性选择样式时，可使用 [`MatText`](/components/text)。
+
 ### 形状、海拔、动效和状态
 
 - 形状：`--mat-sys-shape-corner-none`、`extra-small`、`small`、`medium`、`large`、`large-increased`、`extra-large`、`extra-large-increased`、`extra-extra-large`、`full`，值依次为 `0 / 4 / 8 / 12 / 16 / 20 / 28 / 32 / 48 / 9999px`。

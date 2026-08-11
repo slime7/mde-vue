@@ -985,7 +985,7 @@ if (appContext) {
       v-bind="$attrs"
       :id="tooltipId"
       ref="tooltipElement"
-      class="mat-tooltip"
+      class="mat-tooltip mat-sys-typescale-label-large"
       :class="[
         `mat-tooltip--${phase}`,
         {
@@ -1022,11 +1022,6 @@ if (appContext) {
   padding-inline: var(--mat-tooltip-container-padding-inline);
   overflow: hidden;
   color: var(--mat-tooltip-content-color);
-  font-family: var(--mat-sys-typescale-label-large-font);
-  font-size: var(--mat-sys-typescale-label-large-size);
-  font-weight: var(--mat-sys-typescale-label-large-weight);
-  letter-spacing: var(--mat-sys-typescale-label-large-tracking);
-  line-height: var(--mat-sys-typescale-label-large-line-height);
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;

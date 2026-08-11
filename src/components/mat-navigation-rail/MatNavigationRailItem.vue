@@ -3,6 +3,7 @@ import { computed, inject, useSlots } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatActionBase from '../MatActionBase.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
+import { getTypographyClass } from '../typography';
 import { MAT_NAVIGATION_RAIL_KEY } from './mat-navigation-context';
 
 defineOptions({
@@ -68,6 +69,10 @@ const position = computed(() => navigation?.position.value ?? 'start');
 const horizontalContent = computed(() => expanded.value);
 const selected = computed(() => navigation?.isSelected(props.value) ?? false);
 const hasIcon = computed(() => Boolean(props.icon || slots.icon));
+const typographyClass = computed(() => getTypographyClass(
+  'label',
+  expanded.value && !isHorizontal.value ? 'large' : 'medium',
+));
 const itemClasses = computed(() => ({
   'mat-navigation-rail-item--selected': selected.value,
   'mat-navigation-rail-item--disabled': props.disabled,
@@ -121,7 +126,7 @@ function handleClick(event) {
 
       <span
         v-if="horizontalContent"
-        class="mat-navigation-rail-item__label"
+        :class="['mat-navigation-rail-item__label', typographyClass]"
       >
         <slot />
       </span>
@@ -129,7 +134,7 @@ function handleClick(event) {
 
     <span
       v-if="!horizontalContent"
-      class="mat-navigation-rail-item__label"
+      :class="['mat-navigation-rail-item__label', typographyClass]"
     >
       <slot />
     </span>
@@ -258,11 +263,6 @@ function handleClick(event) {
   z-index: 1;
   min-inline-size: 0;
   color: inherit;
-  font-family: var(--mat-navigation-rail-item-label-font);
-  font-size: var(--mat-navigation-rail-item-label-size);
-  font-weight: var(--mat-navigation-rail-item-label-weight);
-  line-height: var(--mat-navigation-rail-item-label-line-height);
-  letter-spacing: var(--mat-navigation-rail-item-label-tracking);
   overflow-wrap: anywhere;
   white-space: normal;
 }
@@ -272,22 +272,6 @@ function handleClick(event) {
   max-inline-size: 100%;
   color: var(--mat-navigation-rail-item-content-color);
   text-align: center;
-}
-
-.mat-navigation-rail-item--expanded .mat-navigation-rail-item__label {
-  font-family: var(--mat-navigation-rail-expanded-label-font);
-  font-size: var(--mat-navigation-rail-expanded-label-size);
-  font-weight: var(--mat-navigation-rail-expanded-label-weight);
-  line-height: var(--mat-navigation-rail-expanded-label-line-height);
-  letter-spacing: var(--mat-navigation-rail-expanded-label-tracking);
-}
-
-.mat-navigation-rail-item--horizontal .mat-navigation-rail-item__label {
-  font-family: var(--mat-navigation-rail-item-label-font);
-  font-size: var(--mat-navigation-rail-item-label-size);
-  font-weight: var(--mat-navigation-rail-item-label-weight);
-  line-height: var(--mat-navigation-rail-item-label-line-height);
-  letter-spacing: var(--mat-navigation-rail-item-label-tracking);
 }
 
 .mat-navigation-rail-item--selected {

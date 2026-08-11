@@ -192,8 +192,11 @@ onBeforeUnmount(() => {
     >
       <MatItemContentBase
         namespace="mat-menu-item-content"
+        label-typography-class="mat-sys-typescale-label-large"
         :line-count="$slots.supporting ? 2 : 1"
         leading-icon
+        supporting-typography-class="mat-sys-typescale-body-small"
+        trailing-typography-class="mat-sys-typescale-label-large"
       >
         <template v-if="$slots.leading" #leading>
           <slot name="leading" />
@@ -238,21 +241,6 @@ onBeforeUnmount(() => {
   --mat-item-icon-size: 20px;
   --mat-item-label-color: inherit;
   --mat-item-supporting-color: var(--mat-menu-supporting-color);
-  --mat-item-label-font: var(--mat-sys-typescale-label-large-font);
-  --mat-item-label-size: var(--mat-sys-typescale-label-large-size);
-  --mat-item-label-weight: var(--mat-sys-typescale-label-large-weight);
-  --mat-item-label-tracking: var(--mat-sys-typescale-label-large-tracking);
-  --mat-item-label-line-height: var(--mat-sys-typescale-label-large-line-height);
-  --mat-item-supporting-font: var(--mat-sys-typescale-body-small-font);
-  --mat-item-supporting-size: var(--mat-sys-typescale-body-small-size);
-  --mat-item-supporting-weight: var(--mat-sys-typescale-body-small-weight);
-  --mat-item-supporting-tracking: var(--mat-sys-typescale-body-small-tracking);
-  --mat-item-supporting-line-height: var(--mat-sys-typescale-body-small-line-height);
-  --mat-item-trailing-font: var(--mat-sys-typescale-label-large-font);
-  --mat-item-trailing-size: var(--mat-sys-typescale-label-large-size);
-  --mat-item-trailing-weight: var(--mat-sys-typescale-label-large-weight);
-  --mat-item-trailing-tracking: var(--mat-sys-typescale-label-large-tracking);
-  --mat-item-trailing-line-height: var(--mat-sys-typescale-label-large-line-height);
   --mat-item-min-block-size: var(--mat-menu-item-height);
   display: flex;
   align-items: center;

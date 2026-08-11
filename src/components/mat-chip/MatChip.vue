@@ -175,7 +175,7 @@ function handleTrailingClick(event) {
 <template>
   <MatActionBase
     v-bind="$attrs"
-    class="mat-chip"
+    class="mat-chip mat-sys-typescale-label-large"
     :class="[
       `mat-chip--${variant}`,
       {
@@ -262,11 +262,6 @@ function handleTrailingClick(event) {
   padding-block: 0;
   padding-inline: 16px;
   color: var(--mat-chip-label-color);
-  font-family: var(--mat-sys-typescale-label-large-font);
-  font-size: var(--mat-sys-typescale-label-large-size);
-  font-weight: var(--mat-sys-typescale-label-large-weight);
-  letter-spacing: var(--mat-sys-typescale-label-large-tracking);
-  line-height: var(--mat-sys-typescale-label-large-line-height);
   text-align: start;
   white-space: nowrap;
   vertical-align: middle;

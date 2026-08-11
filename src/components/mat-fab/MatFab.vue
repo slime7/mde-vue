@@ -19,6 +19,7 @@ import {
   FAB_TYPES,
   isFabColor,
 } from '../fab-props';
+import { getTypographyClass } from '../typography';
 
 defineOptions({
   name: 'MatFab',
@@ -158,6 +159,15 @@ const iconOpticalSize = computed(() => ({
   medium: 28,
   large: 36,
 }[props.size]));
+const typographyClass = computed(() => {
+  const [type, size] = {
+    small: ['title', 'medium'],
+    medium: ['title', 'large'],
+    large: ['headline', 'small'],
+  }[props.size];
+
+  return getTypographyClass(type, size);
+});
 const colorStyle = computed(() => ({
   '--mat-fab-container-color': `var(--mat-sys-color-${props.color})`,
   '--mat-fab-content-color': `var(--mat-sys-color-on-${props.color})`,
@@ -183,6 +193,7 @@ watchEffect(() => {
     class="mat-fab"
     :class="[
       `mat-fab--size-${size}`,
+      typographyClass,
       {
         'mat-fab--extended': hasLabel,
         'mat-fab--icon-only': isIconOnly,
@@ -228,6 +239,7 @@ watchEffect(() => {
       :class="[
         `mat-fab--size-${size}`,
         `mat-fab--position-${position}`,
+        typographyClass,
         {
           'mat-fab--app-root': true,
           'mat-fab--extended': hasLabel,
@@ -279,11 +291,6 @@ watchEffect(() => {
   gap: var(--mat-fab-icon-label-space);
   min-inline-size: calc(var(--mat-fab-leading-space) + var(--mat-fab-trailing-space));
   padding-inline: var(--mat-fab-leading-space) var(--mat-fab-trailing-space);
-  font-family: var(--mat-fab-label-text-font);
-  font-size: var(--mat-fab-label-text-size);
-  font-weight: var(--mat-fab-label-text-weight);
-  line-height: var(--mat-fab-label-text-line-height);
-  letter-spacing: var(--mat-fab-label-text-tracking);
   text-align: center;
   text-decoration: none;
 }
@@ -310,11 +317,6 @@ watchEffect(() => {
   --mat-fab-leading-space: var(--mat-fab-small-leading-space);
   --mat-fab-trailing-space: var(--mat-fab-small-trailing-space);
   --mat-fab-icon-label-space: var(--mat-fab-small-icon-label-space);
-  --mat-fab-label-text-font: var(--mat-fab-small-label-text-font);
-  --mat-fab-label-text-weight: var(--mat-fab-small-label-text-weight);
-  --mat-fab-label-text-size: var(--mat-fab-small-label-text-size);
-  --mat-fab-label-text-line-height: var(--mat-fab-small-label-text-line-height);
-  --mat-fab-label-text-tracking: var(--mat-fab-small-label-text-tracking);
 }
 
 .mat-fab--size-medium {
@@ -323,11 +325,6 @@ watchEffect(() => {
   --mat-fab-leading-space: var(--mat-fab-medium-leading-space);
   --mat-fab-trailing-space: var(--mat-fab-medium-trailing-space);
   --mat-fab-icon-label-space: var(--mat-fab-medium-icon-label-space);
-  --mat-fab-label-text-font: var(--mat-fab-medium-label-text-font);
-  --mat-fab-label-text-weight: var(--mat-fab-medium-label-text-weight);
-  --mat-fab-label-text-size: var(--mat-fab-medium-label-text-size);
-  --mat-fab-label-text-line-height: var(--mat-fab-medium-label-text-line-height);
-  --mat-fab-label-text-tracking: var(--mat-fab-medium-label-text-tracking);
 }
 
 .mat-fab--size-large {
@@ -336,11 +333,6 @@ watchEffect(() => {
   --mat-fab-leading-space: var(--mat-fab-large-leading-space);
   --mat-fab-trailing-space: var(--mat-fab-large-trailing-space);
   --mat-fab-icon-label-space: var(--mat-fab-large-icon-label-space);
-  --mat-fab-label-text-font: var(--mat-fab-large-label-text-font);
-  --mat-fab-label-text-weight: var(--mat-fab-large-label-text-weight);
-  --mat-fab-label-text-size: var(--mat-fab-large-label-text-size);
-  --mat-fab-label-text-line-height: var(--mat-fab-large-label-text-line-height);
-  --mat-fab-label-text-tracking: var(--mat-fab-large-label-text-tracking);
 }
 
 .mat-fab--icon-only {

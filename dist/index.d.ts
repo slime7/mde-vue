@@ -557,6 +557,40 @@ export interface MatImageProps {
 export type MatImageComponent = DefineComponent<MatImageProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatImage: MatImageComponent;
 
+export interface MatTextProps {
+  /**
+  * Material 3 文字类型。
+  *
+  * @type {'display' | 'headline' | 'title' | 'body' | 'label'}
+  * @default 'body'
+  */
+  type?: 'display' | 'headline' | 'title' | 'body' | 'label';
+  /**
+  * Material 3 文字尺寸。
+  *
+  * @type {'large' | 'medium' | 'small'}
+  * @default 'medium'
+  */
+  size?: 'large' | 'medium' | 'small';
+  /**
+  * 使用同类型同尺寸的 emphasized 排版样式。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  emphasized?: boolean;
+  /**
+  * 实际根元素标签名。
+  *
+  * @type {string}
+  * @default 'span'
+  */
+  as?: string;
+}
+
+export type MatTextComponent = DefineComponent<MatTextProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatText: MatTextComponent;
+
 export interface MatSplitBtnProps {
   /**
   * 使用块级 flex 组根，在普通文档流中铺满父元素。
@@ -2932,6 +2966,8 @@ declare module 'vue' {
     'mat-icon': typeof MatIcon;
     MatImage: typeof MatImage;
     'mat-image': typeof MatImage;
+    MatText: typeof MatText;
+    'mat-text': typeof MatText;
     MatSplitBtn: typeof MatSplitBtn;
     'mat-split-btn': typeof MatSplitBtn;
     MatCard: typeof MatCard;

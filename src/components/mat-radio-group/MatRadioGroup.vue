@@ -205,7 +205,7 @@ provide(MAT_RADIO_GROUP_KEY, {
     :style="rootStyle"
     role="radiogroup"
   >
-    <legend class="mat-radio-group__label">
+    <legend class="mat-radio-group__label mat-sys-typescale-title-medium">
       {{ label }}
     </legend>
     <slot />
@@ -232,10 +232,5 @@ provide(MAT_RADIO_GROUP_KEY, {
   padding: 0;
   overflow-wrap: anywhere;
   color: var(--mat-radio-label-text-color);
-  font-family: var(--mat-sys-typescale-title-medium-font);
-  font-size: var(--mat-sys-typescale-title-medium-size);
-  font-weight: var(--mat-sys-typescale-title-medium-weight);
-  line-height: var(--mat-sys-typescale-title-medium-line-height);
-  letter-spacing: var(--mat-sys-typescale-title-medium-tracking);
 }
 </style>

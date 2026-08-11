@@ -60,7 +60,7 @@ Tooltip 分组由展示元素最近的 `data-mat-tooltip-group` 祖先定义。�
 
 组件可以使用 `--mat-<component>-*` 等 CSS 自定义属性集中表达尺寸、颜色、形状、排版、描边、海拔和间距，但这些变量属于内部实现，不是公共定制入口，也不提供名称或行为兼容承诺。组件级定制通过已公开的 Vue props 完成。
 
-Tailwind 适配层只把公开的 reference 和 system 值映射到 `--color-mat-*`、`--radius-mat-*`、`--text-mat-*`、`--shadow-mat-*` 和 `--ease-mat-*`。两层必须保持同一语义，Tailwind 层不得复制具体颜色或覆盖常见无前缀主题变量。
+排版轴令牌同时由 `.mat-sys-typescale-*` 公共 class 和 `--text-mat-*` Tailwind 主题变量消费；三层必须完整覆盖相同的 30 套样式并保持同一语义。其他 Tailwind 映射继续使用 `--color-mat-*`、`--radius-mat-*`、`--shadow-mat-*` 和 `--ease-mat-*`，不得复制具体值或覆盖常见无前缀主题变量。
 
 ## 组件配色角色
 

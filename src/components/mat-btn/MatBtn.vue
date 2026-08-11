@@ -12,6 +12,7 @@ import {
   isComponentColor,
 } from '../button-props';
 import useButton from '../use-button';
+import { getTypographyClass } from '../typography';
 
 defineOptions({
   name: 'MatBtn',
@@ -300,6 +301,17 @@ const iconOpticalSize = computed(() => ({
   large: 32,
   'extra-large': 40,
 })[effectiveSize.value]);
+const typographyClass = computed(() => {
+  const [type, size] = {
+    'extra-small': ['label', 'large'],
+    small: ['label', 'large'],
+    medium: ['title', 'medium'],
+    large: ['headline', 'small'],
+    'extra-large': ['headline', 'large'],
+  }[effectiveSize.value];
+
+  return getTypographyClass(type, size, true);
+});
 onMounted(() => {
   if (props.icon === true && !defaultSlotIconText.value) {
     console.warn('MatBtn: icon=true 必须在默认 Slot 提供非空 Material Symbols 文本');
@@ -325,6 +337,7 @@ watchEffect(() => {
       `mat-btn--${effectiveVariant}`,
       `mat-btn--size-${effectiveSize}`,
       `mat-btn--shape-${effectiveShape}`,
+      typographyClass,
       {
         'mat-button--explicit-color': hasExplicitColor,
         'mat-btn--icon': isIcon,
@@ -426,11 +439,6 @@ watchEffect(() => {
   max-inline-size: 100%;
   min-inline-size: calc(var(--mat-btn-leading-space) + var(--mat-btn-trailing-space));
   padding-inline: var(--mat-btn-leading-space) var(--mat-btn-trailing-space);
-  font-family: var(--mat-btn-label-text-font);
-  font-size: var(--mat-btn-label-text-size);
-  font-weight: var(--mat-btn-label-text-weight);
-  line-height: var(--mat-btn-label-text-line-height);
-  letter-spacing: var(--mat-btn-label-text-tracking, 0);
   text-align: center;
   text-decoration: none;
 }
@@ -444,11 +452,6 @@ watchEffect(() => {
   --mat-button-outline-width: var(--mat-btn-extra-small-outlined-outline-width);
   --mat-btn-square-container-shape: var(--mat-btn-extra-small-square-container-shape);
   --mat-button-pressed-radius: var(--mat-btn-extra-small-pressed-container-shape);
-  --mat-btn-label-text-font: var(--mat-btn-extra-small-label-text-font);
-  --mat-btn-label-text-size: var(--mat-btn-extra-small-label-text-size);
-  --mat-btn-label-text-line-height: var(--mat-btn-extra-small-label-text-line-height);
-  --mat-btn-label-text-weight: var(--mat-btn-extra-small-label-text-weight);
-  --mat-btn-label-text-tracking: var(--mat-btn-extra-small-label-text-tracking);
   --mat-btn-icon-only-size: var(--mat-btn-icon-only-extra-small-icon-size);
   --mat-btn-icon-only-narrow-space: var(--mat-btn-icon-only-extra-small-narrow-space);
   --mat-btn-icon-only-uniform-space: var(--mat-btn-icon-only-extra-small-uniform-space);
@@ -467,11 +470,6 @@ watchEffect(() => {
   --mat-button-outline-width: var(--mat-btn-small-outlined-outline-width);
   --mat-btn-square-container-shape: var(--mat-btn-small-square-container-shape);
   --mat-button-pressed-radius: var(--mat-btn-small-pressed-container-shape);
-  --mat-btn-label-text-font: var(--mat-btn-small-label-text-font);
-  --mat-btn-label-text-size: var(--mat-btn-small-label-text-size);
-  --mat-btn-label-text-line-height: var(--mat-btn-small-label-text-line-height);
-  --mat-btn-label-text-weight: var(--mat-btn-small-label-text-weight);
-  --mat-btn-label-text-tracking: var(--mat-btn-small-label-text-tracking);
   --mat-btn-icon-only-size: var(--mat-btn-icon-only-small-icon-size);
   --mat-btn-icon-only-narrow-space: var(--mat-btn-icon-only-small-narrow-space);
   --mat-btn-icon-only-uniform-space: var(--mat-btn-icon-only-small-uniform-space);
@@ -490,11 +488,6 @@ watchEffect(() => {
   --mat-button-outline-width: var(--mat-btn-medium-outlined-outline-width);
   --mat-btn-square-container-shape: var(--mat-btn-medium-square-container-shape);
   --mat-button-pressed-radius: var(--mat-btn-medium-pressed-container-shape);
-  --mat-btn-label-text-font: var(--mat-btn-medium-label-text-font);
-  --mat-btn-label-text-size: var(--mat-btn-medium-label-text-size);
-  --mat-btn-label-text-line-height: var(--mat-btn-medium-label-text-line-height);
-  --mat-btn-label-text-weight: var(--mat-btn-medium-label-text-weight);
-  --mat-btn-label-text-tracking: var(--mat-btn-medium-label-text-tracking);
   --mat-btn-icon-only-size: var(--mat-btn-icon-only-medium-icon-size);
   --mat-btn-icon-only-narrow-space: var(--mat-btn-icon-only-medium-narrow-space);
   --mat-btn-icon-only-uniform-space: var(--mat-btn-icon-only-medium-uniform-space);
@@ -513,11 +506,6 @@ watchEffect(() => {
   --mat-button-outline-width: var(--mat-btn-large-outlined-outline-width);
   --mat-btn-square-container-shape: var(--mat-btn-large-square-container-shape);
   --mat-button-pressed-radius: var(--mat-btn-large-pressed-container-shape);
-  --mat-btn-label-text-font: var(--mat-btn-large-label-text-font);
-  --mat-btn-label-text-size: var(--mat-btn-large-label-text-size);
-  --mat-btn-label-text-line-height: var(--mat-btn-large-label-text-line-height);
-  --mat-btn-label-text-weight: var(--mat-btn-large-label-text-weight);
-  --mat-btn-label-text-tracking: var(--mat-btn-large-label-text-tracking);
   --mat-btn-icon-only-size: var(--mat-btn-icon-only-large-icon-size);
   --mat-btn-icon-only-narrow-space: var(--mat-btn-icon-only-large-narrow-space);
   --mat-btn-icon-only-uniform-space: var(--mat-btn-icon-only-large-uniform-space);
@@ -536,11 +524,6 @@ watchEffect(() => {
   --mat-button-outline-width: var(--mat-btn-extra-large-outlined-outline-width);
   --mat-btn-square-container-shape: var(--mat-btn-extra-large-square-container-shape);
   --mat-button-pressed-radius: var(--mat-btn-extra-large-pressed-container-shape);
-  --mat-btn-label-text-font: var(--mat-btn-extra-large-label-text-font);
-  --mat-btn-label-text-size: var(--mat-btn-extra-large-label-text-size);
-  --mat-btn-label-text-line-height: var(--mat-btn-extra-large-label-text-line-height);
-  --mat-btn-label-text-weight: var(--mat-btn-extra-large-label-text-weight);
-  --mat-btn-label-text-tracking: var(--mat-btn-extra-large-label-text-tracking);
   --mat-btn-icon-only-size: var(--mat-btn-icon-only-extra-large-icon-size);
   --mat-btn-icon-only-narrow-space: var(--mat-btn-icon-only-extra-large-narrow-space);
   --mat-btn-icon-only-uniform-space: var(--mat-btn-icon-only-extra-large-uniform-space);

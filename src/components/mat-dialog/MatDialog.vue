@@ -505,7 +505,11 @@ watchEffect(() => {
             @click="requestClose"
           />
 
-          <h2 v-if="hasTitle" :id="titleId" class="mat-dialog__title">
+          <h2
+            v-if="hasTitle"
+            :id="titleId"
+            class="mat-dialog__title mat-sys-typescale-title-large"
+          >
             <template v-if="title !== undefined">
               {{ title }}
             </template>
@@ -517,7 +521,10 @@ watchEffect(() => {
           </div>
         </header>
 
-        <div v-if="hasContent" class="mat-dialog__content">
+        <div
+          v-if="hasContent"
+          class="mat-dialog__content mat-sys-typescale-body-medium"
+        >
           <template v-if="content !== undefined">
             {{ content }}
           </template>
@@ -540,14 +547,21 @@ watchEffect(() => {
           <slot v-else name="icon" />
         </MatIcon>
 
-        <h2 v-if="hasTitle" :id="titleId" class="mat-dialog__title">
+        <h2
+          v-if="hasTitle"
+          :id="titleId"
+          class="mat-dialog__title mat-sys-typescale-headline-small"
+        >
           <template v-if="title !== undefined">
             {{ title }}
           </template>
           <slot v-else name="title" />
         </h2>
 
-        <div v-if="hasContent" class="mat-dialog__content">
+        <div
+          v-if="hasContent"
+          class="mat-dialog__content mat-sys-typescale-body-medium"
+        >
           <template v-if="content !== undefined">
             {{ content }}
           </template>
@@ -638,11 +652,6 @@ watchEffect(() => {
   margin: 0;
   overflow-wrap: anywhere;
   color: var(--mat-dialog-headline-color);
-  font-family: var(--mat-sys-typescale-headline-small-font);
-  font-size: var(--mat-sys-typescale-headline-small-size);
-  font-weight: var(--mat-sys-typescale-headline-small-weight);
-  letter-spacing: var(--mat-sys-typescale-headline-small-tracking);
-  line-height: var(--mat-sys-typescale-headline-small-line-height);
 }
 
 .mat-dialog--with-icon > .mat-dialog__title {
@@ -676,11 +685,6 @@ watchEffect(() => {
   overflow-wrap: anywhere;
   scrollbar-width: thin;
   scrollbar-color: var(--mat-sys-color-outline) transparent;
-  font-family: var(--mat-sys-typescale-body-medium-font);
-  font-size: var(--mat-sys-typescale-body-medium-size);
-  font-weight: var(--mat-sys-typescale-body-medium-weight);
-  letter-spacing: var(--mat-sys-typescale-body-medium-tracking);
-  line-height: var(--mat-sys-typescale-body-medium-line-height);
   overscroll-behavior: contain;
 }
 
@@ -750,11 +754,6 @@ watchEffect(() => {
   inline-size: auto;
   padding: 0;
   overflow: hidden;
-  font-family: var(--mat-sys-typescale-title-large-font);
-  font-size: var(--mat-sys-typescale-title-large-size);
-  font-weight: var(--mat-sys-typescale-title-large-weight);
-  letter-spacing: var(--mat-sys-typescale-title-large-tracking);
-  line-height: var(--mat-sys-typescale-title-large-line-height);
   text-overflow: ellipsis;
   white-space: nowrap;
 }

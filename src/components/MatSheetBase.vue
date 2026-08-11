@@ -778,7 +778,11 @@ watch(() => props.closeLabel, (value) => {
 
       <header v-if="hasHeader" class="mat-sheet__header">
         <slot name="header">
-          <h2 v-if="hasTitle" :id="titleId" class="mat-sheet__title">
+          <h2
+            v-if="hasTitle"
+            :id="titleId"
+            class="mat-sheet__title mat-sys-typescale-title-large"
+          >
             <template v-if="title !== undefined">
               {{ title }}
             </template>
@@ -801,7 +805,10 @@ watch(() => props.closeLabel, (value) => {
         </slot>
       </header>
 
-      <div v-if="hasContent" class="mat-sheet__content">
+      <div
+        v-if="hasContent"
+        class="mat-sheet__content mat-sys-typescale-body-medium"
+      >
         <template v-if="content !== undefined">
           {{ content }}
         </template>
@@ -991,11 +998,6 @@ watch(() => props.closeLabel, (value) => {
   overflow-wrap: anywhere;
   color: var(--mat-sys-color-on-surface);
   border: 0;
-  font-family: var(--mat-sys-typescale-title-large-font);
-  font-size: var(--mat-sys-typescale-title-large-size);
-  font-weight: var(--mat-sys-typescale-title-large-weight);
-  letter-spacing: var(--mat-sys-typescale-title-large-tracking);
-  line-height: var(--mat-sys-typescale-title-large-line-height);
 }
 
 .mat-sheet__header-actions {
@@ -1022,11 +1024,6 @@ watch(() => props.closeLabel, (value) => {
   overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: var(--mat-sys-color-outline) transparent;
-  font-family: var(--mat-sys-typescale-body-medium-font);
-  font-size: var(--mat-sys-typescale-body-medium-size);
-  font-weight: var(--mat-sys-typescale-body-medium-weight);
-  letter-spacing: var(--mat-sys-typescale-body-medium-tracking);
-  line-height: var(--mat-sys-typescale-body-medium-line-height);
 }
 
 .mat-sheet__content::-webkit-scrollbar {

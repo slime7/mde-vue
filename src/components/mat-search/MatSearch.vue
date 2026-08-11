@@ -128,7 +128,7 @@ defineExpose({
 <template>
   <form
     v-bind="rootAttrs"
-    class="mat-search"
+    class="mat-search mat-sys-typescale-body-large"
     role="search"
     @submit.prevent="submitSearch"
   >
@@ -193,10 +193,6 @@ defineExpose({
 .mat-search :deep(.mat-input-base) {
   flex-grow: 1;
   min-inline-size: 0;
-  font-family: var(--mat-sys-typescale-body-large-font);
-  font-size: var(--mat-sys-typescale-body-large-size);
-  line-height: var(--mat-sys-typescale-body-large-line-height);
-  letter-spacing: var(--mat-sys-typescale-body-large-tracking);
 }
 
 .mat-search :deep(.mat-input-base::placeholder) {

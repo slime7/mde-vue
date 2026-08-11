@@ -7,6 +7,7 @@ import MatBtnGroup from './components/mat-btn-group/MatBtnGroup.vue';
 import MatFab from './components/mat-fab/MatFab.vue';
 import MatIcon from './components/mat-icon/MatIcon.vue';
 import MatImage from './components/mat-image/MatImage.vue';
+import MatText from './components/mat-text/MatText.vue';
 import MatSplitBtn from './components/mat-split-btn/MatSplitBtn.vue';
 import MatCard from './components/mat-card/MatCard.vue';
 import MatCardActionArea from './components/mat-card/MatCardActionArea.vue';
@@ -66,6 +67,7 @@ const GLOBAL_COMPONENTS = [
   ['MatFab', 'mat-fab', MatFab],
   ['MatIcon', 'mat-icon', MatIcon],
   ['MatImage', 'mat-image', MatImage],
+  ['MatText', 'mat-text', MatText],
   ['MatSplitBtn', 'mat-split-btn', MatSplitBtn],
   ['MatCard', 'mat-card', MatCard],
   ['MatCardActionArea', 'mat-card-action-area', MatCardActionArea],

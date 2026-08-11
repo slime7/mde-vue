@@ -29,6 +29,18 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  labelTypographyClass: {
+    type: String,
+    required: true,
+  },
+  supportingTypographyClass: {
+    type: String,
+    required: true,
+  },
+  trailingTypographyClass: {
+    type: String,
+    required: true,
+  },
 });
 </script>
 
@@ -63,19 +75,22 @@ defineProps({
       <span
         v-if="$slots.overline"
         data-mat-item-content-overline
-        :class="`${namespace}__overline`"
+        :class="[`${namespace}__overline`, trailingTypographyClass]"
       >
         <slot name="overline" />
       </span>
 
-      <span data-mat-item-content-label :class="`${namespace}__label`">
+      <span
+        data-mat-item-content-label
+        :class="[`${namespace}__label`, labelTypographyClass]"
+      >
         <slot />
       </span>
 
       <span
         v-if="$slots.supporting"
         data-mat-item-content-supporting
-        :class="`${namespace}__supporting`"
+        :class="[`${namespace}__supporting`, supportingTypographyClass]"
       >
         <slot name="supporting" />
       </span>
@@ -84,7 +99,7 @@ defineProps({
     <span
       v-if="$slots.trailing && !separateTrailing"
       data-mat-item-content-trailing
-      :class="`${namespace}__trailing`"
+      :class="[`${namespace}__trailing`, trailingTypographyClass]"
       :inert="presentationSlots ? '' : undefined"
     >
       <slot name="trailing" />
@@ -153,29 +168,10 @@ defineProps({
 
 [data-mat-item-content-label] {
   color: var(--mat-item-label-color);
-  font-family: var(--mat-item-label-font);
-  font-size: var(--mat-item-label-size);
-  font-weight: var(--mat-item-label-weight);
-  letter-spacing: var(--mat-item-label-tracking);
-  line-height: var(--mat-item-label-line-height);
 }
 
 [data-mat-item-content-supporting] {
   color: var(--mat-item-supporting-color);
-  font-family: var(--mat-item-supporting-font);
-  font-size: var(--mat-item-supporting-size);
-  font-weight: var(--mat-item-supporting-weight);
-  letter-spacing: var(--mat-item-supporting-tracking);
-  line-height: var(--mat-item-supporting-line-height);
-}
-
-[data-mat-item-content-overline],
-[data-mat-item-content-trailing] {
-  font-family: var(--mat-item-trailing-font);
-  font-size: var(--mat-item-trailing-size);
-  font-weight: var(--mat-item-trailing-weight);
-  letter-spacing: var(--mat-item-trailing-tracking);
-  line-height: var(--mat-item-trailing-line-height);
 }
 
 [data-mat-item-content-overline] {

@@ -30,7 +30,7 @@ import 'mde-vue/styles.css';
 </template>
 ```
 
-颜色类来自 `--color-mat-*`，覆盖主题的全部 53 个颜色角色。字体族使用 `font-mat-brand`、`font-mat-icon` 和 `font-mat-plain`；15 套基线排版使用 `text-mat-<style>`，15 套强调排版使用 `text-mat-emphasized-<style>`，同时映射字号、行高、字距和字重。
+颜色类来自 `--color-mat-*`，覆盖主题的全部 53 个颜色角色。字体族使用 `font-mat-brand`、`font-mat-icon` 和 `font-mat-plain`；15 套基线排版使用 `text-mat-<type>-<size>`，15 套强调排版使用 `text-mat-emphasized-<type>-<size>`，同时映射字号、行高、字距和字重。它们分别对应基础样式中的 `.mat-sys-typescale-<type>-<size>` 和 `.mat-sys-typescale-emphasized-<type>-<size>`。
 
 圆角类完整映射系统形状，例如 `rounded-mat-extra-small`、`rounded-mat-large-increased`、`rounded-mat-extra-extra-large` 和 `rounded-mat-full`。海拔使用 `shadow-mat-level0` 至 `shadow-mat-level5`。六个缓动类为：
 

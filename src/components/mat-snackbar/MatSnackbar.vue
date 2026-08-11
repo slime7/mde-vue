@@ -414,7 +414,7 @@ watch(() => props.duration, () => {
     <section
       v-if="rendered"
       v-bind="$attrs"
-      class="mat-snackbar"
+      class="mat-snackbar mat-sys-typescale-body-medium"
       :class="[
         `mat-snackbar--${phase}`,
         `mat-snackbar--${position}`,
@@ -441,7 +441,7 @@ watch(() => props.duration, () => {
 
           <MatActionBase
             v-else
-            class="mat-snackbar__default-action"
+            class="mat-snackbar__default-action mat-sys-typescale-label-large"
             :use-cursor="matUi.useCursor"
             @click="requestAction"
           >
@@ -498,11 +498,6 @@ watch(() => props.duration, () => {
   background: var(--mat-snackbar-container-color);
   border-radius: var(--mat-snackbar-container-shape);
   box-shadow: var(--mat-snackbar-container-elevation);
-  font-family: var(--mat-sys-typescale-body-medium-font);
-  font-size: var(--mat-sys-typescale-body-medium-size);
-  font-weight: var(--mat-sys-typescale-body-medium-weight);
-  letter-spacing: var(--mat-sys-typescale-body-medium-tracking);
-  line-height: var(--mat-sys-typescale-body-medium-line-height);
 }
 
 .mat-snackbar--left {
@@ -588,11 +583,6 @@ watch(() => props.duration, () => {
   padding-inline: 12px;
   overflow: hidden;
   color: var(--mat-snackbar-action-color);
-  font-family: var(--mat-sys-typescale-label-large-font);
-  font-size: var(--mat-sys-typescale-label-large-size);
-  font-weight: var(--mat-sys-typescale-label-large-weight);
-  letter-spacing: var(--mat-sys-typescale-label-large-tracking);
-  line-height: var(--mat-sys-typescale-label-large-line-height);
   text-overflow: ellipsis;
   white-space: nowrap;
   background: transparent;

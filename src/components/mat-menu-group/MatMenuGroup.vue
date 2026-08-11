@@ -61,7 +61,7 @@ onBeforeUnmount(() => menu?.unregisterGroup());
     <div
       v-if="label"
       :id="labelId"
-      class="mat-menu-group__label"
+      class="mat-menu-group__label mat-sys-typescale-label-large"
     >
       {{ label }}
     </div>
@@ -104,11 +104,6 @@ onBeforeUnmount(() => menu?.unregisterGroup());
   padding-inline: 8px;
   overflow-wrap: anywhere;
   color: var(--mat-menu-supporting-color);
-  font-family: var(--mat-sys-typescale-label-large-font);
-  font-size: var(--mat-sys-typescale-label-large-size);
-  font-weight: var(--mat-sys-typescale-label-large-weight);
-  line-height: var(--mat-sys-typescale-label-large-line-height);
-  letter-spacing: var(--mat-sys-typescale-label-large-tracking);
 }
 
 @supports (border-shape: inset(0 round 1px)) {

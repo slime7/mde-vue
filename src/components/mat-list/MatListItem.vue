@@ -335,7 +335,7 @@ watch(
 
     <span
       v-if="isMultiAction && hasTrailing"
-      class="mat-list-item__separate-trailing"
+      class="mat-list-item__separate-trailing mat-sys-typescale-label-small"
       data-mat-list-trailing
       :inert="disabled ? '' : undefined"
     >
@@ -469,11 +469,6 @@ watch(
   min-block-size: var(--mat-sys-interaction-target-min-size);
   padding-inline-end: var(--mat-list-item-trailing-space);
   color: var(--mat-list-item-supporting-color);
-  font-family: var(--mat-sys-typescale-label-small-font);
-  font-size: var(--mat-sys-typescale-label-small-size);
-  font-weight: var(--mat-sys-typescale-label-small-weight);
-  letter-spacing: var(--mat-sys-typescale-label-small-tracking);
-  line-height: var(--mat-sys-typescale-label-small-line-height);
 }
 
 .mat-list-item--selected {

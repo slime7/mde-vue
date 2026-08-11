@@ -17,6 +17,7 @@ import {
   findTimelineScope,
   registerAppBarTimeline,
 } from './app-bar-timeline';
+import { getTypographyClass } from '../typography';
 
 const APP_BAR_VARIANTS = ['search', 'small', 'medium-flexible', 'large-flexible'];
 const APP_BAR_CONTENTS = ['headline', 'image', 'search'];
@@ -176,6 +177,17 @@ const headerStyle = computed(() => [
     '--mat-app-bar-timeline': timelineName,
   },
 ]);
+const primaryTypographyClass = computed(() => {
+  if (normalizedVariant.value === 'medium-flexible') {
+    return getTypographyClass('headline', 'small');
+  }
+
+  if (normalizedVariant.value === 'large-flexible') {
+    return getTypographyClass('headline', 'medium');
+  }
+
+  return getTypographyClass('title', 'large');
+});
 const hostClass = computed(() => ({
   'mat-app-bar__host--app': props.app,
   'mat-app-bar__host--app-root': usesAppRoot.value,
@@ -297,11 +309,14 @@ watch([
         </div>
 
         <div class="mat-app-bar__main">
-          <div class="mat-app-bar__primary">
+          <div :class="['mat-app-bar__primary', primaryTypographyClass]">
             <slot />
           </div>
 
-          <div v-if="$slots.subtitle" class="mat-app-bar__subtitle">
+          <div
+            v-if="$slots.subtitle"
+            class="mat-app-bar__subtitle mat-sys-typescale-body-medium"
+          >
             <slot name="subtitle" />
           </div>
         </div>
@@ -420,11 +435,6 @@ watch([
 .mat-app-bar__primary {
   min-inline-size: 0;
   overflow: hidden;
-  font-family: var(--mat-sys-typescale-title-large-font);
-  font-size: var(--mat-sys-typescale-title-large-size);
-  font-weight: var(--mat-sys-typescale-title-large-weight);
-  line-height: var(--mat-sys-typescale-title-large-line-height);
-  letter-spacing: var(--mat-sys-typescale-title-large-tracking);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -432,11 +442,6 @@ watch([
 .mat-app-bar__subtitle {
   overflow: hidden;
   color: var(--mat-sys-color-on-surface-variant);
-  font-family: var(--mat-sys-typescale-body-medium-font);
-  font-size: var(--mat-sys-typescale-body-medium-size);
-  font-weight: var(--mat-sys-typescale-body-medium-weight);
-  line-height: var(--mat-sys-typescale-body-medium-line-height);
-  letter-spacing: var(--mat-sys-typescale-body-medium-tracking);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -480,20 +485,6 @@ watch([
   position: absolute;
   inset-block-start: 100%;
   inset-inline: 12px;
-}
-
-.mat-app-bar--medium-flexible .mat-app-bar__primary {
-  font-family: var(--mat-sys-typescale-headline-small-font);
-  font-size: var(--mat-sys-typescale-headline-small-size);
-  line-height: var(--mat-sys-typescale-headline-small-line-height);
-  letter-spacing: var(--mat-sys-typescale-headline-small-tracking);
-}
-
-.mat-app-bar--large-flexible .mat-app-bar__primary {
-  font-family: var(--mat-sys-typescale-headline-medium-font);
-  font-size: var(--mat-sys-typescale-headline-medium-size);
-  line-height: var(--mat-sys-typescale-headline-medium-line-height);
-  letter-spacing: var(--mat-sys-typescale-headline-medium-tracking);
 }
 
 .mat-app-bar--align-center {

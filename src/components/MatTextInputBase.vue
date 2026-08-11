@@ -257,7 +257,7 @@ function handleModelValue(value) {
 
 <template>
   <div
-    class="mat-text-input"
+    class="mat-text-input mat-sys-typescale-body-large"
     :class="[
       $attrs.class,
       `mat-text-input--${variant}`,
@@ -279,7 +279,10 @@ function handleModelValue(value) {
         class="mat-text-input__outline"
         aria-hidden="true"
       >
-        <legend v-if="isFloating && label" class="mat-text-input__outline-label">
+        <legend
+          v-if="isFloating && label"
+          class="mat-text-input__outline-label mat-sys-typescale-body-small"
+        >
           {{ label }}<span v-if="required"> *</span>
         </legend>
       </fieldset>
@@ -307,7 +310,12 @@ function handleModelValue(value) {
       >
         <span
           v-if="label"
-          class="mat-text-input__label"
+          :class="[
+            'mat-text-input__label',
+            isFloating
+              ? 'mat-sys-typescale-body-small'
+              : 'mat-sys-typescale-body-large',
+          ]"
         >
           {{ label }}<span v-if="required" aria-hidden="true"> *</span>
         </span>
@@ -354,7 +362,11 @@ function handleModelValue(value) {
       </MatIcon>
     </div>
 
-    <span v-if="hasSupporting" :id="supportingId" class="mat-text-input__supporting">
+    <span
+      v-if="hasSupporting"
+      :id="supportingId"
+      class="mat-text-input__supporting mat-sys-typescale-body-small"
+    >
       <span class="mat-text-input__supporting-text">
         {{ visibleSupportingText }}
       </span>
@@ -420,11 +432,6 @@ function handleModelValue(value) {
   padding-inline: 4px;
   overflow: hidden;
   color: transparent;
-  font-family: var(--mat-sys-typescale-body-small-font);
-  font-size: var(--mat-sys-typescale-body-small-size);
-  font-weight: var(--mat-sys-typescale-body-small-weight);
-  letter-spacing: var(--mat-sys-typescale-body-small-tracking);
-  line-height: var(--mat-sys-typescale-body-small-line-height);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -478,11 +485,6 @@ function handleModelValue(value) {
   flex: 1 1 0;
   max-inline-size: 100%;
   min-block-size: 24px;
-  font-family: var(--mat-sys-typescale-body-large-font);
-  font-size: var(--mat-sys-typescale-body-large-size);
-  font-weight: var(--mat-sys-typescale-body-large-weight);
-  letter-spacing: var(--mat-sys-typescale-body-large-tracking);
-  line-height: var(--mat-sys-typescale-body-large-line-height);
   caret-color: var(--mat-text-input-accent-color);
 }
 
@@ -557,11 +559,6 @@ function handleModelValue(value) {
   max-inline-size: 100%;
   overflow: hidden;
   color: var(--mat-text-input-label-color);
-  font-family: var(--mat-sys-typescale-body-large-font);
-  font-size: var(--mat-sys-typescale-body-large-size);
-  font-weight: var(--mat-sys-typescale-body-large-weight);
-  letter-spacing: var(--mat-sys-typescale-body-large-tracking);
-  line-height: var(--mat-sys-typescale-body-large-line-height);
   text-overflow: ellipsis;
   white-space: nowrap;
   pointer-events: none;
@@ -570,11 +567,6 @@ function handleModelValue(value) {
 }
 
 .mat-text-input--floating .mat-text-input__label {
-  font-family: var(--mat-sys-typescale-body-small-font);
-  font-size: var(--mat-sys-typescale-body-small-size);
-  font-weight: var(--mat-sys-typescale-body-small-weight);
-  letter-spacing: var(--mat-sys-typescale-body-small-tracking);
-  line-height: var(--mat-sys-typescale-body-small-line-height);
   transform: translateY(-8px);
 }
 
@@ -647,11 +639,6 @@ function handleModelValue(value) {
   padding-block-start: 4px;
   padding-inline: 16px;
   color: var(--mat-text-input-supporting-color);
-  font-family: var(--mat-sys-typescale-body-small-font);
-  font-size: var(--mat-sys-typescale-body-small-size);
-  font-weight: var(--mat-sys-typescale-body-small-weight);
-  letter-spacing: var(--mat-sys-typescale-body-small-tracking);
-  line-height: var(--mat-sys-typescale-body-small-line-height);
 }
 
 .mat-text-input__supporting-text {

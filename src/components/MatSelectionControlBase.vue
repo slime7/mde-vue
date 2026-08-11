@@ -116,7 +116,7 @@ defineExpose({
 <template>
   <label
     v-bind="rootAttrs"
-    class="mat-selection-control"
+    class="mat-selection-control mat-sys-typescale-body-large"
     :class="{
       'mat-selection-control--checked': checked,
       'mat-selection-control--disabled': disabled,
@@ -166,11 +166,6 @@ defineExpose({
   min-block-size: var(--mat-sys-interaction-target-min-size);
   min-inline-size: 0;
   color: var(--mat-selection-control-label-color, var(--mat-sys-color-on-surface));
-  font-family: var(--mat-sys-typescale-body-large-font);
-  font-size: var(--mat-sys-typescale-body-large-size);
-  font-weight: var(--mat-sys-typescale-body-large-weight);
-  line-height: var(--mat-sys-typescale-body-large-line-height);
-  letter-spacing: var(--mat-sys-typescale-body-large-tracking);
   cursor: default;
   user-select: none;
 }

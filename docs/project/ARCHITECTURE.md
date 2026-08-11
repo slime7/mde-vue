@@ -95,7 +95,7 @@ Checkbox 以布尔值或基础值数组表达受控选择，数组更新始终�
 
 基础样式公开两层令牌：`--mat-ref-*` 保存文字与图标字体等参考值，`--mat-sys-*` 保存颜色、排版、形状、海拔、动效、状态和交互值。组件可以使用 `--mat-<component>-*`、`--mat-button-*` 等 CSS 自定义属性组织尺寸、变体和状态样式，但这些变量属于内部实现，不提供公共定制或兼容承诺。Icon 的字体由 `iconClass` 对应样式决定，字体与 SVG 资源仍由使用方加载。
 
-Tailwind 适配文件通过 `@theme inline` 将公开的 reference 和 system 值映射到带 `mat` 前缀的 Tailwind 主题变量，不重新定义主题来源。
+排版系统在各轴令牌之上提供 30 个 `.mat-sys-typescale-*` 公共 class；`MatText` 根据 `type`、`size` 与 `emphasized` 选择同一套 class，并通过 `as` 提供动态 HTML 根元素。工具 class 不设置字体族，继续继承应用字体。Tailwind 适配文件通过 `@theme inline` 将公开的 reference 和 system 值映射到带 `mat` 前缀的 Tailwind 主题变量，不重新定义主题来源。
 
 ### 文档实时预览与 AI 文档
 
