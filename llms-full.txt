@@ -2404,16 +2404,24 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
       </mat-btn>
     </div>
 
-    <div class="example-row example-row--container">
-      <mat-btn variant="text" color="on-primary-container">
-        on-primary-container
-      </mat-btn>
-      <mat-btn variant="text" color="on-surface">
-        on-surface
-      </mat-btn>
-      <mat-btn variant="text" color="on-surface-variant">
-        on-surface-variant
-      </mat-btn>
+    <div class="example-row">
+      <div class="example-panel example-panel--primary-container">
+        <mat-btn variant="text" color="on-primary-container">
+          on-primary-container
+        </mat-btn>
+      </div>
+
+      <div class="example-panel example-panel--surface">
+        <mat-btn variant="text" color="on-surface">
+          on-surface
+        </mat-btn>
+      </div>
+
+      <div class="example-panel example-panel--surface-variant">
+        <mat-btn variant="text" color="on-surface-variant">
+          on-surface-variant
+        </mat-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -2433,10 +2441,26 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
   align-items: center;
 }
 
-.example-row--container {
+.example-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 168px;
   padding: 12px;
-  background: var(--mat-sys-color-primary-container);
+  border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);
+}
+
+.example-panel--primary-container {
+  background: var(--mat-sys-color-primary-container);
+}
+
+.example-panel--surface {
+  background: var(--mat-sys-color-surface);
+}
+
+.example-panel--surface-variant {
+  background: var(--mat-sys-color-surface-variant);
 }
 </style>
 ```
