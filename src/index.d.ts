@@ -74,9 +74,10 @@ export interface MatBtnProps {
   */
   label?: string | undefined;
   /**
-  * 语义色、系统颜色角色或六位十六进制种子色 `#RRGGBB`。可选语义色为
+  * 语义色、系统颜色角色、`on-*` 内容色或六位十六进制种子色 `#RRGGBB`。可选语义色为
   * `primary`、`secondary`、`tertiary`、`error`；系统颜色角色包括对应的
-  * `-container` 角色和 `surface`、`surface-container-*` 等表面角色。
+  * `-container` 角色和 `surface`、`surface-container-*` 等表面角色；
+  * `on-*` 内容色（如 `on-primary-container`、`on-surface`）只对 `text` 形态生效。
   *
   * @type {string | undefined}
   * @default undefined

@@ -199,7 +199,7 @@ order: 50
   </DocsPreview>
 </ClientOnly>
 
-`color` 除四个语义色和六位十六进制种子色外，还可以直接使用 `primary-container`、`secondary-container`、`tertiary-container`、`error-container` 以及 `surface`、`surface-container-*` 等主题颜色角色。`-container` 角色与同组 `on-*` 令牌配对，表面角色使用 `on-surface` 内容色（`surface-variant` 使用 `on-surface-variant`），完整规则见[组件配色](/guide/component-color)。
+`color` 除四个语义色和六位十六进制种子色外，还可以直接使用 `primary-container`、`secondary-container`、`tertiary-container`、`error-container` 以及 `surface`、`surface-container-*` 等主题颜色角色。`-container` 角色与同组 `on-*` 令牌配对，表面角色使用 `on-surface` 内容色（`surface-variant` 使用 `on-surface-variant`）。`text` 形态还可以直接使用 `on-*` 内容色令牌（如 `on-primary-container`、`on-surface`），用于把无底色按钮放在已经填充配色的表面上；`on-*` 只对 `text` 形态生效，其他形态会发出开发警告并按默认配色处理。完整规则见[组件配色](/guide/component-color)。
 
 ### `toggle` 与 `selected`
 
@@ -360,14 +360,14 @@ order: 50
 | `prefix` | `string` | 未设置 | 普通按钮前置图标，优先于 prefix Slot |
 | `suffix` | `string` | 未设置 | 普通按钮后置图标，优先于 suffix Slot |
 | `label` | `string` | 未设置 | 图标模式的无障碍名称和默认 Tooltip 文本；可由显式 `aria-label` 覆盖 |
-| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| 系统颜色角色 \| #RRGGBB` | 未设置 | 语义色族、主题颜色角色或局部 Material 2025 种子色 |
+| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| 系统颜色角色 \| on-* 内容色（仅 text）\| #RRGGBB` | 未设置 | 语义色族、主题颜色角色、text 形态的 `on-*` 内容色或局部 Material 2025 种子色 |
 | `toggle` | `boolean` | `false` | 启用可选择外观和 `aria-pressed`；text 会忽略该值并发出开发警告 |
 | `selected` | `boolean` | `false` | 受控选中状态，仅在 toggle 或选择组中生效 |
 | `value` | `string \| number \| boolean` | 未设置 | 在 `MatBtnGroup` 选择模式中的项目值 |
 | `disabled` | `boolean` | `false` | 原生禁用状态；父组合组件也可强制禁用 |
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 原生按钮类型 |
 
-未被组件消费的 `name`、`form`、`aria-*`、`data-*` 等属性传给内部 `<button>`。图标模式下显式 `title` 优先于 `label` 作为 Tooltip 文本，组件不会为图标按钮生成原生 HTML `title` 提示。`color` 支持四个语义色、对应的 `-container` 角色、`surface` 与 `surface-container-*` 等表面角色，以及严格六位十六进制种子色。
+未被组件消费的 `name`、`form`、`aria-*`、`data-*` 等属性传给内部 `<button>`。图标模式下显式 `title` 优先于 `label` 作为 Tooltip 文本，组件不会为图标按钮生成原生 HTML `title` 提示。`color` 支持四个语义色、对应的 `-container` 角色、`surface` 与 `surface-container-*` 等表面角色，以及严格六位十六进制种子色；`text` 形态额外支持 `on-*` 内容色令牌（如 `on-primary-container`），非 `text` 形态使用 `on-*` 会警告并按默认配色处理。
 
 ### 事件
 

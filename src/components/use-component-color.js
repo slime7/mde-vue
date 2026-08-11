@@ -4,6 +4,7 @@ import MAT_THEME_KEY from '../theme-context';
 import {
   COMPONENT_COLORS,
   isComponentColor,
+  isContentColor,
   SYSTEM_COLOR_CONTENT,
   SYSTEM_COLOR_ROLES,
 } from './button-props';
@@ -44,6 +45,13 @@ export default function useComponentColor(color) {
         '--mat-on-accent-color': `var(--mat-sys-color-${contentRole})`,
         '--mat-accent-container-color': `var(--mat-sys-color-${value})`,
         '--mat-on-accent-container-color': `var(--mat-sys-color-${contentRole})`,
+      };
+    }
+
+    if (isContentColor(value)) {
+      return {
+        '--mat-accent-color': `var(--mat-sys-color-${value})`,
+        '--mat-on-accent-color': `var(--mat-sys-color-${value})`,
       };
     }
 

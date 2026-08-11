@@ -25,13 +25,15 @@ order: 35
 
 组件显式 `color` 优先于父组合组件级联值，父级联值优先于形态默认值。由 prop 生成的局部配色优先于组件的默认角色映射。中性表面、outline 和 disabled 仍使用项目中性角色，不随局部种子色变化。
 
-系统颜色角色直接引用当前主题令牌，不经过局部色板；`on-*` 内容角色不是合法输入，内容色由所选角色按配对规则决定。`surface-container` 等表面角色没有同组 `on-*` 令牌，内容统一使用 `on-surface`（`surface-variant` 使用 `on-surface-variant`）。无填充形态（如按钮的 text、outlined）会把显式角色直接用作内容色调，因此表面系列角色主要适合填充形态。
+系统颜色角色直接引用当前主题令牌，不经过局部色板；共享 `color` 输入不接受 `on-*` 内容角色，内容色由所选角色按配对规则决定。`surface-container` 等表面角色没有同组 `on-*` 令牌，内容统一使用 `on-surface`（`surface-variant` 使用 `on-surface-variant`）。无填充形态（如按钮的 text、outlined）会把显式角色直接用作内容色调，因此表面系列角色主要适合填充形态。
 
 三位十六进制、带透明度的十六进制、`rgb()`、颜色名称和任意 CSS 值都不是合法 `color` prop。组件内部颜色变量不是公共 API，不应由应用直接覆盖。
 
 `MatIcon` 是内容颜色例外：省略 `color` 时继承 `currentColor`；需要绕过动态色板直接使用 CSS 颜色时可传入 `font-color`，它接受 `rgb()`、颜色名称、CSS 变量等合法颜色，并优先于 `color`。该例外不扩展其他组件的 `color` 输入格式。
 
 `MatFab` 是官方颜色角色输入例外：它的 `color` 只接受 `primary`、`secondary`、`tertiary`、`primary-container`、`secondary-container`、`tertiary-container`、`error` 和 `error-container`。默认角色是 `primary-container`，不接受十六进制种子色；容器、内容和状态层分别使用所选角色及同组的 `on-*` 令牌。
+
+`MatBtn` 的 `text` 形态是内容色输入例外：它额外接受 `on-primary`、`on-secondary`、`on-tertiary`、`on-error`、四个 `on-*-container`、`on-surface` 和 `on-surface-variant` 共 10 个受控 `on-*` 令牌，直接作为文字、图标和状态层颜色，用于把无底色按钮放在已经填充配色的表面上（例如 primary-container 面板内的文字按钮）。`on-*` 只在 `text` 形态生效，其他形态会发出开发警告并按默认配色处理，因此不会被误用作填充色。
 
 ## 基本方法
 

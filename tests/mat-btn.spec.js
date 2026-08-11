@@ -71,20 +71,67 @@ describe('MatBtn', () => {
     expect(MatBtn.props.variant.validator('tonal')).toBe(false);
   });
 
-  it('color 接受语义色、系统颜色角色与六位种子色，并拒绝其他角色', () => {
+  it('color 接受语义色、系统颜色角色、on-* 内容色与六位种子色，并拒绝其他角色', () => {
     expect(MatBtn.props.color.validator('primary')).toBe(true);
     expect(MatBtn.props.color.validator('secondary')).toBe(true);
     expect(MatBtn.props.color.validator('tertiary')).toBe(true);
     expect(MatBtn.props.color.validator('error')).toBe(true);
+    expect(MatBtn.props.color.validator('on-primary')).toBe(true);
+    expect(MatBtn.props.color.validator('on-secondary')).toBe(true);
+    expect(MatBtn.props.color.validator('on-tertiary')).toBe(true);
+    expect(MatBtn.props.color.validator('on-error')).toBe(true);
     expect(MatBtn.props.color.validator('#6750a4')).toBe(true);
     expect(MatBtn.props.color.validator('primary-container')).toBe(true);
     expect(MatBtn.props.color.validator('surface-container')).toBe(true);
     expect(MatBtn.props.color.validator('surface-container-high')).toBe(true);
     expect(MatBtn.props.color.validator('surface-variant')).toBe(true);
-    expect(MatBtn.props.color.validator('on-surface')).toBe(false);
+    expect(MatBtn.props.color.validator('on-primary-container')).toBe(true);
+    expect(MatBtn.props.color.validator('on-secondary-container')).toBe(true);
+    expect(MatBtn.props.color.validator('on-tertiary-container')).toBe(true);
+    expect(MatBtn.props.color.validator('on-error-container')).toBe(true);
+    expect(MatBtn.props.color.validator('on-surface')).toBe(true);
+    expect(MatBtn.props.color.validator('on-surface-variant')).toBe(true);
+    expect(MatBtn.props.color.validator('on-outline')).toBe(false);
+    expect(MatBtn.props.color.validator('on-primary-container ')).toBe(false);
     expect(MatBtn.props.color.validator('outline')).toBe(false);
     expect(MatBtn.props.color.validator('surface-container ')).toBe(false);
     expect(MatBtn.props.color.validator('#fff')).toBe(false);
+  });
+
+  it('on-* 内容色仅 text 形态生效，其他形态警告并保持默认配色', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const wrapper = mount(MatBtn, {
+      props: {
+        variant: 'filled-tonal',
+        color: 'on-primary-container',
+      },
+      slots: {
+        default: '保存',
+      },
+    });
+
+    expect(warn).toHaveBeenCalledWith('MatBtn: on-* 内容色只支持 text 形态，当前按默认配色处理');
+    expect(wrapper.attributes('style')).toBeUndefined();
+    warn.mockRestore();
+  });
+
+  it('text 形态使用 on-* 内容色时不发出警告', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const wrapper = mount(MatBtn, {
+      props: {
+        variant: 'text',
+        color: 'on-primary-container',
+      },
+      slots: {
+        default: '保存',
+      },
+    });
+
+    expect(wrapper.text()).toBe('保存');
+    expect(warn.mock.calls.flat().join(' ')).not.toContain('on-*');
+    warn.mockRestore();
   });
 
   it('使用系统颜色角色时不会触发无效 prop 警告', () => {

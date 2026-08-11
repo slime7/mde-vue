@@ -10,6 +10,7 @@ import {
   BUTTON_SIZES,
   BUTTON_TYPES,
   isComponentColor,
+  isContentColor,
 } from '../button-props';
 import useButton from '../use-button';
 import { useMatProps } from '../use-mat-props';
@@ -139,9 +140,10 @@ const props = defineProps({
     default: undefined,
   },
   /**
-   * 语义色、系统颜色角色或六位十六进制种子色 `#RRGGBB`。可选语义色为
+   * 语义色、系统颜色角色、`on-*` 内容色或六位十六进制种子色 `#RRGGBB`。可选语义色为
    * `primary`、`secondary`、`tertiary`、`error`；系统颜色角色包括对应的
-   * `-container` 角色和 `surface`、`surface-container-*` 等表面角色。
+   * `-container` 角色和 `surface`、`surface-container-*` 等表面角色；
+   * `on-*` 内容色（如 `on-primary-container`、`on-surface`）只对 `text` 形态生效。
    *
    * @type {string | undefined}
    * @default undefined
@@ -149,7 +151,9 @@ const props = defineProps({
   color: {
     type: String,
     default: undefined,
-    validator: isComponentColor,
+    validator(value) {
+      return isComponentColor(value) || isContentColor(value);
+    },
   },
   /**
    * 启用可选择外观和 `aria-pressed`。
@@ -221,6 +225,7 @@ const buttonElement = ref(null);
 const generatedId = useId();
 const {
   colorStyle,
+  effectiveColor,
   effectiveDisabled,
   effectiveSelected,
   effectiveShape,
@@ -232,6 +237,14 @@ const {
   split,
   useCursor,
 } = useButton(propsWithDefaults, emit);
+const isContentColorToken = computed(() => isContentColor(effectiveColor.value));
+const applyContentColor = computed(() => (
+  !isContentColorToken.value || effectiveVariant.value === 'text'
+));
+const buttonColorStyle = computed(() => (applyContentColor.value ? colorStyle.value : {}));
+const buttonHasExplicitColor = computed(() => (
+  applyContentColor.value && hasExplicitColor.value
+));
 const isToggle = computed(() => effectiveToggle.value && effectiveVariant.value !== 'text');
 const isSelected = computed(() => isToggle.value && effectiveSelected.value);
 const isIcon = computed(() => propsWithDefaults.icon === true
@@ -326,6 +339,10 @@ watchEffect(() => {
     console.warn('MatBtn: text 形态不支持 toggle，当前按普通文本按钮处理');
   }
 
+  if (isContentColorToken.value && effectiveVariant.value !== 'text') {
+    console.warn('MatBtn: on-* 内容色只支持 text 形态，当前按默认配色处理');
+  }
+
   if (isIcon.value && (!accessibleLabel.value || accessibleLabel.value.trim().length === 0)) {
     console.warn('MatBtn: 图标模式必须提供非空 label 或 aria-label');
   }
@@ -343,7 +360,7 @@ watchEffect(() => {
       `mat-btn--shape-${effectiveShape}`,
       typographyClass,
       {
-        'mat-button--explicit-color': hasExplicitColor,
+        'mat-button--explicit-color': buttonHasExplicitColor,
         'mat-btn--icon': isIcon,
         [`mat-btn--width-${propsWithDefaults.width}`]: isIcon,
         'mat-btn--toggle': isToggle,
@@ -351,7 +368,7 @@ watchEffect(() => {
         'mat-btn--split-leading': split?.role === 'leading',
       },
     ]"
-    :style="colorStyle"
+    :style="buttonColorStyle"
     :aria-label="isIcon ? accessibleLabel : $attrs['aria-label']"
     :aria-controls="split?.role === 'trailing' ? split.controls.value : undefined"
     :aria-expanded="split?.role === 'trailing' ? split.expanded.value : undefined"

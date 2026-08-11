@@ -38,6 +38,28 @@ export const SYSTEM_COLOR_CONTENT = {
   'surface-container-high': 'on-surface',
   'surface-container-highest': 'on-surface',
 };
+export const CONTENT_COLOR_ROLES = [
+  'on-primary',
+  'on-secondary',
+  'on-tertiary',
+  'on-error',
+  'on-primary-container',
+  'on-secondary-container',
+  'on-tertiary-container',
+  'on-error-container',
+  'on-surface',
+  'on-surface-variant',
+];
+
+/**
+ * 判断值是否为受控的 on-* 内容色令牌。
+ *
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+export function isContentColor(value) {
+  return typeof value === 'string' && CONTENT_COLOR_ROLES.includes(value);
+}
 
 /**
  * 判断值是否为组件支持的语义色、系统颜色角色或六位十六进制种子色。
