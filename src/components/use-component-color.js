@@ -1,7 +1,12 @@
 import { computed, inject, unref } from 'vue';
 import { getComponentColorPalette } from '../material-color';
 import MAT_THEME_KEY from '../theme-context';
-import { COMPONENT_COLORS, isComponentColor } from './button-props';
+import {
+  COMPONENT_COLORS,
+  isComponentColor,
+  SYSTEM_COLOR_CONTENT,
+  SYSTEM_COLOR_ROLES,
+} from './button-props';
 
 const DEFAULT_SCHEME_VARIANT = 'tonal-spot';
 const DEFAULT_CONTRAST_LEVEL = 0;
@@ -28,6 +33,17 @@ export default function useComponentColor(color) {
         '--mat-on-accent-color': `var(--mat-sys-color-on-${value})`,
         '--mat-accent-container-color': `var(--mat-sys-color-${value}-container)`,
         '--mat-on-accent-container-color': `var(--mat-sys-color-on-${value}-container)`,
+      };
+    }
+
+    if (SYSTEM_COLOR_ROLES.includes(value)) {
+      const contentRole = SYSTEM_COLOR_CONTENT[value];
+
+      return {
+        '--mat-accent-color': `var(--mat-sys-color-${value})`,
+        '--mat-on-accent-color': `var(--mat-sys-color-${contentRole})`,
+        '--mat-accent-container-color': `var(--mat-sys-color-${value})`,
+        '--mat-on-accent-container-color': `var(--mat-sys-color-${contentRole})`,
       };
     }
 

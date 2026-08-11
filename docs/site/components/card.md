@@ -224,7 +224,7 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `variant` | `'elevated' \| 'filled' \| 'outlined'` | `'filled'` | 卡片的层级和边框外观 |
-| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| #RRGGBB` | 未设置 | 语义色族或局部 Material 种子色 |
+| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| 系统颜色角色 \| #RRGGBB` | 未设置 | 语义色族、主题颜色角色或局部 Material 种子色 |
 | `as` | `'div' \| 'article' \| 'section' \| 'li'` | `'div'` | 根元素语义 |
 
 未被消费的普通原生属性和事件传递给 `as` 指定的根元素。

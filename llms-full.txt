@@ -907,7 +907,7 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 | `weight` | `number` | `400` | Material Symbols `wght` 轴，范围 `100..700` |
 | `grade` | `number` | `0` | Material Symbols `GRAD` 轴，范围 `-50..200` |
 | `optical-size` | `number` | 自动 | Material Symbols `opsz` 轴，范围 `20..48`；命名尺寸使用对应值，自定义尺寸回退为 `24` |
-| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| #RRGGBB` | 未设置 | 语义色族或局部 Material 2025 种子色；省略时继承 `currentColor` |
+| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| 系统颜色角色 \| #RRGGBB` | 未设置 | 语义色族、主题颜色角色或局部 Material 2025 种子色；省略时继承 `currentColor` |
 | `font-color` | `string` | 未设置 | 直接使用任意合法 CSS 颜色，同时传入时优先于 `color` |
 | `as` | `string` | `'i'` | 非空 HTML 标签名，用作实际根元素 |
 | `icon-class` | `string` | 继承全局值 | 空格分隔的图标 class；默认全局值为 `material-symbols-outlined`，空字符串关闭全局值 |
@@ -959,11 +959,15 @@ import IconWeightExample from '../examples/icon/IconWeightExample.vue';
 | --- | --- |
 | 省略 | 保留该组件形态的 Material 默认角色，例如 filled-tonal 按钮默认使用 secondary container |
 | `primary`、`secondary`、`tertiary`、`error` | 使用当前项目主题中对应色族的 base、on-base、container 和 on-container |
+| `primary-container`、`secondary-container`、`tertiary-container`、`error-container` | 使用该角色作为填充，内容与状态层使用同组 `on-*` 令牌 |
+| `surface`、`surface-dim`、`surface-bright`、`surface-variant`、`surface-container-lowest`、`surface-container-low`、`surface-container`、`surface-container-high`、`surface-container-highest` | 使用该角色作为填充；内容使用 `on-surface`（`surface-variant` 使用 `on-surface-variant`），不生成局部色板 |
 | `#RRGGBB` | 把六位十六进制值作为局部种子色，生成亮暗 primary 色族 |
 
 局部色板沿用当前主题的 `schemeVariant` 和 `contrastLevel`，未安装插件时使用 `tonal-spot` 与对比度 `0`。生成结果通过 `light-dark()` 跟随当前 `color-scheme`，只写在当前组件作用域，不修改全局令牌。
 
 组件显式 `color` 优先于父组合组件级联值，父级联值优先于形态默认值。由 prop 生成的局部配色优先于组件的默认角色映射。中性表面、outline 和 disabled 仍使用项目中性角色，不随局部种子色变化。
+
+系统颜色角色直接引用当前主题令牌，不经过局部色板；`on-*` 内容角色不是合法输入，内容色由所选角色按配对规则决定。`surface-container` 等表面角色没有同组 `on-*` 令牌，内容统一使用 `on-surface`（`surface-variant` 使用 `on-surface-variant`）。无填充形态（如按钮的 text、outlined）会把显式角色直接用作内容色调，因此表面系列角色主要适合填充形态。
 
 三位十六进制、带透明度的十六进制、`rgb()`、颜色名称和任意 CSS 值都不是合法 `color` prop。组件内部颜色变量不是公共 API，不应由应用直接覆盖。
 
@@ -2380,6 +2384,18 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
     <mat-btn color="error">
       error
     </mat-btn>
+    <mat-btn color="primary-container">
+      primary-container
+    </mat-btn>
+    <mat-btn color="secondary-container">
+      secondary-container
+    </mat-btn>
+    <mat-btn color="surface-container">
+      surface-container
+    </mat-btn>
+    <mat-btn color="surface-container-high">
+      surface-container-high
+    </mat-btn>
     <mat-btn color="#6750a4">
       局部种子色
     </mat-btn>
@@ -2404,6 +2420,8 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
     <ButtonColorExample />
   </DocsPreview>
 </ClientOnly>
+
+`color` 除四个语义色和六位十六进制种子色外，还可以直接使用 `primary-container`、`secondary-container`、`tertiary-container`、`error-container` 以及 `surface`、`surface-container-*` 等主题颜色角色。`-container` 角色与同组 `on-*` 令牌配对，表面角色使用 `on-surface` 内容色（`surface-variant` 使用 `on-surface-variant`），完整规则见[组件配色](/guide/component-color)。
 
 ### `toggle` 与 `selected`
 
@@ -2674,14 +2692,14 @@ function updateSelection({ nextSelected }) {
 | `prefix` | `string` | 未设置 | 普通按钮前置图标，优先于 prefix Slot |
 | `suffix` | `string` | 未设置 | 普通按钮后置图标，优先于 suffix Slot |
 | `label` | `string` | 未设置 | 图标模式的无障碍名称和默认 Tooltip 文本；可由显式 `aria-label` 覆盖 |
-| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| #RRGGBB` | 未设置 | 语义色族或局部 Material 2025 种子色 |
+| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| 系统颜色角色 \| #RRGGBB` | 未设置 | 语义色族、主题颜色角色或局部 Material 2025 种子色 |
 | `toggle` | `boolean` | `false` | 启用可选择外观和 `aria-pressed`；text 会忽略该值并发出开发警告 |
 | `selected` | `boolean` | `false` | 受控选中状态，仅在 toggle 或选择组中生效 |
 | `value` | `string \| number \| boolean` | 未设置 | 在 `MatBtnGroup` 选择模式中的项目值 |
 | `disabled` | `boolean` | `false` | 原生禁用状态；父组合组件也可强制禁用 |
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 原生按钮类型 |
 
-未被组件消费的 `name`、`form`、`aria-*`、`data-*` 等属性传给内部 `<button>`。图标模式下显式 `title` 优先于 `label` 作为 Tooltip 文本，组件不会为图标按钮生成原生 HTML `title` 提示。`color` 只接受严格六位十六进制值。
+未被组件消费的 `name`、`form`、`aria-*`、`data-*` 等属性传给内部 `<button>`。图标模式下显式 `title` 优先于 `label` 作为 Tooltip 文本，组件不会为图标按钮生成原生 HTML `title` 提示。`color` 支持四个语义色、对应的 `-container` 角色、`surface` 与 `surface-container-*` 等表面角色，以及严格六位十六进制种子色。
 
 ### 事件
 
@@ -5930,7 +5948,7 @@ const multiple = ref(['文档']);
 | `selected` | `boolean` | `false` | filter 与 input 的受控选中外观及 `aria-pressed` |
 | `value` | `string \| number \| boolean` | 未设置 | 加入 ChipSet 选择模型时使用的基础值 |
 | `disabled` | `boolean` | `false` | 使用原生按钮禁用语义 |
-| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| #RRGGBB` | 未设置 | 覆盖选中强调色和适用的前置图标颜色 |
+| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| 系统颜色角色 \| #RRGGBB` | 未设置 | 覆盖选中强调色和适用的前置图标颜色 |
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 原生按钮类型 |
 
 未消费的属性和监听器透传到根按钮。assist 与 suggestion 不设置 `aria-pressed`，它们的 `selected` 不产生选中外观。启用组选择后，带 value 的 filter/input 由 ChipSet 模型覆盖自身 selected。
@@ -8212,7 +8230,7 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `variant` | `'elevated' \| 'filled' \| 'outlined'` | `'filled'` | 卡片的层级和边框外观 |
-| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| #RRGGBB` | 未设置 | 语义色族或局部 Material 种子色 |
+| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| 系统颜色角色 \| #RRGGBB` | 未设置 | 语义色族、主题颜色角色或局部 Material 种子色 |
 | `as` | `'div' \| 'article' \| 'section' \| 'li'` | `'div'` | 根元素语义 |
 
 未被消费的普通原生属性和事件传递给 `as` 指定的根元素。

@@ -29,6 +29,7 @@
 | [0021](0021-app-root-layout-context.md) | active | 采用 AppRoot 应用布局上下文 |
 | [0022](0022-rename-project-to-mde-vue.md) | active | 项目更名为 mde-vue |
 | [0023](0023-mat-ui-component-defaults.md) | active | createMatUi 组件默认属性 defaults 配置 |
+| [0024](0024-system-color-roles-in-component-color.md) | active | 扩展公共 color 输入到系统颜色角色 |
 
 ## 何时创建 ADR
 

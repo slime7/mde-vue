@@ -244,7 +244,7 @@ order: 35
 | `weight` | `number` | `400` | Material Symbols `wght` 轴，范围 `100..700` |
 | `grade` | `number` | `0` | Material Symbols `GRAD` 轴，范围 `-50..200` |
 | `optical-size` | `number` | 自动 | Material Symbols `opsz` 轴，范围 `20..48`；命名尺寸使用对应值，自定义尺寸回退为 `24` |
-| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| #RRGGBB` | 未设置 | 语义色族或局部 Material 2025 种子色；省略时继承 `currentColor` |
+| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| 系统颜色角色 \| #RRGGBB` | 未设置 | 语义色族、主题颜色角色或局部 Material 2025 种子色；省略时继承 `currentColor` |
 | `font-color` | `string` | 未设置 | 直接使用任意合法 CSS 颜色，同时传入时优先于 `color` |
 | `as` | `string` | `'i'` | 非空 HTML 标签名，用作实际根元素 |
 | `icon-class` | `string` | 继承全局值 | 空格分隔的图标 class；默认全局值为 `material-symbols-outlined`，空字符串关闭全局值 |

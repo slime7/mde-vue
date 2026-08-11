@@ -83,6 +83,7 @@ Tooltip 分组由展示元素最近的 `data-mat-tooltip-group` 祖先定义。�
 
 - 省略时使用组件形态在 Material 规格中规定的语义角色，不强制改成 primary。
 - `primary`、`secondary`、`tertiary`、`error` 引用当前项目主题中同名的 base、on-base、container 和 on-container 令牌。
+- `primary-container`、`secondary-container`、`tertiary-container`、`error-container` 直接引用主题对应令牌，内容与状态层使用同组 `on-*` 令牌；`surface`、`surface-dim`、`surface-bright`、`surface-variant` 和五个 `surface-container-*` 角色同样直接引用主题令牌，内容使用 `on-surface`（`surface-variant` 使用 `on-surface-variant`）。系统颜色角色不生成局部色板，`on-*` 内容角色不是合法输入。
 - 严格六位 `#RRGGBB` 值作为局部种子色，按当前主题方案与对比度生成 Material 2025 亮暗 primary 色族；三位色值和其他 CSS 颜色写法不属于公共输入。
 - `MatFab` 遵循官方 FAB 角色输入：只接受 `primary`、`secondary`、`tertiary`、`primary-container`、`secondary-container`、`tertiary-container`、`error` 和 `error-container`，默认 `primary-container`，不接受十六进制种子色。
 - 显式 `color` 只覆盖强调色族，中性表面、边框和禁用角色不随种子色改变，也不得写入全局主题或影响兄弟组件。

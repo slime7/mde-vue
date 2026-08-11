@@ -71,6 +71,39 @@ describe('MatBtn', () => {
     expect(MatBtn.props.variant.validator('tonal')).toBe(false);
   });
 
+  it('color 接受语义色、系统颜色角色与六位种子色，并拒绝其他角色', () => {
+    expect(MatBtn.props.color.validator('primary')).toBe(true);
+    expect(MatBtn.props.color.validator('secondary')).toBe(true);
+    expect(MatBtn.props.color.validator('tertiary')).toBe(true);
+    expect(MatBtn.props.color.validator('error')).toBe(true);
+    expect(MatBtn.props.color.validator('#6750a4')).toBe(true);
+    expect(MatBtn.props.color.validator('primary-container')).toBe(true);
+    expect(MatBtn.props.color.validator('surface-container')).toBe(true);
+    expect(MatBtn.props.color.validator('surface-container-high')).toBe(true);
+    expect(MatBtn.props.color.validator('surface-variant')).toBe(true);
+    expect(MatBtn.props.color.validator('on-surface')).toBe(false);
+    expect(MatBtn.props.color.validator('outline')).toBe(false);
+    expect(MatBtn.props.color.validator('surface-container ')).toBe(false);
+    expect(MatBtn.props.color.validator('#fff')).toBe(false);
+  });
+
+  it('使用系统颜色角色时不会触发无效 prop 警告', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const wrapper = mount(MatBtn, {
+      props: {
+        color: 'surface-container',
+      },
+      slots: {
+        default: '保存',
+      },
+    });
+
+    expect(wrapper.text()).toBe('保存');
+    expect(warn.mock.calls.flat().join(' ')).not.toContain('Invalid prop');
+    warn.mockRestore();
+  });
+
   it('支持方形、前后图标和受控选择内容，prop 优先于同名 Slot', () => {
     const wrapper = mount(MatBtn, {
       props: {

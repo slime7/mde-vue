@@ -145,7 +145,7 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 | `selected` | `boolean` | `false` | filter 与 input 的受控选中外观及 `aria-pressed` |
 | `value` | `string \| number \| boolean` | 未设置 | 加入 ChipSet 选择模型时使用的基础值 |
 | `disabled` | `boolean` | `false` | 使用原生按钮禁用语义 |
-| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| #RRGGBB` | 未设置 | 覆盖选中强调色和适用的前置图标颜色 |
+| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| 系统颜色角色 \| #RRGGBB` | 未设置 | 覆盖选中强调色和适用的前置图标颜色 |
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 原生按钮类型 |
 
 未消费的属性和监听器透传到根按钮。assist 与 suggestion 不设置 `aria-pressed`，它们的 `selected` 不产生选中外观。启用组选择后，带 value 的 filter/input 由 ChipSet 模型覆盖自身 selected。

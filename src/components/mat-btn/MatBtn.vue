@@ -139,7 +139,9 @@ const props = defineProps({
     default: undefined,
   },
   /**
-   * 语义色或六位十六进制种子色 `#RRGGBB`。可选语义色为 `primary`、`secondary`、`tertiary`、`error`。
+   * 语义色、系统颜色角色或六位十六进制种子色 `#RRGGBB`。可选语义色为
+   * `primary`、`secondary`、`tertiary`、`error`；系统颜色角色包括对应的
+   * `-container` 角色和 `surface`、`surface-container-*` 等表面角色。
    *
    * @type {string | undefined}
    * @default undefined

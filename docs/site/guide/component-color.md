@@ -17,11 +17,15 @@ order: 35
 | --- | --- |
 | 省略 | 保留该组件形态的 Material 默认角色，例如 filled-tonal 按钮默认使用 secondary container |
 | `primary`、`secondary`、`tertiary`、`error` | 使用当前项目主题中对应色族的 base、on-base、container 和 on-container |
+| `primary-container`、`secondary-container`、`tertiary-container`、`error-container` | 使用该角色作为填充，内容与状态层使用同组 `on-*` 令牌 |
+| `surface`、`surface-dim`、`surface-bright`、`surface-variant`、`surface-container-lowest`、`surface-container-low`、`surface-container`、`surface-container-high`、`surface-container-highest` | 使用该角色作为填充；内容使用 `on-surface`（`surface-variant` 使用 `on-surface-variant`），不生成局部色板 |
 | `#RRGGBB` | 把六位十六进制值作为局部种子色，生成亮暗 primary 色族 |
 
 局部色板沿用当前主题的 `schemeVariant` 和 `contrastLevel`，未安装插件时使用 `tonal-spot` 与对比度 `0`。生成结果通过 `light-dark()` 跟随当前 `color-scheme`，只写在当前组件作用域，不修改全局令牌。
 
 组件显式 `color` 优先于父组合组件级联值，父级联值优先于形态默认值。由 prop 生成的局部配色优先于组件的默认角色映射。中性表面、outline 和 disabled 仍使用项目中性角色，不随局部种子色变化。
+
+系统颜色角色直接引用当前主题令牌，不经过局部色板；`on-*` 内容角色不是合法输入，内容色由所选角色按配对规则决定。`surface-container` 等表面角色没有同组 `on-*` 令牌，内容统一使用 `on-surface`（`surface-variant` 使用 `on-surface-variant`）。无填充形态（如按钮的 text、outlined）会把显式角色直接用作内容色调，因此表面系列角色主要适合填充形态。
 
 三位十六进制、带透明度的十六进制、`rgb()`、颜色名称和任意 CSS 值都不是合法 `color` prop。组件内部颜色变量不是公共 API，不应由应用直接覆盖。
 

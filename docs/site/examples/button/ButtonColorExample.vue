@@ -13,6 +13,18 @@
     <mat-btn color="error">
       error
     </mat-btn>
+    <mat-btn color="primary-container">
+      primary-container
+    </mat-btn>
+    <mat-btn color="secondary-container">
+      secondary-container
+    </mat-btn>
+    <mat-btn color="surface-container">
+      surface-container
+    </mat-btn>
+    <mat-btn color="surface-container-high">
+      surface-container-high
+    </mat-btn>
     <mat-btn color="#6750a4">
       局部种子色
     </mat-btn>
