@@ -112,7 +112,7 @@ emphasized 样式用于局部传达层级或重要性，例如选中或激活的
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `type` | `'display' \| 'headline' \| 'title' \| 'body' \| 'label'` | `'body'` | Material 3 文字类型 |
-| `size` | `'large' \| 'medium' \| 'small'` | `'medium'` | 同一文字类型内的尺寸 |
+| `size` | `'large' \| 'medium' \| 'small' \| 'L' \| 'M' \| 'S'` | `'medium'` | 同一文字类型内的尺寸；`L`、`M`、`S` 分别是三个完整名称的简称 |
 | `emphasized` | `boolean` | `false` | 使用同类型同尺寸的 emphasized 样式 |
 | `as` | `string` | `'span'` | 合法 HTML 标签名，用作实际根元素 |
 

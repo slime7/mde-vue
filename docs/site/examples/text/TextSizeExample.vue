@@ -1,14 +1,14 @@
 <!-- #region template -->
 <template>
   <div class="size-example">
-    <mat-text type="headline" size="large">
-      Large headline
+    <mat-text type="headline" size="L">
+      L（large）headline
     </mat-text>
-    <mat-text type="headline" size="medium">
-      Medium headline
+    <mat-text type="headline" size="M">
+      M（medium）headline
     </mat-text>
-    <mat-text type="headline" size="small">
-      Small headline
+    <mat-text type="headline" size="S">
+      S（small）headline
     </mat-text>
   </div>
 </template>

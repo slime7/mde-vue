@@ -26,7 +26,7 @@ const props = defineProps({
   /**
    * Material 3 文字尺寸。
    *
-   * @type {'large' | 'medium' | 'small'}
+   * @type {'large' | 'medium' | 'small' | 'L' | 'M' | 'S'}
    * @default 'medium'
    */
   size: {

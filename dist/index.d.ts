@@ -568,10 +568,10 @@ export interface MatTextProps {
   /**
   * Material 3 文字尺寸。
   *
-  * @type {'large' | 'medium' | 'small'}
+  * @type {'large' | 'medium' | 'small' | 'L' | 'M' | 'S'}
   * @default 'medium'
   */
-  size?: 'large' | 'medium' | 'small';
+  size?: 'large' | 'medium' | 'small' | 'L' | 'M' | 'S';
   /**
   * 使用同类型同尺寸的 emphasized 排版样式。
   *

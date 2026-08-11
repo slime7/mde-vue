@@ -118,6 +118,7 @@ export default defineConfig({
               { text: 'Divider 分隔线', link: '/components/divider' },
               { text: 'Icon 图标', link: '/components/icon' },
               { text: 'Image 图片', link: '/components/image' },
+              { text: 'Text 文字', link: '/components/text' },
               { text: 'List 列表', link: '/components/list' },
             ],
           },

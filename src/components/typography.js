@@ -8,6 +8,12 @@ export const TYPOGRAPHY_TYPES = Object.freeze([
 
 export const TYPOGRAPHY_SIZES = Object.freeze(['large', 'medium', 'small']);
 
+export const TYPOGRAPHY_SIZE_ALIASES = Object.freeze({
+  L: 'large',
+  M: 'medium',
+  S: 'small',
+});
+
 /**
  * @param {unknown} value
  * @returns {boolean}
@@ -21,7 +27,16 @@ export function isTypographyType(value) {
  * @returns {boolean}
  */
 export function isTypographySize(value) {
-  return TYPOGRAPHY_SIZES.includes(value);
+  return TYPOGRAPHY_SIZES.includes(value)
+    || Object.hasOwn(TYPOGRAPHY_SIZE_ALIASES, value);
+}
+
+/**
+ * @param {string} value
+ * @returns {string}
+ */
+export function normalizeTypographySize(value) {
+  return TYPOGRAPHY_SIZE_ALIASES[value] ?? value;
 }
 
 /**
@@ -35,6 +50,6 @@ export function getTypographyClass(type, size, emphasized = false) {
     'mat-sys-typescale',
     emphasized ? 'emphasized' : undefined,
     type,
-    size,
+    normalizeTypographySize(size),
   ].filter(Boolean).join('-');
 }

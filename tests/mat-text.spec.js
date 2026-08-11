@@ -36,6 +36,18 @@ describe('MatText', () => {
     expect(wrapper.classes()).not.toContain('mat-sys-typescale-emphasized-display-large');
   });
 
+  it.each([
+    ['L', 'large'],
+    ['M', 'medium'],
+    ['S', 'small'],
+  ])('将 size=%s 映射为 %s', (size, resolvedSize) => {
+    const wrapper = mount(MatText, {
+      props: { size },
+    });
+
+    expect(wrapper.classes()).toContain(`mat-sys-typescale-body-${resolvedSize}`);
+  });
+
   it('替换根标签并透传原生属性和事件', async () => {
     const handleClick = vi.fn();
     const wrapper = mount(MatText, {
@@ -59,7 +71,9 @@ describe('MatText', () => {
     expect(MatText.props.type.validator('headline')).toBe(true);
     expect(MatText.props.type.validator('caption')).toBe(false);
     expect(MatText.props.size.validator('medium')).toBe(true);
+    expect(MatText.props.size.validator('M')).toBe(true);
     expect(MatText.props.size.validator('extra-large')).toBe(false);
+    expect(MatText.props.size.validator('XS')).toBe(false);
     expect(MatText.props.as.validator('strong')).toBe(true);
     expect(MatText.props.as.validator('not a tag')).toBe(false);
   });
