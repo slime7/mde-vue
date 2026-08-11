@@ -3,6 +3,7 @@ import {
   computed, inject, onBeforeUnmount, onMounted, ref, watch,
 } from 'vue';
 import { MAT_PANES_KEY } from '../panes-context';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatPane',
@@ -34,19 +35,22 @@ const props = defineProps({
     default: undefined,
   },
 });
+const propsWithDefaults = useMatProps('pane', props);
 
 const context = inject(MAT_PANES_KEY, null);
 const root = ref(null);
-const resizeLabel = computed(() => props.resizeLabel);
+const resizeLabelValue = computed(() => propsWithDefaults.resizeLabel);
 let unregister;
 
-const paneStyle = computed(() => context?.getPaneStyle(props.id) ?? {
+const paneStyle = computed(() => context?.getPaneStyle(propsWithDefaults.id) ?? {
   '--mat-pane-weight': 1,
 });
-const hasSeparator = computed(() => Boolean(context?.hasBoundary(props.id)));
-const hasHandle = computed(() => Boolean(context?.isHandleVisible(props.id)));
-const handleAttributes = computed(() => context?.getHandleAttributes(props.id) ?? {});
-const isActive = computed(() => Boolean(context?.isBoundaryActive(props.id)));
+const hasSeparator = computed(() => Boolean(context?.hasBoundary(propsWithDefaults.id)));
+const hasHandle = computed(() => Boolean(context?.isHandleVisible(propsWithDefaults.id)));
+const handleAttributes = computed(() => (
+  context?.getHandleAttributes(propsWithDefaults.id) ?? {}
+));
+const isActive = computed(() => Boolean(context?.isBoundaryActive(propsWithDefaults.id)));
 
 function register() {
   unregister?.();
@@ -55,14 +59,14 @@ function register() {
   if (context) {
     unregister = context.registerPane({
       element: root,
-      id: props.id,
-      resizeLabel,
+      id: propsWithDefaults.id,
+      resizeLabel: resizeLabelValue,
     });
   }
 }
 
 onMounted(register);
-watch(() => props.id, register);
+watch(() => propsWithDefaults.id, register);
 onBeforeUnmount(() => unregister?.());
 </script>
 
@@ -70,7 +74,7 @@ onBeforeUnmount(() => unregister?.());
   <div
     ref="root"
     v-bind="$attrs"
-    :id="id"
+    :id="propsWithDefaults.id"
     class="mat-pane"
     :style="paneStyle"
   >

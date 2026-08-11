@@ -11,6 +11,7 @@ import {
   watch,
 } from 'vue';
 import { isValidMs, normalizeMs } from '../value-utils';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatHover',
@@ -71,6 +72,7 @@ const props = defineProps({
     default: undefined,
   },
 });
+const propsWithDefaults = useMatProps('hover', props);
 const emit = defineEmits({
   /**
    * hover 状态变化时发出新的 boolean。
@@ -86,7 +88,7 @@ const internalHovering = ref(false);
 const uncontrolledHovering = ref(null);
 const targetElement = shallowRef(null);
 const renderedHovering = computed(() => (
-  isControlled ? props.modelValue : uncontrolledHovering.value
+  isControlled ? propsWithDefaults.modelValue : uncontrolledHovering.value
 ));
 let delayTimer;
 let removeTargetListeners = null;
@@ -107,7 +109,7 @@ function clearDelay() {
 function applyHovering(value) {
   internalHovering.value = value;
 
-  if (props.disabled) {
+  if (propsWithDefaults.disabled) {
     return;
   }
 
@@ -141,11 +143,11 @@ function scheduleHovering(value, delayValue) {
 }
 
 function handleMouseenter() {
-  scheduleHovering(true, props.openDelay);
+  scheduleHovering(true, propsWithDefaults.openDelay);
 }
 
 function handleMouseleave() {
-  scheduleHovering(false, props.closeDelay);
+  scheduleHovering(false, propsWithDefaults.closeDelay);
 }
 
 /**
@@ -180,12 +182,12 @@ function normalizeElement(value) {
  * @returns {HTMLElement | null}
  */
 function resolveTarget() {
-  if (typeof props.target !== 'string') {
-    return normalizeElement(props.target);
+  if (typeof propsWithDefaults.target !== 'string') {
+    return normalizeElement(propsWithDefaults.target);
   }
 
   try {
-    return normalizeElement(document.querySelector(props.target));
+    return normalizeElement(document.querySelector(propsWithDefaults.target));
   } catch {
     return null;
   }
@@ -227,7 +229,7 @@ const targetProps = {
   onMouseleave: handleMouseleave,
 };
 
-watch(() => props.disabled, (disabled, previousDisabled) => {
+watch(() => propsWithDefaults.disabled, (disabled, previousDisabled) => {
   if (previousDisabled && !disabled) {
     if (isControlled) {
       emit('update:modelValue', internalHovering.value);

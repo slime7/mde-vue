@@ -6,6 +6,7 @@ import useComponentColor from '../use-component-color';
 import MatCardHeadline from './MatCardHeadline.vue';
 import MatCardMedia from './MatCardMedia.vue';
 import MatCardSubhead from './MatCardSubhead.vue';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({ name: 'MatCard', inheritAttrs: false });
 const props = defineProps({
@@ -31,16 +32,17 @@ const props = defineProps({
    */
   as: { type: String, default: 'div', validator: (value) => ['div', 'article', 'section', 'li'].includes(value) },
 });
-const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => props.color));
+const propsWithDefaults = useMatProps('card', props);
+const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => propsWithDefaults.color));
 </script>
 
 <template>
   <MatSurfaceBase
     v-bind="$attrs"
     class="mat-card"
-    :class="[`mat-card--${variant}`, { 'mat-card--explicit-color': hasExplicitColor }]"
+    :class="[`mat-card--${propsWithDefaults.variant}`, { 'mat-card--explicit-color': hasExplicitColor }]"
     :style="colorStyle"
-    :as="as"
+    :as="propsWithDefaults.as"
   >
     <MatCardMedia v-if="$slots.media">
       <slot name="media" />

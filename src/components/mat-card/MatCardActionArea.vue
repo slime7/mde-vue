@@ -2,9 +2,10 @@
 import { inject } from 'vue';
 import MatActionBase from '../MatActionBase.vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
+import { useMatProps } from '../use-mat-props';
 import { BUTTON_TYPES } from '../button-props';
 defineOptions({ name: 'MatCardActionArea', inheritAttrs: false });
-defineProps({
+const props = defineProps({
   /**
    * 设置后渲染原生链接，否则渲染 button。
    *
@@ -33,16 +34,17 @@ const emit = defineEmits({
    */
   click(payload) { return payload instanceof MouseEvent; },
 });
+const propsWithDefaults = useMatProps('cardActionArea', props);
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 </script>
 <template>
   <MatActionBase
     v-bind="$attrs"
     class="mat-card-action-area"
-    :disabled="disabled"
+    :disabled="propsWithDefaults.disabled"
     :focus-ring="false"
-    :href="href"
-    :type="type"
+    :href="propsWithDefaults.href"
+    :type="propsWithDefaults.type"
     :use-cursor="matUi.useCursor"
     @click="emit('click', $event)"
   >

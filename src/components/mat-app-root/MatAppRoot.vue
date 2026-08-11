@@ -13,6 +13,7 @@ import {
   watch,
 } from 'vue';
 import { MAT_APP_ROOT_KEY } from './mat-app-root-context';
+import { useMatProps } from '../use-mat-props';
 
 const EDGES = ['top', 'bottom', 'start', 'end'];
 const BREAKPOINTS = [
@@ -50,6 +51,7 @@ const props = defineProps({
     default: false,
   },
 });
+const propsWithDefaults = useMatProps('appRoot', props);
 
 const parentApp = inject(MAT_APP_ROOT_KEY, null);
 
@@ -85,9 +87,9 @@ const safeAreaState = reactive({
   top: 0, bottom: 0, start: 0, end: 0,
 });
 const rootClass = computed(() => ({
-  'mat-app-root--document': props.fillViewport && !props.scrollable,
-  'mat-app-root--fill-viewport': props.fillViewport,
-  'mat-app-root--scrollable': props.scrollable,
+  'mat-app-root--document': propsWithDefaults.fillViewport && !propsWithDefaults.scrollable,
+  'mat-app-root--fill-viewport': propsWithDefaults.fillViewport,
+  'mat-app-root--scrollable': propsWithDefaults.scrollable,
 }));
 const rootStyle = computed(() => [
   attrs.style,
@@ -136,7 +138,7 @@ function readSafeArea() {
 }
 
 function getAreaRect(rootRect, width, height) {
-  if (props.fillViewport && !props.scrollable) {
+  if (propsWithDefaults.fillViewport && !propsWithDefaults.scrollable) {
     return {
       top: 0,
       bottom: height,
@@ -189,7 +191,7 @@ function measureLayout() {
   const rootRect = rootElement.value.getBoundingClientRect();
   const width = Math.max(0, Number(rootRect.width) || 0);
   const measuredHeight = Math.max(0, Number(rootRect.height) || 0);
-  const height = props.fillViewport && !props.scrollable
+  const height = propsWithDefaults.fillViewport && !propsWithDefaults.scrollable
     ? Math.max(0, Number(window.innerHeight) || measuredHeight)
     : measuredHeight;
   const breakpoint = BREAKPOINTS.find((item) => width <= item.max) ?? BREAKPOINTS.at(-1);
@@ -330,7 +332,7 @@ function getLayoutRect() {
     top: 0, bottom: 0, left: 0, right: 0,
   };
 
-  if (props.fillViewport && !props.scrollable) {
+  if (propsWithDefaults.fillViewport && !propsWithDefaults.scrollable) {
     return {
       top: 0,
       bottom: layoutState.size.height,
@@ -408,8 +410,8 @@ onBeforeUnmount(() => {
 });
 
 watch([
-  () => props.fillViewport,
-  () => props.scrollable,
+  () => propsWithDefaults.fillViewport,
+  () => propsWithDefaults.scrollable,
 ], scheduleMeasure);
 </script>
 
@@ -419,7 +421,7 @@ watch([
     v-bind="$attrs"
     class="mat-app-root"
     :class="rootClass"
-    :data-scrollable="String(scrollable)"
+    :data-scrollable="String(propsWithDefaults.scrollable)"
     :style="rootStyle"
   >
     <div ref="contentElement" class="mat-app-root__content">

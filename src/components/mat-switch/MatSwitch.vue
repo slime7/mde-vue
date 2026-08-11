@@ -1,13 +1,14 @@
 <script setup>
 import MatSelectionControlBase from '../MatSelectionControlBase.vue';
 import { isComponentColor } from '../button-props';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatSwitch',
   inheritAttrs: false,
 });
 
-defineProps({
+const props = defineProps({
   /**
    * `v-model` 当前开关状态。
    *
@@ -55,6 +56,7 @@ defineProps({
     validator: isComponentColor,
   },
 });
+const propsWithDefaults = useMatProps('switch', props);
 
 const emit = defineEmits({
   /**
@@ -84,12 +86,12 @@ function handleChange(event) {
     v-bind="$attrs"
     class="mat-switch"
     :class="[
-      `mat-switch--icons-${icons}`,
-      { 'mat-switch--checked': modelValue },
+      `mat-switch--icons-${propsWithDefaults.icons}`,
+      { 'mat-switch--checked': propsWithDefaults.modelValue },
     ]"
-    :checked="modelValue"
-    :color="color"
-    :disabled="disabled"
+    :checked="propsWithDefaults.modelValue"
+    :color="propsWithDefaults.color"
+    :disabled="propsWithDefaults.disabled"
     input-role="switch"
     input-type="checkbox"
     label-name="MatSwitch"

@@ -15,6 +15,7 @@ import {
   resolveEdgeValues,
   toCssLength,
 } from '../value-utils';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatScrollArea',
@@ -119,6 +120,7 @@ const props = defineProps({
     validator: (value) => isValidEdgeValues(value, { allowUndefined: false }),
   },
 });
+const propsWithDefaults = useMatProps('scrollArea', props);
 
 const emit = defineEmits({
   /**
@@ -155,24 +157,24 @@ let suppressClick = false;
 let suppressClickTimer;
 
 const normalizedOrientation = computed(() => (
-  ['horizontal', 'x', 'h'].includes(props.orientation) ? 'horizontal' : 'vertical'
+  ['horizontal', 'x', 'h'].includes(propsWithDefaults.orientation) ? 'horizontal' : 'vertical'
 ));
 const canDragScroll = computed(() => (
-  props.dragScroll && normalizedOrientation.value === 'horizontal'
+  propsWithDefaults.dragScroll && normalizedOrientation.value === 'horizontal'
 ));
 const thresholds = computed(() => {
-  return resolveEdgeValues(props.reachThreshold, 0);
+  return resolveEdgeValues(propsWithDefaults.reachThreshold, 0);
 });
 const shadowOffsets = computed(() => {
-  return resolveEdgeValues(props.shadowOffset, 0);
+  return resolveEdgeValues(propsWithDefaults.shadowOffset, 0);
 });
-const shadowLengths = computed(() => resolveEdgeValues(props.shadowLength, 16));
+const shadowLengths = computed(() => resolveEdgeValues(propsWithDefaults.shadowLength, 16));
 const scrollbarSpace = computed(() => {
-  if (props.barWidth === 'hidden') {
+  if (propsWithDefaults.barWidth === 'hidden') {
     return 0;
   }
 
-  return props.barWidth === 'thin' ? 10 : 16;
+  return propsWithDefaults.barWidth === 'thin' ? 10 : 16;
 });
 const viewportStyle = computed(() => ({
   // 阴影变量参与 mask 渐变的 calc() 运算，必须始终携带长度单位；
@@ -189,16 +191,16 @@ const rootAttrs = computed(() => ({
 }));
 const scrollerStyle = computed(() => {
   const isHorizontal = normalizedOrientation.value === 'horizontal';
-  const padding = toCssLength(props.snapPadding, { fallback: '0' });
+  const padding = toCssLength(propsWithDefaults.snapPadding, { fallback: '0' });
 
   return {
     scrollPaddingBottom: isHorizontal ? undefined : padding,
     scrollPaddingLeft: isHorizontal ? padding : undefined,
     scrollPaddingRight: isHorizontal ? padding : undefined,
     scrollPaddingTop: isHorizontal ? undefined : padding,
-    scrollSnapType: props.snap === 'none'
+    scrollSnapType: propsWithDefaults.snap === 'none'
       ? 'none'
-      : `${isHorizontal ? 'x' : 'y'} ${props.snap}`,
+      : `${isHorizontal ? 'x' : 'y'} ${propsWithDefaults.snap}`,
   };
 });
 const scrollerAttrs = computed(() => Object.fromEntries(
@@ -512,7 +514,7 @@ defineExpose({
         class="mat-scroll-area__scroller"
         :style="scrollerStyle"
         :class="[
-          `mat-scroll-area__scroller--bar-${props.barWidth}`,
+          `mat-scroll-area__scroller--bar-${propsWithDefaults.barWidth}`,
           {
             'mat-scroll-area__scroller--dragging': isDragging,
             'mat-scroll-area__scroller--start-overflow': hasStartOverflow,

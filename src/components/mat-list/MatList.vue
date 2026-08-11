@@ -9,6 +9,7 @@ import {
 import useComponentColor from '../use-component-color';
 import useRovingFocus from '../use-roving-focus';
 import { isSelectionValue } from '../selection-control';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatList',
@@ -77,6 +78,7 @@ const props = defineProps({
     validator: isComponentColor,
   },
 });
+const propsWithDefaults = useMatProps('list', props);
 
 const emit = defineEmits({
   /**
@@ -96,9 +98,9 @@ const emit = defineEmits({
   },
 });
 const root = ref(null);
-const isSelectable = computed(() => isSelectableInteraction(props.interaction));
+const isSelectable = computed(() => isSelectableInteraction(propsWithDefaults.interaction));
 const rootTag = computed(() => (isSelectable.value ? 'div' : 'ul'));
-const { colorStyle } = useComponentColor(computed(() => props.color));
+const { colorStyle } = useComponentColor(computed(() => propsWithDefaults.color));
 const groupRecords = [];
 
 const FOCUSABLE_SELECTOR = [
@@ -117,13 +119,13 @@ const FOCUSABLE_SELECTOR = [
  * @returns {boolean}
  */
 function isSelected(value) {
-  if (props.interaction === 'multi-select') {
-    return Array.isArray(props.selected)
-      && props.selected.some((selectedValue) => Object.is(selectedValue, value));
+  if (propsWithDefaults.interaction === 'multi-select') {
+    return Array.isArray(propsWithDefaults.selected)
+      && propsWithDefaults.selected.some((selectedValue) => Object.is(selectedValue, value));
   }
 
-  if (props.interaction === 'single-select') {
-    return Object.is(props.selected, value);
+  if (propsWithDefaults.interaction === 'single-select') {
+    return Object.is(propsWithDefaults.selected, value);
   }
 
   return false;
@@ -141,7 +143,7 @@ function requestSelection(value, originalEvent) {
 
   const currentlySelected = isSelected(value);
 
-  if (props.interaction === 'single-select') {
+  if (propsWithDefaults.interaction === 'single-select') {
     if (currentlySelected) {
       return;
     }
@@ -155,8 +157,10 @@ function requestSelection(value, originalEvent) {
     return;
   }
 
-  if (props.interaction === 'multi-select') {
-    const currentValues = Array.isArray(props.selected) ? props.selected : [];
+  if (propsWithDefaults.interaction === 'multi-select') {
+    const currentValues = Array.isArray(propsWithDefaults.selected)
+      ? propsWithDefaults.selected
+      : [];
 
     emit('select', {
       value,
@@ -174,7 +178,7 @@ function requestSelection(value, originalEvent) {
  * @returns {boolean}
  */
 function isGroupExpanded(value) {
-  return props.expanded.some((expandedValue) => Object.is(expandedValue, value));
+  return propsWithDefaults.expanded.some((expandedValue) => Object.is(expandedValue, value));
 }
 
 /**
@@ -191,8 +195,8 @@ function requestGroupExpanded(value, expanded) {
   emit(
     'update:expanded',
     expanded
-      ? [...props.expanded, value]
-      : props.expanded.filter((expandedValue) => !Object.is(expandedValue, value)),
+      ? [...propsWithDefaults.expanded, value]
+      : propsWithDefaults.expanded.filter((expandedValue) => !Object.is(expandedValue, value)),
   );
 }
 
@@ -247,11 +251,11 @@ function isAvailableFocusable(element) {
   }
 
   if (!element.hasAttribute('data-mat-list-primary')
-    && props.interaction !== 'multi-action') {
+    && propsWithDefaults.interaction !== 'multi-action') {
     return false;
   }
 
-  return props.interaction !== 'none';
+  return propsWithDefaults.interaction !== 'none';
 }
 
 /**
@@ -300,9 +304,9 @@ function handleKeyDown(event) {
 }
 
 provide(MAT_LIST_KEY, {
-  interaction: computed(() => props.interaction),
+  interaction: computed(() => propsWithDefaults.interaction),
   isSelectable,
-  variant: computed(() => props.variant),
+  variant: computed(() => propsWithDefaults.variant),
   isGroupExpanded,
   isSelected,
   registerGroupValue,
@@ -319,7 +323,7 @@ watch(root, async () => {
   roving.observe();
 });
 watch(
-  () => props.interaction,
+  () => propsWithDefaults.interaction,
   async () => {
     roving.restore();
     await nextTick();
@@ -327,7 +331,7 @@ watch(
   },
 );
 watch(
-  () => props.selected,
+  () => propsWithDefaults.selected,
   async () => {
     if (!root.value?.contains(document.activeElement)) {
       roving.resetActive();
@@ -346,9 +350,9 @@ watch(
     ref="root"
     v-bind="$attrs"
     class="mat-list"
-    :class="`mat-list--${variant}`"
+    :class="`mat-list--${propsWithDefaults.variant}`"
     :style="colorStyle"
-    :aria-multiselectable="interaction === 'multi-select'
+    :aria-multiselectable="propsWithDefaults.interaction === 'multi-select'
       ? 'true'
       : $attrs['aria-multiselectable']"
     :aria-orientation="isSelectable ? 'vertical' : $attrs['aria-orientation']"

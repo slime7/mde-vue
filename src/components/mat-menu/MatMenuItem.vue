@@ -9,6 +9,7 @@ import MatIcon from '../mat-icon/MatIcon.vue';
 import {
   isPointInMenuSafeTriangle, MAT_MENU_GROUP_KEY, MAT_MENU_ITEM_KEY, MAT_MENU_KEY,
 } from '../menu-context';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatMenuItem',
@@ -29,6 +30,7 @@ const props = defineProps({
     default: false,
   },
 });
+const propsWithDefaults = useMatProps('menuItem', props);
 const emit = defineEmits({
   /**
    * 叶子菜单项被激活时触发，载荷为 `MouseEvent`。
@@ -69,7 +71,7 @@ function cancelSubmenuClose() {
 }
 
 async function openSubmenu({ pointer = false } = {}) {
-  if (!hasSubmenu.value || props.disabled) {
+  if (!hasSubmenu.value || propsWithDefaults.disabled) {
     return;
   }
 
@@ -183,7 +185,7 @@ onBeforeUnmount(() => {
       :aria-controls="hasSubmenu ? submenuId : undefined"
       :aria-expanded="hasSubmenu ? String(submenuOpen) : undefined"
       :aria-haspopup="hasSubmenu ? 'menu' : undefined"
-      :disabled="disabled"
+      :disabled="propsWithDefaults.disabled"
       role="menuitem"
       :use-cursor="matUi.useCursor"
       @click="handleClick"

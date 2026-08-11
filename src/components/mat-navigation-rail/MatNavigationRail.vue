@@ -9,6 +9,7 @@ import MatIcon from '../mat-icon/MatIcon.vue';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import { MAT_NAVIGATION_RAIL_KEY } from './mat-navigation-context';
 import { isValidCssLength, toCssLength } from '../value-utils';
+import { useMatProps } from '../use-mat-props';
 
 /**
  * @param {unknown} value
@@ -218,6 +219,7 @@ const props = defineProps({
     }),
   },
 });
+const propsWithDefaults = useMatProps('navigationRail', props);
 
 const emit = defineEmits({
   /**
@@ -235,13 +237,19 @@ const instance = getCurrentInstance();
 const appContext = inject(MAT_APP_ROOT_KEY, null);
 const rawVNodeProps = instance?.vnode.props ?? {};
 const hasExplicitAttach = Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach');
-const isHorizontal = computed(() => props.orientation === 'horizontal');
-const effectiveExpanded = computed(() => props.expanded);
-const isModal = computed(() => !isHorizontal.value && props.layout === 'modal');
-const isHidden = computed(() => !isHorizontal.value && props.hideOnCollapse && !props.expanded);
-const usesAppRoot = computed(() => props.app && Boolean(appContext) && !hasExplicitAttach);
+const isHorizontal = computed(() => propsWithDefaults.orientation === 'horizontal');
+const effectiveExpanded = computed(() => propsWithDefaults.expanded);
+const isModal = computed(() => (
+  !isHorizontal.value && propsWithDefaults.layout === 'modal'
+));
+const isHidden = computed(() => (
+  !isHorizontal.value && propsWithDefaults.hideOnCollapse && !propsWithDefaults.expanded
+));
+const usesAppRoot = computed(() => (
+  propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach
+));
 const attachTarget = computed(() => {
-  if (!props.app) {
+  if (!propsWithDefaults.app) {
     return null;
   }
 
@@ -249,41 +257,45 @@ const attachTarget = computed(() => {
     return appContext.edgeLayer.value;
   }
 
-  if (typeof props.attach === 'string') {
+  if (typeof propsWithDefaults.attach === 'string') {
     try {
-      return document.querySelector(props.attach);
+      return document.querySelector(propsWithDefaults.attach);
     } catch {
       return null;
     }
   }
 
-  return normalizeAttach(props.attach);
+  return normalizeAttach(propsWithDefaults.attach);
 });
-const menuIcon = computed(() => (props.expanded ? props.closeIcon : props.openIcon));
-const menuLabel = computed(() => (props.expanded ? props.closeLabel : props.openLabel));
+const menuIcon = computed(() => (
+  propsWithDefaults.expanded ? propsWithDefaults.closeIcon : propsWithDefaults.openIcon
+));
+const menuLabel = computed(() => (
+  propsWithDefaults.expanded ? propsWithDefaults.closeLabel : propsWithDefaults.openLabel
+));
 const hostClasses = computed(() => ({
   'mat-navigation-rail-host--vertical': !isHorizontal.value,
   'mat-navigation-rail-host--horizontal': isHorizontal.value,
   'mat-navigation-rail-host--expanded': effectiveExpanded.value,
-  'mat-navigation-rail-host--collapsed': !props.expanded,
-  [`mat-navigation-rail-host--${props.position}`]: true,
+  'mat-navigation-rail-host--collapsed': !propsWithDefaults.expanded,
+  [`mat-navigation-rail-host--${propsWithDefaults.position}`]: true,
   'mat-navigation-rail-host--modal': isModal.value,
   'mat-navigation-rail-host--hidden': isHidden.value,
-  'mat-navigation-rail-host--app': props.app,
+  'mat-navigation-rail-host--app': propsWithDefaults.app,
   'mat-navigation-rail-host--app-root': usesAppRoot.value,
 }));
 const railClasses = computed(() => ({
   'mat-navigation-rail--expanded': effectiveExpanded.value,
-  'mat-navigation-rail--collapsed': !props.expanded,
+  'mat-navigation-rail--collapsed': !propsWithDefaults.expanded,
   'mat-navigation-rail--bar': isHorizontal.value,
-  'mat-navigation-rail--modal': isModal.value && props.expanded,
+  'mat-navigation-rail--modal': isModal.value && propsWithDefaults.expanded,
   'mat-navigation-rail--hidden': isHidden.value,
-  'mat-navigation-rail--app': props.app,
+  'mat-navigation-rail--app': propsWithDefaults.app,
   'mat-navigation-rail--app-root': usesAppRoot.value,
 }));
 
 const expandedWidthStyle = computed(() => {
-  const width = toCssLength(props.width, { property: 'inline-size' });
+  const width = toCssLength(propsWithDefaults.width, { property: 'inline-size' });
 
   if (width === undefined) {
     return undefined;
@@ -292,11 +304,11 @@ const expandedWidthStyle = computed(() => {
   return { '--mat-navigation-rail-expanded-width': width };
 });
 const effectiveBottomPlaceholder = computed(() => {
-  if (!props.app || usesAppRoot.value) {
+  if (!propsWithDefaults.app || usesAppRoot.value) {
     return '0px';
   }
 
-  const css = toCssLength(props.bottomPlaceholder, {
+  const css = toCssLength(propsWithDefaults.bottomPlaceholder, {
     property: 'block-size',
     fallback: '0px',
   });
@@ -348,7 +360,7 @@ async function syncRailMeasurement() {
   edgeRegistration.value = null;
   await nextTick();
 
-  if (!props.app || !hostElement.value) {
+  if (!propsWithDefaults.app || !hostElement.value) {
     return;
   }
 
@@ -359,7 +371,7 @@ async function syncRailMeasurement() {
 
   if (usesAppRoot.value) {
     edgeRegistration.value = appContext.publicContext.registerEdge({
-      edge: isHorizontal.value ? 'bottom' : props.position,
+      edge: isHorizontal.value ? 'bottom' : propsWithDefaults.position,
       element: hostElement.value,
     });
   }
@@ -368,7 +380,7 @@ async function syncRailMeasurement() {
 }
 
 function warnForInvalidAttach() {
-  if (props.app && !usesAppRoot.value && !attachTarget.value) {
+  if (propsWithDefaults.app && !usesAppRoot.value && !attachTarget.value) {
     console.warn('MatNavigationRail: attach 必须指向当前 document 中存在的 HTMLElement');
   }
 }
@@ -378,14 +390,14 @@ function warnForInvalidAttach() {
  * @returns {boolean}
  */
 function isSelected(value) {
-  return value !== undefined && Object.is(props.modelValue, value);
+  return value !== undefined && Object.is(propsWithDefaults.modelValue, value);
 }
 
 /**
  * @param {unknown} value
  */
 function requestSelection(value) {
-  if (value === undefined || Object.is(props.modelValue, value)) {
+  if (value === undefined || Object.is(propsWithDefaults.modelValue, value)) {
     return;
   }
 
@@ -393,7 +405,7 @@ function requestSelection(value) {
 }
 
 function toggleExpanded() {
-  emit('update:expanded', !props.expanded);
+  emit('update:expanded', !propsWithDefaults.expanded);
 }
 
 function requestCollapse() {
@@ -404,7 +416,7 @@ function requestCollapse() {
  * @param {KeyboardEvent} event
  */
 function handleKeydown(event) {
-  if (event.key === 'Escape' && isModal.value && props.expanded) {
+  if (event.key === 'Escape' && isModal.value && propsWithDefaults.expanded) {
     requestCollapse();
   }
 }
@@ -412,8 +424,8 @@ function handleKeydown(event) {
 provide(MAT_NAVIGATION_RAIL_KEY, {
   expanded: effectiveExpanded,
   isSelected,
-  orientation: computed(() => props.orientation),
-  position: computed(() => props.position),
+  orientation: computed(() => propsWithDefaults.orientation),
+  position: computed(() => propsWithDefaults.position),
   requestSelection,
   useCursor: matUi.useCursor,
 });
@@ -431,14 +443,14 @@ onBeforeUnmount(() => {
 });
 
 watch([
-  () => props.app,
-  () => props.attach,
-  () => props.bottomPlaceholder,
-  () => props.expanded,
-  () => props.hideOnCollapse,
-  () => props.layout,
-  () => props.orientation,
-  () => props.width,
+  () => propsWithDefaults.app,
+  () => propsWithDefaults.attach,
+  () => propsWithDefaults.bottomPlaceholder,
+  () => propsWithDefaults.expanded,
+  () => propsWithDefaults.hideOnCollapse,
+  () => propsWithDefaults.layout,
+  () => propsWithDefaults.orientation,
+  () => propsWithDefaults.width,
   usesAppRoot,
 ], () => {
   warnForInvalidAttach();
@@ -448,7 +460,7 @@ watch([
 
 <template>
   <span
-    v-if="app && attachTarget && placeholder"
+    v-if="propsWithDefaults.app && attachTarget && propsWithDefaults.placeholder"
     class="mat-navigation-rail__placeholder"
     :style="placeholderStyle"
     aria-hidden="true"
@@ -456,20 +468,20 @@ watch([
 
   <Teleport
     :to="attachTarget ?? 'body'"
-    :disabled="!app"
+    :disabled="!propsWithDefaults.app"
   >
     <div
-      v-if="!app || attachTarget"
+      v-if="!propsWithDefaults.app || attachTarget"
       ref="hostElement"
       class="mat-navigation-rail-host"
       :class="hostClasses"
       :style="railStyle"
     >
       <button
-        v-if="isModal && expanded"
+        v-if="isModal && propsWithDefaults.expanded"
         class="mat-navigation-rail__scrim"
         type="button"
-        :aria-label="closeLabel"
+        :aria-label="propsWithDefaults.closeLabel"
         @click="requestCollapse"
       />
 
@@ -486,13 +498,13 @@ watch([
           <slot
             v-if="!isHidden"
             name="header"
-            :expanded="expanded"
+            :expanded="propsWithDefaults.expanded"
           />
 
           <MatActionBase
-            v-if="collapsible"
+            v-if="propsWithDefaults.collapsible"
             class="mat-navigation-rail__menu"
-            :aria-expanded="expanded"
+            :aria-expanded="propsWithDefaults.expanded"
             :aria-label="menuLabel"
             :focus-ring="false"
             :use-cursor="matUi.useCursor"
@@ -510,7 +522,7 @@ watch([
           >
             <slot
               name="fab"
-              :expanded="expanded"
+              :expanded="propsWithDefaults.expanded"
             />
           </div>
         </div>
@@ -521,11 +533,11 @@ watch([
         >
           <div
             class="mat-navigation-rail__destinations"
-            :class="`mat-navigation-rail__destinations--${alignment}`"
+            :class="`mat-navigation-rail__destinations--${propsWithDefaults.alignment}`"
           >
             <slot
               :expanded="effectiveExpanded"
-              :orientation="orientation"
+              :orientation="propsWithDefaults.orientation"
             />
           </div>
         </div>
@@ -536,7 +548,7 @@ watch([
         >
           <slot
             name="end"
-            :expanded="expanded"
+            :expanded="propsWithDefaults.expanded"
           />
         </div>
       </nav>

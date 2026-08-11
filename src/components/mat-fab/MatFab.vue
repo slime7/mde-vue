@@ -20,6 +20,7 @@ import {
   isFabColor,
 } from '../fab-props';
 import { getTypographyClass } from '../typography';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatFab',
@@ -121,6 +122,7 @@ const props = defineProps({
     },
   },
 });
+const propsWithDefaults = useMatProps('fab', props);
 
 const emit = defineEmits({
   /**
@@ -148,38 +150,43 @@ const hasLabel = computed(() => {
     return typeof node.children !== 'string' || node.children.trim().length > 0;
   });
 });
-const isIcon = computed(() => typeof props.icon === 'string' && props.icon.trim().length > 0);
+const isIcon = computed(() => typeof propsWithDefaults.icon === 'string'
+  && propsWithDefaults.icon.trim().length > 0);
 const isIconOnly = computed(() => !hasLabel.value);
 const tooltipContent = computed(() => (
-  isIconOnly.value ? (attrs.title ?? props.label) : undefined
+  isIconOnly.value ? (attrs.title ?? propsWithDefaults.label) : undefined
 ));
-const ariaLabel = computed(() => (isIconOnly.value ? props.label : attrs['aria-label']));
+const ariaLabel = computed(() => (
+  isIconOnly.value ? propsWithDefaults.label : attrs['aria-label']
+));
 const iconOpticalSize = computed(() => ({
   small: 24,
   medium: 28,
   large: 36,
-}[props.size]));
+}[propsWithDefaults.size]));
 const typographyClass = computed(() => {
   const [type, size] = {
     small: ['title', 'medium'],
     medium: ['title', 'large'],
     large: ['headline', 'small'],
-  }[props.size];
+  }[propsWithDefaults.size];
 
   return getTypographyClass(type, size);
 });
 const colorStyle = computed(() => ({
-  '--mat-fab-container-color': `var(--mat-sys-color-${props.color})`,
-  '--mat-fab-content-color': `var(--mat-sys-color-on-${props.color})`,
-  '--mat-fab-state-color': `var(--mat-sys-color-on-${props.color})`,
+  '--mat-fab-container-color': `var(--mat-sys-color-${propsWithDefaults.color})`,
+  '--mat-fab-content-color': `var(--mat-sys-color-on-${propsWithDefaults.color})`,
+  '--mat-fab-state-color': `var(--mat-sys-color-on-${propsWithDefaults.color})`,
 }));
-const usesAppRoot = computed(() => props.app && Boolean(appContext));
+const usesAppRoot = computed(() => propsWithDefaults.app && Boolean(appContext));
 const teleportTarget = computed(() => (
   usesAppRoot.value ? appContext.floatingLayer.value : null
 ));
 
 watchEffect(() => {
-  if (isIconOnly.value && (!isIcon.value || !props.label || props.label.trim().length === 0)) {
+  if (isIconOnly.value && (!isIcon.value
+    || !propsWithDefaults.label
+    || propsWithDefaults.label.trim().length === 0)) {
     console.warn('MatFab: 图标模式必须提供非空 label');
   }
 });
@@ -192,7 +199,7 @@ watchEffect(() => {
     v-bind="$attrs"
     class="mat-fab"
     :class="[
-      `mat-fab--size-${size}`,
+      `mat-fab--size-${propsWithDefaults.size}`,
       typographyClass,
       {
         'mat-fab--extended': hasLabel,
@@ -201,9 +208,9 @@ watchEffect(() => {
     ]"
     :style="colorStyle"
     :aria-label="ariaLabel"
-    :disabled="disabled"
+    :disabled="propsWithDefaults.disabled"
     :title="isIconOnly ? undefined : attrs.title"
-    :type="type"
+    :type="propsWithDefaults.type"
     :use-cursor="matUi.useCursor"
     @click="emit('click', $event)"
   >
@@ -216,7 +223,7 @@ watchEffect(() => {
       size="var(--mat-fab-icon-size)"
       aria-hidden="true"
     >
-      {{ icon }}
+      {{ propsWithDefaults.icon }}
     </MatIcon>
 
     <span v-if="hasLabel" class="mat-fab__label">
@@ -237,8 +244,8 @@ watchEffect(() => {
       v-bind="$attrs"
       class="mat-fab"
       :class="[
-        `mat-fab--size-${size}`,
-        `mat-fab--position-${position}`,
+        `mat-fab--size-${propsWithDefaults.size}`,
+        `mat-fab--position-${propsWithDefaults.position}`,
         typographyClass,
         {
           'mat-fab--app-root': true,
@@ -248,9 +255,9 @@ watchEffect(() => {
       ]"
       :style="colorStyle"
       :aria-label="ariaLabel"
-      :disabled="disabled"
+      :disabled="propsWithDefaults.disabled"
       :title="isIconOnly ? undefined : attrs.title"
-      :type="type"
+      :type="propsWithDefaults.type"
       :use-cursor="matUi.useCursor"
       @click="emit('click', $event)"
     >
@@ -263,7 +270,7 @@ watchEffect(() => {
         size="var(--mat-fab-icon-size)"
         aria-hidden="true"
       >
-        {{ icon }}
+        {{ propsWithDefaults.icon }}
       </MatIcon>
 
       <span v-if="hasLabel" class="mat-fab__label">

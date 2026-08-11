@@ -6,6 +6,7 @@ import {
 } from 'vue';
 import MatBtn from '../mat-btn/MatBtn.vue';
 import MatInputBase from '../MatInputBase.vue';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatSearch',
@@ -74,6 +75,7 @@ const props = defineProps({
     default: undefined,
   },
 });
+const propsWithDefaults = useMatProps('search', props);
 const emit = defineEmits({
   /** 输入内容变化时发出新的字符串。 */
   'update:modelValue': (value) => typeof value === 'string',
@@ -96,8 +98,8 @@ const inputAttrs = computed(() => {
 });
 
 function submitSearch() {
-  if (!props.disabled) {
-    emit('search', props.modelValue);
+  if (!propsWithDefaults.disabled) {
+    emit('search', propsWithDefaults.modelValue);
   }
 }
 
@@ -135,9 +137,9 @@ defineExpose({
     <span class="mat-search__leading">
       <slot name="leading">
         <MatBtn
-          :disabled="props.disabled"
+          :disabled="propsWithDefaults.disabled"
           icon="search"
-          :label="props.label"
+          :label="propsWithDefaults.label"
           size="small"
           type="button"
           variant="standard"
@@ -149,13 +151,13 @@ defineExpose({
     <MatInputBase
       ref="inputBase"
       v-bind="inputAttrs"
-      :aria-label="props.label"
+      :aria-label="propsWithDefaults.label"
       control="input"
-      :disabled="props.disabled"
-      :max-length="props.maxLength"
-      :model-value="props.modelValue"
-      :placeholder="props.placeholder"
-      :readonly="props.readonly"
+      :disabled="propsWithDefaults.disabled"
+      :max-length="propsWithDefaults.maxLength"
+      :model-value="propsWithDefaults.modelValue"
+      :placeholder="propsWithDefaults.placeholder"
+      :readonly="propsWithDefaults.readonly"
       type="search"
       @keydown.enter.prevent="submitSearch"
       @update:model-value="emit('update:modelValue', $event)"

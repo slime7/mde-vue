@@ -18,6 +18,7 @@ import {
   registerAppBarTimeline,
 } from './app-bar-timeline';
 import { getTypographyClass } from '../typography';
+import { useMatProps } from '../use-mat-props';
 
 const APP_BAR_VARIANTS = ['search', 'small', 'medium-flexible', 'large-flexible'];
 const APP_BAR_CONTENTS = ['headline', 'image', 'search'];
@@ -99,6 +100,7 @@ const props = defineProps({
     default: undefined,
   },
 });
+const propsWithDefaults = useMatProps('appBar', props);
 
 const attrs = useAttrs();
 const instance = getCurrentInstance();
@@ -110,17 +112,19 @@ const headerElement = ref(null);
 const edgeRegistration = shallowRef(null);
 const timelineName = `--mat-app-bar-${instance?.uid ?? Math.random().toString(36).slice(2)}`;
 const normalizedVariant = computed(() => (
-  APP_BAR_VARIANTS.includes(props.variant) ? props.variant : 'small'
+  APP_BAR_VARIANTS.includes(propsWithDefaults.variant) ? propsWithDefaults.variant : 'small'
 ));
 const normalizedContent = computed(() => {
   if (normalizedVariant.value === 'search') {
     return 'search';
   }
 
-  return APP_BAR_CONTENTS.includes(props.content) ? props.content : 'headline';
+  return APP_BAR_CONTENTS.includes(propsWithDefaults.content)
+    ? propsWithDefaults.content
+    : 'headline';
 });
 const normalizedAlign = computed(() => (
-  APP_BAR_ALIGNMENTS.includes(props.align) ? props.align : 'start'
+  APP_BAR_ALIGNMENTS.includes(propsWithDefaults.align) ? propsWithDefaults.align : 'start'
 ));
 const expandedHeight = computed(() => {
   if (normalizedVariant.value === 'medium-flexible') {
@@ -133,9 +137,11 @@ const expandedHeight = computed(() => {
 
   return 64;
 });
-const usesAppRoot = computed(() => props.app && Boolean(appContext) && !hasExplicitAttach);
+const usesAppRoot = computed(() => (
+  propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach
+));
 const attachTarget = computed(() => {
-  if (!props.app) {
+  if (!propsWithDefaults.app) {
     return document.body;
   }
 
@@ -143,13 +149,14 @@ const attachTarget = computed(() => {
     return appContext.edgeLayer.value;
   }
 
-  if (props.attach instanceof HTMLElement && props.attach.ownerDocument === document) {
-    return props.attach;
+  if (propsWithDefaults.attach instanceof HTMLElement
+    && propsWithDefaults.attach.ownerDocument === document) {
+    return propsWithDefaults.attach;
   }
 
-  if (typeof props.attach === 'string') {
+  if (typeof propsWithDefaults.attach === 'string') {
     try {
-      return document.querySelector(props.attach);
+      return document.querySelector(propsWithDefaults.attach);
     } catch {
       return null;
     }
@@ -160,7 +167,7 @@ const attachTarget = computed(() => {
 const placeholderHeight = computed(() => {
   const flexibleHeight = expandedHeight.value - 64;
 
-  if (!props.app || usesAppRoot.value) {
+  if (!propsWithDefaults.app || usesAppRoot.value) {
     return flexibleHeight;
   }
 
@@ -189,7 +196,7 @@ const primaryTypographyClass = computed(() => {
   return getTypographyClass('title', 'large');
 });
 const hostClass = computed(() => ({
-  'mat-app-bar__host--app': props.app,
+  'mat-app-bar__host--app': propsWithDefaults.app,
   'mat-app-bar__host--app-root': usesAppRoot.value,
 }));
 
@@ -246,7 +253,7 @@ async function syncRegistrations() {
     return;
   }
 
-  const explicitSource = normalizeElement(props.scrollTarget);
+  const explicitSource = normalizeElement(propsWithDefaults.scrollTarget);
   const appRootSource = usesAppRoot.value && appContext.rootElement.value?.dataset.scrollable === 'true'
     ? appContext.contentElement.value
     : null;
@@ -283,17 +290,17 @@ onBeforeUnmount(() => {
 });
 
 watch([
-  () => props.app,
-  () => props.attach,
-  () => props.scrollTarget,
+  () => propsWithDefaults.app,
+  () => propsWithDefaults.attach,
+  () => propsWithDefaults.scrollTarget,
   normalizedVariant,
 ], syncRegistrations);
 </script>
 
 <template>
   <Teleport
-    v-if="!props.app || attachTarget"
-    :disabled="!props.app"
+    v-if="!propsWithDefaults.app || attachTarget"
+    :disabled="!propsWithDefaults.app"
     :to="attachTarget"
   >
     <div ref="hostElement" class="mat-app-bar__host" :class="hostClass">

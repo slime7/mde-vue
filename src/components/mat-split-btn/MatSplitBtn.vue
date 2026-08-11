@@ -5,6 +5,7 @@ import {
 import { MAT_SPLIT_BTN_KEY } from '../button-context';
 import { BUTTON_SIZES, isComponentColor } from '../button-props';
 import useComponentColor from '../use-component-color';
+import { useMatProps } from '../use-mat-props';
 import MatSplitSegment from './MatSplitSegment.vue';
 
 defineOptions({
@@ -91,6 +92,7 @@ const props = defineProps({
     default: undefined,
   },
 });
+const propsWithDefaults = useMatProps('splitBtn', props);
 
 const emit = defineEmits({
   /**
@@ -108,15 +110,15 @@ const emit = defineEmits({
 });
 const root = ref(null);
 const slots = useSlots();
-const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => props.color));
+const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => propsWithDefaults.color));
 
 provide(MAT_SPLIT_BTN_KEY, {
-  color: computed(() => props.color),
-  controls: computed(() => props.controls),
-  disabled: computed(() => props.disabled),
-  expanded: computed(() => props.expanded),
-  size: computed(() => props.size),
-  variant: computed(() => props.variant),
+  color: computed(() => propsWithDefaults.color),
+  controls: computed(() => propsWithDefaults.controls),
+  disabled: computed(() => propsWithDefaults.disabled),
+  expanded: computed(() => propsWithDefaults.expanded),
+  size: computed(() => propsWithDefaults.size),
+  variant: computed(() => propsWithDefaults.variant),
 });
 
 /**
@@ -139,7 +141,7 @@ function handleTrailingClick(event) {
   }
 
   emit('trailing-click', event);
-  emit('update:expanded', !props.expanded);
+  emit('update:expanded', !propsWithDefaults.expanded);
 }
 
 function validateSlots() {
@@ -162,7 +164,7 @@ function validateSlots() {
 
 onMounted(validateSlots);
 watch(
-  () => [props.size, props.variant],
+  () => [propsWithDefaults.size, propsWithDefaults.variant],
   async () => {
     await nextTick();
     validateSlots();
@@ -176,11 +178,11 @@ watch(
     v-bind="$attrs"
     class="mat-split-btn"
     :class="[
-      `mat-split-btn--${variant}`,
-      `mat-split-btn--size-${size}`,
+      `mat-split-btn--${propsWithDefaults.variant}`,
+      `mat-split-btn--size-${propsWithDefaults.size}`,
       {
-        'mat-split-btn--block': block,
-        'mat-split-btn--expanded': expanded,
+        'mat-split-btn--block': propsWithDefaults.block,
+        'mat-split-btn--expanded': propsWithDefaults.expanded,
         'mat-split-btn--explicit-color': hasExplicitColor,
       },
     ]"

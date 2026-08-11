@@ -6,6 +6,7 @@ import { isComponentColor } from '../button-props';
 import MAT_RADIO_GROUP_KEY from '../radio-context';
 import { isSelectionValue } from '../selection-control';
 import useComponentColor from '../use-component-color';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatRadioGroup',
@@ -58,6 +59,7 @@ const props = defineProps({
     validator: isComponentColor,
   },
 });
+const propsWithDefaults = useMatProps('radioGroup', props);
 
 const emit = defineEmits({
   /**
@@ -75,7 +77,7 @@ const emit = defineEmits({
 });
 const attrs = useAttrs();
 const registrations = shallowRef([]);
-const { colorStyle } = useComponentColor(computed(() => props.color));
+const { colorStyle } = useComponentColor(computed(() => propsWithDefaults.color));
 const rootAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([name]) => name !== 'style'),
 ));
@@ -86,7 +88,7 @@ const rootStyle = computed(() => [colorStyle.value, attrs.style]);
  * @returns {boolean}
  */
 function isSelected(value) {
-  return Object.is(props.modelValue, value);
+  return Object.is(propsWithDefaults.modelValue, value);
 }
 
 /**
@@ -155,7 +157,7 @@ function getTabIndex(registration) {
  * @param {Event} originalEvent
  */
 function requestSelection(value, originalEvent) {
-  if (props.disabled || Object.is(props.modelValue, value)) {
+  if (propsWithDefaults.disabled || Object.is(propsWithDefaults.modelValue, value)) {
     return;
   }
 
@@ -186,8 +188,8 @@ function move(registration, direction, originalEvent) {
 }
 
 provide(MAT_RADIO_GROUP_KEY, {
-  color: computed(() => props.color),
-  disabled: computed(() => props.disabled),
+  color: computed(() => propsWithDefaults.color),
+  disabled: computed(() => propsWithDefaults.disabled),
   getTabIndex,
   isSelected,
   move,
@@ -201,12 +203,12 @@ provide(MAT_RADIO_GROUP_KEY, {
   <fieldset
     v-bind="rootAttrs"
     class="mat-radio-group"
-    :aria-disabled="disabled || undefined"
+    :aria-disabled="propsWithDefaults.disabled || undefined"
     :style="rootStyle"
     role="radiogroup"
   >
     <legend class="mat-radio-group__label mat-sys-typescale-title-medium">
-      {{ label }}
+      {{ propsWithDefaults.label }}
     </legend>
     <slot />
   </fieldset>

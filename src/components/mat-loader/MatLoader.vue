@@ -10,6 +10,7 @@ import {
 import { isComponentColor } from '../button-props';
 import useComponentColor from '../use-component-color';
 import { isValidCssLength, normalizeNumber } from '../value-utils';
+import { useMatProps } from '../use-mat-props';
 
 const INDICATOR_GAP_SIZE = 4;
 const LINEAR_WAVE_AMPLITUDE = 3;
@@ -217,25 +218,28 @@ const props = defineProps({
     validator: isComponentColor,
   },
 });
+const propsWithDefaults = useMatProps('loader', props);
 
-const { colorStyle } = useComponentColor(computed(() => props.color));
+const { colorStyle } = useComponentColor(computed(() => propsWithDefaults.color));
 const linearElement = ref(null);
 const linearWidth = ref(INITIAL_LINEAR_WIDTH);
-const waveMorphProgress = ref(props.shape === 'wavy' ? 1 : 0);
+const waveMorphProgress = ref(propsWithDefaults.shape === 'wavy' ? 1 : 0);
 const wavePhase = ref(0);
 const linearMaskId = `mat-loader-linear-mask-${useId()}`;
 let linearResizeObserver;
 let waveAnimationFrame;
 let previousFrameTime;
 
-const resolvedMax = computed(() => (isPositiveNumber(props.max) ? props.max : 1));
-const resolvedThickness = computed(() => (
-  normalizeNumber(props.thickness, { positive: true, fallback: 4 })
+const resolvedMax = computed(() => (
+  isPositiveNumber(propsWithDefaults.max) ? propsWithDefaults.max : 1
 ));
-const isCircular = computed(() => props.variant === 'circular');
-const isWavy = computed(() => props.shape === 'wavy');
+const resolvedThickness = computed(() => (
+  normalizeNumber(propsWithDefaults.thickness, { positive: true, fallback: 4 })
+));
+const isCircular = computed(() => propsWithDefaults.variant === 'circular');
+const isWavy = computed(() => propsWithDefaults.shape === 'wavy');
 const resolvedValue = computed(() => {
-  const value = isFiniteNumber(props.value) ? props.value : 0;
+  const value = isFiniteNumber(propsWithDefaults.value) ? propsWithDefaults.value : 0;
 
   return Math.min(Math.max(value, 0), resolvedMax.value);
 });
@@ -306,7 +310,7 @@ const circularIndeterminateGapProgress = computed(() => Math.min(
   circularGapProgress.value,
 ));
 const circularTrackStyle = computed(() => {
-  if (props.indeterminate) {
+  if (propsWithDefaults.indeterminate) {
     return {};
   }
 
@@ -326,7 +330,7 @@ const circularTrackStyle = computed(() => {
   };
 });
 const circularActiveStyle = computed(() => {
-  if (props.indeterminate) {
+  if (propsWithDefaults.indeterminate) {
     return {};
   }
 
@@ -374,13 +378,13 @@ function updateWaveAnimation(frameTime) {
     waveMorphProgress.value += Math.sign(progressDifference) * progressStep;
   }
 
-  if (elapsed > 0 && props.waveMotion && waveMorphProgress.value > 0) {
+  if (elapsed > 0 && propsWithDefaults.waveMotion && waveMorphProgress.value > 0) {
     wavePhase.value += (elapsed / WAVE_FLOW_DURATION) * Math.PI * 2;
     wavePhase.value %= Math.PI * 2;
   }
 
   const shouldContinueMorphing = waveMorphProgress.value !== targetProgress;
-  const shouldContinueFlowing = props.waveMotion && waveMorphProgress.value > 0;
+  const shouldContinueFlowing = propsWithDefaults.waveMotion && waveMorphProgress.value > 0;
 
   if (shouldContinueMorphing || shouldContinueFlowing) {
     waveAnimationFrame = globalThis.requestAnimationFrame(updateWaveAnimation);
@@ -402,7 +406,7 @@ function requestWaveAnimation() {
 }
 
 watch(isWavy, requestWaveAnimation);
-watch(() => props.waveMotion, requestWaveAnimation);
+watch(() => propsWithDefaults.waveMotion, requestWaveAnimation);
 
 onMounted(() => {
   requestWaveAnimation();
@@ -435,18 +439,18 @@ onBeforeUnmount(() => {
     v-bind="$attrs"
     class="mat-loader"
     :class="[
-      `mat-loader--${variant}`,
-      `mat-loader--${shape}`,
+      `mat-loader--${propsWithDefaults.variant}`,
+      `mat-loader--${propsWithDefaults.shape}`,
       {
-        'mat-loader--indeterminate': indeterminate,
-        'mat-loader--wave-motion': waveMotion,
+        'mat-loader--indeterminate': propsWithDefaults.indeterminate,
+        'mat-loader--wave-motion': propsWithDefaults.waveMotion,
       },
     ]"
     :style="rootStyle"
     role="progressbar"
     aria-valuemin="0"
     :aria-valuemax="resolvedMax"
-    :aria-valuenow="indeterminate ? undefined : resolvedValue"
+    :aria-valuenow="propsWithDefaults.indeterminate ? undefined : resolvedValue"
   >
     <span
       v-if="!isCircular"
@@ -454,7 +458,7 @@ onBeforeUnmount(() => {
       class="mat-loader__linear"
       aria-hidden="true"
     >
-      <template v-if="!indeterminate">
+      <template v-if="!propsWithDefaults.indeterminate">
         <span class="mat-loader__linear-track mat-loader__linear-track--before" />
         <span class="mat-loader__linear-track mat-loader__linear-track--after" />
       </template>
@@ -464,7 +468,7 @@ onBeforeUnmount(() => {
         :width="linearWidth"
         :height="linearSize"
       >
-        <defs v-if="indeterminate">
+        <defs v-if="propsWithDefaults.indeterminate">
           <mask
             :id="linearMaskId"
             maskUnits="userSpaceOnUse"
@@ -496,14 +500,14 @@ onBeforeUnmount(() => {
         </defs>
 
         <path
-          v-if="indeterminate"
+          v-if="propsWithDefaults.indeterminate"
           class="mat-loader__linear-indeterminate-track"
           :d="linearTrackPath"
           pathLength="100"
           :mask="`url(#${linearMaskId})`"
         />
 
-        <template v-if="indeterminate">
+        <template v-if="propsWithDefaults.indeterminate">
           <g class="mat-loader__linear-bar mat-loader__linear-bar--primary">
             <path
               class="mat-loader__linear-active mat-loader__linear-active--primary mat-loader__linear-segment mat-loader__linear-segment--primary"
@@ -529,7 +533,7 @@ onBeforeUnmount(() => {
       </svg>
 
       <span
-        v-if="!indeterminate"
+        v-if="!propsWithDefaults.indeterminate"
         class="mat-loader__linear-stop"
       />
     </span>

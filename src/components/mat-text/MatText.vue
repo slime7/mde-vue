@@ -6,6 +6,7 @@ import {
   isTypographySize,
   isTypographyType,
 } from '../typography';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatText',
@@ -56,16 +57,17 @@ const props = defineProps({
     validator: isHtmlTagName,
   },
 });
+const propsWithDefaults = useMatProps('text', props);
 
 const typographyClass = computed(() => getTypographyClass(
-  props.type,
-  props.size,
-  props.emphasized,
+  propsWithDefaults.type,
+  propsWithDefaults.size,
+  propsWithDefaults.emphasized,
 ));
 </script>
 
 <template>
-  <component :is="as" :class="typographyClass">
+  <component :is="propsWithDefaults.as" :class="typographyClass">
     <slot />
   </component>
 </template>

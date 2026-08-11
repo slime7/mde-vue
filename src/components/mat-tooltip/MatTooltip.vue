@@ -17,7 +17,7 @@ import {
   watch,
 } from 'vue';
 import MatHover from '../mat-hover/MatHover.vue';
-import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
+import { useMatProps } from '../use-mat-props';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import { getTooltipPosition, TOOLTIP_LOCATIONS } from '../tooltip-position';
 import {
@@ -101,7 +101,7 @@ const props = defineProps({
   /**
    * 自动模式的打开延迟，单位为毫秒；无效值按 0 处理。
    *
-   * 省略时继承 createMatUi() 的 tooltip.openDelay，未安装插件时为 0。
+   * 省略时继承 createMatUi() 的 defaults.tooltip.openDelay，未安装插件时为 0。
    *
    * @type {number | string | undefined}
    * @default undefined
@@ -118,10 +118,10 @@ const emit = defineEmits({
    */
   'update:modelValue': (payload) => typeof payload === 'boolean',
 });
+const propsWithDefaults = useMatProps('tooltip', props);
 const attrs = useAttrs();
 const slots = useSlots();
 const instance = getCurrentInstance();
-const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const appContext = inject(MAT_APP_ROOT_KEY, null);
 const activatorHost = ref(null);
 const targetElement = shallowRef(null);
@@ -141,8 +141,8 @@ const tooltipId = computed(() => (
   typeof attrs.id === 'string' ? attrs.id : generatedId
 ));
 const hasContent = computed(() => {
-  if (props.content !== undefined) {
-    return props.content.length > 0;
+  if (propsWithDefaults.content !== undefined) {
+    return propsWithDefaults.content.length > 0;
   }
 
   return Boolean(slots.default);
@@ -220,11 +220,11 @@ function resolveSelector(selector) {
  * @returns {HTMLElement | null}
  */
 function resolveTargetProp() {
-  if (typeof props.target === 'string') {
-    return resolveSelector(props.target);
+  if (typeof propsWithDefaults.target === 'string') {
+    return resolveSelector(propsWithDefaults.target);
   }
 
-  return normalizeElement(props.target);
+  return normalizeElement(propsWithDefaults.target);
 }
 
 /**
@@ -272,11 +272,11 @@ function resolveAttach() {
     return document.body;
   }
 
-  if (typeof props.attach === 'string') {
-    return resolveSelector(props.attach);
+  if (typeof propsWithDefaults.attach === 'string') {
+    return resolveSelector(propsWithDefaults.attach);
   }
 
-  return normalizeElement(props.attach);
+  return normalizeElement(propsWithDefaults.attach);
 }
 
 function hasExplicitAttach() {
@@ -331,7 +331,7 @@ function resolveTopLayerAttach() {
  * @returns {number}
  */
 function getOpenDelay() {
-  const configuredDelay = props.openDelay ?? matUi.tooltip.openDelay;
+  const configuredDelay = propsWithDefaults.openDelay;
 
   return normalizeMs(configuredDelay, 0);
 }
@@ -528,7 +528,7 @@ function updatePosition() {
     },
   ] : getToolbarRects();
   const position = getTooltipPosition({
-    location: props.location,
+    location: propsWithDefaults.location,
     targetRect,
     tooltipRect: tooltipElement.value.getBoundingClientRect(),
     avoidRects: appAvoidRects,
@@ -733,7 +733,7 @@ function updateAutomaticVisibility() {
   leaveTooltipDelayGroup(
     activeDelayGroup,
     delayGroupOwner,
-    matUi.tooltip.skipDelayDuration,
+    propsWithDefaults.skipDelayDuration,
   );
   scheduleClose();
 }
@@ -835,7 +835,7 @@ async function showTooltip() {
   activateTooltipDelayGroup(activeDelayGroup, delayGroupOwner);
   teleportTarget.value = attach;
   isAppRootAttached.value = attach === appContext?.freeLayer.value;
-  appliedLocation.value = props.location;
+  appliedLocation.value = propsWithDefaults.location;
   positionStyle.value = { left: '0px', top: '0px' };
   isPositioned.value = false;
   phase.value = 'opening';
@@ -865,7 +865,7 @@ onMounted(async () => {
 
   syncTargetElement({ warn: false });
 
-  if (isControlled && props.modelValue) {
+  if (isControlled && propsWithDefaults.modelValue) {
     showTooltip();
   }
 });
@@ -884,7 +884,7 @@ onActivated(() => {
   active = true;
   syncTargetElement({ warn: false });
 
-  if (isControlled && props.modelValue) {
+  if (isControlled && propsWithDefaults.modelValue) {
     showTooltip();
   }
 });
@@ -904,7 +904,7 @@ onBeforeUnmount(() => {
     hideTooltip({ immediate: true });
   }
 });
-watch(() => props.modelValue, (open) => {
+watch(() => propsWithDefaults.modelValue, (open) => {
   if (!mounted || !active || !isControlled) {
     return;
   }
@@ -918,7 +918,7 @@ watch(() => props.modelValue, (open) => {
   suppressed.value = false;
   hideTooltip();
 });
-watch([() => props.content, () => props.target], async () => {
+watch([() => propsWithDefaults.content, () => propsWithDefaults.target], async () => {
   await nextTick();
   const previousTarget = targetElement.value;
 
@@ -933,7 +933,7 @@ watch([() => props.content, () => props.target], async () => {
     requestClose();
   }
 });
-watch(() => props.attach, async () => {
+watch(() => propsWithDefaults.attach, async () => {
   if (!isDisplayed.value) {
     return;
   }
@@ -951,7 +951,7 @@ watch(() => props.attach, async () => {
   await nextTick();
   schedulePositionUpdate();
 });
-watch(() => props.location, () => {
+watch(() => propsWithDefaults.location, () => {
   if (isDisplayed.value) {
     schedulePositionUpdate();
   }
@@ -997,8 +997,8 @@ if (appContext) {
       :style="[positionStyle, $attrs.style]"
       role="tooltip"
     >
-      <template v-if="content !== undefined">
-        {{ content }}
+      <template v-if="propsWithDefaults.content !== undefined">
+        {{ propsWithDefaults.content }}
       </template>
       <slot v-else />
     </span>

@@ -1,5 +1,6 @@
 <script setup>
 import MatSheetBase from '../MatSheetBase.vue';
+import { useMatProps } from '../use-mat-props';
 import { isValidCssLength } from '../value-utils';
 
 defineOptions({
@@ -189,6 +190,7 @@ const props = defineProps({
     default: undefined,
   },
 });
+const propsWithDefaults = useMatProps('bottomSheet', props);
 
 const emit = defineEmits({
   /**
@@ -212,7 +214,7 @@ const emit = defineEmits({
 
 <template>
   <MatSheetBase
-    v-bind="{ ...props, ...$attrs }"
+    v-bind="{ ...propsWithDefaults, ...$attrs }"
     component-name="MatBottomSheet"
     direction="bottom"
     @update:model-value="emit('update:modelValue', $event)"

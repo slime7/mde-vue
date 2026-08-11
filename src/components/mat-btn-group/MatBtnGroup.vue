@@ -7,6 +7,7 @@ import {
   BUTTON_SHAPES, BUTTON_SIZES, isComponentColor,
 } from '../button-props';
 import useComponentColor from '../use-component-color';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatBtnGroup',
@@ -128,6 +129,7 @@ const props = defineProps({
     default: false,
   },
 });
+const propsWithDefaults = useMatProps('btnGroup', props);
 
 const emit = defineEmits({
   /**
@@ -152,20 +154,20 @@ let cleanupTimer;
 let activeTransitionDuration = FALLBACK_WIDTH_TRANSITION_DURATION;
 let restoreReady = true;
 let restoreRequested = false;
-const { colorStyle } = useComponentColor(computed(() => props.color));
+const { colorStyle } = useComponentColor(computed(() => propsWithDefaults.color));
 
 /**
  * @param {unknown} value
  * @returns {boolean}
  */
 function isSelected(value) {
-  if (props.selection === 'multiple') {
-    return Array.isArray(props.selected)
-      && props.selected.some((selectedValue) => Object.is(selectedValue, value));
+  if (propsWithDefaults.selection === 'multiple') {
+    return Array.isArray(propsWithDefaults.selected)
+      && propsWithDefaults.selected.some((selectedValue) => Object.is(selectedValue, value));
   }
 
-  if (props.selection === 'single') {
-    return Object.is(props.selected, value);
+  if (propsWithDefaults.selection === 'single') {
+    return Object.is(propsWithDefaults.selected, value);
   }
 
   return false;
@@ -183,8 +185,8 @@ function requestSelection(value, originalEvent) {
 
   const currentlySelected = isSelected(value);
 
-  if (props.selection === 'single') {
-    if (currentlySelected && props.required) {
+  if (propsWithDefaults.selection === 'single') {
+    if (currentlySelected && propsWithDefaults.required) {
       return;
     }
 
@@ -197,10 +199,10 @@ function requestSelection(value, originalEvent) {
     return;
   }
 
-  if (props.selection === 'multiple') {
-    const currentValues = Array.isArray(props.selected) ? props.selected : [];
+  if (propsWithDefaults.selection === 'multiple') {
+    const currentValues = Array.isArray(propsWithDefaults.selected) ? propsWithDefaults.selected : [];
 
-    if (currentlySelected && props.required && currentValues.length === 1) {
+    if (currentlySelected && propsWithDefaults.required && currentValues.length === 1) {
       return;
     }
 
@@ -216,14 +218,14 @@ function requestSelection(value, originalEvent) {
 }
 
 provide(MAT_BTN_GROUP_KEY, {
-  color: computed(() => props.color),
-  disabled: computed(() => props.disabled),
+  color: computed(() => propsWithDefaults.color),
+  disabled: computed(() => propsWithDefaults.disabled),
   isSelected,
   requestSelection,
-  selection: computed(() => props.selection),
-  shape: computed(() => props.shape),
-  size: computed(() => props.size),
-  variant: computed(() => props.variant),
+  selection: computed(() => propsWithDefaults.selection),
+  shape: computed(() => propsWithDefaults.shape),
+  size: computed(() => propsWithDefaults.size),
+  variant: computed(() => propsWithDefaults.variant),
 });
 
 /**
@@ -385,7 +387,7 @@ function startRestoreThreshold(button) {
  * @param {HTMLButtonElement} button
  */
 function expandButton(button) {
-  if (props.variant !== 'standard' || button.disabled || pressedButton.value === button) {
+  if (propsWithDefaults.variant !== 'standard' || button.disabled || pressedButton.value === button) {
     return;
   }
 
@@ -496,11 +498,11 @@ async function handleKeyDown(event) {
 }
 
 function validateConnectedChildren() {
-  if (props.variant !== 'connected' || !root.value) {
+  if (propsWithDefaults.variant !== 'connected' || !root.value) {
     return;
   }
 
-  if (props.selection === 'none') {
+  if (propsWithDefaults.selection === 'none') {
     console.warn('MatBtnGroup: connected 形态应配合 single 或 multiple 选择模式使用');
   }
 
@@ -533,7 +535,7 @@ function validateConnectedChildren() {
 onMounted(validateConnectedChildren);
 onBeforeUnmount(finishPressedButtonRestore);
 watch(
-  () => [props.variant, props.selection],
+  () => [propsWithDefaults.variant, propsWithDefaults.selection],
   async () => {
     finishPressedButtonRestore();
     await nextTick();
@@ -548,12 +550,12 @@ watch(
     v-bind="$attrs"
     class="mat-btn-group"
     :class="[
-      `mat-btn-group--${variant}`,
-      `mat-btn-group--size-${size}`,
-      `mat-btn-group--shape-${shape}`,
+      `mat-btn-group--${propsWithDefaults.variant}`,
+      `mat-btn-group--size-${propsWithDefaults.size}`,
+      `mat-btn-group--shape-${propsWithDefaults.shape}`,
       {
-        'mat-btn-group--block': block,
-        'mat-btn-group--full-width': variant === 'connected' && fullWidth,
+        'mat-btn-group--block': propsWithDefaults.block,
+        'mat-btn-group--full-width': propsWithDefaults.variant === 'connected' && propsWithDefaults.fullWidth,
       },
     ]"
     :style="colorStyle"

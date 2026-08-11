@@ -5,6 +5,7 @@ import MatActionBase from '../MatActionBase.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
 import { getTypographyClass } from '../typography';
 import { MAT_NAVIGATION_RAIL_KEY } from './mat-navigation-context';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatNavigationRailItem',
@@ -53,6 +54,7 @@ const props = defineProps({
     default: false,
   },
 });
+const propsWithDefaults = useMatProps('navigationRailItem', props);
 
 const emit = defineEmits({
   /**
@@ -67,15 +69,15 @@ const expanded = computed(() => navigation?.expanded.value ?? false);
 const isHorizontal = computed(() => navigation?.orientation.value === 'horizontal');
 const position = computed(() => navigation?.position.value ?? 'start');
 const horizontalContent = computed(() => expanded.value);
-const selected = computed(() => navigation?.isSelected(props.value) ?? false);
-const hasIcon = computed(() => Boolean(props.icon || slots.icon));
+const selected = computed(() => navigation?.isSelected(propsWithDefaults.value) ?? false);
+const hasIcon = computed(() => Boolean(propsWithDefaults.icon || slots.icon));
 const typographyClass = computed(() => getTypographyClass(
   'label',
   expanded.value && !isHorizontal.value ? 'large' : 'medium',
 ));
 const itemClasses = computed(() => ({
   'mat-navigation-rail-item--selected': selected.value,
-  'mat-navigation-rail-item--disabled': props.disabled,
+  'mat-navigation-rail-item--disabled': propsWithDefaults.disabled,
   'mat-navigation-rail-item--expanded': expanded.value,
   'mat-navigation-rail-item--collapsed': !expanded.value,
   'mat-navigation-rail-item--horizontal': isHorizontal.value,
@@ -86,8 +88,8 @@ const itemClasses = computed(() => ({
  * @param {MouseEvent} event
  */
 function handleClick(event) {
-  if (!props.disabled) {
-    navigation?.requestSelection(props.value);
+  if (!propsWithDefaults.disabled) {
+    navigation?.requestSelection(propsWithDefaults.value);
   }
 
   emit('click', event);
@@ -100,9 +102,9 @@ function handleClick(event) {
     class="mat-navigation-rail-item"
     :class="itemClasses"
     :aria-current="selected ? 'page' : undefined"
-    :disabled="disabled"
+    :disabled="propsWithDefaults.disabled"
     :focus-ring="false"
-    :href="href"
+    :href="propsWithDefaults.href"
     :use-cursor="matUi.useCursor"
     @click="handleClick"
   >
@@ -117,7 +119,7 @@ function handleClick(event) {
         <MatIcon
           v-else-if="hasIcon"
           :fill="selected ? 1 : 0"
-          :icon="icon"
+          :icon="propsWithDefaults.icon"
           class="mat-navigation-rail-item__icon"
           aria-hidden="true"
         />

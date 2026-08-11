@@ -2,6 +2,7 @@
 import { computed, provide } from 'vue';
 import { isSelectionValue } from '../selection-control';
 import MatScrollArea from '../mat-scroll-area/MatScrollArea.vue';
+import { useMatProps } from '../use-mat-props';
 import MAT_CHIP_SET_KEY from './chip-context';
 
 defineOptions({ name: 'MatChipSet' });
@@ -49,6 +50,7 @@ const props = defineProps({
     },
   },
 });
+const propsWithDefaults = useMatProps('chipSet', props);
 
 const emit = defineEmits({
   /**
@@ -60,20 +62,20 @@ const emit = defineEmits({
       || (Array.isArray(value) && value.every(isSelectionValue));
   },
 });
-const selection = computed(() => props.selection);
+const selectionState = computed(() => propsWithDefaults.selection);
 
 /**
  * @param {string | number | boolean} value
  * @returns {boolean}
  */
 function isSelected(value) {
-  if (props.selection === 'multiple') {
-    return Array.isArray(props.modelValue)
-      && props.modelValue.some((item) => Object.is(item, value));
+  if (propsWithDefaults.selection === 'multiple') {
+    return Array.isArray(propsWithDefaults.modelValue)
+      && propsWithDefaults.modelValue.some((item) => Object.is(item, value));
   }
 
-  if (props.selection === 'single') {
-    return Object.is(props.modelValue, value);
+  if (propsWithDefaults.selection === 'single') {
+    return Object.is(propsWithDefaults.modelValue, value);
   }
 
   return false;
@@ -86,13 +88,15 @@ function isSelected(value) {
 function requestSelection(value) {
   const currentlySelected = isSelected(value);
 
-  if (props.selection === 'single') {
+  if (propsWithDefaults.selection === 'single') {
     emit('update:modelValue', currentlySelected ? null : value);
     return;
   }
 
-  if (props.selection === 'multiple') {
-    const currentValues = Array.isArray(props.modelValue) ? props.modelValue : [];
+  if (propsWithDefaults.selection === 'multiple') {
+    const currentValues = Array.isArray(propsWithDefaults.modelValue)
+      ? propsWithDefaults.modelValue
+      : [];
 
     emit(
       'update:modelValue',
@@ -106,18 +110,18 @@ function requestSelection(value) {
 provide(MAT_CHIP_SET_KEY, {
   isSelected,
   requestSelection,
-  selection,
+  selection: selectionState,
 });
 </script>
 
 <template>
   <div
     class="mat-chip-set"
-    :class="`mat-chip-set--${layout}`"
+    :class="`mat-chip-set--${propsWithDefaults.layout}`"
     role="group"
   >
     <MatScrollArea
-      v-if="layout === 'scroll'"
+      v-if="propsWithDefaults.layout === 'scroll'"
       class="mat-chip-set__scroll-area"
       orientation="horizontal"
       bar-width="hidden"

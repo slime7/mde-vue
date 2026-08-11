@@ -3,6 +3,7 @@ import {
   computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowReactive, watch,
 } from 'vue';
 import { MAT_PANES_BREAKPOINTS, MAT_PANES_KEY } from '../panes-context';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatPanes',
@@ -38,6 +39,7 @@ const props = defineProps({
     default: true,
   },
 });
+const propsWithDefaults = useMatProps('panes', props);
 
 const emit = defineEmits({
   /**
@@ -84,7 +86,7 @@ const normalizedWeights = computed(() => {
   const result = {};
 
   panes.forEach((pane) => {
-    const value = props.sizes?.[pane.id];
+    const value = propsWithDefaults.sizes?.[pane.id];
 
     result[pane.id] = typeof value === 'number'
       && Number.isFinite(value)
@@ -199,7 +201,7 @@ function getPaneStyle(id) {
  * @returns {boolean}
  */
 function isHandleVisible(id) {
-  return props.resizable && getBoundary(id) !== null;
+  return propsWithDefaults.resizable && getBoundary(id) !== null;
 }
 
 /**
@@ -330,7 +332,9 @@ function getBoundaryMetrics(id) {
  * @param {PointerEvent} event
  */
 function handlePointerDown(id, event) {
-  if (!props.resizable || dragState || event.button !== undefined && event.button !== 0) {
+  if (!propsWithDefaults.resizable
+    || dragState
+    || event.button !== undefined && event.button !== 0) {
     return;
   }
 
@@ -417,7 +421,7 @@ function finishPointerInteraction(id, event, shouldCommit) {
 function handleKeyDown(id, event) {
   const boundary = getBoundary(id);
 
-  if (!boundary || !props.resizable) {
+  if (!boundary || !propsWithDefaults.resizable) {
     return;
   }
 
@@ -496,7 +500,7 @@ function validateSizes() {
 
     ids.add(pane.id);
 
-    if (!(pane.id in props.sizes)) {
+    if (!(pane.id in propsWithDefaults.sizes)) {
       console.warn(`MatPanes: sizes 缺少 Pane ${pane.id} 的权重`);
     }
   });
@@ -644,7 +648,7 @@ watch(
   { flush: 'post', immediate: true },
 );
 watch(
-  () => props.sizes,
+  () => propsWithDefaults.sizes,
   () => {
     previewWeights.value = null;
   },

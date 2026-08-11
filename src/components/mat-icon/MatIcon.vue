@@ -12,6 +12,7 @@ import {
   isWeight,
 } from '../icon-props';
 import useComponentColor from '../use-component-color';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatIcon',
@@ -140,40 +141,43 @@ const props = defineProps({
     default: undefined,
   },
 });
+const propsWithDefaults = useMatProps('icon', props);
 
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
-const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => props.color));
-const effectiveIconClass = computed(() => props.iconClass ?? matUi.iconClass);
-const hasIcon = computed(() => props.icon !== undefined);
-const resolvedSize = computed(() => ICON_SIZES[props.size]?.fontSize ?? props.size);
-const resolvedOpticalSize = computed(() => props.opticalSize
-  ?? ICON_SIZES[props.size]?.opticalSize
+const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => propsWithDefaults.color));
+const effectiveIconClass = computed(() => propsWithDefaults.iconClass ?? matUi.iconClass);
+const hasIcon = computed(() => propsWithDefaults.icon !== undefined);
+const resolvedSize = computed(() => (
+  ICON_SIZES[propsWithDefaults.size]?.fontSize ?? propsWithDefaults.size
+));
+const resolvedOpticalSize = computed(() => propsWithDefaults.opticalSize
+  ?? ICON_SIZES[propsWithDefaults.size]?.opticalSize
   ?? 24);
 const rootStyle = computed(() => ({
   ...colorStyle.value,
   '--mat-icon-size': resolvedSize.value,
-  color: props.fontColor
+  color: propsWithDefaults.fontColor
     ?? (hasExplicitColor.value ? 'var(--mat-accent-color)' : 'currentColor'),
-  fontVariationSettings: `'FILL' ${props.fill}, 'wght' ${props.weight}, 'GRAD' ${props.grade}, 'opsz' ${resolvedOpticalSize.value}`,
+  fontVariationSettings: `'FILL' ${propsWithDefaults.fill}, 'wght' ${propsWithDefaults.weight}, 'GRAD' ${propsWithDefaults.grade}, 'opsz' ${resolvedOpticalSize.value}`,
 }));
 </script>
 
 <template>
   <component
-    :is="as"
+    :is="propsWithDefaults.as"
     v-bind="$attrs"
     class="mat-icon"
     :class="effectiveIconClass"
     :style="rootStyle"
   >
     <img
-      v-if="src !== undefined"
+      v-if="propsWithDefaults.src !== undefined"
       class="mat-icon__image"
-      :src="src"
+      :src="propsWithDefaults.src"
       alt=""
     >
     <template v-else-if="hasIcon">
-      {{ icon }}
+      {{ propsWithDefaults.icon }}
     </template>
     <slot v-else />
   </component>

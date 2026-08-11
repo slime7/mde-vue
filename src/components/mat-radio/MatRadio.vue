@@ -6,6 +6,7 @@ import MatSelectionControlBase from '../MatSelectionControlBase.vue';
 import { isComponentColor } from '../button-props';
 import MAT_RADIO_GROUP_KEY from '../radio-context';
 import { isSelectionValue } from '../selection-control';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatRadio',
@@ -59,6 +60,7 @@ const props = defineProps({
     validator: isComponentColor,
   },
 });
+const propsWithDefaults = useMatProps('radio', props);
 
 const emit = defineEmits({
   /**
@@ -77,11 +79,15 @@ const emit = defineEmits({
 const instance = getCurrentInstance();
 const group = inject(MAT_RADIO_GROUP_KEY, null);
 const base = ref(null);
-const value = computed(() => props.value);
-const effectiveDisabled = computed(() => props.disabled || Boolean(group?.disabled.value));
-const effectiveColor = computed(() => props.color ?? group?.color.value);
+const radioValue = computed(() => propsWithDefaults.value);
+const effectiveDisabled = computed(() => (
+  propsWithDefaults.disabled || Boolean(group?.disabled.value)
+));
+const effectiveColor = computed(() => propsWithDefaults.color ?? group?.color.value);
 const checked = computed(() => (
-  group ? group.isSelected(props.value) : Object.is(props.modelValue, props.value)
+  group
+    ? group.isSelected(propsWithDefaults.value)
+    : Object.is(propsWithDefaults.modelValue, propsWithDefaults.value)
 ));
 
 /**
@@ -93,9 +99,9 @@ function activate(originalEvent) {
   }
 
   if (group) {
-    group.requestSelection(props.value, originalEvent);
+    group.requestSelection(propsWithDefaults.value, originalEvent);
   } else {
-    emit('update:modelValue', props.value);
+    emit('update:modelValue', propsWithDefaults.value);
   }
 
   emit('change', originalEvent);
@@ -110,7 +116,7 @@ const registration = {
   getInput() {
     return base.value?.getInput() ?? null;
   },
-  value,
+  value: radioValue,
 };
 const tabIndex = computed(() => (
   group ? group.getTabIndex(registration) : undefined
@@ -124,7 +130,7 @@ onMounted(() => {
   const vnodeProps = instance?.vnode.props ?? {};
 
   if (
-    props.modelValue !== undefined
+    propsWithDefaults.modelValue !== undefined
     || Object.hasOwn(vnodeProps, 'onUpdate:modelValue')
   ) {
     console.warn('MatRadio: 位于 MatRadioGroup 中时，子级 modelValue 和 v-model 会被忽略');
@@ -163,7 +169,7 @@ function handleKeydown(event) {
     :color="effectiveColor"
     :disabled="effectiveDisabled"
     input-type="radio"
-    :input-value="value"
+    :input-value="radioValue"
     label-name="MatRadio"
     :tabindex="tabIndex"
     @change="activate"

@@ -1,6 +1,7 @@
 <script setup>
 import { computed, useAttrs } from 'vue';
 import { isValidCssLength, toCssLength, toCssValue } from '../value-utils';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatImage',
@@ -92,6 +93,7 @@ const props = defineProps({
     default: undefined,
   },
 });
+const propsWithDefaults = useMatProps('image', props);
 
 const attrs = useAttrs();
 const rootAttrs = computed(() => ({
@@ -102,30 +104,30 @@ const imgAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([name]) => !['class', 'style'].includes(name)),
 ));
 const rootStyle = computed(() => ({
-  aspectRatio: toCssValue(props.aspectRatio, {
+  aspectRatio: toCssValue(propsWithDefaults.aspectRatio, {
     property: 'aspect-ratio',
     positive: true,
   }),
-  borderRadius: props.radius === undefined
+  borderRadius: propsWithDefaults.radius === undefined
     ? 'var(--mat-sys-shape-corner-extra-large)'
-    : toCssLength(props.radius, {
+    : toCssLength(propsWithDefaults.radius, {
       property: 'border-radius',
       fallback: 'var(--mat-sys-shape-corner-extra-large)',
     }),
-  outline: props.outline ? '1px solid var(--mat-sys-color-outline)' : undefined,
+  outline: propsWithDefaults.outline ? '1px solid var(--mat-sys-color-outline)' : undefined,
 }));
 const imgStyleValue = computed(() => {
-  const baseStyle = { objectFit: props.fit };
+  const baseStyle = { objectFit: propsWithDefaults.fit };
 
-  if (typeof props.imgStyle === 'string') {
-    return [baseStyle, props.imgStyle];
+  if (typeof propsWithDefaults.imgStyle === 'string') {
+    return [baseStyle, propsWithDefaults.imgStyle];
   }
 
-  if (Array.isArray(props.imgStyle)) {
-    return [baseStyle, ...props.imgStyle];
+  if (Array.isArray(propsWithDefaults.imgStyle)) {
+    return [baseStyle, ...propsWithDefaults.imgStyle];
   }
 
-  return { ...baseStyle, ...props.imgStyle };
+  return { ...baseStyle, ...propsWithDefaults.imgStyle };
 });
 </script>
 
@@ -138,9 +140,9 @@ const imgStyleValue = computed(() => {
     <img
       v-bind="imgAttrs"
       class="mat-image__img"
-      :class="props.imgClass"
+      :class="propsWithDefaults.imgClass"
       :style="imgStyleValue"
-      :src="props.src"
+      :src="propsWithDefaults.src"
     >
   </div>
 </template>

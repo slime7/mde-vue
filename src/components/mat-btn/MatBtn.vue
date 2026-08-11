@@ -12,6 +12,7 @@ import {
   isComponentColor,
 } from '../button-props';
 import useButton from '../use-button';
+import { useMatProps } from '../use-mat-props';
 import { getTypographyClass } from '../typography';
 
 defineOptions({
@@ -202,6 +203,7 @@ const props = defineProps({
     },
   },
 });
+const propsWithDefaults = useMatProps('btn', props);
 
 const emit = defineEmits({
   /**
@@ -227,14 +229,14 @@ const {
   hasExplicitColor,
   split,
   useCursor,
-} = useButton(props, emit);
+} = useButton(propsWithDefaults, emit);
 const isToggle = computed(() => effectiveToggle.value && effectiveVariant.value !== 'text');
 const isSelected = computed(() => isToggle.value && effectiveSelected.value);
-const isIcon = computed(() => props.icon === true
-  || (typeof props.icon === 'string' && props.icon.trim().length > 0));
+const isIcon = computed(() => propsWithDefaults.icon === true
+  || (typeof propsWithDefaults.icon === 'string' && propsWithDefaults.icon.trim().length > 0));
 const iconFill = computed(() => {
-  if (props.fill !== undefined) {
-    return props.fill;
+  if (propsWithDefaults.fill !== undefined) {
+    return propsWithDefaults.fill;
   }
 
   return isSelected.value ? 1 : 0;
@@ -274,24 +276,24 @@ function getSlotText(nodes) {
 }
 
 const defaultSlotIconText = computed(() => {
-  if (props.icon !== true) {
+  if (propsWithDefaults.icon !== true) {
     return '';
   }
 
   return getSlotText(slots.default?.() ?? []);
 });
 const iconText = computed(() => (
-  typeof props.icon === 'string' ? props.icon.trim() : defaultSlotIconText.value
+  typeof propsWithDefaults.icon === 'string' ? propsWithDefaults.icon.trim() : defaultSlotIconText.value
 ));
-const accessibleLabel = computed(() => $attrs['aria-label'] ?? props.label);
+const accessibleLabel = computed(() => $attrs['aria-label'] ?? propsWithDefaults.label);
 const tooltipContent = computed(() => (
-  isIcon.value ? ($attrs.title ?? props.label) : undefined
+  isIcon.value ? ($attrs.title ?? propsWithDefaults.label) : undefined
 ));
 const hasPrefix = computed(() => !isIcon.value && (
-  props.prefix !== undefined || Boolean(slots.prefix)
+  propsWithDefaults.prefix !== undefined || Boolean(slots.prefix)
 ));
 const hasSuffix = computed(() => !isIcon.value && (
-  props.suffix !== undefined || Boolean(slots.suffix)
+  propsWithDefaults.suffix !== undefined || Boolean(slots.suffix)
 ));
 const hasSelectedLabel = computed(() => isSelected.value && Boolean(slots.selected));
 const iconOpticalSize = computed(() => ({
@@ -313,12 +315,12 @@ const typographyClass = computed(() => {
   return getTypographyClass(type, size, true);
 });
 onMounted(() => {
-  if (props.icon === true && !defaultSlotIconText.value) {
+  if (propsWithDefaults.icon === true && !defaultSlotIconText.value) {
     console.warn('MatBtn: icon=true 必须在默认 Slot 提供非空 Material Symbols 文本');
   }
 });
 watchEffect(() => {
-  if (props.toggle && props.variant === 'text') {
+  if (propsWithDefaults.toggle && propsWithDefaults.variant === 'text') {
     console.warn('MatBtn: text 形态不支持 toggle，当前按普通文本按钮处理');
   }
 
@@ -341,7 +343,7 @@ watchEffect(() => {
       {
         'mat-button--explicit-color': hasExplicitColor,
         'mat-btn--icon': isIcon,
-        [`mat-btn--width-${width}`]: isIcon,
+        [`mat-btn--width-${propsWithDefaults.width}`]: isIcon,
         'mat-btn--toggle': isToggle,
         'mat-btn--selected': isSelected,
         'mat-btn--split-leading': split?.role === 'leading',
@@ -353,10 +355,10 @@ watchEffect(() => {
     :aria-expanded="split?.role === 'trailing' ? split.expanded.value : undefined"
     :aria-haspopup="split?.role === 'trailing' ? 'menu' : undefined"
     :aria-pressed="isToggle ? isSelected : undefined"
-    :block="block"
+    :block="propsWithDefaults.block"
     :disabled="effectiveDisabled"
     :title="isIcon ? undefined : $attrs.title"
-    :type="type"
+    :type="propsWithDefaults.type"
     :use-cursor="useCursor"
     @click="handleClick"
   >
@@ -381,8 +383,8 @@ watchEffect(() => {
       size="var(--mat-btn-icon-size)"
       aria-hidden="true"
     >
-      <template v-if="prefix !== undefined">
-        {{ prefix }}
+      <template v-if="propsWithDefaults.prefix !== undefined">
+        {{ propsWithDefaults.prefix }}
       </template>
       <slot v-else name="prefix" />
     </MatIcon>
@@ -401,8 +403,8 @@ watchEffect(() => {
       size="var(--mat-btn-icon-size)"
       aria-hidden="true"
     >
-      <template v-if="suffix !== undefined">
-        {{ suffix }}
+      <template v-if="propsWithDefaults.suffix !== undefined">
+        {{ propsWithDefaults.suffix }}
       </template>
       <slot v-else name="suffix" />
     </MatIcon>

@@ -23,6 +23,7 @@ import {
   resolveSliderStep,
 } from '../slider-utils';
 import useComponentColor from '../use-component-color';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatSlider',
@@ -175,6 +176,7 @@ const props = defineProps({
     default: false,
   },
 });
+const propsWithDefaults = useMatProps('slider', props);
 
 const emit = defineEmits({
   /**
@@ -207,12 +209,12 @@ const dragValue = ref(undefined);
 const dragChanged = ref(false);
 const isFocused = ref(false);
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
-const { colorStyle } = useComponentColor(computed(() => props.color));
+const { colorStyle } = useComponentColor(computed(() => propsWithDefaults.color));
 
-const bounds = computed(() => resolveSliderBounds(props.min, props.max));
-const resolvedStep = computed(() => resolveSliderStep(props.step));
+const bounds = computed(() => resolveSliderBounds(propsWithDefaults.min, propsWithDefaults.max));
+const resolvedStep = computed(() => resolveSliderStep(propsWithDefaults.step));
 const normalizedValue = computed(() => normalizeSliderValue(
-  props.modelValue,
+  propsWithDefaults.modelValue,
   bounds.value,
   resolvedStep.value,
 ));
@@ -220,12 +222,12 @@ const displayedValue = computed(() => (
   dragging.value ? dragValue.value : normalizedValue.value
 ));
 const centerValue = computed(() => resolveSliderCenter(
-  props.center,
+  propsWithDefaults.center,
   bounds.value,
   resolvedStep.value,
 ));
 const trackOriginValue = computed(() => (
-  props.variant === 'centered' ? centerValue.value : bounds.value.min
+  propsWithDefaults.variant === 'centered' ? centerValue.value : bounds.value.min
 ));
 const valuePosition = computed(() => getSliderPercentage(displayedValue.value, bounds.value));
 const centerPosition = computed(() => getSliderPercentage(
@@ -234,7 +236,7 @@ const centerPosition = computed(() => getSliderPercentage(
 ));
 const formattedValuePosition = computed(() => getSliderVisualPosition(valuePosition.value));
 const formattedCenterPosition = computed(() => (
-  props.variant === 'standard'
+  propsWithDefaults.variant === 'standard'
     ? '0%'
     : getSliderVisualPosition(centerPosition.value)
 ));
@@ -279,23 +281,23 @@ const inactiveAfterSize = computed(() => {
   return `max(0px, calc(100% - ${formattedValuePosition.value} - var(--mat-slider-handle-track-gap)))`;
 });
 const stopValues = computed(() => {
-  if (props.showStopIndicator) {
+  if (propsWithDefaults.showStopIndicator) {
     return getSliderStopValues(bounds.value, resolvedStep.value);
   }
 
-  return props.variant === 'centered'
+  return propsWithDefaults.variant === 'centered'
     ? [bounds.value.min, bounds.value.max]
     : [bounds.value.max];
 });
 const showInsetIcon = computed(() => (
-  props.insetIcon !== undefined
-  && ['medium', 'large', 'extra-large'].includes(props.size)
+  propsWithDefaults.insetIcon !== undefined
+  && ['medium', 'large', 'extra-large'].includes(propsWithDefaults.size)
 ));
 const insetIconOpticalSize = computed(() => (
-  props.size === 'extra-large' ? 32 : 24
+  propsWithDefaults.size === 'extra-large' ? 32 : 24
 ));
-const showValueIndicator = computed(() => (
-  props.showValueIndicator && (dragging.value || isFocused.value)
+const showValueIndicatorState = computed(() => (
+  propsWithDefaults.showValueIndicator && (dragging.value || isFocused.value)
 ));
 const rootStyle = computed(() => ({
   ...colorStyle.value,
@@ -344,7 +346,7 @@ function updateValueFromPointer(event) {
     interaction.value,
     bounds.value,
     resolvedStep.value,
-    props.orientation,
+    propsWithDefaults.orientation,
   );
 
   return updateValue(value, event);
@@ -354,7 +356,7 @@ function updateValueFromPointer(event) {
  * @param {PointerEvent} event
  */
 function handlePointerDown(event) {
-  if (props.disabled) {
+  if (propsWithDefaults.disabled) {
     return;
   }
 
@@ -405,7 +407,7 @@ function finishPointerInteraction(event, shouldEmitChange) {
  * @param {KeyboardEvent} event
  */
 function handleKeyDown(event) {
-  if (props.disabled) {
+  if (propsWithDefaults.disabled) {
     return;
   }
 
@@ -433,11 +435,11 @@ function handleKeyDown(event) {
     v-bind="attrs"
     class="mat-slider"
     :class="[
-      `mat-slider--${orientation}`,
-      `mat-slider--size-${size}`,
-      `mat-slider--${variant}`,
+      `mat-slider--${propsWithDefaults.orientation}`,
+      `mat-slider--size-${propsWithDefaults.size}`,
+      `mat-slider--${propsWithDefaults.variant}`,
       {
-        'mat-slider--disabled': disabled,
+        'mat-slider--disabled': propsWithDefaults.disabled,
         'mat-slider--dragging': dragging,
         'mat-slider--use-cursor': matUi.useCursor,
       },
@@ -451,7 +453,7 @@ function handleKeyDown(event) {
       <span class="mat-slider__inactive-track mat-slider__inactive-track--before" />
       <span
         class="mat-slider__active-track"
-        :class="{ 'mat-slider__active-track--from-start': variant === 'standard' }"
+        :class="{ 'mat-slider__active-track--from-start': propsWithDefaults.variant === 'standard' }"
       />
       <span class="mat-slider__inactive-track mat-slider__inactive-track--after" />
 
@@ -475,7 +477,7 @@ function handleKeyDown(event) {
           <MatIcon
             class="mat-slider__inset-icon mat-slider__inset-icon--inactive"
             font-color="var(--mat-slider-inset-icon-inactive-color)"
-            :icon="insetIcon"
+            :icon="propsWithDefaults.insetIcon"
             :optical-size="insetIconOpticalSize"
             size="var(--mat-slider-current-inset-icon-size)"
             aria-hidden="true"
@@ -486,7 +488,7 @@ function handleKeyDown(event) {
           <MatIcon
             class="mat-slider__inset-icon mat-slider__inset-icon--active"
             font-color="var(--mat-on-accent-color, var(--mat-slider-inset-icon-color))"
-            :icon="insetIcon"
+            :icon="propsWithDefaults.insetIcon"
             :optical-size="insetIconOpticalSize"
             size="var(--mat-slider-current-inset-icon-size)"
             aria-hidden="true"
@@ -504,7 +506,7 @@ function handleKeyDown(event) {
       data-slider-value-indicator
       :content="String(displayedValue)"
       :location="orientation === 'vertical' ? 'right' : 'top'"
-      :model-value="showValueIndicator"
+      :model-value="showValueIndicatorState"
       :target="handle"
     />
 
@@ -524,11 +526,11 @@ function handleKeyDown(event) {
       class="mat-slider__native-input"
       type="range"
       :aria-label="attrs['aria-label']"
-      :aria-orientation="orientation"
+      :aria-orientation="propsWithDefaults.orientation"
       :aria-valuemax="bounds.max"
       :aria-valuemin="bounds.min"
       :aria-valuenow="displayedValue"
-      :disabled="disabled"
+      :disabled="propsWithDefaults.disabled"
       :max="bounds.max"
       :min="bounds.min"
       :step="resolvedStep"

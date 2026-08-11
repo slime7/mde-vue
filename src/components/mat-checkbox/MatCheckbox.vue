@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import MatSelectionControlBase from '../MatSelectionControlBase.vue';
 import { isComponentColor } from '../button-props';
 import { isCheckboxModelValue, isSelectionValue } from '../selection-control';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatCheckbox',
@@ -64,6 +65,7 @@ const props = defineProps({
     validator: isComponentColor,
   },
 });
+const propsWithDefaults = useMatProps('checkbox', props);
 
 const emit = defineEmits({
   /**
@@ -84,11 +86,11 @@ const emit = defineEmits({
   },
 });
 const checked = computed(() => {
-  if (Array.isArray(props.modelValue)) {
-    return props.modelValue.some((item) => Object.is(item, props.value));
+  if (Array.isArray(propsWithDefaults.modelValue)) {
+    return propsWithDefaults.modelValue.some((item) => Object.is(item, propsWithDefaults.value));
   }
 
-  return props.modelValue;
+  return propsWithDefaults.modelValue;
 });
 
 /**
@@ -97,10 +99,10 @@ const checked = computed(() => {
 function handleChange(event) {
   const nextChecked = event.target.checked;
 
-  if (Array.isArray(props.modelValue)) {
+  if (Array.isArray(propsWithDefaults.modelValue)) {
     const nextValue = nextChecked
-      ? [...props.modelValue, props.value]
-      : props.modelValue.filter((item) => !Object.is(item, props.value));
+      ? [...propsWithDefaults.modelValue, propsWithDefaults.value]
+      : propsWithDefaults.modelValue.filter((item) => !Object.is(item, propsWithDefaults.value));
 
     emit('update:modelValue', nextValue);
   } else {
@@ -118,14 +120,14 @@ function handleChange(event) {
     class="mat-checkbox"
     :class="{
       'mat-checkbox--checked': checked,
-      'mat-checkbox--indeterminate': indeterminate,
+      'mat-checkbox--indeterminate': propsWithDefaults.indeterminate,
     }"
     :checked="checked"
-    :color="color"
-    :disabled="disabled"
-    :indeterminate="indeterminate"
+    :color="propsWithDefaults.color"
+    :disabled="propsWithDefaults.disabled"
+    :indeterminate="propsWithDefaults.indeterminate"
     input-type="checkbox"
-    :input-value="value"
+    :input-value="propsWithDefaults.value"
     label-name="MatCheckbox"
     @change="handleChange"
   >

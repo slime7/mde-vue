@@ -16,6 +16,7 @@ import {
 } from 'vue';
 import { MAT_LIST_KEY } from '../list-context';
 import MatListItem from '../mat-list/MatListItem.vue';
+import { useMatProps } from '../use-mat-props';
 import MatListGroupActivatorProvider from './MatListGroupActivatorProvider.vue';
 
 defineOptions({
@@ -35,6 +36,7 @@ const props = defineProps({
     default: undefined,
   },
 });
+const propsWithDefaults = useMatProps('listGroup', props);
 
 const list = inject(MAT_LIST_KEY, null);
 const slots = useSlots();
@@ -48,11 +50,11 @@ const labelId = `mat-list-group-${generatedId}-label`;
 let warnedInvalidActivator = false;
 let registeredValue;
 
-const hasValue = computed(() => props.value !== undefined);
+const hasValue = computed(() => propsWithDefaults.value !== undefined);
 const isSelectableFallback = computed(() => list?.isSelectable.value ?? false);
 const requestedExpanded = computed(() => {
   if (hasValue.value) {
-    return list?.isGroupExpanded(props.value) ?? false;
+    return list?.isGroupExpanded(propsWithDefaults.value) ?? false;
   }
 
   return internalExpanded.value;
@@ -126,7 +128,7 @@ function toggle() {
   }
 
   if (hasValue.value) {
-    list?.requestGroupExpanded(props.value, !requestedExpanded.value);
+    list?.requestGroupExpanded(propsWithDefaults.value, !requestedExpanded.value);
     return;
   }
 
@@ -198,7 +200,7 @@ onMounted(() => {
     console.warn('MatListGroup: 选择模式暂不支持折叠，当前分组将作为静态标签并保持展开');
   }
 
-  registerValue(props.value);
+  registerValue(propsWithDefaults.value);
   validateAndWarnActivator();
   list?.requestFocusRefresh();
 });
@@ -208,7 +210,7 @@ onBeforeUnmount(() => {
   list?.requestFocusRefresh();
 });
 watch(
-  () => props.value,
+  () => propsWithDefaults.value,
   (value, previousValue) => {
     if (Object.is(value, previousValue)) {
       return;

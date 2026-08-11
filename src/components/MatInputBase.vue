@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { useMatProps } from './use-mat-props';
 
 defineOptions({
   name: 'MatInputBase',
@@ -91,6 +92,7 @@ const props = defineProps({
     default: undefined,
   },
 });
+const propsWithDefaults = useMatProps('inputBase', props);
 
 const emit = defineEmits({
   /**
@@ -133,17 +135,17 @@ defineExpose({
 
 <template>
   <component
-    :is="props.control"
+    :is="propsWithDefaults.control"
     ref="input"
     v-bind="$attrs"
     class="mat-input-base"
-    :disabled="props.disabled"
-    :maxlength="props.maxLength"
-    :readonly="props.readonly"
-    :required="props.required"
-    :rows="props.control === 'textarea' ? props.rows : undefined"
-    :type="props.control === 'input' ? props.type : undefined"
-    :value="props.modelValue"
+    :disabled="propsWithDefaults.disabled"
+    :maxlength="propsWithDefaults.maxLength"
+    :readonly="propsWithDefaults.readonly"
+    :required="propsWithDefaults.required"
+    :rows="propsWithDefaults.control === 'textarea' ? propsWithDefaults.rows : undefined"
+    :type="propsWithDefaults.control === 'input' ? propsWithDefaults.type : undefined"
+    :value="propsWithDefaults.modelValue"
     @input="handleInput"
   />
 </template>

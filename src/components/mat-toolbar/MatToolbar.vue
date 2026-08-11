@@ -14,6 +14,7 @@ import {
 } from 'vue';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import { registerToolbar } from '../toolbar-overlay';
+import { useMatProps } from '../use-mat-props';
 import { isValidCssLength, toCssLength } from '../value-utils';
 
 const TOOLBAR_VARIANTS = [
@@ -148,6 +149,7 @@ const props = defineProps({
     }),
   },
 });
+const propsWithDefaults = useMatProps('toolbar', props);
 defineEmits({
   /**
    * Toolbar 显示状态请求变化时发出新的 boolean。
@@ -161,8 +163,8 @@ const instance = getCurrentInstance();
 const appContext = inject(MAT_APP_ROOT_KEY, null);
 const rawVNodeProps = instance?.vnode.props ?? {};
 const hasExplicitAttach = Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach');
-const rendered = ref(props.modelValue);
-const phase = ref(props.modelValue ? 'open' : 'closed');
+const rendered = ref(propsWithDefaults.modelValue);
+const phase = ref(propsWithDefaults.modelValue ? 'open' : 'closed');
 const toolbarElement = ref(null);
 const fabElement = ref(null);
 const toolbarSize = ref({
@@ -170,14 +172,16 @@ const toolbarSize = ref({
   inlineSize: 0,
 });
 const normalizedVariant = computed(() => {
-  if (!TOOLBAR_VARIANTS.includes(props.variant)) {
+  if (!TOOLBAR_VARIANTS.includes(propsWithDefaults.variant)) {
     return 'docked';
   }
 
-  return props.variant === 'floating' ? 'floating-bottom' : props.variant;
+  return propsWithDefaults.variant === 'floating' ? 'floating-bottom' : propsWithDefaults.variant;
 });
 const normalizedPosition = computed(() => (
-  ['start', 'center', 'end'].includes(props.position) ? props.position : 'center'
+  ['start', 'center', 'end'].includes(propsWithDefaults.position)
+    ? propsWithDefaults.position
+    : 'center'
 ));
 const isFloating = computed(() => normalizedVariant.value.startsWith('floating'));
 const isVertical = computed(() => (
@@ -188,9 +192,11 @@ const isBottomVariant = computed(() => (
   normalizedVariant.value === 'docked'
   || normalizedVariant.value === 'floating-bottom'
 ));
-const usesAppRoot = computed(() => props.app && Boolean(appContext) && !hasExplicitAttach);
+const usesAppRoot = computed(() => (
+  propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach
+));
 const attachTarget = computed(() => {
-  if (!props.app) {
+  if (!propsWithDefaults.app) {
     return null;
   }
 
@@ -200,18 +206,18 @@ const attachTarget = computed(() => {
       : appContext.edgeLayer.value;
   }
 
-  if (typeof props.attach === 'string') {
+  if (typeof propsWithDefaults.attach === 'string') {
     try {
-      return document.querySelector(props.attach);
+      return document.querySelector(propsWithDefaults.attach);
     } catch {
       return null;
     }
   }
 
-  return normalizeAttach(props.attach);
+  return normalizeAttach(propsWithDefaults.attach);
 });
 const normalizedBottomPlaceholder = computed(() => {
-  const css = toCssLength(props.bottomPlaceholder, {
+  const css = toCssLength(propsWithDefaults.bottomPlaceholder, {
     property: 'block-size',
     fallback: '0px',
   });
@@ -239,10 +245,10 @@ const toolbarClass = computed(() => [
   `mat-toolbar--${normalizedVariant.value}`,
   `mat-toolbar--position-${normalizedPosition.value}`,
   {
-    'mat-toolbar--app': props.app,
+    'mat-toolbar--app': propsWithDefaults.app,
     'mat-toolbar--app-root': usesAppRoot.value,
     'mat-toolbar--vertical': isVertical.value,
-    'mat-toolbar--vibrant': props.vibrant,
+    'mat-toolbar--vibrant': propsWithDefaults.vibrant,
   },
 ]);
 
@@ -287,7 +293,7 @@ function openToolbar() {
   rendered.value = true;
   phase.value = 'opening';
   waitForAnimation(() => {
-    if (rendered.value && props.modelValue) {
+    if (rendered.value && propsWithDefaults.modelValue) {
       phase.value = 'open';
     }
   });
@@ -303,7 +309,7 @@ function closeToolbar() {
 
   phase.value = 'closing';
   waitForAnimation(() => {
-    if (!props.modelValue) {
+    if (!propsWithDefaults.modelValue) {
       rendered.value = false;
       phase.value = 'closed';
     }
@@ -450,7 +456,7 @@ onBeforeUnmount(() => {
   stopToolbarRegistration();
 });
 
-watch(() => props.modelValue, (value) => {
+watch(() => propsWithDefaults.modelValue, (value) => {
   if (!mounted) {
     return;
   }
@@ -467,8 +473,8 @@ watch([
   normalizedVariant,
   normalizedPosition,
   normalizedBottomPlaceholder,
-  () => props.app,
-  () => props.attach,
+  () => propsWithDefaults.app,
+  () => propsWithDefaults.attach,
   usesAppRoot,
 ], () => {
   warnForInvalidAttach();
@@ -477,7 +483,7 @@ watch([
 });
 
 function warnForInvalidAttach() {
-  if (props.app && !usesAppRoot.value && !attachTarget.value) {
+  if (propsWithDefaults.app && !usesAppRoot.value && !attachTarget.value) {
     console.warn('MatToolbar: attach 必须指向当前 document 中存在的 HTMLElement');
   }
 }

@@ -1,6 +1,7 @@
 <script setup>
 import MatTextInputBase from '../MatTextInputBase.vue';
 import { TEXT_INPUT_PROPS } from '../text-input-props';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatTextField',
@@ -22,6 +23,7 @@ const props = defineProps({
     default: 'text',
   },
 });
+const propsWithDefaults = useMatProps('textField', props);
 const emit = defineEmits({
   /**
    * 原生 input 事件产生新值，用于 v-model；载荷为 string。
@@ -32,7 +34,7 @@ const emit = defineEmits({
 
 <template>
   <MatTextInputBase
-    v-bind="{ ...$attrs, ...props }"
+    v-bind="{ ...$attrs, ...propsWithDefaults }"
     control="input"
     @update:model-value="emit('update:modelValue', $event)"
   >

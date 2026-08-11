@@ -23,6 +23,7 @@ import {
   subscribeToolbarOverlay,
 } from '../toolbar-overlay';
 import MatIcon from '../mat-icon/MatIcon.vue';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatSnackbar',
@@ -113,6 +114,7 @@ const props = defineProps({
     },
   },
 });
+const propsWithDefaults = useMatProps('snackbar', props);
 const emit = defineEmits({
   /**
    * action 控件被激活时触发。
@@ -135,20 +137,22 @@ const rendered = ref(false);
 const phase = ref('closed');
 const suppressed = ref(false);
 const hasContent = computed(() => Boolean(slots.default) || (
-  typeof props.text === 'string' && props.text.trim().length > 0
+  typeof propsWithDefaults.text === 'string' && propsWithDefaults.text.trim().length > 0
 ));
 const hasAction = computed(() => Boolean(slots.action) || (
-  typeof props.actionText === 'string' && props.actionText.trim().length > 0
+  typeof propsWithDefaults.actionText === 'string'
+  && propsWithDefaults.actionText.trim().length > 0
 ));
-const hasClose = computed(() => Boolean(slots.close) || props.closable);
+const hasClose = computed(() => Boolean(slots.close) || propsWithDefaults.closable);
 const hasTrailing = computed(() => hasAction.value || hasClose.value);
 const toolbarBottomClearance = ref(0);
 const teleportTarget = computed(() => (
   appContext ? appContext.snackbarLayer.value : document.body
 ));
 const resolvedCloseLabel = computed(() => (
-  typeof props.closeLabel === 'string' && props.closeLabel.trim().length > 0
-    ? props.closeLabel
+  typeof propsWithDefaults.closeLabel === 'string'
+  && propsWithDefaults.closeLabel.trim().length > 0
+    ? propsWithDefaults.closeLabel
     : '关闭'
 ));
 let mounted = false;
@@ -206,7 +210,9 @@ function waitForPhase(duration, callback) {
 }
 
 function getDuration() {
-  return Number.isFinite(props.duration) && props.duration >= 0 ? props.duration : 4000;
+  return Number.isFinite(propsWithDefaults.duration) && propsWithDefaults.duration >= 0
+    ? propsWithDefaults.duration
+    : 4000;
 }
 
 function startDurationTimer() {
@@ -289,7 +295,7 @@ function requestAction() {
 }
 
 async function openSnackbar() {
-  if (!mounted || !props.modelValue || suppressed.value || !hasContent.value) {
+  if (!mounted || !propsWithDefaults.modelValue || suppressed.value || !hasContent.value) {
     if (!hasContent.value) {
       warnForMissingContent();
       requestModelClose();
@@ -353,7 +359,7 @@ onMounted(() => {
     syncToolbarClearance();
   }
 
-  if (props.modelValue) {
+  if (propsWithDefaults.modelValue) {
     requestOpen();
   }
 });
@@ -372,7 +378,7 @@ onBeforeUnmount(() => {
     }
   }
 });
-watch(() => props.modelValue, (open) => {
+watch(() => propsWithDefaults.modelValue, (open) => {
   if (!mounted) {
     return;
   }
@@ -398,11 +404,11 @@ watch(hasContent, (content) => {
 
   warnedForMissingContent = false;
 
-  if (props.modelValue && !rendered.value && !suppressed.value) {
+  if (propsWithDefaults.modelValue && !rendered.value && !suppressed.value) {
     requestOpen();
   }
 });
-watch(() => props.duration, () => {
+watch(() => propsWithDefaults.duration, () => {
   if (phase.value === 'open') {
     startDurationTimer();
   }
@@ -417,7 +423,7 @@ watch(() => props.duration, () => {
       class="mat-snackbar mat-sys-typescale-body-medium"
       :class="[
         `mat-snackbar--${phase}`,
-        `mat-snackbar--${position}`,
+        `mat-snackbar--${propsWithDefaults.position}`,
         {
           'mat-snackbar--app-root': appContext,
           'mat-snackbar--with-trailing': hasTrailing,
@@ -431,7 +437,7 @@ watch(() => props.duration, () => {
       <div class="mat-snackbar__text">
         <slot v-if="$slots.default" />
         <template v-else>
-          {{ text }}
+          {{ propsWithDefaults.text }}
         </template>
       </div>
 
@@ -445,7 +451,7 @@ watch(() => props.duration, () => {
             :use-cursor="matUi.useCursor"
             @click="requestAction"
           >
-            {{ actionText }}
+            {{ propsWithDefaults.actionText }}
           </MatActionBase>
         </div>
 

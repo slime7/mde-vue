@@ -6,6 +6,7 @@ import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatActionBase from '../MatActionBase.vue';
 import { BUTTON_TYPES } from '../button-props';
 import { MAT_LIST_GROUP_ACTIVATOR_KEY, MAT_LIST_KEY } from '../list-context';
+import { useMatProps } from '../use-mat-props';
 import MatListItemContent from './MatListItemContent.vue';
 
 defineOptions({
@@ -71,6 +72,7 @@ const props = defineProps({
     },
   },
 });
+const propsWithDefaults = useMatProps('listItem', props);
 
 const emit = defineEmits({
   /**
@@ -90,11 +92,11 @@ const isAction = computed(() => (
 ));
 const isMultiAction = computed(() => interaction.value === 'multi-action');
 const isSelectable = computed(() => list?.isSelectable.value ?? false);
-const selected = computed(() => list?.isSelected(props.value) ?? false);
+const selected = computed(() => list?.isSelected(propsWithDefaults.value) ?? false);
 const hasTrailing = computed(() => Boolean(slots.trailing));
 const lineCount = computed(() => {
-  if (props.lines !== undefined) {
-    return props.lines;
+  if (propsWithDefaults.lines !== undefined) {
+    return propsWithDefaults.lines;
   }
 
   const additionalLines = Number(Boolean(slots.overline)) + Number(Boolean(slots.supporting));
@@ -102,7 +104,7 @@ const lineCount = computed(() => {
   return Math.min(3, 1 + additionalLines);
 });
 const surfaceClasses = computed(() => ({
-  'mat-list-item--disabled': props.disabled,
+  'mat-list-item--disabled': propsWithDefaults.disabled,
   'mat-list-item--selected': selected.value,
   [`mat-list-item--lines-${lineCount.value}`]: true,
 }));
@@ -112,7 +114,7 @@ const surfaceClasses = computed(() => ({
  */
 function handlePrimaryClick(event) {
   if (isSelectable.value) {
-    list?.requestSelection(props.value, event);
+    list?.requestSelection(propsWithDefaults.value, event);
     return;
   }
 
@@ -122,7 +124,7 @@ function handlePrimaryClick(event) {
 }
 
 function handleGroupActivatorClick() {
-  if (!props.disabled) {
+  if (!propsWithDefaults.disabled) {
     groupActivator?.toggle();
   }
 }
@@ -131,16 +133,16 @@ function handleGroupActivatorClick() {
  * @param {KeyboardEvent} event
  */
 function handleOptionKeyDown(event) {
-  if (props.disabled || event.repeat || ![' ', 'Enter'].includes(event.key)) {
+  if (propsWithDefaults.disabled || event.repeat || ![' ', 'Enter'].includes(event.key)) {
     return;
   }
 
   event.preventDefault();
-  list?.requestSelection(props.value, event);
+  list?.requestSelection(propsWithDefaults.value, event);
 }
 
 function validateProps() {
-  if (props.href !== undefined && !groupActivator && !isAction.value) {
+  if (propsWithDefaults.href !== undefined && !groupActivator && !isAction.value) {
     console.warn('MatListItem: href 仅在 single-action 或 multi-action 模式下生效');
   }
 }
@@ -151,7 +153,7 @@ onMounted(async () => {
   list?.requestFocusRefresh();
 });
 watch(
-  () => [props.disabled, props.href, interaction.value],
+  () => [propsWithDefaults.disabled, propsWithDefaults.href, interaction.value],
   async () => {
     validateProps();
     await nextTick();
@@ -168,8 +170,8 @@ watch(
     class="mat-list-item mat-list-item__surface mat-list-item--static"
     :class="surfaceClasses"
     data-mat-list-group-label
-    :aria-disabled="disabled ? 'true' : undefined"
-    :data-mat-list-disabled="disabled ? 'true' : undefined"
+    :aria-disabled="propsWithDefaults.disabled ? 'true' : undefined"
+    :data-mat-list-disabled="propsWithDefaults.disabled ? 'true' : undefined"
   >
     <MatListItemContent
       :line-count="lineCount"
@@ -200,8 +202,8 @@ watch(
     data-mat-list-group-activator
     :aria-controls="groupActivator.contentId"
     :aria-expanded="groupActivator.expanded.value ? 'true' : 'false'"
-    :data-mat-list-disabled="disabled ? 'true' : undefined"
-    :disabled="disabled"
+    :data-mat-list-disabled="propsWithDefaults.disabled ? 'true' : undefined"
+    :disabled="propsWithDefaults.disabled"
     :focus-ring="true"
     type="button"
     :use-cursor="matUi.useCursor"
@@ -232,8 +234,8 @@ watch(
     v-bind="$attrs"
     class="mat-list-item mat-list-item__surface mat-list-item--static"
     :class="surfaceClasses"
-    :aria-disabled="disabled ? 'true' : undefined"
-    :data-mat-list-disabled="disabled ? 'true' : undefined"
+    :aria-disabled="propsWithDefaults.disabled ? 'true' : undefined"
+    :data-mat-list-disabled="propsWithDefaults.disabled ? 'true' : undefined"
   >
     <MatListItemContent
       :line-count="lineCount"
@@ -281,18 +283,18 @@ watch(
         'mat-list-item--multi-action': isMultiAction,
       },
     ]"
-    :aria-disabled="disabled ? 'true' : undefined"
-    :data-mat-list-disabled="disabled ? 'true' : undefined"
+    :aria-disabled="propsWithDefaults.disabled ? 'true' : undefined"
+    :data-mat-list-disabled="propsWithDefaults.disabled ? 'true' : undefined"
   >
     <MatActionBase
       v-bind="$attrs"
       class="mat-list-item__primary"
       :class="{ 'mat-list-item__surface': !isMultiAction }"
       data-mat-list-primary
-      :disabled="disabled"
+      :disabled="propsWithDefaults.disabled"
       :focus-ring="true"
-      :href="href"
-      :type="type"
+      :href="propsWithDefaults.href"
+      :type="propsWithDefaults.type"
       :use-cursor="matUi.useCursor"
       @click="handlePrimaryClick"
     >
@@ -337,7 +339,7 @@ watch(
       v-if="isMultiAction && hasTrailing"
       class="mat-list-item__separate-trailing mat-sys-typescale-label-small"
       data-mat-list-trailing
-      :inert="disabled ? '' : undefined"
+      :inert="propsWithDefaults.disabled ? '' : undefined"
     >
       <slot name="trailing" />
     </span>
@@ -350,9 +352,9 @@ watch(
     class="mat-list-item mat-list-item__surface mat-list-item--selectable"
     :class="surfaceClasses"
     data-mat-list-primary
-    :data-mat-list-disabled="disabled ? 'true' : undefined"
+    :data-mat-list-disabled="propsWithDefaults.disabled ? 'true' : undefined"
     :aria-selected="selected ? 'true' : 'false'"
-    :disabled="disabled"
+    :disabled="propsWithDefaults.disabled"
     :focus-ring="true"
     role="option"
     :use-cursor="matUi.useCursor"

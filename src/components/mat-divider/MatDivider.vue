@@ -2,6 +2,7 @@
 import { computed, inject } from 'vue';
 import { MAT_LIST_KEY } from '../list-context';
 import { MAT_MENU_KEY } from '../menu-context';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatDivider',
@@ -23,21 +24,22 @@ const props = defineProps({
     },
   },
 });
+const propsWithDefaults = useMatProps('divider', props);
 const list = inject(MAT_LIST_KEY, null);
 const menu = inject(MAT_MENU_KEY, null);
 const isInList = computed(() => Boolean(list));
 const isInMenu = computed(() => Boolean(menu));
 const isInListbox = computed(() => list?.isSelectable.value ?? false);
 const insetMode = computed(() => {
-  if (props.inset === true) {
+  if (propsWithDefaults.inset === true) {
     return 'middle';
   }
 
-  if (props.inset === false) {
+  if (propsWithDefaults.inset === false) {
     return 'none';
   }
 
-  return props.inset;
+  return propsWithDefaults.inset;
 });
 const tag = computed(() => {
   if (!isInList.value) {

@@ -5,6 +5,7 @@ import {
 import {
   MAT_MENU_GROUP_KEY, MAT_MENU_KEY, updateMenuItemPositions,
 } from '../menu-context';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatMenuGroup',
@@ -23,12 +24,13 @@ const props = defineProps({
     default: undefined,
   },
 });
+const propsWithDefaults = useMatProps('menuGroup', props);
 const attrs = useAttrs();
 const menu = inject(MAT_MENU_KEY, null);
 const generatedId = useId().replace(/[^\w-]/g, '-');
 const labelId = `${generatedId}-label`;
 const labelledBy = computed(() => (
-  props.label ? labelId : attrs['aria-labelledby']
+  propsWithDefaults.label ? labelId : attrs['aria-labelledby']
 ));
 const itemApis = new Set();
 
@@ -59,11 +61,11 @@ onBeforeUnmount(() => menu?.unregisterGroup());
     role="group"
   >
     <div
-      v-if="label"
+      v-if="propsWithDefaults.label"
       :id="labelId"
       class="mat-menu-group__label mat-sys-typescale-label-large"
     >
-      {{ label }}
+      {{ propsWithDefaults.label }}
     </div>
 
     <slot />

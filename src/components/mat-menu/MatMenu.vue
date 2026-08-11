@@ -12,6 +12,7 @@ import {
 import useComponentColor from '../use-component-color';
 import useRovingFocus from '../use-roving-focus';
 import { isValidCssLength, toCssLength } from '../value-utils';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatMenu',
@@ -123,6 +124,7 @@ const props = defineProps({
     default: true,
   },
 });
+const propsWithDefaults = useMatProps('menu', props);
 const emit = defineEmits({
   /**
    * 菜单请求关闭时发出 false。
@@ -163,28 +165,28 @@ let outsidePointerListenerAttached = false;
 const isNested = computed(() => Boolean(itemParent));
 const hasActivatorSlot = computed(() => Boolean(slots.activator));
 const isCoordinateAnchor = computed(() => (
-  !isNested.value && !hasActivatorSlot.value && isCoordinatePair(props.anchor)
+  !isNested.value && !hasActivatorSlot.value && isCoordinatePair(propsWithDefaults.anchor)
 ));
 const isGrouped = computed(() => groupCount.value > 0);
-const usesScrim = computed(() => !isNested.value && props.scrim);
+const usesScrim = computed(() => !isNested.value && propsWithDefaults.scrim);
 const popoverMode = computed(() => (usesScrim.value ? 'manual' : 'auto'));
 const effectiveOpen = computed(() => (
-  isNested.value ? nestedOpen.value : props.modelValue
+  isNested.value ? nestedOpen.value : propsWithDefaults.modelValue
 ));
 const effectiveVariant = computed(() => (
-  props.variant ?? parentMenu?.variant.value ?? 'standard'
+  propsWithDefaults.variant ?? parentMenu?.variant.value ?? 'standard'
 ));
 const effectiveColor = computed(() => (
-  props.color ?? parentMenu?.color.value
+  propsWithDefaults.color ?? parentMenu?.color.value
 ));
-const closeOnClick = computed(() => props.closeOnClick);
+const closeOnClickState = computed(() => propsWithDefaults.closeOnClick);
 const { colorStyle } = useComponentColor(effectiveColor);
 const maxLengthStyle = computed(() => {
-  if (props.maxLength === undefined) {
+  if (propsWithDefaults.maxLength === undefined) {
     return undefined;
   }
 
-  const maxLength = toCssLength(props.maxLength, {
+  const maxLength = toCssLength(propsWithDefaults.maxLength, {
     property: 'max-block-size',
     positive: true,
   });
@@ -201,16 +203,18 @@ const maxLengthStyle = computed(() => {
   };
 });
 const positionStyle = computed(() => {
-  const [offsetX, offsetY] = isCoordinatePair(props.offset) ? props.offset : [0, 0];
+  const [offsetX, offsetY] = isCoordinatePair(propsWithDefaults.offset)
+    ? propsWithDefaults.offset
+    : [0, 0];
   const style = {
     '--mat-menu-offset-x': `${offsetX}px`,
     '--mat-menu-offset-y': `${offsetY}px`,
     positionAnchor: isCoordinateAnchor.value ? 'auto' : anchorName,
   };
 
-  if (isCoordinateAnchor.value && isCoordinatePair(props.anchor)) {
-    style.left = `${props.anchor[0]}px`;
-    style.top = `${props.anchor[1]}px`;
+  if (isCoordinateAnchor.value && isCoordinatePair(propsWithDefaults.anchor)) {
+    style.left = `${propsWithDefaults.anchor[0]}px`;
+    style.top = `${propsWithDefaults.anchor[1]}px`;
   }
 
   return style;
@@ -260,11 +264,11 @@ function resolveAnchor() {
     return null;
   }
 
-  if (!props.anchor || typeof props.anchor !== 'string') {
+  if (!propsWithDefaults.anchor || typeof propsWithDefaults.anchor !== 'string') {
     return null;
   }
 
-  return document.getElementById(props.anchor);
+  return document.getElementById(propsWithDefaults.anchor);
 }
 
 function detachAnchor() {
@@ -650,7 +654,7 @@ function handleToggle(event) {
 provide(MAT_MENU_KEY, {
   closeOtherSubmenus,
   closeTree,
-  closeOnClick,
+  closeOnClick: closeOnClickState,
   color: effectiveColor,
   registerItem,
   registerGroup,
@@ -772,26 +776,26 @@ watch(effectiveOpen, (open) => {
     hidePopover();
   }
 });
-watch(() => props.anchor, async () => {
+watch(() => propsWithDefaults.anchor, async () => {
   detachAnchor();
 
   if (effectiveOpen.value) {
     await showPopover();
   }
 }, { deep: true });
-watch(() => props.offset, async () => {
+watch(() => propsWithDefaults.offset, async () => {
   if (effectiveOpen.value) {
     await nextTick();
     scheduleViewportClamp();
   }
 }, { deep: true });
-watch(() => props.maxLength, async () => {
+watch(() => propsWithDefaults.maxLength, async () => {
   if (effectiveOpen.value) {
     await nextTick();
     scheduleViewportClamp();
   }
 });
-watch(() => props.scrim, async () => {
+watch(() => propsWithDefaults.scrim, async () => {
   if (isNested.value) {
     return;
   }
@@ -819,7 +823,7 @@ watch(() => props.scrim, async () => {
   </span>
 
   <div
-    v-if="!isNested && scrim"
+    v-if="!isNested && propsWithDefaults.scrim"
     ref="scrimElement"
     aria-hidden="true"
     class="mat-menu__scrim"

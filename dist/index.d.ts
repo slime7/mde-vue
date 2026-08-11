@@ -2451,7 +2451,7 @@ export interface MatTooltipProps {
   /**
   * 自动模式的打开延迟，单位为毫秒；无效值按 0 处理。
   *
-  * 省略时继承 createMatUi() 的 tooltip.openDelay，未安装插件时为 0。
+  * 省略时继承 createMatUi() 的 defaults.tooltip.openDelay，未安装插件时为 0。
   *
   * @type {number | string | undefined}
   * @default undefined
@@ -2874,10 +2874,14 @@ export interface MatThemeController {
 export interface MatUiOptions {
   theme?: MatThemeOptions;
   iconClass?: string;
-  tooltip?: { openDelay?: number; skipDelayDuration?: number };
+  defaults?: MatComponentDefaults;
   useCursor?: boolean;
 }
+export type MatComponentDefaults = {
+  tooltip?: { openDelay?: number; skipDelayDuration?: number };
+} & Record<string, Record<string, unknown>>;
 export declare function createMatUi(options?: MatUiOptions): import('vue').Plugin & { theme: MatThemeController };
+export declare function useMatProps<T extends Record<string, unknown>>(componentName: string, props: T): T & Record<string, unknown>;
 export declare function useMatTheme(): MatThemeController;
 export type MatAppEdge = 'top' | 'bottom' | 'start' | 'end';
 export type MatAppBreakpoint = 'compact' | 'medium' | 'expanded' | 'large' | 'extra-large';

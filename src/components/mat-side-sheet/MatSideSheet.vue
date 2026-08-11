@@ -1,5 +1,6 @@
 <script setup>
 import MatSheetBase from '../MatSheetBase.vue';
+import { useMatProps } from '../use-mat-props';
 import { isValidCssLength } from '../value-utils';
 
 defineOptions({
@@ -151,6 +152,7 @@ const props = defineProps({
     default: undefined,
   },
 });
+const propsWithDefaults = useMatProps('sideSheet', props);
 
 const emit = defineEmits({
   /**
@@ -170,7 +172,7 @@ const emit = defineEmits({
 
 <template>
   <MatSheetBase
-    v-bind="{ ...props, ...$attrs }"
+    v-bind="{ ...propsWithDefaults, ...$attrs }"
     component-name="MatSideSheet"
     direction="side"
     @update:model-value="emit('update:modelValue', $event)"

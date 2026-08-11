@@ -1,4 +1,6 @@
 <script setup>
+import { useMatProps } from '../use-mat-props';
+
 defineOptions({
   name: 'MatContainer',
   inheritAttrs: false,
@@ -16,13 +18,14 @@ const props = defineProps({
     default: false,
   },
 });
+const propsWithDefaults = useMatProps('container', props);
 </script>
 
 <template>
   <div
     v-bind="$attrs"
     class="mat-container"
-    :class="{ 'mat-container--fluid': props.fluid }"
+    :class="{ 'mat-container--fluid': propsWithDefaults.fluid }"
   >
     <div class="mat-container__content">
       <slot />

@@ -21,6 +21,7 @@ import {
   resolveSliderStep,
 } from '../slider-utils';
 import useComponentColor from '../use-component-color';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatRangeSlider',
@@ -164,6 +165,7 @@ const props = defineProps({
     },
   },
 });
+const propsWithDefaults = useMatProps('rangeSlider', props);
 
 const emit = defineEmits({
   /**
@@ -198,13 +200,13 @@ const dragPointerId = ref(undefined);
 const dragValue = ref(undefined);
 const dragChanged = ref(false);
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
-const { colorStyle } = useComponentColor(computed(() => props.color));
+const { colorStyle } = useComponentColor(computed(() => propsWithDefaults.color));
 
-const bounds = computed(() => resolveSliderBounds(props.min, props.max));
-const resolvedStep = computed(() => resolveSliderStep(props.step));
+const bounds = computed(() => resolveSliderBounds(propsWithDefaults.min, propsWithDefaults.max));
+const resolvedStep = computed(() => resolveSliderStep(propsWithDefaults.step));
 const normalizedValue = computed(() => normalizeRangeSliderValue(
-  props.modelValue?.[0],
-  props.modelValue?.[1],
+  propsWithDefaults.modelValue?.[0],
+  propsWithDefaults.modelValue?.[1],
   bounds.value,
   resolvedStep.value,
 ));
@@ -216,14 +218,14 @@ const endPosition = computed(() => getSliderPercentage(displayedValue.value[1], 
 const formattedStartPosition = computed(() => getSliderVisualPosition(startPosition.value));
 const formattedEndPosition = computed(() => getSliderVisualPosition(endPosition.value));
 const stopValues = computed(() => (
-  props.showStopIndicator
+  propsWithDefaults.showStopIndicator
     ? getSliderStopValues(bounds.value, resolvedStep.value)
     : [bounds.value.min, bounds.value.max]
 ));
 const activeHandleElement = computed(() => handleElements.value[activeHandle.value] ?? null);
 const activeValue = computed(() => displayedValue.value[activeHandle.value]);
-const showValueIndicator = computed(() => (
-  props.showValueIndicator
+const showValueIndicatorState = computed(() => (
+  propsWithDefaults.showValueIndicator
   && (dragging.value || focusedHandle.value === activeHandle.value)
 ));
 const rootStyle = computed(() => ({
@@ -299,7 +301,7 @@ function updateValueFromPointer(event) {
     interaction.value,
     bounds.value,
     resolvedStep.value,
-    props.orientation,
+    propsWithDefaults.orientation,
   );
 
   return updateRangeValue(activeHandle.value, value, event);
@@ -309,7 +311,7 @@ function updateValueFromPointer(event) {
  * @param {PointerEvent} event
  */
 function handlePointerDown(event) {
-  if (props.disabled || !interaction.value) {
+  if (propsWithDefaults.disabled || !interaction.value) {
     return;
   }
 
@@ -318,7 +320,7 @@ function handlePointerDown(event) {
     interaction.value,
     bounds.value,
     resolvedStep.value,
-    props.orientation,
+    propsWithDefaults.orientation,
   );
 
   if (value === undefined) {
@@ -374,7 +376,7 @@ function finishPointerInteraction(event, shouldEmitChange) {
  * @param {KeyboardEvent} event
  */
 function handleKeyDown(index, event) {
-  if (props.disabled) {
+  if (propsWithDefaults.disabled) {
     return;
   }
 
@@ -428,10 +430,10 @@ function setHandleElement(index, element) {
     v-bind="attrs"
     class="mat-range-slider"
     :class="[
-      `mat-range-slider--${orientation}`,
-      `mat-range-slider--size-${size}`,
+      `mat-range-slider--${propsWithDefaults.orientation}`,
+      `mat-range-slider--size-${propsWithDefaults.size}`,
       {
-        'mat-range-slider--disabled': disabled,
+        'mat-range-slider--disabled': propsWithDefaults.disabled,
         'mat-range-slider--dragging': dragging,
         'mat-range-slider--use-cursor': matUi.useCursor,
       },
@@ -479,8 +481,8 @@ function setHandleElement(index, element) {
       class="mat-range-slider__value-indicator"
       data-slider-value-indicator
       :content="String(activeValue)"
-      :location="orientation === 'vertical' ? 'right' : 'top'"
-      :model-value="showValueIndicator"
+      :location="propsWithDefaults.orientation === 'vertical' ? 'right' : 'top'"
+      :model-value="showValueIndicatorState"
       :target="activeHandleElement"
     />
 
@@ -499,12 +501,12 @@ function setHandleElement(index, element) {
       ref="startInput"
       class="mat-range-slider__native-input"
       type="range"
-      :aria-label="ariaLabelStart"
-      :aria-orientation="orientation"
+      :aria-label="propsWithDefaults.ariaLabelStart"
+      :aria-orientation="propsWithDefaults.orientation"
       :aria-valuemax="displayedValue[1]"
       :aria-valuemin="bounds.min"
       :aria-valuenow="displayedValue[0]"
-      :disabled="disabled"
+      :disabled="propsWithDefaults.disabled"
       :max="displayedValue[1]"
       :min="bounds.min"
       :step="resolvedStep"
@@ -518,12 +520,12 @@ function setHandleElement(index, element) {
       ref="endInput"
       class="mat-range-slider__native-input"
       type="range"
-      :aria-label="ariaLabelEnd"
-      :aria-orientation="orientation"
+      :aria-label="propsWithDefaults.ariaLabelEnd"
+      :aria-orientation="propsWithDefaults.orientation"
       :aria-valuemax="bounds.max"
       :aria-valuemin="displayedValue[0]"
       :aria-valuenow="displayedValue[1]"
-      :disabled="disabled"
+      :disabled="propsWithDefaults.disabled"
       :max="bounds.max"
       :min="displayedValue[0]"
       :step="resolvedStep"

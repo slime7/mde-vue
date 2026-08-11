@@ -8,6 +8,7 @@ import { BUTTON_TYPES, isComponentColor } from '../button-props';
 import MatIcon from '../mat-icon/MatIcon.vue';
 import { isSelectionValue } from '../selection-control';
 import useComponentColor from '../use-component-color';
+import { useMatProps } from '../use-mat-props';
 import MAT_CHIP_SET_KEY from './chip-context';
 
 defineOptions({
@@ -97,6 +98,7 @@ const props = defineProps({
     },
   },
 });
+const propsWithDefaults = useMatProps('chip', props);
 
 const emit = defineEmits({
   /**
@@ -115,24 +117,24 @@ const emit = defineEmits({
 const slots = useSlots();
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const chipSet = inject(MAT_CHIP_SET_KEY, null);
-const isSelectable = computed(() => ['filter', 'input'].includes(props.variant));
+const isSelectable = computed(() => ['filter', 'input'].includes(propsWithDefaults.variant));
 const participatesInSet = computed(() => (
   Boolean(chipSet)
   && isSelectable.value
-  && props.value !== undefined
+  && propsWithDefaults.value !== undefined
   && chipSet.selection.value !== 'none'
 ));
 const isSelected = computed(() => {
   if (participatesInSet.value) {
-    return chipSet.isSelected(props.value);
+    return chipSet.isSelected(propsWithDefaults.value);
   }
 
-  return isSelectable.value && props.selected;
+  return isSelectable.value && propsWithDefaults.selected;
 });
 const hasAvatar = computed(() => Boolean(slots.avatar));
 const hasLeading = computed(() => !hasAvatar.value && Boolean(slots.leading));
 const showSelectedIcon = computed(() => (
-  props.variant === 'filter'
+  propsWithDefaults.variant === 'filter'
     && isSelected.value
     && !hasAvatar.value
     && !hasLeading.value
@@ -140,8 +142,8 @@ const showSelectedIcon = computed(() => (
 const hasLeadingContent = computed(() => (
   hasAvatar.value || hasLeading.value || showSelectedIcon.value
 ));
-const hasTrailing = computed(() => Boolean(slots.trailing) || props.variant === 'input');
-const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => props.color));
+const hasTrailing = computed(() => Boolean(slots.trailing) || propsWithDefaults.variant === 'input');
+const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => propsWithDefaults.color));
 
 /**
  * @param {MouseEvent} event
@@ -151,7 +153,7 @@ function handleClick(event) {
   emit('click', event);
 
   if (participatesInSet.value) {
-    chipSet.requestSelection(props.value, event);
+    chipSet.requestSelection(propsWithDefaults.value, event);
   }
 }
 
@@ -160,13 +162,13 @@ function handleClick(event) {
  * @returns {void}
  */
 function handleTrailingClick(event) {
-  if (props.variant !== 'input' || slots.trailing) {
+  if (propsWithDefaults.variant !== 'input' || slots.trailing) {
     return;
   }
 
   event.stopPropagation();
 
-  if (!props.disabled) {
+  if (!propsWithDefaults.disabled) {
     emit('remove', event);
   }
 }
@@ -177,9 +179,9 @@ function handleTrailingClick(event) {
     v-bind="$attrs"
     class="mat-chip mat-sys-typescale-label-large"
     :class="[
-      `mat-chip--${variant}`,
+      `mat-chip--${propsWithDefaults.variant}`,
       {
-        'mat-chip--elevated': elevated,
+        'mat-chip--elevated': propsWithDefaults.elevated,
         'mat-chip--selected': isSelected,
         'mat-chip--explicit-color': hasExplicitColor,
         'mat-chip--has-leading': hasLeadingContent,
@@ -189,8 +191,8 @@ function handleTrailingClick(event) {
     ]"
     :style="colorStyle"
     :aria-pressed="isSelectable ? String(isSelected) : undefined"
-    :disabled="disabled"
-    :type="type"
+    :disabled="propsWithDefaults.disabled"
+    :type="propsWithDefaults.type"
     :use-cursor="matUi.useCursor"
     @click="handleClick"
   >

@@ -2,6 +2,7 @@
 import { getCurrentInstance } from 'vue';
 import MatTextInputBase from '../MatTextInputBase.vue';
 import { TEXT_INPUT_PROPS } from '../text-input-props';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatTextarea',
@@ -57,13 +58,14 @@ const props = defineProps({
     },
   },
 });
+const propsWithDefaults = useMatProps('textarea', props);
 const instance = getCurrentInstance();
 
 /**
  * @returns {number}
  */
 function getResizeMinRows() {
-  return Object.hasOwn(instance.vnode.props ?? {}, 'rows') ? props.rows : 1;
+  return Object.hasOwn(instance.vnode.props ?? {}, 'rows') ? propsWithDefaults.rows : 1;
 }
 
 const emit = defineEmits({
@@ -76,7 +78,7 @@ const emit = defineEmits({
 
 <template>
   <MatTextInputBase
-    v-bind="{ ...$attrs, ...props }"
+    v-bind="{ ...$attrs, ...propsWithDefaults }"
     control="textarea"
     :resize-min-rows="getResizeMinRows()"
     @update:model-value="emit('update:modelValue', $event)"

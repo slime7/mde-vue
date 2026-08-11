@@ -18,6 +18,7 @@ import MatBtn from '../mat-btn/MatBtn.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
 import useComponentColor from '../use-component-color';
 import { isValidCssLength, toCssLength } from '../value-utils';
+import { useMatProps } from '../use-mat-props';
 
 defineOptions({
   name: 'MatDialog',
@@ -142,6 +143,7 @@ const props = defineProps({
     validator: isComponentColor,
   },
 });
+const propsWithDefaults = useMatProps('dialog', props);
 const emit = defineEmits({
   /**
    * 请求关闭时发出 false。
@@ -165,20 +167,22 @@ const phase = ref('closed');
 const teleportTarget = ref(null);
 const titleId = `${useId().replace(/[^\w-]/g, '-')}-title`;
 const root = computed(() => surface.value?.root ?? surface.value?.$el ?? null);
-const hasTitle = computed(() => props.title !== undefined || Boolean(slots.title));
-const hasContent = computed(() => props.content !== undefined || Boolean(slots.default));
-const hasIcon = computed(() => !props.fullScreen && (
-  props.icon !== undefined || Boolean(slots.icon)
+const hasTitle = computed(() => propsWithDefaults.title !== undefined || Boolean(slots.title));
+const hasContent = computed(() => (
+  propsWithDefaults.content !== undefined || Boolean(slots.default)
+));
+const hasIcon = computed(() => !propsWithDefaults.fullScreen && (
+  propsWithDefaults.icon !== undefined || Boolean(slots.icon)
 ));
 const hasActivatorSlot = computed(() => Boolean(slots.activator));
 const isTop = computed(() => dialogStack.value.at(-1) === root.value);
-const { colorStyle } = useComponentColor(computed(() => props.color));
+const { colorStyle } = useComponentColor(computed(() => propsWithDefaults.color));
 const dialogWidthStyle = computed(() => {
-  if (props.fullScreen || props.width === undefined) {
+  if (propsWithDefaults.fullScreen || propsWithDefaults.width === undefined) {
     return undefined;
   }
 
-  const width = toCssLength(props.width, {
+  const width = toCssLength(propsWithDefaults.width, {
     property: 'inline-size',
     positive: true,
   });
@@ -244,16 +248,17 @@ function waitForPhase(duration, callback) {
  * @returns {HTMLElement | null}
  */
 function resolveAttach() {
-  if (typeof props.attach === 'string') {
+  if (typeof propsWithDefaults.attach === 'string') {
     try {
-      return document.querySelector(props.attach);
+      return document.querySelector(propsWithDefaults.attach);
     } catch {
       return null;
     }
   }
 
-  if (props.attach instanceof HTMLElement && props.attach.ownerDocument === document) {
-    return props.attach;
+  if (propsWithDefaults.attach instanceof HTMLElement
+    && propsWithDefaults.attach.ownerDocument === document) {
+    return propsWithDefaults.attach;
   }
 
   return null;
@@ -338,7 +343,7 @@ async function openDialog() {
   warnForAccessibleName();
   await nextTick();
 
-  if (!props.modelValue || !root.value) {
+  if (!propsWithDefaults.modelValue || !root.value) {
     return;
   }
 
@@ -410,7 +415,7 @@ function handleKeyDown(event) {
  * @param {MouseEvent} event
  */
 function handleDialogClick(event) {
-  if (!props.closeOnBack || event.target !== root.value) {
+  if (!propsWithDefaults.closeOnBack || event.target !== root.value) {
     return;
   }
 
@@ -428,7 +433,7 @@ function handleDialogClick(event) {
 onMounted(() => {
   mounted = true;
 
-  if (props.modelValue) {
+  if (propsWithDefaults.modelValue) {
     openDialog();
   }
 });
@@ -444,7 +449,7 @@ onBeforeUnmount(() => {
     }
   }
 });
-watch(() => props.modelValue, (open) => {
+watch(() => propsWithDefaults.modelValue, (open) => {
   if (!mounted) {
     return;
   }
@@ -455,13 +460,13 @@ watch(() => props.modelValue, (open) => {
     closeDialog();
   }
 });
-watch(() => props.attach, () => {
-  if (props.modelValue && rendered.value) {
+watch(() => propsWithDefaults.attach, () => {
+  if (propsWithDefaults.modelValue && rendered.value) {
     console.warn('MatDialog: 打开期间修改 attach 将在下次打开时生效');
   }
 });
 watchEffect(() => {
-  if (props.closeLabel.trim().length === 0) {
+  if (propsWithDefaults.closeLabel.trim().length === 0) {
     console.warn('MatDialog: closeLabel 必须是非空字符串');
   }
 });
@@ -481,10 +486,10 @@ watchEffect(() => {
       :class="[
         `mat-dialog--${phase}`,
         {
-          'mat-dialog--full-screen': fullScreen,
+          'mat-dialog--full-screen': propsWithDefaults.fullScreen,
           'mat-dialog--with-icon': hasIcon,
           'mat-dialog--top': isTop,
-          'mat-dialog--transparent-scrim': !scrim,
+          'mat-dialog--transparent-scrim': !propsWithDefaults.scrim,
         },
       ]"
       :style="rootStyle"
@@ -494,12 +499,12 @@ watchEffect(() => {
       @click="handleDialogClick"
       @keydown="handleKeyDown"
     >
-      <template v-if="fullScreen">
+      <template v-if="propsWithDefaults.fullScreen">
         <header class="mat-dialog__header">
           <MatBtn
             class="mat-dialog__close"
             icon="close"
-            :label="closeLabel"
+            :label="propsWithDefaults.closeLabel"
             size="small"
             variant="standard"
             @click="requestClose"
@@ -510,8 +515,8 @@ watchEffect(() => {
             :id="titleId"
             class="mat-dialog__title mat-sys-typescale-title-large"
           >
-            <template v-if="title !== undefined">
-              {{ title }}
+            <template v-if="propsWithDefaults.title !== undefined">
+              {{ propsWithDefaults.title }}
             </template>
             <slot v-else name="title" />
           </h2>
@@ -525,8 +530,8 @@ watchEffect(() => {
           v-if="hasContent"
           class="mat-dialog__content mat-sys-typescale-body-medium"
         >
-          <template v-if="content !== undefined">
-            {{ content }}
+          <template v-if="propsWithDefaults.content !== undefined">
+            {{ propsWithDefaults.content }}
           </template>
           <slot v-else />
         </div>
@@ -541,8 +546,8 @@ watchEffect(() => {
           size="24px"
           aria-hidden="true"
         >
-          <template v-if="icon !== undefined">
-            {{ icon }}
+          <template v-if="propsWithDefaults.icon !== undefined">
+            {{ propsWithDefaults.icon }}
           </template>
           <slot v-else name="icon" />
         </MatIcon>
@@ -552,8 +557,8 @@ watchEffect(() => {
           :id="titleId"
           class="mat-dialog__title mat-sys-typescale-headline-small"
         >
-          <template v-if="title !== undefined">
-            {{ title }}
+          <template v-if="propsWithDefaults.title !== undefined">
+            {{ propsWithDefaults.title }}
           </template>
           <slot v-else name="title" />
         </h2>
@@ -562,8 +567,8 @@ watchEffect(() => {
           v-if="hasContent"
           class="mat-dialog__content mat-sys-typescale-body-medium"
         >
-          <template v-if="content !== undefined">
-            {{ content }}
+          <template v-if="propsWithDefaults.content !== undefined">
+            {{ propsWithDefaults.content }}
           </template>
           <slot v-else />
         </div>
