@@ -6883,7 +6883,7 @@ var hi = {
 			])
 		], 6));
 	}
-}), [["__scopeId", "data-v-baf60a6f"]]), ta = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-3af7e49e"]]), ta = /*@__PURE__*/ Object.assign({
 	name: "MatTextarea",
 	inheritAttrs: !1
 }, {
