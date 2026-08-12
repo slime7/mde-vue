@@ -4478,7 +4478,7 @@ var xr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-e338883c"]]), Nr = {
+}), [["__scopeId", "data-v-fb67c8fb"]]), Nr = {
 	key: 0,
 	class: "mat-scroll-area__fixed"
 }, Pr = {

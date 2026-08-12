@@ -263,7 +263,7 @@ function handleRemoveClick(event) {
   --mat-chip-label-color: var(--mat-sys-color-on-surface-variant);
   --mat-chip-icon-color: var(--mat-sys-color-on-surface-variant);
   --mat-chip-state-color: var(--mat-chip-label-color);
-  --mat-chip-remove-state-layer-size: 40px;
+  --mat-chip-remove-state-layer-size: 28px;
   --mat-chip-outline-color: var(--mat-sys-color-outline-variant);
   --mat-chip-elevation: none;
   --mat-action-state-color: var(--mat-chip-state-color);
