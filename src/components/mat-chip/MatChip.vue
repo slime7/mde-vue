@@ -51,6 +51,19 @@ const props = defineProps({
     default: false,
   },
   /**
+   * input Chip 的 Material Symbols 移除图标文本；remove-icon Slot 存在时优先使用 Slot。
+   *
+   * @type {string}
+   * @default 'close'
+   */
+  removeIcon: {
+    type: String,
+    default: 'close',
+    validator(value) {
+      return value.trim().length > 0;
+    },
+  },
+  /**
    * ChipSet 选择模型中的基础值。
    *
    * @type {string | number | boolean | undefined}
@@ -108,7 +121,7 @@ const emit = defineEmits({
     return payload instanceof MouseEvent;
   },
   /**
-   * input 默认关闭图标被点击时触发，载荷为原生 `MouseEvent`。
+   * input 移除图标区域被点击时触发，载荷为原生 `MouseEvent`。
    */
   remove(payload) {
     return payload instanceof MouseEvent;
@@ -142,7 +155,7 @@ const showSelectedIcon = computed(() => (
 const hasLeadingContent = computed(() => (
   hasAvatar.value || hasLeading.value || showSelectedIcon.value
 ));
-const hasTrailing = computed(() => Boolean(slots.trailing) || propsWithDefaults.variant === 'input');
+const hasRemoveIcon = computed(() => propsWithDefaults.variant === 'input');
 const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => propsWithDefaults.color));
 
 /**
@@ -161,8 +174,8 @@ function handleClick(event) {
  * @param {MouseEvent} event
  * @returns {void}
  */
-function handleTrailingClick(event) {
-  if (propsWithDefaults.variant !== 'input' || slots.trailing) {
+function handleRemoveClick(event) {
+  if (propsWithDefaults.variant !== 'input') {
     return;
   }
 
@@ -186,7 +199,7 @@ function handleTrailingClick(event) {
         'mat-chip--explicit-color': hasExplicitColor,
         'mat-chip--has-leading': hasLeadingContent,
         'mat-chip--has-avatar': hasAvatar,
-        'mat-chip--has-trailing': hasTrailing,
+        'mat-chip--has-remove-icon': hasRemoveIcon,
       },
     ]"
     :style="colorStyle"
@@ -226,17 +239,17 @@ function handleTrailingClick(event) {
     </span>
 
     <span
-      v-if="hasTrailing"
-      class="mat-chip__icon mat-chip__icon--trailing"
+      v-if="hasRemoveIcon"
+      class="mat-chip__icon mat-chip__remove-icon"
       aria-hidden="true"
       @pointerdown.stop
-      @click="handleTrailingClick"
+      @click="handleRemoveClick"
     >
-      <slot v-if="$slots.trailing" name="trailing" />
+      <slot v-if="$slots['remove-icon']" name="remove-icon" />
       <MatIcon
         v-else
         as="span"
-        icon="close"
+        :icon="propsWithDefaults.removeIcon"
         :optical-size="20"
         size="18px"
       />
@@ -250,6 +263,7 @@ function handleTrailingClick(event) {
   --mat-chip-label-color: var(--mat-sys-color-on-surface-variant);
   --mat-chip-icon-color: var(--mat-sys-color-on-surface-variant);
   --mat-chip-state-color: var(--mat-chip-label-color);
+  --mat-chip-remove-state-layer-size: 40px;
   --mat-chip-outline-color: var(--mat-sys-color-outline-variant);
   --mat-chip-elevation: none;
   --mat-action-state-color: var(--mat-chip-state-color);
@@ -279,7 +293,11 @@ function handleTrailingClick(event) {
 
 .mat-chip--has-avatar { padding-inline-start: 4px; }
 
-.mat-chip--has-trailing { padding-inline-end: 8px; }
+.mat-chip--input {
+  min-inline-size: 88px;
+}
+
+.mat-chip--has-remove-icon { padding-inline-end: 8px; }
 
 .mat-chip--assist {
   --mat-chip-icon-color: var(--mat-accent-color, var(--mat-sys-color-primary));
@@ -314,14 +332,49 @@ function handleTrailingClick(event) {
   transform: translate(-50%, -50%);
 }
 
+.mat-chip__remove-icon::before,
+.mat-chip__remove-icon::after {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  border-radius: var(--mat-sys-shape-corner-full);
+  content: '';
+  transform: translate(-50%, -50%);
+}
+
+.mat-chip__remove-icon::before {
+  z-index: 0;
+  inline-size: var(--mat-chip-remove-state-layer-size);
+  block-size: var(--mat-chip-remove-state-layer-size);
+  background: var(--mat-chip-state-color);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--mat-sys-motion-spring-fast-effects);
+}
+
+.mat-chip__remove-icon::after {
+  z-index: 1;
+  inline-size: var(--mat-sys-interaction-target-min-size);
+  block-size: var(--mat-sys-interaction-target-min-size);
+  pointer-events: auto;
+}
+
+.mat-chip:not(:disabled):not(.mat-action-base--disabled) .mat-chip__remove-icon:active::before {
+  opacity: var(--mat-sys-state-pressed-state-layer-opacity);
+}
+
+@media (hover: hover) {
+  .mat-chip:not(:disabled):not(.mat-action-base--disabled) .mat-chip__remove-icon:hover::before {
+    opacity: var(--mat-sys-state-hover-state-layer-opacity);
+  }
+}
+
 .mat-chip__avatar,
 .mat-chip__icon,
 .mat-chip__label {
   position: relative;
   z-index: 1;
 }
-
-.mat-chip__icon--trailing { z-index: 3; }
 
 .mat-chip__avatar,
 .mat-chip__icon {
@@ -338,6 +391,18 @@ function handleTrailingClick(event) {
   inline-size: 18px;
   block-size: 18px;
   font-size: 18px;
+}
+
+.mat-chip__remove-icon {
+  position: relative;
+  z-index: 3;
+  isolation: isolate;
+  overflow: visible;
+}
+
+.mat-chip:not(:disabled):not(.mat-action-base--disabled):has(.mat-chip__remove-icon:hover),
+.mat-chip:not(:disabled):not(.mat-action-base--disabled):has(.mat-chip__remove-icon:active) {
+  --mat-action-state-color: transparent;
 }
 
 .mat-chip__avatar {
@@ -358,6 +423,8 @@ function handleTrailingClick(event) {
   text-overflow: ellipsis;
 }
 
+.mat-chip--input .mat-chip__label { flex-grow: 1; }
+
 .mat-chip:disabled {
   --mat-chip-container-color: transparent;
   --mat-chip-label-color: color-mix(
@@ -374,6 +441,10 @@ function handleTrailingClick(event) {
   --mat-chip-elevation: none;
 }
 
+.mat-chip:disabled .mat-chip__remove-icon {
+  cursor: not-allowed;
+}
+
 .mat-chip--elevated:disabled,
 .mat-chip--selected:disabled {
   --mat-chip-container-color: color-mix(
@@ -385,6 +456,9 @@ function handleTrailingClick(event) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mat-chip { transition-duration: 0s; }
+  .mat-chip,
+  .mat-chip__remove-icon::before {
+    transition-duration: 0s;
+  }
 }
 </style>

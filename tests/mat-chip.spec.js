@@ -87,7 +87,7 @@ describe('MatChip', () => {
     expect(wrapper.attributes('aria-pressed')).toBeUndefined();
   });
 
-  it('提供默认状态图标并允许具名 Slot 覆盖', () => {
+  it('提供默认状态图标与 removeIcon prop', () => {
     const selectedFilter = mount(MatChip, {
       props: {
         selected: true,
@@ -105,23 +105,50 @@ describe('MatChip', () => {
         default: () => '联系人',
       },
     });
-    const slotted = mount(MatChip, {
+    const customProp = mount(MatChip, {
       props: {
-        selected: true,
+        removeIcon: 'cancel',
         variant: 'input',
       },
       slots: {
-        avatar: () => h('img', { alt: '用户头像' }),
-        default: () => '自定义内容',
-        trailing: () => h('span', '展开'),
+        default: () => '自定义图标',
       },
     });
 
     expect(selectedFilter.text()).toContain('check');
     expect(input.text()).toContain('close');
-    expect(slotted.get('img').attributes('alt')).toBe('用户头像');
-    expect(slotted.text()).toContain('展开');
-    expect(slotted.text()).not.toContain('close');
+    expect(customProp.text()).toContain('cancel');
+  });
+
+  it('remove-icon Slot 覆盖 removeIcon prop', () => {
+    const wrapper = mount(MatChip, {
+      props: {
+        removeIcon: 'cancel',
+        variant: 'input',
+      },
+      slots: {
+        default: () => '自定义内容',
+        'remove-icon': () => h('span', '自定义移除'),
+      },
+    });
+
+    expect(wrapper.text()).toContain('自定义移除');
+    expect(wrapper.text()).not.toContain('cancel');
+  });
+
+  it('不再渲染 trailing Slot', () => {
+    const wrapper = mount(MatChip, {
+      props: {
+        variant: 'input',
+      },
+      slots: {
+        default: () => '内容',
+        trailing: () => h('span', '旧尾图标'),
+      },
+    });
+
+    expect(wrapper.text()).toContain('close');
+    expect(wrapper.text()).not.toContain('旧尾图标');
   });
 
   it('input 默认关闭图标只触发 remove，不触发根 click', async () => {
@@ -150,7 +177,7 @@ describe('MatChip', () => {
     expect(wrapper.emitted('click')).toBeUndefined();
   });
 
-  it('禁用与自定义 trailing 不触发默认 remove 行为', async () => {
+  it('禁用的 remove-icon 不触发 remove', async () => {
     const disabled = mount(MatChip, {
       props: {
         disabled: true,
@@ -166,18 +193,20 @@ describe('MatChip', () => {
       },
       slots: {
         default: () => '自定义',
-        trailing: () => h('span', '展开'),
+        'remove-icon': () => h('span', '自定义移除'),
       },
     });
     const disabledClose = disabled.findAll('span')
       .find((element) => element.text() === 'close');
+    const customRemoveIcon = custom.findAll('span')
+      .find((element) => element.text() === '自定义移除');
 
     await disabledClose.trigger('click');
-    await custom.get('span span').trigger('click');
+    await customRemoveIcon.trigger('click');
 
     expect(disabled.emitted('remove')).toBeUndefined();
-    expect(custom.emitted('remove')).toBeUndefined();
-    expect(custom.emitted('click')).toHaveLength(1);
+    expect(custom.emitted('remove')?.[0]?.[0]).toBeInstanceOf(MouseEvent);
+    expect(custom.emitted('click')).toBeUndefined();
   });
 });
 
