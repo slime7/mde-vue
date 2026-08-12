@@ -14996,21 +14996,23 @@ const attach = ref(null);
 <template>
   <div class="tooltip-location-grid">
     <div
-      v-for="item in locations"
-      :key="item.name"
+      v-for="(item, index) in locations"
+      :key="item?.name ?? `placeholder-${index}`"
       class="tooltip-location-item"
     >
-      <mat-btn
-        :id="item.target.slice(1)"
-        variant="outlined"
-      >
-        {{ item.name }}
-      </mat-btn>
-      <mat-tooltip
-        content="查看提示位置"
-        :location="item.name"
-        :target="item.target"
-      />
+      <template v-if="item">
+        <mat-btn
+          :id="item.target.slice(1)"
+          variant="outlined"
+        >
+          {{ item.name }}
+        </mat-btn>
+        <mat-tooltip
+          content="查看提示位置"
+          :location="item.name"
+          :target="item.target"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -15018,18 +15020,21 @@ const attach = ref(null);
 ```vue
 <script setup>
 const locations = [
-  { name: 'top', target: '#tooltip-location-top' },
   { name: 'top-start', target: '#tooltip-location-top-start' },
+  { name: 'top', target: '#tooltip-location-top' },
   { name: 'top-end', target: '#tooltip-location-top-end' },
-  { name: 'right', target: '#tooltip-location-right' },
-  { name: 'right-start', target: '#tooltip-location-right-start' },
-  { name: 'right-end', target: '#tooltip-location-right-end' },
-  { name: 'bottom', target: '#tooltip-location-bottom' },
-  { name: 'bottom-start', target: '#tooltip-location-bottom-start' },
-  { name: 'bottom-end', target: '#tooltip-location-bottom-end' },
-  { name: 'left', target: '#tooltip-location-left' },
   { name: 'left-start', target: '#tooltip-location-left-start' },
+  null,
+  { name: 'right-start', target: '#tooltip-location-right-start' },
+  { name: 'left', target: '#tooltip-location-left' },
+  null,
+  { name: 'right', target: '#tooltip-location-right' },
   { name: 'left-end', target: '#tooltip-location-left-end' },
+  null,
+  { name: 'right-end', target: '#tooltip-location-right-end' },
+  { name: 'bottom-start', target: '#tooltip-location-bottom-start' },
+  { name: 'bottom', target: '#tooltip-location-bottom' },
+  { name: 'bottom-end', target: '#tooltip-location-bottom-end' },
 ];
 </script>
 ```
@@ -15044,7 +15049,13 @@ const locations = [
 
 .tooltip-location-item {
   display: flex;
+  min-inline-size: 0;
   justify-content: center;
+  align-items: center;
+}
+
+.tooltip-location-item :deep(.mat-btn) {
+  flex-shrink: 0;
 }
 </style>
 ```
