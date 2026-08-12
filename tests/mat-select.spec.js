@@ -149,6 +149,36 @@ describe('MatSelect', () => {
     expect(wrapper.emitted('change')?.at(-1)).toEqual([null]);
   });
 
+  it('浏览器提供 ResizeObserver 时仍可挂载并展开', async () => {
+    class TestResizeObserver {
+      constructor() {
+        this.observed = false;
+      }
+
+      observe() {
+        this.observed = true;
+      }
+
+      disconnect() {
+        this.observed = false;
+      }
+    }
+
+    vi.stubGlobal('ResizeObserver', TestResizeObserver);
+    const wrapper = mount(MatSelect, {
+      attachTo: document.body,
+      props: {
+        modelValue: null,
+        items: ['甲', '乙'],
+      },
+    });
+
+    await wrapper.get('[role="combobox"]').trigger('click');
+    await nextTick();
+
+    expect(wrapper.get('[role="combobox"]').attributes('aria-expanded')).toBe('true');
+  });
+
   it('隐藏原生 select 同步表单属性、字符串值和选择状态', () => {
     const wrapper = mount(MatSelect, {
       props: {

@@ -5790,7 +5790,7 @@ var hi = {
 			n.resizeMinRows,
 			n.rows
 		], G), S(() => {
-			W(), typeof globalThis.ResizeObserver == "function" && (B = new globalThis.ResizeObserver(K), B.observe(p.value.getInput()));
+			W(), !(n.control === "custom" || typeof globalThis.ResizeObserver != "function") && (B = new globalThis.ResizeObserver(K), B.observe(p.value.getInput()));
 		}), b(() => {
 			B?.disconnect();
 		});
@@ -5895,7 +5895,7 @@ var hi = {
 			class: "mat-text-input__supporting mat-sys-typescale-body-small"
 		}, [s("span", Pi, F(k.value), 1), e.maxLength === void 0 ? a("", !0) : (w(), o("span", Fi, F(e.modelValue.length) + " / " + F(e.maxLength), 1))])) : a("", !0)], 14, wi));
 	}
-}), [["__scopeId", "data-v-647c2514"]]), Li = ["filled", "outlined"], Ri = {
+}), [["__scopeId", "data-v-cf19df0b"]]), Li = ["filled", "outlined"], Ri = {
 	modelValue: {
 		type: String,
 		default: ""

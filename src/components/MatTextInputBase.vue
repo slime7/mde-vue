@@ -236,7 +236,7 @@ watch(
 onMounted(() => {
   syncTextareaSize();
 
-  if (typeof globalThis.ResizeObserver !== 'function') {
+  if (props.control === 'custom' || typeof globalThis.ResizeObserver !== 'function') {
     return;
   }
 
