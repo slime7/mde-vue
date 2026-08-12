@@ -6628,11 +6628,11 @@ var hi = {
 		change: (e) => e === null || $n(e) || Array.isArray(e) && e.every($n)
 	},
 	setup(e, { emit: n }) {
-		let d = $("select", e), f = n, p = ee(), m = O(!1), y = O(!1), b = O(null), x = L().replace(/[^\w-]/g, "-"), S = r(() => p.id ?? `${x}-select`), C = r(() => ({
-			form: p.form,
-			name: p.name
+		let d = $("select", e), f = n, m = ee(), y = p(ie, Q), b = O(!1), x = O(!1), S = O(null), C = L().replace(/[^\w-]/g, "-"), T = r(() => m.id ?? `${C}-select`), E = r(() => ({
+			form: m.form,
+			name: m.name
 		}));
-		function T(e, t) {
+		function D(e, t) {
 			if (typeof e == "string") return {
 				disabled: !1,
 				group: t,
@@ -6650,10 +6650,10 @@ var hi = {
 				value: r
 			};
 		}
-		let E = r(() => {
+		let k = r(() => {
 			let e = [], t = [], n = [], r = /* @__PURE__ */ new Set();
 			function i(t, i) {
-				let a = T(t, i);
+				let a = D(t, i);
 				if (a) {
 					if (n.some((e) => Object.is(e, a.value)) || r.has(String(a.value))) {
 						`${String(a.value)}`;
@@ -6678,42 +6678,42 @@ var hi = {
 				options: e,
 				ungrouped: e.filter((e) => e.group === void 0)
 			};
-		}), D = r(() => E.value.options.filter((e) => d.multiple ? Array.isArray(d.modelValue) && d.modelValue.some((t) => Object.is(t, e.value)) : Object.is(d.modelValue, e.value))), k = r(() => D.value.map((e) => e.title).join(",")), M = r(() => D.value.length > 0), N = `${x}-menu`;
+		}), M = r(() => k.value.options.filter((e) => d.multiple ? Array.isArray(d.modelValue) && d.modelValue.some((t) => Object.is(t, e.value)) : Object.is(d.modelValue, e.value))), N = r(() => M.value.map((e) => e.title).join(",")), P = r(() => M.value.length > 0), R = `${C}-menu`;
 		z(() => [d.modelValue, d.multiple], ([e, t]) => {}, { immediate: !0 });
-		function P(e) {
-			return D.value.some((t) => Object.is(t.value, e));
+		function B(e) {
+			return M.value.some((t) => Object.is(t.value, e));
 		}
-		function R(e) {
+		function H(e) {
 			if (d.disabled || d.readonly) return;
 			let t;
 			if (d.multiple) {
 				let n = Array.isArray(d.modelValue) ? d.modelValue : [];
 				t = n.some((t) => Object.is(t, e)) ? n.filter((t) => !Object.is(t, e)) : [...n, e];
-			} else t = e, m.value = !1;
+			} else t = e, b.value = !1;
 			f("update:modelValue", t), f("change", t);
 		}
-		function B() {
-			d.disabled || d.readonly || (m.value = !m.value);
+		function W() {
+			d.disabled || d.readonly || (b.value = !b.value);
 		}
-		function H(e) {
+		function G(e) {
 			[
 				"Enter",
 				" ",
 				"ArrowDown",
 				"ArrowUp"
-			].includes(e.key) && (e.preventDefault(), m.value || B());
+			].includes(e.key) && (e.preventDefault(), b.value || W());
 		}
-		function W(e) {
-			d.disabled || d.readonly || (d.multiple ? R(e) : (f("update:modelValue", null), f("change", null)), g(() => b.value?.focus()));
+		function K(e) {
+			d.disabled || d.readonly || (d.multiple ? H(e) : (f("update:modelValue", null), f("change", null)), g(() => S.value?.focus()));
 		}
 		return (e, n) => (w(), o("div", {
-			class: _(["mat-select", e.$attrs.class]),
+			class: _(["mat-select", [{ "mat-select--use-cursor": I(y).useCursor }, e.$attrs.class]]),
 			style: v(e.$attrs.style)
 		}, [
 			u(Ii, {
-				id: S.value,
+				id: T.value,
 				control: "custom",
-				"model-value": k.value,
+				"model-value": N.value,
 				label: I(d).label,
 				variant: I(d).variant,
 				color: I(d).color,
@@ -6723,36 +6723,36 @@ var hi = {
 				readonly: I(d).readonly,
 				required: I(d).required,
 				error: I(d).error,
-				"custom-focused": y.value || m.value,
+				"custom-focused": x.value || b.value,
 				placeholder: I(d).placeholder
 			}, c({
 				control: V(({ controlId: r, describedBy: a }) => [s("div", {
 					id: r,
 					ref_key: "trigger",
-					ref: b,
+					ref: S,
 					class: "mat-select__trigger mat-text-input__control",
 					role: "combobox",
-					"aria-controls": N,
+					"aria-controls": R,
 					"aria-describedby": a,
 					"aria-label": e.$attrs["aria-label"] ?? I(d).label,
 					"aria-disabled": I(d).disabled ? "true" : void 0,
-					"aria-expanded": String(m.value),
+					"aria-expanded": String(b.value),
 					"aria-invalid": I(d).error ? "true" : void 0,
 					"aria-haspopup": "menu",
 					"aria-readonly": I(d).readonly ? "true" : void 0,
 					tabindex: I(d).disabled ? -1 : 0,
-					onBlur: n[1] ||= (e) => y.value = !1,
-					onClick: B,
-					onFocus: n[2] ||= (e) => y.value = !0,
-					onKeydown: H
+					onBlur: n[1] ||= (e) => x.value = !1,
+					onClick: W,
+					onFocus: n[2] ||= (e) => x.value = !0,
+					onKeydown: G
 				}, [
-					I(d).chips && M.value ? (w(), o("span", Ji, [(w(!0), o(t, null, A(D.value, (e) => (w(), i(Mr, {
+					I(d).chips && P.value ? (w(), o("span", Ji, [(w(!0), o(t, null, A(M.value, (e) => (w(), i(Mr, {
 						key: `${typeof e.value}:${String(e.value)}`,
 						variant: "input",
-						selected: P(e.value),
+						selected: B(e.value),
 						disabled: I(d).disabled || I(d).readonly,
 						onClick: n[0] ||= U(() => {}, ["stop"]),
-						onRemove: (t) => W(e.value)
+						onRemove: (t) => K(e.value)
 					}, {
 						default: V(() => [l(F(e.title), 1)]),
 						_: 2
@@ -6760,7 +6760,7 @@ var hi = {
 						"selected",
 						"disabled",
 						"onRemove"
-					]))), 128))])) : M.value ? (w(), o("span", Yi, F(k.value), 1)) : (w(), o("span", Xi, F(I(d).placeholder), 1)),
+					]))), 128))])) : P.value ? (w(), o("span", Yi, F(N.value), 1)) : (w(), o("span", Xi, F(I(d).placeholder), 1)),
 					n[4] ||= s("span", { class: "mat-select__spacer" }, null, -1),
 					u(ze, {
 						as: "span",
@@ -6794,7 +6794,7 @@ var hi = {
 				"custom-focused",
 				"placeholder"
 			]),
-			s("select", h(C.value, {
+			s("select", h(E.value, {
 				class: "mat-select__native",
 				disabled: I(d).disabled,
 				multiple: I(d).multiple,
@@ -6804,24 +6804,24 @@ var hi = {
 			}), [I(d).multiple ? a("", !0) : (w(), o("option", {
 				key: 0,
 				value: "",
-				selected: !M.value
-			}, null, 8, Qi)), (w(!0), o(t, null, A(E.value.options, (e) => (w(), o("option", {
+				selected: !P.value
+			}, null, 8, Qi)), (w(!0), o(t, null, A(k.value.options, (e) => (w(), o("option", {
 				key: `${typeof e.value}:${String(e.value)}`,
 				disabled: e.disabled,
-				selected: P(e.value),
+				selected: B(e.value),
 				value: String(e.value)
 			}, F(e.title), 9, $i))), 128))], 16, Zi),
 			u(Vi, {
-				id: N,
-				modelValue: m.value,
-				"onUpdate:modelValue": n[3] ||= (e) => m.value = e,
-				anchor: S.value,
+				id: R,
+				modelValue: b.value,
+				"onUpdate:modelValue": n[3] ||= (e) => b.value = e,
+				anchor: T.value,
 				"close-on-click": !I(d).multiple
 			}, {
-				default: V(() => [E.value.groups.length === 0 ? (w(!0), o(t, { key: 0 }, A(E.value.ungrouped, (e) => (w(), i(Wi, {
+				default: V(() => [k.value.groups.length === 0 ? (w(!0), o(t, { key: 0 }, A(k.value.ungrouped, (e) => (w(), i(Wi, {
 					key: `${typeof e.value}:${String(e.value)}`,
 					disabled: e.disabled,
-					onClick: (t) => R(e.value)
+					onClick: (t) => H(e.value)
 				}, c({
 					default: V(() => [l(" " + F(e.title) + " ", 1)]),
 					_: 2
@@ -6831,18 +6831,18 @@ var hi = {
 						"aria-hidden": "true",
 						inert: "",
 						tabindex: "-1",
-						"model-value": P(e.value)
+						"model-value": B(e.value)
 					}, null, 8, ["model-value"])]),
 					key: "0"
 				} : void 0, e.subtitle ? {
 					name: "supporting",
 					fn: V(() => [l(F(e.subtitle), 1)]),
 					key: "1"
-				} : void 0]), 1032, ["disabled", "onClick"]))), 128)) : E.value.ungrouped.length > 0 ? (w(), i(Ki, { key: 1 }, {
-					default: V(() => [(w(!0), o(t, null, A(E.value.ungrouped, (e) => (w(), i(Wi, {
+				} : void 0]), 1032, ["disabled", "onClick"]))), 128)) : k.value.ungrouped.length > 0 ? (w(), i(Ki, { key: 1 }, {
+					default: V(() => [(w(!0), o(t, null, A(k.value.ungrouped, (e) => (w(), i(Wi, {
 						key: `${typeof e.value}:${String(e.value)}`,
 						disabled: e.disabled,
-						onClick: (t) => R(e.value)
+						onClick: (t) => H(e.value)
 					}, c({
 						default: V(() => [l(" " + F(e.title) + " ", 1)]),
 						_: 2
@@ -6852,7 +6852,7 @@ var hi = {
 							"aria-hidden": "true",
 							inert: "",
 							tabindex: "-1",
-							"model-value": P(e.value)
+							"model-value": B(e.value)
 						}, null, 8, ["model-value"])]),
 						key: "0"
 					} : void 0, e.subtitle ? {
@@ -6861,14 +6861,14 @@ var hi = {
 						key: "1"
 					} : void 0]), 1032, ["disabled", "onClick"]))), 128))]),
 					_: 1
-				})) : a("", !0), (w(!0), o(t, null, A(E.value.groups, (e) => (w(), i(Ki, {
+				})) : a("", !0), (w(!0), o(t, null, A(k.value.groups, (e) => (w(), i(Ki, {
 					key: e.label,
 					label: e.label
 				}, {
 					default: V(() => [(w(!0), o(t, null, A(e.options, (e) => (w(), i(Wi, {
 						key: `${typeof e.value}:${String(e.value)}`,
 						disabled: e.disabled,
-						onClick: (t) => R(e.value)
+						onClick: (t) => H(e.value)
 					}, c({
 						default: V(() => [l(" " + F(e.title) + " ", 1)]),
 						_: 2
@@ -6878,7 +6878,7 @@ var hi = {
 							"aria-hidden": "true",
 							inert: "",
 							tabindex: "-1",
-							"model-value": P(e.value)
+							"model-value": B(e.value)
 						}, null, 8, ["model-value"])]),
 						key: "0"
 					} : void 0, e.subtitle ? {
@@ -6896,7 +6896,7 @@ var hi = {
 			])
 		], 6));
 	}
-}), [["__scopeId", "data-v-b4209918"]]), ta = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-a884bbfb"]]), ta = /*@__PURE__*/ Object.assign({
 	name: "MatTextarea",
 	inheritAttrs: !1
 }, {

@@ -1,7 +1,8 @@
 <script setup>
 import {
-  computed, nextTick, ref, useAttrs, useId, watch,
+  computed, inject, nextTick, ref, useAttrs, useId, watch,
 } from 'vue';
+import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatTextInputBase from '../MatTextInputBase.vue';
 import { isComponentColor } from '../button-props';
 import MatCheckbox from '../mat-checkbox/MatCheckbox.vue';
@@ -90,6 +91,7 @@ const emit = defineEmits({
     || (Array.isArray(value) && value.every(isSelectionValue)),
 });
 const attrs = useAttrs();
+const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const open = ref(false);
 const focused = ref(false);
 const trigger = ref(null);
@@ -271,7 +273,11 @@ function removeValue(value) {
 </script>
 
 <template>
-  <div class="mat-select" :class="$attrs.class" :style="$attrs.style">
+  <div
+    class="mat-select"
+    :class="[{ 'mat-select--use-cursor': matUi.useCursor }, $attrs.class]"
+    :style="$attrs.style"
+  >
     <MatTextInputBase
       :id="triggerId"
       control="custom"
@@ -453,7 +459,7 @@ function removeValue(value) {
   inline-size: 100%;
 }
 
-.mat-select :deep(.mat-text-input__container) {
+.mat-select--use-cursor :deep(.mat-text-input:not(.mat-text-input--disabled) .mat-text-input__container) {
   cursor: pointer;
 }
 
@@ -475,6 +481,10 @@ function removeValue(value) {
   background: transparent;
   border: 0;
   outline: 0;
+  cursor: default;
+}
+
+.mat-select--use-cursor .mat-select__trigger:not([aria-disabled='true']) {
   cursor: pointer;
 }
 
