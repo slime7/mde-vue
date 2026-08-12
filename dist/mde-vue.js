@@ -4436,33 +4436,34 @@ var Nr = ["data-dot"], Pr = ["data-dot"], Fr = /*#__PURE__*/ X(/* @__PURE__ */ O
 		}
 	},
 	setup(e) {
-		let t = $("badge", e), n = ee(), { colorStyle: i } = Ie(r(() => t.color)), s = r(() => t.location === "inline"), c = r(() => t.content !== void 0 && String(t.content).length > 0), l = r(() => t.dot || c.value), u = r(() => t.dot ? void 0 : t.content), d = r(() => ({
+		let t = $("badge", e), n = ee(), { colorStyle: i } = Ie(r(() => t.color)), s = r(() => t.location === "inline"), c = r(() => t.content !== void 0 && String(t.content).length > 0), l = r(() => t.dot || c.value), u = r(() => t.dot ? void 0 : t.content);
+		function d(e) {
+			let t = Ge(e ?? 0, {
+				property: "margin",
+				allowNegative: !0,
+				fallback: "0px"
+			});
+			return t === "0" ? "0px" : t;
+		}
+		let f = r(() => ({
 			...i.value,
-			"--mat-badge-offset-inline": s.value ? void 0 : Ge(t.offset?.inline ?? 0, {
-				property: "margin",
-				allowNegative: !0,
-				fallback: "0"
-			}),
-			"--mat-badge-offset-block": s.value ? void 0 : Ge(t.offset?.block ?? 0, {
-				property: "margin",
-				allowNegative: !0,
-				fallback: "0"
-			})
+			"--mat-badge-offset-inline": s.value ? void 0 : d(t.offset?.inline),
+			"--mat-badge-offset-block": s.value ? void 0 : d(t.offset?.block)
 		}));
 		return (e, r) => s.value && l.value ? (w(), o("span", h({ key: 0 }, I(n), {
 			class: ["mat-badge__indicator mat-badge__indicator--inline", { "mat-badge__indicator--dot": I(t).dot }],
-			style: d.value,
+			style: f.value,
 			"aria-hidden": "true",
 			"data-dot": I(t).dot ? "" : void 0
 		}), F(u.value), 17, Nr)) : s.value ? a("", !0) : (w(), o("span", h({ key: 1 }, I(n), { class: "mat-badge" }), [j(e.$slots, "default", {}, void 0, !0), l.value ? (w(), o("span", {
 			key: 0,
 			class: _(["mat-badge__indicator", [`mat-badge__indicator--${I(t).location}`, { "mat-badge__indicator--dot": I(t).dot }]]),
-			style: v(d.value),
+			style: v(f.value),
 			"aria-hidden": "true",
 			"data-dot": I(t).dot ? "" : void 0
 		}, F(u.value), 15, Pr)) : a("", !0)], 16));
 	}
-}), [["__scopeId", "data-v-eac035e1"]]), Ir = Symbol("mat-chip-set"), Lr = {
+}), [["__scopeId", "data-v-8f699504"]]), Ir = Symbol("mat-chip-set"), Lr = {
 	key: 0,
 	class: "mat-chip__avatar",
 	"aria-hidden": "true",

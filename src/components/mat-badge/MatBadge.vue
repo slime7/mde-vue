@@ -83,22 +83,31 @@ const isVisible = computed(() => propsWithDefaults.dot || hasContent.value);
 const renderedContent = computed(() => (
   propsWithDefaults.dot ? undefined : propsWithDefaults.content
 ));
+
+/**
+ * 保持 calc() 中偏移量的长度类型。
+ *
+ * @param {number | string | undefined} value
+ * @returns {string}
+ */
+function toBadgeOffset(value) {
+  const resolved = toCssLength(value ?? 0, {
+    property: 'margin',
+    allowNegative: true,
+    fallback: '0px',
+  });
+
+  return resolved === '0' ? '0px' : resolved;
+}
+
 const indicatorStyle = computed(() => ({
   ...colorStyle.value,
   '--mat-badge-offset-inline': isInline.value
     ? undefined
-    : toCssLength(propsWithDefaults.offset?.inline ?? 0, {
-      property: 'margin',
-      allowNegative: true,
-      fallback: '0',
-    }),
+    : toBadgeOffset(propsWithDefaults.offset?.inline),
   '--mat-badge-offset-block': isInline.value
     ? undefined
-    : toCssLength(propsWithDefaults.offset?.block ?? 0, {
-      property: 'margin',
-      allowNegative: true,
-      fallback: '0',
-    }),
+    : toBadgeOffset(propsWithDefaults.offset?.block),
 }));
 </script>
 
@@ -222,5 +231,41 @@ const indicatorStyle = computed(() => ({
   inset-block-start: calc(50% + var(--mat-badge-offset-block));
   inset-inline-end: calc(50% - var(--mat-badge-offset-inline));
   translate: 0 -50%;
+}
+
+.mat-badge__indicator--dot.mat-badge__indicator--top-start {
+  inset-block-start: var(--mat-badge-offset-block);
+  inset-inline: var(--mat-badge-offset-inline) auto;
+}
+
+.mat-badge__indicator--dot.mat-badge__indicator--top {
+  inset-block-start: var(--mat-badge-offset-block);
+}
+
+.mat-badge__indicator--dot.mat-badge__indicator--top-end {
+  inset-block-start: var(--mat-badge-offset-block);
+  inset-inline: auto calc(0px - var(--mat-badge-offset-inline));
+}
+
+.mat-badge__indicator--dot.mat-badge__indicator--end {
+  inset-inline: auto calc(0px - var(--mat-badge-offset-inline));
+}
+
+.mat-badge__indicator--dot.mat-badge__indicator--bottom-end {
+  inset-block: auto calc(0px - var(--mat-badge-offset-block));
+  inset-inline: auto calc(0px - var(--mat-badge-offset-inline));
+}
+
+.mat-badge__indicator--dot.mat-badge__indicator--bottom {
+  inset-block: auto calc(0px - var(--mat-badge-offset-block));
+}
+
+.mat-badge__indicator--dot.mat-badge__indicator--bottom-start {
+  inset-block: auto calc(0px - var(--mat-badge-offset-block));
+  inset-inline: var(--mat-badge-offset-inline) auto;
+}
+
+.mat-badge__indicator--dot.mat-badge__indicator--start {
+  inset-inline: var(--mat-badge-offset-inline) auto;
 }
 </style>
