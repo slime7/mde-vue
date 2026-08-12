@@ -4451,6 +4451,7 @@ var xr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 					key: 2,
 					class: "mat-chip__icon mat-chip__icon--trailing",
 					"aria-hidden": "true",
+					onPointerdown: t[0] ||= U(() => {}, ["stop"]),
 					onClick: E
 				}, [e.$slots.trailing ? j(e.$slots, "trailing", { key: 0 }, void 0, !0) : (w(), i(ze, {
 					key: 1,
@@ -4458,7 +4459,7 @@ var xr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 					icon: "close",
 					"optical-size": 20,
 					size: "18px"
-				}))])) : a("", !0)
+				}))], 32)) : a("", !0)
 			]),
 			_: 3
 		}, 16, [
@@ -4470,7 +4471,7 @@ var xr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-76cad618"]]), Nr = {
+}), [["__scopeId", "data-v-b36453f3"]]), Nr = {
 	key: 0,
 	class: "mat-scroll-area__fixed"
 }, Pr = {

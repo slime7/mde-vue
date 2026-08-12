@@ -135,9 +135,17 @@ describe('MatChip', () => {
       },
     });
     const closeIcon = wrapper.findAll('span').find((element) => element.text() === 'close');
+    const rootPointerDown = vi.fn();
+
+    wrapper.element.addEventListener('pointerdown', rootPointerDown);
+    closeIcon.element.dispatchEvent(new MouseEvent('pointerdown', {
+      bubbles: true,
+      button: 0,
+    }));
 
     await closeIcon.trigger('click');
 
+    expect(rootPointerDown).not.toHaveBeenCalled();
     expect(wrapper.emitted('remove')?.[0]?.[0]).toBeInstanceOf(MouseEvent);
     expect(wrapper.emitted('click')).toBeUndefined();
   });

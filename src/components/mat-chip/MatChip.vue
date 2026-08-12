@@ -229,6 +229,7 @@ function handleTrailingClick(event) {
       v-if="hasTrailing"
       class="mat-chip__icon mat-chip__icon--trailing"
       aria-hidden="true"
+      @pointerdown.stop
       @click="handleTrailingClick"
     >
       <slot v-if="$slots.trailing" name="trailing" />

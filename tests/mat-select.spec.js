@@ -127,6 +127,38 @@ describe('MatSelect', () => {
     expect(wrapper.get('[role="menu"]').element.showPopover).not.toHaveBeenCalled();
   });
 
+  it('chips 在受控 v-model 中点击关闭图标后实际移除项目', async () => {
+    let wrapper;
+    let modelValue = ['a', 'b'];
+    const props = {
+      get modelValue() {
+        return modelValue;
+      },
+      multiple: true,
+      chips: true,
+      items: [
+        { title: '甲', value: 'a' },
+        { title: '乙', value: 'b' },
+      ],
+      'onUpdate:modelValue': (value) => {
+        modelValue = value;
+        wrapper.setProps({ modelValue: value });
+      },
+    };
+
+    wrapper = mount(MatSelect, { attachTo: document.body, props });
+    const chip = wrapper.findAllComponents({ name: 'MatChip' })[0];
+
+    await chip.get('[aria-hidden="true"]:last-child').trigger('click');
+    await nextTick();
+
+    expect(modelValue).toEqual(['b']);
+    const chips = wrapper.findAllComponents({ name: 'MatChip' });
+
+    expect(chips).toHaveLength(1);
+    expect(chips[0].text()).toBe('乙close');
+  });
+
   it('单选 chips 点击 x 后清空为 null', async () => {
     const wrapper = mount(MatSelect, {
       attachTo: document.body,
