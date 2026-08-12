@@ -11,6 +11,7 @@
 - [Icon 图标](components/icon.md): mat-icon 的 Material Symbols 字形、SVG 资源、内联 SVG、尺寸、字体轴和配色。
 - [组件配色](guide/component-color.md): 按 Material 3 颜色角色为组件选择容器、内容、表面、边界和状态配色。
 - [Image 图片](components/image.md): mat-image 的图片填充、圆角、宽高比、尺寸动画与原生属性透传。
+- [Badge 徽标](components/badge.md): mat-badge 的点型、内容型、覆盖方位、偏移、行内布局和配色。
 - [Text 文字](components/text.md): mat-text 的 Material 3 文字类型、尺寸、强调样式和动态根元素。
 - [Tailwind CSS](guide/tailwind.md): 将 mde-vue 运行时令牌接入 Tailwind CSS v4，并使用带 mat 前缀的语义工具类。
 - [Button 按钮](components/button.md): mat-btn 的普通与图标模式、尺寸、宽度、形态、配色、受控切换、事件和 slots。

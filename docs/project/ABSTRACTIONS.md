@@ -143,6 +143,12 @@ Icon 尺寸使用 `small`、`medium`、`large`、`extra-large` 四档，分别�
 
 Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `currentColor`；`fontColor` 直接接受任意 CSS 颜色并优先于 `color`。Slot SVG 只有使用 `currentColor` 时继承颜色，`src` 资源保留内部颜色。其他组件复用 MatIcon 时负责传入所在组件的尺寸、光学尺寸、内容颜色和无障碍属性。
 
+## `<mat-badge>`
+
+`<mat-badge>` 的导出名是 `MatBadge`。默认模式使用 `inline-flex` 包装默认 Slot，并把不接收指针事件的指示器绝对定位到八个逻辑方位；包装层会改变直接子选择器和 flex/grid 子项关系。`offset` 只在覆盖模式沿逻辑行轴和块轴微调，数字按 px、字符串按 CSS 长度处理。`location="inline"` 是独立的自然布局模式，只渲染 Badge 指示器并忽略 Slot 与 offset。
+
+`dot` 优先于 `content`；`content=0` 有效，空字符串和 undefined 不显示。覆盖模式无内容时仍保留 Slot 包装，Inline 模式无内容时不生成元素。点型约为 6px，内容型保持约 16px 高并原样扩宽，不替使用方截断超过四字符的内容。`color` 遵循统一组件配色约定，默认使用 error 与 on-error。
+
 ## `<mat-image>`
 
 `<mat-image>` 的导出名是 `MatImage`，根元素是包裹内部原生 `<img>` 的 `div`。`radius` 省略时使用 `--mat-sys-shape-corner-extra-large`（28px），数字与纯数字字符串按 px 处理（0 不带单位），其他字符串须为 trim 后合法的 CSS 长度值，非法时回退默认令牌；`fit` 只接受 `cover`（默认）与 `contain`；`aspect-ratio` 接受宽/高比数字或 trim 后合法的 CSS `aspect-ratio` 字符串，省略或非法时保持图片自然比例；`outline` 默认开启 1px 描边，颜色使用 `--mat-sys-color-outline`，可设置为 `false` 关闭。组件上的 `class` 与 `style` 属于根容器，其余未消费的原生属性和监听器以及 `img-class`、`img-style` 定向到内部 `img`。根元素对 `aspect-ratio`、`inline-size`、`block-size` 和 `border-radius` 使用系统动效令牌过渡，并尊重减少动画偏好；`fit` 切换不参与过渡。组件没有 Slots、自定义事件或公开方法。

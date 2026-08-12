@@ -937,6 +937,47 @@ export interface MatCheckboxEmits {
 export type MatCheckboxComponent = DefineComponent<MatCheckboxProps, {}, {}, {}, {}, {}, {}, MatCheckboxEmits>;
 export declare const MatCheckbox: MatCheckboxComponent;
 
+export interface MatBadgeProps {
+  /**
+  * 内容型 Badge 显示的文本或数字；空字符串不显示。
+  *
+  * @type {string | number | undefined}
+  * @default undefined
+  */
+  content?: string | number | undefined;
+  /**
+  * 显示点型 Badge，并忽略 content。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  dot?: boolean;
+  /**
+  * 覆盖模式的方位；`inline` 使 Badge 自身参与自然布局并忽略默认 Slot。
+  *
+  * @type {'top-start' | 'top' | 'top-end' | 'end' | 'bottom-end' | 'bottom' | 'bottom-start' | 'start' | 'inline'}
+  * @default 'top-end'
+  */
+  location?: 'top-start' | 'top' | 'top-end' | 'end' | 'bottom-end' | 'bottom' | 'bottom-start' | 'start' | 'inline';
+  /**
+  * 覆盖模式下沿逻辑行轴和块轴的微调量；数字按 px 处理。
+  *
+  * @type {{ inline?: number | string, block?: number | string }}
+  * @default { inline: 0, block: 0 }
+  */
+  offset?: { inline?: number | string, block?: number | string }} @default { inline: 0, block: 0 ;
+  /**
+  * Material 语义色、系统颜色角色或六位十六进制种子色。
+  *
+  * @type {string}
+  * @default 'error'
+  */
+  color?: string;
+}
+
+export type MatBadgeComponent = DefineComponent<MatBadgeProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatBadge: MatBadgeComponent;
+
 export interface MatChipProps {
   /**
   * Chip 的用途形态。
@@ -3088,6 +3129,8 @@ declare module 'vue' {
     'mat-divider': typeof MatDivider;
     MatCheckbox: typeof MatCheckbox;
     'mat-checkbox': typeof MatCheckbox;
+    MatBadge: typeof MatBadge;
+    'mat-badge': typeof MatBadge;
     MatChip: typeof MatChip;
     'mat-chip': typeof MatChip;
     MatChipSet: typeof MatChipSet;

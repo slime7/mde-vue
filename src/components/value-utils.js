@@ -81,7 +81,7 @@ function isCssSupported(value, property) {
  * 其他字符串按 CSS 属性校验；未提供 property 时字符串一律拒绝。
  *
  * @param {unknown} value
- * @param {{ property?: string, positive?: boolean, max?: number, allowUndefined?: boolean }} options
+ * @param {{ property?: string, positive?: boolean, max?: number, allowUndefined?: boolean, allowNegative?: boolean }} options
  * @returns {boolean}
  */
 export function isValidCssLength(value, {
@@ -89,6 +89,7 @@ export function isValidCssLength(value, {
   positive = false,
   max,
   allowUndefined = true,
+  allowNegative = false,
 } = {}) {
   if (value === undefined) {
     return allowUndefined;
@@ -96,6 +97,13 @@ export function isValidCssLength(value, {
 
   if (typeof value === 'number'
     || (typeof value === 'string' && NUMERIC_STRING.test(value.trim()))) {
+    if (allowNegative) {
+      const number = toNumber(value);
+
+      return Number.isFinite(number)
+        && (max === undefined || number <= max);
+    }
+
     return isValidNumber(value, { positive, max });
   }
 
@@ -111,7 +119,7 @@ export function isValidCssLength(value, {
  * 合法 CSS 字符串 trim 后原样使用；非法值返回 fallback。
  *
  * @param {unknown} value
- * @param {{ property?: string, positive?: boolean, max?: number, fallback?: string }} options
+ * @param {{ property?: string, positive?: boolean, max?: number, fallback?: string, allowNegative?: boolean }} options
  * @returns {string | undefined}
  */
 export function toCssLength(value, {
@@ -119,12 +127,14 @@ export function toCssLength(value, {
   positive = false,
   max,
   fallback,
+  allowNegative = false,
 } = {}) {
   if (isValidCssLength(value, {
     property,
     positive,
     max,
     allowUndefined: false,
+    allowNegative,
   })) {
     const number = toNumber(value);
 

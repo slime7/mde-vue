@@ -12,6 +12,7 @@ import {
   prompt,
   Intersection as RootIntersection,
   MatAppRoot as RootMatAppRoot,
+  MatBadge as RootMatBadge,
   MatBottomSheet as RootMatBottomSheet,
   MatBtn as RootMatBtn,
   MatBtnGroup as RootMatBtnGroup,
@@ -66,6 +67,7 @@ import {
 
 const globalComponents = [
   ['MatAppRoot', 'mat-app-root', RootMatAppRoot],
+  ['MatBadge', 'mat-badge', RootMatBadge],
   ['MatBtn', 'mat-btn', RootMatBtn],
   ['MatBtnGroup', 'mat-btn-group', RootMatBtnGroup],
   ['MatFab', 'mat-fab', RootMatFab],

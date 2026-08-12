@@ -21,6 +21,7 @@ import MatListGroup from './components/mat-list-group/MatListGroup.vue';
 import MatListItem from './components/mat-list/MatListItem.vue';
 import MatDivider from './components/mat-divider/MatDivider.vue';
 import MatCheckbox from './components/mat-checkbox/MatCheckbox.vue';
+import MatBadge from './components/mat-badge/MatBadge.vue';
 import MatChip from './components/mat-chip/MatChip.vue';
 import MatChipSet from './components/mat-chip/MatChipSet.vue';
 import MatRadio from './components/mat-radio/MatRadio.vue';
@@ -83,6 +84,7 @@ export const GLOBAL_COMPONENTS = [
   ['MatListItem', 'mat-list-item', MatListItem],
   ['MatDivider', 'mat-divider', MatDivider],
   ['MatCheckbox', 'mat-checkbox', MatCheckbox],
+  ['MatBadge', 'mat-badge', MatBadge],
   ['MatChip', 'mat-chip', MatChip],
   ['MatChipSet', 'mat-chip-set', MatChipSet],
   ['MatRadio', 'mat-radio', MatRadio],

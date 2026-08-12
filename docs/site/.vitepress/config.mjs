@@ -67,6 +67,7 @@ export default defineConfig({
             text: '操作与反馈',
             collapsed: true,
             items: [
+              { text: 'Badge 徽标', link: '/components/badge' },
               { text: 'Button 按钮', link: '/components/button' },
               { text: 'Button group 按钮组', link: '/components/button-group' },
               { text: 'Dialog 对话框', link: '/components/dialog' },

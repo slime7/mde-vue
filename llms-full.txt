@@ -148,6 +148,7 @@ import {
   dialog,
   Intersection as vIntersection,
   MatAppRoot,
+  MatBadge,
   MatBottomSheet,
   MatCard,
   MatCardHeadline,
@@ -189,7 +190,7 @@ import {
 } from 'mde-vue';
 ```
 
-局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatAppRoot>`、`<MatAppBar>`、`<MatSearch>`、`<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatText>`、`<MatCard>`、`<MatChip>`、`<MatChipSet>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatScrollArea>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`；`useMatApp()` 只能在 `<MatAppRoot>` 的后代组件中调用。
+局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatAppRoot>`、`<MatAppBar>`、`<MatSearch>`、`<MatBadge>`、`<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatText>`、`<MatCard>`、`<MatChip>`、`<MatChipSet>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatScrollArea>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`；`useMatApp()` 只能在 `<MatAppRoot>` 的后代组件中调用。
 
 ## 页面基础尺寸
 
@@ -1609,6 +1610,313 @@ import ImageFitExample from '../examples/image/ImageFitExample.vue';
 import ImageOutlineExample from '../examples/image/ImageOutlineExample.vue';
 import ImageRadiusExample from '../examples/image/ImageRadiusExample.vue';
 import ImageStyleExample from '../examples/image/ImageStyleExample.vue';
+</script>
+
+# Badge 徽标
+
+## 组件简介
+
+`<mat-badge>` 的组件导出名是 `MatBadge`。它用于显示与目标有关的状态、通知或数量。默认模式通过包装容器把 Badge 覆盖到默认 Slot 的边缘；`location="inline"` 时只显示 Badge 自身，并让它作为普通行内元素参与自然布局。
+
+覆盖模式会增加一个 `inline-flex` 包装层，因此直接子选择器和 flex/grid 子项关系会相应改变。Badge 指示器不接收指针事件，不会阻断 Slot 内控件的点击、hover、焦点或键盘操作。
+
+## 示例
+
+### `dot`
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="badge-row">
+    <mat-badge dot>
+      <mat-icon icon="notifications" />
+    </mat-badge>
+
+    <mat-badge dot>
+      <mat-btn icon="mail" label="收件箱" variant="standard" />
+    </mat-badge>
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.badge-row {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Badge 点型预览">
+    <BadgeDotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `content`
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="badge-row">
+    <mat-badge :content="3">
+      <mat-icon icon="notifications" />
+    </mat-badge>
+
+    <mat-badge content="123456">
+      <mat-icon icon="mail" />
+    </mat-badge>
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.badge-row {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Badge 内容型预览">
+    <BadgeContentExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `location`
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="location-grid">
+    <mat-badge
+      v-for="location in locations"
+      :key="location"
+      :content="location"
+      :location="location"
+    >
+      <span class="target">{{ location }}</span>
+    </mat-badge>
+  </div>
+</template>
+```
+```vue
+<script setup>
+const locations = [
+  'top-start',
+  'top',
+  'top-end',
+  'start',
+  'end',
+  'bottom-start',
+  'bottom',
+  'bottom-end',
+];
+</script>
+```
+```vue
+<style scoped>
+.location-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  gap: 56px 40px;
+  inline-size: 100%;
+}
+
+.target {
+  display: inline-flex;
+  min-inline-size: 96px;
+  min-block-size: 48px;
+  align-items: center;
+  justify-content: center;
+  color: var(--mat-sys-color-on-surface-variant);
+  background: var(--mat-sys-color-surface-container);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Badge 方位预览">
+    <BadgeLocationExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `offset`
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-badge
+    content="12"
+    :offset="{ inline: 8, block: -4 }"
+  >
+    <span class="chart" aria-label="示例柱状图">
+      <i />
+      <i />
+      <i />
+    </span>
+  </mat-badge>
+</template>
+```
+```vue
+<style scoped>
+.chart {
+  display: flex;
+  min-inline-size: 112px;
+  min-block-size: 72px;
+  align-items: end;
+  gap: 8px;
+  padding: 12px;
+  background: var(--mat-sys-color-surface-container);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+
+.chart i {
+  inline-size: 24px;
+  background: var(--mat-sys-color-primary);
+  border-radius: 8px 8px 0 0;
+}
+
+.chart i:nth-child(1) { block-size: 24px; }
+
+.chart i:nth-child(2) { block-size: 48px; }
+
+.chart i:nth-child(3) { block-size: 36px; }
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Badge 偏移预览">
+    <BadgeOffsetExample />
+  </DocsPreview>
+</ClientOnly>
+
+### Inline 布局
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <p class="message">
+    未读消息
+    <mat-badge location="inline" :content="8" />
+  </p>
+</template>
+```
+```vue
+<style scoped>
+.message {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Badge Inline 布局预览">
+    <BadgeInlineExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `color`
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="badge-row">
+    <mat-badge location="inline" content="Error" />
+    <mat-badge location="inline" content="Primary" color="primary" />
+    <mat-badge location="inline" content="Custom" color="#6750A4" />
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Badge 配色预览">
+    <BadgeColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `content` | `string \| number` | — | 内容型 Badge 的文本或数字；`0` 有效，空字符串不显示，内容不会自动截断。 |
+| `dot` | `boolean` | `false` | 显示点型 Badge，并忽略 `content`。 |
+| `location` | `top-start \| top \| top-end \| end \| bottom-end \| bottom \| bottom-start \| start \| inline` | `top-end` | 覆盖方位；`inline` 只渲染 Badge 自身并忽略默认 Slot。 |
+| `offset` | `{ inline?: number \| string, block?: number \| string }` | `{ inline: 0, block: 0 }` | 覆盖模式的逻辑轴微调；数字按 px，字符串须为合法 CSS 长度。Inline 模式忽略。 |
+| `color` | `string` | `error` | Material 语义色、系统颜色角色或六位十六进制种子色。 |
+
+组件没有公开方法。
+
+## 事件
+
+组件没有自定义事件。覆盖层不接收指针事件，默认 Slot 内元素保持自己的原生或组件事件。
+
+## Slots
+
+| Slot | 内容约束 |
+| --- | --- |
+| 默认 Slot | 覆盖模式的目标内容；`location="inline"` 时忽略。 |
+
+### 状态与布局
+
+`dot=false` 且没有有效 `content` 时，覆盖模式仍渲染 Slot 和包装容器，但不显示指示器；Inline 模式不渲染任何 DOM。覆盖模式使用逻辑方向，因此 start/end 会随书写方向变化。`offset.inline` 正值朝 inline-end 移动，`offset.block` 正值朝 block-end 移动。
+
+点型使用约 6px 圆形；内容型保持约 16px 高并随内容扩宽。Material 建议内容型最多使用四个字符，本组件按使用方要求保留原始内容，使用方需要自行避免与邻近元素碰撞。
+
+## 参考
+
+尺寸、形态和默认位置参考 Material 3 [Badge specs](https://m3.material.io/components/badges/specs) 与 [Badge guidelines](https://m3.material.io/components/badges/guidelines)。
+
+<script setup>
+import BadgeColorExample from '../examples/badge/BadgeColorExample.vue';
+import BadgeContentExample from '../examples/badge/BadgeContentExample.vue';
+import BadgeDotExample from '../examples/badge/BadgeDotExample.vue';
+import BadgeInlineExample from '../examples/badge/BadgeInlineExample.vue';
+import BadgeLocationExample from '../examples/badge/BadgeLocationExample.vue';
+import BadgeOffsetExample from '../examples/badge/BadgeOffsetExample.vue';
 </script>
 
 # Text 文字
