@@ -88,6 +88,7 @@ export default defineConfig({
               { text: 'Radio 单选按钮与单选组', link: '/components/radio' },
               { text: 'Range slider 范围滑块', link: '/components/range-slider' },
               { text: 'Search 搜索', link: '/components/search' },
+              { text: 'Select 选择器', link: '/components/select' },
               { text: 'Slider 滑块', link: '/components/slider' },
               { text: 'Switch 开关', link: '/components/switch' },
               { text: 'Text field 文本输入', link: '/components/text-field' },
