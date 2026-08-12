@@ -64,6 +64,28 @@ const props = defineProps({
     default: undefined,
   },
   /**
+   * 使用 Rich tooltip 外观；仅提供 supporting content 时可显式开启。
+   *
+   * 提供 subhead 或 action Slot 时也会自动使用 Rich tooltip 外观。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  rich: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Rich tooltip 的简短标题；存在时优先于 subhead Slot。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
+  subhead: {
+    type: String,
+    default: undefined,
+  },
+  /**
    * 展示元素的选择器或 HTMLElement。
    *
    * @type {string | HTMLElement | undefined}
@@ -161,6 +183,18 @@ const hasContent = computed(() => {
 
   return Boolean(slots.default);
 });
+const hasSubhead = computed(() => {
+  if (propsWithDefaults.subhead !== undefined) {
+    return propsWithDefaults.subhead.length > 0;
+  }
+
+  return Boolean(slots.subhead);
+});
+const isRich = computed(() => (
+  propsWithDefaults.rich
+  || hasSubhead.value
+  || Boolean(slots.action)
+));
 const hasActivatorSlot = computed(() => Boolean(slots.activator));
 const rawVNodeProps = instance?.vnode.props ?? {};
 const isControlled = Object.prototype.hasOwnProperty.call(rawVNodeProps, 'modelValue')
@@ -761,11 +795,41 @@ function handleFocusIn() {
  * @param {FocusEvent} event
  */
 function handleFocusOut(event) {
-  if (targetElement.value?.contains(event.relatedTarget)) {
+  if (
+    targetElement.value?.contains(event.relatedTarget)
+    || (isRich.value && tooltipElement.value?.contains(event.relatedTarget))
+  ) {
     return;
   }
 
   focusInside = false;
+  updateAutomaticVisibility();
+}
+
+function handleTooltipPointerEnter() {
+  if (!isRich.value) {
+    return;
+  }
+
+  pointerInside = true;
+  updateAutomaticVisibility();
+}
+
+function handleTooltipPointerLeave() {
+  if (!isRich.value) {
+    return;
+  }
+
+  pointerInside = false;
+  updateAutomaticVisibility();
+}
+
+function handleTooltipFocusIn() {
+  if (!isRich.value) {
+    return;
+  }
+
+  focusInside = true;
   updateAutomaticVisibility();
 }
 
@@ -997,13 +1061,38 @@ if (appContext) {
         {
           'mat-tooltip--app-root': isAppRootAttached,
           'mat-tooltip--positioned': isPositioned,
+          'mat-tooltip--rich': isRich,
         },
       ]"
       :data-location="appliedLocation"
       :style="[positionStyle, $attrs.style]"
       role="tooltip"
+      @focusin="handleTooltipFocusIn"
+      @focusout="handleFocusOut"
+      @mouseenter="handleTooltipPointerEnter"
+      @mouseleave="handleTooltipPointerLeave"
     >
-      <template v-if="propsWithDefaults.content !== undefined">
+      <template v-if="isRich">
+        <span
+          v-if="hasSubhead"
+          class="mat-tooltip__subhead mat-sys-typescale-title-small"
+        >
+          <template v-if="propsWithDefaults.subhead !== undefined">
+            {{ propsWithDefaults.subhead }}
+          </template>
+          <slot v-else name="subhead" />
+        </span>
+        <span class="mat-tooltip__content mat-sys-typescale-body-medium">
+          <template v-if="propsWithDefaults.content !== undefined">
+            {{ propsWithDefaults.content }}
+          </template>
+          <slot v-else />
+        </span>
+        <span v-if="$slots.action" class="mat-tooltip__actions">
+          <slot name="action" />
+        </span>
+      </template>
+      <template v-else-if="propsWithDefaults.content !== undefined">
         {{ propsWithDefaults.content }}
       </template>
       <slot v-else />
@@ -1048,6 +1137,59 @@ if (appContext) {
 .mat-tooltip--app-root {
   position: absolute;
   max-inline-size: calc(100% - (var(--mat-tooltip-viewport-margin) * 2));
+}
+
+.mat-tooltip--rich {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  inline-size: max-content;
+  max-inline-size: min(
+    var(--mat-tooltip-rich-container-max-width),
+    calc(100dvi - (var(--mat-tooltip-viewport-margin) * 2))
+  );
+  min-block-size: auto;
+  padding: var(--mat-tooltip-rich-container-padding-block-start)
+    var(--mat-tooltip-rich-container-padding-inline)
+    var(--mat-tooltip-rich-container-padding-block-end);
+  overflow: visible;
+  color: var(--mat-tooltip-rich-content-color);
+  text-align: start;
+  text-overflow: clip;
+  white-space: normal;
+  pointer-events: auto;
+  background: var(--mat-tooltip-rich-container-color);
+  border-radius: var(--mat-tooltip-rich-container-shape);
+  box-shadow: var(--mat-tooltip-rich-container-elevation);
+}
+
+.mat-tooltip--rich.mat-tooltip--app-root {
+  max-inline-size: min(
+    var(--mat-tooltip-rich-container-max-width),
+    calc(100% - (var(--mat-tooltip-viewport-margin) * 2))
+  );
+}
+
+.mat-tooltip__subhead,
+.mat-tooltip__content,
+.mat-tooltip__actions {
+  max-inline-size: 100%;
+}
+
+.mat-tooltip__subhead {
+  color: var(--mat-tooltip-rich-subhead-color);
+}
+
+.mat-tooltip__subhead + .mat-tooltip__content {
+  margin-block-start: var(--mat-tooltip-rich-subhead-content-gap);
+}
+
+.mat-tooltip__actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--mat-tooltip-rich-action-gap);
+  margin-block-start: var(--mat-tooltip-rich-content-action-gap);
+  color: var(--mat-tooltip-rich-action-color);
 }
 
 .mat-tooltip--closing {

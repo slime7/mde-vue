@@ -6,6 +6,8 @@ const pagePath = 'docs/site/components/tooltip.md';
 const exampleNames = [
   'TooltipContentExample',
   'TooltipDefaultSlotExample',
+  'TooltipRichExample',
+  'TooltipRichSlotsExample',
   'TooltipActivatorSlotExample',
   'TooltipTargetExample',
   'TooltipAttachExample',

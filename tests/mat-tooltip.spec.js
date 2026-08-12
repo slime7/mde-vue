@@ -136,6 +136,145 @@ describe('MatTooltip', () => {
     wrapper.unmount();
   });
 
+  it('Rich tooltip 使用 subhead 与 content prop，并渲染可交互的 action Slot', async () => {
+    const target = createTarget('rich-props-target');
+    const onAction = vi.fn();
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      props: {
+        content: '这是较长的补充说明。',
+        subhead: '新功能',
+        target,
+      },
+      slots: {
+        action: () => h('button', {
+          onClick: onAction,
+          type: 'button',
+        }, '了解详情'),
+      },
+    });
+
+    await hover(target);
+
+    const tooltip = document.body.querySelector('[role="tooltip"]');
+    const action = tooltip?.querySelector('button');
+
+    expect(tooltip?.textContent).toContain('新功能');
+    expect(tooltip?.textContent).toContain('这是较长的补充说明。');
+    expect(action?.textContent).toBe('了解详情');
+
+    action?.click();
+    expect(onAction).toHaveBeenCalledOnce();
+
+    wrapper.unmount();
+  });
+
+  it('Rich tooltip 的 prop 优先于同名 Slot，省略 prop 时使用 Slot', async () => {
+    const target = createTarget('rich-slot-priority-target');
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      props: {
+        content: 'content prop',
+        subhead: 'subhead prop',
+        target,
+      },
+      slots: {
+        default: () => 'content Slot',
+        subhead: () => 'subhead Slot',
+      },
+    });
+
+    await hover(target);
+
+    const tooltip = document.body.querySelector('[role="tooltip"]');
+
+    expect(tooltip?.textContent).toContain('content prop');
+    expect(tooltip?.textContent).toContain('subhead prop');
+    expect(tooltip?.textContent).not.toContain('content Slot');
+    expect(tooltip?.textContent).not.toContain('subhead Slot');
+
+    wrapper.unmount();
+
+    const slotTarget = createTarget('rich-slot-fallback-target');
+    const slotWrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      props: {
+        target: slotTarget,
+      },
+      slots: {
+        default: () => 'content Slot',
+        subhead: () => 'subhead Slot',
+      },
+    });
+
+    await hover(slotTarget);
+
+    const slotTooltip = document.body.querySelector('[role="tooltip"]');
+
+    expect(slotTooltip?.textContent).toContain('content Slot');
+    expect(slotTooltip?.textContent).toContain('subhead Slot');
+
+    slotWrapper.unmount();
+  });
+
+  it('rich 属性允许只有 supporting content 的 Rich tooltip', async () => {
+    const target = createTarget('rich-content-only-target');
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      props: {
+        content: '没有 subhead 或 action 的详细说明。',
+        rich: true,
+        target,
+      },
+    });
+
+    await hover(target);
+
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent)
+      .toContain('没有 subhead 或 action 的详细说明。');
+
+    wrapper.unmount();
+  });
+
+  it('指针和焦点移入 Rich tooltip 时维持自动展示', async () => {
+    const target = createTarget('rich-interaction-target');
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      props: {
+        closeDelay: 100,
+        content: '可以操作的详细说明。',
+        rich: true,
+        target,
+      },
+      slots: {
+        action: () => h('button', { type: 'button' }, '操作'),
+      },
+    });
+
+    await hover(target);
+
+    const tooltip = document.body.querySelector('[role="tooltip"]');
+    const action = tooltip?.querySelector('button');
+
+    target.dispatchEvent(new MouseEvent('mouseleave'));
+    tooltip?.dispatchEvent(new MouseEvent('mouseenter'));
+    await vi.advanceTimersByTimeAsync(100);
+    expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
+
+    tooltip?.dispatchEvent(new MouseEvent('mouseleave'));
+    action?.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+    await vi.advanceTimersByTimeAsync(100);
+    expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
+
+    action?.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+    await vi.advanceTimersByTimeAsync(100);
+    await vi.advanceTimersByTimeAsync(150);
+    await settleRender();
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    wrapper.unmount();
+  });
+
   it('选择器目标稍后挂载时不在初次挂载阶段误报，并可正常展示', async () => {
     const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const wrapper = mount(MatTooltip, {

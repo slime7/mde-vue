@@ -2490,6 +2490,22 @@ export interface MatTooltipProps {
   */
   content?: string | undefined;
   /**
+  * 使用 Rich tooltip 外观；仅提供 supporting content 时可显式开启。
+  *
+  * 提供 subhead 或 action Slot 时也会自动使用 Rich tooltip 外观。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  rich?: boolean;
+  /**
+  * Rich tooltip 的简短标题；存在时优先于 subhead Slot。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  subhead?: string | undefined;
+  /**
   * 展示元素的选择器或 HTMLElement。
   *
   * @type {string | HTMLElement | undefined}

@@ -482,6 +482,19 @@
   --mat-tooltip-container-shape: var(--mat-sys-shape-corner-extra-small);
   --mat-tooltip-container-elevation: var(--mat-sys-elevation-level0);
   --mat-tooltip-viewport-margin: 8px;
+  --mat-tooltip-rich-container-color: var(--mat-sys-color-surface-container);
+  --mat-tooltip-rich-subhead-color: var(--mat-sys-color-on-surface-variant);
+  --mat-tooltip-rich-content-color: var(--mat-sys-color-on-surface-variant);
+  --mat-tooltip-rich-action-color: var(--mat-sys-color-primary);
+  --mat-tooltip-rich-container-max-width: 320px;
+  --mat-tooltip-rich-container-padding-block-start: 12px;
+  --mat-tooltip-rich-container-padding-block-end: 8px;
+  --mat-tooltip-rich-container-padding-inline: 16px;
+  --mat-tooltip-rich-subhead-content-gap: 4px;
+  --mat-tooltip-rich-content-action-gap: 12px;
+  --mat-tooltip-rich-action-gap: 8px;
+  --mat-tooltip-rich-container-shape: var(--mat-sys-shape-corner-medium);
+  --mat-tooltip-rich-container-elevation: var(--mat-sys-elevation-level2);
 
   /* Toolbar component tokens */
   --mat-toolbar-container-height: 64px;
