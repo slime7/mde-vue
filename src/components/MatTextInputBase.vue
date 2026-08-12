@@ -410,8 +410,12 @@ function handleModelValue(value) {
   min-inline-size: 0;
   inline-size: 100%;
   color: var(--mat-text-input-content-color);
-  cursor: text;
   user-select: none;
+}
+
+.mat-text-input--input,
+.mat-text-input--textarea {
+  cursor: text;
 }
 
 .mat-text-input__container {

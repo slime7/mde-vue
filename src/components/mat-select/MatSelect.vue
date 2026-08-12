@@ -453,6 +453,14 @@ function removeValue(value) {
   inline-size: 100%;
 }
 
+.mat-select :deep(.mat-text-input__container) {
+  cursor: pointer;
+}
+
+.mat-select :deep(.mat-text-input--disabled .mat-text-input__container) {
+  cursor: default;
+}
+
 .mat-select__trigger {
   display: flex;
   flex-grow: 1;

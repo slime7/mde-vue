@@ -5903,7 +5903,7 @@ var hi = {
 			class: "mat-text-input__supporting mat-sys-typescale-body-small"
 		}, [s("span", Pi, F(k.value), 1), e.maxLength === void 0 ? a("", !0) : (w(), o("span", Fi, F(e.modelValue.length) + " / " + F(e.maxLength), 1))])) : a("", !0)], 14, wi));
 	}
-}), [["__scopeId", "data-v-cf19df0b"]]), Li = ["filled", "outlined"], Ri = {
+}), [["__scopeId", "data-v-53234380"]]), Li = ["filled", "outlined"], Ri = {
 	modelValue: {
 		type: String,
 		default: ""
@@ -6896,7 +6896,7 @@ var hi = {
 			])
 		], 6));
 	}
-}), [["__scopeId", "data-v-9e14f04f"]]), ta = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-b4209918"]]), ta = /*@__PURE__*/ Object.assign({
 	name: "MatTextarea",
 	inheritAttrs: !1
 }, {
