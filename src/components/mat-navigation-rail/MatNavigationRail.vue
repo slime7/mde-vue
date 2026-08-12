@@ -563,7 +563,7 @@ watch([
   flex: 0 0 auto;
   inline-size: var(--mat-navigation-rail-collapsed-width);
   min-block-size: 100%;
-  transition: inline-size var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized);
+  transition: inline-size var(--mat-sys-motion-spring-default-spatial);
 }
 
 .mat-navigation-rail-host--end {
@@ -646,7 +646,7 @@ watch([
   align-items: stretch;
   color: var(--mat-navigation-rail-content-color);
   background: var(--mat-navigation-rail-container-color);
-  transition: inline-size var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized), border-radius var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized);
+  transition: inline-size var(--mat-sys-motion-spring-default-spatial), border-radius var(--mat-sys-motion-spring-default-spatial);
 }
 
 .mat-navigation-rail--app {

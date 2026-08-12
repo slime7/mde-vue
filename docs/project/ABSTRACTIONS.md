@@ -58,6 +58,8 @@ Tooltip 分组由展示元素最近的 `data-mat-tooltip-group` 祖先定义。�
 - `--mat-sys-color-*`：Material 语义颜色及其 on-color。
 - `--mat-sys-typescale-*`、`--mat-sys-shape-*`、`--mat-sys-elevation-*`、`--mat-sys-motion-*`、`--mat-sys-state-*`、`--mat-sys-interaction-*`：跨组件共享的系统语义值。
 
+动效令牌同时提供旧版独立 duration/easing 与 Material 3 Expressive 复合值。`--mat-sys-motion-spring-{fast|default|slow}-spatial` 用于位置、尺寸、旋转和圆角等空间变化，`--mat-sys-motion-spring-{fast|default|slow}-effects` 用于颜色与透明度；复合值可直接用于 transition 或 animation。减少动态效果时，组件取消空间和无限动画并直接呈现静态可理解状态。
+
 组件可以使用 `--mat-<component>-*` 等 CSS 自定义属性集中表达尺寸、颜色、形状、排版、描边、海拔和间距，但这些变量属于内部实现，不是公共定制入口，也不提供名称或行为兼容承诺。组件级定制通过已公开的 Vue props 完成。
 
 排版轴令牌同时由 `.mat-sys-typescale-*` 公共 class 和 `--text-mat-*` Tailwind 主题变量消费；三层必须完整覆盖相同的 30 套样式并保持同一语义。其他 Tailwind 映射继续使用 `--color-mat-*`、`--radius-mat-*`、`--shadow-mat-*` 和 `--ease-mat-*`，不得复制具体值或覆盖常见无前缀主题变量。
@@ -215,7 +217,7 @@ Tooltip 只实现 Material 3 Plain tooltip，不提供 color、Rich 内容、操
 
 ## Panes 布局面板
 
-`<mat-panes>` 与 `<mat-pane>` 组成横向 flexible Pane 布局。`MatPane.id` 是当前实例中的唯一稳定键，同时对应 `sizes` 与根 DOM id；`MatPanes.sizes` 始终由使用方受控，组件只预览拖动结果并在释放或键盘操作后发出 `update:sizes`。相邻 Pane 的权重总和保持不变，零权重允许 Pane 折叠但不代替应用执行 `v-if`。
+`<mat-panes>` 与 `<mat-pane>` 组成横向 flexible Pane 布局。`MatPane.id` 是当前实例中的唯一稳定键，同时对应 `sizes` 与根 DOM id；`MatPanes.sizes` 始终由使用方受控，组件按绘制帧合并拖动预览，并在释放前刷新最新位置后发出 `update:sizes`。相邻 Pane 的权重总和保持不变，零权重允许 Pane 折叠但不代替应用执行 `v-if`。
 
 Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父级必须提供确定的块轴尺寸才能形成内部滚动边界。调整控件占用 8px 分隔空间，48px 交互目标在 Pane 高度方向居中，使用 `role="separator"`、垂直方向和左右键语义。`resizeLabel` 由使用方提供给后方分隔控件作为可访问名称；Pane 数量、内容顺序、断点后的显隐和尺寸持久化属于使用方责任。
 

@@ -11,6 +11,7 @@ import {
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatActionBase from '../MatActionBase.vue';
+import createMotionController from '../motion-controller';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import MAT_SNACKBAR_EXTERNALLY_MANAGED_KEY from '../snackbar-context';
 import {
@@ -146,6 +147,7 @@ const hasAction = computed(() => Boolean(slots.action) || (
 const hasClose = computed(() => Boolean(slots.close) || propsWithDefaults.closable);
 const hasTrailing = computed(() => hasAction.value || hasClose.value);
 const toolbarBottomClearance = ref(0);
+const snackbarElement = ref(null);
 const teleportTarget = computed(() => (
   appContext ? appContext.snackbarLayer.value : document.body
 ));
@@ -157,7 +159,7 @@ const resolvedCloseLabel = computed(() => (
 ));
 let mounted = false;
 let durationTimer;
-let phaseTimer;
+const phaseMotion = createMotionController();
 let warnedForMissingContent = false;
 let removeToolbarListener = null;
 
@@ -181,14 +183,7 @@ function clearDurationTimer() {
 }
 
 function clearPhaseTimer() {
-  if (phaseTimer !== undefined) {
-    window.clearTimeout(phaseTimer);
-    phaseTimer = undefined;
-  }
-}
-
-function prefersReducedMotion() {
-  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+  phaseMotion.cancel();
 }
 
 /**
@@ -196,17 +191,7 @@ function prefersReducedMotion() {
  * @param {() => void} callback
  */
 function waitForPhase(duration, callback) {
-  clearPhaseTimer();
-
-  if (prefersReducedMotion()) {
-    callback();
-    return;
-  }
-
-  phaseTimer = window.setTimeout(() => {
-    phaseTimer = undefined;
-    callback();
-  }, duration);
+  phaseMotion.wait(snackbarElement.value, duration, callback);
 }
 
 function getDuration() {
@@ -419,6 +404,7 @@ watch(() => propsWithDefaults.duration, () => {
   <Teleport v-if="teleportTarget" :to="teleportTarget">
     <section
       v-if="rendered"
+      ref="snackbarElement"
       v-bind="$attrs"
       class="mat-snackbar mat-sys-typescale-body-medium"
       :class="[
@@ -541,12 +527,12 @@ watch(() => propsWithDefaults.duration, () => {
 }
 
 .mat-snackbar--opening {
-  animation: mat-snackbar-enter var(--mat-sys-motion-duration-medium4) var(--mat-sys-motion-easing-emphasized-decelerate) both;
+  animation: mat-snackbar-enter var(--mat-sys-motion-spring-fast-spatial) both;
 }
 
 .mat-snackbar--closing {
   pointer-events: none;
-  animation: mat-snackbar-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) both;
+  animation: mat-snackbar-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
 .mat-snackbar--with-trailing {
@@ -659,7 +645,7 @@ watch(() => propsWithDefaults.duration, () => {
 
 @media (prefers-reduced-motion: reduce) {
   .mat-snackbar {
-    animation-duration: .01ms;
+    animation: none;
   }
 }
 </style>

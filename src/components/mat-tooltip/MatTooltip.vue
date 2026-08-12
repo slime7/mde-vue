@@ -17,6 +17,7 @@ import {
   watch,
 } from 'vue';
 import MatHover from '../mat-hover/MatHover.vue';
+import createMotionController from '../motion-controller';
 import { useMatProps } from '../use-mat-props';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import { getTooltipPosition, TOOLTIP_LOCATIONS } from '../tooltip-position';
@@ -167,7 +168,7 @@ const isControlled = Object.prototype.hasOwnProperty.call(rawVNodeProps, 'modelV
 
 let closeTimer;
 let openTimer;
-let phaseTimer;
+const phaseMotion = createMotionController();
 let positionFrame;
 let positionFrameUsesAnimation = false;
 let connectionFrame;
@@ -380,10 +381,7 @@ function clearCloseTimer() {
 }
 
 function clearPhaseTimer() {
-  if (phaseTimer !== undefined) {
-    window.clearTimeout(phaseTimer);
-    phaseTimer = undefined;
-  }
+  phaseMotion.cancel();
 }
 
 function clearConnectionFrame() {
@@ -418,26 +416,12 @@ function watchTargetConnection() {
   connectionFrame = window.requestAnimationFrame(check);
 }
 
-function prefersReducedMotion() {
-  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
-}
-
 /**
  * @param {number} duration
  * @param {() => void} callback
  */
 function waitForPhase(duration, callback) {
-  clearPhaseTimer();
-
-  if (prefersReducedMotion()) {
-    callback();
-    return;
-  }
-
-  phaseTimer = window.setTimeout(() => {
-    phaseTimer = undefined;
-    callback();
-  }, duration);
+  phaseMotion.wait(tooltipElement.value, duration, callback);
 }
 
 function clearPositionFrame() {
@@ -1054,7 +1038,7 @@ if (appContext) {
   box-shadow: var(--mat-tooltip-container-elevation);
   opacity: 1;
   transform: translate(0);
-  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), transform var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
+  transition: opacity var(--mat-sys-motion-spring-fast-effects), transform var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-tooltip--positioned {
@@ -1120,7 +1104,7 @@ if (appContext) {
 
 @media (prefers-reduced-motion: reduce) {
   .mat-tooltip {
-    transition-duration: .01ms;
+    transition: none;
   }
 }
 </style>

@@ -98,9 +98,7 @@ const emit = defineEmits(['click']);
   border-end-start-radius: var(--mat-button-end-start-radius);
   border-end-end-radius: var(--mat-button-end-end-radius);
   box-shadow: var(--mat-button-container-elevation);
-  transition-duration: var(--mat-sys-motion-duration-short3);
-  transition-property: color, background-color, border-color, border-start-start-radius, border-start-end-radius, border-end-start-radius, border-end-end-radius, box-shadow, inline-size;
-  transition-timing-function: var(--mat-sys-motion-easing-standard);
+  transition: color var(--mat-sys-motion-spring-fast-effects), background-color var(--mat-sys-motion-spring-fast-effects), border-color var(--mat-sys-motion-spring-fast-effects), border-start-start-radius var(--mat-sys-motion-spring-fast-spatial), border-start-end-radius var(--mat-sys-motion-spring-fast-spatial), border-end-start-radius var(--mat-sys-motion-spring-fast-spatial), border-end-end-radius var(--mat-sys-motion-spring-fast-spatial), box-shadow var(--mat-sys-motion-spring-fast-effects), inline-size var(--mat-sys-motion-spring-fast-spatial);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
@@ -123,7 +121,7 @@ const emit = defineEmits(['click']);
   pointer-events: none;
   background: var(--mat-button-state-color);
   opacity: 0;
-  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
+  transition: opacity var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-button-base::after {

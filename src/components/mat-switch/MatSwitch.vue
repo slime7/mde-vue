@@ -151,7 +151,7 @@ function handleChange(event) {
   background: var(--mat-switch-unselected-track-color);
   border: var(--mat-switch-track-outline-width) solid var(--mat-switch-unselected-track-outline-color);
   border-radius: var(--mat-sys-shape-corner-full);
-  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard), border-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+  transition: background-color var(--mat-sys-motion-spring-fast-effects), border-color var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-switch--checked .mat-switch__track {
@@ -166,7 +166,7 @@ function handleChange(event) {
   inline-size: var(--mat-switch-pressed-handle-size);
   block-size: var(--mat-switch-pressed-handle-size);
   transform: translateY(-50%);
-  transition: transform var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized);
+  transition: transform var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-switch--checked .mat-switch__handle-positioner {
@@ -183,7 +183,7 @@ function handleChange(event) {
   background: var(--mat-switch-unselected-handle-color);
   border-radius: var(--mat-sys-shape-corner-full);
   clip-path: circle(calc(var(--mat-selection-control-current-handle-size) / 2));
-  transition: clip-path var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+  transition: clip-path var(--mat-sys-motion-spring-fast-spatial), background-color var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-switch--checked .mat-switch__handle {
@@ -195,7 +195,7 @@ function handleChange(event) {
   inline-size: var(--mat-switch-icon-size);
   block-size: var(--mat-switch-icon-size);
   opacity: 0;
-  transition: clip-path var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-emphasized), opacity var(--mat-sys-motion-duration-short2) var(--mat-sys-motion-easing-standard);
+  transition: clip-path var(--mat-sys-motion-spring-fast-spatial), opacity var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-switch--icons-selected .mat-switch__icon--selected,

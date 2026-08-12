@@ -322,7 +322,7 @@ await snackbar({
 
 ## 队列、显示与无障碍
 
-模板 `<mat-snackbar v-model="open">` 与每次 `snackbar()` / `toast()` 调用共享同一个全局 FIFO 队列。活动通知完成 200ms 退出动画后，才会激活下一条；不会堆叠显示。排队中的模板通知在 `v-model=false` 或组件卸载时取消。命令式调用没有独立取消句柄，Promise 在对应通知显示并关闭后结算。
+模板 `<mat-snackbar v-model="open">` 与每次 `snackbar()` / `toast()` 调用共享同一个全局 FIFO 队列。活动通知完成实际退出动画后（默认 150ms），才会激活下一条；不会堆叠显示。排队中的模板通知在 `v-model=false` 或组件卸载时取消。命令式调用没有独立取消句柄，Promise 在对应通知显示并关闭后结算。
 
 默认显示时间为 4 秒，即使设置 action 或 `closable=true` 也不改变；需要常驻通知时设置 `duration=0`。Snackbar 使用底部安全边距，窄屏一行最小高度为 48px、两行自然扩展为 64px；宽屏支持左、中、右对齐。表面使用 Material 3 inverse surface、inverse on surface 与 inverse primary 角色，形状为 extra-small 圆角。文本起始留白为 16px，文本与尾部操作区相隔 24px，action 末端保留 8px；内置 action 与关闭控件都保留 48px 交互目标，关闭图标为 24px。
 

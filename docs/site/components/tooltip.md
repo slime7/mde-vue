@@ -202,7 +202,7 @@ activator Slot 存在时优先于 target，且必须只渲染一个属于当前 
 
 ## 展示行为与无障碍
 
-自动模式在鼠标悬停或键盘焦点进入展示元素时打开。打开延迟优先读取组件的 `openDelay`，省略时读取 `createMatUi()` 的 `defaults.tooltip.openDelay`，未安装插件时为 0；指针和焦点都离开后默认等待 600ms 关闭，关闭延迟同样可通过 `closeDelay` 或 `defaults.tooltip.closeDelay` 调整。Escape 会立即请求关闭当前提示，但节点会保留 150ms 以完成消失动画。模块级协调器保证同一时间只显示一个可见 Tooltip；打开新实例会关闭旧实例，并向受控旧实例发出关闭请求。
+自动模式在鼠标悬停或键盘焦点进入展示元素时打开。打开延迟优先读取组件的 `openDelay`，省略时读取 `createMatUi()` 的 `defaults.tooltip.openDelay`，未安装插件时为 0；指针和焦点都离开后默认等待 600ms 关闭，关闭延迟同样可通过 `closeDelay` 或 `defaults.tooltip.closeDelay` 调整。Escape 会立即请求关闭当前提示，节点保留至浏览器报告实际消失动画完成（默认 150ms）。模块级协调器保证同一时间只显示一个可见 Tooltip；打开新实例会关闭旧实例，并向受控旧实例发出关闭请求。
 
 应用可以在包含相关展示元素的最近祖先上添加 `data-mat-tooltip-group`。首个 Tooltip 实际显示后，该实例在指针和焦点都离开时启动 `defaults.tooltip.skipDelayDuration` 快速切换窗口；窗口内进入同组另一个 Tooltip 会跳过打开延迟。首个尚未显示、跨组、超过窗口和同一实例重新进入不会跳过延迟。该分组通过展示元素的 DOM 祖先识别，因此同样覆盖 Button 和 FAB 内部创建的 Tooltip。
 

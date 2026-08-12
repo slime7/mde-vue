@@ -255,7 +255,7 @@ onBeforeUnmount(() => {
   background: transparent;
   border: 0;
   border-radius: var(--mat-sys-shape-corner-extra-small);
-  transition: border-radius var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-emphasized), color var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), background-color var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
+  transition: border-radius var(--mat-sys-motion-spring-fast-spatial), color var(--mat-sys-motion-spring-fast-effects), background-color var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-menu-item--first:not(.mat-menu-item--submenu-open) {
@@ -280,7 +280,7 @@ onBeforeUnmount(() => {
 
 .mat-menu-item__submenu-icon {
   font-size: 20px;
-  transition: transform var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-emphasized);
+  transition: transform var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-menu-item--submenu-open .mat-menu-item__submenu-icon {

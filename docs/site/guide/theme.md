@@ -137,7 +137,10 @@ matUi.theme.dispose();
 - 海拔：`--mat-sys-elevation-level0` 至 `level5`，值可直接用于 `box-shadow`；组件优先通过 surface container 色表达层级。
 - 时长：`--mat-sys-motion-duration-short1..4`、`medium1..4`、`long1..4`、`extra-long1..4`，范围为 `50ms` 至 `1000ms`。
 - 缓动：`--mat-sys-motion-easing-emphasized`、`emphasized-decelerate`、`emphasized-accelerate`、`standard`、`standard-decelerate`、`standard-accelerate`。
+- Expressive 复合动效：`--mat-sys-motion-spring-fast-spatial`、`default-spatial`、`slow-spatial` 用于位置、尺寸、旋转和形状，时长分别为 `350ms / 500ms / 650ms`；`--mat-sys-motion-spring-fast-effects`、`default-effects`、`slow-effects` 用于颜色与透明度，时长分别为 `150ms / 200ms / 300ms`。这些令牌已包含时长与 `cubic-bezier()`，可直接写在 `transition` 或 `animation` 的属性名之后。
 - 状态层：`--mat-sys-state-hover-state-layer-opacity` 为 `0.08`，focus 与 pressed 为 `0.12`，dragged 为 `0.16`；disabled container 与 content 分别为 `0.10` 和 `0.38`。
 - 交互：`--mat-sys-interaction-target-min-size` 为 `48px`，焦点环使用 `--mat-sys-interaction-focus-ring-width` 和 `--mat-sys-interaction-focus-ring-offset`。
 
 实现组件时不能只根据色值挑选令牌。容器与内容的配对、强调层级、表面层级和边界选择见[组件配色](/guide/component-color)。
+
+空间动效允许轻微越过终点，effects 动效不会回弹。大多数小型控件使用 fast，部分覆盖屏幕的面板使用 default，完整页面变化才使用 slow。旧时长和缓动令牌继续保留；新增动效优先使用上述复合令牌。参数依据 [Material 3 Motion physics system](https://m3.material.io/styles/motion/overview/how-it-works) 的 [Web 转换表](https://m3.material.io/styles/motion/overview/specs)。

@@ -6,6 +6,7 @@ import { h, nextTick, ref } from 'vue';
 import { MatPane, MatPanes } from '../src';
 
 const mountedWrappers = [];
+let scheduledFrames;
 
 /**
  * @param {object} options
@@ -85,11 +86,27 @@ describe('MatPanes', () => {
       value: 800,
       writable: true,
     });
+    let nextFrameId = 1;
+    scheduledFrames = new Map();
+
+    vi.stubGlobal('requestAnimationFrame', (callback) => {
+      const frameId = nextFrameId;
+
+      nextFrameId += 1;
+      scheduledFrames.set(frameId, callback);
+
+      return frameId;
+    });
+    vi.stubGlobal('cancelAnimationFrame', (frameId) => {
+      scheduledFrames.delete(frameId);
+    });
   });
 
   afterEach(() => {
     mountedWrappers.splice(0).forEach((wrapper) => wrapper.unmount());
     vi.useRealTimers();
+    vi.unstubAllGlobals();
+    scheduledFrames = undefined;
   });
 
   it('渲染受控权重的横向 Pane、等高滚动区域和相邻调整控件', async () => {
@@ -139,6 +156,32 @@ describe('MatPanes', () => {
     expect(emitted).toHaveLength(1);
     expect(emitted[0][0].first + emitted[0][0].second).toBe(3);
     expect(emitted[0][0].third).toBe(1);
+  });
+
+  it('合并同帧拖动预览，并在释放前使用最新位置', async () => {
+    const wrapper = mountPanes({ sizes: { first: 1, second: 1, third: 1 } });
+    await nextTick();
+    const panes = wrapper.findAll('.mat-pane');
+    const handle = wrapper.find('.mat-pane__handle');
+
+    mockWidth(panes[0].element, 100);
+    mockWidth(panes[1].element, 100);
+
+    await dispatchPointer(handle, 'pointerdown', { clientX: 100, pointerId: 9 });
+    await dispatchPointer(handle, 'pointermove', { clientX: 120, pointerId: 9 });
+    await dispatchPointer(handle, 'pointermove', { clientX: 180, pointerId: 9 });
+
+    expect(scheduledFrames).toHaveLength(1);
+    expect(wrapper.emitted('update:sizes')).toBeUndefined();
+
+    await dispatchPointer(handle, 'pointerup', { clientX: 180, pointerId: 9 });
+
+    const [nextSizes] = wrapper.emitted('update:sizes')[0];
+
+    expect(nextSizes.first).toBeCloseTo(1.8);
+    expect(nextSizes.second).toBeCloseTo(0.2);
+    expect(nextSizes.third).toBe(1);
+    expect(scheduledFrames).toHaveLength(0);
   });
 
   it('键盘使用 16px 步长、Home 和 End 调整分隔位置', async () => {

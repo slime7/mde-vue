@@ -1,5 +1,7 @@
 import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
+import {
+  afterEach, describe, expect, it, vi,
+} from 'vitest';
 import { nextTick } from 'vue';
 import { MatRangeSlider, MatTooltip } from '../src';
 
@@ -47,6 +49,10 @@ async function dispatchPointer(target, type, options) {
 }
 
 describe('MatRangeSlider', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it('使用两个原生 range 输入承载端点 slider 语义，并规范化顺序', () => {
     const wrapper = mount(MatRangeSlider, {
       props: {
@@ -94,6 +100,51 @@ describe('MatRangeSlider', () => {
     expect(nextValue).not.toBe(sourceValue);
     expect(wrapper.emitted('input')?.[0][0]).toBeInstanceOf(Event);
     expect(wrapper.emitted('change')?.[0][0]).toBeInstanceOf(Event);
+  });
+
+  it('合并同帧端点拖动，并在释放前提交最新范围', async () => {
+    const frames = new Map();
+    let nextFrameId = 1;
+
+    vi.stubGlobal('requestAnimationFrame', (callback) => {
+      const frameId = nextFrameId;
+
+      nextFrameId += 1;
+      frames.set(frameId, callback);
+
+      return frameId;
+    });
+    vi.stubGlobal('cancelAnimationFrame', (frameId) => {
+      frames.delete(frameId);
+    });
+
+    const wrapper = mount(MatRangeSlider, {
+      props: {
+        max: 100,
+        min: 0,
+        modelValue: [0, 100],
+        step: 1,
+      },
+    });
+    const interaction = wrapper.find('.mat-range-slider__interaction');
+
+    mockInteractionRect(wrapper);
+    await dispatchPointer(interaction, 'pointerdown', { clientX: 0, pointerId: 8 });
+    await dispatchPointer(interaction, 'pointermove', { clientX: 15, pointerId: 8 });
+    await dispatchPointer(interaction, 'pointermove', { clientX: 35, pointerId: 8 });
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+    expect(frames).toHaveLength(1);
+
+    await dispatchPointer(interaction, 'pointerup', { clientX: 40, pointerId: 8 });
+
+    expect(wrapper.emitted('update:modelValue')?.map(([value]) => value)).toEqual([
+      [33, 100],
+      [39, 100],
+    ]);
+    expect(wrapper.emitted('change')).toHaveLength(1);
+    expect(frames).toHaveLength(0);
+    wrapper.unmount();
   });
 
   it('键盘操作不能让两个端点越过彼此', async () => {

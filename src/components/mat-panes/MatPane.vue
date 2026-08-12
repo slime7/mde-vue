@@ -171,7 +171,7 @@ onBeforeUnmount(() => unregister?.());
   background: var(--mat-panes-handle-current-color);
   border-radius: var(--mat-panes-handle-current-shape);
   transform: translate(-50%, -50%);
-  transition: background-color var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), border-radius var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), block-size var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), inline-size var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
+  transition: background-color var(--mat-sys-motion-spring-fast-effects), border-radius var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial), inline-size var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-pane__handle:focus-visible::before {

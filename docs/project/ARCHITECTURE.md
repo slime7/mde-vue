@@ -19,6 +19,8 @@
 
 `MatSurfaceBase` 负责表面组件的动态原生根元素和属性透传；`MatActionBase` 统一处理 button/link 及内部可聚焦宿主的禁用、状态层和键盘指针交互；`MatButtonBase` 在此基础上统一按钮根节点、原生属性、48px 交互目标、焦点和按下状态，供 `MatBtn` 与 `MatFab` 复用；`MatSelectionControlBase` 统一处理选择控件的原生 input、标签、48px 目标区、40px 状态层、属性路由和插件指针设置；`MatTextInputBase` 在此基础上提供浮动标签和辅助信息。`MatItemContentBase` 统一 List 与 MenuItem 的无语义内容排列，`useRovingFocus` 只管理 DOM 顺序和 tabindex，不定义组件键盘含义。这些基础层均为内部实现，不作为公共入口导出。`MatInputBase` 是例外：它作为公共的无边框原生 input/textarea 基础组件，供使用方自定义外层 UI。组件共享的数值工具模块统一处理 CSS 长度、边缘像素值和毫秒延迟的校验、转换与回退（数字与纯数字字符串按数字处理，字符串按 CSS 属性校验），只服务内部组件，不加入公共入口。
 
+内部帧调度器将连续指针输入合并到下一次绘制，并支持交互结束前同步刷新最新输入；Slider、RangeSlider、Panes 与 Sheet 复用该调度器。内部动效控制器优先等待根元素及后代的实际 Web Animations 完成，取消或反向切换时使旧等待失效；只有测试或缺少该 API 的环境使用后备时长。
+
 ## 技术栈
 
 | 技术 | 职责 |
@@ -93,7 +95,7 @@ Checkbox 以布尔值或基础值数组表达受控选择，数组更新始终�
 
 ### 样式层
 
-基础样式公开两层令牌：`--mat-ref-*` 保存文字与图标字体等参考值，`--mat-sys-*` 保存颜色、排版、形状、海拔、动效、状态和交互值。组件可以使用 `--mat-<component>-*`、`--mat-button-*` 等 CSS 自定义属性组织尺寸、变体和状态样式，但这些变量属于内部实现，不提供公共定制或兼容承诺。Icon 的字体由 `iconClass` 对应样式决定，字体与 SVG 资源仍由使用方加载。
+基础样式公开两层令牌：`--mat-ref-*` 保存文字与图标字体等参考值，`--mat-sys-*` 保存颜色、排版、形状、海拔、动效、状态和交互值。动效同时保留旧 duration/easing 令牌，并提供 Material 3 Expressive 的 fast/default/slow spatial 与 effects 复合令牌；空间变化使用 spatial，颜色和透明度使用无回弹 effects。组件可以使用 `--mat-<component>-*`、`--mat-button-*` 等 CSS 自定义属性组织尺寸、变体和状态样式，但这些变量属于内部实现，不提供公共定制或兼容承诺。Icon 的字体由 `iconClass` 对应样式决定，字体与 SVG 资源仍由使用方加载。
 
 排版系统在各轴令牌之上提供 30 个 `.mat-sys-typescale-*` 公共 class；`MatText` 根据 `type`、`size` 与 `emphasized` 选择同一套 class，并通过 `as` 提供动态 HTML 根元素。工具 class 不设置字体族，继续继承应用字体。Tailwind 适配文件通过 `@theme inline` 将公开的 reference 和 system 值映射到带 `mat` 前缀的 Tailwind 主题变量，不重新定义主题来源。
 
@@ -178,3 +180,4 @@ flowchart LR
 - [0021 — 采用 AppRoot 应用布局上下文](adr/0021-app-root-layout-context.md)
 - [0022 — 项目更名为 mde-vue](adr/0022-rename-project-to-mde-vue.md)
 - [0023 — createMatUi 组件默认属性 defaults 配置](adr/0023-mat-ui-component-defaults.md)
+- [0026 — 采用 Material 3 Expressive Web 动效令牌](adr/0026-material-3-expressive-motion-tokens.md)

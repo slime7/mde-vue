@@ -415,7 +415,7 @@ function handleModelValue(value) {
   border: 1px solid var(--mat-text-input-outline-color);
   border-radius: inherit;
   pointer-events: none;
-  transition: border-color var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
+  transition: border-color var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-text-input__outline:has(.mat-text-input__outline-label) {
@@ -456,7 +456,7 @@ function handleModelValue(value) {
   background: var(--mat-text-input-accent-color);
   pointer-events: none;
   transform: scaleX(0);
-  transition: transform var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized);
+  transition: transform var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-text-input--filled.mat-text-input--focused .mat-text-input__indicator {
@@ -563,7 +563,7 @@ function handleModelValue(value) {
   white-space: nowrap;
   pointer-events: none;
   transform-origin: top left;
-  transition: color var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), transform var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized);
+  transition: color var(--mat-sys-motion-spring-fast-effects), transform var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-text-input--floating .mat-text-input__label {
@@ -621,7 +621,7 @@ function handleModelValue(value) {
   visibility: hidden;
   font: inherit;
   opacity: 0;
-  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
+  transition: opacity var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-text-input--floating .mat-text-input__affix,

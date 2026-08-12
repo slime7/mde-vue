@@ -427,7 +427,7 @@ watch(
   border-start-end-radius: var(--mat-list-item-start-end-shape);
   border-end-start-radius: var(--mat-list-item-end-start-shape);
   border-end-end-radius: var(--mat-list-item-end-end-shape);
-  transition: border-radius var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
+  transition: border-radius var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-list-item:focus-visible,

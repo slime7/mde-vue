@@ -153,9 +153,7 @@ const imgStyleValue = computed(() => {
   box-sizing: border-box;
   inline-size: 100%;
   overflow: hidden;
-  transition-property: aspect-ratio, inline-size, block-size, border-radius;
-  transition-duration: var(--mat-sys-motion-duration-medium2);
-  transition-timing-function: var(--mat-sys-motion-easing-standard);
+  transition: aspect-ratio var(--mat-sys-motion-spring-default-spatial), inline-size var(--mat-sys-motion-spring-default-spatial), block-size var(--mat-sys-motion-spring-default-spatial), border-radius var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-image__img {

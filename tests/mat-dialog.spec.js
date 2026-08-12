@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import {
   afterEach, beforeAll, beforeEach, describe, expect, it, vi,
 } from 'vitest';
@@ -37,6 +37,7 @@ describe('MatDialog', () => {
   });
   afterEach(() => {
     vi.restoreAllMocks();
+    Reflect.deleteProperty(Element.prototype, 'getAnimations');
   });
 
   it('渲染 activator Slot，并在关闭完成后恢复触发器焦点', async () => {
@@ -122,6 +123,52 @@ describe('MatDialog', () => {
     expect(document.body.contains(element)).toBe(true);
 
     await vi.advanceTimersByTimeAsync(1);
+
+    expect(document.body.contains(element)).toBe(false);
+    expect(wrapper.emitted('closed')).toHaveLength(1);
+  });
+
+  it('等待浏览器报告的实际动画完成后再关闭', async () => {
+    let finishCloseAnimation;
+    let animationQueryCount = 0;
+    const closeFinished = new Promise((resolve) => {
+      finishCloseAnimation = resolve;
+    });
+
+    Object.defineProperty(Element.prototype, 'getAnimations', {
+      configurable: true,
+      value() {
+        animationQueryCount += 1;
+
+        return [{
+          finished: animationQueryCount === 1 ? Promise.resolve() : closeFinished,
+          playState: 'running',
+        }];
+      },
+    });
+
+    const wrapper = mount(MatDialog, {
+      props: {
+        modelValue: true,
+        title: '实际动画',
+      },
+    });
+
+    await settleRender();
+    await flushPromises();
+
+    const element = document.body.querySelector('dialog');
+
+    expect(wrapper.emitted('opened')).toHaveLength(1);
+    await wrapper.setProps({ modelValue: false });
+    await nextTick();
+    await vi.advanceTimersByTimeAsync(1000);
+
+    expect(document.body.contains(element)).toBe(true);
+
+    finishCloseAnimation();
+    await flushPromises();
+    await nextTick();
 
     expect(document.body.contains(element)).toBe(false);
     expect(wrapper.emitted('closed')).toHaveLength(1);

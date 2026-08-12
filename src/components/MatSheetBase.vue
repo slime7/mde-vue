@@ -10,6 +10,8 @@ import {
   useSlots,
   watch,
 } from 'vue';
+import createFrameScheduler from './frame-scheduler';
+import createMotionController from './motion-controller';
 import {
   dialogScrollbarWidth,
   dialogStack,
@@ -122,8 +124,7 @@ const rendered = ref(false);
 const phase = ref('closed');
 const teleportTarget = ref(null);
 const viewportWidth = ref(typeof window === 'undefined' ? 0 : window.innerWidth);
-const dragOffset = ref(0);
-const dragSize = ref(null);
+let dragOffset = 0;
 const dragging = ref(false);
 const titleId = `${useId().replace(/[^\w-]/g, '-')}-title`;
 const root = computed(() => surface.value?.root ?? surface.value?.$el ?? null);
@@ -174,12 +175,7 @@ const sizeStyle = computed(() => {
     '--mat-sheet-preferred-width': resolvedWidth.value,
   };
 });
-const dragStyle = computed(() => ({
-  '--mat-sheet-drag-offset': `${dragOffset.value}px`,
-  ...(dragSize.value === null
-    ? {}
-    : { '--mat-sheet-drag-size': `${dragSize.value}px` }),
-}));
+const initialDragStyle = Object.freeze({ '--mat-sheet-drag-offset': '0px' });
 const positionStyle = computed(() => (
   props.direction === 'side' && isModal.value && props.position === 'end'
     ? { '--mat-sheet-modal-end-offset': `${-dialogScrollbarWidth.value}px` }
@@ -188,11 +184,11 @@ const positionStyle = computed(() => (
 const rootStyle = computed(() => [
   attrs.style,
   sizeStyle.value,
-  dragStyle.value,
+  initialDragStyle,
   positionStyle.value,
 ]);
 let mounted = false;
-let phaseTimer;
+const phaseMotion = createMotionController();
 let previousFocus = null;
 let previousWasModal = false;
 let activePointerId = null;
@@ -203,16 +199,7 @@ let dragDistance = 0;
 let suppressHandleClick = false;
 
 function clearPhaseTimer() {
-  if (phaseTimer === undefined) {
-    return;
-  }
-
-  window.clearTimeout(phaseTimer);
-  phaseTimer = undefined;
-}
-
-function prefersReducedMotion() {
-  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+  phaseMotion.cancel();
 }
 
 /**
@@ -220,17 +207,7 @@ function prefersReducedMotion() {
  * @param {() => void} callback
  */
 function waitForPhase(duration, callback) {
-  clearPhaseTimer();
-
-  if (prefersReducedMotion()) {
-    callback();
-    return;
-  }
-
-  phaseTimer = window.setTimeout(() => {
-    phaseTimer = undefined;
-    callback();
-  }, duration);
+  phaseMotion.wait(root.value, duration, callback);
 }
 
 /**
@@ -268,6 +245,26 @@ function resolveAttach() {
 
 function requestClose() {
   emit('update:modelValue', false);
+}
+
+/**
+ * @param {number} offset
+ * @param {number | null} size
+ */
+function writeDragStyle(offset, size) {
+  dragOffset = offset;
+  root.value?.style.setProperty('--mat-sheet-drag-offset', `${offset}px`);
+
+  if (size === null) {
+    root.value?.style.removeProperty('--mat-sheet-drag-size');
+    return;
+  }
+
+  root.value?.style.setProperty('--mat-sheet-drag-size', `${size}px`);
+}
+
+function clearDragStyle() {
+  writeDragStyle(0, null);
 }
 
 function handleDragHandleClick() {
@@ -435,8 +432,7 @@ function finishClose() {
 
   rendered.value = false;
   phase.value = 'closed';
-  dragOffset.value = 0;
-  dragSize.value = null;
+  clearDragStyle();
   nextTick(() => {
     restoreFocus();
     emit('closed');
@@ -494,7 +490,7 @@ function handleSheetClick(event) {
 /**
  * @param {PointerEvent} event
  */
-function updateDrag(event) {
+function updateDragNow(event) {
   if (event.pointerId !== activePointerId) {
     return;
   }
@@ -504,19 +500,33 @@ function updateDrag(event) {
 
     if ((!props.expanded && dragDistance < 0)
       || (props.expanded && dragDistance > 0)) {
-      dragOffset.value = 0;
-      dragSize.value = Math.max(0, dragStartExtent - dragDistance);
+      writeDragStyle(0, Math.max(0, dragStartExtent - dragDistance));
       return;
     }
 
-    dragOffset.value = Math.max(0, dragDistance);
-    dragSize.value = dragStartExtent;
+    writeDragStyle(Math.max(0, dragDistance), dragStartExtent);
     return;
   }
 
-  dragOffset.value = props.position === 'start'
-    ? Math.max(0, dragStart - event.clientX)
-    : Math.max(0, event.clientX - dragStart);
+  writeDragStyle(
+    props.position === 'start'
+      ? Math.max(0, dragStart - event.clientX)
+      : Math.max(0, event.clientX - dragStart),
+    null,
+  );
+}
+
+const dragFrame = createFrameScheduler(updateDragNow);
+
+/**
+ * @param {PointerEvent} event
+ */
+function updateDrag(event) {
+  if (event.pointerId !== activePointerId) {
+    return;
+  }
+
+  dragFrame.schedule(event);
 }
 
 function stopDragging() {
@@ -535,6 +545,7 @@ function finishDrag(event) {
     return;
   }
 
+  dragFrame.flush();
   const element = root.value;
   const extent = props.direction === 'bottom'
     ? element?.getBoundingClientRect().height ?? 0
@@ -542,7 +553,7 @@ function finishDrag(event) {
   const elapsed = Math.max(1, performance.now() - dragStartedAt);
   const distance = props.direction === 'bottom'
     ? Math.abs(dragDistance)
-    : dragOffset.value;
+    : dragOffset;
   const velocity = distance / elapsed;
   const threshold = Math.min(160, Math.max(80, extent * 0.3));
   const reachedThreshold = distance >= threshold
@@ -553,21 +564,19 @@ function finishDrag(event) {
 
   if (props.direction === 'bottom' && reachedThreshold) {
     if (!props.expanded && dragDistance < 0) {
-      dragOffset.value = 0;
-      dragSize.value = null;
+      clearDragStyle();
       emit('update:expanded', true);
       return;
     }
 
     if (props.expanded && dragDistance > 0) {
-      dragOffset.value = 0;
-      dragSize.value = null;
+      clearDragStyle();
       emit('update:expanded', false);
       return;
     }
 
     if (!props.expanded && dragDistance > 0) {
-      dragSize.value = null;
+      writeDragStyle(dragOffset, null);
       requestClose();
       return;
     }
@@ -578,14 +587,13 @@ function finishDrag(event) {
     return;
   }
 
-  dragOffset.value = 0;
-  dragSize.value = null;
+  clearDragStyle();
 }
 
 function cancelDrag() {
+  dragFrame.cancel();
   stopDragging();
-  dragOffset.value = 0;
-  dragSize.value = null;
+  clearDragStyle();
 }
 
 /**
@@ -596,6 +604,7 @@ function startDrag(event) {
     return;
   }
 
+  dragFrame.cancel();
   activePointerId = event.pointerId;
   dragStart = props.direction === 'bottom' ? event.clientY : event.clientX;
   dragStartExtent = props.direction === 'bottom'
@@ -603,7 +612,7 @@ function startDrag(event) {
     : root.value?.getBoundingClientRect().width ?? 0;
   dragStartedAt = performance.now();
   dragDistance = 0;
-  dragSize.value = props.direction === 'bottom' ? dragStartExtent : null;
+  writeDragStyle(0, props.direction === 'bottom' ? dragStartExtent : null);
   dragging.value = true;
   window.addEventListener('pointermove', updateDrag);
   window.addEventListener('pointerup', finishDrag);
@@ -687,6 +696,7 @@ onMounted(() => {
   }
 });
 onBeforeUnmount(() => {
+  dragFrame.cancel();
   mounted = false;
   clearPhaseTimer();
   stopDragging();
@@ -873,8 +883,7 @@ watch(() => props.closeLabel, (value) => {
     var(--mat-sys-shape-corner-none);
   box-shadow: var(--mat-sys-elevation-level1);
   transform: translateY(var(--mat-sheet-drag-offset));
-  transition: block-size var(--mat-sys-motion-duration-short4)
-    var(--mat-sys-motion-easing-emphasized);
+  transition: block-size var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-sheet--bottom.mat-sheet--modal {
@@ -1078,43 +1087,35 @@ watch(() => props.closeLabel, (value) => {
 }
 
 .mat-sheet--opening.mat-sheet--bottom {
-  animation: mat-bottom-sheet-enter var(--mat-sys-motion-duration-medium4)
-    var(--mat-sys-motion-easing-emphasized-decelerate) both;
+  animation: mat-bottom-sheet-enter var(--mat-sys-motion-spring-default-spatial) both;
 }
 
 .mat-sheet--closing.mat-sheet--bottom {
-  animation: mat-bottom-sheet-exit var(--mat-sys-motion-duration-short4)
-    var(--mat-sys-motion-easing-emphasized-accelerate) both;
+  animation: mat-bottom-sheet-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
 .mat-sheet--opening.mat-sheet--side.mat-sheet--position-end {
-  animation: mat-side-sheet-end-enter var(--mat-sys-motion-duration-medium4)
-    var(--mat-sys-motion-easing-emphasized-decelerate) both;
+  animation: mat-side-sheet-end-enter var(--mat-sys-motion-spring-default-spatial) both;
 }
 
 .mat-sheet--closing.mat-sheet--side.mat-sheet--position-end {
-  animation: mat-side-sheet-end-exit var(--mat-sys-motion-duration-short4)
-    var(--mat-sys-motion-easing-emphasized-accelerate) both;
+  animation: mat-side-sheet-end-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
 .mat-sheet--opening.mat-sheet--side.mat-sheet--position-start {
-  animation: mat-side-sheet-start-enter var(--mat-sys-motion-duration-medium4)
-    var(--mat-sys-motion-easing-emphasized-decelerate) both;
+  animation: mat-side-sheet-start-enter var(--mat-sys-motion-spring-default-spatial) both;
 }
 
 .mat-sheet--closing.mat-sheet--side.mat-sheet--position-start {
-  animation: mat-side-sheet-start-exit var(--mat-sys-motion-duration-short4)
-    var(--mat-sys-motion-easing-emphasized-accelerate) both;
+  animation: mat-side-sheet-start-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
 .mat-sheet--opening::backdrop {
-  animation: mat-sheet-scrim-enter var(--mat-sys-motion-duration-medium4)
-    var(--mat-sys-motion-easing-emphasized-decelerate) both;
+  animation: mat-sheet-scrim-enter var(--mat-sys-motion-spring-default-effects) both;
 }
 
 .mat-sheet--closing::backdrop {
-  animation: mat-sheet-scrim-exit var(--mat-sys-motion-duration-short4)
-    var(--mat-sys-motion-easing-emphasized-accelerate) both;
+  animation: mat-sheet-scrim-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
 .mat-sheet--dragging {
@@ -1172,8 +1173,8 @@ watch(() => props.closeLabel, (value) => {
 @media (prefers-reduced-motion: reduce) {
   .mat-sheet,
   .mat-sheet::backdrop {
-    animation-duration: .01ms;
-    transition-duration: .01ms;
+    animation: none;
+    transition: none;
   }
 }
 </style>

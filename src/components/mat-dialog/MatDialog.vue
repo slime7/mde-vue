@@ -12,6 +12,7 @@ import {
   watchEffect,
 } from 'vue';
 import MatSurfaceBase from '../MatSurfaceBase.vue';
+import createMotionController from '../motion-controller';
 import { isComponentColor } from '../button-props';
 import { dialogStack, registerDialog, unregisterDialog } from '../dialog-stack';
 import MatBtn from '../mat-btn/MatBtn.vue';
@@ -198,7 +199,7 @@ const dialogWidthStyle = computed(() => {
 });
 const rootStyle = computed(() => [colorStyle.value, attrs.style, dialogWidthStyle.value]);
 let mounted = false;
-let phaseTimer;
+const phaseMotion = createMotionController();
 let previousFocus = null;
 
 /**
@@ -216,14 +217,7 @@ function resolveActivatorTarget() {
 }
 
 function clearPhaseTimer() {
-  if (phaseTimer !== undefined) {
-    window.clearTimeout(phaseTimer);
-    phaseTimer = undefined;
-  }
-}
-
-function prefersReducedMotion() {
-  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+  phaseMotion.cancel();
 }
 
 /**
@@ -231,17 +225,7 @@ function prefersReducedMotion() {
  * @param {() => void} callback
  */
 function waitForPhase(duration, callback) {
-  clearPhaseTimer();
-
-  if (prefersReducedMotion()) {
-    callback();
-    return;
-  }
-
-  phaseTimer = window.setTimeout(() => {
-    phaseTimer = undefined;
-    callback();
-  }, duration);
+  phaseMotion.wait(root.value, duration, callback);
 }
 
 /**
@@ -620,19 +604,19 @@ watchEffect(() => {
 }
 
 .mat-dialog--opening {
-  animation: mat-dialog-enter var(--mat-sys-motion-duration-medium4) var(--mat-sys-motion-easing-emphasized-decelerate) both;
+  animation: mat-dialog-enter var(--mat-sys-motion-spring-default-spatial) both;
 }
 
 .mat-dialog--opening::backdrop {
-  animation: mat-dialog-scrim-enter var(--mat-sys-motion-duration-medium4) var(--mat-sys-motion-easing-emphasized-decelerate) both;
+  animation: mat-dialog-scrim-enter var(--mat-sys-motion-spring-default-effects) both;
 }
 
 .mat-dialog--closing {
-  animation: mat-dialog-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) both;
+  animation: mat-dialog-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
 .mat-dialog--closing::backdrop {
-  animation: mat-dialog-scrim-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) both;
+  animation: mat-dialog-scrim-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
 .mat-dialog__icon {
@@ -815,7 +799,7 @@ watchEffect(() => {
 @media (prefers-reduced-motion: reduce) {
   .mat-dialog,
   .mat-dialog::backdrop {
-    animation-duration: .01ms;
+    animation: none;
   }
 }
 </style>

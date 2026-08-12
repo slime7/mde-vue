@@ -491,10 +491,13 @@ matUi.theme.dispose();
 - 海拔：`--mat-sys-elevation-level0` 至 `level5`，值可直接用于 `box-shadow`；组件优先通过 surface container 色表达层级。
 - 时长：`--mat-sys-motion-duration-short1..4`、`medium1..4`、`long1..4`、`extra-long1..4`，范围为 `50ms` 至 `1000ms`。
 - 缓动：`--mat-sys-motion-easing-emphasized`、`emphasized-decelerate`、`emphasized-accelerate`、`standard`、`standard-decelerate`、`standard-accelerate`。
+- Expressive 复合动效：`--mat-sys-motion-spring-fast-spatial`、`default-spatial`、`slow-spatial` 用于位置、尺寸、旋转和形状，时长分别为 `350ms / 500ms / 650ms`；`--mat-sys-motion-spring-fast-effects`、`default-effects`、`slow-effects` 用于颜色与透明度，时长分别为 `150ms / 200ms / 300ms`。这些令牌已包含时长与 `cubic-bezier()`，可直接写在 `transition` 或 `animation` 的属性名之后。
 - 状态层：`--mat-sys-state-hover-state-layer-opacity` 为 `0.08`，focus 与 pressed 为 `0.12`，dragged 为 `0.16`；disabled container 与 content 分别为 `0.10` 和 `0.38`。
 - 交互：`--mat-sys-interaction-target-min-size` 为 `48px`，焦点环使用 `--mat-sys-interaction-focus-ring-width` 和 `--mat-sys-interaction-focus-ring-offset`。
 
 实现组件时不能只根据色值挑选令牌。容器与内容的配对、强调层级、表面层级和边界选择见[组件配色](/guide/component-color)。
+
+空间动效允许轻微越过终点，effects 动效不会回弹。大多数小型控件使用 fast，部分覆盖屏幕的面板使用 default，完整页面变化才使用 slow。旧时长和缓动令牌继续保留；新增动效优先使用上述复合令牌。参数依据 [Material 3 Motion physics system](https://m3.material.io/styles/motion/overview/how-it-works) 的 [Web 转换表](https://m3.material.io/styles/motion/overview/specs)。
 
 # Icon 图标
 
@@ -6753,7 +6756,7 @@ const seededValue = ref(70);
 
 ## 状态与交互
 
-组件支持 focus-visible、pressed、disabled 和减少动态效果偏好。键盘焦点使用 `secondary` 语义色的 3px 胶囊轮廓表示，轮廓与手柄相隔 2px，不绘制圆形背景状态层；拖动期间，活动轨道、非活动轨道和手柄会即时跟随数值，避免视觉滞后。按下或拖动时，当前手柄会由 4px 收窄至 2px，轨道在手柄两侧保留 6px 断口且断口圆角为 2px。指针默认使用 `default`，并遵循 `createMatUi()` 的全局 `useCursor` 设置。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至最小和最大可对齐值。纵向滑块以底部为最小值、顶部为最大值。组件没有公开方法。
+组件支持 focus-visible、pressed、disabled 和减少动态效果偏好。键盘焦点使用 `secondary` 语义色的 3px 胶囊轮廓表示，轮廓与手柄相隔 2px，不绘制圆形背景状态层；拖动期间，同一绘制帧内的连续指针输入合并为最新位置，活动轨道、非活动轨道和手柄不会播放位置补间，释放前会同步刷新最终值。按下或拖动时，当前手柄会由 4px 收窄至 2px，轨道在手柄两侧保留 6px 断口且断口圆角为 2px。指针默认使用 `default`，并遵循 `createMatUi()` 的全局 `useCursor` 设置。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至最小和最大可对齐值。纵向滑块以底部为最小值、顶部为最大值。组件没有公开方法。
 
 ## 参考来源
 
@@ -7158,7 +7161,7 @@ const seededRange = ref([35, 80]);
 
 ## 状态与交互
 
-组件支持 focus-visible、pressed、disabled 和减少动态效果偏好。键盘焦点使用 `secondary` 语义色的 3px 胶囊轮廓表示，轮廓与当前活跃手柄相隔 2px，不绘制圆形背景状态层；点击轨道时选择较近的端点。拖动期间，活动轨道、非活动轨道和当前活跃手柄会即时跟随数值，避免视觉滞后。按下或拖动时仅当前活跃手柄由 4px 收窄至 2px，轨道在两个手柄两侧各保留 6px 断口且断口圆角为 2px；数值指示也只显示当前活跃手柄。指针默认使用 `default`，并遵循 `createMatUi()` 的全局 `useCursor` 设置。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至当前端点允许的最小和最大位置。组件没有公开方法。
+组件支持 focus-visible、pressed、disabled 和减少动态效果偏好。键盘焦点使用 `secondary` 语义色的 3px 胶囊轮廓表示，轮廓与当前活跃手柄相隔 2px，不绘制圆形背景状态层；点击轨道时选择较近的端点。拖动期间，同一绘制帧内的连续指针输入合并为最新位置，活动轨道、非活动轨道和当前活跃手柄不会播放位置补间，释放前会同步刷新最终区间。按下或拖动时仅当前活跃手柄由 4px 收窄至 2px，轨道在两个手柄两侧各保留 6px 断口且断口圆角为 2px；数值指示也只显示当前活跃手柄。指针默认使用 `default`，并遵循 `createMatUi()` 的全局 `useCursor` 设置。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至当前端点允许的最小和最大位置。组件没有公开方法。
 
 ## 参考来源
 
@@ -9276,7 +9279,7 @@ import SearchStateExample from '../examples/search/SearchStateExample.vue';
 
 App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、`content="image"` 或 `content="search"` 明确内容语义，标题、图像和搜索不会同时占据不同的主区域。`variant="search"` 始终按 search 内容处理。leading 和 trailing 操作区保持固定交互尺寸，主内容区使用剩余宽度；`align="center"` 使用对称侧轨，避免两侧操作数量不同时标题发生视觉偏移。
 
-组件默认在声明位置参与文档布局并粘附到滚动容器顶部。small 与 search 在开始滚动时从 `surface` 连续过渡到 `surface container`；medium flexible 和 large flexible 还会分别在前 48px、56px 滚动距离内折叠到 64px。动画由 CSS `scroll-timeline` 和 `animation-timeline` 驱动，展开背景与主内容在不改变滚动范围的视觉层中折叠，不使用 JavaScript 逐帧计算。不支持这些 CSS 能力的浏览器保持静态展开；减少动态效果时保留展开几何，仅播放表面填色。
+组件默认在声明位置参与文档布局并粘附到滚动容器顶部。small 与 search 在开始滚动时从 `surface` 连续过渡到 `surface container`；medium flexible 和 large flexible 还会分别在前 48px、56px 滚动距离内折叠到 64px。动画由 CSS `scroll-timeline` 和 `animation-timeline` 驱动，标题与图片通过 `scale`、`translate`、`clip-path` 和 `opacity` 在稳定布局盒中变化，不逐帧修改字号、块尺寸或执行 JavaScript 计算。不支持这些 CSS 能力的浏览器保持静态展开；减少动态效果时保留展开几何，仅播放表面填色。
 
 ## 示例
 
@@ -10706,7 +10709,7 @@ MenuItem 的 Slots 只构成一个操作，不应嵌套按钮、开关或其他�
 
 - 打开菜单后焦点进入第一个启用项目。ArrowDown 和 ArrowUp 循环移动并跳过 disabled；Home 和 End 移到首末启用项。
 - 在从左到右的页面中，ArrowRight 展开子菜单，ArrowLeft 关闭当前子菜单；从右到左时方向相反。
-- Escape 关闭当前层；Tab 关闭整条菜单链并按浏览器正常焦点顺序继续。程序化关闭、菜单操作以及 Popover 的外部或触发器关闭都会保留菜单 200ms 以完成消失动画，嵌套菜单的状态会立即收起。
+- Escape 关闭当前层；Tab 关闭整条菜单链并按浏览器正常焦点顺序继续。程序化关闭、菜单操作以及 Popover 的外部或触发器关闭都会保留菜单至实际消失动画完成（默认 150ms），嵌套菜单的状态会立即收起。
 - 元素锚点菜单优先显示在触发器下方；子菜单优先显示在父项目行内末端。空间不足时自动向上、向左或向右换边，并保留视口间距。坐标菜单以视口坐标为左上基准，超出边缘时向内夹紧。
 - `offset` 在基础定位后、视口夹紧前生效。坐标使用 client 坐标，不接受 page/document 坐标；页面滚动后由下一次鼠标事件提供新坐标。
 - 菜单宽度限制为 112–280px。内容超过 `maxLength` 或视口安全高度时在内部滚动，滚动条隐藏，并在尚可滚动的边缘显示渐隐。容器内边距为 4px，项目和活动高亮高度为 48px，图标为 20px，项目总水平边缘距离为 12px。
@@ -11615,7 +11618,7 @@ import {
 | `opened` | 无 | 进入动画完成后触发 |
 | `closed` | 无 | 退出动画完成、原生 Dialog 关闭且 DOM 移除后触发 |
 
-组件是受控的：收到 `update:modelValue(false)` 后，使用者必须更新绑定值才会开始退出。打开后焦点进入显式 `autofocus` 或第一个可交互元素；关闭完成后恢复到打开前的元素。Escape 始终请求关闭，不受 `close-on-back` 影响。
+组件是受控的：收到 `update:modelValue(false)` 后，使用者必须更新绑定值才会开始退出。打开后焦点进入显式 `autofocus` 或第一个可交互元素；浏览器报告实际退出动画完成后移除 DOM 并恢复到打开前的元素，快速反向打开会使旧关闭等待失效。Escape 始终请求关闭，不受 `close-on-back` 影响。减少动态效果时直接完成阶段切换。
 
 ## Slots
 
@@ -12448,7 +12451,7 @@ import ListVariantExample from '../examples/list/ListVariantExample.vue';
 
 `<mat-toolbar>` 的组件导出名是 `MatToolbar`。它提供 Material 3 Expressive 的 docked 和 floating 两类 Toolbar：docked 保持横向完整宽度，floating 支持顶部、底部横向和左右垂直布局。默认使用绝对定位，相对声明位置最近的定位容器布局；设置 `app` 后，省略 `attach` 且位于 `MatAppRoot` 内时自动接入应用布局，否则挂载到 `attach` 并固定到视口。默认 Slot 可放置按钮、按钮组和自定义内容，悬浮模式可通过 `fab` Slot 放置外置主操作；当前示例使用接近 Toolbar 高度的 `size="small"`、带 `icon` 和 `label` 的宽图标 `<mat-btn>`。
 
-Toolbar 默认显示，使用 `modelValue` 或 `v-model` 可以播放进入、退出动画并隐藏 Toolbar；不负责随滚动自动隐藏。非应用模式的父容器需要通过 `position: relative` 等方式建立定位上下文；应用模式固定到视口，不要求 `attach` 建立定位上下文。Material 不建议同时显示 Toolbar 与 Navigation bar。
+Toolbar 默认显示，使用 `modelValue` 或 `v-model` 可以播放进入、退出动画并隐藏 Toolbar；组件等待浏览器报告实际动画完成，快速反向切换不会让旧阶段覆盖新状态，减少动态效果时立即完成。不负责随滚动自动隐藏。非应用模式的父容器需要通过 `position: relative` 等方式建立定位上下文；应用模式固定到视口，不要求 `attach` 建立定位上下文。Material 不建议同时显示 Toolbar 与 Navigation bar。
 
 ## 示例
 
@@ -13142,7 +13145,7 @@ Bottom sheet 的宽度不超过 640px；窄屏可占满视口宽度，宽于 640
 | `opened` | 无 | 进入动画完成后触发 |
 | `closed` | 无 | 退出动画完成且 DOM 清理后触发 |
 
-组件是受控的：收到 `update:modelValue(false)` 后，使用者必须更新绑定值才会退出。Modal 打开后聚焦显式 `autofocus` 或第一个可交互元素，关闭完成后恢复原焦点。Modal 锁定页面根滚动；页面原本存在占据布局宽度的经典滚动条时临时保留其槽位，避免页面宽度跳动，没有经典滚动条时不额外预留空间。Standard 不主动移动焦点，也不锁定页面滚动。
+组件是受控的：收到 `update:modelValue(false)` 后，使用者必须更新绑定值才会退出。拖动输入按绘制帧合并，并在释放前刷新最新位置以判断展开、折叠或关闭阈值。Modal 打开后聚焦显式 `autofocus` 或第一个可交互元素，实际退出动画完成后恢复原焦点。Modal 锁定页面根滚动；页面原本存在占据布局宽度的经典滚动条时临时保留其槽位，避免页面宽度跳动，没有经典滚动条时不额外预留空间。Standard 不主动移动焦点，也不锁定页面滚动。
 
 ## Slots
 
@@ -13174,6 +13177,8 @@ import BottomSheetVariantExample from '../examples/bottom-sheet/BottomSheetVaria
 `<mat-side-sheet>` 的组件导出名是 `MatSideSheet`。它从视口或布局容器的逻辑侧边展示补充内容，并提供 Material 3 的 `standard` 与 `modal` 两种变体。Standard 适合宽屏 supporting pane，与主内容并排；modal 从侧边覆盖进入并阻止背景交互。
 
 默认 `variant="auto"`：视口宽度小于 840px 时使用 modal，更宽时使用 standard。`position="start|end"` 使用逻辑方向，默认从 end 边进入。自动模式不会把 Side sheet 替换成 Bottom sheet。
+
+触摸拖动按绘制帧合并，并在释放前刷新最新位置；modal 使用 default spatial 进入和无回弹的快速退出，组件以浏览器报告的实际动画完成时间决定 DOM 清理与焦点恢复。减少动态效果时直接呈现最终状态。
 
 ## 示例
 
@@ -13951,7 +13956,7 @@ const width = ref(280);
 
 ### `position`
 
-`position="start"` 使 Item 在每种状态下贴近起始侧；`position="end"` 使其贴近末尾侧。展开、收回及横向布局切换时，Item 不会先移动到中心再播放动画。
+`position="start"` 使 Item 在每种状态下贴近起始侧；`position="end"` 使其贴近末尾侧。展开、收回及横向布局切换时，Item 不会先移动到中心再播放动画。参与正文排版的 standard rail 使用 default spatial 尺寸过渡；modal 只覆盖正文，不额外改变正文宽度。
 
 :::: details 查看示例代码
 ::: code-group
@@ -14807,7 +14812,7 @@ activator Slot 存在时优先于 target，且必须只渲染一个属于当前 
 
 ## 展示行为与无障碍
 
-自动模式在鼠标悬停或键盘焦点进入展示元素时打开。打开延迟优先读取组件的 `openDelay`，省略时读取 `createMatUi()` 的 `defaults.tooltip.openDelay`，未安装插件时为 0；指针和焦点都离开后默认等待 600ms 关闭，关闭延迟同样可通过 `closeDelay` 或 `defaults.tooltip.closeDelay` 调整。Escape 会立即请求关闭当前提示，但节点会保留 150ms 以完成消失动画。模块级协调器保证同一时间只显示一个可见 Tooltip；打开新实例会关闭旧实例，并向受控旧实例发出关闭请求。
+自动模式在鼠标悬停或键盘焦点进入展示元素时打开。打开延迟优先读取组件的 `openDelay`，省略时读取 `createMatUi()` 的 `defaults.tooltip.openDelay`，未安装插件时为 0；指针和焦点都离开后默认等待 600ms 关闭，关闭延迟同样可通过 `closeDelay` 或 `defaults.tooltip.closeDelay` 调整。Escape 会立即请求关闭当前提示，节点保留至浏览器报告实际消失动画完成（默认 150ms）。模块级协调器保证同一时间只显示一个可见 Tooltip；打开新实例会关闭旧实例，并向受控旧实例发出关闭请求。
 
 应用可以在包含相关展示元素的最近祖先上添加 `data-mat-tooltip-group`。首个 Tooltip 实际显示后，该实例在指针和焦点都离开时启动 `defaults.tooltip.skipDelayDuration` 快速切换窗口；窗口内进入同组另一个 Tooltip 会跳过打开延迟。首个尚未显示、跨组、超过窗口和同一实例重新进入不会跳过延迟。该分组通过展示元素的 DOM 祖先识别，因此同样覆盖 Button 和 FAB 内部创建的 Tooltip。
 
@@ -15711,7 +15716,7 @@ await snackbar({
 
 ## 队列、显示与无障碍
 
-模板 `<mat-snackbar v-model="open">` 与每次 `snackbar()` / `toast()` 调用共享同一个全局 FIFO 队列。活动通知完成 200ms 退出动画后，才会激活下一条；不会堆叠显示。排队中的模板通知在 `v-model=false` 或组件卸载时取消。命令式调用没有独立取消句柄，Promise 在对应通知显示并关闭后结算。
+模板 `<mat-snackbar v-model="open">` 与每次 `snackbar()` / `toast()` 调用共享同一个全局 FIFO 队列。活动通知完成实际退出动画后（默认 150ms），才会激活下一条；不会堆叠显示。排队中的模板通知在 `v-model=false` 或组件卸载时取消。命令式调用没有独立取消句柄，Promise 在对应通知显示并关闭后结算。
 
 默认显示时间为 4 秒，即使设置 action 或 `closable=true` 也不改变；需要常驻通知时设置 `duration=0`。Snackbar 使用底部安全边距，窄屏一行最小高度为 48px、两行自然扩展为 64px；宽屏支持左、中、右对齐。表面使用 Material 3 inverse surface、inverse on surface 与 inverse primary 角色，形状为 extra-small 圆角。文本起始留白为 16px，文本与尾部操作区相隔 24px，action 末端保留 8px；内置 action 与关闭控件都保留 48px 交互目标，关闭图标为 24px。
 
@@ -17315,7 +17320,7 @@ const widths = ref({});
 
 ## 状态与键盘
 
-相邻 Pane 之间的分隔空间为 24px；调整控件交互目标为 48px，并在 `MatPanes` 高度方向垂直居中。Material 3 的默认指示条为 4×48px 胶囊，悬停时不增加独立背景层，按下或拖动时切换为 12×52px、圆角为 `corner-medium` 的 `on-surface` 形状；分隔空间本身不绘制额外背景，指针使用默认样式，键盘焦点轮廓跟随指示条形状。控件使用 `role="separator"` 与垂直方向语义；左右键每次调整 16px，Shift 加速为 64px，Home/End 移到边界，Enter 在折叠左侧 Pane 与最近一次非零比例间切换。指针拖动期间只更新内部预览，释放后才触发 `update:sizes`。
+相邻 Pane 之间的分隔空间为 24px；调整控件交互目标为 48px，并在 `MatPanes` 高度方向垂直居中。Material 3 的默认指示条为 4×48px 胶囊，悬停时不增加独立背景层，按下或拖动时切换为 12×52px、圆角为 `corner-medium` 的 `on-surface` 形状；分隔空间本身不绘制额外背景，指针使用默认样式，键盘焦点轮廓跟随指示条形状。控件使用 `role="separator"` 与垂直方向语义；左右键每次调整 16px，Shift 加速为 64px，Home/End 移到边界，Enter 在折叠左侧 Pane 与最近一次非零比例间切换。指针拖动预览每个绘制帧最多更新一次，释放前刷新最新位置，随后才触发 `update:sizes`。
 
 Material 3 Panes 通常建议不超过三个可见 Pane，并根据窗口等级选择单 Pane、双 Pane 或三 Pane；这是布局使用规范，组件不会限制 Pane 数量。fixed、temporary、floating、docked Pane、自动折叠和尺寸持久化不属于当前能力，应用可自行在外部实现。
 

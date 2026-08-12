@@ -410,11 +410,13 @@ watch([
 .mat-app-bar--medium-flexible {
   --mat-app-bar-expanded-height: 112px;
   --mat-app-bar-collapsed-inset: 48px;
+  --mat-app-bar-collapsed-title-scale: .916667;
 }
 
 .mat-app-bar--large-flexible {
   --mat-app-bar-expanded-height: 120px;
   --mat-app-bar-collapsed-inset: 56px;
+  --mat-app-bar-collapsed-title-scale: .785714;
 }
 
 .mat-app-bar__leading,
@@ -444,6 +446,7 @@ watch([
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transform-origin: left center;
 }
 
 .mat-app-bar__subtitle {
@@ -508,6 +511,10 @@ watch([
   max-inline-size: 100%;
   justify-self: center;
   text-align: center;
+}
+
+.mat-app-bar--align-center .mat-app-bar__primary {
+  transform-origin: center;
 }
 
 .mat-app-bar--align-center .mat-app-bar__spacer {
@@ -636,16 +643,13 @@ watch([
 
 @keyframes mat-app-bar-primary-scroll {
   to {
-    font-size: var(--mat-sys-typescale-title-large-size);
-    line-height: var(--mat-sys-typescale-title-large-line-height);
+    scale: var(--mat-app-bar-collapsed-title-scale);
   }
 }
 
 @keyframes mat-app-bar-image-scroll {
   to {
-    block-size: 40px;
     scale: .84;
-    transform-origin: left center;
   }
 }
 

@@ -2,6 +2,7 @@
 import {
   computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowReactive, watch,
 } from 'vue';
+import createFrameScheduler from '../frame-scheduler';
 import { MAT_PANES_BREAKPOINTS, MAT_PANES_KEY } from '../panes-context';
 import { useMatProps } from '../use-mat-props';
 
@@ -362,7 +363,7 @@ function handlePointerDown(id, event) {
  * @param {string} id
  * @param {PointerEvent} event
  */
-function handlePointerMove(id, event) {
+function updatePointerPreview(id, event) {
   if (!dragState || dragState.pointerId !== event.pointerId) {
     return;
   }
@@ -389,6 +390,22 @@ function handlePointerMove(id, event) {
   dragState.changed = true;
 }
 
+const pointerFrame = createFrameScheduler(({ event, id }) => {
+  updatePointerPreview(id, event);
+});
+
+/**
+ * @param {string} id
+ * @param {PointerEvent} event
+ */
+function handlePointerMove(id, event) {
+  if (!dragState || dragState.pointerId !== event.pointerId) {
+    return;
+  }
+
+  pointerFrame.schedule({ event, id });
+}
+
 /**
  * @param {string} id
  * @param {PointerEvent} event
@@ -397,6 +414,12 @@ function handlePointerMove(id, event) {
 function finishPointerInteraction(id, event, shouldCommit) {
   if (!dragState || dragState.pointerId !== event.pointerId) {
     return;
+  }
+
+  if (shouldCommit) {
+    pointerFrame.flush();
+  } else {
+    pointerFrame.cancel();
   }
 
   const boundary = getBoundary(id);
@@ -666,6 +689,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+  pointerFrame.cancel();
   if (typeof globalThis.window !== 'undefined') {
     globalThis.window.removeEventListener('resize', handleWindowResize);
   }

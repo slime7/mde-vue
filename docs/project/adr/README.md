@@ -31,6 +31,7 @@
 | [0023](0023-mat-ui-component-defaults.md) | active | createMatUi 组件默认属性 defaults 配置 |
 | [0024](0024-system-color-roles-in-component-color.md) | active | 扩展公共 color 输入到系统颜色角色 |
 | [0025](0025-matbtn-text-on-content-color.md) | active | MatBtn text 形态接受受控 on-* 内容色输入 |
+| [0026](0026-material-3-expressive-motion-tokens.md) | active | 采用 Material 3 Expressive Web 动效令牌 |
 
 ## 何时创建 ADR
 

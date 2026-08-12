@@ -13,6 +13,8 @@ order: 102
 
 默认 `variant="auto"`：视口宽度小于 840px 时使用 modal，更宽时使用 standard。`position="start|end"` 使用逻辑方向，默认从 end 边进入。自动模式不会把 Side sheet 替换成 Bottom sheet。
 
+触摸拖动按绘制帧合并，并在释放前刷新最新位置；modal 使用 default spatial 进入和无回弹的快速退出，组件以浏览器报告的实际动画完成时间决定 DOM 清理与焦点恢复。减少动态效果时直接呈现最终状态。
+
 ## 示例
 
 ### `standard` 与 `modal`

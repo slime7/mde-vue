@@ -4,6 +4,7 @@ import {
   useId, useSlots, watch,
 } from 'vue';
 import MatSurfaceBase from '../MatSurfaceBase.vue';
+import createMotionController from '../motion-controller';
 import { isComponentColor } from '../button-props';
 import MatScrollArea from '../mat-scroll-area/MatScrollArea.vue';
 import {
@@ -155,7 +156,7 @@ let previousAnchorName = '';
 let popoverShown = false;
 let scrimShown = false;
 let programmaticClose = false;
-let phaseTimer;
+const phaseMotion = createMotionController();
 let viewportFrame;
 let sizeObserver;
 let returnFocusElement = null;
@@ -309,14 +310,7 @@ function attachAnchor() {
 }
 
 function clearPhaseTimer() {
-  if (phaseTimer !== undefined) {
-    window.clearTimeout(phaseTimer);
-    phaseTimer = undefined;
-  }
-}
-
-function prefersReducedMotion() {
-  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+  phaseMotion.cancel();
 }
 
 function showScrim() {
@@ -349,21 +343,13 @@ function finishClose() {
 }
 
 function finishNativeClose() {
-  phaseTimer = undefined;
   hideScrim();
   phase.value = 'closed';
 }
 
 function animateNativeClose() {
-  clearPhaseTimer();
-
-  if (prefersReducedMotion()) {
-    phase.value = 'closed';
-    return;
-  }
-
   phase.value = 'closing';
-  phaseTimer = window.setTimeout(finishNativeClose, CLOSE_DURATION);
+  phaseMotion.wait(root.value, CLOSE_DURATION, finishNativeClose);
 }
 
 function hidePopover({ immediate = false } = {}) {
@@ -374,7 +360,7 @@ function hidePopover({ immediate = false } = {}) {
   programmaticClose = true;
   closeDescendants({ immediate: true });
 
-  if (immediate || prefersReducedMotion()) {
+  if (immediate) {
     clearPhaseTimer();
     finishClose();
     return;
@@ -385,11 +371,7 @@ function hidePopover({ immediate = false } = {}) {
   }
 
   phase.value = 'closing';
-  clearPhaseTimer();
-  phaseTimer = window.setTimeout(() => {
-    phaseTimer = undefined;
-    finishClose();
-  }, CLOSE_DURATION);
+  phaseMotion.wait(root.value, CLOSE_DURATION, finishClose);
 }
 
 function clampToViewport() {
@@ -912,9 +894,7 @@ watch(() => propsWithDefaults.scrim, async () => {
     calc(var(--mat-menu-offset-y, 0px) + var(--mat-menu-viewport-shift-y, 0px));
   transform: scale(1);
   transform-origin: top left;
-  transition-property: opacity, transform, display, overlay;
-  transition-duration: var(--mat-sys-motion-duration-short3), var(--mat-sys-motion-duration-medium1), var(--mat-sys-motion-duration-short4), var(--mat-sys-motion-duration-short4);
-  transition-timing-function: var(--mat-sys-motion-easing-standard), var(--mat-sys-motion-easing-emphasized-decelerate), linear, linear;
+  transition: opacity var(--mat-sys-motion-spring-fast-effects), transform var(--mat-sys-motion-spring-fast-spatial), display 150ms, overlay 150ms;
   transition-behavior: allow-discrete;
 }
 
@@ -927,7 +907,8 @@ watch(() => propsWithDefaults.scrim, async () => {
   pointer-events: none;
   opacity: 0;
   transform: scale(.96);
-  transition-duration: var(--mat-sys-motion-duration-short4);
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(.31, .94, .34, 1);
 }
 
 .mat-menu__surface {
@@ -943,7 +924,7 @@ watch(() => propsWithDefaults.scrim, async () => {
   background: var(--mat-menu-container-color);
   border-radius: inherit;
   clip-path: inset(0 round var(--mat-sys-shape-corner-large));
-  transition: clip-path var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized-decelerate);
+  transition: clip-path var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-menu__surface :deep(.mat-scroll-area__viewport) {
@@ -959,7 +940,8 @@ watch(() => propsWithDefaults.scrim, async () => {
 
 .mat-menu--closing:not(.mat-menu--grouped) .mat-menu__surface {
   clip-path: inset(46% 8% round var(--mat-sys-shape-corner-extra-large));
-  transition-duration: var(--mat-sys-motion-duration-short4);
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(.31, .94, .34, 1);
 }
 
 .mat-menu:not(:popover-open):not(.mat-menu--grouped) .mat-menu__surface {
@@ -1021,11 +1003,11 @@ watch(() => propsWithDefaults.scrim, async () => {
 
 @media (prefers-reduced-motion: reduce) {
   .mat-menu {
-    transition-duration: 0s;
+    transition: none;
   }
 
   .mat-menu__surface {
-    transition-duration: 0s;
+    transition: none;
   }
 }
 </style>

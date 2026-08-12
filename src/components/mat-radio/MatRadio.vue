@@ -209,7 +209,7 @@ function handleKeydown(event) {
   box-sizing: border-box;
   border: var(--mat-radio-outline-width) solid var(--mat-radio-unselected-icon-color);
   border-radius: var(--mat-sys-shape-corner-full);
-  transition: border-color var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
+  transition: border-color var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-radio--checked .mat-radio__ring {
@@ -222,7 +222,7 @@ function handleKeydown(event) {
   background: var(--mat-accent-color);
   border-radius: var(--mat-sys-shape-corner-full);
   clip-path: circle(0 at 50% 50%);
-  transition: clip-path var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-emphasized);
+  transition: clip-path var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-radio--checked .mat-radio__dot {

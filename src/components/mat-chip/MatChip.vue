@@ -271,9 +271,7 @@ function handleTrailingClick(event) {
   border: 1px solid var(--mat-chip-outline-color);
   border-radius: var(--mat-sys-shape-corner-small);
   box-shadow: var(--mat-chip-elevation);
-  transition-duration: var(--mat-sys-motion-duration-short3);
-  transition-property: color, background-color, border-color, box-shadow;
-  transition-timing-function: var(--mat-sys-motion-easing-standard);
+  transition: color var(--mat-sys-motion-spring-fast-effects), background-color var(--mat-sys-motion-spring-fast-effects), border-color var(--mat-sys-motion-spring-fast-effects), box-shadow var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-chip--has-leading { padding-inline-start: 8px; }

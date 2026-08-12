@@ -1,5 +1,7 @@
 import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
+import {
+  afterEach, describe, expect, it, vi,
+} from 'vitest';
 import { nextTick } from 'vue';
 import { MatSlider, MatTooltip } from '../src';
 
@@ -47,6 +49,10 @@ async function dispatchPointer(target, type, options) {
 }
 
 describe('MatSlider', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it('使用隐藏原生 range 输入提供 slider 语义，并规范化初始数值', () => {
     const wrapper = mount(MatSlider, {
       attrs: {
@@ -109,6 +115,57 @@ describe('MatSlider', () => {
     expect(wrapper.emitted('update:modelValue')?.map(([value]) => value)).toEqual([8, 10]);
     expect(wrapper.emitted('input')?.every(([event]) => event instanceof Event)).toBe(true);
     expect(wrapper.emitted('change')?.[0][0]).toBeInstanceOf(Event);
+  });
+
+  it('同一绘制帧只处理最新指针位置，并在释放前刷新最终值', async () => {
+    const frames = new Map();
+    let nextFrameId = 1;
+
+    vi.stubGlobal('requestAnimationFrame', (callback) => {
+      const frameId = nextFrameId;
+
+      nextFrameId += 1;
+      frames.set(frameId, callback);
+
+      return frameId;
+    });
+    vi.stubGlobal('cancelAnimationFrame', (frameId) => {
+      frames.delete(frameId);
+    });
+
+    const wrapper = mount(MatSlider, {
+      props: {
+        max: 100,
+        min: 0,
+        modelValue: 0,
+        step: 1,
+      },
+    });
+    const interaction = wrapper.find('.mat-slider__interaction');
+
+    mockInteractionRect(wrapper);
+    await dispatchPointer(interaction, 'pointerdown', { clientX: 0, pointerId: 7 });
+    await dispatchPointer(interaction, 'pointermove', { clientX: 20, pointerId: 7 });
+    await dispatchPointer(interaction, 'pointermove', { clientX: 80, pointerId: 7 });
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+    expect(frames).toHaveLength(1);
+
+    const [[frameId, callback]] = frames;
+
+    frames.delete(frameId);
+    callback(16);
+    await nextTick();
+
+    expect(wrapper.emitted('update:modelValue')?.map(([value]) => value)).toEqual([84]);
+
+    await dispatchPointer(interaction, 'pointermove', { clientX: 90, pointerId: 7 });
+    await dispatchPointer(interaction, 'pointerup', { clientX: 95, pointerId: 7 });
+
+    expect(wrapper.emitted('update:modelValue')?.map(([value]) => value)).toEqual([84, 95, 100]);
+    expect(wrapper.emitted('change')).toHaveLength(1);
+    expect(frames).toHaveLength(0);
+    wrapper.unmount();
   });
 
   it('显示当前获得焦点或正在拖动的数值指示', async () => {

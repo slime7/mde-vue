@@ -170,7 +170,7 @@ function handleChange(event) {
   background: transparent;
   border: var(--mat-checkbox-outline-width) solid var(--mat-checkbox-unselected-outline-color);
   border-radius: var(--mat-checkbox-container-shape);
-  transition: background-color var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard), border-color var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
+  transition: background-color var(--mat-sys-motion-spring-fast-effects), border-color var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-checkbox--checked .mat-checkbox__box,
@@ -185,7 +185,7 @@ function handleChange(event) {
   inline-size: 12px;
   block-size: 10px;
   background: var(--mat-on-accent-color);
-  transition: clip-path var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-emphasized);
+  transition: clip-path var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-checkbox__check {

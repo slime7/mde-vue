@@ -151,7 +151,7 @@ order: 105
 
 ### `position`
 
-`position="start"` 使 Item 在每种状态下贴近起始侧；`position="end"` 使其贴近末尾侧。展开、收回及横向布局切换时，Item 不会先移动到中心再播放动画。
+`position="start"` 使 Item 在每种状态下贴近起始侧；`position="end"` 使其贴近末尾侧。展开、收回及横向布局切换时，Item 不会先移动到中心再播放动画。参与正文排版的 standard rail 使用 default spatial 尺寸过渡；modal 只覆盖正文，不额外改变正文宽度。
 
 :::: details 查看示例代码
 ::: code-group

@@ -149,7 +149,7 @@ defineExpose({ root });
   pointer-events: none;
   background: var(--mat-action-state-color);
   opacity: 0;
-  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
+  transition: opacity var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-action-base:not(:disabled):not(.mat-action-base--disabled):focus-visible::before { opacity: var(--mat-sys-state-focus-state-layer-opacity); }

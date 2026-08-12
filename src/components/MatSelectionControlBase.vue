@@ -213,7 +213,7 @@ defineExpose({
   opacity: 0;
   pointer-events: none;
   transform: translate(var(--mat-selection-control-state-layer-translation), -50%);
-  transition: transform var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard), opacity var(--mat-sys-motion-duration-short2) var(--mat-sys-motion-easing-standard), outline-color var(--mat-sys-motion-duration-short2) var(--mat-sys-motion-easing-standard);
+  transition: transform var(--mat-sys-motion-spring-fast-spatial), opacity var(--mat-sys-motion-spring-fast-effects), outline-color var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-selection-control__indicator {

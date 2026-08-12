@@ -1,6 +1,6 @@
 <script setup>
 import {
-  computed, nextTick, onBeforeUnmount, onMounted, provide, ref, watch,
+  computed, nextTick, onBeforeUnmount, onMounted, onUpdated, provide, ref, watch,
 } from 'vue';
 import { MAT_BTN_GROUP_KEY } from '../button-context';
 import {
@@ -146,11 +146,14 @@ const root = ref(null);
 const pressedButton = ref(null);
 const previousInlineSize = new WeakMap();
 const restingInlineSize = new WeakMap();
+const measuredInlineSize = new WeakMap();
 const resizedButtons = new Set();
 const FALLBACK_WIDTH_TRANSITION_DURATION = 150;
 const MINIMUM_EXPANSION_PROGRESS = 0.75;
 let restoreTimer;
 let cleanupTimer;
+let expansionFrame;
+let buttonResizeObserver;
 let activeTransitionDuration = FALLBACK_WIDTH_TRANSITION_DURATION;
 let restoreReady = true;
 let restoreRequested = false;
@@ -261,7 +264,11 @@ function parseCssTime(value) {
  * @returns {number}
  */
 function getWidthTransitionDuration(button) {
-  const [duration] = getComputedStyle(button).transitionDuration.split(',');
+  const style = getComputedStyle(button);
+  const properties = style.transitionProperty.split(',').map((property) => property.trim());
+  const durations = style.transitionDuration.split(',');
+  const propertyIndex = properties.findIndex((property) => property === 'inline-size');
+  const duration = durations[propertyIndex < 0 ? 0 : propertyIndex % durations.length];
 
   return parseCssTime(duration ?? '') ?? FALLBACK_WIDTH_TRANSITION_DURATION;
 }
@@ -289,7 +296,17 @@ function clearCleanupTimer() {
   cleanupTimer = undefined;
 }
 
+function clearExpansionFrame() {
+  if (expansionFrame === undefined) {
+    return;
+  }
+
+  globalThis.cancelAnimationFrame(expansionFrame);
+  expansionFrame = undefined;
+}
+
 function finishPressedButtonRestore() {
+  clearExpansionFrame();
   clearRestoreTimer();
   clearCleanupTimer();
 
@@ -355,11 +372,9 @@ function requestPressedButtonRestore() {
 /**
  * @param {HTMLButtonElement} button
  */
-function startRestoreThreshold(button) {
+function startRestoreThreshold(button, transitionDuration) {
   restoreReady = false;
   restoreRequested = false;
-
-  const transitionDuration = getWidthTransitionDuration(button);
 
   activeTransitionDuration = transitionDuration;
 
@@ -405,9 +420,10 @@ function expandButton(button) {
   const widthFactor = Number.parseFloat(getComputedStyle(root.value).getPropertyValue(
     '--mat-btn-group-standard-pressed-width-factor',
   )) || 1.15;
+  const transitionDuration = getWidthTransitionDuration(targetButton);
   const buttonWidths = new Map(buttons.map((item) => [
     item,
-    item.getBoundingClientRect().width,
+    measuredInlineSize.get(item) ?? item.getBoundingClientRect().width,
   ]));
   const growth = buttonWidths.get(targetButton) * (widthFactor - 1);
   const nextInlineSizes = new Map([
@@ -441,19 +457,46 @@ function expandButton(button) {
     resizedButtons.add(resizedButton);
   });
 
-  resizedButtons.forEach((item) => {
-    item.getBoundingClientRect();
-  });
-
-  nextInlineSizes.forEach((inlineSize, item) => {
-    const resizedButton = item;
-
-    resizedButton.style.inlineSize = `${inlineSize}px`;
-  });
-
   targetButton.dataset.matGroupPressed = '';
   pressedButton.value = targetButton;
-  startRestoreThreshold(targetButton);
+  expansionFrame = globalThis.requestAnimationFrame(() => {
+    expansionFrame = undefined;
+
+    if (pressedButton.value !== targetButton) {
+      return;
+    }
+
+    nextInlineSizes.forEach((inlineSize, item) => {
+      const resizedButton = item;
+
+      resizedButton.style.inlineSize = `${inlineSize}px`;
+    });
+    startRestoreThreshold(targetButton, transitionDuration);
+  });
+}
+
+function observeButtonSizes() {
+  buttonResizeObserver?.disconnect();
+
+  if (!root.value || typeof ResizeObserver !== 'function') {
+    return;
+  }
+
+  buttonResizeObserver ??= new ResizeObserver((entries) => {
+    entries.forEach((entry) => {
+      const borderBoxSize = Array.isArray(entry.borderBoxSize)
+        ? entry.borderBoxSize[0]
+        : entry.borderBoxSize;
+      const inlineSize = borderBoxSize?.inlineSize ?? entry.contentRect.width;
+
+      if (!resizedButtons.has(entry.target) && inlineSize > 0) {
+        measuredInlineSize.set(entry.target, inlineSize);
+      }
+    });
+  });
+  root.value.querySelectorAll('.mat-button-base').forEach((button) => {
+    buttonResizeObserver.observe(button, { box: 'border-box' });
+  });
 }
 
 /**
@@ -532,8 +575,15 @@ function validateConnectedChildren() {
   }
 }
 
-onMounted(validateConnectedChildren);
-onBeforeUnmount(finishPressedButtonRestore);
+onMounted(() => {
+  validateConnectedChildren();
+  observeButtonSizes();
+});
+onUpdated(observeButtonSizes);
+onBeforeUnmount(() => {
+  buttonResizeObserver?.disconnect();
+  finishPressedButtonRestore();
+});
 watch(
   () => [propsWithDefaults.variant, propsWithDefaults.selection],
   async () => {

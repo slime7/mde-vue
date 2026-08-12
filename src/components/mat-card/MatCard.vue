@@ -77,7 +77,7 @@ const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => propsW
   border: var(--mat-card-outline-width) solid var(--mat-card-outline-color);
   border-radius: var(--mat-sys-shape-corner-medium);
   box-shadow: var(--mat-card-elevation);
-  transition: box-shadow var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
+  transition: box-shadow var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-card--elevated {

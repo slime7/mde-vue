@@ -385,7 +385,7 @@ import {
 | `opened` | 无 | 进入动画完成后触发 |
 | `closed` | 无 | 退出动画完成、原生 Dialog 关闭且 DOM 移除后触发 |
 
-组件是受控的：收到 `update:modelValue(false)` 后，使用者必须更新绑定值才会开始退出。打开后焦点进入显式 `autofocus` 或第一个可交互元素；关闭完成后恢复到打开前的元素。Escape 始终请求关闭，不受 `close-on-back` 影响。
+组件是受控的：收到 `update:modelValue(false)` 后，使用者必须更新绑定值才会开始退出。打开后焦点进入显式 `autofocus` 或第一个可交互元素；浏览器报告实际退出动画完成后移除 DOM 并恢复到打开前的元素，快速反向打开会使旧关闭等待失效。Escape 始终请求关闭，不受 `close-on-back` 影响。减少动态效果时直接完成阶段切换。
 
 ## Slots
 

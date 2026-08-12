@@ -583,7 +583,7 @@ onBeforeUnmount(() => {
 .mat-loader--circular {
   inline-size: var(--mat-loader-circular-size);
   block-size: var(--mat-loader-circular-size);
-  transition: inline-size var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized), block-size var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized);
+  transition: inline-size var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-loader__linear {
@@ -591,7 +591,7 @@ onBeforeUnmount(() => {
   display: block;
   block-size: var(--mat-loader-linear-size);
   overflow: clip;
-  transition: block-size var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized);
+  transition: block-size var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-loader__linear-track {
@@ -603,7 +603,7 @@ onBeforeUnmount(() => {
   background: var(--mat-loader-track-color);
   border-radius: var(--mat-sys-shape-corner-full);
   transform: translateY(-50%);
-  transition: block-size var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized), inset-inline var(--mat-sys-motion-duration-medium1) cubic-bezier(.4, 0, .6, 1), inline-size var(--mat-sys-motion-duration-medium1) cubic-bezier(.4, 0, .6, 1);
+  transition: block-size var(--mat-sys-motion-spring-fast-spatial), inset-inline var(--mat-sys-motion-spring-fast-spatial), inline-size var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-loader__linear-track--before {
@@ -652,7 +652,7 @@ onBeforeUnmount(() => {
       - var(--mat-loader-linear-cap-progress)
     ) * var(--mat-loader-linear-path-scale)
   ) 200;
-  transition: stroke-dasharray var(--mat-sys-motion-duration-medium1) cubic-bezier(.4, 0, .6, 1), stroke-width var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized);
+  transition: stroke-dasharray var(--mat-sys-motion-spring-default-effects), stroke-width var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-loader__linear-indeterminate-track {
@@ -680,7 +680,7 @@ onBeforeUnmount(() => {
 }
 
 .mat-loader__linear-segment {
-  transition: stroke-width var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized);
+  transition: stroke-width var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-loader__linear-segment--primary {
@@ -708,7 +708,7 @@ onBeforeUnmount(() => {
   inline-size: var(--mat-loader-circular-size);
   block-size: var(--mat-loader-circular-size);
   overflow: visible;
-  transition: inline-size var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized), block-size var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized);
+  transition: inline-size var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-loader__circular-linear-rotate,
@@ -738,12 +738,12 @@ onBeforeUnmount(() => {
 
 .mat-loader__circular-track {
   stroke: var(--mat-loader-track-color);
-  transition: opacity var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard), stroke-width var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized), stroke-dasharray var(--mat-sys-motion-duration-long2) var(--mat-sys-motion-easing-standard-decelerate), stroke-dashoffset var(--mat-sys-motion-duration-long2) var(--mat-sys-motion-easing-standard-decelerate);
+  transition: opacity var(--mat-sys-motion-spring-fast-effects), stroke-width var(--mat-sys-motion-spring-fast-spatial), stroke-dasharray var(--mat-sys-motion-spring-default-effects), stroke-dashoffset var(--mat-sys-motion-spring-default-effects);
 }
 
 .mat-loader__circular-active {
   stroke: var(--mat-loader-active-indicator-color, var(--mat-sys-color-primary));
-  transition: stroke-width var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized), stroke-dasharray var(--mat-sys-motion-duration-long2) var(--mat-sys-motion-easing-standard-decelerate);
+  transition: stroke-width var(--mat-sys-motion-spring-fast-spatial), stroke-dasharray var(--mat-sys-motion-spring-default-effects);
 }
 
 .mat-loader--indeterminate .mat-loader__circular-track {
@@ -770,7 +770,7 @@ onBeforeUnmount(() => {
 
 .mat-loader--indeterminate .mat-loader__circular-track,
 .mat-loader--indeterminate .mat-loader__circular-active {
-  transition: opacity var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard), stroke-width var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized);
+  transition: opacity var(--mat-sys-motion-spring-fast-effects), stroke-width var(--mat-sys-motion-spring-fast-spatial);
 }
 
 /*

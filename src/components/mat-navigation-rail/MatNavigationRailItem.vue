@@ -208,13 +208,13 @@ function handleClick(event) {
 .mat-navigation-rail-item__indicator::before {
   background: var(--mat-navigation-rail-item-selected-container-color);
   opacity: 0;
-  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
+  transition: opacity var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-navigation-rail-item__indicator::after {
   background: var(--mat-navigation-rail-item-state-color);
   opacity: 0;
-  transition: opacity var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard);
+  transition: opacity var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-navigation-rail-item--selected .mat-navigation-rail-item__indicator::before {

@@ -207,9 +207,7 @@ const rootStyle = computed(() => ({
   overflow-wrap: normal;
   user-select: none;
   cursor: default;
-  transition-duration: var(--mat-sys-motion-duration-short4);
-  transition-property: color, font-size, font-variation-settings;
-  transition-timing-function: var(--mat-sys-motion-easing-standard);
+  transition: color var(--mat-sys-motion-spring-fast-effects), font-size var(--mat-sys-motion-spring-fast-spatial), font-variation-settings var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-icon__image,

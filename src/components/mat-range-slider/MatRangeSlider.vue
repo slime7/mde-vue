@@ -1,9 +1,10 @@
 <script setup>
 import {
-  computed, inject, ref, useAttrs,
+  computed, inject, onBeforeUnmount, ref, useAttrs,
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import { isComponentColor } from '../button-props';
+import createFrameScheduler from '../frame-scheduler';
 import MatTooltip from '../mat-tooltip/MatTooltip.vue';
 import {
   getSliderPercentage,
@@ -307,6 +308,10 @@ function updateValueFromPointer(event) {
   return updateRangeValue(activeHandle.value, value, event);
 }
 
+const pointerFrame = createFrameScheduler((event) => {
+  dragChanged.value = updateValueFromPointer(event) || dragChanged.value;
+});
+
 /**
  * @param {PointerEvent} event
  */
@@ -315,6 +320,7 @@ function handlePointerDown(event) {
     return;
   }
 
+  pointerFrame.cancel();
   const value = getSliderValueFromPointer(
     event,
     interaction.value,
@@ -345,7 +351,7 @@ function handlePointerMove(event) {
     return;
   }
 
-  dragChanged.value = updateValueFromPointer(event) || dragChanged.value;
+  pointerFrame.schedule(event);
 }
 
 /**
@@ -358,7 +364,10 @@ function finishPointerInteraction(event, shouldEmitChange) {
   }
 
   if (shouldEmitChange) {
+    pointerFrame.flush();
     dragChanged.value = updateValueFromPointer(event) || dragChanged.value;
+  } else {
+    pointerFrame.cancel();
   }
 
   if (shouldEmitChange && dragChanged.value) {
@@ -370,6 +379,10 @@ function finishPointerInteraction(event, shouldEmitChange) {
   dragPointerId.value = undefined;
   dragValue.value = undefined;
 }
+
+onBeforeUnmount(() => {
+  pointerFrame.cancel();
+});
 
 /**
  * @param {number} index
@@ -588,7 +601,7 @@ function setHandleElement(index, element) {
   display: block;
   block-size: var(--mat-range-slider-current-track-height);
   transform: translateY(-50%);
-  transition: block-size var(--mat-sys-motion-duration-medium1) var(--mat-sys-motion-easing-emphasized);
+  transition: block-size var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-range-slider__active-track,
@@ -597,7 +610,7 @@ function setHandleElement(index, element) {
   inset-block: 0;
   display: block;
   border-radius: var(--mat-slider-track-gap-corner);
-  transition: inset-inline-start var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), inline-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+  transition: inset-inline-start var(--mat-sys-motion-spring-fast-spatial), inline-size var(--mat-sys-motion-spring-fast-spatial), background-color var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-range-slider__inactive-track {
@@ -650,7 +663,7 @@ function setHandleElement(index, element) {
   block-size: var(--mat-range-slider-current-handle-height);
   border-radius: var(--mat-range-slider-current-track-corner);
   transform: translate(-50%, -50%);
-  transition: inset-inline-start var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), inline-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), block-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized);
+  transition: inset-inline-start var(--mat-sys-motion-spring-fast-spatial), inline-size var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-range-slider__handle-shape {
@@ -660,7 +673,7 @@ function setHandleElement(index, element) {
   background: var(--mat-range-slider-current-handle-color);
   border-radius: var(--mat-range-slider-current-track-corner);
   clip-path: inset(0 round var(--mat-range-slider-current-track-corner));
-  transition: background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard), clip-path var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized);
+  transition: background-color var(--mat-sys-motion-spring-fast-effects), clip-path var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-range-slider__handle--start {
@@ -747,7 +760,7 @@ function setHandleElement(index, element) {
   inset-inline: 0;
   inline-size: auto;
   block-size: var(--mat-range-slider-active-visible-size);
-  transition: inset-block-end var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), block-size var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized), background-color var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard);
+  transition: inset-block-end var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial), background-color var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-range-slider--vertical .mat-range-slider__inactive-track--after {
@@ -789,12 +802,12 @@ function setHandleElement(index, element) {
 
 .mat-range-slider--dragging .mat-range-slider__active-track,
 .mat-range-slider--dragging .mat-range-slider__inactive-track {
-  transition-property: background-color;
+  transition: background-color var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-range-slider--dragging .mat-range-slider__handle--active {
   inline-size: var(--mat-slider-pressed-handle-width);
-  transition-property: inline-size, block-size;
+  transition: inline-size var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial);
 }
 
 @supports (border-shape: inset(0 round 1px)) {

@@ -314,7 +314,7 @@ watch(isSelectableFallback, async (selectable, wasSelectable) => {
   overflow: clip;
   block-size: 0;
   opacity: 0;
-  transition: block-size var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized), opacity var(--mat-sys-motion-duration-medium2) var(--mat-sys-motion-easing-emphasized);
+  transition: block-size var(--mat-sys-motion-spring-default-spatial), opacity var(--mat-sys-motion-spring-default-effects);
 }
 
 .mat-list-group--expanded > .mat-list-group__content,

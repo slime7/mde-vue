@@ -267,6 +267,12 @@
   --mat-sys-motion-easing-standard: cubic-bezier(.2, 0, 0, 1);
   --mat-sys-motion-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
   --mat-sys-motion-easing-standard-accelerate: cubic-bezier(.3, 0, 1, 1);
+  --mat-sys-motion-spring-fast-spatial: 350ms cubic-bezier(.42, 1.67, .21, .9);
+  --mat-sys-motion-spring-default-spatial: 500ms cubic-bezier(.38, 1.21, .22, 1);
+  --mat-sys-motion-spring-slow-spatial: 650ms cubic-bezier(.39, 1.29, .35, .98);
+  --mat-sys-motion-spring-fast-effects: 150ms cubic-bezier(.31, .94, .34, 1);
+  --mat-sys-motion-spring-default-effects: 200ms cubic-bezier(.34, .8, .34, 1);
+  --mat-sys-motion-spring-slow-effects: 300ms cubic-bezier(.34, .88, .34, 1);
 
   /* State and interaction */
   --mat-sys-state-hover-state-layer-opacity: .08;

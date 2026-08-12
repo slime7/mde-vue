@@ -13,6 +13,7 @@ import {
   watch,
 } from 'vue';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
+import createMotionController from '../motion-controller';
 import { registerToolbar } from '../toolbar-overlay';
 import { useMatProps } from '../use-mat-props';
 import { isValidCssLength, toCssLength } from '../value-utils';
@@ -257,35 +258,18 @@ let overlayRegistration;
 let resizeObserver;
 let measuring = false;
 let mounted = false;
-let phaseTimer;
+const phaseMotion = createMotionController();
 let warnedForFabSlot = false;
 
 function clearPhaseTimer() {
-  if (phaseTimer !== undefined) {
-    window.clearTimeout(phaseTimer);
-    phaseTimer = undefined;
-  }
-}
-
-function prefersReducedMotion() {
-  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+  phaseMotion.cancel();
 }
 
 /**
  * @param {() => void} callback
  */
 function waitForAnimation(callback) {
-  clearPhaseTimer();
-
-  if (prefersReducedMotion()) {
-    callback();
-    return;
-  }
-
-  phaseTimer = window.setTimeout(() => {
-    phaseTimer = undefined;
-    callback();
-  }, TOOLBAR_ANIMATION_DURATION);
+  phaseMotion.wait(toolbarElement.value, TOOLBAR_ANIMATION_DURATION, callback);
 }
 
 function openToolbar() {
@@ -790,43 +774,43 @@ function warnForInvalidAttach() {
 }
 
 .mat-toolbar--docked.mat-toolbar--opening {
-  animation: mat-toolbar-docked-enter var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-decelerate) both;
+  animation: mat-toolbar-docked-enter var(--mat-sys-motion-spring-fast-spatial) both;
 }
 
 .mat-toolbar--docked.mat-toolbar--closing {
-  animation: mat-toolbar-docked-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) both;
+  animation: mat-toolbar-docked-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
 .mat-toolbar--floating-top.mat-toolbar--opening {
-  animation: mat-toolbar-floating-top-enter var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-decelerate) both;
+  animation: mat-toolbar-floating-top-enter var(--mat-sys-motion-spring-fast-spatial) both;
 }
 
 .mat-toolbar--floating-top.mat-toolbar--closing {
-  animation: mat-toolbar-floating-top-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) both;
+  animation: mat-toolbar-floating-top-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
 .mat-toolbar--floating-bottom.mat-toolbar--opening {
-  animation: mat-toolbar-floating-bottom-enter var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-decelerate) both;
+  animation: mat-toolbar-floating-bottom-enter var(--mat-sys-motion-spring-fast-spatial) both;
 }
 
 .mat-toolbar--floating-bottom.mat-toolbar--closing {
-  animation: mat-toolbar-floating-bottom-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) both;
+  animation: mat-toolbar-floating-bottom-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
 .mat-toolbar--floating-left.mat-toolbar--opening {
-  animation: mat-toolbar-floating-left-enter var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-decelerate) both;
+  animation: mat-toolbar-floating-left-enter var(--mat-sys-motion-spring-fast-spatial) both;
 }
 
 .mat-toolbar--floating-left.mat-toolbar--closing {
-  animation: mat-toolbar-floating-left-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) both;
+  animation: mat-toolbar-floating-left-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
 .mat-toolbar--floating-right.mat-toolbar--opening {
-  animation: mat-toolbar-floating-right-enter var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-decelerate) both;
+  animation: mat-toolbar-floating-right-enter var(--mat-sys-motion-spring-fast-spatial) both;
 }
 
 .mat-toolbar--floating-right.mat-toolbar--closing {
-  animation: mat-toolbar-floating-right-exit var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate) both;
+  animation: mat-toolbar-floating-right-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
 @keyframes mat-toolbar-docked-enter {
