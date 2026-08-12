@@ -163,7 +163,7 @@ var Y = (e, t) => {
 			"type"
 		]));
 	}
-}), [["__scopeId", "data-v-d7288fce"]]), ie = Object.freeze({
+}), [["__scopeId", "data-v-8ed37891"]]), ie = Object.freeze({
 	openDelay: 0,
 	closeDelay: 600,
 	skipDelayDuration: 0
@@ -2374,16 +2374,16 @@ var sn = {
 		return e && Object.hasOwn(e, "value") && Object.hasOwn(e, "nextSelected") && e.originalEvent instanceof MouseEvent;
 	} },
 	setup(e, { emit: t }) {
-		let n = $("btnGroup", e), i = t, a = O(null), s = O(null), c = /* @__PURE__ */ new WeakMap(), l = /* @__PURE__ */ new WeakMap(), u = /* @__PURE__ */ new WeakMap(), d = /* @__PURE__ */ new Set(), f, p, m = gn, _ = !0, v = !1, { colorStyle: y } = Ie(r(() => n.color));
-		function x(e) {
+		let n = $("btnGroup", e), i = t, a = O(null), s = O(null), c = /* @__PURE__ */ new WeakMap(), l = /* @__PURE__ */ new WeakMap(), u = /* @__PURE__ */ new WeakMap(), d = /* @__PURE__ */ new Set(), f, p, m, _ = gn, v = !0, y = !1, { colorStyle: x } = Ie(r(() => n.color));
+		function E(e) {
 			return n.selection === "multiple" ? Array.isArray(n.selected) && n.selected.some((t) => Object.is(t, e)) : n.selection === "single" && Object.is(n.selected, e);
 		}
-		function E(e, t) {
+		function D(e, t) {
 			if (e === void 0) {
 				console.warn("MatBtnGroup: selection 不为 none 时，子按钮必须提供 value");
 				return;
 			}
-			let r = x(e);
+			let r = E(e);
 			if (n.selection === "single") {
 				if (r && n.required) return;
 				i("select", {
@@ -2408,48 +2408,48 @@ var sn = {
 		T(Lt, {
 			color: r(() => n.color),
 			disabled: r(() => n.disabled),
-			isSelected: x,
-			requestSelection: E,
+			isSelected: E,
+			requestSelection: D,
 			selection: r(() => n.selection),
 			shape: r(() => n.shape),
 			size: r(() => n.size),
 			variant: r(() => n.variant)
 		});
-		function D(e) {
+		function k(e) {
 			return e instanceof Element ? e.closest(".mat-button-base") : null;
 		}
-		function k(e) {
+		function A(e) {
 			let t = e.trim().match(/^(\d*\.?\d+)(ms|s)$/);
 			if (!t) return null;
 			let n = Number.parseFloat(t[1]);
 			return t[2] === "s" ? n * 1e3 : n;
 		}
-		function A() {
-			return k(getComputedStyle(a.value).getPropertyValue("--mat-btn-group-size-animation-duration")) ?? gn;
-		}
 		function M() {
-			return typeof window.matchMedia == "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+			return A(getComputedStyle(a.value).getPropertyValue("--mat-btn-group-size-animation-duration")) ?? gn;
 		}
 		function N() {
+			return typeof window.matchMedia == "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		}
+		function P() {
 			f !== void 0 && (globalThis.cancelAnimationFrame(f), f = void 0);
 		}
-		function P(e, t) {
+		function F(e, t) {
 			let n = e;
 			n.style.inlineSize = t.inlineSize, n.style.paddingInlineStart = t.paddingInlineStart, n.style.paddingInlineEnd = t.paddingInlineEnd;
 		}
-		function F(e) {
+		function ee(e) {
 			return new Map([...e].map(([e, t]) => [e, {
 				inlineSize: Number.parseFloat(t.inlineSize) || 0,
 				paddingInlineStart: Number.parseFloat(t.paddingInlineStart) || 0,
 				paddingInlineEnd: Number.parseFloat(t.paddingInlineEnd) || 0
 			}]));
 		}
-		function ee(e, t, n, r) {
-			N();
+		function L(e, t, n, r) {
+			P();
 			let i = performance.now(), a = [...t.keys()], o = Math.round(a.reduce((e, n) => e + t.get(n).inlineSize, 0) * 64);
-			if (M() || n === 0) {
+			if (N() || n === 0) {
 				t.forEach((e, t) => {
-					P(t, {
+					F(t, {
 						inlineSize: `${e.inlineSize}px`,
 						paddingInlineStart: `${e.paddingInlineStart}px`,
 						paddingInlineEnd: `${e.paddingInlineEnd}px`
@@ -2461,7 +2461,7 @@ var sn = {
 				let l = Math.min(1, Math.max(0, (c - i) / n)), u = 1 - (1 - l) ** 3, d = 0;
 				if (a.forEach((n, r) => {
 					let i = t.get(n), s = e.get(n), c = (e, t) => e + (t - e) * u, l = r === a.length - 1 ? o - d : Math.round(c(s.inlineSize, i.inlineSize) * 64);
-					d += l, P(n, {
+					d += l, F(n, {
 						inlineSize: `${l / 64}px`,
 						paddingInlineStart: `${c(s.paddingInlineStart, i.paddingInlineStart)}px`,
 						paddingInlineEnd: `${c(s.paddingInlineEnd, i.paddingInlineEnd)}px`
@@ -2474,17 +2474,17 @@ var sn = {
 			};
 			f = globalThis.requestAnimationFrame(s);
 		}
-		function L() {
-			N(), d.forEach((e) => {
+		function R() {
+			P(), d.forEach((e) => {
 				let t = e;
-				P(t, c.get(t) ?? {
+				F(t, c.get(t) ?? {
 					inlineSize: "",
 					paddingInlineStart: "",
 					paddingInlineEnd: ""
 				}), c.delete(t), l.delete(t);
-			}), d.clear(), s.value && delete s.value.dataset.matGroupPressed, s.value = null, m = gn, _ = !0, v = !1;
+			}), d.clear(), s.value && delete s.value.dataset.matGroupPressed, m &&= (m.style.removeProperty("--mat-button-visual-scale"), void 0), s.value = null, _ = gn, v = !0, y = !1;
 		}
-		function R() {
+		function B() {
 			if (!s.value) return;
 			let e = new Map([...d].map((e) => {
 				let t = getComputedStyle(e);
@@ -2493,30 +2493,30 @@ var sn = {
 					paddingInlineStart: Number.parseFloat(t.paddingInlineStart) || 0,
 					paddingInlineEnd: Number.parseFloat(t.paddingInlineEnd) || 0
 				}];
-			})), t = F(new Map([...d].map((e) => [e, l.get(e)])));
-			delete s.value.dataset.matGroupPressed, s.value = null, _ = !0, v = !1, ee(e, t, m, L);
+			})), t = ee(new Map([...d].map((e) => [e, l.get(e)])));
+			delete s.value.dataset.matGroupPressed, s.value.style.setProperty("--mat-button-visual-scale", "1"), s.value = null, v = !0, y = !1, L(e, t, _, R);
 		}
-		function B() {
+		function V() {
 			if (s.value) {
-				if (_) {
-					R();
+				if (v) {
+					B();
 					return;
 				}
-				v = !0;
+				y = !0;
 			}
 		}
-		function V(e, t, n, r) {
-			_ = !1, v = !1, m = r, ee(F(t), F(n), r, () => {
-				s.value === e && (_ = !0, v && R());
-			}), (M() || r === 0) && (_ = !0);
+		function H(e, t, n, r) {
+			v = !1, y = !1, _ = r, L(ee(t), ee(n), r, () => {
+				s.value === e && (v = !0, y && B());
+			}), (N() || r === 0) && (v = !0);
 		}
-		function H(e) {
+		function U(e) {
 			if (n.variant !== "standard" || e.disabled || s.value === e) return;
 			let t = e;
-			L();
+			R();
 			let r = [...a.value.querySelectorAll(".mat-button-base")], i = r.indexOf(t);
 			if (r.length < 2 || i === -1) return;
-			let o = Number.parseFloat(getComputedStyle(a.value).getPropertyValue("--mat-btn-group-standard-pressed-width-factor")) || 1.15, f = A(), p = new Map(r.map((e) => {
+			let o = Number.parseFloat(getComputedStyle(a.value).getPropertyValue("--mat-btn-group-standard-pressed-width-factor")) || 1.15, f = M(), p = new Map(r.map((e) => {
 				let t = getComputedStyle(e);
 				return [e, {
 					icon: e.classList.contains("mat-btn--icon"),
@@ -2524,22 +2524,22 @@ var sn = {
 					paddingInlineStart: Number.parseFloat(t.paddingInlineStart) || 0,
 					paddingInlineEnd: Number.parseFloat(t.paddingInlineEnd) || 0
 				}];
-			})), m = i === 0 ? [r[1]] : i === r.length - 1 ? [r[i - 1]] : [r[i - 1], r[i + 1]], h = p.get(t).inlineSize * (o - 1), g = m.reduce((e, t) => {
+			})), h = i === 0 ? [r[1]] : i === r.length - 1 ? [r[i - 1]] : [r[i - 1], r[i + 1]], g = p.get(t).inlineSize * (o - 1), _ = h.reduce((e, t) => {
 				let n = p.get(t);
 				return e + (n.icon ? n.inlineSize * (o - 1) : n.paddingInlineStart + n.paddingInlineEnd);
-			}, 0), _ = Math.min(h, g), v = /* @__PURE__ */ new Map(), y = p.get(t);
-			v.set(t, {
-				inlineSize: `${y.inlineSize + _}px`,
-				paddingInlineStart: `${y.paddingInlineStart}px`,
-				paddingInlineEnd: `${y.paddingInlineEnd}px`
-			}), m.forEach((e) => {
-				let t = p.get(e), n = t.paddingInlineStart + t.paddingInlineEnd, r = t.icon ? t.inlineSize * (o - 1) : n, i = g > 0 ? _ * r / g : 0, a = n > 0 ? i * t.paddingInlineStart / n : 0, s = i - a;
-				v.set(e, {
+			}, 0), v = Math.min(g, _), y = /* @__PURE__ */ new Map(), b = p.get(t);
+			y.set(t, {
+				inlineSize: `${b.inlineSize + v}px`,
+				paddingInlineStart: `${b.paddingInlineStart}px`,
+				paddingInlineEnd: `${b.paddingInlineEnd}px`
+			}), h.forEach((e) => {
+				let t = p.get(e), n = t.paddingInlineStart + t.paddingInlineEnd, r = t.icon ? t.inlineSize * (o - 1) : n, i = _ > 0 ? v * r / _ : 0, a = n > 0 ? i * t.paddingInlineStart / n : 0, s = i - a;
+				y.set(e, {
 					inlineSize: `${t.inlineSize - i}px`,
 					paddingInlineStart: `${t.paddingInlineStart - a}px`,
 					paddingInlineEnd: `${t.paddingInlineEnd - s}px`
 				});
-			}), v.forEach((e, t) => {
+			}), y.forEach((e, t) => {
 				let n = t, r = p.get(n), i = {
 					inlineSize: `${r.inlineSize}px`,
 					paddingInlineStart: `${r.paddingInlineStart}px`,
@@ -2549,10 +2549,10 @@ var sn = {
 					inlineSize: n.style.inlineSize,
 					paddingInlineStart: n.style.paddingInlineStart,
 					paddingInlineEnd: n.style.paddingInlineEnd
-				}), l.set(n, i), P(n, i), d.add(n);
-			}), t.dataset.matGroupPressed = "", s.value = t, V(t, new Map([...d].map((e) => [e, l.get(e)])), v, f);
+				}), l.set(n, i), F(n, i), d.add(n);
+			}), t.dataset.matGroupPressed = "", t.style.setProperty("--mat-button-visual-scale", ".96"), m = t, s.value = t, H(t, new Map([...d].map((e) => [e, l.get(e)])), y, f);
 		}
-		function U() {
+		function W() {
 			p?.disconnect(), !(!a.value || typeof ResizeObserver != "function") && (p ??= new ResizeObserver((e) => {
 				e.forEach((e) => {
 					let t = (Array.isArray(e.borderBoxSize) ? e.borderBoxSize[0] : e.borderBoxSize)?.inlineSize ?? e.contentRect.width;
@@ -2562,30 +2562,30 @@ var sn = {
 				p.observe(e, { box: "border-box" });
 			}));
 		}
-		async function W(e) {
-			let t = D(e.target);
-			t && (await g(), H(t));
+		async function te(e) {
+			let t = k(e.target);
+			t && (await g(), U(t));
 		}
-		function te(e) {
-			e.relatedTarget instanceof Node && a.value?.contains(e.relatedTarget) || B();
+		function G(e) {
+			e.relatedTarget instanceof Node && a.value?.contains(e.relatedTarget) || V();
 		}
-		async function G(e) {
+		async function K(e) {
 			if (e.repeat || ![" ", "Enter"].includes(e.key)) return;
-			let t = D(e.target);
-			t && (await g(), H(t));
+			let t = k(e.target);
+			t && (await g(), U(t));
 		}
-		function K() {
+		function q() {
 			if (n.variant !== "connected" || !a.value) return;
 			n.selection === "none" && console.warn("MatBtnGroup: connected 形态应配合 single 或 multiple 选择模式使用");
 			let e = [...a.value.querySelectorAll(".mat-button-base")], t = e.some((e) => e.classList.contains("mat-btn--text") || e.classList.contains("mat-btn--standard")), r = new Set(e.flatMap((e) => [...e.classList].filter((e) => /^mat-btn--(?:elevated|filled|filled-tonal|outlined)$/.test(e)).map((e) => e.slice(e.lastIndexOf("--") + 2))));
 			t && console.warn("MatBtnGroup: connected 形态不支持 text 或 standard 按钮"), r.size > 1 && console.warn("MatBtnGroup: connected 形态中的子按钮应使用相同视觉层级"), new Set(e.map((e) => e.style.getPropertyValue("--mat-accent-color"))).size > 1 && console.warn("MatBtnGroup: connected 形态中的子按钮应使用相同颜色");
 		}
 		return S(() => {
-			K(), U();
-		}), C(U), b(() => {
-			p?.disconnect(), L();
+			q(), W();
+		}), C(W), b(() => {
+			p?.disconnect(), R();
 		}), z(() => [n.variant, n.selection], async () => {
-			L(), await g(), K();
+			R(), await g(), q();
 		}), (e, t) => (w(), o("div", h({
 			ref_key: "root",
 			ref: a
@@ -2599,18 +2599,18 @@ var sn = {
 					"mat-btn-group--full-width": I(n).variant === "connected" && I(n).fullWidth
 				}
 			]],
-			style: I(y),
+			style: I(x),
 			role: "group",
-			onFocusout: te,
-			onKeydown: G,
-			onKeyupCapture: B,
-			onLostpointercaptureCapture: B,
-			onPointercancelCapture: B,
-			onPointerdown: W,
-			onPointerupCapture: B
+			onFocusout: G,
+			onKeydown: K,
+			onKeyupCapture: V,
+			onLostpointercaptureCapture: V,
+			onPointercancelCapture: V,
+			onPointerdown: te,
+			onPointerupCapture: V
 		}), [j(e.$slots, "default", {}, void 0, !0)], 16));
 	}
-}), [["__scopeId", "data-v-61b42f0c"]]), vn = [
+}), [["__scopeId", "data-v-36a1694a"]]), vn = [
 	"small",
 	"medium",
 	"large"

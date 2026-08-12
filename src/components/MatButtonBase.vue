@@ -61,6 +61,7 @@ const emit = defineEmits(['click']);
   --mat-button-container-height: 40px;
   --mat-button-container-width: auto;
   --mat-button-size-motion: var(--mat-sys-motion-spring-fast-spatial);
+  --mat-button-visual-scale: 1;
 
   /* 将 full 限制为实际半径，避免与较小内角混用时触发 CSS 圆角整体缩放。 */
   --mat-button-full-radius: min(calc(var(--mat-button-container-height) / 2), var(--mat-sys-shape-corner-full));
@@ -99,7 +100,8 @@ const emit = defineEmits(['click']);
   border-end-start-radius: var(--mat-button-end-start-radius);
   border-end-end-radius: var(--mat-button-end-end-radius);
   box-shadow: var(--mat-button-container-elevation);
-  transition: color var(--mat-sys-motion-spring-fast-effects), background-color var(--mat-sys-motion-spring-fast-effects), border-color var(--mat-sys-motion-spring-fast-effects), border-start-start-radius var(--mat-sys-motion-spring-fast-spatial), border-start-end-radius var(--mat-sys-motion-spring-fast-spatial), border-end-start-radius var(--mat-sys-motion-spring-fast-spatial), border-end-end-radius var(--mat-sys-motion-spring-fast-spatial), box-shadow var(--mat-sys-motion-spring-fast-effects), inline-size var(--mat-button-size-motion), padding-inline-start var(--mat-button-size-motion), padding-inline-end var(--mat-button-size-motion);
+  transform: scaleX(var(--mat-button-visual-scale));
+  transition: color var(--mat-sys-motion-spring-fast-effects), background-color var(--mat-sys-motion-spring-fast-effects), border-color var(--mat-sys-motion-spring-fast-effects), border-start-start-radius var(--mat-sys-motion-spring-fast-spatial), border-start-end-radius var(--mat-sys-motion-spring-fast-spatial), border-end-start-radius var(--mat-sys-motion-spring-fast-spatial), border-end-end-radius var(--mat-sys-motion-spring-fast-spatial), box-shadow var(--mat-sys-motion-spring-fast-effects), inline-size var(--mat-button-size-motion), padding-inline-start var(--mat-button-size-motion), padding-inline-end var(--mat-button-size-motion), transform var(--mat-sys-motion-spring-fast-spatial);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }

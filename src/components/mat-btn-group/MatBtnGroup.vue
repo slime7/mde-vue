@@ -151,6 +151,7 @@ const resizedButtons = new Set();
 const FALLBACK_WIDTH_TRANSITION_DURATION = 150;
 let sizeAnimationFrame;
 let buttonResizeObserver;
+let visualButton;
 let activeTransitionDuration = FALLBACK_WIDTH_TRANSITION_DURATION;
 let restoreReady = true;
 let restoreRequested = false;
@@ -388,6 +389,11 @@ function finishPressedButtonRestore() {
     delete pressedButton.value.dataset.matGroupPressed;
   }
 
+  if (visualButton) {
+    visualButton.style.removeProperty('--mat-button-visual-scale');
+    visualButton = undefined;
+  }
+
   pressedButton.value = null;
   activeTransitionDuration = FALLBACK_WIDTH_TRANSITION_DURATION;
   restoreReady = true;
@@ -414,6 +420,7 @@ function restorePressedButton() {
   ])));
 
   delete pressedButton.value.dataset.matGroupPressed;
+  pressedButton.value.style.setProperty('--mat-button-visual-scale', '1');
   pressedButton.value = null;
   restoreReady = true;
   restoreRequested = false;
@@ -567,6 +574,8 @@ function expandButton(button) {
   });
 
   targetButton.dataset.matGroupPressed = '';
+  targetButton.style.setProperty('--mat-button-visual-scale', '.96');
+  visualButton = targetButton;
   pressedButton.value = targetButton;
   startExpansion(targetButton, new Map([...resizedButtons].map((item) => [
     item,
