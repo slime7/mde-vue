@@ -255,7 +255,17 @@ function handleKeydown(event) {
 }
 
 function removeValue(value) {
-  requestValue(value);
+  if (propsWithDefaults.disabled || propsWithDefaults.readonly) {
+    return;
+  }
+
+  if (propsWithDefaults.multiple) {
+    requestValue(value);
+  } else {
+    emit('update:modelValue', null);
+    emit('change', null);
+  }
+
   nextTick(() => trigger.value?.focus());
 }
 </script>
@@ -307,6 +317,7 @@ function removeValue(value) {
               v-for="option in selectedOptions"
               :key="`${typeof option.value}:${String(option.value)}`"
               variant="input"
+              :selected="isSelected(option.value)"
               :disabled="propsWithDefaults.disabled || propsWithDefaults.readonly"
               @click.stop
               @remove="removeValue(option.value)"

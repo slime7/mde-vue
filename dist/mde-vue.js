@@ -6696,7 +6696,7 @@ var hi = {
 			].includes(e.key) && (e.preventDefault(), m.value || B());
 		}
 		function W(e) {
-			R(e), g(() => b.value?.focus());
+			d.disabled || d.readonly || (d.multiple ? R(e) : (f("update:modelValue", null), f("change", null)), g(() => b.value?.focus()));
 		}
 		return (e, n) => (w(), o("div", {
 			class: _(["mat-select", e.$attrs.class]),
@@ -6741,13 +6741,18 @@ var hi = {
 					I(d).chips && M.value ? (w(), o("span", Ji, [(w(!0), o(t, null, A(D.value, (e) => (w(), i(Mr, {
 						key: `${typeof e.value}:${String(e.value)}`,
 						variant: "input",
+						selected: P(e.value),
 						disabled: I(d).disabled || I(d).readonly,
 						onClick: n[0] ||= U(() => {}, ["stop"]),
 						onRemove: (t) => W(e.value)
 					}, {
 						default: V(() => [l(F(e.title), 1)]),
 						_: 2
-					}, 1032, ["disabled", "onRemove"]))), 128))])) : M.value ? (w(), o("span", Yi, F(k.value), 1)) : (w(), o("span", Xi, F(I(d).placeholder), 1)),
+					}, 1032, [
+						"selected",
+						"disabled",
+						"onRemove"
+					]))), 128))])) : M.value ? (w(), o("span", Yi, F(k.value), 1)) : (w(), o("span", Xi, F(I(d).placeholder), 1)),
 					n[4] ||= s("span", { class: "mat-select__spacer" }, null, -1),
 					u(ze, {
 						as: "span",
@@ -6883,7 +6888,7 @@ var hi = {
 			])
 		], 6));
 	}
-}), [["__scopeId", "data-v-3af7e49e"]]), ta = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-9e14f04f"]]), ta = /*@__PURE__*/ Object.assign({
 	name: "MatTextarea",
 	inheritAttrs: !1
 }, {

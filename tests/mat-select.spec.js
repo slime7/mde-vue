@@ -127,6 +127,28 @@ describe('MatSelect', () => {
     expect(wrapper.get('[role="menu"]').element.showPopover).not.toHaveBeenCalled();
   });
 
+  it('单选 chips 点击 x 后清空为 null', async () => {
+    const wrapper = mount(MatSelect, {
+      attachTo: document.body,
+      props: {
+        modelValue: 'a',
+        chips: true,
+        items: [
+          { title: '甲', value: 'a' },
+          { title: '乙', value: 'b' },
+        ],
+      },
+    });
+    const chip = wrapper.findComponent({ name: 'MatChip' });
+
+    expect(chip.attributes('aria-pressed')).toBe('true');
+
+    await chip.get('[aria-hidden="true"]:last-child').trigger('click');
+
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([null]);
+    expect(wrapper.emitted('change')?.at(-1)).toEqual([null]);
+  });
+
   it('隐藏原生 select 同步表单属性、字符串值和选择状态', () => {
     const wrapper = mount(MatSelect, {
       props: {
