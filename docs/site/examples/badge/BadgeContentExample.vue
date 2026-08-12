@@ -5,7 +5,7 @@
       <mat-icon icon="notifications" />
     </mat-badge>
 
-    <mat-badge content="123456">
+    <mat-badge content="999+">
       <mat-icon icon="mail" />
     </mat-badge>
   </div>

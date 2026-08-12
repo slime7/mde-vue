@@ -147,7 +147,7 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 `<mat-badge>` 的导出名是 `MatBadge`。默认模式使用 `inline-flex` 包装默认 Slot，并把不接收指针事件的指示器绝对定位到八个逻辑方位；包装层会改变直接子选择器和 flex/grid 子项关系。`offset` 只在覆盖模式沿逻辑行轴和块轴微调，数字按 px、字符串按 CSS 长度处理。`location="inline"` 是独立的自然布局模式，只渲染 Badge 指示器并忽略 Slot 与 offset。
 
-`dot` 优先于 `content`；`content=0` 有效，空字符串和 undefined 不显示。覆盖模式无内容时仍保留 Slot 包装，Inline 模式无内容时不生成元素。点型约为 6px，内容型保持约 16px 高并原样扩宽，不替使用方截断超过四字符的内容。`color` 遵循统一组件配色约定，默认使用 error 与 on-error。
+`dot` 优先于 `content`；`content=0` 有效，空字符串和 undefined 不显示。覆盖模式无内容时仍保留 Slot 包装，Inline 模式无内容时不生成元素。点型约为 6px，内容型保持约 16px 高、四向 4px 内边距并原样扩宽，不替使用方截断超过四字符的内容。覆盖方位以目标中线作为行轴边缘锚点，top/bottom 方向分别让指示器顶边或底边越过目标边界 2px。`color` 遵循统一组件配色约定，默认使用 error 与 on-error。
 
 ## `<mat-image>`
 

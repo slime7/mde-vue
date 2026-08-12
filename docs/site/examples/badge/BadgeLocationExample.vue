@@ -1,14 +1,20 @@
 <!-- #region template -->
 <template>
   <div class="location-grid">
-    <mat-badge
-      v-for="location in locations"
-      :key="location"
-      :content="location"
-      :location="location"
+    <template
+      v-for="(location, index) in locations"
+      :key="location ?? `empty-${index}`"
     >
-      <span class="target">{{ location }}</span>
-    </mat-badge>
+      <mat-badge
+        v-if="location"
+        :content="index + 1"
+        :location="location"
+      >
+        <span class="target">{{ location }}</span>
+      </mat-badge>
+
+      <span v-else />
+    </template>
   </div>
 </template>
 <!-- #endregion template -->
@@ -20,6 +26,7 @@ const locations = [
   'top',
   'top-end',
   'start',
+  null,
   'end',
   'bottom-start',
   'bottom',

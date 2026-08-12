@@ -4462,7 +4462,7 @@ var Nr = ["data-dot"], Pr = ["data-dot"], Fr = /*#__PURE__*/ X(/* @__PURE__ */ O
 			"data-dot": I(t).dot ? "" : void 0
 		}, F(u.value), 15, Pr)) : a("", !0)], 16));
 	}
-}), [["__scopeId", "data-v-dc6b72d5"]]), Ir = Symbol("mat-chip-set"), Lr = {
+}), [["__scopeId", "data-v-eac035e1"]]), Ir = Symbol("mat-chip-set"), Lr = {
 	key: 0,
 	class: "mat-chip__avatar",
 	"aria-hidden": "true",

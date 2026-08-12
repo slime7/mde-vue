@@ -1670,7 +1670,7 @@ import ImageStyleExample from '../examples/image/ImageStyleExample.vue';
       <mat-icon icon="notifications" />
     </mat-badge>
 
-    <mat-badge content="123456">
+    <mat-badge content="999+">
       <mat-icon icon="mail" />
     </mat-badge>
   </div>
@@ -1702,14 +1702,20 @@ import ImageStyleExample from '../examples/image/ImageStyleExample.vue';
 ```vue
 <template>
   <div class="location-grid">
-    <mat-badge
-      v-for="location in locations"
-      :key="location"
-      :content="location"
-      :location="location"
+    <template
+      v-for="(location, index) in locations"
+      :key="location ?? `empty-${index}`"
     >
-      <span class="target">{{ location }}</span>
-    </mat-badge>
+      <mat-badge
+        v-if="location"
+        :content="index + 1"
+        :location="location"
+      >
+        <span class="target">{{ location }}</span>
+      </mat-badge>
+
+      <span v-else />
+    </template>
   </div>
 </template>
 ```
@@ -1720,6 +1726,7 @@ const locations = [
   'top',
   'top-end',
   'start',
+  null,
   'end',
   'bottom-start',
   'bottom',
@@ -1904,7 +1911,7 @@ const locations = [
 
 `dot=false` 且没有有效 `content` 时，覆盖模式仍渲染 Slot 和包装容器，但不显示指示器；Inline 模式不渲染任何 DOM。覆盖模式使用逻辑方向，因此 start/end 会随书写方向变化。`offset.inline` 正值朝 inline-end 移动，`offset.block` 正值朝 block-end 移动。
 
-点型使用约 6px 圆形；内容型保持约 16px 高并随内容扩宽。Material 建议内容型最多使用四个字符，本组件按使用方要求保留原始内容，使用方需要自行避免与邻近元素碰撞。
+点型使用约 6px 圆形；内容型保持约 16px 高、四向 4px 内边距并随内容扩宽。Material 建议内容型最多使用四个字符，本组件不强制截断，使用方需要自行避免与邻近元素碰撞。
 
 ## 参考
 
