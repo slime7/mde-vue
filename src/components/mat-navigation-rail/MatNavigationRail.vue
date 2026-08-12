@@ -4,6 +4,7 @@ import {
   shallowRef, watch,
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
+import createMotionController from '../motion-controller';
 import MatActionBase from '../MatActionBase.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
@@ -238,13 +239,16 @@ const appContext = inject(MAT_APP_ROOT_KEY, null);
 const rawVNodeProps = instance?.vnode.props ?? {};
 const hasExplicitAttach = Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach');
 const isHorizontal = computed(() => propsWithDefaults.orientation === 'horizontal');
-const effectiveExpanded = computed(() => propsWithDefaults.expanded);
 const isModal = computed(() => (
   !isHorizontal.value && propsWithDefaults.layout === 'modal'
 ));
 const isHidden = computed(() => (
   !isHorizontal.value && propsWithDefaults.hideOnCollapse && !propsWithDefaults.expanded
 ));
+const presentedExpanded = ref(propsWithDefaults.expanded);
+const showCollapsibleContent = ref(!isHidden.value);
+const effectiveExpanded = computed(() => presentedExpanded.value);
+const hideMotion = createMotionController();
 const usesAppRoot = computed(() => (
   propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach
 ));
@@ -277,7 +281,7 @@ const hostClasses = computed(() => ({
   'mat-navigation-rail-host--vertical': !isHorizontal.value,
   'mat-navigation-rail-host--horizontal': isHorizontal.value,
   'mat-navigation-rail-host--expanded': effectiveExpanded.value,
-  'mat-navigation-rail-host--collapsed': !propsWithDefaults.expanded,
+  'mat-navigation-rail-host--collapsed': !effectiveExpanded.value,
   [`mat-navigation-rail-host--${propsWithDefaults.position}`]: true,
   'mat-navigation-rail-host--modal': isModal.value,
   'mat-navigation-rail-host--hidden': isHidden.value,
@@ -286,9 +290,9 @@ const hostClasses = computed(() => ({
 }));
 const railClasses = computed(() => ({
   'mat-navigation-rail--expanded': effectiveExpanded.value,
-  'mat-navigation-rail--collapsed': !propsWithDefaults.expanded,
+  'mat-navigation-rail--collapsed': !effectiveExpanded.value,
   'mat-navigation-rail--bar': isHorizontal.value,
-  'mat-navigation-rail--modal': isModal.value && propsWithDefaults.expanded,
+  'mat-navigation-rail--modal': isModal.value && effectiveExpanded.value,
   'mat-navigation-rail--hidden': isHidden.value,
   'mat-navigation-rail--app': propsWithDefaults.app,
   'mat-navigation-rail--app-root': usesAppRoot.value,
@@ -385,6 +389,32 @@ function warnForInvalidAttach() {
   }
 }
 
+async function syncExpandedPresentation() {
+  hideMotion.cancel();
+
+  if (propsWithDefaults.expanded || !isHidden.value) {
+    presentedExpanded.value = propsWithDefaults.expanded;
+    showCollapsibleContent.value = true;
+    return;
+  }
+
+  showCollapsibleContent.value = true;
+  await nextTick();
+
+  if (!isHidden.value) {
+    return;
+  }
+
+  hideMotion.wait(hostElement.value, 200, () => {
+    if (!isHidden.value) {
+      return;
+    }
+
+    presentedExpanded.value = false;
+    showCollapsibleContent.value = false;
+  });
+}
+
 /**
  * @param {unknown} value
  * @returns {boolean}
@@ -437,6 +467,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+  hideMotion.cancel();
   window.removeEventListener('keydown', handleKeydown);
   resizeObserver?.disconnect();
   edgeRegistration.value?.unregister();
@@ -456,6 +487,11 @@ watch([
   warnForInvalidAttach();
   syncRailMeasurement();
 });
+watch([
+  () => propsWithDefaults.expanded,
+  () => propsWithDefaults.hideOnCollapse,
+  () => propsWithDefaults.orientation,
+], syncExpandedPresentation);
 </script>
 
 <template>
@@ -496,9 +532,9 @@ watch([
           class="mat-navigation-rail__header"
         >
           <slot
-            v-if="!isHidden"
+            v-if="showCollapsibleContent"
             name="header"
-            :expanded="propsWithDefaults.expanded"
+            :expanded="effectiveExpanded"
           />
 
           <MatActionBase
@@ -517,18 +553,18 @@ watch([
           </MatActionBase>
 
           <div
-            v-if="$slots.fab && !isHidden"
+            v-if="$slots.fab && showCollapsibleContent"
             class="mat-navigation-rail__fab"
           >
             <slot
               name="fab"
-              :expanded="propsWithDefaults.expanded"
+              :expanded="effectiveExpanded"
             />
           </div>
         </div>
 
         <div
-          v-if="!isHidden"
+          v-if="showCollapsibleContent"
           class="mat-navigation-rail__content"
         >
           <div
@@ -543,12 +579,12 @@ watch([
         </div>
 
         <div
-          v-if="$slots.end && !isHidden && !isHorizontal"
+          v-if="$slots.end && showCollapsibleContent && !isHorizontal"
           class="mat-navigation-rail__end"
         >
           <slot
             name="end"
-            :expanded="propsWithDefaults.expanded"
+            :expanded="effectiveExpanded"
           />
         </div>
       </nav>
@@ -586,6 +622,7 @@ watch([
 
 .mat-navigation-rail-host--hidden {
   inline-size: 0;
+  transition: inline-size var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-navigation-rail-host--app {
@@ -704,6 +741,7 @@ watch([
 .mat-navigation-rail--hidden {
   inline-size: 0;
   background: transparent;
+  transition: inline-size var(--mat-sys-motion-spring-fast-effects), background-color var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-navigation-rail__scrim {

@@ -17,6 +17,7 @@ import { isComponentColor } from '../button-props';
 import { dialogStack, registerDialog, unregisterDialog } from '../dialog-stack';
 import MatBtn from '../mat-btn/MatBtn.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
+import MatSpacer from '../mat-spacer/MatSpacer.vue';
 import useComponentColor from '../use-component-color';
 import { isValidCssLength, toCssLength } from '../value-utils';
 import { useMatProps } from '../use-mat-props';
@@ -505,6 +506,8 @@ watchEffect(() => {
             <slot v-else name="title" />
           </h2>
 
+          <MatSpacer />
+
           <div v-if="$slots.actions" class="mat-dialog__actions">
             <slot name="actions" />
           </div>
@@ -739,16 +742,14 @@ watchEffect(() => {
 }
 
 .mat-dialog__header .mat-dialog__title {
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   inline-size: auto;
   padding: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .mat-dialog__header .mat-dialog__actions {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   flex-wrap: nowrap;
   min-inline-size: 0;
   padding: 0;

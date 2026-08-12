@@ -4034,7 +4034,7 @@ const selected = ref(['bold']);
   </DocsPreview>
 </ClientOnly>
 
-按下 standard 子项时，该项宽度临时增大，直接相邻项同步缩窄；connected 只改变当前按钮的按压形状，不联动相邻宽度。standard 的选中按钮会把 `round` 与 `square` 反转；connected 的选中按钮四角都使用 round checked shape，`shape` 只改变未选中组的外部轮廓。组的 `size`、`shape`、`color` 只作为未显式设置子项的默认值，组 `disabled` 与子项 `disabled` 取或。
+按下 standard 子项时，该项宽度临时增大。触发按钮、相邻按钮宽度和水平内边距由同一个无过冲帧进度同步回弹；每帧的子像素余量会合并到最后一个受影响按钮，使组的总宽度与后方按钮位置保持稳定。文字按钮的直接相邻项只压缩水平内边距，文字和图标内容区域保持不变；相邻项可用内边距不足时会限制增宽幅度。纯图标按钮没有水平内边距，组会改为有限压缩相邻图标容器，从而保留弹性反馈。connected 只改变当前按钮的按压形状，不联动相邻宽度。standard 的选中按钮会把 `round` 与 `square` 反转；connected 的选中按钮四角都使用 round checked shape，`shape` 只改变未选中组的外部轮廓。组的 `size`、`shape`、`color` 只作为未显式设置子项的默认值，组 `disabled` 与子项 `disabled` 取或。
 
 ## API
 
@@ -11630,7 +11630,7 @@ import {
 | `icon` | 基础 Dialog 的图标内容；`icon` prop 存在时忽略，全屏布局不显示 |
 | `actions` | 基础布局底部或全屏固定头部中的操作；容器只提供 flex、换行和间距，可添加 `<mat-spacer>` 控制操作组对齐 |
 
-基础 Dialog 的图标、标题、正文和 actions 各自提供容器留白，正文与标题之间保持 16px 间距；根容器不裁剪 Slot 内容或焦点环。Dialog 打开期间锁定页面根滚动；页面原本存在占据布局宽度的经典滚动条时会临时保留其槽位，避免页面宽度跳动，没有经典滚动条时不额外预留空间。最后一层关闭后恢复根元素原有内联样式。标题和动作区固定，正文过长时只有 content 区域沿纵向滚动，滚动条位于 Dialog 内部边缘并预留稳定空间。未设置 `width` 时基础 Dialog 宽度限制为 280–560px；设置后使用指定首选宽度，但小屏仍限制在视口可用范围内。全屏 Dialog 占满视口并使用固定 56px 头部，忽略 `width`。
+基础 Dialog 的图标、标题、正文和 actions 各自提供容器留白，正文与标题之间保持 16px 间距；根容器不裁剪 Slot 内容或焦点环。Dialog 打开期间锁定页面根滚动；页面原本存在占据布局宽度的经典滚动条时会临时保留其槽位，避免页面宽度跳动，没有经典滚动条时不额外预留空间。最后一层关闭后恢复根元素原有内联样式。标题和动作区固定，正文过长时只有 content 区域沿纵向滚动，滚动条位于 Dialog 内部边缘并预留稳定空间。未设置 `width` 时基础 Dialog 宽度限制为 280–560px；设置后使用指定首选宽度，但小屏仍限制在视口可用范围内。全屏 Dialog 占满视口并使用固定 56px 头部，忽略 `width`；关闭按钮、标题和 actions 保持自身宽度，中间的 Spacer 吸收剩余空间，标题不会因 actions 占用空间而截断为省略号。
 
 ## 参考来源
 
@@ -14166,7 +14166,7 @@ const modalExpanded = ref(true);
 
 ### `hide-on-collapse`
 
-沉浸式布局可以隐藏 expanded rail 的容器，同时在布局起始侧保留菜单按钮。该配置不会把普通 collapsed rail 作为可隐藏变体；应仅与可展开的导航入口组合使用。
+沉浸式布局可以隐藏 expanded rail 的容器，同时在布局起始侧保留菜单按钮。收起时 expanded 内容会保留到宽度退出动画完成，随后才从 DOM 移除。该配置不会把普通 collapsed rail 作为可隐藏变体；应仅与可展开的导航入口组合使用。
 
 :::: details 查看示例代码
 ::: code-group

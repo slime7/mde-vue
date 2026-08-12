@@ -1,10 +1,15 @@
 import { h, nextTick } from 'vue';
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import {
-  describe, expect, it, vi,
+  afterEach, describe, expect, it, vi,
 } from 'vitest';
 import MatNavigationRail from '../src/components/mat-navigation-rail/MatNavigationRail.vue';
 import MatNavigationRailItem from '../src/components/mat-navigation-rail/MatNavigationRailItem.vue';
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  Reflect.deleteProperty(Element.prototype, 'getAnimations');
+});
 
 async function settleRender() {
   await nextTick();
@@ -212,6 +217,48 @@ describe('MatNavigationRail', () => {
     expect(wrapper.find('.mat-navigation-rail__content').exists()).toBe(false);
     expect(wrapper.find('.test-hidden-header').exists()).toBe(false);
     expect(wrapper.find('.mat-navigation-rail__menu').attributes('aria-expanded')).toBe('false');
+  });
+
+  it('hide-on-collapse 收起时保留内容直到实际退出动画完成', async () => {
+    let finishCloseAnimation;
+    const closeFinished = new Promise((resolve) => {
+      finishCloseAnimation = resolve;
+    });
+
+    Object.defineProperty(Element.prototype, 'getAnimations', {
+      configurable: true,
+      value() {
+        if (!this.classList.contains('mat-navigation-rail-host--hidden')) {
+          return [];
+        }
+
+        return [{
+          finished: closeFinished,
+          playState: 'running',
+        }];
+      },
+    });
+
+    const wrapper = mount(MatNavigationRail, {
+      props: {
+        expanded: true,
+        hideOnCollapse: true,
+      },
+      slots: {
+        default: navigationItems,
+      },
+    });
+
+    await wrapper.setProps({ expanded: false });
+    await nextTick();
+
+    expect(wrapper.find('.mat-navigation-rail__content').exists()).toBe(true);
+
+    finishCloseAnimation();
+    await flushPromises();
+    await nextTick();
+
+    expect(wrapper.find('.mat-navigation-rail__content').exists()).toBe(false);
   });
 
   it('支持 top/center 目的地对齐以及 header、fab Slots', () => {

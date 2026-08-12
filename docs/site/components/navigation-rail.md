@@ -195,7 +195,7 @@ order: 105
 
 ### `hide-on-collapse`
 
-沉浸式布局可以隐藏 expanded rail 的容器，同时在布局起始侧保留菜单按钮。该配置不会把普通 collapsed rail 作为可隐藏变体；应仅与可展开的导航入口组合使用。
+沉浸式布局可以隐藏 expanded rail 的容器，同时在布局起始侧保留菜单按钮。收起时 expanded 内容会保留到宽度退出动画完成，随后才从 DOM 移除。该配置不会把普通 collapsed rail 作为可隐藏变体；应仅与可展开的导航入口组合使用。
 
 :::: details 查看示例代码
 ::: code-group

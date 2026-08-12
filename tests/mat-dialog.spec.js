@@ -396,6 +396,7 @@ describe('MatDialog', () => {
     expect(element.querySelector('.mat-dialog__content').textContent).toContain('很长的正文');
     expect(element.querySelector('.mat-dialog__actions').textContent).toContain('保存');
     expect(element.querySelector('.mat-dialog__close').getAttribute('aria-label')).toBe('关闭');
+    expect(element.querySelector('.mat-spacer')).not.toBeNull();
   });
 
   it('Escape 总是请求关闭，点击帷幕仅由 closeOnBack 控制', async () => {

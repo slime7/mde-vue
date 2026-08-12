@@ -144,15 +144,12 @@ const emit = defineEmits({
 });
 const root = ref(null);
 const pressedButton = ref(null);
-const previousInlineSize = new WeakMap();
-const restingInlineSize = new WeakMap();
+const previousButtonStyle = new WeakMap();
+const restingButtonStyle = new WeakMap();
 const measuredInlineSize = new WeakMap();
 const resizedButtons = new Set();
 const FALLBACK_WIDTH_TRANSITION_DURATION = 150;
-const MINIMUM_EXPANSION_PROGRESS = 0.75;
-let restoreTimer;
-let cleanupTimer;
-let expansionFrame;
+let sizeAnimationFrame;
 let buttonResizeObserver;
 let activeTransitionDuration = FALLBACK_WIDTH_TRANSITION_DURATION;
 let restoreReady = true;
@@ -259,18 +256,12 @@ function parseCssTime(value) {
   return match[2] === 's' ? duration * 1000 : duration;
 }
 
-/**
- * @param {HTMLButtonElement} button
- * @returns {number}
- */
-function getWidthTransitionDuration(button) {
-  const style = getComputedStyle(button);
-  const properties = style.transitionProperty.split(',').map((property) => property.trim());
-  const durations = style.transitionDuration.split(',');
-  const propertyIndex = properties.findIndex((property) => property === 'inline-size');
-  const duration = durations[propertyIndex < 0 ? 0 : propertyIndex % durations.length];
+function getSizeAnimationDuration() {
+  const value = getComputedStyle(root.value).getPropertyValue(
+    '--mat-btn-group-size-animation-duration',
+  );
 
-  return parseCssTime(duration ?? '') ?? FALLBACK_WIDTH_TRANSITION_DURATION;
+  return parseCssTime(value) ?? FALLBACK_WIDTH_TRANSITION_DURATION;
 }
 
 function prefersReducedMotion() {
@@ -278,44 +269,118 @@ function prefersReducedMotion() {
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-function clearRestoreTimer() {
-  if (restoreTimer === undefined) {
+function clearSizeAnimationFrame() {
+  if (sizeAnimationFrame === undefined) {
     return;
   }
 
-  globalThis.clearTimeout(restoreTimer);
-  restoreTimer = undefined;
+  globalThis.cancelAnimationFrame(sizeAnimationFrame);
+  sizeAnimationFrame = undefined;
 }
 
-function clearCleanupTimer() {
-  if (cleanupTimer === undefined) {
-    return;
-  }
+/**
+ * @param {HTMLButtonElement} button
+ * @param {{ inlineSize: string, paddingInlineStart: string, paddingInlineEnd: string }} style
+ */
+function writeButtonStyle(button, style) {
+  const targetButton = button;
 
-  globalThis.clearTimeout(cleanupTimer);
-  cleanupTimer = undefined;
+  targetButton.style.inlineSize = style.inlineSize;
+  targetButton.style.paddingInlineStart = style.paddingInlineStart;
+  targetButton.style.paddingInlineEnd = style.paddingInlineEnd;
 }
 
-function clearExpansionFrame() {
-  if (expansionFrame === undefined) {
+/**
+ * @param {Map<HTMLButtonElement, { inlineSize: string, paddingInlineStart: string, paddingInlineEnd: string }>} styles
+ * @returns {Map<HTMLButtonElement, { inlineSize: number, paddingInlineStart: number, paddingInlineEnd: number }>}
+ */
+function toNumericButtonStyles(styles) {
+  return new Map([...styles].map(([button, style]) => [button, {
+    inlineSize: Number.parseFloat(style.inlineSize) || 0,
+    paddingInlineStart: Number.parseFloat(style.paddingInlineStart) || 0,
+    paddingInlineEnd: Number.parseFloat(style.paddingInlineEnd) || 0,
+  }]));
+}
+
+/**
+ * @param {Map<HTMLButtonElement, { inlineSize: number, paddingInlineStart: number, paddingInlineEnd: number }>} fromStyles
+ * @param {Map<HTMLButtonElement, { inlineSize: number, paddingInlineStart: number, paddingInlineEnd: number }>} toStyles
+ * @param {number} duration
+ * @param {() => void} onComplete
+ */
+function animateButtonStyles(fromStyles, toStyles, duration, onComplete) {
+  clearSizeAnimationFrame();
+  const startedAt = performance.now();
+  const animatedButtons = [...toStyles.keys()];
+  const totalInlineSizeUnits = Math.round(animatedButtons.reduce((sum, button) => (
+    sum + toStyles.get(button).inlineSize
+  ), 0) * 64);
+
+  if (prefersReducedMotion() || duration === 0) {
+    toStyles.forEach((style, button) => {
+      writeButtonStyle(button, {
+        inlineSize: `${style.inlineSize}px`,
+        paddingInlineStart: `${style.paddingInlineStart}px`,
+        paddingInlineEnd: `${style.paddingInlineEnd}px`,
+      });
+    });
+    onComplete();
     return;
   }
 
-  globalThis.cancelAnimationFrame(expansionFrame);
-  expansionFrame = undefined;
+  const update = (now) => {
+    const progress = Math.min(1, Math.max(0, (now - startedAt) / duration));
+    const easedProgress = 1 - (1 - progress) ** 3;
+    let allocatedInlineSizeUnits = 0;
+
+    animatedButtons.forEach((button, index) => {
+      const toStyle = toStyles.get(button);
+      const fromStyle = fromStyles.get(button);
+      const interpolate = (start, end) => start + (end - start) * easedProgress;
+      const inlineSizeUnits = index === animatedButtons.length - 1
+        ? totalInlineSizeUnits - allocatedInlineSizeUnits
+        : Math.round(interpolate(fromStyle.inlineSize, toStyle.inlineSize) * 64);
+
+      allocatedInlineSizeUnits += inlineSizeUnits;
+
+      writeButtonStyle(button, {
+        inlineSize: `${inlineSizeUnits / 64}px`,
+        paddingInlineStart: `${interpolate(
+          fromStyle.paddingInlineStart,
+          toStyle.paddingInlineStart,
+        )}px`,
+        paddingInlineEnd: `${interpolate(
+          fromStyle.paddingInlineEnd,
+          toStyle.paddingInlineEnd,
+        )}px`,
+      });
+    });
+
+    if (progress < 1) {
+      sizeAnimationFrame = globalThis.requestAnimationFrame(update);
+      return;
+    }
+
+    sizeAnimationFrame = undefined;
+    onComplete();
+  };
+
+  sizeAnimationFrame = globalThis.requestAnimationFrame(update);
 }
 
 function finishPressedButtonRestore() {
-  clearExpansionFrame();
-  clearRestoreTimer();
-  clearCleanupTimer();
+  clearSizeAnimationFrame();
 
   resizedButtons.forEach((item) => {
     const resizedButton = item;
 
-    resizedButton.style.inlineSize = previousInlineSize.get(resizedButton) ?? '';
-    previousInlineSize.delete(resizedButton);
-    restingInlineSize.delete(resizedButton);
+    writeButtonStyle(resizedButton, previousButtonStyle.get(resizedButton) ?? {
+      inlineSize: '',
+      paddingInlineStart: '',
+      paddingInlineEnd: '',
+    });
+    previousButtonStyle.delete(resizedButton);
+    restingButtonStyle.delete(resizedButton);
   });
   resizedButtons.clear();
 
@@ -330,30 +395,34 @@ function finishPressedButtonRestore() {
 }
 
 function restorePressedButton() {
-  clearRestoreTimer();
-
   if (!pressedButton.value) {
     return;
   }
 
-  if (prefersReducedMotion() || activeTransitionDuration === 0) {
-    finishPressedButtonRestore();
-    return;
-  }
+  const currentStyles = new Map([...resizedButtons].map((button) => {
+    const style = getComputedStyle(button);
 
-  resizedButtons.forEach((item) => {
-    const resizedButton = item;
+    return [button, {
+      inlineSize: Number.parseFloat(style.inlineSize) || 0,
+      paddingInlineStart: Number.parseFloat(style.paddingInlineStart) || 0,
+      paddingInlineEnd: Number.parseFloat(style.paddingInlineEnd) || 0,
+    }];
+  }));
+  const targetStyles = toNumericButtonStyles(new Map([...resizedButtons].map((button) => [
+    button,
+    restingButtonStyle.get(button),
+  ])));
 
-    resizedButton.style.inlineSize = `${restingInlineSize.get(resizedButton)}px`;
-  });
   delete pressedButton.value.dataset.matGroupPressed;
   pressedButton.value = null;
   restoreReady = true;
   restoreRequested = false;
-  cleanupTimer = globalThis.setTimeout(() => {
-    cleanupTimer = undefined;
-    finishPressedButtonRestore();
-  }, activeTransitionDuration);
+  animateButtonStyles(
+    currentStyles,
+    targetStyles,
+    activeTransitionDuration,
+    finishPressedButtonRestore,
+  );
 }
 
 function requestPressedButtonRestore() {
@@ -371,31 +440,34 @@ function requestPressedButtonRestore() {
 
 /**
  * @param {HTMLButtonElement} button
+ * @param {Map<HTMLButtonElement, { inlineSize: string, paddingInlineStart: string, paddingInlineEnd: string }>} restingStyles
+ * @param {Map<HTMLButtonElement, { inlineSize: string, paddingInlineStart: string, paddingInlineEnd: string }>} expandedStyles
  */
-function startRestoreThreshold(button, transitionDuration) {
+function startExpansion(button, restingStyles, expandedStyles, transitionDuration) {
   restoreReady = false;
   restoreRequested = false;
-
   activeTransitionDuration = transitionDuration;
+
+  animateButtonStyles(
+    toNumericButtonStyles(restingStyles),
+    toNumericButtonStyles(expandedStyles),
+    transitionDuration,
+    () => {
+      if (pressedButton.value !== button) {
+        return;
+      }
+
+      restoreReady = true;
+
+      if (restoreRequested) {
+        restorePressedButton();
+      }
+    },
+  );
 
   if (prefersReducedMotion() || transitionDuration === 0) {
     restoreReady = true;
-    return;
   }
-
-  restoreTimer = globalThis.setTimeout(() => {
-    restoreTimer = undefined;
-
-    if (pressedButton.value !== button) {
-      return;
-    }
-
-    restoreReady = true;
-
-    if (restoreRequested) {
-      restorePressedButton();
-    }
-  }, transitionDuration * MINIMUM_EXPANSION_PROGRESS);
 }
 
 /**
@@ -420,59 +492,86 @@ function expandButton(button) {
   const widthFactor = Number.parseFloat(getComputedStyle(root.value).getPropertyValue(
     '--mat-btn-group-standard-pressed-width-factor',
   )) || 1.15;
-  const transitionDuration = getWidthTransitionDuration(targetButton);
-  const buttonWidths = new Map(buttons.map((item) => [
-    item,
-    measuredInlineSize.get(item) ?? item.getBoundingClientRect().width,
-  ]));
-  const growth = buttonWidths.get(targetButton) * (widthFactor - 1);
-  const nextInlineSizes = new Map([
-    [targetButton, buttonWidths.get(targetButton) + growth],
-  ]);
+  const transitionDuration = getSizeAnimationDuration();
+  const buttonLayouts = new Map(buttons.map((item) => {
+    const style = getComputedStyle(item);
 
-  if (buttonIndex === 0) {
-    const nextButton = buttons[1];
-    nextInlineSizes.set(nextButton, buttonWidths.get(nextButton) - growth);
-  } else if (buttonIndex === buttons.length - 1) {
-    const previousButton = buttons[buttonIndex - 1];
-    nextInlineSizes.set(previousButton, buttonWidths.get(previousButton) - growth);
-  } else {
-    const previousButton = buttons[buttonIndex - 1];
-    const nextButton = buttons[buttonIndex + 1];
-    const neighborCompression = growth / 2;
+    return [item, {
+      icon: item.classList.contains('mat-btn--icon'),
+      inlineSize: measuredInlineSize.get(item) ?? item.getBoundingClientRect().width,
+      paddingInlineStart: Number.parseFloat(style.paddingInlineStart) || 0,
+      paddingInlineEnd: Number.parseFloat(style.paddingInlineEnd) || 0,
+    }];
+  }));
+  const neighborButtons = buttonIndex === 0
+    ? [buttons[1]]
+    : buttonIndex === buttons.length - 1
+      ? [buttons[buttonIndex - 1]]
+      : [buttons[buttonIndex - 1], buttons[buttonIndex + 1]];
+  const requestedGrowth = buttonLayouts.get(targetButton).inlineSize * (widthFactor - 1);
+  const availableCompression = neighborButtons.reduce((sum, neighborButton) => {
+    const layout = buttonLayouts.get(neighborButton);
+    const compressibleSpace = layout.icon
+      ? layout.inlineSize * (widthFactor - 1)
+      : layout.paddingInlineStart + layout.paddingInlineEnd;
 
-    nextInlineSizes.set(
-      previousButton,
-      buttonWidths.get(previousButton) - neighborCompression,
-    );
-    nextInlineSizes.set(nextButton, buttonWidths.get(nextButton) - neighborCompression);
-  }
+    return sum + compressibleSpace;
+  }, 0);
+  const growth = Math.min(requestedGrowth, availableCompression);
+  const nextButtonStyles = new Map();
+  const targetLayout = buttonLayouts.get(targetButton);
 
-  nextInlineSizes.forEach((inlineSize, item) => {
+  nextButtonStyles.set(targetButton, {
+    inlineSize: `${targetLayout.inlineSize + growth}px`,
+    paddingInlineStart: `${targetLayout.paddingInlineStart}px`,
+    paddingInlineEnd: `${targetLayout.paddingInlineEnd}px`,
+  });
+  neighborButtons.forEach((neighborButton) => {
+    const layout = buttonLayouts.get(neighborButton);
+    const buttonAvailablePadding = layout.paddingInlineStart + layout.paddingInlineEnd;
+    const buttonAvailableCompression = layout.icon
+      ? layout.inlineSize * (widthFactor - 1)
+      : buttonAvailablePadding;
+    const compression = availableCompression > 0
+      ? growth * buttonAvailableCompression / availableCompression
+      : 0;
+    const startCompression = buttonAvailablePadding > 0
+      ? compression * layout.paddingInlineStart / buttonAvailablePadding
+      : 0;
+    const endCompression = compression - startCompression;
+
+    nextButtonStyles.set(neighborButton, {
+      inlineSize: `${layout.inlineSize - compression}px`,
+      paddingInlineStart: `${layout.paddingInlineStart - startCompression}px`,
+      paddingInlineEnd: `${layout.paddingInlineEnd - endCompression}px`,
+    });
+  });
+
+  nextButtonStyles.forEach((nextStyle, item) => {
     const resizedButton = item;
+    const layout = buttonLayouts.get(resizedButton);
+    const restingStyle = {
+      inlineSize: `${layout.inlineSize}px`,
+      paddingInlineStart: `${layout.paddingInlineStart}px`,
+      paddingInlineEnd: `${layout.paddingInlineEnd}px`,
+    };
 
-    previousInlineSize.set(resizedButton, resizedButton.style.inlineSize);
-    restingInlineSize.set(resizedButton, buttonWidths.get(resizedButton));
-    resizedButton.style.inlineSize = `${buttonWidths.get(resizedButton)}px`;
+    previousButtonStyle.set(resizedButton, {
+      inlineSize: resizedButton.style.inlineSize,
+      paddingInlineStart: resizedButton.style.paddingInlineStart,
+      paddingInlineEnd: resizedButton.style.paddingInlineEnd,
+    });
+    restingButtonStyle.set(resizedButton, restingStyle);
+    writeButtonStyle(resizedButton, restingStyle);
     resizedButtons.add(resizedButton);
   });
 
   targetButton.dataset.matGroupPressed = '';
   pressedButton.value = targetButton;
-  expansionFrame = globalThis.requestAnimationFrame(() => {
-    expansionFrame = undefined;
-
-    if (pressedButton.value !== targetButton) {
-      return;
-    }
-
-    nextInlineSizes.forEach((inlineSize, item) => {
-      const resizedButton = item;
-
-      resizedButton.style.inlineSize = `${inlineSize}px`;
-    });
-    startRestoreThreshold(targetButton, transitionDuration);
-  });
+  startExpansion(targetButton, new Map([...resizedButtons].map((item) => [
+    item,
+    restingButtonStyle.get(item),
+  ])), nextButtonStyles, transitionDuration);
 }
 
 function observeButtonSizes() {
@@ -631,7 +730,12 @@ watch(
 }
 
 .mat-btn-group--standard {
+  --mat-btn-group-size-animation-duration: var(--mat-sys-motion-duration-short3);
   gap: var(--mat-btn-group-standard-between-space);
+}
+
+.mat-btn-group--standard :deep(.mat-button-base) {
+  --mat-button-size-motion: 0s;
 }
 
 .mat-btn-group--connected {

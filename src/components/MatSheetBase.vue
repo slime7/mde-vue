@@ -439,12 +439,18 @@ function finishClose() {
   });
 }
 
-function closeSheet() {
+async function closeSheet() {
   if (!rendered.value) {
     return;
   }
 
   phase.value = 'closing';
+  await nextTick();
+
+  if (props.modelValue || phase.value !== 'closing' || !root.value) {
+    return;
+  }
+
   waitForPhase(200, finishClose);
 }
 

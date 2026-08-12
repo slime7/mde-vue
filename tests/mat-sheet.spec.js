@@ -1,6 +1,6 @@
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import {
-  beforeAll, beforeEach, describe, expect, it, vi,
+  afterEach, beforeAll, beforeEach, describe, expect, it, vi,
 } from 'vitest';
 import { h, nextTick } from 'vue';
 import MatBottomSheet from '../src/components/mat-bottom-sheet/MatBottomSheet.vue';
@@ -19,6 +19,11 @@ beforeAll(() => {
       this.removeAttribute('open');
     },
   });
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  Reflect.deleteProperty(Element.prototype, 'getAnimations');
 });
 
 async function settleRender() {
@@ -647,5 +652,76 @@ describe('MatSideSheet', () => {
 
     expect(sheet?.getAttribute('aria-label')).toBe('属性面板');
     expect(sheet?.getAttribute('data-testid')).toBe('side-sheet');
+  });
+});
+
+describe.each([
+  ['Bottom Sheet', MatBottomSheet, '筛选条件'],
+  ['Side Sheet', MatSideSheet, '属性设置'],
+])('%s modal 关闭动画', (name, Component, title) => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    setViewportWidth(500);
+  });
+
+  it('点击 overlay 后保留 DOM 直到实际退出动画完成', async () => {
+    let finishCloseAnimation;
+    let closingAnimationQueries = 0;
+    const closeFinished = new Promise((resolve) => {
+      finishCloseAnimation = resolve;
+    });
+
+    Object.defineProperty(Element.prototype, 'getAnimations', {
+      configurable: true,
+      value() {
+        if (!this.classList.contains('mat-sheet--closing')) {
+          return [];
+        }
+
+        closingAnimationQueries += 1;
+        return [{
+          finished: closeFinished,
+          playState: 'running',
+        }];
+      },
+    });
+
+    const wrapper = mount(Component, {
+      props: {
+        modelValue: true,
+        title,
+        variant: 'modal',
+      },
+    });
+
+    await settleRender();
+    const sheet = document.body.querySelector('dialog');
+
+    sheet.getBoundingClientRect = () => ({
+      bottom: 700,
+      left: 100,
+      right: 500,
+      top: 100,
+    });
+    sheet.dispatchEvent(new MouseEvent('click', {
+      bubbles: true,
+      clientX: 20,
+      clientY: 20,
+    }));
+
+    expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
+
+    await wrapper.setProps({ modelValue: false });
+    await nextTick();
+
+    expect(closingAnimationQueries).toBe(1);
+    expect(document.body.contains(sheet)).toBe(true);
+
+    finishCloseAnimation();
+    await flushPromises();
+    await nextTick();
+
+    expect(document.body.contains(sheet)).toBe(false);
+    expect(wrapper.emitted('closed')).toHaveLength(1);
   });
 });
