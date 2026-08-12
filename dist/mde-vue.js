@@ -8845,6 +8845,7 @@ var _o = { class: "mat-snackbar__text" }, vo = {
 			"mat-navigation-rail--bar": k.value,
 			"mat-navigation-rail--modal": A.value && ee.value,
 			"mat-navigation-rail--hidden": M.value,
+			"mat-navigation-rail--collapsible-hidden": !F.value,
 			"mat-navigation-rail--app": f.app,
 			"mat-navigation-rail--app-root": R.value
 		})), K = r(() => {
@@ -8992,7 +8993,7 @@ var _o = { class: "mat-snackbar__text" }, vo = {
 			e.$slots.end && F.value && !k.value ? (w(), o("div", zo, [j(e.$slots, "end", { expanded: ee.value }, void 0, !0)])) : a("", !0)
 		], 16)], 6)) : a("", !0)], 8, ["to", "disabled"]))], 64));
 	}
-}), [["__scopeId", "data-v-39b24062"]]), Vo = { class: "mat-navigation-rail-item__indicator" }, Ho = { class: "mat-navigation-rail-item__icon-wrap" }, Uo = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-869ca95c"]]), Vo = { class: "mat-navigation-rail-item__indicator" }, Ho = { class: "mat-navigation-rail-item__icon-wrap" }, Uo = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationRailItem",
 	inheritAttrs: !1
 }, {

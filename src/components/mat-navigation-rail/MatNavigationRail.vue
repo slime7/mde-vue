@@ -294,6 +294,7 @@ const railClasses = computed(() => ({
   'mat-navigation-rail--bar': isHorizontal.value,
   'mat-navigation-rail--modal': isModal.value && effectiveExpanded.value,
   'mat-navigation-rail--hidden': isHidden.value,
+  'mat-navigation-rail--collapsible-hidden': !showCollapsibleContent.value,
   'mat-navigation-rail--app': propsWithDefaults.app,
   'mat-navigation-rail--app-root': usesAppRoot.value,
 }));
@@ -776,7 +777,7 @@ watch([
   padding-inline: var(--mat-navigation-rail-expanded-side-space);
 }
 
-.mat-navigation-rail--hidden .mat-navigation-rail__header {
+.mat-navigation-rail--collapsible-hidden .mat-navigation-rail__header {
   position: absolute;
   inset-block-start: var(--mat-navigation-rail-top-space);
   inset-inline-start: var(--mat-navigation-rail-hidden-menu-space);
