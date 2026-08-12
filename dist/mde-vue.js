@@ -6585,15 +6585,17 @@ function ia(e) {
 	n.style.overflow === "hidden" && (n.style.overflow = t.overflow), t.lockedScrollbarGutter !== null && n.style.scrollbarGutter === t.lockedScrollbarGutter && (n.style.scrollbarGutter = t.scrollbarGutter), t.lockedScrollbarGutter !== null && (Xi.value = 0);
 }
 function aa(e) {
-	let t = e, n = ea(e);
+	let t = e, n = ea(e), r = getComputedStyle(t), i = (Number.parseFloat(r.borderLeftWidth) || 0) + (Number.parseFloat(r.borderRightWidth) || 0), a = Math.max(0, t.offsetWidth - t.clientWidth - i) > 0 && !r.scrollbarGutter.includes("stable") ? "stable" : null;
 	$i.set(e, {
 		...n,
-		overflow: t.style.overflow
-	}), t.style.overflow = "hidden";
+		lockedScrollbarGutter: a,
+		overflow: t.style.overflow,
+		scrollbarGutter: t.style.scrollbarGutter
+	}), a && (t.style.scrollbarGutter = a), t.style.overflow = "hidden";
 }
 function oa(e) {
 	let t = e, n = $i.get(e);
-	n && t.style.overflow === "hidden" && (t.style.overflow = n.overflow);
+	n && (t.style.overflow === "hidden" && (t.style.overflow = n.overflow), n.lockedScrollbarGutter !== null && t.style.scrollbarGutter === n.lockedScrollbarGutter && (t.style.scrollbarGutter = n.scrollbarGutter));
 }
 function sa(e) {
 	let t = $i.get(e);

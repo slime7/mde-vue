@@ -191,7 +191,7 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 ## Dialog
 
-`<mat-dialog>` 通过 `modelValue` 受控显示，使用原生 `<dialog>` 元素（非模态 `show()`）和 Teleport，组件自管焦点陷阱与背景拦截，不依赖浏览器 top layer。位于 `MatAppRoot` 内且省略 `attach`（或 `attach` 指向 AppRoot 根元素）时进入该 AppRoot 的模态层，表面与帷幕限制在应用矩形内，仅正文层 `inert`；其他场景铺满视口。`activator` Slot 必须只产生一个当前 document 中的 HTMLElement 根节点，作为触发元素和关闭后的焦点恢复目标。`width` 接受数字 px 值或 trim 后合法的 CSS 宽度值，只影响基础布局并在小屏按视口限制；`fullScreen` 只接受显式布尔值并忽略 width，不根据视口自动切换；基础和全屏布局都只允许 content 区域滚动，打开期间由共享堆叠管理器锁定滚动：非 AppRoot 场景锁定页面根滚动，AppRoot 场景锁定正文滚动容器。页面原本存在占据布局宽度的经典滚动条时，锁定期间临时使用稳定滚动条槽位保持页面宽度；没有经典滚动条时不额外预留空间。`scrim=false` 只把帷幕变透明，不允许背景接收指针事件；`closeOnBack` 只控制点击帷幕关闭，Escape 始终请求关闭。多个实例只显示顶层帷幕，最后一层关闭后才恢复页面滚动和根元素原有内联样式。
+`<mat-dialog>` 通过 `modelValue` 受控显示，使用原生 `<dialog>` 元素（非模态 `show()`）和 Teleport，组件自管焦点陷阱与背景拦截，不依赖浏览器 top layer。位于 `MatAppRoot` 内且省略 `attach`（或 `attach` 指向 AppRoot 根元素）时进入该 AppRoot 的模态层，表面与帷幕限制在应用矩形内，仅正文层 `inert`；其他场景铺满视口。`activator` Slot 必须只产生一个当前 document 中的 HTMLElement 根节点，作为触发元素和关闭后的焦点恢复目标。`width` 接受数字 px 值或 trim 后合法的 CSS 宽度值，只影响基础布局并在小屏按视口限制；`fullScreen` 只接受显式布尔值并忽略 width，不根据视口自动切换；基础和全屏布局都只允许 content 区域滚动，打开期间由共享堆叠管理器锁定滚动：非 AppRoot 场景锁定页面根滚动，AppRoot 场景锁定正文滚动容器。页面或正文原本存在占据布局宽度的经典滚动条时，锁定期间临时使用稳定滚动条槽位保持页面宽度；没有经典滚动条时不额外预留空间。`scrim=false` 只把帷幕变透明，不允许背景接收指针事件；`closeOnBack` 只控制点击帷幕关闭，Escape 始终请求关闭。多个实例只显示顶层帷幕，最后一层关闭后才恢复页面滚动和滚动元素原有内联样式。
 
 标题、正文和图标都遵循 prop 优先于同名 Slot；无标题时必须由使用者提供 `aria-label` 或 `aria-labelledby`。关闭期间 DOM 保留到退出动画完成，随后触发 `closed` 并恢复原焦点。
 

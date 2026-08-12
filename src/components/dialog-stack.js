@@ -108,8 +108,30 @@ function releaseDocumentLock(key) {
 function applyElementLock(key) {
   const element = key;
   const state = ensureScopeState(key);
+  const computedStyle = getComputedStyle(element);
+  const borderInlineWidth = (
+    (Number.parseFloat(computedStyle.borderLeftWidth) || 0)
+    + (Number.parseFloat(computedStyle.borderRightWidth) || 0)
+  );
+  const classicScrollbarWidth = Math.max(
+    0,
+    element.offsetWidth - element.clientWidth - borderInlineWidth,
+  );
+  const shouldStabilizeScrollbar = classicScrollbarWidth > 0
+    && !computedStyle.scrollbarGutter.includes('stable');
+  const lockedScrollbarGutter = shouldStabilizeScrollbar ? 'stable' : null;
 
-  scopeStates.set(key, { ...state, overflow: element.style.overflow });
+  scopeStates.set(key, {
+    ...state,
+    lockedScrollbarGutter,
+    overflow: element.style.overflow,
+    scrollbarGutter: element.style.scrollbarGutter,
+  });
+
+  if (lockedScrollbarGutter) {
+    element.style.scrollbarGutter = lockedScrollbarGutter;
+  }
+
   element.style.overflow = 'hidden';
 }
 
@@ -123,6 +145,11 @@ function releaseElementLock(key) {
 
   if (element.style.overflow === 'hidden') {
     element.style.overflow = state.overflow;
+  }
+
+  if (state.lockedScrollbarGutter !== null
+    && element.style.scrollbarGutter === state.lockedScrollbarGutter) {
+    element.style.scrollbarGutter = state.scrollbarGutter;
   }
 }
 
