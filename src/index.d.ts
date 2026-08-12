@@ -1508,6 +1508,61 @@ export interface MatTextFieldEmits {
 export type MatTextFieldComponent = DefineComponent<MatTextFieldProps, {}, {}, {}, {}, {}, {}, MatTextFieldEmits>;
 export declare const MatTextField: MatTextFieldComponent;
 
+export interface MatSelectProps {
+  /**
+  * 单选使用基础值或 null，多选使用基础值数组。
+  *
+  * @type {string | number | boolean | Array<string | number | boolean> | null}
+  * @default null
+  */
+  modelValue?: string | number | boolean | Array<string | number | boolean> | null;
+  /**
+  * 选项、字符串选项或 `{ group, items }` 分组数组。
+  *
+  * @type {Array}
+  * @required
+  */
+  items: Array;
+  /** @type {boolean} @default false */
+  multiple?: boolean;
+  /** @type {boolean} @default false */
+  chips?: boolean;
+  /** @type {string} @default 'title' */
+  itemTitle?: string;
+  /** @type {string} @default 'value' */
+  itemValue?: string;
+  /** @type {string} @default 'subtitle' */
+  itemSubtitle?: string;
+  /** @type {string | undefined} @default undefined */
+  label?: string | undefined;
+  /** @type {'outlined' | 'filled'} @default 'outlined' */
+  variant?: 'outlined' | 'filled';
+  /** @type {string | undefined} @default undefined */
+  color?: string | undefined;
+  /** @type {string | undefined} @default undefined */
+  supportingText?: string | undefined;
+  /** @type {string | undefined} @default undefined */
+  errorText?: string | undefined;
+  /** @type {boolean} @default false */
+  disabled?: boolean;
+  /** @type {boolean} @default false */
+  readonly?: boolean;
+  /** @type {boolean} @default false */
+  required?: boolean;
+  /** @type {boolean} @default false */
+  error?: boolean;
+  /** @type {string | undefined} @default undefined */
+  placeholder?: string | undefined;
+}
+
+export interface MatSelectEmits {
+  "update:modelValue": (payload: unknown) => unknown;
+  "change": (payload: unknown) => unknown;
+}
+
+export type MatSelectComponent = DefineComponent<MatSelectProps, {}, {}, {}, {}, {}, {}, MatSelectEmits>;
+export declare const MatSelect: MatSelectComponent;
+
 export interface MatTextareaProps {
   /**
   * 受控输入值，可使用 `v-model`。
@@ -3026,6 +3081,8 @@ declare module 'vue' {
     'mat-range-slider': typeof MatRangeSlider;
     MatTextField: typeof MatTextField;
     'mat-text-field': typeof MatTextField;
+    MatSelect: typeof MatSelect;
+    'mat-select': typeof MatSelect;
     MatTextarea: typeof MatTextarea;
     'mat-textarea': typeof MatTextarea;
     MatInputBase: typeof MatInputBase;

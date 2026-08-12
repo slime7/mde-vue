@@ -28,6 +28,7 @@ export { default as MatSwitch } from './components/mat-switch/MatSwitch.vue';
 export { default as MatSlider } from './components/mat-slider/MatSlider.vue';
 export { default as MatRangeSlider } from './components/mat-range-slider/MatRangeSlider.vue';
 export { default as MatTextField } from './components/mat-text-field/MatTextField.vue';
+export { default as MatSelect } from './components/mat-select/MatSelect.vue';
 export { default as MatTextarea } from './components/mat-textarea/MatTextarea.vue';
 export { default as MatInputBase } from './components/MatInputBase.vue';
 export { default as MatMenu } from './components/mat-menu/MatMenu.vue';

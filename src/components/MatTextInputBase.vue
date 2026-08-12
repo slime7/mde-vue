@@ -16,7 +16,7 @@ const props = defineProps({
     type: String,
     required: true,
     validator(value) {
-      return ['input', 'textarea'].includes(value);
+      return ['custom', 'input', 'textarea'].includes(value);
     },
   },
   modelValue: {
@@ -95,6 +95,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  customFocused: {
+    type: Boolean,
+    default: false,
+  },
 });
 const emit = defineEmits({
   'update:modelValue': (payload) => typeof payload === 'string',
@@ -108,8 +112,11 @@ const supportingId = `${generatedId}-supporting`;
 const controlId = computed(() => attrs.id || generatedId);
 const { colorStyle } = useComponentColor(computed(() => props.color));
 const hasPlaceholder = computed(() => Boolean(attrs.placeholder));
+const effectiveFocused = computed(() => (
+  props.control === 'custom' ? props.customFocused : focused.value
+));
 const isFloating = computed(() => (
-  focused.value || inputValue.value.length > 0 || hasPlaceholder.value
+  effectiveFocused.value || inputValue.value.length > 0 || hasPlaceholder.value
 ));
 const visibleSupportingText = computed(() => (
   props.error ? props.errorText : props.supportingText
@@ -242,6 +249,10 @@ onBeforeUnmount(() => {
 });
 
 function focusControl() {
+  if (props.control === 'custom') {
+    return;
+  }
+
   controlElement.value?.focusInput();
 }
 
@@ -264,7 +275,7 @@ function handleModelValue(value) {
       `mat-text-input--${control}`,
       {
         'mat-text-input--floating': isFloating,
-        'mat-text-input--focused': focused,
+        'mat-text-input--focused': effectiveFocused,
         'mat-text-input--error': error,
         'mat-text-input--disabled': disabled,
       },
@@ -303,9 +314,10 @@ function handleModelValue(value) {
         <slot name="leading" />
       </MatIcon>
 
-      <label
+      <component
+        :is="control === 'custom' ? 'div' : 'label'"
         class="mat-text-input__main"
-        :for="controlId"
+        :for="control === 'custom' ? undefined : controlId"
         @click="focusControl"
       >
         <span
@@ -325,7 +337,15 @@ function handleModelValue(value) {
             {{ prefixText }}
           </span>
 
+          <slot
+            v-if="control === 'custom'"
+            name="control"
+            :control-id="controlId"
+            :described-by="describedBy"
+          />
+
           <MatInputBase
+            v-else
             ref="controlElement"
             v-bind="nativeAttrs"
             class="mat-text-input__control"
@@ -349,7 +369,7 @@ function handleModelValue(value) {
             {{ suffixText }}
           </span>
         </span>
-      </label>
+      </component>
 
       <MatIcon
         v-if="$slots.trailing"

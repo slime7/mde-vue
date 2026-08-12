@@ -29,6 +29,7 @@ import MatSwitch from './components/mat-switch/MatSwitch.vue';
 import MatSlider from './components/mat-slider/MatSlider.vue';
 import MatRangeSlider from './components/mat-range-slider/MatRangeSlider.vue';
 import MatTextField from './components/mat-text-field/MatTextField.vue';
+import MatSelect from './components/mat-select/MatSelect.vue';
 import MatTextarea from './components/mat-textarea/MatTextarea.vue';
 import MatInputBase from './components/MatInputBase.vue';
 import MatMenu from './components/mat-menu/MatMenu.vue';
@@ -90,6 +91,7 @@ export const GLOBAL_COMPONENTS = [
   ['MatSlider', 'mat-slider', MatSlider],
   ['MatRangeSlider', 'mat-range-slider', MatRangeSlider],
   ['MatTextField', 'mat-text-field', MatTextField],
+  ['MatSelect', 'mat-select', MatSelect],
   ['MatTextarea', 'mat-textarea', MatTextarea],
   ['MatInputBase', 'mat-input-base', MatInputBase],
   ['MatMenu', 'mat-menu', MatMenu],

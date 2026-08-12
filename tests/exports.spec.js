@@ -48,6 +48,7 @@ import {
   MatRadioGroup as RootMatRadioGroup,
   MatRangeSlider as RootMatRangeSlider,
   MatScrollArea as RootMatScrollArea,
+  MatSelect as RootMatSelect,
   MatSideSheet as RootMatSideSheet,
   MatSlider as RootMatSlider,
   MatSnackbar as RootMatSnackbar,
@@ -91,6 +92,7 @@ const globalComponents = [
   ['MatSlider', 'mat-slider', RootMatSlider],
   ['MatRangeSlider', 'mat-range-slider', RootMatRangeSlider],
   ['MatTextField', 'mat-text-field', RootMatTextField],
+  ['MatSelect', 'mat-select', RootMatSelect],
   ['MatTextarea', 'mat-textarea', RootMatTextarea],
   ['MatText', 'mat-text', RootMatText],
   ['MatInputBase', 'mat-input-base', RootMatInputBase],
@@ -178,6 +180,7 @@ describe('公共组件导出', () => {
     expect(app.component('mat-slider')).toBe(RootMatSlider);
     expect(app.component('mat-range-slider')).toBe(RootMatRangeSlider);
     expect(app.component('mat-text-field')).toBe(RootMatTextField);
+    expect(app.component('mat-select')).toBe(RootMatSelect);
     expect(app.component('mat-textarea')).toBe(RootMatTextarea);
     expect(app.component('mat-text')).toBe(RootMatText);
     expect(app.component('mat-input-base')).toBe(RootMatInputBase);
