@@ -1,10 +1,13 @@
 <script setup>
 import {
   computed,
+  getCurrentInstance,
+  inject,
   nextTick,
   onBeforeUnmount,
   onMounted,
   ref,
+  shallowRef,
   useAttrs,
   useId,
   useSlots,
@@ -18,6 +21,11 @@ import {
   registerDialog,
   unregisterDialog,
 } from './dialog-stack';
+import {
+  getAppRootContext,
+  MAT_APP_ROOT_KEY,
+} from './mat-app-root/mat-app-root-context';
+import useFocusTrap from './use-focus-trap';
 import MatBtn from './mat-btn/MatBtn.vue';
 import MatSurfaceBase from './MatSurfaceBase.vue';
 import { normalizeNumber, toCssLength } from './value-utils';
@@ -118,16 +126,26 @@ const emit = defineEmits({
 });
 const attrs = useAttrs();
 const slots = useSlots();
+const instance = getCurrentInstance();
+const appContext = inject(MAT_APP_ROOT_KEY, null);
+const hasExplicitAttach = Object.prototype.hasOwnProperty.call(
+  instance?.vnode.props ?? {},
+  'attach',
+);
 const activatorHost = ref(null);
 const surface = ref(null);
+const panelElement = ref(null);
 const rendered = ref(false);
 const phase = ref('closed');
 const teleportTarget = ref(null);
+const scopedContext = shallowRef(null);
 const viewportWidth = ref(typeof window === 'undefined' ? 0 : window.innerWidth);
 let dragOffset = 0;
 const dragging = ref(false);
 const titleId = `${useId().replace(/[^\w-]/g, '-')}-title`;
 const root = computed(() => surface.value?.root ?? surface.value?.$el ?? null);
+const isAppRootScoped = computed(() => Boolean(scopedContext.value));
+const dragElement = computed(() => (isModal.value ? panelElement.value : root.value));
 const resolvedVariant = computed(() => {
   if (props.variant !== 'auto') {
     return props.variant;
@@ -144,6 +162,14 @@ const hasActivatorSlot = computed(() => Boolean(slots.activator));
 const hasTitle = computed(() => props.title !== undefined || Boolean(slots.title));
 const hasContent = computed(() => props.content !== undefined || Boolean(slots.default));
 const showCloseButton = computed(() => props.closable);
+const panelClasses = computed(() => [
+  `mat-sheet__panel--${props.direction}`,
+  `mat-sheet__panel--position-${props.position}`,
+  {
+    'mat-sheet__panel--expanded': props.direction === 'bottom' && props.expanded,
+    'mat-sheet__panel--dragging': dragging.value,
+  },
+]);
 const resolvedDragHandleLabel = computed(() => {
   if (!props.expanded) {
     return props.dragHandleLabel;
@@ -175,16 +201,17 @@ const sizeStyle = computed(() => {
     '--mat-sheet-preferred-width': resolvedWidth.value,
   };
 });
-const initialDragStyle = Object.freeze({ '--mat-sheet-drag-offset': '0px' });
 const positionStyle = computed(() => (
-  props.direction === 'side' && isModal.value && props.position === 'end'
+  props.direction === 'side' && isModal.value && !isAppRootScoped.value
+    && props.position === 'end'
     ? { '--mat-sheet-modal-end-offset': `${-dialogScrollbarWidth.value}px` }
     : {}
 ));
 const rootStyle = computed(() => [
   attrs.style,
+]);
+const panelStyle = computed(() => [
   sizeStyle.value,
-  initialDragStyle,
   positionStyle.value,
 ]);
 let mounted = false;
@@ -197,6 +224,10 @@ let dragStartExtent = 0;
 let dragStartedAt = 0;
 let dragDistance = 0;
 let suppressHandleClick = false;
+
+useFocusTrap(root, computed(() => (
+  isModal.value && rendered.value && isTop.value
+)));
 
 function clearPhaseTimer() {
   phaseMotion.cancel();
@@ -241,6 +272,45 @@ function resolveAttach() {
   }
 
   return null;
+}
+
+/**
+ * @param {HTMLElement | null} attachTarget
+ * @returns {{context: object, target: HTMLElement | null} | null}
+ */
+function resolveScopedEntry(attachTarget) {
+  if (appContext && !hasExplicitAttach) {
+    return {
+      context: appContext,
+      target: appContext.modalLayer.value,
+    };
+  }
+
+  if (hasExplicitAttach) {
+    const entry = attachTarget ? getAppRootContext(attachTarget) : null;
+
+    if (entry) {
+      return {
+        context: entry,
+        target: entry.modalLayer.value,
+      };
+    }
+  }
+
+  return null;
+}
+
+/**
+ * @param {object} context
+ * @returns {{inertElement: HTMLElement | null, scrollElement: HTMLElement | null}}
+ */
+function buildScopeOptions(context) {
+  return {
+    inertElement: context.contentElement.value,
+    scrollElement: context.documentMode.value
+      ? null
+      : context.contentElement.value,
+  };
 }
 
 function requestClose() {
@@ -346,10 +416,20 @@ function showModalRoot() {
   }
 
   if (!element.open) {
-    element.showModal();
+    element.show();
   }
 
-  registerDialog(element);
+  if (isAppRootScoped.value) {
+    const scoped = scopedContext.value;
+
+    if (!scoped) {
+      return;
+    }
+
+    registerDialog(element, buildScopeOptions(scoped.context));
+  } else {
+    registerDialog(element);
+  }
   focusInitialElement();
 }
 
@@ -374,7 +454,9 @@ async function openSheet() {
   }
 
   if (isModal.value) {
-    const target = resolveAttach();
+    const attachTarget = resolveAttach();
+    const scoped = resolveScopedEntry(attachTarget);
+    const target = scoped ? scoped.target : attachTarget;
 
     if (!target) {
       warnForInvalidAttach();
@@ -382,12 +464,15 @@ async function openSheet() {
       return;
     }
 
+    scopedContext.value = scoped;
     teleportTarget.value = target;
     previousFocus = activator ?? (
       document.activeElement instanceof HTMLElement
         ? document.activeElement
         : null
     );
+  } else {
+    scopedContext.value = null;
   }
 
   previousWasModal = isModal.value;
@@ -430,6 +515,7 @@ function finishClose() {
     unregisterDialog(element);
   }
 
+  scopedContext.value = null;
   rendered.value = false;
   phase.value = 'closed';
   clearDragStyle();
@@ -482,15 +568,7 @@ function handleSheetClick(event) {
     return;
   }
 
-  const rect = root.value.getBoundingClientRect();
-  const outside = event.clientX < rect.left
-    || event.clientX > rect.right
-    || event.clientY < rect.top
-    || event.clientY > rect.bottom;
-
-  if (outside) {
-    requestClose();
-  }
+  requestClose();
 }
 
 /**
@@ -552,7 +630,7 @@ function finishDrag(event) {
   }
 
   dragFrame.flush();
-  const element = root.value;
+  const element = dragElement.value;
   const extent = props.direction === 'bottom'
     ? element?.getBoundingClientRect().height ?? 0
     : element?.getBoundingClientRect().width ?? 0;
@@ -614,8 +692,8 @@ function startDrag(event) {
   activePointerId = event.pointerId;
   dragStart = props.direction === 'bottom' ? event.clientY : event.clientX;
   dragStartExtent = props.direction === 'bottom'
-    ? root.value?.getBoundingClientRect().height ?? 0
-    : root.value?.getBoundingClientRect().width ?? 0;
+    ? dragElement.value?.getBoundingClientRect().height ?? 0
+    : dragElement.value?.getBoundingClientRect().width ?? 0;
   dragStartedAt = performance.now();
   dragDistance = 0;
   writeDragStyle(0, props.direction === 'bottom' ? dragStartExtent : null);
@@ -642,6 +720,24 @@ function handleRootPointerDown(event) {
   startDrag(event);
 }
 
+/**
+ * @param {PointerEvent} event
+ */
+function handleStandardPointerDown(event) {
+  if (!isModal.value) {
+    handleRootPointerDown(event);
+  }
+}
+
+/**
+ * @param {PointerEvent} event
+ */
+function handleModalPointerDown(event) {
+  if (isModal.value) {
+    handleRootPointerDown(event);
+  }
+}
+
 function updateViewportWidth() {
   viewportWidth.value = window.innerWidth;
 }
@@ -665,10 +761,13 @@ async function handleVariantChange(nextVariant, previousVariant) {
 
     unregisterDialog(element);
     restoreFocus();
+    scopedContext.value = null;
   }
 
   if (nextVariant === 'modal') {
-    const target = resolveAttach();
+    const attachTarget = resolveAttach();
+    const scoped = resolveScopedEntry(attachTarget);
+    const target = scoped ? scoped.target : attachTarget;
 
     if (!target) {
       warnForInvalidAttach();
@@ -676,6 +775,7 @@ async function handleVariantChange(nextVariant, previousVariant) {
       return;
     }
 
+    scopedContext.value = scoped;
     teleportTarget.value = target;
     previousFocus = document.activeElement instanceof HTMLElement
       ? document.activeElement
@@ -763,6 +863,7 @@ watch(() => props.closeLabel, (value) => {
         `mat-sheet--${phase}`,
         `mat-sheet--position-${position}`,
         {
+          'mat-sheet--app-root': isAppRootScoped,
           'mat-sheet--dragging': dragging,
           'mat-sheet--expanded': direction === 'bottom' && expanded,
           'mat-sheet--top': isTop,
@@ -771,68 +872,77 @@ watch(() => props.closeLabel, (value) => {
       ]"
       :style="rootStyle"
       :aria-labelledby="$attrs['aria-labelledby'] ?? (hasTitle ? titleId : undefined)"
+      :aria-modal="isModal ? 'true' : undefined"
       :tabindex="isModal ? -1 : undefined"
       @cancel="handleCancel"
       @click="handleSheetClick"
       @keydown="handleKeyDown"
-      @pointerdown="handleRootPointerDown"
+      @pointerdown="handleStandardPointerDown"
     >
-      <button
-        v-if="direction === 'bottom' && dragHandle"
-        class="mat-sheet__drag-handle-target"
-        type="button"
-        data-sheet-drag-handle
-        :aria-label="resolvedDragHandleLabel"
-        @click="handleDragHandleClick"
-        @keydown="handleDragHandleKeydown"
-        @pointerdown.stop="startDrag"
-      >
-        <slot name="drag-handle">
-          <span class="mat-sheet__drag-handle" />
-        </slot>
-      </button>
-
-      <header v-if="hasHeader" class="mat-sheet__header">
-        <slot name="header">
-          <h2
-            v-if="hasTitle"
-            :id="titleId"
-            class="mat-sheet__title mat-sys-typescale-title-large"
-          >
-            <template v-if="title !== undefined">
-              {{ title }}
-            </template>
-            <slot v-else name="title" />
-          </h2>
-
-          <div v-if="$slots.actions" class="mat-sheet__header-actions">
-            <slot name="actions" />
-          </div>
-
-          <MatBtn
-            v-if="showCloseButton"
-            class="mat-sheet__close"
-            icon="close"
-            :label="closeLabel"
-            size="small"
-            variant="standard"
-            @click="requestClose"
-          />
-        </slot>
-      </header>
-
       <div
-        v-if="hasContent"
-        class="mat-sheet__content mat-sys-typescale-body-medium"
+        ref="panelElement"
+        class="mat-sheet__panel"
+        :class="panelClasses"
+        :style="panelStyle"
+        @pointerdown="handleModalPointerDown"
       >
-        <template v-if="content !== undefined">
-          {{ content }}
-        </template>
-        <slot v-else />
-      </div>
+        <button
+          v-if="direction === 'bottom' && dragHandle"
+          class="mat-sheet__drag-handle-target"
+          type="button"
+          data-sheet-drag-handle
+          :aria-label="resolvedDragHandleLabel"
+          @click="handleDragHandleClick"
+          @keydown="handleDragHandleKeydown"
+          @pointerdown.stop="startDrag"
+        >
+          <slot name="drag-handle">
+            <span class="mat-sheet__drag-handle" />
+          </slot>
+        </button>
 
-      <div v-if="$slots.footer" class="mat-sheet__footer">
-        <slot name="footer" />
+        <header v-if="hasHeader" class="mat-sheet__header">
+          <slot name="header">
+            <h2
+              v-if="hasTitle"
+              :id="titleId"
+              class="mat-sheet__title mat-sys-typescale-title-large"
+            >
+              <template v-if="title !== undefined">
+                {{ title }}
+              </template>
+              <slot v-else name="title" />
+            </h2>
+
+            <div v-if="$slots.actions" class="mat-sheet__header-actions">
+              <slot name="actions" />
+            </div>
+
+            <MatBtn
+              v-if="showCloseButton"
+              class="mat-sheet__close"
+              icon="close"
+              :label="closeLabel"
+              size="small"
+              variant="standard"
+              @click="requestClose"
+            />
+          </slot>
+        </header>
+
+        <div
+          v-if="hasContent"
+          class="mat-sheet__content mat-sys-typescale-body-medium"
+        >
+          <template v-if="content !== undefined">
+            {{ content }}
+          </template>
+          <slot v-else />
+        </div>
+
+        <div v-if="$slots.footer" class="mat-sheet__footer">
+          <slot name="footer" />
+        </div>
       </div>
     </MatSurfaceBase>
   </Teleport>
@@ -848,12 +958,62 @@ watch(() => props.closeLabel, (value) => {
   --mat-sheet-content-color: var(--mat-sys-color-on-surface-variant);
   --mat-sheet-preferred-width: 100%;
   --mat-sheet-drag-offset: 0;
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
   box-sizing: border-box;
   min-inline-size: 0;
   padding: 0;
+  border: 0;
+}
+
+.mat-sheet--standard {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--mat-sheet-content-color);
+  background: var(--mat-sheet-container-color);
+  box-shadow: none;
+}
+
+.mat-sheet--standard > .mat-sheet__panel {
+  display: contents;
+}
+
+.mat-sheet--modal {
+  position: fixed;
+  z-index: var(--mat-sys-z-index-dialog);
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  background: transparent;
+  pointer-events: auto;
+}
+
+.mat-sheet--modal[open] {
+  display: block;
+}
+
+.mat-sheet--modal.mat-sheet--app-root {
+  position: absolute;
+}
+
+.mat-sheet--modal.mat-sheet--top:not(.mat-sheet--transparent-scrim):not(.mat-sheet--closing) {
+  background: color-mix(in srgb, var(--mat-sys-color-scrim) 32%, transparent);
+}
+
+.mat-sheet--modal.mat-sheet--opening {
+  animation: mat-sheet-scrim-enter var(--mat-sys-motion-spring-default-effects) both;
+}
+
+.mat-sheet--modal.mat-sheet--closing {
+  animation: mat-sheet-scrim-exit var(--mat-sys-motion-spring-fast-effects) both;
+}
+
+.mat-sheet__panel {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
   overflow: hidden;
   color: var(--mat-sheet-content-color);
   background: var(--mat-sheet-container-color);
@@ -861,23 +1021,7 @@ watch(() => props.closeLabel, (value) => {
   box-shadow: none;
 }
 
-.mat-sheet--modal {
-  position: fixed;
-}
-
-.mat-sheet--modal[open] {
-  display: flex;
-}
-
-.mat-sheet--modal::backdrop {
-  background: transparent;
-}
-
-.mat-sheet--modal.mat-sheet--top:not(.mat-sheet--transparent-scrim):not(.mat-sheet--closing)::backdrop {
-  background: color-mix(in srgb, var(--mat-sys-color-scrim) 32%, transparent);
-}
-
-.mat-sheet--bottom {
+.mat-sheet--standard.mat-sheet--bottom {
   interpolate-size: allow-keywords;
   align-self: center;
   inline-size: min(var(--mat-sheet-preferred-width), 100%);
@@ -892,22 +1036,38 @@ watch(() => props.closeLabel, (value) => {
   transition: block-size var(--mat-sys-motion-spring-fast-spatial);
 }
 
-.mat-sheet--bottom.mat-sheet--modal {
-  inset: auto 0 0;
-  inline-size: min(var(--mat-sheet-preferred-width), 100dvi);
-  max-inline-size: min(640px, 100dvi);
-  margin: 0 auto;
+.mat-sheet--modal .mat-sheet__panel--bottom {
+  interpolate-size: allow-keywords;
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline: 0;
+  inline-size: min(var(--mat-sheet-preferred-width), 100%);
+  max-inline-size: min(640px, 100%);
+  max-block-size: calc(100% - 72px);
+  margin-inline: auto;
+  border-radius: var(--mat-sys-shape-corner-extra-large)
+    var(--mat-sys-shape-corner-extra-large)
+    var(--mat-sys-shape-corner-none)
+    var(--mat-sys-shape-corner-none);
+  box-shadow: var(--mat-sys-elevation-level1);
+  transform: translateY(var(--mat-sheet-drag-offset));
+  transition: block-size var(--mat-sys-motion-spring-fast-spatial);
 }
 
-.mat-sheet--bottom.mat-sheet--modal:not(.mat-sheet--expanded):not(.mat-sheet--dragging) {
-  max-block-size: 50dvb;
+.mat-sheet--modal .mat-sheet__panel--bottom:not(.mat-sheet__panel--expanded):not(.mat-sheet__panel--dragging) {
+  max-block-size: 50%;
 }
 
-.mat-sheet--bottom.mat-sheet--expanded {
+.mat-sheet--standard.mat-sheet--bottom.mat-sheet--expanded {
   block-size: calc(100dvb - 72px);
 }
 
-.mat-sheet--side {
+.mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--expanded {
+  block-size: calc(100% - 72px);
+}
+
+.mat-sheet--standard.mat-sheet--side {
+  --mat-sheet-container-color: var(--mat-sys-color-surface);
   align-self: stretch;
   inline-size: min(var(--mat-sheet-preferred-width), 100%);
   max-inline-size: min(400px, 100%);
@@ -916,41 +1076,44 @@ watch(() => props.closeLabel, (value) => {
   touch-action: pan-y;
 }
 
-.mat-sheet--side.mat-sheet--standard {
-  --mat-sheet-container-color: var(--mat-sys-color-surface);
-}
-
-.mat-sheet--side.mat-sheet--position-end {
+.mat-sheet--standard.mat-sheet--side.mat-sheet--position-end {
   border-start-end-radius: var(--mat-sys-shape-corner-none);
   border-end-end-radius: var(--mat-sys-shape-corner-none);
   transform: translateX(var(--mat-sheet-drag-offset));
 }
 
-.mat-sheet--side.mat-sheet--position-start {
+.mat-sheet--standard.mat-sheet--side.mat-sheet--position-start {
   border-start-start-radius: var(--mat-sys-shape-corner-none);
   border-end-start-radius: var(--mat-sys-shape-corner-none);
   transform: translateX(calc(-1 * var(--mat-sheet-drag-offset)));
 }
 
-.mat-sheet--side.mat-sheet--modal {
+.mat-sheet--modal .mat-sheet__panel--side {
+  position: absolute;
   inset-block: 0;
-  inline-size: min(var(--mat-sheet-preferred-width), calc(100dvi - 16px), 400px);
-  max-inline-size: min(calc(100dvi - 16px), 400px);
-  min-block-size: 100dvb;
-  block-size: 100dvb;
-  max-block-size: 100dvb;
+  inline-size: min(var(--mat-sheet-preferred-width), calc(100% - 16px), 400px);
+  max-inline-size: min(calc(100% - 16px), 400px);
+  min-block-size: 100%;
+  block-size: 100%;
+  max-block-size: 100%;
   margin-block: 0;
+  border-radius: var(--mat-sys-shape-corner-large);
   box-shadow: var(--mat-sys-elevation-level1);
+  touch-action: pan-y;
 }
 
-.mat-sheet--side.mat-sheet--modal.mat-sheet--position-end {
+.mat-sheet--modal .mat-sheet__panel--side.mat-sheet__panel--position-end {
   inset-inline: auto var(--mat-sheet-modal-end-offset, 0);
   margin-inline: auto 0;
+  border-start-end-radius: var(--mat-sys-shape-corner-none);
+  border-end-end-radius: var(--mat-sys-shape-corner-none);
 }
 
-.mat-sheet--side.mat-sheet--modal.mat-sheet--position-start {
+.mat-sheet--modal .mat-sheet__panel--side.mat-sheet__panel--position-start {
   inset-inline: 0 auto;
   margin-inline: 0 auto;
+  border-start-start-radius: var(--mat-sys-shape-corner-none);
+  border-end-start-radius: var(--mat-sys-shape-corner-none);
 }
 
 .mat-sheet__drag-handle-target {
@@ -1056,7 +1219,7 @@ watch(() => props.closeLabel, (value) => {
 }
 
 .mat-sheet__drag-handle-target + .mat-sheet__content,
-.mat-sheet > .mat-sheet__content:first-child {
+.mat-sheet__content:first-child {
   padding-block-start: 24px;
 }
 
@@ -1073,58 +1236,81 @@ watch(() => props.closeLabel, (value) => {
 }
 
 @media (width >= 641px) {
-  .mat-sheet--bottom {
+  .mat-sheet--standard.mat-sheet--bottom {
     max-inline-size: min(640px, calc(100% - 112px));
     max-block-size: calc(100dvb - 56px);
   }
 
-  .mat-sheet--bottom.mat-sheet--expanded {
+  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--expanded {
     block-size: calc(100dvb - 56px);
   }
 
-  .mat-sheet--bottom.mat-sheet--modal {
-    max-inline-size: min(640px, calc(100dvi - 112px));
+  .mat-sheet--modal .mat-sheet__panel--bottom {
+    max-inline-size: min(640px, calc(100% - 112px));
+    max-block-size: calc(100% - 56px);
+  }
+
+  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--expanded {
+    block-size: calc(100% - 56px);
   }
 }
 
-.mat-sheet--bottom.mat-sheet--dragging {
+.mat-sheet--standard.mat-sheet--bottom.mat-sheet--dragging,
+.mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--dragging {
   block-size: var(--mat-sheet-drag-size);
   transition: none;
 }
 
-.mat-sheet--opening.mat-sheet--bottom {
+.mat-sheet--standard.mat-sheet--opening.mat-sheet--bottom {
   animation: mat-bottom-sheet-enter var(--mat-sys-motion-spring-default-spatial) both;
 }
 
-.mat-sheet--closing.mat-sheet--bottom {
+.mat-sheet--standard.mat-sheet--closing.mat-sheet--bottom {
   animation: mat-bottom-sheet-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
-.mat-sheet--opening.mat-sheet--side.mat-sheet--position-end {
+.mat-sheet--standard.mat-sheet--opening.mat-sheet--side.mat-sheet--position-end {
   animation: mat-side-sheet-end-enter var(--mat-sys-motion-spring-default-spatial) both;
 }
 
-.mat-sheet--closing.mat-sheet--side.mat-sheet--position-end {
+.mat-sheet--standard.mat-sheet--closing.mat-sheet--side.mat-sheet--position-end {
   animation: mat-side-sheet-end-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
-.mat-sheet--opening.mat-sheet--side.mat-sheet--position-start {
+.mat-sheet--standard.mat-sheet--opening.mat-sheet--side.mat-sheet--position-start {
   animation: mat-side-sheet-start-enter var(--mat-sys-motion-spring-default-spatial) both;
 }
 
-.mat-sheet--closing.mat-sheet--side.mat-sheet--position-start {
+.mat-sheet--standard.mat-sheet--closing.mat-sheet--side.mat-sheet--position-start {
   animation: mat-side-sheet-start-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
-.mat-sheet--opening::backdrop {
-  animation: mat-sheet-scrim-enter var(--mat-sys-motion-spring-default-effects) both;
+.mat-sheet--modal.mat-sheet--opening .mat-sheet__panel--bottom {
+  animation: mat-bottom-sheet-enter var(--mat-sys-motion-spring-default-spatial) both;
 }
 
-.mat-sheet--closing::backdrop {
-  animation: mat-sheet-scrim-exit var(--mat-sys-motion-spring-fast-effects) both;
+.mat-sheet--modal.mat-sheet--closing .mat-sheet__panel--bottom {
+  animation: mat-bottom-sheet-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
-.mat-sheet--dragging {
+.mat-sheet--modal.mat-sheet--opening .mat-sheet__panel--side.mat-sheet__panel--position-end {
+  animation: mat-side-sheet-end-enter var(--mat-sys-motion-spring-default-spatial) both;
+}
+
+.mat-sheet--modal.mat-sheet--closing .mat-sheet__panel--side.mat-sheet__panel--position-end {
+  animation: mat-side-sheet-end-exit var(--mat-sys-motion-spring-fast-effects) both;
+}
+
+.mat-sheet--modal.mat-sheet--opening .mat-sheet__panel--side.mat-sheet__panel--position-start {
+  animation: mat-side-sheet-start-enter var(--mat-sys-motion-spring-default-spatial) both;
+}
+
+.mat-sheet--modal.mat-sheet--closing .mat-sheet__panel--side.mat-sheet__panel--position-start {
+  animation: mat-side-sheet-start-exit var(--mat-sys-motion-spring-fast-effects) both;
+}
+
+.mat-sheet--modal .mat-sheet__panel--dragging,
+.mat-sheet--standard.mat-sheet--dragging {
   transition: none;
 }
 
@@ -1178,7 +1364,7 @@ watch(() => props.closeLabel, (value) => {
 
 @media (prefers-reduced-motion: reduce) {
   .mat-sheet,
-  .mat-sheet::backdrop {
+  .mat-sheet__panel {
     animation: none;
     transition: none;
   }

@@ -7,7 +7,7 @@ import MatBottomSheet from '../src/components/mat-bottom-sheet/MatBottomSheet.vu
 import MatSideSheet from '../src/components/mat-side-sheet/MatSideSheet.vue';
 
 beforeAll(() => {
-  Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {
+  Object.defineProperty(HTMLDialogElement.prototype, 'show', {
     configurable: true,
     value() {
       this.setAttribute('open', '');

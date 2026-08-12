@@ -9,7 +9,7 @@ order: 101
 
 ## 组件简介
 
-`<mat-bottom-sheet>` 的组件导出名是 `MatBottomSheet`。它把补充内容固定在可用区域底部，并提供 Material 3 的 `standard` 与 `modal` 两种变体。Standard 与主内容共存并保持两侧都可交互；modal 使用原生 `<dialog>`、帷幕和 Vue Teleport，打开时限制背景交互并管理焦点。
+`<mat-bottom-sheet>` 的组件导出名是 `MatBottomSheet`。它把补充内容固定在可用区域底部，并提供 Material 3 的 `standard` 与 `modal` 两种变体。Standard 与主内容共存并保持两侧都可交互；modal 使用原生 `<dialog>` 元素（非模态 `show()`）、帷幕和 Vue Teleport，组件自管焦点陷阱与背景拦截，打开时限制背景交互并管理焦点。位于 `MatAppRoot` 内且省略 `attach` 时，modal 自动进入该 AppRoot 的模态层，表面与帷幕限制在应用矩形内，AppRoot 外内容保持可交互。
 
 默认 `variant="auto"`：视口宽度小于 `breakpoint` 时使用 modal，达到断点后使用 standard。默认断点为 840px。自动模式只改变 Bottom sheet 自身的布局方式，不会把它替换成 Side sheet。
 
@@ -105,7 +105,7 @@ Modal 默认以不超过视口高度 50% 的预览状态打开。`expanded` 可�
 | `variant` | `'auto' \| 'standard' \| 'modal'` | `'auto'` | 布局变体；auto 根据 `breakpoint` 选择 |
 | `breakpoint` | `number` | `840` | auto 切换到 standard 的最小视口宽度，单位为 CSS px |
 | `width` | `number \| string` | 未设置 | 首选宽度；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS 宽度值，非法时使用默认宽度；最终仍受 640px 最大宽度限制 |
-| `attach` | `string \| HTMLElement` | `'body'` | modal 的 Teleport 目标；standard 忽略 |
+| `attach` | `string \| HTMLElement` | `'body'` | modal 的 Teleport 目标；standard 忽略。位于 `MatAppRoot` 内且省略时自动进入该 AppRoot 的模态层，指向 AppRoot 根元素时同样按应用范围展示 |
 | `scrim` | `boolean` | `true` | modal 是否显示帷幕；false 时仍阻止背景指针交互 |
 | `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否允许点击 modal 帷幕关闭 |
 | `dragHandle` | `boolean` | `true` | 模板属性为 `drag-handle`；是否显示顶部拖动把手 |
@@ -119,7 +119,7 @@ Modal 默认以不超过视口高度 50% 的预览状态打开。`expanded` 可�
 | `title` | `string` | 未设置 | 简单标题；优先于 `title` Slot |
 | `content` | `string` | 未设置 | 简单正文；优先于默认 Slot |
 
-未消费的属性、原生事件、`class` 和 `style` 传给根元素。Modal 根为原生 `<dialog>`，standard 根为原生 `<aside>`。Modal 没有标题时必须提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。
+未消费的属性、原生事件、`class` 和 `style` 传给根元素。Modal 根为原生 `<dialog>`（铺满坐标空间的帷幕容器，可见面板位于内部），standard 根为原生 `<aside>`。Modal 没有标题时必须提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。显式 `attach` 指向非 AppRoot 元素时保持铺满视口的原有行为。
 
 Bottom sheet 的宽度不超过 640px；窄屏可占满视口宽度，宽于 640px 的视口在两侧至少保留 56px。宽屏顶部至少保留 56px，窄屏展开状态顶部至少保留 72px。内容过长时只滚动内容区，顶部把手、标题和底部区域保持可见。组件没有公共方法，也不暴露拖动过程中的内部位移。
 
@@ -132,7 +132,7 @@ Bottom sheet 的宽度不超过 640px；窄屏可占满视口宽度，宽于 640
 | `opened` | 无 | 进入动画完成后触发 |
 | `closed` | 无 | 退出动画完成且 DOM 清理后触发 |
 
-组件是受控的：收到 `update:modelValue(false)` 后，使用者必须更新绑定值才会退出。拖动输入按绘制帧合并，并在释放前刷新最新位置以判断展开、折叠或关闭阈值。Modal 打开后聚焦显式 `autofocus` 或第一个可交互元素，实际退出动画完成后恢复原焦点。Modal 锁定页面根滚动；页面原本存在占据布局宽度的经典滚动条时临时保留其槽位，避免页面宽度跳动，没有经典滚动条时不额外预留空间。Standard 不主动移动焦点，也不锁定页面滚动。
+组件是受控的：收到 `update:modelValue(false)` 后，使用者必须更新绑定值才会退出。拖动输入按绘制帧合并，并在释放前刷新最新位置以判断展开、折叠或关闭阈值。Modal 打开后聚焦显式 `autofocus` 或第一个可交互元素，实际退出动画完成后恢复原焦点。Modal 锁定滚动并阻止背景交互：非 AppRoot 场景锁定页面根滚动，AppRoot 场景锁定正文滚动容器并把正文层设为 `inert`；页面原本存在占据布局宽度的经典滚动条时临时保留其槽位，避免页面宽度跳动，没有经典滚动条时不额外预留空间。Standard 不主动移动焦点，也不锁定页面滚动。
 
 ## Slots
 

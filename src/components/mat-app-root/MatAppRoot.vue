@@ -12,7 +12,11 @@ import {
   useAttrs,
   watch,
 } from 'vue';
-import { MAT_APP_ROOT_KEY } from './mat-app-root-context';
+import {
+  MAT_APP_ROOT_KEY,
+  registerAppRoot,
+  unregisterAppRoot,
+} from './mat-app-root-context';
 import { useMatProps } from '../use-mat-props';
 
 const EDGES = ['top', 'bottom', 'start', 'end'];
@@ -64,6 +68,7 @@ const rootElement = ref(null);
 const contentElement = ref(null);
 const edgeLayer = ref(null);
 const freeLayer = ref(null);
+const modalLayer = ref(null);
 const snackbarLayer = ref(null);
 const floatingLayer = ref(null);
 const safeAreaProbe = ref(null);
@@ -353,16 +358,22 @@ function getLayoutRect() {
   };
 }
 
-provide(MAT_APP_ROOT_KEY, {
+const internalContext = {
   publicContext,
   rootElement: readonly(rootElement),
   contentElement: readonly(contentElement),
   edgeLayer: readonly(edgeLayer),
   freeLayer: readonly(freeLayer),
+  modalLayer: readonly(modalLayer),
   snackbarLayer: readonly(snackbarLayer),
   floatingLayer: readonly(floatingLayer),
+  documentMode: computed(() => (
+    propsWithDefaults.fillViewport && !propsWithDefaults.scrollable
+  )),
   getLayoutRect,
-});
+};
+
+provide(MAT_APP_ROOT_KEY, internalContext);
 
 function addViewportListeners() {
   window.addEventListener('resize', scheduleMeasure);
@@ -380,6 +391,7 @@ function removeViewportListeners() {
 
 onMounted(async () => {
   mounted = true;
+  registerAppRoot(rootElement.value, internalContext);
   resizeObserver = typeof ResizeObserver === 'undefined'
     ? undefined
     : new ResizeObserver(scheduleMeasure);
@@ -396,6 +408,7 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   mounted = false;
+  unregisterAppRoot(rootElement.value);
   resizeObserver?.disconnect();
   resizeObserver = undefined;
   removeViewportListeners();
@@ -437,6 +450,8 @@ watch([
         <div ref="snackbarLayer" class="mat-app-root__snackbar-layer" />
         <div ref="floatingLayer" class="mat-app-root__floating-layer" />
       </div>
+
+      <div ref="modalLayer" class="mat-app-root__modal-layer" />
     </div>
 
     <span ref="safeAreaProbe" class="mat-app-root__safe-area-probe" aria-hidden="true" />
@@ -486,6 +501,7 @@ watch([
 .mat-app-root__overlay,
 .mat-app-root__edge-layer,
 .mat-app-root__free-layer,
+.mat-app-root__modal-layer,
 .mat-app-root__bottom-stack {
   position: absolute;
   inset: 0;

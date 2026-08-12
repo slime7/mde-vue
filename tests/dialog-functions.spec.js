@@ -7,7 +7,7 @@ import {
 } from 'mde-vue';
 
 beforeAll(() => {
-  Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {
+  Object.defineProperty(HTMLDialogElement.prototype, 'show', {
     configurable: true,
     value() {
       this.setAttribute('open', '');

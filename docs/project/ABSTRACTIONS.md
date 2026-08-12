@@ -131,6 +131,8 @@ Tooltip 分组由展示元素最近的 `data-mat-tooltip-group` 祖先定义。�
 
 `registerEdge({ edge, element })` 接受当前 document 中的 HTMLElement，并返回只读响应式 `insets`、`update()`、幂等 `unregister()`。同侧外延取最大值而不累加；正交边缘按登记顺序确定优先级，较晚登记项通过 cross-axis insets 避让较早项。默认 Slot 只承载正文和布局组件，覆盖层不作为公共 Slot 暴露。
 
+内部覆盖层按层级依次承载固定边缘、自由定位、Snackbar 与普通浮动组件、模态层。位于 AppRoot 内且省略 `attach` 的 Dialog 与 modal Bottom/Side sheet 进入模态层，表面与帷幕限制在应用矩形内，正文层设为 `inert`，AppRoot 外的内容保持可交互；Menu 的视口夹紧与透明 scrim 同样以应用矩形为边界。document 模式（`fillViewport=true` 且 `scrollable=false`）下应用范围等于视口，任务栏等 AppRoot 外内容应使用 `scrollable` 或 `fillViewport=false` 布局。
+
 FAB 复用 `MatButtonBase` 的原生 button、disabled、焦点、按下状态、交互目标和事件处理；组件本身只负责尺寸、颜色角色、图标/标签内容和无障碍名称。它不负责固定定位、滚动收缩、FAB menu 或页面级动效。颜色直接使用所选 `--mat-sys-color-*` 和同组 `--mat-sys-color-on-*` 令牌，状态层沿用同组内容色。
 
 ## `<mat-icon>`
@@ -185,11 +187,11 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 `MatInputBase` 是文本输入族的无边框基础层，渲染调用方选择的原生 `input` 或 `textarea`，负责受控字符串值、`update:modelValue`、原生属性透传以及 `focusInput`、`getInput` 方法；它同时隐藏浏览器为 search、number、date/time 添加的默认控件装饰（清除按钮、步进按钮、日历指示器），等价操作由使用方自行提供；组件不提供标签、描边、填充、辅助文字或校验语义。`<mat-text-field>` 和 `<mat-textarea>` 在其上共享 outlined/filled 外观、局部配色、辅助或错误文字、字符计数与属性路由，但分别保留 input 和 textarea 原生语义。错误角色始终覆盖 color 强调；Textarea 默认使用固定初始行数和纵向调整，也可以按内容自动增高、限制最大行数或禁止手动调整。其他输入类型可以复用该基础层并自行定义容器语义。
 
-`<mat-menu>` 使用受控根 `modelValue` 和 Popover top layer。根 `activator` Slot 优先于 anchor，并且必须只产生一个当前 document 中的 HTMLElement 根节点；没有 Slot 时 anchor 接受触发器 id 或 `[clientX, clientY]` 视口坐标，offset 在基础位置之后、视口夹紧之前生效；元素 anchor 使用 CSS Anchor Positioning，坐标 anchor 使用 fixed 定位。根菜单默认先打开透明 manual Popover scrim，再在其上打开菜单；外部指针操作只关闭菜单而不传给背景，`scrim=false` 恢复 auto Popover 的轻触外部关闭与背景交互。`maxLength` 以 CSS 块轴长度限制单层菜单并始终受视口安全范围约束，溢出内容通过隐藏滚动条且带边缘渐隐的 MatScrollArea 滚动。嵌套 Menu 只允许直接位于 MatMenuItem 的 submenu Slot，自动继承父级 color 与 variant，并以父项目为 anchor；它共享根 scrim，但独立读取 `maxLength`。MatMenuGroup 以带可选标签的 `role="group"` 和 2px expressive 间隙组织相关项目；同一菜单不得混合分组和未分组的直接子级。MenuItem 是单一操作；叶子 click 关闭整条链，子菜单项只展开。Menu 与 List 可以共享无语义排列和 roving focus，但不得共享 listbox 选择模型、角色或左右键含义。
+`<mat-menu>` 使用受控根 `modelValue` 和 Popover top layer。根 `activator` Slot 优先于 anchor，并且必须只产生一个当前 document 中的 HTMLElement 根节点；没有 Slot 时 anchor 接受触发器 id 或 `[clientX, clientY]` 视口坐标，offset 在基础位置之后、视口夹紧之前生效；元素 anchor 使用 CSS Anchor Positioning，坐标 anchor 使用 fixed 定位。根菜单默认先打开透明 manual Popover scrim，再在其上打开菜单；外部指针操作只关闭菜单而不传给背景，`scrim=false` 恢复 auto Popover 的轻触外部关闭与背景交互。位于 `MatAppRoot` 内时，视口夹紧与透明 scrim 以该 AppRoot 的应用矩形为边界，点击应用外只关闭菜单且不拦截事件。`maxLength` 以 CSS 块轴长度限制单层菜单并始终受所在坐标空间（视口或应用矩形）安全范围约束，溢出内容通过隐藏滚动条且带边缘渐隐的 MatScrollArea 滚动。嵌套 Menu 只允许直接位于 MatMenuItem 的 submenu Slot，自动继承父级 color 与 variant，并以父项目为 anchor；它共享根 scrim，但独立读取 `maxLength`。MatMenuGroup 以带可选标签的 `role="group"` 和 2px expressive 间隙组织相关项目；同一菜单不得混合分组和未分组的直接子级。MenuItem 是单一操作；叶子 click 关闭整条链，子菜单项只展开。Menu 与 List 可以共享无语义排列和 roving focus，但不得共享 listbox 选择模型、角色或左右键含义。
 
 ## Dialog
 
-`<mat-dialog>` 通过 `modelValue` 受控显示，使用原生 modal dialog 和 Teleport。`activator` Slot 必须只产生一个当前 document 中的 HTMLElement 根节点，作为触发元素和关闭后的焦点恢复目标。`width` 接受数字 px 值或 trim 后合法的 CSS 宽度值，只影响基础布局并在小屏按视口限制；`fullScreen` 只接受显式布尔值并忽略 width，不根据视口自动切换；基础和全屏布局都只允许 content 区域滚动，打开期间由共享堆叠管理器锁定页面根滚动。页面原本存在占据布局宽度的经典滚动条时，锁定期间临时使用稳定滚动条槽位保持页面宽度；没有经典滚动条时不额外预留空间。`scrim=false` 只把帷幕变透明，不允许背景接收指针事件；`closeOnBack` 只控制点击帷幕关闭，Escape 始终请求关闭。多个实例只显示顶层帷幕，最后一层关闭后才恢复页面滚动和根元素原有内联样式。
+`<mat-dialog>` 通过 `modelValue` 受控显示，使用原生 `<dialog>` 元素（非模态 `show()`）和 Teleport，组件自管焦点陷阱与背景拦截，不依赖浏览器 top layer。位于 `MatAppRoot` 内且省略 `attach`（或 `attach` 指向 AppRoot 根元素）时进入该 AppRoot 的模态层，表面与帷幕限制在应用矩形内，仅正文层 `inert`；其他场景铺满视口。`activator` Slot 必须只产生一个当前 document 中的 HTMLElement 根节点，作为触发元素和关闭后的焦点恢复目标。`width` 接受数字 px 值或 trim 后合法的 CSS 宽度值，只影响基础布局并在小屏按视口限制；`fullScreen` 只接受显式布尔值并忽略 width，不根据视口自动切换；基础和全屏布局都只允许 content 区域滚动，打开期间由共享堆叠管理器锁定滚动：非 AppRoot 场景锁定页面根滚动，AppRoot 场景锁定正文滚动容器。页面原本存在占据布局宽度的经典滚动条时，锁定期间临时使用稳定滚动条槽位保持页面宽度；没有经典滚动条时不额外预留空间。`scrim=false` 只把帷幕变透明，不允许背景接收指针事件；`closeOnBack` 只控制点击帷幕关闭，Escape 始终请求关闭。多个实例只显示顶层帷幕，最后一层关闭后才恢复页面滚动和根元素原有内联样式。
 
 标题、正文和图标都遵循 prop 优先于同名 Slot；无标题时必须由使用者提供 `aria-label` 或 `aria-labelledby`。关闭期间 DOM 保留到退出动画完成，随后触发 `closed` 并恢复原焦点。
 
@@ -199,7 +201,7 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 `<mat-bottom-sheet>` 与 `<mat-side-sheet>` 分别导出 `MatBottomSheet` 和 `MatSideSheet`，共享内部 `MatSheetBase`，但保持独立公共入口与方向能力。两者都通过 `modelValue` 受控显示，`variant` 接受 `auto`、`standard`、`modal`。Auto 默认以 840px 为断点：窄屏使用 modal，宽屏使用 standard；`breakpoint` 可以覆盖断点。自动模式只切换当前组件的布局，不把 Bottom sheet 与 Side sheet 相互替换。
 
-Standard 使用原生 `aside`，在声明位置参与父级布局，不使用 Teleport、不锁页面滚动且不主动移动焦点；Bottom sheet 适合作为纵向 flex 容器末端区域，Side sheet 适合作为横向 flex 容器的不可压缩侧栏。Modal 使用原生 `<dialog>.showModal()`、Teleport、共享 Dialog 堆叠和滚动锁；页面存在经典滚动条时临时保留其槽位，避免锁定根滚动造成页面横向位移，没有经典滚动条时不预留额外空间。只有顶层模态表面显示帷幕颜色，关闭完成后恢复打开前焦点。Escape 始终请求关闭，`closeOnBack` 只控制帷幕点击，`scrim=false` 只隐藏颜色而不恢复背景交互。
+Standard 使用原生 `aside`，在声明位置参与父级布局，不使用 Teleport、不锁页面滚动且不主动移动焦点；Bottom sheet 适合作为纵向 flex 容器末端区域，Side sheet 适合作为横向 flex 容器的不可压缩侧栏。Modal 使用原生 `<dialog>` 元素（非模态 `show()`）、Teleport、共享 Dialog 堆叠、焦点陷阱与滚动锁，不依赖浏览器 top layer；页面存在经典滚动条时临时保留其槽位，避免锁定根滚动造成页面横向位移，没有经典滚动条时不预留额外空间。只有顶层模态表面显示帷幕颜色，关闭完成后恢复打开前焦点。Escape 始终请求关闭，`closeOnBack` 只控制帷幕点击，`scrim=false` 只隐藏颜色而不恢复背景交互。
 
 Bottom sheet 最大宽度固定为 640px，使用顶部 extra-large 圆角和可选 drag handle。Modal 默认处于不超过半屏的预览高度，`expanded` 表达展开预设高度；预览状态向上拖动或通过键盘选择把手请求展开，展开状态向下拖动请求折叠，展开的 standard 选择把手也请求折叠，展开的 modal 则请求关闭；预览状态向下拖动请求关闭。拖动时面板高度或位移连续跟随指针，关闭动画从释放位置继续。内置关闭按钮默认不显示，由 `closable` 显式开启。Side sheet 使用 start/end 逻辑边缘，默认及最大宽度均为 400px、默认显示关闭入口，并允许触摸用户向依附边缘滑动关闭。标题、正文、header、actions、footer 和 activator 由两者共享；Side sheet 不提供 Bottom sheet 的 drag-handle Slot。
 

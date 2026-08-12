@@ -162,14 +162,14 @@ describe('MatMenu', () => {
     const menu = wrapper.get('[role="menu"]').element;
 
     expect(menu.style.maxBlockSize).toBe(
-      'min(240px, calc(100dvb - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)))',
+      'min(240px, calc(var(--mat-menu-viewport-height) - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)))',
     );
 
     vi.stubGlobal('CSS', { supports: () => true });
     await wrapper.setProps({ maxLength: 'calc(50dvb - 24px)' });
 
     expect(menu.style.maxBlockSize).toBe(
-      'min(calc(50dvb - 24px), calc(100dvb - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)))',
+      'min(calc(50dvb - 24px), calc(var(--mat-menu-viewport-height) - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)))',
     );
   });
 

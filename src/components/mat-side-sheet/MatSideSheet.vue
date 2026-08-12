@@ -1,4 +1,5 @@
 <script setup>
+import { computed, getCurrentInstance } from 'vue';
 import MatSheetBase from '../MatSheetBase.vue';
 import { useMatProps } from '../use-mat-props';
 import { isValidCssLength } from '../value-utils';
@@ -153,6 +154,22 @@ const props = defineProps({
   },
 });
 const propsWithDefaults = useMatProps('sideSheet', props);
+const instance = getCurrentInstance();
+const hasExplicitAttach = Object.prototype.hasOwnProperty.call(
+  instance?.vnode.props ?? {},
+  'attach',
+);
+const forwardedProps = computed(() => {
+  if (hasExplicitAttach) {
+    return propsWithDefaults;
+  }
+
+  const forwarded = { ...propsWithDefaults };
+
+  delete forwarded.attach;
+
+  return forwarded;
+});
 
 const emit = defineEmits({
   /**
@@ -172,7 +189,7 @@ const emit = defineEmits({
 
 <template>
   <MatSheetBase
-    v-bind="{ ...propsWithDefaults, ...$attrs }"
+    v-bind="{ ...forwardedProps, ...$attrs }"
     component-name="MatSideSheet"
     direction="side"
     @update:model-value="emit('update:modelValue', $event)"

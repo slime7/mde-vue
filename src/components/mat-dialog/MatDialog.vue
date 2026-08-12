@@ -1,10 +1,13 @@
 <script setup>
 import {
   computed,
+  getCurrentInstance,
+  inject,
   nextTick,
   onBeforeUnmount,
   onMounted,
   ref,
+  shallowRef,
   useAttrs,
   useId,
   useSlots,
@@ -15,6 +18,11 @@ import MatSurfaceBase from '../MatSurfaceBase.vue';
 import createMotionController from '../motion-controller';
 import { isComponentColor } from '../button-props';
 import { dialogStack, registerDialog, unregisterDialog } from '../dialog-stack';
+import {
+  getAppRootContext,
+  MAT_APP_ROOT_KEY,
+} from '../mat-app-root/mat-app-root-context';
+import useFocusTrap from '../use-focus-trap';
 import MatBtn from '../mat-btn/MatBtn.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
 import MatSpacer from '../mat-spacer/MatSpacer.vue';
@@ -162,13 +170,21 @@ const emit = defineEmits({
 });
 const attrs = useAttrs();
 const slots = useSlots();
+const instance = getCurrentInstance();
+const appContext = inject(MAT_APP_ROOT_KEY, null);
+const hasExplicitAttach = Object.prototype.hasOwnProperty.call(
+  instance?.vnode.props ?? {},
+  'attach',
+);
 const activatorHost = ref(null);
 const surface = ref(null);
 const rendered = ref(false);
 const phase = ref('closed');
 const teleportTarget = ref(null);
+const scopedContext = shallowRef(null);
 const titleId = `${useId().replace(/[^\w-]/g, '-')}-title`;
 const root = computed(() => surface.value?.root ?? surface.value?.$el ?? null);
+const isAppRootScoped = computed(() => Boolean(scopedContext.value));
 const hasTitle = computed(() => propsWithDefaults.title !== undefined || Boolean(slots.title));
 const hasContent = computed(() => (
   propsWithDefaults.content !== undefined || Boolean(slots.default)
@@ -198,10 +214,13 @@ const dialogWidthStyle = computed(() => {
     maxInlineSize: 'calc(100dvi - 48px)',
   };
 });
-const rootStyle = computed(() => [colorStyle.value, attrs.style, dialogWidthStyle.value]);
+const rootStyle = computed(() => [attrs.style]);
+const panelStyle = computed(() => [colorStyle.value, dialogWidthStyle.value]);
 let mounted = false;
 const phaseMotion = createMotionController();
 let previousFocus = null;
+
+useFocusTrap(root, computed(() => rendered.value && isTop.value));
 
 /**
  * @returns {HTMLElement | null}
@@ -247,6 +266,45 @@ function resolveAttach() {
   }
 
   return null;
+}
+
+/**
+ * @param {HTMLElement | null} attachTarget
+ * @returns {{context: object, target: HTMLElement | null} | null}
+ */
+function resolveScopedEntry(attachTarget) {
+  if (appContext && !hasExplicitAttach) {
+    return {
+      context: appContext,
+      target: appContext.modalLayer.value,
+    };
+  }
+
+  if (hasExplicitAttach) {
+    const entry = attachTarget ? getAppRootContext(attachTarget) : null;
+
+    if (entry) {
+      return {
+        context: entry,
+        target: entry.modalLayer.value,
+      };
+    }
+  }
+
+  return null;
+}
+
+/**
+ * @param {object} context
+ * @returns {{inertElement: HTMLElement | null, scrollElement: HTMLElement | null}}
+ */
+function buildScopeOptions(context) {
+  return {
+    inertElement: context.contentElement.value,
+    scrollElement: context.documentMode.value
+      ? null
+      : context.contentElement.value,
+  };
 }
 
 function requestClose() {
@@ -309,7 +367,9 @@ async function openDialog() {
     return;
   }
 
-  const target = resolveAttach();
+  const attachTarget = resolveAttach();
+  const scoped = resolveScopedEntry(attachTarget);
+  const target = scoped ? scoped.target : attachTarget;
 
   if (!target) {
     console.warn('MatDialog: attach 必须指向当前 document 中存在的 HTMLElement');
@@ -322,6 +382,7 @@ async function openDialog() {
       ? document.activeElement
       : null
   );
+  scopedContext.value = scoped;
   teleportTarget.value = target;
   rendered.value = true;
   phase.value = 'opening';
@@ -333,10 +394,10 @@ async function openDialog() {
   }
 
   if (!root.value.open) {
-    root.value.showModal();
+    root.value.show();
   }
 
-  registerDialog(root.value);
+  registerDialog(root.value, scoped ? buildScopeOptions(scoped.context) : undefined);
   focusInitialElement();
   waitForPhase(400, () => {
     phase.value = 'open';
@@ -355,6 +416,7 @@ function finishClose() {
     unregisterDialog(element);
   }
 
+  scopedContext.value = null;
   rendered.value = false;
   phase.value = 'closed';
   nextTick(() => {
@@ -404,15 +466,7 @@ function handleDialogClick(event) {
     return;
   }
 
-  const rect = root.value.getBoundingClientRect();
-  const outside = event.clientX < rect.left
-    || event.clientX > rect.right
-    || event.clientY < rect.top
-    || event.clientY > rect.bottom;
-
-  if (outside) {
-    requestClose();
-  }
+  requestClose();
 }
 
 onMounted(() => {
@@ -471,6 +525,7 @@ watchEffect(() => {
       :class="[
         `mat-dialog--${phase}`,
         {
+          'mat-dialog--app-root': isAppRootScoped,
           'mat-dialog--full-screen': propsWithDefaults.fullScreen,
           'mat-dialog--with-icon': hasIcon,
           'mat-dialog--top': isTop,
@@ -479,26 +534,72 @@ watchEffect(() => {
       ]"
       :style="rootStyle"
       :aria-labelledby="$attrs['aria-labelledby'] ?? (hasTitle ? titleId : undefined)"
+      aria-modal="true"
       tabindex="-1"
       @cancel="handleCancel"
       @click="handleDialogClick"
       @keydown="handleKeyDown"
     >
-      <template v-if="propsWithDefaults.fullScreen">
-        <header class="mat-dialog__header">
-          <MatBtn
-            class="mat-dialog__close"
-            icon="close"
-            :label="propsWithDefaults.closeLabel"
-            size="small"
-            variant="standard"
-            @click="requestClose"
-          />
+      <div class="mat-dialog__panel" :style="panelStyle">
+        <template v-if="propsWithDefaults.fullScreen">
+          <header class="mat-dialog__header">
+            <MatBtn
+              class="mat-dialog__close"
+              icon="close"
+              :label="propsWithDefaults.closeLabel"
+              size="small"
+              variant="standard"
+              @click="requestClose"
+            />
+
+            <h2
+              v-if="hasTitle"
+              :id="titleId"
+              class="mat-dialog__title mat-sys-typescale-title-large"
+            >
+              <template v-if="propsWithDefaults.title !== undefined">
+                {{ propsWithDefaults.title }}
+              </template>
+              <slot v-else name="title" />
+            </h2>
+
+            <MatSpacer />
+
+            <div v-if="$slots.actions" class="mat-dialog__actions">
+              <slot name="actions" />
+            </div>
+          </header>
+
+          <div
+            v-if="hasContent"
+            class="mat-dialog__content mat-sys-typescale-body-medium"
+          >
+            <template v-if="propsWithDefaults.content !== undefined">
+              {{ propsWithDefaults.content }}
+            </template>
+            <slot v-else />
+          </div>
+        </template>
+
+        <template v-else>
+          <MatIcon
+            v-if="hasIcon"
+            as="div"
+            class="mat-dialog__icon"
+            :optical-size="24"
+            size="24px"
+            aria-hidden="true"
+          >
+            <template v-if="propsWithDefaults.icon !== undefined">
+              {{ propsWithDefaults.icon }}
+            </template>
+            <slot v-else name="icon" />
+          </MatIcon>
 
           <h2
             v-if="hasTitle"
             :id="titleId"
-            class="mat-dialog__title mat-sys-typescale-title-large"
+            class="mat-dialog__title mat-sys-typescale-headline-small"
           >
             <template v-if="propsWithDefaults.title !== undefined">
               {{ propsWithDefaults.title }}
@@ -506,64 +607,21 @@ watchEffect(() => {
             <slot v-else name="title" />
           </h2>
 
-          <MatSpacer />
+          <div
+            v-if="hasContent"
+            class="mat-dialog__content mat-sys-typescale-body-medium"
+          >
+            <template v-if="propsWithDefaults.content !== undefined">
+              {{ propsWithDefaults.content }}
+            </template>
+            <slot v-else />
+          </div>
 
           <div v-if="$slots.actions" class="mat-dialog__actions">
             <slot name="actions" />
           </div>
-        </header>
-
-        <div
-          v-if="hasContent"
-          class="mat-dialog__content mat-sys-typescale-body-medium"
-        >
-          <template v-if="propsWithDefaults.content !== undefined">
-            {{ propsWithDefaults.content }}
-          </template>
-          <slot v-else />
-        </div>
-      </template>
-
-      <template v-else>
-        <MatIcon
-          v-if="hasIcon"
-          as="div"
-          class="mat-dialog__icon"
-          :optical-size="24"
-          size="24px"
-          aria-hidden="true"
-        >
-          <template v-if="propsWithDefaults.icon !== undefined">
-            {{ propsWithDefaults.icon }}
-          </template>
-          <slot v-else name="icon" />
-        </MatIcon>
-
-        <h2
-          v-if="hasTitle"
-          :id="titleId"
-          class="mat-dialog__title mat-sys-typescale-headline-small"
-        >
-          <template v-if="propsWithDefaults.title !== undefined">
-            {{ propsWithDefaults.title }}
-          </template>
-          <slot v-else name="title" />
-        </h2>
-
-        <div
-          v-if="hasContent"
-          class="mat-dialog__content mat-sys-typescale-body-medium"
-        >
-          <template v-if="propsWithDefaults.content !== undefined">
-            {{ propsWithDefaults.content }}
-          </template>
-          <slot v-else />
-        </div>
-
-        <div v-if="$slots.actions" class="mat-dialog__actions">
-          <slot name="actions" />
-        </div>
-      </template>
+        </template>
+      </div>
     </MatSurfaceBase>
   </Teleport>
 </template>
@@ -574,16 +632,51 @@ watchEffect(() => {
 }
 
 .mat-dialog {
+  position: fixed;
+  z-index: var(--mat-sys-z-index-dialog);
+  inset: 0;
+  box-sizing: border-box;
+  inline-size: 100%;
+  block-size: 100%;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  background: transparent;
+  border: 0;
+  pointer-events: auto;
+}
+
+.mat-dialog[open] {
+  display: flex;
+}
+
+.mat-dialog--app-root {
+  position: absolute;
+}
+
+.mat-dialog--top:not(.mat-dialog--transparent-scrim):not(.mat-dialog--closing) {
+  background: color-mix(in srgb, var(--mat-sys-color-scrim) 32%, transparent);
+}
+
+.mat-dialog--opening {
+  animation: mat-dialog-scrim-enter var(--mat-sys-motion-spring-default-effects) both;
+}
+
+.mat-dialog--closing {
+  animation: mat-dialog-scrim-exit var(--mat-sys-motion-spring-fast-effects) both;
+}
+
+.mat-dialog__panel {
   --mat-dialog-container-color: var(--mat-sys-color-surface-container-high);
   --mat-dialog-headline-color: var(--mat-sys-color-on-surface);
   --mat-dialog-content-color: var(--mat-sys-color-on-surface-variant);
   --mat-dialog-icon-color: var(--mat-accent-color, var(--mat-sys-color-secondary));
-  inset: 0;
+  display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  min-inline-size: min(280px, calc(100dvi - 48px));
-  max-inline-size: min(560px, calc(100dvi - 48px));
-  max-block-size: calc(100dvb - 48px);
+  min-inline-size: min(280px, calc(100% - 48px));
+  max-inline-size: min(560px, calc(100% - 48px));
+  max-block-size: calc(100% - 48px);
   padding: 0;
   margin: auto;
   overflow: visible;
@@ -594,32 +687,12 @@ watchEffect(() => {
   box-shadow: var(--mat-sys-elevation-level3);
 }
 
-.mat-dialog[open] {
-  display: flex;
-}
-
-.mat-dialog::backdrop {
-  background: transparent;
-}
-
-.mat-dialog--top:not(.mat-dialog--transparent-scrim):not(.mat-dialog--closing)::backdrop {
-  background: color-mix(in srgb, var(--mat-sys-color-scrim) 32%, transparent);
-}
-
-.mat-dialog--opening {
+.mat-dialog--opening .mat-dialog__panel {
   animation: mat-dialog-enter var(--mat-sys-motion-spring-default-spatial) both;
 }
 
-.mat-dialog--opening::backdrop {
-  animation: mat-dialog-scrim-enter var(--mat-sys-motion-spring-default-effects) both;
-}
-
-.mat-dialog--closing {
+.mat-dialog--closing .mat-dialog__panel {
   animation: mat-dialog-exit var(--mat-sys-motion-spring-fast-effects) both;
-}
-
-.mat-dialog--closing::backdrop {
-  animation: mat-dialog-scrim-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
 .mat-dialog__icon {
@@ -646,20 +719,20 @@ watchEffect(() => {
   color: var(--mat-dialog-headline-color);
 }
 
-.mat-dialog--with-icon > .mat-dialog__title {
+.mat-dialog--with-icon .mat-dialog__panel > .mat-dialog__title {
   text-align: center;
 }
 
-.mat-dialog:not(.mat-dialog--full-screen) > .mat-dialog__icon:last-child {
+.mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__icon:last-child {
   padding-block-end: 24px;
   margin-block-end: 0;
 }
 
-.mat-dialog:not(.mat-dialog--full-screen) > .mat-dialog__title:first-child {
+.mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__title:first-child {
   padding-block-start: 24px;
 }
 
-.mat-dialog:not(.mat-dialog--full-screen) > .mat-dialog__title:last-child {
+.mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__title:last-child {
   padding-block-end: 24px;
 }
 
@@ -694,11 +767,11 @@ watchEffect(() => {
   border-radius: var(--mat-sys-shape-corner-full);
 }
 
-.mat-dialog:not(.mat-dialog--full-screen) > .mat-dialog__content:first-child {
+.mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__content:first-child {
   padding-block-start: 24px;
 }
 
-.mat-dialog:not(.mat-dialog--full-screen) > .mat-dialog__content:last-child {
+.mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__content:last-child {
   padding-block-end: 24px;
 }
 
@@ -713,13 +786,13 @@ watchEffect(() => {
   padding: 24px;
 }
 
-.mat-dialog--full-screen {
-  min-inline-size: 100dvi;
-  inline-size: 100dvi;
-  max-inline-size: 100dvi;
-  min-block-size: 100dvb;
-  block-size: 100dvb;
-  max-block-size: 100dvb;
+.mat-dialog--full-screen .mat-dialog__panel {
+  min-inline-size: 100%;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  min-block-size: 100%;
+  block-size: 100%;
+  max-block-size: 100%;
   padding: 0;
   margin: 0;
   background: var(--mat-sys-color-surface);
@@ -756,7 +829,7 @@ watchEffect(() => {
   margin: 0;
 }
 
-.mat-dialog--full-screen > .mat-dialog__content {
+.mat-dialog--full-screen .mat-dialog__panel > .mat-dialog__content {
   flex: 1 1 auto;
   padding: 24px;
 }
@@ -799,7 +872,7 @@ watchEffect(() => {
 
 @media (prefers-reduced-motion: reduce) {
   .mat-dialog,
-  .mat-dialog::backdrop {
+  .mat-dialog__panel {
     animation: none;
   }
 }

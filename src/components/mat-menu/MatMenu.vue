@@ -1,11 +1,12 @@
 <script setup>
 import {
-  computed, inject, nextTick, onBeforeUnmount, onMounted, onUpdated, provide, ref, useAttrs,
-  useId, useSlots, watch,
+  computed, inject, nextTick, onBeforeUnmount, onMounted, onUpdated, provide, ref,
+  shallowRef, useAttrs, useId, useSlots, watch,
 } from 'vue';
 import MatSurfaceBase from '../MatSurfaceBase.vue';
 import createMotionController from '../motion-controller';
 import { isComponentColor } from '../button-props';
+import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import MatScrollArea from '../mat-scroll-area/MatScrollArea.vue';
 import {
   MAT_MENU_ITEM_KEY, MAT_MENU_KEY, updateMenuItemPositions,
@@ -136,9 +137,11 @@ const attrs = useAttrs();
 const slots = useSlots();
 const itemParent = inject(MAT_MENU_ITEM_KEY, null);
 const parentMenu = inject(MAT_MENU_KEY, null);
+const appContext = inject(MAT_APP_ROOT_KEY, null);
 const activatorHost = ref(null);
 const scrimElement = ref(null);
 const surface = ref(null);
+const appViewport = shallowRef(null);
 const root = computed(() => surface.value?.root ?? surface.value?.$el ?? null);
 const generatedId = useId().replace(/[^\w-]/g, '-');
 const menuId = computed(() => attrs.id ?? `${generatedId}-menu`);
@@ -170,6 +173,9 @@ const isCoordinateAnchor = computed(() => (
 ));
 const isGrouped = computed(() => groupCount.value > 0);
 const usesScrim = computed(() => !isNested.value && propsWithDefaults.scrim);
+const needsOutsideListener = computed(() => (
+  !usesScrim.value || Boolean(appContext)
+));
 const popoverMode = computed(() => (usesScrim.value ? 'manual' : 'auto'));
 const effectiveOpen = computed(() => (
   isNested.value ? nestedOpen.value : propsWithDefaults.modelValue
@@ -196,7 +202,7 @@ const maxLengthStyle = computed(() => {
     return undefined;
   }
 
-  const resolvedMaxLength = `min(${maxLength}, calc(100dvb - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)))`;
+  const resolvedMaxLength = `min(${maxLength}, calc(var(--mat-menu-viewport-height) - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)))`;
 
   return {
     '--mat-menu-resolved-max-length': resolvedMaxLength,
@@ -220,9 +226,36 @@ const positionStyle = computed(() => {
 
   return style;
 });
+const viewportStyle = computed(() => {
+  const viewport = appViewport.value;
+
+  if (!viewport) {
+    return undefined;
+  }
+
+  return {
+    '--mat-menu-viewport-width': `${viewport.width}px`,
+    '--mat-menu-viewport-height': `${viewport.height}px`,
+  };
+});
+const scrimStyle = computed(() => {
+  const viewport = appViewport.value;
+
+  if (!viewport) {
+    return undefined;
+  }
+
+  return {
+    left: `${viewport.left}px`,
+    top: `${viewport.top}px`,
+    width: `${viewport.width}px`,
+    height: `${viewport.height}px`,
+  };
+});
 const rootStyle = computed(() => [
   colorStyle.value,
   positionStyle.value,
+  viewportStyle.value,
   attrs.style,
   maxLengthStyle.value,
 ]);
@@ -381,6 +414,15 @@ function clampToViewport() {
     return;
   }
 
+  const viewport = appViewport.value ?? {
+    bottom: window.innerHeight,
+    left: 0,
+    right: window.innerWidth,
+    top: 0,
+    width: window.innerWidth,
+    height: window.innerHeight,
+  };
+
   const style = root.value.style;
   const rect = root.value.getBoundingClientRect();
   const currentX = Number.parseFloat(
@@ -402,23 +444,45 @@ function clampToViewport() {
   let shiftX = 0;
   let shiftY = 0;
 
-  if (baseRect.left < space) {
-    shiftX = space - baseRect.left;
-  } else if (baseRect.right > window.innerWidth - space) {
-    shiftX = window.innerWidth - space - baseRect.right;
+  if (baseRect.left < viewport.left + space) {
+    shiftX = viewport.left + space - baseRect.left;
+  } else if (baseRect.right > viewport.right - space) {
+    shiftX = viewport.right - space - baseRect.right;
   }
 
-  if (baseRect.top < space) {
-    shiftY = space - baseRect.top;
-  } else if (baseRect.bottom > window.innerHeight - space) {
-    shiftY = window.innerHeight - space - baseRect.bottom;
+  if (baseRect.top < viewport.top + space) {
+    shiftY = viewport.top + space - baseRect.top;
+  } else if (baseRect.bottom > viewport.bottom - space) {
+    shiftY = viewport.bottom - space - baseRect.bottom;
   }
 
   style.setProperty('--mat-menu-viewport-shift-x', `${shiftX}px`);
   style.setProperty('--mat-menu-viewport-shift-y', `${shiftY}px`);
 }
 
+function syncAppViewport() {
+  if (!appContext) {
+    appViewport.value = null;
+    return;
+  }
+
+  const viewport = appContext.getLayoutRect();
+
+  appViewport.value = viewport;
+
+  if (scrimElement.value) {
+    Object.assign(scrimElement.value.style, {
+      height: `${viewport.height}px`,
+      left: `${viewport.left}px`,
+      top: `${viewport.top}px`,
+      width: `${viewport.width}px`,
+    });
+  }
+}
+
 function scheduleViewportClamp() {
+  syncAppViewport();
+
   if (viewportFrame !== undefined) {
     cancelAnimationFrame(viewportFrame);
   }
@@ -519,6 +583,7 @@ function handleDocumentPointerDown(event) {
 
   if (!(target instanceof Node)
     || root.value?.contains(target)
+    || scrimElement.value?.contains(target)
     || attachedAnchor?.contains(target)) {
     return;
   }
@@ -730,7 +795,7 @@ function unbindPointerListener() {
 }
 
 function bindOutsidePointerListener() {
-  if (parentMenu || usesScrim.value || outsidePointerListenerAttached) {
+  if (parentMenu || !needsOutsideListener.value || outsidePointerListenerAttached) {
     return;
   }
 
@@ -797,6 +862,9 @@ watch(() => propsWithDefaults.scrim, async () => {
     await showPopover();
   }
 });
+if (appContext) {
+  watch(appContext.publicContext.layout, scheduleViewportClamp);
+}
 </script>
 
 <template>
@@ -810,6 +878,7 @@ watch(() => propsWithDefaults.scrim, async () => {
     aria-hidden="true"
     class="mat-menu__scrim"
     popover="manual"
+    :style="scrimStyle"
     @pointerdown="handleScrimPointerDown"
   />
 
@@ -865,8 +934,10 @@ watch(() => propsWithDefaults.scrim, async () => {
   --mat-menu-supporting-color: var(--mat-sys-color-on-surface-variant);
   --mat-menu-active-container-color: var(--mat-accent-container-color, var(--mat-sys-color-tertiary-container));
   --mat-menu-active-content-color: var(--mat-on-accent-container-color, var(--mat-sys-color-on-tertiary-container));
+  --mat-menu-viewport-width: 100dvi;
+  --mat-menu-viewport-height: 100dvb;
   --mat-menu-resolved-max-length: calc(
-    100dvb - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)
+    var(--mat-menu-viewport-height) - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)
   );
   position: fixed;
   inset: auto;
@@ -876,10 +947,10 @@ watch(() => propsWithDefaults.scrim, async () => {
   min-inline-size: var(--mat-menu-container-min-width);
   max-inline-size: min(
     var(--mat-menu-container-max-width),
-    calc(100dvi - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space))
+    calc(var(--mat-menu-viewport-width) - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space))
   );
   max-block-size: calc(
-    100dvb - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)
+    var(--mat-menu-viewport-height) - var(--mat-menu-viewport-space) - var(--mat-menu-viewport-space)
   );
   padding: 0;
   margin: var(--mat-menu-anchor-space) 0;

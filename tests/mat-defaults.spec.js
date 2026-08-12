@@ -153,7 +153,7 @@ describe('createMatUi defaults 组件行为', () => {
 
 describe('命令式宿主继承 defaults', () => {
   beforeAll(() => {
-    Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {
+    Object.defineProperty(HTMLDialogElement.prototype, 'show', {
       configurable: true,
       value() {
         this.setAttribute('open', '');

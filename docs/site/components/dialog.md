@@ -9,9 +9,9 @@ order: 100
 
 ## 组件简介
 
-`<mat-dialog>` 的组件导出名是 `MatDialog`。组件使用原生 modal dialog 与 Vue Teleport，在基础或全屏布局中展示需要使用者确认、输入或选择的内容，并可通过 `activator` Slot 放置触发元素。Dialog 支持受控开关、进入和退出动画、焦点恢复、多个实例的顶层帷幕合并，以及 `dialog()`、`alert()`、`confirm()`、`prompt()` 四个 Promise 函数。
+`<mat-dialog>` 的组件导出名是 `MatDialog`。组件使用原生 `<dialog>` 元素与 Vue Teleport，在基础或全屏布局中展示需要使用者确认、输入或选择的内容，并可通过 `activator` Slot 放置触发元素。Dialog 支持受控开关、进入和退出动画、焦点恢复、多个实例的帷幕合并，以及 `dialog()`、`alert()`、`confirm()`、`prompt()` 四个 Promise 函数。
 
-Dialog 通过原生 `showModal()` 进入浏览器 top layer，位于 Toolbar、Snackbar 和 Tooltip 等普通覆盖层之上；不需要额外设置 z-index。
+Dialog 使用原生 `<dialog>` 元素（非模态 `show()`）与 Vue Teleport，组件自管焦点陷阱、背景拦截、滚动锁与堆叠，不依赖浏览器 top layer。位于 `MatAppRoot` 内且省略 `attach` 时，Dialog 自动进入该 AppRoot 的模态层，表面与帷幕限制在应用矩形内，AppRoot 正文层设为 `inert`，AppRoot 外的内容（如自绘任务栏）保持可见且可点击；其他场景下 Dialog 铺满视口，位于 Toolbar、Snackbar 和 Tooltip 等普通覆盖层之上。
 
 ## 示例
 
@@ -328,7 +328,7 @@ Dialog 通过原生 `showModal()` 进入浏览器 top layer，位于 Toolbar、S
 | `modelValue` | `boolean` | `false` | 受控打开状态，使用 `v-model` |
 | `fullScreen` | `boolean` | `false` | 模板属性为 `full-screen`；显式切换全屏布局，不自动响应视口 |
 | `width` | `number \| string` | 未设置 | 基础 Dialog 的首选宽度；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS 宽度值，非法时省略宽度样式；小屏按视口可用宽度限制，全屏布局忽略此属性 |
-| `attach` | `string \| HTMLElement` | `'body'` | Teleport 目标；字符串按当前 document 的 CSS 选择器解析 |
+| `attach` | `string \| HTMLElement` | `'body'` | Teleport 目标；字符串按当前 document 的 CSS 选择器解析；位于 `MatAppRoot` 内且省略时自动进入该 AppRoot 的模态层，指向 AppRoot 根元素时同样按应用范围展示 |
 | `scrim` | `boolean` | `true` | 是否显示顶层帷幕；`false` 时帷幕透明但仍阻止背景交互 |
 | `closeOnBack` | `boolean` | `false` | 模板属性为 `close-on-back`；点击 Dialog 外帷幕时是否请求关闭 |
 | `title` | `string` | 未设置 | 简单标题；设置后优先于 `title` Slot |
@@ -337,7 +337,7 @@ Dialog 通过原生 `showModal()` 进入浏览器 top layer，位于 Toolbar、S
 | `closeLabel` | `string` | `'关闭'` | 全屏头部关闭按钮的非空可访问名称 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 基础 Dialog 装饰图标的局部强调色 |
 
-未消费的属性、原生 Dialog 事件、`class` 和 `style` 传给原生 `<dialog>`。没有标题时必须显式提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件给出警告并请求把 `modelValue` 更新为 `false`。
+未消费的属性、原生 Dialog 事件、`class` 和 `style` 传给原生 `<dialog>` 根元素；根元素是铺满坐标空间的帷幕容器，可见表面位于内部面板。没有标题时必须显式提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件给出警告并请求把 `modelValue` 更新为 `false`。显式 `attach` 指向非 AppRoot 元素时保持铺满视口的原有行为，可作为退出应用范围模式的通道。
 
 `activator` Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点；组件使用它作为打开后的焦点恢复目标。多根节点或非 HTMLElement 根节点会给出警告并请求把 `modelValue` 更新为 `false`。
 
@@ -375,7 +375,7 @@ import {
 
 省略 `dialog()` 的 `actions` 时显示一个“确定”按钮。`prompt()` 会自动聚焦输入框；`required=true` 且内容去除首尾空白后为空时，确认按钮保持禁用。第一版不包含异步动作回调、自定义校验器、完整 Text field 配置、调用队列或 `dialog.alert()` 等成员别名。
 
-参数类型、动作、`attach` 或客户端运行环境无效时，函数返回 rejected Promise；Escape、帷幕、取消按钮和全屏关闭按钮等正常取消不会拒绝。Promise 只在退出动画完成、原生 Dialog 关闭并移除一次性宿主后结算。多个调用可以并行打开，只有顶层实例显示帷幕颜色。
+参数类型、动作、`attach` 或客户端运行环境无效时，函数返回 rejected Promise；Escape、帷幕、取消按钮和全屏关闭按钮等正常取消不会拒绝。Promise 只在退出动画完成、Dialog 关闭并移除一次性宿主后结算。多个调用可以并行打开，只有顶层实例显示帷幕颜色。命令式函数默认挂载到 body；把 `attach` 设为 `MatAppRoot` 根元素时，Dialog 同样进入该 AppRoot 的模态层并按应用范围展示。
 
 ## 事件
 
@@ -397,11 +397,11 @@ import {
 | `icon` | 基础 Dialog 的图标内容；`icon` prop 存在时忽略，全屏布局不显示 |
 | `actions` | 基础布局底部或全屏固定头部中的操作；容器只提供 flex、换行和间距，可添加 `<mat-spacer>` 控制操作组对齐 |
 
-基础 Dialog 的图标、标题、正文和 actions 各自提供容器留白，正文与标题之间保持 16px 间距；根容器不裁剪 Slot 内容或焦点环。Dialog 打开期间锁定页面根滚动；页面原本存在占据布局宽度的经典滚动条时会临时保留其槽位，避免页面宽度跳动，没有经典滚动条时不额外预留空间。最后一层关闭后恢复根元素原有内联样式。标题和动作区固定，正文过长时只有 content 区域沿纵向滚动，滚动条位于 Dialog 内部边缘并预留稳定空间。未设置 `width` 时基础 Dialog 宽度限制为 280–560px；设置后使用指定首选宽度，但小屏仍限制在视口可用范围内。全屏 Dialog 占满视口并使用固定 56px 头部，忽略 `width`；关闭按钮、标题和 actions 保持自身宽度，中间的 Spacer 吸收剩余空间，标题不会因 actions 占用空间而截断为省略号。
+基础 Dialog 的图标、标题、正文和 actions 各自提供容器留白，正文与标题之间保持 16px 间距；根容器不裁剪 Slot 内容或焦点环。Dialog 打开期间锁定滚动：非 AppRoot 场景锁定页面根滚动，AppRoot 场景锁定正文滚动容器；页面原本存在占据布局宽度的经典滚动条时会临时保留其槽位，避免页面宽度跳动，没有经典滚动条时不额外预留空间。最后一层关闭后恢复根元素原有内联样式。标题和动作区固定，正文过长时只有 content 区域沿纵向滚动，滚动条位于 Dialog 内部边缘并预留稳定空间。未设置 `width` 时基础 Dialog 宽度限制为 280–560px；设置后使用指定首选宽度，但小屏仍限制在可用范围内。全屏 Dialog 占满所在坐标空间（视口或 AppRoot 矩形）并使用固定 56px 头部，忽略 `width`；关闭按钮、标题和 actions 保持自身宽度，中间的 Spacer 吸收剩余空间，标题不会因 actions 占用空间而截断为省略号。
 
 ## 参考来源
 
-外观、尺寸、基础与全屏结构依据 Material 3 [Dialogs specs](https://m3.material.io/components/dialogs/specs) 与 [Dialogs guidelines](https://m3.material.io/components/dialogs/guidelines)。原生模态语义和焦点限制由最新浏览器的 `<dialog>.showModal()` 提供。
+外观、尺寸、基础与全屏结构依据 Material 3 [Dialogs specs](https://m3.material.io/components/dialogs/specs) 与 [Dialogs guidelines](https://m3.material.io/components/dialogs/guidelines)。模态语义由组件自管的焦点陷阱、背景拦截与 `aria-modal` 提供，背景惰性化在 AppRoot 场景通过正文层 `inert` 实现。
 
 <script setup>
 import DialogActionsSlotExample from '../examples/dialog/DialogActionsSlotExample.vue';

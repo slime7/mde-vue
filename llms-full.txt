@@ -5014,8 +5014,10 @@ const { layout, registerEdge } = useMatApp();
 - `MatSnackbar`：模板实例自动进入当前 AppRoot 的 Snackbar 组，并由 AppRoot 处理安全区、边缘避让和 16px 容器边距；内部滚动模式下，该间距从浮动组边界向内计算，不把滚动条占用计作间距。命令式 `snackbar()`/`toast()` 仍挂载到 body，并使用旧 Toolbar 几何注册表。
 - `MatFab app`：自动进入普通浮动组，与容器边缘保持 16px 间距；内部滚动模式下同样从浮动组边界向内计算。`position` 控制 `start`、`center`、`end` 对齐；未设置 `app` 时仍是声明位置的原生按钮。
 - `MatTooltip`：省略 `attach` 且展示目标位于当前 AppRoot 时进入应用覆盖层，并避让 `layout.padding`；目标位于 AppRoot 外时回退到 body。已打开的 dialog/Popover 和显式 `attach` 仍具有更高优先级。
+- `MatDialog` 与 modal Bottom sheet、Side sheet：位于 AppRoot 内且省略 `attach` 时，进入 AppRoot 内部的模态层，表面与帷幕限制在应用矩形内，正文层设为 `inert` 并锁定滚动；AppRoot 外的内容（如自绘任务栏）保持可见且可点击。`attach` 显式指向 AppRoot 根元素时同样按应用范围展示；指向其他元素时保持铺满视口的原有行为。document 模式（`fillViewport=true` 且 `scrollable=false`）下应用范围等于视口，任务栏等 AppRoot 外内容应使用 `scrollable` 或 `fillViewport=false` 布局。
+- `MatMenu`：位于 AppRoot 内时，菜单的视口夹紧与透明 scrim 都限制在应用矩形内，点击应用外只关闭菜单且不拦截该次事件。
 
-Dialog、Menu、Bottom sheet、Side sheet 的挂载与 top layer 语义保持不变。AppRoot 只建立普通应用布局，不替代浏览器 modal dialog 或 Popover 的顶层管理。
+模态层位于浮动组与 Snackbar 层之上，多个模态实例仍由共享堆叠管理器只显示顶层帷幕；Menu 继续使用浏览器 Popover top layer。
 
 ## 参考来源
 
@@ -9666,7 +9668,7 @@ import AppBarVariantExample from '../examples/app-bar/AppBarVariantExample.vue';
 
 ## 组件简介
 
-`<mat-menu>` 的组件导出名是 `MatMenu`，使用原生 Popover API 在 top layer 显示临时操作集合；`<mat-menu-group>` 的组件导出名是 `MatMenuGroup`，以带可选标签的独立表面组织相关操作；`<mat-menu-item>` 的组件导出名是 `MatMenuItem`，渲染原生按钮和 `menuitem` 语义。Menu 支持 standard、vibrant 配色、expressive 间隙分组、多级子菜单、局部 `color`、最大高度滚动、默认透明 scrim、循环键盘焦点、元素锚点换边和右键坐标定位。
+`<mat-menu>` 的组件导出名是 `MatMenu`，使用原生 Popover API 在 top layer 显示临时操作集合；`<mat-menu-group>` 的组件导出名是 `MatMenuGroup`，以带可选标签的独立表面组织相关操作；`<mat-menu-item>` 的组件导出名是 `MatMenuItem`，渲染原生按钮和 `menuitem` 语义。Menu 支持 standard、vibrant 配色、expressive 间隙分组、多级子菜单、局部 `color`、最大高度滚动、默认透明 scrim、循环键盘焦点、元素锚点换边和右键坐标定位。位于 `MatAppRoot` 内时，菜单的视口夹紧与透明 scrim 都限制在该 AppRoot 的应用矩形内，AppRoot 外的内容保持可交互。
 
 ## 示例
 
@@ -9995,7 +9997,7 @@ const open = ref(false);
 
 ### `scrim`
 
-根菜单默认使用完全透明的 scrim。点击菜单外部会关闭菜单，但该次指针操作不会触发背景元素。设为 `false` 后继续使用原生 auto Popover：点击外部仍关闭菜单，同时允许背景元素响应操作。scrim 不锁定页面滚动；子菜单共享根菜单的拦截范围，不创建自己的 scrim。
+根菜单默认使用完全透明的 scrim。点击菜单外部会关闭菜单，但该次指针操作不会触发背景元素。设为 `false` 后继续使用原生 auto Popover：点击外部仍关闭菜单，同时允许背景元素响应操作。scrim 不锁定页面滚动；子菜单共享根菜单的拦截范围，不创建自己的 scrim。位于 `MatAppRoot` 内时，scrim 只覆盖应用矩形：应用内的外部指针仍被拦截，点击应用外（如自绘任务栏）只关闭菜单且不拦截该次事件。
 
 :::: details 查看示例代码
 ::: code-group
@@ -10660,7 +10662,7 @@ Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项
 | `variant` | `'standard' \| 'vibrant'` | `'standard'` | 中性表面或更高强调的 tertiary 表面 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 活动项目与 vibrant 表面的局部配色 |
 | `closeOnClick` | `boolean` | `true` | 叶子项目点击后是否关闭整条菜单链；设为 `false` 时保持开启 |
-| `maxLength` | `number \| string` | 未设置 | 单层菜单的最大高度；正数与纯数字字符串按 px 处理，其他字符串须为合法 CSS 长度，并始终受视口安全范围限制 |
+| `maxLength` | `number \| string` | 未设置 | 单层菜单的最大高度；正数与纯数字字符串按 px 处理，其他字符串须为合法 CSS 长度，并始终受所在坐标空间（视口或 AppRoot 矩形）安全范围限制 |
 | `scrim` | `boolean` | `true` | 根菜单是否使用透明拦截层；开启时外部指针只关闭菜单，不触发背景元素 |
 
 字符串 anchor 必须能在当前 document 中找到对应 id。`activator` Slot 存在时优先使用其唯一的 HTMLElement 根节点，并忽略 `anchor`；多根节点或非 HTMLElement 根节点会给出警告并请求关闭。坐标 anchor 使用 fixed 定位，适合 `contextmenu`；坐标或 offset 改变时，已打开的菜单立即重新定位。根菜单缺少有效 anchor 时会请求关闭。嵌套在 `submenu` Slot 中的 MatMenu 自动以父 MatMenuItem 为 anchor，并继承父菜单的 color 与 variant；嵌套菜单显式设置的 color、variant、offset 或 maxLength 优先，自身 anchor 被忽略。`maxLength` 和 `closeOnClick` 不会继承；`scrim` 只由根菜单读取。未消费的属性传给 `role="menu"` 的 Popover 根元素。
@@ -10745,9 +10747,9 @@ import MenuVariantExample from '../examples/menu/MenuVariantExample.vue';
 
 ## 组件简介
 
-`<mat-dialog>` 的组件导出名是 `MatDialog`。组件使用原生 modal dialog 与 Vue Teleport，在基础或全屏布局中展示需要使用者确认、输入或选择的内容，并可通过 `activator` Slot 放置触发元素。Dialog 支持受控开关、进入和退出动画、焦点恢复、多个实例的顶层帷幕合并，以及 `dialog()`、`alert()`、`confirm()`、`prompt()` 四个 Promise 函数。
+`<mat-dialog>` 的组件导出名是 `MatDialog`。组件使用原生 `<dialog>` 元素与 Vue Teleport，在基础或全屏布局中展示需要使用者确认、输入或选择的内容，并可通过 `activator` Slot 放置触发元素。Dialog 支持受控开关、进入和退出动画、焦点恢复、多个实例的帷幕合并，以及 `dialog()`、`alert()`、`confirm()`、`prompt()` 四个 Promise 函数。
 
-Dialog 通过原生 `showModal()` 进入浏览器 top layer，位于 Toolbar、Snackbar 和 Tooltip 等普通覆盖层之上；不需要额外设置 z-index。
+Dialog 使用原生 `<dialog>` 元素（非模态 `show()`）与 Vue Teleport，组件自管焦点陷阱、背景拦截、滚动锁与堆叠，不依赖浏览器 top layer。位于 `MatAppRoot` 内且省略 `attach` 时，Dialog 自动进入该 AppRoot 的模态层，表面与帷幕限制在应用矩形内，AppRoot 正文层设为 `inert`，AppRoot 外的内容（如自绘任务栏）保持可见且可点击；其他场景下 Dialog 铺满视口，位于 Toolbar、Snackbar 和 Tooltip 等普通覆盖层之上。
 
 ## 示例
 
@@ -11561,7 +11563,7 @@ async function showPrompt() {
 | `modelValue` | `boolean` | `false` | 受控打开状态，使用 `v-model` |
 | `fullScreen` | `boolean` | `false` | 模板属性为 `full-screen`；显式切换全屏布局，不自动响应视口 |
 | `width` | `number \| string` | 未设置 | 基础 Dialog 的首选宽度；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS 宽度值，非法时省略宽度样式；小屏按视口可用宽度限制，全屏布局忽略此属性 |
-| `attach` | `string \| HTMLElement` | `'body'` | Teleport 目标；字符串按当前 document 的 CSS 选择器解析 |
+| `attach` | `string \| HTMLElement` | `'body'` | Teleport 目标；字符串按当前 document 的 CSS 选择器解析；位于 `MatAppRoot` 内且省略时自动进入该 AppRoot 的模态层，指向 AppRoot 根元素时同样按应用范围展示 |
 | `scrim` | `boolean` | `true` | 是否显示顶层帷幕；`false` 时帷幕透明但仍阻止背景交互 |
 | `closeOnBack` | `boolean` | `false` | 模板属性为 `close-on-back`；点击 Dialog 外帷幕时是否请求关闭 |
 | `title` | `string` | 未设置 | 简单标题；设置后优先于 `title` Slot |
@@ -11570,7 +11572,7 @@ async function showPrompt() {
 | `closeLabel` | `string` | `'关闭'` | 全屏头部关闭按钮的非空可访问名称 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 基础 Dialog 装饰图标的局部强调色 |
 
-未消费的属性、原生 Dialog 事件、`class` 和 `style` 传给原生 `<dialog>`。没有标题时必须显式提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件给出警告并请求把 `modelValue` 更新为 `false`。
+未消费的属性、原生 Dialog 事件、`class` 和 `style` 传给原生 `<dialog>` 根元素；根元素是铺满坐标空间的帷幕容器，可见表面位于内部面板。没有标题时必须显式提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件给出警告并请求把 `modelValue` 更新为 `false`。显式 `attach` 指向非 AppRoot 元素时保持铺满视口的原有行为，可作为退出应用范围模式的通道。
 
 `activator` Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点；组件使用它作为打开后的焦点恢复目标。多根节点或非 HTMLElement 根节点会给出警告并请求把 `modelValue` 更新为 `false`。
 
@@ -11608,7 +11610,7 @@ import {
 
 省略 `dialog()` 的 `actions` 时显示一个“确定”按钮。`prompt()` 会自动聚焦输入框；`required=true` 且内容去除首尾空白后为空时，确认按钮保持禁用。第一版不包含异步动作回调、自定义校验器、完整 Text field 配置、调用队列或 `dialog.alert()` 等成员别名。
 
-参数类型、动作、`attach` 或客户端运行环境无效时，函数返回 rejected Promise；Escape、帷幕、取消按钮和全屏关闭按钮等正常取消不会拒绝。Promise 只在退出动画完成、原生 Dialog 关闭并移除一次性宿主后结算。多个调用可以并行打开，只有顶层实例显示帷幕颜色。
+参数类型、动作、`attach` 或客户端运行环境无效时，函数返回 rejected Promise；Escape、帷幕、取消按钮和全屏关闭按钮等正常取消不会拒绝。Promise 只在退出动画完成、Dialog 关闭并移除一次性宿主后结算。多个调用可以并行打开，只有顶层实例显示帷幕颜色。命令式函数默认挂载到 body；把 `attach` 设为 `MatAppRoot` 根元素时，Dialog 同样进入该 AppRoot 的模态层并按应用范围展示。
 
 ## 事件
 
@@ -11630,11 +11632,11 @@ import {
 | `icon` | 基础 Dialog 的图标内容；`icon` prop 存在时忽略，全屏布局不显示 |
 | `actions` | 基础布局底部或全屏固定头部中的操作；容器只提供 flex、换行和间距，可添加 `<mat-spacer>` 控制操作组对齐 |
 
-基础 Dialog 的图标、标题、正文和 actions 各自提供容器留白，正文与标题之间保持 16px 间距；根容器不裁剪 Slot 内容或焦点环。Dialog 打开期间锁定页面根滚动；页面原本存在占据布局宽度的经典滚动条时会临时保留其槽位，避免页面宽度跳动，没有经典滚动条时不额外预留空间。最后一层关闭后恢复根元素原有内联样式。标题和动作区固定，正文过长时只有 content 区域沿纵向滚动，滚动条位于 Dialog 内部边缘并预留稳定空间。未设置 `width` 时基础 Dialog 宽度限制为 280–560px；设置后使用指定首选宽度，但小屏仍限制在视口可用范围内。全屏 Dialog 占满视口并使用固定 56px 头部，忽略 `width`；关闭按钮、标题和 actions 保持自身宽度，中间的 Spacer 吸收剩余空间，标题不会因 actions 占用空间而截断为省略号。
+基础 Dialog 的图标、标题、正文和 actions 各自提供容器留白，正文与标题之间保持 16px 间距；根容器不裁剪 Slot 内容或焦点环。Dialog 打开期间锁定滚动：非 AppRoot 场景锁定页面根滚动，AppRoot 场景锁定正文滚动容器；页面原本存在占据布局宽度的经典滚动条时会临时保留其槽位，避免页面宽度跳动，没有经典滚动条时不额外预留空间。最后一层关闭后恢复根元素原有内联样式。标题和动作区固定，正文过长时只有 content 区域沿纵向滚动，滚动条位于 Dialog 内部边缘并预留稳定空间。未设置 `width` 时基础 Dialog 宽度限制为 280–560px；设置后使用指定首选宽度，但小屏仍限制在可用范围内。全屏 Dialog 占满所在坐标空间（视口或 AppRoot 矩形）并使用固定 56px 头部，忽略 `width`；关闭按钮、标题和 actions 保持自身宽度，中间的 Spacer 吸收剩余空间，标题不会因 actions 占用空间而截断为省略号。
 
 ## 参考来源
 
-外观、尺寸、基础与全屏结构依据 Material 3 [Dialogs specs](https://m3.material.io/components/dialogs/specs) 与 [Dialogs guidelines](https://m3.material.io/components/dialogs/guidelines)。原生模态语义和焦点限制由最新浏览器的 `<dialog>.showModal()` 提供。
+外观、尺寸、基础与全屏结构依据 Material 3 [Dialogs specs](https://m3.material.io/components/dialogs/specs) 与 [Dialogs guidelines](https://m3.material.io/components/dialogs/guidelines)。模态语义由组件自管的焦点陷阱、背景拦截与 `aria-modal` 提供，背景惰性化在 AppRoot 场景通过正文层 `inert` 实现。
 
 <script setup>
 import DialogActionsSlotExample from '../examples/dialog/DialogActionsSlotExample.vue';
@@ -12824,7 +12826,7 @@ const bottomPlaceholder = ref(0);
 
 ## 覆盖层与避让
 
-在 AppRoot 内，docked Toolbar 登记 `bottom` 并推动正文与浮动组；floating Toolbar 不占正文布局，但会读取 AppRoot 的四向避让值。非 AppRoot 场景继续使用内部 Toolbar 几何注册表，让 Snackbar 与 Tooltip 避让。Dialog 使用原生 top layer，始终位于这些普通覆盖层之上。
+在 AppRoot 内，docked Toolbar 登记 `bottom` 并推动正文与浮动组；floating Toolbar 不占正文布局，但会读取 AppRoot 的四向避让值。非 AppRoot 场景继续使用内部 Toolbar 几何注册表，让 Snackbar 与 Tooltip 避让。Dialog 始终位于这些普通覆盖层之上；位于 AppRoot 内时进入其模态层并限制在应用矩形内。
 
 ## 无障碍
 
@@ -12844,7 +12846,7 @@ import ToolbarVariantExample from '../examples/toolbar/ToolbarVariantExample.vue
 
 ## 组件简介
 
-`<mat-bottom-sheet>` 的组件导出名是 `MatBottomSheet`。它把补充内容固定在可用区域底部，并提供 Material 3 的 `standard` 与 `modal` 两种变体。Standard 与主内容共存并保持两侧都可交互；modal 使用原生 `<dialog>`、帷幕和 Vue Teleport，打开时限制背景交互并管理焦点。
+`<mat-bottom-sheet>` 的组件导出名是 `MatBottomSheet`。它把补充内容固定在可用区域底部，并提供 Material 3 的 `standard` 与 `modal` 两种变体。Standard 与主内容共存并保持两侧都可交互；modal 使用原生 `<dialog>` 元素（非模态 `show()`）、帷幕和 Vue Teleport，组件自管焦点陷阱与背景拦截，打开时限制背景交互并管理焦点。位于 `MatAppRoot` 内且省略 `attach` 时，modal 自动进入该 AppRoot 的模态层，表面与帷幕限制在应用矩形内，AppRoot 外内容保持可交互。
 
 默认 `variant="auto"`：视口宽度小于 `breakpoint` 时使用 modal，达到断点后使用 standard。默认断点为 840px。自动模式只改变 Bottom sheet 自身的布局方式，不会把它替换成 Side sheet。
 
@@ -13118,7 +13120,7 @@ const open = ref(false);
 | `variant` | `'auto' \| 'standard' \| 'modal'` | `'auto'` | 布局变体；auto 根据 `breakpoint` 选择 |
 | `breakpoint` | `number` | `840` | auto 切换到 standard 的最小视口宽度，单位为 CSS px |
 | `width` | `number \| string` | 未设置 | 首选宽度；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS 宽度值，非法时使用默认宽度；最终仍受 640px 最大宽度限制 |
-| `attach` | `string \| HTMLElement` | `'body'` | modal 的 Teleport 目标；standard 忽略 |
+| `attach` | `string \| HTMLElement` | `'body'` | modal 的 Teleport 目标；standard 忽略。位于 `MatAppRoot` 内且省略时自动进入该 AppRoot 的模态层，指向 AppRoot 根元素时同样按应用范围展示 |
 | `scrim` | `boolean` | `true` | modal 是否显示帷幕；false 时仍阻止背景指针交互 |
 | `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否允许点击 modal 帷幕关闭 |
 | `dragHandle` | `boolean` | `true` | 模板属性为 `drag-handle`；是否显示顶部拖动把手 |
@@ -13132,7 +13134,7 @@ const open = ref(false);
 | `title` | `string` | 未设置 | 简单标题；优先于 `title` Slot |
 | `content` | `string` | 未设置 | 简单正文；优先于默认 Slot |
 
-未消费的属性、原生事件、`class` 和 `style` 传给根元素。Modal 根为原生 `<dialog>`，standard 根为原生 `<aside>`。Modal 没有标题时必须提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。
+未消费的属性、原生事件、`class` 和 `style` 传给根元素。Modal 根为原生 `<dialog>`（铺满坐标空间的帷幕容器，可见面板位于内部），standard 根为原生 `<aside>`。Modal 没有标题时必须提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。显式 `attach` 指向非 AppRoot 元素时保持铺满视口的原有行为。
 
 Bottom sheet 的宽度不超过 640px；窄屏可占满视口宽度，宽于 640px 的视口在两侧至少保留 56px。宽屏顶部至少保留 56px，窄屏展开状态顶部至少保留 72px。内容过长时只滚动内容区，顶部把手、标题和底部区域保持可见。组件没有公共方法，也不暴露拖动过程中的内部位移。
 
@@ -13145,7 +13147,7 @@ Bottom sheet 的宽度不超过 640px；窄屏可占满视口宽度，宽于 640
 | `opened` | 无 | 进入动画完成后触发 |
 | `closed` | 无 | 退出动画完成且 DOM 清理后触发 |
 
-组件是受控的：收到 `update:modelValue(false)` 后，使用者必须更新绑定值才会退出。拖动输入按绘制帧合并，并在释放前刷新最新位置以判断展开、折叠或关闭阈值。Modal 打开后聚焦显式 `autofocus` 或第一个可交互元素，实际退出动画完成后恢复原焦点。Modal 锁定页面根滚动；页面原本存在占据布局宽度的经典滚动条时临时保留其槽位，避免页面宽度跳动，没有经典滚动条时不额外预留空间。Standard 不主动移动焦点，也不锁定页面滚动。
+组件是受控的：收到 `update:modelValue(false)` 后，使用者必须更新绑定值才会退出。拖动输入按绘制帧合并，并在释放前刷新最新位置以判断展开、折叠或关闭阈值。Modal 打开后聚焦显式 `autofocus` 或第一个可交互元素，实际退出动画完成后恢复原焦点。Modal 锁定滚动并阻止背景交互：非 AppRoot 场景锁定页面根滚动，AppRoot 场景锁定正文滚动容器并把正文层设为 `inert`；页面原本存在占据布局宽度的经典滚动条时临时保留其槽位，避免页面宽度跳动，没有经典滚动条时不额外预留空间。Standard 不主动移动焦点，也不锁定页面滚动。
 
 ## Slots
 
@@ -13174,7 +13176,7 @@ import BottomSheetVariantExample from '../examples/bottom-sheet/BottomSheetVaria
 
 ## 组件简介
 
-`<mat-side-sheet>` 的组件导出名是 `MatSideSheet`。它从视口或布局容器的逻辑侧边展示补充内容，并提供 Material 3 的 `standard` 与 `modal` 两种变体。Standard 适合宽屏 supporting pane，与主内容并排；modal 从侧边覆盖进入并阻止背景交互。
+`<mat-side-sheet>` 的组件导出名是 `MatSideSheet`。它从视口或布局容器的逻辑侧边展示补充内容，并提供 Material 3 的 `standard` 与 `modal` 两种变体。Standard 适合宽屏 supporting pane，与主内容并排；modal 从侧边覆盖进入并阻止背景交互。位于 `MatAppRoot` 内且省略 `attach` 时，modal 自动进入该 AppRoot 的模态层，表面与帷幕限制在应用矩形内，AppRoot 外内容保持可交互。
 
 默认 `variant="auto"`：视口宽度小于 840px 时使用 modal，更宽时使用 standard。`position="start|end"` 使用逻辑方向，默认从 end 边进入。自动模式不会把 Side sheet 替换成 Bottom sheet。
 
@@ -13465,7 +13467,7 @@ const open = ref(false);
 | `breakpoint` | `number` | `840` | auto 切换到 standard 的最小视口宽度，单位为 CSS px |
 | `position` | `'start' \| 'end'` | `'end'` | Sheet 依附的逻辑边缘 |
 | `width` | `number \| string` | `400` | 首选宽度；数字与纯数字字符串按 px 处理（数值大于 0 且不超过 400），其他字符串需为 trim 后合法的 CSS 宽度值，非法时使用默认宽度；最终不超过 400px |
-| `attach` | `string \| HTMLElement` | `'body'` | modal 的 Teleport 目标；standard 忽略 |
+| `attach` | `string \| HTMLElement` | `'body'` | modal 的 Teleport 目标；standard 忽略。位于 `MatAppRoot` 内且省略时自动进入该 AppRoot 的模态层，指向 AppRoot 根元素时同样按应用范围展示 |
 | `scrim` | `boolean` | `true` | modal 是否显示帷幕；false 时仍阻止背景指针交互 |
 | `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否允许点击 modal 帷幕关闭 |
 | `draggable` | `boolean` | `true` | 是否允许触摸用户向依附边缘滑动关闭 |
@@ -13474,7 +13476,7 @@ const open = ref(false);
 | `title` | `string` | 未设置 | 简单标题；优先于 `title` Slot |
 | `content` | `string` | 未设置 | 简单正文；优先于默认 Slot |
 
-未消费的属性、原生事件、`class` 和 `style` 传给根元素。Modal 根为原生 `<dialog>`，standard 根为原生 `<aside>`。Modal 没有标题时必须提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。
+未消费的属性、原生事件、`class` 和 `style` 传给根元素。Modal 根为原生 `<dialog>`（铺满坐标空间的帷幕容器，可见面板位于内部），standard 根为原生 `<aside>`。Modal 没有标题时必须提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。显式 `attach` 指向非 AppRoot 元素时保持铺满视口的原有行为。
 
 Standard 必须放在横向 flex 父容器中才能与主内容并排；主内容通常使用 `flex: 1` 和 `min-inline-size: 0`，Side sheet 保持自身固定宽度。Side sheet 最大宽度为 400px；窄屏 modal 至少保留 16px 背景空间。内容过长时只滚动内容区，头部和底部区域保持可见。组件没有公共方法。
 
@@ -13486,7 +13488,7 @@ Standard 必须放在横向 flex 父容器中才能与主内容并排；主内�
 | `opened` | 无 | 进入动画完成后触发 |
 | `closed` | 无 | 退出动画完成且 DOM 清理后触发 |
 
-组件是受控的。Modal 打开后聚焦显式 `autofocus` 或第一个可交互元素，关闭完成后恢复原焦点。Modal 锁定页面根滚动；页面原本存在占据布局宽度的经典滚动条时临时保留其槽位，避免页面宽度跳动，没有经典滚动条时不额外预留空间。Standard 不主动移动焦点，也不锁定页面滚动。
+组件是受控的。Modal 打开后聚焦显式 `autofocus` 或第一个可交互元素，关闭完成后恢复原焦点。Modal 锁定滚动并阻止背景交互：非 AppRoot 场景锁定页面根滚动，AppRoot 场景锁定正文滚动容器并把正文层设为 `inert`；页面原本存在占据布局宽度的经典滚动条时临时保留其槽位，避免页面宽度跳动，没有经典滚动条时不额外预留空间。Standard 不主动移动焦点，也不锁定页面滚动。
 
 ## Slots
 
@@ -14818,7 +14820,7 @@ activator Slot 存在时优先于 target，且必须只渲染一个属于当前 
 
 Tooltip 默认位于上方，展示元素边界与提示之间保持 4px 间距。首选方向空间不足时会翻转到对侧并保留 start、end 对齐；最终坐标始终夹紧在距离视口边缘至少 8px 的区域内。窗口缩放、任意滚动容器滚动以及展示元素或 Tooltip 尺寸变化都会重新计算位置。
 
-当展示元素位于已打开的原生 `dialog`、`mat-dialog`、模态 Bottom/Side sheet 或 Popover（包括 `mat-menu`）内时，省略 `attach` 的 Tooltip 会留在最近的 top-layer 容器中，避免被更高的 top layer 遮挡。该规则同样适用于 Button、FAB 以及 Slider、Range slider 内部创建的 Tooltip；普通页面中的 Tooltip 仍挂载到 `body`。
+当展示元素位于已打开的 `mat-dialog`、模态 Bottom/Side sheet 或 Popover（包括 `mat-menu`）内时，省略 `attach` 的 Tooltip 会留在最近的已打开容器中，保证显示在该表面之上。该规则同样适用于 Button、FAB 以及 Slider、Range slider 内部创建的 Tooltip；普通页面中的 Tooltip 仍挂载到 `body`。
 
 显示期间组件把 tooltip 的 id 合并到展示元素的 aria-describedby；关闭、切换展示元素或卸载时恢复展示元素原有属性值。内容应帮助理解已可见的界面，不应重复标签、仅承载关键操作说明，或放置链接、按钮等可交互内容。
 

@@ -7,7 +7,7 @@ import MatDialog from '../src/components/mat-dialog/MatDialog.vue';
 import MatToolbar from '../src/components/mat-toolbar/MatToolbar.vue';
 
 beforeAll(() => {
-  Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {
+  Object.defineProperty(HTMLDialogElement.prototype, 'show', {
     configurable: true,
     value() {
       this.setAttribute('open', '');
@@ -318,8 +318,9 @@ describe('MatDialog', () => {
     await settleRender();
 
     const element = document.body.querySelector('dialog');
+    const panel = element?.querySelector('.mat-dialog__panel');
 
-    expect(element.style.getPropertyValue('inline-size')).toContain('min(720px');
+    expect(panel.style.getPropertyValue('inline-size')).toContain('min(720px');
   });
 
   it('CSS.supports 拒绝非纯数字字符串时回退默认宽度，放行时通过', async () => {
@@ -480,7 +481,7 @@ describe('MatDialog', () => {
     await vi.advanceTimersByTimeAsync(200);
   });
 
-  it('与 Toolbar 同时存在时仍通过原生 showModal 保持 top layer', async () => {
+  it('与 Toolbar 同时存在时 Dialog 仍位于其上方展示', async () => {
     const toolbar = mount(MatToolbar, {
       attachTo: document.body,
     });

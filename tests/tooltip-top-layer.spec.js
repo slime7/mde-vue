@@ -14,9 +14,9 @@ import {
   MatTooltip,
 } from '../src';
 
-const originalDialogShowModal = Object.getOwnPropertyDescriptor(
+const originalDialogShow = Object.getOwnPropertyDescriptor(
   HTMLDialogElement.prototype,
-  'showModal',
+  'show',
 );
 const originalDialogClose = Object.getOwnPropertyDescriptor(
   HTMLDialogElement.prototype,
@@ -26,7 +26,7 @@ const originalShowPopover = Object.getOwnPropertyDescriptor(HTMLElement.prototyp
 const originalHidePopover = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'hidePopover');
 
 beforeAll(() => {
-  Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {
+  Object.defineProperty(HTMLDialogElement.prototype, 'show', {
     configurable: true,
     value() {
       this.setAttribute('open', '');
@@ -53,10 +53,10 @@ beforeAll(() => {
 });
 
 afterAll(() => {
-  if (originalDialogShowModal) {
-    Object.defineProperty(HTMLDialogElement.prototype, 'showModal', originalDialogShowModal);
+  if (originalDialogShow) {
+    Object.defineProperty(HTMLDialogElement.prototype, 'show', originalDialogShow);
   } else {
-    delete HTMLDialogElement.prototype.showModal;
+    delete HTMLDialogElement.prototype.show;
   }
 
   if (originalDialogClose) {

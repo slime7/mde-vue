@@ -208,7 +208,7 @@ activator Slot 存在时优先于 target，且必须只渲染一个属于当前 
 
 Tooltip 默认位于上方，展示元素边界与提示之间保持 4px 间距。首选方向空间不足时会翻转到对侧并保留 start、end 对齐；最终坐标始终夹紧在距离视口边缘至少 8px 的区域内。窗口缩放、任意滚动容器滚动以及展示元素或 Tooltip 尺寸变化都会重新计算位置。
 
-当展示元素位于已打开的原生 `dialog`、`mat-dialog`、模态 Bottom/Side sheet 或 Popover（包括 `mat-menu`）内时，省略 `attach` 的 Tooltip 会留在最近的 top-layer 容器中，避免被更高的 top layer 遮挡。该规则同样适用于 Button、FAB 以及 Slider、Range slider 内部创建的 Tooltip；普通页面中的 Tooltip 仍挂载到 `body`。
+当展示元素位于已打开的 `mat-dialog`、模态 Bottom/Side sheet 或 Popover（包括 `mat-menu`）内时，省略 `attach` 的 Tooltip 会留在最近的已打开容器中，保证显示在该表面之上。该规则同样适用于 Button、FAB 以及 Slider、Range slider 内部创建的 Tooltip；普通页面中的 Tooltip 仍挂载到 `body`。
 
 显示期间组件把 tooltip 的 id 合并到展示元素的 aria-describedby；关闭、切换展示元素或卸载时恢复展示元素原有属性值。内容应帮助理解已可见的界面，不应重复标签、仅承载关键操作说明，或放置链接、按钮等可交互内容。
 

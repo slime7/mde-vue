@@ -109,7 +109,7 @@ Toolbar 默认显示，使用 `modelValue` 或 `v-model` 可以播放进入、�
 
 ## 覆盖层与避让
 
-在 AppRoot 内，docked Toolbar 登记 `bottom` 并推动正文与浮动组；floating Toolbar 不占正文布局，但会读取 AppRoot 的四向避让值。非 AppRoot 场景继续使用内部 Toolbar 几何注册表，让 Snackbar 与 Tooltip 避让。Dialog 使用原生 top layer，始终位于这些普通覆盖层之上。
+在 AppRoot 内，docked Toolbar 登记 `bottom` 并推动正文与浮动组；floating Toolbar 不占正文布局，但会读取 AppRoot 的四向避让值。非 AppRoot 场景继续使用内部 Toolbar 几何注册表，让 Snackbar 与 Tooltip 避让。Dialog 始终位于这些普通覆盖层之上；位于 AppRoot 内时进入其模态层并限制在应用矩形内。
 
 ## 无障碍
 

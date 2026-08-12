@@ -243,6 +243,7 @@
   --mat-sys-z-index-toolbar: 100;
   --mat-sys-z-index-snackbar: 200;
   --mat-sys-z-index-tooltip: 300;
+  --mat-sys-z-index-dialog: 400;
 
   /* Motion */
   --mat-sys-motion-duration-short1: 50ms;

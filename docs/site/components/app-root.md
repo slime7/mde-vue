@@ -179,8 +179,10 @@ const { layout, registerEdge } = useMatApp();
 - `MatSnackbar`：模板实例自动进入当前 AppRoot 的 Snackbar 组，并由 AppRoot 处理安全区、边缘避让和 16px 容器边距；内部滚动模式下，该间距从浮动组边界向内计算，不把滚动条占用计作间距。命令式 `snackbar()`/`toast()` 仍挂载到 body，并使用旧 Toolbar 几何注册表。
 - `MatFab app`：自动进入普通浮动组，与容器边缘保持 16px 间距；内部滚动模式下同样从浮动组边界向内计算。`position` 控制 `start`、`center`、`end` 对齐；未设置 `app` 时仍是声明位置的原生按钮。
 - `MatTooltip`：省略 `attach` 且展示目标位于当前 AppRoot 时进入应用覆盖层，并避让 `layout.padding`；目标位于 AppRoot 外时回退到 body。已打开的 dialog/Popover 和显式 `attach` 仍具有更高优先级。
+- `MatDialog` 与 modal Bottom sheet、Side sheet：位于 AppRoot 内且省略 `attach` 时，进入 AppRoot 内部的模态层，表面与帷幕限制在应用矩形内，正文层设为 `inert` 并锁定滚动；AppRoot 外的内容（如自绘任务栏）保持可见且可点击。`attach` 显式指向 AppRoot 根元素时同样按应用范围展示；指向其他元素时保持铺满视口的原有行为。document 模式（`fillViewport=true` 且 `scrollable=false`）下应用范围等于视口，任务栏等 AppRoot 外内容应使用 `scrollable` 或 `fillViewport=false` 布局。
+- `MatMenu`：位于 AppRoot 内时，菜单的视口夹紧与透明 scrim 都限制在应用矩形内，点击应用外只关闭菜单且不拦截该次事件。
 
-Dialog、Menu、Bottom sheet、Side sheet 的挂载与 top layer 语义保持不变。AppRoot 只建立普通应用布局，不替代浏览器 modal dialog 或 Popover 的顶层管理。
+模态层位于浮动组与 Snackbar 层之上，多个模态实例仍由共享堆叠管理器只显示顶层帷幕；Menu 继续使用浏览器 Popover top layer。
 
 ## 参考来源
 

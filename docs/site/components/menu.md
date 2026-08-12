@@ -9,7 +9,7 @@ order: 95
 
 ## 组件简介
 
-`<mat-menu>` 的组件导出名是 `MatMenu`，使用原生 Popover API 在 top layer 显示临时操作集合；`<mat-menu-group>` 的组件导出名是 `MatMenuGroup`，以带可选标签的独立表面组织相关操作；`<mat-menu-item>` 的组件导出名是 `MatMenuItem`，渲染原生按钮和 `menuitem` 语义。Menu 支持 standard、vibrant 配色、expressive 间隙分组、多级子菜单、局部 `color`、最大高度滚动、默认透明 scrim、循环键盘焦点、元素锚点换边和右键坐标定位。
+`<mat-menu>` 的组件导出名是 `MatMenu`，使用原生 Popover API 在 top layer 显示临时操作集合；`<mat-menu-group>` 的组件导出名是 `MatMenuGroup`，以带可选标签的独立表面组织相关操作；`<mat-menu-item>` 的组件导出名是 `MatMenuItem`，渲染原生按钮和 `menuitem` 语义。Menu 支持 standard、vibrant 配色、expressive 间隙分组、多级子菜单、局部 `color`、最大高度滚动、默认透明 scrim、循环键盘焦点、元素锚点换边和右键坐标定位。位于 `MatAppRoot` 内时，菜单的视口夹紧与透明 scrim 都限制在该 AppRoot 的应用矩形内，AppRoot 外的内容保持可交互。
 
 ## 示例
 
@@ -141,7 +141,7 @@ order: 95
 
 ### `scrim`
 
-根菜单默认使用完全透明的 scrim。点击菜单外部会关闭菜单，但该次指针操作不会触发背景元素。设为 `false` 后继续使用原生 auto Popover：点击外部仍关闭菜单，同时允许背景元素响应操作。scrim 不锁定页面滚动；子菜单共享根菜单的拦截范围，不创建自己的 scrim。
+根菜单默认使用完全透明的 scrim。点击菜单外部会关闭菜单，但该次指针操作不会触发背景元素。设为 `false` 后继续使用原生 auto Popover：点击外部仍关闭菜单，同时允许背景元素响应操作。scrim 不锁定页面滚动；子菜单共享根菜单的拦截范围，不创建自己的 scrim。位于 `MatAppRoot` 内时，scrim 只覆盖应用矩形：应用内的外部指针仍被拦截，点击应用外（如自绘任务栏）只关闭菜单且不拦截该次事件。
 
 :::: details 查看示例代码
 ::: code-group
@@ -377,7 +377,7 @@ Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项
 | `variant` | `'standard' \| 'vibrant'` | `'standard'` | 中性表面或更高强调的 tertiary 表面 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 活动项目与 vibrant 表面的局部配色 |
 | `closeOnClick` | `boolean` | `true` | 叶子项目点击后是否关闭整条菜单链；设为 `false` 时保持开启 |
-| `maxLength` | `number \| string` | 未设置 | 单层菜单的最大高度；正数与纯数字字符串按 px 处理，其他字符串须为合法 CSS 长度，并始终受视口安全范围限制 |
+| `maxLength` | `number \| string` | 未设置 | 单层菜单的最大高度；正数与纯数字字符串按 px 处理，其他字符串须为合法 CSS 长度，并始终受所在坐标空间（视口或 AppRoot 矩形）安全范围限制 |
 | `scrim` | `boolean` | `true` | 根菜单是否使用透明拦截层；开启时外部指针只关闭菜单，不触发背景元素 |
 
 字符串 anchor 必须能在当前 document 中找到对应 id。`activator` Slot 存在时优先使用其唯一的 HTMLElement 根节点，并忽略 `anchor`；多根节点或非 HTMLElement 根节点会给出警告并请求关闭。坐标 anchor 使用 fixed 定位，适合 `contextmenu`；坐标或 offset 改变时，已打开的菜单立即重新定位。根菜单缺少有效 anchor 时会请求关闭。嵌套在 `submenu` Slot 中的 MatMenu 自动以父 MatMenuItem 为 anchor，并继承父菜单的 color 与 variant；嵌套菜单显式设置的 color、variant、offset 或 maxLength 优先，自身 anchor 被忽略。`maxLength` 和 `closeOnClick` 不会继承；`scrim` 只由根菜单读取。未消费的属性传给 `role="menu"` 的 Popover 根元素。
