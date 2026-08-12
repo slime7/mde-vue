@@ -960,6 +960,13 @@ export interface MatChipProps {
   */
   selected?: boolean;
   /**
+  * input Chip 的 Material Symbols 移除图标文本；remove-icon Slot 存在时优先使用 Slot。
+  *
+  * @type {string}
+  * @default 'close'
+  */
+  removeIcon?: string;
+  /**
   * ChipSet 选择模型中的基础值。
   *
   * @type {string | number | boolean | undefined}
@@ -995,7 +1002,7 @@ export interface MatChipEmits {
   */
   "click": (payload: MouseEvent) => unknown;
   /**
-  * input 默认关闭图标被点击时触发，载荷为原生 `MouseEvent`。
+  * input 移除图标区域被点击时触发，载荷为原生 `MouseEvent`。
   */
   "remove": (payload: MouseEvent) => unknown;
 }

@@ -4378,6 +4378,13 @@ var xr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 			type: Boolean,
 			default: !1
 		},
+		removeIcon: {
+			type: String,
+			default: "close",
+			validator(e) {
+				return e.trim().length > 0;
+			}
+		},
 		value: {
 			type: [
 				String,
@@ -4415,12 +4422,12 @@ var xr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 		}
 	},
 	setup(e, { emit: t }) {
-		let n = $("chip", e), c = t, l = R(), u = p(ie, Q), d = p(Or, null), f = r(() => ["filter", "input"].includes(n.variant)), m = r(() => !!d && f.value && n.value !== void 0 && d.selection.value !== "none"), g = r(() => m.value ? d.isSelected(n.value) : f.value && n.selected), _ = r(() => !!l.avatar), v = r(() => !_.value && !!l.leading), y = r(() => n.variant === "filter" && g.value && !_.value && !v.value), b = r(() => _.value || v.value || y.value), x = r(() => !!l.trailing || n.variant === "input"), { colorStyle: S, hasExplicitColor: C } = Ie(r(() => n.color));
+		let n = $("chip", e), c = t, l = R(), u = p(ie, Q), d = p(Or, null), f = r(() => ["filter", "input"].includes(n.variant)), m = r(() => !!d && f.value && n.value !== void 0 && d.selection.value !== "none"), g = r(() => m.value ? d.isSelected(n.value) : f.value && n.selected), _ = r(() => !!l.avatar), v = r(() => !_.value && !!l.leading), y = r(() => n.variant === "filter" && g.value && !_.value && !v.value), b = r(() => _.value || v.value || y.value), x = r(() => n.variant === "input"), { colorStyle: S, hasExplicitColor: C } = Ie(r(() => n.color));
 		function T(e) {
 			c("click", e), m.value && d.requestSelection(n.value, e);
 		}
 		function E(e) {
-			n.variant !== "input" || l.trailing || (e.stopPropagation(), n.disabled || c("remove", e));
+			n.variant === "input" && (e.stopPropagation(), n.disabled || c("remove", e));
 		}
 		return (e, t) => (w(), i(te, h(e.$attrs, {
 			class: ["mat-chip mat-sys-typescale-label-large", [`mat-chip--${I(n).variant}`, {
@@ -4429,7 +4436,7 @@ var xr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 				"mat-chip--explicit-color": I(C),
 				"mat-chip--has-leading": b.value,
 				"mat-chip--has-avatar": _.value,
-				"mat-chip--has-trailing": x.value
+				"mat-chip--has-remove-icon": x.value
 			}]],
 			style: I(S),
 			"aria-pressed": f.value ? String(g.value) : void 0,
@@ -4449,17 +4456,17 @@ var xr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 				s("span", jr, [j(e.$slots, "default", {}, void 0, !0)]),
 				x.value ? (w(), o("span", {
 					key: 2,
-					class: "mat-chip__icon mat-chip__icon--trailing",
+					class: "mat-chip__icon mat-chip__remove-icon",
 					"aria-hidden": "true",
 					onPointerdown: t[0] ||= U(() => {}, ["stop"]),
 					onClick: E
-				}, [e.$slots.trailing ? j(e.$slots, "trailing", { key: 0 }, void 0, !0) : (w(), i(ze, {
+				}, [e.$slots["remove-icon"] ? j(e.$slots, "remove-icon", { key: 0 }, void 0, !0) : (w(), i(ze, {
 					key: 1,
 					as: "span",
-					icon: "close",
+					icon: I(n).removeIcon,
 					"optical-size": 20,
 					size: "18px"
-				}))], 32)) : a("", !0)
+				}, null, 8, ["icon"]))], 32)) : a("", !0)
 			]),
 			_: 3
 		}, 16, [
@@ -4471,7 +4478,7 @@ var xr = /*#__PURE__*/ Z(/* @__PURE__ */ Object.assign({
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-b36453f3"]]), Nr = {
+}), [["__scopeId", "data-v-e338883c"]]), Nr = {
 	key: 0,
 	class: "mat-scroll-area__fixed"
 }, Pr = {

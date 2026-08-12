@@ -11,7 +11,7 @@ order: 85
 
 `<mat-chip>` 的组件导出名是 `MatChip`，以单个原生按钮呈现简短操作、筛选条件、输入值或建议。`<mat-chip-set>` 的组件导出名是 `MatChipSet`，为一组 Chip 提供换行或隐藏滚动条的横向拖拽布局、`group` 语义和可选的受控单选或多选。
 
-Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见部分。独立使用时，`selected` 是 filter 与 input 的受控外观；进入启用选择的 ChipSet 后，带 `value` 的 filter/input 改由组 `v-model` 控制。input 默认 X 的图标区域发出 `remove`，但组件不自行删除数据，也不内置编辑、重排或菜单工作流。
+Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见部分。独立使用时，`selected` 是 filter 与 input 的受控外观；进入启用选择的 ChipSet 后，带 `value` 的 filter/input 改由组 `v-model` 控制。input 默认使用 `close` 移除图标，尾部移除区域发出 `remove`，但组件不自行删除数据，也不内置编辑、重排或菜单工作流。input Chip 的最小宽度为 88px，用于让主操作与移除操作各自保留 48px 命中区域。
 
 ## 示例
 
@@ -59,6 +59,16 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 
 <ClientOnly><DocsPreview label="Input Chip remove 预览" stacked><ChipRemoveExample /></DocsPreview></ClientOnly>
 
+### `remove-icon` prop
+
+:::: details 查看示例代码
+::: code-group
+<<< @/examples/chip/ChipRemoveIconExample.vue#template [template]
+:::
+::::
+
+<ClientOnly><DocsPreview label="Chip remove-icon prop 预览"><ChipRemoveIconExample /></DocsPreview></ClientOnly>
+
 ### `disabled`
 
 :::: details 查看示例代码
@@ -100,15 +110,15 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 
 <ClientOnly><DocsPreview label="Chip avatar Slot 预览"><ChipAvatarSlotExample /></DocsPreview></ClientOnly>
 
-### `trailing` Slot
+### `remove-icon` Slot
 
 :::: details 查看示例代码
 ::: code-group
-<<< @/examples/chip/ChipTrailingSlotExample.vue#template [template]
+<<< @/examples/chip/ChipRemoveIconSlotExample.vue#template [template]
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip trailing Slot 预览"><ChipTrailingSlotExample /></DocsPreview></ClientOnly>
+<ClientOnly><DocsPreview label="Chip remove-icon Slot 预览"><ChipRemoveIconSlotExample /></DocsPreview></ClientOnly>
 
 ### ChipSet 布局
 
@@ -143,6 +153,7 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 | `variant` | `'assist' \| 'filter' \| 'input' \| 'suggestion'` | `'assist'` | Chip 的用途形态 |
 | `elevated` | `boolean` | `false` | 使用升高表面代替描边表面 |
 | `selected` | `boolean` | `false` | filter 与 input 的受控选中外观及 `aria-pressed` |
+| `remove-icon` | `string` | `'close'` | input Chip 的 Material Symbols 移除图标文本；`remove-icon` Slot 存在时优先使用 Slot |
 | `value` | `string \| number \| boolean` | 未设置 | 加入 ChipSet 选择模型时使用的基础值 |
 | `disabled` | `boolean` | `false` | 使用原生按钮禁用语义 |
 | `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| 系统颜色角色 \| #RRGGBB` | 未设置 | 覆盖选中强调色和适用的前置图标颜色 |
@@ -165,7 +176,7 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 | 组件 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- | --- |
 | MatChip | `click` | `MouseEvent` | 启用的根按钮被点击或通过键盘激活 |
-| MatChip | `remove` | `MouseEvent` | 启用的 input 默认 X 图标区域被点击；不会同时触发 click |
+| MatChip | `remove` | `MouseEvent` | 启用的 input 移除图标区域被点击；不会同时触发 click |
 | MatChipSet | `update:modelValue` | 下一基础值、基础值数组或 `null` | 参与选择的 Chip 请求切换状态，用于 `v-model` |
 
 MatChipSet 不提供额外的 select 或 selected 事件。remove 不自动删除 Chip，也不修改 ChipSet 模型；应用负责更新对应的数据源。
@@ -179,9 +190,9 @@ MatChipSet 不提供额外的 select 或 selected 事件。remove 不自动删�
 | 默认 | 单行标签文字，超出可用宽度时省略 |
 | `leading` | 单个 18px 前置图标；avatar 存在时不显示 |
 | `avatar` | 单个 24px 圆形头像；优先于 leading |
-| `trailing` | 单个 18px 尾随图标；作为按钮展示内容，不自动触发 remove |
+| `remove-icon` | input Chip 的单个 18px 自定义移除图标；不应包含嵌套按钮或其他交互元素 |
 
-已选 filter 没有 avatar 或 leading 时显示默认勾选图标；input 没有 trailing 时显示默认关闭图标。默认关闭图标的指针点击区域触发 remove，但不建立独立键盘焦点；自定义 Slot 会替代相应默认图标和 remove 行为。
+已选 filter 没有 avatar 或 leading 时显示默认勾选图标；input 始终显示默认或自定义移除图标。移除图标的指针命中区域至少为 48×48px，启用时显示圆形 hover/pressed state layer，但不建立独立键盘焦点；`remove-icon` Slot 只替换图标内容，不改变 remove 事件行为。旧 `trailing` Slot 不属于 MatChip API。
 
 ### MatChipSet
 
@@ -195,7 +206,7 @@ Chip 支持 hover、focus-visible、pressed、disabled，以及 filter/input 的
 
 ## 参考来源
 
-尺寸、形态、内容排列和状态依据 Material 3 [Chips specs](https://m3.material.io/m3/pages/chips/specs) 与 [Chips guidelines](https://m3.material.io/m3/pages/chips/guidelines)。
+尺寸、形态、内容排列和状态依据 Material 3 [Chips specs](https://m3.material.io/components/chips/specs) 与 [Chips guidelines](https://m3.material.io/components/chips/guidelines)。
 
 <script setup>
 import ChipAvatarSlotExample from '../examples/chip/ChipAvatarSlotExample.vue';
@@ -204,9 +215,10 @@ import ChipDisabledExample from '../examples/chip/ChipDisabledExample.vue';
 import ChipElevatedExample from '../examples/chip/ChipElevatedExample.vue';
 import ChipLeadingSlotExample from '../examples/chip/ChipLeadingSlotExample.vue';
 import ChipRemoveExample from '../examples/chip/ChipRemoveExample.vue';
+import ChipRemoveIconExample from '../examples/chip/ChipRemoveIconExample.vue';
+import ChipRemoveIconSlotExample from '../examples/chip/ChipRemoveIconSlotExample.vue';
 import ChipSelectedExample from '../examples/chip/ChipSelectedExample.vue';
 import ChipSetLayoutExample from '../examples/chip/ChipSetLayoutExample.vue';
 import ChipSetSelectionExample from '../examples/chip/ChipSetSelectionExample.vue';
-import ChipTrailingSlotExample from '../examples/chip/ChipTrailingSlotExample.vue';
 import ChipVariantExample from '../examples/chip/ChipVariantExample.vue';
 </script>
