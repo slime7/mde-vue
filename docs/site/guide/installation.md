@@ -119,6 +119,7 @@ import {
   dialog,
   Intersection as vIntersection,
   MatAppRoot,
+  MatAvatar,
   MatBadge,
   MatBottomSheet,
   MatCard,
@@ -161,7 +162,7 @@ import {
 } from 'mde-vue';
 ```
 
-局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatAppRoot>`、`<MatAppBar>`、`<MatSearch>`、`<MatBadge>`、`<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatText>`、`<MatCard>`、`<MatChip>`、`<MatChipSet>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatScrollArea>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`；`useMatApp()` 只能在 `<MatAppRoot>` 的后代组件中调用。
+局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatAppRoot>`、`<MatAvatar>`、`<MatAppBar>`、`<MatSearch>`、`<MatBadge>`、`<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatText>`、`<MatCard>`、`<MatChip>`、`<MatChipSet>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatScrollArea>`、`<MatSpacer>`、`<MatLoader>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection` 指令在 `<script setup>` 中建议别名为 `vIntersection`，模板中使用 `v-intersection`；`useMatApp()` 只能在 `<MatAppRoot>` 的后代组件中调用。
 
 ## 页面基础尺寸
 

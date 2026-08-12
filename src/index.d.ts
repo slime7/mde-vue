@@ -560,6 +560,40 @@ export interface MatImageProps {
 export type MatImageComponent = DefineComponent<MatImageProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatImage: MatImageComponent;
 
+export interface MatAvatarProps {
+  /**
+  * 头像图片资源地址；非空字符串才有效，空字符串等同未设置。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  src?: string | undefined;
+  /**
+  * Material Symbols 字形文本；仅非空字符串视为有效，空字符串等同未设置。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  icon?: string | undefined;
+  /**
+  * Material 语义色、系统颜色角色或六位十六进制种子色。
+  *
+  * @type {string}
+  * @default 'primary'
+  */
+  color?: string;
+  /**
+  * 头像边长；数字与纯数字字符串按 px 处理，其他字符串 trim 后须为合法正 CSS 长度。
+  *
+  * @type {number | string}
+  * @default 40
+  */
+  size?: number | string;
+}
+
+export type MatAvatarComponent = DefineComponent<MatAvatarProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatAvatar: MatAvatarComponent;
+
 export interface MatTextProps {
   /**
   * Material 3 文字类型。
@@ -3101,6 +3135,8 @@ declare module 'vue' {
     'mat-icon': typeof MatIcon;
     MatImage: typeof MatImage;
     'mat-image': typeof MatImage;
+    MatAvatar: typeof MatAvatar;
+    'mat-avatar': typeof MatAvatar;
     MatText: typeof MatText;
     'mat-text': typeof MatText;
     MatSplitBtn: typeof MatSplitBtn;

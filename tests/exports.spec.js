@@ -12,6 +12,7 @@ import {
   prompt,
   Intersection as RootIntersection,
   MatAppRoot as RootMatAppRoot,
+  MatAvatar as RootMatAvatar,
   MatBadge as RootMatBadge,
   MatBottomSheet as RootMatBottomSheet,
   MatBtn as RootMatBtn,
@@ -67,6 +68,7 @@ import {
 
 const globalComponents = [
   ['MatAppRoot', 'mat-app-root', RootMatAppRoot],
+  ['MatAvatar', 'mat-avatar', RootMatAvatar],
   ['MatBadge', 'mat-badge', RootMatBadge],
   ['MatBtn', 'mat-btn', RootMatBtn],
   ['MatBtnGroup', 'mat-btn-group', RootMatBtnGroup],
@@ -207,6 +209,7 @@ describe('公共组件导出', () => {
     expect(app.component('mat-fab')).toBe(RootMatFab);
     expect(app.component('mat-icon')).toBe(RootMatIcon);
     expect(app.component('mat-image')).toBe(RootMatImage);
+    expect(app.component('mat-avatar')).toBe(RootMatAvatar);
     expect(app.component('mat-icon-btn')).toBeUndefined();
 
     plugin.theme.dispose();

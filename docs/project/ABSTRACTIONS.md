@@ -153,6 +153,10 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 `<mat-image>` 的导出名是 `MatImage`，根元素是包裹内部原生 `<img>` 的 `div`。`radius` 省略时使用 `--mat-sys-shape-corner-extra-large`（28px），数字与纯数字字符串按 px 处理（0 不带单位），其他字符串须为 trim 后合法的 CSS 长度值，非法时回退默认令牌；`fit` 只接受 `cover`（默认）与 `contain`；`aspect-ratio` 接受宽/高比数字或 trim 后合法的 CSS `aspect-ratio` 字符串，省略或非法时保持图片自然比例；`outline` 默认开启 1px 描边，颜色使用 `--mat-sys-color-outline`，可设置为 `false` 关闭。组件上的 `class` 与 `style` 属于根容器，其余未消费的原生属性和监听器以及 `img-class`、`img-style` 定向到内部 `img`。根元素对 `aspect-ratio`、`inline-size`、`block-size` 和 `border-radius` 使用系统动效令牌过渡，并尊重减少动画偏好；`fit` 切换不参与过渡。组件没有 Slots、自定义事件或公开方法。
 
+## `<mat-avatar>`
+
+`<mat-avatar>` 的导出名是 `MatAvatar`，以固定圆形展示头像，不建立交互语义。内容来源固定按 `src > icon > 默认 Slot` 优先级：`src` 使用以 `cover` 填满圆形的装饰性内部图片，`icon` 渲染共享 `MatIcon`（字号为头像尺寸的 60%），两者都未设置时把默认 Slot 放入居中容器，文字以省略号截断、图片直接裁剪。`src` 与 `icon` 都只把非空字符串视为有效，空字符串回退到下一级内容来源。`size` 数字与纯数字字符串按 px 处理，其他字符串须为合法正 CSS 长度，非法值回退 40px；`color` 默认 `primary`，填充与内容沿用 base/on-base 配对，容器角色与系统表面角色直接引用主题令牌。未消费的原生属性与监听器落到根元素；组件没有自定义事件或公开方法。
+
 ## `<mat-card>`
 
 `<mat-card>` 的导出名是 `MatCard`，以 `filled`、`elevated`、`outlined` 表达三种 Material 3 层级，默认 filled。根元素可以使用 `div`、`article`、`section` 或 `li`，并继续透传未消费的原生属性。`color` 遵循统一组件配色约定；省略时保持官方中性表面角色。

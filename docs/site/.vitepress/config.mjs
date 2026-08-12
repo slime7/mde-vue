@@ -116,6 +116,7 @@ export default defineConfig({
             text: '内容与展示',
             collapsed: true,
             items: [
+              { text: 'Avatar 头像', link: '/components/avatar' },
               { text: 'Card 卡片', link: '/components/card' },
               { text: 'Divider 分隔线', link: '/components/divider' },
               { text: 'Icon 图标', link: '/components/icon' },
