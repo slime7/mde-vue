@@ -175,7 +175,7 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 `<mat-loader>` 的导出名是 `MatLoader`，以 `variant='linear' | 'circular'` 统一线条和环形 Progress indicator。默认是确定进度：`value` 会限制在 `0` 与正数 `max` 之间，根元素提供 progressbar ARIA 最小值、最大值和当前值；`indeterminate` 时省略当前值并展示加载动画。组件根始终为块级元素。
 
-`shape='flat' | 'wavy'` 选择平直或 Expressive 波浪形活动指示器。`size` 默认 48，只控制环形宽高，数字与纯数字字符串限制到 24 至 240，线条形忽略；`thickness='default' | 'heavy'` 选择粗细档位，线条形固定使用 4px 或 4.8px，环形分别使用 `size / 12` 或 `size / 10`。环形波浪以 48px 的 1.6px 振幅和 15px 波长为基础，二者按 `size / 48` 等比缩放；路径半径按 heavy 波浪形的最外缘计算并在 shape、thickness 切换时保持稳定，48px 时半径为 20px。活动与停止指示器默认使用 primary，轨道使用 secondary container；`color` 遵循统一组件配色约定，只替换前两者的强调色。Loader 没有 Slots、方法或自定义事件。
+`shape='flat' | 'wavy'` 选择平直或 Expressive 波浪形活动指示器。`size` 默认 48，只控制环形基础宽高，数字与纯数字字符串限制到 24 至 240，线条形忽略；`thickness='default' | 'heavy'` 选择粗细档位，线条形固定使用 4px 或 4.8px，环形分别使用 `size / 12` 或其两倍。环形以 48px 为基准：平直路径半径为 18px，波浪路径半径为 20.4px，波浪振幅为 1.6px、波长为 15px，所有几何量都按 `size / 48` 等比缩放。环形根元素在四周保留 `size / 24` 的外边距，用于容纳 heavy 波浪超出基础宽高的部分；48px 时每侧为 2px。活动与停止指示器默认使用 primary，轨道使用 secondary container；`color` 遵循统一组件配色约定，只替换前两者的强调色。Loader 没有 Slots、方法或自定义事件。
 
 ## 表单选择控件
 

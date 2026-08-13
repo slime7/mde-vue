@@ -21,6 +21,9 @@ const LINEAR_HEAVY_THICKNESS = 4.8;
 const LINEAR_WAVE_AMPLITUDE = 3;
 const LINEAR_WAVE_WAVELENGTH = 40;
 const CIRCULAR_WAVE_WAVELENGTH = 15;
+const CIRCULAR_FLAT_RADIUS = 18;
+const CIRCULAR_WAVY_RADIUS = 20.4;
+const CIRCULAR_OVERFLOW_MARGIN = 2;
 const STOP_INDICATOR_SIZE = 4;
 const MIN_STROKE_PROGRESS = 0.001;
 const INITIAL_LINEAR_WIDTH = 100;
@@ -262,10 +265,13 @@ const resolvedCircularSize = computed(() => {
   return Math.min(Math.max(size, MIN_CIRCULAR_SIZE), MAX_CIRCULAR_SIZE);
 });
 const circularDefaultThickness = computed(() => resolvedCircularSize.value / 12);
-const circularHeavyThickness = computed(() => resolvedCircularSize.value / 10);
+const circularHeavyThickness = computed(() => circularDefaultThickness.value * 2);
 const circularScale = computed(() => resolvedCircularSize.value / DEFAULT_CIRCULAR_SIZE);
 const circularWaveAmplitude = computed(() => 1.6 * circularScale.value);
 const circularWaveWavelength = computed(() => CIRCULAR_WAVE_WAVELENGTH * circularScale.value);
+const circularOverflowMargin = computed(() => (
+  CIRCULAR_OVERFLOW_MARGIN * circularScale.value
+));
 const resolvedThickness = computed(() => {
   if (isCircular.value) {
     return propsWithDefaults.thickness === 'heavy'
@@ -324,9 +330,10 @@ const linearActivePath = computed(() => createLinearPath(
 ));
 const circularCenter = computed(() => resolvedCircularSize.value / 2);
 const circularRadius = computed(() => (
-  circularCenter.value
-  - circularWaveAmplitude.value
-  - (circularHeavyThickness.value / 2)
+  (
+    CIRCULAR_FLAT_RADIUS
+    + ((CIRCULAR_WAVY_RADIUS - CIRCULAR_FLAT_RADIUS) * waveMorphProgress.value)
+  ) * circularScale.value
 ));
 const circularViewBox = computed(() => (
   `0 0 ${resolvedCircularSize.value} ${resolvedCircularSize.value}`
@@ -382,6 +389,7 @@ const circularActiveStyle = computed(() => {
 const rootStyle = computed(() => ({
   ...colorStyle.value,
   '--mat-loader-circular-gap-progress': formatCoordinate(circularIndeterminateGapProgress.value),
+  '--mat-loader-circular-margin': `${circularOverflowMargin.value}px`,
   '--mat-loader-circular-radius': `${circularRadius.value}px`,
   '--mat-loader-circular-size': `${resolvedCircularSize.value}px`,
   '--mat-loader-indicator-gap-size': `${INDICATOR_GAP_SIZE}px`,
@@ -622,7 +630,8 @@ onBeforeUnmount(() => {
 .mat-loader--circular {
   inline-size: var(--mat-loader-circular-size);
   block-size: var(--mat-loader-circular-size);
-  transition: inline-size var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial);
+  margin: var(--mat-loader-circular-margin);
+  transition: inline-size var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial), margin var(--mat-sys-motion-spring-fast-spatial);
 }
 
 .mat-loader__linear {
