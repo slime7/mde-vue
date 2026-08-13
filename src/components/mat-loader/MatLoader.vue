@@ -20,7 +20,6 @@ const LINEAR_DEFAULT_THICKNESS = 4;
 const LINEAR_HEAVY_THICKNESS = 4.8;
 const LINEAR_WAVE_AMPLITUDE = 3;
 const LINEAR_WAVE_WAVELENGTH = 40;
-const CIRCULAR_WAVE_AMPLITUDE = 1.6;
 const CIRCULAR_WAVE_WAVELENGTH = 15;
 const STOP_INDICATOR_SIZE = 4;
 const MIN_STROKE_PROGRESS = 0.001;
@@ -100,10 +99,11 @@ function createLinearPath(width, height, thickness, amplitude, phase) {
  * @param {number} radius
  * @param {number} amplitude
  * @param {number} phase
+ * @param {number} wavelength
  * @returns {string}
  */
-function createCircularPath(center, radius, amplitude, phase) {
-  const waveCount = Math.max(1, Math.round((Math.PI * 2 * radius) / CIRCULAR_WAVE_WAVELENGTH));
+function createCircularPath(center, radius, amplitude, phase, wavelength) {
+  const waveCount = Math.max(1, Math.round((Math.PI * 2 * radius) / wavelength));
   const segmentCount = waveCount * 12;
   const parts = [];
 
@@ -263,6 +263,9 @@ const resolvedCircularSize = computed(() => {
 });
 const circularDefaultThickness = computed(() => resolvedCircularSize.value / 12);
 const circularHeavyThickness = computed(() => resolvedCircularSize.value / 10);
+const circularScale = computed(() => resolvedCircularSize.value / DEFAULT_CIRCULAR_SIZE);
+const circularWaveAmplitude = computed(() => 1.6 * circularScale.value);
+const circularWaveWavelength = computed(() => CIRCULAR_WAVE_WAVELENGTH * circularScale.value);
 const resolvedThickness = computed(() => {
   if (isCircular.value) {
     return propsWithDefaults.thickness === 'heavy'
@@ -322,7 +325,7 @@ const linearActivePath = computed(() => createLinearPath(
 const circularCenter = computed(() => resolvedCircularSize.value / 2);
 const circularRadius = computed(() => (
   circularCenter.value
-  - CIRCULAR_WAVE_AMPLITUDE
+  - circularWaveAmplitude.value
   - (circularHeavyThickness.value / 2)
 ));
 const circularViewBox = computed(() => (
@@ -331,8 +334,9 @@ const circularViewBox = computed(() => (
 const circularActivePath = computed(() => createCircularPath(
   circularCenter.value,
   circularRadius.value,
-  CIRCULAR_WAVE_AMPLITUDE * waveMorphProgress.value,
+  circularWaveAmplitude.value * waveMorphProgress.value,
   wavePhase.value,
+  circularWaveWavelength.value,
 ));
 const circularGapProgress = computed(() => {
   const circumference = Math.PI * 2 * circularRadius.value;
