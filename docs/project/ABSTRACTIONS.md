@@ -143,6 +143,12 @@ Icon 尺寸使用 `small`、`medium`、`large`、`extra-large` 四档，分别�
 
 Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `currentColor`；`fontColor` 直接接受任意 CSS 颜色并优先于 `color`。Slot SVG 只有使用 `currentColor` 时继承颜色，`src` 资源保留内部颜色。其他组件复用 MatIcon 时负责传入所在组件的尺寸、光学尺寸、内容颜色和无障碍属性。
 
+## `<mat-shape>`
+
+`<mat-shape>` 的导出名是 `MatShape`，默认以 `div` 渲染 48px 的 primary circle。`name` 只接受 35 个 Material 3 Expressive 公共名称，内部使用归一化百分比 `clip-path: shape()` 查表，非法名称由 Vue 报告并防御性回退 circle；组件不在运行时生成、下载或解析几何数据。
+
+`size` 同时控制宽高，数字与纯数字字符串按 px 处理，其他字符串须为合法正 CSS 长度，非法值回退 48px。`color` 使用统一组件配色并把配对的 on-color 传给居中的默认 Slot；`as` 接受合法 HTML 标签名。Slot 内容随外轮廓裁剪但不自动获得交互或无障碍语义，未消费的属性与监听器落到实际根元素。
+
 ## `<mat-badge>`
 
 `<mat-badge>` 的导出名是 `MatBadge`。默认模式使用 `inline-flex` 包装默认 Slot，并把不接收指针事件的指示器绝对定位到八个逻辑方位；包装层会改变直接子选择器和 flex/grid 子项关系。`offset` 只在覆盖模式沿逻辑行轴和块轴微调，数字按 px、字符串按 CSS 长度处理。`location="inline"` 是独立的自然布局模式，只渲染 Badge 指示器并忽略 Slot 与 offset。

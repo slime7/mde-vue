@@ -14,6 +14,7 @@
 - [Badge 徽标](components/badge.md): mat-badge 的点型、内容型、覆盖方位、偏移、行内布局和配色。
 - [Text 文字](components/text.md): mat-text 的 Material 3 文字类型、尺寸、强调样式和动态根元素。
 - [Avatar 头像](components/avatar.md): mat-avatar 的图片、图标、默认 Slot 内容、尺寸与 Material 配色。
+- [Shape 形状](components/shape.md): mat-shape 的 35 种 Material 3 Expressive 形状、尺寸、配色、根标签和内容。
 - [Tailwind CSS](guide/tailwind.md): 将 mde-vue 运行时令牌接入 Tailwind CSS v4，并使用带 mat 前缀的语义工具类。
 - [Button 按钮](components/button.md): mat-btn 的普通与图标模式、尺寸、宽度、形态、配色、受控切换、事件和 slots。
 - [FAB 浮动操作按钮](components/fab.md): mat-fab 的纯图标 FAB 与 Extended FAB、尺寸、官方颜色角色、禁用状态和无障碍名称。

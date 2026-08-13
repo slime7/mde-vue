@@ -59,6 +59,7 @@ llms: false
 - Snackbar：`docs/site/components/snackbar.md`
 - Intersection：`docs/site/directives/intersection.md`
 - Spacer：`docs/site/components/spacer.md`
+- Shape：`docs/site/components/shape.md`
 - 支持范围：`docs/site/guide/limitations.md`
 
 只提供单个页面时，可以使用以下提示：
