@@ -802,6 +802,10 @@ watch(
   min-inline-size: var(--mat-sys-interaction-target-min-size);
 }
 
+.mat-btn-group--connected :deep(.mat-button-base:focus-visible) {
+  z-index: 1;
+}
+
 .mat-btn-group--connected :deep(.mat-button-base:first-child) {
   --mat-button-start-start-radius: var(--mat-btn-group-outer-corner-size);
   --mat-button-end-start-radius: var(--mat-btn-group-outer-corner-size);

@@ -2766,7 +2766,7 @@ var Bn = {
 			onPointerupCapture: V
 		}), [j(e.$slots, "default", {}, void 0, !0)], 16));
 	}
-}), [["__scopeId", "data-v-36a1694a"]]), Zn = [
+}), [["__scopeId", "data-v-ded9e176"]]), Zn = [
 	"small",
 	"medium",
 	"large"
