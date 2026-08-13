@@ -155,7 +155,7 @@ Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互
 
 ### 状态
 
-Radio 支持未选中、选中、hover、focus-visible、pressed 和 disabled。已经选中的 Radio 再次操作不会取消选择。组件没有公开方法。
+Radio 支持未选中、选中、hover、focus-visible、pressed 和 disabled。focus-visible 使用公共焦点环宽度与偏移，不叠加状态层填充；hover 和 pressed 继续使用圆形状态层。已经选中的 Radio 再次操作不会取消选择。组件没有公开方法。
 
 ## MatRadioGroup API
 

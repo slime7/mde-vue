@@ -1,13 +1,23 @@
+<!-- #region script -->
+<script setup>
+import { ref } from 'vue';
+
+const noneEnabled = ref(true);
+const selectedEnabled = ref(true);
+const bothEnabled = ref(true);
+</script>
+<!-- #endregion script -->
+
 <!-- #region template -->
 <template>
   <div class="example-row">
-    <mat-switch model-value icons="none">
+    <mat-switch v-model="noneEnabled" icons="none">
       none
     </mat-switch>
-    <mat-switch model-value icons="selected">
+    <mat-switch v-model="selectedEnabled" icons="selected">
       selected
     </mat-switch>
-    <mat-switch model-value icons="both">
+    <mat-switch v-model="bothEnabled" icons="both">
       both
     </mat-switch>
   </div>

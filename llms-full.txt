@@ -6213,7 +6213,7 @@ function toggleAll(checked) {
 
 ## 状态
 
-组件支持未选中、选中、不确定、hover、focus-visible、pressed 和 disabled。减少动态效果偏好下关闭勾号、横线和状态层过渡。组件没有公开方法。
+组件支持未选中、选中、不确定、hover、focus-visible、pressed 和 disabled。focus-visible 使用公共焦点环宽度与偏移，不叠加状态层填充；hover 和 pressed 继续使用圆形状态层。减少动态效果偏好下关闭勾号、横线、焦点环和状态层过渡。组件没有公开方法。
 
 ## 参考来源
 
@@ -6498,7 +6498,7 @@ const themeMode = ref('system');
 
 ### 状态
 
-Radio 支持未选中、选中、hover、focus-visible、pressed 和 disabled。已经选中的 Radio 再次操作不会取消选择。组件没有公开方法。
+Radio 支持未选中、选中、hover、focus-visible、pressed 和 disabled。focus-visible 使用公共焦点环宽度与偏移，不叠加状态层填充；hover 和 pressed 继续使用圆形状态层。已经选中的 Radio 再次操作不会取消选择。组件没有公开方法。
 
 ## MatRadioGroup API
 
@@ -7013,17 +7013,26 @@ import ChipVariantExample from '../examples/chip/ChipVariantExample.vue';
 ```vue
 <template>
   <div class="example-row">
-    <mat-switch model-value icons="none">
+    <mat-switch v-model="noneEnabled" icons="none">
       none
     </mat-switch>
-    <mat-switch model-value icons="selected">
+    <mat-switch v-model="selectedEnabled" icons="selected">
       selected
     </mat-switch>
-    <mat-switch model-value icons="both">
+    <mat-switch v-model="bothEnabled" icons="both">
       both
     </mat-switch>
   </div>
 </template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const noneEnabled = ref(true);
+const selectedEnabled = ref(true);
+const bothEnabled = ref(true);
+</script>
 ```
 ```vue
 <style scoped>
@@ -7180,7 +7189,7 @@ Switch 只表示二元状态，不用于在两个对立选项间选择。组件�
 
 ## 状态
 
-组件支持关闭、开启、hover、focus-visible、pressed 和 disabled。按下时手柄扩展到 28px；减少动态效果偏好下关闭手柄与图标过渡。组件没有公开方法。
+组件支持关闭、开启、hover、focus-visible、pressed 和 disabled。focus-visible 使用公共焦点环宽度与偏移包围完整轨道，不叠加手柄状态层填充；hover 和 pressed 的状态层跟随当前手柄。按下时手柄扩展到 28px；减少动态效果偏好下关闭手柄、图标、焦点环和状态层过渡。组件没有公开方法。
 
 ## 参考来源
 

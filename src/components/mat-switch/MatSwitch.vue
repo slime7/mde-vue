@@ -123,6 +123,10 @@ function handleChange(event) {
   --mat-selection-control-state-layer-size: var(--mat-switch-state-layer-size);
   --mat-selection-control-state-layer-offset: -4px;
   --mat-selection-control-state-layer-color: var(--mat-switch-unselected-state-layer-color);
+  --mat-selection-control-focus-ring-width: var(--mat-switch-track-width);
+  --mat-selection-control-focus-ring-height: var(--mat-switch-track-height);
+  --mat-selection-control-focus-ring-offset: 0;
+  --mat-selection-control-focus-ring-translation: 0;
   --mat-selection-control-label-color: var(--mat-switch-label-text-color);
   --mat-selection-control-current-handle-size: var(--mat-switch-unselected-handle-size);
   --mat-selection-control-pressed-handle-size: var(--mat-switch-pressed-handle-size);

@@ -22,6 +22,8 @@ order: 86
 
 <<< @/examples/selection/SwitchIconsExample.vue#template [template]
 
+<<< @/examples/selection/SwitchIconsExample.vue#script [script]
+
 <<< @/examples/selection/SwitchIconsExample.vue#style [style]
 
 :::
@@ -115,7 +117,7 @@ Switch 只表示二元状态，不用于在两个对立选项间选择。组件�
 
 ## 状态
 
-组件支持关闭、开启、hover、focus-visible、pressed 和 disabled。按下时手柄扩展到 28px；减少动态效果偏好下关闭手柄与图标过渡。组件没有公开方法。
+组件支持关闭、开启、hover、focus-visible、pressed 和 disabled。focus-visible 使用公共焦点环宽度与偏移包围完整轨道，不叠加手柄状态层填充；hover 和 pressed 的状态层跟随当前手柄。按下时手柄扩展到 28px；减少动态效果偏好下关闭手柄、图标、焦点环和状态层过渡。组件没有公开方法。
 
 ## 参考来源
 

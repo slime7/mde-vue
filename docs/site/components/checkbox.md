@@ -143,7 +143,7 @@ order: 80
 
 ## 状态
 
-组件支持未选中、选中、不确定、hover、focus-visible、pressed 和 disabled。减少动态效果偏好下关闭勾号、横线和状态层过渡。组件没有公开方法。
+组件支持未选中、选中、不确定、hover、focus-visible、pressed 和 disabled。focus-visible 使用公共焦点环宽度与偏移，不叠加状态层填充；hover 和 pressed 继续使用圆形状态层。减少动态效果偏好下关闭勾号、横线、焦点环和状态层过渡。组件没有公开方法。
 
 ## 参考来源
 

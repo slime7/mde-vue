@@ -141,6 +141,7 @@ defineExpose({
         @keydown="emit('keydown', $event)"
       >
       <span class="mat-selection-control__state-layer" aria-hidden="true" />
+      <span class="mat-selection-control__focus-ring" aria-hidden="true" />
       <span class="mat-selection-control__indicator" aria-hidden="true">
         <slot name="indicator" />
       </span>
@@ -158,7 +159,11 @@ defineExpose({
   --mat-selection-control-state-layer-offset: calc((var(--mat-selection-control-target-width) - var(--mat-selection-control-state-layer-size)) / 2);
   --mat-selection-control-state-layer-translation: 0;
   --mat-selection-control-state-layer-color: var(--mat-sys-color-on-surface);
-  --mat-selection-control-focus-ring-color: var(--mat-accent-color, var(--mat-sys-color-primary));
+  --mat-selection-control-focus-ring-width: var(--mat-selection-control-state-layer-size);
+  --mat-selection-control-focus-ring-height: var(--mat-selection-control-state-layer-size);
+  --mat-selection-control-focus-ring-offset: var(--mat-selection-control-state-layer-offset);
+  --mat-selection-control-focus-ring-translation: var(--mat-selection-control-state-layer-translation);
+  --mat-selection-control-focus-ring-shape: var(--mat-sys-shape-corner-full);
   display: inline-flex;
   gap: var(--mat-selection-control-label-space, 8px);
   align-items: center;
@@ -216,9 +221,23 @@ defineExpose({
   transition: transform var(--mat-sys-motion-spring-fast-spatial), opacity var(--mat-sys-motion-spring-fast-effects), outline-color var(--mat-sys-motion-spring-fast-effects);
 }
 
+.mat-selection-control__focus-ring {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 50%;
+  inset-inline-start: var(--mat-selection-control-focus-ring-offset);
+  inline-size: var(--mat-selection-control-focus-ring-width);
+  block-size: var(--mat-selection-control-focus-ring-height);
+  border-radius: var(--mat-selection-control-focus-ring-shape);
+  outline: 0 solid transparent;
+  pointer-events: none;
+  transform: translate(var(--mat-selection-control-focus-ring-translation), -50%);
+  transition: transform var(--mat-sys-motion-spring-fast-spatial), outline-color var(--mat-sys-motion-spring-fast-effects);
+}
+
 .mat-selection-control__indicator {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
@@ -236,11 +255,10 @@ defineExpose({
   opacity: var(--mat-sys-state-pressed-state-layer-opacity);
 }
 
-.mat-selection-control__input:focus-visible ~ .mat-selection-control__state-layer {
+.mat-selection-control__input:focus-visible ~ .mat-selection-control__focus-ring {
   outline-width: var(--mat-sys-interaction-focus-ring-width);
-  outline-color: var(--mat-selection-control-focus-ring-color);
+  outline-color: var(--mat-sys-color-secondary);
   outline-offset: var(--mat-sys-interaction-focus-ring-offset);
-  opacity: var(--mat-sys-state-focus-state-layer-opacity);
 }
 
 .mat-selection-control__input:active ~ .mat-selection-control__indicator {
@@ -260,6 +278,7 @@ defineExpose({
 
 @media (prefers-reduced-motion: reduce) {
   .mat-selection-control__state-layer,
+  .mat-selection-control__focus-ring,
   .mat-selection-control__indicator {
     transition: none;
   }

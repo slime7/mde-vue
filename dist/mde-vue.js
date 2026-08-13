@@ -4551,10 +4551,14 @@ var ni = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				class: "mat-selection-control__state-layer",
 				"aria-hidden": "true"
 			}, null, -1),
+			n[3] ||= s("span", {
+				class: "mat-selection-control__focus-ring",
+				"aria-hidden": "true"
+			}, null, -1),
 			s("span", ai, [j(t.$slots, "indicator", {}, void 0, !0)])
 		]), I(u).default ? (w(), o("span", oi, [j(t.$slots, "default", {}, void 0, !0)])) : a("", !0)], 16));
 	}
-}), [["__scopeId", "data-v-e1bf8dba"]]), ci = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-d23e8cad"]]), ci = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatCheckbox",
 	inheritAttrs: !1
 }, {
@@ -5393,7 +5397,7 @@ var di = ["data-dot"], fi = ["data-dot"], pi = /*#__PURE__*/ Q(/* @__PURE__ */ O
 			"disabled"
 		]));
 	}
-}), [["__scopeId", "data-v-5f9d193a"]]);
+}), [["__scopeId", "data-v-c02653bb"]]);
 //#endregion
 //#region src/components/frame-scheduler.js
 function Ai(e) {
