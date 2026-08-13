@@ -104,7 +104,6 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::: details 查看示例代码
 ::: code-group
 <<< @/examples/chip/ChipAvatarSlotExample.vue#template [template]
-<<< @/examples/chip/ChipAvatarSlotExample.vue#style [style]
 :::
 ::::
 
