@@ -8,6 +8,7 @@ import MatFab from './components/mat-fab/MatFab.vue';
 import MatIcon from './components/mat-icon/MatIcon.vue';
 import MatImage from './components/mat-image/MatImage.vue';
 import MatAvatar from './components/mat-avatar/MatAvatar.vue';
+import MatShape from './components/mat-shape/MatShape.vue';
 import MatText from './components/mat-text/MatText.vue';
 import MatSplitBtn from './components/mat-split-btn/MatSplitBtn.vue';
 import MatCard from './components/mat-card/MatCard.vue';
@@ -72,6 +73,7 @@ export const GLOBAL_COMPONENTS = [
   ['MatIcon', 'mat-icon', MatIcon],
   ['MatImage', 'mat-image', MatImage],
   ['MatAvatar', 'mat-avatar', MatAvatar],
+  ['MatShape', 'mat-shape', MatShape],
   ['MatText', 'mat-text', MatText],
   ['MatSplitBtn', 'mat-split-btn', MatSplitBtn],
   ['MatCard', 'mat-card', MatCard],

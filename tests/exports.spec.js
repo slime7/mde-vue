@@ -51,6 +51,7 @@ import {
   MatRangeSlider as RootMatRangeSlider,
   MatScrollArea as RootMatScrollArea,
   MatSelect as RootMatSelect,
+  MatShape as RootMatShape,
   MatSideSheet as RootMatSideSheet,
   MatSlider as RootMatSlider,
   MatSnackbar as RootMatSnackbar,
@@ -75,6 +76,7 @@ const globalComponents = [
   ['MatFab', 'mat-fab', RootMatFab],
   ['MatIcon', 'mat-icon', RootMatIcon],
   ['MatImage', 'mat-image', RootMatImage],
+  ['MatShape', 'mat-shape', RootMatShape],
   ['MatSplitBtn', 'mat-split-btn', RootMatSplitBtn],
   ['MatCard', 'mat-card', RootMatCard],
   ['MatCardActionArea', 'mat-card-action-area', RootMatCardActionArea],
@@ -210,6 +212,7 @@ describe('公共组件导出', () => {
     expect(app.component('mat-icon')).toBe(RootMatIcon);
     expect(app.component('mat-image')).toBe(RootMatImage);
     expect(app.component('mat-avatar')).toBe(RootMatAvatar);
+    expect(app.component('mat-shape')).toBe(RootMatShape);
     expect(app.component('mat-icon-btn')).toBeUndefined();
 
     plugin.theme.dispose();

@@ -594,6 +594,40 @@ export interface MatAvatarProps {
 export type MatAvatarComponent = DefineComponent<MatAvatarProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatAvatar: MatAvatarComponent;
 
+export interface MatShapeProps {
+  /**
+  * Material 3 Expressive 预定义形状名称。
+  *
+  * @type {string}
+  * @default 'circle'
+  */
+  name?: string;
+  /**
+  * 形状边长；数字与纯数字字符串按 px 处理，其他字符串须为合法正 CSS 长度。
+  *
+  * @type {number | string}
+  * @default 48
+  */
+  size?: number | string;
+  /**
+  * Material 语义色、系统颜色角色或六位十六进制种子色。
+  *
+  * @type {string}
+  * @default 'primary'
+  */
+  color?: string;
+  /**
+  * 形状根元素标签名。
+  *
+  * @type {string}
+  * @default 'div'
+  */
+  as?: string;
+}
+
+export type MatShapeComponent = DefineComponent<MatShapeProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatShape: MatShapeComponent;
+
 export interface MatTextProps {
   /**
   * Material 3 文字类型。
@@ -3137,6 +3171,8 @@ declare module 'vue' {
     'mat-image': typeof MatImage;
     MatAvatar: typeof MatAvatar;
     'mat-avatar': typeof MatAvatar;
+    MatShape: typeof MatShape;
+    'mat-shape': typeof MatShape;
     MatText: typeof MatText;
     'mat-text': typeof MatText;
     MatSplitBtn: typeof MatSplitBtn;
