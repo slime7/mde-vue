@@ -38,6 +38,8 @@ Tooltip 分组由展示元素最近的 `data-mat-tooltip-group` 祖先定义。�
 
 `v-intersection` 是客户端原生 `IntersectionObserver` 指令，不渲染包装元素。绑定值可以是处理函数或带 `handler`、`options` 的对象；`options` 保持原生观察器配置，回调的 `isIntersecting` 取本次 entries 是否存在相交项。`.quiet` 只跳过首次投递，`.once` 在首次相交后解除观察；观察器不支持时保持静默，卸载和绑定更新必须清理旧实例。
 
+`v-state-layer` 是公共视觉状态指令，绑定值为可扩展对象，当前只公开可选 `color`。它在能容纳子元素且非 `display: contents` 的宿主中加入无障碍隐藏层，使用 CSS Anchor Positioning 覆盖宿主，并以系统透明度令牌表达 hover、focus-visible 和 pressed。指令按原生标签与 `role` 推导键盘 pressed，但不赋予焦点、点击、ARIA 或键盘激活语义；短按至少显示 150ms，属于项目视觉保持策略。内部节点、属性、class 和 anchor 名称不是公共接口。
+
 ## 主题配置
 
 主题配置由以下值组成：

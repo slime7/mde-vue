@@ -747,6 +747,42 @@
   --mat-split-btn-outlined-outline-color: var(--mat-btn-outlined-outline-color);
 }
 
+.mat-state-layer-host {
+  isolation: isolate;
+}
+
+.mat-state-layer {
+  position: absolute;
+  z-index: 0;
+  position-area: center;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--mat-sys-motion-spring-fast-effects);
+}
+
+.mat-state-layer-host:not(:disabled):not([aria-disabled='true']):focus-visible > .mat-state-layer {
+  opacity: var(--mat-sys-state-focus-state-layer-opacity);
+}
+
+@media (hover: hover) {
+  .mat-state-layer-host:not(:disabled):not([aria-disabled='true']):hover > .mat-state-layer {
+    opacity: var(--mat-sys-state-hover-state-layer-opacity);
+  }
+}
+
+.mat-state-layer-host:not(:disabled):not([aria-disabled='true']):is(:active, [data-mat-state-layer-pressed]) > .mat-state-layer {
+  opacity: var(--mat-sys-state-pressed-state-layer-opacity);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mat-state-layer {
+    transition-duration: 0s;
+  }
+}
+
 /* Public type scale utilities */
 .mat-sys-typescale-display-large {
   font-size: var(--mat-sys-typescale-display-large-size);

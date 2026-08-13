@@ -43,7 +43,6 @@ const emit = defineEmits(['click']);
     :aria-pressed="ariaPressed"
     :disabled="disabled"
     :type="type"
-    pressed-class="mat-button-base--pressed"
     @click="emit('click', $event)"
   >
     <slot />
@@ -76,6 +75,7 @@ const emit = defineEmits(['click']);
   --mat-button-pressed-end-start-radius: var(--mat-button-pressed-radius);
   --mat-button-pressed-end-end-radius: var(--mat-button-pressed-radius);
   --mat-button-target-size: var(--mat-sys-interaction-target-min-size, 48px);
+  --mat-action-state-color: var(--mat-button-state-color);
   position: relative;
   isolation: isolate;
   display: inline-flex;
@@ -115,18 +115,6 @@ const emit = defineEmits(['click']);
   inline-size: 100%;
 }
 
-.mat-button-base::before {
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  border-radius: inherit;
-  content: '';
-  pointer-events: none;
-  background: var(--mat-button-state-color);
-  opacity: 0;
-  transition: opacity var(--mat-sys-motion-spring-fast-effects);
-}
-
 .mat-button-base::after {
   position: absolute;
   z-index: 2;
@@ -138,30 +126,11 @@ const emit = defineEmits(['click']);
   transform: translate(-50%, -50%);
 }
 
-@media (hover: hover) {
-  .mat-button-base:not(:disabled):hover::before {
-    opacity: var(--mat-sys-state-hover-state-layer-opacity);
-  }
-}
-
-.mat-button-base:not(:disabled):focus-visible {
-  outline: var(--mat-sys-interaction-focus-ring-width, 3px) solid var(--mat-sys-color-secondary);
-  outline-offset: var(--mat-sys-interaction-focus-ring-offset, 2px);
-}
-
-.mat-button-base:not(:disabled):focus-visible::before {
-  opacity: var(--mat-sys-state-focus-state-layer-opacity);
-}
-
-.mat-button-base:not(:disabled):is(:active, .mat-button-base--pressed) {
+.mat-button-base:not(:disabled):is(:active, [data-mat-state-layer-pressed]) {
   border-start-start-radius: var(--mat-button-pressed-start-start-radius);
   border-start-end-radius: var(--mat-button-pressed-start-end-radius);
   border-end-start-radius: var(--mat-button-pressed-end-start-radius);
   border-end-end-radius: var(--mat-button-pressed-end-end-radius);
-}
-
-.mat-button-base:not(:disabled):is(:active, .mat-button-base--pressed)::before {
-  opacity: var(--mat-sys-state-pressed-state-layer-opacity);
 }
 
 .mat-button-base:disabled {
@@ -173,8 +142,7 @@ const emit = defineEmits(['click']);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mat-button-base,
-  .mat-button-base::before {
+  .mat-button-base {
     transition-duration: 0s;
   }
 }

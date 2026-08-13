@@ -53,6 +53,7 @@ export { default as MatPane } from './components/mat-panes/MatPane.vue';
 export { default as MatNavigationRail } from './components/mat-navigation-rail/MatNavigationRail.vue';
 export { default as MatNavigationRailItem } from './components/mat-navigation-rail/MatNavigationRailItem.vue';
 export { default as Intersection } from './directives/intersection';
+export { default as StateLayer } from './directives/state-layer';
 // Node/Vitest 直接解析包源码时需要保留 JavaScript 扩展名。
 // eslint-disable-next-line import-x/extensions
 export { createMatUi, useMatTheme } from './plugin.js';

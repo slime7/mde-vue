@@ -62,6 +62,7 @@ import MAT_UI_KEY, {
 import createThemeController from './theme';
 import MAT_THEME_KEY from './theme-context';
 import { Intersection } from './directives/intersection';
+import { StateLayer } from './directives/state-layer';
 
 export const GLOBAL_COMPONENTS = [
   ['MatAppRoot', 'mat-app-root', MatAppRoot],
@@ -311,6 +312,7 @@ export function createMatUi(options = {}) {
         app.component(kebabName, component);
       });
       app.directive('intersection', Intersection);
+      app.directive('state-layer', StateLayer);
       app.provide(MAT_UI_KEY, componentOptions);
       app.provide(MAT_THEME_KEY, theme);
       setImperativeContext(componentOptions, theme);

@@ -51,3 +51,4 @@
 - [Panes 布局面板](components/panes.md): mat-panes 与 mat-pane 的横向多窗口布局、受控宽度调整、断点事件和低频宽度信息。
 - [Hover 悬停状态](components/hover.md): mat-hover 的作用域 Slot、受控状态和进入离开延迟。
 - [Intersection 指令](directives/intersection.md): v-intersection 的 IntersectionObserver 绑定值、选项和修饰符。
+- [State layer 指令](directives/state-layer.md): v-state-layer 的颜色配置、交互状态、宿主约束和生命周期。

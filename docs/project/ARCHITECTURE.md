@@ -17,7 +17,7 @@
 
 ## 共享组件基础层
 
-`MatSurfaceBase` 负责表面组件的动态原生根元素和属性透传；`MatActionBase` 统一处理 button/link 及内部可聚焦宿主的禁用、状态层和键盘指针交互；`MatButtonBase` 在此基础上统一按钮根节点、原生属性、48px 交互目标、焦点和按下状态，供 `MatBtn` 与 `MatFab` 复用；`MatSelectionControlBase` 统一处理选择控件的原生 input、标签、48px 目标区、40px 状态层、属性路由和插件指针设置；`MatTextInputBase` 在此基础上提供浮动标签和辅助信息。`MatItemContentBase` 统一 List 与 MenuItem 的无语义内容排列，`useRovingFocus` 只管理 DOM 顺序和 tabindex，不定义组件键盘含义。这些基础层均为内部实现，不作为公共入口导出。`MatInputBase` 是例外：它作为公共的无边框原生 input/textarea 基础组件，供使用方自定义外层 UI。组件共享的数值工具模块统一处理 CSS 长度、边缘像素值和毫秒延迟的校验、转换与回退（数字与纯数字字符串按数字处理，字符串按 CSS 属性校验），只服务内部组件，不加入公共入口。
+`MatSurfaceBase` 负责表面组件的动态原生根元素和属性透传；`MatActionBase` 统一处理 button/link 及内部可聚焦宿主的禁用和属性路由，并复用公共 `v-state-layer` 指令表达交互状态；`MatButtonBase` 在此基础上统一按钮根节点、原生属性、48px 交互目标、焦点和按下形状，供 `MatBtn` 与 `MatFab` 复用；`MatSelectionControlBase` 统一处理选择控件的原生 input、标签、48px 目标区、40px 状态层、属性路由和插件指针设置；`MatTextInputBase` 在此基础上提供浮动标签和辅助信息。`MatItemContentBase` 统一 List 与 MenuItem 的无语义内容排列，`useRovingFocus` 只管理 DOM 顺序和 tabindex，不定义组件键盘含义。这些基础层均为内部实现，不作为公共入口导出。`MatInputBase` 是例外：它作为公共的无边框原生 input/textarea 基础组件，供使用方自定义外层 UI。组件共享的数值工具模块统一处理 CSS 长度、边缘像素值和毫秒延迟的校验、转换与回退（数字与纯数字字符串按数字处理，字符串按 CSS 属性校验），只服务内部组件，不加入公共入口。
 
 内部帧调度器将连续指针输入合并到下一次绘制，并支持交互结束前同步刷新最新输入；Slider、RangeSlider、Panes 与 Sheet 复用该调度器。内部动效控制器优先等待根元素及后代的实际 Web Animations 完成，取消或反向切换时使旧等待失效；只有测试或缺少该 API 的环境使用后备时长。
 
@@ -38,7 +38,7 @@
 
 ### 公共入口
 
-`src/index.js` 是唯一 JavaScript 公共入口，导出全部组件、`Intersection` 指令、命令式 Dialog 与 Snackbar 函数，以及 `createMatUi()`、`useMatTheme()` 和 `useMatApp()`。构建将该入口编译为唯一运行时文件 `dist/mde-vue.js`，因此所有组件、Vue 上下文键、队列和协调器只存在一个模块实例。`dist/index.d.ts` 是完整根入口类型声明。包不提供组件、指令或函数子入口；`mde-vue/styles.css` 暴露基础令牌与全部组件样式，`mde-vue/tailwind.css` 暴露 Tailwind v4 映射。
+`src/index.js` 是唯一 JavaScript 公共入口，导出全部组件、`Intersection` 与 `StateLayer` 指令、命令式 Dialog 与 Snackbar 函数，以及 `createMatUi()`、`useMatTheme()` 和 `useMatApp()`。构建将该入口编译为唯一运行时文件 `dist/mde-vue.js`，因此所有组件、Vue 上下文键、队列和协调器只存在一个模块实例。`dist/index.d.ts` 是完整根入口类型声明。包不提供组件、指令或函数子入口；`mde-vue/styles.css` 暴露基础令牌与全部组件样式，`mde-vue/tailwind.css` 暴露 Tailwind v4 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -52,14 +52,14 @@
 
 ### 插件配置
 
-`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针、组件图标容器使用的全局 `iconClass`，以及按组件键配置的默认属性（defaults）。defaults 的键是 `mat-*` 标签去掉前缀后的 camelCase，值为该组件可配置的 prop 默认值；显式传入的 prop 优先，`v-model` 相关属性不接受配置，Tooltip 的打开延迟与同组快速切换时长通过 `defaults.tooltip` 提供。插件以 `mat-*` 和对应 `Mat*` 名称全局注册组件，并以 `intersection` 名称注册 `v-intersection` 指令。顶层选项不会写入主题控制器；未安装插件的按需组件和指令使用组件定义默认值。
+`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针、组件图标容器使用的全局 `iconClass`，以及按组件键配置的默认属性（defaults）。defaults 的键是 `mat-*` 标签去掉前缀后的 camelCase，值为该组件可配置的 prop 默认值；显式传入的 prop 优先，`v-model` 相关属性不接受配置，Tooltip 的打开延迟与同组快速切换时长通过 `defaults.tooltip` 提供。插件以 `mat-*` 和对应 `Mat*` 名称全局注册组件，并注册 `v-intersection` 与 `v-state-layer` 指令。顶层选项不会写入主题控制器；未安装插件的按需组件和指令使用组件定义默认值。
 
 ### 组件
 
 `MatAppRoot` 建立应用级布局坐标系与隔离覆盖层。默认正文随 document/body 增长和滚动，`scrollable` 切换为确定高度内的正文滚动；组件不修改页面根滚动样式。布局上下文使用 `ResizeObserver`、视口事件和显式 `update()` 测量根与登记元素，汇总安全区、四向 padding、内容尺寸、容器断点和边缘信息。边缘按登记顺序产生正交 inset，同侧外延取最大值。内部覆盖层按层级依次承载固定边缘、自由定位、Snackbar 与普通浮动组件、模态层，不公开 Slot；`useMatApp()` 只暴露深只读响应式 layout 与 `registerEdge()`。
 
 每个组件拥有自己的 Vue SFC、公开入口、样式与测试。`MatBadge` 默认以相对定位的 `inline-flex` 包装目标并绝对定位指示器，Inline 模式则只渲染参与自然布局的指示器；两种模式都不建立交互语义。`MatSpacer` 是不进入无障碍树的空 flex 子元素，只通过增长分配父容器主轴剩余空间。`MatBtn` 以同一个原生 `<button>` 组件提供普通按钮和图标模式：`icon=true` 解析默认 Slot 的 Material Symbols 文本，字符串 `icon` 使用 prop 文本，未设置 `icon` 时仍按普通按钮渲染并允许默认 Slot 直接放置 `MatIcon`；普通模式也可使用 `prefix`、`suffix` 或同名 Slots。`MatFab` 以同一个原生 `<button>` 组件提供纯图标 FAB 和 Extended FAB：默认 Slot 有非空内容时显示 Extended 标签，否则要求 `icon` 与 `label` 并显示 Tooltip；`app` 模式自动进入最近 AppRoot 的普通浮动组。两者共享 `MatButtonBase` 的原生交互和状态逻辑。按钮组与 split button 使用 Vue provide/inject 协调 `MatBtn` 子按钮，不复制交互协议；standard 选中态沿用普通按钮的 round/square 反转，connected 选中态使用覆盖四角的全圆 checked shape。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
-每个组件拥有自己的 Vue SFC、公开入口、样式与测试。`MatHover` 是无渲染交互组件，通过作用域 Slot 向使用方提供 hover 状态和目标事件 props，不引入包装元素；它只处理鼠标进入、离开及可取消的开放/关闭延迟。`v-intersection` 是独立的原生观察指令，绑定值直接映射 `IntersectionObserver` 回调和初始化选项，使用元素级 WeakMap 管理生命周期，不向 DOM 写入私有字段。`MatSpacer` 是不进入无障碍树的空 flex 子元素，只通过增长分配父容器主轴剩余空间。`MatBtn` 以同一个原生 `<button>` 组件提供普通按钮和图标模式：`icon=true` 解析默认 Slot 的 Material Symbols 文本，字符串 `icon` 使用 prop 文本，未设置 `icon` 时仍按普通按钮渲染并允许默认 Slot 直接放置 `MatIcon`；普通模式也可使用 `prefix`、`suffix` 或同名 Slots。`MatFab` 以同一个原生 `<button>` 组件提供纯图标 FAB 和 Extended FAB：默认 Slot 有非空内容时显示 Extended 标签，否则要求 `icon` 与 `label` 并显示 Tooltip。两者共享 `MatButtonBase` 的原生交互和状态逻辑。按钮组与 split button 使用 Vue provide/inject 协调 `MatBtn` 子按钮，不复制交互协议；standard 选中态沿用普通按钮的 round/square 反转，connected 选中态使用覆盖四角的全圆 checked shape。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
+每个组件拥有自己的 Vue SFC、公开入口、样式与测试。`MatHover` 是无渲染交互组件，通过作用域 Slot 向使用方提供 hover 状态和目标事件 props，不引入包装元素；它只处理鼠标进入、离开及可取消的开放/关闭延迟。`v-intersection` 是独立的原生观察指令，绑定值直接映射 `IntersectionObserver` 回调和初始化选项，使用元素级 WeakMap 管理生命周期，不向 DOM 写入私有字段。`v-state-layer` 以对象绑定接收状态层颜色，在可容纳子元素的交互宿主内插入无障碍隐藏层，并通过 CSS Anchor Positioning、系统状态透明度令牌和统一按压保持管理 hover、focus-visible 与 pressed；它不赋予宿主交互或无障碍语义。`MatSpacer` 是不进入无障碍树的空 flex 子元素，只通过增长分配父容器主轴剩余空间。`MatBtn` 以同一个原生 `<button>` 组件提供普通按钮和图标模式：`icon=true` 解析默认 Slot 的 Material Symbols 文本，字符串 `icon` 使用 prop 文本，未设置 `icon` 时仍按普通按钮渲染并允许默认 Slot 直接放置 `MatIcon`；普通模式也可使用 `prefix`、`suffix` 或同名 Slots。`MatFab` 以同一个原生 `<button>` 组件提供纯图标 FAB 和 Extended FAB：默认 Slot 有非空内容时显示 Extended 标签，否则要求 `icon` 与 `label` 并显示 Tooltip。两者共享 `MatButtonBase` 的原生交互和状态逻辑。按钮组与 split button 使用 Vue provide/inject 协调 `MatBtn` 子按钮，不复制交互协议；standard 选中态沿用普通按钮的 round/square 反转，connected 选中态使用覆盖四角的全圆 checked shape。split button 只负责两侧按钮、展开状态和 ARIA，不渲染菜单。
 
 Tooltip 的模块级协调器继续保证同一时间只有一个活动实例，并使用以分组容器为键的 WeakMap 保存最近实际显示的实例标识和快速切换有效期。分组由展示元素最近的 `data-mat-tooltip-group` 祖先明确声明，不根据标签名或组件层级推断；未分组或未配置跳过时长时不共享打开状态。省略显式 attach 时，已打开的 top-layer 祖先优先，其次使用目标所属 AppRoot 并读取布局 padding 生成避让矩形，目标不属于当前 AppRoot 时回退 body 与 Toolbar 几何注册表。Plain 与 Rich tooltip 复用同一触发、定位、延迟和堆叠协议；Rich 由显式 rich 或 subhead/action 内容启用，subhead 与 supporting content 同时支持 prop 和 Slot，action 只使用 Slot，指针或焦点进入 Rich 表面时继续维持自动展示。
 
@@ -184,3 +184,4 @@ flowchart LR
 - [0023 — createMatUi 组件默认属性 defaults 配置](adr/0023-mat-ui-component-defaults.md)
 - [0026 — 采用 Material 3 Expressive Web 动效令牌](adr/0026-material-3-expressive-motion-tokens.md)
 - [0027 — AppRoot 内模态与浮层按应用范围展示](adr/0027-approot.md)
+- [0028 — 公共 State layer 指令统一交互状态层](adr/0028-public-state-layer-directive.md)

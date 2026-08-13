@@ -132,6 +132,7 @@ export default defineConfig({
         text: '指令',
         items: [
           { text: 'Intersection 相交观察', link: '/directives/intersection' },
+          { text: 'State layer 状态层', link: '/directives/state-layer' },
         ],
       },
       {

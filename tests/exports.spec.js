@@ -63,6 +63,7 @@ import {
   MatTextField as RootMatTextField,
   MatToolbar as RootMatToolbar,
   MatTooltip as RootMatTooltip,
+  StateLayer as RootStateLayer,
   useMatApp,
   useMatProps,
 } from 'mde-vue';
@@ -199,6 +200,7 @@ describe('公共组件导出', () => {
     expect(app.component('mat-hover')).toBe(RootMatHover);
     expect(app.component('mat-container')).toBe(RootMatContainer);
     expect(app.directive('intersection')).toBe(RootIntersection);
+    expect(app.directive('state-layer')).toBe(RootStateLayer);
     expect(app.component('mat-spacer')).toBe(RootMatSpacer);
     expect(app.component('mat-loader')).toBe(RootMatLoader);
     expect(app.component('mat-tooltip')).toBe(RootMatTooltip);

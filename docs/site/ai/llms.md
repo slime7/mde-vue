@@ -58,6 +58,7 @@ llms: false
 - Tooltip：`docs/site/components/tooltip.md`
 - Snackbar：`docs/site/components/snackbar.md`
 - Intersection：`docs/site/directives/intersection.md`
+- State layer：`docs/site/directives/state-layer.md`
 - Spacer：`docs/site/components/spacer.md`
 - Shape：`docs/site/components/shape.md`
 - 支持范围：`docs/site/guide/limitations.md`

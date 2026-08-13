@@ -507,13 +507,13 @@ watch(
 
 .mat-list-item__surface:not(.mat-list-item--static):not(.mat-list-item--disabled):focus-visible,
 .mat-list-item__surface:not(.mat-list-item--static):not(.mat-list-item--disabled):active,
-.mat-list-item__surface.mat-action-base--pressed {
+.mat-list-item__surface[data-mat-state-layer-pressed] {
   border-radius: var(--mat-list-item-interactive-container-shape);
 }
 
 .mat-list-item--multi-action:not(.mat-list-item--disabled):has(.mat-list-item__primary:focus-visible),
 .mat-list-item--multi-action:not(.mat-list-item--disabled):has(.mat-list-item__primary:active),
-.mat-list-item--multi-action:has(.mat-list-item__primary.mat-action-base--pressed) {
+.mat-list-item--multi-action:has(.mat-list-item__primary[data-mat-state-layer-pressed]) {
   border-radius: var(--mat-list-item-interactive-container-shape);
 }
 

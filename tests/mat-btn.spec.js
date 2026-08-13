@@ -112,7 +112,7 @@ describe('MatBtn', () => {
     });
 
     expect(warn).toHaveBeenCalledWith('MatBtn: on-* 内容色只支持 text 形态，当前按默认配色处理');
-    expect(wrapper.attributes('style')).toBeUndefined();
+    expect(wrapper.element.style.getPropertyValue('--mat-btn-label-text-color')).toBe('');
     warn.mockRestore();
   });
 

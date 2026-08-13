@@ -128,12 +128,12 @@ const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => propsW
   }
 }
 
-.mat-card--filled:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, .mat-action-base--pressed)),
-.mat-card--outlined:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, .mat-action-base--pressed)) {
+.mat-card--filled:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed])),
+.mat-card--outlined:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed])) {
   --mat-card-elevation: var(--mat-sys-elevation-level0);
 }
 
-.mat-card--elevated:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, .mat-action-base--pressed)) {
+.mat-card--elevated:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed])) {
   --mat-card-elevation: var(--mat-sys-elevation-level1);
 }
 

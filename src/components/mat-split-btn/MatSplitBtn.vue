@@ -326,7 +326,7 @@ watch(
   transform: translateX(0) rotate(180deg);
 }
 
-.mat-split-btn--expanded .mat-split-btn__trailing :deep(.mat-button-base::before) {
+.mat-split-btn--expanded .mat-split-btn__trailing :deep(.mat-button-base > .mat-state-layer) {
   opacity: var(--mat-sys-state-pressed-state-layer-opacity);
 }
 
