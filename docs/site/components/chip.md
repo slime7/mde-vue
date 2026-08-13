@@ -201,7 +201,7 @@ MatChipSet 不提供额外的 select 或 selected 事件。remove 不自动删�
 
 ## 状态
 
-Chip 支持 hover、focus-visible、pressed、disabled，以及 filter/input 的受控 selected。ChipSet 的 scroll 布局复用横向 MatScrollArea，完全隐藏滚动条，并使用 48px 边缘渐隐提示仍有内容可移动；鼠标主键和触控笔可以按住拖拽，触摸保持原生惯性滑动。超过拖拽阈值后不会激活 Chip，短按和键盘激活保持不变。描边形态使用 outline variant，升高形态使用 surface container low 和 level 1 海拔；按压只改变状态层。减少动态效果偏好下关闭颜色、阴影和状态层过渡。两个组件均没有公开方法。
+Chip 支持 hover、focus-visible、pressed、disabled，以及 filter/input 的受控 selected。ChipSet 的 scroll 布局复用横向 MatScrollArea，完全隐藏滚动条，并使用 48px 边缘渐隐提示仍有内容可移动；滚动首尾保留不可见焦点空间，键盘聚焦两端 Chip 时焦点环保持完整。鼠标主键和触控笔可以按住拖拽，触摸保持原生惯性滑动。超过拖拽阈值后不会激活 Chip，短按和键盘激活保持不变。描边形态使用 outline variant，升高形态使用 surface container low 和 level 1 海拔；按压只改变状态层。减少动态效果偏好下关闭颜色、阴影和状态层过渡。两个组件均没有公开方法。
 
 ## 参考来源
 

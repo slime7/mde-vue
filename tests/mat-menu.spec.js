@@ -731,7 +731,7 @@ describe('MatMenu', () => {
     expect(trailing.find('.mat-icon').exists()).toBe(false);
   });
 
-  it('键盘聚焦只使用菜单内部焦点环', async () => {
+  it('键盘聚焦保持菜单项目可达', async () => {
     const wrapper = mount(MatMenuItem, {
       attachTo: document.body,
       slots: { default: '菜单项目' },
@@ -741,7 +741,6 @@ describe('MatMenu', () => {
     item.element.focus();
     await nextTick();
 
-    expect(item.classes()).not.toContain('mat-action-base--focus-ring');
     expect(document.activeElement).toBe(item.element);
   });
 

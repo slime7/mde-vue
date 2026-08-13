@@ -138,6 +138,9 @@ defineProps({
   align-items: center;
   justify-content: center;
   color: var(--mat-item-supporting-color);
+}
+
+[data-mat-item-content-leading] {
   font-size: var(--mat-item-icon-size);
   line-height: 1;
 }

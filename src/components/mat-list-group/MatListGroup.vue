@@ -312,6 +312,7 @@ watch(isSelectableFallback, async (selectable, wasSelectable) => {
   display: block;
   min-block-size: 0;
   overflow: clip;
+  overflow-clip-margin: 5px;
   block-size: 0;
   opacity: 0;
   transition: block-size var(--mat-sys-motion-spring-default-spatial), opacity var(--mat-sys-motion-spring-default-effects);

@@ -186,7 +186,6 @@ onBeforeUnmount(() => {
       :aria-expanded="hasSubmenu ? String(submenuOpen) : undefined"
       :aria-haspopup="hasSubmenu ? 'menu' : undefined"
       :disabled="propsWithDefaults.disabled"
-      :focus-ring="false"
       role="menuitem"
       :use-cursor="matUi.useCursor"
       @click="handleClick"
@@ -277,12 +276,6 @@ onBeforeUnmount(() => {
   color: var(--mat-menu-active-content-color);
   background: var(--mat-menu-active-container-color);
   border-radius: var(--mat-sys-shape-corner-medium);
-}
-
-.mat-menu-item:focus-visible {
-  outline: none;
-  box-shadow: inset 0 0 0 var(--mat-sys-interaction-focus-ring-width, 3px)
-    var(--mat-sys-color-secondary);
 }
 
 .mat-menu-item__submenu-icon {

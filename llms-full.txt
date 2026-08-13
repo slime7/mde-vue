@@ -6974,7 +6974,7 @@ MatChipSet 不提供额外的 select 或 selected 事件。remove 不自动删�
 
 ## 状态
 
-Chip 支持 hover、focus-visible、pressed、disabled，以及 filter/input 的受控 selected。ChipSet 的 scroll 布局复用横向 MatScrollArea，完全隐藏滚动条，并使用 48px 边缘渐隐提示仍有内容可移动；鼠标主键和触控笔可以按住拖拽，触摸保持原生惯性滑动。超过拖拽阈值后不会激活 Chip，短按和键盘激活保持不变。描边形态使用 outline variant，升高形态使用 surface container low 和 level 1 海拔；按压只改变状态层。减少动态效果偏好下关闭颜色、阴影和状态层过渡。两个组件均没有公开方法。
+Chip 支持 hover、focus-visible、pressed、disabled，以及 filter/input 的受控 selected。ChipSet 的 scroll 布局复用横向 MatScrollArea，完全隐藏滚动条，并使用 48px 边缘渐隐提示仍有内容可移动；滚动首尾保留不可见焦点空间，键盘聚焦两端 Chip 时焦点环保持完整。鼠标主键和触控笔可以按住拖拽，触摸保持原生惯性滑动。超过拖拽阈值后不会激活 Chip，短按和键盘激活保持不变。描边形态使用 outline variant，升高形态使用 surface container low 和 level 1 海拔；按压只改变状态层。减少动态效果偏好下关闭颜色、阴影和状态层过渡。两个组件均没有公开方法。
 
 ## 参考来源
 
@@ -11257,7 +11257,7 @@ const open = ref(false);
 
 ### `maxLength`
 
-`maxLength` 接受正数、纯数字字符串或合法 CSS 长度。数字按 px 处理；最终最大高度不会超过视口安全范围。内容溢出后在菜单内部纵向滚动，原生滚动条隐藏，并只在仍有内容可滚动的一侧显示 16px 边缘渐隐。
+`maxLength` 接受正数、纯数字字符串或合法 CSS 长度。数字按 px 处理；最终最大高度不会超过视口安全范围。内容溢出后在菜单内部纵向滚动，原生滚动条隐藏，并只在仍有内容可滚动的一侧显示 16px 边缘渐隐。滚动区域四周会保留键盘焦点环所需的不可见空间，因此聚焦首项、末项或靠近行轴边缘的项目时，焦点环仍完整可见。
 
 :::: details 查看示例代码
 ::: code-group
@@ -11854,6 +11854,8 @@ const open = ref(false);
 
 ### `trailing` Slot
 
+`trailing` 适合放置快捷键或短文本，文字使用 `label-large` 排版；图标保持自身尺寸。省略时，带有子菜单的项目自动显示 20px 方向图标。
+
 :::: details 查看示例代码
 ::: code-group
 
@@ -12022,7 +12024,7 @@ MatMenuGroup 没有自定义事件。包含 submenu 的项目把点击、Enter�
 | `MatMenuItem` | 默认 | 必需的简短操作标签 |
 | `MatMenuItem` | `leading` | 20px 图标或简短展示内容 |
 | `MatMenuItem` | `supporting` | 标签下方的一行简短辅助文字 |
-| `MatMenuItem` | `trailing` | 快捷键或短文本；省略时子菜单项自动显示方向图标 |
+| `MatMenuItem` | `trailing` | 使用 `label-large` 的快捷键或短文本，也可放置自带尺寸的图标；省略时子菜单项自动显示 20px 方向图标 |
 | `MatMenuItem` | `submenu` | 直接放置一个 MatMenu；可以继续递归嵌套 |
 
 MenuItem 的 Slots 只构成一个操作，不应嵌套按钮、开关或其他独立交互控件。MatDivider 在 Menu 中自动使用 `role="separator"` 和菜单间距。
@@ -12034,7 +12036,7 @@ MenuItem 的 Slots 只构成一个操作，不应嵌套按钮、开关或其他�
 - Escape 关闭当前层；Tab 关闭整条菜单链并按浏览器正常焦点顺序继续。程序化关闭、菜单操作以及 Popover 的外部或触发器关闭都会保留菜单至实际消失动画完成（默认 150ms），嵌套菜单的状态会立即收起。
 - 元素锚点菜单优先显示在触发器下方；子菜单优先显示在父项目行内末端。空间不足时自动向上、向左或向右换边，并保留视口间距。坐标菜单以视口坐标为左上基准，超出边缘时向内夹紧。
 - `offset` 在基础定位后、视口夹紧前生效。坐标使用 client 坐标，不接受 page/document 坐标；页面滚动后由下一次鼠标事件提供新坐标。
-- 菜单宽度限制为 112–280px。内容超过 `maxLength` 或视口安全高度时在内部滚动，滚动条隐藏，并在尚可滚动的边缘显示渐隐。容器内边距为 4px，项目和活动高亮高度为 48px，图标为 20px，项目总水平边缘距离为 12px。
+- 菜单宽度限制为 112–280px。内容超过 `maxLength` 或视口安全高度时在内部滚动，滚动条隐藏，并在尚可滚动的边缘显示渐隐；滚动区域四周预留外扩空间，项目获得键盘焦点时完整显示焦点环。容器内边距为 4px，项目和活动高亮高度为 48px，图标为 20px，项目总水平边缘距离为 12px。
 - MatMenuGroup 提供 Material 3 expressive 间隙分组；这是本组件库补充的 Web 实现能力，不受 Google 官方 Web 组件暂未提供间隙分组的限制。滚动菜单仍应优先使用 MatDivider，避免间隙削弱连续滚动内容。
 - 使用方负责触发器的点击、`aria-haspopup="menu"`、`aria-expanded` 和 `aria-controls`；Menu 不会接管外部按钮的展开逻辑。
 - 减少动态效果偏好下关闭展开和形状变化的非必要过渡。
@@ -13739,7 +13741,7 @@ single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌�
 - `ArrowDown`、`ArrowRight` 移至下一项，`ArrowUp`、`ArrowLeft` 移至上一项；到边界后循环并跳过禁用项。
 - 选择模式优先以第一个选中项作为初始停靠点；方向键只移动焦点，不自动改变选择。
 - 选择模式使用 Space 或 Enter 请求选择。多操作模式把主操作与 trailing 内的启用控件纳入同一方向键顺序。
-- 键盘焦点环完整包围当前项目或独立操作，不会被相邻项目或多操作 trailing 区域遮挡。
+- 键盘焦点环完整包围当前项目或独立操作，不会被相邻项目、多操作 trailing 区域或展开分组内容的边界遮挡。
 - selected 同时改变容器配色和形状。disabled 内容降低强调，不响应指针或键盘；减少动态效果偏好下关闭形状和状态层过渡。
 
 组件没有公开方法。

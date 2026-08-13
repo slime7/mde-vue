@@ -417,6 +417,7 @@ watch(
   --mat-list-item-label-color: var(--mat-list-item-label-text-color);
   --mat-list-item-supporting-color: var(--mat-list-item-supporting-text-color);
   overflow: clip;
+  overflow-clip-margin: 5px;
   inline-size: 100%;
   color: var(--mat-list-item-label-color);
   text-align: start;

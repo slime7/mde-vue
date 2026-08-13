@@ -3897,7 +3897,7 @@ var Ir = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}, [j(t.$slots, "trailing", {}, void 0, !0)], 10, zr)) : a("", !0)
 		], 10, Lr));
 	}
-}), [["__scopeId", "data-v-8bcade82"]]), Vr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatListItemContent" }, {
+}), [["__scopeId", "data-v-e06fa12c"]]), Vr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatListItemContent" }, {
 	__name: "MatListItemContent",
 	props: {
 		lineCount: {
@@ -4256,7 +4256,7 @@ var Ir = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-dcb731ba"]]), qr = /*@__PURE__*/ Object.assign({ name: "MatListGroupActivatorProvider" }, {
+}), [["__scopeId", "data-v-9fdd8fd5"]]), qr = /*@__PURE__*/ Object.assign({ name: "MatListGroupActivatorProvider" }, {
 	__name: "MatListGroupActivatorProvider",
 	props: { context: {
 		type: Object,
@@ -4374,7 +4374,7 @@ var Ir = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"aria-labelledby"
 		]));
 	}
-}), [["__scopeId", "data-v-eae89dc1"]]), Xr = Symbol("mat-menu"), Zr = Symbol("mat-menu-item"), Qr = Symbol("mat-menu-group");
+}), [["__scopeId", "data-v-6177ebb7"]]), Xr = Symbol("mat-menu"), Zr = Symbol("mat-menu-item"), Qr = Symbol("mat-menu-group");
 function $r(e, t, n) {
 	return Math.abs((e.x * (t.y - n.y) + t.x * (n.y - e.y) + n.x * (e.y - t.y)) / 2);
 }
@@ -5143,7 +5143,7 @@ var di = ["data-dot"], fi = ["data-dot"], pi = /*#__PURE__*/ Q(/* @__PURE__ */ O
 			_: 3
 		})) : j(e.$slots, "default", { key: 1 }, void 0, !0)], 2));
 	}
-}), [["__scopeId", "data-v-0f248b3b"]]), wi = Symbol("mde-vue-radio-group"), Ti = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-6760f296"]]), wi = Symbol("mde-vue-radio-group"), Ti = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatRadio",
 	inheritAttrs: !1
 }, {
@@ -6767,7 +6767,7 @@ var ta = {
 			])
 		], 64));
 	}
-}), [["__scopeId", "data-v-649b3a75"]]), Oa = { class: "mat-menu-item-host" }, ka = 300, Aa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-5e9edf61"]]), Oa = { class: "mat-menu-item-host" }, ka = 300, Aa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatMenuItem",
 	inheritAttrs: !1
 }, {
@@ -6851,7 +6851,6 @@ var ta = {
 			"aria-expanded": D.value ? String(v.value) : void 0,
 			"aria-haspopup": D.value ? "menu" : void 0,
 			disabled: I(n).disabled,
-			"focus-ring": !1,
 			role: "menuitem",
 			"use-cursor": I(m).useCursor,
 			onClick: L,
@@ -6896,7 +6895,7 @@ var ta = {
 			"use-cursor"
 		]), e.$slots.submenu ? j(e.$slots, "submenu", { key: 0 }, void 0, !0) : a("", !0)]));
 	}
-}), [["__scopeId", "data-v-7ee26f6d"]]), ja = ["aria-labelledby"], Ma = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-985e87a6"]]), ja = ["aria-labelledby"], Ma = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatMenuGroup",
 	inheritAttrs: !1
 }, {

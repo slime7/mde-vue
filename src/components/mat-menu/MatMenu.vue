@@ -928,6 +928,10 @@ if (appContext) {
   --mat-menu-supporting-color: var(--mat-sys-color-on-surface-variant);
   --mat-menu-active-container-color: var(--mat-accent-container-color, var(--mat-sys-color-tertiary-container));
   --mat-menu-active-content-color: var(--mat-on-accent-container-color, var(--mat-sys-color-on-tertiary-container));
+  --mat-menu-focus-ring-bleed: calc(
+    var(--mat-sys-interaction-focus-ring-width, 3px)
+    + var(--mat-sys-interaction-focus-ring-offset, 2px)
+  );
   --mat-menu-viewport-width: 100dvi;
   --mat-menu-viewport-height: 100dvb;
   --mat-menu-resolved-max-length: calc(
@@ -984,11 +988,11 @@ if (appContext) {
   min-block-size: 0;
   max-block-size: inherit;
   padding: var(--mat-menu-container-padding);
-  overflow: hidden;
+  overflow: visible;
   overscroll-behavior: contain;
   background: var(--mat-menu-container-color);
   border-radius: inherit;
-  clip-path: inset(0 round var(--mat-sys-shape-corner-large));
+  clip-path: none;
   transition: clip-path var(--mat-sys-motion-spring-fast-spatial);
 }
 
@@ -997,19 +1001,24 @@ if (appContext) {
 }
 
 .mat-menu__surface :deep(.mat-scroll-area__scroller) {
+  padding: var(--mat-menu-focus-ring-bleed);
+  margin: calc(-1 * var(--mat-menu-focus-ring-bleed));
+  inline-size: calc(100% + (2 * var(--mat-menu-focus-ring-bleed)));
   max-block-size: calc(
     var(--mat-menu-resolved-max-length) - var(--mat-menu-container-padding)
-    - var(--mat-menu-container-padding)
+    - var(--mat-menu-container-padding) + (2 * var(--mat-menu-focus-ring-bleed))
   );
 }
 
 .mat-menu--closing:not(.mat-menu--grouped) .mat-menu__surface {
+  overflow: hidden;
   clip-path: inset(46% 8% round var(--mat-sys-shape-corner-extra-large));
   transition-duration: 150ms;
   transition-timing-function: cubic-bezier(.31, .94, .34, 1);
 }
 
 .mat-menu:not(:popover-open):not(.mat-menu--grouped) .mat-menu__surface {
+  overflow: hidden;
   clip-path: inset(46% 8% round var(--mat-sys-shape-corner-extra-large));
 }
 
@@ -1028,10 +1037,15 @@ if (appContext) {
 .mat-menu--grouped .mat-menu__surface {
   display: flex;
   flex-direction: column;
-  gap: var(--mat-menu-group-space);
   padding: 0;
   background: transparent;
   clip-path: none;
+}
+
+.mat-menu--grouped .mat-menu__surface :deep(.mat-scroll-area__scroller) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mat-menu-group-space);
 }
 
 .mat-menu--nested {
