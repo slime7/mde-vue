@@ -2906,10 +2906,27 @@ Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量�
 
 ```vue
 <template>
-  <mat-btn prefix="add">
-    新增项目
-  </mat-btn>
+  <div class="example-stack">
+    <mat-btn prefix="send">
+      发送
+    </mat-btn>
+
+    <mat-btn prefix="send" block>
+      发送
+    </mat-btn>
+  </div>
 </template>
+```
+```vue
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  inline-size: 100%;
+}
+</style>
 ```
 :::
 ::::

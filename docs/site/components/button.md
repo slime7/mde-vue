@@ -156,6 +156,8 @@ order: 50
 
 <<< @/examples/button/ButtonPrefixExample.vue#template [template]
 
+<<< @/examples/button/ButtonPrefixExample.vue#style [style]
+
 :::
 ::::
 
