@@ -468,6 +468,7 @@ watch(
 }
 
 .mat-list-item__separate-trailing {
+  --mat-list-item-trailing-action-space: 8px;
   position: relative;
   z-index: 1;
   display: flex;
@@ -477,6 +478,9 @@ watch(
   box-sizing: border-box;
   min-block-size: var(--mat-sys-interaction-target-min-size);
   padding-inline-end: var(--mat-list-item-trailing-space);
+  margin-inline-end: calc(
+    var(--mat-list-item-trailing-action-space) - var(--mat-list-item-trailing-space)
+  );
   color: var(--mat-list-item-supporting-color);
 }
 

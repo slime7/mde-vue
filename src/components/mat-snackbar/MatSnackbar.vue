@@ -535,10 +535,6 @@ watch(() => propsWithDefaults.duration, () => {
   animation: mat-snackbar-exit var(--mat-sys-motion-spring-fast-effects) both;
 }
 
-.mat-snackbar--with-trailing {
-  padding-inline-end: var(--mat-snackbar-action-trailing-space);
-}
-
 .mat-snackbar__text {
   flex: 1 1 auto;
   min-inline-size: 0;
@@ -552,7 +548,9 @@ watch(() => propsWithDefaults.duration, () => {
   align-items: center;
   min-block-size: var(--mat-snackbar-action-target-size);
   margin-block: -12px;
-  margin-inline-start: var(--mat-snackbar-content-action-space);
+  margin-inline: var(--mat-snackbar-content-action-space) calc(
+    var(--mat-snackbar-action-trailing-space) - var(--mat-snackbar-leading-space)
+  );
 }
 
 .mat-snackbar__action,

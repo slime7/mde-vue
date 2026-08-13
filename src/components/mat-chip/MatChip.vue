@@ -263,6 +263,10 @@ function handleRemoveClick(event) {
   --mat-chip-label-color: var(--mat-sys-color-on-surface-variant);
   --mat-chip-icon-color: var(--mat-sys-color-on-surface-variant);
   --mat-chip-state-color: var(--mat-chip-label-color);
+  --mat-chip-horizontal-space: 16px;
+  --mat-chip-leading-icon-space: 8px;
+  --mat-chip-avatar-space: 4px;
+  --mat-chip-remove-icon-space: 8px;
   --mat-chip-remove-state-layer-size: 28px;
   --mat-chip-outline-color: var(--mat-sys-color-outline-variant);
   --mat-chip-elevation: none;
@@ -277,7 +281,7 @@ function handleRemoveClick(event) {
   min-inline-size: 0;
   block-size: 32px;
   padding-block: 0;
-  padding-inline: 16px;
+  padding-inline: var(--mat-chip-horizontal-space);
   color: var(--mat-chip-label-color);
   text-align: start;
   white-space: nowrap;
@@ -289,15 +293,27 @@ function handleRemoveClick(event) {
   transition: color var(--mat-sys-motion-spring-fast-effects), background-color var(--mat-sys-motion-spring-fast-effects), border-color var(--mat-sys-motion-spring-fast-effects), box-shadow var(--mat-sys-motion-spring-fast-effects);
 }
 
-.mat-chip--has-leading { padding-inline-start: 8px; }
+.mat-chip--has-leading .mat-chip__icon--leading {
+  margin-inline-start: calc(
+    var(--mat-chip-leading-icon-space) - var(--mat-chip-horizontal-space)
+  );
+}
 
-.mat-chip--has-avatar { padding-inline-start: 4px; }
+.mat-chip--has-avatar .mat-chip__avatar {
+  margin-inline-start: calc(
+    var(--mat-chip-avatar-space) - var(--mat-chip-horizontal-space)
+  );
+}
 
 .mat-chip--input {
   min-inline-size: 88px;
 }
 
-.mat-chip--has-remove-icon { padding-inline-end: 8px; }
+.mat-chip--has-remove-icon .mat-chip__remove-icon {
+  margin-inline-end: calc(
+    var(--mat-chip-remove-icon-space) - var(--mat-chip-horizontal-space)
+  );
+}
 
 .mat-chip--assist {
   --mat-chip-icon-color: var(--mat-accent-color, var(--mat-sys-color-primary));
