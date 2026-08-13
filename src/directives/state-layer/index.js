@@ -6,6 +6,7 @@ import { addAnchorName, removeAnchorName } from '../../anchor-names';
  */
 
 const DEFAULT_COLOR = 'currentcolor';
+const HOST_ATTRIBUTE = 'data-mat-state-layer-host';
 const PRESS_MIN_DURATION = 150;
 const UNSUPPORTED_TAGS = new Set([
   'AREA', 'AUDIO', 'BASE', 'BR', 'CANVAS', 'COL', 'EMBED', 'HR', 'IFRAME', 'IMG',
@@ -274,7 +275,7 @@ function mountStateLayer(element, binding) {
   layer.style.setProperty('position-anchor', anchorName);
   layer.style.backgroundColor = resolveColor(readOptions(binding.value));
   addAnchorName(element, anchorName);
-  element.classList.add('mat-state-layer-host');
+  element.setAttribute(HOST_ATTRIBUTE, '');
   element.prepend(layer);
 
   const record = {
@@ -332,7 +333,7 @@ function unmountStateLayer(element) {
   record.removeEventListeners();
   record.observer.disconnect();
   record.layer.remove();
-  element.classList.remove('mat-state-layer-host');
+  element.removeAttribute(HOST_ATTRIBUTE);
   removeAnchorName(element, record.anchorName);
   records.delete(element);
 }

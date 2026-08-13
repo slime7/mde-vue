@@ -731,6 +731,20 @@ describe('MatMenu', () => {
     expect(trailing.find('.mat-icon').exists()).toBe(false);
   });
 
+  it('键盘聚焦只使用菜单内部焦点环', async () => {
+    const wrapper = mount(MatMenuItem, {
+      attachTo: document.body,
+      slots: { default: '菜单项目' },
+    });
+    const item = wrapper.get('[role="menuitem"]');
+
+    item.element.focus();
+    await nextTick();
+
+    expect(item.classes()).not.toContain('mat-action-base--focus-ring');
+    expect(document.activeElement).toBe(item.element);
+  });
+
   it('子菜单箭头也使用统一的独立图标元素', () => {
     const wrapper = mount(MatMenuItem, {
       global: {

@@ -157,4 +157,20 @@ describe('v-state-layer', () => {
     expect(wrapper.element.hasAttribute('data-mat-state-layer-pressed')).toBe(false);
     expect(wrapper.element.style.getPropertyValue('anchor-name')).toBe('');
   });
+
+  it('Vue 更新宿主 class 后仍保留状态层宿主标记', async () => {
+    const wrapper = mount({
+      data: () => ({ active: false }),
+      directives: { stateLayer: StateLayer },
+      template: '<button v-state-layer :class="{ active }">内容</button>',
+    });
+
+    expect(wrapper.element.hasAttribute('data-mat-state-layer-host')).toBe(true);
+
+    await wrapper.setData({ active: true });
+
+    expect(wrapper.classes()).toContain('active');
+    expect(wrapper.element.hasAttribute('data-mat-state-layer-host')).toBe(true);
+    expect(getLayer(wrapper)).not.toBeNull();
+  });
 });
