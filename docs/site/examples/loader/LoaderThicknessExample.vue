@@ -2,7 +2,7 @@
 <script setup>
 import { ref } from 'vue';
 
-const thickness = ref(4);
+const thickness = ref('default');
 </script>
 <!-- #endregion script -->
 
@@ -15,15 +15,15 @@ const thickness = ref(4);
     :selected="thickness"
     @select="thickness = $event.nextSelected"
   >
-    <mat-btn :value="4">
-      4px
+    <mat-btn value="default">
+      default
     </mat-btn>
-    <mat-btn :value="8">
-      8px
+    <mat-btn value="heavy">
+      heavy
     </mat-btn>
   </mat-btn-group>
 
-  <p>线条形：{{ thickness }}px</p>
+  <p>线条形：{{ thickness }}</p>
   <mat-loader
     shape="wavy"
     :thickness="thickness"
@@ -31,9 +31,10 @@ const thickness = ref(4);
     aria-label="波浪线进度 60%"
   />
 
-  <p>环形：{{ thickness }}px</p>
+  <p>48px 波浪环：{{ thickness }}</p>
   <mat-loader
     shape="wavy"
+    size="48"
     :thickness="thickness"
     variant="circular"
     :value=".6"

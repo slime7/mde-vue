@@ -256,9 +256,23 @@ export function normalizeMs(value, fallback = 0) {
  * 归一化纯数字属性；字符串同样按数字处理，非法值返回 fallback。
  *
  * @param {unknown} value
- * @param {{ positive?: boolean, fallback?: number }} options
+ * @param {{ positive?: boolean, fallback?: number, allowNegative?: boolean }} options
  * @returns {number}
  */
-export function normalizeNumber(value, { positive = false, fallback } = {}) {
-  return isValidNumber(value, { positive }) ? toNumber(value) : fallback;
+export function normalizeNumber(value, {
+  positive = false,
+  fallback,
+  allowNegative = false,
+} = {}) {
+  const number = toNumber(value);
+
+  if (!Number.isFinite(number)) {
+    return fallback;
+  }
+
+  if (positive ? number <= 0 : (!allowNegative && number < 0)) {
+    return fallback;
+  }
+
+  return number;
 }

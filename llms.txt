@@ -28,7 +28,7 @@
 - [Switch 开关](components/switch.md): mat-switch 的布尔 v-model、三档内置图标、配色、事件和默认 slot。
 - [Slider 滑块](components/slider.md): mat-slider 的单数值 v-model、标准与居中变体、尺寸、方向、图标和数值指示。
 - [Range slider 范围滑块](components/range-slider.md): mat-range-slider 的不可变区间 v-model、端点名称、方向、尺寸、停靠点和数值指示。
-- [Loader 加载器](components/loader.md): mat-loader 的线条与环形进度、确定与不确定状态、波浪形及其运动开关、厚度和配色。
+- [Loader 加载器](components/loader.md): mat-loader 的线条与环形进度、确定与不确定状态、波浪形、环形尺寸、粗细档位和配色。
 - [Select 选择器](components/select.md): mat-select 的 items、单选、多选、Chips、分组、表单值与菜单交互。
 - [Input base 输入基础层](components/input-base.md): mat-input-base 与 MatInputBase 提供可自定义输入 UI 的无边框原生 input 或 textarea 基础层。
 - [Card 卡片](components/card.md): mat-card 的 Material 3 外观、标题、副标题、媒体、内容、操作区与链接式交互。

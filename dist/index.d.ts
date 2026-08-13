@@ -2551,12 +2551,19 @@ export interface MatLoaderProps {
   */
   indeterminate?: boolean;
   /**
-  * 轨道厚度，必须为正数；非法值回退默认 4。
+  * 环形加载器的宽高尺寸；有限数值会限制在 24 至 240 之间，线条形忽略此属性。
   *
-  * @type {number}
-  * @default 4
+  * @type {number | string}
+  * @default 48
   */
-  thickness?: number;
+  size?: number | string;
+  /**
+  * 轨道和活动指示器的粗细档位。
+  *
+  * @type {'default' | 'heavy'}
+  * @default 'default'
+  */
+  thickness?: 'default' | 'heavy';
   /**
   * 轨道形状；可选值为 `flat`、`wavy`。
   *

@@ -44,15 +44,26 @@ describe('MatLoader', () => {
     expect(clamped.attributes('aria-valuenow')).toBe('2');
   });
 
-  it('校验规格规定的变体、形状和正数厚度', () => {
+  it('校验规格规定的变体、形状、尺寸和厚度档位', () => {
     expect(MatLoader.props.variant.validator('linear')).toBe(true);
     expect(MatLoader.props.variant.validator('circular')).toBe(true);
     expect(MatLoader.props.variant.validator('radial')).toBe(false);
     expect(MatLoader.props.shape.validator('flat')).toBe(true);
     expect(MatLoader.props.shape.validator('wavy')).toBe(true);
     expect(MatLoader.props.shape.validator('round')).toBe(false);
-    expect(MatLoader.props.thickness.validator(4)).toBe(true);
-    expect(MatLoader.props.thickness.validator(0)).toBe(false);
+    expect(MatLoader.props.size.default).toBe(48);
+    expect(MatLoader.props.size.validator(24)).toBe(true);
+    expect(MatLoader.props.size.validator('48')).toBe(true);
+    expect(MatLoader.props.size.validator(' 240 ')).toBe(true);
+    expect(MatLoader.props.size.validator(240)).toBe(true);
+    expect(MatLoader.props.size.validator(-1)).toBe(true);
+    expect(MatLoader.props.size.validator('-1')).toBe(true);
+    expect(MatLoader.props.size.validator(Number.NaN)).toBe(false);
+    expect(MatLoader.props.size.validator('large')).toBe(false);
+    expect(MatLoader.props.thickness.default).toBe('default');
+    expect(MatLoader.props.thickness.validator('default')).toBe(true);
+    expect(MatLoader.props.thickness.validator('heavy')).toBe(true);
+    expect(MatLoader.props.thickness.validator(4)).toBe(false);
     expect(MatLoader.props.max.validator(0)).toBe(false);
   });
 });

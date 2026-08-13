@@ -13,6 +13,11 @@ import { isValidCssLength, normalizeNumber } from '../value-utils';
 import { useMatProps } from '../use-mat-props';
 
 const INDICATOR_GAP_SIZE = 4;
+const DEFAULT_CIRCULAR_SIZE = 48;
+const MIN_CIRCULAR_SIZE = 24;
+const MAX_CIRCULAR_SIZE = 240;
+const LINEAR_DEFAULT_THICKNESS = 4;
+const LINEAR_HEAVY_THICKNESS = 4.8;
 const LINEAR_WAVE_AMPLITUDE = 3;
 const LINEAR_WAVE_WAVELENGTH = 40;
 const CIRCULAR_WAVE_AMPLITUDE = 1.6;
@@ -170,18 +175,31 @@ const props = defineProps({
     default: false,
   },
   /**
-   * 轨道厚度，必须为正数；非法值回退默认 4。
+   * 环形加载器的宽高尺寸；有限数值会限制在 24 至 240 之间，线条形忽略此属性。
    *
-   * @type {number}
-   * @default 4
+   * @type {number | string}
+   * @default 48
+   */
+  size: {
+    type: [Number, String],
+    default: 48,
+    validator: (value) => isValidCssLength(value, {
+      allowUndefined: false,
+      allowNegative: true,
+    }),
+  },
+  /**
+   * 轨道和活动指示器的粗细档位。
+   *
+   * @type {'default' | 'heavy'}
+   * @default 'default'
    */
   thickness: {
-    type: Number,
-    default: 4,
-    validator: (value) => isValidCssLength(value, {
-      positive: true,
-      allowUndefined: false,
-    }),
+    type: String,
+    default: 'default',
+    validator(value) {
+      return ['default', 'heavy'].includes(value);
+    },
   },
   /**
    * 轨道形状；可选值为 `flat`、`wavy`。
@@ -233,11 +251,29 @@ let previousFrameTime;
 const resolvedMax = computed(() => (
   isPositiveNumber(propsWithDefaults.max) ? propsWithDefaults.max : 1
 ));
-const resolvedThickness = computed(() => (
-  normalizeNumber(propsWithDefaults.thickness, { positive: true, fallback: 4 })
-));
 const isCircular = computed(() => propsWithDefaults.variant === 'circular');
 const isWavy = computed(() => propsWithDefaults.shape === 'wavy');
+const resolvedCircularSize = computed(() => {
+  const size = normalizeNumber(propsWithDefaults.size, {
+    allowNegative: true,
+    fallback: DEFAULT_CIRCULAR_SIZE,
+  });
+
+  return Math.min(Math.max(size, MIN_CIRCULAR_SIZE), MAX_CIRCULAR_SIZE);
+});
+const circularDefaultThickness = computed(() => resolvedCircularSize.value / 12);
+const circularHeavyThickness = computed(() => resolvedCircularSize.value / 10);
+const resolvedThickness = computed(() => {
+  if (isCircular.value) {
+    return propsWithDefaults.thickness === 'heavy'
+      ? circularHeavyThickness.value
+      : circularDefaultThickness.value;
+  }
+
+  return propsWithDefaults.thickness === 'heavy'
+    ? LINEAR_HEAVY_THICKNESS
+    : LINEAR_DEFAULT_THICKNESS;
+});
 const resolvedValue = computed(() => {
   const value = isFiniteNumber(propsWithDefaults.value) ? propsWithDefaults.value : 0;
 
@@ -283,16 +319,15 @@ const linearActivePath = computed(() => createLinearPath(
   LINEAR_WAVE_AMPLITUDE * waveMorphProgress.value,
   wavePhase.value,
 ));
-const circularSize = computed(() => (
-  resolvedThickness.value + 36 + (8 * waveMorphProgress.value)
-));
-const circularCenter = computed(() => circularSize.value / 2);
+const circularCenter = computed(() => resolvedCircularSize.value / 2);
 const circularRadius = computed(() => (
   circularCenter.value
-  - (resolvedThickness.value / 2)
-  - (CIRCULAR_WAVE_AMPLITUDE * waveMorphProgress.value)
+  - CIRCULAR_WAVE_AMPLITUDE
+  - (circularHeavyThickness.value / 2)
 ));
-const circularViewBox = computed(() => `0 0 ${circularSize.value} ${circularSize.value}`);
+const circularViewBox = computed(() => (
+  `0 0 ${resolvedCircularSize.value} ${resolvedCircularSize.value}`
+));
 const circularActivePath = computed(() => createCircularPath(
   circularCenter.value,
   circularRadius.value,
@@ -344,7 +379,7 @@ const rootStyle = computed(() => ({
   ...colorStyle.value,
   '--mat-loader-circular-gap-progress': formatCoordinate(circularIndeterminateGapProgress.value),
   '--mat-loader-circular-radius': `${circularRadius.value}px`,
-  '--mat-loader-circular-size': `${circularSize.value}px`,
+  '--mat-loader-circular-size': `${resolvedCircularSize.value}px`,
   '--mat-loader-indicator-gap-size': `${INDICATOR_GAP_SIZE}px`,
   '--mat-loader-linear-cap-progress': formatCoordinate(linearCapProgress.value),
   '--mat-loader-linear-path-scale': formatCoordinate(linearPathScale.value),
