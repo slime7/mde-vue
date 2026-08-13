@@ -1214,11 +1214,11 @@ if (appContext) {
 }
 
 .mat-tooltip[data-slider-value-indicator] {
-  inline-size: var(--mat-slider-value-indicator-width);
+  inline-size: max-content;
   block-size: var(--mat-slider-value-indicator-height);
   min-block-size: var(--mat-slider-value-indicator-height);
   min-inline-size: var(--mat-slider-value-indicator-width);
-  padding-inline: 0;
+  padding-inline: 12px;
   border-radius: var(--mat-sys-shape-corner-full);
 }
 

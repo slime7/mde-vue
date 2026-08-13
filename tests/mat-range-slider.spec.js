@@ -195,9 +195,47 @@ describe('MatRangeSlider', () => {
     const tooltip = wrapper.findComponent(MatTooltip);
 
     expect(tooltip.exists()).toBe(true);
-    expect(tooltip.props('content')).toBe('3');
     expect(tooltip.props('location')).toBe('right');
     expect(tooltip.props('modelValue')).toBe(true);
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('3');
+  });
+
+  it('通过 indicator-label Slot 自定义当前端点的数值指示内容', async () => {
+    const indicatorLabel = vi.fn(({ index, modelValue }) => `${index}:${modelValue}%`);
+    const wrapper = mount(MatRangeSlider, {
+      attachTo: document.body,
+      props: {
+        max: 10,
+        min: 0,
+        modelValue: [1.2, 8.7],
+        showValueIndicator: true,
+        step: 2,
+      },
+      slots: {
+        'indicator-label': indicatorLabel,
+      },
+    });
+    const inputs = wrapper.findAll('input');
+
+    await inputs[1].trigger('focus');
+    await nextTick();
+
+    expect(indicatorLabel).toHaveBeenLastCalledWith(expect.objectContaining({
+      index: 1,
+      modelValue: 8,
+    }));
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('1:8%');
+
+    await inputs[1].trigger('blur');
+    await inputs[0].trigger('focus');
+    await nextTick();
+
+    expect(indicatorLabel).toHaveBeenLastCalledWith(expect.objectContaining({
+      index: 0,
+      modelValue: 2,
+    }));
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('0:2%');
+    wrapper.unmount();
   });
 
   it('校验范围专有属性', () => {

@@ -1,6 +1,6 @@
 <script setup>
 import {
-  computed, inject, onBeforeUnmount, ref, useAttrs,
+  computed, inject, onBeforeUnmount, onMounted, ref, useAttrs, useSlots, watch,
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatIcon from '../mat-icon/MatIcon.vue';
@@ -22,6 +22,7 @@ import {
   resolveSliderBounds,
   resolveSliderCenter,
   resolveSliderStep,
+  SLIDER_TRACK_END_INSET,
 } from '../slider-utils';
 import useComponentColor from '../use-component-color';
 import { useMatProps } from '../use-mat-props';
@@ -201,6 +202,8 @@ const emit = defineEmits({
 });
 
 const attrs = useAttrs();
+const slots = useSlots();
+const root = ref(null);
 const handle = ref(null);
 const interaction = ref(null);
 const nativeInput = ref(null);
@@ -209,6 +212,7 @@ const dragPointerId = ref(undefined);
 const dragValue = ref(undefined);
 const dragChanged = ref(false);
 const isFocused = ref(false);
+const insetIconPlacement = ref('active');
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const { colorStyle } = useComponentColor(computed(() => propsWithDefaults.color));
 
@@ -308,8 +312,55 @@ const rootStyle = computed(() => ({
   '--mat-slider-inactive-after-size': inactiveAfterSize.value,
   '--mat-slider-inactive-after-start': inactiveAfterStart.value,
   '--mat-slider-inactive-before-size': inactiveBeforeSize.value,
+  '--mat-slider-inset-icon-position': insetIconPlacement.value === 'inactive'
+    ? `calc(${formattedValuePosition.value} + (var(--mat-slider-handle-width) / 2) + var(--mat-slider-handle-track-gap))`
+    : 'var(--mat-slider-inset-icon-offset)',
   '--mat-slider-position': formattedValuePosition.value,
 }));
+
+function updateInsetIconPlacement() {
+  if (
+    !showInsetIcon.value
+    || propsWithDefaults.variant !== 'standard'
+    || !root.value
+  ) {
+    insetIconPlacement.value = 'active';
+    return;
+  }
+
+  const rootRect = root.value.getBoundingClientRect();
+  const trackLength = propsWithDefaults.orientation === 'vertical'
+    ? rootRect.height
+    : rootRect.width;
+  const iconLength = propsWithDefaults.size === 'extra-large' ? 32 : 24;
+  const handleWidth = Number.parseFloat(
+    getComputedStyle(root.value).getPropertyValue('--mat-slider-handle-width'),
+  ) || 4;
+  const handlePosition = SLIDER_TRACK_END_INSET
+    + ((trackLength - (SLIDER_TRACK_END_INSET * 2)) * valuePosition.value) / 100;
+  const iconEnd = 12 + iconLength;
+
+  insetIconPlacement.value = handlePosition - (handleWidth / 2) - 6 >= iconEnd
+    ? 'active'
+    : 'inactive';
+}
+
+let insetIconResizeObserver;
+
+onMounted(() => {
+  updateInsetIconPlacement();
+
+  if (typeof ResizeObserver !== 'undefined') {
+    insetIconResizeObserver = new ResizeObserver(updateInsetIconPlacement);
+    insetIconResizeObserver.observe(root.value);
+  }
+});
+
+watch(
+  [showInsetIcon, () => propsWithDefaults.orientation, () => propsWithDefaults.variant, valuePosition],
+  updateInsetIconPlacement,
+  { flush: 'post' },
+);
 
 /**
  * @param {number} value
@@ -413,6 +464,7 @@ function finishPointerInteraction(event, shouldEmitChange) {
 }
 
 onBeforeUnmount(() => {
+  insetIconResizeObserver?.disconnect();
   pointerFrame.cancel();
 });
 
@@ -445,6 +497,7 @@ function handleKeyDown(event) {
 
 <template>
   <div
+    ref="root"
     v-bind="attrs"
     class="mat-slider"
     :class="[
@@ -485,7 +538,19 @@ function handleKeyDown(event) {
         }"
       />
 
-      <template v-if="showInsetIcon">
+      <MatIcon
+        v-if="showInsetIcon && propsWithDefaults.variant === 'standard'"
+        class="mat-slider__inset-icon"
+        :font-color="insetIconPlacement === 'active'
+          ? 'var(--mat-on-accent-color, var(--mat-slider-inset-icon-color))'
+          : 'var(--mat-slider-inset-icon-inactive-color)'"
+        :icon="propsWithDefaults.insetIcon"
+        :optical-size="insetIconOpticalSize"
+        size="var(--mat-slider-current-inset-icon-size)"
+        aria-hidden="true"
+      />
+
+      <template v-else-if="showInsetIcon">
         <span class="mat-slider__inset-icon-layer">
           <MatIcon
             class="mat-slider__inset-icon mat-slider__inset-icon--inactive"
@@ -517,11 +582,19 @@ function handleKeyDown(event) {
     <MatTooltip
       class="mat-slider__value-indicator"
       data-slider-value-indicator
-      :content="String(displayedValue)"
       :location="orientation === 'vertical' ? 'right' : 'top'"
       :model-value="showValueIndicatorState"
       :target="handle"
-    />
+    >
+      <slot
+        v-if="slots['indicator-label']"
+        name="indicator-label"
+        :model-value="displayedValue"
+      />
+      <template v-else>
+        {{ displayedValue }}
+      </template>
+    </MatTooltip>
 
     <span
       ref="interaction"
@@ -706,8 +779,11 @@ function handleKeyDown(event) {
 .mat-slider__inset-icon {
   position: absolute;
   inset-block-start: 50%;
-  inset-inline-start: var(--mat-slider-inset-icon-offset);
+  inset-inline-start: var(--mat-slider-inset-icon-position);
+  z-index: 1;
+  pointer-events: none;
   transform: translateY(-50%);
+  transition: inset-inline-start var(--mat-sys-motion-spring-fast-spatial), color var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-slider__interaction {
@@ -829,9 +905,10 @@ function handleKeyDown(event) {
 }
 
 .mat-slider--vertical .mat-slider__inset-icon {
-  inset-block: auto var(--mat-slider-inset-icon-offset);
+  inset-block: auto var(--mat-slider-inset-icon-position);
   inset-inline-start: 50%;
   transform: translateX(-50%);
+  transition: inset-block-end var(--mat-sys-motion-spring-fast-spatial), color var(--mat-sys-motion-spring-fast-effects);
 }
 
 .mat-slider--dragging .mat-slider__active-track,
@@ -856,7 +933,8 @@ function handleKeyDown(event) {
   .mat-slider__active-track,
   .mat-slider__inactive-track,
   .mat-slider__handle,
-  .mat-slider__handle-shape {
+  .mat-slider__handle-shape,
+  .mat-slider__inset-icon {
     transition: none;
   }
 }

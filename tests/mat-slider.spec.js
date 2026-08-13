@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils';
 import {
   afterEach, describe, expect, it, vi,
 } from 'vitest';
-import { nextTick } from 'vue';
+import { defineComponent, nextTick } from 'vue';
 import { MatSlider, MatTooltip } from '../src';
 
 /**
@@ -179,7 +179,6 @@ describe('MatSlider', () => {
     const tooltip = wrapper.findComponent(MatTooltip);
 
     expect(tooltip.exists()).toBe(true);
-    expect(tooltip.props('content')).toBe('32');
     expect(tooltip.props('location')).toBe('top');
     expect(tooltip.props('modelValue')).toBe(false);
 
@@ -187,10 +186,55 @@ describe('MatSlider', () => {
     await nextTick();
 
     expect(tooltip.props('modelValue')).toBe(true);
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('32');
 
     await input.trigger('blur');
 
     expect(tooltip.props('modelValue')).toBe(false);
+    wrapper.unmount();
+  });
+
+  it('通过 indicator-label Slot 自定义规范化后的数值指示内容', async () => {
+    const indicatorLabel = vi.fn(({ modelValue }) => `${modelValue}°`);
+    const wrapper = mount(MatSlider, {
+      attachTo: document.body,
+      props: {
+        max: 10,
+        min: 0,
+        modelValue: 5.3,
+        showValueIndicator: true,
+        step: 2,
+      },
+      slots: {
+        'indicator-label': indicatorLabel,
+      },
+    });
+
+    await wrapper.find('input').trigger('focus');
+    await nextTick();
+
+    expect(indicatorLabel).toHaveBeenCalledWith(expect.objectContaining({ modelValue: 6 }));
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('6°');
+    wrapper.unmount();
+  });
+
+  it('通过模板中的 indicator-label Slot 自定义数值指示内容', async () => {
+    const Example = defineComponent({
+      components: { MatSlider },
+      template: `
+        <MatSlider :model-value="21" show-value-indicator>
+          <template #indicator-label="{ modelValue }">
+            {{ modelValue }}°
+          </template>
+        </MatSlider>
+      `,
+    });
+    const wrapper = mount(Example, { attachTo: document.body });
+
+    await wrapper.find('input').trigger('focus');
+    await nextTick();
+
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('21°');
     wrapper.unmount();
   });
 

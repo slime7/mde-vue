@@ -14,7 +14,11 @@ const range = ref([30, 70]);
       aria-label-end="湿度上限"
       aria-label-start="湿度下限"
       show-value-indicator
-    />
+    >
+      <template #indicator-label="{ index, modelValue }">
+        {{ index === 0 ? '最低' : '最高' }}：{{ modelValue }}%
+      </template>
+    </mat-range-slider>
     <output>聚焦或拖动的端点会显示数值：{{ range[0] }} — {{ range[1] }}</output>
   </div>
 </template>

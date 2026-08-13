@@ -15,7 +15,11 @@ const temperature = ref(22);
       :max="30"
       :min="16"
       show-value-indicator
-    />
+    >
+      <template #indicator-label="{ modelValue }">
+        {{ modelValue }}°
+      </template>
+    </mat-slider>
     <output>聚焦或拖动手柄即可显示：{{ temperature }} ℃</output>
   </div>
 </template>

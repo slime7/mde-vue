@@ -184,7 +184,11 @@ order: 87.5
 
 ## Slots
 
-该组件没有自定义 Slots。两个端点的名称由 `aria-label-start` 与 `aria-label-end` 提供；不要依赖未命名的范围滑块表达两个端点的含义。
+| Slot | 作用域 | 用途 |
+| --- | --- | --- |
+| `indicator-label` | `{ modelValue: number, index: 0 \| 1 }` | 自定义当前活动端点的数值指示内容；`modelValue` 是该端点当前显示值，`index` 的 `0` 代表起点、`1` 代表终点。指示器至少为 48px 圆形，内容较长时横向增长为胶囊形；未提供 Slot 时显示纯数值 |
+
+两个端点的可访问名称由 `aria-label-start` 与 `aria-label-end` 提供；不要依赖未命名的范围滑块表达两个端点的含义。
 
 ## 状态与交互
 

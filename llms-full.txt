@@ -7133,6 +7133,14 @@ const value = ref(50);
       v-model="altitude"
       size="extra-large"
     />
+    <mat-slider
+      class="vertical-slider"
+      aria-label="纵向音量"
+      inset-icon="volume_up"
+      v-model="verticalVolume"
+      orientation="vertical"
+      size="large"
+    />
   </div>
 </template>
 ```
@@ -7142,15 +7150,26 @@ import { ref } from 'vue';
 
 const altitude = ref(85);
 const brightness = ref(70);
-const volume = ref(55);
+const verticalVolume = ref(8);
+const volume = ref(8);
 </script>
 ```
 ```vue
 <style scoped>
 .example {
   display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 20px;
   inline-size: 100%;
+}
+
+.example > :not(.vertical-slider) {
+  grid-column: 1;
+}
+
+.vertical-slider {
+  grid-column: 2;
+  grid-row: 1 / span 3;
 }
 </style>
 ```
@@ -7221,7 +7240,11 @@ const rating = ref(3);
       :max="30"
       :min="16"
       show-value-indicator
-    />
+    >
+      <template #indicator-label="{ modelValue }">
+        {{ modelValue }}°
+      </template>
+    </mat-slider>
     <output>聚焦或拖动手柄即可显示：{{ temperature }} ℃</output>
   </div>
 </template>
@@ -7337,7 +7360,7 @@ const seededValue = ref(70);
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 活动轨道、手柄和状态层的局部强调色 |
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | 横向从左到右递增；纵向从下到上递增 |
 | `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'extra-small'` | 对应 16、24、40、56、96px 轨道高度 |
-| `insetIcon` | `string` | 未设置 | Material Symbols 图标名；仅在 `medium`、`large`、`extra-large` 显示，并随活动轨道覆盖范围切换前景色 |
+| `insetIcon` | `string` | 未设置 | Material Symbols 图标名；仅在 `medium`、`large`、`extra-large` 显示。活动轨道空间不足时，图标会完整移到手柄后方的非活动轨道 |
 | `showStopIndicator` | `boolean` | `false` | 标准变体始终显示最大值终点，居中变体始终显示最小值与最大值终点；手柄与停靠点共用两端各 6px 的保护区域，开启后再为所有离散步长渲染停靠点 |
 | `showValueIndicator` | `boolean` | `false` | 当前手柄聚焦或拖动时通过受控 `MatTooltip` 显示规范化后的数值；手柄位于已打开的 dialog 或 Popover 内时，数值指示自动留在该容器中 |
 
@@ -7353,7 +7376,9 @@ const seededValue = ref(70);
 
 ## Slots
 
-该组件没有自定义 Slots。请用相邻文本、`aria-label` 或 `aria-labelledby` 说明滑块用途。
+| Slot | 作用域 | 用途 |
+| --- | --- | --- |
+| `indicator-label` | `{ modelValue: number }` | 自定义数值指示内容；`modelValue` 是范围钳制、按 `step` 对齐且在拖动中实时更新的当前显示值。指示器至少为 48px 圆形，内容较长时横向增长为胶囊形；未提供 Slot 时显示纯数值 |
 
 ## 状态与交互
 
@@ -7624,7 +7649,11 @@ const hours = ref([2, 6]);
       aria-label-end="湿度上限"
       aria-label-start="湿度下限"
       show-value-indicator
-    />
+    >
+      <template #indicator-label="{ index, modelValue }">
+        {{ index === 0 ? '最低' : '最高' }}：{{ modelValue }}%
+      </template>
+    </mat-range-slider>
     <output>聚焦或拖动的端点会显示数值：{{ range[0] }} — {{ range[1] }}</output>
   </div>
 </template>
@@ -7758,7 +7787,11 @@ const seededRange = ref([35, 80]);
 
 ## Slots
 
-该组件没有自定义 Slots。两个端点的名称由 `aria-label-start` 与 `aria-label-end` 提供；不要依赖未命名的范围滑块表达两个端点的含义。
+| Slot | 作用域 | 用途 |
+| --- | --- | --- |
+| `indicator-label` | `{ modelValue: number, index: 0 \| 1 }` | 自定义当前活动端点的数值指示内容；`modelValue` 是该端点当前显示值，`index` 的 `0` 代表起点、`1` 代表终点。指示器至少为 48px 圆形，内容较长时横向增长为胶囊形；未提供 Slot 时显示纯数值 |
+
+两个端点的可访问名称由 `aria-label-start` 与 `aria-label-end` 提供；不要依赖未命名的范围滑块表达两个端点的含义。
 
 ## 状态与交互
 

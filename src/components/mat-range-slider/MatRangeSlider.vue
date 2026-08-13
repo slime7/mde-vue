@@ -1,6 +1,6 @@
 <script setup>
 import {
-  computed, inject, onBeforeUnmount, ref, useAttrs,
+  computed, inject, onBeforeUnmount, ref, useAttrs, useSlots,
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import { isComponentColor } from '../button-props';
@@ -190,6 +190,7 @@ const emit = defineEmits({
 });
 
 const attrs = useAttrs();
+const slots = useSlots();
 const handleElements = ref([]);
 const interaction = ref(null);
 const startInput = ref(null);
@@ -493,11 +494,20 @@ function setHandleElement(index, element) {
     <MatTooltip
       class="mat-range-slider__value-indicator"
       data-slider-value-indicator
-      :content="String(activeValue)"
       :location="propsWithDefaults.orientation === 'vertical' ? 'right' : 'top'"
       :model-value="showValueIndicatorState"
       :target="activeHandleElement"
-    />
+    >
+      <slot
+        v-if="slots['indicator-label']"
+        name="indicator-label"
+        :index="activeHandle"
+        :model-value="activeValue"
+      />
+      <template v-else>
+        {{ activeValue }}
+      </template>
+    </MatTooltip>
 
     <span
       ref="interaction"

@@ -209,7 +209,7 @@ order: 87
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 活动轨道、手柄和状态层的局部强调色 |
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | 横向从左到右递增；纵向从下到上递增 |
 | `size` | `'extra-small' \| 'small' \| 'medium' \| 'large' \| 'extra-large'` | `'extra-small'` | 对应 16、24、40、56、96px 轨道高度 |
-| `insetIcon` | `string` | 未设置 | Material Symbols 图标名；仅在 `medium`、`large`、`extra-large` 显示，并随活动轨道覆盖范围切换前景色 |
+| `insetIcon` | `string` | 未设置 | Material Symbols 图标名；仅在 `medium`、`large`、`extra-large` 显示。活动轨道空间不足时，图标会完整移到手柄后方的非活动轨道 |
 | `showStopIndicator` | `boolean` | `false` | 标准变体始终显示最大值终点，居中变体始终显示最小值与最大值终点；手柄与停靠点共用两端各 6px 的保护区域，开启后再为所有离散步长渲染停靠点 |
 | `showValueIndicator` | `boolean` | `false` | 当前手柄聚焦或拖动时通过受控 `MatTooltip` 显示规范化后的数值；手柄位于已打开的 dialog 或 Popover 内时，数值指示自动留在该容器中 |
 
@@ -225,7 +225,9 @@ order: 87
 
 ## Slots
 
-该组件没有自定义 Slots。请用相邻文本、`aria-label` 或 `aria-labelledby` 说明滑块用途。
+| Slot | 作用域 | 用途 |
+| --- | --- | --- |
+| `indicator-label` | `{ modelValue: number }` | 自定义数值指示内容；`modelValue` 是范围钳制、按 `step` 对齐且在拖动中实时更新的当前显示值。指示器至少为 48px 圆形，内容较长时横向增长为胶囊形；未提供 Slot 时显示纯数值 |
 
 ## 状态与交互
 
