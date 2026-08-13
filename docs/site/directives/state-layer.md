@@ -53,6 +53,28 @@ order: 121
   </DocsPreview>
 </ClientOnly>
 
+### 普通 div 宿主
+
+`div` 没有原生交互语义，使用方需要自行提供 `role="button"`、`tabindex="0"`、键盘激活和点击行为，指令才能显示对应的 pressed 反馈。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/state-layer/StateLayerDivExample.vue#template [template]
+
+<<< @/examples/state-layer/StateLayerDivExample.vue#script [script]
+
+<<< @/examples/state-layer/StateLayerDivExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="State layer 普通 div 预览">
+    <StateLayerDivExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 绑定值
@@ -84,4 +106,5 @@ order: 121
 <script setup>
 import StateLayerColorExample from '../examples/state-layer/StateLayerColorExample.vue';
 import StateLayerDefaultExample from '../examples/state-layer/StateLayerDefaultExample.vue';
+import StateLayerDivExample from '../examples/state-layer/StateLayerDivExample.vue';
 </script>
