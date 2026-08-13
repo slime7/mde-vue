@@ -491,16 +491,21 @@ describe('MatMenu', () => {
 
     await nextTick();
     const parentItem = wrapper.get('[role="menuitem"]');
+    const parentAnchorNames = parentItem.element.style.getPropertyValue('anchor-name');
 
     expect(parentItem.attributes('aria-haspopup')).toBe('menu');
     expect(parentItem.attributes('aria-expanded')).toBe('false');
+    expect(parentAnchorNames).toContain('--mat-state-layer-');
 
     await parentItem.trigger('keydown', { key: 'ArrowRight' });
     await nextTick();
     const menus = wrapper.findAll('[role="menu"]');
     const nestedItems = menus[1].findAll('[role="menuitem"]');
+    const openParentAnchorNames = parentItem.element.style.getPropertyValue('anchor-name');
 
     expect(parentItem.attributes('aria-expanded')).toBe('true');
+    expect(openParentAnchorNames).toContain('--mat-state-layer-');
+    expect(openParentAnchorNames).toContain('--mat-menu-anchor-');
     expect(document.activeElement).toBe(nestedItems[0].element);
 
     await nestedItems[0].trigger('keydown', { key: 'ArrowLeft' });

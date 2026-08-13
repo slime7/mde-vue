@@ -4,6 +4,7 @@ import {
   shallowRef, useAttrs, useId, useSlots, watch,
 } from 'vue';
 import MatSurfaceBase from '../MatSurfaceBase.vue';
+import { addAnchorName, removeAnchorName } from '../../anchor-names';
 import createMotionController from '../motion-controller';
 import { isComponentColor } from '../button-props';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
@@ -155,7 +156,6 @@ const pointerHistory = parentMenu?.pointerHistory ?? {
 const groupCount = ref(0);
 const itemApis = new Map();
 let attachedAnchor = null;
-let previousAnchorName = '';
 let popoverShown = false;
 let scrimShown = false;
 let programmaticClose = false;
@@ -310,14 +310,9 @@ function detachAnchor() {
     return;
   }
 
-  if (previousAnchorName) {
-    attachedAnchor.style.setProperty('anchor-name', previousAnchorName);
-  } else {
-    attachedAnchor.style.removeProperty('anchor-name');
-  }
+  removeAnchorName(attachedAnchor, anchorName);
 
   attachedAnchor = null;
-  previousAnchorName = '';
 }
 
 /**
@@ -336,8 +331,7 @@ function attachAnchor() {
 
   detachAnchor();
   attachedAnchor = anchorElement;
-  previousAnchorName = anchorElement.style.getPropertyValue('anchor-name');
-  anchorElement.style.setProperty('anchor-name', anchorName);
+  addAnchorName(anchorElement, anchorName);
 
   return anchorElement;
 }

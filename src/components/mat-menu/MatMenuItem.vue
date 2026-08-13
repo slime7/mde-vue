@@ -278,6 +278,12 @@ onBeforeUnmount(() => {
   border-radius: var(--mat-sys-shape-corner-medium);
 }
 
+.mat-menu-item.mat-action-base--focus-ring:focus-visible {
+  outline: 0;
+  box-shadow: inset 0 0 0 var(--mat-sys-interaction-focus-ring-width, 3px)
+    var(--mat-sys-color-secondary);
+}
+
 .mat-menu-item__submenu-icon {
   font-size: 20px;
   transition: transform var(--mat-sys-motion-spring-fast-spatial);
