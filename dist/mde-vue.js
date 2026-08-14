@@ -9879,14 +9879,22 @@ var Ss = { class: "mat-snackbar__text" }, Cs = {
 				])) : a("", !0),
 				e.$slots.fab && F.value ? (w(), o("div", Hs, [j(e.$slots, "fab", { expanded: ee.value }, void 0, !0)])) : a("", !0)
 			])),
-			F.value ? (w(), o("div", Us, [s("div", { class: _(["mat-navigation-rail__destinations", `mat-navigation-rail__destinations--${I(f).alignment}`]) }, [j(e.$slots, "default", {
-				expanded: ee.value,
-				orientation: I(f).orientation
-			}, void 0, !0)], 2)])) : a("", !0),
+			F.value ? (w(), o("div", Us, [u(Si, {
+				class: "mat-navigation-rail__scroll-area",
+				orientation: k.value ? "horizontal" : "vertical",
+				"bar-width": "hidden",
+				"no-scroll-padding": ""
+			}, {
+				default: B(() => [s("div", { class: _(["mat-navigation-rail__destinations", `mat-navigation-rail__destinations--${I(f).alignment}`]) }, [j(e.$slots, "default", {
+					expanded: ee.value,
+					orientation: I(f).orientation
+				}, void 0, !0)], 2)]),
+				_: 3
+			}, 8, ["orientation"])])) : a("", !0),
 			e.$slots.end && F.value && !k.value ? (w(), o("div", Ws, [j(e.$slots, "end", { expanded: ee.value }, void 0, !0)])) : a("", !0)
 		], 16)], 6)) : a("", !0)], 8, ["to", "disabled"]))], 64));
 	}
-}), [["__scopeId", "data-v-4e95c507"]]), Ks = { class: "mat-navigation-rail-item__indicator" }, qs = { class: "mat-navigation-rail-item__icon-wrap" }, Js = { class: "mat-navigation-rail-item__label-wrap" }, Ys = {
+}), [["__scopeId", "data-v-9f9a713f"]]), Ks = { class: "mat-navigation-rail-item__indicator" }, qs = { class: "mat-navigation-rail-item__icon-wrap" }, Js = { class: "mat-navigation-rail-item__label-wrap" }, Ys = {
 	key: 0,
 	class: "mat-navigation-rail-item__spacer",
 	"aria-hidden": "true"

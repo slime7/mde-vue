@@ -34,7 +34,7 @@ const expanded = ref(false);
 <!-- #region style -->
 <style scoped>
 .navigation-rail-example-shell {
-  position: relative;
+  display: flex;
   inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
@@ -44,7 +44,8 @@ const expanded = ref(false);
 
 .navigation-rail-example-content {
   display: grid;
-  min-block-size: 280px;
+  flex: 1 1 auto;
+  min-inline-size: 0;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
   background: var(--mat-sys-color-surface-container-low);

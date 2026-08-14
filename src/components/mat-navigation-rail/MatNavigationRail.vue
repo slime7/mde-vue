@@ -7,6 +7,7 @@ import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import createMotionController from '../motion-controller';
 import MatActionBase from '../MatActionBase.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
+import MatScrollArea from '../mat-scroll-area/MatScrollArea.vue';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import { MAT_NAVIGATION_RAIL_KEY } from './mat-navigation-context';
 import { isValidCssLength, toCssLength } from '../value-utils';
@@ -568,15 +569,22 @@ watch([
           v-if="showCollapsibleContent"
           class="mat-navigation-rail__content"
         >
-          <div
-            class="mat-navigation-rail__destinations"
-            :class="`mat-navigation-rail__destinations--${propsWithDefaults.alignment}`"
+          <MatScrollArea
+            class="mat-navigation-rail__scroll-area"
+            :orientation="isHorizontal ? 'horizontal' : 'vertical'"
+            bar-width="hidden"
+            no-scroll-padding
           >
-            <slot
-              :expanded="effectiveExpanded"
-              :orientation="propsWithDefaults.orientation"
-            />
-          </div>
+            <div
+              class="mat-navigation-rail__destinations"
+              :class="`mat-navigation-rail__destinations--${propsWithDefaults.alignment}`"
+            >
+              <slot
+                :expanded="effectiveExpanded"
+                :orientation="propsWithDefaults.orientation"
+              />
+            </div>
+          </MatScrollArea>
         </div>
 
         <div
@@ -839,6 +847,16 @@ watch([
     padding: 0 var(--mat-navigation-bar-edge-space);
   }
 
+  .mat-navigation-rail__scroll-area :deep(.mat-scroll-area__viewport) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mat-navigation-rail--bar .mat-navigation-rail__scroll-area :deep(.mat-scroll-area__viewport) {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
   .mat-navigation-rail__destinations {
     display: flex;
     flex: 1 1 auto;
@@ -859,13 +877,13 @@ watch([
   }
 
   .mat-navigation-rail__destinations--center {
-    justify-content: center;
+    justify-content: safe center;
   }
 
   .mat-navigation-rail--bar .mat-navigation-rail__destinations {
     flex-direction: row;
     align-items: stretch;
-    justify-content: center;
+    justify-content: safe center;
     gap: var(--mat-navigation-bar-item-space);
   }
 

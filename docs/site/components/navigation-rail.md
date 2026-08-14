@@ -367,6 +367,8 @@ Item 的 `trailing` 只在展开态显示，通过前置弹性 spacer 保持在 
 
 默认纵向 rail 位于应用布局容器的起始侧，由父容器决定滚动边界；需要作为固定应用导航时设置 `app`。AppRoot 模式会统一处理安全区；`layout="modal"` 展开时只用 collapsed host 宽度推动正文，展开表面覆盖正文。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 不自动监听窗口宽度，应用可读取 AppRoot 断点切换。显式 `attach` 无法解析时组件给出警告且不渲染应用布局。
 
+目的地区域在隐藏滚动条的 scroll-area 内滚动：纵向超出可用高度、横向 bar 超出可用宽度时均可滚动，滚动方向不留内边距。
+
 ## 参考来源
 
 官方明确规定 collapsed / expanded rail、3–7 个目的地、standard / modal、目的地对齐、Header、FAB、指示器和自适应使用方式，详见 [Navigation rail overview](https://m3.material.io/components/navigation-rail/overview)、[Navigation rail specs](https://m3.material.io/components/navigation-rail/specs) 与 [Navigation rail guidelines](https://m3.material.io/components/navigation-rail/guidelines)。Flexible bar 的 64px 容器和 horizontal items 依据 [Navigation bar specs](https://m3.material.io/components/navigation-bar/specs)。把两种官方组件组合为同一 Vue API 是本项目的实现选择。

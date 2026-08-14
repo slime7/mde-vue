@@ -15633,7 +15633,7 @@ const expanded = ref(false);
 ```vue
 <style scoped>
 .navigation-rail-example-shell {
-  position: relative;
+  display: flex;
   inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
@@ -15643,7 +15643,8 @@ const expanded = ref(false);
 
 .navigation-rail-example-content {
   display: grid;
-  min-block-size: 280px;
+  flex: 1 1 auto;
+  min-inline-size: 0;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
   background: var(--mat-sys-color-surface-container-low);
@@ -15945,6 +15946,8 @@ const selected = ref('inbox');
 根导航使用原生 `<nav>`；应用应通过 `aria-label` 或 `aria-labelledby` 区分页面中的多个导航区域。选中 Item 使用 `aria-current="page"`。Item 保留原生按钮或链接的 Tab 顺序，完整 Item 宽度都是命中区域，焦点环和状态层显示在活动指示器上。
 
 默认纵向 rail 位于应用布局容器的起始侧，由父容器决定滚动边界；需要作为固定应用导航时设置 `app`。AppRoot 模式会统一处理安全区；`layout="modal"` 展开时只用 collapsed host 宽度推动正文，展开表面覆盖正文。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 不自动监听窗口宽度，应用可读取 AppRoot 断点切换。显式 `attach` 无法解析时组件给出警告且不渲染应用布局。
+
+目的地区域在隐藏滚动条的 scroll-area 内滚动：纵向超出可用高度、横向 bar 超出可用宽度时均可滚动，滚动方向不留内边距。
 
 ## 参考来源
 
