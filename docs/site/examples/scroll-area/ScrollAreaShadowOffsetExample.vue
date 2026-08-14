@@ -3,6 +3,8 @@
   <div class="scroll-area-shadow-offset-example">
     <mat-scroll-area
       class="scroll-area-shadow-offset-example__vertical"
+      color="surface-container"
+      rounded
       :shadow-offset="{ start: 48, end: 48 }"
       aria-label="带固定标题的消息列表"
       tabindex="0"
@@ -53,8 +55,6 @@
 .scroll-area-shadow-offset-example__vertical {
   block-size: 260px;
   padding-inline: 16px;
-  background: var(--mat-sys-color-surface-container);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .scroll-area-shadow-offset-example__vertical p {

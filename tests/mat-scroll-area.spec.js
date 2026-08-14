@@ -268,8 +268,8 @@ describe('MatScrollArea', () => {
     expect(wrapper.classes()).toContain('consumer-area');
     expect(wrapper.attributes('style')).toContain('block-size: 240px');
     expect(onScroll).toHaveBeenCalledOnce();
-    expect(wrapper.text()).toContain('固定开头');
-    expect(wrapper.text()).toContain('固定结尾');
+    expect(wrapper.text()).not.toContain('固定开头');
+    expect(wrapper.text()).not.toContain('固定结尾');
     expect(wrapper.text()).toContain('滚动内容');
   });
 

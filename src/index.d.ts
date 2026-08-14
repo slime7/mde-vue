@@ -2456,7 +2456,7 @@ export interface MatScrollAreaProps {
   */
   shadowLength?: number | { start?: number, end?: number };
   /**
-  * 原生滚动条宽度；`default` 使用浏览器默认值，`thin` 使用窄滚动条，`hidden` 隐藏滚动条。
+  * 原生滚动条宽度；`thin` 使用 8px 窄滚动条，`default` 使用 16px，`hidden` 隐藏滚动条。
   *
   * @type {'default' | 'thin' | 'hidden'}
   * @default 'thin'
@@ -2485,6 +2485,21 @@ export interface MatScrollAreaProps {
   * @default 0
   */
   shadowOffset?: number | { start?: number, end?: number };
+  /**
+  * 是否使用接近 28px 的系统大圆角令牌作为容器圆角。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  rounded?: boolean;
+  /**
+  * 语义色、系统颜色角色或六位十六进制种子色 `#RRGGBB`；
+  * 设置时作为容器背景填充，并同步内容文字颜色。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  color?: string | undefined;
 }
 
 export interface MatScrollAreaEmits {

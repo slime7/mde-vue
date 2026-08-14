@@ -9,6 +9,8 @@ import {
   useAttrs,
   watch,
 } from 'vue';
+import { isComponentColor } from '../button-props';
+import useComponentColor from '../use-component-color';
 import {
   isValidCssLength,
   isValidEdgeValues,
@@ -73,7 +75,7 @@ const props = defineProps({
     validator: (value) => isValidEdgeValues(value),
   },
   /**
-   * 原生滚动条宽度；`default` 使用浏览器默认值，`thin` 使用窄滚动条，`hidden` 隐藏滚动条。
+   * 原生滚动条宽度；`thin` 使用 8px 窄滚动条，`default` 使用 16px，`hidden` 隐藏滚动条。
    *
    * @type {'default' | 'thin' | 'hidden'}
    * @default 'thin'
@@ -119,8 +121,31 @@ const props = defineProps({
     default: 0,
     validator: (value) => isValidEdgeValues(value, { allowUndefined: false }),
   },
+  /**
+   * 是否使用接近 28px 的系统大圆角令牌作为容器圆角。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  rounded: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * 语义色、系统颜色角色或六位十六进制种子色 `#RRGGBB`；
+   * 设置时作为容器背景填充，并同步内容文字颜色。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
+  color: {
+    type: String,
+    default: undefined,
+    validator: isComponentColor,
+  },
 });
 const propsWithDefaults = useMatProps('scrollArea', props);
+const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => propsWithDefaults.color));
 
 const emit = defineEmits({
   /**
@@ -142,6 +167,7 @@ const emit = defineEmits({
 });
 
 const attrs = useAttrs();
+const root = ref(null);
 const scroller = ref(null);
 const hasStartOverflow = ref(false);
 const hasEndOverflow = ref(false);
@@ -169,26 +195,47 @@ const shadowOffsets = computed(() => {
   return resolveEdgeValues(propsWithDefaults.shadowOffset, 0);
 });
 const shadowLengths = computed(() => resolveEdgeValues(propsWithDefaults.shadowLength, 16));
-const scrollbarSpace = computed(() => {
+const scrollbarWidth = computed(() => {
   if (propsWithDefaults.barWidth === 'hidden') {
     return 0;
   }
 
-  return propsWithDefaults.barWidth === 'thin' ? 10 : 16;
+  return propsWithDefaults.barWidth === 'thin' ? 8 : 16;
 });
-const viewportStyle = computed(() => ({
-  // 阴影变量参与 mask 渐变的 calc() 运算，必须始终携带长度单位；
-  // toCssLength 会把 0 输出为无单位值，导致渐变整体失效。
-  '--mat-scroll-area-shadow-length-start': `${shadowLengths.value.start}px`,
-  '--mat-scroll-area-shadow-length-end': `${shadowLengths.value.end}px`,
-  '--mat-scroll-area-shadow-offset-start': `${shadowOffsets.value.start}px`,
-  '--mat-scroll-area-shadow-offset-end': `${shadowOffsets.value.end}px`,
-  '--mat-scroll-area-scrollbar-space': `${scrollbarSpace.value}px`,
-}));
-const rootAttrs = computed(() => ({
-  class: attrs.class,
-  style: attrs.style,
-}));
+const rootPadding = ref({ left: 0, right: 0, top: 0, bottom: 0 });
+
+/**
+ * 读取根元素计算内边距，用于让滚动元素覆盖内边距区域，
+ * 使滚动条始终贴住容器边缘，同时把内边距转给滚动元素保持内容间距。
+ *
+ * @returns {void}
+ */
+function syncRootPadding() {
+  const element = root.value;
+
+  if (!element) {
+    return;
+  }
+
+  const computed = getComputedStyle(element);
+  const next = {
+    left: Number.parseFloat(computed.paddingLeft) || 0,
+    right: Number.parseFloat(computed.paddingRight) || 0,
+    top: Number.parseFloat(computed.paddingTop) || 0,
+    bottom: Number.parseFloat(computed.paddingBottom) || 0,
+  };
+  const current = rootPadding.value;
+
+  if (next.left === current.left
+    && next.right === current.right
+    && next.top === current.top
+    && next.bottom === current.bottom) {
+    return;
+  }
+
+  rootPadding.value = next;
+}
+
 const scrollerStyle = computed(() => {
   const isHorizontal = normalizedOrientation.value === 'horizontal';
   const padding = toCssLength(propsWithDefaults.snapPadding, { fallback: '0' });
@@ -203,10 +250,29 @@ const scrollerStyle = computed(() => {
       : `${isHorizontal ? 'x' : 'y'} ${propsWithDefaults.snap}`,
   };
 });
+const rootAttrs = computed(() => ({
+  class: attrs.class,
+  style: attrs.style,
+}));
+const rootStyleBindings = computed(() => [
+  colorStyle.value,
+  {
+    // 阴影变量参与 mask 渐变的 calc() 运算，必须始终携带长度单位；
+    // toCssLength 会把 0 输出为无单位值，导致渐变整体失效。
+    '--mat-scroll-area-shadow-length-start': `${shadowLengths.value.start}px`,
+    '--mat-scroll-area-shadow-length-end': `${shadowLengths.value.end}px`,
+    '--mat-scroll-area-shadow-offset-start': `${shadowOffsets.value.start}px`,
+    '--mat-scroll-area-shadow-offset-end': `${shadowOffsets.value.end}px`,
+    '--mat-scroll-area-scrollbar-width': `${scrollbarWidth.value}px`,
+    '--mat-scroll-area-root-padding-left': `${rootPadding.value.left}px`,
+    '--mat-scroll-area-root-padding-right': `${rootPadding.value.right}px`,
+    '--mat-scroll-area-root-padding-top': `${rootPadding.value.top}px`,
+    '--mat-scroll-area-root-padding-bottom': `${rootPadding.value.bottom}px`,
+  },
+]);
 const scrollerAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([name]) => !['class', 'style'].includes(name)),
 ));
-
 /**
  * @returns {{ start: number, end: number }}
  */
@@ -462,14 +528,22 @@ watch(canDragScroll, (enabled) => {
 });
 
 onMounted(() => {
+  syncRootPadding();
+
   if (typeof ResizeObserver === 'function') {
-    resizeObserver = new ResizeObserver(() => scheduleSync(false));
+    resizeObserver = new ResizeObserver(() => {
+      syncRootPadding();
+      scheduleSync(false);
+    });
   }
 
   observeContent();
 });
 
-onUpdated(observeContent);
+onUpdated(() => {
+  syncRootPadding();
+  observeContent();
+});
 
 onBeforeUnmount(() => {
   if (frameId !== undefined) {
@@ -489,55 +563,40 @@ defineExpose({
 
 <template>
   <div
+    ref="root"
     v-bind="rootAttrs"
     class="mat-scroll-area"
-    :class="`mat-scroll-area--${normalizedOrientation}`"
+    :class="[
+      {
+        'mat-scroll-area--rounded': propsWithDefaults.rounded,
+        'mat-scroll-area--explicit-color': hasExplicitColor,
+      },
+    ]"
+    :style="rootStyleBindings"
   >
     <div
-      v-if="$slots['fixed-start']"
-      class="mat-scroll-area__fixed"
-    >
-      <slot name="fixed-start" />
-    </div>
-
-    <div
+      ref="scroller"
+      v-bind="scrollerAttrs"
       class="mat-scroll-area__viewport"
-      :style="viewportStyle"
-      :class="{
-        'mat-scroll-area__viewport--start-overflow': hasStartOverflow,
-        'mat-scroll-area__viewport--end-overflow': hasEndOverflow,
-      }"
+      :style="scrollerStyle"
+      :class="[
+        `mat-scroll-area__viewport--${normalizedOrientation}`,
+        `mat-scroll-area__viewport--bar-${propsWithDefaults.barWidth}`,
+        {
+          'mat-scroll-area__viewport--dragging': isDragging,
+          'mat-scroll-area__viewport--start-overflow': hasStartOverflow,
+          'mat-scroll-area__viewport--end-overflow': hasEndOverflow,
+        },
+      ]"
+      @click.capture="handleClickCapture"
+      @lostpointercapture="handleLostPointerCapture"
+      @pointercancel="handlePointerCancel"
+      @pointerdown="handlePointerDown"
+      @pointermove="handlePointerMove"
+      @pointerup="handlePointerUp"
+      @scroll="handleScroll"
     >
-      <div
-        ref="scroller"
-        v-bind="scrollerAttrs"
-        class="mat-scroll-area__scroller"
-        :style="scrollerStyle"
-        :class="[
-          `mat-scroll-area__scroller--bar-${propsWithDefaults.barWidth}`,
-          {
-            'mat-scroll-area__scroller--dragging': isDragging,
-            'mat-scroll-area__scroller--start-overflow': hasStartOverflow,
-            'mat-scroll-area__scroller--end-overflow': hasEndOverflow,
-          },
-        ]"
-        @click.capture="handleClickCapture"
-        @lostpointercapture="handleLostPointerCapture"
-        @pointercancel="handlePointerCancel"
-        @pointerdown="handlePointerDown"
-        @pointermove="handlePointerMove"
-        @pointerup="handlePointerUp"
-        @scroll="handleScroll"
-      >
-        <slot />
-      </div>
-    </div>
-
-    <div
-      v-if="$slots['fixed-end']"
-      class="mat-scroll-area__fixed"
-    >
-      <slot name="fixed-end" />
+      <slot />
     </div>
   </div>
 </template>
@@ -545,113 +604,106 @@ defineExpose({
 <style scoped>
 @layer mde.components {
   .mat-scroll-area {
-    display: flex;
+    --mat-scroll-area-container-color: transparent;
     box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 100%;
+    flex-grow: 1;
     min-inline-size: 0;
     min-block-size: 0;
+    background: var(--mat-scroll-area-container-color);
   }
 
-  .mat-scroll-area--vertical {
-    flex-direction: column;
+  .mat-scroll-area--rounded {
+    --mat-scroll-area-rounded-radius: var(--mat-sys-shape-corner-extra-large);
+    border-radius: var(--mat-scroll-area-rounded-radius);
+    overflow: clip;
   }
 
-  .mat-scroll-area--horizontal {
-    flex-direction: row;
-  }
-
-  .mat-scroll-area__fixed {
-    flex-shrink: 0;
+  .mat-scroll-area--explicit-color {
+    --mat-scroll-area-container-color: var(--mat-accent-container-color);
+    color: var(--mat-on-accent-container-color);
   }
 
   .mat-scroll-area__viewport {
-    --mat-scroll-area-scrollbar-space: 16px;
-    flex-grow: 1;
-    min-inline-size: 0;
-    min-block-size: 0;
-  }
-
-  .mat-scroll-area__scroller {
-    block-size: 100%;
-    inline-size: 100%;
-    flex-grow: 1;
     box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 100%;
     min-inline-size: 0;
     min-block-size: 0;
-    scrollbar-color: var(--mat-sys-color-outline) transparent;
+    scrollbar-color: var(--mat-sys-color-primary) transparent;
   }
 
-  .mat-scroll-area__scroller--dragging { user-select: none; }
-
-  .mat-scroll-area--vertical .mat-scroll-area__scroller {
+  .mat-scroll-area__viewport--vertical {
     overflow: hidden auto;
-    mask-image: var(--mat-scroll-area-content-mask, linear-gradient(black, black)), linear-gradient(to right, transparent 0 calc(100% - var(--mat-scroll-area-scrollbar-space)), black calc(100% - var(--mat-scroll-area-scrollbar-space)) 100%);
+    padding-block: 28px;
+    padding-left: var(--mat-scroll-area-root-padding-left, 0);
+    padding-right: var(--mat-scroll-area-root-padding-right, 0);
+    margin-left: calc(-1 * var(--mat-scroll-area-root-padding-left, 0));
+    margin-right: calc(-1 * var(--mat-scroll-area-root-padding-right, 0));
+    inline-size: calc(100% + var(--mat-scroll-area-root-padding-left, 0) + var(--mat-scroll-area-root-padding-right, 0));
+    mask-image: var(--mat-scroll-area-content-mask, linear-gradient(black, black)), linear-gradient(to right, transparent 0 calc(100% - var(--mat-scroll-area-scrollbar-width)), black calc(100% - var(--mat-scroll-area-scrollbar-width)) 100%);
     mask-composite: add;
   }
 
-  .mat-scroll-area--horizontal .mat-scroll-area__scroller {
+  .mat-scroll-area__viewport--horizontal {
     overflow: hidden;
     overflow-x: auto;
-    mask-image: var(--mat-scroll-area-content-mask, linear-gradient(black, black)), linear-gradient(to bottom, transparent 0 calc(100% - var(--mat-scroll-area-scrollbar-space)), black calc(100% - var(--mat-scroll-area-scrollbar-space)) 100%);
+    padding-inline: 28px;
+    padding-top: var(--mat-scroll-area-root-padding-top, 0);
+    padding-bottom: var(--mat-scroll-area-root-padding-bottom, 0);
+    margin-top: calc(-1 * var(--mat-scroll-area-root-padding-top, 0));
+    margin-bottom: calc(-1 * var(--mat-scroll-area-root-padding-bottom, 0));
+    block-size: calc(100% + var(--mat-scroll-area-root-padding-top, 0) + var(--mat-scroll-area-root-padding-bottom, 0));
+    mask-image: var(--mat-scroll-area-content-mask, linear-gradient(black, black)), linear-gradient(to bottom, transparent 0 calc(100% - var(--mat-scroll-area-scrollbar-width)), black calc(100% - var(--mat-scroll-area-scrollbar-width)) 100%);
     mask-composite: add;
   }
 
-  .mat-scroll-area__scroller--bar-default {
-    scrollbar-width: auto;
-  }
+  .mat-scroll-area__viewport--dragging { user-select: none; }
 
-  .mat-scroll-area__scroller--bar-thin {
-    scrollbar-width: thin;
-  }
+  .mat-scroll-area__viewport--bar-default { scrollbar-width: auto; }
 
-  .mat-scroll-area__scroller--bar-hidden {
-    scrollbar-width: none;
-  }
+  .mat-scroll-area__viewport--bar-thin { scrollbar-width: thin; }
 
-  .mat-scroll-area--vertical .mat-scroll-area__scroller--start-overflow {
+  .mat-scroll-area__viewport--bar-hidden { scrollbar-width: none; }
+
+  .mat-scroll-area__viewport--vertical.mat-scroll-area__viewport--start-overflow {
     --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) 100%);
   }
 
-  .mat-scroll-area--vertical .mat-scroll-area__scroller--end-overflow {
+  .mat-scroll-area__viewport--vertical.mat-scroll-area__viewport--end-overflow {
     --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
   }
 
-  .mat-scroll-area--vertical .mat-scroll-area__scroller--start-overflow.mat-scroll-area__scroller--end-overflow {
+  .mat-scroll-area__viewport--vertical.mat-scroll-area__viewport--start-overflow.mat-scroll-area__viewport--end-overflow {
     --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
   }
 
-  .mat-scroll-area--horizontal .mat-scroll-area__scroller--start-overflow {
+  .mat-scroll-area__viewport--horizontal.mat-scroll-area__viewport--start-overflow {
     --mat-scroll-area-content-mask: linear-gradient(to right, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) 100%);
   }
 
-  .mat-scroll-area--horizontal .mat-scroll-area__scroller--end-overflow {
+  .mat-scroll-area__viewport--horizontal.mat-scroll-area__viewport--end-overflow {
     --mat-scroll-area-content-mask: linear-gradient(to right, black 0 calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
   }
 
-  .mat-scroll-area--horizontal .mat-scroll-area__scroller--start-overflow.mat-scroll-area__scroller--end-overflow {
+  .mat-scroll-area__viewport--horizontal.mat-scroll-area__viewport--start-overflow.mat-scroll-area__viewport--end-overflow {
     --mat-scroll-area-content-mask: linear-gradient(to right, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
   }
 
-  .mat-scroll-area__scroller::-webkit-scrollbar {
+  .mat-scroll-area__viewport::-webkit-scrollbar {
+    width: var(--mat-scroll-area-scrollbar-width);
+    height: var(--mat-scroll-area-scrollbar-width);
     background: transparent;
   }
 
-  .mat-scroll-area__scroller--bar-thin::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-  }
-
-  .mat-scroll-area__scroller--bar-hidden::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-  }
-
-  .mat-scroll-area__scroller::-webkit-scrollbar-track,
-  .mat-scroll-area__scroller::-webkit-scrollbar-corner {
+  .mat-scroll-area__viewport::-webkit-scrollbar-track,
+  .mat-scroll-area__viewport::-webkit-scrollbar-corner {
     background: transparent;
   }
 
-  .mat-scroll-area__scroller::-webkit-scrollbar-thumb {
-    background: var(--mat-sys-color-outline);
+  .mat-scroll-area__viewport::-webkit-scrollbar-thumb {
+    background: var(--mat-sys-color-primary);
     border-radius: var(--mat-sys-shape-corner-full);
   }
 }

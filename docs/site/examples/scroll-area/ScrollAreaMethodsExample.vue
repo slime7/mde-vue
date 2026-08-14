@@ -13,6 +13,8 @@
     <mat-scroll-area
       ref="area"
       class="scroll-area-methods-example__area"
+      color="surface-container-low"
+      rounded
       aria-label="可命令滚动的列表"
       tabindex="0"
     >
@@ -59,8 +61,6 @@ function scrollToEnd() {
 .scroll-area-methods-example__area {
   block-size: 200px;
   padding-inline: 16px;
-  background: var(--mat-sys-color-surface-container-low);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 </style>
 <!-- #endregion style -->

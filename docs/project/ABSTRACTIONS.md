@@ -256,7 +256,7 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 
 ## Scroll area 滚动区域
 
-`<mat-scroll-area>` 与导出 `MatScrollArea` 拥有一个单轴原生滚动元素。`orientation` 的 `vertical`、`y`、`v` 表示纵向，`horizontal`、`x`、`h` 表示横向；完整值是文档中的规范写法。组件只在实际离开边缘后对对应内容使用真实 CSS mask 渐隐，并保留独立的滚动条保护区域；`shadowLength` 支持数字或分别设置 `start`、`end` 的对象，省略时两端默认 16px；边缘阴影带默认贴边，`shadowOffset` 可以分别设置起始端与末端的向内偏移，偏移区内的滚动内容不被遮罩覆盖，适合放置不透明的 sticky 元素；`barWidth` 的 `default`、`thin`、`hidden` 分别使用浏览器默认、窄或隐藏的滚动条；`fixed-start` 与 `fixed-end` 位于阴影之外，偏移区外的默认 Slot sticky 内容不保证避开阴影。
+`<mat-scroll-area>` 与导出 `MatScrollArea` 拥有一个单轴原生滚动元素，根元素本身就是滚动元素，`class`、`style`、原生属性和监听器都作用于它。`orientation` 的 `vertical`、`y`、`v` 表示纵向，`horizontal`、`x`、`h` 表示横向；完整值是文档中的规范写法。组件只在实际离开边缘后对对应内容使用真实 CSS mask 渐隐，并保留独立的滚动条保护区域；`shadowLength` 支持数字或分别设置 `start`、`end` 的对象，省略时两端默认 16px；边缘阴影带默认贴边，`shadowOffset` 可以分别设置起始端与末端的向内偏移，偏移区内的滚动内容不被遮罩覆盖，适合放置不透明的 sticky 元素。滚动方向两端固定保留 28px 内边距；`barWidth` 的 `default`、`thin`、`hidden` 分别对应 16px、8px、0 的滚动条宽度，尺寸以内联 CSS 变量 `--mat-scroll-area-scrollbar-width` 置于根元素供子元素读取，拇指使用 primary 令牌且轨道透明；滚动条始终贴住容器边缘，根元素内边距由滚动元素覆盖并以同样间距保留内容缩进。`rounded` 使用 `--mat-sys-shape-corner-extra-large`（28px）圆角令牌；`color` 接受语义色、系统颜色角色（含 `surface` 与各 `surface-container-*`）或六位十六进制种子色，显式设置时由根元素填充容器背景并同步内容文字颜色，边缘渐隐只作用于内容，不覆盖背景。组件可作为页面正文滚动容器使用，推荐把 `<mat-container>` 放入默认 Slot：容器继承根元素上的 `--mat-scroll-area-scrollbar-width`，把其 `padding-inline-end` 改为原值减滚动条宽度即可保持正文视觉居中。默认 Slot 内的 sticky 内容仍属于滚动内容，不保证避开阴影。
 
 `snap` 以 `none`、`proximity`、`mandatory` 设置当前物理滚动轴的原生滚动停靠强度，默认关闭；`snapPadding` 以非负像素值设置同一轴两端的停靠内边距。组件不替默认 Slot 内容选择停靠目标，使用方必须在目标元素上声明 `scroll-snap-align`，并按需要选择 `scroll-snap-stop`。
 

@@ -5,6 +5,8 @@
 
     <mat-scroll-area
       class="scroll-area-reach-example__area"
+      color="surface-container-low"
+      rounded
       :reach-threshold="{ start: 24, end: 48 }"
       aria-label="无限滚动消息"
       tabindex="0"
@@ -43,8 +45,6 @@ function loadMore({ distance }) {
 .scroll-area-reach-example__area {
   block-size: 220px;
   padding-inline: 16px;
-  background: var(--mat-sys-color-surface-container-low);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 </style>
 <!-- #endregion style -->

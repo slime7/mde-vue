@@ -1,21 +1,19 @@
 <!-- #region script -->
 <script setup>
-const barWidths = ['default', 'thin', 'hidden'];
+const colors = ['surface-container', 'surface-container-high', 'surface-container-highest'];
 </script>
 <!-- #endregion script -->
 
 <!-- #region template -->
 <template>
-  <div class="scroll-area-bar-width-example">
-    <section v-for="barWidth in barWidths" :key="barWidth">
-      <h4>{{ barWidth }}</h4>
+  <div class="scroll-area-color-example">
+    <section v-for="color in colors" :key="color">
+      <h4>{{ color }}</h4>
 
       <mat-scroll-area
-        class="scroll-area-bar-width-example__area"
-        :bar-width="barWidth"
-        color="surface-container"
-        rounded
-        :aria-label="`${barWidth} 滚动条示例`"
+        class="scroll-area-color-example__area"
+        :color="color"
+        :aria-label="`${color} 滚动区域示例`"
         tabindex="0"
       >
         <p v-for="index in 8" :key="index">
@@ -29,14 +27,14 @@ const barWidths = ['default', 'thin', 'hidden'];
 
 <!-- #region style -->
 <style scoped>
-.scroll-area-bar-width-example {
+.scroll-area-color-example {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
   inline-size: 100%;
 }
 
-.scroll-area-bar-width-example section {
+.scroll-area-color-example section {
   display: flex;
   flex: 1 1 180px;
   min-inline-size: 0;
@@ -44,18 +42,17 @@ const barWidths = ['default', 'thin', 'hidden'];
   gap: 8px;
 }
 
-.scroll-area-bar-width-example h4 {
+.scroll-area-color-example h4 {
   margin: 0;
   color: var(--mat-sys-color-on-surface);
   font: var(--mat-sys-typescale-title-medium);
 }
 
-.scroll-area-bar-width-example__area {
-  block-size: 150px;
-  padding-inline: 16px;
+.scroll-area-color-example__area {
+  block-size: 180px;
 }
 
-.scroll-area-bar-width-example__area p {
+.scroll-area-color-example__area p {
   margin-block: 16px;
 }
 </style>

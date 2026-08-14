@@ -6,6 +6,8 @@
 
       <mat-scroll-area
         class="scroll-area-shadow-length-example__area"
+        color="surface-container"
+        rounded
         aria-label="默认渐隐长度示例"
         tabindex="0"
       >
@@ -20,6 +22,8 @@
 
       <mat-scroll-area
         class="scroll-area-shadow-length-example__area"
+        color="surface-container"
+        rounded
         :shadow-length="48"
         aria-label="数字阴影长度示例"
         tabindex="0"
@@ -36,6 +40,8 @@
       <mat-scroll-area
         class="scroll-area-shadow-length-example__horizontal"
         orientation="horizontal"
+        color="surface-container"
+        rounded
         :shadow-length="{ start: 16, end: 64 }"
         aria-label="两端不同阴影长度示例"
         tabindex="0"
@@ -75,8 +81,6 @@
 .scroll-area-shadow-length-example__area {
   block-size: 180px;
   padding-inline: 16px;
-  background: var(--mat-sys-color-surface-container);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .scroll-area-shadow-length-example__area p {
@@ -86,8 +90,6 @@
 .scroll-area-shadow-length-example__horizontal {
   inline-size: 100%;
   padding: 16px;
-  background: var(--mat-sys-color-surface-container);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .scroll-area-shadow-length-example__row {

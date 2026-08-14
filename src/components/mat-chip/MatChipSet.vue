@@ -155,7 +155,13 @@ provide(MAT_CHIP_SET_KEY, {
     inline-size: 100%;
   }
 
-  .mat-chip-set__scroll-area { inline-size: 100%; }
+  .mat-chip-set--scroll .mat-chip-set__scroll-area {
+    inline-size: 100%;
+  }
+
+  .mat-chip-set--scroll .mat-chip-set__scroll-area :deep(.mat-scroll-area__viewport) {
+    padding-inline: 0;
+  }
 
   .mat-chip-set__scroll-content {
     --mat-chip-set-focus-ring-bleed: calc(

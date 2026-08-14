@@ -4,6 +4,8 @@
     <mat-scroll-area
       orientation="y"
       class="scroll-area-orientation-example__vertical"
+      color="surface-container"
+      rounded
       aria-label="纵向消息"
       tabindex="0"
     >
@@ -44,8 +46,6 @@
 .scroll-area-orientation-example__vertical {
   block-size: 180px;
   padding-inline: 16px;
-  background: var(--mat-sys-color-surface-container);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .scroll-area-orientation-example__vertical p {

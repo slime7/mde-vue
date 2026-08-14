@@ -998,10 +998,6 @@ if (appContext) {
   }
 
   .mat-menu__surface :deep(.mat-scroll-area__viewport) {
-    block-size: 100%;
-  }
-
-  .mat-menu__surface :deep(.mat-scroll-area__scroller) {
     padding: var(--mat-menu-focus-ring-bleed);
     margin: calc(-1 * var(--mat-menu-focus-ring-bleed));
     inline-size: calc(100% + (2 * var(--mat-menu-focus-ring-bleed)));
@@ -1043,7 +1039,7 @@ if (appContext) {
     clip-path: none;
   }
 
-  .mat-menu--grouped .mat-menu__surface :deep(.mat-scroll-area__scroller) {
+  .mat-menu--grouped .mat-menu__surface :deep(.mat-scroll-area__viewport) {
     display: flex;
     flex-direction: column;
     gap: var(--mat-menu-group-space);
