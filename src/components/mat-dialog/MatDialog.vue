@@ -582,19 +582,21 @@ watchEffect(() => {
         </template>
 
         <template v-else>
-          <MatIcon
+          <div
             v-if="hasIcon"
-            as="div"
             class="mat-dialog__icon"
-            :optical-size="24"
-            size="24px"
-            aria-hidden="true"
           >
-            <template v-if="propsWithDefaults.icon !== undefined">
-              {{ propsWithDefaults.icon }}
-            </template>
-            <slot v-else name="icon" />
-          </MatIcon>
+            <MatIcon
+              :optical-size="24"
+              size="24px"
+              aria-hidden="true"
+            >
+              <template v-if="propsWithDefaults.icon !== undefined">
+                {{ propsWithDefaults.icon }}
+              </template>
+              <slot v-else name="icon" />
+            </MatIcon>
+          </div>
 
           <h2
             v-if="hasTitle"

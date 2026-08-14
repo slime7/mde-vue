@@ -304,15 +304,18 @@ function handleModelValue(value) {
         aria-hidden="true"
       />
 
-      <MatIcon
+      <span
         v-if="$slots.leading"
-        as="span"
         class="mat-text-input__icon mat-text-input__leading"
-        :optical-size="24"
-        size="24px"
       >
-        <slot name="leading" />
-      </MatIcon>
+        <MatIcon
+          as="span"
+          :optical-size="24"
+          size="24px"
+        >
+          <slot name="leading" />
+        </MatIcon>
+      </span>
 
       <component
         :is="control === 'custom' ? 'div' : 'label'"
@@ -371,15 +374,18 @@ function handleModelValue(value) {
         </span>
       </component>
 
-      <MatIcon
+      <span
         v-if="$slots.trailing"
-        as="span"
         class="mat-text-input__icon mat-text-input__trailing"
-        :optical-size="24"
-        size="24px"
       >
-        <slot name="trailing" />
-      </MatIcon>
+        <MatIcon
+          as="span"
+          :optical-size="24"
+          size="24px"
+        >
+          <slot name="trailing" />
+        </MatIcon>
+      </span>
     </div>
 
     <span
