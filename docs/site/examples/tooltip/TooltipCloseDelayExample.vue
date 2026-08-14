@@ -1,8 +1,8 @@
 <!-- #region template -->
 <template>
   <mat-tooltip
-    content="移开指针 800ms 后关闭"
-    close-delay="800"
+    content="移开指针 3 秒后关闭"
+    close-delay="3000"
   >
     <template #activator>
       <mat-btn variant="outlined">

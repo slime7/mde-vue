@@ -25,6 +25,7 @@ import {
   activateTooltip,
   activateTooltipDelayGroup,
   deactivateTooltip,
+  isKeyboardTooltipFocus,
   leaveTooltipDelayGroup,
   shouldSkipTooltipDelay,
 } from '../tooltip-stack';
@@ -787,6 +788,10 @@ function handleHoverChange(isHovering) {
 }
 
 function handleFocusIn() {
+  if (!isKeyboardTooltipFocus()) {
+    return;
+  }
+
   focusInside = true;
   updateAutomaticVisibility();
 }

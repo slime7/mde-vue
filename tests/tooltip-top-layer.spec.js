@@ -84,6 +84,20 @@ async function settleRender() {
 }
 
 /**
+ * @returns {void}
+ */
+function useKeyboardInput() {
+  window.dispatchEvent(new KeyboardEvent('keydown'));
+}
+
+/**
+ * @returns {void}
+ */
+function usePointerInput() {
+  window.dispatchEvent(new MouseEvent('pointerdown'));
+}
+
+/**
  * @param {'dialog'|'popover'} type
  * @returns {HTMLElement}
  */
@@ -193,7 +207,8 @@ describe('Tooltip top layer 挂载', () => {
     wrapper.unmount();
   });
 
-  it('MatBtn 和 MatFab 的内部 Tooltip 在 dialog 内可见', async () => {
+  it('键盘聚焦时 MatBtn 和 MatFab 的内部 Tooltip 在 dialog 内可见', async () => {
+    useKeyboardInput();
     const dialog = createTopLayer('dialog');
     const button = mount(MatBtn, {
       attachTo: dialog,
@@ -223,6 +238,29 @@ describe('Tooltip top layer 挂载', () => {
 
     button.unmount();
     fab.unmount();
+  });
+
+  it('鼠标打开 MatDialog 时自动聚焦的图标按钮不显示 Tooltip', async () => {
+    usePointerInput();
+    const wrapper = mount(MatDialog, {
+      attachTo: document.body,
+      props: {
+        modelValue: true,
+        title: '图标按钮',
+      },
+      slots: {
+        default: () => h(MatBtn, { icon: 'settings', label: '设置' }),
+      },
+    });
+
+    await settleRender();
+
+    const dialog = document.body.querySelector('dialog');
+
+    expect(document.activeElement?.closest('button')).not.toBeNull();
+    expect(dialog.querySelector('[role="tooltip"]')).toBeNull();
+
+    wrapper.unmount();
   });
 
   it('MatSlider 和 MatRangeSlider 的 value indicator 在 dialog 内可见', async () => {
@@ -316,7 +354,8 @@ describe('Tooltip top layer 挂载', () => {
     wrapper.unmount();
   });
 
-  it('MatMenu Popover 内的 Tooltip 保留在菜单 top layer', async () => {
+  it('键盘聚焦时 MatMenu 首项的 Tooltip 保留在菜单 top layer', async () => {
+    useKeyboardInput();
     const anchor = document.createElement('button');
 
     anchor.id = 'tooltip-menu-anchor';
@@ -348,6 +387,40 @@ describe('Tooltip top layer 挂载', () => {
     await settleRender();
 
     expect(menu.querySelector('[role="tooltip"]')?.textContent).toContain('菜单项目提示');
+    wrapper.unmount();
+  });
+
+  it('鼠标打开 MatMenu 时自动聚焦的首项不显示 Tooltip', async () => {
+    usePointerInput();
+    const anchor = document.createElement('button');
+
+    anchor.id = 'tooltip-menu-anchor-mouse';
+    anchor.type = 'button';
+    document.body.append(anchor);
+    const wrapper = mount(MatMenu, {
+      attachTo: document.body,
+      props: {
+        anchor: 'tooltip-menu-anchor-mouse',
+        modelValue: true,
+      },
+      slots: {
+        default: () => [
+          h(MatMenuItem, { id: 'tooltip-menu-item-mouse' }, () => '菜单项目'),
+          h(MatTooltip, {
+            content: '菜单项目提示',
+            target: '#tooltip-menu-item-mouse',
+          }),
+        ],
+      },
+    });
+
+    await settleRender();
+
+    const menu = document.body.querySelector('[role="menu"]');
+
+    expect(menu).not.toBeNull();
+    expect(menu.querySelector('[role="tooltip"]')).toBeNull();
+
     wrapper.unmount();
   });
 });

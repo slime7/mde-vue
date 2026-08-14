@@ -63,6 +63,20 @@ async function hover(target) {
   await settleRender();
 }
 
+/**
+ * @returns {void}
+ */
+function useKeyboardInput() {
+  window.dispatchEvent(new KeyboardEvent('keydown'));
+}
+
+/**
+ * @returns {void}
+ */
+function usePointerInput() {
+  window.dispatchEvent(new MouseEvent('pointerdown'));
+}
+
 describe('MatTooltip', () => {
   beforeEach(() => {
     vi.useFakeTimers();
@@ -604,6 +618,7 @@ describe('MatTooltip', () => {
       props: { content: '焦点第二个', target: targets[1] },
     });
 
+    useKeyboardInput();
     targets[0].dispatchEvent(new FocusEvent('focusin'));
     await vi.advanceTimersByTimeAsync(600);
     await settleRender();
@@ -617,6 +632,95 @@ describe('MatTooltip', () => {
     first.unmount();
     second.unmount();
     plugin.theme.dispose();
+  });
+
+  it('鼠标点击获得的焦点不显示 Tooltip，悬停仍显示且移开按 closeDelay 关闭', async () => {
+    const target = createTarget('pointer-focus-target');
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      props: {
+        closeDelay: 300,
+        content: '指针焦点提示',
+        target,
+      },
+    });
+
+    usePointerInput();
+    target.dispatchEvent(new FocusEvent('focusin'));
+    await vi.advanceTimersByTimeAsync(0);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    await hover(target);
+
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('指针焦点提示');
+
+    target.dispatchEvent(new MouseEvent('mouseleave'));
+    await vi.advanceTimersByTimeAsync(300);
+    await settleRender();
+    await vi.advanceTimersByTimeAsync(150);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    wrapper.unmount();
+  });
+
+  it('键盘聚焦显示 Tooltip 且 openDelay 生效', async () => {
+    const target = createTarget('keyboard-focus-target');
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      props: {
+        content: '键盘焦点提示',
+        openDelay: 300,
+        target,
+      },
+    });
+
+    useKeyboardInput();
+    target.dispatchEvent(new FocusEvent('focusin'));
+    await vi.advanceTimersByTimeAsync(299);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    await vi.advanceTimersByTimeAsync(1);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('键盘焦点提示');
+
+    wrapper.unmount();
+  });
+
+  it('kebab-case 属性不被插件默认延迟覆盖', async () => {
+    const target = createTarget('kebab-delay-target');
+    const wrapper = mount({
+      render: () => h(MatTooltip, {
+        'close-delay': '400',
+        content: 'kebab 属性',
+        'open-delay': '300',
+        target,
+      }),
+    });
+
+    await hover(target);
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    await vi.advanceTimersByTimeAsync(300);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('kebab 属性');
+
+    target.dispatchEvent(new MouseEvent('mouseleave'));
+    await settleRender();
+    await vi.advanceTimersByTimeAsync(550);
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+
+    wrapper.unmount();
   });
 
   it('首个 Tooltip 未显示、切换不同组或有效期结束时保留完整延迟', async () => {

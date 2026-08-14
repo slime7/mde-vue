@@ -6,6 +6,16 @@ import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../mat-ui-context';
 const EMPTY_OBJECT = Object.freeze({});
 
 /**
+ * 把 camelCase 属性名转换为 kebab-case，与 Vue 模板属性写法对应。
+ *
+ * @param {string} name
+ * @returns {string}
+ */
+function hyphenate(name) {
+  return name.replace(/\B([A-Z])/g, '-$1').toLowerCase();
+}
+
+/**
  * 返回合并 createMatUi() defaults 配置后的响应式 props 对象。
  *
  * 必须在组件 setup 中调用。显式传入且原始值非 undefined 的属性优先；
@@ -35,8 +45,11 @@ export function useMatProps(componentName, props) {
   keys.forEach((key) => {
     merged[key] = computed(() => {
       const rawProps = instance.vnode.props ?? EMPTY_OBJECT;
+      const explicitNames = [key, hyphenate(key)];
 
-      if (key in rawProps && rawProps[key] !== undefined) {
+      if (explicitNames.some((name) => (
+        name in rawProps && rawProps[name] !== undefined
+      ))) {
         return props[key];
       }
 

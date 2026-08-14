@@ -1,5 +1,24 @@
 let activeTooltip = null;
 const delayGroups = new WeakMap();
+let inputModality = 'pointer';
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('keydown', () => {
+    inputModality = 'keyboard';
+  }, true);
+  window.addEventListener('pointerdown', () => {
+    inputModality = 'pointer';
+  }, true);
+}
+
+/**
+ * 判断最近一次用户输入是否为键盘，用于只对键盘聚焦显示 Tooltip。
+ *
+ * @returns {boolean}
+ */
+export function isKeyboardTooltipFocus() {
+  return inputModality === 'keyboard';
+}
 
 /**
  * @typedef {object} TooltipStackEntry
