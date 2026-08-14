@@ -21,7 +21,7 @@ pnpm add "mde-vue@git+ssh://git@github.com/slime7/mde-vue.git#<commit>"
 
 ## 全局注册：推荐用法
 
-大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，以 kebab-case `mat-*` 和 PascalCase `Mat*` 两种名称全局注册所有组件，并注册 `v-intersection` 与 `v-state-layer` 指令。基础样式必须显式导入。页面级应用建议用 `<mat-app-root>` 包住应用正文和设置 `app` 的布局组件。
+大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，以 kebab-case `mat-*` 和 PascalCase `Mat*` 两种名称全局注册所有组件，并注册 `v-intersection` 与 `v-state-layer` 指令。基础样式必须显式导入。它依次声明 `mde.tokens`、`mde.components`、`mde.utilities` 三个稳定 CSS 级联层；应用中未分层的普通 CSS 默认优先，可以直接覆盖库样式。页面级应用建议用 `<mat-app-root>` 包住应用正文和设置 `app` 的布局组件。
 
 应用入口 `src/main.js`：
 
@@ -76,7 +76,7 @@ function handleIntersection(isIntersecting) {
 
 ## 局部注册
 
-只需要少量组件时，也从唯一的 `mde-vue` 根入口具名导入。基础样式仍然必须导入；它同时包含默认主题、全部组件样式和 Tailwind CSS v4 语义映射。支持 tree shaking 的构建工具可以移除未使用的具名导出。
+只需要少量组件时，也从唯一的 `mde-vue` 根入口具名导入。基础样式仍然必须导入；它包含默认主题、全部组件样式和公共排版工具类。Tailwind CSS v4 语义映射由独立的 `mde-vue/tailwind.css` 提供，不进入 `mde` 级联层。支持 tree shaking 的构建工具可以移除未使用的具名导出。
 
 ```vue
 <script setup>

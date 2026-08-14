@@ -543,114 +543,116 @@ defineExpose({
 </template>
 
 <style scoped>
-.mat-scroll-area {
-  display: flex;
-  box-sizing: border-box;
-  min-inline-size: 0;
-  min-block-size: 0;
-}
+@layer mde.components {
+  .mat-scroll-area {
+    display: flex;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    min-block-size: 0;
+  }
 
-.mat-scroll-area--vertical {
-  flex-direction: column;
-}
+  .mat-scroll-area--vertical {
+    flex-direction: column;
+  }
 
-.mat-scroll-area--horizontal {
-  flex-direction: row;
-}
+  .mat-scroll-area--horizontal {
+    flex-direction: row;
+  }
 
-.mat-scroll-area__fixed {
-  flex-shrink: 0;
-}
+  .mat-scroll-area__fixed {
+    flex-shrink: 0;
+  }
 
-.mat-scroll-area__viewport {
-  --mat-scroll-area-scrollbar-space: 16px;
-  flex-grow: 1;
-  min-inline-size: 0;
-  min-block-size: 0;
-}
+  .mat-scroll-area__viewport {
+    --mat-scroll-area-scrollbar-space: 16px;
+    flex-grow: 1;
+    min-inline-size: 0;
+    min-block-size: 0;
+  }
 
-.mat-scroll-area__scroller {
-  block-size: 100%;
-  inline-size: 100%;
-  flex-grow: 1;
-  box-sizing: border-box;
-  min-inline-size: 0;
-  min-block-size: 0;
-  scrollbar-color: var(--mat-sys-color-outline) transparent;
-}
+  .mat-scroll-area__scroller {
+    block-size: 100%;
+    inline-size: 100%;
+    flex-grow: 1;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    min-block-size: 0;
+    scrollbar-color: var(--mat-sys-color-outline) transparent;
+  }
 
-.mat-scroll-area__scroller--dragging { user-select: none; }
+  .mat-scroll-area__scroller--dragging { user-select: none; }
 
-.mat-scroll-area--vertical .mat-scroll-area__scroller {
-  overflow: hidden auto;
-  mask-image: var(--mat-scroll-area-content-mask, linear-gradient(black, black)), linear-gradient(to right, transparent 0 calc(100% - var(--mat-scroll-area-scrollbar-space)), black calc(100% - var(--mat-scroll-area-scrollbar-space)) 100%);
-  mask-composite: add;
-}
+  .mat-scroll-area--vertical .mat-scroll-area__scroller {
+    overflow: hidden auto;
+    mask-image: var(--mat-scroll-area-content-mask, linear-gradient(black, black)), linear-gradient(to right, transparent 0 calc(100% - var(--mat-scroll-area-scrollbar-space)), black calc(100% - var(--mat-scroll-area-scrollbar-space)) 100%);
+    mask-composite: add;
+  }
 
-.mat-scroll-area--horizontal .mat-scroll-area__scroller {
-  overflow: hidden;
-  overflow-x: auto;
-  mask-image: var(--mat-scroll-area-content-mask, linear-gradient(black, black)), linear-gradient(to bottom, transparent 0 calc(100% - var(--mat-scroll-area-scrollbar-space)), black calc(100% - var(--mat-scroll-area-scrollbar-space)) 100%);
-  mask-composite: add;
-}
+  .mat-scroll-area--horizontal .mat-scroll-area__scroller {
+    overflow: hidden;
+    overflow-x: auto;
+    mask-image: var(--mat-scroll-area-content-mask, linear-gradient(black, black)), linear-gradient(to bottom, transparent 0 calc(100% - var(--mat-scroll-area-scrollbar-space)), black calc(100% - var(--mat-scroll-area-scrollbar-space)) 100%);
+    mask-composite: add;
+  }
 
-.mat-scroll-area__scroller--bar-default {
-  scrollbar-width: auto;
-}
+  .mat-scroll-area__scroller--bar-default {
+    scrollbar-width: auto;
+  }
 
-.mat-scroll-area__scroller--bar-thin {
-  scrollbar-width: thin;
-}
+  .mat-scroll-area__scroller--bar-thin {
+    scrollbar-width: thin;
+  }
 
-.mat-scroll-area__scroller--bar-hidden {
-  scrollbar-width: none;
-}
+  .mat-scroll-area__scroller--bar-hidden {
+    scrollbar-width: none;
+  }
 
-.mat-scroll-area--vertical .mat-scroll-area__scroller--start-overflow {
-  --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) 100%);
-}
+  .mat-scroll-area--vertical .mat-scroll-area__scroller--start-overflow {
+    --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) 100%);
+  }
 
-.mat-scroll-area--vertical .mat-scroll-area__scroller--end-overflow {
-  --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
-}
+  .mat-scroll-area--vertical .mat-scroll-area__scroller--end-overflow {
+    --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
+  }
 
-.mat-scroll-area--vertical .mat-scroll-area__scroller--start-overflow.mat-scroll-area__scroller--end-overflow {
-  --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
-}
+  .mat-scroll-area--vertical .mat-scroll-area__scroller--start-overflow.mat-scroll-area__scroller--end-overflow {
+    --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
+  }
 
-.mat-scroll-area--horizontal .mat-scroll-area__scroller--start-overflow {
-  --mat-scroll-area-content-mask: linear-gradient(to right, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) 100%);
-}
+  .mat-scroll-area--horizontal .mat-scroll-area__scroller--start-overflow {
+    --mat-scroll-area-content-mask: linear-gradient(to right, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) 100%);
+  }
 
-.mat-scroll-area--horizontal .mat-scroll-area__scroller--end-overflow {
-  --mat-scroll-area-content-mask: linear-gradient(to right, black 0 calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
-}
+  .mat-scroll-area--horizontal .mat-scroll-area__scroller--end-overflow {
+    --mat-scroll-area-content-mask: linear-gradient(to right, black 0 calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
+  }
 
-.mat-scroll-area--horizontal .mat-scroll-area__scroller--start-overflow.mat-scroll-area__scroller--end-overflow {
-  --mat-scroll-area-content-mask: linear-gradient(to right, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
-}
+  .mat-scroll-area--horizontal .mat-scroll-area__scroller--start-overflow.mat-scroll-area__scroller--end-overflow {
+    --mat-scroll-area-content-mask: linear-gradient(to right, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
+  }
 
-.mat-scroll-area__scroller::-webkit-scrollbar {
-  background: transparent;
-}
+  .mat-scroll-area__scroller::-webkit-scrollbar {
+    background: transparent;
+  }
 
-.mat-scroll-area__scroller--bar-thin::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
+  .mat-scroll-area__scroller--bar-thin::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
 
-.mat-scroll-area__scroller--bar-hidden::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
+  .mat-scroll-area__scroller--bar-hidden::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 
-.mat-scroll-area__scroller::-webkit-scrollbar-track,
-.mat-scroll-area__scroller::-webkit-scrollbar-corner {
-  background: transparent;
-}
+  .mat-scroll-area__scroller::-webkit-scrollbar-track,
+  .mat-scroll-area__scroller::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 
-.mat-scroll-area__scroller::-webkit-scrollbar-thumb {
-  background: var(--mat-sys-color-outline);
-  border-radius: var(--mat-sys-shape-corner-full);
+  .mat-scroll-area__scroller::-webkit-scrollbar-thumb {
+    background: var(--mat-sys-color-outline);
+    border-radius: var(--mat-sys-shape-corner-full);
+  }
 }
 </style>

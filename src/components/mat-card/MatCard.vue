@@ -61,83 +61,85 @@ const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => propsW
 </template>
 
 <style scoped>
-.mat-card {
-  --mat-card-container-color: var(--mat-sys-color-surface-container-highest);
-  --mat-card-content-color: var(--mat-sys-color-on-surface);
-  --mat-card-outline-color: transparent;
-  --mat-card-outline-width: 0;
-  --mat-card-elevation: var(--mat-sys-elevation-level0);
-  --mat-card-subhead-color: var(--mat-sys-color-on-surface-variant);
-  position: relative;
-  overflow: clip;
-  box-sizing: border-box;
-  min-inline-size: 0;
-  color: var(--mat-card-content-color);
-  background: var(--mat-card-container-color);
-  border: var(--mat-card-outline-width) solid var(--mat-card-outline-color);
-  border-radius: var(--mat-sys-shape-corner-medium);
-  box-shadow: var(--mat-card-elevation);
-  transition: box-shadow var(--mat-sys-motion-spring-fast-effects);
-}
+@layer mde.components {
+  .mat-card {
+    --mat-card-container-color: var(--mat-sys-color-surface-container-highest);
+    --mat-card-content-color: var(--mat-sys-color-on-surface);
+    --mat-card-outline-color: transparent;
+    --mat-card-outline-width: 0;
+    --mat-card-elevation: var(--mat-sys-elevation-level0);
+    --mat-card-subhead-color: var(--mat-sys-color-on-surface-variant);
+    position: relative;
+    overflow: clip;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    color: var(--mat-card-content-color);
+    background: var(--mat-card-container-color);
+    border: var(--mat-card-outline-width) solid var(--mat-card-outline-color);
+    border-radius: var(--mat-sys-shape-corner-medium);
+    box-shadow: var(--mat-card-elevation);
+    transition: box-shadow var(--mat-sys-motion-spring-fast-effects);
+  }
 
-.mat-card--elevated {
-  --mat-card-container-color: var(--mat-sys-color-surface-container-low);
-  --mat-card-elevation: var(--mat-sys-elevation-level1);
-}
-
-.mat-card--outlined {
-  --mat-card-container-color: var(--mat-sys-color-surface);
-  --mat-card-outline-color: var(--mat-sys-color-outline-variant);
-  --mat-card-outline-width: 1px;
-}
-
-.mat-card--explicit-color {
-  --mat-card-container-color: var(--mat-accent-container-color);
-  --mat-card-content-color: var(--mat-on-accent-container-color);
-  --mat-card-subhead-color: var(--mat-on-accent-container-color);
-}
-
-.mat-card > :deep(.mat-card-headline) {
-  margin-block-start: 16px;
-  margin-inline: 16px;
-}
-
-.mat-card > :deep(.mat-card-subhead) {
-  margin-block-start: 4px;
-  margin-inline: 16px;
-}
-
-.mat-card > :deep(.mat-card-headline:last-child),
-.mat-card > :deep(.mat-card-subhead:last-child) {
-  margin-block-end: 16px;
-}
-
-.mat-card:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):focus-visible) {
-  outline: var(--mat-sys-interaction-focus-ring-width, 3px) solid var(--mat-sys-color-secondary);
-  outline-offset: var(--mat-sys-interaction-focus-ring-offset, 2px);
-}
-
-@media (hover: hover) {
-  .mat-card--filled:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover),
-  .mat-card--outlined:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover) {
+  .mat-card--elevated {
+    --mat-card-container-color: var(--mat-sys-color-surface-container-low);
     --mat-card-elevation: var(--mat-sys-elevation-level1);
   }
 
-  .mat-card--elevated:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover) {
-    --mat-card-elevation: var(--mat-sys-elevation-level2);
+  .mat-card--outlined {
+    --mat-card-container-color: var(--mat-sys-color-surface);
+    --mat-card-outline-color: var(--mat-sys-color-outline-variant);
+    --mat-card-outline-width: 1px;
   }
-}
 
-.mat-card--filled:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed])),
-.mat-card--outlined:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed])) {
-  --mat-card-elevation: var(--mat-sys-elevation-level0);
-}
+  .mat-card--explicit-color {
+    --mat-card-container-color: var(--mat-accent-container-color);
+    --mat-card-content-color: var(--mat-on-accent-container-color);
+    --mat-card-subhead-color: var(--mat-on-accent-container-color);
+  }
 
-.mat-card--elevated:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed])) {
-  --mat-card-elevation: var(--mat-sys-elevation-level1);
-}
+  .mat-card > :deep(.mat-card-headline) {
+    margin-block-start: 16px;
+    margin-inline: 16px;
+  }
 
-@media (prefers-reduced-motion: reduce) {
-  .mat-card { transition-duration: 0s; }
+  .mat-card > :deep(.mat-card-subhead) {
+    margin-block-start: 4px;
+    margin-inline: 16px;
+  }
+
+  .mat-card > :deep(.mat-card-headline:last-child),
+  .mat-card > :deep(.mat-card-subhead:last-child) {
+    margin-block-end: 16px;
+  }
+
+  .mat-card:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):focus-visible) {
+    outline: var(--mat-sys-interaction-focus-ring-width, 3px) solid var(--mat-sys-color-secondary);
+    outline-offset: var(--mat-sys-interaction-focus-ring-offset, 2px);
+  }
+
+  @media (hover: hover) {
+    .mat-card--filled:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover),
+    .mat-card--outlined:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover) {
+      --mat-card-elevation: var(--mat-sys-elevation-level1);
+    }
+
+    .mat-card--elevated:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover) {
+      --mat-card-elevation: var(--mat-sys-elevation-level2);
+    }
+  }
+
+  .mat-card--filled:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed])),
+  .mat-card--outlined:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed])) {
+    --mat-card-elevation: var(--mat-sys-elevation-level0);
+  }
+
+  .mat-card--elevated:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed])) {
+    --mat-card-elevation: var(--mat-sys-elevation-level1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-card { transition-duration: 0s; }
+  }
 }
 </style>

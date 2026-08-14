@@ -170,44 +170,46 @@ defineExpose({
 </template>
 
 <style scoped>
-.mat-search {
-  box-sizing: border-box;
-  display: flex;
-  inline-size: min(100%, 45rem);
-  min-inline-size: 0;
-  block-size: 56px;
-  align-items: center;
-  gap: var(--mat-sys-spacing-2, 8px);
-  padding-inline: 4px 16px;
-  color: var(--mat-sys-color-on-surface);
-  background: var(--mat-sys-color-surface-container-high);
-  border-radius: 28px;
-  user-select: none;
-}
+@layer mde.components {
+  .mat-search {
+    box-sizing: border-box;
+    display: flex;
+    inline-size: min(100%, 45rem);
+    min-inline-size: 0;
+    block-size: 56px;
+    align-items: center;
+    gap: var(--mat-sys-spacing-2, 8px);
+    padding-inline: 4px 16px;
+    color: var(--mat-sys-color-on-surface);
+    background: var(--mat-sys-color-surface-container-high);
+    border-radius: 28px;
+    user-select: none;
+  }
 
-.mat-search__leading,
-.mat-search__trailing {
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-}
+  .mat-search__leading,
+  .mat-search__trailing {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+  }
 
-.mat-search :deep(.mat-input-base) {
-  flex-grow: 1;
-  min-inline-size: 0;
-}
+  .mat-search :deep(.mat-input-base) {
+    flex-grow: 1;
+    min-inline-size: 0;
+  }
 
-.mat-search :deep(.mat-input-base::placeholder) {
-  color: var(--mat-sys-color-on-surface-variant);
-  opacity: 1;
-}
+  .mat-search :deep(.mat-input-base::placeholder) {
+    color: var(--mat-sys-color-on-surface-variant);
+    opacity: 1;
+  }
 
-.mat-search:has(.mat-input-base:focus-visible) {
-  outline: 3px solid var(--mat-sys-color-primary);
-  outline-offset: 2px;
-}
+  .mat-search:has(.mat-input-base:focus-visible) {
+    outline: 3px solid var(--mat-sys-color-primary);
+    outline-offset: 2px;
+  }
 
-.mat-search:has(.mat-input-base:disabled) {
-  opacity: .38;
+  .mat-search:has(.mat-input-base:disabled) {
+    opacity: .38;
+  }
 }
 </style>

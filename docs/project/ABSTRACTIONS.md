@@ -30,7 +30,7 @@ Tooltip 分组由展示元素最近的 `data-mat-tooltip-group` 祖先定义。�
 
 `src/` 是组件、插件、指令、函数和样式的维护权威，`dist/` 是使用方唯一可解析的运行时与类型边界。所有运行时实现必须进入同一个 `dist/mde-vue.js`，公共 JavaScript API 只通过 `mde-vue` 根入口具名导入，使内部上下文、队列和协调器只存在一个模块实例。Vue 保持 peer dependency，Material Color Utilities 保持普通外部依赖；分发产物不包含 `.vue` 导入，也不要求使用方执行依赖生命周期脚本。
 
-`dist/styles.css` 由基础令牌与全部 SFC 样式生成，`dist/tailwind.css` 来自 Tailwind 映射，`dist/index.d.ts` 包含根入口的组件、插件、指令和命令式函数声明。`dist/` 必须恰好包含这四个文件，且只能通过 `pnpm build` 更新，并与造成变化的源码和文档放在同一提交中。
+`dist/styles.css` 由基础令牌与全部 SFC 样式生成，并保留公开的 `mde.tokens`、`mde.components`、`mde.utilities` 层序。`dist/tailwind.css` 来自独立的 Tailwind 映射，`dist/index.d.ts` 包含根入口的组件、插件、指令和命令式函数声明。`dist/` 必须恰好包含这四个文件，且只能通过 `pnpm build` 更新，并与造成变化的源码和文档放在同一提交中。
 
 `useMatTheme()` 只能读取当前 Vue 应用提供的主题上下文。组件不得自行创建第二套主题状态；应用级主题控制器是运行时配置的权威来源。
 
@@ -53,6 +53,14 @@ Tooltip 分组由展示元素最近的 `data-mat-tooltip-group` 祖先定义。�
 主题控制器公开当前配置、解析模式、运行时切换方法和清理方法。切换配置会重新生成颜色令牌并写入同一目标；销毁控制器后不得继续响应系统主题变化。
 
 ## CSS 令牌层级
+
+`mde-vue/styles.css` 公开以下稳定的 CSS 级联层顺序：
+
+```css
+@layer mde.tokens, mde.components, mde.utilities;
+```
+
+`mde.tokens` 包含公共 reference/system 令牌及默认主题值，`mde.components` 包含全部组件与公共指令样式，`mde.utilities` 包含公共排版 class。未分层的普通应用 CSS 在级联层中自然优先于这些库样式，因此使用方无需提高选择器权重即可覆盖组件外观。三个层名及其顺序属于稳定公共接口；`mde-vue/tailwind.css` 保持独立，不进入 `mde` 层。
 
 公共 CSS 令牌分为两个层级：
 

@@ -151,38 +151,40 @@ defineExpose({
 </template>
 
 <style scoped>
-.mat-input-base {
-  box-sizing: border-box;
-  min-inline-size: 0;
-  inline-size: 100%;
-  margin: 0;
-  padding: 0;
-  color: inherit;
-  font: inherit;
-  background: transparent;
-  border: 0;
-  outline: 0;
-  appearance: none;
-  user-select: text;
-}
+@layer mde.components {
+  .mat-input-base {
+    box-sizing: border-box;
+    min-inline-size: 0;
+    inline-size: 100%;
+    margin: 0;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    appearance: none;
+    user-select: text;
+  }
 
-.mat-input-base:is(textarea) {
-  resize: vertical;
-}
+  .mat-input-base:is(textarea) {
+    resize: vertical;
+  }
 
-.mat-input-base::-webkit-search-cancel-button {
-  display: none;
-  appearance: none;
-}
+  .mat-input-base::-webkit-search-cancel-button {
+    display: none;
+    appearance: none;
+  }
 
-.mat-input-base::-webkit-inner-spin-button,
-.mat-input-base::-webkit-outer-spin-button {
-  margin: 0;
-  appearance: none;
-}
+  .mat-input-base::-webkit-inner-spin-button,
+  .mat-input-base::-webkit-outer-spin-button {
+    margin: 0;
+    appearance: none;
+  }
 
-.mat-input-base::-webkit-calendar-picker-indicator {
-  display: none;
-  appearance: none;
+  .mat-input-base::-webkit-calendar-picker-indicator {
+    display: none;
+    appearance: none;
+  }
 }
 </style>

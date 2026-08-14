@@ -288,111 +288,113 @@ watchEffect(() => {
 </template>
 
 <style scoped>
-.mat-fab {
-  --mat-button-container-color: var(--mat-fab-container-color);
-  --mat-button-content-color: var(--mat-fab-content-color);
-  --mat-button-state-color: var(--mat-fab-state-color);
-  --mat-button-container-elevation: var(--mat-fab-rest-container-elevation);
-  --mat-button-radius: var(--mat-fab-container-shape);
-  --mat-button-pressed-radius: var(--mat-fab-container-shape);
-  gap: var(--mat-fab-icon-label-space);
-  min-inline-size: calc(var(--mat-fab-leading-space) + var(--mat-fab-trailing-space));
-  padding-inline: var(--mat-fab-leading-space) var(--mat-fab-trailing-space);
-  text-align: center;
-  text-decoration: none;
-}
-
-.mat-fab--app-root {
-  pointer-events: auto;
-}
-
-.mat-fab--app-root.mat-fab--position-start {
-  align-self: flex-start;
-}
-
-.mat-fab--app-root.mat-fab--position-center {
-  align-self: center;
-}
-
-.mat-fab--app-root.mat-fab--position-end {
-  align-self: flex-end;
-}
-
-.mat-fab--size-small {
-  --mat-button-container-height: var(--mat-fab-small-container-height);
-  --mat-fab-icon-size: var(--mat-fab-small-icon-size);
-  --mat-fab-leading-space: var(--mat-fab-small-leading-space);
-  --mat-fab-trailing-space: var(--mat-fab-small-trailing-space);
-  --mat-fab-icon-label-space: var(--mat-fab-small-icon-label-space);
-}
-
-.mat-fab--size-medium {
-  --mat-button-container-height: var(--mat-fab-medium-container-height);
-  --mat-fab-icon-size: var(--mat-fab-medium-icon-size);
-  --mat-fab-leading-space: var(--mat-fab-medium-leading-space);
-  --mat-fab-trailing-space: var(--mat-fab-medium-trailing-space);
-  --mat-fab-icon-label-space: var(--mat-fab-medium-icon-label-space);
-}
-
-.mat-fab--size-large {
-  --mat-button-container-height: var(--mat-fab-large-container-height);
-  --mat-fab-icon-size: var(--mat-fab-large-icon-size);
-  --mat-fab-leading-space: var(--mat-fab-large-leading-space);
-  --mat-fab-trailing-space: var(--mat-fab-large-trailing-space);
-  --mat-fab-icon-label-space: var(--mat-fab-large-icon-label-space);
-}
-
-.mat-fab--icon-only {
-  --mat-button-container-width: var(--mat-button-container-height);
-  --mat-fab-leading-space: 0;
-  --mat-fab-trailing-space: 0;
-}
-
-.mat-fab--extended {
-  --mat-button-container-width: auto;
-  max-inline-size: 100%;
-}
-
-.mat-fab__icon,
-.mat-fab__label {
-  position: relative;
-  z-index: 1;
-}
-
-.mat-fab__icon {
-  display: inline-flex;
-  flex: 0 0 auto;
-  inline-size: var(--mat-fab-icon-size);
-  block-size: var(--mat-fab-icon-size);
-  align-items: center;
-  justify-content: center;
-  color: var(--mat-fab-content-color);
-}
-
-.mat-fab__label {
-  flex: 0 1 auto;
-  min-inline-size: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@media (hover: hover) {
-  .mat-fab:not(:disabled):hover {
-    --mat-button-container-elevation: var(--mat-fab-hover-container-elevation);
+@layer mde.components {
+  .mat-fab {
+    --mat-button-container-color: var(--mat-fab-container-color);
+    --mat-button-content-color: var(--mat-fab-content-color);
+    --mat-button-state-color: var(--mat-fab-state-color);
+    --mat-button-container-elevation: var(--mat-fab-rest-container-elevation);
+    --mat-button-radius: var(--mat-fab-container-shape);
+    --mat-button-pressed-radius: var(--mat-fab-container-shape);
+    gap: var(--mat-fab-icon-label-space);
+    min-inline-size: calc(var(--mat-fab-leading-space) + var(--mat-fab-trailing-space));
+    padding-inline: var(--mat-fab-leading-space) var(--mat-fab-trailing-space);
+    text-align: center;
+    text-decoration: none;
   }
-}
 
-.mat-fab:disabled {
-  --mat-button-container-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-container-opacity) * 100%), transparent);
-  --mat-button-content-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-content-opacity) * 100%), transparent);
-  --mat-button-state-color: var(--mat-sys-color-on-surface);
-  --mat-button-container-elevation: none;
-}
+  .mat-fab--app-root {
+    pointer-events: auto;
+  }
 
-@media (prefers-reduced-motion: reduce) {
+  .mat-fab--app-root.mat-fab--position-start {
+    align-self: flex-start;
+  }
+
+  .mat-fab--app-root.mat-fab--position-center {
+    align-self: center;
+  }
+
+  .mat-fab--app-root.mat-fab--position-end {
+    align-self: flex-end;
+  }
+
+  .mat-fab--size-small {
+    --mat-button-container-height: var(--mat-fab-small-container-height);
+    --mat-fab-icon-size: var(--mat-fab-small-icon-size);
+    --mat-fab-leading-space: var(--mat-fab-small-leading-space);
+    --mat-fab-trailing-space: var(--mat-fab-small-trailing-space);
+    --mat-fab-icon-label-space: var(--mat-fab-small-icon-label-space);
+  }
+
+  .mat-fab--size-medium {
+    --mat-button-container-height: var(--mat-fab-medium-container-height);
+    --mat-fab-icon-size: var(--mat-fab-medium-icon-size);
+    --mat-fab-leading-space: var(--mat-fab-medium-leading-space);
+    --mat-fab-trailing-space: var(--mat-fab-medium-trailing-space);
+    --mat-fab-icon-label-space: var(--mat-fab-medium-icon-label-space);
+  }
+
+  .mat-fab--size-large {
+    --mat-button-container-height: var(--mat-fab-large-container-height);
+    --mat-fab-icon-size: var(--mat-fab-large-icon-size);
+    --mat-fab-leading-space: var(--mat-fab-large-leading-space);
+    --mat-fab-trailing-space: var(--mat-fab-large-trailing-space);
+    --mat-fab-icon-label-space: var(--mat-fab-large-icon-label-space);
+  }
+
+  .mat-fab--icon-only {
+    --mat-button-container-width: var(--mat-button-container-height);
+    --mat-fab-leading-space: 0;
+    --mat-fab-trailing-space: 0;
+  }
+
+  .mat-fab--extended {
+    --mat-button-container-width: auto;
+    max-inline-size: 100%;
+  }
+
+  .mat-fab__icon,
+  .mat-fab__label {
+    position: relative;
+    z-index: 1;
+  }
+
   .mat-fab__icon {
-    transition-duration: 0s;
+    display: inline-flex;
+    flex: 0 0 auto;
+    inline-size: var(--mat-fab-icon-size);
+    block-size: var(--mat-fab-icon-size);
+    align-items: center;
+    justify-content: center;
+    color: var(--mat-fab-content-color);
+  }
+
+  .mat-fab__label {
+    flex: 0 1 auto;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @media (hover: hover) {
+    .mat-fab:not(:disabled):hover {
+      --mat-button-container-elevation: var(--mat-fab-hover-container-elevation);
+    }
+  }
+
+  .mat-fab:disabled {
+    --mat-button-container-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-container-opacity) * 100%), transparent);
+    --mat-button-content-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-content-opacity) * 100%), transparent);
+    --mat-button-state-color: var(--mat-sys-color-on-surface);
+    --mat-button-container-elevation: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-fab__icon {
+      transition-duration: 0s;
+    }
   }
 }
 </style>

@@ -108,94 +108,96 @@ onBeforeUnmount(() => unregister?.());
 </template>
 
 <style scoped>
-.mat-pane {
-  display: block;
-  flex: var(--mat-pane-weight, 1) 1 0%;
-  box-sizing: border-box;
-  min-inline-size: 0;
-  min-block-size: 0;
-  block-size: 100%;
-  overflow: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: var(--mat-sys-color-outline) transparent;
-}
+@layer mde.components {
+  .mat-pane {
+    display: block;
+    flex: var(--mat-pane-weight, 1) 1 0%;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    min-block-size: 0;
+    block-size: 100%;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--mat-sys-color-outline) transparent;
+  }
 
-.mat-pane::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
+  .mat-pane::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
 
-.mat-pane::-webkit-scrollbar-track {
-  background: transparent;
-}
+  .mat-pane::-webkit-scrollbar-track {
+    background: transparent;
+  }
 
-.mat-pane::-webkit-scrollbar-thumb {
-  background: var(--mat-sys-color-outline);
-  border-radius: var(--mat-sys-shape-corner-full);
-}
+  .mat-pane::-webkit-scrollbar-thumb {
+    background: var(--mat-sys-color-outline);
+    border-radius: var(--mat-sys-shape-corner-full);
+  }
 
-.mat-pane__separator {
-  position: relative;
-  flex: 0 0 var(--mat-panes-divider-space);
-  align-self: stretch;
-  min-inline-size: var(--mat-panes-divider-space);
-}
+  .mat-pane__separator {
+    position: relative;
+    flex: 0 0 var(--mat-panes-divider-space);
+    align-self: stretch;
+    min-inline-size: var(--mat-panes-divider-space);
+  }
 
-.mat-pane__handle {
-  --mat-panes-handle-current-width: var(--mat-panes-handle-indicator-width);
-  --mat-panes-handle-current-height: var(--mat-panes-handle-indicator-height);
-  --mat-panes-handle-current-color: var(--mat-sys-color-outline);
-  --mat-panes-handle-current-shape: var(--mat-sys-shape-corner-full);
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-start: 50%;
-  inline-size: var(--mat-panes-handle-size);
-  block-size: var(--mat-panes-handle-size);
-  padding: 0;
-  cursor: default;
-  border: 0;
-  border-radius: var(--mat-sys-shape-corner-full);
-  transform: translate(-50%, -50%);
-  touch-action: none;
-  user-select: none;
-}
+  .mat-pane__handle {
+    --mat-panes-handle-current-width: var(--mat-panes-handle-indicator-width);
+    --mat-panes-handle-current-height: var(--mat-panes-handle-indicator-height);
+    --mat-panes-handle-current-color: var(--mat-sys-color-outline);
+    --mat-panes-handle-current-shape: var(--mat-sys-shape-corner-full);
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    inline-size: var(--mat-panes-handle-size);
+    block-size: var(--mat-panes-handle-size);
+    padding: 0;
+    cursor: default;
+    border: 0;
+    border-radius: var(--mat-sys-shape-corner-full);
+    transform: translate(-50%, -50%);
+    touch-action: none;
+    user-select: none;
+  }
 
-.mat-pane__handle::before {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  content: '';
-  pointer-events: none;
-  inline-size: var(--mat-panes-handle-current-width);
-  block-size: var(--mat-panes-handle-current-height);
-  background: var(--mat-panes-handle-current-color);
-  border-radius: var(--mat-panes-handle-current-shape);
-  transform: translate(-50%, -50%);
-  transition: background-color var(--mat-sys-motion-spring-fast-effects), border-radius var(--mat-sys-motion-spring-fast-effects), block-size var(--mat-sys-motion-spring-fast-spatial), inline-size var(--mat-sys-motion-spring-fast-spatial);
-}
-
-.mat-pane__handle:focus-visible::before {
-  outline: var(--mat-sys-interaction-focus-ring-width) solid var(--mat-sys-color-primary);
-  outline-offset: var(--mat-sys-interaction-focus-ring-offset);
-}
-
-.mat-pane__handle:active {
-  --mat-panes-handle-current-width: var(--mat-panes-handle-pressed-width);
-  --mat-panes-handle-current-height: var(--mat-panes-handle-pressed-height);
-  --mat-panes-handle-current-color: var(--mat-sys-color-on-surface);
-  --mat-panes-handle-current-shape: var(--mat-sys-shape-corner-medium);
-}
-
-.mat-pane__handle--active {
-  --mat-panes-handle-current-width: var(--mat-panes-handle-dragged-width);
-  --mat-panes-handle-current-height: var(--mat-panes-handle-dragged-height);
-  --mat-panes-handle-current-color: var(--mat-sys-color-on-surface);
-  --mat-panes-handle-current-shape: var(--mat-sys-shape-corner-medium);
-}
-
-@media (prefers-reduced-motion: reduce) {
   .mat-pane__handle::before {
-    transition-duration: 0s;
+    position: absolute;
+    inset: 50% auto auto 50%;
+    content: '';
+    pointer-events: none;
+    inline-size: var(--mat-panes-handle-current-width);
+    block-size: var(--mat-panes-handle-current-height);
+    background: var(--mat-panes-handle-current-color);
+    border-radius: var(--mat-panes-handle-current-shape);
+    transform: translate(-50%, -50%);
+    transition: background-color var(--mat-sys-motion-spring-fast-effects), border-radius var(--mat-sys-motion-spring-fast-effects), block-size var(--mat-sys-motion-spring-fast-spatial), inline-size var(--mat-sys-motion-spring-fast-spatial);
+  }
+
+  .mat-pane__handle:focus-visible::before {
+    outline: var(--mat-sys-interaction-focus-ring-width) solid var(--mat-sys-color-primary);
+    outline-offset: var(--mat-sys-interaction-focus-ring-offset);
+  }
+
+  .mat-pane__handle:active {
+    --mat-panes-handle-current-width: var(--mat-panes-handle-pressed-width);
+    --mat-panes-handle-current-height: var(--mat-panes-handle-pressed-height);
+    --mat-panes-handle-current-color: var(--mat-sys-color-on-surface);
+    --mat-panes-handle-current-shape: var(--mat-sys-shape-corner-medium);
+  }
+
+  .mat-pane__handle--active {
+    --mat-panes-handle-current-width: var(--mat-panes-handle-dragged-width);
+    --mat-panes-handle-current-height: var(--mat-panes-handle-dragged-height);
+    --mat-panes-handle-current-color: var(--mat-sys-color-on-surface);
+    --mat-panes-handle-current-shape: var(--mat-sys-shape-corner-medium);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-pane__handle::before {
+      transition-duration: 0s;
+    }
   }
 }
 </style>

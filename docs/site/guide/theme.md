@@ -43,6 +43,20 @@ createApp(App)
 
 省略 `theme` 或直接调用 `createMatUi()` 会使用全部默认值。初始化会立即把颜色令牌写入 `document.documentElement`，因此整个应用都能继承主题。
 
+## CSS 级联层
+
+`mde-vue/styles.css` 按固定顺序公开三个稳定层名：
+
+```css
+@layer mde.tokens, mde.components, mde.utilities;
+```
+
+- `mde.tokens`：公共 `--mat-ref-*`、`--mat-sys-*` 令牌和默认亮暗主题值。
+- `mde.components`：全部组件和公共指令样式。
+- `mde.utilities`：`.mat-sys-typescale-*` 公共排版工具类。
+
+应用中未放入任何级联层的普通 CSS 默认优先于库样式，因此可以使用普通选择器覆盖组件外观。需要统一管理应用自身层序时，也可以在导入前声明包含上述稳定层名的完整顺序。独立入口 `mde-vue/tailwind.css` 只提供 Tailwind CSS v4 的 `@theme inline` 映射，不进入 `mde` 层。
+
 ## 配置项
 
 | 配置 | 类型或可用值 | 默认值 | 说明 |

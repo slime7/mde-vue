@@ -717,14 +717,16 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.mat-panes {
-  display: flex;
-  align-items: stretch;
-  box-sizing: border-box;
-  inline-size: 100%;
-  block-size: 100%;
-  min-inline-size: 0;
-  min-block-size: 0;
-  overflow: hidden;
+@layer mde.components {
+  .mat-panes {
+    display: flex;
+    align-items: stretch;
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 100%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: hidden;
+  }
 }
 </style>

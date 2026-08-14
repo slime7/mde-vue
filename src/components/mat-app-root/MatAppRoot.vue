@@ -459,102 +459,104 @@ watch([
 </template>
 
 <style scoped>
-.mat-app-root {
-  --mat-app-root-floating-edge-space: var(--mat-sys-spacing-4, 16px);
-  position: relative;
-  isolation: isolate;
-  box-sizing: border-box;
-  inline-size: 100%;
-  min-inline-size: 0;
-}
+@layer mde.components {
+  .mat-app-root {
+    --mat-app-root-floating-edge-space: var(--mat-sys-spacing-4, 16px);
+    position: relative;
+    isolation: isolate;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
 
-.mat-app-root--fill-viewport {
-  min-block-size: 100dvb;
-}
+  .mat-app-root--fill-viewport {
+    min-block-size: 100dvb;
+  }
 
-.mat-app-root--scrollable {
-  overflow: hidden;
-}
+  .mat-app-root--scrollable {
+    overflow: hidden;
+  }
 
-.mat-app-root--fill-viewport.mat-app-root--scrollable {
-  block-size: 100dvb;
-}
+  .mat-app-root--fill-viewport.mat-app-root--scrollable {
+    block-size: 100dvb;
+  }
 
-.mat-app-root__content {
-  box-sizing: border-box;
-  min-inline-size: 0;
-  padding-block: var(--mat-app-root-padding-top) var(--mat-app-root-padding-bottom);
-  padding-inline: var(--mat-app-root-padding-start) var(--mat-app-root-padding-end);
-}
+  .mat-app-root__content {
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding-block: var(--mat-app-root-padding-top) var(--mat-app-root-padding-bottom);
+    padding-inline: var(--mat-app-root-padding-start) var(--mat-app-root-padding-end);
+  }
 
-.mat-app-root--fill-viewport .mat-app-root__content {
-  min-block-size: 100dvb;
-}
+  .mat-app-root--fill-viewport .mat-app-root__content {
+    min-block-size: 100dvb;
+  }
 
-.mat-app-root--scrollable .mat-app-root__content {
-  block-size: 100%;
-  min-block-size: 0;
-  overflow: auto;
-  overscroll-behavior: contain;
-}
+  .mat-app-root--scrollable .mat-app-root__content {
+    block-size: 100%;
+    min-block-size: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
 
-.mat-app-root__overlay,
-.mat-app-root__edge-layer,
-.mat-app-root__free-layer,
-.mat-app-root__modal-layer,
-.mat-app-root__bottom-stack {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
+  .mat-app-root__overlay,
+  .mat-app-root__edge-layer,
+  .mat-app-root__free-layer,
+  .mat-app-root__modal-layer,
+  .mat-app-root__bottom-stack {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
 
-.mat-app-root--document .mat-app-root__overlay {
-  position: fixed;
-}
+  .mat-app-root--document .mat-app-root__overlay {
+    position: fixed;
+  }
 
-.mat-app-root__bottom-stack {
-  display: flex;
-  min-inline-size: 0;
-  flex-direction: column;
-  gap: var(--mat-sys-spacing-4, 16px);
-  padding-block: var(--mat-app-root-padding-top) calc(
-    var(--mat-app-root-padding-bottom)
-    + var(--mat-app-root-floating-edge-space)
-  );
-  padding-inline: calc(
-    var(--mat-app-root-padding-start)
-    + var(--mat-app-root-floating-edge-space)
-  ) calc(
-    var(--mat-app-root-padding-end)
-    + var(--mat-app-root-floating-edge-space)
-  );
-}
+  .mat-app-root__bottom-stack {
+    display: flex;
+    min-inline-size: 0;
+    flex-direction: column;
+    gap: var(--mat-sys-spacing-4, 16px);
+    padding-block: var(--mat-app-root-padding-top) calc(
+      var(--mat-app-root-padding-bottom)
+      + var(--mat-app-root-floating-edge-space)
+    );
+    padding-inline: calc(
+      var(--mat-app-root-padding-start)
+      + var(--mat-app-root-floating-edge-space)
+    ) calc(
+      var(--mat-app-root-padding-end)
+      + var(--mat-app-root-floating-edge-space)
+    );
+  }
 
-.mat-app-root__stack-spacer {
-  flex-grow: 1;
-  min-block-size: 0;
-}
+  .mat-app-root__stack-spacer {
+    flex-grow: 1;
+    min-block-size: 0;
+  }
 
-.mat-app-root__snackbar-layer,
-.mat-app-root__floating-layer {
-  box-sizing: border-box;
-  display: flex;
-  flex: 0 0 auto;
-  min-inline-size: 0;
-  flex-direction: column;
-  align-items: stretch;
-  gap: var(--mat-sys-spacing-4, 16px);
-  padding-inline: var(--mat-app-root-floating-edge-space);
-  pointer-events: none;
-}
+  .mat-app-root__snackbar-layer,
+  .mat-app-root__floating-layer {
+    box-sizing: border-box;
+    display: flex;
+    flex: 0 0 auto;
+    min-inline-size: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--mat-sys-spacing-4, 16px);
+    padding-inline: var(--mat-app-root-floating-edge-space);
+    pointer-events: none;
+  }
 
-.mat-app-root__safe-area-probe {
-  position: absolute;
-  inline-size: 0;
-  block-size: 0;
-  padding-block: env(safe-area-inset-top, 0) env(safe-area-inset-bottom, 0);
-  padding-inline: env(safe-area-inset-left, 0) env(safe-area-inset-right, 0);
-  visibility: hidden;
-  pointer-events: none;
+  .mat-app-root__safe-area-probe {
+    position: absolute;
+    inline-size: 0;
+    block-size: 0;
+    padding-block: env(safe-area-inset-top, 0) env(safe-area-inset-bottom, 0);
+    padding-inline: env(safe-area-inset-left, 0) env(safe-area-inset-right, 0);
+    visibility: hidden;
+    pointer-events: none;
+  }
 }
 </style>

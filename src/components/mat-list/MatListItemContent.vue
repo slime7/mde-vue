@@ -52,25 +52,27 @@ defineProps({
 </template>
 
 <style scoped>
-.mat-list-item-content {
-  --mat-item-content-gap: var(--mat-list-item-content-gap);
-  --mat-item-block-space: var(--mat-list-item-vertical-space);
-  --mat-item-leading-space: var(--mat-list-item-leading-space);
-  --mat-item-trailing-space: var(--mat-list-item-trailing-space);
-  --mat-item-icon-size: var(--mat-list-item-icon-size);
-  --mat-item-label-color: var(--mat-list-item-label-color);
-  --mat-item-supporting-color: var(--mat-list-item-supporting-color);
-}
+@layer mde.components {
+  .mat-list-item-content {
+    --mat-item-content-gap: var(--mat-list-item-content-gap);
+    --mat-item-block-space: var(--mat-list-item-vertical-space);
+    --mat-item-leading-space: var(--mat-list-item-leading-space);
+    --mat-item-trailing-space: var(--mat-list-item-trailing-space);
+    --mat-item-icon-size: var(--mat-list-item-icon-size);
+    --mat-item-label-color: var(--mat-list-item-label-color);
+    --mat-item-supporting-color: var(--mat-list-item-supporting-color);
+  }
 
-.mat-list-item-content--lines-1 {
-  --mat-item-min-block-size: var(--mat-list-item-one-line-height);
-}
+  .mat-list-item-content--lines-1 {
+    --mat-item-min-block-size: var(--mat-list-item-one-line-height);
+  }
 
-.mat-list-item-content--lines-2 {
-  --mat-item-min-block-size: var(--mat-list-item-two-line-height);
-}
+  .mat-list-item-content--lines-2 {
+    --mat-item-min-block-size: var(--mat-list-item-two-line-height);
+  }
 
-.mat-list-item-content--lines-3 {
-  --mat-item-min-block-size: var(--mat-list-item-three-line-height);
+  .mat-list-item-content--lines-3 {
+    --mat-item-min-block-size: var(--mat-list-item-three-line-height);
+  }
 }
 </style>

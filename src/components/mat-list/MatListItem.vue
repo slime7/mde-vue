@@ -399,142 +399,144 @@ watch(
 </template>
 
 <style scoped>
-.mat-list-item {
-  --mat-list-item-start-start-shape: var(--mat-list-item-container-shape);
-  --mat-list-item-start-end-shape: var(--mat-list-item-container-shape);
-  --mat-list-item-end-start-shape: var(--mat-list-item-container-shape);
-  --mat-list-item-end-end-shape: var(--mat-list-item-container-shape);
-  display: block;
-  box-sizing: border-box;
-  min-inline-size: 0;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.mat-list-item__surface {
-  --mat-action-state-color: var(--mat-list-item-state-layer-color);
-  --mat-list-item-label-color: var(--mat-list-item-label-text-color);
-  --mat-list-item-supporting-color: var(--mat-list-item-supporting-text-color);
-  overflow: clip;
-  overflow-clip-margin: 5px;
-  inline-size: 100%;
-  color: var(--mat-list-item-label-color);
-  text-align: start;
-  text-decoration: none;
-  background: var(--mat-list-item-container-color);
-  border: 0;
-  border-start-start-radius: var(--mat-list-item-start-start-shape);
-  border-start-end-radius: var(--mat-list-item-start-end-shape);
-  border-end-start-radius: var(--mat-list-item-end-start-shape);
-  border-end-end-radius: var(--mat-list-item-end-end-shape);
-  transition: border-radius var(--mat-sys-motion-spring-fast-spatial);
-}
-
-.mat-list-item:focus-visible,
-.mat-list-item:has(:focus-visible) {
-  position: relative;
-  z-index: 2;
-}
-
-.mat-list-item__primary {
-  --mat-action-state-color: var(--mat-list-item-state-layer-color);
-  display: block;
-  min-inline-size: 0;
-  padding: 0;
-  color: inherit;
-  text-align: start;
-  text-decoration: none;
-  border: 0;
-  border-radius: inherit;
-}
-
-.mat-list-item__primary.mat-list-item__surface {
-  border-start-start-radius: var(--mat-list-item-start-start-shape);
-  border-start-end-radius: var(--mat-list-item-start-end-shape);
-  border-end-start-radius: var(--mat-list-item-end-start-shape);
-  border-end-end-radius: var(--mat-list-item-end-end-shape);
-}
-
-.mat-list-item--multi-action {
-  overflow: visible;
-  display: flex;
-  gap: var(--mat-list-item-content-gap);
-  align-items: center;
-}
-
-.mat-list-item--multi-action .mat-list-item__primary {
-  flex: 1 1 auto;
-  background: transparent;
-}
-
-.mat-list-item__separate-trailing {
-  --mat-list-item-trailing-action-space: 8px;
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex: 0 0 auto;
-  gap: var(--mat-list-item-trailing-action-gap);
-  align-items: center;
-  box-sizing: border-box;
-  min-block-size: var(--mat-sys-interaction-target-min-size);
-  padding-inline-end: var(--mat-list-item-trailing-space);
-  margin-inline-end: calc(
-    var(--mat-list-item-trailing-action-space) - var(--mat-list-item-trailing-space)
-  );
-  color: var(--mat-list-item-supporting-color);
-}
-
-.mat-list-item--selected {
-  --mat-list-item-container-color: var(--mat-accent-container-color, var(--mat-list-item-selected-container-color));
-  --mat-list-item-label-color: var(--mat-on-accent-container-color, var(--mat-list-item-selected-label-text-color));
-  --mat-list-item-supporting-color: var(--mat-on-accent-container-color, var(--mat-list-item-selected-supporting-text-color));
-  border-radius: var(--mat-list-item-selected-container-shape);
-}
-
-.mat-list-item--disabled :deep(.mat-list-item-content) {
-  opacity: var(--mat-list-item-disabled-content-opacity);
-}
-
-.mat-list-item--disabled.mat-list-item--selected {
-  --mat-list-item-container-color: color-mix(
-    in srgb,
-    var(--mat-sys-color-on-surface) var(--mat-list-item-disabled-selected-container-opacity),
-    var(--mat-sys-color-surface)
-  );
-  --mat-list-item-label-color: var(--mat-sys-color-on-surface);
-  --mat-list-item-supporting-color: var(--mat-sys-color-on-surface);
-}
-
-.mat-list-item__surface:not(.mat-list-item--static):not(.mat-list-item--disabled):focus-visible,
-.mat-list-item__surface:not(.mat-list-item--static):not(.mat-list-item--disabled):active,
-.mat-list-item__surface[data-mat-state-layer-pressed] {
-  border-radius: var(--mat-list-item-interactive-container-shape);
-}
-
-.mat-list-item--multi-action:not(.mat-list-item--disabled):has(.mat-list-item__primary:focus-visible),
-.mat-list-item--multi-action:not(.mat-list-item--disabled):has(.mat-list-item__primary:active),
-.mat-list-item--multi-action:has(.mat-list-item__primary[data-mat-state-layer-pressed]) {
-  border-radius: var(--mat-list-item-interactive-container-shape);
-}
-
-@media (hover: hover) {
-  .mat-list-item__surface:not(.mat-list-item--static):not(.mat-list-item--disabled):hover {
-    border-radius: var(--mat-list-item-hover-container-shape);
+@layer mde.components {
+  .mat-list-item {
+    --mat-list-item-start-start-shape: var(--mat-list-item-container-shape);
+    --mat-list-item-start-end-shape: var(--mat-list-item-container-shape);
+    --mat-list-item-end-start-shape: var(--mat-list-item-container-shape);
+    --mat-list-item-end-end-shape: var(--mat-list-item-container-shape);
+    display: block;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding: 0;
+    margin: 0;
+    list-style: none;
   }
 
-  .mat-list-item--selected:not(.mat-list-item--disabled):hover {
+  .mat-list-item__surface {
+    --mat-action-state-color: var(--mat-list-item-state-layer-color);
+    --mat-list-item-label-color: var(--mat-list-item-label-text-color);
+    --mat-list-item-supporting-color: var(--mat-list-item-supporting-text-color);
+    overflow: clip;
+    overflow-clip-margin: 5px;
+    inline-size: 100%;
+    color: var(--mat-list-item-label-color);
+    text-align: start;
+    text-decoration: none;
+    background: var(--mat-list-item-container-color);
+    border: 0;
+    border-start-start-radius: var(--mat-list-item-start-start-shape);
+    border-start-end-radius: var(--mat-list-item-start-end-shape);
+    border-end-start-radius: var(--mat-list-item-end-start-shape);
+    border-end-end-radius: var(--mat-list-item-end-end-shape);
+    transition: border-radius var(--mat-sys-motion-spring-fast-spatial);
+  }
+
+  .mat-list-item:focus-visible,
+  .mat-list-item:has(:focus-visible) {
+    position: relative;
+    z-index: 2;
+  }
+
+  .mat-list-item__primary {
+    --mat-action-state-color: var(--mat-list-item-state-layer-color);
+    display: block;
+    min-inline-size: 0;
+    padding: 0;
+    color: inherit;
+    text-align: start;
+    text-decoration: none;
+    border: 0;
+    border-radius: inherit;
+  }
+
+  .mat-list-item__primary.mat-list-item__surface {
+    border-start-start-radius: var(--mat-list-item-start-start-shape);
+    border-start-end-radius: var(--mat-list-item-start-end-shape);
+    border-end-start-radius: var(--mat-list-item-end-start-shape);
+    border-end-end-radius: var(--mat-list-item-end-end-shape);
+  }
+
+  .mat-list-item--multi-action {
+    overflow: visible;
+    display: flex;
+    gap: var(--mat-list-item-content-gap);
+    align-items: center;
+  }
+
+  .mat-list-item--multi-action .mat-list-item__primary {
+    flex: 1 1 auto;
+    background: transparent;
+  }
+
+  .mat-list-item__separate-trailing {
+    --mat-list-item-trailing-action-space: 8px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex: 0 0 auto;
+    gap: var(--mat-list-item-trailing-action-gap);
+    align-items: center;
+    box-sizing: border-box;
+    min-block-size: var(--mat-sys-interaction-target-min-size);
+    padding-inline-end: var(--mat-list-item-trailing-space);
+    margin-inline-end: calc(
+      var(--mat-list-item-trailing-action-space) - var(--mat-list-item-trailing-space)
+    );
+    color: var(--mat-list-item-supporting-color);
+  }
+
+  .mat-list-item--selected {
+    --mat-list-item-container-color: var(--mat-accent-container-color, var(--mat-list-item-selected-container-color));
+    --mat-list-item-label-color: var(--mat-on-accent-container-color, var(--mat-list-item-selected-label-text-color));
+    --mat-list-item-supporting-color: var(--mat-on-accent-container-color, var(--mat-list-item-selected-supporting-text-color));
     border-radius: var(--mat-list-item-selected-container-shape);
   }
 
-  .mat-list-item--multi-action:not(.mat-list-item--disabled):has(.mat-list-item__primary:hover) {
-    border-radius: var(--mat-list-item-hover-container-shape);
+  .mat-list-item--disabled :deep(.mat-list-item-content) {
+    opacity: var(--mat-list-item-disabled-content-opacity);
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .mat-list-item__surface {
-    transition-duration: 0s;
+  .mat-list-item--disabled.mat-list-item--selected {
+    --mat-list-item-container-color: color-mix(
+      in srgb,
+      var(--mat-sys-color-on-surface) var(--mat-list-item-disabled-selected-container-opacity),
+      var(--mat-sys-color-surface)
+    );
+    --mat-list-item-label-color: var(--mat-sys-color-on-surface);
+    --mat-list-item-supporting-color: var(--mat-sys-color-on-surface);
+  }
+
+  .mat-list-item__surface:not(.mat-list-item--static):not(.mat-list-item--disabled):focus-visible,
+  .mat-list-item__surface:not(.mat-list-item--static):not(.mat-list-item--disabled):active,
+  .mat-list-item__surface[data-mat-state-layer-pressed] {
+    border-radius: var(--mat-list-item-interactive-container-shape);
+  }
+
+  .mat-list-item--multi-action:not(.mat-list-item--disabled):has(.mat-list-item__primary:focus-visible),
+  .mat-list-item--multi-action:not(.mat-list-item--disabled):has(.mat-list-item__primary:active),
+  .mat-list-item--multi-action:has(.mat-list-item__primary[data-mat-state-layer-pressed]) {
+    border-radius: var(--mat-list-item-interactive-container-shape);
+  }
+
+  @media (hover: hover) {
+    .mat-list-item__surface:not(.mat-list-item--static):not(.mat-list-item--disabled):hover {
+      border-radius: var(--mat-list-item-hover-container-shape);
+    }
+
+    .mat-list-item--selected:not(.mat-list-item--disabled):hover {
+      border-radius: var(--mat-list-item-selected-container-shape);
+    }
+
+    .mat-list-item--multi-action:not(.mat-list-item--disabled):has(.mat-list-item__primary:hover) {
+      border-radius: var(--mat-list-item-hover-container-shape);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-list-item__surface {
+      transition-duration: 0s;
+    }
   }
 }
 </style>

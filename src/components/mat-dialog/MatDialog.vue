@@ -627,253 +627,255 @@ watchEffect(() => {
 </template>
 
 <style scoped>
-.mat-dialog__activator {
-  display: contents;
-}
-
-.mat-dialog {
-  position: fixed;
-  z-index: var(--mat-sys-z-index-dialog);
-  inset: 0;
-  box-sizing: border-box;
-  inline-size: 100%;
-  block-size: 100%;
-  padding: 0;
-  margin: 0;
-  overflow: visible;
-  background: transparent;
-  border: 0;
-  pointer-events: auto;
-}
-
-.mat-dialog[open] {
-  display: flex;
-}
-
-.mat-dialog--app-root {
-  position: absolute;
-}
-
-.mat-dialog--top:not(.mat-dialog--transparent-scrim):not(.mat-dialog--closing) {
-  background: color-mix(in srgb, var(--mat-sys-color-scrim) 32%, transparent);
-}
-
-.mat-dialog--opening {
-  animation: mat-dialog-scrim-enter var(--mat-sys-motion-spring-default-effects) both;
-}
-
-.mat-dialog--closing {
-  animation: mat-dialog-scrim-exit var(--mat-sys-motion-spring-fast-effects) both;
-}
-
-.mat-dialog__panel {
-  --mat-dialog-container-color: var(--mat-sys-color-surface-container-high);
-  --mat-dialog-headline-color: var(--mat-sys-color-on-surface);
-  --mat-dialog-content-color: var(--mat-sys-color-on-surface-variant);
-  --mat-dialog-icon-color: var(--mat-accent-color, var(--mat-sys-color-secondary));
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  min-inline-size: min(280px, calc(100% - 48px));
-  max-inline-size: min(560px, calc(100% - 48px));
-  max-block-size: calc(100% - 48px);
-  padding: 0;
-  margin: auto;
-  overflow: visible;
-  color: var(--mat-dialog-content-color);
-  background: var(--mat-dialog-container-color);
-  border: 0;
-  border-radius: var(--mat-sys-shape-corner-extra-large);
-  box-shadow: var(--mat-sys-elevation-level3);
-}
-
-.mat-dialog--opening .mat-dialog__panel {
-  animation: mat-dialog-enter var(--mat-sys-motion-spring-default-spatial) both;
-}
-
-.mat-dialog--closing .mat-dialog__panel {
-  animation: mat-dialog-exit var(--mat-sys-motion-spring-fast-effects) both;
-}
-
-.mat-dialog__icon {
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  inline-size: 100%;
-  padding-block-start: 24px;
-  padding-inline: 24px;
-  margin-block-end: 16px;
-  color: var(--mat-dialog-icon-color);
-}
-
-.mat-dialog__title {
-  flex: 0 0 auto;
-  min-inline-size: 0;
-  box-sizing: border-box;
-  inline-size: 100%;
-  padding-inline: 24px;
-  margin: 0;
-  overflow-wrap: anywhere;
-  color: var(--mat-dialog-headline-color);
-}
-
-.mat-dialog--with-icon .mat-dialog__panel > .mat-dialog__title {
-  text-align: center;
-}
-
-.mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__icon:last-child {
-  padding-block-end: 24px;
-  margin-block-end: 0;
-}
-
-.mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__title:first-child {
-  padding-block-start: 24px;
-}
-
-.mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__title:last-child {
-  padding-block-end: 24px;
-}
-
-.mat-dialog__title + .mat-dialog__content {
-  padding-block-start: 16px;
-}
-
-.mat-dialog__content {
-  flex: 0 1 auto;
-  min-block-size: 0;
-  box-sizing: border-box;
-  inline-size: 100%;
-  padding-inline: 24px;
-  overflow-y: auto;
-  overflow-wrap: anywhere;
-  scrollbar-width: thin;
-  scrollbar-color: var(--mat-sys-color-outline) transparent;
-  overscroll-behavior: contain;
-}
-
-.mat-dialog__content::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-
-.mat-dialog__content::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.mat-dialog__content::-webkit-scrollbar-thumb {
-  background: var(--mat-sys-color-outline);
-  border-radius: var(--mat-sys-shape-corner-full);
-}
-
-.mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__content:first-child {
-  padding-block-start: 24px;
-}
-
-.mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__content:last-child {
-  padding-block-end: 24px;
-}
-
-.mat-dialog__actions {
-  display: flex;
-  flex: 0 0 auto;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  box-sizing: border-box;
-  inline-size: 100%;
-  padding: 24px;
-}
-
-.mat-dialog--full-screen .mat-dialog__panel {
-  min-inline-size: 100%;
-  inline-size: 100%;
-  max-inline-size: 100%;
-  min-block-size: 100%;
-  block-size: 100%;
-  max-block-size: 100%;
-  padding: 0;
-  margin: 0;
-  background: var(--mat-sys-color-surface);
-  border-radius: var(--mat-sys-shape-corner-none);
-  box-shadow: none;
-}
-
-.mat-dialog__header {
-  display: flex;
-  flex: 0 0 56px;
-  gap: 16px;
-  align-items: center;
-  box-sizing: border-box;
-  min-inline-size: 0;
-  padding-inline: 4px 16px;
-}
-
-.mat-dialog__header .mat-dialog__close {
-  flex-shrink: 0;
-}
-
-.mat-dialog__header .mat-dialog__title {
-  flex: 0 0 auto;
-  inline-size: auto;
-  padding: 0;
-  overflow-wrap: anywhere;
-}
-
-.mat-dialog__header .mat-dialog__actions {
-  flex: 0 0 auto;
-  flex-wrap: nowrap;
-  min-inline-size: 0;
-  padding: 0;
-  margin: 0;
-}
-
-.mat-dialog--full-screen .mat-dialog__panel > .mat-dialog__content {
-  flex: 1 1 auto;
-  padding: 24px;
-}
-
-@keyframes mat-dialog-enter {
-  from {
-    opacity: 0;
-    transform: scale(.92);
+@layer mde.components {
+  .mat-dialog__activator {
+    display: contents;
   }
 
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes mat-dialog-exit {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  to {
-    opacity: 0;
-    transform: scale(.92);
-  }
-}
-
-@keyframes mat-dialog-scrim-enter {
-  from {
+  .mat-dialog {
+    position: fixed;
+    z-index: var(--mat-sys-z-index-dialog);
+    inset: 0;
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
     background: transparent;
+    border: 0;
+    pointer-events: auto;
   }
-}
 
-@keyframes mat-dialog-scrim-exit {
-  to {
-    background: transparent;
+  .mat-dialog[open] {
+    display: flex;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .mat-dialog,
+  .mat-dialog--app-root {
+    position: absolute;
+  }
+
+  .mat-dialog--top:not(.mat-dialog--transparent-scrim):not(.mat-dialog--closing) {
+    background: color-mix(in srgb, var(--mat-sys-color-scrim) 32%, transparent);
+  }
+
+  .mat-dialog--opening {
+    animation: mat-dialog-scrim-enter var(--mat-sys-motion-spring-default-effects) both;
+  }
+
+  .mat-dialog--closing {
+    animation: mat-dialog-scrim-exit var(--mat-sys-motion-spring-fast-effects) both;
+  }
+
   .mat-dialog__panel {
-    animation: none;
+    --mat-dialog-container-color: var(--mat-sys-color-surface-container-high);
+    --mat-dialog-headline-color: var(--mat-sys-color-on-surface);
+    --mat-dialog-content-color: var(--mat-sys-color-on-surface-variant);
+    --mat-dialog-icon-color: var(--mat-accent-color, var(--mat-sys-color-secondary));
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-inline-size: min(280px, calc(100% - 48px));
+    max-inline-size: min(560px, calc(100% - 48px));
+    max-block-size: calc(100% - 48px);
+    padding: 0;
+    margin: auto;
+    overflow: visible;
+    color: var(--mat-dialog-content-color);
+    background: var(--mat-dialog-container-color);
+    border: 0;
+    border-radius: var(--mat-sys-shape-corner-extra-large);
+    box-shadow: var(--mat-sys-elevation-level3);
+  }
+
+  .mat-dialog--opening .mat-dialog__panel {
+    animation: mat-dialog-enter var(--mat-sys-motion-spring-default-spatial) both;
+  }
+
+  .mat-dialog--closing .mat-dialog__panel {
+    animation: mat-dialog-exit var(--mat-sys-motion-spring-fast-effects) both;
+  }
+
+  .mat-dialog__icon {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: 100%;
+    padding-block-start: 24px;
+    padding-inline: 24px;
+    margin-block-end: 16px;
+    color: var(--mat-dialog-icon-color);
+  }
+
+  .mat-dialog__title {
+    flex: 0 0 auto;
+    min-inline-size: 0;
+    box-sizing: border-box;
+    inline-size: 100%;
+    padding-inline: 24px;
+    margin: 0;
+    overflow-wrap: anywhere;
+    color: var(--mat-dialog-headline-color);
+  }
+
+  .mat-dialog--with-icon .mat-dialog__panel > .mat-dialog__title {
+    text-align: center;
+  }
+
+  .mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__icon:last-child {
+    padding-block-end: 24px;
+    margin-block-end: 0;
+  }
+
+  .mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__title:first-child {
+    padding-block-start: 24px;
+  }
+
+  .mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__title:last-child {
+    padding-block-end: 24px;
+  }
+
+  .mat-dialog__title + .mat-dialog__content {
+    padding-block-start: 16px;
+  }
+
+  .mat-dialog__content {
+    flex: 0 1 auto;
+    min-block-size: 0;
+    box-sizing: border-box;
+    inline-size: 100%;
+    padding-inline: 24px;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    scrollbar-width: thin;
+    scrollbar-color: var(--mat-sys-color-outline) transparent;
+    overscroll-behavior: contain;
+  }
+
+  .mat-dialog__content::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  .mat-dialog__content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .mat-dialog__content::-webkit-scrollbar-thumb {
+    background: var(--mat-sys-color-outline);
+    border-radius: var(--mat-sys-shape-corner-full);
+  }
+
+  .mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__content:first-child {
+    padding-block-start: 24px;
+  }
+
+  .mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__content:last-child {
+    padding-block-end: 24px;
+  }
+
+  .mat-dialog__actions {
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    box-sizing: border-box;
+    inline-size: 100%;
+    padding: 24px;
+  }
+
+  .mat-dialog--full-screen .mat-dialog__panel {
+    min-inline-size: 100%;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    min-block-size: 100%;
+    block-size: 100%;
+    max-block-size: 100%;
+    padding: 0;
+    margin: 0;
+    background: var(--mat-sys-color-surface);
+    border-radius: var(--mat-sys-shape-corner-none);
+    box-shadow: none;
+  }
+
+  .mat-dialog__header {
+    display: flex;
+    flex: 0 0 56px;
+    gap: 16px;
+    align-items: center;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding-inline: 4px 16px;
+  }
+
+  .mat-dialog__header .mat-dialog__close {
+    flex-shrink: 0;
+  }
+
+  .mat-dialog__header .mat-dialog__title {
+    flex: 0 0 auto;
+    inline-size: auto;
+    padding: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .mat-dialog__header .mat-dialog__actions {
+    flex: 0 0 auto;
+    flex-wrap: nowrap;
+    min-inline-size: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mat-dialog--full-screen .mat-dialog__panel > .mat-dialog__content {
+    flex: 1 1 auto;
+    padding: 24px;
+  }
+
+  @keyframes mat-dialog-enter {
+    from {
+      opacity: 0;
+      transform: scale(.92);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes mat-dialog-exit {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    to {
+      opacity: 0;
+      transform: scale(.92);
+    }
+  }
+
+  @keyframes mat-dialog-scrim-enter {
+    from {
+      background: transparent;
+    }
+  }
+
+  @keyframes mat-dialog-scrim-exit {
+    to {
+      background: transparent;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-dialog,
+    .mat-dialog__panel {
+      animation: none;
+    }
   }
 }
 </style>

@@ -148,24 +148,26 @@ const imgStyleValue = computed(() => {
 </template>
 
 <style scoped>
-.mat-image {
-  display: block;
-  box-sizing: border-box;
-  inline-size: 100%;
-  overflow: hidden;
-  transition: aspect-ratio var(--mat-sys-motion-spring-default-spatial), inline-size var(--mat-sys-motion-spring-default-spatial), block-size var(--mat-sys-motion-spring-default-spatial), border-radius var(--mat-sys-motion-spring-fast-spatial);
-}
-
-.mat-image__img {
-  display: block;
-  box-sizing: border-box;
-  inline-size: 100%;
-  block-size: 100%;
-}
-
-@media (prefers-reduced-motion: reduce) {
+@layer mde.components {
   .mat-image {
-    transition-duration: 0s;
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    overflow: hidden;
+    transition: aspect-ratio var(--mat-sys-motion-spring-default-spatial), inline-size var(--mat-sys-motion-spring-default-spatial), block-size var(--mat-sys-motion-spring-default-spatial), border-radius var(--mat-sys-motion-spring-fast-spatial);
+  }
+
+  .mat-image__img {
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-image {
+      transition-duration: 0s;
+    }
   }
 }
 </style>

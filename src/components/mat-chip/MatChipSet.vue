@@ -138,37 +138,39 @@ provide(MAT_CHIP_SET_KEY, {
 </template>
 
 <style scoped>
-.mat-chip-set {
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  box-sizing: border-box;
-  max-inline-size: 100%;
-  min-block-size: var(--mat-sys-interaction-target-min-size);
+@layer mde.components {
+  .mat-chip-set {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    min-block-size: var(--mat-sys-interaction-target-min-size);
+  }
+
+  .mat-chip-set--wrap { flex-wrap: wrap; }
+
+  .mat-chip-set--scroll {
+    display: block;
+    inline-size: 100%;
+  }
+
+  .mat-chip-set__scroll-area { inline-size: 100%; }
+
+  .mat-chip-set__scroll-content {
+    --mat-chip-set-focus-ring-bleed: calc(
+      var(--mat-sys-interaction-focus-ring-width, 3px)
+      + var(--mat-sys-interaction-focus-ring-offset, 2px)
+    );
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    box-sizing: border-box;
+    min-inline-size: max-content;
+    min-block-size: var(--mat-sys-interaction-target-min-size);
+    padding-inline: var(--mat-chip-set-focus-ring-bleed);
+  }
+
+  .mat-chip-set__scroll-content :deep(.mat-chip) { max-inline-size: none; }
 }
-
-.mat-chip-set--wrap { flex-wrap: wrap; }
-
-.mat-chip-set--scroll {
-  display: block;
-  inline-size: 100%;
-}
-
-.mat-chip-set__scroll-area { inline-size: 100%; }
-
-.mat-chip-set__scroll-content {
-  --mat-chip-set-focus-ring-bleed: calc(
-    var(--mat-sys-interaction-focus-ring-width, 3px)
-    + var(--mat-sys-interaction-focus-ring-offset, 2px)
-  );
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  box-sizing: border-box;
-  min-inline-size: max-content;
-  min-block-size: var(--mat-sys-interaction-target-min-size);
-  padding-inline: var(--mat-chip-set-focus-ring-bleed);
-}
-
-.mat-chip-set__scroll-content :deep(.mat-chip) { max-inline-size: none; }
 </style>

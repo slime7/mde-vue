@@ -65,31 +65,33 @@ const tag = computed(() => {
 </template>
 
 <style scoped>
-.mat-divider {
-  display: block;
-  flex: 0 0 auto;
-  box-sizing: border-box;
-  block-size: var(--mat-divider-thickness);
-  inline-size: 100%;
-  padding: 0;
-  margin-block: 0;
-  margin-inline: 0;
-  list-style: none;
-  background: var(--mat-divider-color);
-  border: 0;
-}
+@layer mde.components {
+  .mat-divider {
+    display: block;
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    block-size: var(--mat-divider-thickness);
+    inline-size: 100%;
+    padding: 0;
+    margin-block: 0;
+    margin-inline: 0;
+    list-style: none;
+    background: var(--mat-divider-color);
+    border: 0;
+  }
 
-.mat-divider--start {
-  inline-size: calc(100% - var(--mat-divider-inset-space));
-  margin-inline-start: var(--mat-divider-inset-space);
-}
+  .mat-divider--start {
+    inline-size: calc(100% - var(--mat-divider-inset-space));
+    margin-inline-start: var(--mat-divider-inset-space);
+  }
 
-.mat-divider--middle {
-  inline-size: calc(100% - 2 * var(--mat-divider-inset-space));
-  margin-inline: var(--mat-divider-inset-space);
-}
+  .mat-divider--middle {
+    inline-size: calc(100% - 2 * var(--mat-divider-inset-space));
+    margin-inline: var(--mat-divider-inset-space);
+  }
 
-.mat-divider--menu {
-  margin-block: 8px;
+  .mat-divider--menu {
+    margin-block: 8px;
+  }
 }
 </style>

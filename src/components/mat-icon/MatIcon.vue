@@ -184,43 +184,45 @@ const rootStyle = computed(() => ({
 </template>
 
 <style scoped>
-/*
- * 内容来源与 SVG 资源模式参考 mdui v2 icon（MIT）：
- * https://github.com/zdhxiong/mdui/tree/818146c3e188580e2831873b4f245d864422552c
- */
+@layer mde.components {
+  /*
+   * 内容来源与 SVG 资源模式参考 mdui v2 icon（MIT）：
+   * https://github.com/zdhxiong/mdui/tree/818146c3e188580e2831873b4f245d864422552c
+   */
 
-.mat-icon {
-  display: inline-flex;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  color: currentcolor;
-  font-size: var(--mat-icon-size);
-  font-style: normal;
-  font-feature-settings: 'liga';
-  letter-spacing: normal;
-  line-height: 1;
-  text-rendering: optimizelegibility;
-  text-transform: none;
-  white-space: nowrap;
-  overflow-wrap: normal;
-  user-select: none;
-  cursor: default;
-  transition: color var(--mat-sys-motion-spring-fast-effects), font-size var(--mat-sys-motion-spring-fast-spatial), font-variation-settings var(--mat-sys-motion-spring-fast-spatial);
-}
-
-.mat-icon__image,
-.mat-icon :deep(svg) {
-  display: block;
-  flex: 0 0 auto;
-  inline-size: 1em;
-  block-size: 1em;
-}
-
-@media (prefers-reduced-motion: reduce) {
   .mat-icon {
-    transition-duration: 0s;
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    color: currentcolor;
+    font-size: var(--mat-icon-size);
+    font-style: normal;
+    font-feature-settings: 'liga';
+    letter-spacing: normal;
+    line-height: 1;
+    text-rendering: optimizelegibility;
+    text-transform: none;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    user-select: none;
+    cursor: default;
+    transition: color var(--mat-sys-motion-spring-fast-effects), font-size var(--mat-sys-motion-spring-fast-spatial), font-variation-settings var(--mat-sys-motion-spring-fast-spatial);
+  }
+
+  .mat-icon__image,
+  .mat-icon :deep(svg) {
+    display: block;
+    flex: 0 0 auto;
+    inline-size: 1em;
+    block-size: 1em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-icon {
+      transition-duration: 0s;
+    }
   }
 }
 </style>

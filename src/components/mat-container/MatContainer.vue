@@ -34,27 +34,29 @@ const propsWithDefaults = useMatProps('container', props);
 </template>
 
 <style scoped>
-.mat-container {
-  box-sizing: border-box;
-  inline-size: 100%;
-  padding-inline: 16px;
-}
-
-.mat-container__content {
-  inline-size: 100%;
-  block-size: 100%;
-  min-block-size: 0;
-  max-inline-size: 1040px;
-  margin-inline: auto;
-}
-
-.mat-container--fluid .mat-container__content {
-  max-inline-size: none;
-}
-
-@media (width >= 600px) {
+@layer mde.components {
   .mat-container {
-    padding-inline: 24px;
+    box-sizing: border-box;
+    inline-size: 100%;
+    padding-inline: 16px;
+  }
+
+  .mat-container__content {
+    inline-size: 100%;
+    block-size: 100%;
+    min-block-size: 0;
+    max-inline-size: 1040px;
+    margin-inline: auto;
+  }
+
+  .mat-container--fluid .mat-container__content {
+    max-inline-size: none;
+  }
+
+  @media (width >= 600px) {
+    .mat-container {
+      padding-inline: 24px;
+    }
   }
 }
 </style>

@@ -346,336 +346,338 @@ watch([
 </template>
 
 <style scoped>
-.mat-app-bar__placeholder {
-  display: block;
-  inline-size: 100%;
-  pointer-events: none;
-}
+@layer mde.components {
+  .mat-app-bar__placeholder {
+    display: block;
+    inline-size: 100%;
+    pointer-events: none;
+  }
 
-.mat-app-bar__host {
-  display: contents;
-}
+  .mat-app-bar__host {
+    display: contents;
+  }
 
-.mat-app-bar__host--app {
-  position: fixed;
-  z-index: 8;
-  display: block;
-  box-sizing: border-box;
-  inset-block-start: 0;
-  inset-inline: 0;
-  block-size: 64px;
-  pointer-events: none;
-}
+  .mat-app-bar__host--app {
+    position: fixed;
+    z-index: 8;
+    display: block;
+    box-sizing: border-box;
+    inset-block-start: 0;
+    inset-inline: 0;
+    block-size: 64px;
+    pointer-events: none;
+  }
 
-.mat-app-bar__host--app-root {
-  position: absolute;
-}
+  .mat-app-bar__host--app-root {
+    position: absolute;
+  }
 
-.mat-app-bar {
-  --mat-app-bar-expanded-height: 64px;
-  --mat-app-bar-collapsed-inset: 0;
-  position: sticky;
-  z-index: 8;
-  inset-block-start: 0;
-  isolation: isolate;
-  box-sizing: border-box;
-  display: flex;
-  inline-size: 100%;
-  min-inline-size: 0;
-  block-size: 64px;
-  align-items: center;
-  padding-inline: 4px;
-  color: var(--mat-sys-color-on-surface);
-  pointer-events: auto;
-}
+  .mat-app-bar {
+    --mat-app-bar-expanded-height: 64px;
+    --mat-app-bar-collapsed-inset: 0;
+    position: sticky;
+    z-index: 8;
+    inset-block-start: 0;
+    isolation: isolate;
+    box-sizing: border-box;
+    display: flex;
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: 64px;
+    align-items: center;
+    padding-inline: 4px;
+    color: var(--mat-sys-color-on-surface);
+    pointer-events: auto;
+  }
 
-.mat-app-bar::before {
-  position: absolute;
-  z-index: 0;
-  inset-block-start: 0;
-  inset-inline: 0;
-  box-sizing: border-box;
-  block-size: var(--mat-app-bar-expanded-height);
-  clip-path: inset(0);
-  background: var(--mat-sys-color-surface);
-  content: '';
-  pointer-events: none;
-}
+  .mat-app-bar::before {
+    position: absolute;
+    z-index: 0;
+    inset-block-start: 0;
+    inset-inline: 0;
+    box-sizing: border-box;
+    block-size: var(--mat-app-bar-expanded-height);
+    clip-path: inset(0);
+    background: var(--mat-sys-color-surface);
+    content: '';
+    pointer-events: none;
+  }
 
-.mat-app-bar__host--app .mat-app-bar {
-  position: absolute;
-  inset: 0 0 auto;
-}
+  .mat-app-bar__host--app .mat-app-bar {
+    position: absolute;
+    inset: 0 0 auto;
+  }
 
-.mat-app-bar--medium-flexible {
-  --mat-app-bar-expanded-height: 112px;
-  --mat-app-bar-collapsed-inset: 48px;
-  --mat-app-bar-collapsed-title-scale: .916667;
-}
+  .mat-app-bar--medium-flexible {
+    --mat-app-bar-expanded-height: 112px;
+    --mat-app-bar-collapsed-inset: 48px;
+    --mat-app-bar-collapsed-title-scale: .916667;
+  }
 
-.mat-app-bar--large-flexible {
-  --mat-app-bar-expanded-height: 120px;
-  --mat-app-bar-collapsed-inset: 56px;
-  --mat-app-bar-collapsed-title-scale: .785714;
-}
+  .mat-app-bar--large-flexible {
+    --mat-app-bar-expanded-height: 120px;
+    --mat-app-bar-collapsed-inset: 56px;
+    --mat-app-bar-collapsed-title-scale: .785714;
+  }
 
-.mat-app-bar__leading,
-.mat-app-bar__trailing {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex: 0 0 auto;
-  min-block-size: 48px;
-  align-items: center;
-  gap: var(--mat-sys-spacing-1, 4px);
-}
+  .mat-app-bar__leading,
+  .mat-app-bar__trailing {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex: 0 0 auto;
+    min-block-size: 48px;
+    align-items: center;
+    gap: var(--mat-sys-spacing-1, 4px);
+  }
 
-.mat-app-bar__main {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-grow: 1;
-  min-inline-size: 0;
-  flex-direction: column;
-  justify-content: center;
-  padding-inline: 12px;
-}
-
-.mat-app-bar__primary {
-  min-inline-size: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  transform-origin: left center;
-}
-
-.mat-app-bar__subtitle {
-  overflow: hidden;
-  color: var(--mat-sys-color-on-surface-variant);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.mat-app-bar__spacer {
-  position: relative;
-  z-index: 1;
-  flex-grow: 1;
-  min-inline-size: 0;
-}
-
-.mat-app-bar--medium-flexible,
-.mat-app-bar--large-flexible {
-  align-items: center;
-}
-
-.mat-app-bar--medium-flexible .mat-app-bar__main,
-.mat-app-bar--large-flexible .mat-app-bar__main {
-  padding-inline-start: 12px;
-}
-
-.mat-app-bar--medium-flexible .mat-app-bar__main {
-  translate: 0 24px;
-}
-
-.mat-app-bar--large-flexible .mat-app-bar__main {
-  translate: 0 28px;
-}
-
-.mat-app-bar--medium-flexible .mat-app-bar__primary,
-.mat-app-bar--large-flexible .mat-app-bar__primary {
-  display: -webkit-box;
-  overflow: hidden;
-  white-space: normal;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-.mat-app-bar--medium-flexible .mat-app-bar__subtitle,
-.mat-app-bar--large-flexible .mat-app-bar__subtitle {
-  position: absolute;
-  inset-block-start: 100%;
-  inset-inline: 12px;
-}
-
-.mat-app-bar--align-center {
-  display: grid;
-  grid-template-columns: minmax(48px, 1fr) minmax(0, auto) minmax(48px, 1fr);
-}
-
-.mat-app-bar--align-center .mat-app-bar__leading {
-  justify-self: start;
-}
-
-.mat-app-bar--align-center .mat-app-bar__main {
-  inline-size: max-content;
-  max-inline-size: 100%;
-  justify-self: center;
-  text-align: center;
-}
-
-.mat-app-bar--align-center .mat-app-bar__primary {
-  transform-origin: center;
-}
-
-.mat-app-bar--align-center .mat-app-bar__spacer {
-  display: none;
-}
-
-.mat-app-bar--align-center .mat-app-bar__trailing {
-  justify-self: end;
-}
-
-.mat-app-bar--content-image .mat-app-bar__primary {
-  block-size: 48px;
-}
-
-.mat-app-bar--content-image .mat-app-bar__primary :deep(img),
-.mat-app-bar--content-image .mat-app-bar__primary :deep(svg) {
-  display: block;
-  max-inline-size: 100%;
-  block-size: 100%;
-  object-fit: contain;
-  object-position: left center;
-}
-
-.mat-app-bar--content-search .mat-app-bar__main {
-  inline-size: min(50%, 48rem);
-  flex-grow: 0;
-}
-
-.mat-app-bar--content-search .mat-app-bar__primary {
-  display: flex;
-  overflow: visible;
-}
-
-@media (width < 312px) {
-  .mat-app-bar--content-search .mat-app-bar__main {
-    inline-size: auto;
+  .mat-app-bar__main {
+    position: relative;
+    z-index: 1;
+    display: flex;
     flex-grow: 1;
-  }
-}
-
-@supports (animation-timeline: scroll()) {
-  .mat-app-bar[data-timeline-active]::before {
-    animation: mat-app-bar-small-scroll 1ms linear both;
-    animation-range: 0 16px;
-    animation-timeline: var(--mat-app-bar-timeline);
+    min-inline-size: 0;
+    flex-direction: column;
+    justify-content: center;
+    padding-inline: 12px;
   }
 
-  .mat-app-bar--medium-flexible[data-timeline-active]::before,
-  .mat-app-bar--large-flexible[data-timeline-active]::before {
-    animation-name: mat-app-bar-flexible-scroll;
+  .mat-app-bar__primary {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transform-origin: left center;
   }
 
-  .mat-app-bar--medium-flexible[data-timeline-active]::before {
-    animation-range: 0 48px;
+  .mat-app-bar__subtitle {
+    overflow: hidden;
+    color: var(--mat-sys-color-on-surface-variant);
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  .mat-app-bar--large-flexible[data-timeline-active]::before {
-    animation-range: 0 56px;
+  .mat-app-bar__spacer {
+    position: relative;
+    z-index: 1;
+    flex-grow: 1;
+    min-inline-size: 0;
   }
 
-  .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__main,
-  .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__main {
-    animation: mat-app-bar-main-scroll 1ms linear both;
-    animation-timeline: var(--mat-app-bar-timeline);
+  .mat-app-bar--medium-flexible,
+  .mat-app-bar--large-flexible {
+    align-items: center;
   }
 
-  .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__primary,
-  .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__primary {
-    animation: mat-app-bar-primary-scroll 1ms linear both;
-    animation-timeline: var(--mat-app-bar-timeline);
+  .mat-app-bar--medium-flexible .mat-app-bar__main,
+  .mat-app-bar--large-flexible .mat-app-bar__main {
+    padding-inline-start: 12px;
   }
 
-  .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__subtitle,
-  .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__subtitle {
-    animation: mat-app-bar-secondary-exit 1ms linear both;
-    animation-timeline: var(--mat-app-bar-timeline);
+  .mat-app-bar--medium-flexible .mat-app-bar__main {
+    translate: 0 24px;
   }
 
-  .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__primary {
-    animation-range: 0 48px;
+  .mat-app-bar--large-flexible .mat-app-bar__main {
+    translate: 0 28px;
   }
 
-  .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__primary {
-    animation-range: 0 56px;
+  .mat-app-bar--medium-flexible .mat-app-bar__primary,
+  .mat-app-bar--large-flexible .mat-app-bar__primary {
+    display: -webkit-box;
+    overflow: hidden;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
-  .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__main {
-    animation-range: 0 48px;
+  .mat-app-bar--medium-flexible .mat-app-bar__subtitle,
+  .mat-app-bar--large-flexible .mat-app-bar__subtitle {
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline: 12px;
   }
 
-  .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__main {
-    animation-range: 0 56px;
+  .mat-app-bar--align-center {
+    display: grid;
+    grid-template-columns: minmax(48px, 1fr) minmax(0, auto) minmax(48px, 1fr);
   }
 
-  .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__subtitle {
-    animation-range: 0 34px;
+  .mat-app-bar--align-center .mat-app-bar__leading {
+    justify-self: start;
   }
 
-  .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__subtitle {
-    animation-range: 0 39px;
+  .mat-app-bar--align-center .mat-app-bar__main {
+    inline-size: max-content;
+    max-inline-size: 100%;
+    justify-self: center;
+    text-align: center;
   }
 
-  .mat-app-bar--content-image[data-timeline-active] .mat-app-bar__primary {
-    animation-name: mat-app-bar-image-scroll;
+  .mat-app-bar--align-center .mat-app-bar__primary {
+    transform-origin: center;
   }
-}
 
-@keyframes mat-app-bar-small-scroll {
-  to {
-    background: var(--mat-sys-color-surface-container);
+  .mat-app-bar--align-center .mat-app-bar__spacer {
+    display: none;
   }
-}
 
-@keyframes mat-app-bar-flexible-scroll {
-  to {
-    clip-path: inset(0 0 var(--mat-app-bar-collapsed-inset));
-    background: var(--mat-sys-color-surface-container);
+  .mat-app-bar--align-center .mat-app-bar__trailing {
+    justify-self: end;
   }
-}
 
-@keyframes mat-app-bar-main-scroll {
-  to {
-    translate: 0;
+  .mat-app-bar--content-image .mat-app-bar__primary {
+    block-size: 48px;
   }
-}
 
-@keyframes mat-app-bar-primary-scroll {
-  to {
-    scale: var(--mat-app-bar-collapsed-title-scale);
+  .mat-app-bar--content-image .mat-app-bar__primary :deep(img),
+  .mat-app-bar--content-image .mat-app-bar__primary :deep(svg) {
+    display: block;
+    max-inline-size: 100%;
+    block-size: 100%;
+    object-fit: contain;
+    object-position: left center;
   }
-}
 
-@keyframes mat-app-bar-image-scroll {
-  to {
-    scale: .84;
+  .mat-app-bar--content-search .mat-app-bar__main {
+    inline-size: min(50%, 48rem);
+    flex-grow: 0;
   }
-}
 
-@keyframes mat-app-bar-secondary-exit {
-  to {
-    opacity: 0;
-    translate: 0 -8px;
+  .mat-app-bar--content-search .mat-app-bar__primary {
+    display: flex;
+    overflow: visible;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
+  @media (width < 312px) {
+    .mat-app-bar--content-search .mat-app-bar__main {
+      inline-size: auto;
+      flex-grow: 1;
+    }
+  }
+
   @supports (animation-timeline: scroll()) {
-    .mat-app-bar[data-timeline-active]::before,
+    .mat-app-bar[data-timeline-active]::before {
+      animation: mat-app-bar-small-scroll 1ms linear both;
+      animation-range: 0 16px;
+      animation-timeline: var(--mat-app-bar-timeline);
+    }
+
     .mat-app-bar--medium-flexible[data-timeline-active]::before,
     .mat-app-bar--large-flexible[data-timeline-active]::before {
-      animation-name: mat-app-bar-small-scroll;
-      animation-range: 0 16px;
+      animation-name: mat-app-bar-flexible-scroll;
+    }
+
+    .mat-app-bar--medium-flexible[data-timeline-active]::before {
+      animation-range: 0 48px;
+    }
+
+    .mat-app-bar--large-flexible[data-timeline-active]::before {
+      animation-range: 0 56px;
     }
 
     .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__main,
-    .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__main,
+    .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__main {
+      animation: mat-app-bar-main-scroll 1ms linear both;
+      animation-timeline: var(--mat-app-bar-timeline);
+    }
+
     .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__primary,
-    .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__primary,
+    .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__primary {
+      animation: mat-app-bar-primary-scroll 1ms linear both;
+      animation-timeline: var(--mat-app-bar-timeline);
+    }
+
     .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__subtitle,
     .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__subtitle {
-      animation: none;
+      animation: mat-app-bar-secondary-exit 1ms linear both;
+      animation-timeline: var(--mat-app-bar-timeline);
+    }
+
+    .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__primary {
+      animation-range: 0 48px;
+    }
+
+    .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__primary {
+      animation-range: 0 56px;
+    }
+
+    .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__main {
+      animation-range: 0 48px;
+    }
+
+    .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__main {
+      animation-range: 0 56px;
+    }
+
+    .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__subtitle {
+      animation-range: 0 34px;
+    }
+
+    .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__subtitle {
+      animation-range: 0 39px;
+    }
+
+    .mat-app-bar--content-image[data-timeline-active] .mat-app-bar__primary {
+      animation-name: mat-app-bar-image-scroll;
+    }
+  }
+
+  @keyframes mat-app-bar-small-scroll {
+    to {
+      background: var(--mat-sys-color-surface-container);
+    }
+  }
+
+  @keyframes mat-app-bar-flexible-scroll {
+    to {
+      clip-path: inset(0 0 var(--mat-app-bar-collapsed-inset));
+      background: var(--mat-sys-color-surface-container);
+    }
+  }
+
+  @keyframes mat-app-bar-main-scroll {
+    to {
+      translate: 0;
+    }
+  }
+
+  @keyframes mat-app-bar-primary-scroll {
+    to {
+      scale: var(--mat-app-bar-collapsed-title-scale);
+    }
+  }
+
+  @keyframes mat-app-bar-image-scroll {
+    to {
+      scale: .84;
+    }
+  }
+
+  @keyframes mat-app-bar-secondary-exit {
+    to {
+      opacity: 0;
+      translate: 0 -8px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    @supports (animation-timeline: scroll()) {
+      .mat-app-bar[data-timeline-active]::before,
+      .mat-app-bar--medium-flexible[data-timeline-active]::before,
+      .mat-app-bar--large-flexible[data-timeline-active]::before {
+        animation-name: mat-app-bar-small-scroll;
+        animation-range: 0 16px;
+      }
+
+      .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__main,
+      .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__main,
+      .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__primary,
+      .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__primary,
+      .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__subtitle,
+      .mat-app-bar--large-flexible[data-timeline-active] .mat-app-bar__subtitle {
+        animation: none;
+      }
     }
   }
 }

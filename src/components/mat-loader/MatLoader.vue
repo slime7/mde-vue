@@ -614,321 +614,188 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.mat-loader {
-  --mat-loader-active-indicator-color: var(--mat-accent-color, var(--mat-sys-color-primary));
-  --mat-loader-track-color: var(--mat-sys-color-secondary-container);
-  display: block;
-  box-sizing: border-box;
-  color: var(--mat-loader-active-indicator-color, var(--mat-sys-color-primary));
-}
-
-.mat-loader--linear {
-  inline-size: 100%;
-  min-inline-size: 0;
-}
-
-.mat-loader--circular {
-  inline-size: var(--mat-loader-circular-size);
-  block-size: var(--mat-loader-circular-size);
-  margin: var(--mat-loader-circular-margin);
-  transition: inline-size var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial), margin var(--mat-sys-motion-spring-fast-spatial);
-}
-
-.mat-loader__linear {
-  position: relative;
-  display: block;
-  block-size: var(--mat-loader-linear-size);
-  overflow: clip;
-  transition: block-size var(--mat-sys-motion-spring-fast-spatial);
-}
-
-.mat-loader__linear-track {
-  position: absolute;
-  inset-block-start: 50%;
-  z-index: 1;
-  display: block;
-  block-size: var(--mat-loader-thickness);
-  background: var(--mat-loader-track-color);
-  border-radius: var(--mat-sys-shape-corner-full);
-  transform: translateY(-50%);
-  transition: block-size var(--mat-sys-motion-spring-fast-spatial), inset-inline var(--mat-sys-motion-spring-fast-spatial), inline-size var(--mat-sys-motion-spring-fast-spatial);
-}
-
-.mat-loader__linear-track--before {
-  inset-inline-start: 0;
-  inline-size: max(
-    0px,
-    calc(0% - var(--mat-loader-indicator-gap-size))
-  );
-}
-
-.mat-loader__linear-track--after {
-  inset-inline: min(
-    100%,
-    calc(var(--mat-loader-linear-segment-end-position) + var(--mat-loader-indicator-gap-size))
-  ) 0;
-}
-
-.mat-loader__linear-indicator {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: block;
-  inline-size: 100%;
-  block-size: 100%;
-  overflow: visible;
-}
-
-.mat-loader__linear-active,
-.mat-loader__linear-indeterminate-track,
-.mat-loader__linear-gap {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: var(--mat-loader-thickness);
-  vector-effect: non-scaling-stroke;
-}
-
-.mat-loader__linear-active {
-  stroke: var(--mat-loader-active-indicator-color, var(--mat-sys-color-primary));
-}
-
-.mat-loader__linear-active--determinate {
-  stroke-dasharray: calc(
-    (
-      var(--mat-loader-linear-segment-end)
-      - var(--mat-loader-linear-cap-progress)
-    ) * var(--mat-loader-linear-path-scale)
-  ) 200;
-  transition: stroke-dasharray var(--mat-sys-motion-spring-default-effects), stroke-width var(--mat-sys-motion-spring-fast-spatial);
-}
-
-.mat-loader__linear-indeterminate-track {
-  stroke: var(--mat-loader-track-color);
-}
-
-.mat-loader__linear-gap {
-  stroke: black;
-  stroke-width: calc(var(--mat-loader-thickness) + (var(--mat-loader-indicator-gap-size) * 2));
-}
-
-.mat-loader__linear-bar {
-  transform-box: view-box;
-  transform-origin: center;
-}
-
-.mat-loader__linear-bar--primary {
-  translate: -145.167% 0;
-  animation: mat-loader-primary-indeterminate-translate 2s infinite linear;
-}
-
-.mat-loader__linear-bar--secondary {
-  translate: -54.8889% 0;
-  animation: mat-loader-secondary-indeterminate-translate 2s infinite linear;
-}
-
-.mat-loader__linear-segment {
-  transition: stroke-width var(--mat-sys-motion-spring-fast-spatial);
-}
-
-.mat-loader__linear-segment--primary {
-  animation: mat-loader-primary-indeterminate-scale 2s infinite linear;
-}
-
-.mat-loader__linear-segment--secondary {
-  animation: mat-loader-secondary-indeterminate-scale 2s infinite linear;
-}
-
-.mat-loader__linear-stop {
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-end: 0;
-  z-index: 3;
-  inline-size: var(--mat-loader-stop-indicator-size);
-  block-size: var(--mat-loader-stop-indicator-size);
-  background: var(--mat-loader-active-indicator-color, var(--mat-sys-color-primary));
-  border-radius: var(--mat-sys-shape-corner-full);
-  transform: translateY(-50%);
-}
-
-.mat-loader__circular {
-  display: block;
-  inline-size: var(--mat-loader-circular-size);
-  block-size: var(--mat-loader-circular-size);
-  overflow: visible;
-  transition: inline-size var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial);
-}
-
-.mat-loader__circular-linear-rotate,
-.mat-loader__circular-rotate-arc {
-  transform-box: view-box;
-  transform-origin: center;
-}
-
-.mat-loader--indeterminate .mat-loader__circular-linear-rotate {
-  animation: mat-loader-circular-linear-rotate 1568.235ms linear infinite;
-}
-
-.mat-loader--indeterminate .mat-loader__circular-rotate-arc {
-  animation: mat-loader-circular-rotate-arc 5332ms cubic-bezier(.4, 0, .2, 1) infinite;
-}
-
-.mat-loader__circular-track,
-.mat-loader__circular-active {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: var(--mat-loader-thickness);
-  transform: rotate(-90deg);
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-.mat-loader__circular-track {
-  stroke: var(--mat-loader-track-color);
-  transition: opacity var(--mat-sys-motion-spring-fast-effects), stroke-width var(--mat-sys-motion-spring-fast-spatial), stroke-dasharray var(--mat-sys-motion-spring-default-effects), stroke-dashoffset var(--mat-sys-motion-spring-default-effects);
-}
-
-.mat-loader__circular-active {
-  stroke: var(--mat-loader-active-indicator-color, var(--mat-sys-color-primary));
-  transition: stroke-width var(--mat-sys-motion-spring-fast-spatial), stroke-dasharray var(--mat-sys-motion-spring-default-effects);
-}
-
-.mat-loader--indeterminate .mat-loader__circular-track {
-  stroke-dasharray: calc(
-    97.2222
-    - (var(--mat-loader-circular-gap-progress) * 2)
-  ) 200;
-  stroke-dashoffset: calc(
-    (2.7778 + var(--mat-loader-circular-gap-progress)) * -1
-  );
-  animation-name: mat-loader-circular-expand-track-arc;
-  animation-duration: 1333ms;
-  animation-timing-function: cubic-bezier(.4, 0, .2, 1);
-  animation-iteration-count: infinite;
-}
-
-.mat-loader--indeterminate .mat-loader__circular-active {
-  stroke-dasharray: 2.7778 200;
-  animation-name: mat-loader-circular-expand-active-arc;
-  animation-duration: 1333ms;
-  animation-timing-function: cubic-bezier(.4, 0, .2, 1);
-  animation-iteration-count: infinite;
-}
-
-.mat-loader--indeterminate .mat-loader__circular-track,
-.mat-loader--indeterminate .mat-loader__circular-active {
-  transition: opacity var(--mat-sys-motion-spring-fast-effects), stroke-width var(--mat-sys-motion-spring-fast-spatial);
-}
-
-/*
- * Indeterminate timing and easing values are adapted from Material Web's
- * progress implementation, licensed under Apache-2.0.
- */
-@keyframes mat-loader-primary-indeterminate-translate {
-  0% {
-    transform: translateX(0);
+@layer mde.components {
+  .mat-loader {
+    --mat-loader-active-indicator-color: var(--mat-accent-color, var(--mat-sys-color-primary));
+    --mat-loader-track-color: var(--mat-sys-color-secondary-container);
+    display: block;
+    box-sizing: border-box;
+    color: var(--mat-loader-active-indicator-color, var(--mat-sys-color-primary));
   }
 
-  20% {
-    transform: translateX(0);
-    animation-timing-function: cubic-bezier(.5, 0, .701732, .495819);
+  .mat-loader--linear {
+    inline-size: 100%;
+    min-inline-size: 0;
   }
 
-  59.15% {
-    transform: translateX(83.6714%);
-    animation-timing-function: cubic-bezier(.302435, .381352, .55, .956352);
+  .mat-loader--circular {
+    inline-size: var(--mat-loader-circular-size);
+    block-size: var(--mat-loader-circular-size);
+    margin: var(--mat-loader-circular-margin);
+    transition: inline-size var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial), margin var(--mat-sys-motion-spring-fast-spatial);
   }
 
-  100% {
-    transform: translateX(200.611%);
-  }
-}
-
-@keyframes mat-loader-primary-indeterminate-scale {
-  0% {
-    stroke-dasharray: 8 200;
-    stroke-dashoffset: -46;
+  .mat-loader__linear {
+    position: relative;
+    display: block;
+    block-size: var(--mat-loader-linear-size);
+    overflow: clip;
+    transition: block-size var(--mat-sys-motion-spring-fast-spatial);
   }
 
-  36.65% {
-    stroke-dasharray: 8 200;
-    stroke-dashoffset: -46;
-    animation-timing-function: cubic-bezier(.334731, .12482, .785844, 1);
+  .mat-loader__linear-track {
+    position: absolute;
+    inset-block-start: 50%;
+    z-index: 1;
+    display: block;
+    block-size: var(--mat-loader-thickness);
+    background: var(--mat-loader-track-color);
+    border-radius: var(--mat-sys-shape-corner-full);
+    transform: translateY(-50%);
+    transition: block-size var(--mat-sys-motion-spring-fast-spatial), inset-inline var(--mat-sys-motion-spring-fast-spatial), inline-size var(--mat-sys-motion-spring-fast-spatial);
   }
 
-  69.15% {
-    stroke-dasharray: 66.1479 200;
-    stroke-dashoffset: -16.92605;
-    animation-timing-function: cubic-bezier(.06, .11, .6, 1);
+  .mat-loader__linear-track--before {
+    inset-inline-start: 0;
+    inline-size: max(
+      0px,
+      calc(0% - var(--mat-loader-indicator-gap-size))
+    );
   }
 
-  100% {
-    stroke-dasharray: 8 200;
-    stroke-dashoffset: -46;
-  }
-}
-
-@keyframes mat-loader-secondary-indeterminate-translate {
-  0% {
-    transform: translateX(0);
-    animation-timing-function: cubic-bezier(.15, 0, .515058, .409685);
+  .mat-loader__linear-track--after {
+    inset-inline: min(
+      100%,
+      calc(var(--mat-loader-linear-segment-end-position) + var(--mat-loader-indicator-gap-size))
+    ) 0;
   }
 
-  25% {
-    transform: translateX(37.6519%);
-    animation-timing-function: cubic-bezier(.31033, .284058, .8, .733712);
+  .mat-loader__linear-indicator {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: visible;
   }
 
-  48.35% {
-    transform: translateX(84.3862%);
-    animation-timing-function: cubic-bezier(.4, .627035, .6, .902026);
+  .mat-loader__linear-active,
+  .mat-loader__linear-indeterminate-track,
+  .mat-loader__linear-gap {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: var(--mat-loader-thickness);
+    vector-effect: non-scaling-stroke;
   }
 
-  100% {
-    transform: translateX(160.278%);
-  }
-}
-
-@keyframes mat-loader-secondary-indeterminate-scale {
-  0% {
-    stroke-dasharray: 8 200;
-    stroke-dashoffset: -46;
-    animation-timing-function: cubic-bezier(.205028, .057051, .57661, .453971);
+  .mat-loader__linear-active {
+    stroke: var(--mat-loader-active-indicator-color, var(--mat-sys-color-primary));
   }
 
-  19.15% {
-    stroke-dasharray: 45.7104 200;
-    stroke-dashoffset: -27.1448;
-    animation-timing-function: cubic-bezier(.152313, .196432, .648374, 1.00432);
+  .mat-loader__linear-active--determinate {
+    stroke-dasharray: calc(
+      (
+        var(--mat-loader-linear-segment-end)
+        - var(--mat-loader-linear-cap-progress)
+      ) * var(--mat-loader-linear-path-scale)
+    ) 200;
+    transition: stroke-dasharray var(--mat-sys-motion-spring-default-effects), stroke-width var(--mat-sys-motion-spring-fast-spatial);
   }
 
-  44.15% {
-    stroke-dasharray: 72.796 200;
-    stroke-dashoffset: -13.602;
-    animation-timing-function: cubic-bezier(.257759, -.003163, .211762, 1.38179);
+  .mat-loader__linear-indeterminate-track {
+    stroke: var(--mat-loader-track-color);
   }
 
-  100% {
-    stroke-dasharray: 8 200;
-    stroke-dashoffset: -46;
-  }
-}
-
-@keyframes mat-loader-circular-expand-active-arc {
-  0%,
-  100% {
-    stroke-dasharray: 2.7778 200;
+  .mat-loader__linear-gap {
+    stroke: black;
+    stroke-width: calc(var(--mat-loader-thickness) + (var(--mat-loader-indicator-gap-size) * 2));
   }
 
-  50% {
-    stroke-dasharray: 75 200;
+  .mat-loader__linear-bar {
+    transform-box: view-box;
+    transform-origin: center;
   }
-}
 
-@keyframes mat-loader-circular-expand-track-arc {
-  0%,
-  100% {
+  .mat-loader__linear-bar--primary {
+    translate: -145.167% 0;
+    animation: mat-loader-primary-indeterminate-translate 2s infinite linear;
+  }
+
+  .mat-loader__linear-bar--secondary {
+    translate: -54.8889% 0;
+    animation: mat-loader-secondary-indeterminate-translate 2s infinite linear;
+  }
+
+  .mat-loader__linear-segment {
+    transition: stroke-width var(--mat-sys-motion-spring-fast-spatial);
+  }
+
+  .mat-loader__linear-segment--primary {
+    animation: mat-loader-primary-indeterminate-scale 2s infinite linear;
+  }
+
+  .mat-loader__linear-segment--secondary {
+    animation: mat-loader-secondary-indeterminate-scale 2s infinite linear;
+  }
+
+  .mat-loader__linear-stop {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: 0;
+    z-index: 3;
+    inline-size: var(--mat-loader-stop-indicator-size);
+    block-size: var(--mat-loader-stop-indicator-size);
+    background: var(--mat-loader-active-indicator-color, var(--mat-sys-color-primary));
+    border-radius: var(--mat-sys-shape-corner-full);
+    transform: translateY(-50%);
+  }
+
+  .mat-loader__circular {
+    display: block;
+    inline-size: var(--mat-loader-circular-size);
+    block-size: var(--mat-loader-circular-size);
+    overflow: visible;
+    transition: inline-size var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial);
+  }
+
+  .mat-loader__circular-linear-rotate,
+  .mat-loader__circular-rotate-arc {
+    transform-box: view-box;
+    transform-origin: center;
+  }
+
+  .mat-loader--indeterminate .mat-loader__circular-linear-rotate {
+    animation: mat-loader-circular-linear-rotate 1568.235ms linear infinite;
+  }
+
+  .mat-loader--indeterminate .mat-loader__circular-rotate-arc {
+    animation: mat-loader-circular-rotate-arc 5332ms cubic-bezier(.4, 0, .2, 1) infinite;
+  }
+
+  .mat-loader__circular-track,
+  .mat-loader__circular-active {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: var(--mat-loader-thickness);
+    transform: rotate(-90deg);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .mat-loader__circular-track {
+    stroke: var(--mat-loader-track-color);
+    transition: opacity var(--mat-sys-motion-spring-fast-effects), stroke-width var(--mat-sys-motion-spring-fast-spatial), stroke-dasharray var(--mat-sys-motion-spring-default-effects), stroke-dashoffset var(--mat-sys-motion-spring-default-effects);
+  }
+
+  .mat-loader__circular-active {
+    stroke: var(--mat-loader-active-indicator-color, var(--mat-sys-color-primary));
+    transition: stroke-width var(--mat-sys-motion-spring-fast-spatial), stroke-dasharray var(--mat-sys-motion-spring-default-effects);
+  }
+
+  .mat-loader--indeterminate .mat-loader__circular-track {
     stroke-dasharray: calc(
       97.2222
       - (var(--mat-loader-circular-gap-progress) * 2)
@@ -936,110 +803,245 @@ onBeforeUnmount(() => {
     stroke-dashoffset: calc(
       (2.7778 + var(--mat-loader-circular-gap-progress)) * -1
     );
+    animation-name: mat-loader-circular-expand-track-arc;
+    animation-duration: 1333ms;
+    animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+    animation-iteration-count: infinite;
   }
 
-  50% {
-    stroke-dasharray: calc(
-      25
-      - (var(--mat-loader-circular-gap-progress) * 2)
-    ) 200;
-    stroke-dashoffset: calc(
-      (75 + var(--mat-loader-circular-gap-progress)) * -1
-    );
-  }
-}
-
-@keyframes mat-loader-circular-rotate-arc {
-  0% {
-    transform: rotate(0deg);
+  .mat-loader--indeterminate .mat-loader__circular-active {
+    stroke-dasharray: 2.7778 200;
+    animation-name: mat-loader-circular-expand-active-arc;
+    animation-duration: 1333ms;
+    animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+    animation-iteration-count: infinite;
   }
 
-  12.5% {
-    transform: rotate(135deg);
-  }
-
-  25% {
-    transform: rotate(270deg);
-  }
-
-  37.5% {
-    transform: rotate(405deg);
-  }
-
-  50% {
-    transform: rotate(540deg);
-  }
-
-  62.5% {
-    transform: rotate(675deg);
-  }
-
-  75% {
-    transform: rotate(810deg);
-  }
-
-  87.5% {
-    transform: rotate(945deg);
-  }
-
-  100% {
-    transform: rotate(1080deg);
-  }
-}
-
-@keyframes mat-loader-circular-linear-rotate {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mat-loader--circular,
-  .mat-loader__linear,
-  .mat-loader__linear-track,
-  .mat-loader__linear-segment,
-  .mat-loader__linear-active--determinate,
-  .mat-loader__circular,
-  .mat-loader__circular-track,
-  .mat-loader__circular-active {
-    transition: none;
-  }
-
-  .mat-loader__linear-bar,
-  .mat-loader__linear-segment,
-  .mat-loader--indeterminate .mat-loader__circular-linear-rotate,
-  .mat-loader--indeterminate .mat-loader__circular-rotate-arc,
   .mat-loader--indeterminate .mat-loader__circular-track,
   .mat-loader--indeterminate .mat-loader__circular-active {
-    animation: none;
+    transition: opacity var(--mat-sys-motion-spring-fast-effects), stroke-width var(--mat-sys-motion-spring-fast-spatial);
   }
 
-  .mat-loader__linear-bar--primary {
-    translate: 0 0;
-    transform: translateX(10%);
+  /*
+   * Indeterminate timing and easing values are adapted from Material Web's
+   * progress implementation, licensed under Apache-2.0.
+   */
+  @keyframes mat-loader-primary-indeterminate-translate {
+    0% {
+      transform: translateX(0);
+    }
+
+    20% {
+      transform: translateX(0);
+      animation-timing-function: cubic-bezier(.5, 0, .701732, .495819);
+    }
+
+    59.15% {
+      transform: translateX(83.6714%);
+      animation-timing-function: cubic-bezier(.302435, .381352, .55, .956352);
+    }
+
+    100% {
+      transform: translateX(200.611%);
+    }
   }
 
-  .mat-loader__linear-segment--primary {
-    stroke-dasharray: 40 200;
-    stroke-dashoffset: -30;
+  @keyframes mat-loader-primary-indeterminate-scale {
+    0% {
+      stroke-dasharray: 8 200;
+      stroke-dashoffset: -46;
+    }
+
+    36.65% {
+      stroke-dasharray: 8 200;
+      stroke-dashoffset: -46;
+      animation-timing-function: cubic-bezier(.334731, .12482, .785844, 1);
+    }
+
+    69.15% {
+      stroke-dasharray: 66.1479 200;
+      stroke-dashoffset: -16.92605;
+      animation-timing-function: cubic-bezier(.06, .11, .6, 1);
+    }
+
+    100% {
+      stroke-dasharray: 8 200;
+      stroke-dashoffset: -46;
+    }
   }
 
-  .mat-loader__linear-bar--secondary {
-    display: none;
+  @keyframes mat-loader-secondary-indeterminate-translate {
+    0% {
+      transform: translateX(0);
+      animation-timing-function: cubic-bezier(.15, 0, .515058, .409685);
+    }
+
+    25% {
+      transform: translateX(37.6519%);
+      animation-timing-function: cubic-bezier(.31033, .284058, .8, .733712);
+    }
+
+    48.35% {
+      transform: translateX(84.3862%);
+      animation-timing-function: cubic-bezier(.4, .627035, .6, .902026);
+    }
+
+    100% {
+      transform: translateX(160.278%);
+    }
   }
 
-  .mat-loader--indeterminate .mat-loader__circular-active {
-    stroke-dasharray: 25 200;
+  @keyframes mat-loader-secondary-indeterminate-scale {
+    0% {
+      stroke-dasharray: 8 200;
+      stroke-dashoffset: -46;
+      animation-timing-function: cubic-bezier(.205028, .057051, .57661, .453971);
+    }
+
+    19.15% {
+      stroke-dasharray: 45.7104 200;
+      stroke-dashoffset: -27.1448;
+      animation-timing-function: cubic-bezier(.152313, .196432, .648374, 1.00432);
+    }
+
+    44.15% {
+      stroke-dasharray: 72.796 200;
+      stroke-dashoffset: -13.602;
+      animation-timing-function: cubic-bezier(.257759, -.003163, .211762, 1.38179);
+    }
+
+    100% {
+      stroke-dasharray: 8 200;
+      stroke-dashoffset: -46;
+    }
   }
 
-  .mat-loader--indeterminate .mat-loader__circular-track {
-    stroke-dasharray: calc(
-      75
-      - (var(--mat-loader-circular-gap-progress) * 2)
-    ) 200;
-    stroke-dashoffset: calc(
-      (25 + var(--mat-loader-circular-gap-progress)) * -1
-    );
+  @keyframes mat-loader-circular-expand-active-arc {
+    0%,
+    100% {
+      stroke-dasharray: 2.7778 200;
+    }
+
+    50% {
+      stroke-dasharray: 75 200;
+    }
+  }
+
+  @keyframes mat-loader-circular-expand-track-arc {
+    0%,
+    100% {
+      stroke-dasharray: calc(
+        97.2222
+        - (var(--mat-loader-circular-gap-progress) * 2)
+      ) 200;
+      stroke-dashoffset: calc(
+        (2.7778 + var(--mat-loader-circular-gap-progress)) * -1
+      );
+    }
+
+    50% {
+      stroke-dasharray: calc(
+        25
+        - (var(--mat-loader-circular-gap-progress) * 2)
+      ) 200;
+      stroke-dashoffset: calc(
+        (75 + var(--mat-loader-circular-gap-progress)) * -1
+      );
+    }
+  }
+
+  @keyframes mat-loader-circular-rotate-arc {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    12.5% {
+      transform: rotate(135deg);
+    }
+
+    25% {
+      transform: rotate(270deg);
+    }
+
+    37.5% {
+      transform: rotate(405deg);
+    }
+
+    50% {
+      transform: rotate(540deg);
+    }
+
+    62.5% {
+      transform: rotate(675deg);
+    }
+
+    75% {
+      transform: rotate(810deg);
+    }
+
+    87.5% {
+      transform: rotate(945deg);
+    }
+
+    100% {
+      transform: rotate(1080deg);
+    }
+  }
+
+  @keyframes mat-loader-circular-linear-rotate {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-loader--circular,
+    .mat-loader__linear,
+    .mat-loader__linear-track,
+    .mat-loader__linear-segment,
+    .mat-loader__linear-active--determinate,
+    .mat-loader__circular,
+    .mat-loader__circular-track,
+    .mat-loader__circular-active {
+      transition: none;
+    }
+
+    .mat-loader__linear-bar,
+    .mat-loader__linear-segment,
+    .mat-loader--indeterminate .mat-loader__circular-linear-rotate,
+    .mat-loader--indeterminate .mat-loader__circular-rotate-arc,
+    .mat-loader--indeterminate .mat-loader__circular-track,
+    .mat-loader--indeterminate .mat-loader__circular-active {
+      animation: none;
+    }
+
+    .mat-loader__linear-bar--primary {
+      translate: 0 0;
+      transform: translateX(10%);
+    }
+
+    .mat-loader__linear-segment--primary {
+      stroke-dasharray: 40 200;
+      stroke-dashoffset: -30;
+    }
+
+    .mat-loader__linear-bar--secondary {
+      display: none;
+    }
+
+    .mat-loader--indeterminate .mat-loader__circular-active {
+      stroke-dasharray: 25 200;
+    }
+
+    .mat-loader--indeterminate .mat-loader__circular-track {
+      stroke-dasharray: calc(
+        75
+        - (var(--mat-loader-circular-gap-progress) * 2)
+      ) 200;
+      stroke-dashoffset: calc(
+        (25 + var(--mat-loader-circular-gap-progress)) * -1
+      );
+    }
   }
 }
 </style>

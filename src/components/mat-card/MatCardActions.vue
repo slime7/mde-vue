@@ -7,12 +7,14 @@ defineOptions({ name: 'MatCardActions' });
   </div>
 </template>
 <style scoped>
-.mat-card-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  padding: 16px;
+@layer mde.components {
+  .mat-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 16px;
+  }
 }
 </style>

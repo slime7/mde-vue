@@ -186,60 +186,62 @@ function handleKeydown(event) {
 </template>
 
 <style scoped>
-.mat-radio {
-  --mat-accent-color: var(--mat-radio-selected-icon-color);
-  --mat-selection-control-indicator-width: var(--mat-radio-icon-size);
-  --mat-selection-control-indicator-height: var(--mat-radio-icon-size);
-  --mat-selection-control-state-layer-size: var(--mat-radio-state-layer-size);
-  --mat-selection-control-state-layer-color: var(--mat-radio-unselected-state-layer-color);
-  --mat-selection-control-label-color: var(--mat-radio-label-text-color);
-}
-
-.mat-radio--checked {
-  --mat-selection-control-state-layer-color: var(--mat-accent-color);
-}
-
-.mat-radio__ring {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  inline-size: 100%;
-  block-size: 100%;
-  box-sizing: border-box;
-  border: var(--mat-radio-outline-width) solid var(--mat-radio-unselected-icon-color);
-  border-radius: var(--mat-sys-shape-corner-full);
-  transition: border-color var(--mat-sys-motion-spring-fast-effects);
-}
-
-.mat-radio--checked .mat-radio__ring {
-  border-color: var(--mat-accent-color);
-}
-
-.mat-radio__dot {
-  inline-size: var(--mat-radio-selected-dot-size);
-  block-size: var(--mat-radio-selected-dot-size);
-  background: var(--mat-accent-color);
-  border-radius: var(--mat-sys-shape-corner-full);
-  clip-path: circle(0 at 50% 50%);
-  transition: clip-path var(--mat-sys-motion-spring-fast-spatial);
-}
-
-.mat-radio--checked .mat-radio__dot {
-  clip-path: circle(50% at 50% 50%);
-}
-
-@supports (border-shape: circle(50%)) {
-  .mat-radio__ring {
-    border-radius: 0;
-    border-shape: circle(50%);
+@layer mde.components {
+  .mat-radio {
+    --mat-accent-color: var(--mat-radio-selected-icon-color);
+    --mat-selection-control-indicator-width: var(--mat-radio-icon-size);
+    --mat-selection-control-indicator-height: var(--mat-radio-icon-size);
+    --mat-selection-control-state-layer-size: var(--mat-radio-state-layer-size);
+    --mat-selection-control-state-layer-color: var(--mat-radio-unselected-state-layer-color);
+    --mat-selection-control-label-color: var(--mat-radio-label-text-color);
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .mat-radio__ring,
+  .mat-radio--checked {
+    --mat-selection-control-state-layer-color: var(--mat-accent-color);
+  }
+
+  .mat-radio__ring {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 100%;
+    block-size: 100%;
+    box-sizing: border-box;
+    border: var(--mat-radio-outline-width) solid var(--mat-radio-unselected-icon-color);
+    border-radius: var(--mat-sys-shape-corner-full);
+    transition: border-color var(--mat-sys-motion-spring-fast-effects);
+  }
+
+  .mat-radio--checked .mat-radio__ring {
+    border-color: var(--mat-accent-color);
+  }
+
   .mat-radio__dot {
-    transition: none;
+    inline-size: var(--mat-radio-selected-dot-size);
+    block-size: var(--mat-radio-selected-dot-size);
+    background: var(--mat-accent-color);
+    border-radius: var(--mat-sys-shape-corner-full);
+    clip-path: circle(0 at 50% 50%);
+    transition: clip-path var(--mat-sys-motion-spring-fast-spatial);
+  }
+
+  .mat-radio--checked .mat-radio__dot {
+    clip-path: circle(50% at 50% 50%);
+  }
+
+  @supports (border-shape: circle(50%)) {
+    .mat-radio__ring {
+      border-radius: 0;
+      border-shape: circle(50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-radio__ring,
+    .mat-radio__dot {
+      transition: none;
+    }
   }
 }
 </style>

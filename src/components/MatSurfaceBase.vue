@@ -30,7 +30,9 @@ defineExpose({ root });
 </template>
 
 <style scoped>
-.mat-surface-base {
-  box-sizing: border-box;
+@layer mde.components {
+  .mat-surface-base {
+    box-sizing: border-box;
+  }
 }
 </style>

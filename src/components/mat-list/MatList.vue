@@ -365,38 +365,39 @@ watch(
 </template>
 
 <style scoped>
-.mat-list {
-  display: flex;
-  flex-direction: column;
-  inline-size: 100%;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  border-radius: var(--mat-list-container-shape);
-}
+@layer mde.components {
+  .mat-list {
+    display: flex;
+    flex-direction: column;
+    inline-size: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    border-radius: var(--mat-list-container-shape);
+  }
 
-.mat-list--standard {
-  gap: 0;
-}
+  .mat-list--standard {
+    gap: 0;
+  }
 
-.mat-list--segmented {
-  gap: var(--mat-list-segmented-gap);
-}
+  .mat-list--segmented {
+    gap: var(--mat-list-segmented-gap);
+  }
 
-.mat-list > :deep(.mat-list-item:first-child),
-.mat-list > :deep(.mat-list-group:first-child) {
-  --mat-list-item-start-start-shape: var(--mat-list-container-shape);
-  --mat-list-item-start-end-shape: var(--mat-list-container-shape);
-  --mat-list-group-start-start-shape: var(--mat-list-container-shape);
-  --mat-list-group-start-end-shape: var(--mat-list-container-shape);
-}
+  .mat-list > :deep(.mat-list-item:first-child),
+  .mat-list > :deep(.mat-list-group:first-child) {
+    --mat-list-item-start-start-shape: var(--mat-list-container-shape);
+    --mat-list-item-start-end-shape: var(--mat-list-container-shape);
+    --mat-list-group-start-start-shape: var(--mat-list-container-shape);
+    --mat-list-group-start-end-shape: var(--mat-list-container-shape);
+  }
 
-.mat-list > :deep(.mat-list-item:last-child),
-.mat-list > :deep(.mat-list-group:last-child) {
-  --mat-list-item-end-start-shape: var(--mat-list-container-shape);
-  --mat-list-item-end-end-shape: var(--mat-list-container-shape);
-  --mat-list-group-end-start-shape: var(--mat-list-container-shape);
-  --mat-list-group-end-end-shape: var(--mat-list-container-shape);
+  .mat-list > :deep(.mat-list-item:last-child),
+  .mat-list > :deep(.mat-list-group:last-child) {
+    --mat-list-item-end-start-shape: var(--mat-list-container-shape);
+    --mat-list-item-end-end-shape: var(--mat-list-container-shape);
+    --mat-list-group-end-start-shape: var(--mat-list-container-shape);
+    --mat-list-group-end-end-shape: var(--mat-list-container-shape);
+  }
 }
-
 </style>

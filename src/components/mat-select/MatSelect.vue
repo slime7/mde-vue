@@ -453,73 +453,75 @@ function removeValue(value) {
 </template>
 
 <style scoped>
-.mat-select {
-  position: relative;
-  min-inline-size: 0;
-  inline-size: 100%;
-}
+@layer mde.components {
+  .mat-select {
+    position: relative;
+    min-inline-size: 0;
+    inline-size: 100%;
+  }
 
-.mat-select--use-cursor :deep(.mat-text-input:not(.mat-text-input--disabled) .mat-text-input__container) {
-  cursor: pointer;
-}
+  .mat-select--use-cursor :deep(.mat-text-input:not(.mat-text-input--disabled) .mat-text-input__container) {
+    cursor: pointer;
+  }
 
-.mat-select :deep(.mat-text-input--disabled .mat-text-input__container) {
-  cursor: default;
-}
+  .mat-select :deep(.mat-text-input--disabled .mat-text-input__container) {
+    cursor: default;
+  }
 
-.mat-select__trigger {
-  display: flex;
-  flex-grow: 1;
-  gap: 4px;
-  align-items: center;
-  min-inline-size: 0;
-  min-block-size: 24px;
-  padding: 0;
-  color: inherit;
-  font: inherit;
-  text-align: start;
-  background: transparent;
-  border: 0;
-  outline: 0;
-  cursor: default;
-}
+  .mat-select__trigger {
+    display: flex;
+    flex-grow: 1;
+    gap: 4px;
+    align-items: center;
+    min-inline-size: 0;
+    min-block-size: 24px;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    cursor: default;
+  }
 
-.mat-select--use-cursor .mat-select__trigger:not([aria-disabled='true']) {
-  cursor: pointer;
-}
+  .mat-select--use-cursor .mat-select__trigger:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
 
-.mat-select__trigger[aria-disabled='true'] { cursor: default; }
+  .mat-select__trigger[aria-disabled='true'] { cursor: default; }
 
-.mat-select__value,
-.mat-select__placeholder {
-  min-inline-size: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+  .mat-select__value,
+  .mat-select__placeholder {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-.mat-select__placeholder { color: var(--mat-sys-color-on-surface-variant); }
+  .mat-select__placeholder { color: var(--mat-sys-color-on-surface-variant); }
 
-.mat-select__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  min-inline-size: 0;
-  padding-block: 4px;
-}
+  .mat-select__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-inline-size: 0;
+    padding-block: 4px;
+  }
 
-.mat-select__spacer { flex-grow: 1; }
+  .mat-select__spacer { flex-grow: 1; }
 
-.mat-select__trigger > :last-child { flex-shrink: 0; }
+  .mat-select__trigger > :last-child { flex-shrink: 0; }
 
-.mat-select__native {
-  position: absolute;
-  inline-size: 1px;
-  block-size: 1px;
-  padding: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  border: 0;
-  clip-path: inset(50%);
+  .mat-select__native {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    padding: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    border: 0;
+    clip-path: inset(50%);
+  }
 }
 </style>

@@ -73,64 +73,66 @@ onBeforeUnmount(() => menu?.unregisterGroup());
 </template>
 
 <style scoped>
-.mat-menu-group {
-  display: block;
-  box-sizing: border-box;
-  min-inline-size: 100%;
-  padding: var(--mat-menu-container-padding);
-  color: var(--mat-menu-content-color);
-  background: var(--mat-menu-container-color);
-  border-radius: var(--mat-sys-shape-corner-small);
-}
-
-.mat-menu-group:first-child:not(:last-child) {
-  border-radius: var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)
-    var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small);
-}
-
-.mat-menu-group:last-child:not(:first-child) {
-  border-radius: var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small)
-    var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large);
-}
-
-.mat-menu-group:only-child {
-  border-radius: var(--mat-sys-shape-corner-large);
-}
-
-.mat-menu-group__label {
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  min-inline-size: 0;
-  min-block-size: var(--mat-menu-group-label-height);
-  padding-inline: 8px;
-  overflow-wrap: anywhere;
-  color: var(--mat-menu-supporting-color);
-}
-
-@supports (border-shape: inset(0 round 1px)) {
+@layer mde.components {
   .mat-menu-group {
-    border-shape: inset(0 round var(--mat-sys-shape-corner-small));
+    display: block;
+    box-sizing: border-box;
+    min-inline-size: 100%;
+    padding: var(--mat-menu-container-padding);
+    color: var(--mat-menu-content-color);
+    background: var(--mat-menu-container-color);
+    border-radius: var(--mat-sys-shape-corner-small);
   }
 
   .mat-menu-group:first-child:not(:last-child) {
-    border-shape: inset(
-      0 round
-      var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)
-      var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small)
-    );
+    border-radius: var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)
+      var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small);
   }
 
   .mat-menu-group:last-child:not(:first-child) {
-    border-shape: inset(
-      0 round
-      var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small)
-      var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)
-    );
+    border-radius: var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small)
+      var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large);
   }
 
   .mat-menu-group:only-child {
-    border-shape: inset(0 round var(--mat-sys-shape-corner-large));
+    border-radius: var(--mat-sys-shape-corner-large);
+  }
+
+  .mat-menu-group__label {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    min-block-size: var(--mat-menu-group-label-height);
+    padding-inline: 8px;
+    overflow-wrap: anywhere;
+    color: var(--mat-menu-supporting-color);
+  }
+
+  @supports (border-shape: inset(0 round 1px)) {
+    .mat-menu-group {
+      border-shape: inset(0 round var(--mat-sys-shape-corner-small));
+    }
+
+    .mat-menu-group:first-child:not(:last-child) {
+      border-shape: inset(
+        0 round
+        var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)
+        var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small)
+      );
+    }
+
+    .mat-menu-group:last-child:not(:first-child) {
+      border-shape: inset(
+        0 round
+        var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small)
+        var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)
+      );
+    }
+
+    .mat-menu-group:only-child {
+      border-shape: inset(0 round var(--mat-sys-shape-corner-large));
+    }
   }
 }
 </style>

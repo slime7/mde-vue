@@ -731,126 +731,127 @@ watch(
 </template>
 
 <style scoped>
-.mat-btn-group {
-  display: inline-flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  max-inline-size: 100%;
-}
+@layer mde.components {
+  .mat-btn-group {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    max-inline-size: 100%;
+  }
 
-.mat-btn-group--standard {
-  --mat-btn-group-size-animation-duration: var(--mat-sys-motion-duration-short3);
-  gap: var(--mat-btn-group-standard-between-space);
-}
+  .mat-btn-group--standard {
+    --mat-btn-group-size-animation-duration: var(--mat-sys-motion-duration-short3);
+    gap: var(--mat-btn-group-standard-between-space);
+  }
 
-.mat-btn-group--standard :deep(.mat-button-base) {
-  --mat-button-size-motion: 0s;
-}
+  .mat-btn-group--standard :deep(.mat-button-base) {
+    --mat-button-size-motion: 0s;
+  }
 
-.mat-btn-group--connected {
-  gap: var(--mat-btn-group-connected-between-space);
-}
+  .mat-btn-group--connected {
+    gap: var(--mat-btn-group-connected-between-space);
+  }
 
-.mat-btn-group--block {
-  display: flex;
-}
+  .mat-btn-group--block {
+    display: flex;
+  }
 
-.mat-btn-group--size-extra-small {
-  --mat-btn-group-standard-between-space: var(--mat-btn-group-standard-extra-small-between-space);
-  --mat-btn-group-connected-inner-corner-size: var(--mat-btn-group-connected-extra-small-inner-corner-size);
-  --mat-btn-group-connected-pressed-inner-corner-size: var(--mat-btn-group-connected-extra-small-pressed-inner-corner-size);
-  --mat-btn-group-connected-square-outer-corner-size: var(--mat-btn-group-connected-extra-small-square-outer-corner-size);
-}
+  .mat-btn-group--size-extra-small {
+    --mat-btn-group-standard-between-space: var(--mat-btn-group-standard-extra-small-between-space);
+    --mat-btn-group-connected-inner-corner-size: var(--mat-btn-group-connected-extra-small-inner-corner-size);
+    --mat-btn-group-connected-pressed-inner-corner-size: var(--mat-btn-group-connected-extra-small-pressed-inner-corner-size);
+    --mat-btn-group-connected-square-outer-corner-size: var(--mat-btn-group-connected-extra-small-square-outer-corner-size);
+  }
 
-.mat-btn-group--size-small {
-  --mat-btn-group-standard-between-space: var(--mat-btn-group-standard-small-between-space);
-  --mat-btn-group-connected-inner-corner-size: var(--mat-btn-group-connected-small-inner-corner-size);
-  --mat-btn-group-connected-pressed-inner-corner-size: var(--mat-btn-group-connected-small-pressed-inner-corner-size);
-  --mat-btn-group-connected-square-outer-corner-size: var(--mat-btn-group-connected-small-square-outer-corner-size);
-}
+  .mat-btn-group--size-small {
+    --mat-btn-group-standard-between-space: var(--mat-btn-group-standard-small-between-space);
+    --mat-btn-group-connected-inner-corner-size: var(--mat-btn-group-connected-small-inner-corner-size);
+    --mat-btn-group-connected-pressed-inner-corner-size: var(--mat-btn-group-connected-small-pressed-inner-corner-size);
+    --mat-btn-group-connected-square-outer-corner-size: var(--mat-btn-group-connected-small-square-outer-corner-size);
+  }
 
-.mat-btn-group--size-medium {
-  --mat-btn-group-standard-between-space: var(--mat-btn-group-standard-medium-between-space);
-  --mat-btn-group-connected-inner-corner-size: var(--mat-btn-group-connected-medium-inner-corner-size);
-  --mat-btn-group-connected-pressed-inner-corner-size: var(--mat-btn-group-connected-medium-pressed-inner-corner-size);
-  --mat-btn-group-connected-square-outer-corner-size: var(--mat-btn-group-connected-medium-square-outer-corner-size);
-}
+  .mat-btn-group--size-medium {
+    --mat-btn-group-standard-between-space: var(--mat-btn-group-standard-medium-between-space);
+    --mat-btn-group-connected-inner-corner-size: var(--mat-btn-group-connected-medium-inner-corner-size);
+    --mat-btn-group-connected-pressed-inner-corner-size: var(--mat-btn-group-connected-medium-pressed-inner-corner-size);
+    --mat-btn-group-connected-square-outer-corner-size: var(--mat-btn-group-connected-medium-square-outer-corner-size);
+  }
 
-.mat-btn-group--size-large {
-  --mat-btn-group-standard-between-space: var(--mat-btn-group-standard-large-between-space);
-  --mat-btn-group-connected-inner-corner-size: var(--mat-btn-group-connected-large-inner-corner-size);
-  --mat-btn-group-connected-pressed-inner-corner-size: var(--mat-btn-group-connected-large-pressed-inner-corner-size);
-  --mat-btn-group-connected-square-outer-corner-size: var(--mat-btn-group-connected-large-square-outer-corner-size);
-}
+  .mat-btn-group--size-large {
+    --mat-btn-group-standard-between-space: var(--mat-btn-group-standard-large-between-space);
+    --mat-btn-group-connected-inner-corner-size: var(--mat-btn-group-connected-large-inner-corner-size);
+    --mat-btn-group-connected-pressed-inner-corner-size: var(--mat-btn-group-connected-large-pressed-inner-corner-size);
+    --mat-btn-group-connected-square-outer-corner-size: var(--mat-btn-group-connected-large-square-outer-corner-size);
+  }
 
-.mat-btn-group--size-extra-large {
-  --mat-btn-group-standard-between-space: var(--mat-btn-group-standard-extra-large-between-space);
-  --mat-btn-group-connected-inner-corner-size: var(--mat-btn-group-connected-extra-large-inner-corner-size);
-  --mat-btn-group-connected-pressed-inner-corner-size: var(--mat-btn-group-connected-extra-large-pressed-inner-corner-size);
-  --mat-btn-group-connected-square-outer-corner-size: var(--mat-btn-group-connected-extra-large-square-outer-corner-size);
-}
+  .mat-btn-group--size-extra-large {
+    --mat-btn-group-standard-between-space: var(--mat-btn-group-standard-extra-large-between-space);
+    --mat-btn-group-connected-inner-corner-size: var(--mat-btn-group-connected-extra-large-inner-corner-size);
+    --mat-btn-group-connected-pressed-inner-corner-size: var(--mat-btn-group-connected-extra-large-pressed-inner-corner-size);
+    --mat-btn-group-connected-square-outer-corner-size: var(--mat-btn-group-connected-extra-large-square-outer-corner-size);
+  }
 
-.mat-btn-group--connected :deep(.mat-button-base) {
-  --mat-button-start-start-radius: var(--mat-btn-group-connected-inner-corner-size);
-  --mat-button-start-end-radius: var(--mat-btn-group-connected-inner-corner-size);
-  --mat-button-end-start-radius: var(--mat-btn-group-connected-inner-corner-size);
-  --mat-button-end-end-radius: var(--mat-btn-group-connected-inner-corner-size);
-  --mat-button-pressed-start-start-radius: var(--mat-btn-group-connected-pressed-inner-corner-size);
-  --mat-button-pressed-start-end-radius: var(--mat-btn-group-connected-pressed-inner-corner-size);
-  --mat-button-pressed-end-start-radius: var(--mat-btn-group-connected-pressed-inner-corner-size);
-  --mat-button-pressed-end-end-radius: var(--mat-btn-group-connected-pressed-inner-corner-size);
-  min-inline-size: var(--mat-sys-interaction-target-min-size);
-}
+  .mat-btn-group--connected :deep(.mat-button-base) {
+    --mat-button-start-start-radius: var(--mat-btn-group-connected-inner-corner-size);
+    --mat-button-start-end-radius: var(--mat-btn-group-connected-inner-corner-size);
+    --mat-button-end-start-radius: var(--mat-btn-group-connected-inner-corner-size);
+    --mat-button-end-end-radius: var(--mat-btn-group-connected-inner-corner-size);
+    --mat-button-pressed-start-start-radius: var(--mat-btn-group-connected-pressed-inner-corner-size);
+    --mat-button-pressed-start-end-radius: var(--mat-btn-group-connected-pressed-inner-corner-size);
+    --mat-button-pressed-end-start-radius: var(--mat-btn-group-connected-pressed-inner-corner-size);
+    --mat-button-pressed-end-end-radius: var(--mat-btn-group-connected-pressed-inner-corner-size);
+    min-inline-size: var(--mat-sys-interaction-target-min-size);
+  }
 
-.mat-btn-group--connected :deep(.mat-button-base:focus-visible) {
-  z-index: 1;
-}
+  .mat-btn-group--connected :deep(.mat-button-base:focus-visible) {
+    z-index: 1;
+  }
 
-.mat-btn-group--connected :deep(.mat-button-base:first-child) {
-  --mat-button-start-start-radius: var(--mat-btn-group-outer-corner-size);
-  --mat-button-end-start-radius: var(--mat-btn-group-outer-corner-size);
-  --mat-button-pressed-start-start-radius: var(--mat-btn-group-outer-corner-size);
-  --mat-button-pressed-end-start-radius: var(--mat-btn-group-outer-corner-size);
-}
+  .mat-btn-group--connected :deep(.mat-button-base:first-child) {
+    --mat-button-start-start-radius: var(--mat-btn-group-outer-corner-size);
+    --mat-button-end-start-radius: var(--mat-btn-group-outer-corner-size);
+    --mat-button-pressed-start-start-radius: var(--mat-btn-group-outer-corner-size);
+    --mat-button-pressed-end-start-radius: var(--mat-btn-group-outer-corner-size);
+  }
 
-.mat-btn-group--connected :deep(.mat-button-base:last-child) {
-  --mat-button-start-end-radius: var(--mat-btn-group-outer-corner-size);
-  --mat-button-end-end-radius: var(--mat-btn-group-outer-corner-size);
-  --mat-button-pressed-start-end-radius: var(--mat-btn-group-outer-corner-size);
-  --mat-button-pressed-end-end-radius: var(--mat-btn-group-outer-corner-size);
-}
+  .mat-btn-group--connected :deep(.mat-button-base:last-child) {
+    --mat-button-start-end-radius: var(--mat-btn-group-outer-corner-size);
+    --mat-button-end-end-radius: var(--mat-btn-group-outer-corner-size);
+    --mat-button-pressed-start-end-radius: var(--mat-btn-group-outer-corner-size);
+    --mat-button-pressed-end-end-radius: var(--mat-btn-group-outer-corner-size);
+  }
 
-.mat-btn-group--connected.mat-btn-group--shape-round :deep(.mat-button-base) {
-  --mat-btn-group-outer-corner-size: var(--mat-button-full-radius);
-  --mat-btn-group-connected-selected-inner-corner-size: var(--mat-button-full-radius);
-  --mat-btn-group-connected-selected-pressed-inner-corner-size: var(--mat-btn-group-connected-pressed-inner-corner-size);
-}
+  .mat-btn-group--connected.mat-btn-group--shape-round :deep(.mat-button-base) {
+    --mat-btn-group-outer-corner-size: var(--mat-button-full-radius);
+    --mat-btn-group-connected-selected-inner-corner-size: var(--mat-button-full-radius);
+    --mat-btn-group-connected-selected-pressed-inner-corner-size: var(--mat-btn-group-connected-pressed-inner-corner-size);
+  }
 
-.mat-btn-group--connected.mat-btn-group--shape-square :deep(.mat-button-base) {
-  --mat-btn-group-outer-corner-size: var(--mat-btn-group-connected-square-outer-corner-size);
-  --mat-btn-group-connected-selected-inner-corner-size: var(--mat-button-full-radius);
-  --mat-btn-group-connected-selected-pressed-inner-corner-size: var(--mat-btn-group-connected-pressed-inner-corner-size);
-}
+  .mat-btn-group--connected.mat-btn-group--shape-square :deep(.mat-button-base) {
+    --mat-btn-group-outer-corner-size: var(--mat-btn-group-connected-square-outer-corner-size);
+    --mat-btn-group-connected-selected-inner-corner-size: var(--mat-button-full-radius);
+    --mat-btn-group-connected-selected-pressed-inner-corner-size: var(--mat-btn-group-connected-pressed-inner-corner-size);
+  }
 
-.mat-btn-group--connected :deep(.mat-button-base.mat-btn--selected) {
-  --mat-button-start-start-radius: var(--mat-btn-group-connected-selected-inner-corner-size);
-  --mat-button-start-end-radius: var(--mat-btn-group-connected-selected-inner-corner-size);
-  --mat-button-end-start-radius: var(--mat-btn-group-connected-selected-inner-corner-size);
-  --mat-button-end-end-radius: var(--mat-btn-group-connected-selected-inner-corner-size);
-  --mat-button-pressed-start-start-radius: var(--mat-btn-group-connected-selected-pressed-inner-corner-size);
-  --mat-button-pressed-start-end-radius: var(--mat-btn-group-connected-selected-pressed-inner-corner-size);
-  --mat-button-pressed-end-start-radius: var(--mat-btn-group-connected-selected-pressed-inner-corner-size);
-  --mat-button-pressed-end-end-radius: var(--mat-btn-group-connected-selected-pressed-inner-corner-size);
-}
+  .mat-btn-group--connected :deep(.mat-button-base.mat-btn--selected) {
+    --mat-button-start-start-radius: var(--mat-btn-group-connected-selected-inner-corner-size);
+    --mat-button-start-end-radius: var(--mat-btn-group-connected-selected-inner-corner-size);
+    --mat-button-end-start-radius: var(--mat-btn-group-connected-selected-inner-corner-size);
+    --mat-button-end-end-radius: var(--mat-btn-group-connected-selected-inner-corner-size);
+    --mat-button-pressed-start-start-radius: var(--mat-btn-group-connected-selected-pressed-inner-corner-size);
+    --mat-button-pressed-start-end-radius: var(--mat-btn-group-connected-selected-pressed-inner-corner-size);
+    --mat-button-pressed-end-start-radius: var(--mat-btn-group-connected-selected-pressed-inner-corner-size);
+    --mat-button-pressed-end-end-radius: var(--mat-btn-group-connected-selected-pressed-inner-corner-size);
+  }
 
-.mat-btn-group--full-width {
-  display: flex;
-  inline-size: 100%;
-}
+  .mat-btn-group--full-width {
+    display: flex;
+    inline-size: 100%;
+  }
 
-.mat-btn-group--full-width :deep(.mat-button-base) {
-  flex: 1 1 0;
-  inline-size: auto;
+  .mat-btn-group--full-width :deep(.mat-button-base) {
+    flex: 1 1 0;
+    inline-size: auto;
+  }
 }
-
 </style>

@@ -108,46 +108,48 @@ const rootStyle = computed(() => ({
 </template>
 
 <style scoped>
-.mat-avatar {
-  --mat-avatar-icon-size: calc(var(--mat-avatar-size) * .6);
-  display: inline-flex;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  overflow: hidden;
-  border-radius: var(--mat-sys-shape-corner-full);
-  background: var(--mat-accent-color);
-  color: var(--mat-on-accent-color);
-  vertical-align: middle;
-  font-family: var(--mat-sys-typescale-label-large-font);
-  font-size: var(--mat-sys-typescale-label-large-size);
-  font-weight: var(--mat-sys-typescale-label-large-weight);
-  letter-spacing: var(--mat-sys-typescale-label-large-tracking);
-  line-height: var(--mat-sys-typescale-label-large-line-height);
-}
+@layer mde.components {
+  .mat-avatar {
+    --mat-avatar-icon-size: calc(var(--mat-avatar-size) * .6);
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    border-radius: var(--mat-sys-shape-corner-full);
+    background: var(--mat-accent-color);
+    color: var(--mat-on-accent-color);
+    vertical-align: middle;
+    font-family: var(--mat-sys-typescale-label-large-font);
+    font-size: var(--mat-sys-typescale-label-large-size);
+    font-weight: var(--mat-sys-typescale-label-large-weight);
+    letter-spacing: var(--mat-sys-typescale-label-large-tracking);
+    line-height: var(--mat-sys-typescale-label-large-line-height);
+  }
 
-.mat-avatar__image {
-  display: block;
-  box-sizing: border-box;
-  inline-size: 100%;
-  block-size: 100%;
-  object-fit: cover;
-}
+  .mat-avatar__image {
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
 
-.mat-avatar__icon {
-  flex: 0 0 auto;
-}
+  .mat-avatar__icon {
+    flex: 0 0 auto;
+  }
 
-.mat-avatar__content {
-  display: block;
-  box-sizing: border-box;
-  min-inline-size: 0;
-  max-inline-size: 100%;
-  padding-inline: 4px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  text-align: center;
+  .mat-avatar__content {
+    display: block;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    padding-inline: 4px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+  }
 }
 </style>

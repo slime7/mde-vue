@@ -230,102 +230,104 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.mat-menu-item-host {
-  display: contents;
-}
-
-.mat-menu-item {
-  --mat-action-state-color: currentcolor;
-  --mat-item-content-gap: 8px;
-  --mat-item-block-space: 0;
-  --mat-item-leading-space: 8px;
-  --mat-item-trailing-space: 8px;
-  --mat-item-icon-size: 20px;
-  --mat-item-label-color: inherit;
-  --mat-item-supporting-color: var(--mat-menu-supporting-color);
-  --mat-item-min-block-size: var(--mat-menu-item-height);
-  display: flex;
-  align-items: center;
-  min-block-size: var(--mat-menu-item-height);
-  inline-size: 100%;
-  min-inline-size: 0;
-  padding: 0;
-  color: var(--mat-menu-content-color);
-  text-align: start;
-  background: transparent;
-  border: 0;
-  border-radius: var(--mat-sys-shape-corner-extra-small);
-  transition: border-radius var(--mat-sys-motion-spring-fast-spatial), color var(--mat-sys-motion-spring-fast-effects), background-color var(--mat-sys-motion-spring-fast-effects);
-}
-
-.mat-menu-item--first:not(.mat-menu-item--submenu-open) {
-  border-radius: var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium)
-    var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small);
-}
-
-.mat-menu-item--last:not(.mat-menu-item--submenu-open) {
-  border-radius: var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
-    var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium);
-}
-
-.mat-menu-item--only:not(.mat-menu-item--submenu-open) {
-  border-radius: var(--mat-sys-shape-corner-medium);
-}
-
-.mat-menu-item--submenu-open {
-  color: var(--mat-menu-active-content-color);
-  background: var(--mat-menu-active-container-color);
-  border-radius: var(--mat-sys-shape-corner-medium);
-}
-
-.mat-menu-item__submenu-icon {
-  font-size: 20px;
-  transition: transform var(--mat-sys-motion-spring-fast-spatial);
-}
-
-.mat-menu-item--submenu-open .mat-menu-item__submenu-icon {
-  transform: translateX(2px);
-}
-
-.mat-menu-item:disabled {
-  color: var(--mat-menu-content-color);
-  opacity: var(--mat-sys-state-disabled-content-opacity);
-}
-
-@supports (border-shape: inset(0 round 1px)) {
-  .mat-menu-item {
-    border-shape: inset(0 round var(--mat-sys-shape-corner-extra-small));
+@layer mde.components {
+  .mat-menu-item-host {
+    display: contents;
   }
 
-  .mat-menu-item--submenu-open {
-    border-shape: inset(0 round var(--mat-sys-shape-corner-medium));
+  .mat-menu-item {
+    --mat-action-state-color: currentcolor;
+    --mat-item-content-gap: 8px;
+    --mat-item-block-space: 0;
+    --mat-item-leading-space: 8px;
+    --mat-item-trailing-space: 8px;
+    --mat-item-icon-size: 20px;
+    --mat-item-label-color: inherit;
+    --mat-item-supporting-color: var(--mat-menu-supporting-color);
+    --mat-item-min-block-size: var(--mat-menu-item-height);
+    display: flex;
+    align-items: center;
+    min-block-size: var(--mat-menu-item-height);
+    inline-size: 100%;
+    min-inline-size: 0;
+    padding: 0;
+    color: var(--mat-menu-content-color);
+    text-align: start;
+    background: transparent;
+    border: 0;
+    border-radius: var(--mat-sys-shape-corner-extra-small);
+    transition: border-radius var(--mat-sys-motion-spring-fast-spatial), color var(--mat-sys-motion-spring-fast-effects), background-color var(--mat-sys-motion-spring-fast-effects);
   }
 
   .mat-menu-item--first:not(.mat-menu-item--submenu-open) {
-    border-shape: inset(
-      0 round
-      var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium)
-      var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
-    );
+    border-radius: var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium)
+      var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small);
   }
 
   .mat-menu-item--last:not(.mat-menu-item--submenu-open) {
-    border-shape: inset(
-      0 round
-      var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
-      var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium)
-    );
+    border-radius: var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
+      var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium);
   }
 
   .mat-menu-item--only:not(.mat-menu-item--submenu-open) {
-    border-shape: inset(0 round var(--mat-sys-shape-corner-medium));
+    border-radius: var(--mat-sys-shape-corner-medium);
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .mat-menu-item,
+  .mat-menu-item--submenu-open {
+    color: var(--mat-menu-active-content-color);
+    background: var(--mat-menu-active-container-color);
+    border-radius: var(--mat-sys-shape-corner-medium);
+  }
+
   .mat-menu-item__submenu-icon {
-    transition-duration: 0s;
+    font-size: 20px;
+    transition: transform var(--mat-sys-motion-spring-fast-spatial);
+  }
+
+  .mat-menu-item--submenu-open .mat-menu-item__submenu-icon {
+    transform: translateX(2px);
+  }
+
+  .mat-menu-item:disabled {
+    color: var(--mat-menu-content-color);
+    opacity: var(--mat-sys-state-disabled-content-opacity);
+  }
+
+  @supports (border-shape: inset(0 round 1px)) {
+    .mat-menu-item {
+      border-shape: inset(0 round var(--mat-sys-shape-corner-extra-small));
+    }
+
+    .mat-menu-item--submenu-open {
+      border-shape: inset(0 round var(--mat-sys-shape-corner-medium));
+    }
+
+    .mat-menu-item--first:not(.mat-menu-item--submenu-open) {
+      border-shape: inset(
+        0 round
+        var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium)
+        var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
+      );
+    }
+
+    .mat-menu-item--last:not(.mat-menu-item--submenu-open) {
+      border-shape: inset(
+        0 round
+        var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
+        var(--mat-sys-shape-corner-medium) var(--mat-sys-shape-corner-medium)
+      );
+    }
+
+    .mat-menu-item--only:not(.mat-menu-item--submenu-open) {
+      border-shape: inset(0 round var(--mat-sys-shape-corner-medium));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-menu-item,
+    .mat-menu-item__submenu-icon {
+      transition-duration: 0s;
+    }
   }
 }
 </style>

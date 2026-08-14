@@ -9,8 +9,10 @@ defineOptions({ name: 'MatCardHeadline' });
 </template>
 
 <style scoped>
-.mat-card-headline {
-  overflow-wrap: anywhere;
-  color: inherit;
+@layer mde.components {
+  .mat-card-headline {
+    overflow-wrap: anywhere;
+    color: inherit;
+  }
 }
 </style>

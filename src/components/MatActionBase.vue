@@ -56,25 +56,27 @@ defineExpose({ root });
 </template>
 
 <style scoped>
-.mat-action-base {
-  --mat-action-state-color: currentcolor;
-  position: relative;
-  isolation: isolate;
-  box-sizing: border-box;
-  appearance: none;
-  cursor: default;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+@layer mde.components {
+  .mat-action-base {
+    --mat-action-state-color: currentcolor;
+    position: relative;
+    isolation: isolate;
+    box-sizing: border-box;
+    appearance: none;
+    cursor: default;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .mat-action-base--use-cursor:not(:disabled):not(.mat-action-base--disabled) { cursor: pointer; }
+
+  .mat-action-base--focus-ring:not(:disabled):not(.mat-action-base--disabled):focus-visible {
+    outline: var(--mat-sys-interaction-focus-ring-width, 3px) solid var(--mat-sys-color-secondary);
+    outline-offset: var(--mat-sys-interaction-focus-ring-offset, 2px);
+  }
+
+  .mat-action-base:disabled,
+  .mat-action-base--disabled { cursor: not-allowed; }
 }
-
-.mat-action-base--use-cursor:not(:disabled):not(.mat-action-base--disabled) { cursor: pointer; }
-
-.mat-action-base--focus-ring:not(:disabled):not(.mat-action-base--disabled):focus-visible {
-  outline: var(--mat-sys-interaction-focus-ring-width, 3px) solid var(--mat-sys-color-secondary);
-  outline-offset: var(--mat-sys-interaction-focus-ring-offset, 2px);
-}
-
-.mat-action-base:disabled,
-.mat-action-base--disabled { cursor: not-allowed; }
 </style>

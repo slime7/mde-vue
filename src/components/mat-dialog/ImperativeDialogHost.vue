@@ -118,7 +118,9 @@ function finish() {
 </template>
 
 <style scoped>
-.mat-dialog-prompt__content {
-  margin-block: 0 16px;
+@layer mde.components {
+  .mat-dialog-prompt__content {
+    margin-block: 0 16px;
+  }
 }
 </style>

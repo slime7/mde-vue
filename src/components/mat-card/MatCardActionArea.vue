@@ -52,22 +52,24 @@ const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
   </MatActionBase>
 </template>
 <style scoped>
-.mat-card-action-area {
-  --mat-action-state-color: var(--mat-card-content-color, var(--mat-sys-color-on-surface));
-  display: block;
-  inline-size: 100%;
-  padding: 0;
-  color: inherit;
-  text-align: inherit;
-  text-decoration: none;
-  background: transparent;
-  border: 0;
-}
+@layer mde.components {
+  .mat-card-action-area {
+    --mat-action-state-color: var(--mat-card-content-color, var(--mat-sys-color-on-surface));
+    display: block;
+    inline-size: 100%;
+    padding: 0;
+    color: inherit;
+    text-align: inherit;
+    text-decoration: none;
+    background: transparent;
+    border: 0;
+  }
 
-.mat-card-action-area__content {
-  position: relative;
-  z-index: 1;
-  display: block;
-  overflow-wrap: anywhere;
+  .mat-card-action-area__content {
+    position: relative;
+    z-index: 1;
+    display: block;
+    overflow-wrap: anywhere;
+  }
 }
 </style>

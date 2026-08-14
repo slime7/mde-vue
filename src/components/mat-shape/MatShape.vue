@@ -91,15 +91,17 @@ const rootStyle = computed(() => ({
 </template>
 
 <style scoped>
-.mat-shape {
-  display: inline-flex;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  overflow: hidden;
-  background: var(--mat-accent-color);
-  color: var(--mat-on-accent-color);
-  vertical-align: middle;
+@layer mde.components {
+  .mat-shape {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    background: var(--mat-accent-color);
+    color: var(--mat-on-accent-color);
+    vertical-align: middle;
+  }
 }
 </style>

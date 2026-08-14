@@ -215,24 +215,26 @@ provide(MAT_RADIO_GROUP_KEY, {
 </template>
 
 <style scoped>
-.mat-radio-group {
-  display: inline-flex;
-  flex-direction: column;
-  gap: var(--mat-radio-group-item-space);
-  align-items: flex-start;
-  max-inline-size: 100%;
-  min-inline-size: 0;
-  margin: 0;
-  padding: 0;
-  color: var(--mat-radio-label-text-color);
-  border: 0;
-}
+@layer mde.components {
+  .mat-radio-group {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--mat-radio-group-item-space);
+    align-items: flex-start;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    color: var(--mat-radio-label-text-color);
+    border: 0;
+  }
 
-.mat-radio-group__label {
-  max-inline-size: 100%;
-  margin-block-end: var(--mat-radio-group-label-space);
-  padding: 0;
-  overflow-wrap: anywhere;
-  color: var(--mat-radio-label-text-color);
+  .mat-radio-group__label {
+    max-inline-size: 100%;
+    margin-block-end: var(--mat-radio-group-label-space);
+    padding: 0;
+    overflow-wrap: anywhere;
+    color: var(--mat-radio-label-text-color);
+  }
 }
 </style>

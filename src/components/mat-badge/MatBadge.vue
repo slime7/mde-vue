@@ -148,124 +148,126 @@ const indicatorStyle = computed(() => ({
 </template>
 
 <style scoped>
-.mat-badge {
-  position: relative;
-  display: inline-flex;
-  flex: 0 0 auto;
-  vertical-align: middle;
-}
+@layer mde.components {
+  .mat-badge {
+    position: relative;
+    display: inline-flex;
+    flex: 0 0 auto;
+    vertical-align: middle;
+  }
 
-.mat-badge__indicator {
-  position: absolute;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  min-inline-size: 16px;
-  block-size: 16px;
-  padding: 4px;
-  color: var(--mat-on-accent-color);
-  font-family: var(--mat-sys-typescale-label-small-font);
-  font-size: var(--mat-sys-typescale-label-small-size);
-  font-weight: var(--mat-sys-typescale-label-small-weight);
-  letter-spacing: var(--mat-sys-typescale-label-small-tracking);
-  line-height: var(--mat-sys-typescale-label-small-line-height);
-  white-space: nowrap;
-  background: var(--mat-accent-color);
-  border-radius: var(--mat-sys-shape-corner-full);
-  pointer-events: none;
-}
+  .mat-badge__indicator {
+    position: absolute;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-inline-size: 16px;
+    block-size: 16px;
+    padding: 4px;
+    color: var(--mat-on-accent-color);
+    font-family: var(--mat-sys-typescale-label-small-font);
+    font-size: var(--mat-sys-typescale-label-small-size);
+    font-weight: var(--mat-sys-typescale-label-small-weight);
+    letter-spacing: var(--mat-sys-typescale-label-small-tracking);
+    line-height: var(--mat-sys-typescale-label-small-line-height);
+    white-space: nowrap;
+    background: var(--mat-accent-color);
+    border-radius: var(--mat-sys-shape-corner-full);
+    pointer-events: none;
+  }
 
-.mat-badge__indicator--dot {
-  min-inline-size: 6px;
-  inline-size: 6px;
-  block-size: 6px;
-  padding: 0;
-}
+  .mat-badge__indicator--dot {
+    min-inline-size: 6px;
+    inline-size: 6px;
+    block-size: 6px;
+    padding: 0;
+  }
 
-.mat-badge__indicator--inline {
-  position: static;
-  vertical-align: baseline;
-}
+  .mat-badge__indicator--inline {
+    position: static;
+    vertical-align: baseline;
+  }
 
-.mat-badge__indicator--top-start {
-  inset-block-start: calc(-2px + var(--mat-badge-offset-block));
-  inset-inline-end: calc(50% - var(--mat-badge-offset-inline));
-}
+  .mat-badge__indicator--top-start {
+    inset-block-start: calc(-2px + var(--mat-badge-offset-block));
+    inset-inline-end: calc(50% - var(--mat-badge-offset-inline));
+  }
 
-.mat-badge__indicator--top {
-  inset-block-start: calc(-2px + var(--mat-badge-offset-block));
-  inset-inline-start: calc(50% + var(--mat-badge-offset-inline));
-  translate: -50% 0;
-}
+  .mat-badge__indicator--top {
+    inset-block-start: calc(-2px + var(--mat-badge-offset-block));
+    inset-inline-start: calc(50% + var(--mat-badge-offset-inline));
+    translate: -50% 0;
+  }
 
-.mat-badge__indicator--top-end {
-  inset-block-start: calc(-2px + var(--mat-badge-offset-block));
-  inset-inline-start: calc(50% + var(--mat-badge-offset-inline));
-}
+  .mat-badge__indicator--top-end {
+    inset-block-start: calc(-2px + var(--mat-badge-offset-block));
+    inset-inline-start: calc(50% + var(--mat-badge-offset-inline));
+  }
 
-.mat-badge__indicator--end {
-  inset-block-start: calc(50% + var(--mat-badge-offset-block));
-  inset-inline-start: calc(50% + var(--mat-badge-offset-inline));
-  translate: 0 -50%;
-}
+  .mat-badge__indicator--end {
+    inset-block-start: calc(50% + var(--mat-badge-offset-block));
+    inset-inline-start: calc(50% + var(--mat-badge-offset-inline));
+    translate: 0 -50%;
+  }
 
-.mat-badge__indicator--bottom-end {
-  inset-block-end: calc(-2px - var(--mat-badge-offset-block));
-  inset-inline-start: calc(50% + var(--mat-badge-offset-inline));
-}
+  .mat-badge__indicator--bottom-end {
+    inset-block-end: calc(-2px - var(--mat-badge-offset-block));
+    inset-inline-start: calc(50% + var(--mat-badge-offset-inline));
+  }
 
-.mat-badge__indicator--bottom {
-  inset-block-end: calc(-2px - var(--mat-badge-offset-block));
-  inset-inline-start: calc(50% + var(--mat-badge-offset-inline));
-  translate: -50% 0;
-}
+  .mat-badge__indicator--bottom {
+    inset-block-end: calc(-2px - var(--mat-badge-offset-block));
+    inset-inline-start: calc(50% + var(--mat-badge-offset-inline));
+    translate: -50% 0;
+  }
 
-.mat-badge__indicator--bottom-start {
-  inset-block-end: calc(-2px - var(--mat-badge-offset-block));
-  inset-inline-end: calc(50% - var(--mat-badge-offset-inline));
-}
+  .mat-badge__indicator--bottom-start {
+    inset-block-end: calc(-2px - var(--mat-badge-offset-block));
+    inset-inline-end: calc(50% - var(--mat-badge-offset-inline));
+  }
 
-.mat-badge__indicator--start {
-  inset-block-start: calc(50% + var(--mat-badge-offset-block));
-  inset-inline-end: calc(50% - var(--mat-badge-offset-inline));
-  translate: 0 -50%;
-}
+  .mat-badge__indicator--start {
+    inset-block-start: calc(50% + var(--mat-badge-offset-block));
+    inset-inline-end: calc(50% - var(--mat-badge-offset-inline));
+    translate: 0 -50%;
+  }
 
-.mat-badge__indicator--dot.mat-badge__indicator--top-start {
-  inset-block-start: var(--mat-badge-offset-block);
-  inset-inline: var(--mat-badge-offset-inline) auto;
-}
+  .mat-badge__indicator--dot.mat-badge__indicator--top-start {
+    inset-block-start: var(--mat-badge-offset-block);
+    inset-inline: var(--mat-badge-offset-inline) auto;
+  }
 
-.mat-badge__indicator--dot.mat-badge__indicator--top {
-  inset-block-start: var(--mat-badge-offset-block);
-}
+  .mat-badge__indicator--dot.mat-badge__indicator--top {
+    inset-block-start: var(--mat-badge-offset-block);
+  }
 
-.mat-badge__indicator--dot.mat-badge__indicator--top-end {
-  inset-block-start: var(--mat-badge-offset-block);
-  inset-inline: auto calc(0px - var(--mat-badge-offset-inline));
-}
+  .mat-badge__indicator--dot.mat-badge__indicator--top-end {
+    inset-block-start: var(--mat-badge-offset-block);
+    inset-inline: auto calc(0px - var(--mat-badge-offset-inline));
+  }
 
-.mat-badge__indicator--dot.mat-badge__indicator--end {
-  inset-inline: auto calc(0px - var(--mat-badge-offset-inline));
-}
+  .mat-badge__indicator--dot.mat-badge__indicator--end {
+    inset-inline: auto calc(0px - var(--mat-badge-offset-inline));
+  }
 
-.mat-badge__indicator--dot.mat-badge__indicator--bottom-end {
-  inset-block: auto calc(0px - var(--mat-badge-offset-block));
-  inset-inline: auto calc(0px - var(--mat-badge-offset-inline));
-}
+  .mat-badge__indicator--dot.mat-badge__indicator--bottom-end {
+    inset-block: auto calc(0px - var(--mat-badge-offset-block));
+    inset-inline: auto calc(0px - var(--mat-badge-offset-inline));
+  }
 
-.mat-badge__indicator--dot.mat-badge__indicator--bottom {
-  inset-block: auto calc(0px - var(--mat-badge-offset-block));
-}
+  .mat-badge__indicator--dot.mat-badge__indicator--bottom {
+    inset-block: auto calc(0px - var(--mat-badge-offset-block));
+  }
 
-.mat-badge__indicator--dot.mat-badge__indicator--bottom-start {
-  inset-block: auto calc(0px - var(--mat-badge-offset-block));
-  inset-inline: var(--mat-badge-offset-inline) auto;
-}
+  .mat-badge__indicator--dot.mat-badge__indicator--bottom-start {
+    inset-block: auto calc(0px - var(--mat-badge-offset-block));
+    inset-inline: var(--mat-badge-offset-inline) auto;
+  }
 
-.mat-badge__indicator--dot.mat-badge__indicator--start {
-  inset-inline: var(--mat-badge-offset-inline) auto;
+  .mat-badge__indicator--dot.mat-badge__indicator--start {
+    inset-inline: var(--mat-badge-offset-inline) auto;
+  }
 }
 </style>
