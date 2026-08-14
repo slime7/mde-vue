@@ -60,6 +60,7 @@ llms: false
 - Intersection：`docs/site/directives/intersection.md`
 - State layer：`docs/site/directives/state-layer.md`
 - Spacer：`docs/site/components/spacer.md`
+- Table wrapper：`docs/site/components/table-wrapper.md`
 - Shape：`docs/site/components/shape.md`
 - 支持范围：`docs/site/guide/limitations.md`
 

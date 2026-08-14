@@ -61,6 +61,22 @@ export default defineConfig({
     ['link', { rel: 'stylesheet', href: notoSansScUrl }],
     ['link', { rel: 'stylesheet', href: materialSymbolsUrl }],
   ],
+  markdown: {
+    config(md) {
+      const tableOpen = md.renderer.rules.table_open;
+
+      // VitePress 的 markdown 配置钩子要求就地修改渲染规则。
+      /* eslint-disable no-param-reassign */
+      md.renderer.rules.table_open = (tokens, index, options, env, self) => (
+        `<div class="table-wrapper">\n${tableOpen(tokens, index, options, env, self)}`
+      );
+
+      md.renderer.rules.table_close = (tokens, index, options, env, self) => (
+        `${self.renderToken(tokens, index, options)}</div>\n`
+      );
+      /* eslint-enable no-param-reassign */
+    },
+  },
   themeConfig: {
     nav: [
       { text: '指南', link: '/guide/overview' },
@@ -145,6 +161,7 @@ export default defineConfig({
               { text: 'Shape 形状', link: '/components/shape' },
               { text: 'Text 文字', link: '/components/text' },
               { text: 'List 列表', link: '/components/list' },
+              { text: 'Table wrapper 表格容器', link: '/components/table-wrapper' },
             ],
           },
         ],

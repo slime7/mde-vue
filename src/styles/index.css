@@ -380,6 +380,7 @@
     --mat-divider-color: var(--mat-sys-color-outline-variant);
     --mat-divider-thickness: 1px;
     --mat-divider-inset-space: 16px;
+    --mat-table-wrapper-container-shape: 24px;
 
     /* Navigation rail and navigation bar component tokens */
     --mat-navigation-rail-collapsed-width: 96px;

@@ -53,6 +53,36 @@ html[data-mat-theme='dark'] {
   inline-size: 100%;
 }
 
+/* 文档表格由 table-wrapper 组件样式控制，恢复 VitePress 默认表格样式影响的值。 */
+.vp-doc .table-wrapper {
+  margin-block: 20px;
+}
+
+.vp-doc .table-wrapper table {
+  display: revert;
+  margin: 0;
+  overflow-x: visible;
+}
+
+.vp-doc .table-wrapper tr {
+  background-color: transparent;
+  border-top: 0;
+}
+
+.vp-doc .table-wrapper th,
+.vp-doc .table-wrapper td {
+  font-size: inherit;
+}
+
+.vp-doc .table-wrapper th {
+  text-align: revert;
+}
+
+/* 预览容器内的表格容器不额外增加外边距。 */
+.vp-doc .docs-preview .table-wrapper {
+  margin-block: 0;
+}
+
 .vp-doc .custom-block.details {
   margin-block: 16px 12px;
 }

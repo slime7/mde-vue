@@ -2425,6 +2425,12 @@ export interface MatSpacerProps {
 export type MatSpacerComponent = DefineComponent<MatSpacerProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatSpacer: MatSpacerComponent;
 
+export interface MatTableWrapperProps {
+}
+
+export type MatTableWrapperComponent = DefineComponent<MatTableWrapperProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatTableWrapper: MatTableWrapperComponent;
+
 export interface MatScrollAreaProps {
   /**
   * 滚动方向；`y`、`v` 是 `vertical` 的别名，`x`、`h` 是 `horizontal` 的别名。
@@ -3269,6 +3275,8 @@ declare module 'vue' {
     'mat-container': typeof MatContainer;
     MatSpacer: typeof MatSpacer;
     'mat-spacer': typeof MatSpacer;
+    MatTableWrapper: typeof MatTableWrapper;
+    'mat-table-wrapper': typeof MatTableWrapper;
     MatScrollArea: typeof MatScrollArea;
     'mat-scroll-area': typeof MatScrollArea;
     MatLoader: typeof MatLoader;
