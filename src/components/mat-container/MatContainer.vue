@@ -39,6 +39,7 @@ const propsWithDefaults = useMatProps('container', props);
     box-sizing: border-box;
     inline-size: 100%;
     padding-inline: 16px;
+    padding-inline-end: calc(16px - var(--mat-scroll-area-scrollbar-width, 0px));
   }
 
   .mat-container__content {
@@ -56,6 +57,7 @@ const propsWithDefaults = useMatProps('container', props);
   @media (width >= 600px) {
     .mat-container {
       padding-inline: 24px;
+      padding-inline-end: calc(24px - var(--mat-scroll-area-scrollbar-width, 0px));
     }
   }
 }

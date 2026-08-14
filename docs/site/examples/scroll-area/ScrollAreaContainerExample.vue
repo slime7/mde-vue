@@ -30,16 +30,6 @@
   block-size: 100%;
 }
 
-.scroll-area-container-example .mat-container {
-  padding-inline-end: calc(16px - var(--mat-scroll-area-scrollbar-width));
-}
-
-@media (width >= 600px) {
-  .scroll-area-container-example .mat-container {
-    padding-inline-end: calc(24px - var(--mat-scroll-area-scrollbar-width));
-  }
-}
-
 .scroll-area-container-example__row {
   padding: 16px;
   border-block-end: 1px solid var(--mat-sys-color-outline-variant);

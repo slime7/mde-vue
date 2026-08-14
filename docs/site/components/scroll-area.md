@@ -83,7 +83,7 @@ order: 114
 
 ### 搭配 Container
 
-`<mat-scroll-area>` 常作为页面正文的滚动容器，推荐把 `<mat-container>` 直接放在默认 Slot 内：容器提供两侧响应式内边距与最大宽度，正文在滚动区域内左右各保留 16px（`>=600px` 时为 24px）。纵向滚动条占据右侧空间会让正文的视觉中心偏左，把容器的 `padding-inline-end` 从原值改为减去滚动条宽度后的值即可保持完全居中。容器位于滚动区域内，会直接继承组件根元素上的 `--mat-scroll-area-scrollbar-width`（`thin` 8px、`default` 16px、`hidden` 0），无需手动重复设置；示例使用 `calc(16px - var(--mat-scroll-area-scrollbar-width))` 与 `calc(24px - var(--mat-scroll-area-scrollbar-width))`，切换 `bar-width` 后自动跟随。
+`<mat-scroll-area>` 常作为页面正文的滚动容器，推荐把 `<mat-container>` 直接放在默认 Slot 内：容器提供两侧响应式内边距与最大宽度，正文在滚动区域内左右各保留 16px（`>=600px` 时为 24px）。容器会继承组件根元素上的 `--mat-scroll-area-scrollbar-width`（`thin` 8px、`default` 16px、`hidden` 0），并自动把右侧内边距减去滚动条宽度，正文在滚动条占据右侧空间后仍保持视觉居中；切换 `bar-width` 后补偿自动跟随，无需使用方手动覆盖。
 
 :::: details 查看示例代码
 ::: code-group

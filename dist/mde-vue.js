@@ -8564,7 +8564,7 @@ var fo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		let t = $("container", e);
 		return (e, n) => (w(), o("div", h(e.$attrs, { class: ["mat-container", { "mat-container--fluid": I(t).fluid }] }), [s("div", Oo, [j(e.$slots, "default", {}, void 0, !0)])], 16));
 	}
-}), [["__scopeId", "data-v-67e71ce1"]]), Ao = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-f2274c15"]]), Ao = /*@__PURE__*/ Object.assign({
 	name: "MatTableWrapper",
 	inheritAttrs: !1
 }, {
