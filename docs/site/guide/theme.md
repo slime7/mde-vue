@@ -43,20 +43,6 @@ createApp(App)
 
 省略 `theme` 或直接调用 `createMatUi()` 会使用全部默认值。初始化会立即把颜色令牌写入 `document.documentElement`，因此整个应用都能继承主题。
 
-## CSS 级联层
-
-`mde-vue/styles.css` 按固定顺序公开三个稳定层名：
-
-```css
-@layer mde.tokens, mde.components, mde.utilities;
-```
-
-- `mde.tokens`：公共 `--mat-ref-*`、`--mat-sys-*` 令牌和默认亮暗主题值。
-- `mde.components`：全部组件和公共指令样式。
-- `mde.utilities`：`.mat-sys-typescale-*` 公共排版工具类。
-
-应用中未放入任何级联层的普通 CSS 默认优先于库样式，因此可以使用普通选择器覆盖组件外观。需要统一管理应用自身层序时，也可以在导入前声明包含上述稳定层名的完整顺序。独立入口 `mde-vue/tailwind.css` 只提供 Tailwind CSS v4 的 `@theme inline` 映射，不进入 `mde` 层。
-
 ## 配置项
 
 | 配置 | 类型或可用值 | 默认值 | 说明 |
@@ -119,42 +105,4 @@ app.use(matUi).mount('#app');
 matUi.theme.dispose();
 ```
 
-## CSS 令牌
-
-公共令牌分为两层：`--mat-ref-*` 保存字体族和字重参考值，`--mat-sys-*` 保存跨组件系统语义。组件样式中出现的 `--mat-<component>-*` 等变量属于内部实现，不是公共定制入口；旧的扁平命名空间不再提供兼容别名。
-
-运行时只向 `target` 写入 53 个 `--mat-sys-color-*`。基础样式同时提供默认亮暗回退值以及下列静态系统令牌。应用样式可以直接使用，例如 `color: var(--mat-sys-color-on-surface)`。
-
-### 颜色
-
-- Primary：`primary`、`primary-dim`、`on-primary`、`primary-container`、`on-primary-container`、`inverse-primary`、`primary-fixed`、`primary-fixed-dim`、`on-primary-fixed`、`on-primary-fixed-variant`。
-- Secondary：`secondary`、`secondary-dim`、`on-secondary`、`secondary-container`、`on-secondary-container`、`secondary-fixed`、`secondary-fixed-dim`、`on-secondary-fixed`、`on-secondary-fixed-variant`。
-- Tertiary：`tertiary`、`tertiary-dim`、`on-tertiary`、`tertiary-container`、`on-tertiary-container`、`tertiary-fixed`、`tertiary-fixed-dim`、`on-tertiary-fixed`、`on-tertiary-fixed-variant`。
-- Error：`error`、`error-dim`、`on-error`、`error-container`、`on-error-container`。
-- Surface：`background`、`on-background`、`surface`、`surface-dim`、`surface-bright`、`surface-container-lowest`、`surface-container-low`、`surface-container`、`surface-container-high`、`surface-container-highest`、`on-surface`、`surface-variant`、`on-surface-variant`。
-- 边界与反色：`outline`、`outline-variant`、`inverse-surface`、`inverse-on-surface`。
-- 辅助角色：`shadow`、`scrim`、`surface-tint`。
-
-以上名称统一加 `--mat-sys-color-` 前缀。
-
-### 字体与排版
-
-参考文字字体为 `--mat-ref-typeface-brand`、`--mat-ref-typeface-plain`，默认均为 `system-ui, sans-serif`；图标字体参考值 `--mat-ref-typeface-icon` 默认为 `'Material Symbols Outlined'`。`MatIcon` 实际使用的字体由 `createMatUi({ iconClass })` 对应的 CSS class 决定。字重为 `--mat-ref-typeface-weight-regular`、`medium`、`bold`。
-
-系统排版包含 `display`、`headline`、`title`、`body`、`label` 五组，每组都有 `large`、`medium`、`small`，并分别公开 `font`、`weight`、`size`、`line-height`、`tracking` 五个轴。例如 `--mat-sys-typescale-title-medium-size`。强调样式使用 `--mat-sys-typescale-emphasized-<style>-<axis>`，共提供相同的 15 套样式。
-
-基础样式同时提供 30 个不设置字体族的公共 class。baseline 使用 `.mat-sys-typescale-<type>-<size>`，emphasized 使用 `.mat-sys-typescale-emphasized-<type>-<size>`；它们与上述令牌一一对应。需要动态根元素或通过属性选择样式时，可使用 [`MatText`](/components/text)。
-
-### 形状、海拔、动效和状态
-
-- 形状：`--mat-sys-shape-corner-none`、`extra-small`、`small`、`medium`、`large`、`large-increased`、`extra-large`、`extra-large-increased`、`extra-extra-large`、`full`，值依次为 `0 / 4 / 8 / 12 / 16 / 20 / 28 / 32 / 48 / 9999px`。
-- 海拔：`--mat-sys-elevation-level0` 至 `level5`，值可直接用于 `box-shadow`；组件优先通过 surface container 色表达层级。
-- 时长：`--mat-sys-motion-duration-short1..4`、`medium1..4`、`long1..4`、`extra-long1..4`，范围为 `50ms` 至 `1000ms`。
-- 缓动：`--mat-sys-motion-easing-emphasized`、`emphasized-decelerate`、`emphasized-accelerate`、`standard`、`standard-decelerate`、`standard-accelerate`。
-- Expressive 复合动效：`--mat-sys-motion-spring-fast-spatial`、`default-spatial`、`slow-spatial` 用于位置、尺寸、旋转和形状，时长分别为 `350ms / 500ms / 650ms`；`--mat-sys-motion-spring-fast-effects`、`default-effects`、`slow-effects` 用于颜色与透明度，时长分别为 `150ms / 200ms / 300ms`。这些令牌已包含时长与 `cubic-bezier()`，可直接写在 `transition` 或 `animation` 的属性名之后。
-- 状态层：`--mat-sys-state-hover-state-layer-opacity` 为 `0.08`，focus 与 pressed 为 `0.12`，dragged 为 `0.16`；disabled container 与 content 分别为 `0.10` 和 `0.38`。
-- 交互：`--mat-sys-interaction-target-min-size` 为 `48px`，焦点环使用 `--mat-sys-interaction-focus-ring-width` 和 `--mat-sys-interaction-focus-ring-offset`。
-
-实现组件时不能只根据色值挑选令牌。容器与内容的配对、强调层级、表面层级和边界选择见[组件配色](/guide/component-color)。
-
-空间动效允许轻微越过终点，effects 动效不会回弹。大多数小型控件使用 fast，部分覆盖屏幕的面板使用 default，完整页面变化才使用 slow。旧时长和缓动令牌继续保留；新增动效优先使用上述复合令牌。参数依据 [Material 3 Motion physics system](https://m3.material.io/styles/motion/overview/how-it-works) 的 [Web 转换表](https://m3.material.io/styles/motion/overview/specs)。
+主题使用的公共 CSS 令牌、级联层契约和 Tailwind CSS v4 接入方式统一见[样式](/guide/styles)。

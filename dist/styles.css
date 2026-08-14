@@ -1,4 +1,5 @@
 @layer mde.tokens, mde.components, mde.utilities;
+@layer mde-final;
 
 @layer mde.tokens {
   :root {
@@ -750,44 +751,6 @@
     --mat-split-btn-outlined-outline-color: var(--mat-btn-outlined-outline-color);
   }
 
-  [data-mat-state-layer-host] {
-    isolation: isolate;
-  }
-
-  .mat-state-layer {
-    position: absolute;
-    z-index: 0;
-    position-area: center;
-    inset: 0;
-    overflow: hidden;
-    border-radius: inherit;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--mat-sys-motion-spring-fast-effects);
-  }
-
-  [data-mat-state-layer-host]:not(:disabled):not([aria-disabled='true']):focus-visible > .mat-state-layer {
-    opacity: var(--mat-sys-state-focus-state-layer-opacity);
-  }
-
-  @media (hover: hover) {
-    [data-mat-state-layer-host]:not(:disabled):not([aria-disabled='true']):hover > .mat-state-layer {
-      opacity: var(--mat-sys-state-hover-state-layer-opacity);
-    }
-  }
-
-  [data-mat-state-layer-host]:not(:disabled):not([aria-disabled='true']):is(:active, [data-mat-state-layer-pressed]) > .mat-state-layer {
-    opacity: var(--mat-sys-state-pressed-state-layer-opacity);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .mat-state-layer {
-      transition-duration: 0s;
-    }
-  }
-
-  /* Public type scale utilities */
-
   @media (prefers-color-scheme: dark) {
     :root:not([data-mat-theme]) {
       color-scheme: dark;
@@ -845,6 +808,44 @@
       --mat-sys-color-shadow: #000;
       --mat-sys-color-scrim: #000;
       --mat-sys-color-surface-tint: #accaea;
+    }
+  }
+}
+
+@layer mde.components {
+  [data-mat-state-layer-host] {
+    isolation: isolate;
+  }
+
+  .mat-state-layer {
+    position: absolute;
+    z-index: 0;
+    position-area: center;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--mat-sys-motion-spring-fast-effects);
+  }
+
+  [data-mat-state-layer-host]:not(:disabled):not([aria-disabled='true']):focus-visible > .mat-state-layer {
+    opacity: var(--mat-sys-state-focus-state-layer-opacity);
+  }
+
+  @media (hover: hover) {
+    [data-mat-state-layer-host]:not(:disabled):not([aria-disabled='true']):hover > .mat-state-layer {
+      opacity: var(--mat-sys-state-hover-state-layer-opacity);
+    }
+  }
+
+  [data-mat-state-layer-host]:not(:disabled):not([aria-disabled='true']):is(:active, [data-mat-state-layer-pressed]) > .mat-state-layer {
+    opacity: var(--mat-sys-state-pressed-state-layer-opacity);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-state-layer {
+      transition-duration: 0s;
     }
   }
 }
@@ -1058,6 +1059,16 @@
     font-weight: var(--mat-sys-typescale-emphasized-label-small-weight);
     line-height: var(--mat-sys-typescale-emphasized-label-small-line-height);
     letter-spacing: var(--mat-sys-typescale-emphasized-label-small-tracking);
+  }
+}
+
+@layer mde-final {
+  [data-mat-state-layer-host] {
+    isolation: isolate;
+  }
+
+  .mat-state-layer {
+    pointer-events: none;
   }
 }
 

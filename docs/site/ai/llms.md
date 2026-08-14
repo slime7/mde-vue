@@ -40,7 +40,7 @@ llms: false
 - 安装：`docs/site/guide/installation.md`
 - 主题：`docs/site/guide/theme.md`
 - 组件配色：`docs/site/guide/component-color.md`
-- Tailwind CSS：`docs/site/guide/tailwind.md`
+- 样式：`docs/site/guide/styles.md`
 - App root：`docs/site/components/app-root.md`
 - App bar：`docs/site/components/app-bar.md`
 - Search：`docs/site/components/search.md`

@@ -11,7 +11,7 @@
 - 运行时只面向 Vue 3 客户端应用和最新浏览器。
 - 组件渲染、主题计算、CSS 令牌和文档生成保持边界清晰。
 - 组件默认读取语义令牌；显式十六进制 `color` 通过共享配色模块生成局部 Material 配色，不在组件内重复计算规则。
-- 原生 CSS 令牌是运行时权威值；`styles.css` 通过稳定的 `mde.tokens`、`mde.components`、`mde.utilities` 级联层依次组织令牌、组件和公共工具类，未分层的应用样式自然优先；Tailwind 适配层只提供独立的静态名称映射。
+- 原生 CSS 令牌是运行时权威值；`styles.css` 在父层 `mde` 内通过稳定的 `mde.tokens`、`mde.components`、`mde.utilities` 依次组织令牌、组件和公共工具类，并以顶层 `mde-final` 保护少量安全不变量；未分层的应用样式自然优先，Tailwind 适配层只提供独立的静态名称映射。
 - Markdown、其直接引用的 Vue 示例文件与 `src/` 公共入口是使用文档和实时预览的权威来源；AI 文本是生成产物，`dist/` 另由分发检查验证。
 - `src/` 是维护权威，`dist/` 是由构建生成并随同源码提交的分发边界，不接受手工修改。
 
@@ -153,7 +153,7 @@ flowchart LR
 
 ## 构建与验证
 
-`pnpm build` 先生成完整根入口类型声明，再以 Vue 和 Material Color Utilities 为外部依赖编译单一 `dist/mde-vue.js`，将基础令牌与组件样式合并为 `dist/styles.css`。该样式入口固定声明 `mde.tokens`、`mde.components`、`mde.utilities` 层序；SFC 源码样式直接归入 `mde.components`，使开发预览与分发产物保持相同的层叠行为。构建另复制独立且不进入 `mde` 层的 `src/styles/tailwind.css` 至 `dist/tailwind.css`，并复制 `dist/index.d.ts`。构建后 `dist/` 必须恰好包含这四个文件。`dist/` 随源码提交，公开入口测试从包自身 `exports` 加载产物并检查文件集合。VitePress 只构建 `docs/site/`，并在其 Vite 配置中把公共导入别名解析到 `src/`；文档、测试和静态检查在 Node.js 24 环境中运行。
+`pnpm build` 先生成完整根入口类型声明，再以 Vue 和 Material Color Utilities 为外部依赖编译单一 `dist/mde-vue.js`，将基础令牌与组件样式合并为 `dist/styles.css`。该样式入口固定声明 `mde.tokens`、`mde.components`、`mde.utilities` 与顶层 `mde-final`；SFC 源码样式直接归入 `mde.components`，最终层只保护不会阻断 Vue 运行时样式控制的少量不变量。构建另复制独立的 `src/styles/tailwind.css` 至 `dist/tailwind.css`，并复制 `dist/index.d.ts`。构建后 `dist/` 必须恰好包含这四个文件。`dist/` 随源码提交，公开入口测试从包自身 `exports` 加载产物并检查文件集合。VitePress 只构建 `docs/site/`，并在其 Vite 配置中把公共导入别名解析到 `src/`；文档站按 `tailwind-theme`、`tailwind-reset`、`mde`、`tailwind-utilities`、`mde-final` 的顺序模拟真实 Tailwind 使用方，文档、测试和静态检查在 Node.js 24 环境中运行。
 
 ## 安全与可靠性边界
 

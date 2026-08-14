@@ -159,7 +159,7 @@ pnpm docs:dev
 import 'mde-vue/styles.css';
 ```
 
-Tailwind CSS v4 项目需在应用 CSS 中导入 `mde-vue/tailwind.css`。消费方只会加载 `dist/` 中的 ESM 和 CSS，不会编译组件库的 Vue SFC。修改源码或公开入口后运行 `pnpm build`，确认 `dist/` 包含这四个文件且 ESM 不含 `.vue` 导入，并将产物与源码一同提交。
+Tailwind CSS v4 项目需按使用文档预先声明 `tailwind-theme`、`tailwind-reset`、`mde`、`tailwind-utilities`、`mde-final`，再分别导入 Tailwind 各部分、`mde-vue/styles.css` 与 `mde-vue/tailwind.css`。消费方只会加载 `dist/` 中的 ESM 和 CSS，不会编译组件库的 Vue SFC。修改源码或公开入口后运行 `pnpm build`，确认 `dist/` 包含这四个文件且 ESM 不含 `.vue` 导入，并将产物与源码一同提交。
 
 ## 常见问题
 

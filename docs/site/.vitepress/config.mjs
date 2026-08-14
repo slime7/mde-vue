@@ -56,7 +56,7 @@ export default defineConfig({
           { text: 'createMatUi', link: '/guide/create-mat-ui' },
           { text: '主题', link: '/guide/theme' },
           { text: '组件配色', link: '/guide/component-color' },
-          { text: 'Tailwind CSS', link: '/guide/tailwind' },
+          { text: '样式', link: '/guide/styles' },
           { text: '限制', link: '/guide/limitations' },
         ],
       },

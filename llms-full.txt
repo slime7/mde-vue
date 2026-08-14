@@ -50,7 +50,7 @@ pnpm add "mde-vue@git+ssh://git@github.com/slime7/mde-vue.git#<commit>"
 
 ## 全局注册：推荐用法
 
-大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，以 kebab-case `mat-*` 和 PascalCase `Mat*` 两种名称全局注册所有组件，并注册 `v-intersection` 与 `v-state-layer` 指令。基础样式必须显式导入。它依次声明 `mde.tokens`、`mde.components`、`mde.utilities` 三个稳定 CSS 级联层；应用中未分层的普通 CSS 默认优先，可以直接覆盖库样式。页面级应用建议用 `<mat-app-root>` 包住应用正文和设置 `app` 的布局组件。
+大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，以 kebab-case `mat-*` 和 PascalCase `Mat*` 两种名称全局注册所有组件，并注册 `v-intersection` 与 `v-state-layer` 指令。基础样式必须显式导入。它声明 `mde.tokens`、`mde.components`、`mde.utilities` 与顶层 `mde-final`；应用中未分层的普通 CSS 默认优先，可以直接覆盖库样式。Tailwind 项目的完整层序与导入方式见[样式](/guide/styles)。页面级应用建议用 `<mat-app-root>` 包住应用正文和设置 `app` 的布局组件。
 
 应用入口 `src/main.js`：
 
@@ -105,7 +105,7 @@ function handleIntersection(isIntersecting) {
 
 ## 局部注册
 
-只需要少量组件时，也从唯一的 `mde-vue` 根入口具名导入。基础样式仍然必须导入；它包含默认主题、全部组件样式和公共排版工具类。Tailwind CSS v4 语义映射由独立的 `mde-vue/tailwind.css` 提供，不进入 `mde` 级联层。支持 tree shaking 的构建工具可以移除未使用的具名导出。
+只需要少量组件时，也从唯一的 `mde-vue` 根入口具名导入。基础样式仍然必须导入；它包含默认主题、全部组件样式和公共排版工具类。Tailwind CSS v4 语义映射由独立的 `mde-vue/tailwind.css` 提供，不包含组件样式。支持 tree shaking 的构建工具可以移除未使用的具名导出。
 
 ```vue
 <script setup>
@@ -406,20 +406,6 @@ createApp(App)
 
 省略 `theme` 或直接调用 `createMatUi()` 会使用全部默认值。初始化会立即把颜色令牌写入 `document.documentElement`，因此整个应用都能继承主题。
 
-## CSS 级联层
-
-`mde-vue/styles.css` 按固定顺序公开三个稳定层名：
-
-```css
-@layer mde.tokens, mde.components, mde.utilities;
-```
-
-- `mde.tokens`：公共 `--mat-ref-*`、`--mat-sys-*` 令牌和默认亮暗主题值。
-- `mde.components`：全部组件和公共指令样式。
-- `mde.utilities`：`.mat-sys-typescale-*` 公共排版工具类。
-
-应用中未放入任何级联层的普通 CSS 默认优先于库样式，因此可以使用普通选择器覆盖组件外观。需要统一管理应用自身层序时，也可以在导入前声明包含上述稳定层名的完整顺序。独立入口 `mde-vue/tailwind.css` 只提供 Tailwind CSS v4 的 `@theme inline` 映射，不进入 `mde` 层。
-
 ## 配置项
 
 | 配置 | 类型或可用值 | 默认值 | 说明 |
@@ -482,45 +468,7 @@ app.use(matUi).mount('#app');
 matUi.theme.dispose();
 ```
 
-## CSS 令牌
-
-公共令牌分为两层：`--mat-ref-*` 保存字体族和字重参考值，`--mat-sys-*` 保存跨组件系统语义。组件样式中出现的 `--mat-<component>-*` 等变量属于内部实现，不是公共定制入口；旧的扁平命名空间不再提供兼容别名。
-
-运行时只向 `target` 写入 53 个 `--mat-sys-color-*`。基础样式同时提供默认亮暗回退值以及下列静态系统令牌。应用样式可以直接使用，例如 `color: var(--mat-sys-color-on-surface)`。
-
-### 颜色
-
-- Primary：`primary`、`primary-dim`、`on-primary`、`primary-container`、`on-primary-container`、`inverse-primary`、`primary-fixed`、`primary-fixed-dim`、`on-primary-fixed`、`on-primary-fixed-variant`。
-- Secondary：`secondary`、`secondary-dim`、`on-secondary`、`secondary-container`、`on-secondary-container`、`secondary-fixed`、`secondary-fixed-dim`、`on-secondary-fixed`、`on-secondary-fixed-variant`。
-- Tertiary：`tertiary`、`tertiary-dim`、`on-tertiary`、`tertiary-container`、`on-tertiary-container`、`tertiary-fixed`、`tertiary-fixed-dim`、`on-tertiary-fixed`、`on-tertiary-fixed-variant`。
-- Error：`error`、`error-dim`、`on-error`、`error-container`、`on-error-container`。
-- Surface：`background`、`on-background`、`surface`、`surface-dim`、`surface-bright`、`surface-container-lowest`、`surface-container-low`、`surface-container`、`surface-container-high`、`surface-container-highest`、`on-surface`、`surface-variant`、`on-surface-variant`。
-- 边界与反色：`outline`、`outline-variant`、`inverse-surface`、`inverse-on-surface`。
-- 辅助角色：`shadow`、`scrim`、`surface-tint`。
-
-以上名称统一加 `--mat-sys-color-` 前缀。
-
-### 字体与排版
-
-参考文字字体为 `--mat-ref-typeface-brand`、`--mat-ref-typeface-plain`，默认均为 `system-ui, sans-serif`；图标字体参考值 `--mat-ref-typeface-icon` 默认为 `'Material Symbols Outlined'`。`MatIcon` 实际使用的字体由 `createMatUi({ iconClass })` 对应的 CSS class 决定。字重为 `--mat-ref-typeface-weight-regular`、`medium`、`bold`。
-
-系统排版包含 `display`、`headline`、`title`、`body`、`label` 五组，每组都有 `large`、`medium`、`small`，并分别公开 `font`、`weight`、`size`、`line-height`、`tracking` 五个轴。例如 `--mat-sys-typescale-title-medium-size`。强调样式使用 `--mat-sys-typescale-emphasized-<style>-<axis>`，共提供相同的 15 套样式。
-
-基础样式同时提供 30 个不设置字体族的公共 class。baseline 使用 `.mat-sys-typescale-<type>-<size>`，emphasized 使用 `.mat-sys-typescale-emphasized-<type>-<size>`；它们与上述令牌一一对应。需要动态根元素或通过属性选择样式时，可使用 [`MatText`](/components/text)。
-
-### 形状、海拔、动效和状态
-
-- 形状：`--mat-sys-shape-corner-none`、`extra-small`、`small`、`medium`、`large`、`large-increased`、`extra-large`、`extra-large-increased`、`extra-extra-large`、`full`，值依次为 `0 / 4 / 8 / 12 / 16 / 20 / 28 / 32 / 48 / 9999px`。
-- 海拔：`--mat-sys-elevation-level0` 至 `level5`，值可直接用于 `box-shadow`；组件优先通过 surface container 色表达层级。
-- 时长：`--mat-sys-motion-duration-short1..4`、`medium1..4`、`long1..4`、`extra-long1..4`，范围为 `50ms` 至 `1000ms`。
-- 缓动：`--mat-sys-motion-easing-emphasized`、`emphasized-decelerate`、`emphasized-accelerate`、`standard`、`standard-decelerate`、`standard-accelerate`。
-- Expressive 复合动效：`--mat-sys-motion-spring-fast-spatial`、`default-spatial`、`slow-spatial` 用于位置、尺寸、旋转和形状，时长分别为 `350ms / 500ms / 650ms`；`--mat-sys-motion-spring-fast-effects`、`default-effects`、`slow-effects` 用于颜色与透明度，时长分别为 `150ms / 200ms / 300ms`。这些令牌已包含时长与 `cubic-bezier()`，可直接写在 `transition` 或 `animation` 的属性名之后。
-- 状态层：`--mat-sys-state-hover-state-layer-opacity` 为 `0.08`，focus 与 pressed 为 `0.12`，dragged 为 `0.16`；disabled container 与 content 分别为 `0.10` 和 `0.38`。
-- 交互：`--mat-sys-interaction-target-min-size` 为 `48px`，焦点环使用 `--mat-sys-interaction-focus-ring-width` 和 `--mat-sys-interaction-focus-ring-offset`。
-
-实现组件时不能只根据色值挑选令牌。容器与内容的配对、强调层级、表面层级和边界选择见[组件配色](/guide/component-color)。
-
-空间动效允许轻微越过终点，effects 动效不会回弹。大多数小型控件使用 fast，部分覆盖屏幕的面板使用 default，完整页面变化才使用 slow。旧时长和缓动令牌继续保留；新增动效优先使用上述复合令牌。参数依据 [Material 3 Motion physics system](https://m3.material.io/styles/motion/overview/how-it-works) 的 [Web 转换表](https://m3.material.io/styles/motion/overview/specs)。
+主题使用的公共 CSS 令牌、级联层契约和 Tailwind CSS v4 接入方式统一见[样式](/guide/styles)。
 
 # Icon 图标
 
@@ -2749,49 +2697,6 @@ import ShapeSizeExample from '../examples/shape/ShapeSizeExample.vue';
 import ShapeSlotExample from '../examples/shape/ShapeSlotExample.vue';
 </script>
 
-# Tailwind CSS
-
-Tailwind CSS v4 是可选依赖。先按照 Tailwind 文档为 Vite 项目配置 `tailwindcss` 与 `@tailwindcss/vite`，然后在应用 CSS 中导入 Tailwind 和 mde-vue 适配层：
-
-```css
-@import "tailwindcss";
-@import "mde-vue/tailwind.css";
-```
-
-应用 JavaScript 入口仍需导入基础主题样式：
-
-``js
-import 'mde-vue/styles.css';
-``
-
-适配层使用 `@theme inline`，将运行时令牌映射到带 `mat` 前缀的 Tailwind 主题变量。常见工具类包括：
-
-```vue
-<template>
-  <section class="bg-mat-primary text-mat-on-primary rounded-mat-large shadow-mat-level2 ease-mat-emphasized">
-    内容会跟随 mde-vue 主题变化
-  </section>
-</template>
-```
-
-颜色类来自 `--color-mat-*`，覆盖主题的全部 53 个颜色角色。字体族使用 `font-mat-brand`、`font-mat-icon` 和 `font-mat-plain`；15 套基线排版使用 `text-mat-<type>-<size>`，15 套强调排版使用 `text-mat-emphasized-<type>-<size>`，同时映射字号、行高、字距和字重。它们分别对应基础样式中的 `.mat-sys-typescale-<type>-<size>` 和 `.mat-sys-typescale-emphasized-<type>-<size>`。
-
-圆角类完整映射系统形状，例如 `rounded-mat-extra-small`、`rounded-mat-large-increased`、`rounded-mat-extra-extra-large` 和 `rounded-mat-full`。海拔使用 `shadow-mat-level0` 至 `shadow-mat-level5`。六个缓动类为：
-
-- `ease-mat-emphasized`、`ease-mat-emphasized-decelerate`、`ease-mat-emphasized-accelerate`；
-- `ease-mat-standard`、`ease-mat-standard-decelerate`、`ease-mat-standard-accelerate`。
-
-Tailwind v4 没有与本项目时长和状态令牌一一对应的主题变量命名空间，因此直接通过 CSS 属性使用，例如：
-
-```css
-.entering {
-  transition-duration: var(--mat-sys-motion-duration-medium4);
-  transition-timing-function: var(--mat-sys-motion-easing-emphasized-decelerate);
-}
-```
-
-组件内部变量不属于公共 CSS API，也不生成按组件、尺寸和变体展开的工具类。适配层不会覆盖 `primary`、`surface` 等常见无前缀变量。
-
 # Button 按钮
 
 ## 组件简介
@@ -3737,6 +3642,112 @@ import ButtonValueExample from '../examples/button/ButtonValueExample.vue';
 import ButtonVariantExample from '../examples/button/ButtonVariantExample.vue';
 import ButtonWidthExample from '../examples/button/ButtonWidthExample.vue';
 </script>
+
+# 样式
+
+`mde-vue/styles.css` 是所有项目都要导入的基础样式入口，包含公共令牌、组件样式、公共排版工具类和少量最终安全不变量。`mde-vue/tailwind.css` 是可选的 Tailwind CSS v4 `@theme inline` 映射，不包含组件样式。
+
+## CSS 级联层
+
+基础样式入口公开以下稳定层：
+
+```css
+@layer mde.tokens, mde.components, mde.utilities;
+@layer mde-final;
+```
+
+- `mde.tokens`：公共 `--mat-ref-*`、`--mat-sys-*` 令牌和默认亮暗主题值。
+- `mde.components`：全部组件与公共指令的普通结构和状态样式。
+- `mde.utilities`：`.mat-sys-typescale-*` 公共排版工具类。
+- `mde-final`：独立的顶层最终层，只保护不会阻断 Vue 运行时控制的少量结构或交互安全不变量。
+
+`mde-final` 不是 `mde.final`。它必须是顶层名称，使用方才能把外部工具类放在 `mde` 之后、把最终安全不变量放在外部工具类之后。层名和顺序属于公共 CSS 接口。
+
+未分层的普通应用 CSS 优先于所有普通命名层；元素的普通内联样式也保持优先。因此应用仍能有意覆盖组件。`mde-final` 不保护 `display`、`visibility`、`opacity`、运行时尺寸、位置或变换，避免阻断 Vue `v-show`、`:style`、Web Animations 和脚本更新。
+
+## Tailwind CSS v4
+
+Tailwind 项目不要使用单个 `@import 'tailwindcss'` 与组件库争夺未明确的层序。建议建立独立的 `src/styles/layers.css`，集中维护整个应用的顶层顺序和框架样式导入：
+
+```css
+/* src/styles/layers.css */
+@layer tailwind-theme, tailwind-reset, mde, tailwind-utilities, mde-final;
+
+@import 'tailwindcss/theme.css' layer(tailwind-theme);
+@import 'tailwindcss/preflight.css' layer(tailwind-reset);
+@import 'tailwindcss/utilities.css' layer(tailwind-utilities);
+```
+
+应用样式入口必须先导入该文件，再编写应用自身样式：
+
+```css
+/* src/styles/app.css */
+@import './layers.css';
+@import 'mde-vue/styles.css';
+@import 'mde-vue/tailwind.css';
+
+/* 应用样式从这里开始。 */
+```
+
+然后只需在 JavaScript 应用入口导入 `app.css`，不要再次单独导入 `mde-vue/styles.css`：
+
+```js
+import './styles/app.css';
+```
+
+这套顺序让 Tailwind Preflight 先完成全局标准化，再由 `mde.components` 恢复组件需要的原生元素样式；Tailwind utilities 随后可按使用方意图覆盖普通组件样式；`mde-final` 最后只维持少量安全不变量。组件库不承诺任意第三方层序都能得到相同结果，使用 Tailwind 时应预先声明上述完整顺序。
+
+适配入口把运行时令牌映射到带 `mat` 前缀的 Tailwind 主题变量：
+
+```vue
+<template>
+  <section class="bg-mat-primary text-mat-on-primary rounded-mat-large shadow-mat-level2 ease-mat-emphasized">
+    内容会跟随 mde-vue 主题变化
+  </section>
+</template>
+```
+
+颜色类来自 `--color-mat-*`，覆盖全部 53 个颜色角色。字体族使用 `font-mat-brand`、`font-mat-icon` 和 `font-mat-plain`；排版使用 `text-mat-<type>-<size>` 与 `text-mat-emphasized-<type>-<size>`。圆角使用 `rounded-mat-*`，海拔使用 `shadow-mat-level0` 至 `shadow-mat-level5`，缓动使用 `ease-mat-*`。
+
+时长和状态没有对应的 Tailwind v4 主题命名空间，可直接使用公共令牌：
+
+```css
+.entering {
+  transition-duration: var(--mat-sys-motion-duration-medium4);
+  transition-timing-function: var(--mat-sys-motion-easing-emphasized-decelerate);
+}
+```
+
+## 公共 CSS 令牌
+
+公共令牌分为 `--mat-ref-*` 参考值和 `--mat-sys-*` 系统语义值。组件内部的 `--mat-<component>-*` 变量不是公共定制入口，也不提供兼容承诺。
+
+### 颜色
+
+运行时主题向目标元素写入 53 个 `--mat-sys-color-*` 令牌，基础样式同时提供默认亮暗回退值。主要分组如下：
+
+- Primary、Secondary、Tertiary：base、dim、on-base、container、on-container、fixed 和 inverse 等角色。
+- Error：`error`、`error-dim`、`on-error`、`error-container`、`on-error-container`。
+- Surface：`background`、`surface`、各级 `surface-container-*`、对应内容色和 variant。
+- 边界与辅助：`outline`、`outline-variant`、inverse、shadow、scrim 与 surface tint。
+
+应用可直接引用，例如 `color: var(--mat-sys-color-on-surface)`。颜色角色的选择与配对见[组件配色](/guide/component-color)。
+
+### 字体与排版
+
+参考字体使用 `--mat-ref-typeface-brand`、`--mat-ref-typeface-plain`、`--mat-ref-typeface-icon`，字重使用 `--mat-ref-typeface-weight-*`。
+
+系统排版包含 `display`、`headline`、`title`、`body`、`label` 五组，每组都有 `large`、`medium`、`small` 以及 `font`、`weight`、`size`、`line-height`、`tracking` 五个轴。强调样式使用 `--mat-sys-typescale-emphasized-*`。基础样式还提供对应的 `.mat-sys-typescale-*` 公共 class；需要动态根元素时可使用 [`MatText`](/components/text)。
+
+### 形状、海拔、动效和状态
+
+- 形状：`--mat-sys-shape-corner-*`，从 `none` 到 `full`。
+- 海拔：`--mat-sys-elevation-level0` 至 `level5`。
+- 动效：`--mat-sys-motion-duration-*`、`--mat-sys-motion-easing-*` 和 `--mat-sys-motion-spring-*`。
+- 状态：`--mat-sys-state-*`，包括 hover、focus、pressed、dragged 与 disabled 透明度。
+- 交互：`--mat-sys-interaction-*`，包括最小目标尺寸和焦点环参数。
+
+空间动效使用 spatial 复合令牌，颜色与透明度使用 effects 复合令牌；减少动态效果时，组件直接呈现静态可理解状态。
 
 # FAB 浮动操作按钮
 

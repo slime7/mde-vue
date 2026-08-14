@@ -1,5 +1,6 @@
-@import 'tailwindcss';
+@import './layers.css';
 @import 'mde-vue/styles.css';
+@import 'mde-vue/tailwind.css';
 
 :root {
   --vp-c-brand-1: var(--mat-sys-color-primary, #00639c);

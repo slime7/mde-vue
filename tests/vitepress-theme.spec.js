@@ -21,11 +21,13 @@ describe('VitePress 文档自定义主题', () => {
 
   it('文档预览从源码入口加载组件与样式', () => {
     const config = readFileSync(resolve('docs/site/.vitepress/config.mjs'), 'utf8');
+    const theme = readThemeFile('index.js');
 
     expect(config).toContain('find: /^mde-vue$/');
     expect(config).toContain('new URL(\'../../../src/index.js\', import.meta.url)');
     expect(config).toContain('find: /^mde-vue\\/styles\\.css$/');
     expect(config).toContain('new URL(\'../../../src/styles/index.css\', import.meta.url)');
+    expect(theme.indexOf("import './custom.css';")).toBeLessThan(theme.indexOf("from 'mde-vue';"));
   });
 
   it('在主题插件初始化时同步 VitePress 的高亮配色模式', () => {

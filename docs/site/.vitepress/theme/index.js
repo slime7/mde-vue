@@ -1,7 +1,7 @@
+import './custom.css';
 import DefaultTheme from 'vitepress/theme-without-fonts';
 import { watch } from 'vue';
 import { createMatUi } from 'mde-vue';
-import './custom.css';
 import DocsPreview from './DocsPreview.vue';
 
 const DOCS_THEME_STORAGE_KEY = 'mde-vue.docs.theme';
