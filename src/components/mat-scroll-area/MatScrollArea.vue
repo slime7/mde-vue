@@ -132,6 +132,16 @@ const props = defineProps({
     default: false,
   },
   /**
+   * 关闭当前滚动方向两端的固定 28px 内边距，让内容贴住滚动方向边缘。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  noScrollPadding: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * 语义色、系统颜色角色或六位十六进制种子色 `#RRGGBB`；
    * 设置时作为容器背景填充，并同步内容文字颜色。
    *
@@ -584,6 +594,7 @@ defineExpose({
         `mat-scroll-area__viewport--bar-${propsWithDefaults.barWidth}`,
         {
           'mat-scroll-area__viewport--dragging': isDragging,
+          'mat-scroll-area__viewport--no-scroll-padding': propsWithDefaults.noScrollPadding,
           'mat-scroll-area__viewport--start-overflow': hasStartOverflow,
           'mat-scroll-area__viewport--end-overflow': hasEndOverflow,
         },
@@ -657,6 +668,14 @@ defineExpose({
     block-size: calc(100% + var(--mat-scroll-area-root-padding-top, 0) + var(--mat-scroll-area-root-padding-bottom, 0));
     mask-image: var(--mat-scroll-area-content-mask, linear-gradient(black, black)), linear-gradient(to bottom, transparent 0 calc(100% - var(--mat-scroll-area-scrollbar-width)), black calc(100% - var(--mat-scroll-area-scrollbar-width)) 100%);
     mask-composite: add;
+  }
+
+  .mat-scroll-area__viewport--no-scroll-padding.mat-scroll-area__viewport--vertical {
+    padding-block: 0;
+  }
+
+  .mat-scroll-area__viewport--no-scroll-padding.mat-scroll-area__viewport--horizontal {
+    padding-inline: 0;
   }
 
   .mat-scroll-area__viewport--dragging { user-select: none; }

@@ -2499,6 +2499,13 @@ export interface MatScrollAreaProps {
   */
   rounded?: boolean;
   /**
+  * 关闭当前滚动方向两端的固定 28px 内边距，让内容贴住滚动方向边缘。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  noScrollPadding?: boolean;
+  /**
   * 语义色、系统颜色角色或六位十六进制种子色 `#RRGGBB`；
   * 设置时作为容器背景填充，并同步内容文字颜色。
   *

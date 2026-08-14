@@ -4934,6 +4934,10 @@ var mi = ["data-dot"], hi = ["data-dot"], gi = /*#__PURE__*/ Q(/* @__PURE__ */ O
 			type: Boolean,
 			default: !1
 		},
+		noScrollPadding: {
+			type: Boolean,
+			default: !1
+		},
 		color: {
 			type: String,
 			default: void 0,
@@ -5103,6 +5107,7 @@ var mi = ["data-dot"], hi = ["data-dot"], gi = /*#__PURE__*/ Q(/* @__PURE__ */ O
 				`mat-scroll-area__viewport--bar-${I(i).barWidth}`,
 				{
 					"mat-scroll-area__viewport--dragging": _.value,
+					"mat-scroll-area__viewport--no-scroll-padding": I(i).noScrollPadding,
 					"mat-scroll-area__viewport--start-overflow": p.value,
 					"mat-scroll-area__viewport--end-overflow": m.value
 				}
@@ -5117,7 +5122,7 @@ var mi = ["data-dot"], hi = ["data-dot"], gi = /*#__PURE__*/ Q(/* @__PURE__ */ O
 			onScroll: Y
 		}), [j(e.$slots, "default", {}, void 0, !0)], 16)], 16));
 	}
-}), [["__scopeId", "data-v-acfe9a39"]]), Ci = { class: "mat-chip-set__scroll-content" }, wi = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatChipSet" }, {
+}), [["__scopeId", "data-v-93a5f328"]]), Ci = { class: "mat-chip-set__scroll-content" }, wi = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatChipSet" }, {
 	__name: "MatChipSet",
 	props: {
 		layout: {

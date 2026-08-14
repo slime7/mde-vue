@@ -9,7 +9,7 @@ order: 114
 
 ## 组件简介
 
-`<mat-scroll-area>` 的组件导出名是 `MatScrollArea`。组件拥有一个纵向或横向原生滚动元素，并在仍有内容可滚动时用真实 CSS mask 渐隐对应边缘；效果不依赖容器背景色，适合透明表面、图片和任意主题背景。滚动方向两端固定保留 28px 内边距，内容在两端始终留出间距。滚动条始终贴住容器边缘，即使容器根元素设置了水平或垂直内边距，内容仍保留同样的内边距间距。
+`<mat-scroll-area>` 的组件导出名是 `MatScrollArea`。组件拥有一个纵向或横向原生滚动元素，并在仍有内容可滚动时用真实 CSS mask 渐隐对应边缘；效果不依赖容器背景色，适合透明表面、图片和任意主题背景。滚动方向两端默认保留 28px 内边距，内容在两端始终留出间距，`noScrollPadding` 可以关闭这个内边距。滚动条始终贴住容器边缘，即使容器根元素设置了水平或垂直内边距，内容仍保留同样的内边距间距。
 
 组件默认背景透明，作为容器使用时可以通过 `color` 属性填充 `surface`、`surface-container` 等系统颜色角色或六位十六进制种子色，并同步内容文字颜色；`rounded` 属性可以添加接近 28px 的系统大圆角。滚动条拇指使用 primary 令牌、轨道透明，尺寸以内联 CSS 变量 `--mat-scroll-area-scrollbar-width` 暴露在组件根元素上供子元素读取（该变量属于内部实现，不承诺公共兼容）。
 
@@ -41,7 +41,7 @@ order: 114
 
 ### 圆角
 
-`rounded` 为组件添加 `--mat-sys-shape-corner-extra-large`（28px）系统圆角。滚动方向两端固定保留的 28px 内边距让内容始终避开圆角裁剪区；下方纵向与横向示例都开启了圆角，并搭配 `color="surface-container"` 提供容器填充。
+`rounded` 为组件添加 `--mat-sys-shape-corner-extra-large`（28px）系统圆角。滚动方向两端固定保留的 28px 内边距让内容始终避开圆角裁剪区；开启 `noScrollPadding` 时内容可能进入圆角裁剪区，需要自行保留相应间距。下方纵向与横向示例都开启了圆角，并搭配 `color="surface-container"` 提供容器填充。
 
 :::: details 查看示例代码
 ::: code-group
@@ -98,6 +98,26 @@ order: 114
 <ClientOnly>
   <DocsPreview label="Scroll area 搭配 Container 预览">
     <ScrollAreaContainerExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 关闭滚动方向内边距
+
+`noScrollPadding` 关闭滚动方向两端的固定 28px 内边距，让内容可以直接贴住滚动方向边缘，适合条目自带间距、需要整行分隔线或贴边对齐的场景。它只影响当前滚动方向，另一轴的容器内边距补偿与滚动条贴边行为保持不变；搭配 `rounded` 时内容可能被圆角裁剪区遮挡，需要自行保留间距。下方左侧保留默认内边距用于对比，右侧和横向示例使用 `no-scroll-padding`。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/scroll-area/ScrollAreaNoScrollPaddingExample.vue#template [template]
+
+<<< @/examples/scroll-area/ScrollAreaNoScrollPaddingExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Scroll area 关闭滚动方向内边距预览">
+    <ScrollAreaNoScrollPaddingExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -262,6 +282,7 @@ order: 114
 | `barWidth` | `'default' \| 'thin' \| 'hidden'` | `'thin'` | 设置滚动条宽度；`thin` 使用 8px，`default` 使用 16px，`hidden` 隐藏滚动条 |
 | `dragScroll` | `boolean` | `false` | 横向模式下允许鼠标主键和触控笔按住拖拽；触摸保持原生滑动 |
 | `rounded` | `boolean` | `false` | 为 `true` 时使用 `--mat-sys-shape-corner-extra-large`（28px）作为容器圆角 |
+| `noScrollPadding` | `boolean` | `false` | 关闭当前滚动方向两端的固定 28px 内边距，让内容贴住滚动方向边缘；不影响另一轴的容器内边距补偿 |
 | `color` | `string \| undefined` | `undefined` | 语义色、系统颜色角色（如 `surface`、`surface-container`）或六位十六进制种子色 `#RRGGBB`；显式设置时填充容器背景并同步内容文字颜色 |
 
 `class` 和 `style` 作用于组件根元素。其他未被消费的原生属性、ARIA 属性和监听器作用于同一根元素（即滚动元素）；需要键盘聚焦滚动区时，应按场景提供 `tabindex="0"` 和可访问名称。
@@ -297,6 +318,7 @@ import ScrollAreaColorExample from '../examples/scroll-area/ScrollAreaColorExamp
 import ScrollAreaContainerExample from '../examples/scroll-area/ScrollAreaContainerExample.vue';
 import ScrollAreaDragScrollExample from '../examples/scroll-area/ScrollAreaDragScrollExample.vue';
 import ScrollAreaMethodsExample from '../examples/scroll-area/ScrollAreaMethodsExample.vue';
+import ScrollAreaNoScrollPaddingExample from '../examples/scroll-area/ScrollAreaNoScrollPaddingExample.vue';
 import ScrollAreaOrientationExample from '../examples/scroll-area/ScrollAreaOrientationExample.vue';
 import ScrollAreaReachExample from '../examples/scroll-area/ScrollAreaReachExample.vue';
 import ScrollAreaRoundedExample from '../examples/scroll-area/ScrollAreaRoundedExample.vue';
