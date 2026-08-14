@@ -10,13 +10,12 @@ const expanded = ref(true);
 <!-- #region template -->
 <template>
   <div class="navigation-bar-example-shell">
-    <button
-      class="navigation-bar-example-toggle"
-      type="button"
+    <mat-btn
+      variant="outlined"
       @click="expanded = !expanded"
     >
       {{ expanded ? '切换为图标在上的 Item' : '切换为图标在左的 Item' }}
-    </button>
+    </mat-btn>
 
     <mat-navigation-rail
       v-model="selected"
@@ -51,16 +50,6 @@ const expanded = ref(true);
   overflow: hidden;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-large);
-}
-
-.navigation-bar-example-toggle {
-  align-self: flex-start;
-  min-block-size: 40px;
-  padding-inline: 12px;
-  color: var(--mat-sys-color-primary);
-  background: var(--mat-sys-color-secondary-container);
-  border: 0;
-  border-radius: var(--mat-sys-shape-corner-full);
 }
 </style>
 <!-- #endregion style -->

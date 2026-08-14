@@ -1333,23 +1333,22 @@ const source = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
 <template>
   <div class="example-stack">
     <div class="example-toolbar">
-      <button
+      <mat-chip
         v-for="ratio in ratios"
         :key="ratio.value"
-        type="button"
-        :class="{ 'example-chip--active': ratio.value === selectedRatio }"
-        class="example-chip"
+        variant="filter"
+        :selected="ratio.value === selectedRatio"
         @click="selectedRatio = ratio.value"
       >
         {{ ratio.label }}
-      </button>
-      <button
-        type="button"
-        class="example-chip"
+      </mat-chip>
+      <mat-chip
+        variant="filter"
+        :selected="wide"
         @click="wide = !wide"
       >
         {{ wide ? '宽度 100%' : '宽度 60%' }}
-      </button>
+      </mat-chip>
     </div>
     <mat-image
       :src="source"
@@ -1395,22 +1394,6 @@ const source = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-}
-
-.example-chip {
-  padding: 6px 14px;
-  color: var(--mat-sys-color-on-surface);
-  font: inherit;
-  background: var(--mat-sys-color-surface-container);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-full);
-  cursor: pointer;
-}
-
-.example-chip--active {
-  color: var(--mat-sys-color-on-primary);
-  background: var(--mat-sys-color-primary);
-  border-color: transparent;
 }
 
 .demo-image {
@@ -15217,19 +15200,19 @@ const selected = ref('overview');
 <template>
   <div class="navigation-rail-width-example-shell">
     <div class="navigation-rail-width-example-controls">
-      <button
-        type="button"
+      <mat-btn
+        variant="outlined"
         @click="width = 280"
       >
         280px
-      </button>
+      </mat-btn>
 
-      <button
-        type="button"
+      <mat-btn
+        variant="outlined"
         @click="width = 'min(80vw, 360px)'"
       >
         min(80vw, 360px)
-      </button>
+      </mat-btn>
     </div>
 
     <div class="navigation-rail-width-example-layout">
@@ -15275,15 +15258,6 @@ const width = ref(280);
   gap: 8px;
 }
 
-.navigation-rail-width-example-controls button {
-  min-block-size: 40px;
-  padding-inline: 12px;
-  color: var(--mat-sys-color-primary);
-  background: var(--mat-sys-color-secondary-container);
-  border: 0;
-  border-radius: var(--mat-sys-shape-corner-full);
-}
-
 .navigation-rail-width-example-layout {
   display: flex;
   inline-size: 100%;
@@ -15323,19 +15297,19 @@ const width = ref(280);
 <template>
   <div class="navigation-rail-position-example-shell">
     <div class="navigation-rail-position-example-controls">
-      <button
-        type="button"
+      <mat-btn
+        variant="outlined"
         @click="expanded = !expanded"
       >
         {{ expanded ? '收回导航' : '展开导航' }}
-      </button>
+      </mat-btn>
 
-      <button
-        type="button"
+      <mat-btn
+        variant="outlined"
         @click="position = position === 'start' ? 'end' : 'start'"
       >
         对齐到{{ position === 'start' ? '末尾侧' : '起始侧' }}
-      </button>
+      </mat-btn>
     </div>
 
     <div class="navigation-rail-position-example-layout">
@@ -15380,15 +15354,6 @@ const position = ref('start');
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-}
-
-.navigation-rail-position-example-controls button {
-  min-block-size: 40px;
-  padding-inline: 12px;
-  color: var(--mat-sys-color-primary);
-  background: var(--mat-sys-color-secondary-container);
-  border: 0;
-  border-radius: var(--mat-sys-shape-corner-full);
 }
 
 .navigation-rail-position-example-layout {
@@ -15599,13 +15564,12 @@ const expanded = ref(false);
 ```vue
 <template>
   <div class="navigation-bar-example-shell">
-    <button
-      class="navigation-bar-example-toggle"
-      type="button"
+    <mat-btn
+      variant="outlined"
       @click="expanded = !expanded"
     >
       {{ expanded ? '切换为图标在上的 Item' : '切换为图标在左的 Item' }}
-    </button>
+    </mat-btn>
 
     <mat-navigation-rail
       v-model="selected"
@@ -15647,16 +15611,6 @@ const expanded = ref(true);
   overflow: hidden;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-large);
-}
-
-.navigation-bar-example-toggle {
-  align-self: flex-start;
-  min-block-size: 40px;
-  padding-inline: 12px;
-  color: var(--mat-sys-color-primary);
-  background: var(--mat-sys-color-secondary-container);
-  border: 0;
-  border-radius: var(--mat-sys-shape-corner-full);
 }
 </style>
 ```

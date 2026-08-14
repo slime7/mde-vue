@@ -11,19 +11,19 @@ const position = ref('start');
 <template>
   <div class="navigation-rail-position-example-shell">
     <div class="navigation-rail-position-example-controls">
-      <button
-        type="button"
+      <mat-btn
+        variant="outlined"
         @click="expanded = !expanded"
       >
         {{ expanded ? '收回导航' : '展开导航' }}
-      </button>
+      </mat-btn>
 
-      <button
-        type="button"
+      <mat-btn
+        variant="outlined"
         @click="position = position === 'start' ? 'end' : 'start'"
       >
         对齐到{{ position === 'start' ? '末尾侧' : '起始侧' }}
-      </button>
+      </mat-btn>
     </div>
 
     <div class="navigation-rail-position-example-layout">
@@ -61,15 +61,6 @@ const position = ref('start');
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-}
-
-.navigation-rail-position-example-controls button {
-  min-block-size: 40px;
-  padding-inline: 12px;
-  color: var(--mat-sys-color-primary);
-  background: var(--mat-sys-color-secondary-container);
-  border: 0;
-  border-radius: var(--mat-sys-shape-corner-full);
 }
 
 .navigation-rail-position-example-layout {

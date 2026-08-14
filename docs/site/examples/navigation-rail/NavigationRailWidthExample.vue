@@ -10,19 +10,19 @@ const width = ref(280);
 <template>
   <div class="navigation-rail-width-example-shell">
     <div class="navigation-rail-width-example-controls">
-      <button
-        type="button"
+      <mat-btn
+        variant="outlined"
         @click="width = 280"
       >
         280px
-      </button>
+      </mat-btn>
 
-      <button
-        type="button"
+      <mat-btn
+        variant="outlined"
         @click="width = 'min(80vw, 360px)'"
       >
         min(80vw, 360px)
-      </button>
+      </mat-btn>
     </div>
 
     <div class="navigation-rail-width-example-layout">
@@ -60,15 +60,6 @@ const width = ref(280);
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-}
-
-.navigation-rail-width-example-controls button {
-  min-block-size: 40px;
-  padding-inline: 12px;
-  color: var(--mat-sys-color-primary);
-  background: var(--mat-sys-color-secondary-container);
-  border: 0;
-  border-radius: var(--mat-sys-shape-corner-full);
 }
 
 .navigation-rail-width-example-layout {

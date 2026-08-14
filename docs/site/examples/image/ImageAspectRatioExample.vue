@@ -2,23 +2,22 @@
 <template>
   <div class="example-stack">
     <div class="example-toolbar">
-      <button
+      <mat-chip
         v-for="ratio in ratios"
         :key="ratio.value"
-        type="button"
-        :class="{ 'example-chip--active': ratio.value === selectedRatio }"
-        class="example-chip"
+        variant="filter"
+        :selected="ratio.value === selectedRatio"
         @click="selectedRatio = ratio.value"
       >
         {{ ratio.label }}
-      </button>
-      <button
-        type="button"
-        class="example-chip"
+      </mat-chip>
+      <mat-chip
+        variant="filter"
+        :selected="wide"
         @click="wide = !wide"
       >
         {{ wide ? '宽度 100%' : '宽度 60%' }}
-      </button>
+      </mat-chip>
     </div>
     <mat-image
       :src="source"
@@ -66,22 +65,6 @@ const source = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-}
-
-.example-chip {
-  padding: 6px 14px;
-  color: var(--mat-sys-color-on-surface);
-  font: inherit;
-  background: var(--mat-sys-color-surface-container);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-full);
-  cursor: pointer;
-}
-
-.example-chip--active {
-  color: var(--mat-sys-color-on-primary);
-  background: var(--mat-sys-color-primary);
-  border-color: transparent;
 }
 
 .demo-image {
