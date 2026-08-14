@@ -34,10 +34,11 @@ describe('MatNavigationRail', () => {
 
     expect(wrapper.find('nav').attributes('aria-orientation')).toBeUndefined();
     expect(wrapper.findAll('.mat-navigation-rail-item')).toHaveLength(2);
-    expect(wrapper.find('.mat-navigation-rail-item__indicator .mat-navigation-rail-item__label').exists())
-      .toBe(false);
+    expect(wrapper.find('.mat-navigation-rail-item__indicator .mat-navigation-rail-item__label').text())
+      .toBe('首页');
     expect(wrapper.find('.mat-navigation-rail-item > .mat-navigation-rail-item__label').text())
       .toBe('首页');
+    expect(wrapper.find('.mat-navigation-rail-item__trailing').exists()).toBe(false);
   });
 
   it('width 为 0 时输出不带单位的 CSS 长度', () => {
@@ -125,8 +126,8 @@ describe('MatNavigationRail', () => {
 
     expect(wrapper.find('.mat-navigation-rail__menu').exists()).toBe(false);
     expect(wrapper.find('.mat-navigation-rail__scrim').exists()).toBe(false);
-    expect(wrapper.find('.mat-navigation-rail-item__indicator .mat-navigation-rail-item__label').exists())
-      .toBe(false);
+    expect(wrapper.find('.mat-navigation-rail-item__indicator .mat-navigation-rail-item__label').text())
+      .toBe('首页');
     expect(wrapper.find('.mat-navigation-rail-item > .mat-navigation-rail-item__label').text())
       .toBe('首页');
 
@@ -273,6 +274,42 @@ describe('MatNavigationRail', () => {
 
     expect(wrapper.find('.test-header').text()).toBe('true');
     expect(wrapper.find('.test-fab').text()).toBe('true');
+  });
+
+  it('trailing 插槽渲染内容并接收 expanded/selected 插槽参数', async () => {
+    const wrapper = mount(MatNavigationRail, {
+      props: { modelValue: 'home' },
+      slots: {
+        default: () => [
+          h(MatNavigationRailItem, { value: 'home', icon: 'home' }, {
+            default: () => '首页',
+            trailing: ({ expanded, selected }) => (
+              h('span', { class: 'test-trailing' }, `${expanded}-${selected}`)
+            ),
+          }),
+          h(MatNavigationRailItem, { value: 'settings', icon: 'settings' }, {
+            default: () => '设置',
+            trailing: ({ expanded, selected }) => (
+              h('span', { class: 'test-trailing' }, `${expanded}-${selected}`)
+            ),
+          }),
+        ],
+      },
+    });
+    const items = wrapper.findAllComponents(MatNavigationRailItem);
+    const trailing = wrapper.findAll('.test-trailing');
+
+    expect(items[0].find('.mat-navigation-rail-item__trailing').exists()).toBe(true);
+    expect(items[1].find('.mat-navigation-rail-item__trailing').exists()).toBe(true);
+    expect(trailing).toHaveLength(2);
+    expect(trailing[0].text()).toBe('false-true');
+    expect(trailing[1].text()).toBe('false-false');
+
+    await wrapper.setProps({ expanded: true });
+    await nextTick();
+
+    expect(wrapper.findAll('.test-trailing')[0].text()).toBe('true-true');
+    expect(wrapper.findAll('.test-trailing')[1].text()).toBe('true-false');
   });
 
   it('end Slot 固定在纵向导航底部并接收展开状态', () => {

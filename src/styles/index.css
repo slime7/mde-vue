@@ -408,6 +408,9 @@
     --mat-navigation-rail-horizontal-indicator-height: 56px;
     --mat-navigation-rail-horizontal-leading-space: 16px;
     --mat-navigation-rail-horizontal-icon-label-space: 8px;
+    --mat-navigation-rail-full-width-icon-label-space: 12px;
+    --mat-navigation-rail-trailing-start-space: 12px;
+    --mat-navigation-rail-trailing-end-space: 8px;
     --mat-navigation-rail-item-selected-container-color: var(--mat-sys-color-secondary-container);
     --mat-navigation-rail-item-content-color: var(--mat-sys-color-on-surface-variant);
     --mat-navigation-rail-item-selected-content-color: var(--mat-sys-color-on-secondary-container);

@@ -109,6 +109,8 @@ order: 105
 
 `collapsible` 为纵向 rail 添加菜单按钮，`expanded` 支持 `v-model:expanded`。collapsed Item 为图标上、标签下；expanded Item 的图标与标签位于同一个 56px 高活动指示器中。`open-icon` 和 `close-icon` 可以替换菜单按钮图标。
 
+展开与收回时，Item 下方的标签渐隐，活动指示器尺寸、Item 高度与间距平滑过渡（展开态 Item 之间间距为 0），展开状态的标签在指示器内逐渐出现；trailing 内容通过弹性 spacer 保持在 Item 尾部。
+
 :::: details 查看示例代码
 ::: code-group
 
@@ -146,6 +148,28 @@ order: 105
 <ClientOnly>
   <DocsPreview label="Navigation rail 自定义展开宽度预览">
     <NavigationRailWidthExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `full-width`（Item）
+
+`full-width` 只作用于展开态 Item：活动指示器铺满 Item 可用宽度，两端保留展开侧边距；默认指示器只贴合图标与标签的内容宽度。设置 `full-width` 时，展开态指示器内图标与标签的间距增加到 12px。适合让展开后的目的地呈现等宽、更强的选中区域。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/navigation-rail/NavigationRailItemFullWidthExample.vue#template [template]
+
+<<< @/examples/navigation-rail/NavigationRailItemFullWidthExample.vue#script [script]
+
+<<< @/examples/navigation-rail/NavigationRailItemFullWidthExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail full-width 预览">
+    <NavigationRailItemFullWidthExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -257,6 +281,28 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
   </DocsPreview>
 </ClientOnly>
 
+### Item 的 `trailing` Slot
+
+Item 的 `trailing` 只在展开态显示，通过前置弹性 spacer 保持在 Item 尾部，并随 Item 宽度动画始终锚定在末尾；trailing 前后分别保留 12px 与 8px 间距，后部间距与展开侧边距合计在 rail 尾部空出 24px。适合放置徽标、状态图标或快捷键；Slot 参数为 `{ expanded, selected }`。折叠态 rail 宽度不足，trailing 不渲染。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/navigation-rail/NavigationRailItemTrailingExample.vue#template [template]
+
+<<< @/examples/navigation-rail/NavigationRailItemTrailingExample.vue#script [script]
+
+<<< @/examples/navigation-rail/NavigationRailItemTrailingExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail Item trailing 预览">
+    <NavigationRailItemTrailingExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -291,6 +337,7 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 | `icon` | `string` | `undefined` | Material Symbols 图标名称；`icon` Slot 存在时忽略 |
 | `href` | `string` | `undefined` | 提供后渲染为原生链接，否则渲染为按钮 |
 | `disabled` | `boolean` | `false` | 禁用原生交互和选择请求，并降低内容强调 |
+| `full-width` | `boolean` | `false` | 仅展开态有效；活动指示器铺满 Item 可用宽度，默认贴合内容 |
 
 组件没有公开方法。
 
@@ -310,8 +357,9 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 | `header` | `MatNavigationRail` | 纵向 rail 顶部的非交互品牌标识；Slot 参数为 `{ expanded }` |
 | `fab` | `MatNavigationRail` | 纵向 rail 顶部、目的地之前的 FAB 或 Extended FAB；Slot 参数为 `{ expanded }` |
 | `end` | `MatNavigationRail` | 纵向 rail 底部的自定义内容；Slot 参数为 `{ expanded }` |
-| 默认 | `MatNavigationRailItem` | 必填的简短目的地标签；避免截断，必要时最多换为两行 |
+| 默认 | `MatNavigationRailItem` | 必填的简短目的地标签；单行显示，超长时以省略号截断 |
 | `icon` | `MatNavigationRailItem` | 自定义图标内容；Slot 参数为 `{ selected }` |
+| `trailing` | `MatNavigationRailItem` | 展开态显示在 Item 尾部的内容，通过弹性 spacer 保持在末尾；Slot 参数为 `{ expanded, selected }` |
 
 ## 无障碍与布局说明
 
@@ -331,6 +379,8 @@ import NavigationRailCollapsibleExample from '../examples/navigation-rail/Naviga
 import NavigationRailHideOnCollapseExample from '../examples/navigation-rail/NavigationRailHideOnCollapseExample.vue';
 import NavigationRailHorizontalExample from '../examples/navigation-rail/NavigationRailHorizontalExample.vue';
 import NavigationRailLayoutExample from '../examples/navigation-rail/NavigationRailLayoutExample.vue';
+import NavigationRailItemFullWidthExample from '../examples/navigation-rail/NavigationRailItemFullWidthExample.vue';
+import NavigationRailItemTrailingExample from '../examples/navigation-rail/NavigationRailItemTrailingExample.vue';
 import NavigationRailPositionExample from '../examples/navigation-rail/NavigationRailPositionExample.vue';
 import NavigationRailPlaceholderExample from '../examples/navigation-rail/NavigationRailPlaceholderExample.vue';
 import NavigationRailSlotsExample from '../examples/navigation-rail/NavigationRailSlotsExample.vue';

@@ -612,6 +612,7 @@ watch([
     inline-size: 100%;
     min-block-size: 0;
     block-size: var(--mat-navigation-bar-height);
+    transition: inline-size var(--mat-sys-motion-spring-default-spatial), block-size var(--mat-sys-motion-spring-default-spatial);
   }
 
   .mat-navigation-rail-host--horizontal.mat-navigation-rail-host--collapsed {
@@ -846,6 +847,11 @@ watch([
     flex-direction: column;
     align-items: stretch;
     gap: var(--mat-navigation-rail-item-space);
+    transition: gap var(--mat-sys-motion-spring-default-spatial);
+  }
+
+  .mat-navigation-rail--expanded .mat-navigation-rail__destinations {
+    gap: 0;
   }
 
   .mat-navigation-rail__destinations--top {

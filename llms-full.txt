@@ -15124,6 +15124,8 @@ const active = ref(false);
 
 `collapsible` 为纵向 rail 添加菜单按钮，`expanded` 支持 `v-model:expanded`。collapsed Item 为图标上、标签下；expanded Item 的图标与标签位于同一个 56px 高活动指示器中。`open-icon` 和 `close-icon` 可以替换菜单按钮图标。
 
+展开与收回时，Item 下方的标签渐隐，活动指示器尺寸、Item 高度与间距平滑过渡（展开态 Item 之间间距为 0），展开状态的标签在指示器内逐渐出现；trailing 内容通过弹性 spacer 保持在 Item 尾部。
+
 :::: details 查看示例代码
 ::: code-group
 
@@ -15284,6 +15286,108 @@ const width = ref(280);
 <ClientOnly>
   <DocsPreview label="Navigation rail 自定义展开宽度预览">
     <NavigationRailWidthExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `full-width`（Item）
+
+`full-width` 只作用于展开态 Item：活动指示器铺满 Item 可用宽度，两端保留展开侧边距；默认指示器只贴合图标与标签的内容宽度。设置 `full-width` 时，展开态指示器内图标与标签的间距增加到 12px。适合让展开后的目的地呈现等宽、更强的选中区域。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="navigation-rail-full-width-example">
+    <section>
+      <h3>默认：指示器贴合内容</h3>
+      <div class="navigation-rail-example-shell">
+        <mat-navigation-rail
+          v-model="selected"
+          expanded
+          aria-label="贴合内容导航"
+        >
+          <mat-navigation-rail-item value="home" icon="home">
+            首页
+          </mat-navigation-rail-item>
+          <mat-navigation-rail-item value="folder" icon="folder">
+            项目
+          </mat-navigation-rail-item>
+        </mat-navigation-rail>
+        <div class="navigation-rail-example-content">
+          正文
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h3>full-width：指示器铺满宽度</h3>
+      <div class="navigation-rail-example-shell">
+        <mat-navigation-rail
+          v-model="selected"
+          expanded
+          aria-label="铺满宽度导航"
+        >
+          <mat-navigation-rail-item value="home" icon="home" full-width>
+            首页
+          </mat-navigation-rail-item>
+          <mat-navigation-rail-item value="folder" icon="folder" full-width>
+            项目
+          </mat-navigation-rail-item>
+        </mat-navigation-rail>
+        <div class="navigation-rail-example-content">
+          正文
+        </div>
+      </div>
+    </section>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const selected = ref('home');
+</script>
+```
+```vue
+<style scoped>
+.navigation-rail-full-width-example {
+  display: grid;
+  inline-size: 100%;
+  gap: 16px;
+}
+
+.navigation-rail-full-width-example h3 {
+  margin-block: 0 8px;
+  font-size: 14px;
+}
+
+.navigation-rail-example-shell {
+  display: flex;
+  inline-size: 100%;
+  min-block-size: 220px;
+  overflow: hidden;
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.navigation-rail-example-content {
+  display: grid;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  place-items: center;
+  color: var(--mat-sys-color-on-surface-variant);
+  background: var(--mat-sys-color-surface-container-low);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail full-width 预览">
+    <NavigationRailItemFullWidthExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -15686,6 +15790,98 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
   </DocsPreview>
 </ClientOnly>
 
+### Item 的 `trailing` Slot
+
+Item 的 `trailing` 只在展开态显示，通过前置弹性 spacer 保持在 Item 尾部，并随 Item 宽度动画始终锚定在末尾；trailing 前后分别保留 12px 与 8px 间距，后部间距与展开侧边距合计在 rail 尾部空出 24px。适合放置徽标、状态图标或快捷键；Slot 参数为 `{ expanded, selected }`。折叠态 rail 宽度不足，trailing 不渲染。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="navigation-rail-example-shell">
+    <mat-navigation-rail
+      v-model="selected"
+      v-model:expanded="expanded"
+      collapsible
+      aria-label="带 trailing 的导航"
+    >
+      <mat-navigation-rail-item value="inbox" icon="inbox">
+        收件箱
+        <template #trailing="{ expanded: railExpanded, selected: itemSelected }">
+          <span
+            v-if="railExpanded"
+            class="navigation-rail-trailing-badge"
+          >
+            {{ itemSelected ? '12' : '3' }}
+          </span>
+        </template>
+      </mat-navigation-rail-item>
+      <mat-navigation-rail-item value="archive" icon="archive">
+        归档
+        <template #trailing>
+          <mat-icon icon="chevron_right" aria-hidden="true" />
+        </template>
+      </mat-navigation-rail-item>
+    </mat-navigation-rail>
+
+    <div class="navigation-rail-example-content">
+      {{ expanded ? '展开状态' : '折叠状态' }}
+    </div>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const expanded = ref(true);
+const selected = ref('inbox');
+</script>
+```
+```vue
+<style scoped>
+.navigation-rail-example-shell {
+  display: flex;
+  inline-size: 100%;
+  min-block-size: 280px;
+  overflow: hidden;
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.navigation-rail-trailing-badge {
+  display: inline-grid;
+  box-sizing: border-box;
+  min-inline-size: 20px;
+  block-size: 20px;
+  place-items: center;
+  padding-inline: 6px;
+  color: var(--mat-sys-color-on-error-container);
+  background: var(--mat-sys-color-error-container);
+  border-radius: var(--mat-sys-shape-corner-full);
+  font-size: 12px;
+}
+
+.navigation-rail-example-content {
+  display: grid;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  place-items: center;
+  color: var(--mat-sys-color-on-surface-variant);
+  background: var(--mat-sys-color-surface-container-low);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail Item trailing 预览">
+    <NavigationRailItemTrailingExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -15720,6 +15916,7 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 | `icon` | `string` | `undefined` | Material Symbols 图标名称；`icon` Slot 存在时忽略 |
 | `href` | `string` | `undefined` | 提供后渲染为原生链接，否则渲染为按钮 |
 | `disabled` | `boolean` | `false` | 禁用原生交互和选择请求，并降低内容强调 |
+| `full-width` | `boolean` | `false` | 仅展开态有效；活动指示器铺满 Item 可用宽度，默认贴合内容 |
 
 组件没有公开方法。
 
@@ -15739,8 +15936,9 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 | `header` | `MatNavigationRail` | 纵向 rail 顶部的非交互品牌标识；Slot 参数为 `{ expanded }` |
 | `fab` | `MatNavigationRail` | 纵向 rail 顶部、目的地之前的 FAB 或 Extended FAB；Slot 参数为 `{ expanded }` |
 | `end` | `MatNavigationRail` | 纵向 rail 底部的自定义内容；Slot 参数为 `{ expanded }` |
-| 默认 | `MatNavigationRailItem` | 必填的简短目的地标签；避免截断，必要时最多换为两行 |
+| 默认 | `MatNavigationRailItem` | 必填的简短目的地标签；单行显示，超长时以省略号截断 |
 | `icon` | `MatNavigationRailItem` | 自定义图标内容；Slot 参数为 `{ selected }` |
+| `trailing` | `MatNavigationRailItem` | 展开态显示在 Item 尾部的内容，通过弹性 spacer 保持在末尾；Slot 参数为 `{ expanded, selected }` |
 
 ## 无障碍与布局说明
 
@@ -15760,6 +15958,8 @@ import NavigationRailCollapsibleExample from '../examples/navigation-rail/Naviga
 import NavigationRailHideOnCollapseExample from '../examples/navigation-rail/NavigationRailHideOnCollapseExample.vue';
 import NavigationRailHorizontalExample from '../examples/navigation-rail/NavigationRailHorizontalExample.vue';
 import NavigationRailLayoutExample from '../examples/navigation-rail/NavigationRailLayoutExample.vue';
+import NavigationRailItemFullWidthExample from '../examples/navigation-rail/NavigationRailItemFullWidthExample.vue';
+import NavigationRailItemTrailingExample from '../examples/navigation-rail/NavigationRailItemTrailingExample.vue';
 import NavigationRailPositionExample from '../examples/navigation-rail/NavigationRailPositionExample.vue';
 import NavigationRailPlaceholderExample from '../examples/navigation-rail/NavigationRailPlaceholderExample.vue';
 import NavigationRailSlotsExample from '../examples/navigation-rail/NavigationRailSlotsExample.vue';

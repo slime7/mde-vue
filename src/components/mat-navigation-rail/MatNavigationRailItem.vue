@@ -48,8 +48,18 @@ const props = defineProps({
    *
    * @type {boolean}
    * @default false
-   */
+  */
   disabled: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * 展开态活动指示器是否铺满 Item 可用宽度；默认贴合内容。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  fullWidth: {
     type: Boolean,
     default: false,
   },
@@ -68,19 +78,20 @@ const navigation = inject(MAT_NAVIGATION_RAIL_KEY, null);
 const expanded = computed(() => navigation?.expanded.value ?? false);
 const isHorizontal = computed(() => navigation?.orientation.value === 'horizontal');
 const position = computed(() => navigation?.position.value ?? 'start');
-const horizontalContent = computed(() => expanded.value);
 const selected = computed(() => navigation?.isSelected(propsWithDefaults.value) ?? false);
 const hasIcon = computed(() => Boolean(propsWithDefaults.icon || slots.icon));
 const typographyClass = computed(() => getTypographyClass(
   'label',
   expanded.value && !isHorizontal.value ? 'large' : 'medium',
 ));
+const collapsedLabelClass = computed(() => getTypographyClass('label', 'medium'));
 const itemClasses = computed(() => ({
   'mat-navigation-rail-item--selected': selected.value,
   'mat-navigation-rail-item--disabled': propsWithDefaults.disabled,
   'mat-navigation-rail-item--expanded': expanded.value,
   'mat-navigation-rail-item--collapsed': !expanded.value,
   'mat-navigation-rail-item--horizontal': isHorizontal.value,
+  'mat-navigation-rail-item--full-width': propsWithDefaults.fullWidth,
   [`mat-navigation-rail-item--${position.value}`]: true,
 }));
 
@@ -127,18 +138,37 @@ function handleClick(event) {
       </span>
 
       <span
-        v-if="horizontalContent"
-        :class="['mat-navigation-rail-item__label', typographyClass]"
+        class="mat-navigation-rail-item__label-wrap"
       >
-        <slot />
+        <span
+          :class="['mat-navigation-rail-item__label', typographyClass]"
+        >
+          <slot />
+        </span>
       </span>
     </span>
 
     <span
-      v-if="!horizontalContent"
-      :class="['mat-navigation-rail-item__label', typographyClass]"
+      :class="['mat-navigation-rail-item__label', collapsedLabelClass]"
     >
       <slot />
+    </span>
+
+    <span
+      v-if="$slots.trailing"
+      class="mat-navigation-rail-item__spacer"
+      aria-hidden="true"
+    />
+
+    <span
+      v-if="$slots.trailing"
+      class="mat-navigation-rail-item__trailing"
+    >
+      <slot
+        name="trailing"
+        :expanded="expanded"
+        :selected="selected"
+      />
     </span>
   </MatActionBase>
 </template>
@@ -168,12 +198,14 @@ function handleClick(event) {
     gap: var(--mat-navigation-rail-vertical-icon-label-space);
     padding-block: var(--mat-navigation-rail-item-space);
     padding-inline: var(--mat-navigation-rail-collapsed-side-space);
+    transition: min-block-size var(--mat-sys-motion-spring-default-spatial);
   }
 
   .mat-navigation-rail-item--expanded {
     min-block-size: var(--mat-navigation-rail-expanded-item-height);
     justify-content: var(--mat-navigation-rail-item-inline-alignment, flex-start);
     padding-inline: var(--mat-navigation-rail-expanded-side-space);
+    transition: min-block-size var(--mat-sys-motion-spring-default-spatial);
   }
 
   .mat-navigation-rail-item--horizontal {
@@ -191,9 +223,10 @@ function handleClick(event) {
     box-sizing: border-box;
     flex: 0 0 auto;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     background: transparent;
     border-radius: var(--mat-sys-shape-corner-full);
+    transition: min-block-size var(--mat-sys-motion-spring-default-spatial), inline-size var(--mat-sys-motion-spring-default-spatial);
   }
 
   .mat-navigation-rail-item__indicator::before,
@@ -224,10 +257,13 @@ function handleClick(event) {
 
   .mat-navigation-rail-item--collapsed .mat-navigation-rail-item__indicator {
     inline-size: var(--mat-navigation-rail-vertical-indicator-width);
-    block-size: var(--mat-navigation-rail-vertical-indicator-height);
+    min-block-size: var(--mat-navigation-rail-vertical-indicator-height);
+    padding-inline: var(--mat-navigation-rail-horizontal-leading-space);
   }
 
   .mat-navigation-rail-item--expanded .mat-navigation-rail-item__indicator {
+    flex: 0 1 auto;
+    min-inline-size: var(--mat-navigation-rail-vertical-indicator-width);
     min-block-size: var(--mat-navigation-rail-horizontal-indicator-height);
     max-inline-size: 100%;
     gap: var(--mat-navigation-rail-horizontal-icon-label-space);
@@ -243,9 +279,8 @@ function handleClick(event) {
 
   .mat-navigation-rail-item--horizontal.mat-navigation-rail-item--collapsed .mat-navigation-rail-item__indicator {
     inline-size: var(--mat-navigation-rail-vertical-indicator-width);
-    block-size: var(--mat-navigation-rail-vertical-indicator-height);
-    min-block-size: 0;
-    padding-inline: 0;
+    min-block-size: var(--mat-navigation-rail-vertical-indicator-height);
+    padding-inline: var(--mat-navigation-bar-horizontal-indicator-space);
   }
 
   .mat-navigation-rail-item__icon-wrap {
@@ -261,32 +296,124 @@ function handleClick(event) {
     color: inherit;
   }
 
+  .mat-navigation-rail-item__label-wrap {
+    display: grid;
+    min-inline-size: 0;
+    grid-template-columns: 0fr;
+    transition: grid-template-columns var(--mat-sys-motion-spring-default-effects);
+  }
+
+  .mat-navigation-rail-item--expanded .mat-navigation-rail-item__label-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-navigation-rail-item__label-wrap > .mat-navigation-rail-item__label {
+    min-inline-size: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--mat-sys-motion-spring-default-effects), visibility 0s linear var(--mat-sys-motion-duration-short3);
+  }
+
+  .mat-navigation-rail-item--expanded .mat-navigation-rail-item__label-wrap > .mat-navigation-rail-item__label {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity var(--mat-sys-motion-spring-default-effects), visibility 0s;
+  }
+
   .mat-navigation-rail-item__label {
     position: relative;
     z-index: 1;
     min-inline-size: 0;
     color: inherit;
-    overflow-wrap: anywhere;
-    white-space: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .mat-navigation-rail-item--collapsed > .mat-navigation-rail-item__label {
+  .mat-navigation-rail-item > .mat-navigation-rail-item__label {
     inline-size: var(--mat-navigation-rail-vertical-indicator-width);
     max-inline-size: 100%;
     color: var(--mat-navigation-rail-item-content-color);
     text-align: center;
   }
 
+  .mat-navigation-rail-item--collapsed > .mat-navigation-rail-item__label {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity var(--mat-sys-motion-spring-fast-effects), visibility 0s;
+  }
+
+  .mat-navigation-rail-item--expanded > .mat-navigation-rail-item__label {
+    position: absolute;
+    inset-inline-start: 50%;
+    translate: -50% 0;
+    inset-block-end: var(--mat-navigation-rail-item-space);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--mat-sys-motion-spring-fast-effects), visibility 0s linear var(--mat-sys-motion-duration-short3);
+  }
+
+  .mat-navigation-rail-item--expanded.mat-navigation-rail-item--start > .mat-navigation-rail-item__label {
+    inset-inline-start: var(--mat-navigation-rail-collapsed-side-space);
+    translate: 0 0;
+  }
+
+  .mat-navigation-rail-item--expanded.mat-navigation-rail-item--end > .mat-navigation-rail-item__label {
+    inset-inline: auto var(--mat-navigation-rail-collapsed-side-space);
+    translate: 0 0;
+  }
+
+  .mat-navigation-rail-item--horizontal.mat-navigation-rail-item--expanded > .mat-navigation-rail-item__label {
+    inset-inline-start: 50%;
+    translate: -50% 0;
+  }
+
   .mat-navigation-rail-item--selected {
     color: var(--mat-navigation-rail-item-selected-content-color);
   }
 
-  .mat-navigation-rail-item--selected.mat-navigation-rail-item--collapsed > .mat-navigation-rail-item__label {
+  .mat-navigation-rail-item--selected > .mat-navigation-rail-item__label {
     color: var(--mat-navigation-rail-item-selected-label-color);
   }
 
   .mat-navigation-rail-item--horizontal.mat-navigation-rail-item--selected .mat-navigation-rail-item__label {
     color: var(--mat-navigation-bar-item-selected-label-color);
+  }
+
+  .mat-navigation-rail-item__trailing {
+    display: none;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mat-navigation-rail-item--expanded .mat-navigation-rail-item__trailing {
+    display: inline-flex;
+    margin-inline: var(--mat-navigation-rail-trailing-start-space) var(--mat-navigation-rail-trailing-end-space);
+  }
+
+  .mat-navigation-rail-item__spacer {
+    display: none;
+  }
+
+  .mat-navigation-rail-item--expanded .mat-navigation-rail-item__spacer {
+    display: block;
+    flex: 1 1 auto;
+    min-inline-size: 0;
+  }
+
+  .mat-navigation-rail-item--expanded.mat-navigation-rail-item--end .mat-navigation-rail-item__indicator {
+    margin-inline-start: auto;
+  }
+
+  .mat-navigation-rail-item--horizontal.mat-navigation-rail-item--expanded .mat-navigation-rail-item__indicator {
+    margin-inline-start: 0;
+  }
+
+  .mat-navigation-rail-item--expanded.mat-navigation-rail-item--full-width .mat-navigation-rail-item__indicator {
+    inline-size: 100%;
+    gap: var(--mat-navigation-rail-full-width-icon-label-space);
   }
 
   .mat-navigation-rail-item:focus-visible {
@@ -314,9 +441,14 @@ function handleClick(event) {
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .mat-navigation-rail-item,
+    .mat-navigation-rail-item__indicator,
     .mat-navigation-rail-item__indicator::before,
-    .mat-navigation-rail-item__indicator::after {
+    .mat-navigation-rail-item__indicator::after,
+    .mat-navigation-rail-item__label-wrap,
+    .mat-navigation-rail-item__label {
       transition-duration: 0s;
+      transition-delay: 0s;
     }
   }
 }

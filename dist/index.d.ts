@@ -3070,6 +3070,13 @@ export interface MatNavigationRailItemProps {
   * @default false
   */
   disabled?: boolean;
+  /**
+  * 展开态活动指示器是否铺满 Item 可用宽度；默认贴合内容。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  fullWidth?: boolean;
 }
 
 export interface MatNavigationRailItemEmits {
