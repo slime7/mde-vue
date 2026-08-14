@@ -111,7 +111,7 @@ Tailwind CSS v4 使用方必须预先声明 `tailwind-theme`、`tailwind-reset`�
 
 - Vue 组件导出使用 PascalCase，例如 `MatBtn`；安装 `createMatUi()` 后，模板可使用 `mat-*`（如 `<mat-btn>`）或对应 PascalCase（如 `<MatBtn>`）。
 - `<mat-spacer>` 是无内容、无交互且固定从无障碍树隐藏的 flex 子元素，只负责增长占据父容器主轴剩余空间，不定义父级方向、对齐或间距。
-- `<mat-container>` 的外层始终铺满父容器，使用视口宽度在 `<600px` 时提供 16px、其他宽度提供 24px 的水平内边距。默认 Slot 位于内部正文层；正文层默认以 1040px 最大宽度和 `margin-inline: auto` 居中，在外层具有确定块轴尺寸时同步铺满高度，外层尺寸未确定时仍由内容自然撑开。`fluid=true` 只取消正文层的最大宽度，不改变外层边距或尺寸。
+- `<mat-container>` 的外层始终铺满父容器，使用视口宽度在 `<600px` 时提供 16px、其他宽度提供 24px 的水平内边距；位于 `mat-scroll-area` 内时，右侧内边距自动减去滚动条宽度，正文保持视觉居中。默认 Slot 位于内部正文层；正文层默认以 1040px 最大宽度和 `margin-inline: auto` 居中，在外层具有确定块轴尺寸时同步铺满高度，外层尺寸未确定时仍由内容自然撑开。`fluid=true` 只取消正文层的最大宽度，不改变外层边距或尺寸。
 - 所有组件、插件、指令和命令式函数必须从唯一根入口导出。
 - 原生元素语义优先于自造交互协议；`<mat-btn>` 渲染原生 `<button>`。
 - 未被组件消费的原生属性和事件应继续传递到根原生元素。
@@ -256,7 +256,7 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 
 ## Scroll area 滚动区域
 
-`<mat-scroll-area>` 与导出 `MatScrollArea` 拥有一个单轴原生滚动元素，根元素本身就是滚动元素，`class`、`style`、原生属性和监听器都作用于它。`orientation` 的 `vertical`、`y`、`v` 表示纵向，`horizontal`、`x`、`h` 表示横向；完整值是文档中的规范写法。组件只在实际离开边缘后对对应内容使用真实 CSS mask 渐隐，并保留独立的滚动条保护区域；`shadowLength` 支持数字或分别设置 `start`、`end` 的对象，省略时两端默认 16px；边缘阴影带默认贴边，`shadowOffset` 可以分别设置起始端与末端的向内偏移，偏移区内的滚动内容不被遮罩覆盖，适合放置不透明的 sticky 元素。滚动方向两端固定保留 28px 内边距；`barWidth` 的 `default`、`thin`、`hidden` 分别对应 16px、8px、0 的滚动条宽度，尺寸以内联 CSS 变量 `--mat-scroll-area-scrollbar-width` 置于根元素供子元素读取，拇指使用 primary 令牌且轨道透明；滚动条始终贴住容器边缘，根元素内边距由滚动元素覆盖并以同样间距保留内容缩进。`rounded` 使用 `--mat-sys-shape-corner-extra-large`（28px）圆角令牌；`color` 接受语义色、系统颜色角色（含 `surface` 与各 `surface-container-*`）或六位十六进制种子色，显式设置时由根元素填充容器背景并同步内容文字颜色，边缘渐隐只作用于内容，不覆盖背景。组件可作为页面正文滚动容器使用，推荐把 `<mat-container>` 放入默认 Slot：容器继承根元素上的 `--mat-scroll-area-scrollbar-width`，把其 `padding-inline-end` 改为原值减滚动条宽度即可保持正文视觉居中。默认 Slot 内的 sticky 内容仍属于滚动内容，不保证避开阴影。
+`<mat-scroll-area>` 与导出 `MatScrollArea` 拥有一个单轴原生滚动元素，根元素本身就是滚动元素，`class`、`style`、原生属性和监听器都作用于它。`orientation` 的 `vertical`、`y`、`v` 表示纵向，`horizontal`、`x`、`h` 表示横向；完整值是文档中的规范写法。组件只在实际离开边缘后对对应内容使用真实 CSS mask 渐隐，并保留独立的滚动条保护区域；`shadowLength` 支持数字或分别设置 `start`、`end` 的对象，省略时两端默认 16px；边缘阴影带默认贴边，`shadowOffset` 可以分别设置起始端与末端的向内偏移，偏移区内的滚动内容不被遮罩覆盖，适合放置不透明的 sticky 元素。滚动方向两端固定保留 28px 内边距；`barWidth` 的 `default`、`thin`、`hidden` 分别对应 16px、8px、0 的滚动条宽度，尺寸以内联 CSS 变量 `--mat-scroll-area-scrollbar-width` 置于根元素供子元素读取，拇指使用 primary 令牌且轨道透明；滚动条始终贴住容器边缘，根元素内边距由滚动元素覆盖并以同样间距保留内容缩进。`rounded` 使用 `--mat-sys-shape-corner-extra-large`（28px）圆角令牌；`color` 接受语义色、系统颜色角色（含 `surface` 与各 `surface-container-*`）或六位十六进制种子色，显式设置时由根元素填充容器背景并同步内容文字颜色，边缘渐隐只作用于内容，不覆盖背景。组件可作为页面正文滚动容器使用，推荐把 `<mat-container>` 放入默认 Slot：容器继承根元素上的 `--mat-scroll-area-scrollbar-width`，自动把右侧内边距减去滚动条宽度保持正文视觉居中。默认 Slot 内的 sticky 内容仍属于滚动内容，不保证避开阴影。
 
 `snap` 以 `none`、`proximity`、`mandatory` 设置当前物理滚动轴的原生滚动停靠强度，默认关闭；`snapPadding` 以非负像素值设置同一轴两端的停靠内边距。组件不替默认 Slot 内容选择停靠目标，使用方必须在目标元素上声明 `scroll-snap-align`，并按需要选择 `scroll-snap-stop`。
 
