@@ -88,12 +88,12 @@
 }
 
 .scroll-area-shadow-offset-example__sticky--start {
-  inset-block-start: 0;
+  inset-block-start: -28px;
   padding: 12px 16px;
 }
 
 .scroll-area-shadow-offset-example__sticky--end {
-  inset-block-end: 0;
+  inset-block-end: -28px;
   padding: 12px 16px;
 }
 
@@ -103,7 +103,7 @@
   inline-size: 48px;
   align-items: center;
   justify-content: center;
-  inset-inline-start: 0;
+  inset-inline-start: -28px;
 }
 </style>
 <!-- #endregion style -->
