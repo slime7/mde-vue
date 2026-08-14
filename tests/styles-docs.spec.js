@@ -26,7 +26,7 @@ describe('样式使用文档', () => {
       "@import 'tailwindcss/utilities.css' layer(tailwind-utilities);",
     ];
 
-    expect(layerOrder.trimStart().startsWith('@layer tailwind-theme, tailwind-reset, mde, tailwind-utilities, mde-final;')).toBe(true);
+    expect(layerOrder.trimStart().startsWith('@layer tailwind-theme, tailwind-reset, docs-base, mde, tailwind-utilities, mde-final;')).toBe(true);
     imports.forEach((statement, index) => {
       expect(layerOrder.indexOf(statement)).toBeGreaterThan(index === 0 ? -1 : layerOrder.indexOf(imports[index - 1]));
     });

@@ -21,6 +21,27 @@ const materialSymbolsUrl = [
   '&display=block',
 ].join('');
 
+function createVitePressStylesLayerPlugin() {
+  const themeStylesPath = '/vitepress/dist/client/theme-default/styles/';
+
+  return {
+    name: 'mde-vue-vitepress-styles-layer',
+    enforce: 'pre',
+    transform(code, id) {
+      const normalizedId = id.replaceAll('\\', '/').split('?', 1)[0];
+
+      if (!normalizedId.includes(themeStylesPath) || !normalizedId.endsWith('.css')) {
+        return null;
+      }
+
+      return {
+        code: `@layer docs-base {\n${code.trimEnd()}\n}\n`,
+        map: null,
+      };
+    },
+  };
+}
+
 export default defineConfig({
   title: 'mde-vue',
   description: '面向现代浏览器的私有 Vue 3 组件库',
@@ -155,7 +176,11 @@ export default defineConfig({
     darkModeSwitchLabel: '主题设置',
   },
   vite: {
-    plugins: [tailwindcss(), createLlmsArtifactsPlugin()],
+    plugins: [
+      createVitePressStylesLayerPlugin(),
+      tailwindcss(),
+      createLlmsArtifactsPlugin(),
+    ],
     resolve: {
       alias: [
         {

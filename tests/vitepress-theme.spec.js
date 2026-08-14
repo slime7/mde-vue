@@ -28,6 +28,8 @@ describe('VitePress 文档自定义主题', () => {
     expect(config).toContain('find: /^mde-vue\\/styles\\.css$/');
     expect(config).toContain('new URL(\'../../../src/styles/index.css\', import.meta.url)');
     expect(theme.indexOf("import './custom.css';")).toBeLessThan(theme.indexOf("from 'mde-vue';"));
+    expect(config).toContain('createVitePressStylesLayerPlugin()');
+    expect(config).toContain('@layer docs-base');
   });
 
   it('在主题插件初始化时同步 VitePress 的高亮配色模式', () => {
