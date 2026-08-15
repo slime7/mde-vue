@@ -10,6 +10,7 @@ import MatImage from './components/mat-image/MatImage.vue';
 import MatAvatar from './components/mat-avatar/MatAvatar.vue';
 import MatShape from './components/mat-shape/MatShape.vue';
 import MatText from './components/mat-text/MatText.vue';
+import MatDynamicText from './components/mat-dynamic-text/MatDynamicText.vue';
 import MatSplitBtn from './components/mat-split-btn/MatSplitBtn.vue';
 import MatCard from './components/mat-card/MatCard.vue';
 import MatCardActionArea from './components/mat-card/MatCardActionArea.vue';
@@ -77,6 +78,7 @@ export const GLOBAL_COMPONENTS = [
   ['MatAvatar', 'mat-avatar', MatAvatar],
   ['MatShape', 'mat-shape', MatShape],
   ['MatText', 'mat-text', MatText],
+  ['MatDynamicText', 'mat-dynamic-text', MatDynamicText],
   ['MatSplitBtn', 'mat-split-btn', MatSplitBtn],
   ['MatCard', 'mat-card', MatCard],
   ['MatCardActionArea', 'mat-card-action-area', MatCardActionArea],

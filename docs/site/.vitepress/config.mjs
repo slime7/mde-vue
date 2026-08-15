@@ -160,6 +160,7 @@ export default defineConfig({
               { text: 'Image 图片', link: '/components/image' },
               { text: 'Shape 形状', link: '/components/shape' },
               { text: 'Text 文字', link: '/components/text' },
+              { text: 'Dynamic text 动态文字', link: '/components/dynamic-text' },
               { text: 'List 列表', link: '/components/list' },
               { text: 'Table wrapper 表格容器', link: '/components/table-wrapper' },
             ],

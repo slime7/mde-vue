@@ -9,6 +9,7 @@ export { default as MatImage } from './components/mat-image/MatImage.vue';
 export { default as MatAvatar } from './components/mat-avatar/MatAvatar.vue';
 export { default as MatShape } from './components/mat-shape/MatShape.vue';
 export { default as MatText } from './components/mat-text/MatText.vue';
+export { default as MatDynamicText } from './components/mat-dynamic-text/MatDynamicText.vue';
 export { default as MatSplitBtn } from './components/mat-split-btn/MatSplitBtn.vue';
 export { default as MatCard } from './components/mat-card/MatCard.vue';
 export { default as MatCardActionArea } from './components/mat-card/MatCardActionArea.vue';

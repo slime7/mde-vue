@@ -662,6 +662,40 @@ export interface MatTextProps {
 export type MatTextComponent = DefineComponent<MatTextProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatText: MatTextComponent;
 
+export interface MatDynamicTextProps {
+  /**
+  * 需要展示和动态切换的单行文本或数值。
+  *
+  * @type {string | number}
+  * @default ''
+  */
+  text?: string | number;
+  /**
+  * 实际根元素标签名。
+  *
+  * @type {string}
+  * @default 'span'
+  */
+  as?: string;
+  /**
+  * 是否仅对发生变化的字符执行切换动画。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  diff?: boolean;
+  /**
+  * 首次挂载时是否执行入场动画。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  appear?: boolean;
+}
+
+export type MatDynamicTextComponent = DefineComponent<MatDynamicTextProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatDynamicText: MatDynamicTextComponent;
+
 export interface MatSplitBtnProps {
   /**
   * 使用块级 flex 组根，在普通文档流中铺满父元素。
@@ -3221,6 +3255,8 @@ declare module 'vue' {
     'mat-shape': typeof MatShape;
     MatText: typeof MatText;
     'mat-text': typeof MatText;
+    MatDynamicText: typeof MatDynamicText;
+    'mat-dynamic-text': typeof MatDynamicText;
     MatSplitBtn: typeof MatSplitBtn;
     'mat-split-btn': typeof MatSplitBtn;
     MatCard: typeof MatCard;

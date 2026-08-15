@@ -30,6 +30,7 @@ import {
   MatContainer as RootMatContainer,
   MatDialog as RootMatDialog,
   MatDivider as RootMatDivider,
+  MatDynamicText as RootMatDynamicText,
   MatFab as RootMatFab,
   MatHover as RootMatHover,
   MatIcon as RootMatIcon,
@@ -102,6 +103,7 @@ const globalComponents = [
   ['MatSelect', 'mat-select', RootMatSelect],
   ['MatTextarea', 'mat-textarea', RootMatTextarea],
   ['MatText', 'mat-text', RootMatText],
+  ['MatDynamicText', 'mat-dynamic-text', RootMatDynamicText],
   ['MatInputBase', 'mat-input-base', RootMatInputBase],
   ['MatMenu', 'mat-menu', RootMatMenu],
   ['MatMenuGroup', 'mat-menu-group', RootMatMenuGroup],
@@ -190,6 +192,7 @@ describe('公共组件导出', () => {
     expect(app.component('mat-select')).toBe(RootMatSelect);
     expect(app.component('mat-textarea')).toBe(RootMatTextarea);
     expect(app.component('mat-text')).toBe(RootMatText);
+    expect(app.component('mat-dynamic-text')).toBe(RootMatDynamicText);
     expect(app.component('mat-input-base')).toBe(RootMatInputBase);
     expect(app.component('mat-menu')).toBe(RootMatMenu);
     expect(app.component('mat-menu-group')).toBe(RootMatMenuGroup);
