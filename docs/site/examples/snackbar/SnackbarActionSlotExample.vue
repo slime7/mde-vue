@@ -30,7 +30,7 @@ function undo(action) {
     text="项目已删除。"
   >
     <template #action="{ action }">
-      <mat-btn variant="text" @click="undo(action)">
+      <mat-btn class="slot-action" variant="text" @click="undo(action)">
         恢复项目
       </mat-btn>
     </template>
@@ -41,15 +41,9 @@ function undo(action) {
 <!-- #region style -->
 <style scoped>
 .slot-action {
-  box-sizing: border-box;
-  min-inline-size: 48px;
-  min-block-size: 48px;
-  padding-inline: 12px;
-  color: var(--mat-sys-color-inverse-primary);
-  font: var(--mat-sys-typescale-label-large-weight) var(--mat-sys-typescale-label-large-size) / var(--mat-sys-typescale-label-large-line-height) var(--mat-sys-typescale-label-large-font);
-  letter-spacing: var(--mat-sys-typescale-label-large-tracking);
-  background: transparent;
-  border: 0;
+  --mat-btn-label-text-color: var(--mat-sys-color-inverse-primary);
+  --mat-btn-icon-color: var(--mat-sys-color-inverse-primary);
+  --mat-button-state-color: var(--mat-sys-color-inverse-primary);
 }
 </style>
 <!-- #endregion style -->
