@@ -10,7 +10,7 @@ import { isComponentColor } from '../button-props';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import MatScrollArea from '../mat-scroll-area/MatScrollArea.vue';
 import {
-  MAT_MENU_ITEM_KEY, MAT_MENU_KEY, updateMenuItemPositions,
+  isPointInMenuSafeTriangle, MAT_MENU_ITEM_KEY, MAT_MENU_KEY, updateMenuItemPositions,
 } from '../menu-context';
 import useComponentColor from '../use-component-color';
 import useRovingFocus from '../use-roving-focus';
@@ -622,15 +622,46 @@ function unregisterGroup() {
 /**
  * @param {object} activeApi
  */
-function closeOtherSubmenus(activeApi, { pointer = false } = {}) {
+function closeOtherSubmenus(activeApi) {
   itemApis.forEach((api) => {
     if (api !== activeApi) {
-      api.closeSubmenu({
-        delay: pointer ? api.getSubmenuCloseDelay?.() : 0,
-        focus: false,
-      });
+      api.closeSubmenu({ focus: false });
     }
   });
+}
+
+/**
+ * 指针是否正处于某个已打开子菜单的三角安全区内。
+ * 悬停展开同级子菜单前先检查，避免指针斜向移入已打开子菜单时
+ * 误关闭当前子菜单并打开其他同级子菜单。
+ *
+ * @returns {boolean}
+ */
+function isPointerInOpenSubmenuTriangle() {
+  const { current, previous } = pointerHistory;
+
+  for (const api of itemApis.values()) {
+    if (!api.submenuOpen?.value) {
+      continue;
+    }
+
+    const itemElement = api.element?.value;
+    const submenuElement = api.submenuElement?.value;
+
+    if (!itemElement || !submenuElement) {
+      continue;
+    }
+
+    const itemRect = itemElement.getBoundingClientRect();
+    const submenuRect = submenuElement.getBoundingClientRect();
+    const side = submenuRect.left < itemRect.left ? 'left' : 'right';
+
+    if (isPointInMenuSafeTriangle(current, previous, submenuRect, side)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /**
@@ -697,11 +728,11 @@ provide(MAT_MENU_KEY, {
   closeTree,
   closeOnClick: closeOnClickState,
   color: effectiveColor,
+  isPointerInOpenSubmenuTriangle,
   registerItem,
   registerGroup,
   unregisterItem,
   unregisterGroup,
-  pointerHistory,
   variant: effectiveVariant,
 });
 
@@ -893,7 +924,6 @@ if (appContext) {
     :style="rootStyle"
     :popover="popoverMode"
     role="menu"
-    @pointerenter="itemParent?.cancelSubmenuClose()"
     @focusin="roving.handleFocusIn"
     @keydown="handleKeyDown"
     @toggle="handleToggle"

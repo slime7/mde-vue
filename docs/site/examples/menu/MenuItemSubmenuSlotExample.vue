@@ -30,7 +30,6 @@ const open = ref(false);
           </mat-menu>
         </template>
       </mat-menu-item>
-      <mat-menu-item>复制链接</mat-menu-item>
       <mat-menu-item>
         分享
         <template #submenu>
@@ -41,6 +40,7 @@ const open = ref(false);
           </mat-menu>
         </template>
       </mat-menu-item>
+      <mat-menu-item>复制链接</mat-menu-item>
     </mat-menu>
   </div>
 </template>

@@ -7,7 +7,7 @@ import MatActionBase from '../MatActionBase.vue';
 import MatItemContentBase from '../MatItemContentBase.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
 import {
-  isPointInMenuSafeTriangle, MAT_MENU_GROUP_KEY, MAT_MENU_ITEM_KEY, MAT_MENU_KEY,
+  MAT_MENU_GROUP_KEY, MAT_MENU_ITEM_KEY, MAT_MENU_KEY,
 } from '../menu-context';
 import { useMatProps } from '../use-mat-props';
 
@@ -15,8 +15,6 @@ defineOptions({
   name: 'MatMenuItem',
   inheritAttrs: false,
 });
-
-const SUBMENU_SAFE_CLOSE_DELAY = 300;
 
 const props = defineProps({
   /**
@@ -47,27 +45,11 @@ const submenuOpen = ref(false);
 const submenuId = ref(undefined);
 const position = ref('only');
 let submenuApi;
-let closeTimer;
 const hasSubmenu = computed(() => Boolean(slots.submenu));
 
-function closeSubmenu({ delay = 0, focus = false, immediate = false } = {}) {
-  cancelSubmenuClose();
-
-  if (delay > 0) {
-    closeTimer = setTimeout(() => {
-      submenuOpen.value = false;
-      submenuApi?.close({ focus, immediate });
-    }, delay);
-    return;
-  }
-
+function closeSubmenu({ focus = false, immediate = false } = {}) {
   submenuOpen.value = false;
   submenuApi?.close({ focus, immediate });
-}
-
-function cancelSubmenuClose() {
-  clearTimeout(closeTimer);
-  closeTimer = undefined;
 }
 
 async function openSubmenu({ pointer = false } = {}) {
@@ -75,7 +57,11 @@ async function openSubmenu({ pointer = false } = {}) {
     return;
   }
 
-  menu?.closeOtherSubmenus(itemApi, { pointer });
+  if (pointer && menu?.isPointerInOpenSubmenuTriangle?.()) {
+    return;
+  }
+
+  menu?.closeOtherSubmenus(itemApi);
   submenuOpen.value = true;
   await submenuApi?.open();
 }
@@ -101,22 +87,8 @@ const itemApi = {
   setPosition(value) {
     position.value = value;
   },
-  getSubmenuCloseDelay() {
-    if (!submenuApi?.element?.value || !menu?.pointerHistory || !element.value) {
-      return 0;
-    }
-
-    const itemRect = element.value.getBoundingClientRect();
-    const submenuRect = submenuApi.element.value.getBoundingClientRect();
-    const side = submenuRect.left < itemRect.left ? 'left' : 'right';
-
-    return isPointInMenuSafeTriangle(
-      menu.pointerHistory.current,
-      menu.pointerHistory.previous,
-      submenuRect,
-      side,
-    ) ? SUBMENU_SAFE_CLOSE_DELAY : 0;
-  },
+  submenuElement: computed(() => submenuApi?.element?.value ?? null),
+  submenuOpen,
 };
 
 /**
@@ -153,7 +125,6 @@ function handleKeyDown(event) {
 }
 
 provide(MAT_MENU_ITEM_KEY, {
-  cancelSubmenuClose,
   element,
   registerSubmenu,
   submenuOpen,
@@ -165,7 +136,6 @@ onMounted(() => {
   menu?.registerItem(itemApi);
 });
 onBeforeUnmount(() => {
-  clearTimeout(closeTimer);
   group?.unregisterItem(itemApi);
   menu?.unregisterItem(itemApi);
 });
