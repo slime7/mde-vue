@@ -17,9 +17,28 @@ defineOptions({
 <style>
 @layer mde.components {
   .table-wrapper {
+    --mat-table-wrapper-scrollbar-width: 8px;
     overflow-x: auto;
     border: 1px solid var(--mat-sys-color-surface-variant);
     border-radius: var(--mat-table-wrapper-container-shape);
+    scrollbar-width: thin;
+    scrollbar-color: var(--mat-sys-color-primary) transparent;
+  }
+
+  .table-wrapper::-webkit-scrollbar {
+    width: var(--mat-table-wrapper-scrollbar-width);
+    height: var(--mat-table-wrapper-scrollbar-width);
+    background: transparent;
+  }
+
+  .table-wrapper::-webkit-scrollbar-track,
+  .table-wrapper::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  .table-wrapper::-webkit-scrollbar-thumb {
+    background: var(--mat-sys-color-primary);
+    border-radius: var(--mat-sys-shape-corner-full);
   }
 
   .table-wrapper table {

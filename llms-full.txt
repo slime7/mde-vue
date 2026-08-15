@@ -19099,6 +19099,7 @@ import ContainerHeightExample from '../examples/container/ContainerHeightExample
 ## 样式行为
 
 - 容器 `overflow-x: auto`，表格超出可用宽度时在容器内横向滚动，不会撑破页面。
+ - 容器滚动条采用 thin 尺寸，拇指使用 primary 色、轨道透明，与 scroll-area 的滚动条规范一致。
 - 容器不设最大宽度，宽度由父元素决定；内部 `table` 占满容器宽度。
 - 容器带 1px `surface-variant` 边框与 24px 圆角；单元格使用 `16px 24px` 内边距，行间以 1px `surface-variant` 上边框分隔，末列无右边框，首行无上边框。
 - 表头 `th` 使用 `surface-container-low` 底色、`on-surface-variant` 文字色与 `font-weight: 500`。
