@@ -1,7 +1,7 @@
 <script setup>
 import {
-  computed, getCurrentInstance, inject, nextTick, onBeforeUnmount, onMounted, provide, ref,
-  shallowRef, watch,
+  cloneVNode, computed, Fragment, getCurrentInstance, h, inject, isVNode, nextTick,
+  onBeforeUnmount, onMounted, provide, ref, shallowRef, useSlots, watch,
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import createMotionController from '../motion-controller';
@@ -9,6 +9,7 @@ import MatActionBase from '../MatActionBase.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
 import MatScrollArea from '../mat-scroll-area/MatScrollArea.vue';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
+import MatNavigationRailItem from './MatNavigationRailItem.vue';
 import { MAT_NAVIGATION_RAIL_KEY } from './mat-navigation-context';
 import { isValidCssLength, toCssLength } from '../value-utils';
 import { useMatProps } from '../use-mat-props';
@@ -77,17 +78,14 @@ const props = defineProps({
     validator: (value) => isValidCssLength(value, { property: 'inline-size' }),
   },
   /**
-   * 应用模式的固定侧；可选值为 `start`、`end`。
+   * 展开态下所有 Item 的活动指示器是否铺满可用宽度。
    *
-   * @type {'start' | 'end'}
-   * @default 'start'
+   * @type {boolean}
+   * @default false
    */
-  position: {
-    type: String,
-    default: 'start',
-    validator(value) {
-      return ['start', 'end'].includes(value);
-    },
+  fullWidth: {
+    type: Boolean,
+    default: false,
   },
   /**
    * 是否允许通过内部菜单入口切换展开状态。
@@ -123,16 +121,16 @@ const props = defineProps({
     default: false,
   },
   /**
-   * Item 对齐方式；可选值为 `top`、`center`。
+   * 默认 Slot 在主轴上的对齐方式；可选值为 `start`、`center`、`end`。
    *
-   * @type {'top' | 'center'}
-   * @default 'top'
+   * @type {'start' | 'center' | 'end'}
+   * @default 'start'
    */
   alignment: {
     type: String,
-    default: 'top',
+    default: 'start',
     validator(value) {
-      return ['top', 'center'].includes(value);
+      return ['start', 'center', 'end'].includes(value);
     },
   },
   /**
@@ -236,6 +234,7 @@ const emit = defineEmits({
 
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const instance = getCurrentInstance();
+const slots = useSlots();
 const appContext = inject(MAT_APP_ROOT_KEY, null);
 const rawVNodeProps = instance?.vnode.props ?? {};
 const hasExplicitAttach = Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach');
@@ -249,6 +248,60 @@ const isHidden = computed(() => (
 const presentedExpanded = ref(propsWithDefaults.expanded);
 const showCollapsibleContent = ref(!isHidden.value);
 const effectiveExpanded = computed(() => presentedExpanded.value);
+const hasFixedHeader = computed(() => (
+  propsWithDefaults.collapsible
+  || (showCollapsibleContent.value && Boolean(slots.header || slots.fab))
+));
+const hasFixedEnd = computed(() => (
+  !isHorizontal.value && showCollapsibleContent.value && Boolean(slots.end)
+));
+const showsCustomContent = computed(() => (
+  !isHorizontal.value && propsWithDefaults.expanded
+));
+
+/**
+ * @param {import('vue').VNode} vnode
+ * @returns {boolean}
+ */
+function isNavigationItemVNode(vnode) {
+  return vnode.type === MatNavigationRailItem
+    || vnode.type?.name === 'MatNavigationRailItem';
+}
+
+/**
+ * @param {unknown} node
+ * @returns {unknown}
+ */
+function renderDefaultNode(node) {
+  if (!isVNode(node)) {
+    return node;
+  }
+
+  if (node.type === Fragment && Array.isArray(node.children)) {
+    return h(
+      Fragment,
+      { key: node.key },
+      node.children.map(renderDefaultNode),
+    );
+  }
+
+  if (isNavigationItemVNode(node)) {
+    return node;
+  }
+
+  if (showsCustomContent.value) {
+    return node;
+  }
+
+  return cloneVNode(node, { hidden: true });
+}
+
+function NavigationRailContent() {
+  return slots.default?.({
+    expanded: propsWithDefaults.expanded,
+    orientation: propsWithDefaults.orientation,
+  }).map(renderDefaultNode);
+}
 const hideMotion = createMotionController();
 const usesAppRoot = computed(() => (
   propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach
@@ -283,7 +336,6 @@ const hostClasses = computed(() => ({
   'mat-navigation-rail-host--horizontal': isHorizontal.value,
   'mat-navigation-rail-host--expanded': effectiveExpanded.value,
   'mat-navigation-rail-host--collapsed': !effectiveExpanded.value,
-  [`mat-navigation-rail-host--${propsWithDefaults.position}`]: true,
   'mat-navigation-rail-host--modal': isModal.value,
   'mat-navigation-rail-host--hidden': isHidden.value,
   'mat-navigation-rail-host--app': propsWithDefaults.app,
@@ -296,6 +348,8 @@ const railClasses = computed(() => ({
   'mat-navigation-rail--modal': isModal.value && effectiveExpanded.value,
   'mat-navigation-rail--hidden': isHidden.value,
   'mat-navigation-rail--collapsible-hidden': !showCollapsibleContent.value,
+  'mat-navigation-rail--with-header': hasFixedHeader.value,
+  'mat-navigation-rail--with-end': hasFixedEnd.value,
   'mat-navigation-rail--app': propsWithDefaults.app,
   'mat-navigation-rail--app-root': usesAppRoot.value,
 }));
@@ -377,7 +431,7 @@ async function syncRailMeasurement() {
 
   if (usesAppRoot.value) {
     edgeRegistration.value = appContext.publicContext.registerEdge({
-      edge: isHorizontal.value ? 'bottom' : propsWithDefaults.position,
+      edge: isHorizontal.value ? 'bottom' : 'start',
       element: hostElement.value,
     });
   }
@@ -455,9 +509,9 @@ function handleKeydown(event) {
 
 provide(MAT_NAVIGATION_RAIL_KEY, {
   expanded: effectiveExpanded,
+  fullWidth: computed(() => propsWithDefaults.fullWidth),
   isSelected,
   orientation: computed(() => propsWithDefaults.orientation),
-  position: computed(() => propsWithDefaults.position),
   requestSelection,
   useCursor: matUi.useCursor,
 });
@@ -529,73 +583,92 @@ watch([
         class="mat-navigation-rail"
         :class="railClasses"
       >
-        <div
-          v-if="!isHorizontal"
-          class="mat-navigation-rail__header"
+        <MatActionBase
+          v-if="!isHorizontal && propsWithDefaults.collapsible && !showCollapsibleContent"
+          class="mat-navigation-rail__menu mat-navigation-rail__menu--detached"
+          :aria-expanded="propsWithDefaults.expanded"
+          :aria-label="menuLabel"
+          :focus-ring="false"
+          :use-cursor="matUi.useCursor"
+          @click="toggleExpanded"
         >
-          <slot
-            v-if="showCollapsibleContent"
-            name="header"
-            :expanded="effectiveExpanded"
+          <MatIcon
+            :icon="menuIcon"
+            aria-hidden="true"
           />
+        </MatActionBase>
 
-          <MatActionBase
-            v-if="propsWithDefaults.collapsible"
-            class="mat-navigation-rail__menu"
-            :aria-expanded="propsWithDefaults.expanded"
-            :aria-label="menuLabel"
-            :focus-ring="false"
-            :use-cursor="matUi.useCursor"
-            @click="toggleExpanded"
-          >
-            <MatIcon
-              :icon="menuIcon"
-              aria-hidden="true"
-            />
-          </MatActionBase>
-
-          <div
-            v-if="$slots.fab && showCollapsibleContent"
-            class="mat-navigation-rail__fab"
-          >
-            <slot
-              name="fab"
-              :expanded="effectiveExpanded"
-            />
-          </div>
-        </div>
-
-        <div
-          v-if="showCollapsibleContent"
-          class="mat-navigation-rail__content"
+        <MatScrollArea
+          class="mat-navigation-rail__scroll-area"
+          :orientation="isHorizontal ? 'horizontal' : 'vertical'"
+          bar-width="thin"
+          :shadow-length="0"
+          no-scroll-padding
         >
-          <MatScrollArea
-            class="mat-navigation-rail__scroll-area"
-            :orientation="isHorizontal ? 'horizontal' : 'vertical'"
-            bar-width="hidden"
-            no-scroll-padding
-          >
+          <div class="mat-navigation-rail__layout">
             <div
-              class="mat-navigation-rail__destinations"
-              :class="`mat-navigation-rail__destinations--${propsWithDefaults.alignment}`"
+              v-if="!isHorizontal && hasFixedHeader && showCollapsibleContent"
+              class="mat-navigation-rail__header"
             >
               <slot
-                :expanded="effectiveExpanded"
-                :orientation="propsWithDefaults.orientation"
+                name="header"
+                :expanded="propsWithDefaults.expanded"
+              />
+
+              <MatActionBase
+                v-if="propsWithDefaults.collapsible"
+                class="mat-navigation-rail__menu"
+                :aria-expanded="propsWithDefaults.expanded"
+                :aria-label="menuLabel"
+                :focus-ring="false"
+                :use-cursor="matUi.useCursor"
+                @click="toggleExpanded"
+              >
+                <MatIcon
+                  :icon="menuIcon"
+                  aria-hidden="true"
+                />
+              </MatActionBase>
+
+              <div
+                v-if="$slots.fab && showCollapsibleContent"
+                class="mat-navigation-rail__fab"
+              >
+                <slot
+                  name="fab"
+                  :expanded="propsWithDefaults.expanded"
+                />
+              </div>
+            </div>
+
+            <div
+              v-if="showCollapsibleContent"
+              class="mat-navigation-rail__content"
+            >
+              <div
+                class="mat-navigation-rail__destinations"
+                :class="[
+                  `mat-navigation-rail__destinations--${propsWithDefaults.alignment}`,
+                  {
+                    'mat-navigation-rail__destinations--show-custom-content': showsCustomContent,
+                  },
+                ]"
+              >
+                <NavigationRailContent />
+              </div>
+            </div>
+
+            <div
+              v-if="$slots.end && showCollapsibleContent && !isHorizontal"
+              class="mat-navigation-rail__end"
+            >
+              <slot
+                name="end"
+                :expanded="propsWithDefaults.expanded"
               />
             </div>
-          </MatScrollArea>
-        </div>
-
-        <div
-          v-if="$slots.end && showCollapsibleContent && !isHorizontal"
-          class="mat-navigation-rail__end"
-        >
-          <slot
-            name="end"
-            :expanded="effectiveExpanded"
-          />
-        </div>
+          </div>
+        </MatScrollArea>
       </nav>
     </div>
   </Teleport>
@@ -610,10 +683,6 @@ watch([
     inline-size: var(--mat-navigation-rail-collapsed-width);
     min-block-size: 100%;
     transition: inline-size var(--mat-sys-motion-spring-default-spatial);
-  }
-
-  .mat-navigation-rail-host--end {
-    --mat-navigation-rail-item-inline-alignment: flex-end;
   }
 
   .mat-navigation-rail-host--horizontal {
@@ -656,10 +725,6 @@ watch([
     pointer-events: auto;
   }
 
-  .mat-navigation-rail-host--app.mat-navigation-rail-host--end {
-    inset-inline: auto 0;
-  }
-
   .mat-navigation-rail-host--app.mat-navigation-rail-host--horizontal {
     --mat-navigation-rail-app-bar-height: var(--mat-navigation-bar-height);
     inset: auto 0 0;
@@ -683,6 +748,7 @@ watch([
   }
 
   .mat-navigation-rail {
+    --mat-navigation-rail-current-container-color: var(--mat-navigation-rail-container-color);
     position: relative;
     z-index: 1;
     display: flex;
@@ -693,7 +759,7 @@ watch([
     flex-direction: column;
     align-items: stretch;
     color: var(--mat-navigation-rail-content-color);
-    background: var(--mat-navigation-rail-container-color);
+    background: var(--mat-navigation-rail-current-container-color);
     transition: inline-size var(--mat-sys-motion-spring-default-spatial), border-radius var(--mat-sys-motion-spring-default-spatial);
   }
 
@@ -702,6 +768,7 @@ watch([
   }
 
   .mat-navigation-rail--modal {
+    --mat-navigation-rail-current-container-color: var(--mat-navigation-rail-modal-container-color);
     position: absolute;
     z-index: 11;
     inset-block: 0;
@@ -732,20 +799,13 @@ watch([
     );
   }
 
-  .mat-navigation-rail-host--app.mat-navigation-rail-host--end .mat-navigation-rail--modal {
-    inset-inline: auto 0;
-    border-start-start-radius: var(--mat-navigation-rail-modal-shape);
-    border-end-start-radius: var(--mat-navigation-rail-modal-shape);
-    border-start-end-radius: 0;
-    border-end-end-radius: 0;
-  }
-
   .mat-navigation-rail--bar {
+    --mat-navigation-rail-current-container-color: var(--mat-navigation-bar-container-color);
     flex-direction: row;
     align-items: stretch;
     justify-content: center;
     min-block-size: 0;
-    background: var(--mat-navigation-bar-container-color);
+    background: var(--mat-navigation-rail-current-container-color);
     box-shadow: var(--mat-navigation-bar-elevation);
   }
 
@@ -772,6 +832,9 @@ watch([
   }
 
   .mat-navigation-rail__header {
+    position: sticky;
+    z-index: 1;
+    inset-block-start: 0;
     display: flex;
     flex: 0 0 auto;
     min-inline-size: 0;
@@ -780,6 +843,7 @@ watch([
     gap: var(--mat-navigation-rail-header-gap);
     padding-block-start: var(--mat-navigation-rail-top-space);
     padding-inline: var(--mat-navigation-rail-collapsed-side-space);
+    background: var(--mat-navigation-rail-current-container-color);
   }
 
   .mat-navigation-rail--expanded .mat-navigation-rail__header {
@@ -787,11 +851,11 @@ watch([
     padding-inline: var(--mat-navigation-rail-expanded-side-space);
   }
 
-  .mat-navigation-rail--collapsible-hidden .mat-navigation-rail__header {
+  .mat-navigation-rail__menu--detached {
     position: absolute;
+    z-index: 2;
     inset-block-start: var(--mat-navigation-rail-top-space);
     inset-inline-start: var(--mat-navigation-rail-hidden-menu-space);
-    padding: 0;
   }
 
   .mat-navigation-rail__menu {
@@ -822,18 +886,31 @@ watch([
 
   .mat-navigation-rail__content {
     display: flex;
-    flex: 1 1 auto;
+    flex: 1 0 auto;
     min-block-size: 0;
     flex-direction: column;
-    padding-block: var(--mat-navigation-rail-item-space);
+    padding-block: var(--mat-navigation-rail-top-space);
+  }
+
+  .mat-navigation-rail--with-header .mat-navigation-rail__content {
+    padding-block-start: var(--mat-navigation-rail-header-content-space);
+  }
+
+  .mat-navigation-rail--with-end .mat-navigation-rail__content {
+    padding-block-end: 0;
   }
 
   .mat-navigation-rail__end {
+    position: sticky;
+    z-index: 1;
+    inset-block-end: 0;
     display: flex;
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    padding: var(--mat-navigation-rail-end-space);
+    padding-block-end: var(--mat-navigation-rail-top-space);
+    padding-inline: var(--mat-navigation-rail-collapsed-side-space);
+    background: var(--mat-navigation-rail-current-container-color);
   }
 
   .mat-navigation-rail--expanded .mat-navigation-rail__end {
@@ -847,12 +924,18 @@ watch([
     padding: 0 var(--mat-navigation-bar-edge-space);
   }
 
-  .mat-navigation-rail__scroll-area :deep(.mat-scroll-area__viewport) {
+  .mat-navigation-rail__scroll-area {
+    flex: 1 1 auto;
+  }
+
+  .mat-navigation-rail__layout {
     display: flex;
+    min-inline-size: 100%;
+    min-block-size: 100%;
     flex-direction: column;
   }
 
-  .mat-navigation-rail--bar .mat-navigation-rail__scroll-area :deep(.mat-scroll-area__viewport) {
+  .mat-navigation-rail--bar .mat-navigation-rail__layout {
     flex-direction: row;
     align-items: stretch;
   }
@@ -872,7 +955,7 @@ watch([
     gap: 0;
   }
 
-  .mat-navigation-rail__destinations--top {
+  .mat-navigation-rail__destinations--start {
     justify-content: flex-start;
   }
 
@@ -880,11 +963,22 @@ watch([
     justify-content: safe center;
   }
 
+  .mat-navigation-rail__destinations--end {
+    justify-content: safe flex-end;
+  }
+
   .mat-navigation-rail--bar .mat-navigation-rail__destinations {
     flex-direction: row;
     align-items: stretch;
-    justify-content: safe center;
     gap: var(--mat-navigation-bar-item-space);
+  }
+
+  .mat-navigation-rail__destinations:not(.mat-navigation-rail__destinations--show-custom-content) {
+    font-size: 0;
+  }
+
+  :global(.mat-navigation-rail__destinations:not(.mat-navigation-rail__destinations--show-custom-content) > :not(.mat-navigation-rail-item)) {
+    display: none !important;
   }
 
   .mat-navigation-rail__placeholder {

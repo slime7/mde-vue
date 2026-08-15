@@ -4,22 +4,39 @@ import { ref } from 'vue';
 
 const selected = ref('home');
 const expanded = ref(true);
+const alignment = ref('center');
 </script>
 <!-- #endregion script -->
 
 <!-- #region template -->
 <template>
   <div class="navigation-bar-example-shell">
-    <mat-btn
-      variant="outlined"
-      @click="expanded = !expanded"
-    >
-      {{ expanded ? '切换为图标在上的 Item' : '切换为图标在左的 Item' }}
-    </mat-btn>
+    <div class="navigation-bar-example-controls">
+      <mat-switch v-model="expanded">
+        {{ expanded ? '图标在左' : '图标在上' }}
+      </mat-switch>
+
+      <mat-radio-group
+        v-model="alignment"
+        class="navigation-bar-example-alignment"
+        label="内容对齐"
+      >
+        <mat-radio value="start">
+          起始
+        </mat-radio>
+        <mat-radio value="center">
+          居中
+        </mat-radio>
+        <mat-radio value="end">
+          末尾
+        </mat-radio>
+      </mat-radio-group>
+    </div>
 
     <mat-navigation-rail
       v-model="selected"
       :expanded="expanded"
+      :alignment="alignment"
       orientation="horizontal"
       aria-label="底部导航"
     >
@@ -32,6 +49,8 @@ const expanded = ref(true);
       <mat-navigation-rail-item value="profile" icon="person">
         我的
       </mat-navigation-rail-item>
+
+      <mat-btn>横向模式不会显示</mat-btn>
     </mat-navigation-rail>
   </div>
 </template>
@@ -50,6 +69,18 @@ const expanded = ref(true);
   overflow: hidden;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.navigation-bar-example-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.navigation-bar-example-alignment {
+  flex-flow: row wrap;
+  align-items: center;
 }
 </style>
 <!-- #endregion style -->

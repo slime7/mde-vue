@@ -12,9 +12,9 @@ const active = ref(false);
     id="navigation-rail-app-example"
     class="navigation-rail-app-example"
   >
-    <mat-btn variant="outlined" @click="active = !active">
+    <mat-switch v-model="active">
       {{ active ? '隐藏应用导航' : '显示应用导航' }}
-    </mat-btn>
+    </mat-switch>
     <mat-navigation-rail
       v-if="active"
       app

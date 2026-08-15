@@ -1,4 +1,6 @@
-import { h, nextTick } from 'vue';
+import {
+  defineComponent, h, nextTick, onMounted,
+} from 'vue';
 import { flushPromises, mount } from '@vue/test-utils';
 import {
   afterEach, describe, expect, it, vi,
@@ -24,6 +26,42 @@ function navigationItems() {
 }
 
 describe('MatNavigationRail', () => {
+  it('使用 alignment 控制默认内容定位且不再公开 position', () => {
+    expect(MatNavigationRail.props.position).toBeUndefined();
+    expect(MatNavigationRail.props.alignment.default).toBe('start');
+    expect(MatNavigationRail.props.alignment.validator('start')).toBe(true);
+    expect(MatNavigationRail.props.alignment.validator('center')).toBe(true);
+    expect(MatNavigationRail.props.alignment.validator('end')).toBe(true);
+    expect(MatNavigationRail.props.alignment.validator('top')).toBe(false);
+  });
+
+  it('由 Navigation 的 full-width 统一控制所有 Item', async () => {
+    expect(MatNavigationRail.props.fullWidth.default).toBe(false);
+    expect(MatNavigationRailItem.props.fullWidth).toBeUndefined();
+
+    const wrapper = mount(MatNavigationRail, {
+      props: {
+        expanded: true,
+        fullWidth: false,
+      },
+      slots: { default: navigationItems },
+    });
+    const itemElements = wrapper.findAllComponents(MatNavigationRailItem)
+      .map((item) => item.element);
+
+    expect(wrapper.findAllComponents(MatNavigationRailItem).every(
+      (item) => !item.classes().includes('mat-navigation-rail-item--full-width'),
+    )).toBe(true);
+
+    await wrapper.setProps({ fullWidth: true });
+
+    expect(wrapper.findAllComponents(MatNavigationRailItem).every(
+      (item) => item.classes().includes('mat-navigation-rail-item--full-width'),
+    )).toBe(true);
+    expect(wrapper.findAllComponents(MatNavigationRailItem).map((item) => item.element))
+      .toEqual(itemElements);
+  });
+
   it('默认渲染只用于纵向布局的 collapsed Expressive rail', () => {
     expect(MatNavigationRail.props.app.default).toBe(false);
 
@@ -137,6 +175,48 @@ describe('MatNavigationRail', () => {
       .toBe('首页');
   });
 
+  it('仅在纵向展开态显示默认 Slot 中的其他内容且切换时不卸载内容', async () => {
+    let extraMountCount = 0;
+    const ExtraContent = defineComponent({
+      setup() {
+        onMounted(() => {
+          extraMountCount += 1;
+        });
+
+        return () => h('button', { class: 'test-extra-content' }, '辅助操作');
+      },
+    });
+    const wrapper = mount(MatNavigationRail, {
+      props: {
+        expanded: false,
+        modelValue: 'home',
+      },
+      slots: {
+        default: () => [
+          h(MatNavigationRailItem, { value: 'home', icon: 'home' }, () => '首页'),
+          h(ExtraContent),
+        ],
+      },
+    });
+    const itemElement = wrapper.findComponent(MatNavigationRailItem).element;
+    const extraContent = wrapper.find('.test-extra-content');
+
+    expect(extraContent.element.hidden).toBe(true);
+    expect(extraMountCount).toBe(1);
+
+    await wrapper.setProps({ expanded: true });
+
+    expect(wrapper.find('.test-extra-content').element.hidden).toBe(false);
+    expect(wrapper.findComponent(MatNavigationRailItem).element).toBe(itemElement);
+    expect(extraMountCount).toBe(1);
+
+    await wrapper.setProps({ orientation: 'horizontal' });
+
+    expect(wrapper.find('.test-extra-content').element.hidden).toBe(true);
+    expect(wrapper.findComponent(MatNavigationRailItem).element).toBe(itemElement);
+    expect(extraMountCount).toBe(1);
+  });
+
   it('Item 通过 update:modelValue 请求单选，并保留原生 click 事件', async () => {
     const wrapper = mount(MatNavigationRail, {
       props: { modelValue: 'home' },
@@ -203,7 +283,7 @@ describe('MatNavigationRail', () => {
     expect(wrapper.emitted('update:expanded')).toEqual([[false], [false]]);
   });
 
-  it('hide-on-collapse 隐藏 expanded rail 容器但保留可访问的菜单按钮', () => {
+  it('hide-on-collapse 隐藏 expanded rail 容器但保留可再次展开的菜单按钮', async () => {
     const wrapper = mount(MatNavigationRail, {
       props: {
         collapsible: true,
@@ -218,6 +298,10 @@ describe('MatNavigationRail', () => {
     expect(wrapper.find('.mat-navigation-rail__content').exists()).toBe(false);
     expect(wrapper.find('.test-hidden-header').exists()).toBe(false);
     expect(wrapper.find('.mat-navigation-rail__menu').attributes('aria-expanded')).toBe('false');
+
+    await wrapper.find('.mat-navigation-rail__menu').trigger('click');
+
+    expect(wrapper.emitted('update:expanded')).toEqual([[true]]);
   });
 
   it('hide-on-collapse 收起时保留内容直到实际退出动画完成', async () => {
@@ -247,6 +331,11 @@ describe('MatNavigationRail', () => {
       },
       slots: {
         default: navigationItems,
+        header: ({ expanded }) => h(
+          'span',
+          { class: 'test-controlled-expanded' },
+          String(expanded),
+        ),
       },
     });
 
@@ -254,6 +343,7 @@ describe('MatNavigationRail', () => {
     await nextTick();
 
     expect(wrapper.find('.mat-navigation-rail__content').exists()).toBe(true);
+    expect(wrapper.find('.test-controlled-expanded').text()).toBe('false');
 
     finishCloseAnimation();
     await flushPromises();
@@ -262,7 +352,7 @@ describe('MatNavigationRail', () => {
     expect(wrapper.find('.mat-navigation-rail__content').exists()).toBe(false);
   });
 
-  it('支持 top/center 目的地对齐以及 header、fab Slots', () => {
+  it('支持默认内容对齐以及 header、fab Slots', () => {
     const wrapper = mount(MatNavigationRail, {
       props: { alignment: 'center', expanded: true },
       slots: {
@@ -274,6 +364,30 @@ describe('MatNavigationRail', () => {
 
     expect(wrapper.find('.test-header').text()).toBe('true');
     expect(wrapper.find('.test-fab').text()).toBe('true');
+  });
+
+  it('缺省 icon 在收缩态使用圆点占位且展开态不保留图标', async () => {
+    const wrapper = mount(MatNavigationRail, {
+      slots: {
+        default: () => [
+          h(MatNavigationRailItem, { value: 'missing' }, () => '无图标'),
+          h(MatNavigationRailItem, { value: 'empty', icon: '' }, () => '空图标'),
+        ],
+      },
+    });
+
+    expect(wrapper.findAllComponents(MatNavigationRailItem)).toHaveLength(2);
+    expect(wrapper.findAllComponents(MatNavigationRailItem)[0].findComponent({ name: 'MatIcon' }).props('icon'))
+      .toBe('circle');
+    expect(wrapper.findAllComponents(MatNavigationRailItem)[1].findComponent({ name: 'MatIcon' }).props('icon'))
+      .toBe('circle');
+
+    await wrapper.setProps({ expanded: true });
+
+    expect(wrapper.findAllComponents(MatNavigationRailItem)[0].findComponent({ name: 'MatIcon' }).exists())
+      .toBe(false);
+    expect(wrapper.findAllComponents(MatNavigationRailItem)[1].findComponent({ name: 'MatIcon' }).exists())
+      .toBe(false);
   });
 
   it('trailing 插槽渲染内容并接收 expanded/selected 插槽参数', async () => {

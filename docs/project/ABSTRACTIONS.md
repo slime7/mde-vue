@@ -264,9 +264,9 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 
 ## Navigation 导航
 
-`<mat-navigation-rail>` 通过 `modelValue` 受控选择唯一目的地，直接子级 `<mat-navigation-rail-item>` 使用稳定 `value` 请求更新。纵向模式表达 Material 3 Expressive collapsed/expanded rail；默认在当前容器内布局，`expanded` 只由使用方控制，`layout="standard"` 占据正文空间，`layout="modal"` 在当前布局容器内覆盖正文并通过遮罩或 Escape 请求收起。设置 `app=true` 后组件建立应用导航：省略显式 attach 且位于 AppRoot 时自动登记逻辑边缘，modal 展开只以 collapsed host 宽度参与 padding；否则固定到显式 attach。`placeholder` 和 `bottomPlaceholder` 只在应用模式下生效；`position` 同时决定 rail 的固定侧和 Item 对齐。collapsed rail 默认保持可见；`hideOnCollapse` 只用于保留外部可达菜单入口的沉浸式 expanded rail。
+`<mat-navigation-rail>` 通过 `modelValue` 受控选择唯一目的地，直接子级 `<mat-navigation-rail-item>` 使用稳定 `value` 请求更新。纵向模式表达 Material 3 Expressive collapsed/expanded rail；默认在当前容器内布局，`expanded` 只由使用方控制，`layout="standard"` 占据正文空间，`layout="modal"` 在当前布局容器内覆盖正文并通过遮罩或 Escape 请求收起。设置 `app=true` 后组件建立应用导航：省略显式 attach 且位于 AppRoot 时固定登记逻辑 start 边缘，modal 展开只以 collapsed host 宽度参与 padding；否则固定到显式 attach。`placeholder` 和 `bottomPlaceholder` 只在应用模式下生效。collapsed rail 默认保持可见；`hideOnCollapse` 只用于保留外部可达菜单入口的沉浸式 expanded rail。
 
-`width` 只覆写 expanded rail 的宽度：数字与纯数字字符串转换为 px（0 不带单位），其他字符串须为 trim 后合法的 CSS 宽度值，非法时使用默认宽度；`position` 决定 Item 在起始或末尾侧对齐，并在展开/收回时保持该对齐。`orientation="horizontal"` 表达 Flexible navigation bar；`expanded=false` 使用图标上、标签下的纵向 Item，`expanded=true` 使用图标左、标签右的横向 Item。它不响应 `collapsible`、`layout`、`hideOnCollapse`、`alignment`、Header、FAB 或 `end`。纵向 rail 的 `end` Slot 固定于底部。组件不自动监听窗口尺寸，应用负责在 compact、medium 及更大断点间切换 bar 与 rail，且同一布局不得同时显示两者。Item 使用原生按钮或链接、`aria-current="page"`、完整宽度命中区域和指示器状态层；选中时只过渡背景色，标签必须简短且不得通过省略号截断。
+`width` 只覆写 expanded rail 的宽度：数字与纯数字字符串转换为 px（0 不带单位），其他字符串须为 trim 后合法的 CSS 宽度值，非法时使用默认宽度。纵向使用覆盖整栏且贴边的 thin ScrollArea；Header、具名 FAB 与 `end` 在同一滚动层中 sticky 固定，默认内容从它们之间滚过。展开态显示全部直接子内容，收缩态只显示直接子级 Item而不卸载其他内容；具名 FAB 可用 Slot 的 `expanded` 参数在收缩时切换为纯图标。`alignment` 使用 start/center/end 在剩余高度内对齐默认内容，`fullWidth` 由 Navigation 统一控制全部 Item 的展开态指示器。`orientation="horizontal"` 表达 Flexible navigation bar；`expanded=false` 使用图标上、标签下的纵向 Item，`expanded=true` 使用图标左、标签右的横向 Item，`alignment` 改为沿可用宽度对齐，并始终隐藏非 Item 默认内容。横向模式不响应 `collapsible`、`layout`、`hideOnCollapse`、Header、FAB 或 `end`。组件不自动监听窗口尺寸，应用负责在 compact、medium 及更大断点间切换 bar 与 rail，且同一布局不得同时显示两者。Item 使用原生按钮或链接、`aria-current="page"`、完整宽度命中区域和指示器状态层；缺省 icon 在展开态不占空间，收缩态使用圆点占位，展开与方向切换继续过渡标签和指示器。
 
 ## Toolbar 工具栏
 

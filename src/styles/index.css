@@ -390,7 +390,7 @@
     --mat-navigation-rail-content-color: var(--mat-sys-color-on-surface-variant);
     --mat-navigation-rail-top-space: 44px;
     --mat-navigation-rail-header-gap: 12px;
-    --mat-navigation-rail-end-space: 12px;
+    --mat-navigation-rail-header-content-space: 40px;
     --mat-navigation-rail-menu-size: 48px;
     --mat-navigation-rail-hidden-menu-space: 24px;
     --mat-navigation-rail-expanded-side-space: 16px;

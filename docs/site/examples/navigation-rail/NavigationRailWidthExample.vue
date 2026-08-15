@@ -9,21 +9,18 @@ const width = ref(280);
 <!-- #region template -->
 <template>
   <div class="navigation-rail-width-example-shell">
-    <div class="navigation-rail-width-example-controls">
-      <mat-btn
-        variant="outlined"
-        @click="width = 280"
-      >
+    <mat-radio-group
+      v-model="width"
+      class="navigation-rail-width-example-controls"
+      label="展开宽度"
+    >
+      <mat-radio :value="280">
         280px
-      </mat-btn>
-
-      <mat-btn
-        variant="outlined"
-        @click="width = 'min(80vw, 360px)'"
-      >
+      </mat-radio>
+      <mat-radio value="min(80vw, 360px)">
         min(80vw, 360px)
-      </mat-btn>
-    </div>
+      </mat-radio>
+    </mat-radio-group>
 
     <div class="navigation-rail-width-example-layout">
       <mat-navigation-rail
@@ -57,9 +54,8 @@ const width = ref(280);
 }
 
 .navigation-rail-width-example-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-flow: row wrap;
+  align-items: center;
 }
 
 .navigation-rail-width-example-layout {

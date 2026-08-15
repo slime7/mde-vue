@@ -53,16 +53,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  /**
-   * 展开态活动指示器是否铺满 Item 可用宽度；默认贴合内容。
-   *
-   * @type {boolean}
-   * @default false
-   */
-  fullWidth: {
-    type: Boolean,
-    default: false,
-  },
 });
 const propsWithDefaults = useMatProps('navigationRailItem', props);
 
@@ -76,10 +66,16 @@ const slots = useSlots();
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const navigation = inject(MAT_NAVIGATION_RAIL_KEY, null);
 const expanded = computed(() => navigation?.expanded.value ?? false);
+const fullWidth = computed(() => navigation?.fullWidth.value ?? false);
 const isHorizontal = computed(() => navigation?.orientation.value === 'horizontal');
-const position = computed(() => navigation?.position.value ?? 'start');
 const selected = computed(() => navigation?.isSelected(propsWithDefaults.value) ?? false);
-const hasIcon = computed(() => Boolean(propsWithDefaults.icon || slots.icon));
+const hasIcon = computed(() => Boolean(
+  slots.icon || (propsWithDefaults.icon && propsWithDefaults.icon.trim()),
+));
+const showsIcon = computed(() => hasIcon.value || !expanded.value);
+const resolvedIcon = computed(() => (
+  hasIcon.value ? propsWithDefaults.icon : 'circle'
+));
 const typographyClass = computed(() => getTypographyClass(
   'label',
   expanded.value && !isHorizontal.value ? 'large' : 'medium',
@@ -91,8 +87,7 @@ const itemClasses = computed(() => ({
   'mat-navigation-rail-item--expanded': expanded.value,
   'mat-navigation-rail-item--collapsed': !expanded.value,
   'mat-navigation-rail-item--horizontal': isHorizontal.value,
-  'mat-navigation-rail-item--full-width': propsWithDefaults.fullWidth,
-  [`mat-navigation-rail-item--${position.value}`]: true,
+  'mat-navigation-rail-item--full-width': fullWidth.value,
 }));
 
 /**
@@ -120,7 +115,10 @@ function handleClick(event) {
     @click="handleClick"
   >
     <span class="mat-navigation-rail-item__indicator">
-      <span class="mat-navigation-rail-item__icon-wrap">
+      <span
+        v-if="showsIcon"
+        class="mat-navigation-rail-item__icon-wrap"
+      >
         <slot
           v-if="slots.icon"
           name="icon"
@@ -128,9 +126,9 @@ function handleClick(event) {
         />
 
         <MatIcon
-          v-else-if="hasIcon"
+          v-else
           :fill="selected ? 1 : 0"
-          :icon="propsWithDefaults.icon"
+          :icon="resolvedIcon"
           class="mat-navigation-rail-item__icon"
           aria-hidden="true"
         />
@@ -346,22 +344,12 @@ function handleClick(event) {
 
   .mat-navigation-rail-item--expanded > .mat-navigation-rail-item__label {
     position: absolute;
-    inset-inline-start: 50%;
-    translate: -50% 0;
+    inset-inline-start: var(--mat-navigation-rail-collapsed-side-space);
+    translate: 0 0;
     inset-block-end: var(--mat-navigation-rail-item-space);
     opacity: 0;
     visibility: hidden;
     transition: opacity var(--mat-sys-motion-spring-fast-effects), visibility 0s linear var(--mat-sys-motion-duration-short3);
-  }
-
-  .mat-navigation-rail-item--expanded.mat-navigation-rail-item--start > .mat-navigation-rail-item__label {
-    inset-inline-start: var(--mat-navigation-rail-collapsed-side-space);
-    translate: 0 0;
-  }
-
-  .mat-navigation-rail-item--expanded.mat-navigation-rail-item--end > .mat-navigation-rail-item__label {
-    inset-inline: auto var(--mat-navigation-rail-collapsed-side-space);
-    translate: 0 0;
   }
 
   .mat-navigation-rail-item--horizontal.mat-navigation-rail-item--expanded > .mat-navigation-rail-item__label {
@@ -401,10 +389,6 @@ function handleClick(event) {
     display: block;
     flex: 1 1 auto;
     min-inline-size: 0;
-  }
-
-  .mat-navigation-rail-item--expanded.mat-navigation-rail-item--end .mat-navigation-rail-item__indicator {
-    margin-inline-start: auto;
   }
 
   .mat-navigation-rail-item--horizontal.mat-navigation-rail-item--expanded .mat-navigation-rail-item__indicator {

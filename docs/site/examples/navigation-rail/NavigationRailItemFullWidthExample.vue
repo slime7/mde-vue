@@ -36,12 +36,13 @@ const selected = ref('home');
         <mat-navigation-rail
           v-model="selected"
           expanded
+          full-width
           aria-label="铺满宽度导航"
         >
-          <mat-navigation-rail-item value="home" icon="home" full-width>
+          <mat-navigation-rail-item value="home" icon="home">
             首页
           </mat-navigation-rail-item>
-          <mat-navigation-rail-item value="folder" icon="folder" full-width>
+          <mat-navigation-rail-item value="folder" icon="folder">
             项目
           </mat-navigation-rail-item>
         </mat-navigation-rail>
@@ -86,4 +87,3 @@ const selected = ref('home');
 }
 </style>
 <!-- #endregion style -->
-

@@ -9,7 +9,7 @@ order: 53
 
 ## 组件简介
 
-`<mat-fab>` 的组件导出名是 `MatFab`。它使用同一个组件表达普通 FAB 和 Extended FAB：没有默认 Slot 文本时渲染纯图标 FAB；有默认 Slot 文本时渲染带标签的 Extended FAB。默认在声明位置参与普通布局；设置 `app` 后自动进入最近 `MatAppRoot` 的普通浮动组。组件不实现滚动收缩、FAB menu 或页面级动效。
+`<mat-fab>` 的组件导出名是 `MatFab`。它使用同一个组件表达普通 FAB 和 Extended FAB：没有默认 Slot 文本时渲染纯图标 FAB；有默认 Slot 文本时渲染带标签的 Extended FAB。Extended FAB 可以通过 `expanded` 在保留同一组件实例的情况下收缩为图标态。默认在声明位置参与普通布局；设置 `app` 后自动进入最近 `MatAppRoot` 的普通浮动组。组件不实现滚动驱动的自动收缩、FAB menu 或页面级动效。
 
 纯图标模式需要传入非空 `icon` 和 `label`。`label` 同时作为按钮的可访问名称和默认 Tooltip 文本；Extended FAB 可以省略图标，默认 Slot 标签仍然有效。标签保持单行，超出可用宽度时以省略号截断。
 
@@ -50,6 +50,28 @@ order: 53
 <ClientOnly>
   <DocsPreview label="FAB Extended 与无图标标签预览">
     <FabExtendedExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `expanded`
+
+带默认 Slot 标签的 Extended FAB 可以将 `expanded` 设为 `false` 收缩为纯图标 FAB。标签隐藏时仍使用 `label` 提供可访问名称和 Tooltip，恢复展开后继续使用原有 Slot 内容。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/fab/FabExpandedExample.vue#template [template]
+
+<<< @/examples/fab/FabExpandedExample.vue#script [script]
+
+<<< @/examples/fab/FabExpandedExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="FAB 展开与收缩预览">
+    <FabExpandedExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -164,6 +186,7 @@ FAB 只接受当前主题中的八组官方颜色角色，不接受十六进制�
 | `size` | `'small' \| 'medium' \| 'large'` | `'medium'` | FAB 高度和内容尺寸；分别为 56px、80px、96px，`small` 不是已废弃的 40px FAB |
 | `icon` | `string` | 未设置 | Material Symbols 图标；Extended FAB 可以省略；非空时显示为填充图标 |
 | `label` | `string` | 未设置 | 纯图标模式的无障碍名称和默认 Tooltip 文本；纯图标模式必须提供非空值 |
+| `expanded` | `boolean` | `true` | 是否显示默认 Slot 标签；`false` 时同一 Extended FAB 收缩为纯图标态 |
 | `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'primary-container' \| 'secondary-container' \| 'tertiary-container' \| 'error' \| 'error-container'` | `'primary-container'` | 当前主题的官方颜色角色；不接受十六进制种子色 |
 | `disabled` | `boolean` | `false` | 原生禁用状态 |
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 原生按钮类型 |
@@ -205,6 +228,7 @@ import FabAppExample from '../examples/fab/FabAppExample.vue';
 import FabColorExample from '../examples/fab/FabColorExample.vue';
 import FabDefaultExample from '../examples/fab/FabDefaultExample.vue';
 import FabDisabledExample from '../examples/fab/FabDisabledExample.vue';
+import FabExpandedExample from '../examples/fab/FabExpandedExample.vue';
 import FabExtendedExample from '../examples/fab/FabExtendedExample.vue';
 import FabSizeExample from '../examples/fab/FabSizeExample.vue';
 </script>

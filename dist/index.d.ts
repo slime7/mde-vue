@@ -374,6 +374,13 @@ export interface MatFabProps {
   */
   label?: string | undefined;
   /**
+  * 是否显示默认 Slot 标签；设为 false 时，同一个 Extended FAB 收缩为纯图标 FAB。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  expanded?: boolean;
+  /**
   * FAB 颜色角色；可选值为 `primary`、`secondary`、`tertiary`、`primary-container`、`secondary-container`、`tertiary-container`、`error`、`error-container`。
   *
   * @type {string}
@@ -2968,12 +2975,12 @@ export interface MatNavigationRailProps {
   */
   width?: number | string | undefined;
   /**
-  * 应用模式的固定侧；可选值为 `start`、`end`。
+  * 展开态下所有 Item 的活动指示器是否铺满可用宽度。
   *
-  * @type {'start' | 'end'}
-  * @default 'start'
+  * @type {boolean}
+  * @default false
   */
-  position?: 'start' | 'end';
+  fullWidth?: boolean;
   /**
   * 是否允许通过内部菜单入口切换展开状态。
   *
@@ -2996,12 +3003,12 @@ export interface MatNavigationRailProps {
   */
   hideOnCollapse?: boolean;
   /**
-  * Item 对齐方式；可选值为 `top`、`center`。
+  * 默认 Slot 在主轴上的对齐方式；可选值为 `start`、`center`、`end`。
   *
-  * @type {'top' | 'center'}
-  * @default 'top'
+  * @type {'start' | 'center' | 'end'}
+  * @default 'start'
   */
-  alignment?: 'top' | 'center';
+  alignment?: 'start' | 'center' | 'end';
   /**
   * 收起状态菜单入口的 Material Symbols 图标。
   *
@@ -3104,13 +3111,6 @@ export interface MatNavigationRailItemProps {
   * @default false
   */
   disabled?: boolean;
-  /**
-  * 展开态活动指示器是否铺满 Item 可用宽度；默认贴合内容。
-  *
-  * @type {boolean}
-  * @default false
-  */
-  fullWidth?: boolean;
 }
 
 export interface MatNavigationRailItemEmits {

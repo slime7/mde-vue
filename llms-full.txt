@@ -3965,7 +3965,7 @@ import './styles/app.css';
 
 ## 组件简介
 
-`<mat-fab>` 的组件导出名是 `MatFab`。它使用同一个组件表达普通 FAB 和 Extended FAB：没有默认 Slot 文本时渲染纯图标 FAB；有默认 Slot 文本时渲染带标签的 Extended FAB。默认在声明位置参与普通布局；设置 `app` 后自动进入最近 `MatAppRoot` 的普通浮动组。组件不实现滚动收缩、FAB menu 或页面级动效。
+`<mat-fab>` 的组件导出名是 `MatFab`。它使用同一个组件表达普通 FAB 和 Extended FAB：没有默认 Slot 文本时渲染纯图标 FAB；有默认 Slot 文本时渲染带标签的 Extended FAB。Extended FAB 可以通过 `expanded` 在保留同一组件实例的情况下收缩为图标态。默认在声明位置参与普通布局；设置 `app` 后自动进入最近 `MatAppRoot` 的普通浮动组。组件不实现滚动驱动的自动收缩、FAB menu 或页面级动效。
 
 纯图标模式需要传入非空 `icon` 和 `label`。`label` 同时作为按钮的可访问名称和默认 Tooltip 文本；Extended FAB 可以省略图标，默认 Slot 标签仍然有效。标签保持单行，超出可用宽度时以省略号截断。
 
@@ -4037,6 +4037,56 @@ import './styles/app.css';
 <ClientOnly>
   <DocsPreview label="FAB Extended 与无图标标签预览">
     <FabExtendedExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `expanded`
+
+带默认 Slot 标签的 Extended FAB 可以将 `expanded` 设为 `false` 收缩为纯图标 FAB。标签隐藏时仍使用 `label` 提供可访问名称和 Tooltip，恢复展开后继续使用原有 Slot 内容。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="fab-expanded-example">
+    <mat-switch v-model="expanded">
+      显示标签
+    </mat-switch>
+
+    <mat-fab
+      :expanded="expanded"
+      size="small"
+      icon="add"
+      label="新建"
+    >
+      新建
+    </mat-fab>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const expanded = ref(true);
+</script>
+```
+```vue
+<style scoped>
+.fab-expanded-example {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="FAB 展开与收缩预览">
+    <FabExpandedExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -4291,6 +4341,7 @@ const colors = [
 | `size` | `'small' \| 'medium' \| 'large'` | `'medium'` | FAB 高度和内容尺寸；分别为 56px、80px、96px，`small` 不是已废弃的 40px FAB |
 | `icon` | `string` | 未设置 | Material Symbols 图标；Extended FAB 可以省略；非空时显示为填充图标 |
 | `label` | `string` | 未设置 | 纯图标模式的无障碍名称和默认 Tooltip 文本；纯图标模式必须提供非空值 |
+| `expanded` | `boolean` | `true` | 是否显示默认 Slot 标签；`false` 时同一 Extended FAB 收缩为纯图标态 |
 | `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'primary-container' \| 'secondary-container' \| 'tertiary-container' \| 'error' \| 'error-container'` | `'primary-container'` | 当前主题的官方颜色角色；不接受十六进制种子色 |
 | `disabled` | `boolean` | `false` | 原生禁用状态 |
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 原生按钮类型 |
@@ -4332,6 +4383,7 @@ import FabAppExample from '../examples/fab/FabAppExample.vue';
 import FabColorExample from '../examples/fab/FabColorExample.vue';
 import FabDefaultExample from '../examples/fab/FabDefaultExample.vue';
 import FabDisabledExample from '../examples/fab/FabDisabledExample.vue';
+import FabExpandedExample from '../examples/fab/FabExpandedExample.vue';
 import FabExtendedExample from '../examples/fab/FabExtendedExample.vue';
 import FabSizeExample from '../examples/fab/FabSizeExample.vue';
 </script>
@@ -6151,7 +6203,7 @@ const { layout, registerEdge } = useMatApp();
 ## 组件接入规则
 
 - `MatToolbar app`：省略 `attach` 时自动进入当前 AppRoot。docked 登记 `bottom`；所有 floating 变体不占布局，但会避让已登记边缘。floating 仍可显式设置 `placeholder`，为声明处的长内容保留滚动末端空间。显式 `attach` 始终优先，并沿用视口固定模式。
-- `MatNavigationRail app`：省略 `attach` 时自动进入当前 AppRoot。纵向按 `position` 登记 `start`/`end`，横向登记 `bottom`；modal 展开层覆盖正文，只以 collapsed host 宽度参与布局。显式 `attach` 保留原行为。
+- `MatNavigationRail app`：省略 `attach` 时自动进入当前 AppRoot。纵向固定登记 `start`，横向登记 `bottom`；modal 展开层覆盖正文，只以 collapsed host 宽度参与布局。显式 `attach` 保留原行为。
 - `MatSnackbar`：模板实例自动进入当前 AppRoot 的 Snackbar 组，并由 AppRoot 处理安全区、边缘避让和 16px 容器边距；内部滚动模式下，该间距从浮动组边界向内计算，不把滚动条占用计作间距。命令式 `snackbar()`/`toast()` 仍挂载到 body，并使用旧 Toolbar 几何注册表。
 - `MatFab app`：自动进入普通浮动组，与容器边缘保持 16px 间距；内部滚动模式下同样从浮动组边界向内计算。`position` 控制 `start`、`center`、`end` 对齐；未设置 `app` 时仍是声明位置的原生按钮。
 - `MatTooltip`：省略 `attach` 且展示目标位于当前 AppRoot 时进入应用覆盖层，并避让 `layout.padding`；目标位于 AppRoot 外时回退到 body。已打开的 dialog/Popover 和显式 `attach` 仍具有更高优先级。
@@ -15088,7 +15140,7 @@ import SideSheetVariantExample from '../examples/side-sheet/SideSheetVariantExam
 
 官方把 Navigation rail 和 Navigation bar 定义为独立组件。本组件为减少重复 API 暂时组合两者，但仍保持规范边界：纵向模式只实现 rail；横向模式只实现 Navigation bar 的 horizontal items，不提供 vertical navigation bar，也不把横向模式称为 Navigation rail。
 
-纵向 rail 支持 3–7 个主要目的地、可选菜单、Header、FAB 与底部自定义内容。默认在声明位置参与父容器布局；expanded rail 可以使用占据正文空间的 `standard` 布局或覆盖当前布局容器的 `modal` 布局。设置 `app` 后，省略 `attach` 且位于 `MatAppRoot` 内时自动登记应用边缘，否则固定到视口并挂载至 `attach`。横向 bar 适合较小或中等窗口中的少量目的地：`expanded` 为 `false` 时图标在上、标签在下，为 `true` 时使用图标在左、标签在右的固定宽度 Item。
+纵向 rail 支持 3–7 个主要目的地、可选菜单、Header、固定 FAB 与底部自定义内容。纵向展开后，默认 Slot 还可以直接组合 FAB、图标按钮、Divider、Spacer、Headline 等内容；收缩状态和横向模式只显示直接子级 NavigationItem。默认在声明位置参与父容器布局；expanded rail 可以使用占据正文空间的 `standard` 布局或覆盖当前布局容器的 `modal` 布局。设置 `app` 后，省略 `attach` 且位于 `MatAppRoot` 内时自动登记应用起始边缘，否则固定到视口并挂载至 `attach`。
 
 ## 示例
 
@@ -15162,7 +15214,7 @@ const selected = ref('home');
 
 ### `app` 与 `attach`
 
-`app=true` 将 Navigation rail 作为应用级固定导航。位于 `MatAppRoot` 且省略 `attach` 时，纵向按 `position` 登记 `start`/`end`，horizontal bar 登记 `bottom`；显式 `attach` 时沿用视口固定模式。`app=false` 时 `attach` 不生效，组件保留在声明位置。
+`app=true` 将 Navigation rail 作为应用级固定导航。位于 `MatAppRoot` 且省略 `attach` 时，纵向登记 `start`，horizontal bar 登记 `bottom`；显式 `attach` 时沿用视口固定模式。`app=false` 时 `attach` 不生效，组件保留在声明位置。
 
 :::: details 查看示例代码
 ::: code-group
@@ -15173,9 +15225,9 @@ const selected = ref('home');
     id="navigation-rail-app-example"
     class="navigation-rail-app-example"
   >
-    <mat-btn variant="outlined" @click="active = !active">
+    <mat-switch v-model="active">
       {{ active ? '隐藏应用导航' : '显示应用导航' }}
-    </mat-btn>
+    </mat-switch>
     <mat-navigation-rail
       v-if="active"
       app
@@ -15234,9 +15286,9 @@ const active = ref(false);
     id="navigation-rail-placeholder-example"
     class="navigation-rail-placeholder-example"
   >
-    <mat-btn variant="outlined" @click="active = !active">
+    <mat-switch v-model="active">
       {{ active ? '隐藏应用导航' : '显示应用导航' }}
-    </mat-btn>
+    </mat-switch>
     <mat-navigation-rail
       v-if="active"
       app
@@ -15299,9 +15351,9 @@ const active = ref(false);
     id="navigation-rail-bottom-placeholder-example"
     class="navigation-rail-bottom-placeholder-example"
   >
-    <mat-btn variant="outlined" @click="active = !active">
+    <mat-switch v-model="active">
       {{ active ? '隐藏应用导航' : '显示应用导航' }}
-    </mat-btn>
+    </mat-switch>
     <mat-navigation-rail
       v-if="active"
       app
@@ -15430,21 +15482,18 @@ const selected = ref('overview');
 ```vue
 <template>
   <div class="navigation-rail-width-example-shell">
-    <div class="navigation-rail-width-example-controls">
-      <mat-btn
-        variant="outlined"
-        @click="width = 280"
-      >
+    <mat-radio-group
+      v-model="width"
+      class="navigation-rail-width-example-controls"
+      label="展开宽度"
+    >
+      <mat-radio :value="280">
         280px
-      </mat-btn>
-
-      <mat-btn
-        variant="outlined"
-        @click="width = 'min(80vw, 360px)'"
-      >
+      </mat-radio>
+      <mat-radio value="min(80vw, 360px)">
         min(80vw, 360px)
-      </mat-btn>
-    </div>
+      </mat-radio>
+    </mat-radio-group>
 
     <div class="navigation-rail-width-example-layout">
       <mat-navigation-rail
@@ -15484,9 +15533,8 @@ const width = ref(280);
 }
 
 .navigation-rail-width-example-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-flow: row wrap;
+  align-items: center;
 }
 
 .navigation-rail-width-example-layout {
@@ -15517,9 +15565,9 @@ const width = ref(280);
   </DocsPreview>
 </ClientOnly>
 
-### `full-width`（Item）
+### `full-width`
 
-`full-width` 只作用于展开态 Item：活动指示器铺满 Item 可用宽度，两端保留展开侧边距；默认指示器只贴合图标与标签的内容宽度。设置 `full-width` 时，展开态指示器内图标与标签的间距增加到 12px。适合让展开后的目的地呈现等宽、更强的选中区域。
+在 `MatNavigationRail` 上设置 `full-width` 后，全部直接子级 NavigationItem 的活动指示器会在展开态铺满可用宽度，两端保留展开侧边距；默认指示器只贴合图标与标签的内容宽度。启用时，展开态指示器内图标与标签的间距增加到 12px，避免逐项重复配置。
 
 :::: details 查看示例代码
 ::: code-group
@@ -15554,12 +15602,13 @@ const width = ref(280);
         <mat-navigation-rail
           v-model="selected"
           expanded
+          full-width
           aria-label="铺满宽度导航"
         >
-          <mat-navigation-rail-item value="home" icon="home" full-width>
+          <mat-navigation-rail-item value="home" icon="home">
             首页
           </mat-navigation-rail-item>
-          <mat-navigation-rail-item value="folder" icon="folder" full-width>
+          <mat-navigation-rail-item value="folder" icon="folder">
             项目
           </mat-navigation-rail-item>
         </mat-navigation-rail>
@@ -15619,37 +15668,43 @@ const selected = ref('home');
   </DocsPreview>
 </ClientOnly>
 
-### `position`
+### `alignment`
 
-`position="start"` 使 Item 在每种状态下贴近起始侧；`position="end"` 使其贴近末尾侧。展开、收回及横向布局切换时，Item 不会先移动到中心再播放动画。参与正文排版的 standard rail 使用 default spatial 尺寸过渡；modal 只覆盖正文，不额外改变正文宽度。
+`alignment` 使用 `start`、`center`、`end` 控制默认 Slot 在主轴上的位置。纵向模式在固定 Header/FAB 和 `end` 之间的剩余高度内对齐；横向模式沿水平方向对齐 NavigationItem。内容溢出时安全回退到起始位置，确保滚动起点可达。参与正文排版的 standard rail 使用 default spatial 尺寸过渡；modal 只覆盖正文，不额外改变正文宽度。
 
 :::: details 查看示例代码
 ::: code-group
 
 ```vue
 <template>
-  <div class="navigation-rail-position-example-shell">
-    <div class="navigation-rail-position-example-controls">
-      <mat-btn
-        variant="outlined"
-        @click="expanded = !expanded"
-      >
-        {{ expanded ? '收回导航' : '展开导航' }}
-      </mat-btn>
+  <div class="navigation-rail-alignment-example-shell">
+    <div class="navigation-rail-alignment-example-controls">
+      <mat-switch v-model="expanded">
+        {{ expanded ? '已展开' : '已收回' }}
+      </mat-switch>
 
-      <mat-btn
-        variant="outlined"
-        @click="position = position === 'start' ? 'end' : 'start'"
+      <mat-radio-group
+        v-model="alignment"
+        class="navigation-rail-alignment-example-options"
+        label="默认内容对齐"
       >
-        对齐到{{ position === 'start' ? '末尾侧' : '起始侧' }}
-      </mat-btn>
+        <mat-radio value="start">
+          起始
+        </mat-radio>
+        <mat-radio value="center">
+          居中
+        </mat-radio>
+        <mat-radio value="end">
+          末尾
+        </mat-radio>
+      </mat-radio-group>
     </div>
 
-    <div class="navigation-rail-position-example-layout">
+    <div class="navigation-rail-alignment-example-layout">
       <mat-navigation-rail
         v-model:expanded="expanded"
-        :position="position"
-        aria-label="固定侧导航"
+        :alignment="alignment"
+        aria-label="内容对齐导航"
       >
         <mat-navigation-rail-item icon="home">
           首页
@@ -15659,8 +15714,8 @@ const selected = ref('home');
         </mat-navigation-rail-item>
       </mat-navigation-rail>
 
-      <div class="navigation-rail-position-example-content">
-        Item 会保持在{{ position === 'start' ? '起始' : '末尾' }}侧。
+      <div class="navigation-rail-alignment-example-content">
+        默认 Slot 位于剩余空间的 {{ alignment }} 位置。
       </div>
     </div>
   </div>
@@ -15671,25 +15726,31 @@ const selected = ref('home');
 import { ref } from 'vue';
 
 const expanded = ref(true);
-const position = ref('start');
+const alignment = ref('start');
 </script>
 ```
 ```vue
 <style scoped>
-.navigation-rail-position-example-shell {
+.navigation-rail-alignment-example-shell {
   display: flex;
   inline-size: 100%;
   flex-direction: column;
   gap: 12px;
 }
 
-.navigation-rail-position-example-controls {
+.navigation-rail-alignment-example-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  align-items: center;
+  gap: 16px;
 }
 
-.navigation-rail-position-example-layout {
+.navigation-rail-alignment-example-options {
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+.navigation-rail-alignment-example-layout {
   display: flex;
   inline-size: 100%;
   min-block-size: 240px;
@@ -15698,7 +15759,7 @@ const position = ref('start');
   border-radius: var(--mat-sys-shape-corner-large);
 }
 
-.navigation-rail-position-example-content {
+.navigation-rail-alignment-example-content {
   display: grid;
   flex: 1 1 auto;
   min-inline-size: 0;
@@ -15712,8 +15773,8 @@ const position = ref('start');
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation rail 固定侧对齐预览">
-    <NavigationRailPositionExample />
+  <DocsPreview label="Navigation rail 默认内容对齐预览">
+    <NavigationRailAlignmentExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -15890,7 +15951,7 @@ const expanded = ref(false);
 
 ### Horizontal flexible Navigation bar
 
-设置 `orientation="horizontal"` 后使用 Flexible navigation bar。`expanded` 为 `false` 时显示 80px 高的图标上、标签下 Item；`expanded` 为 `true` 时显示 64px 高的图标左、标签右 Item。此模式仍忽略 `collapsible`、`layout`、`hide-on-collapse`、`alignment`、Header、FAB 和 `end`。
+设置 `orientation="horizontal"` 后使用 Flexible navigation bar。`expanded` 为 `false` 时显示 80px 高的图标上、标签下 Item；`expanded` 为 `true` 时显示 64px 高的图标左、标签右 Item。`alignment` 在水平方向对齐 NavigationItem；其他默认 Slot 内容始终隐藏。此模式仍忽略 `collapsible`、`layout`、`hide-on-collapse`、Header、FAB 和 `end`。
 
 :::: details 查看示例代码
 ::: code-group
@@ -15898,16 +15959,32 @@ const expanded = ref(false);
 ```vue
 <template>
   <div class="navigation-bar-example-shell">
-    <mat-btn
-      variant="outlined"
-      @click="expanded = !expanded"
-    >
-      {{ expanded ? '切换为图标在上的 Item' : '切换为图标在左的 Item' }}
-    </mat-btn>
+    <div class="navigation-bar-example-controls">
+      <mat-switch v-model="expanded">
+        {{ expanded ? '图标在左' : '图标在上' }}
+      </mat-switch>
+
+      <mat-radio-group
+        v-model="alignment"
+        class="navigation-bar-example-alignment"
+        label="内容对齐"
+      >
+        <mat-radio value="start">
+          起始
+        </mat-radio>
+        <mat-radio value="center">
+          居中
+        </mat-radio>
+        <mat-radio value="end">
+          末尾
+        </mat-radio>
+      </mat-radio-group>
+    </div>
 
     <mat-navigation-rail
       v-model="selected"
       :expanded="expanded"
+      :alignment="alignment"
       orientation="horizontal"
       aria-label="底部导航"
     >
@@ -15920,6 +15997,8 @@ const expanded = ref(false);
       <mat-navigation-rail-item value="profile" icon="person">
         我的
       </mat-navigation-rail-item>
+
+      <mat-btn>横向模式不会显示</mat-btn>
     </mat-navigation-rail>
   </div>
 </template>
@@ -15930,6 +16009,7 @@ import { ref } from 'vue';
 
 const selected = ref('home');
 const expanded = ref(true);
+const alignment = ref('center');
 </script>
 ```
 ```vue
@@ -15946,6 +16026,18 @@ const expanded = ref(true);
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-large);
 }
+
+.navigation-bar-example-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.navigation-bar-example-alignment {
+  flex-flow: row wrap;
+  align-items: center;
+}
 </style>
 ```
 :::
@@ -15959,7 +16051,7 @@ const expanded = ref(true);
 
 ### Header、FAB 与底部内容 Slots
 
-Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互品牌标识；不要把容易被误认为按钮的图形放入其中。FAB 应位于目的地之前；`end` 则固定在 rail 底部，适合帮助、设置或账户操作等自定义元素。
+Header、菜单和具名 FAB 通过 sticky 固定在纵向 rail 顶部，`end` sticky 固定在底部；整栏共用同一个滚动区域和靠边的 thin 滚动条。Header 适合品牌标识，具名 `fab` 适合主要操作；Slot 的 `expanded` 参数可让 Extended FAB 在 rail 收缩时只保留图标。放入默认 Slot 的 FAB、按钮、Divider、Spacer 与文字会在纵向展开态显示并随内容滚动；收缩状态会隐藏这些元素，但不会卸载它们。
 
 :::: details 查看示例代码
 ::: code-group
@@ -15968,23 +16060,53 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 <template>
   <div class="navigation-rail-example-shell">
     <mat-navigation-rail
-      expanded
+      v-model="selected"
+      v-model:expanded="expanded"
+      collapsible
       aria-label="带扩展内容的导航"
     >
-      <template #header>
-        <mat-icon icon="timer" class="navigation-rail-example-logo" />
+      <template #header="{ expanded: currentExpanded }">
+        <mat-text type="title" size="small" emphasized>
+          {{ currentExpanded ? '工作空间' : '导航' }}
+        </mat-text>
       </template>
 
-      <template #fab>
-        <mat-fab icon="add" label="新建" />
+      <template #fab="{ expanded: currentExpanded }">
+        <mat-fab
+          :expanded="currentExpanded"
+          size="small"
+          icon="add"
+          label="新建"
+          aria-label="新建"
+        >
+          新建
+        </mat-fab>
       </template>
 
-      <mat-navigation-rail-item icon="inbox">
+      <mat-navigation-rail-item value="inbox" icon="inbox">
         收件箱
       </mat-navigation-rail-item>
-      <mat-navigation-rail-item icon="star">
+      <mat-navigation-rail-item value="starred" icon="star">
         收藏
       </mat-navigation-rail-item>
+
+      <mat-divider />
+
+      <mat-text
+        as="h3"
+        type="headline"
+        size="small"
+        class="navigation-rail-example-headline"
+      >
+        快捷操作
+      </mat-text>
+
+      <mat-btn icon="notifications" label="通知" />
+      <mat-fab size="small" icon="edit" label="编辑" />
+      <mat-spacer />
+      <mat-text class="navigation-rail-example-note">
+        这些自定义内容仅在纵向展开态显示，并随中间区域滚动。
+      </mat-text>
 
       <template #end>
         <mat-btn icon="help" label="帮助" />
@@ -15994,19 +16116,31 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 </template>
 ```
 ```vue
+<script setup>
+import { ref } from 'vue';
+
+const expanded = ref(true);
+const selected = ref('inbox');
+</script>
+```
+```vue
 <style scoped>
 .navigation-rail-example-shell {
   display: flex;
   inline-size: 100%;
-  min-block-size: 280px;
+  block-size: 440px;
   overflow: hidden;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-large);
 }
 
-.navigation-rail-example-logo {
-  margin-inline: 12px;
-  color: var(--mat-sys-color-primary);
+.navigation-rail-example-headline,
+.navigation-rail-example-note {
+  padding-inline: 16px;
+}
+
+.navigation-rail-example-note {
+  color: var(--mat-sys-color-on-surface-variant);
 }
 </style>
 ```
@@ -16016,6 +16150,126 @@ Header、菜单和 FAB 始终位于纵向 rail 顶部。Header 适合非交互�
 <ClientOnly>
   <DocsPreview label="Navigation rail Header 与 FAB 预览">
     <NavigationRailSlotsExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 顶部内容组合
+
+纵向容器顶部固定保留 44px。Header、菜单和具名 FAB 组成顶部固定区，内部元素相隔 12px；顶部固定区存在时，与默认 Slot 滚动区之间至少保留 40px。没有这些顶部内容时，默认 Slot 直接从 44px 留白后开始。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="navigation-rail-header-spacing-example">
+    <section>
+      <mat-text type="label">
+        无菜单、无 FAB
+      </mat-text>
+      <div class="navigation-rail-header-spacing-example-frame">
+        <mat-navigation-rail expanded aria-label="无顶部操作导航">
+          <mat-navigation-rail-item icon="home">
+            首页
+          </mat-navigation-rail-item>
+          <mat-navigation-rail-item icon="folder">
+            项目
+          </mat-navigation-rail-item>
+        </mat-navigation-rail>
+      </div>
+    </section>
+
+    <section>
+      <mat-text type="label">
+        仅菜单
+      </mat-text>
+      <div class="navigation-rail-header-spacing-example-frame">
+        <mat-navigation-rail expanded collapsible aria-label="仅菜单导航">
+          <mat-navigation-rail-item icon="home">
+            首页
+          </mat-navigation-rail-item>
+          <mat-navigation-rail-item icon="folder">
+            项目
+          </mat-navigation-rail-item>
+        </mat-navigation-rail>
+      </div>
+    </section>
+
+    <section>
+      <mat-text type="label">
+        仅 FAB
+      </mat-text>
+      <div class="navigation-rail-header-spacing-example-frame">
+        <mat-navigation-rail expanded aria-label="仅 FAB 导航">
+          <template #fab>
+            <mat-fab size="small" icon="add" label="新建" />
+          </template>
+
+          <mat-navigation-rail-item icon="home">
+            首页
+          </mat-navigation-rail-item>
+          <mat-navigation-rail-item icon="folder">
+            项目
+          </mat-navigation-rail-item>
+        </mat-navigation-rail>
+      </div>
+    </section>
+
+    <section>
+      <mat-text type="label">
+        菜单和 FAB
+      </mat-text>
+      <div class="navigation-rail-header-spacing-example-frame">
+        <mat-navigation-rail expanded collapsible aria-label="菜单和 FAB 导航">
+          <template #fab>
+            <mat-fab size="small" icon="add" label="新建" />
+          </template>
+
+          <mat-navigation-rail-item icon="home">
+            首页
+          </mat-navigation-rail-item>
+          <mat-navigation-rail-item icon="folder">
+            项目
+          </mat-navigation-rail-item>
+        </mat-navigation-rail>
+      </div>
+    </section>
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.navigation-rail-header-spacing-example {
+  display: grid;
+  inline-size: 100%;
+  grid-template-columns: repeat(4, minmax(220px, 1fr));
+  gap: 12px;
+  overflow-x: auto;
+}
+
+.navigation-rail-header-spacing-example section {
+  display: flex;
+  block-size: 440px;
+  min-inline-size: 220px;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.navigation-rail-header-spacing-example-frame {
+  min-block-size: 0;
+  flex-grow: 1;
+  overflow: hidden;
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail 顶部内容组合预览">
+    <NavigationRailHeaderSpacingExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -16123,11 +16377,11 @@ const selected = ref('inbox');
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | 纵向 Expressive rail 或 horizontal Flexible navigation bar |
 | `expanded` | `boolean` | `false` | 受控展开状态，支持 `v-model:expanded`；horizontal 模式中决定纵向或横向 Item 排列 |
 | `width` | `number \| string` | `undefined` | expanded rail 宽度；数字与纯数字字符串按 px 处理（0 不带单位），其他字符串需为 trim 后合法的 CSS 宽度值，非法时使用默认宽度 |
-| `position` | `'start' \| 'end'` | `'start'` | Item 在展开、收回和横向切换期间固定在起始或末尾侧，避免从居中位置开始动画 |
+| `full-width` | `boolean` | `false` | 仅展开态有效；让全部 Item 的活动指示器铺满可用宽度 |
 | `collapsible` | `boolean` | `false` | 为纵向 rail 显示展开/收起菜单按钮 |
 | `layout` | `'standard' \| 'modal'` | `'standard'` | 纵向 expanded rail 占据空间或覆盖正文 |
 | `hide-on-collapse` | `boolean` | `false` | 未展开时隐藏 rail 容器并保留菜单按钮 |
-| `alignment` | `'top' \| 'center'` | `'top'` | 纵向目的地组靠上或居中；菜单、Header 与 FAB 始终靠上 |
+| `alignment` | `'start' \| 'center' \| 'end'` | `'start'` | 默认 Slot 沿主轴对齐；纵向按剩余高度对齐，横向按可用宽度对齐 |
 | `open-icon` | `string` | `'menu'` | 未展开时的菜单按钮图标 |
 | `close-icon` | `string` | `'menu_open'` | 展开时的菜单按钮图标 |
 | `open-label` | `string` | `'展开导航'` | 未展开时菜单按钮的无障碍名称 |
@@ -16142,10 +16396,9 @@ const selected = ref('inbox');
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `value` | `string \| number \| boolean` | `undefined` | 供父组件匹配 `model-value`；省略时不参与受控选择 |
-| `icon` | `string` | `undefined` | Material Symbols 图标名称；`icon` Slot 存在时忽略 |
+| `icon` | `string` | `undefined` | Material Symbols 图标名称；`icon` Slot 存在时忽略。缺省或空字符串在展开态不占空间，收缩态使用圆点占位 |
 | `href` | `string` | `undefined` | 提供后渲染为原生链接，否则渲染为按钮 |
 | `disabled` | `boolean` | `false` | 禁用原生交互和选择请求，并降低内容强调 |
-| `full-width` | `boolean` | `false` | 仅展开态有效；活动指示器铺满 Item 可用宽度，默认贴合内容 |
 
 组件没有公开方法。
 
@@ -16161,7 +16414,7 @@ const selected = ref('inbox');
 
 | 名称 | 组件 | 内容约束 |
 | --- | --- | --- |
-| 默认 | `MatNavigationRail` | `MatNavigationRailItem` 列表；Slot 参数为 `{ expanded, orientation }` |
+| 默认 | `MatNavigationRail` | 直接子级 NavigationItem 及纵向展开态的任意自定义内容；收缩态与横向模式只显示直接子级 NavigationItem。Slot 参数为 `{ expanded, orientation }` |
 | `header` | `MatNavigationRail` | 纵向 rail 顶部的非交互品牌标识；Slot 参数为 `{ expanded }` |
 | `fab` | `MatNavigationRail` | 纵向 rail 顶部、目的地之前的 FAB 或 Extended FAB；Slot 参数为 `{ expanded }` |
 | `end` | `MatNavigationRail` | 纵向 rail 底部的自定义内容；Slot 参数为 `{ expanded }` |
@@ -16175,7 +16428,7 @@ const selected = ref('inbox');
 
 默认纵向 rail 位于应用布局容器的起始侧，由父容器决定滚动边界；需要作为固定应用导航时设置 `app`。AppRoot 模式会统一处理安全区；`layout="modal"` 展开时只用 collapsed host 宽度推动正文，展开表面覆盖正文。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 不自动监听窗口宽度，应用可读取 AppRoot 断点切换。显式 `attach` 无法解析时组件给出警告且不渲染应用布局。
 
-目的地区域在隐藏滚动条的 scroll-area 内滚动：纵向超出可用高度、横向 bar 超出可用宽度时均可滚动，滚动方向不留内边距。
+Navigation 使用覆盖整栏的 scroll-area：纵向 Header、具名 FAB 与 `end` 在其中 sticky 固定，默认内容从它们之间滚过；横向 bar 超出可用宽度时沿水平方向滚动。滚动条使用 8px thin 尺寸并贴住容器逻辑末端，纵向容器上下各保留 44px，顶部固定区与默认内容之间保留 40px。
 
 ## 参考来源
 
@@ -16187,11 +16440,12 @@ import NavigationRailAppExample from '../examples/navigation-rail/NavigationRail
 import NavigationRailBottomPlaceholderExample from '../examples/navigation-rail/NavigationRailBottomPlaceholderExample.vue';
 import NavigationRailCollapsibleExample from '../examples/navigation-rail/NavigationRailCollapsibleExample.vue';
 import NavigationRailHideOnCollapseExample from '../examples/navigation-rail/NavigationRailHideOnCollapseExample.vue';
+import NavigationRailHeaderSpacingExample from '../examples/navigation-rail/NavigationRailHeaderSpacingExample.vue';
 import NavigationRailHorizontalExample from '../examples/navigation-rail/NavigationRailHorizontalExample.vue';
 import NavigationRailLayoutExample from '../examples/navigation-rail/NavigationRailLayoutExample.vue';
 import NavigationRailItemFullWidthExample from '../examples/navigation-rail/NavigationRailItemFullWidthExample.vue';
 import NavigationRailItemTrailingExample from '../examples/navigation-rail/NavigationRailItemTrailingExample.vue';
-import NavigationRailPositionExample from '../examples/navigation-rail/NavigationRailPositionExample.vue';
+import NavigationRailAlignmentExample from '../examples/navigation-rail/NavigationRailAlignmentExample.vue';
 import NavigationRailPlaceholderExample from '../examples/navigation-rail/NavigationRailPlaceholderExample.vue';
 import NavigationRailSlotsExample from '../examples/navigation-rail/NavigationRailSlotsExample.vue';
 import NavigationRailWidthExample from '../examples/navigation-rail/NavigationRailWidthExample.vue';

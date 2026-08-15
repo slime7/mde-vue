@@ -46,6 +46,31 @@ describe('MatFab', () => {
     expect(withoutIcon.text()).toBe('继续');
   });
 
+  it('expanded 控制同一 Extended FAB 在标签态与图标态之间切换', async () => {
+    const wrapper = mount(MatFab, {
+      props: {
+        expanded: true,
+        icon: 'add',
+        label: '新建',
+      },
+      slots: {
+        default: '新建',
+      },
+    });
+
+    expect(wrapper.text()).toBe('add新建');
+    expect(wrapper.attributes('aria-label')).toBeUndefined();
+
+    await wrapper.setProps({ expanded: false });
+
+    expect(wrapper.text()).toBe('add');
+    expect(wrapper.attributes('aria-label')).toBe('新建');
+
+    await wrapper.setProps({ expanded: true });
+
+    expect(wrapper.text()).toBe('add新建');
+  });
+
   it('图标模式将 label 作为 ARIA 名称和 Tooltip 文本，并警告缺失 label', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const labelled = mount(MatFab, {

@@ -65,6 +65,16 @@ const props = defineProps({
     default: undefined,
   },
   /**
+   * 是否显示默认 Slot 标签；设为 false 时，同一个 Extended FAB 收缩为纯图标 FAB。
+   *
+   * @type {boolean}
+   * @default true
+   */
+  expanded: {
+    type: Boolean,
+    default: true,
+  },
+  /**
    * FAB 颜色角色；可选值为 `primary`、`secondary`、`tertiary`、`primary-container`、`secondary-container`、`tertiary-container`、`error`、`error-container`。
    *
    * @type {string}
@@ -140,6 +150,10 @@ const buttonElement = ref(null);
 const generatedId = useId();
 
 const hasLabel = computed(() => {
+  if (!propsWithDefaults.expanded) {
+    return false;
+  }
+
   const nodes = slots.default?.() ?? [];
 
   return nodes.some((node) => {
