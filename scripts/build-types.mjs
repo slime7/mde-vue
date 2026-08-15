@@ -1,6 +1,7 @@
 /* eslint-disable no-continue, no-console, no-restricted-syntax */
 import fs from 'node:fs';
 import path from 'node:path';
+import COMPONENT_ALIASES from '../src/component-aliases.js';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const ENTRY = path.join(ROOT, 'src/index.js');
@@ -610,6 +611,11 @@ function generate() {
   for (const component of components) {
     output.push(`    ${component.name}: typeof ${component.name};`);
     output.push(`    '${componentTag(component.name)}': typeof ${component.name};`);
+
+    (COMPONENT_ALIASES[component.name] ?? []).forEach((alias) => {
+      const propertyName = /^[A-Za-z_$][\w$]*$/.test(alias) ? alias : `'${alias}'`;
+      output.push(`    ${propertyName}: typeof ${component.name};`);
+    });
   }
   output.push('  }', '}', '');
 

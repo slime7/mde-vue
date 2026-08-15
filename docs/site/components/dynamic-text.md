@@ -11,6 +11,8 @@ order: 36.5
 
 `<mat-dynamic-text>` 的组件导出名是 `MatDynamicText`。它在同一位置以逐字符动画切换单行文字：新字符从底部以加速动效曲线滑入，并由模糊渐变至清晰；被替换字符向上滑出并模糊淡出。组件继承父元素的字体、字号、颜色和行高，字符槽高度锁定为 `1em` 且溢出裁切，动画期间不会引起整体高度变化。
 
+该组件不直接对应 Material 官方 API，因此安装 `createMatUi()` 后，除 `mat-dynamic-text` 外还会额外注册 `MdeDynamicText` 与 `mde-dynamic-text` 作为同一组件的全局标签别名。
+
 组件默认只对发生变化的位置执行动画（`diff`），相同前后缀保持静止。文字只能通过 `text` 属性传入，不提供 Slot。
 
 ## 示例
@@ -109,4 +111,3 @@ import DynamicTextBasicExample from '../examples/dynamic-text/DynamicTextBasicEx
 import DynamicTextDiffExample from '../examples/dynamic-text/DynamicTextDiffExample.vue';
 import DynamicTextInheritExample from '../examples/dynamic-text/DynamicTextInheritExample.vue';
 </script>
-

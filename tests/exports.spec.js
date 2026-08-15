@@ -103,7 +103,7 @@ const globalComponents = [
   ['MatSelect', 'mat-select', RootMatSelect],
   ['MatTextarea', 'mat-textarea', RootMatTextarea],
   ['MatText', 'mat-text', RootMatText],
-  ['MatDynamicText', 'mat-dynamic-text', RootMatDynamicText],
+  ['MatDynamicText', 'mat-dynamic-text', RootMatDynamicText, ['MdeDynamicText', 'mde-dynamic-text']],
   ['MatInputBase', 'mat-input-base', RootMatInputBase],
   ['MatMenu', 'mat-menu', RootMatMenu],
   ['MatMenuGroup', 'mat-menu-group', RootMatMenuGroup],
@@ -233,9 +233,15 @@ describe('公共组件导出', () => {
 
     app.use(plugin);
 
-    globalComponents.forEach(([pascalName, kebabName, component]) => {
+    globalComponents.forEach(([pascalName, kebabName, component, aliasNames]) => {
       expect(app.component(pascalName)).toBe(component);
       expect(app.component(kebabName)).toBe(component);
+
+      if (aliasNames) {
+        aliasNames.forEach((aliasName) => {
+          expect(app.component(aliasName)).toBe(component);
+        });
+      }
     });
 
     plugin.theme.dispose();
@@ -251,9 +257,16 @@ describe('公共组件导出', () => {
 
     const declaration = readFileSync(declarationPath, 'utf8');
 
-    globalComponents.forEach(([pascalName, kebabName]) => {
+    globalComponents.forEach(([pascalName, kebabName, , aliasNames]) => {
       expect(declaration).toContain(`  ${pascalName}: typeof ${pascalName};`);
       expect(declaration).toContain(`  '${kebabName}': typeof ${pascalName};`);
+
+      if (aliasNames) {
+        aliasNames.forEach((aliasName) => {
+          const propertyName = /^[A-Za-z_$][\w$]*$/.test(aliasName) ? aliasName : `'${aliasName}'`;
+          expect(declaration).toContain(`  ${propertyName}: typeof ${pascalName};`);
+        });
+      }
     });
     expect(declaration).toContain('export interface MatAppLayout');
     expect(declaration).toContain('export interface MatAppEdgeRegistration');

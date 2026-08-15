@@ -55,6 +55,7 @@ import MatPanes from './components/mat-panes/MatPanes.vue';
 import MatPane from './components/mat-panes/MatPane.vue';
 import MatNavigationRail from './components/mat-navigation-rail/MatNavigationRail.vue';
 import MatNavigationRailItem from './components/mat-navigation-rail/MatNavigationRailItem.vue';
+import COMPONENT_ALIASES from './component-aliases';
 import { setImperativeContext } from './imperative-context';
 import MAT_UI_KEY, {
   DEFAULT_MAT_UI_OPTIONS,
@@ -314,6 +315,10 @@ export function createMatUi(options = {}) {
       GLOBAL_COMPONENTS.forEach(([pascalName, kebabName, component]) => {
         app.component(pascalName, component);
         app.component(kebabName, component);
+
+        (COMPONENT_ALIASES[pascalName] ?? []).forEach((aliasName) => {
+          app.component(aliasName, component);
+        });
       });
       app.directive('intersection', Intersection);
       app.directive('state-layer', StateLayer);

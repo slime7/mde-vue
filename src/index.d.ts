@@ -3257,6 +3257,8 @@ declare module 'vue' {
     'mat-text': typeof MatText;
     MatDynamicText: typeof MatDynamicText;
     'mat-dynamic-text': typeof MatDynamicText;
+    MdeDynamicText: typeof MatDynamicText;
+    'mde-dynamic-text': typeof MatDynamicText;
     MatSplitBtn: typeof MatSplitBtn;
     'mat-split-btn': typeof MatSplitBtn;
     MatCard: typeof MatCard;
