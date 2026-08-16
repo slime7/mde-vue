@@ -85,16 +85,7 @@ createApp(App).use(createMatUi({
 }));
 ```
 
-使用 `data-mat-tooltip-group` 标记语义相关的容器。Tooltip 根据展示元素最近的分组容器协调延迟，因此该机制也适用于 `MatBtn` 和 `MatFab` 内部创建的 Tooltip：
-
-```vue
-<div data-mat-tooltip-group>
-  <mat-btn icon="zoom_in" label="放大" />
-  <mat-btn icon="zoom_out" label="缩小" />
-</div>
-```
-
-同组内已有 Tooltip 显示时，进入同组另一个 Tooltip 会立即显示；组内没有 Tooltip 显示时，进入任何 Tooltip 都按 `openDelay` 计时。未分组、跨组、同组 Tooltip 关闭后、首个尚未显示或重新进入同一 Tooltip 时仍使用完整延迟。受控 Tooltip 不参与自动延迟。
+任一 Tooltip 显示时，进入另一个展示元素会立即显示，无需标记分组容器；没有 Tooltip 显示时，进入任何 Tooltip 都按 `openDelay` 计时。首个尚未显示、Tooltip 关闭后或重新进入同一 Tooltip 时仍使用完整延迟。该规则作用于所有 Tooltip，同样覆盖 `MatBtn` 和 `MatFab` 内部创建的 Tooltip。受控 Tooltip 不参与自动延迟。
 
 ## 交互指针
 

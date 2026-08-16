@@ -23,9 +23,7 @@ import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import { getTooltipPosition, TOOLTIP_LOCATIONS } from '../tooltip-position';
 import {
   activateTooltip,
-  activateTooltipDelayGroup,
   deactivateTooltip,
-  deactivateTooltipDelayGroup,
   isKeyboardTooltipFocus,
   shouldSkipTooltipDelay,
 } from '../tooltip-stack';
@@ -218,12 +216,10 @@ let active = true;
 let pointerInside = false;
 let focusInside = false;
 let warnedAboutTarget = false;
-let activeDelayGroup = null;
 
 const stackEntry = {
   close: requestClose,
 };
-const delayGroupOwner = Symbol('mat-tooltip-delay-group-owner');
 
 /**
  * @param {unknown} value
@@ -392,13 +388,6 @@ function getCloseDelay() {
   const configuredDelay = propsWithDefaults.closeDelay;
 
   return normalizeMs(configuredDelay, CLOSE_DELAY);
-}
-
-/**
- * @returns {HTMLElement | null}
- */
-function resolveDelayGroup() {
-  return targetElement.value?.closest('[data-mat-tooltip-group]') ?? null;
 }
 
 function clearOpenTimer() {
@@ -627,7 +616,6 @@ function startPositioning() {
 }
 
 function finishClose() {
-  deactivateTooltipDelayGroup(activeDelayGroup, delayGroupOwner);
   rendered.value = false;
   phase.value = 'closed';
   isDisplayed.value = false;
@@ -729,8 +717,7 @@ function scheduleOpen() {
     return;
   }
 
-  const delayGroup = resolveDelayGroup();
-  const delay = shouldSkipTooltipDelay(delayGroup, delayGroupOwner)
+  const delay = shouldSkipTooltipDelay()
     ? 0
     : getOpenDelay();
 
@@ -902,8 +889,6 @@ async function showTooltip() {
   clearCloseTimer();
   clearPhaseTimer();
   activateTooltip(stackEntry);
-  activeDelayGroup = resolveDelayGroup();
-  activateTooltipDelayGroup(activeDelayGroup, delayGroupOwner);
   teleportTarget.value = attach;
   isAppRootAttached.value = attach === appContext?.freeLayer.value;
   appliedLocation.value = propsWithDefaults.location;

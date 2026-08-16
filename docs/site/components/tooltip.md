@@ -181,23 +181,23 @@ order: 105
   </DocsPreview>
 </ClientOnly>
 
-### 同组快速切换
+### 快速切换
 
-同一 `data-mat-tooltip-group` 容器内的 Tooltip 共享快速切换状态：任一同组 Tooltip 显示时，直接划入另一个展示元素会立即显示；组内没有 Tooltip 显示时，进入仍按各自的 `open-delay` 计时。
+任一 Tooltip 显示时，直接划入另一个展示元素会立即显示，无需标记分组容器；没有 Tooltip 显示时，进入仍按各自的 `open-delay` 计时。
 
 :::: details 查看示例代码
 ::: code-group
 
-<<< @/examples/tooltip/TooltipGroupExample.vue#template [template]
+<<< @/examples/tooltip/TooltipQuickSwitchExample.vue#template [template]
 
-<<< @/examples/tooltip/TooltipGroupExample.vue#style [style]
+<<< @/examples/tooltip/TooltipQuickSwitchExample.vue#style [style]
 
 :::
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Tooltip 同组快速切换预览">
-    <TooltipGroupExample />
+  <DocsPreview label="Tooltip 快速切换预览">
+    <TooltipQuickSwitchExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -260,7 +260,7 @@ activator Slot 存在时优先于 target，且必须只渲染一个属于当前 
 
 自动模式在鼠标悬停或键盘聚焦（Tab、方向键等）进入展示元素时打开；鼠标点击或程序化聚焦（如 dialog、菜单打开时的自动聚焦）不会触发显示。Rich tooltip 沿用相同触发方式；指针或焦点移入 Rich tooltip 的内容和操作区域时维持展示，以便操作其中的链接或按钮。打开延迟优先读取组件的 `openDelay`，省略时读取 `createMatUi()` 的 `defaults.tooltip.openDelay`，未安装插件时为 0；指针和键盘焦点都离开后默认等待 600ms 关闭，关闭延迟同样可通过 `closeDelay` 或 `defaults.tooltip.closeDelay` 调整。Escape 会立即请求关闭当前提示，节点保留至浏览器报告实际消失动画完成（默认 150ms）。模块级协调器保证同一时间只显示一个可见 Tooltip；打开新实例会关闭旧实例，并向受控旧实例发出关闭请求。
 
-应用可以在包含相关展示元素的最近祖先上添加 `data-mat-tooltip-group`。同组内已有 Tooltip 显示时，进入同组另一个 Tooltip 会立即显示；组内没有 Tooltip 显示时，进入任何 Tooltip 都按 `openDelay` 计时。首个尚未显示、跨组、同组 Tooltip 关闭后以及重新进入同一 Tooltip 都不会跳过延迟。该分组通过展示元素的 DOM 祖先识别，因此同样覆盖 Button 和 FAB 内部创建的 Tooltip。
+任一 Tooltip 显示时，进入另一个展示元素会立即显示，无需标记分组容器；没有 Tooltip 显示时，进入任何 Tooltip 都按 `openDelay` 计时。首个尚未显示、Tooltip 关闭后以及重新进入同一 Tooltip 都不会跳过延迟。该规则作用于所有 Tooltip，同样覆盖 Button 和 FAB 内部创建的 Tooltip。
 
 Tooltip 默认位于上方，展示元素边界与提示之间保持 4px 间距。首选方向空间不足时会翻转到对侧并保留 start、end 对齐；最终坐标始终夹紧在距离视口边缘至少 8px 的区域内。窗口缩放、任意滚动容器滚动以及展示元素或 Tooltip 尺寸变化都会重新计算位置。
 
@@ -278,10 +278,10 @@ import TooltipAttachExample from '../examples/tooltip/TooltipAttachExample.vue';
 import TooltipCloseDelayExample from '../examples/tooltip/TooltipCloseDelayExample.vue';
 import TooltipContentExample from '../examples/tooltip/TooltipContentExample.vue';
 import TooltipDefaultSlotExample from '../examples/tooltip/TooltipDefaultSlotExample.vue';
-import TooltipGroupExample from '../examples/tooltip/TooltipGroupExample.vue';
 import TooltipLocationExample from '../examples/tooltip/TooltipLocationExample.vue';
 import TooltipModelValueExample from '../examples/tooltip/TooltipModelValueExample.vue';
 import TooltipOpenDelayExample from '../examples/tooltip/TooltipOpenDelayExample.vue';
+import TooltipQuickSwitchExample from '../examples/tooltip/TooltipQuickSwitchExample.vue';
 import TooltipRichExample from '../examples/tooltip/TooltipRichExample.vue';
 import TooltipRichSlotsExample from '../examples/tooltip/TooltipRichSlotsExample.vue';
 import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';

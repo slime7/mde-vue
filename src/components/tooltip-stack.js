@@ -1,5 +1,4 @@
 let activeTooltip = null;
-const delayGroups = new WeakMap();
 let inputModality = 'pointer';
 
 if (typeof window !== 'undefined') {
@@ -50,63 +49,10 @@ export function deactivateTooltip(tooltip) {
 }
 
 /**
- * @typedef {object} TooltipDelayGroupState
- * @property {symbol} owner
- * @property {boolean} displayed
- */
-
-/**
- * 记录同组中当前实际显示的 Tooltip。
+ * 判断当前是否已有其他 Tooltip 显示；已有显示时切换进入可跳过打开延迟。
  *
- * @param {HTMLElement | null} group
- * @param {symbol} owner
- * @returns {void}
- */
-export function activateTooltipDelayGroup(group, owner) {
-  if (!group) {
-    return;
-  }
-
-  delayGroups.set(group, {
-    owner,
-    displayed: true,
-  });
-}
-
-/**
- * 同组 Tooltip 关闭后清除显示状态。
- *
- * @param {HTMLElement | null} group
- * @param {symbol} owner
- * @returns {void}
- */
-export function deactivateTooltipDelayGroup(group, owner) {
-  if (!group) {
-    return;
-  }
-
-  const state = delayGroups.get(group);
-
-  if (!state || state.owner !== owner) {
-    return;
-  }
-
-  delayGroups.delete(group);
-}
-
-/**
- * 判断当前 Tooltip 是否可以跳过同组打开延迟。
- *
- * @param {HTMLElement | null} group
- * @param {symbol} owner
  * @returns {boolean}
  */
-export function shouldSkipTooltipDelay(group, owner) {
-  if (!group) {
-    return false;
-  }
-
-  const state = delayGroups.get(group);
-
-  return Boolean(state) && state.owner !== owner && state.displayed;
+export function shouldSkipTooltipDelay() {
+  return activeTooltip !== null;
 }

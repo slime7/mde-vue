@@ -22,7 +22,7 @@
 | [0014](0014-connected-button-group-checked-shape.md) | superseded | 连接按钮组选中态使用全圆形状 |
 | [0015](0015-connected-button-group-checked-shape-overrides-outer-shape.md) | active | 连接按钮组选中态完整覆盖组外轮廓 |
 | [0016](0016-public-input-base.md) | active | 公开 MatInputBase 作为可组合文本输入基础组件 |
-| [0017](0017-tooltip-delay-groups.md) | superseded | 使用应用配置与显式容器协调 Tooltip 延迟（配置落点已由 0023 替代，同组延迟策略已由 0031 替代） |
+| [0017](0017-tooltip-delay-groups.md) | superseded | 使用应用配置与显式容器协调 Tooltip 延迟（配置落点已由 0023 替代，延迟策略已由 0031/0032 相继替代） |
 | [0018](0018-distribute-prebuilt-esm-from-private-git.md) | superseded | 通过私有 Git 分发预构建 ESM |
 | [0019](0019-minimize-esm-distribution-files.md) | superseded | 将 ESM 分发压缩为三个文件 |
 | [0020](0020-tailwind-css.md) | active | 恢复 tailwind.css 独立分发入口 |
@@ -35,7 +35,8 @@
 | [0028](0028-public-state-layer-directive.md) | active | 公共 State layer 指令统一交互状态层 |
 | [0029](0029-mde-css-cascade-layers.md) | superseded | 采用稳定的 mde CSS 级联层 |
 | [0030](0030-interleave-external-css-layers-and-final-safety-layer.md) | active | 交错外部 CSS 层并增加最终安全层 |
-| [0031](0031-tooltip-group-display-state-skip.md) | active | 同组 Tooltip 延迟跳过基于当前显示状态（替代 0017 的同组延迟策略） |
+| [0031](0031-tooltip-group-display-state-skip.md) | superseded | 同组 Tooltip 延迟跳过基于当前显示状态（已由 0032 替代：移除分组容器） |
+| [0032](0032-tooltip-global-delay-skip.md) | active | 移除 Tooltip 分组容器，延迟跳过全局生效 |
 
 ## 何时创建 ADR
 
