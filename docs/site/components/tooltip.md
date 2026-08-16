@@ -181,6 +181,26 @@ order: 105
   </DocsPreview>
 </ClientOnly>
 
+### 同组快速切换
+
+同一 `data-mat-tooltip-group` 容器内的 Tooltip 共享快速切换状态：任一同组 Tooltip 显示时，直接划入另一个展示元素会立即显示；组内没有 Tooltip 显示时，进入仍按各自的 `open-delay` 计时。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/tooltip/TooltipGroupExample.vue#template [template]
+
+<<< @/examples/tooltip/TooltipGroupExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Tooltip 同组快速切换预览">
+    <TooltipGroupExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### v-model
 
 :::: details 查看示例代码
@@ -258,6 +278,7 @@ import TooltipAttachExample from '../examples/tooltip/TooltipAttachExample.vue';
 import TooltipCloseDelayExample from '../examples/tooltip/TooltipCloseDelayExample.vue';
 import TooltipContentExample from '../examples/tooltip/TooltipContentExample.vue';
 import TooltipDefaultSlotExample from '../examples/tooltip/TooltipDefaultSlotExample.vue';
+import TooltipGroupExample from '../examples/tooltip/TooltipGroupExample.vue';
 import TooltipLocationExample from '../examples/tooltip/TooltipLocationExample.vue';
 import TooltipModelValueExample from '../examples/tooltip/TooltipModelValueExample.vue';
 import TooltipOpenDelayExample from '../examples/tooltip/TooltipOpenDelayExample.vue';

@@ -728,6 +728,72 @@ describe('MatTooltip', () => {
     plugin.theme.dispose();
   });
 
+  it('同组 Tooltip 显示中进入 3000ms 延迟目标时立即显示', async () => {
+    const { targets } = createTooltipGroup('slow-delay-group', ['slow-first', 'slow-second']);
+    const plugin = createMatUi({ defaults: { tooltip: { openDelay: 600 } } });
+    const first = mount(MatTooltip, {
+      attachTo: document.body,
+      global: { plugins: [plugin] },
+      props: { content: '慢组第一个', target: targets[0] },
+    });
+    const second = mount(MatTooltip, {
+      attachTo: document.body,
+      global: { plugins: [plugin] },
+      props: { content: '慢组第二个', openDelay: 3000, target: targets[1] },
+    });
+
+    targets[0].dispatchEvent(new MouseEvent('mouseenter'));
+    await vi.advanceTimersByTimeAsync(600);
+    await settleRender();
+    targets[0].dispatchEvent(new MouseEvent('mouseleave'));
+    targets[1].dispatchEvent(new MouseEvent('mouseenter'));
+    await settleRender();
+
+    expect([...document.body.querySelectorAll('[role="tooltip"]')]
+      .some((tooltip) => tooltip.textContent.includes('慢组第二个'))).toBe(true);
+
+    first.unmount();
+    second.unmount();
+    plugin.theme.dispose();
+  });
+
+  it('未标记分组的 Tooltip 之间切换保留完整延迟', async () => {
+    const firstTarget = createTarget('ungrouped-first');
+    const secondTarget = createTarget('ungrouped-second');
+    const plugin = createMatUi({ defaults: { tooltip: { openDelay: 600 } } });
+    const first = mount(MatTooltip, {
+      attachTo: document.body,
+      global: { plugins: [plugin] },
+      props: { content: '未分组第一个', target: firstTarget },
+    });
+    const second = mount(MatTooltip, {
+      attachTo: document.body,
+      global: { plugins: [plugin] },
+      props: { content: '未分组第二个', openDelay: 3000, target: secondTarget },
+    });
+
+    firstTarget.dispatchEvent(new MouseEvent('mouseenter'));
+    await vi.advanceTimersByTimeAsync(600);
+    await settleRender();
+    firstTarget.dispatchEvent(new MouseEvent('mouseleave'));
+    secondTarget.dispatchEvent(new MouseEvent('mouseenter'));
+    await vi.advanceTimersByTimeAsync(2999);
+    await settleRender();
+
+    expect([...document.body.querySelectorAll('[role="tooltip"]')]
+      .some((tooltip) => tooltip.textContent.includes('未分组第二个'))).toBe(false);
+
+    await vi.advanceTimersByTimeAsync(1);
+    await settleRender();
+
+    expect([...document.body.querySelectorAll('[role="tooltip"]')]
+      .some((tooltip) => tooltip.textContent.includes('未分组第二个'))).toBe(true);
+
+    first.unmount();
+    second.unmount();
+    plugin.theme.dispose();
+  });
+
   it('首个 Tooltip 未显示、跨组或同组关闭后保留完整延迟', async () => {
     const firstGroup = createTooltipGroup('delay-group-a', ['group-a-first', 'group-a-second']);
     const secondGroup = createTooltipGroup('delay-group-b', ['group-b-first']);
