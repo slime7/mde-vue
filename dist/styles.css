@@ -817,6 +817,16 @@
 }
 
 @layer mde.components {
+  ::view-transition-group(*) {
+    animation-duration: var(--mat-sys-motion-duration-medium4);
+    animation-timing-function: var(--mat-sys-motion-easing-emphasized);
+  }
+
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: var(--mat-sys-motion-duration-medium4);
+  }
+
   [data-mat-state-layer-host] {
     isolation: isolate;
   }
@@ -848,6 +858,13 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation-duration: 0s;
+      animation-delay: 0s;
+    }
+
     .mat-state-layer {
       transition-duration: 0s;
     }

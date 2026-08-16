@@ -21,7 +21,7 @@ pnpm add "mde-vue@git+ssh://git@github.com/slime7/mde-vue.git#<commit>"
 
 ## 全局注册：推荐用法
 
-大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，以 kebab-case `mat-*` 和 PascalCase `Mat*` 两种名称全局注册所有组件，并注册 `v-intersection` 与 `v-state-layer` 指令。不直接对应 Material 官方 API 的非标准组件会额外注册 `mde-*` 标签别名，目前只有 `<MdeDynamicText>` 与 `<mde-dynamic-text>`。基础样式必须显式导入。它声明 `mde.tokens`、`mde.components`、`mde.utilities` 与顶层 `mde-final`；应用中未分层的普通 CSS 默认优先，可以直接覆盖库样式。Tailwind 项目的完整层序与导入方式见[样式](/guide/styles)。页面级应用建议用 `<mat-app-root>` 包住应用正文和设置 `app` 的布局组件。
+大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，以 kebab-case `mat-*` 和 PascalCase `Mat*` 两种名称全局注册所有组件，并注册 `v-intersection` 与 `v-state-layer` 指令。不直接对应 Material 官方 API 的非标准组件会额外注册 `mde-*` 标签别名，目前包括 `<MdeDynamicText>`、`<mde-dynamic-text>`、`<MdeSharedElement>` 与 `<mde-shared-element>`。基础样式必须显式导入。它声明 `mde.tokens`、`mde.components`、`mde.utilities` 与顶层 `mde-final`；应用中未分层的普通 CSS 默认优先，可以直接覆盖库样式。Tailwind 项目的完整层序与导入方式见[样式](/guide/styles)。页面级应用建议用 `<mat-app-root>` 包住应用正文和设置 `app` 的布局组件。
 
 应用入口 `src/main.js`：
 

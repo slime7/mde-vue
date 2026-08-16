@@ -38,7 +38,7 @@
 
 ### 公共入口
 
-`src/index.js` 是唯一 JavaScript 公共入口，导出全部组件、`Intersection` 与 `StateLayer` 指令、命令式 Dialog 与 Snackbar 函数，以及 `createMatUi()`、`useMatTheme()` 和 `useMatApp()`。构建将该入口编译为唯一运行时文件 `dist/mde-vue.js`，因此所有组件、Vue 上下文键、队列和协调器只存在一个模块实例。`dist/index.d.ts` 是完整根入口类型声明。包不提供组件、指令或函数子入口；`mde-vue/styles.css` 暴露基础令牌与全部组件样式，`mde-vue/tailwind.css` 暴露 Tailwind v4 映射。
+`src/index.js` 是唯一 JavaScript 公共入口，导出全部组件、`Intersection` 与 `StateLayer` 指令、命令式 Dialog 与 Snackbar 函数，以及 `createMatUi()`、`useMatTheme()`、`useMatApp()` 和同一文档 View Transition 协调器。构建将该入口编译为唯一运行时文件 `dist/mde-vue.js`，因此所有组件、Vue 上下文键、队列和协调器只存在一个模块实例。`dist/index.d.ts` 是完整根入口类型声明。包不提供组件、指令或函数子入口；`mde-vue/styles.css` 暴露基础令牌与全部组件样式，`mde-vue/tailwind.css` 暴露 Tailwind v4 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -70,6 +70,8 @@ Icon 统一字体字形、SVG 资源和默认 Slot 中的 SVG 元素，负责 Ma
 Shape 把 35 个归一化 Material 3 Expressive 轮廓固化为 CSS `clip-path: shape()` 百分比曲线，按名称查表渲染，不在运行时执行几何转换。组件以等宽高容器承载居中的默认 Slot，统一复用 CSS 长度处理、局部 Material 配色和动态 HTML 根标签；默认是 48px primary circle 的 `div`。
 
 `MatImage` 以根容器包裹内部原生 `<img>`，提供可配置圆角（默认引用 extra-large 形状令牌）、`cover`/`contain` 填充、宽高比和默认开启的 outline 描边。组件上的 class 与 style 属于根容器，其余原生属性与监听器以及 `img-class`、`img-style` 定向到 `img`；根元素对 `aspect-ratio`、`inline-size`、`block-size` 和 `border-radius` 使用系统动效令牌表达尺寸变化。
+
+`MatSharedElement` 保存稳定的 View Transition 名称，但默认不写入动态 HTML 根元素，也不管理应用状态或路由。`useMatViewTransition()` 只在单次调用期间激活 `names` 指定的元素，完成或失败后清理名称，从而隔离同页其他实例；它负责执行应用状态更新、等待同一文档 View Transition 完成，并在同一协调器实例内跳过尚未完成的旧动画。不支持 API、显式跳过或减少动态效果时仍直接执行更新。基础样式以系统 duration/easing 令牌设置文档 View Transition 伪元素，并允许应用样式覆盖。
 
 Card 组合 `MatSurfaceBase` 与可选 `MatCardActionArea`，提供 filled、elevated、outlined 三种中性表面和局部种子配色。Headline、Subhead 与 Media 既可以由 Card 的同名具名 Slot 自动创建，也可以作为 `MatCardHeadline`、`MatCardSubhead`、`MatCardMedia` 子组件直接组合；Content 与 Actions 继续负责 16px 内容内边距和末端对齐的操作布局。Divider 作为 Card 直接子项时以明确横向尺寸完整分隔区域，布尔 inset 模式在两侧保留系统缩进。
 

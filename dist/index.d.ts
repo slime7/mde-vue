@@ -567,6 +567,60 @@ export interface MatImageProps {
 export type MatImageComponent = DefineComponent<MatImageProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatImage: MatImageComponent;
 
+export interface MatSharedElementProps {
+  /**
+  * View Transition 使用的共享元素名称；同一文档快照中必须保持唯一。
+  *
+  * @type {string}
+  * @required
+  */
+  name: string;
+  /**
+  * 实际根元素标签名。
+  *
+  * @type {string}
+  * @default 'div'
+  */
+  as?: string;
+  /**
+  * 是否禁用共享元素动画。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  disabled?: boolean;
+}
+
+export type MatSharedElementComponent = DefineComponent<MatSharedElementProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatSharedElement: MatSharedElementComponent;
+
+export interface MdeSharedElementProps {
+  /**
+  * View Transition 使用的共享元素名称；同一文档快照中必须保持唯一。
+  *
+  * @type {string}
+  * @required
+  */
+  name: string;
+  /**
+  * 实际根元素标签名。
+  *
+  * @type {string}
+  * @default 'div'
+  */
+  as?: string;
+  /**
+  * 是否禁用共享元素动画。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  disabled?: boolean;
+}
+
+export type MdeSharedElementComponent = DefineComponent<MdeSharedElementProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MdeSharedElement: MdeSharedElementComponent;
+
 export interface MatAvatarProps {
   /**
   * 头像图片资源地址；非空字符串才有效，空字符串等同未设置。
@@ -3158,6 +3212,16 @@ export type MatComponentDefaults = {
 export declare function createMatUi(options?: MatUiOptions): import('vue').Plugin & { theme: MatThemeController };
 export declare function useMatProps<T extends Record<string, unknown>>(componentName: string, props: T): T & Record<string, unknown>;
 export declare function useMatTheme(): MatThemeController;
+export interface MatViewTransitionOptions {
+  skip?: boolean;
+  names?: string | string[];
+}
+export interface MatViewTransitionController {
+  readonly supported: boolean;
+  start(update: () => void | Promise<void>, options?: MatViewTransitionOptions): Promise<void>;
+}
+export declare function useMatViewTransition(): MatViewTransitionController;
+export declare const useMdeViewTransition: typeof useMatViewTransition;
 export type MatAppEdge = 'top' | 'bottom' | 'start' | 'end';
 export type MatAppBreakpoint = 'compact' | 'medium' | 'expanded' | 'large' | 'extra-large';
 export interface MatAppEdgeInsets {
@@ -3249,6 +3313,12 @@ declare module 'vue' {
     'mat-icon': typeof MatIcon;
     MatImage: typeof MatImage;
     'mat-image': typeof MatImage;
+    MatSharedElement: typeof MatSharedElement;
+    'mat-shared-element': typeof MatSharedElement;
+    MdeSharedElement: typeof MatSharedElement;
+    'mde-shared-element': typeof MatSharedElement;
+    MdeSharedElement: typeof MdeSharedElement;
+    'mde-shared-element': typeof MdeSharedElement;
     MatAvatar: typeof MatAvatar;
     'mat-avatar': typeof MatAvatar;
     MatShape: typeof MatShape;

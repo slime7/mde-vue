@@ -6,6 +6,8 @@ export { default as MatBtnGroup } from './components/mat-btn-group/MatBtnGroup.v
 export { default as MatFab } from './components/mat-fab/MatFab.vue';
 export { default as MatIcon } from './components/mat-icon/MatIcon.vue';
 export { default as MatImage } from './components/mat-image/MatImage.vue';
+export { default as MatSharedElement } from './components/mat-shared-element/MatSharedElement.vue';
+export { default as MdeSharedElement } from './components/mat-shared-element/MatSharedElement.vue';
 export { default as MatAvatar } from './components/mat-avatar/MatAvatar.vue';
 export { default as MatShape } from './components/mat-shape/MatShape.vue';
 export { default as MatText } from './components/mat-text/MatText.vue';
@@ -61,6 +63,8 @@ export { default as StateLayer } from './directives/state-layer';
 export { createMatUi, useMatTheme } from './plugin.js';
 // eslint-disable-next-line import-x/extensions
 export { useMatProps } from './components/use-mat-props.js';
+// eslint-disable-next-line import-x/extensions
+export { useMatViewTransition, useMdeViewTransition } from './view-transition.js';
 export { useMatApp } from './components/mat-app-root/mat-app-root-context';
 export {
   alert, confirm, dialog, prompt,

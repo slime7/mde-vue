@@ -172,6 +172,8 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 `<mat-image>` 的导出名是 `MatImage`，根元素是包裹内部原生 `<img>` 的 `div`。`radius` 省略时使用 `--mat-sys-shape-corner-extra-large`（28px），数字与纯数字字符串按 px 处理（0 不带单位），其他字符串须为 trim 后合法的 CSS 长度值，非法时回退默认令牌；`fit` 只接受 `cover`（默认）与 `contain`；`aspect-ratio` 接受宽/高比数字或 trim 后合法的 CSS `aspect-ratio` 字符串，省略或非法时保持图片自然比例；`outline` 默认开启 1px 描边，颜色使用 `--mat-sys-color-outline`，可设置为 `false` 关闭。组件上的 `class` 与 `style` 属于根容器，其余未消费的原生属性和监听器以及 `img-class`、`img-style` 定向到内部 `img`。根元素对 `aspect-ratio`、`inline-size`、`block-size` 和 `border-radius` 使用系统动效令牌过渡，并尊重减少动画偏好；`fit` 切换不参与过渡。组件没有 Slots、自定义事件或公开方法。
 
+`<mat-shared-element>` 的导出名是 `MatSharedElement`，公共入口和全局注册另提供 `MdeSharedElement` 别名。必填 `name` 是同一文档 View Transition 的稳定 CSS `<custom-ident>`，在每次旧快照或新快照中必须唯一；名称默认不写入 DOM，只在 `useMatViewTransition().start()` 的 `names` 选项指定后临时启用并在完成或失败后清理，避免无关实例进入过渡顶层。`as` 只改变合法 HTML 根标签，`disabled` 阻止同名临时激活。组件不更新状态、不启动动画，也不赋予 Slot 交互或无障碍语义。`useMatViewTransition()` 与别名 `useMdeViewTransition()` 每次调用创建独立协调器；协调器在同一实例内跳过尚未完成的旧动画，并在 API 不可用、显式跳过或减少动态效果时直接执行更新。更新函数与动画完成错误向调用方传播。
+
 ## `<mat-avatar>`
 
 `<mat-avatar>` 的导出名是 `MatAvatar`，以固定圆形展示头像，不建立交互语义。内容来源固定按 `src > icon > 默认 Slot` 优先级：`src` 使用以 `cover` 填满圆形的装饰性内部图片，`icon` 渲染共享 `MatIcon`（字号为头像尺寸的 60%），两者都未设置时把默认 Slot 放入居中容器，文字以省略号截断、图片直接裁剪。`src` 与 `icon` 都只把非空字符串视为有效，空字符串回退到下一级内容来源。`size` 数字与纯数字字符串按 px 处理，其他字符串须为合法正 CSS 长度，非法值回退 40px；`color` 默认 `primary`，填充与内容沿用 base/on-base 配对，容器角色与系统表面角色直接引用主题令牌。未消费的原生属性与监听器落到根元素；组件没有自定义事件或公开方法。

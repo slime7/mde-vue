@@ -53,6 +53,7 @@ import {
   MatScrollArea as RootMatScrollArea,
   MatSelect as RootMatSelect,
   MatShape as RootMatShape,
+  MatSharedElement as RootMatSharedElement,
   MatSideSheet as RootMatSideSheet,
   MatSlider as RootMatSlider,
   MatSnackbar as RootMatSnackbar,
@@ -64,9 +65,12 @@ import {
   MatTextField as RootMatTextField,
   MatToolbar as RootMatToolbar,
   MatTooltip as RootMatTooltip,
+  MdeSharedElement as RootMdeSharedElement,
   StateLayer as RootStateLayer,
   useMatApp,
   useMatProps,
+  useMatViewTransition,
+  useMdeViewTransition,
 } from 'mde-vue';
 
 const globalComponents = [
@@ -78,6 +82,7 @@ const globalComponents = [
   ['MatFab', 'mat-fab', RootMatFab],
   ['MatIcon', 'mat-icon', RootMatIcon],
   ['MatImage', 'mat-image', RootMatImage],
+  ['MatSharedElement', 'mat-shared-element', RootMatSharedElement, ['MdeSharedElement', 'mde-shared-element']],
   ['MatShape', 'mat-shape', RootMatShape],
   ['MatSplitBtn', 'mat-split-btn', RootMatSplitBtn],
   ['MatCard', 'mat-card', RootMatCard],
@@ -126,6 +131,10 @@ const globalComponents = [
 ];
 
 describe('公共组件导出', () => {
+  it('导出同元素转移组件与 MDE 别名协调器', () => {
+    expect(RootMdeSharedElement).toBe(RootMatSharedElement);
+    expect(useMdeViewTransition).toBe(useMatViewTransition);
+  });
   it('从根入口导出应用布局组件与组合函数', () => {
     expect(RootMatAppRoot).toBeTruthy();
     expect(useMatApp).toBeTypeOf('function');

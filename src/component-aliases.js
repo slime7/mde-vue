@@ -6,6 +6,7 @@
  */
 const COMPONENT_ALIASES = Object.freeze({
   MatDynamicText: Object.freeze(['MdeDynamicText', 'mde-dynamic-text']),
+  MatSharedElement: Object.freeze(['MdeSharedElement', 'mde-shared-element']),
 });
 
 export default COMPONENT_ALIASES;
