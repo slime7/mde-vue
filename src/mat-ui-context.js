@@ -1,7 +1,6 @@
 export const DEFAULT_TOOLTIP_OPTIONS = Object.freeze({
   openDelay: 0,
   closeDelay: 600,
-  skipDelayDuration: 0,
 });
 
 export const DEFAULT_MAT_UI_OPTIONS = Object.freeze({

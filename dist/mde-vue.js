@@ -262,8 +262,7 @@ var Ee = {
 	}
 }), [["__scopeId", "data-v-7767781b"]]), ke = Object.freeze({
 	openDelay: 0,
-	closeDelay: 600,
-	skipDelayDuration: 0
+	closeDelay: 600
 }), Ae = Object.freeze({
 	iconClass: "material-symbols-outlined",
 	useCursor: !1,
@@ -971,24 +970,18 @@ function $t(e) {
 function en(e, t) {
 	e && Yt.set(e, {
 		owner: t,
-		expiresAt: Infinity
+		displayed: !0
 	});
 }
-function tn(e, t, n) {
+function tn(e, t) {
 	if (!e) return;
-	let r = Yt.get(e);
-	if (!(!r || r.owner !== t)) {
-		if (n <= 0) {
-			Yt.delete(e);
-			return;
-		}
-		r.expiresAt = Date.now() + n;
-	}
+	let n = Yt.get(e);
+	!n || n.owner !== t || Yt.delete(e);
 }
 function nn(e, t) {
 	if (!e) return !1;
 	let n = Yt.get(e);
-	return !n || n.owner === t ? !1 : n.expiresAt < Date.now() ? (Yt.delete(e), !1) : !0;
+	return !!n && n.owner !== t && n.displayed;
 }
 //#endregion
 //#region src/components/toolbar-overlay.js
@@ -1283,7 +1276,7 @@ var mn = ["id", "data-location"], hn = {
 			}, me = pn(Je), typeof ResizeObserver < "u" && (de = new ResizeObserver(Je), de.observe(O.value), de.observe(P.value)));
 		}
 		function Xe() {
-			V.value = !1, W.value = "closed", H.value = !1, U.value = !1, j.value = null, N.value = !1;
+			tn(Se, we), V.value = !1, W.value = "closed", H.value = !1, U.value = !1, j.value = null, N.value = !1;
 		}
 		function Ze({ immediate: e = !1 } = {}) {
 			if (Le(), Re(), Be(), Ke(), We(), $t(Ce), !V.value) {
@@ -1334,7 +1327,7 @@ var mn = ["id", "data-location"], hn = {
 				tt();
 				return;
 			}
-			tn(Se, we, p.skipDelayDuration), nt();
+			nt();
 		}
 		function it(e) {
 			ye = e, rt();
@@ -1454,7 +1447,7 @@ var mn = ["id", "data-location"], hn = {
 			], 64)) : L(p).content === void 0 ? M(r.$slots, "default", { key: 2 }, void 0, !0) : (T(), s(t, { key: 1 }, [u(I(L(p).content), 1)], 64))], 16, mn)], 8, ["to"])) : o("", !0)
 		], 64));
 	}
-}), [["__scopeId", "data-v-42fe548c"]]), xn = Symbol("mde-vue-button-group"), Sn = Symbol("mde-vue-split-button");
+}), [["__scopeId", "data-v-747fb7d0"]]), xn = Symbol("mde-vue-button-group"), Sn = Symbol("mde-vue-split-button");
 //#endregion
 //#region src/components/use-button.js
 function Cn(e, t) {
@@ -10566,13 +10559,12 @@ function kc(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("createMatUi defaults.tooltip 必须是对象");
 	return Object.freeze({
 		openDelay: Oc(e, "openDelay"),
-		closeDelay: Oc(e, "closeDelay"),
-		skipDelayDuration: Oc(e, "skipDelayDuration")
+		closeDelay: Oc(e, "closeDelay")
 	});
 }
 function Ac(e) {
-	let t = Object.keys(e.props ?? {}), n = new Set(Object.keys(e.emits ?? {}).filter((e) => e.startsWith("update:")).map((e) => e.slice(7))), r = new Set(t.filter((e) => !n.has(e)));
-	return e.name === "MatTooltip" && r.add("skipDelayDuration"), r;
+	let t = Object.keys(e.props ?? {}), n = new Set(Object.keys(e.emits ?? {}).filter((e) => e.startsWith("update:")).map((e) => e.slice(7)));
+	return new Set(t.filter((e) => !n.has(e)));
 }
 function jc(e) {
 	let t = e.defaults;

@@ -178,7 +178,6 @@ describe('主题控制器', () => {
     expect(() => createMatUi({ defaults: { tooltip: { openDelay: -1 } } })).toThrow(RangeError);
     expect(() => createMatUi({ defaults: { tooltip: { closeDelay: '600' } } })).toThrow(TypeError);
     expect(() => createMatUi({ defaults: { tooltip: { closeDelay: -1 } } })).toThrow(RangeError);
-    expect(() => createMatUi({ defaults: { tooltip: { skipDelayDuration: Number.NaN } } })).toThrow(RangeError);
   });
 
   it('dispose 清理系统主题监听且可重复调用', () => {

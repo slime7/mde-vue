@@ -3153,7 +3153,7 @@ export interface MatUiOptions {
   useCursor?: boolean;
 }
 export type MatComponentDefaults = {
-  tooltip?: { closeDelay?: number; openDelay?: number; skipDelayDuration?: number };
+  tooltip?: { closeDelay?: number; openDelay?: number };
 } & Record<string, Record<string, unknown>>;
 export declare function createMatUi(options?: MatUiOptions): import('vue').Plugin & { theme: MatThemeController };
 export declare function useMatProps<T extends Record<string, unknown>>(componentName: string, props: T): T & Record<string, unknown>;

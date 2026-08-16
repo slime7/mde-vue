@@ -25,8 +25,8 @@ import {
   activateTooltip,
   activateTooltipDelayGroup,
   deactivateTooltip,
+  deactivateTooltipDelayGroup,
   isKeyboardTooltipFocus,
-  leaveTooltipDelayGroup,
   shouldSkipTooltipDelay,
 } from '../tooltip-stack';
 import {
@@ -627,6 +627,7 @@ function startPositioning() {
 }
 
 function finishClose() {
+  deactivateTooltipDelayGroup(activeDelayGroup, delayGroupOwner);
   rendered.value = false;
   phase.value = 'closed';
   isDisplayed.value = false;
@@ -771,11 +772,6 @@ function updateAutomaticVisibility() {
     return;
   }
 
-  leaveTooltipDelayGroup(
-    activeDelayGroup,
-    delayGroupOwner,
-    propsWithDefaults.skipDelayDuration,
-  );
   scheduleClose();
 }
 

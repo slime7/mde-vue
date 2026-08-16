@@ -136,14 +136,13 @@ const COMPONENT_DEFAULTS_REGISTRY = new Map(
  * @property {string} [iconClass='material-symbols-outlined']
  * @property {boolean} [useCursor=false]
  * @property {object} [defaults] 按组件键设置的默认属性；键为组件名去掉 mat- 前缀后的 camelCase，
- *   值为该组件可配置的 prop 默认值。v-model 属性不可配置，tooltip 额外支持 skipDelayDuration。
+ *   值为该组件可配置的 prop 默认值。v-model 属性不可配置。
  */
 
 /**
  * @typedef {object} MatTooltipOptions
  * @property {number} [openDelay=0] 自动模式的默认打开延迟，单位为毫秒。
  * @property {number} [closeDelay=600] 自动模式的默认关闭延迟，单位为毫秒。
- * @property {number} [skipDelayDuration=0] 同组 Tooltip 跳过打开延迟的有效时长，单位为毫秒。
  */
 
 /**
@@ -177,7 +176,7 @@ function readIconClass(options) {
 
 /**
  * @param {MatTooltipOptions} options
- * @param {'openDelay' | 'closeDelay' | 'skipDelayDuration'} name
+ * @param {'openDelay' | 'closeDelay'} name
  * @returns {number}
  */
 function readTooltipDelay(options, name) {
@@ -214,7 +213,6 @@ function readTooltipDefaults(value) {
   return Object.freeze({
     openDelay: readTooltipDelay(value, 'openDelay'),
     closeDelay: readTooltipDelay(value, 'closeDelay'),
-    skipDelayDuration: readTooltipDelay(value, 'skipDelayDuration'),
   });
 }
 
@@ -232,10 +230,6 @@ function getAllowedDefaultsKeys(component) {
       .map((eventName) => eventName.slice('update:'.length)),
   );
   const allowed = new Set(propNames.filter((propName) => !modelProps.has(propName)));
-
-  if (component.name === 'MatTooltip') {
-    allowed.add('skipDelayDuration');
-  }
 
   return allowed;
 }

@@ -506,14 +506,7 @@ describe('MatTooltip', () => {
 
   it('未显式设置 openDelay 时使用插件 Tooltip 打开延迟', async () => {
     const target = createTarget('plugin-delay-target');
-    const plugin = createMatUi({
-      defaults: {
-        tooltip: {
-          openDelay: 600,
-          skipDelayDuration: 600,
-        },
-      },
-    });
+    const plugin = createMatUi({ defaults: { tooltip: { openDelay: 600 } } });
     const wrapper = mount(MatTooltip, {
       attachTo: document.body,
       global: { plugins: [plugin] },
@@ -561,16 +554,9 @@ describe('MatTooltip', () => {
     plugin.theme.dispose();
   });
 
-  it('首个 Tooltip 显示后在有效期内切换同组目标时立即打开', async () => {
+  it('同组 Tooltip 显示中切换到另一个目标时立即打开', async () => {
     const { targets } = createTooltipGroup('shared-delay-group', ['group-first', 'group-second']);
-    const plugin = createMatUi({
-      defaults: {
-        tooltip: {
-          openDelay: 600,
-          skipDelayDuration: 600,
-        },
-      },
-    });
+    const plugin = createMatUi({ defaults: { tooltip: { openDelay: 600 } } });
     const first = mount(MatTooltip, {
       attachTo: document.body,
       global: { plugins: [plugin] },
@@ -597,16 +583,9 @@ describe('MatTooltip', () => {
     plugin.theme.dispose();
   });
 
-  it('键盘焦点在同组 Tooltip 之间切换时复用快速切换窗口', async () => {
+  it('键盘焦点在同组 Tooltip 之间切换时立即显示', async () => {
     const { targets } = createTooltipGroup('focus-delay-group', ['focus-first', 'focus-second']);
-    const plugin = createMatUi({
-      defaults: {
-        tooltip: {
-          openDelay: 600,
-          skipDelayDuration: 600,
-        },
-      },
-    });
+    const plugin = createMatUi({ defaults: { tooltip: { openDelay: 600 } } });
     const first = mount(MatTooltip, {
       attachTo: document.body,
       global: { plugins: [plugin] },
@@ -723,17 +702,36 @@ describe('MatTooltip', () => {
     wrapper.unmount();
   });
 
-  it('首个 Tooltip 未显示、切换不同组或有效期结束时保留完整延迟', async () => {
+  it('同组连续切换多个 Tooltip 时保持立即显示', async () => {
+    const { targets } = createTooltipGroup('chain-delay-group', ['chain-first', 'chain-second', 'chain-third']);
+    const plugin = createMatUi({ defaults: { tooltip: { openDelay: 600 } } });
+    const wrappers = ['同组链第一个', '同组链第二个', '同组链第三个'].map((content, index) => mount(MatTooltip, {
+      attachTo: document.body,
+      global: { plugins: [plugin] },
+      props: { content, target: targets[index] },
+    }));
+
+    targets[0].dispatchEvent(new MouseEvent('mouseenter'));
+    await vi.advanceTimersByTimeAsync(600);
+    await settleRender();
+    targets[0].dispatchEvent(new MouseEvent('mouseleave'));
+    targets[1].dispatchEvent(new MouseEvent('mouseenter'));
+    await settleRender();
+    targets[1].dispatchEvent(new MouseEvent('mouseleave'));
+    targets[2].dispatchEvent(new MouseEvent('mouseenter'));
+    await settleRender();
+
+    expect([...document.body.querySelectorAll('[role="tooltip"]')]
+      .some((tooltip) => tooltip.textContent.includes('同组链第三个'))).toBe(true);
+
+    wrappers.forEach((wrapper) => wrapper.unmount());
+    plugin.theme.dispose();
+  });
+
+  it('首个 Tooltip 未显示、跨组或同组关闭后保留完整延迟', async () => {
     const firstGroup = createTooltipGroup('delay-group-a', ['group-a-first', 'group-a-second']);
     const secondGroup = createTooltipGroup('delay-group-b', ['group-b-first']);
-    const plugin = createMatUi({
-      defaults: {
-        tooltip: {
-          openDelay: 600,
-          skipDelayDuration: 600,
-        },
-      },
-    });
+    const plugin = createMatUi({ defaults: { tooltip: { openDelay: 600 } } });
     const wrappers = [
       ['同组首个', firstGroup.targets[0]],
       ['同组第二个', firstGroup.targets[1]],
@@ -777,16 +775,9 @@ describe('MatTooltip', () => {
     plugin.theme.dispose();
   });
 
-  it('同一 Tooltip 在有效期内重新进入时仍等待完整延迟', async () => {
+  it('同一 Tooltip 关闭后重新进入时仍等待完整延迟', async () => {
     const { targets } = createTooltipGroup('same-tooltip-group', ['same-tooltip-target']);
-    const plugin = createMatUi({
-      defaults: {
-        tooltip: {
-          openDelay: 600,
-          skipDelayDuration: 600,
-        },
-      },
-    });
+    const plugin = createMatUi({ defaults: { tooltip: { openDelay: 600 } } });
     const wrapper = mount(MatTooltip, {
       attachTo: document.body,
       global: { plugins: [plugin] },

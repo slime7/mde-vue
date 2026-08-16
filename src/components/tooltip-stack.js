@@ -52,11 +52,11 @@ export function deactivateTooltip(tooltip) {
 /**
  * @typedef {object} TooltipDelayGroupState
  * @property {symbol} owner
- * @property {number} expiresAt
+ * @property {boolean} displayed
  */
 
 /**
- * 记录同组中最近实际显示的 Tooltip。
+ * 记录同组中当前实际显示的 Tooltip。
  *
  * @param {HTMLElement | null} group
  * @param {symbol} owner
@@ -69,19 +69,18 @@ export function activateTooltipDelayGroup(group, owner) {
 
   delayGroups.set(group, {
     owner,
-    expiresAt: Number.POSITIVE_INFINITY,
+    displayed: true,
   });
 }
 
 /**
- * 从 Tooltip 离开时启动同组快速切换窗口。
+ * 同组 Tooltip 关闭后清除显示状态。
  *
  * @param {HTMLElement | null} group
  * @param {symbol} owner
- * @param {number} duration
  * @returns {void}
  */
-export function leaveTooltipDelayGroup(group, owner, duration) {
+export function deactivateTooltipDelayGroup(group, owner) {
   if (!group) {
     return;
   }
@@ -92,16 +91,11 @@ export function leaveTooltipDelayGroup(group, owner, duration) {
     return;
   }
 
-  if (duration <= 0) {
-    delayGroups.delete(group);
-    return;
-  }
-
-  state.expiresAt = Date.now() + duration;
+  delayGroups.delete(group);
 }
 
 /**
- * 判断当前 Tooltip 是否可以继承同组最近一次展示状态并跳过延迟。
+ * 判断当前 Tooltip 是否可以跳过同组打开延迟。
  *
  * @param {HTMLElement | null} group
  * @param {symbol} owner
@@ -114,14 +108,5 @@ export function shouldSkipTooltipDelay(group, owner) {
 
   const state = delayGroups.get(group);
 
-  if (!state || state.owner === owner) {
-    return false;
-  }
-
-  if (state.expiresAt < Date.now()) {
-    delayGroups.delete(group);
-    return false;
-  }
-
-  return true;
+  return Boolean(state) && state.owner !== owner && state.displayed;
 }
