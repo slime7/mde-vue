@@ -39,6 +39,30 @@ order: 105
   </DocsPreview>
 </ClientOnly>
 
+### NavigationItem 的 `badge`
+
+`MatNavigationRailItem` 提供一等 `badge` 属性，将 Badge 固定绑定到 Item 的图标区域。收缩态显示 Badge 指示器，展开态保留图标布局但隐藏指示器，因此不会影响标签、活动指示器、`trailing` 或完整点击区域。`content` 支持数字（包括 `0`），空字符串不显示；设置 `dot` 时优先显示点型 Badge。
+
+Badge 不提供专用 Slot，也不支持 `offset`。`location` 只接受八种覆盖位置；传入 `inline` 会在开发环境发出警告，并按 `top-end` 处理。没有图标时，收缩态会使用 Item 原有的圆形占位图标作为 Badge 目标。Badge 指示器是不可交互的 `aria-hidden` 内容，不会自动加入 Item 的无障碍名称。示例为了让展开态 Badge 继续显示，在标签内容后单独组合通用 `MatBadge location="inline"`；这不属于 NavigationItem 的 `badge` 属性能力。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/navigation-rail/NavigationRailItemBadgeExample.vue#template [template]
+
+<<< @/examples/navigation-rail/NavigationRailItemBadgeExample.vue#script [script]
+
+<<< @/examples/navigation-rail/NavigationRailItemBadgeExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail Item Badge 预览">
+    <NavigationRailItemBadgeExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `app` 与 `attach`
 
 `app=true` 将 Navigation rail 作为应用级固定导航。位于 `MatAppRoot` 且省略 `attach` 时，纵向登记 `start`，horizontal bar 登记 `bottom`；显式 `attach` 时沿用视口固定模式。`app=false` 时 `attach` 不生效，组件保留在声明位置。
@@ -357,6 +381,7 @@ Item 的 `trailing` 只在展开态显示，通过前置弹性 spacer 保持在 
 | --- | --- | --- | --- |
 | `value` | `string \| number \| boolean` | `undefined` | 供父组件匹配 `model-value`；省略时不参与受控选择 |
 | `icon` | `string` | `undefined` | Material Symbols 图标名称；`icon` Slot 存在时忽略。缺省或空字符串在展开态不占空间，收缩态使用圆点占位 |
+| `badge` | `{ content?: string \| number, dot?: boolean, location?: 'top-start' \| 'top' \| 'top-end' \| 'end' \| 'bottom-end' \| 'bottom' \| 'bottom-start' \| 'start', color?: string }` | `undefined` | 仅绑定到图标区域的 Badge；收缩态显示、展开态隐藏。`content=0` 有效，空字符串不显示，`dot` 优先；不支持 `inline` 和 `offset`，也不在 `createMatUi.defaults` 中提供默认值 |
 | `href` | `string` | `undefined` | 提供后渲染为原生链接，否则渲染为按钮 |
 | `disabled` | `boolean` | `false` | 禁用原生交互和选择请求，并降低内容强调 |
 
@@ -382,11 +407,13 @@ Item 的 `trailing` 只在展开态显示，通过前置弹性 spacer 保持在 
 | `icon` | `MatNavigationRailItem` | 自定义图标内容；Slot 参数为 `{ selected }` |
 | `trailing` | `MatNavigationRailItem` | 展开态显示在 Item 尾部的内容，通过弹性 spacer 保持在末尾；Slot 参数为 `{ expanded, selected }` |
 
+Badge 通过 `badge` 属性配置，不新增 Badge 专用 Slot。
+
 ## 无障碍与布局说明
 
 根导航使用原生 `<nav>`；应用应通过 `aria-label` 或 `aria-labelledby` 区分页面中的多个导航区域。选中 Item 使用 `aria-current="page"`。Item 保留原生按钮或链接的 Tab 顺序，完整 Item 宽度都是命中区域，焦点环和状态层显示在活动指示器上。
 
-默认纵向 rail 位于应用布局容器的起始侧，由父容器决定滚动边界；需要作为固定应用导航时设置 `app`。AppRoot 模式会统一处理安全区；`layout="modal"` 展开时只用 collapsed host 宽度推动正文，展开表面覆盖正文。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 不自动监听窗口宽度，应用可读取 AppRoot 断点切换。显式 `attach` 无法解析时组件给出警告且不渲染应用布局。
+默认纵向 rail 位于应用布局容器的起始侧，由父容器决定滚动边界；需要作为固定应用导航时设置 `app`。AppRoot 模式会统一处理安全区；`layout="modal"` 展开时只用 collapsed host 宽度推动正文，展开表面覆盖正文。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 不自动监听窗口宽度，应用可读取 AppRoot 断点切换。显式 `attach` 无法解析时组件给出警告且不渲染应用布局。Item 的 Badge 数量不会自动修改无障碍名称，需要时由应用在 `aria-label` 或关联描述中补充业务语义。
 
 Navigation 使用覆盖整栏的 scroll-area：纵向 Header、具名 FAB 与 `end` 在其中 sticky 固定，默认内容从它们之间滚过；横向 bar 超出可用宽度时沿水平方向滚动。滚动条使用 8px thin 尺寸并贴住容器逻辑末端，纵向容器上下各保留 44px，顶部固定区与默认内容之间保留 40px。
 
@@ -404,6 +431,7 @@ import NavigationRailHeaderSpacingExample from '../examples/navigation-rail/Navi
 import NavigationRailHorizontalExample from '../examples/navigation-rail/NavigationRailHorizontalExample.vue';
 import NavigationRailLayoutExample from '../examples/navigation-rail/NavigationRailLayoutExample.vue';
 import NavigationRailItemFullWidthExample from '../examples/navigation-rail/NavigationRailItemFullWidthExample.vue';
+import NavigationRailItemBadgeExample from '../examples/navigation-rail/NavigationRailItemBadgeExample.vue';
 import NavigationRailItemTrailingExample from '../examples/navigation-rail/NavigationRailItemTrailingExample.vue';
 import NavigationRailAlignmentExample from '../examples/navigation-rail/NavigationRailAlignmentExample.vue';
 import NavigationRailPlaceholderExample from '../examples/navigation-rail/NavigationRailPlaceholderExample.vue';

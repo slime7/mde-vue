@@ -1,11 +1,25 @@
 <script setup>
-import { computed, inject, useSlots } from 'vue';
+import {
+  computed, inject, useSlots, watch,
+} from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatActionBase from '../MatActionBase.vue';
+import MatBadge from '../mat-badge/MatBadge.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
 import { getTypographyClass } from '../typography';
 import { MAT_NAVIGATION_RAIL_KEY } from './mat-navigation-context';
 import { useMatProps } from '../use-mat-props';
+
+const NAVIGATION_BADGE_LOCATIONS = [
+  'top-start',
+  'top',
+  'top-end',
+  'end',
+  'bottom-end',
+  'bottom',
+  'bottom-start',
+  'start',
+];
 
 defineOptions({
   name: 'MatNavigationRailItem',
@@ -31,6 +45,17 @@ const props = defineProps({
    */
   icon: {
     type: String,
+    default: undefined,
+  },
+  /**
+   * 收缩态附着到图标区域的 Badge 配置；展开态隐藏指示器。
+   * location="inline" 不受支持，会回退为 top-end。
+   *
+   * @type {{ content?: string | number, dot?: boolean, location?: 'top-start' | 'top' | 'top-end' | 'end' | 'bottom-end' | 'bottom' | 'bottom-start' | 'start', color?: string } | undefined}
+   * @default undefined
+   */
+  badge: {
+    type: Object,
     default: undefined,
   },
   /**
@@ -76,6 +101,22 @@ const showsIcon = computed(() => hasIcon.value || !expanded.value);
 const resolvedIcon = computed(() => (
   hasIcon.value ? propsWithDefaults.icon : 'circle'
 ));
+const badgeProps = computed(() => {
+  const badge = propsWithDefaults.badge;
+
+  if (!badge) {
+    return null;
+  }
+
+  return {
+    content: expanded.value ? undefined : badge.content,
+    dot: expanded.value ? false : badge.dot,
+    location: NAVIGATION_BADGE_LOCATIONS.includes(badge.location)
+      ? badge.location
+      : 'top-end',
+    color: badge.color,
+  };
+});
 const typographyClass = computed(() => getTypographyClass(
   'label',
   expanded.value && !isHorizontal.value ? 'large' : 'medium',
@@ -89,6 +130,16 @@ const itemClasses = computed(() => ({
   'mat-navigation-rail-item--horizontal': isHorizontal.value,
   'mat-navigation-rail-item--full-width': fullWidth.value,
 }));
+
+watch(
+  () => propsWithDefaults.badge?.location,
+  (location) => {
+    if (import.meta.env.DEV && location === 'inline') {
+      console.warn('MatNavigationRailItem: badge.location 不支持 inline，当前按 top-end 处理');
+    }
+  },
+  { immediate: true },
+);
 
 /**
  * @param {MouseEvent} event
@@ -119,19 +170,43 @@ function handleClick(event) {
         v-if="showsIcon"
         class="mat-navigation-rail-item__icon-wrap"
       >
-        <slot
-          v-if="slots.icon"
-          name="icon"
-          :selected="selected"
-        />
+        <MatBadge
+          v-if="badgeProps"
+          :color="badgeProps.color"
+          :content="badgeProps.content"
+          :dot="badgeProps.dot"
+          :location="badgeProps.location"
+        >
+          <slot
+            v-if="slots.icon"
+            name="icon"
+            :selected="selected"
+          />
 
-        <MatIcon
-          v-else
-          :fill="selected ? 1 : 0"
-          :icon="resolvedIcon"
-          class="mat-navigation-rail-item__icon"
-          aria-hidden="true"
-        />
+          <MatIcon
+            v-else
+            :fill="selected ? 1 : 0"
+            :icon="resolvedIcon"
+            class="mat-navigation-rail-item__icon"
+            aria-hidden="true"
+          />
+        </MatBadge>
+
+        <template v-else>
+          <slot
+            v-if="slots.icon"
+            name="icon"
+            :selected="selected"
+          />
+
+          <MatIcon
+            v-else
+            :fill="selected ? 1 : 0"
+            :icon="resolvedIcon"
+            class="mat-navigation-rail-item__icon"
+            aria-hidden="true"
+          />
+        </template>
 
       </span>
 

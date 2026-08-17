@@ -3152,6 +3152,14 @@ export interface MatNavigationRailItemProps {
   */
   icon?: string | undefined;
   /**
+  * 收缩态附着到图标区域的 Badge 配置；展开态隐藏指示器。
+  * location="inline" 不受支持，会回退为 top-end。
+  *
+  * @type {{ content?: string | number, dot?: boolean, location?: 'top-start' | 'top' | 'top-end' | 'end' | 'bottom-end' | 'bottom' | 'bottom-start' | 'start', color?: string } | undefined}
+  * @default undefined
+  */
+  badge?: { content?: string | number, dot?: boolean, location?: 'top-start' | 'top' | 'top-end' | 'end' | 'bottom-end' | 'bottom' | 'bottom-start' | 'start', color?: string } | undefined;
+  /**
   * 设置后渲染原生链接。
   *
   * @type {string | undefined}

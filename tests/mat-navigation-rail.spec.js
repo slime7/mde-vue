@@ -5,6 +5,7 @@ import { flushPromises, mount } from '@vue/test-utils';
 import {
   afterEach, describe, expect, it, vi,
 } from 'vitest';
+import MatBadge from '../src/components/mat-badge/MatBadge.vue';
 import MatNavigationRail from '../src/components/mat-navigation-rail/MatNavigationRail.vue';
 import MatNavigationRailItem from '../src/components/mat-navigation-rail/MatNavigationRailItem.vue';
 
@@ -437,5 +438,188 @@ describe('MatNavigationRail', () => {
 
     expect(wrapper.find('.mat-navigation-rail__end').exists()).toBe(true);
     expect(wrapper.find('.test-end').text()).toBe('true');
+  });
+
+  it('Item 的 badge 只绑定图标区域并保留 Item 交互', async () => {
+    const wrapper = mount(MatNavigationRail, {
+      attachTo: document.body,
+      slots: {
+        default: () => h(MatNavigationRailItem, {
+          value: 'inbox',
+          icon: 'inbox',
+          badge: {
+            content: 0,
+            color: 'tertiary',
+            location: 'top-start',
+          },
+        }, () => '收件箱'),
+      },
+    });
+    const item = wrapper.findComponent(MatNavigationRailItem);
+    const badge = item.findComponent(MatBadge);
+
+    expect(badge.exists()).toBe(true);
+    expect(badge.props()).toMatchObject({
+      content: 0,
+      color: 'tertiary',
+      location: 'top-start',
+      dot: false,
+    });
+    const hiddenNodes = badge.findAll('[aria-hidden="true"]');
+
+    expect(hiddenNodes.at(hiddenNodes.length - 1).text()).toBe('0');
+    expect(item.text()).toContain('收件箱');
+
+    item.element.focus();
+    expect(document.activeElement).toBe(item.element);
+
+    await item.trigger('click');
+    expect(item.emitted('click')).toHaveLength(1);
+  });
+
+  it('expanded 状态隐藏 badge 指示器，切回收缩态后恢复显示', async () => {
+    const wrapper = mount(MatNavigationRail, {
+      props: { expanded: true },
+      slots: {
+        default: () => h(MatNavigationRailItem, {
+          icon: 'mail',
+          badge: { content: 3 },
+        }, () => '邮件'),
+      },
+    });
+    const item = wrapper.findComponent(MatNavigationRailItem);
+    const badge = item.findComponent(MatBadge);
+
+    expect(badge.exists()).toBe(true);
+    expect(badge.findAll('[aria-hidden="true"]')).toHaveLength(1);
+    expect(badge.text()).not.toContain('3');
+    expect(item.findComponent({ name: 'MatIcon' }).exists()).toBe(true);
+    expect(item.text()).toContain('邮件');
+
+    await wrapper.setProps({ expanded: false });
+
+    const hiddenNodes = item.findComponent(MatBadge).findAll('[aria-hidden="true"]');
+
+    expect(hiddenNodes.at(hiddenNodes.length - 1).text()).toBe('3');
+  });
+
+  it('badge 支持 icon Slot 与收缩态圆点占位图标', () => {
+    const wrapper = mount(MatNavigationRail, {
+      slots: {
+        default: () => [
+          h(MatNavigationRailItem, {
+            value: 'missing',
+            badge: { dot: true },
+          }, () => '无图标'),
+          h(MatNavigationRailItem, {
+            value: 'custom',
+            badge: { content: 8 },
+          }, {
+            default: () => '自定义图标',
+            icon: () => h('span', { 'data-testid': 'custom-icon' }, 'mail'),
+          }),
+        ],
+      },
+    });
+    const items = wrapper.findAllComponents(MatNavigationRailItem);
+    const missingIconHiddenNodes = items[0].findAll('[aria-hidden="true"]');
+    const customIconHiddenNodes = items[1].findAll('[aria-hidden="true"]');
+
+    expect(items[0].findComponent({ name: 'MatIcon' }).props('icon')).toBe('circle');
+    expect(missingIconHiddenNodes.at(missingIconHiddenNodes.length - 1).attributes('data-dot')).toBe('');
+    expect(items[1].find('[data-testid="custom-icon"]').exists()).toBe(true);
+    expect(customIconHiddenNodes.at(customIconHiddenNodes.length - 1).text()).toBe('8');
+  });
+
+  it('badge 遵循内容、dot 优先级、颜色和八种覆盖位置', () => {
+    const locations = [
+      'top-start',
+      'top',
+      'top-end',
+      'end',
+      'bottom-end',
+      'bottom',
+      'bottom-start',
+      'start',
+    ];
+    const wrapper = mount(MatNavigationRail, {
+      slots: {
+        default: () => [
+          ...locations.map((location) => h(MatNavigationRailItem, {
+            key: location,
+            icon: 'mail',
+            badge: { content: 1, location },
+          }, () => location)),
+          h(MatNavigationRailItem, {
+            icon: 'priority_high',
+            badge: { content: '99', dot: true, color: 'error' },
+          }, () => '点型'),
+          h(MatNavigationRailItem, {
+            icon: 'drafts',
+            badge: { content: '' },
+          }, () => '空内容'),
+        ],
+      },
+    });
+    const items = wrapper.findAllComponents(MatNavigationRailItem);
+
+    expect(items.slice(0, locations.length).map((item) => item.findComponent(MatBadge).props('location')))
+      .toEqual(locations);
+    const dotHiddenNodes = items[locations.length].findAll('[aria-hidden="true"]');
+    const emptyHiddenNodes = items[locations.length + 1].findAll('[aria-hidden="true"]');
+
+    expect(dotHiddenNodes.at(dotHiddenNodes.length - 1).attributes('data-dot')).toBe('');
+    expect(dotHiddenNodes.at(dotHiddenNodes.length - 1).text()).not.toContain('99');
+    expect(emptyHiddenNodes).toHaveLength(2);
+    expect(emptyHiddenNodes.at(emptyHiddenNodes.length - 1).attributes('data-dot')).toBeUndefined();
+  });
+
+  it('NavigationItem 不公开 badge offset，且不会把 offset 转发给 MatBadge', () => {
+    expect(MatNavigationRailItem.props.offset).toBeUndefined();
+
+    const wrapper = mount(MatNavigationRail, {
+      slots: {
+        default: () => h(MatNavigationRailItem, {
+          icon: 'mail',
+          badge: {
+            content: 1,
+            offset: { inline: 20, block: 10 },
+          },
+        }, () => '邮件'),
+      },
+    });
+    const hiddenNodes = wrapper.findComponent(MatBadge).findAll('[aria-hidden="true"]');
+    const indicator = hiddenNodes.at(hiddenNodes.length - 1);
+
+    expect(indicator.attributes('style')).not.toContain('20px');
+    expect(indicator.attributes('style')).not.toContain('10px');
+  });
+
+  it('badge.location=inline 回退到 top-end 并给出开发警告', () => {
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const wrapper = mount(MatNavigationRail, {
+      slots: {
+        default: () => h(MatNavigationRailItem, {
+          icon: 'mail',
+          badge: { content: 1, location: 'inline' },
+        }, () => '邮件'),
+      },
+    });
+
+    expect(wrapper.findComponent(MatBadge).props('location')).toBe('top-end');
+    expect(warning).toHaveBeenCalledWith(
+      'MatNavigationRailItem: badge.location 不支持 inline，当前按 top-end 处理',
+    );
+  });
+
+  it('未传 badge 时不渲染 Badge，且不会通过 createMatUi 默认注入', () => {
+    const wrapper = mount(MatNavigationRail, {
+      slots: {
+        default: () => h(MatNavigationRailItem, { icon: 'mail' }, () => '邮件'),
+      },
+    });
+
+    expect(wrapper.findComponent(MatBadge).exists()).toBe(false);
+    expect(MatNavigationRailItem.props.badge.default).toBeUndefined();
   });
 });

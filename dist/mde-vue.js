@@ -9758,6 +9758,10 @@ var As = { class: "mat-snackbar__text" }, js = {
 			type: String,
 			default: void 0
 		},
+		badge: {
+			type: Object,
+			default: void 0
+		},
 		href: {
 			type: String,
 			default: void 0
@@ -9768,43 +9772,84 @@ var As = { class: "mat-snackbar__text" }, js = {
 		}
 	},
 	emits: { click: (e) => e instanceof MouseEvent },
-	setup(e, { emit: t }) {
-		let n = $("navigationRailItem", e), r = t, l = z(), u = m(je, Ae), d = m(qs, null), f = i(() => d?.expanded.value ?? !1), p = i(() => d?.fullWidth.value ?? !1), h = i(() => d?.orientation.value === "horizontal"), _ = i(() => d?.isSelected(n.value) ?? !1), y = i(() => !!(l.icon || n.icon && n.icon.trim())), b = i(() => y.value || !f.value), x = i(() => y.value ? n.icon : "circle"), S = i(() => Dn("label", f.value && !h.value ? "large" : "medium")), C = i(() => Dn("label", "medium")), w = i(() => ({
-			"mat-navigation-rail-item--selected": _.value,
-			"mat-navigation-rail-item--disabled": n.disabled,
-			"mat-navigation-rail-item--expanded": f.value,
-			"mat-navigation-rail-item--collapsed": !f.value,
-			"mat-navigation-rail-item--horizontal": h.value,
-			"mat-navigation-rail-item--full-width": p.value
+	setup(e, { emit: n }) {
+		let r = [
+			"top-start",
+			"top",
+			"top-end",
+			"end",
+			"bottom-end",
+			"bottom",
+			"bottom-start",
+			"start"
+		], l = $("navigationRailItem", e), u = n, d = z(), f = m(je, Ae), p = m(qs, null), h = i(() => p?.expanded.value ?? !1), _ = i(() => p?.fullWidth.value ?? !1), y = i(() => p?.orientation.value === "horizontal"), b = i(() => p?.isSelected(l.value) ?? !1), x = i(() => !!(d.icon || l.icon && l.icon.trim())), S = i(() => x.value || !h.value), C = i(() => x.value ? l.icon : "circle"), w = i(() => {
+			let e = l.badge;
+			return e ? {
+				content: h.value ? void 0 : e.content,
+				dot: !h.value && e.dot,
+				location: r.includes(e.location) ? e.location : "top-end",
+				color: e.color
+			} : null;
+		}), E = i(() => Dn("label", h.value && !y.value ? "large" : "medium")), D = i(() => Dn("label", "medium")), O = i(() => ({
+			"mat-navigation-rail-item--selected": b.value,
+			"mat-navigation-rail-item--disabled": l.disabled,
+			"mat-navigation-rail-item--expanded": h.value,
+			"mat-navigation-rail-item--collapsed": !h.value,
+			"mat-navigation-rail-item--horizontal": y.value,
+			"mat-navigation-rail-item--full-width": _.value
 		}));
-		function E(e) {
-			n.disabled || d?.requestSelection(n.value), r("click", e);
+		B(() => l.badge?.location, (e) => {}, { immediate: !0 });
+		function k(e) {
+			l.disabled || p?.requestSelection(l.value), u("click", e);
 		}
-		return (e, t) => (T(), a(De, g(e.$attrs, {
-			class: ["mat-navigation-rail-item", w.value],
-			"aria-current": _.value ? "page" : void 0,
-			disabled: L(n).disabled,
+		return (e, n) => (T(), a(De, g(e.$attrs, {
+			class: ["mat-navigation-rail-item", O.value],
+			"aria-current": b.value ? "page" : void 0,
+			disabled: L(l).disabled,
 			"focus-ring": !1,
-			href: L(n).href,
-			"use-cursor": L(u).useCursor,
-			onClick: E
+			href: L(l).href,
+			"use-cursor": L(f).useCursor,
+			onClick: k
 		}), {
 			default: H(() => [
-				c("span", Js, [b.value ? (T(), s("span", Ys, [L(l).icon ? M(e.$slots, "icon", {
+				c("span", Js, [S.value ? (T(), s("span", Ys, [w.value ? (T(), a(Ti, {
 					key: 0,
-					selected: _.value
+					color: w.value.color,
+					content: w.value.content,
+					dot: w.value.dot,
+					location: w.value.location
+				}, {
+					default: H(() => [L(d).icon ? M(e.$slots, "icon", {
+						key: 0,
+						selected: b.value
+					}, void 0, !0) : (T(), a(pt, {
+						key: 1,
+						fill: +!!b.value,
+						icon: C.value,
+						class: "mat-navigation-rail-item__icon",
+						"aria-hidden": "true"
+					}, null, 8, ["fill", "icon"]))]),
+					_: 3
+				}, 8, [
+					"color",
+					"content",
+					"dot",
+					"location"
+				])) : (T(), s(t, { key: 1 }, [L(d).icon ? M(e.$slots, "icon", {
+					key: 0,
+					selected: b.value
 				}, void 0, !0) : (T(), a(pt, {
 					key: 1,
-					fill: +!!_.value,
-					icon: x.value,
+					fill: +!!b.value,
+					icon: C.value,
 					class: "mat-navigation-rail-item__icon",
 					"aria-hidden": "true"
-				}, null, 8, ["fill", "icon"]))])) : o("", !0), c("span", Xs, [c("span", { class: v(["mat-navigation-rail-item__label", S.value]) }, [M(e.$slots, "default", {}, void 0, !0)], 2)])]),
-				c("span", { class: v(["mat-navigation-rail-item__label", C.value]) }, [M(e.$slots, "default", {}, void 0, !0)], 2),
+				}, null, 8, ["fill", "icon"]))], 64))])) : o("", !0), c("span", Xs, [c("span", { class: v(["mat-navigation-rail-item__label", E.value]) }, [M(e.$slots, "default", {}, void 0, !0)], 2)])]),
+				c("span", { class: v(["mat-navigation-rail-item__label", D.value]) }, [M(e.$slots, "default", {}, void 0, !0)], 2),
 				e.$slots.trailing ? (T(), s("span", Zs)) : o("", !0),
 				e.$slots.trailing ? (T(), s("span", Qs, [M(e.$slots, "trailing", {
-					expanded: f.value,
-					selected: _.value
+					expanded: h.value,
+					selected: b.value
 				}, void 0, !0)])) : o("", !0)
 			]),
 			_: 3
@@ -9816,7 +9861,7 @@ var As = { class: "mat-snackbar__text" }, js = {
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-3a957208"]]), ec = ["aria-label"], tc = { class: "mat-navigation-rail__layout" }, nc = {
+}), [["__scopeId", "data-v-b18013ea"]]), ec = ["aria-label"], tc = { class: "mat-navigation-rail__layout" }, nc = {
 	key: 0,
 	class: "mat-navigation-rail__header"
 }, rc = {
