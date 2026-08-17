@@ -615,7 +615,19 @@ defineExpose({
 <style scoped>
 @layer mde.components {
   .mat-scroll-area {
+    /* 每个实例独立拥有内部变量，避免嵌套实例继承外层计算值。 */
     --mat-scroll-area-container-color: transparent;
+    --mat-scroll-area-content-mask: initial;
+    --mat-scroll-area-rounded-radius: initial;
+    --mat-scroll-area-shadow-length-start: initial;
+    --mat-scroll-area-shadow-length-end: initial;
+    --mat-scroll-area-shadow-offset-start: initial;
+    --mat-scroll-area-shadow-offset-end: initial;
+    --mat-scroll-area-scrollbar-width: initial;
+    --mat-scroll-area-root-padding-left: initial;
+    --mat-scroll-area-root-padding-right: initial;
+    --mat-scroll-area-root-padding-top: initial;
+    --mat-scroll-area-root-padding-bottom: initial;
     box-sizing: border-box;
     inline-size: 100%;
     block-size: 100%;

@@ -5268,7 +5268,7 @@ var Ci = ["data-dot"], wi = ["data-dot"], Ti = /*#__PURE__*/ Q(/* @__PURE__ */ O
 			onScroll: Y
 		}), [M(e.$slots, "default", {}, void 0, !0)], 16)], 16));
 	}
-}), [["__scopeId", "data-v-93a5f328"]]), Mi = { class: "mat-chip-set__scroll-content" }, Ni = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatChipSet" }, {
+}), [["__scopeId", "data-v-144c5ed8"]]), Mi = { class: "mat-chip-set__scroll-content" }, Ni = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatChipSet" }, {
 	__name: "MatChipSet",
 	props: {
 		layout: {
