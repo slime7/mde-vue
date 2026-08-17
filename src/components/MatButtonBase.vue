@@ -102,7 +102,7 @@ const emit = defineEmits(['click']);
     border-end-end-radius: var(--mat-button-end-end-radius);
     box-shadow: var(--mat-button-container-elevation);
     transform: scaleX(var(--mat-button-visual-scale));
-    transition: color var(--mat-sys-motion-spring-fast-effects), background-color var(--mat-sys-motion-spring-fast-effects), border-color var(--mat-sys-motion-spring-fast-effects), border-start-start-radius var(--mat-sys-motion-spring-fast-spatial), border-start-end-radius var(--mat-sys-motion-spring-fast-spatial), border-end-start-radius var(--mat-sys-motion-spring-fast-spatial), border-end-end-radius var(--mat-sys-motion-spring-fast-spatial), box-shadow var(--mat-sys-motion-spring-fast-effects), inline-size var(--mat-button-size-motion), padding-inline-start var(--mat-button-size-motion), padding-inline-end var(--mat-button-size-motion), transform var(--mat-sys-motion-spring-fast-spatial);
+    transition: color var(--mat-sys-motion-spring-fast-effects), background-color var(--mat-sys-motion-spring-fast-effects), border-color var(--mat-sys-motion-spring-fast-effects), border-start-start-radius var(--mat-sys-motion-spring-fast-spatial), border-start-end-radius var(--mat-sys-motion-spring-fast-spatial), border-end-start-radius var(--mat-sys-motion-spring-fast-spatial), border-end-end-radius var(--mat-sys-motion-spring-fast-spatial), box-shadow var(--mat-sys-motion-spring-fast-effects), gap var(--mat-button-size-motion), inline-size var(--mat-button-size-motion), padding-inline-start var(--mat-button-size-motion), padding-inline-end var(--mat-button-size-motion), transform var(--mat-sys-motion-spring-fast-spatial);
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }

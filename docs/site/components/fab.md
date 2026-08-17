@@ -11,7 +11,7 @@ order: 53
 
 `<mat-fab>` 的组件导出名是 `MatFab`。它使用同一个组件表达普通 FAB 和 Extended FAB：没有默认 Slot 文本时渲染纯图标 FAB；有默认 Slot 文本时渲染带标签的 Extended FAB。Extended FAB 可以通过 `expanded` 在保留同一组件实例的情况下收缩为图标态。默认在声明位置参与普通布局；设置 `app` 后自动进入最近 `MatAppRoot` 的普通浮动组。组件不实现滚动驱动的自动收缩、FAB menu 或页面级动效。
 
-纯图标模式需要传入非空 `icon` 和 `label`。`label` 同时作为按钮的可访问名称和默认 Tooltip 文本；Extended FAB 可以省略图标，默认 Slot 标签仍然有效。标签保持单行，超出可用宽度时以省略号截断。
+纯图标模式需要传入非空 `icon` 和 `label`。`label` 同时作为按钮的可访问名称和默认 Tooltip 文本；Extended FAB 可以省略图标，默认 Slot 标签仍然有效。标签保持单行，超出可用宽度时隐藏溢出内容。
 
 ## 示例
 
@@ -55,7 +55,7 @@ order: 53
 
 ### `expanded`
 
-带默认 Slot 标签的 Extended FAB 可以将 `expanded` 设为 `false` 收缩为纯图标 FAB。标签隐藏时仍使用 `label` 提供可访问名称和 Tooltip，恢复展开后继续使用原有 Slot 内容。
+带默认 Slot 标签的 Extended FAB 可以将 `expanded` 设为 `false` 收缩为纯图标 FAB。标签隐藏时仍使用 `label` 提供可访问名称和 Tooltip，恢复展开后继续使用原有 Slot 内容。展开与收缩之间按钮宽度和标签透明度使用系统动效令牌过渡，减少动态效果偏好下直接切换。
 
 :::: details 查看示例代码
 ::: code-group
@@ -77,7 +77,7 @@ order: 53
 
 ### `size`
 
-`small`、`medium` 和 `large` 分别使用 56px、80px 和 96px 高度。纯图标模式的宽度与高度相等，Extended FAB 的宽度随内容增长。
+`small`、`medium` 和 `large` 分别使用 56px、80px 和 96px 高度，图标尺寸分别为 24px、28px 和 36px。纯图标模式的宽度与高度相等，Extended FAB 的宽度随内容增长。
 
 :::: details 查看示例代码
 ::: code-group
@@ -183,7 +183,7 @@ FAB 只接受当前主题中的八组官方颜色角色，不接受十六进制�
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `size` | `'small' \| 'medium' \| 'large'` | `'medium'` | FAB 高度和内容尺寸；分别为 56px、80px、96px，`small` 不是已废弃的 40px FAB |
+| `size` | `'small' \| 'medium' \| 'large'` | `'medium'` | FAB 高度、图标和内容尺寸；高度分别为 56px、80px、96px，图标分别为 24px、28px、36px，`small` 不是已废弃的 40px FAB |
 | `icon` | `string` | 未设置 | Material Symbols 图标；Extended FAB 可以省略；非空时显示为填充图标 |
 | `label` | `string` | 未设置 | 纯图标模式的无障碍名称和默认 Tooltip 文本；纯图标模式必须提供非空值 |
 | `expanded` | `boolean` | `true` | 是否显示默认 Slot 标签；`false` 时同一 Extended FAB 收缩为纯图标态 |
@@ -203,7 +203,7 @@ FAB 只接受当前主题中的八组官方颜色角色，不接受十六进制�
 
 | 名称 | 内容约束 |
 | --- | --- |
-| 默认 | 可选的单行 Extended FAB 标签；存在非空内容时切换为 Extended FAB，超出可用宽度时以省略号截断 |
+| 默认 | 可选的单行 Extended FAB 标签；存在非空内容时切换为 Extended FAB，超出可用宽度时隐藏溢出内容 |
 
 组件没有其他 Slots，也没有公共方法。
 
@@ -216,7 +216,7 @@ FAB 只接受当前主题中的八组官方颜色角色，不接受十六进制�
 | pressed | 使用基础按钮层的按下状态层和状态处理 |
 | disabled | 使用原生禁用语义、禁用内容对比并移除阴影 |
 
-组件不自行计算固定坐标；`app` 模式由 AppRoot 负责布局、边缘避让和安全区。组件不实现滚动收缩、FAB menu 或页面级动效。减少动态效果偏好下，基础按钮层和图标过渡会被取消。
+组件不自行计算固定坐标；`app` 模式由 AppRoot 负责布局、边缘避让和安全区。组件不实现滚动收缩、FAB menu 或页面级动效。减少动态效果偏好下，基础按钮层、图标和标签的过渡会被取消。
 
 ## 参考来源
 

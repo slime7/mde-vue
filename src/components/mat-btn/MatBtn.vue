@@ -439,11 +439,6 @@ watchEffect(() => {
 
 <style scoped>
 @layer mde.components {
-  /*
-   * 交互结构改编自 mdui v2 button（MIT），尺寸与状态按 Material 3 Expressive 重写：
-   * https://github.com/zdhxiong/mdui/tree/818146c3e188580e2831873b4f245d864422552c
-   */
-
   .mat-btn {
     --mat-accent-color: var(--mat-sys-color-primary);
     --mat-on-accent-color: var(--mat-sys-color-on-primary);

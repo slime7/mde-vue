@@ -10,7 +10,7 @@
         :content="index + 1"
         :location="location"
       >
-        <span class="target">{{ location }}</span>
+        <mat-icon icon="notifications" />
       </mat-badge>
 
       <span v-else />
@@ -42,17 +42,7 @@ const locations = [
   grid-template-columns: repeat(3, minmax(120px, 1fr));
   gap: 56px 40px;
   inline-size: 100%;
-}
-
-.target {
-  display: inline-flex;
-  min-inline-size: 96px;
-  min-block-size: 48px;
-  align-items: center;
-  justify-content: center;
-  color: var(--mat-sys-color-on-surface-variant);
-  background: var(--mat-sys-color-surface-container);
-  border-radius: var(--mat-sys-shape-corner-medium);
+  place-items: center;
 }
 </style>
 <!-- #endregion style -->

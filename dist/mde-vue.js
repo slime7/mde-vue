@@ -260,7 +260,7 @@ var Ee = {
 			"type"
 		]));
 	}
-}), [["__scopeId", "data-v-7767781b"]]), ke = Object.freeze({
+}), [["__scopeId", "data-v-12a32b0d"]]), ke = Object.freeze({
 	openDelay: 0,
 	closeDelay: 600
 }), Ae = Object.freeze({
@@ -604,6 +604,8 @@ var ft = ["src"], pt = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		let n = $("icon", e), r = m(je, Ae), { colorStyle: o, hasExplicitColor: c } = lt(i(() => n.color)), l = i(() => n.iconClass ?? r.iconClass), d = i(() => n.icon !== void 0), f = i(() => He[n.size]?.fontSize ?? n.size), p = i(() => n.opticalSize ?? He[n.size]?.opticalSize ?? 24), h = i(() => ({
 			...o.value,
 			"--mat-icon-size": f.value,
+			display: "inline-flex",
+			fontSize: f.value,
 			color: n.fontColor ?? (c.value ? "var(--mat-accent-color)" : "currentColor"),
 			fontVariationSettings: `'FILL' ${n.fill}, 'wght' ${n.weight}, 'GRAD' ${n.grade}, 'opsz' ${p.value}`
 		}));
@@ -620,7 +622,7 @@ var ft = ["src"], pt = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			_: 3
 		}, 16, ["class", "style"]));
 	}
-}), [["__scopeId", "data-v-4805a6da"]]), mt = /^-?\d+(\.\d+)?$/;
+}), [["__scopeId", "data-v-b3defc6b"]]), mt = /^-?\d+(\.\d+)?$/;
 function ht(e) {
 	if (typeof e == "number") return Number.isFinite(e) ? e : NaN;
 	if (typeof e == "string") {
@@ -1726,7 +1728,7 @@ var On = {
 			"onClick"
 		]));
 	}
-}), [["__scopeId", "data-v-47959319"]]), An = ["data-scrollable"], jn = { class: "mat-app-root__overlay" }, Mn = { class: "mat-app-root__bottom-stack" }, Nn = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-2514fbe1"]]), An = ["data-scrollable"], jn = { class: "mat-app-root__overlay" }, Mn = { class: "mat-app-root__bottom-stack" }, Nn = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatAppRoot",
 	inheritAttrs: !1
 }, {
@@ -2777,13 +2779,7 @@ function tr(e) {
 }
 //#endregion
 //#region src/components/mat-fab/MatFab.vue
-var nr = {
-	key: 1,
-	class: "mat-fab__label"
-}, rr = {
-	key: 1,
-	class: "mat-fab__label"
-}, ir = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+var nr = ["aria-hidden"], rr = ["aria-hidden"], ir = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatFab",
 	inheritAttrs: !1
 }, {
@@ -2847,27 +2843,27 @@ var nr = {
 		return e instanceof MouseEvent;
 	} },
 	setup(t, { emit: r }) {
-		let c = $("fab", t), l = r, f = ee(), p = z(), h = m(je, Ae), _ = m(kt, null), v = k(null), y = R(), b = i(() => c.expanded ? (p.default?.() ?? []).some((t) => t.type === e ? !1 : typeof t.children != "string" || t.children.trim().length > 0) : !1), x = i(() => typeof c.icon == "string" && c.icon.trim().length > 0), S = i(() => !b.value), C = i(() => S.value ? f.title ?? c.label : void 0), w = i(() => S.value ? c.label : f["aria-label"]), E = i(() => ({
+		let c = $("fab", t), l = r, f = ee(), p = z(), h = m(je, Ae), _ = m(kt, null), v = k(null), y = R(), b = i(() => (p.default?.() ?? []).some((t) => t.type === e ? !1 : typeof t.children != "string" || t.children.trim().length > 0)), x = i(() => c.expanded && b.value), S = i(() => typeof c.icon == "string" && c.icon.trim().length > 0), C = i(() => !x.value), w = i(() => C.value ? f.title ?? c.label : void 0), E = i(() => C.value ? c.label : f["aria-label"]), D = i(() => ({
 			small: 24,
 			medium: 28,
 			large: 36
-		})[c.size]), D = i(() => {
+		})[c.size]), O = i(() => {
 			let [e, t] = {
 				small: ["title", "medium"],
 				medium: ["title", "large"],
 				large: ["headline", "small"]
 			}[c.size];
 			return Dn(e, t);
-		}), O = i(() => ({
+		}), A = i(() => ({
 			"--mat-fab-container-color": `var(--mat-sys-color-${c.color})`,
 			"--mat-fab-content-color": `var(--mat-sys-color-on-${c.color})`,
 			"--mat-fab-state-color": `var(--mat-sys-color-on-${c.color})`
-		})), A = i(() => c.app && !!_), j = i(() => A.value ? _.floatingLayer.value : null);
+		})), j = i(() => c.app && !!_), N = i(() => j.value ? _.floatingLayer.value : null);
 		return V(() => {
-			S.value && (!x.value || !c.label || c.label.trim().length === 0) && console.warn("MatFab: 图标模式必须提供非空 label");
-		}), (e, t) => A.value ? j.value ? (T(), a(n, {
+			C.value && (!S.value || !c.label || c.label.trim().length === 0) && console.warn("MatFab: 图标模式必须提供非空 label");
+		}), (e, t) => j.value ? N.value ? (T(), a(n, {
 			key: 1,
-			to: j.value
+			to: N.value
 		}, [d(Oe, g({
 			ref_key: "buttonElement",
 			ref: v
@@ -2875,38 +2871,42 @@ var nr = {
 			class: ["mat-fab", [
 				`mat-fab--size-${L(c).size}`,
 				`mat-fab--position-${L(c).position}`,
-				D.value,
+				O.value,
 				{
 					"mat-fab--app-root": !0,
-					"mat-fab--extended": b.value,
-					"mat-fab--icon-only": S.value
+					"mat-fab--extended": x.value,
+					"mat-fab--icon-only": C.value
 				}
 			]],
-			style: O.value,
-			"aria-label": w.value,
+			style: A.value,
+			"aria-label": E.value,
 			disabled: L(c).disabled,
-			title: S.value ? void 0 : L(f).title,
+			title: C.value ? void 0 : L(f).title,
 			type: L(c).type,
 			"use-cursor": L(h).useCursor,
 			onClick: t[1] ||= (e) => l("click", e)
 		}), {
 			default: H(() => [
-				x.value ? (T(), a(pt, {
+				S.value ? (T(), a(pt, {
 					key: 0,
 					as: "span",
 					class: "mat-fab__icon",
 					fill: 1,
-					"optical-size": E.value,
+					"optical-size": D.value,
 					size: "var(--mat-fab-icon-size)",
 					"aria-hidden": "true"
 				}, {
 					default: H(() => [u(I(L(c).icon), 1)]),
 					_: 1
 				}, 8, ["optical-size"])) : o("", !0),
-				b.value ? (T(), s("span", rr, [M(e.$slots, "default", {}, void 0, !0)])) : o("", !0),
-				S.value && C.value ? (T(), a(_n, {
+				b.value ? (T(), s("span", {
+					key: 1,
+					class: "mat-fab__label",
+					"aria-hidden": x.value ? void 0 : "true"
+				}, [M(e.$slots, "default", {}, void 0, !0)], 8, rr)) : o("", !0),
+				C.value && w.value ? (T(), a(_n, {
 					key: 2,
-					content: C.value,
+					content: w.value,
 					id: `${L(y)}-tooltip`,
 					target: v.value
 				}, null, 8, [
@@ -2931,37 +2931,41 @@ var nr = {
 		}, e.$attrs, {
 			class: ["mat-fab", [
 				`mat-fab--size-${L(c).size}`,
-				D.value,
+				O.value,
 				{
-					"mat-fab--extended": b.value,
-					"mat-fab--icon-only": S.value
+					"mat-fab--extended": x.value,
+					"mat-fab--icon-only": C.value
 				}
 			]],
-			style: O.value,
-			"aria-label": w.value,
+			style: A.value,
+			"aria-label": E.value,
 			disabled: L(c).disabled,
-			title: S.value ? void 0 : L(f).title,
+			title: C.value ? void 0 : L(f).title,
 			type: L(c).type,
 			"use-cursor": L(h).useCursor,
 			onClick: t[0] ||= (e) => l("click", e)
 		}), {
 			default: H(() => [
-				x.value ? (T(), a(pt, {
+				S.value ? (T(), a(pt, {
 					key: 0,
 					as: "span",
 					class: "mat-fab__icon",
 					fill: 1,
-					"optical-size": E.value,
+					"optical-size": D.value,
 					size: "var(--mat-fab-icon-size)",
 					"aria-hidden": "true"
 				}, {
 					default: H(() => [u(I(L(c).icon), 1)]),
 					_: 1
 				}, 8, ["optical-size"])) : o("", !0),
-				b.value ? (T(), s("span", nr, [M(e.$slots, "default", {}, void 0, !0)])) : o("", !0),
-				S.value && C.value ? (T(), a(_n, {
+				b.value ? (T(), s("span", {
+					key: 1,
+					class: "mat-fab__label",
+					"aria-hidden": x.value ? void 0 : "true"
+				}, [M(e.$slots, "default", {}, void 0, !0)], 8, nr)) : o("", !0),
+				C.value && w.value ? (T(), a(_n, {
 					key: 2,
-					content: C.value,
+					content: w.value,
 					id: `${L(y)}-tooltip`,
 					target: v.value
 				}, null, 8, [
@@ -2981,7 +2985,7 @@ var nr = {
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-8468f873"]]), ar = ["src"], or = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-7cc5cf2e"]]), ar = ["src"], or = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatImage",
 	inheritAttrs: !1
 }, {
@@ -9812,7 +9816,7 @@ var As = { class: "mat-snackbar__text" }, js = {
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-1582be04"]]), ec = ["aria-label"], tc = { class: "mat-navigation-rail__layout" }, nc = {
+}), [["__scopeId", "data-v-3a957208"]]), ec = ["aria-label"], tc = { class: "mat-navigation-rail__layout" }, nc = {
 	key: 0,
 	class: "mat-navigation-rail__header"
 }, rc = {

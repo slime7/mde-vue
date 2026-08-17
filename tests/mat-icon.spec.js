@@ -67,4 +67,16 @@ describe('MatIcon', () => {
     expect(MatIcon.props.size.validator('24')).toBe(false);
     expect(MatIcon.props.size.validator('huge')).toBe(false);
   });
+
+  it('以内联字号和 display 保护组件样式不被外部图标字体覆盖', () => {
+    const wrapper = mount(MatIcon, {
+      props: {
+        icon: 'home',
+        size: 'large',
+      },
+    });
+
+    expect(wrapper.element.style.fontSize).toBe('40px');
+    expect(wrapper.element.style.display).toBe('inline-flex');
+  });
 });

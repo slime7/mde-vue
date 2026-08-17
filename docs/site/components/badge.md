@@ -78,8 +78,6 @@ order: 37
 
 <<< @/examples/badge/BadgeOffsetExample.vue#template [template]
 
-<<< @/examples/badge/BadgeOffsetExample.vue#style [style]
-
 :::
 ::::
 

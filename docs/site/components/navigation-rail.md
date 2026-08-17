@@ -378,7 +378,7 @@ Item 的 `trailing` 只在展开态显示，通过前置弹性 spacer 保持在 
 | `header` | `MatNavigationRail` | 纵向 rail 顶部的非交互品牌标识；Slot 参数为 `{ expanded }` |
 | `fab` | `MatNavigationRail` | 纵向 rail 顶部、目的地之前的 FAB 或 Extended FAB；Slot 参数为 `{ expanded }` |
 | `end` | `MatNavigationRail` | 纵向 rail 底部的自定义内容；Slot 参数为 `{ expanded }` |
-| 默认 | `MatNavigationRailItem` | 必填的简短目的地标签；单行显示，超长时以省略号截断 |
+| 默认 | `MatNavigationRailItem` | 必填的简短目的地标签；单行显示，超长时隐藏溢出内容 |
 | `icon` | `MatNavigationRailItem` | 自定义图标内容；Slot 参数为 `{ selected }` |
 | `trailing` | `MatNavigationRailItem` | 展开态显示在 Item 尾部的内容，通过弹性 spacer 保持在末尾；Slot 参数为 `{ expanded, selected }` |
 

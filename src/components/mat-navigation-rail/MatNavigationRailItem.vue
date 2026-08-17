@@ -326,7 +326,6 @@ function handleClick(event) {
     color: inherit;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .mat-navigation-rail-item > .mat-navigation-rail-item__label {

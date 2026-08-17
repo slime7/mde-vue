@@ -149,11 +149,7 @@ const appContext = inject(MAT_APP_ROOT_KEY, null);
 const buttonElement = ref(null);
 const generatedId = useId();
 
-const hasLabel = computed(() => {
-  if (!propsWithDefaults.expanded) {
-    return false;
-  }
-
+const hasLabelContent = computed(() => {
   const nodes = slots.default?.() ?? [];
 
   return nodes.some((node) => {
@@ -164,6 +160,7 @@ const hasLabel = computed(() => {
     return typeof node.children !== 'string' || node.children.trim().length > 0;
   });
 });
+const hasLabel = computed(() => propsWithDefaults.expanded && hasLabelContent.value);
 const isIcon = computed(() => typeof propsWithDefaults.icon === 'string'
   && propsWithDefaults.icon.trim().length > 0);
 const isIconOnly = computed(() => !hasLabel.value);
@@ -240,7 +237,11 @@ watchEffect(() => {
       {{ propsWithDefaults.icon }}
     </MatIcon>
 
-    <span v-if="hasLabel" class="mat-fab__label">
+    <span
+      v-if="hasLabelContent"
+      class="mat-fab__label"
+      :aria-hidden="hasLabel ? undefined : 'true'"
+    >
       <slot />
     </span>
 
@@ -287,7 +288,11 @@ watchEffect(() => {
         {{ propsWithDefaults.icon }}
       </MatIcon>
 
-      <span v-if="hasLabel" class="mat-fab__label">
+      <span
+        v-if="hasLabelContent"
+        class="mat-fab__label"
+        :aria-hidden="hasLabel ? undefined : 'true'"
+      >
         <slot />
       </span>
 
@@ -311,6 +316,7 @@ watchEffect(() => {
     --mat-button-radius: var(--mat-fab-container-shape);
     --mat-button-pressed-radius: var(--mat-fab-container-shape);
     gap: var(--mat-fab-icon-label-space);
+    interpolate-size: allow-keywords;
     min-inline-size: calc(var(--mat-fab-leading-space) + var(--mat-fab-trailing-space));
     padding-inline: var(--mat-fab-leading-space) var(--mat-fab-trailing-space);
     text-align: center;
@@ -361,11 +367,24 @@ watchEffect(() => {
     --mat-button-container-width: var(--mat-button-container-height);
     --mat-fab-leading-space: 0;
     --mat-fab-trailing-space: 0;
+    gap: 0;
   }
 
   .mat-fab--extended {
     --mat-button-container-width: auto;
     max-inline-size: 100%;
+  }
+
+  .mat-fab--extended .mat-fab__label {
+    opacity: 1;
+    visibility: visible;
+    transition: inline-size var(--mat-sys-motion-spring-fast-spatial), opacity var(--mat-sys-motion-spring-fast-effects), visibility 0s;
+  }
+
+  .mat-fab--icon-only .mat-fab__label {
+    inline-size: 0;
+    opacity: 0;
+    visibility: hidden;
   }
 
   .mat-fab__icon,
@@ -386,10 +405,11 @@ watchEffect(() => {
 
   .mat-fab__label {
     flex: 0 1 auto;
+    inline-size: auto;
     min-inline-size: 0;
     overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
+    transition: inline-size var(--mat-sys-motion-spring-fast-spatial), opacity var(--mat-sys-motion-spring-fast-effects), visibility 0s linear var(--mat-sys-motion-duration-short3);
   }
 
   @media (hover: hover) {
@@ -406,8 +426,10 @@ watchEffect(() => {
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .mat-fab__icon {
+    .mat-fab__icon,
+    .mat-fab__label {
       transition-duration: 0s;
+      transition-delay: 0s;
     }
   }
 }

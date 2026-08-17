@@ -6,7 +6,7 @@
     </mat-badge>
 
     <mat-badge dot>
-      <mat-btn icon="mail" label="收件箱" variant="standard" />
+      <mat-icon icon="mail" />
     </mat-badge>
   </div>
 </template>

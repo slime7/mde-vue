@@ -57,18 +57,24 @@ describe('MatFab', () => {
         default: '新建',
       },
     });
+    const label = () => wrapper.get('.mat-fab__label');
 
     expect(wrapper.text()).toBe('add新建');
+    expect(label().attributes('aria-hidden')).toBeUndefined();
     expect(wrapper.attributes('aria-label')).toBeUndefined();
 
     await wrapper.setProps({ expanded: false });
 
-    expect(wrapper.text()).toBe('add');
+    expect(label().attributes('aria-hidden')).toBe('true');
     expect(wrapper.attributes('aria-label')).toBe('新建');
+    expect(wrapper.findComponent({ name: 'MatTooltip' }).exists()).toBe(true);
 
     await wrapper.setProps({ expanded: true });
 
     expect(wrapper.text()).toBe('add新建');
+    expect(label().attributes('aria-hidden')).toBeUndefined();
+    expect(wrapper.attributes('aria-label')).toBeUndefined();
+    expect(wrapper.findComponent({ name: 'MatTooltip' }).exists()).toBe(false);
   });
 
   it('图标模式将 label 作为 ARIA 名称和 Tooltip 文本，并警告缺失 label', () => {

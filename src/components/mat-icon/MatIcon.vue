@@ -156,6 +156,8 @@ const resolvedOpticalSize = computed(() => propsWithDefaults.opticalSize
 const rootStyle = computed(() => ({
   ...colorStyle.value,
   '--mat-icon-size': resolvedSize.value,
+  display: 'inline-flex',
+  fontSize: resolvedSize.value,
   color: propsWithDefaults.fontColor
     ?? (hasExplicitColor.value ? 'var(--mat-accent-color)' : 'currentColor'),
   fontVariationSettings: `'FILL' ${propsWithDefaults.fill}, 'wght' ${propsWithDefaults.weight}, 'GRAD' ${propsWithDefaults.grade}, 'opsz' ${resolvedOpticalSize.value}`,
@@ -185,11 +187,6 @@ const rootStyle = computed(() => ({
 
 <style scoped>
 @layer mde.components {
-  /*
-   * 内容来源与 SVG 资源模式参考 mdui v2 icon（MIT）：
-   * https://github.com/zdhxiong/mdui/tree/818146c3e188580e2831873b4f245d864422552c
-   */
-
   .mat-icon {
     display: inline-flex;
     flex: 0 0 auto;
