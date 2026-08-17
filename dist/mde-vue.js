@@ -6973,7 +6973,7 @@ var da = {
 			])
 		], 64));
 	}
-}), [["__scopeId", "data-v-d3b3b58f"]]), Ba = { class: "mat-menu-item-host" }, Va = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-eaf43e88"]]), Ba = { class: "mat-menu-item-host" }, Va = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatMenuItem",
 	inheritAttrs: !1
 }, {

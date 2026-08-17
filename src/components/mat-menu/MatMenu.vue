@@ -963,6 +963,10 @@ if (appContext) {
       var(--mat-sys-interaction-focus-ring-width, 3px)
       + var(--mat-sys-interaction-focus-ring-offset, 2px)
     );
+
+    /* 每个菜单实例独立保存定位修正量，避免嵌套菜单继承父菜单位移。 */
+    --mat-menu-viewport-shift-x: 0;
+    --mat-menu-viewport-shift-y: 0;
     --mat-menu-viewport-width: 100dvi;
     --mat-menu-viewport-height: 100dvb;
     --mat-menu-resolved-max-length: calc(
