@@ -479,10 +479,7 @@ watch(
     align-items: center;
     box-sizing: border-box;
     min-block-size: var(--mat-sys-interaction-target-min-size);
-    padding-inline-end: var(--mat-list-item-trailing-space);
-    margin-inline-end: calc(
-      var(--mat-list-item-trailing-action-space) - var(--mat-list-item-trailing-space)
-    );
+    padding-inline-end: var(--mat-list-item-trailing-action-space);
     color: var(--mat-list-item-supporting-color);
   }
 
