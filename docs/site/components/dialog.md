@@ -11,7 +11,7 @@ order: 100
 
 `<mat-dialog>` 的组件导出名是 `MatDialog`。组件使用原生 `<dialog>` 元素与 Vue Teleport，在基础或全屏布局中展示需要使用者确认、输入或选择的内容，并可通过 `activator` Slot 放置触发元素。Dialog 支持受控开关、进入和退出动画、焦点恢复、多个实例的帷幕合并，以及 `dialog()`、`alert()`、`confirm()`、`prompt()` 四个 Promise 函数。
 
-Dialog 使用原生 `<dialog>` 元素（非模态 `show()`）与 Vue Teleport，组件自管焦点陷阱、背景拦截、滚动锁与堆叠，不依赖浏览器 top layer。位于 `MatAppRoot` 内且省略 `attach` 时，Dialog 自动进入该 AppRoot 的模态层，表面与帷幕限制在应用矩形内，AppRoot 正文层设为 `inert`，AppRoot 外的内容（如自绘任务栏）保持可见且可点击；其他场景下 Dialog 铺满视口，位于 Toolbar、Snackbar 和 Tooltip 等普通覆盖层之上。
+Dialog 使用原生 `<dialog>` 元素（非模态 `show()`）与 Vue Teleport，组件自管焦点陷阱、背景拦截、滚动锁与堆叠，不依赖浏览器 top layer。正文区域使用垂直 `MatScrollArea`，关闭滚动方向默认内边距并使用 `thin` 滚动条，同时保留边缘渐隐和正文留白；滚动条侧会扣除滚动条宽度，避免末端留白过宽。位于 `MatAppRoot` 内且省略 `attach` 时，Dialog 自动进入该 AppRoot 的模态层，表面与帷幕限制在应用矩形内，AppRoot 正文层设为 `inert`，AppRoot 外的内容（如自绘任务栏）保持可见且可点击；其他场景下 Dialog 铺满视口，位于 Toolbar、Snackbar 和 Tooltip 等普通覆盖层之上。
 
 ## 示例
 

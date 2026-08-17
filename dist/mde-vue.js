@@ -7706,16 +7706,10 @@ var bo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 }), [["__scopeId", "data-v-cf9d6504"]]), xo = { class: "mat-dialog__header" }, So = {
 	key: 1,
 	class: "mat-dialog__actions"
-}, Co = {
-	key: 0,
-	class: "mat-dialog__content mat-sys-typescale-body-medium"
-}, wo = {
+}, Co = { class: "mat-dialog__content-body" }, wo = {
 	key: 0,
 	class: "mat-dialog__icon"
-}, To = {
-	key: 2,
-	class: "mat-dialog__content mat-sys-typescale-body-medium"
-}, Eo = {
+}, To = { class: "mat-dialog__content-body" }, Eo = {
 	key: 3,
 	class: "mat-dialog__actions"
 }, Do = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
@@ -7947,7 +7941,16 @@ var bo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				}, [L(l).title === void 0 ? M(e.$slots, "title", { key: 1 }, void 0, !0) : (T(), s(t, { key: 0 }, [u(I(L(l).title), 1)], 64))])) : o("", !0),
 				d(bo),
 				e.$slots.actions ? (T(), s("div", So, [M(e.$slots, "actions", {}, void 0, !0)])) : o("", !0)
-			]), te.value ? (T(), s("div", Co, [L(l).content === void 0 ? M(e.$slots, "default", { key: 1 }, void 0, !0) : (T(), s(t, { key: 0 }, [u(I(L(l).content), 1)], 64))])) : o("", !0)], 64)) : (T(), s(t, { key: 1 }, [
+			]), te.value ? (T(), a(ji, {
+				key: 0,
+				class: "mat-dialog__content mat-sys-typescale-body-medium",
+				orientation: "vertical",
+				"no-scroll-padding": "",
+				"bar-width": "thin"
+			}, {
+				default: H(() => [c("div", Co, [L(l).content === void 0 ? M(e.$slots, "default", { key: 1 }, void 0, !0) : (T(), s(t, { key: 0 }, [u(I(L(l).content), 1)], 64))])]),
+				_: 3
+			})) : o("", !0)], 64)) : (T(), s(t, { key: 1 }, [
 				K.value ? (T(), s("div", wo, [d(pt, {
 					"optical-size": 24,
 					size: "24px",
@@ -7961,7 +7964,16 @@ var bo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 					id: P,
 					class: "mat-dialog__title mat-sys-typescale-headline-small"
 				}, [L(l).title === void 0 ? M(e.$slots, "title", { key: 1 }, void 0, !0) : (T(), s(t, { key: 0 }, [u(I(L(l).title), 1)], 64))])) : o("", !0),
-				te.value ? (T(), s("div", To, [L(l).content === void 0 ? M(e.$slots, "default", { key: 1 }, void 0, !0) : (T(), s(t, { key: 0 }, [u(I(L(l).content), 1)], 64))])) : o("", !0),
+				te.value ? (T(), a(ji, {
+					key: 2,
+					class: "mat-dialog__content mat-sys-typescale-body-medium",
+					orientation: "vertical",
+					"no-scroll-padding": "",
+					"bar-width": "thin"
+				}, {
+					default: H(() => [c("div", To, [L(l).content === void 0 ? M(e.$slots, "default", { key: 1 }, void 0, !0) : (T(), s(t, { key: 0 }, [u(I(L(l).content), 1)], 64))])]),
+					_: 3
+				})) : o("", !0),
 				e.$slots.actions ? (T(), s("div", Eo, [M(e.$slots, "actions", {}, void 0, !0)])) : o("", !0)
 			], 64))], 4)]),
 			_: 3
@@ -7971,16 +7983,13 @@ var bo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"aria-labelledby"
 		])], 8, ["to"])) : o("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-7e023628"]]), Oo = ["aria-label"], ko = {
+}), [["__scopeId", "data-v-9fb33860"]]), Oo = ["aria-label"], ko = {
 	key: 1,
 	class: "mat-sheet__header"
 }, Ao = {
 	key: 1,
 	class: "mat-sheet__header-actions"
-}, jo = {
-	key: 2,
-	class: "mat-sheet__content mat-sys-typescale-body-medium"
-}, Mo = {
+}, jo = { class: "mat-sheet__content-body" }, Mo = {
 	key: 3,
 	class: "mat-sheet__footer"
 }, No = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
@@ -8400,7 +8409,16 @@ var bo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 						onClick: Ae
 					}, null, 8, ["label"])) : o("", !0)
 				], !0)])) : o("", !0),
-				ae.value ? (T(), s("div", jo, [e.content === void 0 ? M(r.$slots, "default", { key: 1 }, void 0, !0) : (T(), s(t, { key: 0 }, [u(I(e.content), 1)], 64))])) : o("", !0),
+				ae.value ? (T(), a(ji, {
+					key: 2,
+					class: "mat-sheet__content mat-sys-typescale-body-medium",
+					orientation: "vertical",
+					"no-scroll-padding": "",
+					"bar-width": "thin"
+				}, {
+					default: H(() => [c("div", jo, [e.content === void 0 ? M(r.$slots, "default", { key: 1 }, void 0, !0) : (T(), s(t, { key: 0 }, [u(I(e.content), 1)], 64))])]),
+					_: 3
+				})) : o("", !0),
 				r.$slots.footer ? (T(), s("div", Mo, [M(r.$slots, "footer", {}, void 0, !0)])) : o("", !0)
 			], 38)]),
 			_: 3
@@ -8413,7 +8431,7 @@ var bo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"tabindex"
 		])], 8, ["to", "disabled"])) : o("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-bb876c53"]]), Po = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-504f7e89"]]), Po = /*@__PURE__*/ Object.assign({
 	name: "MatBottomSheet",
 	inheritAttrs: !1
 }, {

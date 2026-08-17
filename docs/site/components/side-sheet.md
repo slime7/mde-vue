@@ -119,7 +119,7 @@ order: 102
 
 未消费的属性、原生事件、`class` 和 `style` 传给根元素。Modal 根为原生 `<dialog>`（铺满坐标空间的帷幕容器，可见面板位于内部），standard 根为原生 `<aside>`。Modal 没有标题时必须提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。显式 `attach` 指向非 AppRoot 元素时保持铺满视口的原有行为。
 
-Standard 必须放在横向 flex 父容器中才能与主内容并排；主内容通常使用 `flex: 1` 和 `min-inline-size: 0`，Side sheet 保持自身固定宽度。Side sheet 最大宽度为 400px；窄屏 modal 至少保留 16px 背景空间。内容过长时只滚动内容区，头部和底部区域保持可见。组件没有公共方法。
+Standard 必须放在横向 flex 父容器中才能与主内容并排；主内容通常使用 `flex: 1` 和 `min-inline-size: 0`，Side sheet 保持自身固定宽度。Side sheet 最大宽度为 400px；窄屏 modal 至少保留 16px 背景空间。内容过长时只滚动内容区，头部和底部区域保持可见。正文区域使用关闭滚动方向默认内边距的垂直 `MatScrollArea` 和 `thin` 滚动条，保留边缘渐隐与正文留白，并对滚动条侧进行宽度补偿。组件没有公共方法。
 
 ## 事件
 

@@ -26,6 +26,7 @@ import useFocusTrap from '../use-focus-trap';
 import MatBtn from '../mat-btn/MatBtn.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
 import MatSpacer from '../mat-spacer/MatSpacer.vue';
+import MatScrollArea from '../mat-scroll-area/MatScrollArea.vue';
 import useComponentColor from '../use-component-color';
 import { isValidCssLength, toCssLength } from '../value-utils';
 import { useMatProps } from '../use-mat-props';
@@ -570,15 +571,20 @@ watchEffect(() => {
             </div>
           </header>
 
-          <div
+          <MatScrollArea
             v-if="hasContent"
             class="mat-dialog__content mat-sys-typescale-body-medium"
+            orientation="vertical"
+            no-scroll-padding
+            bar-width="thin"
           >
-            <template v-if="propsWithDefaults.content !== undefined">
-              {{ propsWithDefaults.content }}
-            </template>
-            <slot v-else />
-          </div>
+            <div class="mat-dialog__content-body">
+              <template v-if="propsWithDefaults.content !== undefined">
+                {{ propsWithDefaults.content }}
+              </template>
+              <slot v-else />
+            </div>
+          </MatScrollArea>
         </template>
 
         <template v-else>
@@ -609,15 +615,20 @@ watchEffect(() => {
             <slot v-else name="title" />
           </h2>
 
-          <div
+          <MatScrollArea
             v-if="hasContent"
             class="mat-dialog__content mat-sys-typescale-body-medium"
+            orientation="vertical"
+            no-scroll-padding
+            bar-width="thin"
           >
-            <template v-if="propsWithDefaults.content !== undefined">
-              {{ propsWithDefaults.content }}
-            </template>
-            <slot v-else />
-          </div>
+            <div class="mat-dialog__content-body">
+              <template v-if="propsWithDefaults.content !== undefined">
+                {{ propsWithDefaults.content }}
+              </template>
+              <slot v-else />
+            </div>
+          </MatScrollArea>
 
           <div v-if="$slots.actions" class="mat-dialog__actions">
             <slot name="actions" />
@@ -739,42 +750,33 @@ watchEffect(() => {
     padding-block-end: 24px;
   }
 
-  .mat-dialog__title + .mat-dialog__content {
-    padding-block-start: 16px;
-  }
-
   .mat-dialog__content {
+    display: flex;
+    flex-direction: column;
     flex: 0 1 auto;
     min-block-size: 0;
     box-sizing: border-box;
     inline-size: 100%;
-    padding-inline: 24px;
-    overflow-y: auto;
-    overflow-wrap: anywhere;
-    scrollbar-width: thin;
-    scrollbar-color: var(--mat-sys-color-outline) transparent;
     overscroll-behavior: contain;
   }
 
-  .mat-dialog__content::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+  .mat-dialog__content-body {
+    box-sizing: border-box;
+    min-inline-size: 0;
+    inline-size: 100%;
+    padding-inline: 24px calc(24px - var(--mat-scroll-area-scrollbar-width, 0px));
+    overflow-wrap: anywhere;
   }
 
-  .mat-dialog__content::-webkit-scrollbar-track {
-    background: transparent;
+  .mat-dialog__title + .mat-dialog__content .mat-dialog__content-body {
+    padding-block-start: 16px;
   }
 
-  .mat-dialog__content::-webkit-scrollbar-thumb {
-    background: var(--mat-sys-color-outline);
-    border-radius: var(--mat-sys-shape-corner-full);
-  }
-
-  .mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__content:first-child {
+  .mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__content:first-child .mat-dialog__content-body {
     padding-block-start: 24px;
   }
 
-  .mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__content:last-child {
+  .mat-dialog:not(.mat-dialog--full-screen) .mat-dialog__panel > .mat-dialog__content:last-child .mat-dialog__content-body {
     padding-block-end: 24px;
   }
 
@@ -834,7 +836,10 @@ watchEffect(() => {
 
   .mat-dialog--full-screen .mat-dialog__panel > .mat-dialog__content {
     flex: 1 1 auto;
-    padding: 24px;
+  }
+
+  .mat-dialog--full-screen .mat-dialog__content-body {
+    padding-block: 24px;
   }
 
   @keyframes mat-dialog-enter {

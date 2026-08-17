@@ -28,6 +28,7 @@ import {
 import useFocusTrap from './use-focus-trap';
 import MatBtn from './mat-btn/MatBtn.vue';
 import MatSurfaceBase from './MatSurfaceBase.vue';
+import MatScrollArea from './mat-scroll-area/MatScrollArea.vue';
 import { normalizeNumber, toCssLength } from './value-utils';
 
 defineOptions({
@@ -930,15 +931,20 @@ watch(() => props.closeLabel, (value) => {
           </slot>
         </header>
 
-        <div
+        <MatScrollArea
           v-if="hasContent"
           class="mat-sheet__content mat-sys-typescale-body-medium"
+          orientation="vertical"
+          no-scroll-padding
+          bar-width="thin"
         >
-          <template v-if="content !== undefined">
-            {{ content }}
-          </template>
-          <slot v-else />
-        </div>
+          <div class="mat-sheet__content-body">
+            <template v-if="content !== undefined">
+              {{ content }}
+            </template>
+            <slot v-else />
+          </div>
+        </MatScrollArea>
 
         <div v-if="$slots.footer" class="mat-sheet__footer">
           <slot name="footer" />
@@ -1193,34 +1199,26 @@ watch(() => props.closeLabel, (value) => {
   }
 
   .mat-sheet__content {
+    display: flex;
+    flex-direction: column;
     flex: 1 1 auto;
     box-sizing: border-box;
     min-block-size: 0;
     inline-size: 100%;
-    padding: 16px 24px 24px;
-    overflow-y: auto;
-    overflow-wrap: anywhere;
     overscroll-behavior: contain;
-    scrollbar-width: thin;
-    scrollbar-color: var(--mat-sys-color-outline) transparent;
   }
 
-  .mat-sheet__content::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+  .mat-sheet__content-body {
+    box-sizing: border-box;
+    min-inline-size: 0;
+    inline-size: 100%;
+    padding-block: 16px 24px;
+    padding-inline: 24px calc(24px - var(--mat-scroll-area-scrollbar-width, 0px));
+    overflow-wrap: anywhere;
   }
 
-  .mat-sheet__content::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .mat-sheet__content::-webkit-scrollbar-thumb {
-    background: var(--mat-sys-color-outline);
-    border-radius: var(--mat-sys-shape-corner-full);
-  }
-
-  .mat-sheet__drag-handle-target + .mat-sheet__content,
-  .mat-sheet__content:first-child {
+  .mat-sheet__drag-handle-target + .mat-sheet__content .mat-sheet__content-body,
+  .mat-sheet__content:first-child .mat-sheet__content-body {
     padding-block-start: 24px;
   }
 
