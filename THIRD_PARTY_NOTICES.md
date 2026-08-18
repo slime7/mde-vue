@@ -8,9 +8,9 @@
 - 原项目许可：MIT License
 - 许可原文：[licenses/mdui-MIT.txt](licenses/mdui-MIT.txt)
 
-## Material Web
+## Progress 与 Loading
 
-Loader 不确定状态的动画时间、缓动参数和关键帧结构参考或改编自 Material Web：
+Progress 不确定状态的动画时间、缓动参数和关键帧结构，以及 Loading 形状变形的采样，参考或改编自 Material Web：
 
 - 项目：`material-components/material-web`
 - 固定来源提交：`b4de401eb665ec63474f39319a4ba8f2145974cc`

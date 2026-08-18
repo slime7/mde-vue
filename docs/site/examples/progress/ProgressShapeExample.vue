@@ -24,14 +24,14 @@ const shape = ref('flat');
   </mat-btn-group>
 
   <p>线条形：{{ shape }}</p>
-  <mat-loader
+  <mat-progress
     :shape="shape"
     :value=".6"
     aria-label="线条形进度 60%"
   />
 
   <p>环形：{{ shape }}</p>
-  <mat-loader
+  <mat-progress
     :shape="shape"
     variant="circular"
     :value=".6"

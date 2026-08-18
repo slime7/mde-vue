@@ -1,15 +1,15 @@
 ---
-title: Loader 加载器
-description: mat-loader 的线条与环形进度、确定与不确定状态、波浪形、环形尺寸、粗细档位和配色。
+title: Progress 加载器
+description: mat-progress 的线条与环形进度、确定与不确定状态、波浪形、环形尺寸、粗细档位和配色。
 llms: true
 order: 88
 ---
 
-# Loader 加载器
+# Progress 加载器
 
 ## 组件简介
 
-`<mat-loader>` 的组件导出名是 `MatLoader`。它对应 Material 3 的 Progress indicators，提供线条形和环形两种进度展示。默认以线条形、确定进度渲染；设置 `indeterminate` 后用于无法量化完成比例的加载过程。
+`<mat-progress>` 的组件导出名是 `MatProgress`。它对应 Material 3 的 Progress indicators，提供线条形和环形两种进度展示。默认以线条形、确定进度渲染；设置 `indeterminate` 后用于无法量化完成比例的加载过程。
 
 组件根元素始终是块级 `div`。线条形填满可用行宽；环形仍是块级元素，其自身宽高由 `size` 决定。
 
@@ -22,14 +22,14 @@ order: 88
 :::: details 查看示例代码
 ::: code-group
 
-<<< @/examples/loader/LoaderProgressExample.vue#template [template]
+<<< @/examples/progress/ProgressValueExample.vue#template [template]
 
 :::
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Loader 确定进度预览" stacked>
-    <LoaderProgressExample />
+  <DocsPreview label="Progress 确定进度预览" stacked>
+    <ProgressValueExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -38,14 +38,14 @@ order: 88
 :::: details 查看示例代码
 ::: code-group
 
-<<< @/examples/loader/LoaderVariantExample.vue#template [template]
+<<< @/examples/progress/ProgressVariantExample.vue#template [template]
 
 :::
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Loader 形态预览" stacked>
-    <LoaderVariantExample />
+  <DocsPreview label="Progress 形态预览" stacked>
+    <ProgressVariantExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -54,14 +54,14 @@ order: 88
 :::: details 查看示例代码
 ::: code-group
 
-<<< @/examples/loader/LoaderIndeterminateExample.vue#template [template]
+<<< @/examples/progress/ProgressIndeterminateExample.vue#template [template]
 
 :::
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Loader 不确定加载预览" stacked>
-    <LoaderIndeterminateExample />
+  <DocsPreview label="Progress 不确定加载预览" stacked>
+    <ProgressIndeterminateExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -70,16 +70,16 @@ order: 88
 :::: details 查看示例代码
 ::: code-group
 
-<<< @/examples/loader/LoaderShapeExample.vue#template [template]
+<<< @/examples/progress/ProgressShapeExample.vue#template [template]
 
-<<< @/examples/loader/LoaderShapeExample.vue#script [script]
+<<< @/examples/progress/ProgressShapeExample.vue#script [script]
 
 :::
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Loader 直线与波浪形预览" stacked>
-    <LoaderShapeExample />
+  <DocsPreview label="Progress 直线与波浪形预览" stacked>
+    <ProgressShapeExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -88,16 +88,16 @@ order: 88
 :::: details 查看示例代码
 ::: code-group
 
-<<< @/examples/loader/LoaderWaveMotionExample.vue#template [template]
+<<< @/examples/progress/ProgressWaveMotionExample.vue#template [template]
 
-<<< @/examples/loader/LoaderWaveMotionExample.vue#script [script]
+<<< @/examples/progress/ProgressWaveMotionExample.vue#script [script]
 
 :::
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Loader 波浪运动预览" stacked>
-    <LoaderWaveMotionExample />
+  <DocsPreview label="Progress 波浪运动预览" stacked>
+    <ProgressWaveMotionExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -106,16 +106,16 @@ order: 88
 :::: details 查看示例代码
 ::: code-group
 
-<<< @/examples/loader/LoaderThicknessExample.vue#template [template]
+<<< @/examples/progress/ProgressThicknessExample.vue#template [template]
 
-<<< @/examples/loader/LoaderThicknessExample.vue#script [script]
+<<< @/examples/progress/ProgressThicknessExample.vue#script [script]
 
 :::
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Loader 厚度预览" stacked>
-    <LoaderThicknessExample />
+  <DocsPreview label="Progress 厚度预览" stacked>
+    <ProgressThicknessExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -124,14 +124,14 @@ order: 88
 :::: details 查看示例代码
 ::: code-group
 
-<<< @/examples/loader/LoaderSizeExample.vue#template [template]
+<<< @/examples/progress/ProgressSizeExample.vue#template [template]
 
 :::
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Loader 环形尺寸预览" stacked>
-    <LoaderSizeExample />
+  <DocsPreview label="Progress 环形尺寸预览" stacked>
+    <ProgressSizeExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -140,14 +140,14 @@ order: 88
 :::: details 查看示例代码
 ::: code-group
 
-<<< @/examples/loader/LoaderColorExample.vue#template [template]
+<<< @/examples/progress/ProgressColorExample.vue#template [template]
 
 :::
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Loader 配色预览" stacked>
-    <LoaderColorExample />
+  <DocsPreview label="Progress 配色预览" stacked>
+    <ProgressColorExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -189,7 +189,7 @@ order: 88
 
 ## Slots
 
-组件没有 Slots；不要在 `<mat-loader>` 内放置文字或其他内容。相邻文本或 `aria-label` 应承担加载状态说明。
+组件没有 Slots；不要在 `<mat-progress>` 内放置文字或其他内容。相邻文本或 `aria-label` 应承担加载状态说明。
 
 ## 状态
 
@@ -202,12 +202,12 @@ order: 88
 尺寸、颜色角色、确定与不确定行为、直线和波浪形依据 Material 3 [Progress indicators specs](https://m3.material.io/components/progress-indicators/specs) 与 [Progress indicators guidelines](https://m3.material.io/components/progress-indicators/guidelines)。不确定状态的时间和缓动参数改编自 Material Web 的 [_linear-progress.scss](https://github.com/material-components/material-web/blob/b4de401eb665ec63474f39319a4ba8f2145974cc/progress/internal/_linear-progress.scss) 与 [_circular-progress.scss](https://github.com/material-components/material-web/blob/b4de401eb665ec63474f39319a4ba8f2145974cc/progress/internal/_circular-progress.scss)。
 
 <script setup>
-import LoaderColorExample from '../examples/loader/LoaderColorExample.vue';
-import LoaderIndeterminateExample from '../examples/loader/LoaderIndeterminateExample.vue';
-import LoaderProgressExample from '../examples/loader/LoaderProgressExample.vue';
-import LoaderShapeExample from '../examples/loader/LoaderShapeExample.vue';
-import LoaderSizeExample from '../examples/loader/LoaderSizeExample.vue';
-import LoaderThicknessExample from '../examples/loader/LoaderThicknessExample.vue';
-import LoaderVariantExample from '../examples/loader/LoaderVariantExample.vue';
-import LoaderWaveMotionExample from '../examples/loader/LoaderWaveMotionExample.vue';
+import ProgressColorExample from '../examples/progress/ProgressColorExample.vue';
+import ProgressIndeterminateExample from '../examples/progress/ProgressIndeterminateExample.vue';
+import ProgressValueExample from '../examples/progress/ProgressValueExample.vue';
+import ProgressShapeExample from '../examples/progress/ProgressShapeExample.vue';
+import ProgressSizeExample from '../examples/progress/ProgressSizeExample.vue';
+import ProgressThicknessExample from '../examples/progress/ProgressThicknessExample.vue';
+import ProgressVariantExample from '../examples/progress/ProgressVariantExample.vue';
+import ProgressWaveMotionExample from '../examples/progress/ProgressWaveMotionExample.vue';
 </script>

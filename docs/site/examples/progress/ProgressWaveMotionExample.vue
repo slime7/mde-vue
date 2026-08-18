@@ -13,7 +13,7 @@ const waveMotion = ref(false);
   </mat-switch>
 
   <p>线条形</p>
-  <mat-loader
+  <mat-progress
     shape="wavy"
     :value=".6"
     :wave-motion="waveMotion"
@@ -21,7 +21,7 @@ const waveMotion = ref(false);
   />
 
   <p>环形</p>
-  <mat-loader
+  <mat-progress
     shape="wavy"
     variant="circular"
     :value=".6"

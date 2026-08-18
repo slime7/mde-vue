@@ -186,11 +186,15 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 `MatCardActionArea` 使用原生 button 或 link 语义，使整块内容成为主要操作区域；独立按钮、链接和选择控件必须放在同级 Actions 中。只有启用的 ActionArea 才驱动 Card 的 hover、focus 和 pressed 状态，pressed 必须恢复各变体的静止海拔，不能停留在 hover 海拔。`MatDivider` 直接位于 Card 和 Actions 之间时完整分隔两个区域；布尔 `inset` 表达两侧各 16px 的相关内容分隔，`start` 与旧 `middle` 字符串继续兼容。
 
-## `<mat-loader>`
+## `<mat-progress>`
 
-`<mat-loader>` 的导出名是 `MatLoader`，以 `variant='linear' | 'circular'` 统一线条和环形 Progress indicator。默认是确定进度：`value` 会限制在 `0` 与正数 `max` 之间，根元素提供 progressbar ARIA 最小值、最大值和当前值；`indeterminate` 时省略当前值并展示加载动画。组件根始终为块级元素。
+`<mat-progress>` 的导出名是 `MatProgress`，以 `variant='linear' | 'circular'` 统一线条和环形 Progress indicator。默认是确定进度：`value` 会限制在 `0` 与正数 `max` 之间，根元素提供 progressbar ARIA 最小值、最大值和当前值；`indeterminate` 时省略当前值并展示加载动画。组件根始终为块级元素。
 
-`shape='flat' | 'wavy'` 选择平直或 Expressive 波浪形活动指示器。`size` 默认 48，只控制环形基础宽高，数字与纯数字字符串限制到 24 至 240，线条形忽略；`thickness='default' | 'heavy'` 选择粗细档位，线条形固定使用 4px 或 4.8px，环形分别使用 `size / 12` 或其两倍。环形以 48px 为基准：平直路径半径为 18px，波浪路径半径为 20.4px，波浪振幅为 1.6px、波长为 15px，所有几何量都按 `size / 48` 等比缩放。环形根元素在四周保留 `size / 24` 的外边距，用于容纳 heavy 波浪超出基础宽高的部分；48px 时每侧为 2px。活动与停止指示器默认使用 primary，轨道使用 secondary container；`color` 遵循统一组件配色约定，只替换前两者的强调色。Loader 没有 Slots、方法或自定义事件。
+`shape='flat' | 'wavy'` 选择平直或 Expressive 波浪形活动指示器。`size` 默认 48，只控制环形基础宽高，数字与纯数字字符串限制到 24 至 240，线条形忽略；`thickness='default' | 'heavy'` 选择粗细档位，线条形固定使用 4px 或 4.8px，环形分别使用 `size / 12` 或其两倍。环形以 48px 为基准：平直路径半径为 18px，波浪路径半径为 20.4px，波浪振幅为 1.6px、波长为 15px，所有几何量都按 `size / 48` 等比缩放。环形根元素在四周保留 `size / 24` 的外边距，用于容纳 heavy 波浪超出基础宽高的部分；48px 时每侧为 2px。活动与停止指示器默认使用 primary，轨道使用 secondary container；`color` 遵循统一组件配色约定，只替换前两者的强调色。Progress 没有 Slots、方法或自定义事件。
+
+## `<mat-loading>`
+
+`<mat-loading>` 的导出名是 `MatLoading`，表达短时且不确定的加载过程，始终使用 `role="progressbar"` 且不声明具体进度。活动指示器固定循环官方 7 个形状，在共享 MatShape 几何的归一化采样折线之间连续变形并叠加缓慢旋转；`containment` 布尔属性开启圆形背景容器，活动形状按 38 : 48 比例缩小并换用同组 on-container 内容色。`size` 只接受数字与纯数字字符串，默认 48 并限制在 24 至 240。`color` 遵循统一组件配色约定，只替换活动形状的强调色族。Loading 没有 Slots、方法或自定义事件。
 
 ## 表单选择控件
 

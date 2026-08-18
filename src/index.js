@@ -48,7 +48,8 @@ export { default as MatContainer } from './components/mat-container/MatContainer
 export { default as MatSpacer } from './components/mat-spacer/MatSpacer.vue';
 export { default as MatTableWrapper } from './components/mat-table-wrapper/MatTableWrapper.vue';
 export { default as MatScrollArea } from './components/mat-scroll-area/MatScrollArea.vue';
-export { default as MatLoader } from './components/mat-loader/MatLoader.vue';
+export { default as MatLoading } from './components/mat-loading/MatLoading.vue';
+export { default as MatProgress } from './components/mat-progress/MatProgress.vue';
 export { default as MatTooltip } from './components/mat-tooltip/MatTooltip.vue';
 export { default as MatSnackbar } from './components/mat-snackbar/MatSnackbar.vue';
 export { default as MatToolbar } from './components/mat-toolbar/MatToolbar.vue';

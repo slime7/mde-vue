@@ -50,3 +50,13 @@ export const SHAPE_NAMES = Object.freeze(Object.keys(SHAPE_PATHS));
 export function isShapeName(value) {
   return typeof value === 'string' && Object.hasOwn(SHAPE_PATHS, value);
 }
+
+export const LOADING_SHAPE_NAMES = Object.freeze([
+  'soft-burst',
+  '9-sided-cookie',
+  'pentagon',
+  'pill',
+  'sunny',
+  '4-sided-cookie',
+  'oval',
+]);

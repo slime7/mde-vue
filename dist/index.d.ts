@@ -2644,7 +2644,34 @@ export interface MatScrollAreaExposed {
 export type MatScrollAreaComponent = DefineComponent<MatScrollAreaProps, MatScrollAreaExposed, {}, {}, {}, {}, {}, MatScrollAreaEmits>;
 export declare const MatScrollArea: MatScrollAreaComponent;
 
-export interface MatLoaderProps {
+export interface MatLoadingProps {
+  /**
+  * 是否显示圆形背景容器；启用时活动形状使用同组 on-container 内容色。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  containment?: boolean;
+  /**
+  * 加载指示器的宽高尺寸；数字与纯数字字符串按 px 处理并限制在 24 至 240。
+  *
+  * @type {number | string}
+  * @default 48
+  */
+  size?: number | string;
+  /**
+  * Material 语义色、系统颜色角色或六位十六进制种子色。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  color?: string | undefined;
+}
+
+export type MatLoadingComponent = DefineComponent<MatLoadingProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatLoading: MatLoadingComponent;
+
+export interface MatProgressProps {
   /**
   * 加载器形态；可选值为 `linear`、`circular`。
   *
@@ -2710,8 +2737,8 @@ export interface MatLoaderProps {
   color?: string | undefined;
 }
 
-export type MatLoaderComponent = DefineComponent<MatLoaderProps, {}, {}, {}, {}, {}, {}, {}>;
-export declare const MatLoader: MatLoaderComponent;
+export type MatProgressComponent = DefineComponent<MatProgressProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatProgress: MatProgressComponent;
 
 export interface MatTooltipProps {
   /**
@@ -3409,8 +3436,10 @@ declare module 'vue' {
     'mat-table-wrapper': typeof MatTableWrapper;
     MatScrollArea: typeof MatScrollArea;
     'mat-scroll-area': typeof MatScrollArea;
-    MatLoader: typeof MatLoader;
-    'mat-loader': typeof MatLoader;
+    MatLoading: typeof MatLoading;
+    'mat-loading': typeof MatLoading;
+    MatProgress: typeof MatProgress;
+    'mat-progress': typeof MatProgress;
     MatTooltip: typeof MatTooltip;
     'mat-tooltip': typeof MatTooltip;
     MatSnackbar: typeof MatSnackbar;

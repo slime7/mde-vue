@@ -31,7 +31,7 @@ const SHAPE_MORPH_DURATION = 300;
 const WAVE_FLOW_DURATION = 900;
 
 defineOptions({
-  name: 'MatLoader',
+  name: 'MatProgress',
   inheritAttrs: false,
 });
 
@@ -239,14 +239,14 @@ const props = defineProps({
     validator: isComponentColor,
   },
 });
-const propsWithDefaults = useMatProps('loader', props);
+const propsWithDefaults = useMatProps('progress', props);
 
 const { colorStyle } = useComponentColor(computed(() => propsWithDefaults.color));
 const linearElement = ref(null);
 const linearWidth = ref(INITIAL_LINEAR_WIDTH);
 const waveMorphProgress = ref(propsWithDefaults.shape === 'wavy' ? 1 : 0);
 const wavePhase = ref(0);
-const linearMaskId = `mat-loader-linear-mask-${useId()}`;
+const linearMaskId = `mat-progress-linear-mask-${useId()}`;
 let linearResizeObserver;
 let waveAnimationFrame;
 let previousFrameTime;
@@ -388,19 +388,19 @@ const circularActiveStyle = computed(() => {
 });
 const rootStyle = computed(() => ({
   ...colorStyle.value,
-  '--mat-loader-circular-gap-progress': formatCoordinate(circularIndeterminateGapProgress.value),
-  '--mat-loader-circular-margin': `${circularOverflowMargin.value}px`,
-  '--mat-loader-circular-radius': `${circularRadius.value}px`,
-  '--mat-loader-circular-size': `${resolvedCircularSize.value}px`,
-  '--mat-loader-indicator-gap-size': `${INDICATOR_GAP_SIZE}px`,
-  '--mat-loader-linear-cap-progress': formatCoordinate(linearCapProgress.value),
-  '--mat-loader-linear-path-scale': formatCoordinate(linearPathScale.value),
-  '--mat-loader-linear-segment-end': formatCoordinate(linearSegmentEnd.value),
-  '--mat-loader-linear-segment-end-position': `${formatCoordinate(linearSegmentEnd.value)}%`,
-  '--mat-loader-linear-size': `${linearSize.value}px`,
-  '--mat-loader-progress': `${progress.value}`,
-  '--mat-loader-stop-indicator-size': `${STOP_INDICATOR_SIZE}px`,
-  '--mat-loader-thickness': `${resolvedThickness.value}px`,
+  '--mat-progress-circular-gap-progress': formatCoordinate(circularIndeterminateGapProgress.value),
+  '--mat-progress-circular-margin': `${circularOverflowMargin.value}px`,
+  '--mat-progress-circular-radius': `${circularRadius.value}px`,
+  '--mat-progress-circular-size': `${resolvedCircularSize.value}px`,
+  '--mat-progress-indicator-gap-size': `${INDICATOR_GAP_SIZE}px`,
+  '--mat-progress-linear-cap-progress': formatCoordinate(linearCapProgress.value),
+  '--mat-progress-linear-path-scale': formatCoordinate(linearPathScale.value),
+  '--mat-progress-linear-segment-end': formatCoordinate(linearSegmentEnd.value),
+  '--mat-progress-linear-segment-end-position': `${formatCoordinate(linearSegmentEnd.value)}%`,
+  '--mat-progress-linear-size': `${linearSize.value}px`,
+  '--mat-progress-progress': `${progress.value}`,
+  '--mat-progress-stop-indicator-size': `${STOP_INDICATOR_SIZE}px`,
+  '--mat-progress-thickness': `${resolvedThickness.value}px`,
 }));
 
 /**
@@ -484,13 +484,13 @@ onBeforeUnmount(() => {
 <template>
   <div
     v-bind="$attrs"
-    class="mat-loader"
+    class="mat-progress"
     :class="[
-      `mat-loader--${propsWithDefaults.variant}`,
-      `mat-loader--${propsWithDefaults.shape}`,
+      `mat-progress--${propsWithDefaults.variant}`,
+      `mat-progress--${propsWithDefaults.shape}`,
       {
-        'mat-loader--indeterminate': propsWithDefaults.indeterminate,
-        'mat-loader--wave-motion': propsWithDefaults.waveMotion,
+        'mat-progress--indeterminate': propsWithDefaults.indeterminate,
+        'mat-progress--wave-motion': propsWithDefaults.waveMotion,
       },
     ]"
     :style="rootStyle"
@@ -502,16 +502,16 @@ onBeforeUnmount(() => {
     <span
       v-if="!isCircular"
       ref="linearElement"
-      class="mat-loader__linear"
+      class="mat-progress__linear"
       aria-hidden="true"
     >
       <template v-if="!propsWithDefaults.indeterminate">
-        <span class="mat-loader__linear-track mat-loader__linear-track--before" />
-        <span class="mat-loader__linear-track mat-loader__linear-track--after" />
+        <span class="mat-progress__linear-track mat-progress__linear-track--before" />
+        <span class="mat-progress__linear-track mat-progress__linear-track--after" />
       </template>
 
       <svg
-        class="mat-loader__linear-indicator"
+        class="mat-progress__linear-indicator"
         :width="linearWidth"
         :height="linearSize"
       >
@@ -529,16 +529,16 @@ onBeforeUnmount(() => {
               height="100%"
               fill="white"
             />
-            <g class="mat-loader__linear-bar mat-loader__linear-bar--primary">
+            <g class="mat-progress__linear-bar mat-progress__linear-bar--primary">
               <path
-                class="mat-loader__linear-segment mat-loader__linear-segment--primary mat-loader__linear-gap mat-loader__linear-gap--primary"
+                class="mat-progress__linear-segment mat-progress__linear-segment--primary mat-progress__linear-gap mat-progress__linear-gap--primary"
                 :d="linearActivePath"
                 pathLength="100"
               />
             </g>
-            <g class="mat-loader__linear-bar mat-loader__linear-bar--secondary">
+            <g class="mat-progress__linear-bar mat-progress__linear-bar--secondary">
               <path
-                class="mat-loader__linear-segment mat-loader__linear-segment--secondary mat-loader__linear-gap mat-loader__linear-gap--secondary"
+                class="mat-progress__linear-segment mat-progress__linear-segment--secondary mat-progress__linear-gap mat-progress__linear-gap--secondary"
                 :d="linearActivePath"
                 pathLength="100"
               />
@@ -548,23 +548,23 @@ onBeforeUnmount(() => {
 
         <path
           v-if="propsWithDefaults.indeterminate"
-          class="mat-loader__linear-indeterminate-track"
+          class="mat-progress__linear-indeterminate-track"
           :d="linearTrackPath"
           pathLength="100"
           :mask="`url(#${linearMaskId})`"
         />
 
         <template v-if="propsWithDefaults.indeterminate">
-          <g class="mat-loader__linear-bar mat-loader__linear-bar--primary">
+          <g class="mat-progress__linear-bar mat-progress__linear-bar--primary">
             <path
-              class="mat-loader__linear-active mat-loader__linear-active--primary mat-loader__linear-segment mat-loader__linear-segment--primary"
+              class="mat-progress__linear-active mat-progress__linear-active--primary mat-progress__linear-segment mat-progress__linear-segment--primary"
               :d="linearActivePath"
               pathLength="100"
             />
           </g>
-          <g class="mat-loader__linear-bar mat-loader__linear-bar--secondary">
+          <g class="mat-progress__linear-bar mat-progress__linear-bar--secondary">
             <path
-              class="mat-loader__linear-active mat-loader__linear-active--secondary mat-loader__linear-segment mat-loader__linear-segment--secondary"
+              class="mat-progress__linear-active mat-progress__linear-active--secondary mat-progress__linear-segment mat-progress__linear-segment--secondary"
               :d="linearActivePath"
               pathLength="100"
             />
@@ -573,7 +573,7 @@ onBeforeUnmount(() => {
 
         <path
           v-else
-          class="mat-loader__linear-active mat-loader__linear-active--determinate"
+          class="mat-progress__linear-active mat-progress__linear-active--determinate"
           :d="linearActivePath"
           pathLength="100"
         />
@@ -581,20 +581,20 @@ onBeforeUnmount(() => {
 
       <span
         v-if="!propsWithDefaults.indeterminate"
-        class="mat-loader__linear-stop"
+        class="mat-progress__linear-stop"
       />
     </span>
 
     <svg
       v-else
-      class="mat-loader__circular"
+      class="mat-progress__circular"
       :viewBox="circularViewBox"
       aria-hidden="true"
     >
-      <g class="mat-loader__circular-linear-rotate">
-        <g class="mat-loader__circular-rotate-arc">
+      <g class="mat-progress__circular-linear-rotate">
+        <g class="mat-progress__circular-rotate-arc">
           <circle
-            class="mat-loader__circular-track"
+            class="mat-progress__circular-track"
             :cx="circularCenter"
             :cy="circularCenter"
             :r="circularRadius"
@@ -602,7 +602,7 @@ onBeforeUnmount(() => {
             :style="circularTrackStyle"
           />
           <path
-            class="mat-loader__circular-active"
+            class="mat-progress__circular-active"
             :d="circularActivePath"
             pathLength="100"
             :style="circularActiveStyle"
@@ -615,62 +615,62 @@ onBeforeUnmount(() => {
 
 <style scoped>
 @layer mde.components {
-  .mat-loader {
-    --mat-loader-active-indicator-color: var(--mat-accent-color, var(--mat-sys-color-primary));
-    --mat-loader-track-color: var(--mat-sys-color-secondary-container);
+  .mat-progress {
+    --mat-progress-active-indicator-color: var(--mat-accent-color, var(--mat-sys-color-primary));
+    --mat-progress-track-color: var(--mat-sys-color-secondary-container);
     display: block;
     box-sizing: border-box;
-    color: var(--mat-loader-active-indicator-color, var(--mat-sys-color-primary));
+    color: var(--mat-progress-active-indicator-color, var(--mat-sys-color-primary));
   }
 
-  .mat-loader--linear {
+  .mat-progress--linear {
     inline-size: 100%;
     min-inline-size: 0;
   }
 
-  .mat-loader--circular {
-    inline-size: var(--mat-loader-circular-size);
-    block-size: var(--mat-loader-circular-size);
-    margin: var(--mat-loader-circular-margin);
+  .mat-progress--circular {
+    inline-size: var(--mat-progress-circular-size);
+    block-size: var(--mat-progress-circular-size);
+    margin: var(--mat-progress-circular-margin);
     transition: inline-size var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial), margin var(--mat-sys-motion-spring-fast-spatial);
   }
 
-  .mat-loader__linear {
+  .mat-progress__linear {
     position: relative;
     display: block;
-    block-size: var(--mat-loader-linear-size);
+    block-size: var(--mat-progress-linear-size);
     overflow: clip;
     transition: block-size var(--mat-sys-motion-spring-fast-spatial);
   }
 
-  .mat-loader__linear-track {
+  .mat-progress__linear-track {
     position: absolute;
     inset-block-start: 50%;
     z-index: 1;
     display: block;
-    block-size: var(--mat-loader-thickness);
-    background: var(--mat-loader-track-color);
+    block-size: var(--mat-progress-thickness);
+    background: var(--mat-progress-track-color);
     border-radius: var(--mat-sys-shape-corner-full);
     transform: translateY(-50%);
     transition: block-size var(--mat-sys-motion-spring-fast-spatial), inset-inline var(--mat-sys-motion-spring-fast-spatial), inline-size var(--mat-sys-motion-spring-fast-spatial);
   }
 
-  .mat-loader__linear-track--before {
+  .mat-progress__linear-track--before {
     inset-inline-start: 0;
     inline-size: max(
       0px,
-      calc(0% - var(--mat-loader-indicator-gap-size))
+      calc(0% - var(--mat-progress-indicator-gap-size))
     );
   }
 
-  .mat-loader__linear-track--after {
+  .mat-progress__linear-track--after {
     inset-inline: min(
       100%,
-      calc(var(--mat-loader-linear-segment-end-position) + var(--mat-loader-indicator-gap-size))
+      calc(var(--mat-progress-linear-segment-end-position) + var(--mat-progress-indicator-gap-size))
     ) 0;
   }
 
-  .mat-loader__linear-indicator {
+  .mat-progress__linear-indicator {
     position: absolute;
     inset: 0;
     z-index: 2;
@@ -680,145 +680,145 @@ onBeforeUnmount(() => {
     overflow: visible;
   }
 
-  .mat-loader__linear-active,
-  .mat-loader__linear-indeterminate-track,
-  .mat-loader__linear-gap {
+  .mat-progress__linear-active,
+  .mat-progress__linear-indeterminate-track,
+  .mat-progress__linear-gap {
     fill: none;
     stroke-linecap: round;
     stroke-linejoin: round;
-    stroke-width: var(--mat-loader-thickness);
+    stroke-width: var(--mat-progress-thickness);
     vector-effect: non-scaling-stroke;
   }
 
-  .mat-loader__linear-active {
-    stroke: var(--mat-loader-active-indicator-color, var(--mat-sys-color-primary));
+  .mat-progress__linear-active {
+    stroke: var(--mat-progress-active-indicator-color, var(--mat-sys-color-primary));
   }
 
-  .mat-loader__linear-active--determinate {
+  .mat-progress__linear-active--determinate {
     stroke-dasharray: calc(
       (
-        var(--mat-loader-linear-segment-end)
-        - var(--mat-loader-linear-cap-progress)
-      ) * var(--mat-loader-linear-path-scale)
+        var(--mat-progress-linear-segment-end)
+        - var(--mat-progress-linear-cap-progress)
+      ) * var(--mat-progress-linear-path-scale)
     ) 200;
     transition: stroke-dasharray var(--mat-sys-motion-spring-default-effects), stroke-width var(--mat-sys-motion-spring-fast-spatial);
   }
 
-  .mat-loader__linear-indeterminate-track {
-    stroke: var(--mat-loader-track-color);
+  .mat-progress__linear-indeterminate-track {
+    stroke: var(--mat-progress-track-color);
   }
 
-  .mat-loader__linear-gap {
+  .mat-progress__linear-gap {
     stroke: black;
-    stroke-width: calc(var(--mat-loader-thickness) + (var(--mat-loader-indicator-gap-size) * 2));
+    stroke-width: calc(var(--mat-progress-thickness) + (var(--mat-progress-indicator-gap-size) * 2));
   }
 
-  .mat-loader__linear-bar {
+  .mat-progress__linear-bar {
     transform-box: view-box;
     transform-origin: center;
   }
 
-  .mat-loader__linear-bar--primary {
+  .mat-progress__linear-bar--primary {
     translate: -145.167% 0;
-    animation: mat-loader-primary-indeterminate-translate 2s infinite linear;
+    animation: mat-progress-primary-indeterminate-translate 2s infinite linear;
   }
 
-  .mat-loader__linear-bar--secondary {
+  .mat-progress__linear-bar--secondary {
     translate: -54.8889% 0;
-    animation: mat-loader-secondary-indeterminate-translate 2s infinite linear;
+    animation: mat-progress-secondary-indeterminate-translate 2s infinite linear;
   }
 
-  .mat-loader__linear-segment {
+  .mat-progress__linear-segment {
     transition: stroke-width var(--mat-sys-motion-spring-fast-spatial);
   }
 
-  .mat-loader__linear-segment--primary {
-    animation: mat-loader-primary-indeterminate-scale 2s infinite linear;
+  .mat-progress__linear-segment--primary {
+    animation: mat-progress-primary-indeterminate-scale 2s infinite linear;
   }
 
-  .mat-loader__linear-segment--secondary {
-    animation: mat-loader-secondary-indeterminate-scale 2s infinite linear;
+  .mat-progress__linear-segment--secondary {
+    animation: mat-progress-secondary-indeterminate-scale 2s infinite linear;
   }
 
-  .mat-loader__linear-stop {
+  .mat-progress__linear-stop {
     position: absolute;
     inset-block-start: 50%;
     inset-inline-end: 0;
     z-index: 3;
-    inline-size: var(--mat-loader-stop-indicator-size);
-    block-size: var(--mat-loader-stop-indicator-size);
-    background: var(--mat-loader-active-indicator-color, var(--mat-sys-color-primary));
+    inline-size: var(--mat-progress-stop-indicator-size);
+    block-size: var(--mat-progress-stop-indicator-size);
+    background: var(--mat-progress-active-indicator-color, var(--mat-sys-color-primary));
     border-radius: var(--mat-sys-shape-corner-full);
     transform: translateY(-50%);
   }
 
-  .mat-loader__circular {
+  .mat-progress__circular {
     display: block;
-    inline-size: var(--mat-loader-circular-size);
-    block-size: var(--mat-loader-circular-size);
+    inline-size: var(--mat-progress-circular-size);
+    block-size: var(--mat-progress-circular-size);
     overflow: visible;
     transition: inline-size var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial);
   }
 
-  .mat-loader__circular-linear-rotate,
-  .mat-loader__circular-rotate-arc {
+  .mat-progress__circular-linear-rotate,
+  .mat-progress__circular-rotate-arc {
     transform-box: view-box;
     transform-origin: center;
   }
 
-  .mat-loader--indeterminate .mat-loader__circular-linear-rotate {
-    animation: mat-loader-circular-linear-rotate 1568.235ms linear infinite;
+  .mat-progress--indeterminate .mat-progress__circular-linear-rotate {
+    animation: mat-progress-circular-linear-rotate 1568.235ms linear infinite;
   }
 
-  .mat-loader--indeterminate .mat-loader__circular-rotate-arc {
-    animation: mat-loader-circular-rotate-arc 5332ms cubic-bezier(.4, 0, .2, 1) infinite;
+  .mat-progress--indeterminate .mat-progress__circular-rotate-arc {
+    animation: mat-progress-circular-rotate-arc 5332ms cubic-bezier(.4, 0, .2, 1) infinite;
   }
 
-  .mat-loader__circular-track,
-  .mat-loader__circular-active {
+  .mat-progress__circular-track,
+  .mat-progress__circular-active {
     fill: none;
     stroke-linecap: round;
     stroke-linejoin: round;
-    stroke-width: var(--mat-loader-thickness);
+    stroke-width: var(--mat-progress-thickness);
     transform: rotate(-90deg);
     transform-box: fill-box;
     transform-origin: center;
   }
 
-  .mat-loader__circular-track {
-    stroke: var(--mat-loader-track-color);
+  .mat-progress__circular-track {
+    stroke: var(--mat-progress-track-color);
     transition: opacity var(--mat-sys-motion-spring-fast-effects), stroke-width var(--mat-sys-motion-spring-fast-spatial), stroke-dasharray var(--mat-sys-motion-spring-default-effects), stroke-dashoffset var(--mat-sys-motion-spring-default-effects);
   }
 
-  .mat-loader__circular-active {
-    stroke: var(--mat-loader-active-indicator-color, var(--mat-sys-color-primary));
+  .mat-progress__circular-active {
+    stroke: var(--mat-progress-active-indicator-color, var(--mat-sys-color-primary));
     transition: stroke-width var(--mat-sys-motion-spring-fast-spatial), stroke-dasharray var(--mat-sys-motion-spring-default-effects);
   }
 
-  .mat-loader--indeterminate .mat-loader__circular-track {
+  .mat-progress--indeterminate .mat-progress__circular-track {
     stroke-dasharray: calc(
       97.2222
-      - (var(--mat-loader-circular-gap-progress) * 2)
+      - (var(--mat-progress-circular-gap-progress) * 2)
     ) 200;
     stroke-dashoffset: calc(
-      (2.7778 + var(--mat-loader-circular-gap-progress)) * -1
+      (2.7778 + var(--mat-progress-circular-gap-progress)) * -1
     );
-    animation-name: mat-loader-circular-expand-track-arc;
+    animation-name: mat-progress-circular-expand-track-arc;
     animation-duration: 1333ms;
     animation-timing-function: cubic-bezier(.4, 0, .2, 1);
     animation-iteration-count: infinite;
   }
 
-  .mat-loader--indeterminate .mat-loader__circular-active {
+  .mat-progress--indeterminate .mat-progress__circular-active {
     stroke-dasharray: 2.7778 200;
-    animation-name: mat-loader-circular-expand-active-arc;
+    animation-name: mat-progress-circular-expand-active-arc;
     animation-duration: 1333ms;
     animation-timing-function: cubic-bezier(.4, 0, .2, 1);
     animation-iteration-count: infinite;
   }
 
-  .mat-loader--indeterminate .mat-loader__circular-track,
-  .mat-loader--indeterminate .mat-loader__circular-active {
+  .mat-progress--indeterminate .mat-progress__circular-track,
+  .mat-progress--indeterminate .mat-progress__circular-active {
     transition: opacity var(--mat-sys-motion-spring-fast-effects), stroke-width var(--mat-sys-motion-spring-fast-spatial);
   }
 
@@ -826,7 +826,7 @@ onBeforeUnmount(() => {
    * Indeterminate timing and easing values are adapted from Material Web's
    * progress implementation, licensed under Apache-2.0.
    */
-  @keyframes mat-loader-primary-indeterminate-translate {
+  @keyframes mat-progress-primary-indeterminate-translate {
     0% {
       transform: translateX(0);
     }
@@ -846,7 +846,7 @@ onBeforeUnmount(() => {
     }
   }
 
-  @keyframes mat-loader-primary-indeterminate-scale {
+  @keyframes mat-progress-primary-indeterminate-scale {
     0% {
       stroke-dasharray: 8 200;
       stroke-dashoffset: -46;
@@ -870,7 +870,7 @@ onBeforeUnmount(() => {
     }
   }
 
-  @keyframes mat-loader-secondary-indeterminate-translate {
+  @keyframes mat-progress-secondary-indeterminate-translate {
     0% {
       transform: translateX(0);
       animation-timing-function: cubic-bezier(.15, 0, .515058, .409685);
@@ -891,7 +891,7 @@ onBeforeUnmount(() => {
     }
   }
 
-  @keyframes mat-loader-secondary-indeterminate-scale {
+  @keyframes mat-progress-secondary-indeterminate-scale {
     0% {
       stroke-dasharray: 8 200;
       stroke-dashoffset: -46;
@@ -916,7 +916,7 @@ onBeforeUnmount(() => {
     }
   }
 
-  @keyframes mat-loader-circular-expand-active-arc {
+  @keyframes mat-progress-circular-expand-active-arc {
     0%,
     100% {
       stroke-dasharray: 2.7778 200;
@@ -927,30 +927,30 @@ onBeforeUnmount(() => {
     }
   }
 
-  @keyframes mat-loader-circular-expand-track-arc {
+  @keyframes mat-progress-circular-expand-track-arc {
     0%,
     100% {
       stroke-dasharray: calc(
         97.2222
-        - (var(--mat-loader-circular-gap-progress) * 2)
+        - (var(--mat-progress-circular-gap-progress) * 2)
       ) 200;
       stroke-dashoffset: calc(
-        (2.7778 + var(--mat-loader-circular-gap-progress)) * -1
+        (2.7778 + var(--mat-progress-circular-gap-progress)) * -1
       );
     }
 
     50% {
       stroke-dasharray: calc(
         25
-        - (var(--mat-loader-circular-gap-progress) * 2)
+        - (var(--mat-progress-circular-gap-progress) * 2)
       ) 200;
       stroke-dashoffset: calc(
-        (75 + var(--mat-loader-circular-gap-progress)) * -1
+        (75 + var(--mat-progress-circular-gap-progress)) * -1
       );
     }
   }
 
-  @keyframes mat-loader-circular-rotate-arc {
+  @keyframes mat-progress-circular-rotate-arc {
     0% {
       transform: rotate(0deg);
     }
@@ -988,58 +988,58 @@ onBeforeUnmount(() => {
     }
   }
 
-  @keyframes mat-loader-circular-linear-rotate {
+  @keyframes mat-progress-circular-linear-rotate {
     to {
       transform: rotate(360deg);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .mat-loader--circular,
-    .mat-loader__linear,
-    .mat-loader__linear-track,
-    .mat-loader__linear-segment,
-    .mat-loader__linear-active--determinate,
-    .mat-loader__circular,
-    .mat-loader__circular-track,
-    .mat-loader__circular-active {
+    .mat-progress--circular,
+    .mat-progress__linear,
+    .mat-progress__linear-track,
+    .mat-progress__linear-segment,
+    .mat-progress__linear-active--determinate,
+    .mat-progress__circular,
+    .mat-progress__circular-track,
+    .mat-progress__circular-active {
       transition: none;
     }
 
-    .mat-loader__linear-bar,
-    .mat-loader__linear-segment,
-    .mat-loader--indeterminate .mat-loader__circular-linear-rotate,
-    .mat-loader--indeterminate .mat-loader__circular-rotate-arc,
-    .mat-loader--indeterminate .mat-loader__circular-track,
-    .mat-loader--indeterminate .mat-loader__circular-active {
+    .mat-progress__linear-bar,
+    .mat-progress__linear-segment,
+    .mat-progress--indeterminate .mat-progress__circular-linear-rotate,
+    .mat-progress--indeterminate .mat-progress__circular-rotate-arc,
+    .mat-progress--indeterminate .mat-progress__circular-track,
+    .mat-progress--indeterminate .mat-progress__circular-active {
       animation: none;
     }
 
-    .mat-loader__linear-bar--primary {
+    .mat-progress__linear-bar--primary {
       translate: 0 0;
       transform: translateX(10%);
     }
 
-    .mat-loader__linear-segment--primary {
+    .mat-progress__linear-segment--primary {
       stroke-dasharray: 40 200;
       stroke-dashoffset: -30;
     }
 
-    .mat-loader__linear-bar--secondary {
+    .mat-progress__linear-bar--secondary {
       display: none;
     }
 
-    .mat-loader--indeterminate .mat-loader__circular-active {
+    .mat-progress--indeterminate .mat-progress__circular-active {
       stroke-dasharray: 25 200;
     }
 
-    .mat-loader--indeterminate .mat-loader__circular-track {
+    .mat-progress--indeterminate .mat-progress__circular-track {
       stroke-dasharray: calc(
         75
-        - (var(--mat-loader-circular-gap-progress) * 2)
+        - (var(--mat-progress-circular-gap-progress) * 2)
       ) 200;
       stroke-dashoffset: calc(
-        (25 + var(--mat-loader-circular-gap-progress)) * -1
+        (25 + var(--mat-progress-circular-gap-progress)) * -1
       );
     }
   }

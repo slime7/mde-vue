@@ -24,7 +24,7 @@ const thickness = ref('default');
   </mat-btn-group>
 
   <p>线条形：{{ thickness }}</p>
-  <mat-loader
+  <mat-progress
     shape="wavy"
     :thickness="thickness"
     :value=".6"
@@ -32,7 +32,7 @@ const thickness = ref('default');
   />
 
   <p>48px 波浪环：{{ thickness }}</p>
-  <mat-loader
+  <mat-progress
     shape="wavy"
     size="48"
     :thickness="thickness"

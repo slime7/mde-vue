@@ -39,7 +39,7 @@ import {
   MatList as RootMatList,
   MatListGroup as RootMatListGroup,
   MatListItem as RootMatListItem,
-  MatLoader as RootMatLoader,
+  MatLoading as RootMatLoading,
   MatMenu as RootMatMenu,
   MatMenuGroup as RootMatMenuGroup,
   MatMenuItem as RootMatMenuItem,
@@ -47,6 +47,7 @@ import {
   MatNavigationRailItem as RootMatNavigationRailItem,
   MatPane as RootMatPane,
   MatPanes as RootMatPanes,
+  MatProgress as RootMatProgress,
   MatRadio as RootMatRadio,
   MatRadioGroup as RootMatRadioGroup,
   MatRangeSlider as RootMatRangeSlider,
@@ -119,7 +120,8 @@ const globalComponents = [
   ['MatHover', 'mat-hover', RootMatHover],
   ['MatContainer', 'mat-container', RootMatContainer],
   ['MatSpacer', 'mat-spacer', RootMatSpacer],
-  ['MatLoader', 'mat-loader', RootMatLoader],
+  ['MatLoading', 'mat-loading', RootMatLoading],
+  ['MatProgress', 'mat-progress', RootMatProgress],
   ['MatTooltip', 'mat-tooltip', RootMatTooltip],
   ['MatSnackbar', 'mat-snackbar', RootMatSnackbar],
   ['MatScrollArea', 'mat-scroll-area', RootMatScrollArea],
@@ -214,7 +216,8 @@ describe('公共组件导出', () => {
     expect(app.directive('intersection')).toBe(RootIntersection);
     expect(app.directive('state-layer')).toBe(RootStateLayer);
     expect(app.component('mat-spacer')).toBe(RootMatSpacer);
-    expect(app.component('mat-loader')).toBe(RootMatLoader);
+    expect(app.component('mat-loading')).toBe(RootMatLoading);
+    expect(app.component('mat-progress')).toBe(RootMatProgress);
     expect(app.component('mat-tooltip')).toBe(RootMatTooltip);
     expect(app.component('mat-scroll-area')).toBe(RootMatScrollArea);
     expect(app.component('mat-toolbar')).toBe(RootMatToolbar);

@@ -1,9 +1,9 @@
 <!-- #region template -->
 <template>
-  <div class="loader-sizes">
+  <div class="progress-sizes">
     <div>
       <p>24px</p>
-      <mat-loader
+      <mat-progress
         variant="circular"
         :size="24"
         :value=".6"
@@ -13,7 +13,7 @@
 
     <div>
       <p>默认 48px</p>
-      <mat-loader
+      <mat-progress
         variant="circular"
         :value=".6"
         aria-label="48 像素环形进度 60%"
@@ -22,7 +22,7 @@
 
     <div>
       <p>240px</p>
-      <mat-loader
+      <mat-progress
         variant="circular"
         :size="240"
         :value=".6"
@@ -31,10 +31,10 @@
     </div>
   </div>
 
-  <div class="loader-sizes">
+  <div class="progress-sizes">
     <div>
       <p>24px 波浪形</p>
-      <mat-loader
+      <mat-progress
         shape="wavy"
         variant="circular"
         :size="24"
@@ -45,7 +45,7 @@
 
     <div>
       <p>默认 48px 波浪形</p>
-      <mat-loader
+      <mat-progress
         shape="wavy"
         variant="circular"
         :value=".6"
@@ -55,7 +55,7 @@
 
     <div>
       <p>240px 波浪形</p>
-      <mat-loader
+      <mat-progress
         shape="wavy"
         variant="circular"
         :size="240"
@@ -66,7 +66,7 @@
   </div>
 
   <p>线条形忽略 size="240"，仍填满可用宽度</p>
-  <mat-loader
+  <mat-progress
     :size="240"
     :value=".6"
     aria-label="线条进度 60%"
@@ -75,7 +75,7 @@
 <!-- #endregion template -->
 
 <style scoped>
-.loader-sizes {
+.progress-sizes {
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
