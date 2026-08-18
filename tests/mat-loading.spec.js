@@ -1,7 +1,23 @@
 import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
-import { MatLoading } from '../src';
-import { LOADING_SHAPE_NAMES, SHAPE_NAMES } from '../src/components/mat-shape/shape-paths';
+import { nextTick } from 'vue';
+import {
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest';
+import {
+  MatLoading,
+  MatShape,
+} from '../src';
+import {
+  formatLoadingPolygon,
+  LOADING_SHAPE_ANIMATION_FRAMES,
+  LOADING_SHAPE_FRAMES,
+  LOADING_SHAPE_NAMES,
+  LOADING_SHAPE_ROTATION_STEP,
+} from '../src/components/mat-loading/loading-shape-frames';
+import { SHAPE_NAMES } from '../src/components/mat-shape/shape-paths';
 
 describe('MatLoading', () => {
   it('默认渲染块级不确定加载指示器，并提供 progressbar 语义', () => {
@@ -37,6 +53,81 @@ describe('MatLoading', () => {
     });
   });
 
+  it('为连续动画预生成相同拓扑且坐标有限的轮廓帧', () => {
+    expect(LOADING_SHAPE_FRAMES).toHaveLength(7);
+    expect(LOADING_SHAPE_ANIMATION_FRAMES).toHaveLength(8);
+    expect(LOADING_SHAPE_ANIMATION_FRAMES.at(-1)).toBe(LOADING_SHAPE_FRAMES[0]);
+    expect(LOADING_SHAPE_ROTATION_STEP).toBe(90);
+
+    const pointCounts = LOADING_SHAPE_FRAMES.map((frame) => frame.length);
+
+    expect(new Set(pointCounts).size).toBe(1);
+    expect(pointCounts[0]).toBeGreaterThan(32);
+
+    LOADING_SHAPE_FRAMES.flat().forEach(([x, y]) => {
+      expect(Number.isFinite(x)).toBe(true);
+      expect(Number.isFinite(y)).toBe(true);
+      expect(x).toBeGreaterThanOrEqual(0);
+      expect(x).toBeLessThanOrEqual(100);
+      expect(y).toBeGreaterThanOrEqual(0);
+      expect(y).toBeLessThanOrEqual(100);
+    });
+
+    expect(formatLoadingPolygon(LOADING_SHAPE_FRAMES[0])).toMatch(/^polygon\(/);
+  });
+
+  it('直接使用 MatShape 的公开属性渲染活动指示器', () => {
+    const wrapper = mount(MatLoading);
+    const shape = wrapper.findComponent(MatShape);
+
+    expect(shape.props('name')).toBe('soft-burst');
+    expect(shape.props('size')).toBe(48);
+    expect(shape.props('color')).toBe('primary');
+    expect(shape.attributes('style')).toContain('clip-path: shape(');
+  });
+
+  it('按 650ms 间隔切换 MatShape 形状名称', async () => {
+    const callbacks = [];
+    vi.stubGlobal('requestAnimationFrame', (callback) => {
+      callbacks.push(callback);
+      return callbacks.length;
+    });
+    vi.stubGlobal('cancelAnimationFrame', vi.fn());
+
+    const wrapper = mount(MatLoading);
+    const shape = wrapper.findComponent(MatShape);
+
+    expect(shape.props('name')).toBe('soft-burst');
+
+    callbacks.shift()(0);
+    callbacks.shift()(350);
+    await nextTick();
+    expect(shape.props('name')).toBe('soft-burst');
+
+    callbacks.shift()(650);
+    await nextTick();
+    expect(shape.props('name')).toBe('9-sided-cookie');
+  });
+
+  it('减少动态效果时保持首个形状并停止帧循环', () => {
+    const callbacks = [];
+    const reducedMotionQuery = {
+      matches: true,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    };
+    vi.stubGlobal('matchMedia', () => reducedMotionQuery);
+    vi.stubGlobal('requestAnimationFrame', (callback) => {
+      callbacks.push(callback);
+      return callbacks.length;
+    });
+
+    const wrapper = mount(MatLoading);
+
+    expect(wrapper.findComponent(MatShape).props('name')).toBe('soft-burst');
+    expect(callbacks).toHaveLength(0);
+  });
+
   it('校验 containment、尺寸和配色输入', () => {
     expect(MatLoading.props.containment.default).toBe(false);
     expect(MatLoading.props.containment.type).toBe(Boolean);
@@ -70,5 +161,7 @@ describe('MatLoading', () => {
 
     expect(wrapper.attributes('style')).not.toContain('--mat-loading-container-color');
     expect(contained.attributes('style')).toContain('--mat-loading-container-color');
+    expect(wrapper.findComponent(MatShape).props('size')).toBe(48);
+    expect(contained.findComponent(MatShape).props('size')).toBe(38);
   });
 });

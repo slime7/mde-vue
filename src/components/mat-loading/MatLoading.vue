@@ -1,20 +1,17 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import MatShape from '../mat-shape/MatShape.vue';
 import { isComponentColor } from '../button-props';
 import useComponentColor from '../use-component-color';
 import { normalizeNumber } from '../value-utils';
 import { useMatProps } from '../use-mat-props';
-import {
-  formatLoadingShape,
-  interpolateLoadingShapes,
-  LOADING_SHAPE_FRAMES,
-} from './loading-shape-frames';
+import { LOADING_SHAPE_NAMES } from '../mat-shape/shape-paths';
+import './loading-shape-frames.css';
 
 const DEFAULT_SIZE = 48;
 const MIN_SIZE = 24;
 const MAX_SIZE = 240;
-const MORPH_CYCLE = 2400;
-const MORPH_SEGMENTS = 7;
+const SHAPE_SWITCH_INTERVAL = 650;
 
 defineOptions({
   name: 'MatLoading',
@@ -64,8 +61,7 @@ const props = defineProps({
 const propsWithDefaults = useMatProps('loading', props);
 
 const { colorStyle } = useComponentColor(computed(() => propsWithDefaults.color));
-const activeIndicator = ref(null);
-const clippath = ref(formatLoadingShape(LOADING_SHAPE_FRAMES[0]));
+const currentShapeIndex = ref(0);
 let animationFrame;
 let accumulatedTime = 0;
 let previousFrameTime;
@@ -97,40 +93,36 @@ const rootStyle = computed(() => ({
   ...sizeStyle.value,
   ...containmentStyle.value,
 }));
-// 容器与活动指示器按 38 : 48 的比例保持尺寸关系，数字来自官方规格。
-const indicatorStyle = computed(() => ({
-  '--mat-loading-indicator-size': propsWithDefaults.containment
-    ? 'calc(var(--mat-loading-size) * 0.7916666666666666)'
-    : 'var(--mat-loading-size)',
-}));
-
-/**
- * 返回给定累计时间对应的形状插值 clip-path。
- *
- * @param {number} time
- * @returns {string}
- */
-function computeClipPath(time) {
-  const cycle = time % MORPH_CYCLE;
-  const segment = (cycle / MORPH_CYCLE) * MORPH_SEGMENTS;
-  const fromIndex = Math.floor(segment) % LOADING_SHAPE_FRAMES.length;
-  const toIndex = (fromIndex + 1) % LOADING_SHAPE_FRAMES.length;
-  const progress = segment - Math.floor(segment);
-  const eased = progress * progress * (3 - 2 * progress);
-
-  return formatLoadingShape(interpolateLoadingShapes(
-    LOADING_SHAPE_FRAMES[fromIndex],
-    LOADING_SHAPE_FRAMES[toIndex],
-    eased,
-  ));
-}
+const indicatorSize = computed(() => (
+  propsWithDefaults.containment
+    ? resolvedSize.value * (38 / 48)
+    : resolvedSize.value
+));
+const activeShapeName = computed(() => LOADING_SHAPE_NAMES[currentShapeIndex.value]);
 
 /**
  * @returns {boolean}
  */
 function prefersReducedMotion() {
+  if (reducedMotionQuery) {
+    return reducedMotionQuery.matches;
+  }
+
   return typeof globalThis.matchMedia === 'function'
     && globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function stopShapeAnimation() {
+  if (animationFrame !== undefined) {
+    globalThis.cancelAnimationFrame?.(animationFrame);
+    animationFrame = undefined;
+  }
+}
+
+function resetShape() {
+  currentShapeIndex.value = 0;
+  accumulatedTime = 0;
+  previousFrameTime = undefined;
 }
 
 /**
@@ -144,7 +136,12 @@ function updateShape(frameTime) {
   }
 
   previousFrameTime = frameTime;
-  clippath.value = computeClipPath(accumulatedTime);
+  const nextShapeIndex = Math.floor(accumulatedTime / SHAPE_SWITCH_INTERVAL)
+    % LOADING_SHAPE_NAMES.length;
+
+  if (nextShapeIndex !== currentShapeIndex.value) {
+    currentShapeIndex.value = nextShapeIndex;
+  }
 
   if (!prefersReducedMotion()) {
     animationFrame = globalThis.requestAnimationFrame(updateShape);
@@ -152,36 +149,28 @@ function updateShape(frameTime) {
 }
 
 function startShapeAnimation() {
-  if (typeof globalThis.requestAnimationFrame !== 'function') {
+  stopShapeAnimation();
+  resetShape();
+
+  if (typeof globalThis.requestAnimationFrame !== 'function'
+    || prefersReducedMotion()) {
     return;
   }
 
-  if (prefersReducedMotion()) {
-    clippath.value = computeClipPath(0);
-    return;
-  }
-
-  if (animationFrame === undefined) {
-    previousFrameTime = undefined;
-    accumulatedTime = 0;
-    animationFrame = globalThis.requestAnimationFrame(updateShape);
-  }
+  animationFrame = globalThis.requestAnimationFrame(updateShape);
 }
 
 onMounted(() => {
-  startShapeAnimation();
-
   if (typeof globalThis.matchMedia === 'function') {
     reducedMotionQuery = globalThis.matchMedia('(prefers-reduced-motion: reduce)');
     reducedMotionQuery.addEventListener?.('change', startShapeAnimation);
   }
+
+  startShapeAnimation();
 });
 
 onBeforeUnmount(() => {
-  if (animationFrame !== undefined) {
-    globalThis.cancelAnimationFrame?.(animationFrame);
-  }
-
+  stopShapeAnimation();
   reducedMotionQuery?.removeEventListener?.('change', startShapeAnimation);
 });
 </script>
@@ -196,10 +185,11 @@ onBeforeUnmount(() => {
     aria-valuemin="0"
     aria-valuemax="1"
   >
-    <span
-      ref="activeIndicator"
+    <MatShape
       class="mat-loading__active-indicator"
-      :style="indicatorStyle"
+      :name="activeShapeName"
+      :size="indicatorSize"
+      :color="propsWithDefaults.color || 'primary'"
       aria-hidden="true"
     />
   </div>
@@ -221,25 +211,23 @@ onBeforeUnmount(() => {
     border-radius: var(--mat-sys-shape-corner-full);
   }
 
-  .mat-loading__active-indicator {
+  .mat-loading .mat-loading__active-indicator {
     display: block;
     flex: 0 0 auto;
     box-sizing: border-box;
-    inline-size: var(--mat-loading-indicator-size);
-    block-size: var(--mat-loading-indicator-size);
     background: var(--mat-loading-active-indicator-color);
-    clip-path: v-bind(clippath);
-    animation: mat-loading-morph 24s linear infinite;
+    animation: mat-loading-shape-cycle 4550ms linear infinite, mat-loading-morph-rotate 18200ms linear infinite, mat-loading-rotate 4666ms linear infinite;
   }
 
-  @keyframes mat-loading-morph {
+  @keyframes mat-loading-rotate {
     to {
       transform: rotate(1turn);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .mat-loading__active-indicator {
+    .mat-loading .mat-loading__active-indicator {
+      transition: none;
       animation: none;
     }
   }

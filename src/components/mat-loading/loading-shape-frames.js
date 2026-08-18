@@ -1,58 +1,113 @@
 /**
- * Loading Indicator 的形状变形帧数据。
+ * Loading Indicator 的同拓扑形状帧数据。
  *
- * 从 MatShape 共享的 35 个 Material 3 Expressive 形状中选取官方 Loading Indicator
- * 使用的 7 个形状，把归一化三次贝塞尔轮廓按等弧长采样为闭合折线，供运行时逐帧
- * 插值。数据与 shape-paths.js 同源，不引入运行时转换依赖。
+ * 数据从 MatShape 的 7 个共享 shape() 轮廓一次性采样为相同数量的闭合点列，供
+ * CSS clip-path: polygon() keyframes 连续插值。运行时不解析或修改 MatShape 的路径。
  */
-import { SHAPE_PATHS } from '../mat-shape/shape-paths';
+import {
+  LOADING_SHAPE_NAMES,
+  SHAPE_PATHS,
+} from '../mat-shape/shape-paths';
 
-export const LOADING_SHAPE_NAMES = Object.freeze([
-  'soft-burst',
-  '9-sided-cookie',
-  'pentagon',
-  'pill',
-  'sunny',
-  '4-sided-cookie',
-  'oval',
-]);
-
-const CURVE_PATTERN = /curve to ([\d.]+)% ([\d.]+)% with ([\d.]+)% ([\d.]+)% \/ ([\d.]+)% ([\d.]+)%/g;
-const SAMPLE_STEP = 60;
+const CURVE_SAMPLE_STEP = 48;
+const MORPH_POINT_COUNT = 96;
+const LOADING_SHAPE_ROTATION_STEP = 90;
+const FRAME_POINT_OFFSETS = Object.freeze([0, 82, 82, 70, 58, 46, 70]);
+const NUMBER_PATTERN = '[-+]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][-+]?\\d+)?';
+const START_PATTERN = new RegExp(
+  `^shape\\(from\\s+(${NUMBER_PATTERN})%\\s+(${NUMBER_PATTERN})%`,
+);
+const CURVE_PATTERN = new RegExp(
+  `curve\\s+to\\s+(${NUMBER_PATTERN})%\\s+(${NUMBER_PATTERN})%`
+    + `\\s+with\\s+(${NUMBER_PATTERN})%\\s+(${NUMBER_PATTERN})%`
+    + `\\s*/\\s*(${NUMBER_PATTERN})%\\s+(${NUMBER_PATTERN})%`,
+  'g',
+);
 
 /**
- * 把单个 shape() 字符串解析为起点和三次贝塞尔曲线列表。
- *
- * @param {string} path
- * @returns {{ start: [number, number], curves: Array<[number, number, number, number, number, number, number, number]> }}
+ * @typedef {[number, number]} Point
  */
-function parseShapePath(path) {
-  const startMatch = path.match(/shape\(from ([\d.]+)% ([\d.]+)%/);
-  const curves = [];
-  let match = CURVE_PATTERN.exec(path);
 
-  while (match !== null) {
-    curves.push([
-      Number(match[1]), Number(match[2]),
-      Number(match[3]), Number(match[4]),
-      Number(match[5]), Number(match[6]),
-      Number(match[7]), Number(match[8]),
-    ]);
-    match = CURVE_PATTERN.exec(path);
+/**
+ * @param {number} value
+ * @param {string} context
+ * @returns {number}
+ */
+function assertFinite(value, context) {
+  if (!Number.isFinite(value)) {
+    throw new Error(`Loading shape generation produced a non-finite value: ${context}`);
   }
 
-  return {
-    start: [Number(startMatch[1]), Number(startMatch[2])],
-    curves,
-  };
+  return value;
 }
 
 /**
- * 采样一条三次贝塞尔曲线，返回百分比坐标点数组。
- *
- * @param {[number, number, number, number, number, number, number, number]} curve
+ * @param {Point} point
+ * @param {string} context
+ * @returns {Point}
+ */
+function assertFinitePoint(point, context) {
+  return [
+    assertFinite(point[0], `${context}.x`),
+    assertFinite(point[1], `${context}.y`),
+  ];
+}
+
+/**
+ * @param {string} path
+ * @returns {{start: Point, curves: Array<{from: Point, controlStart: Point, controlEnd: Point, to: Point}>}}
+ */
+function parseShapePath(path) {
+  const startMatch = START_PATTERN.exec(path);
+
+  if (startMatch === null) {
+    throw new Error(`Loading shape path has an invalid start point: ${path}`);
+  }
+
+  const start = assertFinitePoint([
+    Number(startMatch[1]),
+    Number(startMatch[2]),
+  ], 'start');
+  const curves = [];
+  let from = start;
+  const curvePattern = new RegExp(CURVE_PATTERN.source, 'g');
+  let match = curvePattern.exec(path);
+
+  while (match !== null) {
+    const controlStart = assertFinitePoint([
+      Number(match[3]),
+      Number(match[4]),
+    ], 'controlStart');
+    const controlEnd = assertFinitePoint([
+      Number(match[5]),
+      Number(match[6]),
+    ], 'controlEnd');
+    const to = assertFinitePoint([
+      Number(match[1]),
+      Number(match[2]),
+    ], 'to');
+
+    curves.push({
+      from,
+      controlStart,
+      controlEnd,
+      to,
+    });
+    from = to;
+    match = curvePattern.exec(path);
+  }
+
+  if (curves.length === 0) {
+    throw new Error(`Loading shape path has no curves: ${path}`);
+  }
+
+  return { start, curves };
+}
+
+/**
+ * @param {{from: Point, controlStart: Point, controlEnd: Point, to: Point}} curve
  * @param {number} step
- * @returns {Array<[number, number]>}
+ * @returns {Point[]}
  */
 function sampleCurve(curve, step) {
   const points = [];
@@ -60,88 +115,186 @@ function sampleCurve(curve, step) {
   for (let index = 0; index <= step; index += 1) {
     const t = index / step;
     const inverse = 1 - t;
-    const x = (inverse ** 3 * curve[0])
-      + (3 * inverse * inverse * t * curve[2])
-      + (3 * inverse * t * t * curve[4])
-      + (t ** 3 * curve[6]);
-    const y = (inverse ** 3 * curve[1])
-      + (3 * inverse * inverse * t * curve[3])
-      + (3 * inverse * t * t * curve[5])
-      + (t ** 3 * curve[7]);
+    const x = (inverse ** 3 * curve.from[0])
+      + (3 * inverse * inverse * t * curve.controlStart[0])
+      + (3 * inverse * t * t * curve.controlEnd[0])
+      + (t ** 3 * curve.to[0]);
+    const y = (inverse ** 3 * curve.from[1])
+      + (3 * inverse * inverse * t * curve.controlStart[1])
+      + (3 * inverse * t * t * curve.controlEnd[1])
+      + (t ** 3 * curve.to[1]);
 
-    points.push([x, y]);
+    points.push(assertFinitePoint([x, y], `curve point ${index}`));
   }
 
   return points;
 }
 
 /**
- * 把形状采样为闭合折线点列（起点追加到末尾，保证端点不重复计数）。
- *
+ * @param {Point} from
+ * @param {Point} to
+ * @returns {number}
+ */
+function distance(from, to) {
+  return Math.hypot(to[0] - from[0], to[1] - from[1]);
+}
+
+/**
+ * @param {Point[]} points
+ * @param {number} count
+ * @returns {Point[]}
+ */
+function resampleClosedPath(points, count) {
+  if (points.length < 2) {
+    throw new Error('Loading shape path needs at least two points');
+  }
+
+  const closedPoints = [...points, points[0]];
+  const cumulativeLengths = [0];
+
+  for (let index = 1; index < closedPoints.length; index += 1) {
+    cumulativeLengths.push(
+      assertFinite(
+        cumulativeLengths[index - 1] + distance(closedPoints[index - 1], closedPoints[index]),
+        `path length ${index}`,
+      ),
+    );
+  }
+
+  const totalLength = cumulativeLengths.at(-1);
+
+  if (!Number.isFinite(totalLength) || totalLength <= 0) {
+    throw new Error('Loading shape path has no measurable perimeter');
+  }
+
+  const result = [];
+  let segmentIndex = 0;
+
+  for (let index = 0; index < count; index += 1) {
+    const targetLength = (totalLength * index) / count;
+
+    while (segmentIndex < points.length - 1
+      && cumulativeLengths[segmentIndex + 1] < targetLength) {
+      segmentIndex += 1;
+    }
+
+    const segmentStart = cumulativeLengths[segmentIndex];
+    const segmentEnd = cumulativeLengths[segmentIndex + 1];
+    const segmentProgress = segmentEnd === segmentStart
+      ? 0
+      : (targetLength - segmentStart) / (segmentEnd - segmentStart);
+    const from = closedPoints[segmentIndex];
+    const to = closedPoints[segmentIndex + 1];
+
+    result.push(assertFinitePoint([
+      from[0] + ((to[0] - from[0]) * segmentProgress),
+      from[1] + ((to[1] - from[1]) * segmentProgress),
+    ], `resampled point ${index}`));
+  }
+
+  return result;
+}
+
+/**
+ * @param {Point} first
+ * @param {Point} second
+ * @returns {boolean}
+ */
+function samePoint(first, second) {
+  return Math.abs(first[0] - second[0]) < 0.000001
+    && Math.abs(first[1] - second[1]) < 0.000001;
+}
+
+/**
  * @param {string} path
- * @returns {Array<[number, number]>}
+ * @returns {Point[]}
  */
 function sampleShape(path) {
   const { start, curves } = parseShapePath(path);
   const points = [start];
 
   curves.forEach((curve) => {
-    const samples = sampleCurve(curve, SAMPLE_STEP);
-
-    points.push(...samples.slice(1));
+    points.push(...sampleCurve(curve, CURVE_SAMPLE_STEP).slice(1));
   });
 
-  points.push(start);
-
-  return points;
-}
-
-const LOADING_SHAPE_FRAMES = Object.freeze(
-  LOADING_SHAPE_NAMES.map((name) => Object.freeze(sampleShape(SHAPE_PATHS[name]))),
-);
-
-/**
- * 在相邻两个形状帧之间按进度插值。
- *
- * @param {Array<[number, number]>} from
- * @param {Array<[number, number]>} to
- * @param {number} progress
- * @returns {Array<[number, number]>}
- */
-export function interpolateLoadingShapes(from, to, progress) {
-  const count = Math.min(from.length, to.length);
-  const points = [];
-
-  for (let index = 0; index < count; index += 1) {
-    points.push([
-      from[index][0] + ((to[index][0] - from[index][0]) * progress),
-      from[index][1] + ((to[index][1] - from[index][1]) * progress),
-    ]);
+  if (samePoint(points[0], points.at(-1))) {
+    points.pop();
   }
 
-  return points;
+  return Object.freeze(
+    resampleClosedPath(points, MORPH_POINT_COUNT)
+      .map((point) => Object.freeze(point)),
+  );
 }
 
 /**
- * 把插值点列转换为 clip-path: shape() 字符串。
+ * 对齐循环中相邻轮廓的采样起点，减少轮廓特征沿边界滑动。
  *
- * @param {Array<[number, number]>} points
- * @returns {string}
+ * @param {Point[]} points
+ * @param {number} offset
+ * @returns {ReadonlyArray<Point>}
  */
-export function formatLoadingShape(points) {
-  const parts = [];
-
-  points.forEach(([x, y], index) => {
-    const command = index === 0 ? 'from' : 'curve to';
-
-    parts.push(
-      command === 'from'
-        ? `${command} ${x.toFixed(2)}% ${y.toFixed(2)}%`
-        : `${command} ${x.toFixed(2)}% ${y.toFixed(2)}% with ${x.toFixed(2)}% ${y.toFixed(2)}% / ${x.toFixed(2)}% ${y.toFixed(2)}%`,
-    );
-  });
-
-  return `shape(${parts.join(', ')}, close)`;
+function alignFrame(points, offset) {
+  return Object.freeze(
+    points.map((_, index) => points[(index + offset) % points.length]),
+  );
 }
 
-export { LOADING_SHAPE_FRAMES };
+/**
+ * @param {Point} point
+ * @returns {string}
+ */
+function formatPoint(point) {
+  const x = assertFinite(point[0], 'formatted point x');
+  const y = assertFinite(point[1], 'formatted point y');
+
+  const formatPercentage = (value) => {
+    const formatted = Number(value.toFixed(3)).toString();
+
+    if (formatted.startsWith('-0.')) {
+      return `-${formatted.slice(2)}`;
+    }
+
+    if (formatted.startsWith('0.')) {
+      return formatted.slice(1);
+    }
+
+    return formatted;
+  };
+
+  return `${formatPercentage(x)}% ${formatPercentage(y)}%`;
+}
+
+/**
+ * 把固定拓扑的轮廓点列转换为 CSS polygon()。
+ *
+ * @param {Point[]} points
+ * @returns {string}
+ */
+export function formatLoadingPolygon(points) {
+  if (points.length !== MORPH_POINT_COUNT) {
+    throw new Error(`Loading shape frame must contain ${MORPH_POINT_COUNT} points`);
+  }
+
+  return `polygon(${points.map(formatPoint).join(', ')})`;
+}
+
+/** @type {ReadonlyArray<ReadonlyArray<Point>>} */
+const LOADING_SHAPE_FRAMES = Object.freeze(
+  LOADING_SHAPE_NAMES.map((name, index) => (
+    alignFrame(sampleShape(SHAPE_PATHS[name]), FRAME_POINT_OFFSETS[index])
+  )),
+);
+
+/** @type {ReadonlyArray<ReadonlyArray<Point>>} */
+const LOADING_SHAPE_ANIMATION_FRAMES = Object.freeze([
+  ...LOADING_SHAPE_FRAMES,
+  LOADING_SHAPE_FRAMES[0],
+]);
+
+export {
+  LOADING_SHAPE_ANIMATION_FRAMES,
+  LOADING_SHAPE_FRAMES,
+  LOADING_SHAPE_NAMES,
+  LOADING_SHAPE_ROTATION_STEP,
+};

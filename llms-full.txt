@@ -7477,9 +7477,9 @@ import SwitchModelValueExample from '../examples/selection/SwitchModelValueExamp
 
 ## 组件简介
 
-`<mat-loading>` 的组件导出名是 `MatLoading`。它对应 Material 3 Expressive 的 Loading indicator，用于表示 200ms 到 5s 的短时、不确定等待过程；活动指示器由官方 7 个 Material 3 形状循环变形并缓慢旋转，容器尺寸默认 48px。
+`<mat-loading>` 的组件导出名是 `MatLoading`。它对应 Material 3 Expressive 的 Loading indicator，用于表示 200ms 到 5s 的短时、不确定等待过程；活动指示器直接复用 `MatShape` 的官方 7 个 Material 3 形状，并使用相同拓扑的轮廓帧连续变形，容器尺寸默认 48px。
 
-组件根元素始终是块级 `div`，默认水平居中。`containment` 开启后在指示器外显示圆形背景容器，适合叠加在已有内容之上；活动形状按 38 : 48 的比例缩小并换成同组 on-container 内容色。
+组件根元素始终是块级 `div`，默认水平居中。`containment` 开启后在指示器外显示圆形背景容器，适合叠加在已有内容之上；活动形状按 38 : 48 的比例缩小并换成同组 on-container 内容色。组件每 650ms 启动一次低阻尼弹簧变化，轮廓在前段快速接近下一个形状，额外 90° 旋转使用同一弹簧进度并轻微越过目标后回稳；组件另有 4666ms 的匀速整圈旋转。形状采样点会按整个循环对齐起点，减少轮廓特征在变形时沿边界滑动。
 
 ## 示例
 
@@ -7563,11 +7563,11 @@ import SwitchModelValueExample from '../examples/selection/SwitchModelValueExamp
 
 ## 状态
 
-根元素提供 `role="progressbar"`、`aria-valuemin="0"` 与 `aria-valuemax="1"`，不确定加载不声明具体比例。活动形状在 7 个官方形状之间连续变形，并叠加整圈缓慢旋转。启用减少动态效果偏好时，组件停止形状变形与旋转，显示静态活动形状。组件没有公开方法。组件不应被装饰性使用，也不应从不确定加载切换到确定进度。
+根元素提供 `role="progressbar"`、`aria-valuemin="0"` 与 `aria-valuemax="1"`，不确定加载不声明具体比例。活动形状仍通过 `MatShape` 的 `name`、`size` 与 `color` 属性渲染；Loading 专用的同拓扑 `polygon()` 关键帧直接动画 `clip-path`，每 650ms 以低阻尼弹簧节奏变形到下一个官方形状，同一弹簧进度驱动额外 90° 旋转并与 4666ms 的整圈匀速旋转叠加。启用减少动态效果偏好时，组件停止形状切换与两种旋转，显示静态活动形状。组件没有公开方法。组件不应被装饰性使用，也不应从不确定加载切换到确定进度。
 
 ## 参考来源
 
-使用时机、尺寸范围、背景容器、配色与无障碍语义依据 Material 3 [Loading indicator guidelines](https://m3.material.io/components/loading-indicator/guidelines)、[Specs](https://m3.material.io/components/loading-indicator/specs) 与 [Accessibility](https://m3.material.io/components/loading-indicator/accessibility)。活动指示器的 7 个形状取自 [Shape 官方页面](https://m3.material.io/styles/shape/overview-principles)。
+使用时机、尺寸范围、背景容器、配色与无障碍语义依据 Material 3 [Loading indicator guidelines](https://m3.material.io/components/loading-indicator/guidelines)、[Specs](https://m3.material.io/components/loading-indicator/specs) 与 [Accessibility](https://m3.material.io/components/loading-indicator/accessibility)。活动指示器的 7 个形状取自 [Shape 官方页面](https://m3.material.io/styles/shape/overview-principles)，弹簧、旋转和调度节奏参考 [AndroidX Compose LoadingIndicator](https://android.googlesource.com/platform/frameworks/support/+/383a96e0e6e21b2155de1ff320ef3c78f4c288f7/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/LoadingIndicator.kt)。
 
 <script setup>
 import LoadingContainmentExample from '../examples/loading/LoadingContainmentExample.vue';

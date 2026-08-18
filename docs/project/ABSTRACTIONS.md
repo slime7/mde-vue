@@ -194,7 +194,7 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 ## `<mat-loading>`
 
-`<mat-loading>` 的导出名是 `MatLoading`，表达短时且不确定的加载过程，始终使用 `role="progressbar"` 且不声明具体进度。活动指示器固定循环官方 7 个形状，在共享 MatShape 几何的归一化采样折线之间连续变形并叠加缓慢旋转；`containment` 布尔属性开启圆形背景容器，活动形状按 38 : 48 比例缩小并换用同组 on-container 内容色。`size` 只接受数字与纯数字字符串，默认 48 并限制在 24 至 240。`color` 遵循统一组件配色约定，只替换活动形状的强调色族。Loading 没有 Slots、方法或自定义事件。
+`<mat-loading>` 的导出名是 `MatLoading`，表达短时且不确定的加载过程，始终使用 `role="progressbar"` 且不声明具体进度。活动指示器直接复用 `MatShape` 的 `name`、`size` 与 `color` 属性，固定循环官方 7 个形状，并由 Loading 专用、采样起点经过循环对齐的同拓扑 `polygon()` 关键帧连续变形。组件每 650ms 启动一段参考 AndroidX 参数采样的低阻尼弹簧，同一进度同时驱动轮廓与额外 90° 旋转并产生轻微越过和回稳，另以 4666ms 周期叠加整圈匀速旋转。`containment` 布尔属性开启圆形背景容器，活动形状按 38 : 48 比例缩小并换用同组 on-container 内容色。`size` 只接受数字与纯数字字符串，默认 48 并限制在 24 至 240。`color` 遵循统一组件配色约定，只替换活动形状的强调色族。Loading 没有 Slots、方法或自定义事件。减少动态效果偏好会停止形状和旋转动画并保留首个形状。
 
 ## 表单选择控件
 
