@@ -364,6 +364,7 @@ matUi.theme.dispose();
 
 <script setup>
 import ThemeSettings from '../.vitepress/theme/ThemeSettings.vue';
+import ThemeColorTokens from '../.vitepress/theme/ThemeColorTokens.vue';
 </script>
 
 <ClientOnly>
@@ -371,6 +372,12 @@ import ThemeSettings from '../.vitepress/theme/ThemeSettings.vue';
 </ClientOnly>
 
 上方设置会直接作用于当前文档站：种子色、亮暗模式、配色变体和对比度变化后，页面中的所有 `mat-*` 组件都会读取同一组主题令牌。右上角的外观开关也会跳转到本页，方便进行完整设置。
+
+## 当前配色令牌
+
+<ClientOnly>
+  <ThemeColorTokens />
+</ClientOnly>
 
 ## 初始化
 
