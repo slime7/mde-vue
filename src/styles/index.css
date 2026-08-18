@@ -878,6 +878,7 @@
 
 @layer mde.utilities {
   .mat-sys-typescale-display-large {
+    font-family: var(--mat-sys-typescale-display-large-font);
     font-size: var(--mat-sys-typescale-display-large-size);
     font-weight: var(--mat-sys-typescale-display-large-weight);
     line-height: var(--mat-sys-typescale-display-large-line-height);
@@ -885,6 +886,7 @@
   }
 
   .mat-sys-typescale-display-medium {
+    font-family: var(--mat-sys-typescale-display-medium-font);
     font-size: var(--mat-sys-typescale-display-medium-size);
     font-weight: var(--mat-sys-typescale-display-medium-weight);
     line-height: var(--mat-sys-typescale-display-medium-line-height);
@@ -892,6 +894,7 @@
   }
 
   .mat-sys-typescale-display-small {
+    font-family: var(--mat-sys-typescale-display-small-font);
     font-size: var(--mat-sys-typescale-display-small-size);
     font-weight: var(--mat-sys-typescale-display-small-weight);
     line-height: var(--mat-sys-typescale-display-small-line-height);
@@ -899,6 +902,7 @@
   }
 
   .mat-sys-typescale-headline-large {
+    font-family: var(--mat-sys-typescale-headline-large-font);
     font-size: var(--mat-sys-typescale-headline-large-size);
     font-weight: var(--mat-sys-typescale-headline-large-weight);
     line-height: var(--mat-sys-typescale-headline-large-line-height);
@@ -906,6 +910,7 @@
   }
 
   .mat-sys-typescale-headline-medium {
+    font-family: var(--mat-sys-typescale-headline-medium-font);
     font-size: var(--mat-sys-typescale-headline-medium-size);
     font-weight: var(--mat-sys-typescale-headline-medium-weight);
     line-height: var(--mat-sys-typescale-headline-medium-line-height);
@@ -913,6 +918,7 @@
   }
 
   .mat-sys-typescale-headline-small {
+    font-family: var(--mat-sys-typescale-headline-small-font);
     font-size: var(--mat-sys-typescale-headline-small-size);
     font-weight: var(--mat-sys-typescale-headline-small-weight);
     line-height: var(--mat-sys-typescale-headline-small-line-height);
@@ -920,6 +926,7 @@
   }
 
   .mat-sys-typescale-title-large {
+    font-family: var(--mat-sys-typescale-title-large-font);
     font-size: var(--mat-sys-typescale-title-large-size);
     font-weight: var(--mat-sys-typescale-title-large-weight);
     line-height: var(--mat-sys-typescale-title-large-line-height);
@@ -927,6 +934,7 @@
   }
 
   .mat-sys-typescale-title-medium {
+    font-family: var(--mat-sys-typescale-title-medium-font);
     font-size: var(--mat-sys-typescale-title-medium-size);
     font-weight: var(--mat-sys-typescale-title-medium-weight);
     line-height: var(--mat-sys-typescale-title-medium-line-height);
@@ -934,6 +942,7 @@
   }
 
   .mat-sys-typescale-title-small {
+    font-family: var(--mat-sys-typescale-title-small-font);
     font-size: var(--mat-sys-typescale-title-small-size);
     font-weight: var(--mat-sys-typescale-title-small-weight);
     line-height: var(--mat-sys-typescale-title-small-line-height);
@@ -941,6 +950,7 @@
   }
 
   .mat-sys-typescale-body-large {
+    font-family: var(--mat-sys-typescale-body-large-font);
     font-size: var(--mat-sys-typescale-body-large-size);
     font-weight: var(--mat-sys-typescale-body-large-weight);
     line-height: var(--mat-sys-typescale-body-large-line-height);
@@ -948,6 +958,7 @@
   }
 
   .mat-sys-typescale-body-medium {
+    font-family: var(--mat-sys-typescale-body-medium-font);
     font-size: var(--mat-sys-typescale-body-medium-size);
     font-weight: var(--mat-sys-typescale-body-medium-weight);
     line-height: var(--mat-sys-typescale-body-medium-line-height);
@@ -955,6 +966,7 @@
   }
 
   .mat-sys-typescale-body-small {
+    font-family: var(--mat-sys-typescale-body-small-font);
     font-size: var(--mat-sys-typescale-body-small-size);
     font-weight: var(--mat-sys-typescale-body-small-weight);
     line-height: var(--mat-sys-typescale-body-small-line-height);
@@ -962,6 +974,7 @@
   }
 
   .mat-sys-typescale-label-large {
+    font-family: var(--mat-sys-typescale-label-large-font);
     font-size: var(--mat-sys-typescale-label-large-size);
     font-weight: var(--mat-sys-typescale-label-large-weight);
     line-height: var(--mat-sys-typescale-label-large-line-height);
@@ -969,6 +982,7 @@
   }
 
   .mat-sys-typescale-label-medium {
+    font-family: var(--mat-sys-typescale-label-medium-font);
     font-size: var(--mat-sys-typescale-label-medium-size);
     font-weight: var(--mat-sys-typescale-label-medium-weight);
     line-height: var(--mat-sys-typescale-label-medium-line-height);
@@ -976,6 +990,7 @@
   }
 
   .mat-sys-typescale-label-small {
+    font-family: var(--mat-sys-typescale-label-small-font);
     font-size: var(--mat-sys-typescale-label-small-size);
     font-weight: var(--mat-sys-typescale-label-small-weight);
     line-height: var(--mat-sys-typescale-label-small-line-height);
@@ -983,6 +998,7 @@
   }
 
   .mat-sys-typescale-emphasized-display-large {
+    font-family: var(--mat-sys-typescale-emphasized-display-large-font);
     font-size: var(--mat-sys-typescale-emphasized-display-large-size);
     font-weight: var(--mat-sys-typescale-emphasized-display-large-weight);
     line-height: var(--mat-sys-typescale-emphasized-display-large-line-height);
@@ -990,6 +1006,7 @@
   }
 
   .mat-sys-typescale-emphasized-display-medium {
+    font-family: var(--mat-sys-typescale-emphasized-display-medium-font);
     font-size: var(--mat-sys-typescale-emphasized-display-medium-size);
     font-weight: var(--mat-sys-typescale-emphasized-display-medium-weight);
     line-height: var(--mat-sys-typescale-emphasized-display-medium-line-height);
@@ -997,6 +1014,7 @@
   }
 
   .mat-sys-typescale-emphasized-display-small {
+    font-family: var(--mat-sys-typescale-emphasized-display-small-font);
     font-size: var(--mat-sys-typescale-emphasized-display-small-size);
     font-weight: var(--mat-sys-typescale-emphasized-display-small-weight);
     line-height: var(--mat-sys-typescale-emphasized-display-small-line-height);
@@ -1004,6 +1022,7 @@
   }
 
   .mat-sys-typescale-emphasized-headline-large {
+    font-family: var(--mat-sys-typescale-emphasized-headline-large-font);
     font-size: var(--mat-sys-typescale-emphasized-headline-large-size);
     font-weight: var(--mat-sys-typescale-emphasized-headline-large-weight);
     line-height: var(--mat-sys-typescale-emphasized-headline-large-line-height);
@@ -1011,6 +1030,7 @@
   }
 
   .mat-sys-typescale-emphasized-headline-medium {
+    font-family: var(--mat-sys-typescale-emphasized-headline-medium-font);
     font-size: var(--mat-sys-typescale-emphasized-headline-medium-size);
     font-weight: var(--mat-sys-typescale-emphasized-headline-medium-weight);
     line-height: var(--mat-sys-typescale-emphasized-headline-medium-line-height);
@@ -1018,6 +1038,7 @@
   }
 
   .mat-sys-typescale-emphasized-headline-small {
+    font-family: var(--mat-sys-typescale-emphasized-headline-small-font);
     font-size: var(--mat-sys-typescale-emphasized-headline-small-size);
     font-weight: var(--mat-sys-typescale-emphasized-headline-small-weight);
     line-height: var(--mat-sys-typescale-emphasized-headline-small-line-height);
@@ -1025,6 +1046,7 @@
   }
 
   .mat-sys-typescale-emphasized-title-large {
+    font-family: var(--mat-sys-typescale-emphasized-title-large-font);
     font-size: var(--mat-sys-typescale-emphasized-title-large-size);
     font-weight: var(--mat-sys-typescale-emphasized-title-large-weight);
     line-height: var(--mat-sys-typescale-emphasized-title-large-line-height);
@@ -1032,6 +1054,7 @@
   }
 
   .mat-sys-typescale-emphasized-title-medium {
+    font-family: var(--mat-sys-typescale-emphasized-title-medium-font);
     font-size: var(--mat-sys-typescale-emphasized-title-medium-size);
     font-weight: var(--mat-sys-typescale-emphasized-title-medium-weight);
     line-height: var(--mat-sys-typescale-emphasized-title-medium-line-height);
@@ -1039,6 +1062,7 @@
   }
 
   .mat-sys-typescale-emphasized-title-small {
+    font-family: var(--mat-sys-typescale-emphasized-title-small-font);
     font-size: var(--mat-sys-typescale-emphasized-title-small-size);
     font-weight: var(--mat-sys-typescale-emphasized-title-small-weight);
     line-height: var(--mat-sys-typescale-emphasized-title-small-line-height);
@@ -1046,6 +1070,7 @@
   }
 
   .mat-sys-typescale-emphasized-body-large {
+    font-family: var(--mat-sys-typescale-emphasized-body-large-font);
     font-size: var(--mat-sys-typescale-emphasized-body-large-size);
     font-weight: var(--mat-sys-typescale-emphasized-body-large-weight);
     line-height: var(--mat-sys-typescale-emphasized-body-large-line-height);
@@ -1053,6 +1078,7 @@
   }
 
   .mat-sys-typescale-emphasized-body-medium {
+    font-family: var(--mat-sys-typescale-emphasized-body-medium-font);
     font-size: var(--mat-sys-typescale-emphasized-body-medium-size);
     font-weight: var(--mat-sys-typescale-emphasized-body-medium-weight);
     line-height: var(--mat-sys-typescale-emphasized-body-medium-line-height);
@@ -1060,6 +1086,7 @@
   }
 
   .mat-sys-typescale-emphasized-body-small {
+    font-family: var(--mat-sys-typescale-emphasized-body-small-font);
     font-size: var(--mat-sys-typescale-emphasized-body-small-size);
     font-weight: var(--mat-sys-typescale-emphasized-body-small-weight);
     line-height: var(--mat-sys-typescale-emphasized-body-small-line-height);
@@ -1067,6 +1094,7 @@
   }
 
   .mat-sys-typescale-emphasized-label-large {
+    font-family: var(--mat-sys-typescale-emphasized-label-large-font);
     font-size: var(--mat-sys-typescale-emphasized-label-large-size);
     font-weight: var(--mat-sys-typescale-emphasized-label-large-weight);
     line-height: var(--mat-sys-typescale-emphasized-label-large-line-height);
@@ -1074,6 +1102,7 @@
   }
 
   .mat-sys-typescale-emphasized-label-medium {
+    font-family: var(--mat-sys-typescale-emphasized-label-medium-font);
     font-size: var(--mat-sys-typescale-emphasized-label-medium-size);
     font-weight: var(--mat-sys-typescale-emphasized-label-medium-weight);
     line-height: var(--mat-sys-typescale-emphasized-label-medium-line-height);
@@ -1081,6 +1110,7 @@
   }
 
   .mat-sys-typescale-emphasized-label-small {
+    font-family: var(--mat-sys-typescale-emphasized-label-small-font);
     font-size: var(--mat-sys-typescale-emphasized-label-small-size);
     font-weight: var(--mat-sys-typescale-emphasized-label-small-weight);
     line-height: var(--mat-sys-typescale-emphasized-label-small-line-height);

@@ -3,7 +3,6 @@ import {
   computed, nextTick, onBeforeUnmount, onMounted, ref, useAttrs, useId, watch,
 } from 'vue';
 import MatInputBase from './MatInputBase.vue';
-import MatIcon from './mat-icon/MatIcon.vue';
 import useComponentColor from './use-component-color';
 
 defineOptions({
@@ -308,13 +307,7 @@ function handleModelValue(value) {
         v-if="$slots.leading"
         class="mat-text-input__icon mat-text-input__leading"
       >
-        <MatIcon
-          as="span"
-          :optical-size="24"
-          size="24px"
-        >
-          <slot name="leading" />
-        </MatIcon>
+        <slot name="leading" />
       </span>
 
       <component
@@ -378,13 +371,7 @@ function handleModelValue(value) {
         v-if="$slots.trailing"
         class="mat-text-input__icon mat-text-input__trailing"
       >
-        <MatIcon
-          as="span"
-          :optical-size="24"
-          size="24px"
-        >
-          <slot name="trailing" />
-        </MatIcon>
+        <slot name="trailing" />
       </span>
     </div>
 

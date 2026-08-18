@@ -768,32 +768,23 @@ describe('MatMenu', () => {
     await items[0].trigger('keydown', { key: 'ArrowDown' });
     await items[1].trigger('keydown', { key: 'ArrowDown' });
 
-    expect(document.activeElement).toBe(items[2].element);
-  });
+   expect(document.activeElement).toBe(items[2].element);
+ });
 
-  it('只用统一 MatIcon 承载 leading Slot', () => {
+  it('leading Slot 直接承载内容且不产生多余 MatIcon 包装', () => {
     const wrapper = mount(MatMenuItem, {
-      global: {
-        provide: {
-          [MAT_UI_KEY]: {
-            defaults: {},
-            iconClass: 'material-symbols-outlined',
-            useCursor: false,
-          },
-        },
-      },
       slots: {
         default: '新建文件',
-        leading: 'note_add',
+        leading: '<span class="custom-leading">note_add</span>',
         trailing: 'Ctrl+N',
       },
     });
     const leading = wrapper.get('[data-mat-item-content-leading]');
-    const icon = leading.get('.mat-icon');
     const trailing = wrapper.get('[data-mat-item-content-trailing]');
 
-    expect(icon.element.tagName).toBe('SPAN');
-    expect(icon.text()).toBe('note_add');
+    expect(leading.element.tagName).toBe('SPAN');
+    expect(leading.find('.mat-icon').exists()).toBe(false);
+    expect(leading.find('.custom-leading').exists()).toBe(true);
     expect(trailing.find('.mat-icon').exists()).toBe(false);
   });
 

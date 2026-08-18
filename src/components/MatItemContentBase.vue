@@ -1,5 +1,4 @@
 <script setup>
-import MatIcon from './mat-icon/MatIcon.vue';
 
 defineOptions({
   name: 'MatItemContentBase',
@@ -22,10 +21,6 @@ defineProps({
     default: false,
   },
   presentationSlots: {
-    type: Boolean,
-    default: false,
-  },
-  leadingIcon: {
     type: Boolean,
     default: false,
   },
@@ -60,15 +55,7 @@ defineProps({
       :class="`${namespace}__leading`"
       :inert="presentationSlots ? '' : undefined"
     >
-      <MatIcon
-        v-if="leadingIcon"
-        as="span"
-        :optical-size="20"
-        size="var(--mat-item-icon-size)"
-      >
-        <slot name="leading" />
-      </MatIcon>
-      <slot v-else name="leading" />
+      <slot name="leading" />
     </span>
 
     <span data-mat-item-content-text :class="`${namespace}__text`">

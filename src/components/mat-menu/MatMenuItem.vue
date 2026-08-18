@@ -166,7 +166,6 @@ onBeforeUnmount(() => {
         namespace="mat-menu-item-content"
         label-typography-class="mat-sys-typescale-label-large"
         :line-count="$slots.supporting ? 2 : 1"
-        leading-icon
         supporting-typography-class="mat-sys-typescale-body-small"
         trailing-typography-class="mat-sys-typescale-label-large"
       >

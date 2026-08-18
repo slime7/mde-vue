@@ -3994,10 +3994,6 @@ var Yr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			type: Boolean,
 			default: !1
 		},
-		leadingIcon: {
-			type: Boolean,
-			default: !1
-		},
 		labelTypographyClass: {
 			type: String,
 			required: !0
@@ -4026,15 +4022,7 @@ var Yr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				"data-mat-item-content-leading": "",
 				class: v(`${e.namespace}__leading`),
 				inert: e.presentationSlots ? "" : void 0
-			}, [e.leadingIcon ? (T(), a(pt, {
-				key: 0,
-				as: "span",
-				"optical-size": 20,
-				size: "var(--mat-item-icon-size)"
-			}, {
-				default: H(() => [M(t.$slots, "leading", {}, void 0, !0)]),
-				_: 3
-			})) : M(t.$slots, "leading", { key: 1 }, void 0, !0)], 10, Zr)) : o("", !0),
+			}, [M(t.$slots, "leading", {}, void 0, !0)], 10, Zr)) : o("", !0),
 			c("span", {
 				"data-mat-item-content-text": "",
 				class: v(`${e.namespace}__text`)
@@ -4062,7 +4050,7 @@ var Yr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}, [M(t.$slots, "trailing", {}, void 0, !0)], 10, Qr)) : o("", !0)
 		], 10, Xr));
 	}
-}), [["__scopeId", "data-v-2d67bd35"]]), ei = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatListItemContent" }, {
+}), [["__scopeId", "data-v-9cd359ef"]]), ei = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatListItemContent" }, {
 	__name: "MatListItemContent",
 	props: {
 		lineCount: {
@@ -6377,25 +6365,25 @@ var fa = {
 	},
 	emits: { "update:modelValue": (e) => typeof e == "string" },
 	setup(e, { emit: t }) {
-		let n = e, r = t, l = ee(), f = k(!1), p = k(n.modelValue), m = k(), h = R(), b = `${h}-supporting`, S = i(() => l.id || h), { colorStyle: w } = lt(i(() => n.color)), E = i(() => !!l.placeholder), D = i(() => n.control === "custom" ? n.customFocused : f.value), O = i(() => D.value || p.value.length > 0 || E.value), A = i(() => n.error ? n.errorText : n.supportingText), j = i(() => !!A.value || n.maxLength !== void 0), P = i(() => {
+		let n = e, r = t, l = ee(), d = k(!1), f = k(n.modelValue), p = k(), m = R(), h = `${m}-supporting`, b = i(() => l.id || m), { colorStyle: S } = lt(i(() => n.color)), w = i(() => !!l.placeholder), E = i(() => n.control === "custom" ? n.customFocused : d.value), D = i(() => E.value || f.value.length > 0 || w.value), O = i(() => n.error ? n.errorText : n.supportingText), A = i(() => !!O.value || n.maxLength !== void 0), j = i(() => {
 			let e = [l["aria-describedby"]];
-			return j.value && e.push(b), e.filter(Boolean).join(" ") || void 0;
-		}), F = i(() => [w.value, l.style]), L = /* @__PURE__ */ new Set([
+			return A.value && e.push(h), e.filter(Boolean).join(" ") || void 0;
+		}), P = i(() => [S.value, l.style]), F = /* @__PURE__ */ new Set([
 			"aria-describedby",
 			"aria-hidden",
 			"block",
 			"class",
 			"inert",
 			"style"
-		]), z = i(() => Object.fromEntries(Object.entries(l).filter(([e]) => !L.has(e)))), V, U;
-		function W(e) {
+		]), L = i(() => Object.fromEntries(Object.entries(l).filter(([e]) => !F.has(e)))), z, V;
+		function U(e) {
 			return Number.parseFloat(e) || 0;
 		}
-		function G() {
-			let e = m.value?.getInput();
+		function W() {
+			let e = p.value?.getInput();
 			if (!(e instanceof HTMLTextAreaElement)) return;
 			e.style.resize = n.noResize ? "none" : "";
-			let t = getComputedStyle(e), r = W(t.lineHeight) || 24, i = W(t.paddingBlockStart || t.paddingTop) + W(t.paddingBlockEnd || t.paddingBottom);
+			let t = getComputedStyle(e), r = U(t.lineHeight) || 24, i = U(t.paddingBlockStart || t.paddingTop) + U(t.paddingBlockEnd || t.paddingBottom);
 			if (e.style.minBlockSize = `${n.resizeMinRows * r + i}px`, !n.autoGrow) {
 				e.style.blockSize = "", e.style.height = "", e.style.overflowY = "";
 				return;
@@ -6405,15 +6393,15 @@ var fa = {
 			let l = e.scrollHeight, u = Math.max(s, Math.min(l, c));
 			e.style.blockSize = `${u}px`, e.style.overflowY = "auto";
 		}
-		function te() {
-			_(G);
+		function G() {
+			_(W);
 		}
-		function K(e) {
+		function te(e) {
 			let t = e[0]?.contentRect.width;
-			t !== U && (U = t, te());
+			t !== V && (V = t, G());
 		}
 		B(() => n.modelValue, (e) => {
-			p.value = e, te();
+			f.value = e, G();
 		}), B(() => [
 			n.autoGrow,
 			n.label,
@@ -6421,16 +6409,16 @@ var fa = {
 			n.noResize,
 			n.resizeMinRows,
 			n.rows
-		], te), C(() => {
-			G(), !(n.control === "custom" || typeof globalThis.ResizeObserver != "function") && (V = new globalThis.ResizeObserver(K), V.observe(m.value.getInput()));
+		], G), C(() => {
+			W(), !(n.control === "custom" || typeof globalThis.ResizeObserver != "function") && (z = new globalThis.ResizeObserver(te), z.observe(p.value.getInput()));
 		}), x(() => {
-			V?.disconnect();
+			z?.disconnect();
 		});
-		function q() {
-			n.control !== "custom" && m.value?.focusInput();
+		function K() {
+			n.control !== "custom" && p.value?.focusInput();
 		}
-		function J(e) {
-			p.value = e, r("update:modelValue", e), te();
+		function q(e) {
+			f.value = e, r("update:modelValue", e), G();
 		}
 		return (t, n) => (T(), s("div", {
 			class: v(["mat-text-input mat-sys-typescale-body-large", [
@@ -6438,50 +6426,43 @@ var fa = {
 				`mat-text-input--${e.variant}`,
 				`mat-text-input--${e.control}`,
 				{
-					"mat-text-input--floating": O.value,
-					"mat-text-input--focused": D.value,
+					"mat-text-input--floating": D.value,
+					"mat-text-input--focused": E.value,
 					"mat-text-input--error": e.error,
 					"mat-text-input--disabled": e.disabled
 				}
 			]]),
-			style: y(F.value),
+			style: y(P.value),
 			inert: t.$attrs.inert,
 			"aria-hidden": t.$attrs["aria-hidden"]
 		}, [c("div", Sa, [
-			e.variant === "outlined" ? (T(), s("fieldset", Ca, [O.value && e.label ? (T(), s("legend", wa, [u(I(e.label), 1), e.required ? (T(), s("span", Ta, " *")) : o("", !0)])) : o("", !0)])) : o("", !0),
+			e.variant === "outlined" ? (T(), s("fieldset", Ca, [D.value && e.label ? (T(), s("legend", wa, [u(I(e.label), 1), e.required ? (T(), s("span", Ta, " *")) : o("", !0)])) : o("", !0)])) : o("", !0),
 			e.variant === "filled" ? (T(), s("span", Ea)) : o("", !0),
-			t.$slots.leading ? (T(), s("span", Da, [d(pt, {
-				as: "span",
-				"optical-size": 24,
-				size: "24px"
-			}, {
-				default: H(() => [M(t.$slots, "leading", {}, void 0, !0)]),
-				_: 3
-			})])) : o("", !0),
+			t.$slots.leading ? (T(), s("span", Da, [M(t.$slots, "leading", {}, void 0, !0)])) : o("", !0),
 			(T(), a(N(e.control === "custom" ? "div" : "label"), {
 				class: "mat-text-input__main",
-				for: e.control === "custom" ? void 0 : S.value,
-				onClick: q
+				for: e.control === "custom" ? void 0 : b.value,
+				onClick: K
 			}, {
 				default: H(() => [e.label ? (T(), s("span", {
 					key: 0,
-					class: v(["mat-text-input__label", O.value ? "mat-sys-typescale-body-small" : "mat-sys-typescale-body-large"])
+					class: v(["mat-text-input__label", D.value ? "mat-sys-typescale-body-small" : "mat-sys-typescale-body-large"])
 				}, [u(I(e.label), 1), e.required ? (T(), s("span", Oa, " *")) : o("", !0)], 2)) : o("", !0), c("span", ka, [
 					e.prefixText ? (T(), s("span", Aa, I(e.prefixText), 1)) : o("", !0),
 					e.control === "custom" ? M(t.$slots, "control", {
 						key: 1,
-						controlId: S.value,
-						describedBy: P.value
+						controlId: b.value,
+						describedBy: j.value
 					}, void 0, !0) : (T(), a(Kn, g({
 						key: 2,
 						ref_key: "controlElement",
-						ref: m
-					}, z.value, {
+						ref: p
+					}, L.value, {
 						class: "mat-text-input__control",
-						"aria-describedby": P.value,
+						"aria-describedby": j.value,
 						"aria-invalid": e.error ? "true" : void 0,
 						disabled: e.disabled,
-						id: S.value,
+						id: b.value,
 						"max-length": e.maxLength,
 						readonly: e.readonly,
 						required: e.required,
@@ -6489,9 +6470,9 @@ var fa = {
 						type: e.control === "input" ? e.type : void 0,
 						control: e.control,
 						"model-value": e.modelValue,
-						onBlur: n[0] ||= (e) => f.value = !1,
-						onFocus: n[1] ||= (e) => f.value = !0,
-						"onUpdate:modelValue": J
+						onBlur: n[0] ||= (e) => d.value = !1,
+						onFocus: n[1] ||= (e) => d.value = !0,
+						"onUpdate:modelValue": q
 					}), null, 16, [
 						"aria-describedby",
 						"aria-invalid",
@@ -6509,21 +6490,14 @@ var fa = {
 				])]),
 				_: 3
 			}, 8, ["for"])),
-			t.$slots.trailing ? (T(), s("span", Ma, [d(pt, {
-				as: "span",
-				"optical-size": 24,
-				size: "24px"
-			}, {
-				default: H(() => [M(t.$slots, "trailing", {}, void 0, !0)]),
-				_: 3
-			})])) : o("", !0)
-		]), j.value ? (T(), s("span", {
+			t.$slots.trailing ? (T(), s("span", Ma, [M(t.$slots, "trailing", {}, void 0, !0)])) : o("", !0)
+		]), A.value ? (T(), s("span", {
 			key: 0,
-			id: b,
+			id: h,
 			class: "mat-text-input__supporting mat-sys-typescale-body-small"
-		}, [c("span", Na, I(A.value), 1), e.maxLength === void 0 ? o("", !0) : (T(), s("span", Pa, I(e.modelValue.length) + " / " + I(e.maxLength), 1))])) : o("", !0)], 14, xa));
+		}, [c("span", Na, I(O.value), 1), e.maxLength === void 0 ? o("", !0) : (T(), s("span", Pa, I(e.modelValue.length) + " / " + I(e.maxLength), 1))])) : o("", !0)], 14, xa));
 	}
-}), [["__scopeId", "data-v-eaafae98"]]), Ia = ["filled", "outlined"], La = {
+}), [["__scopeId", "data-v-cee9b077"]]), Ia = ["filled", "outlined"], La = {
 	modelValue: {
 		type: String,
 		default: ""
@@ -7059,7 +7033,6 @@ var fa = {
 				namespace: "mat-menu-item-content",
 				"label-typography-class": "mat-sys-typescale-label-large",
 				"line-count": e.$slots.supporting ? 2 : 1,
-				"leading-icon": "",
 				"supporting-typography-class": "mat-sys-typescale-body-small",
 				"trailing-typography-class": "mat-sys-typescale-label-large"
 			}, l({
@@ -7093,7 +7066,7 @@ var fa = {
 			"use-cursor"
 		]), e.$slots.submenu ? M(e.$slots, "submenu", { key: 0 }, void 0, !0) : o("", !0)]));
 	}
-}), [["__scopeId", "data-v-ef8ad31a"]]), Ua = ["aria-labelledby"], Wa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-cac5ebfb"]]), Ua = ["aria-labelledby"], Wa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatMenuGroup",
 	inheritAttrs: !1
 }, {

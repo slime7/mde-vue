@@ -3,6 +3,8 @@ import {
   describe, expect, it, vi,
 } from 'vitest';
 import MatInputBase from '../src/components/MatInputBase.vue';
+import MatMenu from '../src/components/mat-menu/MatMenu.vue';
+import MatMenuItem from '../src/components/mat-menu/MatMenuItem.vue';
 import MatTextField from '../src/components/mat-text-field/MatTextField.vue';
 import MatTextarea from '../src/components/mat-textarea/MatTextarea.vue';
 import MAT_UI_KEY from '../src/mat-ui-context';
@@ -420,24 +422,15 @@ describe('文本输入组件', () => {
     expect(disconnect).toHaveBeenCalledOnce();
   });
 
-  it('用统一 MatIcon 承载前后图标 Slot', () => {
+  it('前后 Slot 直接承载内容且不产生多余 MatIcon 包装', () => {
     const wrapper = mount(MatTextField, {
-      global: {
-        provide: {
-          [MAT_UI_KEY]: {
-            defaults: {},
-            iconClass: 'material-symbols-outlined',
-            useCursor: false,
-          },
-        },
-      },
       props: {
         modelValue: '',
         label: '邮箱',
       },
       slots: {
-        leading: 'mail',
-        trailing: 'alternate_email',
+        leading: '<span class="custom-leading">mail</span>',
+        trailing: '<button class="custom-btn">action</button>',
       },
     });
 
@@ -446,7 +439,44 @@ describe('文本输入组件', () => {
 
     expect(leading.element.tagName).toBe('SPAN');
     expect(trailing.element.tagName).toBe('SPAN');
-    expect(leading.text()).toBe('mail');
-    expect(trailing.text()).toBe('alternate_email');
+    expect(leading.find('.mat-icon').exists()).toBe(false);
+    expect(trailing.find('.mat-icon').exists()).toBe(false);
+    expect(leading.find('.custom-leading').exists()).toBe(true);
+    expect(trailing.find('.custom-btn').exists()).toBe(true);
+  });
+
+  it('在 trailing 插槽中嵌套 MatMenu 时不污染菜单项字体和文本', () => {
+    const wrapper = mount(MatTextField, {
+      attachTo: document.body,
+      props: {
+        modelValue: '',
+        label: '搜索',
+      },
+      slots: {
+        trailing: {
+          components: { MatMenu, MatMenuItem },
+          template: `
+            <mat-menu :model-value="true">
+              <template #activator>
+                <button class="filter-trigger">Filter</button>
+              </template>
+              <mat-menu-item>search</mat-menu-item>
+              <mat-menu-item>settings</mat-menu-item>
+            </mat-menu>
+          `,
+        },
+      },
+    });
+
+    const trailing = wrapper.get('.mat-text-input__trailing');
+    const items = trailing.findAll('[data-mat-menu-item]');
+
+    expect(trailing.find('.mat-icon').exists()).toBe(false);
+    expect(items).toHaveLength(2);
+    expect(items[0].text()).toBe('search');
+    expect(items[1].text()).toBe('settings');
+    expect(items[0].find('.material-symbols-outlined').exists()).toBe(false);
+
+    wrapper.unmount();
   });
 });
