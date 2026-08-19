@@ -53,6 +53,7 @@ llms: false
 - Input base：`docs/site/components/input-base.md`
 - Text field 与 Textarea：`docs/site/components/text-field.md`
 - Menu 与 Menu item：`docs/site/components/menu.md`
+- Docked container：`docs/site/components/docked-container.md`
 - Scroll area：`docs/site/components/scroll-area.md`
 - Toolbar：`docs/site/components/toolbar.md`
 - Tooltip：`docs/site/components/tooltip.md`

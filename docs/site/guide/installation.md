@@ -135,6 +135,7 @@ import {
   MatChip,
   MatChipSet,
   MatContainer,
+  MatDockedContainer,
   MatDialog,
   MatDivider,
   MatFab,

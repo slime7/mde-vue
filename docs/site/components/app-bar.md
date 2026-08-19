@@ -20,6 +20,7 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 ### `variant`
 
 :::: details 查看示例代码
+
 ::: code-group
 
 <<< @/examples/app-bar/AppBarVariantExample.vue#template [template]
@@ -40,6 +41,7 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 ### `content` 与默认 Slot
 
 :::: details 查看示例代码
+
 ::: code-group
 
 <<< @/examples/app-bar/AppBarContentExample.vue#template [template]
@@ -60,6 +62,7 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 ### `align`
 
 :::: details 查看示例代码
+
 ::: code-group
 
 <<< @/examples/app-bar/AppBarAlignExample.vue#template [template]
@@ -78,6 +81,7 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 ### `leading`、`subtitle` 与 `trailing` Slots
 
 :::: details 查看示例代码
+
 ::: code-group
 
 <<< @/examples/app-bar/AppBarSlotsExample.vue#template [template]
@@ -98,6 +102,7 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 滚动示例把容器元素作为显式 `scrollTarget`。在最新浏览器中缓慢滚动，可以观察视觉高度、标题、subtitle 和背景色共享同一个滚动进度；折叠不会改写滚动容器的可滚动高度，因此越过动画终点后仍可正常继续滚动。
 
 :::: details 查看示例代码
+
 ::: code-group
 
 <<< @/examples/app-bar/AppBarScrollExample.vue#template [template]

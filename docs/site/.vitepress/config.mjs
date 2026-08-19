@@ -141,6 +141,7 @@ export default defineConfig({
               { text: 'App bar 应用栏', link: '/components/app-bar' },
               { text: 'Bottom sheet 底部面板', link: '/components/bottom-sheet' },
               { text: 'Container 响应式容器', link: '/components/container' },
+              { text: 'Docked container 浮动容器', link: '/components/docked-container' },
               { text: 'Menu 菜单', link: '/components/menu' },
               { text: 'Navigation 导航', link: '/components/navigation-rail' },
               { text: 'Panes 布局面板', link: '/components/panes' },

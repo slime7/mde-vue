@@ -164,6 +164,7 @@ import {
   MatChip,
   MatChipSet,
   MatContainer,
+  MatDockedContainer,
   MatDialog,
   MatDivider,
   MatFab,
@@ -10989,6 +10990,7 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 ### `variant`
 
 :::: details 查看示例代码
+
 ::: code-group
 
 ```vue
@@ -11050,6 +11052,7 @@ const query = ref('');
 ### `content` 与默认 Slot
 
 :::: details 查看示例代码
+
 ::: code-group
 
 ```vue
@@ -11119,6 +11122,7 @@ const query = ref('');
 ### `align`
 
 :::: details 查看示例代码
+
 ::: code-group
 
 ```vue
@@ -11181,6 +11185,7 @@ const query = ref('');
 ### `leading`、`subtitle` 与 `trailing` Slots
 
 :::: details 查看示例代码
+
 ::: code-group
 
 ```vue
@@ -11227,6 +11232,7 @@ const query = ref('');
 滚动示例把容器元素作为显式 `scrollTarget`。在最新浏览器中缓慢滚动，可以观察视觉高度、标题、subtitle 和背景色共享同一个滚动进度；折叠不会改写滚动容器的可滚动高度，因此越过动画终点后仍可正常继续滚动。
 
 :::: details 查看示例代码
+
 ::: code-group
 
 ```vue
@@ -12444,6 +12450,470 @@ import MenuOpenAnchorExample from '../examples/menu/MenuOpenAnchorExample.vue';
 import MenuOffsetExample from '../examples/menu/MenuOffsetExample.vue';
 import MenuScrimExample from '../examples/menu/MenuScrimExample.vue';
 import MenuVariantExample from '../examples/menu/MenuVariantExample.vue';
+</script>
+
+# Docked container 浮动容器
+
+## 组件简介
+
+`<mat-docked-container>` 的组件导出名是 `MatDockedContainer`。它结合了 Menu 的锚点弹出定位能力与 Dialog 的结构化内容布局，使用原生 Popover API 在 top layer 显示依附于锚点或视口坐标的浮动容器表面。组件支持 standard 与 vibrant 配色变体、透明全屏遮罩、内置尺寸预设（small、medium、large）与自定义宽度，并提供 `headline`、`actions` 和 `activator` 插槽。
+
+## 示例
+
+浮动容器通过 `v-model` 控制显示状态，支持使用元素 id、`activator` Slot 或视口坐标形式的 `anchor` 进行锚定。
+
+### `modelValue` 与元素 `anchor`
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="docked-container-example">
+    <mat-btn
+      id="docked-anchor-trigger"
+      variant="filled"
+      @click="open = !open"
+    >
+      打开锚点容器
+    </mat-btn>
+
+    <mat-docked-container
+      v-model="open"
+      anchor="docked-anchor-trigger"
+      headline="快捷设置"
+    >
+      <p>浮动容器依附于锚点元素弹出，支持任意自定义内容。</p>
+      <template #actions>
+        <mat-spacer />
+        <mat-btn variant="text" @click="open = false">
+          完成
+        </mat-btn>
+      </template>
+    </mat-docked-container>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
+```vue
+<style scoped>
+.docked-container-example {
+  min-block-size: 140px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Docked container modelValue 与元素 anchor 预览">
+    <DockedContainerOpenAnchorExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `activator` Slot
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="docked-container-example">
+    <mat-docked-container v-model="open">
+      <template #activator>
+        <mat-btn
+          variant="outlined"
+          icon="settings"
+          @click="open = !open"
+        >
+          设置选项
+        </mat-btn>
+      </template>
+
+      <template #headline>
+        偏好设置
+      </template>
+
+      <div class="docked-settings-content">
+        <mat-switch v-model="notifications" label="启用桌面通知" />
+      </div>
+
+      <template #actions>
+        <mat-spacer />
+        <mat-btn variant="filled-tonal" @click="open = false">
+          确定
+        </mat-btn>
+      </template>
+    </mat-docked-container>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+const notifications = ref(true);
+</script>
+```
+```vue
+<style scoped>
+.docked-container-example {
+  min-block-size: 140px;
+}
+
+.docked-settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Docked container activator Slot 预览">
+    <DockedContainerActivatorSlotExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 尺寸预设与自定义 `width`
+
+支持使用 `size` 属性快速切换 `small`（280px）、`medium`（328px，标准时间/日期选择器尺寸）、`large`（560px）等预设尺寸，也可直接设置 `width`。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="docked-size-examples">
+    <mat-docked-container v-model="openSmall" size="small" headline="Small (280px)">
+      <template #activator>
+        <mat-btn variant="outlined" @click="openSmall = !openSmall">
+          Small (280px)
+        </mat-btn>
+      </template>
+      <p>紧凑型尺寸，适合简要操作或单项输入。</p>
+    </mat-docked-container>
+
+    <mat-docked-container v-model="openMedium" size="medium" headline="Medium (328px)">
+      <template #activator>
+        <mat-btn variant="outlined" @click="openMedium = !openMedium">
+          Medium (328px)
+        </mat-btn>
+      </template>
+      <p>标准选择器尺寸，符合 MD3 时间/日期选择规范。</p>
+    </mat-docked-container>
+
+    <mat-docked-container v-model="openLarge" size="large" headline="Large (560px)">
+      <template #activator>
+        <mat-btn variant="outlined" @click="openLarge = !openLarge">
+          Large (560px)
+        </mat-btn>
+      </template>
+      <p>宽幅尺寸，适合复杂表单或横向排版。</p>
+    </mat-docked-container>
+
+    <mat-docked-container v-model="openCustom" width="400px" headline="自定义 400px">
+      <template #activator>
+        <mat-btn variant="outlined" @click="openCustom = !openCustom">
+          自定义 400px
+        </mat-btn>
+      </template>
+      <p>显式传入 width 可以精确指定宽度。</p>
+    </mat-docked-container>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const openSmall = ref(false);
+const openMedium = ref(false);
+const openLarge = ref(false);
+const openCustom = ref(false);
+</script>
+```
+```vue
+<style scoped>
+.docked-size-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-block-size: 140px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Docked container 尺寸预设与自定义 width 预览">
+    <DockedContainerSizeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 时间选择器浮动面板
+
+组合 `headline` 标题、自定义时间表盘及底部 `actions` 操作栏，实现符合 Material 3 规范的时间选择浮动容器。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="docked-time-picker-example">
+    <mat-docked-container
+      v-model="open"
+      size="medium"
+      headline="Select time"
+    >
+      <template #activator>
+        <mat-btn
+          variant="filled-tonal"
+          icon="schedule"
+          @click="open = !open"
+        >
+          {{ hour }}:{{ minute }} {{ period }}
+        </mat-btn>
+      </template>
+
+      <div class="time-picker-body">
+        <div class="time-inputs-row">
+          <div class="time-input-box active">
+            {{ hour }}
+          </div>
+          <span class="time-separator">:</span>
+          <div class="time-input-box">
+            {{ minute }}
+          </div>
+          <div class="time-period-toggle">
+            <button
+              type="button"
+              :class="{ selected: period === 'AM' }"
+              @click="period = 'AM'"
+            >
+              AM
+            </button>
+            <button
+              type="button"
+              :class="{ selected: period === 'PM' }"
+              @click="period = 'PM'"
+            >
+              PM
+            </button>
+          </div>
+        </div>
+
+        <div class="time-dial-placeholder">
+          <div class="time-dial-circle">
+            <span class="dial-num num-12">12</span>
+            <span class="dial-num num-3">3</span>
+            <span class="dial-num num-6">6</span>
+            <span class="dial-num num-9">9</span>
+            <div class="dial-hand" />
+          </div>
+        </div>
+      </div>
+
+      <template #actions>
+        <mat-btn
+          variant="standard"
+          icon="keyboard"
+          aria-label="切换到输入模式"
+        />
+        <mat-spacer />
+        <mat-btn variant="text" @click="open = false">
+          Cancel
+        </mat-btn>
+        <mat-btn variant="text" @click="open = false">
+          OK
+        </mat-btn>
+      </template>
+    </mat-docked-container>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+const hour = ref('07');
+const minute = ref('00');
+const period = ref('AM');
+</script>
+```
+```vue
+<style scoped>
+.docked-time-picker-example {
+  min-block-size: 200px;
+}
+
+.time-picker-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+.time-inputs-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.time-input-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 80px;
+  block-size: 64px;
+  font-size: 2rem;
+  background: var(--mat-sys-color-surface-container-highest);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+
+.time-input-box.active {
+  color: var(--mat-sys-color-on-primary-container);
+  background: var(--mat-sys-color-primary-container);
+}
+
+.time-separator {
+  font-size: 2rem;
+}
+
+.time-period-toggle {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--mat-sys-color-outline);
+  border-radius: var(--mat-sys-shape-corner-small);
+}
+
+.time-period-toggle button {
+  padding: 6px 12px;
+  font-size: var(--mat-sys-typescale-label-medium-size);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.time-period-toggle button.selected {
+  background: var(--mat-sys-color-tertiary-container);
+}
+
+.time-dial-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 200px;
+  block-size: 200px;
+  background: var(--mat-sys-color-surface-container-highest);
+  border-radius: var(--mat-sys-shape-corner-full);
+}
+
+.time-dial-circle {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.dial-num {
+  position: absolute;
+  font-size: var(--mat-sys-typescale-body-small-size);
+}
+
+.num-12 {
+  top: 8px;
+  left: 50%;
+  translate: -50% 0;
+}
+
+.num-3 {
+  top: 50%;
+  right: 8px;
+  translate: 0 -50%;
+}
+
+.num-6 {
+  bottom: 8px;
+  left: 50%;
+  translate: -50% 0;
+}
+
+.num-9 {
+  top: 50%;
+  left: 8px;
+  translate: 0 -50%;
+}
+
+.dial-hand {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  inline-size: 2px;
+  block-size: 60px;
+  background: var(--mat-sys-color-primary);
+  transform-origin: top center;
+  rotate: 210deg;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Docked container 时间选择器浮动面板预览">
+    <DockedContainerTimePickerExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `modelValue` | `boolean` | `false` | 受控打开状态，支持 `v-model` |
+| `anchor` | `string \| [number, number] \| undefined` | `undefined` | 锚点元素 id 或 `[clientX, clientY]` 视口坐标；未提供时使用 `activator` 插槽 |
+| `offset` | `[number, number]` | `[0, 0]` | 相对锚点的 `[x, y]` 偏移像素 |
+| `width` | `number \| string \| undefined` | `undefined` | 自定义宽度；数字与纯数字字符串按 px 处理，显式设置时优先于 `size` |
+| `size` | `'small' \| 'medium' \| 'large' \| undefined` | `undefined` | 内置尺寸预设；`small` 为 280px，`medium` 为 328px，`large` 为 560px |
+| `headline` | `string \| undefined` | `undefined` | 快捷设置容器标题 |
+| `variant` | `'standard' \| 'vibrant' \| undefined` | `'standard'` | 配色形态 |
+| `color` | `string \| undefined` | `undefined` | 语义色或六位十六进制种子色 `#RRGGBB` |
+| `maxLength` | `number \| string \| undefined` | `undefined` | 容器最大块轴高度；数字与纯数字字符串按 px 处理 |
+| `scrim` | `boolean` | `true` | 是否使用透明帷幕拦截容器外部的指针交互并在点击时请求关闭 |
+
+## 事件
+
+| 事件名 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `boolean` | 容器请求打开或关闭时触发 |
+| `opened` | - | 展开过渡动画完成时触发 |
+| `closed` | - | 收起过渡动画完成且 DOM 清理后触发 |
+
+## Slots
+
+| 插槽名 | 说明 |
+| --- | --- |
+| `default` | 容器主体内容区域 |
+| `activator` | 触发器插槽；必须只渲染一个当前 document 中的 HTMLElement 根节点 |
+| `headline` | 标题插槽；优先于 `headline` 属性 |
+| `actions` | 底部操作栏插槽 |
+
+<script setup>
+import DockedContainerActivatorSlotExample from '../examples/docked-container/DockedContainerActivatorSlotExample.vue';
+import DockedContainerOpenAnchorExample from '../examples/docked-container/DockedContainerOpenAnchorExample.vue';
+import DockedContainerSizeExample from '../examples/docked-container/DockedContainerSizeExample.vue';
+import DockedContainerTimePickerExample from '../examples/docked-container/DockedContainerTimePickerExample.vue';
 </script>
 
 # Dialog 对话框
