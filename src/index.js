@@ -40,6 +40,7 @@ export { default as MatInputBase } from './components/MatInputBase.vue';
 export { default as MatMenu } from './components/mat-menu/MatMenu.vue';
 export { default as MatMenuGroup } from './components/mat-menu-group/MatMenuGroup.vue';
 export { default as MatMenuItem } from './components/mat-menu/MatMenuItem.vue';
+export { default as MatDockedContainer } from './components/mat-docked-container/MatDockedContainer.vue';
 export { default as MatDialog } from './components/mat-dialog/MatDialog.vue';
 export { default as MatBottomSheet } from './components/mat-bottom-sheet/MatBottomSheet.vue';
 export { default as MatSideSheet } from './components/mat-side-sheet/MatSideSheet.vue';

@@ -2096,6 +2096,97 @@ export interface MatMenuItemEmits {
 export type MatMenuItemComponent = DefineComponent<MatMenuItemProps, {}, {}, {}, {}, {}, {}, MatMenuItemEmits>;
 export declare const MatMenuItem: MatMenuItemComponent;
 
+export interface MatDockedContainerProps {
+  /**
+  * 受控打开状态，可使用 v-model。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  modelValue?: boolean;
+  /**
+  * 元素选择器或 `[clientX, clientY]` 视口坐标；未设置时使用 activator Slot。
+  *
+  * @type {string | [number, number] | undefined}
+  * @default undefined
+  */
+  anchor?: string | [number, number] | undefined;
+  /**
+  * 浮动容器相对锚点的 `[x, y]` 偏移像素。
+  *
+  * @type {[number, number]}
+  * @default [0, 0]
+  */
+  offset?: [number, number];
+  /**
+  * 首选宽度；数字与纯数字字符串按 px 处理，其他字符串须为合法 CSS 宽度值。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  width?: number | string | undefined;
+  /**
+  * 内置尺寸预设；可选值为 `small` (280px)、`medium` (328px)、`large` (560px)。
+  *
+  * @type {'small' | 'medium' | 'large' | undefined}
+  * @default undefined
+  */
+  size?: 'small' | 'medium' | 'large' | undefined;
+  /**
+  * 快捷设置容器标题。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  headline?: string | undefined;
+  /**
+  * 浮动容器配色形态；可选值为 `standard`、`vibrant`。
+  *
+  * @type {'standard' | 'vibrant' | undefined}
+  * @default undefined
+  */
+  variant?: 'standard' | 'vibrant' | undefined;
+  /**
+  * 语义色或六位十六进制种子色 `#RRGGBB`。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  color?: string | undefined;
+  /**
+  * 容器最大块轴长度；数字与纯数字字符串按 px 处理，其他字符串须为合法 CSS 长度。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  maxLength?: number | string | undefined;
+  /**
+  * 是否使用透明帷幕拦截容器外部的指针交互。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  scrim?: boolean;
+}
+
+export interface MatDockedContainerEmits {
+  /**
+  * 容器请求关闭时发出 false。
+  */
+  "update:modelValue": (payload: unknown) => unknown;
+  /**
+  * 展开进入动画完成后触发。
+  */
+  "opened": (payload: unknown) => unknown;
+  /**
+  * 收起退出动画完成后触发。
+  */
+  "closed": (payload: unknown) => unknown;
+}
+
+export type MatDockedContainerComponent = DefineComponent<MatDockedContainerProps, {}, {}, {}, {}, {}, {}, MatDockedContainerEmits>;
+export declare const MatDockedContainer: MatDockedContainerComponent;
+
 export interface MatDialogProps {
   /**
   * 受控打开状态，可使用 v-model。
@@ -3420,6 +3511,8 @@ declare module 'vue' {
     'mat-menu-group': typeof MatMenuGroup;
     MatMenuItem: typeof MatMenuItem;
     'mat-menu-item': typeof MatMenuItem;
+    MatDockedContainer: typeof MatDockedContainer;
+    'mat-docked-container': typeof MatDockedContainer;
     MatDialog: typeof MatDialog;
     'mat-dialog': typeof MatDialog;
     MatBottomSheet: typeof MatBottomSheet;

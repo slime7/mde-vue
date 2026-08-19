@@ -40,6 +40,7 @@ import MatInputBase from './components/MatInputBase.vue';
 import MatMenu from './components/mat-menu/MatMenu.vue';
 import MatMenuGroup from './components/mat-menu-group/MatMenuGroup.vue';
 import MatMenuItem from './components/mat-menu/MatMenuItem.vue';
+import MatDockedContainer from './components/mat-docked-container/MatDockedContainer.vue';
 import MatDialog from './components/mat-dialog/MatDialog.vue';
 import MatBottomSheet from './components/mat-bottom-sheet/MatBottomSheet.vue';
 import MatSideSheet from './components/mat-side-sheet/MatSideSheet.vue';
@@ -111,6 +112,7 @@ export const GLOBAL_COMPONENTS = [
   ['MatMenu', 'mat-menu', MatMenu],
   ['MatMenuGroup', 'mat-menu-group', MatMenuGroup],
   ['MatMenuItem', 'mat-menu-item', MatMenuItem],
+  ['MatDockedContainer', 'mat-docked-container', MatDockedContainer],
   ['MatDialog', 'mat-dialog', MatDialog],
   ['MatBottomSheet', 'mat-bottom-sheet', MatBottomSheet],
   ['MatSideSheet', 'mat-side-sheet', MatSideSheet],

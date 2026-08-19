@@ -7,7 +7,6 @@ import MatMenu from '../src/components/mat-menu/MatMenu.vue';
 import MatMenuItem from '../src/components/mat-menu/MatMenuItem.vue';
 import MatTextField from '../src/components/mat-text-field/MatTextField.vue';
 import MatTextarea from '../src/components/mat-textarea/MatTextarea.vue';
-import MAT_UI_KEY from '../src/mat-ui-context';
 
 function mockTextareaLayout(initialScrollHeight) {
   let scrollHeight = initialScrollHeight;

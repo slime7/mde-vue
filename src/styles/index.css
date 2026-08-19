@@ -342,6 +342,12 @@
     --mat-menu-group-space: 2px;
     --mat-menu-group-label-height: 32px;
 
+    /* Docked container component tokens */
+    --mat-docked-container-min-width: 280px;
+    --mat-docked-container-max-width: 560px;
+    --mat-docked-container-viewport-space: 8px;
+    --mat-docked-container-anchor-space: 4px;
+
     /* Panes component tokens */
     --mat-panes-divider-space: 24px;
     --mat-panes-handle-size: 48px;

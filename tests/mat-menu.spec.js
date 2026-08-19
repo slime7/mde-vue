@@ -768,8 +768,8 @@ describe('MatMenu', () => {
     await items[0].trigger('keydown', { key: 'ArrowDown' });
     await items[1].trigger('keydown', { key: 'ArrowDown' });
 
-   expect(document.activeElement).toBe(items[2].element);
- });
+    expect(document.activeElement).toBe(items[2].element);
+  });
 
   it('leading Slot 直接承载内容且不产生多余 MatIcon 包装', () => {
     const wrapper = mount(MatMenuItem, {
