@@ -436,7 +436,8 @@ single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌�
 - 选择模式使用 Space 或 Enter 请求选择。多操作模式把主操作与 trailing 内的启用控件纳入同一方向键顺序。
 - 键盘焦点环完整包围当前项目或独立操作，不会被相邻项目、多操作 trailing 区域或展开分组内容的边界遮挡。
 - selected 同时改变容器配色和形状。disabled 内容降低强调，不响应指针或键盘；减少动态效果偏好下关闭形状和状态层过渡。
-- `draggable` 只接管主指针长按：按住 500ms 后显示等尺寸占位和抬升预览，启动前移动超过 8px、提前释放或发生 pointercancel 时保持普通点击和滚动。
+- `draggable` 只接管主指针长按：按住 500ms 后显示等尺寸的 dragged 背景占位容器和抬升预览，预览自身也切换为 dragged 容器色；启动前移动超过 8px、提前释放或发生 pointercancel 时保持普通点击和滚动。
+- 只有实际进入拖动后才会清除现有文本选区并在文档范围禁止新的文本选择；完成、取消、失焦、关闭 `draggable` 或组件卸载后立即恢复。
 - 排序只在连续的有效直属 MatListItem 区段内进行。Divider、MatListGroup、禁用项、缺少 value 或 value 重复的项目是固定边界；multi-action 的 trailing 控件不会启动拖动。
 - `fromIndex` 和 `toIndex` 按全部直属 MatListItem 计算，不包含 Divider 与 MatListGroup。位置没有变化时不触发 `reorder`；拖动成功后抑制同一次 click 或选择请求。
 - 拖动支持鼠标、触控笔和触摸主指针，不提供键盘排序或跨 List 拖放。Escape、窗口失焦、关闭 `draggable` 和组件卸载会取消当前拖动。
