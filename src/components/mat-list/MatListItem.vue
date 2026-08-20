@@ -16,7 +16,7 @@ defineOptions({
 
 const props = defineProps({
   /**
-   * 选择模式中的项目值。
+   * 选择或拖动排序中的稳定项目值。
    *
    * @type {string | number | boolean | undefined}
    * @default undefined

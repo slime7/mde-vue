@@ -73,6 +73,28 @@ order: 100
   </DocsPreview>
 </ClientOnly>
 
+### `draggable`
+
+设置 `draggable` 后，按住未禁用的直属 MatListItem 500ms 可开始拖动。每个可排序项目必须提供稳定且唯一的 `value`；应用在 `reorder` 事件中更新原数组，List 本身不会修改业务数据。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListDraggableExample.vue#template [template]
+
+<<< @/examples/list/ListDraggableExample.vue#script [script]
+
+<<< @/examples/list/ListDraggableExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="List 长按拖动排序预览">
+    <ListDraggableExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `selected`
 
 选择模式必须同时提供 `interaction`、项目 `value`，并在 `select` 事件中回写值。
@@ -207,6 +229,26 @@ order: 100
   </DocsPreview>
 </ClientOnly>
 
+### ListItem 尺寸
+
+一行项目至少为 48px。24px 图标维持 48px，40px 头像、56px 媒体和 64px 媒体分别把项目撑高至 56px、72px 和 88px；更大的自定义 Slot 内容继续自然扩展。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListItemSizesExample.vue#template [template]
+
+<<< @/examples/list/ListItemSizesExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="ListItem 内容尺寸预览">
+    <ListItemSizesExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### MatList 默认 Slot
 
 :::: details 查看示例代码
@@ -328,6 +370,7 @@ order: 100
 | `selected` | 基础值、基础值数组或 `null` | `null` | 受控选择值；single-select 使用单值，multi-select 使用数组 |
 | `expanded` | `(string \| number \| boolean)[]` | `[]` | 有值 MatListGroup 的受控展开值，可同时包含多个值 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 选择项的局部 container/on-container 色对；省略时使用 secondary 色族 |
+| `draggable` | `boolean` | `false` | 是否允许长按未禁用的直属 MatListItem 请求拖动排序 |
 
 选择模式的根元素使用 `role="listbox"`，应通过 `aria-label` 或 `aria-labelledby` 提供可访问名称。其他未消费的原生属性传递给根 `ul` 或 listbox `div`。
 
@@ -345,11 +388,11 @@ order: 100
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `value` | `string \| number \| boolean` | 未设置 | 选择模式中的项目值；选择模式下必须设置 |
+| `value` | `string \| number \| boolean` | 未设置 | 选择或拖动排序中的稳定项目值；对应模式下必须设置 |
 | `href` | `string` | 未设置 | 单操作或多操作模式下把主操作渲染为链接 |
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 主操作为 button 时的原生类型 |
 | `disabled` | `boolean` | `false` | 禁用主操作、选择和多操作 trailing 区域 |
-| `lines` | `1 \| 2 \| 3` | 按 Slots 推断 | 控制 56、72、88px 最小高度以及三行内容的顶部对齐 |
+| `lines` | `1 \| 2 \| 3` | 按 Slots 推断 | 控制 48、72、88px 最小高度以及三行内容的顶部对齐 |
 
 操作模式中未消费的原生属性传给主按钮或链接，可设置 `target`、`rel` 等链接属性；非交互和选择模式中传给项目根元素。`href` 在非交互或选择模式中会被忽略并发出开发警告。
 
@@ -359,6 +402,7 @@ order: 100
 | --- | --- | --- | --- |
 | `MatList` | `select` | `{ value, selected, nextSelected, originalEvent }` | 启用的选择项通过指针、Space 或 Enter 请求改变选择 |
 | `MatList` | `update:expanded` | `(string \| number \| boolean)[]` | 有值分组请求展开或收起，用于 `v-model:expanded` |
+| `MatList` | `reorder` | `{ value, fromIndex, toIndex, originalEvent }` | `draggable` 项目长按拖动并在新位置释放 |
 | `MatListItem` | `click` | 原生 `MouseEvent` | 单操作或多操作模式中的启用主操作被激活 |
 
 single-select 再次激活当前项不会取消选择，也不会发出 `select`。multi-select 每次激活都返回不修改原数组的新数组。`originalEvent` 是实际的 `MouseEvent` 或 `KeyboardEvent`。非交互模式没有自定义事件，trailing 中的独立控件使用自己的事件。MatListGroup 没有自定义事件；无值分组不会触发根 List 的 `update:expanded`。
@@ -392,6 +436,10 @@ single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌�
 - 选择模式使用 Space 或 Enter 请求选择。多操作模式把主操作与 trailing 内的启用控件纳入同一方向键顺序。
 - 键盘焦点环完整包围当前项目或独立操作，不会被相邻项目、多操作 trailing 区域或展开分组内容的边界遮挡。
 - selected 同时改变容器配色和形状。disabled 内容降低强调，不响应指针或键盘；减少动态效果偏好下关闭形状和状态层过渡。
+- `draggable` 只接管主指针长按：按住 500ms 后显示等尺寸占位和抬升预览，启动前移动超过 8px、提前释放或发生 pointercancel 时保持普通点击和滚动。
+- 排序只在连续的有效直属 MatListItem 区段内进行。Divider、MatListGroup、禁用项、缺少 value 或 value 重复的项目是固定边界；multi-action 的 trailing 控件不会启动拖动。
+- `fromIndex` 和 `toIndex` 按全部直属 MatListItem 计算，不包含 Divider 与 MatListGroup。位置没有变化时不触发 `reorder`；拖动成功后抑制同一次 click 或选择请求。
+- 拖动支持鼠标、触控笔和触摸主指针，不提供键盘排序或跨 List 拖放。Escape、窗口失焦、关闭 `draggable` 和组件卸载会取消当前拖动。
 
 组件没有公开方法。
 
@@ -402,6 +450,7 @@ single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌�
 <script setup>
 import ListColorExample from '../examples/list/ListColorExample.vue';
 import ListDefaultSlotExample from '../examples/list/ListDefaultSlotExample.vue';
+import ListDraggableExample from '../examples/list/ListDraggableExample.vue';
 import ListExpandedExample from '../examples/list/ListExpandedExample.vue';
 import ListInteractionExample from '../examples/list/ListInteractionExample.vue';
 import ListItemDefaultSlotExample from '../examples/list/ListItemDefaultSlotExample.vue';
@@ -410,6 +459,7 @@ import ListItemHrefExample from '../examples/list/ListItemHrefExample.vue';
 import ListItemLeadingSlotExample from '../examples/list/ListItemLeadingSlotExample.vue';
 import ListItemLinesExample from '../examples/list/ListItemLinesExample.vue';
 import ListItemOverlineSlotExample from '../examples/list/ListItemOverlineSlotExample.vue';
+import ListItemSizesExample from '../examples/list/ListItemSizesExample.vue';
 import ListItemSupportingSlotExample from '../examples/list/ListItemSupportingSlotExample.vue';
 import ListItemTrailingSlotExample from '../examples/list/ListItemTrailingSlotExample.vue';
 import ListItemTypeExample from '../examples/list/ListItemTypeExample.vue';

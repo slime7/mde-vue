@@ -75,7 +75,7 @@ Shape 把 35 个归一化 Material 3 Expressive 轮廓固化为 CSS `clip-path: 
 
 Card 组合 `MatSurfaceBase` 与可选 `MatCardActionArea`，提供 filled、elevated、outlined 三种中性表面和局部种子配色。Headline、Subhead 与 Media 既可以由 Card 的同名具名 Slot 自动创建，也可以作为 `MatCardHeadline`、`MatCardSubhead`、`MatCardMedia` 子组件直接组合；Content 与 Actions 继续负责 16px 内容内边距和末端对齐的操作布局。Divider 作为 Card 直接子项时以明确横向尺寸完整分隔区域，布尔 inset 模式在两侧保留系统缩进。
 
-List 通过内部 provide/inject 上下文统一交互模式、受控选择、折叠值和焦点刷新。普通与操作模式保留 `ul/li`；MatListGroup 作为根列表的 `li`，在其中组合 Activator 按钮、可惰化的内容容器和嵌套 `ul`。有值分组由根 List 的 `expanded` 数组控制，无值分组保存内部状态。选择模式使用 `listbox/option`，折叠分组在该模式下降级为始终展开的静态 `group`，避免把 disclosure 按钮放入 listbox。roving tabindex 注册表按 DOM 顺序协调直属项目、分组 Activator、展开项目和 multi-action trailing 控件，并在模式切换或卸载时恢复使用方原有的 tabindex。Divider 根据 List 上下文切换合法的根语义，不参与选择与焦点顺序。
+List 通过内部 provide/inject 上下文统一交互模式、受控选择、折叠值、拖动项目登记和焦点刷新。普通与操作模式保留 `ul/li`；MatListGroup 作为根列表的 `li`，在其中组合 Activator 按钮、可惰化的内容容器和嵌套 `ul`。有值分组由根 List 的 `expanded` 数组控制，无值分组保存内部状态。选择模式使用 `listbox/option`，折叠分组在该模式下降级为始终展开的静态 `group`，避免把 disclosure 按钮放入 listbox。roving tabindex 注册表按 DOM 顺序协调直属项目、分组 Activator、展开项目和 multi-action trailing 控件，并在模式切换或卸载时恢复使用方原有的 tabindex。可选拖动排序使用指针长按、绘制帧调度、临时占位与固定定位预览，只发出受控 `reorder` 请求；Divider、Group、禁用项和无有效值项目形成排序边界。Divider 根据 List 上下文切换合法的根语义，不参与选择与焦点顺序。
 
 Panes 通过内部 provide/inject 注册直接的 `MatPane` 子项，按受控权重使用横向 flex 布局，并由每个相邻 Pane 的子级渲染垂直 separator 调整控件。父组件只在指针释放或键盘调整后发出下一组权重；ResizeObserver 的宽度通知使用尾端防抖，浏览器断点只报告视口等级变化。Pane 默认填满父级块轴高度并在自身内容溢出时滚动，显隐由使用方通过 `v-if` 管理。
 

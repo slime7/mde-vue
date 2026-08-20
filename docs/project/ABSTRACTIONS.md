@@ -206,7 +206,7 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 选择控件使用原生 input 保留 checkbox、radio 和 switch 语义，但公共能力只覆盖 Vue 状态绑定，不包括 FormData、原生 required 校验、表单重置或表单代理方法。纯展示实例必须同时从指针、焦点和无障碍树移除，不能在 List option 内形成嵌套交互。
 
-`<mat-list>` 在同一实例中只允许一种 `interaction`。`none`、`single-action`、`multi-action` 使用原生列表结构；`single-select`、`multi-select` 使用 listbox/option，并由父组件以受控 `selected` 和 `select` 事件协调选择。方向键只移动 roving tabindex 焦点，不隐式修改选择。选择 option 内不得放置可聚焦后代，多操作项的附加操作只能位于 trailing Slot。
+`<mat-list>` 在同一实例中只允许一种 `interaction`。`none`、`single-action`、`multi-action` 使用原生列表结构；`single-select`、`multi-select` 使用 listbox/option，并由父组件以受控 `selected` 和 `select` 事件协调选择。方向键只移动 roving tabindex 焦点，不隐式修改选择。选择 option 内不得放置可聚焦后代，多操作项的附加操作只能位于 trailing Slot。`draggable` 只为具有稳定唯一 `value` 的未禁用直属 MatListItem 提供主指针长按排序，并通过 `reorder` 请求应用更新数据；组件不改变 Slot 数据顺序。Divider、Group、禁用项和无有效值项目是不可跨越的固定边界，键盘排序和跨 List 拖放不属于当前能力。
 
 `<mat-divider>` 独立使用时保持原生 `hr`；进入普通 List 后使用合法的 `li` separator，进入选择 List 后成为不参与 listbox 语义的展示元素。Divider 不进入 Tab 顺序，也不提供强调色。默认 Divider 明确占满可用横向空间；`inset=true` 或兼容值 `middle` 表示两侧各缩进 16px，`start` 只缩进逻辑起始侧。
 
