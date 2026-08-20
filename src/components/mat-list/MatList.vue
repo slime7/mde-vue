@@ -109,6 +109,8 @@ const emit = defineEmits({
   },
   /**
    * 长按拖动改变项目位置时触发，载荷包含 value、fromIndex、toIndex 和 originalEvent。
+   *
+   * @type {{ value: string | number | boolean, fromIndex: number, toIndex: number, originalEvent: PointerEvent }}
    */
   reorder(payload) {
     return payload

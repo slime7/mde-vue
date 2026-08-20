@@ -954,6 +954,13 @@ export interface MatListProps {
   * @default undefined
   */
   color?: string | undefined;
+  /**
+  * 是否允许通过长按直属项目请求拖动排序。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  draggable?: boolean;
 }
 
 export interface MatListEmits {
@@ -965,6 +972,12 @@ export interface MatListEmits {
   * 分组展开状态变化时触发，载荷为新的 value 数组。
   */
   "update:expanded": (payload: unknown) => unknown;
+  /**
+  * 长按拖动改变项目位置时触发，载荷包含 value、fromIndex、toIndex 和 originalEvent。
+  *
+  * @type {{ value: string | number | boolean, fromIndex: number, toIndex: number, originalEvent: PointerEvent }}
+  */
+  "reorder": (payload: { value: string | number | boolean, fromIndex: number, toIndex: number, originalEvent: PointerEvent }) => unknown;
 }
 
 export type MatListComponent = DefineComponent<MatListProps, {}, {}, {}, {}, {}, {}, MatListEmits>;
@@ -985,7 +998,7 @@ export declare const MatListGroup: MatListGroupComponent;
 
 export interface MatListItemProps {
   /**
-  * 选择模式中的项目值。
+  * 选择或拖动排序中的稳定项目值。
   *
   * @type {string | number | boolean | undefined}
   * @default undefined
