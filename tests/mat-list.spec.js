@@ -3,16 +3,63 @@ import {
   createApp, h, nextTick,
 } from 'vue';
 import {
-  describe, expect, it, vi,
+  afterEach, describe, expect, it, vi,
 } from 'vitest';
 import {
-  createMatUi, MatBtn, MatList, MatListGroup, MatListItem,
+  createMatUi, MatBtn, MatDivider, MatList, MatListGroup, MatListItem,
 } from '../src';
 import ListExpandedExample from '../docs/site/examples/list/ListExpandedExample.vue';
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 async function flushFocusManagement() {
   await nextTick();
   await Promise.resolve();
+}
+
+/**
+ * @param {number} top
+ * @param {number} [height]
+ * @returns {DOMRect}
+ */
+function itemRect(top, height = 48) {
+  return {
+    x: 0,
+    y: top,
+    top,
+    right: 240,
+    bottom: top + height,
+    left: 0,
+    width: 240,
+    height,
+    toJSON() {
+      return {};
+    },
+  };
+}
+
+/**
+ * @param {EventTarget} target
+ * @param {string} type
+ * @param {PointerEventInit} [options]
+ * @returns {PointerEvent}
+ */
+function dispatchPointer(target, type, options = {}) {
+  const event = new PointerEvent(type, {
+    bubbles: true,
+    button: 0,
+    buttons: type === 'pointerup' || type === 'pointercancel' ? 0 : 1,
+    clientX: 20,
+    clientY: 20,
+    pointerId: 1,
+    pointerType: 'mouse',
+    ...options,
+  });
+
+  target.dispatchEvent(event);
+  return event;
 }
 
 describe('MatList', () => {
@@ -231,6 +278,169 @@ describe('MatList', () => {
     expect(wrapper.find('.mat-list-item-content__label .ellipsis').exists()).toBe(true);
     expect(wrapper.find('.mat-list-item-content__supporting .ellipsis').exists()).toBe(true);
     expect(wrapper.find('[data-mat-list-trailing]').text()).toBe('移除');
+  });
+
+  it('只在主指针保持 500ms 且未越过移动阈值后开始拖动', () => {
+    vi.useFakeTimers();
+    const wrapper = mount(MatList, {
+      attachTo: document.body,
+      props: { draggable: true },
+      slots: {
+        default: () => [
+          h(MatListItem, { value: 'one' }, () => '一'),
+          h(MatListItem, { value: 'two' }, () => '二'),
+        ],
+      },
+    });
+    const items = wrapper.findAll('.mat-list-item');
+
+    items[0].element.getBoundingClientRect = () => itemRect(0);
+    items[1].element.getBoundingClientRect = () => itemRect(50);
+
+    dispatchPointer(items[0].element, 'pointerdown');
+    vi.advanceTimersByTime(499);
+    expect(document.querySelector('[data-mat-list-drag-preview]')).toBeNull();
+    dispatchPointer(window, 'pointerup');
+
+    dispatchPointer(items[0].element, 'pointerdown', { pointerId: 2 });
+    dispatchPointer(window, 'pointermove', {
+      clientY: 29,
+      pointerId: 2,
+    });
+    vi.advanceTimersByTime(500);
+    expect(document.querySelector('[data-mat-list-drag-preview]')).toBeNull();
+    expect(wrapper.emitted('reorder')).toBeUndefined();
+  });
+
+  it('长按拖动显示占位并发出受控 reorder，同时抑制原项目 click', async () => {
+    vi.useFakeTimers();
+    const click = vi.fn();
+    const wrapper = mount(MatList, {
+      attachTo: document.body,
+      props: {
+        draggable: true,
+        interaction: 'single-action',
+      },
+      slots: {
+        default: () => [
+          h(MatListItem, { value: 'one', onClick: click }, () => '一'),
+          h(MatListItem, { value: 'two' }, () => '二'),
+          h(MatListItem, { value: 'three' }, () => '三'),
+        ],
+      },
+    });
+    const items = wrapper.findAll('.mat-list-item');
+
+    items[0].element.getBoundingClientRect = () => itemRect(0);
+    items[1].element.getBoundingClientRect = () => itemRect(50);
+    items[2].element.getBoundingClientRect = () => itemRect(100);
+
+    dispatchPointer(items[0].element, 'pointerdown', { clientY: 24 });
+    vi.advanceTimersByTime(500);
+    expect(wrapper.find('[data-mat-list-drag-placeholder]').exists()).toBe(true);
+    expect(document.querySelector('[data-mat-list-drag-preview]')).not.toBeNull();
+
+    dispatchPointer(window, 'pointermove', { clientY: 130 });
+    dispatchPointer(window, 'pointerup', { clientY: 130 });
+    expect(wrapper.emitted('reorder')).toHaveLength(1);
+    expect(wrapper.emitted('reorder')[0][0]).toMatchObject({
+      value: 'one',
+      fromIndex: 0,
+      toIndex: 2,
+    });
+    expect(wrapper.emitted('reorder')[0][0].originalEvent).toBeInstanceOf(PointerEvent);
+
+    await wrapper.find('[data-mat-list-primary]').trigger('click');
+    expect(click).not.toHaveBeenCalled();
+    await nextTick();
+    expect(wrapper.find('[data-mat-list-drag-placeholder]').exists()).toBe(false);
+    expect(document.querySelector('[data-mat-list-drag-preview]')).toBeNull();
+  });
+
+  it('固定结构和无效项目形成排序边界，trailing 控件不启动拖动', () => {
+    vi.useFakeTimers();
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const wrapper = mount(MatList, {
+      attachTo: document.body,
+      props: {
+        draggable: true,
+        interaction: 'multi-action',
+      },
+      slots: {
+        default: () => [
+          h(MatListItem, { value: 'one' }, () => '一'),
+          h(MatDivider),
+          h(MatListItem, { value: 'two' }, {
+            default: () => '二',
+            trailing: () => h(MatBtn, {
+              icon: 'more_vert',
+              label: '更多',
+            }),
+          }),
+          h(MatListItem, null, () => '无值'),
+          h(MatListItem, { value: 'disabled', disabled: true }, () => '禁用'),
+        ],
+      },
+    });
+    const items = wrapper.findAll('.mat-list-item');
+
+    items.forEach((item, index) => {
+      item.element.getBoundingClientRect = () => itemRect(index * 50);
+    });
+
+    dispatchPointer(items[0].element, 'pointerdown');
+    vi.advanceTimersByTime(500);
+    dispatchPointer(window, 'pointermove', { clientY: 120 });
+    dispatchPointer(window, 'pointerup', { clientY: 120 });
+    expect(wrapper.emitted('reorder')).toBeUndefined();
+
+    dispatchPointer(wrapper.get('[data-mat-list-trailing] button').element, 'pointerdown', {
+      pointerId: 2,
+    });
+    vi.advanceTimersByTime(500);
+    expect(document.querySelector('[data-mat-list-drag-preview]')).toBeNull();
+
+    dispatchPointer(items[3].element, 'pointerdown', { pointerId: 3 });
+    vi.advanceTimersByTime(500);
+    expect(document.querySelector('[data-mat-list-drag-preview]')).toBeNull();
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('draggable'));
+  });
+
+  it('取消事件、关闭 draggable 和卸载都会清理拖动视觉与监听', async () => {
+    vi.useFakeTimers();
+    const wrapper = mount(MatList, {
+      attachTo: document.body,
+      props: { draggable: true },
+      slots: {
+        default: () => [
+          h(MatListItem, { value: 'one' }, () => '一'),
+          h(MatListItem, { value: 'two' }, () => '二'),
+        ],
+      },
+    });
+    const items = wrapper.findAll('.mat-list-item');
+
+    items[0].element.getBoundingClientRect = () => itemRect(0);
+    items[1].element.getBoundingClientRect = () => itemRect(50);
+    dispatchPointer(items[0].element, 'pointerdown');
+    vi.advanceTimersByTime(500);
+    dispatchPointer(window, 'pointercancel');
+    expect(wrapper.find('[data-mat-list-drag-placeholder]').exists()).toBe(false);
+    expect(document.querySelector('[data-mat-list-drag-preview]')).toBeNull();
+    expect(wrapper.emitted('reorder')).toBeUndefined();
+
+    dispatchPointer(items[0].element, 'pointerdown', { pointerId: 2 });
+    vi.advanceTimersByTime(500);
+    await wrapper.setProps({ draggable: false });
+    expect(wrapper.find('[data-mat-list-drag-placeholder]').exists()).toBe(false);
+    expect(document.querySelector('[data-mat-list-drag-preview]')).toBeNull();
+
+    await wrapper.setProps({ draggable: true });
+    dispatchPointer(items[0].element, 'pointerdown', { pointerId: 3 });
+    vi.advanceTimersByTime(500);
+    wrapper.unmount();
+    expect(document.querySelector('[data-mat-list-drag-preview]')).toBeNull();
+    dispatchPointer(window, 'pointerup', { pointerId: 3 });
   });
 
   it('插件全局注册 List、ListItem 和 Divider', () => {
