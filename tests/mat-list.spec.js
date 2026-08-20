@@ -24,7 +24,7 @@ async function flushFocusManagement() {
  * @param {number} [height]
  * @returns {DOMRect}
  */
-function itemRect(top, height = 48) {
+function itemRect(top, height = 56) {
   return {
     x: 0,
     y: top,
