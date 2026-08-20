@@ -429,6 +429,11 @@ watch(
     user-select: none;
   }
 
+  :global(html[data-mat-list-drag-selection-lock]),
+  :global(html[data-mat-list-drag-selection-lock] *) {
+    user-select: none !important;
+  }
+
   .mat-list > :deep([data-mat-list-drag-placeholder]) {
     box-sizing: border-box;
     flex: 0 0 auto;
@@ -436,11 +441,6 @@ watch(
     padding: 0;
     margin: 0;
     list-style: none;
-    background: color-mix(
-      in srgb,
-      var(--mat-list-drag-placeholder-content-color) var(--mat-sys-state-dragged-state-layer-opacity),
-      var(--mat-list-drag-placeholder-container-color)
-    );
     border-radius: var(--mat-list-item-selected-container-shape);
   }
 

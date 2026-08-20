@@ -7,6 +7,45 @@ const LONG_PRESS_DELAY = 500;
 const PENDING_MOVE_THRESHOLD = 8;
 const AUTO_SCROLL_EDGE = 48;
 const AUTO_SCROLL_MAX_STEP = 24;
+const DRAGGED_SURFACE_BACKGROUND = `color-mix(
+  in srgb,
+  var(--mat-list-drag-content-color) calc(var(--mat-sys-state-dragged-state-layer-opacity) * 100%),
+  var(--mat-list-drag-container-color)
+)`;
+const SELECTION_LOCK_ATTRIBUTE = 'data-mat-list-drag-selection-lock';
+let selectionLockCount = 0;
+
+/**
+ * @param {Event} event
+ */
+function preventSelection(event) {
+  if (event.cancelable) {
+    event.preventDefault();
+  }
+}
+
+function acquireSelectionLock() {
+  if (selectionLockCount === 0) {
+    document.documentElement.setAttribute(SELECTION_LOCK_ATTRIBUTE, '');
+    document.addEventListener('selectstart', preventSelection, true);
+  }
+
+  selectionLockCount += 1;
+  globalThis.getSelection?.()?.removeAllRanges();
+}
+
+function releaseSelectionLock() {
+  if (selectionLockCount === 0) {
+    return;
+  }
+
+  selectionLockCount -= 1;
+
+  if (selectionLockCount === 0) {
+    document.documentElement.removeAttribute(SELECTION_LOCK_ATTRIBUTE);
+    document.removeEventListener('selectstart', preventSelection, true);
+  }
+}
 
 /**
  * @param {unknown} value
@@ -57,6 +96,24 @@ function removeDuplicateIds(element) {
 }
 
 /**
+ * @param {HTMLElement} element
+ * @param {CSSStyleDeclaration} sourceStyle
+ */
+function applyDraggedSurface(element, sourceStyle) {
+  const { style } = element;
+
+  style.setProperty(
+    '--mat-list-drag-container-color',
+    sourceStyle.backgroundColor,
+  );
+  style.setProperty(
+    '--mat-list-drag-content-color',
+    sourceStyle.color,
+  );
+  style.background = DRAGGED_SURFACE_BACKGROUND;
+}
+
+/**
  * @param {HTMLElement} source
  * @param {DOMRect} rect
  * @returns {HTMLElement}
@@ -64,6 +121,12 @@ function removeDuplicateIds(element) {
 function createPreview(source, rect) {
   const preview = /** @type {HTMLElement} */ (source.cloneNode(true));
   const computedStyle = getComputedStyle(source);
+  const sourceSurface = source.matches('.mat-list-item__surface')
+    ? source
+    : source.querySelector('.mat-list-item__surface') ?? source;
+  const previewSurface = preview.matches('.mat-list-item__surface')
+    ? preview
+    : preview.querySelector('.mat-list-item__surface') ?? preview;
 
   removeDuplicateIds(preview);
   preview.setAttribute('aria-hidden', 'true');
@@ -78,6 +141,10 @@ function createPreview(source, rect) {
     }
   }
 
+  applyDraggedSurface(
+    /** @type {HTMLElement} */ (previewSurface),
+    getComputedStyle(sourceSurface),
+  );
   Object.assign(preview.style, {
     position: 'fixed',
     zIndex: '1000',
@@ -295,6 +362,7 @@ export default function useListDragSort(options) {
     active.source.style.display = active.sourceDisplay;
     active.placeholder.remove();
     active.preview.remove();
+    releaseSelectionLock();
     active = undefined;
     dragging.value = false;
   }
@@ -486,7 +554,10 @@ export default function useListDragSort(options) {
     const rect = source.getBoundingClientRect();
     const placeholder = document.createElement(source.tagName.toLowerCase());
     const preview = createPreview(source, rect);
-    const sourceStyle = getComputedStyle(source);
+    const sourceSurface = source.matches('.mat-list-item__surface')
+      ? source
+      : source.querySelector('.mat-list-item__surface') ?? source;
+    const sourceStyle = getComputedStyle(sourceSurface);
     const sourceDisplay = source.style.display;
     const sourceSegmentIndex = segment.indexOf(currentPending.record);
 
@@ -494,14 +565,7 @@ export default function useListDragSort(options) {
     placeholder.setAttribute('data-mat-list-drag-placeholder', '');
     placeholder.style.blockSize = `${rect.height}px`;
     placeholder.style.inlineSize = `${rect.width}px`;
-    placeholder.style.setProperty(
-      '--mat-list-drag-placeholder-container-color',
-      sourceStyle.backgroundColor,
-    );
-    placeholder.style.setProperty(
-      '--mat-list-drag-placeholder-content-color',
-      sourceStyle.color,
-    );
+    applyDraggedSurface(placeholder, sourceStyle);
     options.root.value.insertBefore(placeholder, source);
     source.style.display = 'none';
 
@@ -524,6 +588,7 @@ export default function useListDragSort(options) {
       value: currentPending.record.value.value,
     };
     pending = undefined;
+    acquireSelectionLock();
     dragging.value = true;
 
     try {

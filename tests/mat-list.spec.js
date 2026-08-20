@@ -447,6 +447,68 @@ describe('MatList', () => {
     dispatchPointer(window, 'pointerup', { pointerId: 3 });
   });
 
+  it('只在实际拖动期间禁止文本选择，并在所有结束路径恢复', async () => {
+    vi.useFakeTimers();
+    const removeAllRanges = vi.fn();
+
+    vi.spyOn(window, 'getSelection').mockReturnValue({
+      removeAllRanges,
+    });
+    const wrapper = mount(MatList, {
+      attachTo: document.body,
+      props: { draggable: true },
+      slots: {
+        default: () => [
+          h(MatListItem, { value: 'one' }, () => '一'),
+          h(MatListItem, { value: 'two' }, () => '二'),
+        ],
+      },
+    });
+    const items = wrapper.findAll('.mat-list-item');
+
+    items[0].element.getBoundingClientRect = () => itemRect(0);
+    items[1].element.getBoundingClientRect = () => itemRect(50);
+
+    function expectSelectionBlocked(blocked) {
+      const event = new Event('selectstart', {
+        bubbles: true,
+        cancelable: true,
+      });
+
+      document.body.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(blocked);
+    }
+
+    function startDrag(pointerId) {
+      dispatchPointer(items[0].element, 'pointerdown', { pointerId });
+      vi.advanceTimersByTime(500);
+      expectSelectionBlocked(true);
+    }
+
+    expectSelectionBlocked(false);
+    startDrag(1);
+    expect(removeAllRanges).toHaveBeenCalledOnce();
+    dispatchPointer(window, 'pointerup', { pointerId: 1 });
+    expectSelectionBlocked(false);
+
+    startDrag(2);
+    dispatchPointer(window, 'pointercancel', { pointerId: 2 });
+    expectSelectionBlocked(false);
+
+    startDrag(3);
+    window.dispatchEvent(new Event('blur'));
+    expectSelectionBlocked(false);
+
+    startDrag(4);
+    await wrapper.setProps({ draggable: false });
+    expectSelectionBlocked(false);
+
+    await wrapper.setProps({ draggable: true });
+    startDrag(5);
+    wrapper.unmount();
+    expectSelectionBlocked(false);
+  });
+
   it('插件全局注册 List、ListItem 和 Divider', () => {
     const app = createApp({});
 
