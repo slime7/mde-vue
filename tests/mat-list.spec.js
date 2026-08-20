@@ -55,6 +55,7 @@ function dispatchPointer(target, type, options = {}) {
     clientY: 20,
     pointerId: 1,
     pointerType: 'mouse',
+    isPrimary: true,
     ...options,
   });
 
@@ -357,7 +358,7 @@ describe('MatList', () => {
     expect(document.querySelector('[data-mat-list-drag-preview]')).toBeNull();
   });
 
-  it('固定结构和无效项目形成排序边界，trailing 控件不启动拖动', () => {
+  it('固定结构和无效项目形成排序边界，trailing 控件不启动拖动', async () => {
     vi.useFakeTimers();
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const wrapper = mount(MatList, {
@@ -384,8 +385,11 @@ describe('MatList', () => {
     });
     const items = wrapper.findAll('.mat-list-item');
 
+    await nextTick();
     items.forEach((item, index) => {
-      item.element.getBoundingClientRect = () => itemRect(index * 50);
+      const { element } = item;
+
+      element.getBoundingClientRect = () => itemRect(index * 50);
     });
 
     dispatchPointer(items[0].element, 'pointerdown');

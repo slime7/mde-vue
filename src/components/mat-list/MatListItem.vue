@@ -1,6 +1,6 @@
 <script setup>
 import {
-  computed, inject, nextTick, onMounted, useSlots, watch,
+  computed, inject, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch,
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatActionBase from '../MatActionBase.vue';
@@ -94,6 +94,17 @@ const isMultiAction = computed(() => interaction.value === 'multi-action');
 const isSelectable = computed(() => list?.isSelectable.value ?? false);
 const selected = computed(() => list?.isSelected(propsWithDefaults.value) ?? false);
 const hasTrailing = computed(() => Boolean(slots.trailing));
+const itemRoot = ref(null);
+const dragToken = Symbol('mat-list-item-drag');
+const dragElement = computed(() => {
+  if (itemRoot.value instanceof HTMLElement) {
+    return itemRoot.value;
+  }
+
+  return itemRoot.value?.$el instanceof HTMLElement ? itemRoot.value.$el : null;
+});
+const dragValue = computed(() => propsWithDefaults.value);
+const dragDisabled = computed(() => propsWithDefaults.disabled || Boolean(groupActivator));
 const lineCount = computed(() => {
   if (propsWithDefaults.lines !== undefined) {
     return propsWithDefaults.lines;
@@ -149,13 +160,28 @@ function validateProps() {
 
 onMounted(async () => {
   validateProps();
+  list?.registerDragItem?.({
+    token: dragToken,
+    element: dragElement,
+    value: dragValue,
+    disabled: dragDisabled,
+  });
   await nextTick();
   list?.requestFocusRefresh();
 });
+onBeforeUnmount(() => {
+  list?.unregisterDragItem?.(dragToken);
+});
 watch(
-  () => [propsWithDefaults.disabled, propsWithDefaults.href, interaction.value],
+  () => [
+    propsWithDefaults.disabled,
+    propsWithDefaults.href,
+    propsWithDefaults.value,
+    interaction.value,
+  ],
   async () => {
     validateProps();
+    list?.requestDragValidation?.();
     await nextTick();
     list?.requestFocusRefresh();
   },
@@ -165,6 +191,7 @@ watch(
 <template>
   <div
     v-if="groupActivator?.static.value"
+    ref="itemRoot"
     v-bind="$attrs"
     :id="groupActivator.labelId"
     class="mat-list-item mat-list-item__surface mat-list-item--static"
@@ -195,6 +222,7 @@ watch(
 
   <MatActionBase
     v-else-if="groupActivator"
+    ref="itemRoot"
     v-bind="$attrs"
     class="mat-list-item mat-list-item__surface mat-list-item__primary mat-list-item--group-activator"
     :class="surfaceClasses"
@@ -231,6 +259,7 @@ watch(
 
   <li
     v-else-if="interaction === 'none'"
+    ref="itemRoot"
     v-bind="$attrs"
     class="mat-list-item mat-list-item__surface mat-list-item--static"
     :class="surfaceClasses"
@@ -275,6 +304,7 @@ watch(
 
   <li
     v-else-if="isAction"
+    ref="itemRoot"
     class="mat-list-item"
     :class="[
       surfaceClasses,
@@ -347,6 +377,7 @@ watch(
 
   <MatActionBase
     v-else
+    ref="itemRoot"
     v-bind="$attrs"
     as="div"
     class="mat-list-item mat-list-item__surface mat-list-item--selectable"

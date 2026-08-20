@@ -374,13 +374,14 @@
     --mat-list-item-selected-container-shape: var(--mat-sys-shape-corner-large);
     --mat-list-item-leading-space: 16px;
     --mat-list-item-trailing-space: 16px;
-    --mat-list-item-vertical-space: 10px;
-    --mat-list-item-content-gap: 12px;
+    --mat-list-item-vertical-space: 8px;
+    --mat-list-item-large-vertical-space: 12px;
+    --mat-list-item-content-gap: 16px;
     --mat-list-item-trailing-action-gap: 4px;
-    --mat-list-item-one-line-height: 56px;
+    --mat-list-item-one-line-height: 48px;
     --mat-list-item-two-line-height: 72px;
     --mat-list-item-three-line-height: 88px;
-    --mat-list-item-icon-size: 20px;
+    --mat-list-item-icon-size: 24px;
     --mat-list-item-disabled-content-opacity: .38;
     --mat-list-item-disabled-selected-container-opacity: 12%;
     --mat-divider-color: var(--mat-sys-color-outline-variant);

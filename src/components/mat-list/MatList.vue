@@ -10,6 +10,7 @@ import useComponentColor from '../use-component-color';
 import useRovingFocus from '../use-roving-focus';
 import { isSelectionValue } from '../selection-control';
 import { useMatProps } from '../use-mat-props';
+import useListDragSort from './use-list-drag-sort';
 
 defineOptions({
   name: 'MatList',
@@ -77,6 +78,16 @@ const props = defineProps({
     default: undefined,
     validator: isComponentColor,
   },
+  /**
+   * 是否允许通过长按直属项目请求拖动排序。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  draggable: {
+    type: Boolean,
+    default: false,
+  },
 });
 const propsWithDefaults = useMatProps('list', props);
 
@@ -95,6 +106,16 @@ const emit = defineEmits({
    */
   'update:expanded'(payload) {
     return Array.isArray(payload) && payload.every(isSelectionValue);
+  },
+  /**
+   * 长按拖动改变项目位置时触发，载荷包含 value、fromIndex、toIndex 和 originalEvent。
+   */
+  reorder(payload) {
+    return payload
+      && Object.hasOwn(payload, 'value')
+      && Number.isInteger(payload.fromIndex)
+      && Number.isInteger(payload.toIndex)
+      && payload.originalEvent instanceof PointerEvent;
   },
 });
 const root = ref(null);
@@ -283,6 +304,13 @@ const roving = useRovingFocus({
   findInitial: findInitialFocusable,
   observedAttributes: ['aria-disabled', 'aria-hidden', 'disabled', 'href', 'inert'],
 });
+const dragSort = useListDragSort({
+  root,
+  enabled: computed(() => propsWithDefaults.draggable),
+  emitReorder(payload) {
+    emit('reorder', payload);
+  },
+});
 
 /**
  * @param {KeyboardEvent} event
@@ -313,7 +341,10 @@ provide(MAT_LIST_KEY, {
   requestFocusRefresh: roving.queueRefresh,
   requestGroupExpanded,
   requestSelection,
+  registerDragItem: dragSort.registerItem,
+  requestDragValidation: dragSort.queueValidation,
   unregisterGroupValue,
+  unregisterDragItem: dragSort.unregisterItem,
 });
 
 onMounted(roving.observe);
@@ -350,15 +381,23 @@ watch(
     ref="root"
     v-bind="$attrs"
     class="mat-list"
-    :class="`mat-list--${propsWithDefaults.variant}`"
+    :class="[
+      `mat-list--${propsWithDefaults.variant}`,
+      {
+        'mat-list--draggable': propsWithDefaults.draggable,
+        'mat-list--dragging': dragSort.dragging.value,
+      },
+    ]"
     :style="colorStyle"
     :aria-multiselectable="propsWithDefaults.interaction === 'multi-select'
       ? 'true'
       : $attrs['aria-multiselectable']"
     :aria-orientation="isSelectable ? 'vertical' : $attrs['aria-orientation']"
     :role="isSelectable ? 'listbox' : $attrs.role"
+    @click.capture="dragSort.handleClickCapture"
     @focusin="roving.handleFocusIn"
     @keydown="handleKeyDown"
+    @pointerdown="dragSort.handlePointerDown"
   >
     <slot />
   </component>
@@ -382,6 +421,25 @@ watch(
 
   .mat-list--segmented {
     gap: var(--mat-list-segmented-gap);
+  }
+
+  .mat-list--dragging {
+    user-select: none;
+  }
+
+  .mat-list > :deep([data-mat-list-drag-placeholder]) {
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    min-inline-size: 0;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    background: color-mix(
+      in srgb,
+      var(--mat-list-drag-placeholder-content-color) var(--mat-sys-state-dragged-state-layer-opacity),
+      var(--mat-list-drag-placeholder-container-color)
+    );
+    border-radius: var(--mat-list-item-selected-container-shape);
   }
 
   .mat-list > :deep(.mat-list-item:first-child),
