@@ -474,7 +474,7 @@ watch([
   }
 
   .mat-app-root--scrollable {
-    overflow: hidden;
+    overflow: clip;
   }
 
   .mat-app-root--fill-viewport.mat-app-root--scrollable {
@@ -482,6 +482,7 @@ watch([
   }
 
   .mat-app-root__content {
+    position: relative;
     box-sizing: border-box;
     min-inline-size: 0;
     padding-block: var(--mat-app-root-padding-top) var(--mat-app-root-padding-bottom);

@@ -2064,7 +2064,7 @@ var On = {
 			}, null, 512)
 		], 16, An));
 	}
-}), [["__scopeId", "data-v-ba53aa3d"]]), Pn = /* @__PURE__ */ new WeakMap(), Fn = /* @__PURE__ */ new WeakMap();
+}), [["__scopeId", "data-v-3d076d51"]]), Pn = /* @__PURE__ */ new WeakMap(), Fn = /* @__PURE__ */ new WeakMap();
 function In(e, t, n) {
 	let r = [n.initialValue, ...n.names].filter((e) => e && e !== "none"), i = e.style;
 	i[t] = r.join(", ");
@@ -8321,7 +8321,7 @@ function Wo(e, t) {
 		let n = i(), r = e.value;
 		if (!r) return;
 		if (n.length === 0) {
-			t.preventDefault(), r.focus();
+			t.preventDefault(), r.focus({ preventScroll: !0 });
 			return;
 		}
 		let a = n[0], o = n[n.length - 1], s = document.activeElement, c = s instanceof Node && r.contains(s);
@@ -8334,7 +8334,7 @@ function Wo(e, t) {
 				a instanceof HTMLElement && (n = a);
 				return;
 			}
-			(n instanceof HTMLElement && n.isConnected ? n : i).focus();
+			(n instanceof HTMLElement && n.isConnected ? n : i).focus({ preventScroll: !0 });
 		}
 	}
 	function s() {

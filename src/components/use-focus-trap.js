@@ -48,7 +48,7 @@ export default function useFocusTrap(root, active) {
 
     if (focusable.length === 0) {
       event.preventDefault();
-      element.focus();
+      element.focus({ preventScroll: true });
       return;
     }
 
@@ -87,7 +87,7 @@ export default function useFocusTrap(root, active) {
     (lastFocused instanceof HTMLElement && lastFocused.isConnected
       ? lastFocused
       : element
-    ).focus();
+    ).focus({ preventScroll: true });
   }
 
   function bind() {
