@@ -1,3 +1,4 @@
+import { readdir, readFile, writeFile } from 'node:fs/promises';
 import process from 'node:process';
 import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vitepress';
@@ -230,15 +231,17 @@ export default defineConfig({
     await copyLlmsArtifacts(siteConfig.outDir);
     const assetsDir = fileURLToPath(new URL('assets', `file:///${siteConfig.outDir.replaceAll('\\', '/')}/`));
     const layerOrderHeader = '@layer tailwind-theme, tailwind-reset, docs-base, mde, tailwind-utilities, mde-final;\n';
-    const { readdir, readFile, writeFile } = await import('node:fs/promises');
     const files = await readdir(assetsDir);
-    for (const file of files) {
-      if (file.endsWith('.css')) {
-        const filePath = fileURLToPath(new URL(file, `file:///${assetsDir.replaceAll('\\', '/')}/`));
-        const cssContent = await readFile(filePath, 'utf8');
-        const cleanedContent = cssContent.replace(/@layer\s+tailwind-theme[^;]+;/g, '').replace(/@layer\s+docs-base,\s*mde;/g, '').trimStart();
-        await writeFile(filePath, layerOrderHeader + cleanedContent, 'utf8');
-      }
-    }
+    const cssFiles = files.filter((file) => file.endsWith('.css'));
+
+    await Promise.all(cssFiles.map(async (file) => {
+      const filePath = fileURLToPath(new URL(file, `file:///${assetsDir.replaceAll('\\', '/')}/`));
+      const cssContent = await readFile(filePath, 'utf8');
+      const cleanedContent = cssContent
+        .replace(/@layer\s+tailwind-theme[^;]+;/g, '')
+        .replace(/@layer\s+docs-base,\s*mde;/g, '')
+        .trimStart();
+      await writeFile(filePath, layerOrderHeader + cleanedContent, 'utf8');
+    }));
   },
 });
