@@ -918,6 +918,123 @@ export interface MatCardMediaProps {
 export type MatCardMediaComponent = DefineComponent<MatCardMediaProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatCardMedia: MatCardMediaComponent;
 
+export interface MatExpansionProps {
+  /**
+  * 受控展开值；多选时为数组，手风琴模式 (multiple=false) 时为单值或 null。
+  *
+  * @type {Array<string | number | boolean> | string | number | boolean | null | undefined}
+  * @default undefined
+  */
+  modelValue?: Array<string | number | boolean> | string | number | boolean | null | undefined;
+  /**
+  * 是否允许多个面板同时展开；设为 false 时为单选手风琴模式。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  multiple?: boolean;
+  /**
+  * 语义色或六位十六进制种子色 `#RRGGBB`。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  color?: string | undefined;
+  /**
+  * 是否全局禁用所有子面板。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  disabled?: boolean;
+  /**
+  * 根元素语义；可选值为 `div`、`section`、`article`、`ul` 等。
+  *
+  * @type {string}
+  * @default 'div'
+  */
+  as?: string;
+  /**
+  * 列表布局形态；可选值为 `standard`、`segmented`。
+  *
+  * @type {'standard' | 'segmented'}
+  * @default 'segmented'
+  */
+  variant?: 'standard' | 'segmented';
+}
+
+export interface MatExpansionEmits {
+  /**
+  * 展开面板状态改变时触发，多选模式载荷为数组，单选模式为单值或 null。
+  */
+  "update:modelValue": (payload: unknown) => unknown;
+}
+
+export type MatExpansionComponent = DefineComponent<MatExpansionProps, {}, {}, {}, {}, {}, {}, MatExpansionEmits>;
+export declare const MatExpansion: MatExpansionComponent;
+
+export interface MatExpansionPanelProps {
+  /**
+  * 当前面板在 MatExpansion 容器中的唯一稳定值。
+  *
+  * @type {string | number | boolean | undefined}
+  * @default undefined
+  */
+  value?: string | number | boolean | undefined;
+  /**
+  * 独立或单面板使用时的受控展开状态。
+  *
+  * @type {boolean | undefined}
+  * @default undefined
+  */
+  modelValue?: boolean | undefined;
+  /**
+  * 触发器标题文本；未提供 activator Slot 时自动渲染为 MatListItem 标题。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  title?: string | undefined;
+  /**
+  * 是否以分立列表项形态展开；为 true 时默认插槽使用 MatListItem，为 false 时在同一块卡片内展开自由内容。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  split?: boolean;
+  /**
+  * 语义色或六位十六进制种子色 #RRGGBB。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  color?: string | undefined;
+  /**
+  * 是否禁用面板展开触发。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  disabled?: boolean;
+  /**
+  * 面板根元素语义；可选值为 div、section、article、li 等。
+  *
+  * @type {string}
+  * @default 'div'
+  */
+  as?: string;
+}
+
+export interface MatExpansionPanelEmits {
+  /**
+  * 面板展开或折叠状态改变时触发，载荷为布尔值。
+  */
+  "update:modelValue": (payload: unknown) => unknown;
+}
+
+export type MatExpansionPanelComponent = DefineComponent<MatExpansionPanelProps, {}, {}, {}, {}, {}, {}, MatExpansionPanelEmits>;
+export declare const MatExpansionPanel: MatExpansionPanelComponent;
+
 export interface MatListProps {
   /**
   * 列表布局形态；可选值为 `standard`、`segmented`。
@@ -991,6 +1108,13 @@ export interface MatListGroupProps {
   * @default undefined
   */
   value?: string | number | boolean | undefined;
+  /**
+  * 根元素语义标签。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  as?: string | undefined;
 }
 
 export type MatListGroupComponent = DefineComponent<MatListGroupProps, {}, {}, {}, {}, {}, {}, {}>;
@@ -3672,6 +3796,10 @@ declare module 'vue' {
     'mat-card-subhead': typeof MatCardSubhead;
     MatCardMedia: typeof MatCardMedia;
     'mat-card-media': typeof MatCardMedia;
+    MatExpansion: typeof MatExpansion;
+    'mat-expansion': typeof MatExpansion;
+    MatExpansionPanel: typeof MatExpansionPanel;
+    'mat-expansion-panel': typeof MatExpansionPanel;
     MatList: typeof MatList;
     'mat-list': typeof MatList;
     MatListGroup: typeof MatListGroup;

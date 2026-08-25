@@ -20,6 +20,8 @@ export { default as MatCardActions } from './components/mat-card/MatCardActions.
 export { default as MatCardHeadline } from './components/mat-card/MatCardHeadline.vue';
 export { default as MatCardSubhead } from './components/mat-card/MatCardSubhead.vue';
 export { default as MatCardMedia } from './components/mat-card/MatCardMedia.vue';
+export { default as MatExpansion } from './components/mat-expansion/MatExpansion.vue';
+export { default as MatExpansionPanel } from './components/mat-expansion/MatExpansionPanel.vue';
 export { default as MatList } from './components/mat-list/MatList.vue';
 export { default as MatListGroup } from './components/mat-list-group/MatListGroup.vue';
 export { default as MatListItem } from './components/mat-list/MatListItem.vue';

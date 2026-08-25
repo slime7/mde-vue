@@ -35,6 +35,16 @@ const props = defineProps({
     type: [String, Number, Boolean],
     default: undefined,
   },
+  /**
+   * 根元素语义标签。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
+  as: {
+    type: String,
+    default: undefined,
+  },
 });
 const propsWithDefaults = useMatProps('listGroup', props);
 
@@ -240,7 +250,7 @@ watch(isSelectableFallback, async (selectable, wasSelectable) => {
 
 <template>
   <component
-    :is="isSelectableFallback ? 'div' : 'li'"
+    :is="propsWithDefaults.as || (isSelectableFallback ? 'div' : 'li')"
     ref="root"
     v-bind="$attrs"
     class="mat-list-group"

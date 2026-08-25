@@ -44,6 +44,7 @@
 - [Toolbar 工具栏](components/toolbar.md): mat-toolbar 的停靠、悬浮、自然布局占位、安全区和覆盖层避让。
 - [Bottom sheet 底部面板](components/bottom-sheet.md): mat-bottom-sheet 的 standard、modal、自适应布局、拖动关闭、帷幕和焦点行为。
 - [Side sheet 侧边面板](components/side-sheet.md): mat-side-sheet 的 standard、modal、自适应布局、start/end 位置、帷幕和焦点行为。
+- [Expansion 折叠面板](components/expansion.md): mat-expansion 与 mat-expansion-panel 的 Material 3 Expressive 外观、分立与一体化折叠、受控绑定与手风琴协同。
 - [Navigation 导航](components/navigation-rail.md): mat-navigation-rail 的 Expressive collapsed/expanded rail 与 horizontal flexible navigation bar。
 - [Tooltip 文字提示](components/tooltip.md): mat-tooltip 的 Material 3 Plain 与 Rich tooltip、展示元素、固定定位、延迟和无障碍说明。
 - [Divider 分隔线](components/divider.md): mat-divider 的 Material 3 全宽、起始缩进、两侧 inset 与 Card Actions 分隔方式。
