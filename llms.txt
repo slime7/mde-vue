@@ -49,6 +49,7 @@
 - [Divider 分隔线](components/divider.md): mat-divider 的 Material 3 全宽、起始缩进、两侧 inset 与 Card Actions 分隔方式。
 - [Snackbar 消息提示](components/snackbar.md): mat-snackbar 的 Material 3 底部消息提示、文字 action、全局 FIFO 队列和 Promise 函数。
 - [Scroll area 滚动区域](components/scroll-area.md): mat-scroll-area 与 MatScrollArea 为单轴内容提供边缘渐隐、容器配色、圆角和无限滚动事件。
+- [Virtual scroll 虚拟滚动](components/virtual-scroll.md): mat-virtual-scroll 与 MatVirtualScroll 为大数据列表提供轻量高性能的虚拟列表渲染与滚动联动。
 - [Spacer 弹性占位](components/spacer.md): mat-spacer 在 flex 布局中占据主轴剩余空间。
 - [Container 响应式容器](components/container.md): mat-container 统一正文的响应式水平内边距、最大宽度和流式布局。
 - [Table wrapper 表格容器](components/table-wrapper.md): mat-table-wrapper 以 table-wrapper 容器优化表格展示：横向滚动、圆角边框、单元格内边距与表头底色。

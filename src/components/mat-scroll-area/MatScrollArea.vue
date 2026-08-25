@@ -5,10 +5,12 @@ import {
   onBeforeUnmount,
   onMounted,
   onUpdated,
+  provide,
   ref,
   useAttrs,
   watch,
 } from 'vue';
+import { MAT_SCROLL_AREA_KEY } from '../scroll-area-context';
 import { isComponentColor } from '../button-props';
 import useComponentColor from '../use-component-color';
 import {
@@ -521,6 +523,11 @@ function getScroller() {
 function scrollTo(options) {
   scroller.value?.scrollTo(options);
 }
+
+provide(MAT_SCROLL_AREA_KEY, {
+  getScroller,
+  scrollTo,
+});
 
 watch(
   [normalizedOrientation, thresholds],

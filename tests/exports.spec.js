@@ -67,7 +67,9 @@ import {
   MatTextField as RootMatTextField,
   MatToolbar as RootMatToolbar,
   MatTooltip as RootMatTooltip,
+  MatVirtualScroll as RootMatVirtualScroll,
   MdeSharedElement as RootMdeSharedElement,
+  MdeVirtualScroll as RootMdeVirtualScroll,
   StateLayer as RootStateLayer,
   useMatApp,
   useMatProps,
@@ -132,11 +134,13 @@ const globalComponents = [
   ['MatPane', 'mat-pane', RootMatPane],
   ['MatNavigationRail', 'mat-navigation-rail', RootMatNavigationRail],
   ['MatNavigationRailItem', 'mat-navigation-rail-item', RootMatNavigationRailItem],
+  ['MatVirtualScroll', 'mat-virtual-scroll', RootMatVirtualScroll, ['MdeVirtualScroll', 'mde-virtual-scroll']],
 ];
 
 describe('公共组件导出', () => {
   it('导出同元素转移组件与 MDE 别名协调器', () => {
     expect(RootMdeSharedElement).toBe(RootMatSharedElement);
+    expect(RootMdeVirtualScroll).toBe(RootMatVirtualScroll);
     expect(useMdeViewTransition).toBe(useMatViewTransition);
   });
   it('从根入口导出应用布局组件与组合函数', () => {

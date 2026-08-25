@@ -146,6 +146,7 @@ export default defineConfig({
               { text: 'Navigation 导航', link: '/components/navigation-rail' },
               { text: 'Panes 布局面板', link: '/components/panes' },
               { text: 'Scroll area 滚动区域', link: '/components/scroll-area' },
+              { text: 'Virtual scroll 虚拟滚动', link: '/components/virtual-scroll' },
               { text: 'Side sheet 侧边面板', link: '/components/side-sheet' },
               { text: 'Spacer 弹性占位', link: '/components/spacer' },
               { text: 'Toolbar 工具栏', link: '/components/toolbar' },

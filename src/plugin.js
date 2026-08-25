@@ -49,6 +49,7 @@ import MatContainer from './components/mat-container/MatContainer.vue';
 import MatSpacer from './components/mat-spacer/MatSpacer.vue';
 import MatTableWrapper from './components/mat-table-wrapper/MatTableWrapper.vue';
 import MatScrollArea from './components/mat-scroll-area/MatScrollArea.vue';
+import MatVirtualScroll from './components/mat-virtual-scroll/MatVirtualScroll.vue';
 import MatLoading from './components/mat-loading/MatLoading.vue';
 import MatProgress from './components/mat-progress/MatProgress.vue';
 import MatTooltip from './components/mat-tooltip/MatTooltip.vue';
@@ -121,6 +122,7 @@ export const GLOBAL_COMPONENTS = [
   ['MatSpacer', 'mat-spacer', MatSpacer],
   ['MatTableWrapper', 'mat-table-wrapper', MatTableWrapper],
   ['MatScrollArea', 'mat-scroll-area', MatScrollArea],
+  ['MatVirtualScroll', 'mat-virtual-scroll', MatVirtualScroll],
   ['MatLoading', 'mat-loading', MatLoading],
   ['MatProgress', 'mat-progress', MatProgress],
   ['MatTooltip', 'mat-tooltip', MatTooltip],
