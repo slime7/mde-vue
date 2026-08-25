@@ -206,7 +206,7 @@ function renderDocuments(documents) {
     llms: [
       '# mde-vue',
       '',
-      '> 面向最新浏览器的私有 Vue 3 组件库。',
+      '> 主要面向 Electron 等现代客户端环境的 Vue 3 组件库。',
       '',
       '## 文档',
       '',

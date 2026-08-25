@@ -1,23 +1,27 @@
 ---
 title: 安装
-description: 从 GitHub 私有仓库固定提交安装 mde-vue，并选择全局注册或按需导入组件与指令。
+description: 从 GitHub 仓库固定提交或标签安装 mde-vue，并选择全局注册或按需导入组件与指令。
 llms: true
 order: 20
 ---
 
 # 安装
 
-`mde-vue` 不发布到 npm registry，而是从私有 GitHub 仓库安装已提交的单一核心 ESM 分发产物。使用方需要 Vue 3、支持 ESM 的构建环境，以及访问仓库的 SSH 凭据。
+`mde-vue` 目前通过 GitHub 仓库分发已构建的单一核心 ESM 产物。使用方需要 Vue 3 以及支持 ESM 的构建环境。
 
-## 从私有 Git 仓库安装
+## 从 GitHub 仓库安装
 
-把 `<commit>` 替换为需要固定的完整 Git 提交 SHA：
+建议使用固定 Git 提交 SHA 或发布 Tag 锁定版本：
 
 ```bash
-pnpm add "mde-vue@git+ssh://git@github.com/slime7/mde-vue.git#<commit>"
+# HTTPS 安装（推荐）
+pnpm add "mde-vue@git+https://github.com/slime7/mde-vue.git#<commit-or-tag>"
+
+# SSH 安装
+pnpm add "mde-vue@git+ssh://git@github.com/slime7/mde-vue.git#<commit-or-tag>"
 ```
 
-不要使用会随时间移动的分支名代替提交 SHA，否则不同时间安装可能得到不同产物。仓库的 `package.json` 只导出已提交的 `dist`，其中只有一个 JavaScript 文件、一个样式文件和一个类型声明文件。安装时不运行 `prepare`，使用方也不需要编译组件库的 Vue SFC。
+不要使用会随时间移动的分支名代替提交 SHA 或 Tag，否则不同时间安装可能得到不同产物。仓库的 `package.json` 只导出已提交的 `dist`，其中只有一个 JavaScript 文件、一个样式文件和一个类型声明文件。安装时不运行 `prepare`，使用方也不需要编译组件库的 Vue SFC。
 
 ## 全局注册：推荐用法
 

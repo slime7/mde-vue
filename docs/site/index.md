@@ -5,8 +5,8 @@ llms: false
 
 hero:
   name: mde-vue
-  text: 私有 Vue 组件库
-  tagline: 面向现代浏览器与个人项目的 Material 3 组件、主题和 AI 文档。
+  text: Material 3 Expressive Vue 组件库
+  tagline: 主要面向 Electron 等现代客户端环境与个人项目的 Material 3 组件、主题和 AI 文档。
   actions:
     - theme: brand
       text: 开始使用

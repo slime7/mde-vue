@@ -4,7 +4,7 @@
 
 # 概述
 
-`mde-vue` 是一个仅供个人项目使用的 Vue 3 组件库。它只面向最新浏览器和客户端应用，源码使用 JavaScript、Vue SFC 与原生 CSS。
+`mde-vue` 是一个基于 Vue 3 的 Material 3 Expressive 个人组件库，由个人主导、AI（Coding Agent）重度参与设计、实现与维护。它主要面向 Electron 等拥有现代化 Chromium/浏览器内核的客户端应用，源码使用 JavaScript、Vue SFC 与原生 CSS。
 
 当前公共能力包括：
 
@@ -15,7 +15,7 @@
 
 ## 设计边界
 
-项目不提供 npm 发布产物、TypeScript 声明、服务端渲染、旧浏览器兼容、本地化、IDE 插件或其他框架适配。组件源码由使用方的 Vue/Vite 项目直接编译。
+项目当前通过 GitHub 仓库分发构建后的 ESM 单包产物与 TypeScript 类型声明，暂不发布到 npm 仓库。直接采用现代 Web 标准与 CSS 特性，不提供服务端渲染、旧浏览器兼容、本地化、IDE 插件或其他前端框架适配。
 
 ## 公共入口
 
@@ -36,17 +36,21 @@ import 'mde-vue/styles.css';
 
 # 安装
 
-`mde-vue` 不发布到 npm registry，而是从私有 GitHub 仓库安装已提交的单一核心 ESM 分发产物。使用方需要 Vue 3、支持 ESM 的构建环境，以及访问仓库的 SSH 凭据。
+`mde-vue` 目前通过 GitHub 仓库分发已构建的单一核心 ESM 产物。使用方需要 Vue 3 以及支持 ESM 的构建环境。
 
-## 从私有 Git 仓库安装
+## 从 GitHub 仓库安装
 
-把 `<commit>` 替换为需要固定的完整 Git 提交 SHA：
+建议使用固定 Git 提交 SHA 或发布 Tag 锁定版本：
 
 ```bash
-pnpm add "mde-vue@git+ssh://git@github.com/slime7/mde-vue.git#<commit>"
+# HTTPS 安装（推荐）
+pnpm add "mde-vue@git+https://github.com/slime7/mde-vue.git#<commit-or-tag>"
+
+# SSH 安装
+pnpm add "mde-vue@git+ssh://git@github.com/slime7/mde-vue.git#<commit-or-tag>"
 ```
 
-不要使用会随时间移动的分支名代替提交 SHA，否则不同时间安装可能得到不同产物。仓库的 `package.json` 只导出已提交的 `dist`，其中只有一个 JavaScript 文件、一个样式文件和一个类型声明文件。安装时不运行 `prepare`，使用方也不需要编译组件库的 Vue SFC。
+不要使用会随时间移动的分支名代替提交 SHA 或 Tag，否则不同时间安装可能得到不同产物。仓库的 `package.json` 只导出已提交的 `dist`，其中只有一个 JavaScript 文件、一个样式文件和一个类型声明文件。安装时不运行 `prepare`，使用方也不需要编译组件库的 Vue SFC。
 
 ## 全局注册：推荐用法
 
@@ -5276,7 +5280,7 @@ import ButtonGroupVariantExample from '../examples/button/ButtonGroupVariantExam
 
 当前版本有意保持较小的支持范围：
 
-- 仅支持 Vue 3 客户端应用和最新浏览器；
+- 主要面向 Electron 等拥有现代内核的客户端应用与现代浏览器；
 - 不支持 SSR、旧浏览器、本地化、IDE 插件或其他前端框架；
 - 不发布 npm registry 包，不提供 CommonJS 产物；
 - 只分发预构建 ESM、CSS 和 Vue 类型声明，使用方无需处理组件库的 `.vue` 源文件；

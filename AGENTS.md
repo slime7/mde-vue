@@ -1,6 +1,6 @@
 # mde-vue Agent 工作规则
 
-`mde-vue` 是一个仅供仓库所有者使用的 Vue 3 组件库，使用 JavaScript、Vue SFC 和原生 CSS，面向最新浏览器中的客户端应用。
+`mde-vue` 是一个基于 Vue 3 的 Material 3 Expressive 个人组件库，由个人主导、AI（Coding Agent）重度参与设计与构建，使用 JavaScript、Vue SFC 和原生 CSS，面向最新浏览器中的客户端应用。
 
 ## 开始任务前
 
@@ -24,7 +24,7 @@
 - 组件基于 Vue 实现，不增加 Web Components、React 或其他框架适配层。
 - 样式使用原生 CSS；共享设计值必须通过公开的 `--mat-ref-*` 和 `--mat-sys-*` 令牌表达。组件可以使用 `--mat-<component>-*` 等内部变量组织样式，但这些变量不是公共定制入口。
 - 保持最小 ESM 分发：`dist/` 只包含全部运行时实现的 `mde-vue.js`、基础令牌与组件样式 `styles.css`、Tailwind v4 映射 `tailwind.css` 以及、根入口类型 `index.d.ts`。公共 JavaScript API 只使用包根入口，不提供组件、指令或函数子入口；不添加 npm 发布或 `prepare` 流程。源码是维护权威，`dist/` 必须由 `pnpm build` 生成，禁止手工编辑。
-- 只支持最新浏览器和客户端渲染；不要加入旧浏览器兼容层、SSR 分支、本地化或 IDE 插件。
+- 主要支持 Electron 等现代化浏览器内核及最新浏览器客户端渲染；不要加入旧浏览器兼容层、SSR 分支、本地化或 IDE 插件。
 - 修改公共导出、组件 props、主题选项或公共 CSS 令牌时，同步更新测试、使用文档和 AI 文档来源页面。
 - mdui 改编内容应标注来源；不得删除 `THIRD_PARTY_NOTICES.md` 或 `licenses/mdui-MIT.txt` 中的许可信息。
 

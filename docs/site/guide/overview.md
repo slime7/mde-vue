@@ -7,7 +7,7 @@ order: 10
 
 # 概述
 
-`mde-vue` 是一个仅供个人项目使用的 Vue 3 组件库。它只面向最新浏览器和客户端应用，源码使用 JavaScript、Vue SFC 与原生 CSS。
+`mde-vue` 是一个基于 Vue 3 的 Material 3 Expressive 个人组件库，由个人主导、AI（Coding Agent）重度参与设计、实现与维护。它主要面向 Electron 等拥有现代化 Chromium/浏览器内核的客户端应用，源码使用 JavaScript、Vue SFC 与原生 CSS。
 
 当前公共能力包括：
 
@@ -18,7 +18,7 @@ order: 10
 
 ## 设计边界
 
-项目不提供 npm 发布产物、TypeScript 声明、服务端渲染、旧浏览器兼容、本地化、IDE 插件或其他框架适配。组件源码由使用方的 Vue/Vite 项目直接编译。
+项目当前通过 GitHub 仓库分发构建后的 ESM 单包产物与 TypeScript 类型声明，暂不发布到 npm 仓库。直接采用现代 Web 标准与 CSS 特性，不提供服务端渲染、旧浏览器兼容、本地化、IDE 插件或其他前端框架适配。
 
 ## 公共入口
 

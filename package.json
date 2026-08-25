@@ -1,6 +1,13 @@
 {
   "name": "mde-vue",
   "version": "0.1.0",
+  "description": "主要面向 Electron 等现代客户端环境、基于 Vue 3 与原生 CSS 的 Material 3 Expressive 个人组件库（AI 重度参与构建）",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slime7/mde-vue.git"
+  },
+  "homepage": "https://slime7.github.io/mde-vue/",
   "private": true,
   "type": "module",
   "types": "./dist/index.d.ts",

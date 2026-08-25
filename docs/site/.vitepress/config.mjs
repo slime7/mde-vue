@@ -43,8 +43,9 @@ function createVitePressStylesLayerPlugin() {
 }
 
 export default defineConfig({
+  base: process.env.VITEPRESS_BASE || '/',
   title: 'mde-vue',
-  description: '面向现代浏览器的私有 Vue 3 组件库',
+  description: '主要面向 Electron 等现代客户端环境的 Material 3 Expressive Vue 3 组件库',
   lang: 'zh-CN',
   cleanUrls: true,
   appearance: false,

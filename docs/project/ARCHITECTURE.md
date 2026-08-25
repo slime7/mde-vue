@@ -2,13 +2,13 @@
 
 ## 当前状态
 
-`mde-vue` 是一个私有的 Vue 3 单包组件库。源码经 Vite 编译为仓库内提交的单一核心 ESM，包 `exports` 只向使用方暴露 `dist/`；仓库同时包含带实时预览的 VitePress 中文使用文档、项目维护文档、测试和由 Markdown 生成的 AI 文档。
+`mde-vue` 是一个开源的 Vue 3 单包个人组件库。源码经 Vite 编译为仓库内提交的单一核心 ESM，包 `exports` 只向使用方暴露 `dist/`；仓库同时包含带实时预览的 VitePress 中文使用文档、项目维护文档、测试和由 Markdown 生成的 AI 文档。
 
 长期技术选择及原因记录在 [ADR 索引](adr/README.md)；公共概念和不变量见 [核心抽象](ABSTRACTIONS.md)。
 
 ## 架构原则
 
-- 运行时只面向 Vue 3 客户端应用和最新浏览器。
+- 运行时主要面向 Electron 等搭载现代浏览器内核的 Vue 3 客户端应用与最新现代浏览器。
 - 组件渲染、主题计算、CSS 令牌和文档生成保持边界清晰。
 - 组件默认读取语义令牌；显式十六进制 `color` 通过共享配色模块生成局部 Material 配色，不在组件内重复计算规则。
 - 原生 CSS 令牌是运行时权威值；`styles.css` 在父层 `mde` 内通过稳定的 `mde.tokens`、`mde.components`、`mde.utilities` 依次组织令牌、组件和公共工具类，并以顶层 `mde-final` 保护少量安全不变量；未分层的应用样式自然优先，Tailwind 适配层只提供独立的静态名称映射。
