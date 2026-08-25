@@ -16,7 +16,6 @@ import {
 import createFrameScheduler from './frame-scheduler';
 import createMotionController from './motion-controller';
 import {
-  dialogScrollbarWidth,
   dialogStack,
   registerDialog,
   unregisterDialog,
@@ -202,18 +201,11 @@ const sizeStyle = computed(() => {
     '--mat-sheet-preferred-width': resolvedWidth.value,
   };
 });
-const positionStyle = computed(() => (
-  props.direction === 'side' && isModal.value && !isAppRootScoped.value
-    && props.position === 'end'
-    ? { '--mat-sheet-modal-end-offset': `${-dialogScrollbarWidth.value}px` }
-    : {}
-));
 const rootStyle = computed(() => [
   attrs.style,
 ]);
 const panelStyle = computed(() => [
   sizeStyle.value,
-  positionStyle.value,
 ]);
 let mounted = false;
 const phaseMotion = createMotionController();
@@ -1110,7 +1102,7 @@ watch(() => props.closeLabel, (value) => {
   }
 
   .mat-sheet--modal .mat-sheet__panel--side.mat-sheet__panel--position-end {
-    inset-inline: auto var(--mat-sheet-modal-end-offset, 0);
+    inset-inline: auto 0;
     margin-inline: auto 0;
     border-start-end-radius: var(--mat-sys-shape-corner-none);
     border-end-end-radius: var(--mat-sys-shape-corner-none);

@@ -493,6 +493,24 @@ describe('MatSideSheet', () => {
     expect(document.documentElement.style.overflow).not.toBe('hidden');
   });
 
+  it('modal 在 position="end" 时面板不设置负偏移样式', async () => {
+    mount(MatSideSheet, {
+      props: {
+        modelValue: true,
+        position: 'end',
+        title: '右侧面板',
+        variant: 'modal',
+      },
+    });
+
+    await settleRender();
+
+    const panel = document.body.querySelector('dialog .mat-sheet__panel--side.mat-sheet__panel--position-end');
+
+    expect(panel).not.toBeNull();
+    expect(panel?.getAttribute('style') || '').not.toContain('--mat-sheet-modal-end-offset');
+  });
+
   it('内置关闭按钮提供可访问名称并请求关闭', async () => {
     const wrapper = mount(MatSideSheet, {
       attachTo: document.body,

@@ -8978,19 +8978,19 @@ var Zo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			});
 		}), de = i(() => {
 			if (ue.value) return { "--mat-sheet-preferred-width": ue.value };
-		}), fe = i(() => l.direction === "side" && X.value && !q.value && l.position === "end" ? { "--mat-sheet-modal-end-offset": `${-Mo.value}px` } : {}), pe = i(() => [h.style]), me = i(() => [de.value, fe.value]), he = !1, ge = Ot(), _e = null, ve = !1, ye = null, be = 0, xe = 0, Se = 0, Ce = 0, we = !1;
+		}), fe = i(() => [h.style]), pe = i(() => [de.value]), me = !1, he = Ot(), ge = null, _e = !1, ve = null, ye = 0, be = 0, xe = 0, Se = 0, Ce = !1;
 		Xo(K, i(() => X.value && j.value && Z.value));
-		function Te() {
-			ge.cancel();
+		function we() {
+			he.cancel();
 		}
-		function Ee(e, t) {
-			ge.wait(K.value, e, t);
+		function Te(e, t) {
+			he.wait(K.value, e, t);
 		}
-		function Q() {
+		function Ee() {
 			let e = D.value ? [...D.value.children] : [];
 			return e.length === 1 && e[0] instanceof HTMLElement && e[0].ownerDocument === document ? e[0] : null;
 		}
-		function De() {
+		function Q() {
 			if (typeof l.attach == "string") try {
 				return document.querySelector(l.attach);
 			} catch {
@@ -8998,7 +8998,7 @@ var Zo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}
 			return l.attach instanceof HTMLElement && l.attach.ownerDocument === document ? l.attach : null;
 		}
-		function Oe(e) {
+		function De(e) {
 			if (w && !E) return {
 				context: w,
 				target: w.modalLayer.value
@@ -9012,33 +9012,33 @@ var Zo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}
 			return null;
 		}
-		function ke(e) {
+		function Oe(e) {
 			return {
 				inertElement: e.contentElement.value,
 				scrollElement: e.documentMode.value ? null : e.contentElement.value
 			};
 		}
-		function Ae() {
+		function ke() {
 			p("update:modelValue", !1);
 		}
-		function je(e, t) {
+		function Ae(e, t) {
 			if (U = e, K.value?.style.setProperty("--mat-sheet-drag-offset", `${e}px`), t === null) {
 				K.value?.style.removeProperty("--mat-sheet-drag-size");
 				return;
 			}
 			K.value?.style.setProperty("--mat-sheet-drag-size", `${t}px`);
 		}
-		function Me() {
-			je(0, null);
+		function je() {
+			Ae(0, null);
 		}
-		function Ne() {
-			if (we) {
-				we = !1;
+		function Me() {
+			if (Ce) {
+				Ce = !1;
 				return;
 			}
 			if (l.expanded) {
 				if (X.value) {
-					Ae();
+					ke();
 					return;
 				}
 				p("update:expanded", !1);
@@ -9046,19 +9046,19 @@ var Zo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}
 			p("update:expanded", !0);
 		}
-		function Pe(e) {
-			e.key !== "Enter" && e.key !== " " || (e.preventDefault(), Ne());
+		function Ne(e) {
+			e.key !== "Enter" && e.key !== " " || (e.preventDefault(), Me());
 		}
-		function Fe() {
+		function Pe() {
 			console.warn(`${l.componentName}: activator Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点`);
 		}
-		function Ie() {
+		function Fe() {
 			!X.value || re.value || h["aria-label"] || h["aria-labelledby"] || console.warn(`${l.componentName}: 必须通过 title、title Slot、aria-label 或 aria-labelledby 提供可访问名称`);
 		}
-		function Le() {
+		function Ie() {
 			console.warn(`${l.componentName}: attach 必须指向当前 document 中存在的 HTMLElement`);
 		}
-		function Re() {
+		function Le() {
 			let e = K.value;
 			e && (e.querySelector([
 				"[autofocus]",
@@ -9070,147 +9070,147 @@ var Zo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				"[tabindex]:not([tabindex=\"-1\"])"
 			].join(",")) ?? e).focus({ preventScroll: !0 });
 		}
-		function ze() {
+		function Re() {
 			let e = K.value;
 			if (e instanceof HTMLDialogElement) {
 				if (e.open || e.show(), q.value) {
 					let t = L.value;
 					if (!t) return;
-					qo(e, ke(t.context));
+					qo(e, Oe(t.context));
 				} else qo(e);
-				Re();
+				Le();
 			}
 		}
-		async function Be() {
-			if (Te(), j.value) {
-				N.value = "opening", Ee(400, () => {
+		async function ze() {
+			if (we(), j.value) {
+				N.value = "opening", Te(400, () => {
 					N.value = "open", p("opened");
 				});
 				return;
 			}
-			let e = ne.value ? Q() : null;
+			let e = ne.value ? Ee() : null;
 			if (ne.value && !e) {
-				Fe(), Ae();
+				Pe(), ke();
 				return;
 			}
 			if (X.value) {
-				let t = De(), n = Oe(t), r = n ? n.target : t;
+				let t = Q(), n = De(t), r = n ? n.target : t;
 				if (!r) {
-					Le(), Ae();
+					Ie(), ke();
 					return;
 				}
-				L.value = n, P.value = r, _e = e ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+				L.value = n, P.value = r, ge = e ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
 			} else L.value = null;
-			ve = X.value, j.value = !0, N.value = "opening", Ie(), await _(), !(!l.modelValue || !K.value) && (X.value && ze(), Ee(400, () => {
+			_e = X.value, j.value = !0, N.value = "opening", Fe(), await _(), !(!l.modelValue || !K.value) && (X.value && Re(), Te(400, () => {
 				N.value = "open", p("opened");
 			}));
 		}
-		function Ve() {
-			ve && _e?.isConnected && _e.focus({ preventScroll: !0 }), _e = null, ve = !1;
+		function Be() {
+			_e && ge?.isConnected && ge.focus({ preventScroll: !0 }), ge = null, _e = !1;
 		}
-		function He() {
+		function Ve() {
 			let e = K.value;
-			e instanceof HTMLDialogElement && (e.open && e.close(), Jo(e)), L.value = null, j.value = !1, N.value = "closed", Me(), _(() => {
-				Ve(), p("closed");
+			e instanceof HTMLDialogElement && (e.open && e.close(), Jo(e)), L.value = null, j.value = !1, N.value = "closed", je(), _(() => {
+				Be(), p("closed");
 			});
 		}
-		async function Ue() {
-			j.value && (N.value = "closing", await _(), !(l.modelValue || N.value !== "closing" || !K.value) && Ee(200, He));
+		async function He() {
+			j.value && (N.value = "closing", await _(), !(l.modelValue || N.value !== "closing" || !K.value) && Te(200, Ve));
+		}
+		function Ue(e) {
+			e.preventDefault(), ke();
 		}
 		function We(e) {
-			e.preventDefault(), Ae();
+			e.key === "Escape" && (e.preventDefault(), ke());
 		}
 		function Ge(e) {
-			e.key === "Escape" && (e.preventDefault(), Ae());
+			!X.value || !l.closeOnBack || e.target !== K.value || ke();
 		}
 		function Ke(e) {
-			!X.value || !l.closeOnBack || e.target !== K.value || Ae();
-		}
-		function qe(e) {
-			if (e.pointerId === ye) {
+			if (e.pointerId === ve) {
 				if (l.direction === "bottom") {
-					if (Ce = e.clientY - be, !l.expanded && Ce < 0 || l.expanded && Ce > 0) {
-						je(0, Math.max(0, xe - Ce));
+					if (Se = e.clientY - ye, !l.expanded && Se < 0 || l.expanded && Se > 0) {
+						Ae(0, Math.max(0, be - Se));
 						return;
 					}
-					je(Math.max(0, Ce), xe);
+					Ae(Math.max(0, Se), be);
 					return;
 				}
-				je(l.position === "start" ? Math.max(0, be - e.clientX) : Math.max(0, e.clientX - be), null);
+				Ae(l.position === "start" ? Math.max(0, ye - e.clientX) : Math.max(0, e.clientX - ye), null);
 			}
 		}
-		let Je = Yr(qe);
-		function Ye(e) {
-			e.pointerId === ye && Je.schedule(e);
+		let qe = Yr(Ke);
+		function Je(e) {
+			e.pointerId === ve && qe.schedule(e);
 		}
-		function Xe() {
-			ye = null, W.value = !1, window.removeEventListener("pointermove", Ye), window.removeEventListener("pointerup", Ze), window.removeEventListener("pointercancel", Qe);
+		function Ye() {
+			ve = null, W.value = !1, window.removeEventListener("pointermove", Je), window.removeEventListener("pointerup", Xe), window.removeEventListener("pointercancel", Ze);
 		}
-		function Ze(e) {
-			if (e.pointerId !== ye) return;
-			Je.flush();
-			let t = J.value, n = l.direction === "bottom" ? t?.getBoundingClientRect().height ?? 0 : t?.getBoundingClientRect().width ?? 0, r = Math.max(1, performance.now() - Se), i = l.direction === "bottom" ? Math.abs(Ce) : U, a = i / r, o = i >= Math.min(160, Math.max(80, n * .3)) || i >= 24 && a >= .5;
-			if (we = i >= 4, Xe(), l.direction === "bottom" && o) {
-				if (!l.expanded && Ce < 0) {
-					Me(), p("update:expanded", !0);
+		function Xe(e) {
+			if (e.pointerId !== ve) return;
+			qe.flush();
+			let t = J.value, n = l.direction === "bottom" ? t?.getBoundingClientRect().height ?? 0 : t?.getBoundingClientRect().width ?? 0, r = Math.max(1, performance.now() - xe), i = l.direction === "bottom" ? Math.abs(Se) : U, a = i / r, o = i >= Math.min(160, Math.max(80, n * .3)) || i >= 24 && a >= .5;
+			if (Ce = i >= 4, Ye(), l.direction === "bottom" && o) {
+				if (!l.expanded && Se < 0) {
+					je(), p("update:expanded", !0);
 					return;
 				}
-				if (l.expanded && Ce > 0) {
-					Me(), p("update:expanded", !1);
+				if (l.expanded && Se > 0) {
+					je(), p("update:expanded", !1);
 					return;
 				}
-				if (!l.expanded && Ce > 0) {
-					je(U, null), Ae();
+				if (!l.expanded && Se > 0) {
+					Ae(U, null), ke();
 					return;
 				}
 			}
 			if (l.direction === "side" && o) {
-				Ae();
+				ke();
 				return;
 			}
-			Me();
+			je();
 		}
-		function Qe() {
-			Je.cancel(), Xe(), Me();
+		function Ze() {
+			qe.cancel(), Ye(), je();
+		}
+		function Qe(e) {
+			!l.draggable || e.button !== 0 || ve !== null || (qe.cancel(), ve = e.pointerId, ye = l.direction === "bottom" ? e.clientY : e.clientX, be = l.direction === "bottom" ? J.value?.getBoundingClientRect().height ?? 0 : J.value?.getBoundingClientRect().width ?? 0, xe = performance.now(), Se = 0, Ae(0, l.direction === "bottom" ? be : null), W.value = !0, window.addEventListener("pointermove", Je), window.addEventListener("pointerup", Xe), window.addEventListener("pointercancel", Ze));
 		}
 		function $e(e) {
-			!l.draggable || e.button !== 0 || ye !== null || (Je.cancel(), ye = e.pointerId, be = l.direction === "bottom" ? e.clientY : e.clientX, xe = l.direction === "bottom" ? J.value?.getBoundingClientRect().height ?? 0 : J.value?.getBoundingClientRect().width ?? 0, Se = performance.now(), Ce = 0, je(0, l.direction === "bottom" ? xe : null), W.value = !0, window.addEventListener("pointermove", Ye), window.addEventListener("pointerup", Ze), window.addEventListener("pointercancel", Qe));
+			l.direction !== "side" || e.pointerType !== "touch" || e.target instanceof Element && e.target.closest("button, a, input, textarea, select, [contenteditable=\"true\"]") || Qe(e);
 		}
 		function et(e) {
-			l.direction !== "side" || e.pointerType !== "touch" || e.target instanceof Element && e.target.closest("button, a, input, textarea, select, [contenteditable=\"true\"]") || $e(e);
+			X.value || $e(e);
 		}
 		function tt(e) {
-			X.value || et(e);
+			X.value && $e(e);
 		}
-		function nt(e) {
-			X.value && et(e);
-		}
-		function rt() {
+		function nt() {
 			V.value = window.innerWidth;
 		}
-		async function it(e, t) {
+		async function rt(e, t) {
 			if (!j.value || !l.modelValue || e === t) return;
-			Te();
+			we();
 			let n = K.value;
-			if (t === "modal" && n instanceof HTMLDialogElement && (n.open && n.close(), Jo(n), Ve(), L.value = null), e === "modal") {
-				let e = De(), t = Oe(e), n = t ? t.target : e;
+			if (t === "modal" && n instanceof HTMLDialogElement && (n.open && n.close(), Jo(n), Be(), L.value = null), e === "modal") {
+				let e = Q(), t = De(e), n = t ? t.target : e;
 				if (!n) {
-					Le(), Ae();
+					Ie(), ke();
 					return;
 				}
-				L.value = t, P.value = n, _e = document.activeElement instanceof HTMLElement ? document.activeElement : null, ve = !0, Ie();
+				L.value = t, P.value = n, ge = document.activeElement instanceof HTMLElement ? document.activeElement : null, _e = !0, Fe();
 			}
-			N.value = "open", await _(), e === "modal" && l.modelValue && ze();
+			N.value = "open", await _(), e === "modal" && l.modelValue && Re();
 		}
 		return C(() => {
-			he = !0, rt(), window.addEventListener("resize", rt), l.modelValue && Be();
+			me = !0, nt(), window.addEventListener("resize", nt), l.modelValue && ze();
 		}), x(() => {
-			Je.cancel(), he = !1, Te(), Xe(), window.removeEventListener("resize", rt);
+			qe.cancel(), me = !1, we(), Ye(), window.removeEventListener("resize", nt);
 			let e = K.value;
 			e instanceof HTMLDialogElement && (Jo(e), e.open && e.close());
 		}), B(() => l.modelValue, (e) => {
-			he && (e ? Be() : Ue());
-		}), B(Y, it), B(() => l.attach, () => {
+			me && (e ? ze() : He());
+		}), B(Y, rt), B(() => l.attach, () => {
 			l.modelValue && j.value && X.value && console.warn(`${l.componentName}: 打开期间修改 attach 将在下次打开时生效`);
 		}), B(() => l.closeLabel, (e) => {
 			e.trim().length === 0 && console.warn(`${l.componentName}: closeLabel 必须是非空字符串`);
@@ -9241,21 +9241,21 @@ var Zo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 					"mat-sheet--transparent-scrim": !e.scrim
 				}
 			]],
-			style: pe.value,
+			style: fe.value,
 			"aria-labelledby": r.$attrs["aria-labelledby"] ?? (re.value ? te : void 0),
 			"aria-modal": X.value ? "true" : void 0,
 			tabindex: X.value ? -1 : void 0,
-			onCancel: We,
-			onClick: Ke,
-			onKeydown: Ge,
-			onPointerdown: tt
+			onCancel: Ue,
+			onClick: Ge,
+			onKeydown: We,
+			onPointerdown: et
 		}), {
 			default: H(() => [c("div", {
 				ref_key: "panelElement",
 				ref: A,
 				class: v(["mat-sheet__panel", oe.value]),
-				style: y(me.value),
-				onPointerdown: nt
+				style: y(pe.value),
+				onPointerdown: tt
 			}, [
 				e.direction === "bottom" && e.dragHandle ? (T(), s("button", {
 					key: 0,
@@ -9263,9 +9263,9 @@ var Zo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 					type: "button",
 					"data-sheet-drag-handle": "",
 					"aria-label": se.value,
-					onClick: Ne,
-					onKeydown: Pe,
-					onPointerdown: G($e, ["stop"])
+					onClick: Me,
+					onKeydown: Ne,
+					onPointerdown: G(Qe, ["stop"])
 				}, [M(r.$slots, "drag-handle", {}, () => [i[0] ||= c("span", { class: "mat-sheet__drag-handle" }, null, -1)], !0)], 40, as)) : o("", !0),
 				ce.value ? (T(), s("header", os, [M(r.$slots, "header", {}, () => [
 					re.value ? (T(), s("h2", {
@@ -9281,7 +9281,7 @@ var Zo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 						label: e.closeLabel,
 						size: "small",
 						variant: "standard",
-						onClick: Ae
+						onClick: ke
 					}, null, 8, ["label"])) : o("", !0)
 				], !0)])) : o("", !0),
 				ie.value ? (T(), a(na, {
@@ -9306,7 +9306,7 @@ var Zo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"tabindex"
 		])], 8, ["to", "disabled"])) : o("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-504f7e89"]]), ds = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-9a53b49a"]]), ds = /*@__PURE__*/ Object.assign({
 	name: "MatBottomSheet",
 	inheritAttrs: !1
 }, {
