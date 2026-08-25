@@ -1176,6 +1176,13 @@ export interface MatDividerProps {
   * @default false
   */
   inset?: boolean | 'none' | 'start' | 'middle';
+  /**
+  * 是否为竖向分隔线。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  vertical?: boolean;
 }
 
 export type MatDividerComponent = DefineComponent<MatDividerProps, {}, {}, {}, {}, {}, {}, {}>;

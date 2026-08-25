@@ -23,6 +23,16 @@ const props = defineProps({
       return typeof value === 'boolean' || ['none', 'start', 'middle'].includes(value);
     },
   },
+  /**
+   * 是否为竖向分隔线。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  vertical: {
+    type: Boolean,
+    default: false,
+  },
 });
 const propsWithDefaults = useMatProps('divider', props);
 const list = inject(MAT_LIST_KEY, null);
@@ -57,10 +67,14 @@ const tag = computed(() => {
     class="mat-divider"
     :class="[
       `mat-divider--${insetMode}`,
-      { 'mat-divider--menu': isInMenu },
+      {
+        'mat-divider--menu': isInMenu,
+        'mat-divider--vertical': propsWithDefaults.vertical,
+      },
     ]"
     :aria-hidden="isInListbox ? 'true' : $attrs['aria-hidden']"
-    :role="isInListbox ? 'presentation' : isInList || isInMenu ? 'separator' : $attrs.role"
+    :aria-orientation="isInListbox ? undefined : (propsWithDefaults.vertical ? 'vertical' : undefined)"
+    :role="isInListbox ? 'presentation' : (isInList || isInMenu || propsWithDefaults.vertical ? 'separator' : $attrs.role)"
   />
 </template>
 
@@ -88,6 +102,29 @@ const tag = computed(() => {
   .mat-divider--middle {
     inline-size: calc(100% - 2 * var(--mat-divider-inset-space));
     margin-inline: var(--mat-divider-inset-space);
+  }
+
+  .mat-divider--vertical {
+    display: inline-block;
+    inline-size: var(--mat-divider-thickness);
+    block-size: 100%;
+    align-self: stretch;
+    margin-block: 0;
+    margin-inline: 0;
+  }
+
+  .mat-divider--vertical.mat-divider--start {
+    block-size: calc(100% - var(--mat-divider-inset-space));
+    inline-size: var(--mat-divider-thickness);
+    margin-block-start: var(--mat-divider-inset-space);
+    margin-inline-start: 0;
+  }
+
+  .mat-divider--vertical.mat-divider--middle {
+    block-size: calc(100% - 2 * var(--mat-divider-inset-space));
+    inline-size: var(--mat-divider-thickness);
+    margin-block: var(--mat-divider-inset-space);
+    margin-inline: 0;
   }
 
   .mat-divider--menu {

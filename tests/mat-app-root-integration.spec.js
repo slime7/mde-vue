@@ -277,4 +277,113 @@ describe('MatAppRoot 组件接入', () => {
 
     outsideWrapper.unmount();
   });
+
+  it('先 Navigation 后 AppBar 时 Navigation 占通栏高度，AppBar 避让 Navigation 宽度', async () => {
+    let app;
+    const Capture = layoutCapture((value) => {
+      app = value;
+    });
+    const wrapper = mount(MatAppRoot, {
+      attachTo: document.body,
+      props: { fillViewport: false },
+      slots: {
+        default: () => [
+          h(Capture),
+          h(MatNavigationRail, { app: true }),
+          h(MatToolbar, { app: true, variant: 'docked' }),
+        ],
+      },
+    });
+
+    await settleRender();
+    const railHost = wrapper.element.querySelector('.mat-navigation-rail-host');
+    const toolbar = wrapper.element.querySelector('[role="toolbar"]');
+
+    expect(wrapper.element.querySelector('.mat-app-root__edge-layer')).toBeNull();
+    expect(railHost).not.toBeNull();
+    expect(toolbar).not.toBeNull();
+
+    vi.spyOn(wrapper.element, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 800,
+      height: 800,
+      right: 1200,
+      width: 1200,
+    }));
+    vi.spyOn(railHost, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 800,
+      height: 800,
+      right: 80,
+      top: 0,
+      width: 80,
+    }));
+    vi.spyOn(toolbar, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 800,
+      height: 64,
+      left: 80,
+      right: 1200,
+      top: 736,
+      width: 1120,
+    }));
+
+    window.dispatchEvent(new Event('resize'));
+    await settleMeasurement();
+
+    expect(app.layout.padding.start).toBe(80);
+    expect(app.layout.padding.bottom).toBe(64);
+    expect(app.layout.content).toEqual({ width: 1120, height: 736 });
+
+    wrapper.unmount();
+  });
+
+  it('连续放置两个 NavigationRail 时次级导航紧跟一级导航并累加起始侧宽度', async () => {
+    let app;
+    const Capture = layoutCapture((value) => {
+      app = value;
+    });
+    const wrapper = mount(MatAppRoot, {
+      attachTo: document.body,
+      props: { fillViewport: false },
+      slots: {
+        default: () => [
+          h(Capture),
+          h(MatNavigationRail, { app: true }),
+          h(MatNavigationRail, { app: true, expanded: true, fullWidth: true }),
+        ],
+      },
+    });
+
+    await settleRender();
+    const rails = wrapper.element.querySelectorAll('.mat-navigation-rail-host');
+    expect(rails.length).toBe(2);
+
+    vi.spyOn(wrapper.element, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 800,
+      height: 800,
+      right: 1200,
+      width: 1200,
+    }));
+    vi.spyOn(rails[0], 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 800,
+      height: 800,
+      right: 80,
+      top: 0,
+      width: 80,
+    }));
+    vi.spyOn(rails[1], 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 800,
+      height: 800,
+      left: 80,
+      right: 320,
+      top: 0,
+      width: 240,
+    }));
+
+    window.dispatchEvent(new Event('resize'));
+    await settleMeasurement();
+
+    expect(app.layout.padding.start).toBe(320);
+    expect(app.layout.content.width).toBe(880);
+
+    wrapper.unmount();
+  });
 });

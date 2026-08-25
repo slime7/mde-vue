@@ -6027,9 +6027,9 @@ const RegisteredHeader = defineComponent({
   </DocsPreview>
 </ClientOnly>
 
-### 布局组件自动接入
+### 布局组件自动接入与正文滚动
 
-位于 AppRoot 内且设置 `app` 的 Toolbar、Navigation rail 和 FAB 会自动 Teleport 到当前布局；模板 Snackbar 与目标位于当前布局内的 Tooltip 不需要额外属性。示例使用带 `placeholder` 的 floating Toolbar，并让 Snackbar 在结束侧排列于 FAB 上方；浮动组件与容器边缘保持 Material 推荐的 16px 间距。
+位于 AppRoot 内且设置 `app` 的 Toolbar、Navigation rail 和 FAB 会自动接入当前应用布局并保持在边缘固定；正文区域可方便组合 `<mat-scroll-area>` 与 `<mat-container>` 进行滚动，Navigation 与 App bar 不会被正文滚动带走。示例展示底部 docked Toolbar、FAB、Snackbar 和 Tooltip 在正文滚动时的自动避让与层级排列。
 
 :::: details 查看示例代码
 ::: code-group
@@ -6038,7 +6038,6 @@ const RegisteredHeader = defineComponent({
 <template>
   <mat-app-root
     :fill-viewport="false"
-    scrollable
     class="app-root-components-example"
   >
     <mat-navigation-rail
@@ -6053,25 +6052,37 @@ const RegisteredHeader = defineComponent({
       </mat-navigation-rail-item>
     </mat-navigation-rail>
 
-    <section class="app-root-components-example__content">
-      <h3>组件自动接入</h3>
-      <p>Navigation 登记侧边；floating Toolbar、FAB、Snackbar 和 Tooltip 自动进入对应浮动层。</p>
-      <mat-btn
-        id="app-root-tooltip-target"
-        @click="snackbarOpen = true"
-      >
-        显示 Snackbar
-      </mat-btn>
-      <mat-tooltip
-        content="这个 Tooltip 属于当前 AppRoot"
-        target="#app-root-tooltip-target"
-      />
-    </section>
+    <mat-scroll-area>
+      <mat-container>
+        <section class="app-root-components-example__content">
+          <h3>组件自动接入与正文滚动</h3>
+          <p>Navigation 与底部 docked Toolbar 自动登记边缘；正文使用 MatScrollArea 和 MatContainer 组合进行滚动，FAB、Snackbar 和 Tooltip 自动浮动于正文与 Toolbar 之上。</p>
+          <mat-btn
+            id="app-root-tooltip-target"
+            @click="snackbarOpen = true"
+          >
+            显示 Snackbar
+          </mat-btn>
+          <mat-tooltip
+            content="这个 Tooltip 属于当前 AppRoot"
+            target="#app-root-tooltip-target"
+          />
+
+          <article
+            v-for="item in 4"
+            :key="item"
+            class="app-root-components-example__card"
+          >
+            <h4>滚动列表项 {{ item }}</h4>
+            <p>正文内容在 ScrollArea 内部滚动，Navigation 不会被滚动带走。</p>
+          </article>
+        </section>
+      </mat-container>
+    </mat-scroll-area>
 
     <mat-toolbar
       app
-      placeholder
-      variant="floating-top"
+      variant="docked"
     >
       <mat-btn variant="standard">
         取消
@@ -6117,13 +6128,27 @@ const current = ref('home');
 }
 
 .app-root-components-example__content {
-  min-block-size: 520px;
-  padding: 112px 24px 24px;
+  padding-block: 16px;
 }
 
 .app-root-components-example__content h3,
 .app-root-components-example__content p {
   margin-block: 0 16px;
+}
+
+.app-root-components-example__card {
+  margin-block: 12px;
+  padding: 12px 16px;
+  background: var(--mat-sys-color-surface-container);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+
+.app-root-components-example__card h4 {
+  margin: 0 0 8px;
+}
+
+.app-root-components-example__card p {
+  margin: 0;
 }
 </style>
 ```
@@ -6175,7 +6200,7 @@ const { layout, registerEdge } = useMatApp();
 
 `registerEdge({ edge, element })` 的 `edge` 只接受 `top`、`bottom`、`start`、`end`，`element` 必须是当前 document 中的 `HTMLElement`。返回值包含只读响应式 `insets { start, end }`、`update()` 和幂等的 `unregister()`。
 
-同侧多个登记项取最大外延，不累加，因此同侧固定组件可能互相覆盖；每侧通常只放一个固定组件。正交边缘按登记顺序确定优先级：较早登记的边缘占满自己的方向，后登记组件通过 `insets` 避让它。该顺序与 Vue 挂载顺序一致，动态条件切换时应保持组件顺序稳定。
+边缘组件接入遵循“先出现先占有”的通栏排布规则：在 AppRoot 容器内先出现的组件占据该方向的通栏（例如先 Navigation 后 AppBar 时 Navigation 高度为页面高度，AppBar 宽度为页面宽度扣去 Navigation 宽度；反之 AppBar 占满整宽，Navigation 高度扣去 AppBar 高度）。同向连续放置多个组件时（如先后放置两个 Navigation rail）按顺序依次偏移并累加占据宽度，可用于组合两级导航菜单。
 
 ## 事件
 
@@ -18504,6 +18529,46 @@ import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
   </DocsPreview>
 </ClientOnly>
 
+### 竖向分隔线
+
+设置 `vertical` 可将分隔线转为竖向，适合在工具栏、按钮组或水平排列的内容之间进行视觉划分，同时支持 `inset` 纵向缩进。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example-row">
+    <span>文本一</span>
+    <mat-divider vertical />
+    <span>文本二</span>
+    <mat-divider vertical inset="start" />
+    <span>文本三</span>
+    <mat-divider vertical inset />
+    <span>文本四</span>
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.example-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  block-size: 48px;
+  padding-inline: 16px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Divider 竖向预览">
+    <DividerVerticalExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### List 中使用
 
 :::: details 查看示例代码
@@ -18603,6 +18668,7 @@ import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `inset` | `boolean \| 'none' \| 'start' \| 'middle'` | `false` | `false`/`'none'` 为全宽，`true`/`'middle'` 为两侧各缩进 16px，`'start'` 只缩进起始侧 |
+| `vertical` | `boolean` | `false` | 是否为竖向分隔线 |
 
 未被消费的原生属性传递给实际根元素。独立使用时根元素是 `hr`；普通 List 中是 `li`；选择 List 中是展示用 `div`。组件没有公开方法。
 
@@ -18626,6 +18692,7 @@ Divider 固定为 1px，不响应 hover、focus、pressed 或 selected，也不�
 import DividerCardActionsExample from '../examples/divider/DividerCardActionsExample.vue';
 import DividerInsetsExample from '../examples/divider/DividerInsetsExample.vue';
 import DividerListExample from '../examples/divider/DividerListExample.vue';
+import DividerVerticalExample from '../examples/divider/DividerVerticalExample.vue';
 </script>
 
 # Snackbar 消息提示

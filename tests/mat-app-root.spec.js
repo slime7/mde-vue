@@ -134,7 +134,7 @@ describe('MatAppRoot', () => {
     expect(wrapper.text()).toContain('第二个');
   });
 
-  it('注册边缘后计算 padding、content 和同侧最大外延，并在更新与注销后同步', async () => {
+  it('注册边缘后按先出现先占有顺序累加 padding、content，并在更新与注销后同步', async () => {
     const topElement = document.createElement('header');
     const tallerTopElement = document.createElement('header');
     const handles = [];
@@ -185,9 +185,9 @@ describe('MatAppRoot', () => {
       bottom: 0,
       end: 0,
       start: 0,
-      top: 80,
+      top: 144,
     });
-    expect(app.layout.content).toEqual({ width: 800, height: 420 });
+    expect(app.layout.content).toEqual({ width: 800, height: 356 });
 
     tallerRect.mockReturnValue(rect({
       bottom: 48,
@@ -198,7 +198,7 @@ describe('MatAppRoot', () => {
     }));
     handles[1].update();
     await settleLayout();
-    expect(app.layout.padding.top).toBe(64);
+    expect(app.layout.padding.top).toBe(112);
 
     handles[0].unregister();
     await settleLayout();
@@ -251,7 +251,9 @@ describe('MatAppRoot', () => {
     await settleLayout();
 
     expect(isReadonly(startHandle.insets)).toBe(true);
-    expect(startHandle.insets).toEqual({ start: 64, end: 0 });
+    expect(startHandle.insets.top).toBe(64);
+    expect(startHandle.insets.bottom).toBe(0);
+    expect(startHandle.insets.start).toBe(0);
     expect(app.layout.edges.start).toEqual({
       endInset: 0,
       size: 96,

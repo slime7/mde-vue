@@ -99,9 +99,9 @@ order: 69
   </DocsPreview>
 </ClientOnly>
 
-### 布局组件自动接入
+### 布局组件自动接入与正文滚动
 
-位于 AppRoot 内且设置 `app` 的 Toolbar、Navigation rail 和 FAB 会自动 Teleport 到当前布局；模板 Snackbar 与目标位于当前布局内的 Tooltip 不需要额外属性。示例使用带 `placeholder` 的 floating Toolbar，并让 Snackbar 在结束侧排列于 FAB 上方；浮动组件与容器边缘保持 Material 推荐的 16px 间距。
+位于 AppRoot 内且设置 `app` 的 Toolbar、Navigation rail 和 FAB 会自动接入当前应用布局并保持在边缘固定；正文区域可方便组合 `<mat-scroll-area>` 与 `<mat-container>` 进行滚动，Navigation 与 App bar 不会被正文滚动带走。示例展示底部 docked Toolbar、FAB、Snackbar 和 Tooltip 在正文滚动时的自动避让与层级排列。
 
 :::: details 查看示例代码
 ::: code-group
@@ -160,7 +160,7 @@ const { layout, registerEdge } = useMatApp();
 
 `registerEdge({ edge, element })` 的 `edge` 只接受 `top`、`bottom`、`start`、`end`，`element` 必须是当前 document 中的 `HTMLElement`。返回值包含只读响应式 `insets { start, end }`、`update()` 和幂等的 `unregister()`。
 
-同侧多个登记项取最大外延，不累加，因此同侧固定组件可能互相覆盖；每侧通常只放一个固定组件。正交边缘按登记顺序确定优先级：较早登记的边缘占满自己的方向，后登记组件通过 `insets` 避让它。该顺序与 Vue 挂载顺序一致，动态条件切换时应保持组件顺序稳定。
+边缘组件接入遵循“先出现先占有”的通栏排布规则：在 AppRoot 容器内先出现的组件占据该方向的通栏（例如先 Navigation 后 AppBar 时 Navigation 高度为页面高度，AppBar 宽度为页面宽度扣去 Navigation 宽度；反之 AppBar 占满整宽，Navigation 高度扣去 AppBar 高度）。同向连续放置多个组件时（如先后放置两个 Navigation rail）按顺序依次偏移并累加占据宽度，可用于组合两级导航菜单。
 
 ## 事件
 

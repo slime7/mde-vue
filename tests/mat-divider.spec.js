@@ -24,6 +24,22 @@ describe('MatDivider', () => {
     expect(MatDivider.props.inset.validator('invalid')).toBe(false);
   });
 
+  it('支持 vertical 属性并输出 vertical 方向语义和类名', () => {
+    const horizontal = mount(MatDivider);
+    const vertical = mount(MatDivider, { props: { vertical: true } });
+    const verticalInset = mount(MatDivider, { props: { vertical: true, inset: 'start' } });
+
+    expect(horizontal.classes()).not.toContain('mat-divider--vertical');
+    expect(horizontal.attributes('aria-orientation')).toBeUndefined();
+
+    expect(vertical.classes()).toContain('mat-divider--vertical');
+    expect(vertical.attributes('aria-orientation')).toBe('vertical');
+    expect(vertical.attributes('role')).toBe('separator');
+
+    expect(verticalInset.classes()).toContain('mat-divider--vertical');
+    expect(verticalInset.classes()).toContain('mat-divider--start');
+  });
+
   it('普通 List 中渲染合法的 li separator', () => {
     const wrapper = mount(MatList, {
       slots: {

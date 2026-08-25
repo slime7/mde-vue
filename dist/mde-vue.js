@@ -1857,32 +1857,7 @@ var On = {
 				end: t === "rtl" ? n : r
 			};
 		}
-		function V(e, t, n) {
-			return r.fillViewport && !r.scrollable ? {
-				top: 0,
-				bottom: n,
-				left: e.left,
-				right: e.left + t
-			} : {
-				top: e.top,
-				bottom: e.bottom,
-				left: e.left,
-				right: e.right
-			};
-		}
-		function H(e, t, n, r) {
-			return e === "top" ? Math.max(0, t.bottom - n.top) : e === "bottom" ? Math.max(0, n.bottom - t.top) : e === "start" ? r === "rtl" ? Math.max(0, n.right - t.left) : Math.max(0, t.right - n.left) : r === "rtl" ? Math.max(0, t.right - n.left) : Math.max(0, n.right - t.left);
-		}
-		function U(e, t) {
-			return e === "top" || e === "bottom" ? {
-				start: t.start,
-				end: t.end
-			} : {
-				start: t.top,
-				end: t.bottom
-			};
-		}
-		function W() {
+		function V() {
 			if (!N || !o.value) return;
 			let e = o.value.getBoundingClientRect(), i = Math.max(0, Number(e.width) || 0), a = Math.max(0, Number(e.height) || 0), s = r.fillViewport && !r.scrollable ? Math.max(0, Number(window.innerHeight) || a) : a, c = n.find((e) => i <= e.max) ?? n.at(-1), l = z(), u = { ...l }, d = {
 				top: {
@@ -1901,13 +1876,32 @@ var On = {
 					startInset: 0,
 					endInset: 0
 				}
-			}, f = V(e, i, s), p = window.getComputedStyle(o.value).direction;
-			Object.assign(S, l), j.forEach((e) => {
-				if (!e.active) return;
-				let t = U(e.edge, u), n = e.insets;
-				n.start = t.start, n.end = t.end, d[e.edge].startInset = Math.max(d[e.edge].startInset, t.start), d[e.edge].endInset = Math.max(d[e.edge].endInset, t.end);
-				let r = e.element.getBoundingClientRect(), i = H(e.edge, r, f, p);
-				u[e.edge] = Math.max(u[e.edge], i);
+			};
+			Object.assign(S, l);
+			let f = j.filter((e) => e.active);
+			f.sort((e, t) => {
+				if (e.element === t.element) return 0;
+				if (e.element.isConnected && t.element.isConnected) {
+					let n = e.element.compareDocumentPosition(t.element);
+					if (n & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+					if (n & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+				}
+				return j.indexOf(e) - j.indexOf(t);
+			}), f.forEach((e) => {
+				let t = e.element.getBoundingClientRect(), n = e.edge, r = e.insets;
+				if (n === "top") {
+					let e = Math.max(0, Number(t.height) || t.bottom - t.top || 0);
+					r.top = u.top, r.start = u.start, r.end = u.end, r.bottom = 0, r.offset = u.top, d.top.startInset = Math.max(d.top.startInset, u.start), d.top.endInset = Math.max(d.top.endInset, u.end), u.top += e;
+				} else if (n === "bottom") {
+					let e = Math.max(0, Number(t.height) || t.bottom - t.top || 0);
+					r.bottom = u.bottom, r.start = u.start, r.end = u.end, r.top = 0, r.offset = u.bottom, d.bottom.startInset = Math.max(d.bottom.startInset, u.start), d.bottom.endInset = Math.max(d.bottom.endInset, u.end), u.bottom += e;
+				} else if (n === "start") {
+					let e = Math.max(0, Number(t.width) || t.right - t.left || 0);
+					r.start = u.start, r.top = u.top, r.bottom = u.bottom, r.end = 0, r.offset = u.start, d.start.startInset = Math.max(d.start.startInset, u.top), d.start.endInset = Math.max(d.start.endInset, u.bottom), u.start += e;
+				} else if (n === "end") {
+					let e = Math.max(0, Number(t.width) || t.right - t.left || 0);
+					r.end = u.end, r.top = u.top, r.bottom = u.bottom, r.start = 0, r.offset = u.end, d.end.startInset = Math.max(d.end.startInset, u.top), d.end.endInset = Math.max(d.end.endInset, u.bottom), u.end += e;
+				}
 			}), Object.assign(y.size, {
 				width: i,
 				height: s
@@ -1924,11 +1918,11 @@ var On = {
 				});
 			});
 		}
-		function G() {
+		function H() {
 			if (!N || I) return;
 			I = !0;
 			let e = () => {
-				I = !1, F = void 0, W();
+				I = !1, F = void 0, V();
 			};
 			if (typeof window.requestAnimationFrame == "function") {
 				F = window.requestAnimationFrame(e);
@@ -1936,33 +1930,36 @@ var On = {
 			}
 			F = window.setTimeout(e, 0);
 		}
-		function te({ edge: e, element: n } = {}) {
+		function U({ edge: e, element: n } = {}) {
 			if (!t.includes(e)) throw TypeError("registerEdge() 的 edge 必须是 top、bottom、start 或 end");
 			if (!(n instanceof HTMLElement) || n.ownerDocument !== document) throw TypeError("registerEdge() 的 element 必须是当前 document 中的 HTMLElement");
 			let r = D({
+				bottom: 0,
+				end: 0,
+				offset: 0,
 				start: 0,
-				end: 0
+				top: 0
 			}), i = {
 				active: !0,
 				edge: e,
 				element: n,
 				insets: r
 			};
-			return j.push(i), P?.observe(n), G(), Object.freeze({
+			return j.push(i), P?.observe(n), H(), Object.freeze({
 				insets: O(r),
 				unregister: () => {
-					i.active && (i.active = !1, P?.unobserve?.(n), G());
+					i.active && (i.active = !1, P?.unobserve?.(n), H());
 				},
 				update: () => {
-					i.active && G();
+					i.active && H();
 				}
 			});
 		}
-		let K = Object.freeze({
+		let W = Object.freeze({
 			layout: b,
-			registerEdge: te
+			registerEdge: U
 		});
-		function q() {
+		function G() {
 			let e = o.value?.getBoundingClientRect() ?? {
 				top: 0,
 				bottom: 0,
@@ -1985,8 +1982,8 @@ var On = {
 				height: y.size.height
 			};
 		}
-		let J = {
-			publicContext: K,
+		let te = {
+			publicContext: W,
 			rootElement: O(o),
 			contentElement: O(l),
 			edgeLayer: O(u),
@@ -1995,22 +1992,22 @@ var On = {
 			snackbarLayer: O(p),
 			floatingLayer: O(h),
 			documentMode: i(() => r.fillViewport && !r.scrollable),
-			getLayoutRect: q
+			getLayoutRect: G
 		};
-		E(kt, J);
-		function Y() {
-			window.addEventListener("resize", G), document.addEventListener("scroll", G, !0), window.visualViewport?.addEventListener("resize", G), window.visualViewport?.addEventListener("scroll", G);
+		E(kt, te);
+		function K() {
+			window.addEventListener("resize", H), document.addEventListener("scroll", H, !0), window.visualViewport?.addEventListener("resize", H), window.visualViewport?.addEventListener("scroll", H);
 		}
-		function X() {
-			window.removeEventListener("resize", G), document.removeEventListener("scroll", G, !0), window.visualViewport?.removeEventListener("resize", G), window.visualViewport?.removeEventListener("scroll", G);
+		function q() {
+			window.removeEventListener("resize", H), document.removeEventListener("scroll", H, !0), window.visualViewport?.removeEventListener("resize", H), window.visualViewport?.removeEventListener("scroll", H);
 		}
 		return C(async () => {
-			N = !0, jt(o.value, J), P = typeof ResizeObserver > "u" ? void 0 : new ResizeObserver(G), P?.observe(o.value), j.forEach((e) => {
+			N = !0, jt(o.value, te), P = typeof ResizeObserver > "u" ? void 0 : new ResizeObserver(H), P?.observe(o.value), j.forEach((e) => {
 				e.active && P?.observe(e.element);
-			}), Y(), await _(), G();
+			}), K(), await _(), H();
 		}), x(() => {
-			N = !1, Mt(o.value), P?.disconnect(), P = void 0, X(), F !== void 0 && (typeof window.cancelAnimationFrame == "function" ? window.cancelAnimationFrame(F) : window.clearTimeout(F));
-		}), B([() => r.fillViewport, () => r.scrollable], G), (e, t) => (T(), s("div", g({
+			N = !1, Mt(o.value), P?.disconnect(), P = void 0, q(), F !== void 0 && (typeof window.cancelAnimationFrame == "function" ? window.cancelAnimationFrame(F) : window.clearTimeout(F));
+		}), B([() => r.fillViewport, () => r.scrollable], H), (e, t) => (T(), s("div", g({
 			ref_key: "rootElement",
 			ref: o
 		}, e.$attrs, {
@@ -2024,11 +2021,6 @@ var On = {
 				class: "mat-app-root__content"
 			}, [M(e.$slots, "default", {}, void 0, !0)], 512),
 			c("div", jn, [
-				c("div", {
-					ref_key: "edgeLayer",
-					ref: u,
-					class: "mat-app-root__edge-layer"
-				}, null, 512),
 				c("div", {
 					ref_key: "freeLayer",
 					ref: d,
@@ -2064,7 +2056,7 @@ var On = {
 			}, null, 512)
 		], 16, An));
 	}
-}), [["__scopeId", "data-v-3d076d51"]]), Pn = /* @__PURE__ */ new WeakMap(), Fn = /* @__PURE__ */ new WeakMap();
+}), [["__scopeId", "data-v-a265e6d7"]]), Pn = /* @__PURE__ */ new WeakMap(), Fn = /* @__PURE__ */ new WeakMap();
 function In(e, t, n) {
 	let r = [n.initialValue, ...n.names].filter((e) => e && e !== "none"), i = e.style;
 	i[t] = r.join(", ");
@@ -2182,8 +2174,7 @@ var Vn = {
 			"image",
 			"search"
 		], u = ["start", "center"], d = $("appBar", e), p = ee(), h = f(), b = m(kt, null), S = h?.vnode.props ?? {}, w = Object.prototype.hasOwnProperty.call(S, "attach"), E = k(null), D = k(null), O = F(null), A = `--mat-app-bar-${h?.uid ?? Math.random().toString(36).slice(2)}`, j = i(() => r.includes(d.variant) ? d.variant : "small"), N = i(() => j.value === "search" ? "search" : l.includes(d.content) ? d.content : "headline"), P = i(() => u.includes(d.align) ? d.align : "start"), I = i(() => j.value === "medium-flexible" ? 112 : j.value === "large-flexible" ? 120 : 64), R = i(() => d.app && !!b && !w), z = i(() => {
-			if (!d.app) return document.body;
-			if (R.value) return b.edgeLayer.value;
+			if (!d.app || R.value) return null;
 			if (d.attach instanceof HTMLElement && d.attach.ownerDocument === document) return d.attach;
 			if (typeof d.attach == "string") try {
 				return document.querySelector(d.attach);
@@ -2201,11 +2192,17 @@ var Vn = {
 		]), U = i(() => [p.style, { "--mat-app-bar-timeline": A }]), W = i(() => j.value === "medium-flexible" ? Dn("headline", "small") : j.value === "large-flexible" ? Dn("headline", "medium") : Dn("title", "large")), G = i(() => ({
 			"mat-app-bar__host--app": d.app,
 			"mat-app-bar__host--app-root": R.value
-		})), te = !1, K;
-		function q() {
+		})), te = i(() => {
+			if (R.value) return {
+				"--mat-app-bar-app-end-inset": `${O.value?.insets.end ?? 0}px`,
+				"--mat-app-bar-app-start-inset": `${O.value?.insets.start ?? 0}px`,
+				"--mat-app-bar-app-top-offset": `${O.value?.insets.top ?? 0}px`
+			};
+		}), K = !1, q;
+		function J() {
 			return typeof CSS < "u" && typeof CSS.supports == "function" && CSS.supports("animation-timeline", "scroll()");
 		}
-		function J(e) {
+		function Y(e) {
 			if (e instanceof HTMLElement && e.ownerDocument === document) return e;
 			if (typeof e == "string") try {
 				return document.querySelector(e);
@@ -2214,40 +2211,41 @@ var Vn = {
 			}
 			return null;
 		}
-		function Y() {
-			K?.(), K = void 0, D.value?.removeAttribute("data-timeline-active"), O.value?.unregister(), O.value = null;
+		function X() {
+			q?.(), q = void 0, D.value?.removeAttribute("data-timeline-active"), O.value?.unregister(), O.value = null;
 		}
-		async function X() {
-			if (await _(), !te || !E.value || !D.value || (Y(), R.value && (O.value = b.publicContext.registerEdge({
+		async function Z() {
+			if (await _(), !K || !E.value || !D.value || (X(), R.value && (O.value = b.publicContext.registerEdge({
 				edge: "top",
 				element: E.value
-			})), !q())) return;
-			let e = J(d.scrollTarget), t = R.value && b.rootElement.value?.dataset.scrollable === "true" ? b.contentElement.value : null, n = e ?? t ?? zn(E.value);
+			})), !J())) return;
+			let e = Y(d.scrollTarget), t = R.value && b.rootElement.value?.dataset.scrollable === "true" ? b.contentElement.value : null, n = e ?? t ?? zn(E.value);
 			if (!n) return;
 			let r = R.value ? b.rootElement.value : Bn(n, D.value);
-			r && (K = Rn({
+			r && (q = Rn({
 				name: A,
 				scope: r,
 				source: n
 			}), D.value.dataset.timelineActive = "");
 		}
 		return C(() => {
-			te = !0, X();
+			K = !0, Z();
 		}), x(() => {
-			te = !1, Y();
+			K = !1, X();
 		}), B([
 			() => d.app,
 			() => d.attach,
 			() => d.scrollTarget,
 			j
-		], X), (e, r) => (T(), s(t, null, [!L(d).app || z.value ? (T(), a(n, {
+		], Z), (e, r) => (T(), s(t, null, [!L(d).app || z.value || R.value ? (T(), a(n, {
 			key: 0,
-			disabled: !L(d).app,
-			to: z.value
+			disabled: !L(d).app || R.value,
+			to: z.value ?? "body"
 		}, [c("div", {
 			ref_key: "hostElement",
 			ref: E,
-			class: v(["mat-app-bar__host", G.value])
+			class: v(["mat-app-bar__host", G.value]),
+			style: y(te.value)
 		}, [c("header", g({
 			ref_key: "headerElement",
 			ref: D
@@ -2262,14 +2260,14 @@ var Vn = {
 				"aria-hidden": "true"
 			}, null, -1),
 			e.$slots.trailing ? (T(), s("div", Wn, [M(e.$slots, "trailing", {}, void 0, !0)])) : o("", !0)
-		], 16)], 2)], 8, ["disabled", "to"])) : o("", !0), V.value > 0 ? (T(), s("span", {
+		], 16)], 6)], 8, ["disabled", "to"])) : o("", !0), V.value > 0 ? (T(), s("span", {
 			key: 1,
 			"aria-hidden": "true",
 			class: "mat-app-bar__placeholder",
 			style: y({ blockSize: `${V.value}px` })
 		}, null, 4)) : o("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-8e9ca182"]]), Kn = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-fc6d49f0"]]), Kn = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatInputBase",
 	inheritAttrs: !1
 }, {
@@ -5142,30 +5140,41 @@ var Ri = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	inheritAttrs: !1
 }, {
 	__name: "MatDivider",
-	props: { inset: {
-		type: [Boolean, String],
-		default: !1,
-		validator(e) {
-			return typeof e == "boolean" || [
-				"none",
-				"start",
-				"middle"
-			].includes(e);
+	props: {
+		inset: {
+			type: [Boolean, String],
+			default: !1,
+			validator(e) {
+				return typeof e == "boolean" || [
+					"none",
+					"start",
+					"middle"
+				].includes(e);
+			}
+		},
+		vertical: {
+			type: Boolean,
+			default: !1
 		}
-	} },
+	},
 	setup(e) {
 		let t = $("divider", e), n = m(Ur, null), r = m(Mi, null), o = i(() => !!n), s = i(() => !!r), c = i(() => n?.isSelectable.value ?? !1), l = i(() => t.inset === !0 ? "middle" : t.inset === !1 ? "none" : t.inset), u = i(() => o.value ? c.value ? "div" : "li" : s.value ? "div" : "hr");
-		return (e, t) => (T(), a(N(u.value), g(e.$attrs, {
-			class: ["mat-divider", [`mat-divider--${l.value}`, { "mat-divider--menu": s.value }]],
+		return (e, n) => (T(), a(N(u.value), g(e.$attrs, {
+			class: ["mat-divider", [`mat-divider--${l.value}`, {
+				"mat-divider--menu": s.value,
+				"mat-divider--vertical": L(t).vertical
+			}]],
 			"aria-hidden": c.value ? "true" : e.$attrs["aria-hidden"],
-			role: c.value ? "presentation" : o.value || s.value ? "separator" : e.$attrs.role
+			"aria-orientation": c.value ? void 0 : L(t).vertical ? "vertical" : void 0,
+			role: c.value ? "presentation" : o.value || s.value || L(t).vertical ? "separator" : e.$attrs.role
 		}), null, 16, [
 			"class",
 			"aria-hidden",
+			"aria-orientation",
 			"role"
 		]));
 	}
-}), [["__scopeId", "data-v-fc5602fa"]]), zi = { class: "mat-selection-control__target" }, Bi = [
+}), [["__scopeId", "data-v-88c82c06"]]), zi = { class: "mat-selection-control__target" }, Bi = [
 	"aria-checked",
 	"checked",
 	"disabled",
@@ -10511,7 +10520,7 @@ var pc = { class: "mat-snackbar__text" }, mc = {
 			"end"
 		].includes(u.position) ? u.position : "center"), P = i(() => j.value.startsWith("floating")), I = i(() => j.value === "floating-left" || j.value === "floating-right"), R = i(() => j.value === "docked" || j.value === "floating-bottom"), V = i(() => u.app && !!v && !S), H = i(() => {
 			if (!u.app) return null;
-			if (V.value) return P.value ? v.freeLayer.value : v.edgeLayer.value;
+			if (V.value) return P.value ? v.freeLayer.value : null;
 			if (typeof u.attach == "string") try {
 				return document.querySelector(u.attach);
 			} catch {
@@ -10525,6 +10534,7 @@ var pc = { class: "mat-snackbar__text" }, mc = {
 			});
 			return e === "0" ? "0px" : e;
 		}), W = i(() => R.value ? U.value : "0px"), G = i(() => [d.style, {
+			"--mat-toolbar-app-bottom-offset": `${q.value?.insets.bottom ?? 0}px`,
 			"--mat-toolbar-app-end-inset": `${q.value?.insets.end ?? 0}px`,
 			"--mat-toolbar-app-start-inset": `${q.value?.insets.start ?? 0}px`,
 			"--mat-toolbar-bottom-placeholder": W.value
@@ -10631,15 +10641,15 @@ var pc = { class: "mat-snackbar__text" }, mc = {
 		function me() {
 			u.app && !V.value && !H.value && console.warn("MatToolbar: attach 必须指向当前 document 中存在的 HTMLElement");
 		}
-		return (r, i) => (T(), s(t, null, [e.placeholder && w.value && (!e.app || H.value) ? (T(), s("span", {
+		return (r, i) => (T(), s(t, null, [e.placeholder && w.value && (!e.app || H.value || V.value) ? (T(), s("span", {
 			key: 0,
 			class: "mat-toolbar__placeholder",
 			style: y(te.value),
 			"aria-hidden": "true"
 		}, null, 4)) : o("", !0), (T(), a(n, {
 			to: H.value ?? "body",
-			disabled: !e.app
-		}, [w.value && (!e.app || H.value) ? (T(), s("div", g({
+			disabled: !e.app || V.value && !P.value
+		}, [w.value && (!e.app || H.value || V.value) ? (T(), s("div", g({
 			key: 0,
 			ref_key: "toolbarElement",
 			ref: D
@@ -10655,7 +10665,7 @@ var pc = { class: "mat-snackbar__text" }, mc = {
 			class: "mat-toolbar__fab"
 		}, [M(r.$slots, "fab", {}, void 0, !0)], 512)) : o("", !0)], 16, vc)) : o("", !0)], 8, ["to", "disabled"]))], 64));
 	}
-}), [["__scopeId", "data-v-9b6f454a"]]), Cc = Symbol("mat-panes"), wc = [
+}), [["__scopeId", "data-v-3aaaf898"]]), Cc = Symbol("mat-panes"), wc = [
 	"compact",
 	"medium",
 	"expanded",
@@ -11234,8 +11244,7 @@ var pc = { class: "mat-snackbar__text" }, mc = {
 			}).map(q);
 		}
 		let Y = Ot(), X = i(() => b.app && !!A && !N), Z = i(() => {
-			if (!b.app) return null;
-			if (X.value) return A.edgeLayer.value;
+			if (!b.app || X.value) return null;
 			if (typeof b.attach == "string") try {
 				return document.querySelector(b.attach);
 			} catch {
@@ -11273,8 +11282,12 @@ var pc = { class: "mat-snackbar__text" }, mc = {
 			});
 			return e === "0" ? "0px" : e;
 		}), ce = i(() => [oe.value, {
+			"--mat-navigation-rail-app-bottom-inset": `${pe.value?.insets.bottom ?? 0}px`,
+			"--mat-navigation-rail-app-bottom-offset": `${pe.value?.insets.bottom ?? 0}px`,
 			"--mat-navigation-rail-app-end-inset": `${pe.value?.insets.end ?? 0}px`,
 			"--mat-navigation-rail-app-start-inset": `${pe.value?.insets.start ?? 0}px`,
+			"--mat-navigation-rail-app-start-offset": `${pe.value?.insets.start ?? 0}px`,
+			"--mat-navigation-rail-app-top-inset": `${pe.value?.insets.top ?? 0}px`,
 			"--mat-navigation-rail-bottom-placeholder": se.value
 		}]), le = k(null), ue = k(null), de = k({
 			blockSize: 0,
@@ -11350,15 +11363,15 @@ var pc = { class: "mat-snackbar__text" }, mc = {
 			() => b.expanded,
 			() => b.hideOnCollapse,
 			() => b.orientation
-		], ve), (e, r) => (T(), s(t, null, [L(b).app && Z.value && L(b).placeholder ? (T(), s("span", {
+		], ve), (e, r) => (T(), s(t, null, [L(b).app && (Z.value || X.value) && L(b).placeholder ? (T(), s("span", {
 			key: 0,
 			class: "mat-navigation-rail__placeholder",
 			style: y(fe.value),
 			"aria-hidden": "true"
 		}, null, 4)) : o("", !0), (T(), a(n, {
 			to: Z.value ?? "body",
-			disabled: !L(b).app
-		}, [!L(b).app || Z.value ? (T(), s("div", {
+			disabled: !L(b).app || X.value
+		}, [!L(b).app || Z.value || X.value ? (T(), s("div", {
 			key: 0,
 			ref_key: "hostElement",
 			ref: le,
@@ -11428,7 +11441,7 @@ var pc = { class: "mat-snackbar__text" }, mc = {
 			_: 3
 		}, 8, ["orientation"])], 16)], 6)) : o("", !0)], 8, ["to", "disabled"]))], 64));
 	}
-}), [["__scopeId", "data-v-b2f87ac7"]]), Wc = /* @__PURE__ */ new WeakMap();
+}), [["__scopeId", "data-v-380530c4"]]), Wc = /* @__PURE__ */ new WeakMap();
 function Gc(e) {
 	return typeof e == "function" ? {
 		handler: e,

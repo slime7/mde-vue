@@ -142,52 +142,6 @@ function readSafeArea() {
   };
 }
 
-function getAreaRect(rootRect, width, height) {
-  if (propsWithDefaults.fillViewport && !propsWithDefaults.scrollable) {
-    return {
-      top: 0,
-      bottom: height,
-      left: rootRect.left,
-      right: rootRect.left + width,
-    };
-  }
-
-  return {
-    top: rootRect.top,
-    bottom: rootRect.bottom,
-    left: rootRect.left,
-    right: rootRect.right,
-  };
-}
-
-function edgeExtent(edge, rect, area, direction) {
-  if (edge === 'top') {
-    return Math.max(0, rect.bottom - area.top);
-  }
-
-  if (edge === 'bottom') {
-    return Math.max(0, area.bottom - rect.top);
-  }
-
-  if (edge === 'start') {
-    return direction === 'rtl'
-      ? Math.max(0, area.right - rect.left)
-      : Math.max(0, rect.right - area.left);
-  }
-
-  return direction === 'rtl'
-    ? Math.max(0, rect.right - area.left)
-    : Math.max(0, area.right - rect.left);
-}
-
-function registrationInsets(edge, sizes) {
-  if (edge === 'top' || edge === 'bottom') {
-    return { start: sizes.start, end: sizes.end };
-  }
-
-  return { start: sizes.top, end: sizes.bottom };
-}
-
 function measureLayout() {
   if (!mounted || !rootElement.value) {
     return;
@@ -201,47 +155,86 @@ function measureLayout() {
     : measuredHeight;
   const breakpoint = BREAKPOINTS.find((item) => width <= item.max) ?? BREAKPOINTS.at(-1);
   const safeArea = readSafeArea();
-  const sizes = { ...safeArea };
+  const currentInsets = { ...safeArea };
   const edgeInsets = {
     top: { startInset: 0, endInset: 0 },
     bottom: { startInset: 0, endInset: 0 },
     start: { startInset: 0, endInset: 0 },
     end: { startInset: 0, endInset: 0 },
   };
-  const area = getAreaRect(rootRect, width, height);
-  const direction = window.getComputedStyle(rootElement.value).direction;
 
   Object.assign(safeAreaState, safeArea);
 
-  registrations.forEach((registration) => {
-    if (!registration.active) {
-      return;
+  const activeRegistrations = registrations.filter((r) => r.active);
+  activeRegistrations.sort((a, b) => {
+    if (a.element === b.element) {
+      return 0;
     }
+    if (a.element.isConnected && b.element.isConnected) {
+      const position = a.element.compareDocumentPosition(b.element);
+      if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
+        return -1;
+      }
+      if (position & Node.DOCUMENT_POSITION_PRECEDING) {
+        return 1;
+      }
+    }
+    return registrations.indexOf(a) - registrations.indexOf(b);
+  });
 
-    const insets = registrationInsets(registration.edge, sizes);
+  activeRegistrations.forEach((registration) => {
+    const rect = registration.element.getBoundingClientRect();
+    const edge = registration.edge;
     const mutableInsets = registration.insets;
 
-    mutableInsets.start = insets.start;
-    mutableInsets.end = insets.end;
-    edgeInsets[registration.edge].startInset = Math.max(
-      edgeInsets[registration.edge].startInset,
-      insets.start,
-    );
-    edgeInsets[registration.edge].endInset = Math.max(
-      edgeInsets[registration.edge].endInset,
-      insets.end,
-    );
-    const rect = registration.element.getBoundingClientRect();
-    const extent = edgeExtent(registration.edge, rect, area, direction);
-
-    sizes[registration.edge] = Math.max(sizes[registration.edge], extent);
+    if (edge === 'top') {
+      const extent = Math.max(0, Number(rect.height) || (rect.bottom - rect.top) || 0);
+      mutableInsets.top = currentInsets.top;
+      mutableInsets.start = currentInsets.start;
+      mutableInsets.end = currentInsets.end;
+      mutableInsets.bottom = 0;
+      mutableInsets.offset = currentInsets.top;
+      edgeInsets.top.startInset = Math.max(edgeInsets.top.startInset, currentInsets.start);
+      edgeInsets.top.endInset = Math.max(edgeInsets.top.endInset, currentInsets.end);
+      currentInsets.top += extent;
+    } else if (edge === 'bottom') {
+      const extent = Math.max(0, Number(rect.height) || (rect.bottom - rect.top) || 0);
+      mutableInsets.bottom = currentInsets.bottom;
+      mutableInsets.start = currentInsets.start;
+      mutableInsets.end = currentInsets.end;
+      mutableInsets.top = 0;
+      mutableInsets.offset = currentInsets.bottom;
+      edgeInsets.bottom.startInset = Math.max(edgeInsets.bottom.startInset, currentInsets.start);
+      edgeInsets.bottom.endInset = Math.max(edgeInsets.bottom.endInset, currentInsets.end);
+      currentInsets.bottom += extent;
+    } else if (edge === 'start') {
+      const extent = Math.max(0, Number(rect.width) || (rect.right - rect.left) || 0);
+      mutableInsets.start = currentInsets.start;
+      mutableInsets.top = currentInsets.top;
+      mutableInsets.bottom = currentInsets.bottom;
+      mutableInsets.end = 0;
+      mutableInsets.offset = currentInsets.start;
+      edgeInsets.start.startInset = Math.max(edgeInsets.start.startInset, currentInsets.top);
+      edgeInsets.start.endInset = Math.max(edgeInsets.start.endInset, currentInsets.bottom);
+      currentInsets.start += extent;
+    } else if (edge === 'end') {
+      const extent = Math.max(0, Number(rect.width) || (rect.right - rect.left) || 0);
+      mutableInsets.end = currentInsets.end;
+      mutableInsets.top = currentInsets.top;
+      mutableInsets.bottom = currentInsets.bottom;
+      mutableInsets.start = 0;
+      mutableInsets.offset = currentInsets.end;
+      edgeInsets.end.startInset = Math.max(edgeInsets.end.startInset, currentInsets.top);
+      edgeInsets.end.endInset = Math.max(edgeInsets.end.endInset, currentInsets.bottom);
+      currentInsets.end += extent;
+    }
   });
 
   Object.assign(layoutState.size, { width, height });
-  Object.assign(layoutState.padding, sizes);
+  Object.assign(layoutState.padding, currentInsets);
   Object.assign(layoutState.content, {
-    width: Math.max(0, width - sizes.start - sizes.end),
-    height: Math.max(0, height - sizes.top - sizes.bottom),
+    width: Math.max(0, width - currentInsets.start - currentInsets.end),
+    height: Math.max(0, height - currentInsets.top - currentInsets.bottom),
   });
   layoutState.breakpoint = breakpoint.name;
   Object.assign(layoutState.breakpointRange, {
@@ -250,7 +243,7 @@ function measureLayout() {
   });
   EDGES.forEach((edge) => {
     Object.assign(layoutState.edges[edge], {
-      size: sizes[edge],
+      size: currentInsets[edge],
       ...edgeInsets[edge],
     });
   });
@@ -292,7 +285,13 @@ function registerEdge({ edge, element } = {}) {
     throw new TypeError('registerEdge() 的 element 必须是当前 document 中的 HTMLElement');
   }
 
-  const insets = reactive({ start: 0, end: 0 });
+  const insets = reactive({
+    bottom: 0,
+    end: 0,
+    offset: 0,
+    start: 0,
+    top: 0,
+  });
   const registration = {
     active: true,
     edge,
@@ -442,7 +441,6 @@ watch([
     </div>
 
     <div class="mat-app-root__overlay">
-      <div ref="edgeLayer" class="mat-app-root__edge-layer" />
       <div ref="freeLayer" class="mat-app-root__free-layer" />
 
       <div class="mat-app-root__bottom-stack">
@@ -482,9 +480,13 @@ watch([
   }
 
   .mat-app-root__content {
-    position: relative;
     box-sizing: border-box;
     min-inline-size: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    min-block-size: 0;
+    display: flex;
+    flex-direction: column;
     padding-block: var(--mat-app-root-padding-top) var(--mat-app-root-padding-bottom);
     padding-inline: var(--mat-app-root-padding-start) var(--mat-app-root-padding-end);
   }
@@ -501,7 +503,6 @@ watch([
   }
 
   .mat-app-root__overlay,
-  .mat-app-root__edge-layer,
   .mat-app-root__free-layer,
   .mat-app-root__modal-layer,
   .mat-app-root__bottom-stack {

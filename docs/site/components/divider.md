@@ -31,6 +31,26 @@ order: 110
   </DocsPreview>
 </ClientOnly>
 
+### 竖向分隔线
+
+设置 `vertical` 可将分隔线转为竖向，适合在工具栏、按钮组或水平排列的内容之间进行视觉划分，同时支持 `inset` 纵向缩进。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/divider/DividerVerticalExample.vue#template [template]
+
+<<< @/examples/divider/DividerVerticalExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Divider 竖向预览">
+    <DividerVerticalExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### List 中使用
 
 :::: details 查看示例代码
@@ -78,6 +98,7 @@ order: 110
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `inset` | `boolean \| 'none' \| 'start' \| 'middle'` | `false` | `false`/`'none'` 为全宽，`true`/`'middle'` 为两侧各缩进 16px，`'start'` 只缩进起始侧 |
+| `vertical` | `boolean` | `false` | 是否为竖向分隔线 |
 
 未被消费的原生属性传递给实际根元素。独立使用时根元素是 `hr`；普通 List 中是 `li`；选择 List 中是展示用 `div`。组件没有公开方法。
 
@@ -101,4 +122,5 @@ Divider 固定为 1px，不响应 hover、focus、pressed 或 selected，也不�
 import DividerCardActionsExample from '../examples/divider/DividerCardActionsExample.vue';
 import DividerInsetsExample from '../examples/divider/DividerInsetsExample.vue';
 import DividerListExample from '../examples/divider/DividerListExample.vue';
+import DividerVerticalExample from '../examples/divider/DividerVerticalExample.vue';
 </script>

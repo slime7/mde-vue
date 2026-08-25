@@ -11,7 +11,6 @@ const current = ref('home');
 <template>
   <mat-app-root
     :fill-viewport="false"
-    scrollable
     class="app-root-components-example"
   >
     <mat-navigation-rail
@@ -26,25 +25,37 @@ const current = ref('home');
       </mat-navigation-rail-item>
     </mat-navigation-rail>
 
-    <section class="app-root-components-example__content">
-      <h3>组件自动接入</h3>
-      <p>Navigation 登记侧边；floating Toolbar、FAB、Snackbar 和 Tooltip 自动进入对应浮动层。</p>
-      <mat-btn
-        id="app-root-tooltip-target"
-        @click="snackbarOpen = true"
-      >
-        显示 Snackbar
-      </mat-btn>
-      <mat-tooltip
-        content="这个 Tooltip 属于当前 AppRoot"
-        target="#app-root-tooltip-target"
-      />
-    </section>
+    <mat-scroll-area>
+      <mat-container>
+        <section class="app-root-components-example__content">
+          <h3>组件自动接入与正文滚动</h3>
+          <p>Navigation 与底部 docked Toolbar 自动登记边缘；正文使用 MatScrollArea 和 MatContainer 组合进行滚动，FAB、Snackbar 和 Tooltip 自动浮动于正文与 Toolbar 之上。</p>
+          <mat-btn
+            id="app-root-tooltip-target"
+            @click="snackbarOpen = true"
+          >
+            显示 Snackbar
+          </mat-btn>
+          <mat-tooltip
+            content="这个 Tooltip 属于当前 AppRoot"
+            target="#app-root-tooltip-target"
+          />
+
+          <article
+            v-for="item in 4"
+            :key="item"
+            class="app-root-components-example__card"
+          >
+            <h4>滚动列表项 {{ item }}</h4>
+            <p>正文内容在 ScrollArea 内部滚动，Navigation 不会被滚动带走。</p>
+          </article>
+        </section>
+      </mat-container>
+    </mat-scroll-area>
 
     <mat-toolbar
       app
-      placeholder
-      variant="floating-top"
+      variant="docked"
     >
       <mat-btn variant="standard">
         取消
@@ -83,13 +94,27 @@ const current = ref('home');
 }
 
 .app-root-components-example__content {
-  min-block-size: 520px;
-  padding: 112px 24px 24px;
+  padding-block: 16px;
 }
 
 .app-root-components-example__content h3,
 .app-root-components-example__content p {
   margin-block: 0 16px;
+}
+
+.app-root-components-example__card {
+  margin-block: 12px;
+  padding: 12px 16px;
+  background: var(--mat-sys-color-surface-container);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+
+.app-root-components-example__card h4 {
+  margin: 0 0 8px;
+}
+
+.app-root-components-example__card p {
+  margin: 0;
 }
 </style>
 <!-- #endregion style -->

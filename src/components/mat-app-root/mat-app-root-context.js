@@ -61,6 +61,9 @@ export function useMatApp() {
  * @typedef {object} MatAppEdgeInsets
  * @property {number} start
  * @property {number} end
+ * @property {number} [top]
+ * @property {number} [bottom]
+ * @property {number} [offset]
  */
 
 /**

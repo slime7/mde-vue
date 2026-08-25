@@ -141,12 +141,8 @@ const usesAppRoot = computed(() => (
   propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach
 ));
 const attachTarget = computed(() => {
-  if (!propsWithDefaults.app) {
-    return document.body;
-  }
-
-  if (usesAppRoot.value) {
-    return appContext.edgeLayer.value;
+  if (!propsWithDefaults.app || usesAppRoot.value) {
+    return null;
   }
 
   if (propsWithDefaults.attach instanceof HTMLElement
@@ -199,6 +195,17 @@ const hostClass = computed(() => ({
   'mat-app-bar__host--app': propsWithDefaults.app,
   'mat-app-bar__host--app-root': usesAppRoot.value,
 }));
+const hostStyle = computed(() => {
+  if (!usesAppRoot.value) {
+    return undefined;
+  }
+
+  return {
+    '--mat-app-bar-app-end-inset': `${edgeRegistration.value?.insets.end ?? 0}px`,
+    '--mat-app-bar-app-start-inset': `${edgeRegistration.value?.insets.start ?? 0}px`,
+    '--mat-app-bar-app-top-offset': `${edgeRegistration.value?.insets.top ?? 0}px`,
+  };
+});
 
 let mounted = false;
 let unregisterTimeline;
@@ -299,11 +306,11 @@ watch([
 
 <template>
   <Teleport
-    v-if="!propsWithDefaults.app || attachTarget"
-    :disabled="!propsWithDefaults.app"
-    :to="attachTarget"
+    v-if="!propsWithDefaults.app || attachTarget || usesAppRoot"
+    :disabled="!propsWithDefaults.app || usesAppRoot"
+    :to="attachTarget ?? 'body'"
   >
-    <div ref="hostElement" class="mat-app-bar__host" :class="hostClass">
+    <div ref="hostElement" class="mat-app-bar__host" :class="hostClass" :style="hostStyle">
       <header
         ref="headerElement"
         v-bind="attrs"
@@ -362,14 +369,16 @@ watch([
     z-index: 8;
     display: block;
     box-sizing: border-box;
-    inset-block-start: 0;
-    inset-inline: 0;
+    inset-block-start: var(--mat-app-bar-app-top-offset, 0);
+    inset-inline: var(--mat-app-bar-app-start-inset, 0) var(--mat-app-bar-app-end-inset, 0);
     block-size: 64px;
     pointer-events: none;
   }
 
   .mat-app-bar__host--app-root {
     position: absolute;
+    inset-block-start: var(--mat-app-bar-app-top-offset, 0);
+    inset-inline: var(--mat-app-bar-app-start-inset, 0) var(--mat-app-bar-app-end-inset, 0);
   }
 
   .mat-app-bar {

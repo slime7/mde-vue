@@ -204,7 +204,7 @@ const attachTarget = computed(() => {
   if (usesAppRoot.value) {
     return isFloating.value
       ? appContext.freeLayer.value
-      : appContext.edgeLayer.value;
+      : null;
   }
 
   if (typeof propsWithDefaults.attach === 'string') {
@@ -233,6 +233,7 @@ const effectiveBottomPlaceholder = computed(() => (
 const toolbarStyle = computed(() => [
   attrs.style,
   {
+    '--mat-toolbar-app-bottom-offset': `${appEdgeRegistration.value?.insets.bottom ?? 0}px`,
     '--mat-toolbar-app-end-inset': `${appEdgeRegistration.value?.insets.end ?? 0}px`,
     '--mat-toolbar-app-start-inset': `${appEdgeRegistration.value?.insets.start ?? 0}px`,
     '--mat-toolbar-bottom-placeholder': effectiveBottomPlaceholder.value,
@@ -475,7 +476,7 @@ function warnForInvalidAttach() {
 
 <template>
   <span
-    v-if="placeholder && rendered && (!app || attachTarget)"
+    v-if="placeholder && rendered && (!app || attachTarget || usesAppRoot)"
     class="mat-toolbar__placeholder"
     :style="placeholderStyle"
     aria-hidden="true"
@@ -483,10 +484,10 @@ function warnForInvalidAttach() {
 
   <Teleport
     :to="attachTarget ?? 'body'"
-    :disabled="!app"
+    :disabled="!app || (usesAppRoot && !isFloating)"
   >
     <div
-      v-if="rendered && (!app || attachTarget)"
+      v-if="rendered && (!app || attachTarget || usesAppRoot)"
       ref="toolbarElement"
       v-bind="$attrs"
       class="mat-toolbar"
@@ -599,6 +600,7 @@ function warnForInvalidAttach() {
 
   .mat-toolbar--app-root.mat-toolbar--docked {
     inset-inline: var(--mat-toolbar-app-start-inset) var(--mat-toolbar-app-end-inset);
+    inset-block-end: var(--mat-toolbar-app-bottom-offset, 0);
     padding-block-end: max(
       var(--mat-toolbar-bottom-placeholder),
       var(--mat-app-root-safe-area-bottom)

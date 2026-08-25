@@ -302,89 +302,89 @@ function NavigationRailContent() {
     orientation: propsWithDefaults.orientation,
   }).map(renderDefaultNode);
 }
-const hideMotion = createMotionController();
-const usesAppRoot = computed(() => (
-  propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach
-));
-const attachTarget = computed(() => {
-  if (!propsWithDefaults.app) {
-    return null;
-  }
-
-  if (usesAppRoot.value) {
-    return appContext.edgeLayer.value;
-  }
-
-  if (typeof propsWithDefaults.attach === 'string') {
-    try {
-      return document.querySelector(propsWithDefaults.attach);
-    } catch {
+  const hideMotion = createMotionController();
+  const usesAppRoot = computed(() => (
+    propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach
+  ));
+  const attachTarget = computed(() => {
+    if (!propsWithDefaults.app || usesAppRoot.value) {
       return null;
     }
-  }
 
-  return normalizeAttach(propsWithDefaults.attach);
-});
-const menuIcon = computed(() => (
-  propsWithDefaults.expanded ? propsWithDefaults.closeIcon : propsWithDefaults.openIcon
-));
-const menuLabel = computed(() => (
-  propsWithDefaults.expanded ? propsWithDefaults.closeLabel : propsWithDefaults.openLabel
-));
-const hostClasses = computed(() => ({
-  'mat-navigation-rail-host--vertical': !isHorizontal.value,
-  'mat-navigation-rail-host--horizontal': isHorizontal.value,
-  'mat-navigation-rail-host--expanded': effectiveExpanded.value,
-  'mat-navigation-rail-host--collapsed': !effectiveExpanded.value,
-  'mat-navigation-rail-host--modal': isModal.value,
-  'mat-navigation-rail-host--hidden': isHidden.value,
-  'mat-navigation-rail-host--app': propsWithDefaults.app,
-  'mat-navigation-rail-host--app-root': usesAppRoot.value,
-}));
-const railClasses = computed(() => ({
-  'mat-navigation-rail--expanded': effectiveExpanded.value,
-  'mat-navigation-rail--collapsed': !effectiveExpanded.value,
-  'mat-navigation-rail--bar': isHorizontal.value,
-  'mat-navigation-rail--modal': isModal.value && effectiveExpanded.value,
-  'mat-navigation-rail--hidden': isHidden.value,
-  'mat-navigation-rail--collapsible-hidden': !showCollapsibleContent.value,
-  'mat-navigation-rail--with-header': hasFixedHeader.value,
-  'mat-navigation-rail--with-end': hasFixedEnd.value,
-  'mat-navigation-rail--app': propsWithDefaults.app,
-  'mat-navigation-rail--app-root': usesAppRoot.value,
-}));
+    if (typeof propsWithDefaults.attach === 'string') {
+      try {
+        return document.querySelector(propsWithDefaults.attach);
+      } catch {
+        return null;
+      }
+    }
 
-const expandedWidthStyle = computed(() => {
-  const width = toCssLength(propsWithDefaults.width, { property: 'inline-size' });
-
-  if (width === undefined) {
-    return undefined;
-  }
-
-  return { '--mat-navigation-rail-expanded-width': width };
-});
-const effectiveBottomPlaceholder = computed(() => {
-  if (!propsWithDefaults.app || usesAppRoot.value) {
-    return '0px';
-  }
-
-  const css = toCssLength(propsWithDefaults.bottomPlaceholder, {
-    property: 'block-size',
-    fallback: '0px',
+    return normalizeAttach(propsWithDefaults.attach);
   });
+  const menuIcon = computed(() => (
+    propsWithDefaults.expanded ? propsWithDefaults.closeIcon : propsWithDefaults.openIcon
+  ));
+  const menuLabel = computed(() => (
+    propsWithDefaults.expanded ? propsWithDefaults.closeLabel : propsWithDefaults.openLabel
+  ));
+  const hostClasses = computed(() => ({
+    'mat-navigation-rail-host--vertical': !isHorizontal.value,
+    'mat-navigation-rail-host--horizontal': isHorizontal.value,
+    'mat-navigation-rail-host--expanded': effectiveExpanded.value,
+    'mat-navigation-rail-host--collapsed': !effectiveExpanded.value,
+    'mat-navigation-rail-host--modal': isModal.value,
+    'mat-navigation-rail-host--hidden': isHidden.value,
+    'mat-navigation-rail-host--app': propsWithDefaults.app,
+    'mat-navigation-rail-host--app-root': usesAppRoot.value,
+  }));
+  const railClasses = computed(() => ({
+    'mat-navigation-rail--expanded': effectiveExpanded.value,
+    'mat-navigation-rail--collapsed': !effectiveExpanded.value,
+    'mat-navigation-rail--bar': isHorizontal.value,
+    'mat-navigation-rail--modal': isModal.value && effectiveExpanded.value,
+    'mat-navigation-rail--hidden': isHidden.value,
+    'mat-navigation-rail--collapsible-hidden': !showCollapsibleContent.value,
+    'mat-navigation-rail--with-header': hasFixedHeader.value,
+    'mat-navigation-rail--with-end': hasFixedEnd.value,
+    'mat-navigation-rail--app': propsWithDefaults.app,
+    'mat-navigation-rail--app-root': usesAppRoot.value,
+  }));
 
-  // 占位高度参与 max()/calc() 运算，必须始终携带长度单位；
-  // toCssLength 会把 0 输出为无单位值，导致整条声明失效。
-  return css === '0' ? '0px' : css;
-});
-const railStyle = computed(() => [
-  expandedWidthStyle.value,
-  {
-    '--mat-navigation-rail-app-end-inset': `${edgeRegistration.value?.insets.end ?? 0}px`,
-    '--mat-navigation-rail-app-start-inset': `${edgeRegistration.value?.insets.start ?? 0}px`,
-    '--mat-navigation-rail-bottom-placeholder': effectiveBottomPlaceholder.value,
-  },
-]);
+  const expandedWidthStyle = computed(() => {
+    const width = toCssLength(propsWithDefaults.width, { property: 'inline-size' });
+
+    if (width === undefined) {
+      return undefined;
+    }
+
+    return { '--mat-navigation-rail-expanded-width': width };
+  });
+  const effectiveBottomPlaceholder = computed(() => {
+    if (!propsWithDefaults.app || usesAppRoot.value) {
+      return '0px';
+    }
+
+    const css = toCssLength(propsWithDefaults.bottomPlaceholder, {
+      property: 'block-size',
+      fallback: '0px',
+    });
+
+    // 占位高度参与 max()/calc() 运算，必须始终携带长度单位；
+    // toCssLength 会把 0 输出为无单位值，导致整条声明失效。
+    return css === '0' ? '0px' : css;
+  });
+  const railStyle = computed(() => [
+    expandedWidthStyle.value,
+    {
+      '--mat-navigation-rail-app-bottom-inset': `${edgeRegistration.value?.insets.bottom ?? 0}px`,
+      '--mat-navigation-rail-app-bottom-offset': `${edgeRegistration.value?.insets.bottom ?? 0}px`,
+      '--mat-navigation-rail-app-end-inset': `${edgeRegistration.value?.insets.end ?? 0}px`,
+      '--mat-navigation-rail-app-start-inset': `${edgeRegistration.value?.insets.start ?? 0}px`,
+      '--mat-navigation-rail-app-start-offset': `${edgeRegistration.value?.insets.start ?? 0}px`,
+      '--mat-navigation-rail-app-top-inset': `${edgeRegistration.value?.insets.top ?? 0}px`,
+      '--mat-navigation-rail-bottom-placeholder': effectiveBottomPlaceholder.value,
+    },
+  ]);
 const hostElement = ref(null);
 const railElement = ref(null);
 const railSize = ref({
@@ -552,7 +552,7 @@ watch([
 
 <template>
   <span
-    v-if="propsWithDefaults.app && attachTarget && propsWithDefaults.placeholder"
+    v-if="propsWithDefaults.app && (attachTarget || usesAppRoot) && propsWithDefaults.placeholder"
     class="mat-navigation-rail__placeholder"
     :style="placeholderStyle"
     aria-hidden="true"
@@ -560,10 +560,10 @@ watch([
 
   <Teleport
     :to="attachTarget ?? 'body'"
-    :disabled="!propsWithDefaults.app"
+    :disabled="!propsWithDefaults.app || usesAppRoot"
   >
     <div
-      v-if="!propsWithDefaults.app || attachTarget"
+      v-if="!propsWithDefaults.app || attachTarget || usesAppRoot"
       ref="hostElement"
       class="mat-navigation-rail-host"
       :class="hostClasses"
@@ -708,18 +708,23 @@ watch([
   .mat-navigation-rail-host--app {
     position: fixed;
     z-index: var(--mat-sys-z-index-toolbar);
-    inset-block: 0;
-    inset-inline-start: 0;
-    block-size: 100dvb;
+    inset-block-start: var(--mat-navigation-rail-app-top-inset, 0);
+    inset-inline-start: var(--mat-navigation-rail-app-start-offset, 0);
+    block-size: calc(
+      100dvb
+      - var(--mat-navigation-rail-app-top-inset, 0)
+      - var(--mat-navigation-rail-app-bottom-inset, 0)
+    );
   }
 
   .mat-navigation-rail-host--app-root {
     position: absolute;
-    inset-block: var(--mat-navigation-rail-app-start-inset) auto;
+    inset-inline-start: var(--mat-navigation-rail-app-start-offset, 0);
+    inset-block: var(--mat-navigation-rail-app-top-inset, 0) auto;
     block-size: calc(
       100%
-      - var(--mat-navigation-rail-app-start-inset)
-      - var(--mat-navigation-rail-app-end-inset)
+      - var(--mat-navigation-rail-app-top-inset, 0)
+      - var(--mat-navigation-rail-app-bottom-inset, 0)
     );
     min-block-size: 0;
     pointer-events: auto;
@@ -727,7 +732,7 @@ watch([
 
   .mat-navigation-rail-host--app.mat-navigation-rail-host--horizontal {
     --mat-navigation-rail-app-bar-height: var(--mat-navigation-bar-height);
-    inset: auto 0 0;
+    inset: auto var(--mat-navigation-rail-app-end-inset, 0) var(--mat-navigation-rail-app-bottom-offset, 0) var(--mat-navigation-rail-app-start-offset, 0);
     block-size: calc(
       var(--mat-navigation-rail-app-bar-height)
       + var(--mat-navigation-rail-bottom-placeholder)
@@ -735,7 +740,7 @@ watch([
   }
 
   .mat-navigation-rail-host--app-root.mat-navigation-rail-host--horizontal {
-    inset: auto var(--mat-navigation-rail-app-end-inset) 0 var(--mat-navigation-rail-app-start-inset);
+    inset: auto var(--mat-navigation-rail-app-end-inset, 0) var(--mat-navigation-rail-app-bottom-offset, 0) var(--mat-navigation-rail-app-start-offset, 0);
     inline-size: auto;
     block-size: calc(
       var(--mat-navigation-rail-app-bar-height)
