@@ -256,6 +256,130 @@ describe('MatList', () => {
     expect(secondaryElement.getAttribute('tabindex')).toBe('2');
   });
 
+  it('选择模式默认保持展示型 trailing 内容且点击整行触发选中', async () => {
+    const wrapper = mount(MatList, {
+      props: {
+        interaction: 'single-select',
+        selected: 'one',
+      },
+      slots: {
+        default: () => [
+          h(MatListItem, { value: 'one' }, {
+            default: () => '选项一',
+            trailing: () => '状态标记',
+          }),
+          h(MatListItem, { value: 'two' }, {
+            default: () => '选项二',
+            trailing: () => h('span', { class: 'trailing-tag' }, '尾部文字'),
+          }),
+        ],
+      },
+    });
+
+    expect(wrapper.find('[data-mat-list-trailing]').exists()).toBe(false);
+    const trailingTag = wrapper.find('.trailing-tag');
+    await trailingTag.trigger('click');
+
+    expect(wrapper.emitted('select')).toHaveLength(1);
+    expect(wrapper.emitted('select')[0][0]).toMatchObject({
+      value: 'two',
+      selected: true,
+      nextSelected: 'two',
+    });
+  });
+
+  it('选择模式支持通过 separateTrailing 分离尾部操作，点击尾部按钮不触发选中并支持键盘焦点流转', async () => {
+    const buttonClick = vi.fn();
+    const wrapper = mount(MatList, {
+      attachTo: document.body,
+      props: {
+        interaction: 'single-select',
+        selected: null,
+      },
+      slots: {
+        default: () => [
+          h(MatListItem, { value: 'item-1', separateTrailing: true }, {
+            default: () => '条目一',
+            trailing: () => h(MatBtn, {
+              icon: 'delete',
+              label: '删除',
+              onClick: buttonClick,
+            }),
+          }),
+        ],
+      },
+    });
+    await flushFocusManagement();
+
+    const primary = wrapper.find('[data-mat-list-primary]');
+    const trailingBtn = wrapper.find('[data-mat-list-trailing] button');
+
+    expect(primary.attributes('tabindex')).toBe('0');
+    expect(trailingBtn.attributes('tabindex')).toBe('-1');
+
+    await trailingBtn.trigger('click');
+    expect(buttonClick).toHaveBeenCalledOnce();
+    expect(wrapper.emitted('select')).toBeUndefined();
+
+    primary.element.focus();
+    await primary.trigger('keydown', { key: 'ArrowRight' });
+    expect(document.activeElement).toBe(trailingBtn.element);
+
+    wrapper.unmount();
+  });
+
+  it('多选模式与禁用状态下正确处理 separateTrailing', async () => {
+    const buttonClick = vi.fn();
+    const wrapper = mount(MatList, {
+      attachTo: document.body,
+      props: {
+        interaction: 'multi-select',
+        selected: ['active'],
+      },
+      slots: {
+        default: () => [
+          h(MatListItem, { value: 'active', separateTrailing: true }, {
+            default: () => '已选项目',
+            trailing: () => h(MatBtn, { label: '操作', onClick: buttonClick }),
+          }),
+          h(MatListItem, { value: 'disabled-item', disabled: true, separateTrailing: true }, {
+            default: () => '禁用项目',
+            trailing: () => h(MatBtn, { label: '禁用操作' }),
+          }),
+        ],
+      },
+    });
+    await flushFocusManagement();
+
+    const options = wrapper.findAll('[role="option"]');
+    const trailingContainers = wrapper.findAll('[data-mat-list-trailing]');
+    const trailingBtns = wrapper.findAll('[data-mat-list-trailing] button');
+
+    expect(trailingContainers[0].attributes('inert')).toBeUndefined();
+    expect(trailingContainers[1].attributes('inert')).toBeDefined();
+
+    // 点击多选主项触发多选更新
+    await options[0].trigger('click');
+    expect(wrapper.emitted('select')).toHaveLength(1);
+    expect(wrapper.emitted('select')[0][0].nextSelected).toEqual([]);
+
+    // 点击尾部按钮不触发多选更新
+    await trailingBtns[0].trigger('click');
+    expect(buttonClick).toHaveBeenCalledOnce();
+    expect(wrapper.emitted('select')).toHaveLength(1);
+
+    // 焦点导航跳过禁用的尾部按钮
+    options[0].element.focus();
+    await options[0].trigger('keydown', { key: 'ArrowDown' });
+    expect(document.activeElement).toBe(trailingBtns[0].element);
+
+    await trailingBtns[0].trigger('keydown', { key: 'ArrowDown' });
+    // 循环回第一个可用项 options[0]
+    expect(document.activeElement).toBe(options[0].element);
+
+    wrapper.unmount();
+  });
+
   it('多操作模式为长标签和 supporting 文本保留 trailing 操作区', () => {
     const wrapper = mount(MatList, {
       props: { interaction: 'multi-action' },

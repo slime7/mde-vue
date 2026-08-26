@@ -359,7 +359,8 @@ function isAvailableFocusable(element) {
   }
 
   if (!element.hasAttribute('data-mat-list-primary')
-    && propsWithDefaults.interaction !== 'multi-action') {
+    && propsWithDefaults.interaction !== 'multi-action'
+    && !isSelectable.value) {
     return false;
   }
 

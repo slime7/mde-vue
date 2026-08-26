@@ -251,6 +251,28 @@ order: 100
   </DocsPreview>
 </ClientOnly>
 
+### ListItem 的 `separateTrailing`
+
+在选择模式（`single-select` 或 `multi-select`）下，默认不开启 `separateTrailing` 时，尾部内容作为主选项的一部分，点击整行（包括尾部区域）均触发选择，适合放置展示型标记、`MatRadio` 或 `MatCheckbox`；开启 `separateTrailing` 后，尾部内容被提取至独立操作区，点击尾部按钮时不触发整行选中。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListItemSeparateTrailingExample.vue#template [template]
+
+<<< @/examples/list/ListItemSeparateTrailingExample.vue#script [script]
+
+<<< @/examples/list/ListItemSeparateTrailingExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="ListItem separateTrailing 预览">
+    <ListItemSeparateTrailingExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### ListItem 尺寸
 
 一行项目至少为 56px。24px 图标和 40px 头像维持 56px 最小高度，56px 媒体和 64px 媒体分别把项目撑高至 72px 和 88px；更大的自定义 Slot 内容继续自然扩展。
@@ -421,6 +443,7 @@ order: 100
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 主操作为 button 时的原生类型 |
 | `disabled` | `boolean` | `false` | 禁用主操作、选择和多操作 trailing 区域 |
 | `lines` | `1 \| 2 \| 3` | 按 Slots 推断 | 控制 56、72、88px 最小高度以及三行内容的顶部对齐 |
+| `separateTrailing` | `boolean` | `false` | 是否将 trailing 插槽与主操作/选择区分离渲染为独立操作区；选择模式下用于承载独立按钮等交互控件 |
 
 操作模式中未消费的原生属性传给主按钮或链接，可设置 `target`、`rel` 等链接属性；非交互和选择模式中传给项目根元素。`href` 在非交互或选择模式中会被忽略并发出开发警告。
 
@@ -460,9 +483,9 @@ single-select 再次激活当前项不会取消选择，也不会发出 `select`
 | `MatListItem` | `leading` | 图标、40px 头像、56px 图片、媒体或非交互选择标记 |
 | `MatListItem` | `overline` | 标签上方的短文本 |
 | `MatListItem` | `supporting` | 一至三行辅助文字 |
-| `MatListItem` | `trailing` | 尾部短文本、图标；仅 multi-action 可放置可聚焦操作 |
+| `MatListItem` | `trailing` | 尾部短文本、图标；multi-action 或开启 separateTrailing 的选择项可放置可聚焦操作 |
 
-single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌套其他交互元素。选择模式中的 leading 和 trailing 作为展示内容处理，选择状态由 `aria-selected` 表达。
+single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌套其他交互元素。选择模式中的 leading 和默认 trailing 作为展示内容处理，选择状态由 `aria-selected` 表达；若需要在选择模式下放置独立操作按钮，可设置 `separateTrailing` 将尾部操作区与行选择解耦。
 
 作为 Activator 的 MatListItem 会变成单一 disclosure 按钮：组件忽略其 `href`、选择 `value` 和普通叶子 `click`，自动设置 `aria-expanded` 与 `aria-controls`。组件不会自动添加箭头或改写 trailing。Activator 缺失或不是单个 MatListItem 时会发出开发警告，并让内容保持展开。
 
@@ -475,7 +498,7 @@ single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌�
 - `single-select` 和 `multi-select` 暂不支持折叠。此时组件发出开发警告，把 Activator 降级为静态分组标签并始终展示内容，保留 listbox 的 group/option 结构。
 - `ArrowDown`、`ArrowRight` 移至下一项，`ArrowUp`、`ArrowLeft` 移至上一项；到边界后循环并跳过禁用项。
 - 选择模式优先以第一个选中项作为初始停靠点；方向键只移动焦点，不自动改变选择。
-- 选择模式使用 Space 或 Enter 请求选择。多操作模式把主操作与 trailing 内的启用控件纳入同一方向键顺序。
+- 选择模式使用 Space 或 Enter 请求选择。多操作模式以及开启 `separateTrailing` 的选择模式把主项与 trailing 内的启用控件纳入同一方向键顺序。
 - 键盘焦点环完整包围当前项目或独立操作，不会被相邻项目、多操作 trailing 区域或展开分组内容的边界遮挡。
 - selected 同时改变容器配色和形状。disabled 内容降低强调，不响应指针或键盘；减少动态效果偏好下关闭形状和状态层过渡。
 - `draggable` 只接管主指针长按：按住 500ms 后显示等尺寸的 dragged 背景占位容器和抬升预览，预览自身也切换为 dragged 容器色；启动前移动超过 8px、提前释放或发生 pointercancel 时保持普通点击和滚动。
@@ -501,6 +524,7 @@ import ListItemDisabledExample from '../examples/list/ListItemDisabledExample.vu
 import ListItemHrefExample from '../examples/list/ListItemHrefExample.vue';
 import ListItemLeadingSlotExample from '../examples/list/ListItemLeadingSlotExample.vue';
 import ListItemLinesExample from '../examples/list/ListItemLinesExample.vue';
+import ListItemSeparateTrailingExample from '../examples/list/ListItemSeparateTrailingExample.vue';
 import ListItemOverlineSlotExample from '../examples/list/ListItemOverlineSlotExample.vue';
 import ListItemSizesExample from '../examples/list/ListItemSizesExample.vue';
 import ListItemSupportingSlotExample from '../examples/list/ListItemSupportingSlotExample.vue';

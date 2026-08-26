@@ -71,6 +71,16 @@ const props = defineProps({
       return [1, 2, 3].includes(value);
     },
   },
+  /**
+   * 是否将 trailing 插槽与主操作/选择区分离渲染为独立操作区。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  separateTrailing: {
+    type: Boolean,
+    default: false,
+  },
 });
 const propsWithDefaults = useMatProps('listItem', props);
 
@@ -94,6 +104,9 @@ const isMultiAction = computed(() => interaction.value === 'multi-action');
 const isSelectable = computed(() => list?.isSelectable.value ?? false);
 const selected = computed(() => list?.isSelected(propsWithDefaults.value) ?? false);
 const hasTrailing = computed(() => Boolean(slots.trailing));
+const shouldSeparateTrailing = computed(() => (
+  hasTrailing.value && (isMultiAction.value || (isSelectable.value && propsWithDefaults.separateTrailing))
+));
 const itemRoot = ref(null);
 const dragToken = Symbol('mat-list-item-drag');
 const dragElement = computed(() => {
@@ -178,6 +191,7 @@ watch(
     propsWithDefaults.href,
     propsWithDefaults.value,
     interaction.value,
+    propsWithDefaults.separateTrailing,
   ],
   async () => {
     validateProps();
@@ -374,6 +388,66 @@ watch(
       <slot name="trailing" />
     </span>
   </li>
+
+  <div
+    v-else-if="isSelectable && shouldSeparateTrailing"
+    ref="itemRoot"
+    class="mat-list-item mat-list-item__surface mat-list-item--multi-action mat-list-item--selectable"
+    :class="surfaceClasses"
+    :aria-disabled="propsWithDefaults.disabled ? 'true' : undefined"
+    :data-mat-list-disabled="propsWithDefaults.disabled ? 'true' : undefined"
+  >
+    <MatActionBase
+      v-bind="$attrs"
+      as="div"
+      class="mat-list-item__primary"
+      data-mat-list-primary
+      :aria-selected="selected ? 'true' : 'false'"
+      :disabled="propsWithDefaults.disabled"
+      :focus-ring="true"
+      role="option"
+      :use-cursor="matUi.useCursor"
+      @click="handlePrimaryClick"
+      @keydown="handleOptionKeyDown"
+    >
+      <MatListItemContent
+        :line-count="lineCount"
+        presentation-slots
+        :separate-trailing="true"
+      >
+        <template
+          v-if="$slots.leading"
+          #leading
+        >
+          <slot name="leading" />
+        </template>
+
+        <template
+          v-if="$slots.overline"
+          #overline
+        >
+          <slot name="overline" />
+        </template>
+
+        <slot />
+
+        <template
+          v-if="$slots.supporting"
+          #supporting
+        >
+          <slot name="supporting" />
+        </template>
+      </MatListItemContent>
+    </MatActionBase>
+
+    <span
+      class="mat-list-item__separate-trailing mat-sys-typescale-label-small"
+      data-mat-list-trailing
+      :inert="propsWithDefaults.disabled ? '' : undefined"
+    >
+      <slot name="trailing" />
+    </span>
+  </div>
 
   <MatActionBase
     v-else

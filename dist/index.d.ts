@@ -1211,6 +1211,13 @@ export interface MatListItemProps {
   * @default undefined
   */
   lines?: 1 | 2 | 3 | undefined;
+  /**
+  * 是否将 trailing 插槽与主操作/选择区分离渲染为独立操作区。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  separateTrailing?: boolean;
 }
 
 export interface MatListItemEmits {
