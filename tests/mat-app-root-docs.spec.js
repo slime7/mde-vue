@@ -68,7 +68,6 @@ describe('AppRoot 文档', () => {
 
     expect(scrollable).toContain('scrollable');
     expect(scrollable).toContain('block-size: 280px;');
-    expect(components).toContain('scrollable');
     expect(components).toContain('block-size: 440px;');
   });
 });

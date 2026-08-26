@@ -25,6 +25,10 @@ const current = ref('home');
       </mat-navigation-rail-item>
     </mat-navigation-rail>
 
+    <mat-app-bar app>
+      应用标题
+    </mat-app-bar>
+
     <mat-scroll-area>
       <mat-container>
         <section class="app-root-components-example__content">
