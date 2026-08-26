@@ -33,6 +33,28 @@ order: 100
   </DocsPreview>
 </ClientOnly>
 
+### `virtual` 虚拟滚动
+
+针对海量数据长列表，`<mat-list>` 支持通过 `virtual` 属性开启原生虚拟滚动优化 DOM 渲染性能。列表首尾两项永久常驻渲染以保持标准的容器首尾圆角外观，占位容器置于内部，滚动平滑无闪烁。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListVirtualExample.vue#template [template]
+
+<<< @/examples/list/ListVirtualExample.vue#script [script]
+
+<<< @/examples/list/ListVirtualExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="List 虚拟滚动预览">
+    <ListVirtualExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `expanded` 与 MatListGroup
 
 有 `value` 的分组由根 List 的 `v-model:expanded` 完全控制；省略 `value` 的分组保存自己的展开状态。Activator Slot 提供当前 `expanded`，箭头和其他 trailing 内容由使用方决定。
@@ -371,6 +393,12 @@ order: 100
 | `expanded` | `(string \| number \| boolean)[]` | `[]` | 有值 MatListGroup 的受控展开值，可同时包含多个值 |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 选择项的局部 container/on-container 色对；省略时使用 secondary 色族 |
 | `draggable` | `boolean` | `false` | 是否允许长按未禁用的直属 MatListItem 请求拖动排序 |
+| `virtual` | `boolean` | `false` | 是否启用虚拟滚动来优化长列表 DOM 性能 |
+| `items` | `Array<unknown>` | `[]` | 虚拟滚动的全量数据列表 |
+| `itemHeight` | `number \| string \| undefined` | 未设置 | 固定单项高度（px）；设置后跳过动态尺寸计算 |
+| `estimatedItemHeight` | `number \| string` | `48` | 动态高度模式下的初始预估单项高度（px） |
+| `buffer` | `number \| string` | `3` | 视口上下方额外预渲染的缓冲项数量 |
+| `itemKey` | `Function \| string \| undefined` | 未设置 | 用于提取 item 唯一 key 的函数或属性名；省略时默认使用 index |
 
 选择模式的根元素使用 `role="listbox"`，应通过 `aria-label` 或 `aria-labelledby` 提供可访问名称。其他未消费的原生属性传递给根 `ul` 或 listbox `div`。
 
@@ -403,15 +431,29 @@ order: 100
 | `MatList` | `select` | `{ value, selected, nextSelected, originalEvent }` | 启用的选择项通过指针、Space 或 Enter 请求改变选择 |
 | `MatList` | `update:expanded` | `(string \| number \| boolean)[]` | 有值分组请求展开或收起，用于 `v-model:expanded` |
 | `MatList` | `reorder` | `{ value, fromIndex, toIndex, originalEvent }` | `draggable` 项目长按拖动并在新位置释放 |
+| `MatList` | `scroll` | `{ scrollTop, scrollHeight, clientHeight, startIndex, endIndex }` | 开启虚拟滚动时滚动触发 |
+| `MatList` | `visible-range-change` | `{ startIndex, endIndex }` | 开启虚拟滚动时可见索引区间变化触发 |
 | `MatListItem` | `click` | 原生 `MouseEvent` | 单操作或多操作模式中的启用主操作被激活 |
 
 single-select 再次激活当前项不会取消选择，也不会发出 `select`。multi-select 每次激活都返回不修改原数组的新数组。`originalEvent` 是实际的 `MouseEvent` 或 `KeyboardEvent`。非交互模式没有自定义事件，trailing 中的独立控件使用自己的事件。MatListGroup 没有自定义事件；无值分组不会触发根 List 的 `update:expanded`。
+
+## 方法
+
+通过模板引用（`ref`）可调用 `MatList` 暴露的公共方法：
+
+| 方法 | 参数 | 返回值 | 说明 |
+| --- | --- | --- | --- |
+| `calculate` | 无 | `void` | 手动触发虚拟滚动计算 |
+| `refresh` | 无 | `Promise<void>` | 在 `nextTick` 后异步触发虚拟滚动计算 |
+| `scrollTo` | `options: ScrollToOptions` | `void` | 滚动容器原生 `scrollTo` 代理 |
+| `scrollToIndex` | `index: number, options?: { align?: 'start' \| 'center' \| 'end' \| 'auto', behavior?: ScrollBehavior }` | `void` | 滚动到指定索引项 |
+| `getScroller` | 无 | `HTMLElement \| Window \| null` | 获取关联的滚动容器元素 |
 
 ## Slots
 
 | 组件 | 名称 | 内容约束 |
 | --- | --- | --- |
-| `MatList` | 默认 | 直接放置 `MatListItem`、`MatListGroup` 和 `MatDivider` |
+| `MatList` | 默认 | 常规模式直接放置 `MatListItem` 等；虚拟滚动模式接收 `{ item, index, itemRef, isFirst, isLast }` 作用域参数 |
 | `MatListGroup` | `activator` | 必须且只能放置一个 `MatListItem`；接收 `{ expanded: boolean }`，trailing 只放展示内容 |
 | `MatListGroup` | 默认 | 直接放置该组的 `MatListItem` 和 `MatDivider` |
 | `MatListItem` | 默认 | 必需的主要标签文字 |
@@ -467,4 +509,5 @@ import ListItemTypeExample from '../examples/list/ListItemTypeExample.vue';
 import ListItemValueExample from '../examples/list/ListItemValueExample.vue';
 import ListSelectedExample from '../examples/list/ListSelectedExample.vue';
 import ListVariantExample from '../examples/list/ListVariantExample.vue';
+import ListVirtualExample from '../examples/list/ListVirtualExample.vue';
 </script>

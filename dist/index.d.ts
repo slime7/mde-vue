@@ -1078,6 +1078,49 @@ export interface MatListProps {
   * @default false
   */
   draggable?: boolean;
+  /**
+  * 是否启用虚拟滚动优化长列表性能。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  virtual?: boolean;
+  /**
+  * 虚拟滚动待渲染的全量数据列表。
+  *
+  * @type {Array<unknown>}
+  * @default []
+  */
+  items?: Array<unknown>;
+  /**
+  * 固定的单项高度（单位 px）；仅支持可转换为数字的数值或纯数字字符串。
+  * 传入时跳过动态尺寸计算与 ResizeObserver 监听。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  itemHeight?: number | string | undefined;
+  /**
+  * 动态高度模式下的初始预估单项高度（单位 px）。
+  *
+  * @type {number | string}
+  * @default 48
+  */
+  estimatedItemHeight?: number | string;
+  /**
+  * 视口上下方额外预渲染的缓冲项数量。
+  *
+  * @type {number | string}
+  * @default 3
+  */
+  buffer?: number | string;
+  /**
+  * 用于提取 item 唯一 key 的函数或属性名；未设置时默认使用项的索引 index。
+  *
+  * @type {Function | string | undefined}
+  * @default undefined
+  */
+  itemKey?: Function | string | undefined;
 }
 
 export interface MatListEmits {
@@ -1095,6 +1138,18 @@ export interface MatListEmits {
   * @type {{ value: string | number | boolean, fromIndex: number, toIndex: number, originalEvent: PointerEvent }}
   */
   "reorder": (payload: { value: string | number | boolean, fromIndex: number, toIndex: number, originalEvent: PointerEvent }) => unknown;
+  /**
+  * 虚拟滚动时触发，载荷包含当前滚动位置与渲染区间。
+  *
+  * @type {{ scrollTop: number, scrollHeight: number, clientHeight: number, startIndex: number, endIndex: number }}
+  */
+  "scroll": (payload: { scrollTop: number, scrollHeight: number, clientHeight: number, startIndex: number, endIndex: number }) => unknown;
+  /**
+  * 虚拟滚动可见索引区间变化时触发。
+  *
+  * @type {{ startIndex: number, endIndex: number }}
+  */
+  "visible-range-change": (payload: { startIndex: number, endIndex: number }) => unknown;
 }
 
 export type MatListComponent = DefineComponent<MatListProps, {}, {}, {}, {}, {}, {}, MatListEmits>;
@@ -2940,37 +2995,7 @@ export interface MatVirtualScrollEmits {
   "visible-range-change": (payload: { startIndex: number, endIndex: number }) => unknown;
 }
 
-export interface MatVirtualScrollExposed {
-  /**
- * 计算虚拟滚动区间和上下 spacer 尺寸。
- *
- * @returns {void}
- */
-  calculate(): void;
-  /**
- * 获取关联的滚动容器 DOM 元素（或 window）。
- *
- * @returns {HTMLElement | Window | null}
- */
-  getScroller(): HTMLElement | Window | null;
-  /**
- * 滚动容器原生 scrollTo 方法调用代理。
- *
- * @param {ScrollToOptions} options
- * @returns {void}
- */
-  scrollTo(options: ScrollToOptions): void;
-  /**
- * 滚动到指定索引。
- *
- * @param {number} index
- * @param {{ align?: 'start' | 'center' | 'end' | 'auto', behavior?: ScrollBehavior }} [options]
- * @returns {void}
- */
-  scrollToIndex(index: number): void;
-}
-
-export type MatVirtualScrollComponent = DefineComponent<MatVirtualScrollProps, MatVirtualScrollExposed, {}, {}, {}, {}, {}, MatVirtualScrollEmits>;
+export type MatVirtualScrollComponent = DefineComponent<MatVirtualScrollProps, {}, {}, {}, {}, {}, {}, MatVirtualScrollEmits>;
 export declare const MatVirtualScroll: MatVirtualScrollComponent;
 
 export interface MdeVirtualScrollProps {
@@ -3034,37 +3059,7 @@ export interface MdeVirtualScrollEmits {
   "visible-range-change": (payload: { startIndex: number, endIndex: number }) => unknown;
 }
 
-export interface MdeVirtualScrollExposed {
-  /**
- * 计算虚拟滚动区间和上下 spacer 尺寸。
- *
- * @returns {void}
- */
-  calculate(): void;
-  /**
- * 获取关联的滚动容器 DOM 元素（或 window）。
- *
- * @returns {HTMLElement | Window | null}
- */
-  getScroller(): HTMLElement | Window | null;
-  /**
- * 滚动容器原生 scrollTo 方法调用代理。
- *
- * @param {ScrollToOptions} options
- * @returns {void}
- */
-  scrollTo(options: ScrollToOptions): void;
-  /**
- * 滚动到指定索引。
- *
- * @param {number} index
- * @param {{ align?: 'start' | 'center' | 'end' | 'auto', behavior?: ScrollBehavior }} [options]
- * @returns {void}
- */
-  scrollToIndex(index: number): void;
-}
-
-export type MdeVirtualScrollComponent = DefineComponent<MdeVirtualScrollProps, MdeVirtualScrollExposed, {}, {}, {}, {}, {}, MdeVirtualScrollEmits>;
+export type MdeVirtualScrollComponent = DefineComponent<MdeVirtualScrollProps, {}, {}, {}, {}, {}, {}, MdeVirtualScrollEmits>;
 export declare const MdeVirtualScroll: MdeVirtualScrollComponent;
 
 export interface MatLoadingProps {

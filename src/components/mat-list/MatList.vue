@@ -10,6 +10,8 @@ import useComponentColor from '../use-component-color';
 import useRovingFocus from '../use-roving-focus';
 import { isSelectionValue } from '../selection-control';
 import { useMatProps } from '../use-mat-props';
+import { isValidCssLength } from '../value-utils';
+import useVirtualScroll from '../mat-virtual-scroll/use-virtual-scroll';
 import useListDragSort from './use-list-drag-sort';
 
 defineOptions({
@@ -88,6 +90,70 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * 是否启用虚拟滚动优化长列表性能。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  virtual: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * 虚拟滚动待渲染的全量数据列表。
+   *
+   * @type {Array<unknown>}
+   * @default []
+   */
+  items: {
+    type: Array,
+    default: () => [],
+  },
+  /**
+   * 固定的单项高度（单位 px）；仅支持可转换为数字的数值或纯数字字符串。
+   * 传入时跳过动态尺寸计算与 ResizeObserver 监听。
+   *
+   * @type {number | string | undefined}
+   * @default undefined
+   */
+  itemHeight: {
+    type: [Number, String],
+    default: undefined,
+    validator: (value) => isValidCssLength(value, { positive: true }),
+  },
+  /**
+   * 动态高度模式下的初始预估单项高度（单位 px）。
+   *
+   * @type {number | string}
+   * @default 48
+   */
+  estimatedItemHeight: {
+    type: [Number, String],
+    default: 48,
+    validator: (value) => isValidCssLength(value, { positive: true, allowUndefined: false }),
+  },
+  /**
+   * 视口上下方额外预渲染的缓冲项数量。
+   *
+   * @type {number | string}
+   * @default 3
+   */
+  buffer: {
+    type: [Number, String],
+    default: 3,
+    validator: (value) => isValidCssLength(value, { allowUndefined: false }),
+  },
+  /**
+   * 用于提取 item 唯一 key 的函数或属性名；未设置时默认使用项的索引 index。
+   *
+   * @type {Function | string | undefined}
+   * @default undefined
+   */
+  itemKey: {
+    type: [Function, String],
+    default: undefined,
+  },
 });
 const propsWithDefaults = useMatProps('list', props);
 
@@ -118,6 +184,25 @@ const emit = defineEmits({
       && Number.isInteger(payload.fromIndex)
       && Number.isInteger(payload.toIndex)
       && payload.originalEvent instanceof PointerEvent;
+  },
+  /**
+   * 虚拟滚动时触发，载荷包含当前滚动位置与渲染区间。
+   *
+   * @type {{ scrollTop: number, scrollHeight: number, clientHeight: number, startIndex: number, endIndex: number }}
+   */
+  scroll(payload) {
+    return typeof payload?.scrollTop === 'number'
+      && typeof payload?.startIndex === 'number'
+      && typeof payload?.endIndex === 'number';
+  },
+  /**
+   * 虚拟滚动可见索引区间变化时触发。
+   *
+   * @type {{ startIndex: number, endIndex: number }}
+   */
+  'visible-range-change'(payload) {
+    return typeof payload?.startIndex === 'number'
+      && typeof payload?.endIndex === 'number';
   },
 });
 const root = ref(null);
@@ -306,6 +391,39 @@ const roving = useRovingFocus({
   findInitial: findInitialFocusable,
   observedAttributes: ['aria-disabled', 'aria-hidden', 'disabled', 'href', 'inert'],
 });
+const {
+  calculate,
+  getItemKey,
+  getScroller,
+  paddingBottom,
+  paddingTop,
+  refresh,
+  scrollTo,
+  scrollToIndex,
+  setItemRef,
+  visibleItems,
+} = useVirtualScroll({
+  root,
+  props: propsWithDefaults,
+  enabled: computed(() => propsWithDefaults.virtual),
+  pinEdges: computed(() => propsWithDefaults.virtual),
+  emit,
+});
+
+const totalItemCount = computed(() => (propsWithDefaults.items ? propsWithDefaults.items.length : 0));
+const firstItemRecord = computed(() => {
+  if (totalItemCount.value > 0) {
+    return { item: propsWithDefaults.items[0], index: 0 };
+  }
+  return null;
+});
+const lastItemRecord = computed(() => {
+  if (totalItemCount.value > 1) {
+    const lastIndex = totalItemCount.value - 1;
+    return { item: propsWithDefaults.items[lastIndex], index: lastIndex };
+  }
+  return null;
+});
 const dragSort = useListDragSort({
   root,
   enabled: computed(() => propsWithDefaults.draggable),
@@ -375,6 +493,14 @@ watch(
   },
   { deep: true },
 );
+
+defineExpose({
+  calculate,
+  getScroller,
+  refresh,
+  scrollTo,
+  scrollToIndex,
+});
 </script>
 
 <template>
@@ -386,6 +512,7 @@ watch(
     :class="[
       `mat-list--${propsWithDefaults.variant}`,
       {
+        'mat-list--virtual': propsWithDefaults.virtual,
         'mat-list--draggable': propsWithDefaults.draggable,
         'mat-list--dragging': dragSort.dragging.value,
       },
@@ -401,7 +528,56 @@ watch(
     @keydown="handleKeyDown"
     @pointerdown="dragSort.handlePointerDown"
   >
-    <slot />
+    <template v-if="!propsWithDefaults.virtual">
+      <slot />
+    </template>
+
+    <template v-else-if="totalItemCount > 0">
+      <slot
+        v-if="firstItemRecord"
+        :item="firstItemRecord.item"
+        :index="firstItemRecord.index"
+        :item-ref="(el) => setItemRef(firstItemRecord.index, el)"
+        :is-first="true"
+        :is-last="totalItemCount === 1"
+      />
+
+      <div
+        v-if="totalItemCount >= 3 && paddingTop > 0"
+        class="mat-list__spacer"
+        :style="{ height: `${paddingTop}px` }"
+        aria-hidden="true"
+      />
+
+      <template
+        v-for="itemRecord in (totalItemCount >= 3 ? visibleItems : [])"
+        :key="getItemKey(itemRecord.item, itemRecord.index)"
+      >
+        <slot
+          :item="itemRecord.item"
+          :index="itemRecord.index"
+          :item-ref="(el) => setItemRef(itemRecord.index, el)"
+          :is-first="false"
+          :is-last="false"
+        />
+      </template>
+
+      <div
+        v-if="totalItemCount >= 3 && paddingBottom > 0"
+        class="mat-list__spacer"
+        :style="{ height: `${paddingBottom}px` }"
+        aria-hidden="true"
+      />
+
+      <slot
+        v-if="lastItemRecord"
+        :item="lastItemRecord.item"
+        :index="lastItemRecord.index"
+        :item-ref="(el) => setItemRef(lastItemRecord.index, el)"
+        :is-first="false"
+        :is-last="true"
+      />
+    </template>
   </component>
 </template>
 
@@ -415,6 +591,13 @@ watch(
     margin: 0;
     list-style: none;
     border-radius: var(--mat-list-container-shape);
+  }
+
+  .mat-list__spacer {
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    inline-size: 100%;
+    pointer-events: none;
   }
 
   .mat-list--standard {
