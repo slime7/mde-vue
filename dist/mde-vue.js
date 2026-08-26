@@ -11441,7 +11441,7 @@ var pc = { class: "mat-snackbar__text" }, mc = {
 			_: 3
 		}, 8, ["orientation"])], 16)], 6)) : o("", !0)], 8, ["to", "disabled"]))], 64));
 	}
-}), [["__scopeId", "data-v-380530c4"]]), Wc = /* @__PURE__ */ new WeakMap();
+}), [["__scopeId", "data-v-2a87778a"]]), Wc = /* @__PURE__ */ new WeakMap();
 function Gc(e) {
 	return typeof e == "function" ? {
 		handler: e,

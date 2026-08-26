@@ -302,89 +302,89 @@ function NavigationRailContent() {
     orientation: propsWithDefaults.orientation,
   }).map(renderDefaultNode);
 }
-  const hideMotion = createMotionController();
-  const usesAppRoot = computed(() => (
-    propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach
-  ));
-  const attachTarget = computed(() => {
-    if (!propsWithDefaults.app || usesAppRoot.value) {
+const hideMotion = createMotionController();
+const usesAppRoot = computed(() => (
+  propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach
+));
+const attachTarget = computed(() => {
+  if (!propsWithDefaults.app || usesAppRoot.value) {
+    return null;
+  }
+
+  if (typeof propsWithDefaults.attach === 'string') {
+    try {
+      return document.querySelector(propsWithDefaults.attach);
+    } catch {
       return null;
     }
+  }
 
-    if (typeof propsWithDefaults.attach === 'string') {
-      try {
-        return document.querySelector(propsWithDefaults.attach);
-      } catch {
-        return null;
-      }
-    }
+  return normalizeAttach(propsWithDefaults.attach);
+});
+const menuIcon = computed(() => (
+  propsWithDefaults.expanded ? propsWithDefaults.closeIcon : propsWithDefaults.openIcon
+));
+const menuLabel = computed(() => (
+  propsWithDefaults.expanded ? propsWithDefaults.closeLabel : propsWithDefaults.openLabel
+));
+const hostClasses = computed(() => ({
+  'mat-navigation-rail-host--vertical': !isHorizontal.value,
+  'mat-navigation-rail-host--horizontal': isHorizontal.value,
+  'mat-navigation-rail-host--expanded': effectiveExpanded.value,
+  'mat-navigation-rail-host--collapsed': !effectiveExpanded.value,
+  'mat-navigation-rail-host--modal': isModal.value,
+  'mat-navigation-rail-host--hidden': isHidden.value,
+  'mat-navigation-rail-host--app': propsWithDefaults.app,
+  'mat-navigation-rail-host--app-root': usesAppRoot.value,
+}));
+const railClasses = computed(() => ({
+  'mat-navigation-rail--expanded': effectiveExpanded.value,
+  'mat-navigation-rail--collapsed': !effectiveExpanded.value,
+  'mat-navigation-rail--bar': isHorizontal.value,
+  'mat-navigation-rail--modal': isModal.value && effectiveExpanded.value,
+  'mat-navigation-rail--hidden': isHidden.value,
+  'mat-navigation-rail--collapsible-hidden': !showCollapsibleContent.value,
+  'mat-navigation-rail--with-header': hasFixedHeader.value,
+  'mat-navigation-rail--with-end': hasFixedEnd.value,
+  'mat-navigation-rail--app': propsWithDefaults.app,
+  'mat-navigation-rail--app-root': usesAppRoot.value,
+}));
 
-    return normalizeAttach(propsWithDefaults.attach);
+const expandedWidthStyle = computed(() => {
+  const width = toCssLength(propsWithDefaults.width, { property: 'inline-size' });
+
+  if (width === undefined) {
+    return undefined;
+  }
+
+  return { '--mat-navigation-rail-expanded-width': width };
+});
+const effectiveBottomPlaceholder = computed(() => {
+  if (!propsWithDefaults.app || usesAppRoot.value) {
+    return '0px';
+  }
+
+  const css = toCssLength(propsWithDefaults.bottomPlaceholder, {
+    property: 'block-size',
+    fallback: '0px',
   });
-  const menuIcon = computed(() => (
-    propsWithDefaults.expanded ? propsWithDefaults.closeIcon : propsWithDefaults.openIcon
-  ));
-  const menuLabel = computed(() => (
-    propsWithDefaults.expanded ? propsWithDefaults.closeLabel : propsWithDefaults.openLabel
-  ));
-  const hostClasses = computed(() => ({
-    'mat-navigation-rail-host--vertical': !isHorizontal.value,
-    'mat-navigation-rail-host--horizontal': isHorizontal.value,
-    'mat-navigation-rail-host--expanded': effectiveExpanded.value,
-    'mat-navigation-rail-host--collapsed': !effectiveExpanded.value,
-    'mat-navigation-rail-host--modal': isModal.value,
-    'mat-navigation-rail-host--hidden': isHidden.value,
-    'mat-navigation-rail-host--app': propsWithDefaults.app,
-    'mat-navigation-rail-host--app-root': usesAppRoot.value,
-  }));
-  const railClasses = computed(() => ({
-    'mat-navigation-rail--expanded': effectiveExpanded.value,
-    'mat-navigation-rail--collapsed': !effectiveExpanded.value,
-    'mat-navigation-rail--bar': isHorizontal.value,
-    'mat-navigation-rail--modal': isModal.value && effectiveExpanded.value,
-    'mat-navigation-rail--hidden': isHidden.value,
-    'mat-navigation-rail--collapsible-hidden': !showCollapsibleContent.value,
-    'mat-navigation-rail--with-header': hasFixedHeader.value,
-    'mat-navigation-rail--with-end': hasFixedEnd.value,
-    'mat-navigation-rail--app': propsWithDefaults.app,
-    'mat-navigation-rail--app-root': usesAppRoot.value,
-  }));
 
-  const expandedWidthStyle = computed(() => {
-    const width = toCssLength(propsWithDefaults.width, { property: 'inline-size' });
-
-    if (width === undefined) {
-      return undefined;
-    }
-
-    return { '--mat-navigation-rail-expanded-width': width };
-  });
-  const effectiveBottomPlaceholder = computed(() => {
-    if (!propsWithDefaults.app || usesAppRoot.value) {
-      return '0px';
-    }
-
-    const css = toCssLength(propsWithDefaults.bottomPlaceholder, {
-      property: 'block-size',
-      fallback: '0px',
-    });
-
-    // 占位高度参与 max()/calc() 运算，必须始终携带长度单位；
-    // toCssLength 会把 0 输出为无单位值，导致整条声明失效。
-    return css === '0' ? '0px' : css;
-  });
-  const railStyle = computed(() => [
-    expandedWidthStyle.value,
-    {
-      '--mat-navigation-rail-app-bottom-inset': `${edgeRegistration.value?.insets.bottom ?? 0}px`,
-      '--mat-navigation-rail-app-bottom-offset': `${edgeRegistration.value?.insets.bottom ?? 0}px`,
-      '--mat-navigation-rail-app-end-inset': `${edgeRegistration.value?.insets.end ?? 0}px`,
-      '--mat-navigation-rail-app-start-inset': `${edgeRegistration.value?.insets.start ?? 0}px`,
-      '--mat-navigation-rail-app-start-offset': `${edgeRegistration.value?.insets.start ?? 0}px`,
-      '--mat-navigation-rail-app-top-inset': `${edgeRegistration.value?.insets.top ?? 0}px`,
-      '--mat-navigation-rail-bottom-placeholder': effectiveBottomPlaceholder.value,
-    },
-  ]);
+  // 占位高度参与 max()/calc() 运算，必须始终携带长度单位；
+  // toCssLength 会把 0 输出为无单位值，导致整条声明失效。
+  return css === '0' ? '0px' : css;
+});
+const railStyle = computed(() => [
+  expandedWidthStyle.value,
+  {
+    '--mat-navigation-rail-app-bottom-inset': `${edgeRegistration.value?.insets.bottom ?? 0}px`,
+    '--mat-navigation-rail-app-bottom-offset': `${edgeRegistration.value?.insets.bottom ?? 0}px`,
+    '--mat-navigation-rail-app-end-inset': `${edgeRegistration.value?.insets.end ?? 0}px`,
+    '--mat-navigation-rail-app-start-inset': `${edgeRegistration.value?.insets.start ?? 0}px`,
+    '--mat-navigation-rail-app-start-offset': `${edgeRegistration.value?.insets.start ?? 0}px`,
+    '--mat-navigation-rail-app-top-inset': `${edgeRegistration.value?.insets.top ?? 0}px`,
+    '--mat-navigation-rail-bottom-placeholder': effectiveBottomPlaceholder.value,
+  },
+]);
 const hostElement = ref(null);
 const railElement = ref(null);
 const railSize = ref({
