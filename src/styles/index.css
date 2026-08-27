@@ -450,6 +450,8 @@
     --mat-loading-size: 48px;
     --mat-loading-active-indicator-color: var(--mat-sys-color-primary);
     --mat-loading-container-color: transparent;
+    --mat-loading-contained-active-indicator-color: var(--mat-sys-color-on-primary-container);
+    --mat-loading-contained-container-color: var(--mat-sys-color-primary-container);
 
     /* Slider component tokens */
     --mat-slider-extra-small-track-height: 16px;

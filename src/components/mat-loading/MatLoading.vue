@@ -78,20 +78,9 @@ const resolvedSize = computed(() => {
 const sizeStyle = computed(() => ({
   '--mat-loading-size': `${resolvedSize.value}px`,
 }));
-const containmentStyle = computed(() => {
-  if (!propsWithDefaults.containment) {
-    return {};
-  }
-
-  return {
-    '--mat-loading-container-color': 'var(--mat-accent-container-color, var(--mat-sys-color-primary-container))',
-    '--mat-loading-active-indicator-color': 'var(--mat-on-accent-container-color, var(--mat-sys-color-on-primary-container))',
-  };
-});
 const rootStyle = computed(() => ({
   ...colorStyle.value,
   ...sizeStyle.value,
-  ...containmentStyle.value,
 }));
 const indicatorSize = computed(() => resolvedSize.value * (38 / 48));
 const activeShapeName = computed(() => LOADING_SHAPE_NAMES[currentShapeIndex.value]);
@@ -194,8 +183,8 @@ onBeforeUnmount(() => {
 <style scoped>
 @layer mde.components {
   .mat-loading {
-    --mat-loading-active-indicator-color: var(--mat-accent-color, var(--mat-sys-color-primary));
-    --mat-loading-container-color: transparent;
+    --mat-loading-current-active-indicator-color: var(--mat-accent-color, var(--mat-loading-active-indicator-color));
+    --mat-loading-current-container-color: var(--mat-loading-container-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -203,15 +192,20 @@ onBeforeUnmount(() => {
     inline-size: var(--mat-loading-size);
     block-size: var(--mat-loading-size);
     margin-inline: auto;
-    background: var(--mat-loading-container-color);
+    background: var(--mat-loading-current-container-color);
     border-radius: var(--mat-sys-shape-corner-full);
+  }
+
+  .mat-loading--contained {
+    --mat-loading-current-active-indicator-color: var(--mat-on-accent-container-color, var(--mat-loading-contained-active-indicator-color));
+    --mat-loading-current-container-color: var(--mat-accent-container-color, var(--mat-loading-contained-container-color));
   }
 
   .mat-loading .mat-loading__active-indicator {
     display: block;
     flex: 0 0 auto;
     box-sizing: border-box;
-    background: var(--mat-loading-active-indicator-color);
+    background: var(--mat-loading-current-active-indicator-color);
     animation: mat-loading-shape-cycle 4550ms linear infinite, mat-loading-morph-rotate 18200ms linear infinite, mat-loading-rotate 4666ms linear infinite;
   }
 

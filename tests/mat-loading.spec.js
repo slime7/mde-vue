@@ -159,9 +159,19 @@ describe('MatLoading', () => {
     const wrapper = mount(MatLoading);
     const contained = mount(MatLoading, { props: { containment: true } });
 
-    expect(wrapper.attributes('style')).not.toContain('--mat-loading-container-color');
-    expect(contained.attributes('style')).toContain('--mat-loading-container-color');
+    expect(wrapper.classes()).not.toContain('mat-loading--contained');
+    expect(contained.classes()).toContain('mat-loading--contained');
     expect(wrapper.findComponent(MatShape).props('size')).toBe(38);
     expect(contained.findComponent(MatShape).props('size')).toBe(38);
+  });
+
+  it('color 设置组件级强调色变量并支持与 containment 搭配', () => {
+    const wrapper = mount(MatLoading, { props: { color: 'tertiary' } });
+    const contained = mount(MatLoading, { props: { color: 'tertiary', containment: true } });
+
+    expect(wrapper.attributes('style')).toContain('--mat-accent-color: var(--mat-sys-color-tertiary)');
+    expect(wrapper.classes()).not.toContain('mat-loading--contained');
+    expect(contained.attributes('style')).toContain('--mat-accent-color: var(--mat-sys-color-tertiary)');
+    expect(contained.classes()).toContain('mat-loading--contained');
   });
 });

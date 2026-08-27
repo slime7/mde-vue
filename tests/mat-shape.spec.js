@@ -51,6 +51,7 @@ describe('MatShape', () => {
     expect(wrapper.props('color')).toBe('primary');
     expect(wrapper.attributes('style')).toContain('inline-size: 48px');
     expect(wrapper.attributes('style')).toContain('block-size: 48px');
+    expect(wrapper.attributes('style')).toContain('--mat-accent-color: var(--mat-sys-color-primary)');
   });
 
   it('接受官方图鉴的 35 个形状名称', () => {
@@ -105,6 +106,10 @@ describe('MatShape', () => {
     expect(validator('surface-container-high')).toBe(true);
     expect(validator('#6750a4')).toBe(true);
     expect(validator('on-primary')).toBe(false);
+
+    const primaryWrapper = mount(MatShape, { props: { color: 'primary' } });
+    expect(primaryWrapper.props('color')).toBe('primary');
+    expect(primaryWrapper.attributes('style')).toContain('--mat-accent-color: var(--mat-sys-color-primary)');
   });
 
   it('读取 defaults.shape，显式属性优先', () => {
