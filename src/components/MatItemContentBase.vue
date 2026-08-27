@@ -115,10 +115,6 @@ defineProps({
     align-items: flex-start;
   }
 
-  [data-mat-item-content][class*='--separate-trailing'] {
-    padding-inline-end: 0;
-  }
-
   [data-mat-item-content-leading],
   [data-mat-item-content-trailing] {
     display: flex;

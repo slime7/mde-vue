@@ -4786,7 +4786,7 @@ var hi = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}, [M(t.$slots, "trailing", {}, void 0, !0)], 10, bi)) : o("", !0)
 		], 10, vi));
 	}
-}), [["__scopeId", "data-v-9cd359ef"]]), Si = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatListItemContent" }, {
+}), [["__scopeId", "data-v-3223d16a"]]), Si = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatListItemContent" }, {
 	__name: "MatListItemContent",
 	props: {
 		lineCount: {
