@@ -81,7 +81,7 @@ describe('MatLoading', () => {
     const shape = wrapper.findComponent(MatShape);
 
     expect(shape.props('name')).toBe('soft-burst');
-    expect(shape.props('size')).toBe(48);
+    expect(shape.props('size')).toBe(38);
     expect(shape.props('color')).toBe('primary');
     expect(shape.attributes('style')).toContain('clip-path: shape(');
   });
@@ -161,7 +161,7 @@ describe('MatLoading', () => {
 
     expect(wrapper.attributes('style')).not.toContain('--mat-loading-container-color');
     expect(contained.attributes('style')).toContain('--mat-loading-container-color');
-    expect(wrapper.findComponent(MatShape).props('size')).toBe(48);
+    expect(wrapper.findComponent(MatShape).props('size')).toBe(38);
     expect(contained.findComponent(MatShape).props('size')).toBe(38);
   });
 });

@@ -10106,7 +10106,7 @@ var es = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			...n.value,
 			...f.value,
 			...p.value
-		})), h = i(() => t.containment ? u.value * (38 / 48) : u.value), _ = i(() => _r[r.value]);
+		})), h = i(() => u.value * (38 / 48)), _ = i(() => _r[r.value]);
 		function v() {
 			return l ? l.matches : typeof globalThis.matchMedia == "function" && globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
 		}
@@ -10146,7 +10146,7 @@ var es = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"color"
 		])], 16));
 	}
-}), [["__scopeId", "data-v-783479a0"]]), Ts = ["aria-valuemax", "aria-valuenow"], Es = ["width", "height"], Ds = { key: 0 }, Os = ["width", "height"], ks = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, As = ["d"], js = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, Ms = ["d"], Ns = ["d", "mask"], Ps = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, Fs = ["d"], Is = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, Ls = ["d"], Rs = ["d"], zs = {
+}), [["__scopeId", "data-v-54f7cc15"]]), Ts = ["aria-valuemax", "aria-valuenow"], Es = ["width", "height"], Ds = { key: 0 }, Os = ["width", "height"], ks = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, As = ["d"], js = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, Ms = ["d"], Ns = ["d", "mask"], Ps = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, Fs = ["d"], Is = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, Ls = ["d"], Rs = ["d"], zs = {
 	key: 1,
 	class: "mat-progress__linear-stop"
 }, Bs = ["viewBox"], Vs = { class: "mat-progress__circular-linear-rotate" }, Hs = { class: "mat-progress__circular-rotate-arc" }, Us = [

@@ -93,11 +93,7 @@ const rootStyle = computed(() => ({
   ...sizeStyle.value,
   ...containmentStyle.value,
 }));
-const indicatorSize = computed(() => (
-  propsWithDefaults.containment
-    ? resolvedSize.value * (38 / 48)
-    : resolvedSize.value
-));
+const indicatorSize = computed(() => resolvedSize.value * (38 / 48));
 const activeShapeName = computed(() => LOADING_SHAPE_NAMES[currentShapeIndex.value]);
 
 /**
