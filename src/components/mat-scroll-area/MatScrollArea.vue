@@ -527,6 +527,8 @@ function scrollTo(options) {
 provide(MAT_SCROLL_AREA_KEY, {
   getScroller,
   scrollTo,
+  scroller,
+  orientation: normalizedOrientation,
 });
 
 watch(

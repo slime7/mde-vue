@@ -267,7 +267,11 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 
 `snap` 以 `none`、`proximity`、`mandatory` 设置当前物理滚动轴的原生滚动停靠强度，默认关闭；`snapPadding` 以非负像素值设置同一轴两端的停靠内边距。组件不替默认 Slot 内容选择停靠目标，使用方必须在目标元素上声明 `scroll-snap-align`，并按需要选择 `scroll-snap-stop`。
 
-`reachThreshold` 只设置 `reach-start`、`reach-end` 的非负像素阈值，不改变渐隐。初次布局、尺寸或内容同步、方向和阈值变化均保持静默；只有原生 scroll 从阈值外进入阈值内时派发一次，离开后重新进入才再次派发。事件载荷提供到对应边缘的 `distance` 与原生滚动 `target`。`getScroller()` 和 `scrollTo()` 是公共命令式方法；class 与 style 属于根容器，其他原生属性和监听器属于滚动元素。
+`reachThreshold` 只设置 `reach-start`、`reach-end` 的非负像素阈值，不改变渐隐。初次布局、尺寸或内容同步、方向和阈值变化均保持静默；只有原生 scroll 从阈值外进入阈值内时派发一次，离开后重新进入才再次派发。事件载荷提供到对应边缘的 `distance` 与原生滚动 `target`。`getScroller()` 和 `scrollTo()` 是公共命令式方法；class 与 style 属于根容器，其他原生属性和监听器属于滚动元素。组件还通过内部上下文向子孙组件提供滚动元素的响应式引用与归一化方向，供下拉刷新等配合组件使用；该上下文属于内部实现，不是公共接口。
+
+## Pull to refresh 下拉刷新
+
+`<mat-pull-to-refresh>` 与导出 `MatPullToRefresh` 没有 Slots，只提供手势与指示器：必须作为 `<mat-scroll-area>` 的子元素放在滚动内容首位，列表或其他内容作为兄弟元素跟在组件之后；在滚动区域外渲染时不建立手势。垂直滚动区域在顶部继续向下拉动、水平滚动区域在最左端继续向右拉动时，指针拖拽与滚轮、触控板在边界朝界外的滚动都随拉动距离渐入指示器；释放时达到 `triggerDistance`（默认 80，对齐 AndroidX 80dp）发出 `refresh` 与 `update:modelValue(true)`，未达到则收起取消。`modelValue` 表达刷新中状态，触发时组件置为 `true`，外部置回 `false` 结束刷新；刷新中重复拉动不重复触发。`placeholder` 让组件自身随拉动变高（水平时变宽）推挤后面的兄弟内容，未开启时指示器悬浮在内容上方。`size`、`color`、`containment` 透传给内部 `<mat-loading>`；拖动中指示器使用受控进度（`0` 至 `1` 形变、超过 `1` 继续旋转，透明度从 `0.3` 渐入），刷新中切换到自动旋转。动画参数（拖拽系数 `0.5`、行程上限、临界阻尼弹簧 damping 1.0 / stiffness 1600）对应 AndroidX Material 3 PullToRefresh 官方数值；减少动态效果偏好下动画直接落位。组件没有公开方法。
 
 ## Navigation 导航
 

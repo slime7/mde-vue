@@ -115,6 +115,7 @@ export default defineConfig({
               { text: 'Hover 悬停状态', link: '/components/hover' },
               { text: 'Loading 加载指示器', link: '/components/loading' },
               { text: 'Progress 进度', link: '/components/progress' },
+              { text: 'PullToRefresh 下拉刷新', link: '/components/pull-to-refresh' },
               { text: 'Snackbar 消息提示', link: '/components/snackbar' },
               { text: 'Split button 拆分按钮', link: '/components/split-button' },
               { text: 'Tooltip 文字提示', link: '/components/tooltip' },

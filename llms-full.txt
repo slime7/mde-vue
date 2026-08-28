@@ -7515,7 +7515,7 @@ import SwitchModelValueExample from '../examples/selection/SwitchModelValueExamp
 
 组件根元素始终是块级 `div`，默认水平居中。无论是否启用 `containment`，活动形状均按 38 : 48 比例限制在背景容器尺寸内并居中（未开启时背景容器透明）；`containment` 开启后在指示器外显示圆形背景容器，适合叠加在已有内容之上，活动形状自动换用同组 on-container 内容色。组件每 650ms 启动一次低阻尼弹簧变化，轮廓在前段快速接近下一个形状，额外 90° 旋转使用同一弹簧进度并轻微越过目标后回稳；组件另有 4666ms 的匀速整圈旋转。形状采样点会按整个循环对齐起点，减少轮廓特征在变形时沿边界滑动。
 
-受控模式使用 AndroidX Determinate LoadingIndicator 的两帧参数：从经过 18° 起始旋转处理的圆形变为 `soft-burst`，`0` 到 `1` 之间的进度直接控制形变与 `-progress × 180°` 旋转；进度超过 `1` 后保持 `soft-burst`，继续追加相同方向的旋转。设置 `progress` 会停止自动形状循环和旋转，移除后恢复自动模式。
+受控模式使用 AndroidX Determinate LoadingIndicator 的两帧参数：从经过 18° 起始旋转处理的圆形变为 `soft-burst`，`0` 到 `1` 之间的进度直接控制形变与 `-progress × 180°` 旋转；进度超过 `1` 后保持 `soft-burst`，继续追加相同方向的旋转。设置 `progress` 会停止自动形状循环和旋转，移除后恢复自动模式。配合 `<mat-pull-to-refresh>` 可直接获得完整的下拉刷新手势。
 
 ## 示例
 
@@ -9076,6 +9076,533 @@ import ProgressSizeExample from '../examples/progress/ProgressSizeExample.vue';
 import ProgressThicknessExample from '../examples/progress/ProgressThicknessExample.vue';
 import ProgressVariantExample from '../examples/progress/ProgressVariantExample.vue';
 import ProgressWaveMotionExample from '../examples/progress/ProgressWaveMotionExample.vue';
+</script>
+
+# PullToRefresh 下拉刷新
+
+## 组件简介
+
+`<mat-pull-to-refresh>` 的组件导出名是 `MatPullToRefresh`。它在滚动区域起始端提供 Material 3 风格的下拉刷新手势：垂直 `mat-scroll-area` 滚动到顶部后继续向下拉动、水平 `mat-scroll-area` 滚动到最左端后继续向右拉动，都会随拉动距离渐入内部的 `mat-loading` 指示器；释放时拉动距离达到触发距离即发出刷新，未达到则回弹取消。鼠标、触摸、笔的拖拽与滚轮、触控板在边界朝界外的滚动都能触发。
+
+组件没有 Slots，只负责手势与指示器：把它作为 `mat-scroll-area` 内容的第一个子元素，列表或其他内容作为兄弟元素跟在组件后面，组件渲染为零尺寸元素悬浮在内容上方。开启 `placeholder` 后组件自身随拉动变高（水平时变宽），把后面的内容推离起点，呈现列表"被拉动"的视觉效果。指示器与收起动画的阈值、拖拽系数和弹簧参数对应 AndroidX Material 3 `PullToRefresh` 的官方数值，刷新期间指示器切换到 `mat-loading` 的自动旋转模式。
+
+## 示例
+
+以下代码块由 VitePress 直接读取实际渲染的 Vue 示例文件，因此代码与紧随其后的预览始终来自同一份源码。
+
+### `v-model` 与 `refresh` 事件
+
+触发刷新时组件把 `modelValue` 置为 `true` 并发出 `refresh`；异步刷新完成后把 `modelValue` 置回 `false`，指示器回弹收起。刷新过程中继续拉动不会重复触发。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="pull-to-refresh-basic-example">
+    <mat-scroll-area class="area">
+      <mat-pull-to-refresh v-model="refreshing" @refresh="onRefresh" />
+      <ul class="list">
+        <li v-for="item in items" :key="item.id">
+          {{ item.text }}
+        </li>
+      </ul>
+    </mat-scroll-area>
+    <output>
+      最近刷新：{{ lastRefreshed || '尚未刷新' }}
+    </output>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const refreshing = ref(false);
+const lastRefreshed = ref('');
+let seed = 0;
+
+function createItem() {
+  seed += 1;
+  const time = new Date().toLocaleTimeString('zh-CN', { hour12: false });
+
+  return { id: seed, text: `新消息 ${seed}（${time}）` };
+}
+
+const items = ref([
+  { id: -1, text: '周会同步：组件库周报' },
+  { id: -2, text: '设计评审：形状令牌更新' },
+  { id: -3, text: '通知：滚动区域组件已合入' },
+]);
+
+async function onRefresh() {
+  await new Promise((resolve) => setTimeout(resolve, 1200));
+
+  items.value.unshift(createItem());
+  lastRefreshed.value = new Date().toLocaleTimeString('zh-CN', { hour12: false });
+  refreshing.value = false;
+}
+</script>
+```
+```vue
+<style scoped>
+.pull-to-refresh-basic-example {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  inline-size: 100%;
+}
+
+.area {
+  inline-size: min(100%, 420px);
+  block-size: 240px;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list li {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="PullToRefresh 基础用法预览" stacked>
+    <PullToRefreshBasicExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `placeholder`
+
+开启后组件根元素随拉动变高，把后面的兄弟内容推离起点；刷新期间保持足够指示器停留的高度，刷新结束回弹归零。未开启时指示器悬浮在内容上方，内容不移动。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="pull-to-refresh-placeholder-example">
+    <mat-scroll-area class="area">
+      <mat-pull-to-refresh v-model="refreshing" placeholder @refresh="onRefresh" />
+      <ul class="list">
+        <li v-for="item in items" :key="item">
+          {{ item }}
+        </li>
+      </ul>
+    </mat-scroll-area>
+    <p class="hint">
+      开启 placeholder 后，组件自身随拉动变高，把列表推离顶部。
+    </p>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const refreshing = ref(false);
+let count = 0;
+
+function createItem() {
+  count += 1;
+
+  return `占位列表项 ${count}`;
+}
+
+const items = ref(Array.from({ length: 8 }, () => createItem()));
+
+async function onRefresh() {
+  await new Promise((resolve) => setTimeout(resolve, 1200));
+
+  items.value.unshift(createItem());
+  refreshing.value = false;
+}
+</script>
+```
+```vue
+<style scoped>
+.pull-to-refresh-placeholder-example {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  inline-size: 100%;
+}
+
+.area {
+  inline-size: min(100%, 420px);
+  block-size: 240px;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list li {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.hint {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="PullToRefresh placeholder 预览" stacked>
+    <PullToRefreshPlaceholderExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `triggerDistance`
+
+触发距离接受数字或纯数字字符串，单位 px；非法值回退默认 `80`。同一属性的多个取值集中展示：
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="pull-to-refresh-trigger-example">
+    <section>
+      <h4>triggerDistance 80（默认数字）</h4>
+      <mat-scroll-area class="area">
+        <mat-pull-to-refresh v-model="shortRefreshing" placeholder @refresh="refreshShort" />
+        <ul>
+          <li v-for="item in shortItems" :key="item">
+            {{ item }}
+          </li>
+        </ul>
+      </mat-scroll-area>
+    </section>
+    <section>
+      <h4>triggerDistance "160"（数字字符串）</h4>
+      <mat-scroll-area class="area">
+        <mat-pull-to-refresh
+          v-model="longRefreshing"
+          placeholder
+          trigger-distance="160"
+          @refresh="refreshLong"
+        />
+        <ul>
+          <li v-for="item in longItems" :key="item">
+            {{ item }}
+          </li>
+        </ul>
+      </mat-scroll-area>
+    </section>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const shortRefreshing = ref(false);
+const longRefreshing = ref(false);
+let shortCount = 0;
+let longCount = 0;
+
+const shortItems = ref(['短距离 甲', '短距离 乙', '短距离 丙']);
+const longItems = ref(['长距离 甲', '长距离 乙', '长距离 丙']);
+
+async function refreshShort() {
+  await new Promise((resolve) => setTimeout(resolve, 900));
+
+  shortCount += 1;
+  shortItems.value.unshift(`短距离 新增 ${shortCount}`);
+  shortRefreshing.value = false;
+}
+
+async function refreshLong() {
+  await new Promise((resolve) => setTimeout(resolve, 900));
+
+  longCount += 1;
+  longItems.value.unshift(`长距离 新增 ${longCount}`);
+  longRefreshing.value = false;
+}
+</script>
+```
+```vue
+<style scoped>
+.pull-to-refresh-trigger-example {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  inline-size: 100%;
+}
+
+section {
+  display: grid;
+  gap: 8px;
+}
+
+h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.area {
+  block-size: 200px;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+ul li {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="PullToRefresh triggerDistance 预览" stacked>
+    <PullToRefreshTriggerDistanceExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 透传 `size`、`color`、`containment`
+
+指示器属性直接透传给内部 `mat-loading`；未设置时使用 `mat-loading` 自身默认值。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="pull-to-refresh-loading-example">
+    <mat-scroll-area class="area">
+      <mat-pull-to-refresh
+        v-model="refreshing"
+        placeholder
+        containment
+        size="60"
+        color="tertiary"
+        @refresh="onRefresh"
+      />
+      <ul>
+        <li v-for="item in items" :key="item">
+          {{ item }}
+        </li>
+      </ul>
+    </mat-scroll-area>
+    <p class="hint">
+      containment、size、color 直接透传给内部的 mat-loading。
+    </p>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const refreshing = ref(false);
+const items = ref(['透传 size 与 containment', '列表项 乙', '列表项 丙', '列表项 丁']);
+
+async function onRefresh() {
+  await new Promise((resolve) => setTimeout(resolve, 1400));
+
+  items.value = [...items.value].reverse();
+  refreshing.value = false;
+}
+</script>
+```
+```vue
+<style scoped>
+.pull-to-refresh-loading-example {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  inline-size: 100%;
+}
+
+.area {
+  inline-size: min(100%, 420px);
+  block-size: 220px;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+ul li {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.hint {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="PullToRefresh loading 属性透传预览" stacked>
+    <PullToRefreshLoadingExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 水平滚动区域
+
+水平 `mat-scroll-area` 在最左端继续向右拉动时触发，指示器出现在左端、垂直居中，placeholder 在左端变宽把内容推向右侧。组件与内容需要保持行内布局（示例使用 `inline-flex` 列表），placeholder 才能推挤内容。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="pull-to-refresh-horizontal-example">
+    <mat-scroll-area class="area" orientation="horizontal" no-scroll-padding>
+      <mat-pull-to-refresh v-model="refreshing" placeholder @refresh="onRefresh" />
+      <ul class="cards">
+        <li v-for="card in cards" :key="card">
+          {{ card }}
+        </li>
+      </ul>
+    </mat-scroll-area>
+    <p class="hint">
+      滚动到最左端后继续向右拉动触发；组件与卡片列表保持行内布局，placeholder 变宽时把卡片推向右侧。
+    </p>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const refreshing = ref(false);
+let count = 0;
+
+function createCard() {
+  count += 1;
+
+  return `卡片 ${count}`;
+}
+
+const cards = ref(['卡片 甲', '卡片 乙', '卡片 丙', '卡片 丁', '卡片 戊']);
+
+async function onRefresh() {
+  await new Promise((resolve) => setTimeout(resolve, 1200));
+
+  cards.value.unshift(createCard());
+  refreshing.value = false;
+}
+</script>
+```
+```vue
+<style scoped>
+.pull-to-refresh-horizontal-example {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  inline-size: 100%;
+}
+
+.area {
+  inline-size: min(100%, 480px);
+  block-size: 160px;
+}
+
+.cards {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: inline-flex;
+  gap: 12px;
+  block-size: 100%;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.cards li {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 120px;
+  block-size: 96px;
+  border-radius: var(--mat-sys-shape-corner-medium);
+  background: var(--mat-sys-surface-container);
+}
+
+.hint {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="PullToRefresh 水平滚动区域预览" stacked>
+    <PullToRefreshHorizontalExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `modelValue` | `boolean` | `false` | 刷新中状态（v-model）；触发时组件置为 `true`，外部刷新完成后置回 `false` 结束刷新 |
+| `placeholder` | `boolean` | `false` | 组件根元素随拉动变高（水平时变宽），推挤后面的兄弟内容；未开启时指示器悬浮在内容上方 |
+| `triggerDistance` | `number \| string` | `80` | 触发刷新需要的拉动距离，单位 px；数字与纯数字字符串，非法值回退 `80` |
+| `size` | `number \| string` | 未设置 | 透传给内部 `mat-loading` 的指示器宽高，未设置时使用其默认 `48` |
+| `color` | 语义色或 `#RRGGBB` | 未设置 | 透传给内部 `mat-loading` 的强调色 |
+| `containment` | `boolean` | `false` | 透传给内部 `mat-loading` 的圆形背景容器开关 |
+
+未被组件消费的 `aria-*`、`id`、`class`、`style` 和原生事件监听器会传给根元素。组件必须作为 `mat-scroll-area` 的子元素使用并放在滚动内容首位；在滚动区域外渲染时不建立手势。
+
+## 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `refresh` | 无 | 拉动距离达到 `triggerDistance` 后释放，或滚轮在边界朝界外累积达到阈值时触发；刷新中不重复触发 |
+| `update:modelValue` | `boolean` | 触发刷新时载荷为 `true`；外部置回 `false` 结束刷新并收起指示器 |
+
+## Slots
+
+组件没有 Slots；列表或其他内容不进入组件，作为兄弟元素放在组件之后。组件内部渲染 `mat-loading` 指示器，其外观由 `size`、`color`、`containment` 控制。
+
+## 状态
+
+拖动过程中内部 `mat-loading` 进入受控进度模式：进度为拉动距离与触发距离之比，`0` 至 `1` 控制圆形到 `soft-burst` 的形变，超过 `1` 后保持 `soft-burst` 并继续旋转；指示器透明度按官方规范从 `0.3` 渐入到 `1`。释放达到阈值后指示器以轻微放大动画停在距起点 `triggerDistance` 处（默认 80px），并切换到 `mat-loading` 的自动旋转模式；未达阈值或刷新结束时按弹簧动画收起。启用减少动态效果偏好时，收起与放大动画直接落位。组件没有公开方法。
+
+## 参考来源
+
+触发阈值（80dp）、拖拽系数（0.5）、指示器行程上限、拖动进度驱动与刷新弹簧（damping 1.0、stiffness 1600）参考 [AndroidX PullToRefresh.kt](https://android.googlesource.com/platform/frameworks/support/+/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/pulltorefresh/PullToRefresh.kt)；指示器容器尺寸、出现动画与自动旋转参考 [AndroidX LoadingIndicator.kt](https://android.googlesource.com/platform/frameworks/support/+/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/LoadingIndicator.kt)；指示器透明度下限参考 SwipeRefreshLayout 规范。
+
+<script setup>
+import PullToRefreshBasicExample from '../examples/pull-to-refresh/PullToRefreshBasicExample.vue';
+import PullToRefreshHorizontalExample from '../examples/pull-to-refresh/PullToRefreshHorizontalExample.vue';
+import PullToRefreshLoadingExample from '../examples/pull-to-refresh/PullToRefreshLoadingExample.vue';
+import PullToRefreshPlaceholderExample from '../examples/pull-to-refresh/PullToRefreshPlaceholderExample.vue';
+import PullToRefreshTriggerDistanceExample from '../examples/pull-to-refresh/PullToRefreshTriggerDistanceExample.vue';
 </script>
 
 # Select 选择器
@@ -19774,7 +20301,7 @@ import SnackbarTextExample from '../examples/snackbar/SnackbarTextExample.vue';
 
 组件默认背景透明，作为容器使用时可以通过 `color` 属性填充 `surface`、`surface-container` 等系统颜色角色或六位十六进制种子色，并同步内容文字颜色；`rounded` 属性可以添加接近 28px 的系统大圆角。滚动条拇指使用 primary 令牌、轨道透明，尺寸以内联 CSS 变量 `--mat-scroll-area-scrollbar-width` 暴露在组件根元素上供子元素读取（该变量属于内部实现，不承诺公共兼容）。
 
-组件一次只管理一个滚动轴。使用方必须为纵向模式提供确定的块轴尺寸，或为横向模式提供确定的行轴尺寸和不会收缩的内部内容，才能形成滚动边界。
+组件一次只管理一个滚动轴。使用方必须为纵向模式提供确定的块轴尺寸，或为横向模式提供确定的行轴尺寸和不会收缩的内部内容，才能形成滚动边界。配合 `<mat-pull-to-refresh>` 可以在滚动区域起始端提供下拉刷新手势。
 
 边缘阴影带默认紧贴边缘，`shadowOffset` 可以让起始端、末端的阴影带从边缘向内偏移；偏移区内的滚动内容不会被遮罩覆盖，适合放置不透明的 sticky 元素。
 

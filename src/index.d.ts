@@ -3117,6 +3117,69 @@ export interface MatLoadingProps {
 export type MatLoadingComponent = DefineComponent<MatLoadingProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatLoading: MatLoadingComponent;
 
+export interface MatPullToRefreshProps {
+  /**
+  * 刷新中状态；拉动触发时组件发出 `update:modelValue` 置为 true，
+  * 外部刷新完成后置回 false 结束刷新（v-model）。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  modelValue?: boolean;
+  /**
+  * 拉动时组件自身随拉动变高（水平时变宽），把后面的兄弟内容推离起点，
+  * 呈现列表被拉动的视觉效果；未开启时指示器悬浮在内容上方。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  placeholder?: boolean;
+  /**
+  * 触发刷新需要的拉动距离，单位 px；数字与纯数字字符串，非法值回退 80。
+  *
+  * @type {number | string}
+  * @default 80
+  */
+  triggerDistance?: number | string;
+  /**
+  * 透传给内部加载指示器的宽高尺寸。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  size?: number | string | undefined;
+  /**
+  * 透传给内部加载指示器的颜色。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  color?: string | undefined;
+  /**
+  * 透传给内部加载指示器的圆形背景容器开关。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  containment?: boolean;
+}
+
+export interface MatPullToRefreshEmits {
+  /**
+  * 拉动距离达到触发距离后释放，或滚轮累积达到阈值时触发。
+  */
+  "refresh": (payload: unknown) => unknown;
+  /**
+  * 刷新状态变化；触发时载荷为 true，等待外部置回 false。
+  *
+  * @type {boolean}
+  */
+  "update:modelValue": (payload: boolean) => unknown;
+}
+
+export type MatPullToRefreshComponent = DefineComponent<MatPullToRefreshProps, {}, {}, {}, {}, {}, {}, MatPullToRefreshEmits>;
+export declare const MatPullToRefresh: MatPullToRefreshComponent;
+
 export interface MatProgressProps {
   /**
   * 加载器形态；可选值为 `linear`、`circular`。
@@ -3896,6 +3959,8 @@ declare module 'vue' {
     'mde-virtual-scroll': typeof MdeVirtualScroll;
     MatLoading: typeof MatLoading;
     'mat-loading': typeof MatLoading;
+    MatPullToRefresh: typeof MatPullToRefresh;
+    'mat-pull-to-refresh': typeof MatPullToRefresh;
     MatProgress: typeof MatProgress;
     'mat-progress': typeof MatProgress;
     MatTooltip: typeof MatTooltip;
