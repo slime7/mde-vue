@@ -341,10 +341,14 @@ order: 90
 
 ### `trailing` Slot
 
+`trailing` Slot 支持放置普通图标，也可以放置 `mat-btn` 图标模式承担触发操作。
+
 :::: details 查看示例代码
 ::: code-group
 
 <<< @/examples/text-field/TextFieldTrailingSlotExample.vue#template [template]
+
+<<< @/examples/text-field/TextFieldTrailingSlotExample.vue#style [style]
 
 :::
 ::::
@@ -408,7 +412,7 @@ order: 90
 | 名称 | 内容约束 |
 | --- | --- |
 | `leading` | 输入内容前的单个图标或简短展示内容，不应放置可交互控件 |
-| `trailing` | 输入内容后的单个图标或简短展示内容，不应放置可交互控件 |
+| `trailing` | 输入内容后的单个图标、图标按钮或简短展示内容；图标按钮建议使用 `mat-btn` 的 `standard` 形态与 `small` 尺寸 |
 
 组件没有默认 Slot；输入文字只由 `modelValue` 提供。前后缀短文本使用 `prefixText` 与 `suffixText`，避免和图标 Slot 混淆。
 

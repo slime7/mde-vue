@@ -610,12 +610,13 @@ function handleModelValue(value) {
     color: var(--mat-text-input-label-color);
   }
 
+  /* 图标区最小 52px 并随内容加宽，普通图标宽度不变，图标按钮等更宽内容不会被压缩。 */
   .mat-text-input__icon {
     z-index: 1;
     box-sizing: border-box;
     align-self: stretch;
     min-inline-size: 52px;
-    inline-size: 52px;
+    inline-size: auto;
     font-size: 24px;
   }
 
