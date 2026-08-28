@@ -3091,6 +3091,13 @@ export interface MatLoadingProps {
   * @default undefined
   */
   color?: string | undefined;
+  /**
+  * 受控加载进度；有限数值会停止自动动画，负值按 0 处理，超过 1 时保持 soft-burst 并继续旋转。
+  *
+  * @type {number | undefined}
+  * @default undefined
+  */
+  progress?: number | undefined;
 }
 
 export type MatLoadingComponent = DefineComponent<MatLoadingProps, {}, {}, {}, {}, {}, {}, {}>;

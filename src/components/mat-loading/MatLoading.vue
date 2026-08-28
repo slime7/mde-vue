@@ -1,5 +1,7 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import {
+  computed, onBeforeUnmount, onMounted, ref, watch,
+} from 'vue';
 import MatShape from '../mat-shape/MatShape.vue';
 import { isComponentColor } from '../button-props';
 import useComponentColor from '../use-component-color';
@@ -57,6 +59,17 @@ const props = defineProps({
     default: undefined,
     validator: isComponentColor,
   },
+  /**
+   * 受控加载进度；有限数值会停止自动动画，负值按 0 处理，超过 1 时保持 soft-burst 并继续旋转。
+   *
+   * @type {number | undefined}
+   * @default undefined
+   */
+  progress: {
+    type: Number,
+    default: undefined,
+    validator: (value) => value === undefined || Number.isFinite(value),
+  },
 });
 const propsWithDefaults = useMatProps('loading', props);
 
@@ -78,12 +91,42 @@ const resolvedSize = computed(() => {
 const sizeStyle = computed(() => ({
   '--mat-loading-size': `${resolvedSize.value}px`,
 }));
+const isControlled = computed(() => Number.isFinite(propsWithDefaults.progress));
+const controlledProgress = computed(() => (
+  isControlled.value ? Math.max(propsWithDefaults.progress, 0) : 0
+));
+const controlledMorphProgress = computed(() => Math.min(controlledProgress.value, 1));
+const controlledStyle = computed(() => {
+  if (!isControlled.value) {
+    return {};
+  }
+
+  return {
+    '--mat-loading-determinate-morph-progress': `${controlledMorphProgress.value}`,
+  };
+});
 const rootStyle = computed(() => ({
   ...colorStyle.value,
   ...sizeStyle.value,
+  ...controlledStyle.value,
 }));
 const indicatorSize = computed(() => resolvedSize.value * (38 / 48));
-const activeShapeName = computed(() => LOADING_SHAPE_NAMES[currentShapeIndex.value]);
+const activeShapeName = computed(() => {
+  if (isControlled.value) {
+    return controlledMorphProgress.value >= 1 ? 'soft-burst' : 'circle';
+  }
+
+  return LOADING_SHAPE_NAMES[currentShapeIndex.value];
+});
+const activeShapeStyle = computed(() => {
+  if (!isControlled.value) {
+    return undefined;
+  }
+
+  return {
+    rotate: String(-controlledProgress.value * 180) + 'deg',
+  };
+});
 
 /**
  * @returns {boolean}
@@ -116,6 +159,10 @@ function resetShape() {
 function updateShape(frameTime) {
   animationFrame = undefined;
 
+  if (isControlled.value) {
+    return;
+  }
+
   if (previousFrameTime !== undefined) {
     accumulatedTime += frameTime - previousFrameTime;
   }
@@ -137,13 +184,27 @@ function startShapeAnimation() {
   stopShapeAnimation();
   resetShape();
 
-  if (typeof globalThis.requestAnimationFrame !== 'function'
+  if (isControlled.value
+    || typeof globalThis.requestAnimationFrame !== 'function'
     || prefersReducedMotion()) {
     return;
   }
 
   animationFrame = globalThis.requestAnimationFrame(updateShape);
 }
+
+watch(
+  () => propsWithDefaults.progress,
+  () => {
+    if (isControlled.value) {
+      stopShapeAnimation();
+      resetShape();
+      return;
+    }
+
+    startShapeAnimation();
+  },
+);
 
 onMounted(() => {
   if (typeof globalThis.matchMedia === 'function') {
@@ -164,17 +225,22 @@ onBeforeUnmount(() => {
   <div
     v-bind="$attrs"
     class="mat-loading"
-    :class="{ 'mat-loading--contained': propsWithDefaults.containment }"
+    :class="{
+      'mat-loading--contained': propsWithDefaults.containment,
+      'mat-loading--determinate': isControlled,
+    }"
     :style="rootStyle"
     role="progressbar"
     aria-valuemin="0"
     aria-valuemax="1"
+    :aria-valuenow="isControlled ? controlledMorphProgress : undefined"
   >
     <MatShape
       class="mat-loading__active-indicator"
       :name="activeShapeName"
       :size="indicatorSize"
       :color="propsWithDefaults.color || 'primary'"
+      :style="activeShapeStyle"
       aria-hidden="true"
     />
   </div>
@@ -209,6 +275,12 @@ onBeforeUnmount(() => {
     animation: mat-loading-shape-cycle 4550ms linear infinite, mat-loading-morph-rotate 18200ms linear infinite, mat-loading-rotate 4666ms linear infinite;
   }
 
+  .mat-loading.mat-loading--determinate .mat-loading__active-indicator {
+    animation: mat-loading-determinate-shape 1s linear 1 both;
+    animation-delay: calc(var(--mat-loading-determinate-morph-progress) * -1s);
+    animation-play-state: paused;
+  }
+
   @keyframes mat-loading-rotate {
     to {
       transform: rotate(1turn);
@@ -216,7 +288,7 @@ onBeforeUnmount(() => {
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .mat-loading .mat-loading__active-indicator {
+    .mat-loading:not(.mat-loading--determinate) .mat-loading__active-indicator {
       transition: none;
       animation: none;
     }

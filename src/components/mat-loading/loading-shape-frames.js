@@ -12,6 +12,8 @@ import {
 const CURVE_SAMPLE_STEP = 48;
 const MORPH_POINT_COUNT = 96;
 const LOADING_SHAPE_ROTATION_STEP = 90;
+const DETERMINATE_LOADING_SHAPE_START_ROTATION = 18;
+const DETERMINATE_LOADING_SHAPE_POINT_OFFSET = 53;
 const FRAME_POINT_OFFSETS = Object.freeze([0, 82, 82, 70, 58, 46, 70]);
 const NUMBER_PATTERN = '[-+]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][-+]?\\d+)?';
 const START_PATTERN = new RegExp(
@@ -241,6 +243,24 @@ function alignFrame(points, offset) {
 }
 
 /**
+ * @param {Point[]} points
+ * @param {number} degrees
+ * @returns {ReadonlyArray<Point>}
+ */
+function rotateFrame(points, degrees) {
+  const radians = (degrees * Math.PI) / 180;
+  const cosine = Math.cos(radians);
+  const sine = Math.sin(radians);
+
+  return Object.freeze(
+    points.map((point, index) => Object.freeze(assertFinitePoint([
+      50 + (((point[0] - 50) * cosine) - ((point[1] - 50) * sine)),
+      50 + (((point[0] - 50) * sine) + ((point[1] - 50) * cosine)),
+    ], `rotated point ${index}`))),
+  );
+}
+
+/**
  * @param {Point} point
  * @returns {string}
  */
@@ -292,7 +312,20 @@ const LOADING_SHAPE_ANIMATION_FRAMES = Object.freeze([
   LOADING_SHAPE_FRAMES[0],
 ]);
 
+/** @type {ReadonlyArray<ReadonlyArray<Point>>} */
+const DETERMINATE_LOADING_SHAPE_FRAMES = Object.freeze([
+  alignFrame(
+    rotateFrame(
+      sampleShape(SHAPE_PATHS.circle),
+      DETERMINATE_LOADING_SHAPE_START_ROTATION,
+    ),
+    DETERMINATE_LOADING_SHAPE_POINT_OFFSET,
+  ),
+  LOADING_SHAPE_FRAMES[0],
+]);
+
 export {
+  DETERMINATE_LOADING_SHAPE_FRAMES,
   LOADING_SHAPE_ANIMATION_FRAMES,
   LOADING_SHAPE_FRAMES,
   LOADING_SHAPE_NAMES,
