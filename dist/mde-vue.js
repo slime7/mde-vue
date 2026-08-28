@@ -6567,7 +6567,7 @@ var Zi = ["data-dot"], Qi = ["data-dot"], $i = /*#__PURE__*/ Q(/* @__PURE__ */ O
 			"disabled"
 		]));
 	}
-}), [["__scopeId", "data-v-339c7d66"]]), ma = Object.freeze(["horizontal", "vertical"]), ha = Object.freeze([
+}), [["__scopeId", "data-v-6efac2c1"]]), ma = Object.freeze(["horizontal", "vertical"]), ha = Object.freeze([
 	"extra-small",
 	"small",
 	"medium",

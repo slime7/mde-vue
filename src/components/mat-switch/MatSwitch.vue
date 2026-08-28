@@ -167,7 +167,7 @@ function handleChange(event) {
   .mat-switch__handle-positioner {
     position: absolute;
     inset-block-start: 50%;
-    inset-inline-start: 2px;
+    inset-inline-start: 0;
     inline-size: var(--mat-switch-pressed-handle-size);
     block-size: var(--mat-switch-pressed-handle-size);
     transform: translateY(-50%);
