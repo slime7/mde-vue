@@ -246,6 +246,21 @@ describe('MatSelect', () => {
     ]);
   });
 
+  it('prefixText 与 suffixText 渲染为字段前后的固定文本', () => {
+    const wrapper = mount(MatSelect, {
+      props: {
+        modelValue: 'a',
+        items: [{ title: '甲', value: 'a' }],
+        label: '金额',
+        prefixText: '¥',
+        suffixText: '元',
+      },
+    });
+
+    expect(wrapper.text()).toContain('¥');
+    expect(wrapper.text()).toContain('元');
+  });
+
   it('readonly 保持可聚焦但不打开，disabled 不可聚焦', async () => {
     const readonly = mount(MatSelect, {
       props: { modelValue: null, readonly: true, items: ['甲'] },

@@ -78,7 +78,35 @@ order: 88
 
 <ClientOnly><DocsPreview label="Select 状态预览"><SelectStateExample /></DocsPreview></ClientOnly>
 
+### `prefixText`
+
+选中值之前的固定短文本。有标签且没有选中值、未聚焦时隐藏，避免与停留在字段行的标签重叠；聚焦、已有选中值或设置 placeholder 后显示。
+
+:::: details 查看示例代码
+::: code-group
+<<< @/examples/select/SelectPrefixTextExample.vue#template [template]
+<<< @/examples/select/SelectPrefixTextExample.vue#script [script]
+:::
+::::
+
+<ClientOnly><DocsPreview label="Select prefixText 预览"><SelectPrefixTextExample /></DocsPreview></ClientOnly>
+
+### `suffixText`
+
+选中值之后的固定短文本，可见条件与 prefixText 相同。
+
+:::: details 查看示例代码
+::: code-group
+<<< @/examples/select/SelectSuffixTextExample.vue#template [template]
+<<< @/examples/select/SelectSuffixTextExample.vue#script [script]
+:::
+::::
+
+<ClientOnly><DocsPreview label="Select suffixText 预览"><SelectSuffixTextExample /></DocsPreview></ClientOnly>
+
 ### `leading` 与 `trailing` Slots
+
+前置与尾随图标使用 `mat-icon` 渲染；纯文本的前后缀改用 `prefixText` 与 `suffixText` 属性，不要把图标名称文本直接放进 Slot。
 
 :::: details 查看示例代码
 ::: code-group
@@ -108,6 +136,8 @@ order: 88
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 聚焦描边或活动指示器强调色 |
 | `supportingText` | `string` | 未设置 | 字段下方辅助说明 |
 | `errorText` | `string` | 未设置 | error 时替换 supportingText |
+| `prefixText` | `string` | 未设置 | 选中值之前的固定短文本；有标签的空选择未聚焦时隐藏 |
+| `suffixText` | `string` | 未设置 | 选中值之后的固定短文本；可见条件与 prefixText 相同 |
 | `disabled` | `boolean` | `false` | 禁止焦点、菜单和选择，且禁用隐藏 select |
 | `readonly` | `boolean` | `false` | 保留字段焦点，但禁止展开和修改 |
 | `required` | `boolean` | `false` | 标签显示星号，并同步隐藏 select 的 required |
@@ -128,10 +158,10 @@ order: 88
 
 | 名称 | 内容约束 |
 | --- | --- |
-| `leading` | 字段前置的单个图标或简短展示内容，不应包含交互控件 |
-| `trailing` | 字段尾随的单个图标或简短展示内容，不应包含交互控件 |
+| `leading` | 字段前置的单个 `mat-icon` 图标或简短展示内容，不应包含交互控件 |
+| `trailing` | 字段尾随的单个 `mat-icon` 图标或简短展示内容，不应包含交互控件 |
 
-组件没有默认 Slot，所有选项只通过 `items` 提供；不支持子菜单、自由输入、搜索过滤或对象值。
+前后缀短文本使用 `prefixText` 与 `suffixText` 属性，避免和图标 Slot 混淆。组件没有默认 Slot，所有选项只通过 `items` 提供；不支持子菜单、自由输入、搜索过滤或对象值。
 
 ## 状态与无障碍
 
@@ -149,7 +179,9 @@ Select 的组合外观由 mde-vue 根据 Material 3 [Text fields](https://m3.mat
 import SelectChipsExample from '../examples/select/SelectChipsExample.vue';
 import SelectItemsExample from '../examples/select/SelectItemsExample.vue';
 import SelectMultipleExample from '../examples/select/SelectMultipleExample.vue';
+import SelectPrefixTextExample from '../examples/select/SelectPrefixTextExample.vue';
 import SelectSlotsExample from '../examples/select/SelectSlotsExample.vue';
 import SelectStateExample from '../examples/select/SelectStateExample.vue';
+import SelectSuffixTextExample from '../examples/select/SelectSuffixTextExample.vue';
 import SelectVariantExample from '../examples/select/SelectVariantExample.vue';
 </script>

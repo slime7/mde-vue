@@ -1960,6 +1960,20 @@ export interface MatSelectProps {
   supportingText?: string | undefined;
   /** @type {string | undefined} @default undefined */
   errorText?: string | undefined;
+  /**
+  * 选中值之前的固定短文本。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  prefixText?: string | undefined;
+  /**
+  * 选中值之后的固定短文本。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  suffixText?: string | undefined;
   /** @type {boolean} @default false */
   disabled?: boolean;
   /** @type {boolean} @default false */

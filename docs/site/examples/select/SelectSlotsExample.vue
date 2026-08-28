@@ -14,10 +14,10 @@ const items = [
 <template>
   <mat-select v-model="value" label="空间" :items="items">
     <template #leading>
-      folder
+      <mat-icon icon="folder" aria-hidden="true" />
     </template>
     <template #trailing>
-      info
+      <mat-icon icon="info" aria-hidden="true" />
     </template>
   </mat-select>
 </template>

@@ -70,6 +70,20 @@ const props = defineProps({
   supportingText: { type: String, default: undefined },
   /** @type {string | undefined} @default undefined */
   errorText: { type: String, default: undefined },
+  /**
+   * 选中值之前的固定短文本。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
+  prefixText: { type: String, default: undefined },
+  /**
+   * 选中值之后的固定短文本。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
+  suffixText: { type: String, default: undefined },
   /** @type {boolean} @default false */
   disabled: { type: Boolean, default: false },
   /** @type {boolean} @default false */
@@ -287,6 +301,8 @@ function removeValue(value) {
       :color="propsWithDefaults.color"
       :supporting-text="propsWithDefaults.supportingText"
       :error-text="propsWithDefaults.errorText"
+      :prefix-text="propsWithDefaults.prefixText"
+      :suffix-text="propsWithDefaults.suffixText"
       :disabled="propsWithDefaults.disabled"
       :readonly="propsWithDefaults.readonly"
       :required="propsWithDefaults.required"

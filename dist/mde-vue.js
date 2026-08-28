@@ -8138,6 +8138,14 @@ var Ra = {
 			type: String,
 			default: void 0
 		},
+		prefixText: {
+			type: String,
+			default: void 0
+		},
+		suffixText: {
+			type: String,
+			default: void 0
+		},
 		disabled: {
 			type: Boolean,
 			default: !1
@@ -8255,6 +8263,8 @@ var Ra = {
 				color: L(r).color,
 				"supporting-text": L(r).supportingText,
 				"error-text": L(r).errorText,
+				"prefix-text": L(r).prefixText,
+				"suffix-text": L(r).suffixText,
 				disabled: L(r).disabled,
 				readonly: L(r).readonly,
 				required: L(r).required,
@@ -8323,6 +8333,8 @@ var Ra = {
 				"color",
 				"supporting-text",
 				"error-text",
+				"prefix-text",
+				"suffix-text",
 				"disabled",
 				"readonly",
 				"required",
@@ -8432,7 +8444,7 @@ var Ra = {
 			])
 		], 6));
 	}
-}), [["__scopeId", "data-v-c9ae0170"]]), Eo = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-d2753c32"]]), Eo = /*@__PURE__*/ Object.assign({
 	name: "MatTextarea",
 	inheritAttrs: !1
 }, {
