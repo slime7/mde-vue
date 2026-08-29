@@ -3136,6 +3136,15 @@ export interface MatPullToRefreshProps {
   */
   placeholder?: boolean;
   /**
+  * 是否禁用下拉刷新手势；禁用时拖拽与滚轮都不会触发刷新，
+  * 进行中的拉动手势和滚轮累积会被立即取消。
+  * 受控的 modelValue 刷新显示不受影响。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  disabled?: boolean;
+  /**
   * 触发刷新需要的拉动距离，单位 px；数字与纯数字字符串，非法值回退 80。
   *
   * @type {number | string}

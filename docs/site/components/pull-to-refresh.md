@@ -13,6 +13,8 @@ order: 88
 
 组件没有 Slots，只负责手势与指示器：把它作为 `mat-scroll-area` 内容的第一个子元素，列表或其他内容作为兄弟元素跟在组件后面，组件渲染为零尺寸元素悬浮在内容上方。开启 `placeholder` 后组件自身随拉动变高（水平时变宽），把后面的内容推离起点，呈现列表"被拉动"的视觉效果。入场与回弹动画的阈值、拖拽系数和弹簧参数对应 AndroidX Material 3 `PullToRefresh` 的官方数值，刷新期间指示器切换到 `mat-loading` 的自动旋转模式。
 
+不需要刷新能力时设置 `disabled` 关闭手势，无需用 `v-if` 反复重建组件和滚动内容：禁用期间拖拽与滚轮都不会触发刷新，进行中的拉动手势会被取消，重新启用后手势恢复。
+
 ## 示例
 
 以下代码块由 VitePress 直接读取实际渲染的 Vue 示例文件，因此代码与紧随其后的预览始终来自同一份源码。
@@ -58,6 +60,28 @@ order: 88
 <ClientOnly>
   <DocsPreview label="PullToRefresh placeholder 预览" stacked>
     <PullToRefreshPlaceholderExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `disabled`
+
+禁用后拖拽与滚轮都不会触发刷新，进行中的拉动手势和滚轮累积会被立即取消；受控的 `modelValue` 刷新显示不受影响。重新启用后手势立即恢复，适合在"没有更多内容可刷新"时代替 `v-if` 反复重建组件。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/pull-to-refresh/PullToRefreshDisabledExample.vue#template [template]
+
+<<< @/examples/pull-to-refresh/PullToRefreshDisabledExample.vue#script [script]
+
+<<< @/examples/pull-to-refresh/PullToRefreshDisabledExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="PullToRefresh disabled 预览" stacked>
+    <PullToRefreshDisabledExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -135,6 +159,7 @@ order: 88
 | --- | --- | --- | --- |
 | `modelValue` | `boolean` | `false` | 刷新中状态（v-model）；触发时组件置为 `true`，外部刷新完成后置回 `false` 结束刷新 |
 | `placeholder` | `boolean` | `false` | 组件根元素随拉动变高（水平时变宽），推挤后面的兄弟内容；未开启时指示器悬浮在内容上方 |
+| `disabled` | `boolean` | `false` | 禁用下拉刷新手势；拖拽与滚轮都不再触发，进行中的拉动手势会被取消。受控的 `modelValue` 刷新显示不受影响 |
 | `triggerDistance` | `number \| string` | `80` | 触发刷新需要的拉动距离，单位 px；数字与纯数字字符串，非法值回退 `80` |
 | `size` | `number \| string` | 未设置 | 透传给内部 `mat-loading` 的指示器宽高，未设置时使用其默认 `48` |
 | `color` | 语义色或 `#RRGGBB` | 未设置 | 透传给内部 `mat-loading` 的强调色 |
@@ -163,6 +188,7 @@ order: 88
 
 <script setup>
 import PullToRefreshBasicExample from '../examples/pull-to-refresh/PullToRefreshBasicExample.vue';
+import PullToRefreshDisabledExample from '../examples/pull-to-refresh/PullToRefreshDisabledExample.vue';
 import PullToRefreshHorizontalExample from '../examples/pull-to-refresh/PullToRefreshHorizontalExample.vue';
 import PullToRefreshLoadingExample from '../examples/pull-to-refresh/PullToRefreshLoadingExample.vue';
 import PullToRefreshPlaceholderExample from '../examples/pull-to-refresh/PullToRefreshPlaceholderExample.vue';

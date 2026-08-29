@@ -353,6 +353,75 @@ describe('MatPullToRefresh', () => {
     expect(wrapper.emitted('refresh')).toHaveLength(1);
   });
 
+  it('禁用时拖拽不触发刷新', () => {
+    const { wrapper, scroller } = mountComponent({ disabled: true });
+
+    dispatchPointer(scroller, 'pointerdown', { clientY: 100 });
+    dispatchPointer(scroller, 'pointermove', { clientY: 270 });
+    dispatchPointer(scroller, 'pointerup', { clientY: 270 });
+
+    expect(wrapper.emitted('refresh')).toBeUndefined();
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+  });
+
+  it('禁用时滚轮不触发也不吞掉滚动', () => {
+    const { wrapper, scroller } = mountComponent({ disabled: true });
+
+    const first = dispatchWheel(scroller, { deltaY: -60 });
+    const second = dispatchWheel(scroller, { deltaY: -60 });
+    const third = dispatchWheel(scroller, { deltaY: -60 });
+
+    expect(wrapper.emitted('refresh')).toBeUndefined();
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+    expect(first.defaultPrevented).toBe(false);
+    expect(second.defaultPrevented).toBe(false);
+    expect(third.defaultPrevented).toBe(false);
+  });
+
+  it('拉动手势进行中变为禁用时释放不再触发刷新', async () => {
+    const { wrapper, scroller } = mountComponent();
+
+    dispatchPointer(scroller, 'pointerdown', { clientY: 100 });
+    dispatchPointer(scroller, 'pointermove', { clientY: 270 });
+    await wrapper.setProps({ disabled: true });
+    flushFrames();
+
+    dispatchPointer(scroller, 'pointerup', { clientY: 270 });
+
+    expect(wrapper.emitted('refresh')).toBeUndefined();
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+  });
+
+  it('滚轮累积中变为禁用时取消累积', async () => {
+    const { wrapper, scroller } = mountComponent();
+
+    dispatchWheel(scroller, { deltaY: -60 });
+    await wrapper.setProps({ disabled: true });
+
+    dispatchWheel(scroller, { deltaY: -60 });
+    dispatchWheel(scroller, { deltaY: -60 });
+
+    expect(wrapper.emitted('refresh')).toBeUndefined();
+  });
+
+  it('禁用后重新启用可再次触发刷新', async () => {
+    const { wrapper, scroller } = mountComponent({ disabled: true });
+
+    dispatchPointer(scroller, 'pointerdown', { clientY: 100 });
+    dispatchPointer(scroller, 'pointermove', { clientY: 270 });
+    dispatchPointer(scroller, 'pointerup', { clientY: 270 });
+
+    await wrapper.setProps({ disabled: false });
+
+    dispatchPointer(scroller, 'pointerdown', { clientY: 100 });
+    dispatchPointer(scroller, 'pointermove', { clientY: 270 });
+    dispatchPointer(scroller, 'pointerup', { clientY: 270 });
+    await nextTick();
+
+    expect(wrapper.emitted('refresh')).toHaveLength(1);
+    expect(wrapper.emitted('update:modelValue')).toEqual([[true]]);
+  });
+
   it('与 mat-scroll-area 集成并跟随方向切换', async () => {
     const refreshing = ref(false);
     const wrapper = mount(MatScrollArea, {

@@ -271,7 +271,7 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 
 ## Pull to refresh 下拉刷新
 
-`<mat-pull-to-refresh>` 与导出 `MatPullToRefresh` 没有 Slots，只提供手势与指示器：必须作为 `<mat-scroll-area>` 的子元素放在滚动内容首位，列表或其他内容作为兄弟元素跟在组件之后；在滚动区域外渲染时不建立手势。垂直滚动区域在顶部继续向下拉动、水平滚动区域在最左端继续向右拉动时，指针拖拽与滚轮、触控板在边界朝界外的滚动都会以短暂的淡入放大动画显示指示器；释放时达到 `triggerDistance`（默认 80，对齐 AndroidX 80dp）发出 `refresh` 与 `update:modelValue(true)`，未达到则取消。`modelValue` 表达刷新中状态，触发时组件置为 `true`，外部置回 `false` 结束刷新；刷新中重复拉动不重复触发。`placeholder` 让组件自身随拉动变高（水平时变宽）推挤后面的兄弟内容：开始下拉即随拉动距离增长，拉满进度后停止；触发刷新后以空间弹簧回弹归零、内容复位；未开启时指示器悬浮在内容上方。`size`、`color`、`containment` 透传给内部 `<mat-loading>`；拖动开始后指示器在静止位（距起点 80px）以短暂淡入放大入场并保持在该位置，使用受控进度（`0` 至 `1` 形变、超过 `1` 继续旋转）；触发刷新后切换到自动旋转。动画参数（拖拽系数 `0.5`、效果弹簧 damping 1.0 / stiffness 1600、空间弹簧 damping 0.9 / stiffness 700）对应 AndroidX Material 3 PullToRefresh 官方数值；减少动态效果偏好下动画直接落位。组件没有公开方法。
+`<mat-pull-to-refresh>` 与导出 `MatPullToRefresh` 没有 Slots，只提供手势与指示器：必须作为 `<mat-scroll-area>` 的子元素放在滚动内容首位，列表或其他内容作为兄弟元素跟在组件之后；在滚动区域外渲染时不建立手势。垂直滚动区域在顶部继续向下拉动、水平滚动区域在最左端继续向右拉动时，指针拖拽与滚轮、触控板在边界朝界外的滚动都会以短暂的淡入放大动画显示指示器；释放时达到 `triggerDistance`（默认 80，对齐 AndroidX 80dp）发出 `refresh` 与 `update:modelValue(true)`，未达到则取消。`modelValue` 表达刷新中状态，触发时组件置为 `true`，外部置回 `false` 结束刷新；刷新中重复拉动不重复触发。`disabled` 关闭手势：拖拽与滚轮不再触发刷新，进行中的拉动手势和滚轮累积被立即取消，受控的 `modelValue` 刷新显示不受影响。`placeholder` 让组件自身随拉动变高（水平时变宽）推挤后面的兄弟内容：开始下拉即随拉动距离增长，拉满进度后停止；触发刷新后以空间弹簧回弹归零、内容复位；未开启时指示器悬浮在内容上方。`size`、`color`、`containment` 透传给内部 `<mat-loading>`；拖动开始后指示器在静止位（距起点 80px）以短暂淡入放大入场并保持在该位置，使用受控进度（`0` 至 `1` 形变、超过 `1` 继续旋转）；触发刷新后切换到自动旋转。动画参数（拖拽系数 `0.5`、效果弹簧 damping 1.0 / stiffness 1600、空间弹簧 damping 0.9 / stiffness 700）对应 AndroidX Material 3 PullToRefresh 官方数值；减少动态效果偏好下动画直接落位。组件没有公开方法。
 
 ## Navigation 导航
 

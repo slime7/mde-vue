@@ -50,6 +50,18 @@ const props = defineProps({
     default: false,
   },
   /**
+   * 是否禁用下拉刷新手势；禁用时拖拽与滚轮都不会触发刷新，
+   * 进行中的拉动手势和滚轮累积会被立即取消。
+   * 受控的 modelValue 刷新显示不受影响。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * 触发刷新需要的拉动距离，单位 px；数字与纯数字字符串，非法值回退 80。
    *
    * @type {number | string}
@@ -321,6 +333,22 @@ watch(() => props.modelValue, (value) => {
   }
 });
 
+watch(() => propsWithDefaults.disabled, (disabled) => {
+  if (!disabled) {
+    return;
+  }
+
+  if (wheelAccumulating) {
+    wheelAccumulating = false;
+    rawPulled = 0;
+    startCollapse();
+  }
+
+  if (activePointerId !== undefined) {
+    endPointerGesture(activePointerId, false);
+  }
+});
+
 function isAtStart() {
   if (!currentScroller) {
     return false;
@@ -364,6 +392,7 @@ function applyPull() {
 
 function handlePointerDown(event) {
   if (!currentScroller
+    || propsWithDefaults.disabled
     || isRefreshing.value
     || phase.value !== 'idle'
     || event.button !== 0) {
@@ -470,6 +499,7 @@ function handleTouchMove(event) {
 
 function handleWheel(event) {
   if (!currentScroller
+    || propsWithDefaults.disabled
     || isRefreshing.value
     || (phase.value === 'drag' && !wheelAccumulating)) {
     return;

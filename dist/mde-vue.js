@@ -10188,6 +10188,10 @@ var es = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			type: Boolean,
 			default: !1
 		},
+		disabled: {
+			type: Boolean,
+			default: !1
+		},
 		triggerDistance: {
 			type: [Number, String],
 			default: 80,
@@ -10282,6 +10286,8 @@ var es = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		}
 		V(() => r.modelValue, (e) => {
 			e && !_.value ? J(!1) : !e && _.value && X();
+		}), V(() => a.disabled, (e) => {
+			e && (P && (P = !1, F = 0, Y()), D !== void 0 && ae(D, !1));
 		});
 		function Z() {
 			return E ? p.value ? Math.abs(E.scrollLeft) < 1 : E.scrollTop < 1 : !1;
@@ -10300,7 +10306,7 @@ var es = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			b.value = Math.min(e, h.value), S.value = h.value > 0 ? e / h.value : 0;
 		}
 		function re(e) {
-			!E || _.value || g.value !== "idle" || e.button !== 0 || (D = e.pointerId, O = e.clientX, A = e.clientY, j = Z(), M = !1, N = !1);
+			!E || a.disabled || _.value || g.value !== "idle" || e.button !== 0 || (D = e.pointerId, O = e.clientX, A = e.clientY, j = Z(), M = !1, N = !1);
 		}
 		function ie(e) {
 			if (e.pointerId !== D || !E || _.value) return;
@@ -10343,7 +10349,7 @@ var es = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			M && e.preventDefault();
 		}
 		function ue(e) {
-			if (!E || _.value || g.value === "drag" && !P) return;
+			if (!E || a.disabled || _.value || g.value === "drag" && !P) return;
 			let t = p.value ? -e.deltaX : -e.deltaY;
 			if (!P) {
 				if (!Z() || t <= 0) return;
@@ -10394,7 +10400,7 @@ var es = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"progress"
 		])])], 6));
 	}
-}), [["__scopeId", "data-v-d4738468"]]), Ps = ["aria-valuemax", "aria-valuenow"], Fs = ["width", "height"], Is = { key: 0 }, Ls = ["width", "height"], Rs = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, zs = ["d"], Bs = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, Vs = ["d"], Hs = ["d", "mask"], Us = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, Ws = ["d"], Gs = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, Ks = ["d"], qs = ["d"], Js = {
+}), [["__scopeId", "data-v-a7c07024"]]), Ps = ["aria-valuemax", "aria-valuenow"], Fs = ["width", "height"], Is = { key: 0 }, Ls = ["width", "height"], Rs = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, zs = ["d"], Bs = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, Vs = ["d"], Hs = ["d", "mask"], Us = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, Ws = ["d"], Gs = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, Ks = ["d"], qs = ["d"], Js = {
 	key: 1,
 	class: "mat-progress__linear-stop"
 }, Ys = ["viewBox"], Xs = { class: "mat-progress__circular-linear-rotate" }, Zs = { class: "mat-progress__circular-rotate-arc" }, Qs = [
