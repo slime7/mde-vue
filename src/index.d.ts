@@ -1370,6 +1370,13 @@ export interface MatChipProps {
   */
   selected?: boolean;
   /**
+  * filter Chip 选中时不显示默认 check 前置图标；avatar 或 leading Slot 存在时不受影响。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  hideSelectedIcon?: boolean;
+  /**
   * input Chip 的 Material Symbols 移除图标文本；remove-icon Slot 存在时优先使用 Slot。
   *
   * @type {string}

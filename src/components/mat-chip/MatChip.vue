@@ -51,6 +51,16 @@ const props = defineProps({
     default: false,
   },
   /**
+   * filter Chip 选中时不显示默认 check 前置图标；avatar 或 leading Slot 存在时不受影响。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  hideSelectedIcon: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * input Chip 的 Material Symbols 移除图标文本；remove-icon Slot 存在时优先使用 Slot。
    *
    * @type {string}
@@ -151,6 +161,7 @@ const showSelectedIcon = computed(() => (
     && isSelected.value
     && !hasAvatar.value
     && !hasLeading.value
+    && !propsWithDefaults.hideSelectedIcon
 ));
 const hasLeadingContent = computed(() => (
   hasAvatar.value || hasLeading.value || showSelectedIcon.value

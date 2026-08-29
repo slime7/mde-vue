@@ -120,6 +120,32 @@ describe('MatChip', () => {
     expect(customProp.text()).toContain('cancel');
   });
 
+  it('hide-selected-icon 使选中 filter 不渲染默认勾选图标且保持选中语义', () => {
+    const withoutProp = mount(MatChip, {
+      props: {
+        selected: true,
+        variant: 'filter',
+      },
+      slots: {
+        default: () => '显示勾选',
+      },
+    });
+    const withProp = mount(MatChip, {
+      props: {
+        'hide-selected-icon': true,
+        selected: true,
+        variant: 'filter',
+      },
+      slots: {
+        default: () => '隐藏勾选',
+      },
+    });
+
+    expect(withoutProp.text()).toContain('check');
+    expect(withProp.text()).not.toContain('check');
+    expect(withProp.attributes('aria-pressed')).toBe('true');
+  });
+
   it('remove-icon Slot 覆盖 removeIcon prop', () => {
     const wrapper = mount(MatChip, {
       props: {
@@ -341,6 +367,25 @@ describe('MatChipSet', () => {
     await closeIcon.trigger('click');
 
     expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+  });
+
+  it('hide-selected-icon 在组模型选中时同样隐藏勾选图标', () => {
+    const wrapper = mount(MatChipSet, {
+      props: {
+        modelValue: ['one'],
+        selection: 'multiple',
+      },
+      slots: {
+        default: () => h(MatChip, {
+          'hide-selected-icon': true,
+          value: 'one',
+          variant: 'filter',
+        }, () => '一'),
+      },
+    });
+
+    expect(wrapper.findAll('button')[0].attributes('aria-pressed')).toBe('true');
+    expect(wrapper.text()).not.toContain('check');
   });
 
   it('scroll 布局启用隐藏滚动条与拖拽，拖拽不激活 Chip', async () => {

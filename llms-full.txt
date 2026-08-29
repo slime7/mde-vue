@@ -6935,6 +6935,27 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 
 <ClientOnly><DocsPreview label="Chip selected 预览" stacked><ChipSelectedExample /></DocsPreview></ClientOnly>
 
+### `hide-selected-icon`
+
+:::: details 查看示例代码
+::: code-group
+```vue
+<template>
+  <mat-chip-set>
+    <mat-chip variant="filter" selected>
+      选中显示勾选
+    </mat-chip>
+    <mat-chip variant="filter" hide-selected-icon selected>
+      选中隐藏勾选
+    </mat-chip>
+  </mat-chip-set>
+</template>
+```
+:::
+::::
+
+<ClientOnly><DocsPreview label="Chip hide-selected-icon 预览" stacked><ChipHideSelectedIconExample /></DocsPreview></ClientOnly>
+
 ### input `remove`
 
 :::: details 查看示例代码
@@ -7230,6 +7251,7 @@ const multiple = ref(['文档']);
 | `variant` | `'assist' \| 'filter' \| 'input' \| 'suggestion'` | `'assist'` | Chip 的用途形态 |
 | `elevated` | `boolean` | `false` | 使用升高表面代替描边表面 |
 | `selected` | `boolean` | `false` | filter 与 input 的受控选中外观及 `aria-pressed` |
+| `hide-selected-icon` | `boolean` | `false` | 选中的 filter Chip 不显示默认 check 前置图标 |
 | `remove-icon` | `string` | `'close'` | input Chip 的 Material Symbols 移除图标文本；`remove-icon` Slot 存在时优先使用 Slot |
 | `value` | `string \| number \| boolean` | 未设置 | 加入 ChipSet 选择模型时使用的基础值 |
 | `disabled` | `boolean` | `false` | 使用原生按钮禁用语义 |
@@ -7269,7 +7291,7 @@ MatChipSet 不提供额外的 select 或 selected 事件。remove 不自动删�
 | `avatar` | 单个 24px 圆形头像；优先于 leading |
 | `remove-icon` | input Chip 的单个 18px 自定义移除图标；不应包含嵌套按钮或其他交互元素 |
 
-已选 filter 没有 avatar 或 leading 时显示默认勾选图标；input 始终显示默认或自定义移除图标。移除图标的指针命中区域至少为 48×48px，启用时显示圆形 hover/pressed state layer，但不建立独立键盘焦点；`remove-icon` Slot 只替换图标内容，不改变 remove 事件行为。旧 `trailing` Slot 不属于 MatChip API。
+已选 filter 没有 avatar 或 leading 时显示默认勾选图标，设置 `hide-selected-icon` 时不显示；input 始终显示默认或自定义移除图标。移除图标的指针命中区域至少为 48×48px，启用时显示圆形 hover/pressed state layer，但不建立独立键盘焦点；`remove-icon` Slot 只替换图标内容，不改变 remove 事件行为。旧 `trailing` Slot 不属于 MatChip API。
 
 ### MatChipSet
 
@@ -7290,6 +7312,7 @@ import ChipAvatarSlotExample from '../examples/chip/ChipAvatarSlotExample.vue';
 import ChipColorExample from '../examples/chip/ChipColorExample.vue';
 import ChipDisabledExample from '../examples/chip/ChipDisabledExample.vue';
 import ChipElevatedExample from '../examples/chip/ChipElevatedExample.vue';
+import ChipHideSelectedIconExample from '../examples/chip/ChipHideSelectedIconExample.vue';
 import ChipLeadingSlotExample from '../examples/chip/ChipLeadingSlotExample.vue';
 import ChipRemoveExample from '../examples/chip/ChipRemoveExample.vue';
 import ChipRemoveIconExample from '../examples/chip/ChipRemoveIconExample.vue';
