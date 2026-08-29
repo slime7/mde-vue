@@ -10177,7 +10177,7 @@ var es = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"style"
 		])], 16, bs));
 	}
-}), [["__scopeId", "data-v-47a074d9"]]), Es = { class: "mat-pull-to-refresh__window" }, Ds = { class: "mat-pull-to-refresh__indicator" }, Os = 80, ks = .5, As = 4, js = 80, Ms = .85, Ns = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatPullToRefresh" }, {
+}), [["__scopeId", "data-v-47a074d9"]]), Es = { class: "mat-pull-to-refresh__indicator" }, Ds = 80, Os = .5, ks = 4, As = 1600, js = 80, Ms = 700, Ns = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatPullToRefresh" }, {
 	__name: "MatPullToRefresh",
 	props: {
 		modelValue: {
@@ -10213,190 +10213,188 @@ var es = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		"update:modelValue": (e) => typeof e == "boolean"
 	},
 	setup(e, { emit: t }) {
-		let n = e, r = $("pullToRefresh", n), a = t, o = m(Yr, null), l = o?.scroller ?? k(null), u = o?.orientation ?? k("vertical"), f = i(() => u.value === "horizontal"), p = i(() => Tt(r.triggerDistance, {
+		let n = 2 * Math.sqrt(Ms) * .9, r = e, a = $("pullToRefresh", r), o = t, l = m(Yr, null), u = l?.scroller ?? k(null), f = l?.orientation ?? k("vertical"), p = i(() => f.value === "horizontal"), h = i(() => Tt(a.triggerDistance, {
 			positive: !0,
-			fallback: Os
-		})), h = k("idle"), g = k(n.modelValue), _ = k(0), b = k(0), S = k(1), C = k(0), w = null, E, D = 0, O = 0, A = !1, j = !1, M = !1, N = !1, P = 0, F = !1, I, R = i(() => ({
-			"--mat-pull-to-refresh-distance": `${_.value}px`,
-			"--mat-pull-to-refresh-progress": `${Math.min(Math.max(b.value, 0), 1)}`,
-			"--mat-pull-to-refresh-scale": `${S.value}`,
-			"--mat-pull-to-refresh-scroll-padding": `${C.value}px`
-		})), z = i(() => g.value ? void 0 : b.value);
-		function B() {
+			fallback: Ds
+		})), g = k("idle"), _ = k(r.modelValue), b = k(0), S = k(0), C = k(0), w = k(0), E = null, D, O = 0, A = 0, j = !1, M = !1, N = !1, P = !1, F = 0, I = !1, R, z = i(() => ({
+			"--mat-pull-to-refresh-placeholder-size": `${b.value}px`,
+			"--mat-pull-to-refresh-appear": `${C.value}`,
+			"--mat-pull-to-refresh-scroll-padding": `${w.value}px`
+		})), B = i(() => _.value ? void 0 : S.value);
+		function H() {
 			return typeof globalThis.matchMedia == "function" && globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
 		}
-		function H() {
-			I !== void 0 && (globalThis.clearTimeout(I), I = void 0), F = !1;
-		}
 		function U() {
-			H(), F = !0, I = globalThis.setTimeout(() => {
-				F = !1, I = void 0;
+			R !== void 0 && (globalThis.clearTimeout(R), R = void 0), I = !1;
+		}
+		function W() {
+			U(), I = !0, R = globalThis.setTimeout(() => {
+				I = !1, R = void 0;
 			}, 0);
 		}
-		function W(e, t) {
-			let n, r = 0, i = 0, a = 0, o;
-			function s() {
-				n !== void 0 && (globalThis.cancelAnimationFrame?.(n), n = void 0), o = void 0;
+		function G(e, t, n = As, r = js) {
+			let i, a = 0, o = 0, s = 0, c;
+			function l() {
+				i !== void 0 && (globalThis.cancelAnimationFrame?.(i), i = void 0), c = void 0;
 			}
-			function c(s) {
-				n = void 0;
-				let l = o === void 0 ? 0 : Math.min((s - o) / 1e3, 1 / 30);
-				if (o = s, l > 0) {
-					let e = -1600 * (r - a) - js * i;
-					i += e * l, r += i * l;
+			function u(l) {
+				i = void 0;
+				let d = c === void 0 ? 0 : Math.min((l - c) / 1e3, 1 / 30);
+				if (c = l, d > 0) {
+					let e = -n * (a - s) - r * o;
+					o += e * d, a += o * d;
 				}
-				if (Math.abs(r - a) < .1 && Math.abs(i) < .1) {
-					r = a, i = 0, o = void 0, e(r), t?.();
+				if (Math.abs(a - s) < .1 && Math.abs(o) < .1) {
+					a = s, o = 0, c = void 0, e(a), t?.();
 					return;
 				}
-				e(r), n = globalThis.requestAnimationFrame(c);
+				e(a), i = globalThis.requestAnimationFrame(u);
 			}
 			return {
-				start(o, l) {
-					if (s(), r = o, a = l, i = 0, B() || typeof globalThis.requestAnimationFrame != "function") {
-						r = l, e(r), t?.();
+				start(n, r) {
+					if (l(), a = n, s = r, o = 0, H() || typeof globalThis.requestAnimationFrame != "function") {
+						a = r, e(a), t?.();
 						return;
 					}
-					n = globalThis.requestAnimationFrame(c);
+					i = globalThis.requestAnimationFrame(u);
 				},
-				stop: s
+				stop: l
 			};
 		}
-		let G = W((e) => {
-			_.value = e, g.value || (b.value = p.value > 0 ? e / p.value : 0);
+		let K = G((e) => {
+			C.value = e;
 		}, () => {
-			!g.value && h.value === "collapse" && (h.value = "idle");
-		}), K = W((e) => {
-			S.value = e;
-		});
-		function ee(e) {
-			G.stop(), g.value = !0, h.value = "refresh", N = !1, P = 0, _.value = p.value, b.value = 0, K.start(Ms, 1), e && (a("update:modelValue", !0), a("refresh"));
-		}
+			g.value === "collapse" && (g.value = "idle");
+		}), ee = G((e) => {
+			b.value = Math.max(0, e);
+		}, void 0, Ms, n);
 		function q() {
-			if (_.value <= 0) {
-				h.value = "idle";
-				return;
-			}
-			h.value = "collapse", G.start(_.value, 0);
+			K.start(C.value, 1);
 		}
-		function J() {
-			g.value = !1, q();
+		function J(e) {
+			_.value = !0, g.value = "refresh", P = !1, F = 0, S.value = 0, ee.start(b.value, 0), C.value < 1 && q(), e && (o("update:modelValue", !0), o("refresh"));
 		}
-		V(() => n.modelValue, (e) => {
-			e && !g.value ? ee(!1) : !e && g.value && J();
-		});
 		function Y() {
-			return w ? f.value ? Math.abs(w.scrollLeft) < 1 : w.scrollTop < 1 : !1;
+			g.value !== "collapse" && (g.value = "collapse", S.value = 0, ee.start(b.value, 0), K.start(C.value, 0));
 		}
 		function X() {
-			let e = w;
-			if (!e || typeof globalThis.getComputedStyle != "function") {
-				C.value = 0;
-				return;
-			}
-			let t = globalThis.getComputedStyle(e), n = parseFloat(f.value ? t.paddingLeft : t.paddingTop);
-			C.value = Number.isFinite(n) ? n : 0;
+			_.value = !1, Y();
 		}
+		V(() => r.modelValue, (e) => {
+			e && !_.value ? J(!1) : !e && _.value && X();
+		});
 		function Z() {
-			let e = P * ks;
-			_.value = Math.min(e, p.value), b.value = p.value > 0 ? e / p.value : 0;
+			return E ? p.value ? Math.abs(E.scrollLeft) < 1 : E.scrollTop < 1 : !1;
 		}
-		function te(e) {
-			!w || g.value || h.value !== "idle" || e.button !== 0 || (E = e.pointerId, D = e.clientX, O = e.clientY, A = Y(), j = !1, M = !1);
-		}
-		function ne(e) {
-			if (e.pointerId !== E || !w || g.value) return;
-			let t = f.value ? e.clientX - D : e.clientY - O;
-			if (!j) {
-				if (!A || t <= As) {
-					t < -4 && (E = void 0);
-					return;
-				}
-				j = !0, M = !0, G.stop(), w.setPointerCapture?.(e.pointerId);
-			}
-			if (P = Math.max(0, t - As), P <= 0) {
-				re(e.pointerId);
+		function te() {
+			let e = E;
+			if (!e || typeof globalThis.getComputedStyle != "function") {
+				w.value = 0;
 				return;
 			}
-			Z(), e.preventDefault();
+			let t = globalThis.getComputedStyle(e), n = parseFloat(p.value ? t.paddingLeft : t.paddingTop);
+			w.value = Number.isFinite(n) ? n : 0;
 		}
-		function re(e, t = !0) {
-			if (e !== void 0 && e !== E) return;
-			let n = j, r = M, i = w;
-			if (E = void 0, j = !1, M = !1, r && i?.hasPointerCapture?.(e) && i.releasePointerCapture(e), !n) return;
-			U();
-			let a = t && P * ks >= p.value;
-			if (P = 0, a) {
-				ee(!0);
-				return;
-			}
-			q();
+		function ne() {
+			let e = F * Os;
+			b.value = Math.min(e, h.value), S.value = h.value > 0 ? e / h.value : 0;
+		}
+		function re(e) {
+			!E || _.value || g.value !== "idle" || e.button !== 0 || (D = e.pointerId, O = e.clientX, A = e.clientY, j = Z(), M = !1, N = !1);
 		}
 		function ie(e) {
-			re(e.pointerId, !0);
-		}
-		function ae(e) {
-			re(e.pointerId, !1);
-		}
-		function oe(e) {
-			re(e.pointerId, !1);
-		}
-		function se(e) {
-			j && e.preventDefault();
-		}
-		function ce(e) {
-			if (!w || g.value || h.value === "drag" && !N) return;
-			let t = f.value ? -e.deltaX : -e.deltaY;
-			if (!N) {
-				if (!Y() || t <= 0) return;
-				N = !0, P = 0, h.value = "drag", G.stop();
+			if (e.pointerId !== D || !E || _.value) return;
+			let t = p.value ? e.clientX - O : e.clientY - A;
+			if (!M) {
+				if (!j || t <= ks) {
+					t < -4 && (D = void 0);
+					return;
+				}
+				M = !0, N = !0, q(), E.setPointerCapture?.(e.pointerId);
 			}
-			if (P = Math.max(0, P + t), P <= 0) {
-				N = !1, q();
+			if (F = Math.max(0, t - ks), F <= 0) {
+				ae(e.pointerId);
 				return;
 			}
-			e.preventDefault(), Z(), P * ks >= p.value && ee(!0);
+			ne(), e.preventDefault();
 		}
-		function le() {
-			N && (N = !1, P = 0, q());
+		function ae(e, t = !0) {
+			if (e !== void 0 && e !== D) return;
+			let n = M, r = N, i = E;
+			if (D = void 0, M = !1, N = !1, r && i?.hasPointerCapture?.(e) && i.releasePointerCapture(e), !n) return;
+			W();
+			let a = t && F * Os >= h.value;
+			if (F = 0, a) {
+				J(!0);
+				return;
+			}
+			Y();
 		}
-		function ue() {
-			let e = w;
-			e && (e.removeEventListener("pointerdown", te), e.removeEventListener("pointermove", ne), e.removeEventListener("pointerup", ie), e.removeEventListener("pointercancel", ae), e.removeEventListener("lostpointercapture", oe), e.removeEventListener("touchmove", se), e.removeEventListener("scroll", le), e.removeEventListener("wheel", ce), e.removeEventListener("click", de, !0), w = null);
+		function oe(e) {
+			ae(e.pointerId, !0);
 		}
-		function de(e) {
-			F && (H(), e.preventDefault(), e.stopImmediatePropagation());
+		function se(e) {
+			ae(e.pointerId, !1);
 		}
-		return V(() => l.value ?? null, (e) => {
-			ue(), C.value = 0, e && (w = e, X(), e.addEventListener("pointerdown", te), e.addEventListener("pointermove", ne), e.addEventListener("pointerup", ie), e.addEventListener("pointercancel", ae), e.addEventListener("lostpointercapture", oe), e.addEventListener("touchmove", se), e.addEventListener("scroll", le), e.addEventListener("wheel", ce, { passive: !1 }), e.addEventListener("click", de, !0));
+		function ce(e) {
+			ae(e.pointerId, !1);
+		}
+		function le(e) {
+			M && e.preventDefault();
+		}
+		function ue(e) {
+			if (!E || _.value || g.value === "drag" && !P) return;
+			let t = p.value ? -e.deltaX : -e.deltaY;
+			if (!P) {
+				if (!Z() || t <= 0) return;
+				P = !0, F = 0, g.value = "drag", q();
+			}
+			if (F = Math.max(0, F + t), F <= 0) {
+				P = !1, Y();
+				return;
+			}
+			e.preventDefault(), ne(), F * Os >= h.value && J(!0);
+		}
+		function de() {
+			P && (P = !1, F = 0, Y());
+		}
+		function fe() {
+			let e = E;
+			e && (e.removeEventListener("pointerdown", re), e.removeEventListener("pointermove", ie), e.removeEventListener("pointerup", oe), e.removeEventListener("pointercancel", se), e.removeEventListener("lostpointercapture", ce), e.removeEventListener("touchmove", le), e.removeEventListener("scroll", de), e.removeEventListener("wheel", ue), e.removeEventListener("click", pe, !0), E = null);
+		}
+		function pe(e) {
+			I && (U(), e.preventDefault(), e.stopImmediatePropagation());
+		}
+		return V(() => u.value ?? null, (e) => {
+			fe(), w.value = 0, e && (E = e, te(), e.addEventListener("pointerdown", re), e.addEventListener("pointermove", ie), e.addEventListener("pointerup", oe), e.addEventListener("pointercancel", se), e.addEventListener("lostpointercapture", ce), e.addEventListener("touchmove", le), e.addEventListener("scroll", de), e.addEventListener("wheel", ue, { passive: !1 }), e.addEventListener("click", pe, !0));
 		}, {
 			immediate: !0,
 			flush: "post"
-		}), V(f, () => {
-			X();
-		}), g.value && (h.value = "refresh", _.value = p.value), x(() => {
-			ue(), G.stop(), K.stop(), H();
+		}), V(p, () => {
+			te();
+		}), _.value && (g.value = "refresh", C.value = 1), x(() => {
+			fe(), K.stop(), ee.stop(), U();
 		}), (e, t) => (T(), s("div", {
 			class: v(["mat-pull-to-refresh", {
-				"mat-pull-to-refresh--horizontal": f.value,
-				"mat-pull-to-refresh--placeholder": L(r).placeholder,
-				"mat-pull-to-refresh--refreshing": g.value,
-				"mat-pull-to-refresh--active": _.value > 0 || g.value
+				"mat-pull-to-refresh--horizontal": p.value,
+				"mat-pull-to-refresh--placeholder": L(a).placeholder,
+				"mat-pull-to-refresh--refreshing": _.value,
+				"mat-pull-to-refresh--active": C.value > 0 || _.value
 			}]),
-			style: y(R.value)
-		}, [c("div", Es, [c("div", Ds, [d(Ts, {
-			size: L(r).size,
-			color: L(r).color,
-			containment: L(r).containment,
-			progress: z.value
+			style: y(z.value)
+		}, [c("div", Es, [d(Ts, {
+			size: L(a).size,
+			color: L(a).color,
+			containment: L(a).containment,
+			progress: B.value
 		}, null, 8, [
 			"size",
 			"color",
 			"containment",
 			"progress"
-		])])])], 6));
+		])])], 6));
 	}
-}), [["__scopeId", "data-v-085b3923"]]), Ps = ["aria-valuemax", "aria-valuenow"], Fs = ["width", "height"], Is = { key: 0 }, Ls = ["width", "height"], Rs = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, zs = ["d"], Bs = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, Vs = ["d"], Hs = ["d", "mask"], Us = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, Ws = ["d"], Gs = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, Ks = ["d"], qs = ["d"], Js = {
+}), [["__scopeId", "data-v-d4738468"]]), Ps = ["aria-valuemax", "aria-valuenow"], Fs = ["width", "height"], Is = { key: 0 }, Ls = ["width", "height"], Rs = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, zs = ["d"], Bs = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, Vs = ["d"], Hs = ["d", "mask"], Us = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, Ws = ["d"], Gs = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, Ks = ["d"], qs = ["d"], Js = {
 	key: 1,
 	class: "mat-progress__linear-stop"
 }, Ys = ["viewBox"], Xs = { class: "mat-progress__circular-linear-rotate" }, Zs = { class: "mat-progress__circular-rotate-arc" }, Qs = [

@@ -34,7 +34,7 @@ async function onRefresh() {
       </ul>
     </mat-scroll-area>
     <p class="hint">
-      开启 placeholder 后，组件自身随拉动变高，把列表推离顶部。
+      开启 placeholder 后，指示器完全露出时列表才开始被推离；触发刷新后 placeholder 回弹归零，列表复位。
     </p>
   </div>
 </template>

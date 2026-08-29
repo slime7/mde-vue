@@ -16,7 +16,10 @@ const POINTER_SLOP = 4;
 // 临界阻尼系数 c = 2 × sqrt(k) × ζ。
 const SPRING_STIFFNESS = 1600;
 const SPRING_DAMPING = 80;
-const APPEAR_SCALE_FROM = 0.85;
+// androidx StandardMotionTokens 默认空间弹簧：dampingRatio 0.9、stiffness 700，
+// placeholder 的回弹属于空间位移，使用带轻微回弹的空间弹簧。
+const PLACEHOLDER_SPRING_STIFFNESS = 700;
+const PLACEHOLDER_SPRING_DAMPING = 2 * Math.sqrt(PLACEHOLDER_SPRING_STIFFNESS) * 0.9;
 
 defineOptions({
   name: 'MatPullToRefresh',
@@ -35,8 +38,9 @@ const props = defineProps({
     default: false,
   },
   /**
-   * 拉动时组件自身随拉动变高（水平时变宽），把后面的兄弟内容推离起点，
-   * 呈现列表被拉动的视觉效果；未开启时指示器悬浮在内容上方。
+   * 拉动时组件自身随拉动变高（水平时变宽），推挤后面的兄弟内容；
+   * 随拉动距离增长，拉满进度后停止，触发刷新或取消拉动时回弹归零、内容复位。
+   * 未开启时内容不移动，指示器悬浮在内容上方。
    *
    * @type {boolean}
    * @default false
@@ -123,9 +127,9 @@ const triggerPx = computed(() => normalizeNumber(propsWithDefaults.triggerDistan
 
 const phase = ref('idle');
 const isRefreshing = ref(props.modelValue);
-const distance = ref(0);
+const placeholderSize = ref(0);
 const pullProgress = ref(0);
-const appearScale = ref(1);
+const appear = ref(0);
 const scrollPaddingPx = ref(0);
 
 let currentScroller = null;
@@ -141,9 +145,8 @@ let suppressClick = false;
 let suppressClickTimer;
 
 const rootStyle = computed(() => ({
-  '--mat-pull-to-refresh-distance': `${distance.value}px`,
-  '--mat-pull-to-refresh-progress': `${Math.min(Math.max(pullProgress.value, 0), 1)}`,
-  '--mat-pull-to-refresh-scale': `${appearScale.value}`,
+  '--mat-pull-to-refresh-placeholder-size': `${placeholderSize.value}px`,
+  '--mat-pull-to-refresh-appear': `${appear.value}`,
   '--mat-pull-to-refresh-scroll-padding': `${scrollPaddingPx.value}px`,
 }));
 const indicatorProgress = computed(() => (
@@ -174,13 +177,15 @@ function suppressNextClick() {
 }
 
 /**
- * 临界阻尼弹簧；动画参数对应 androidx DefaultEffects（stiffness 1600、dampingRatio 1.0）。
+ * 弹簧动画；默认参数对应 androidx DefaultEffects（stiffness 1600、dampingRatio 1.0）。
  *
  * @param {(value: number) => void} onUpdate 每帧回调。
  * @param {() => void} [onSettle] 到达目标后的回调。
+ * @param {number} [stiffness] 弹簧刚度，默认取 DefaultEffects 数值。
+ * @param {number} [damping] 阻尼系数，默认取 DefaultEffects 数值。
  * @returns {{ start: (from: number, to: number) => void, stop: () => void }}
  */
-function createSpring(onUpdate, onSettle) {
+function createSpring(onUpdate, onSettle, stiffness = SPRING_STIFFNESS, damping = SPRING_DAMPING) {
   let frameId;
   let position = 0;
   let velocity = 0;
@@ -209,9 +214,7 @@ function createSpring(onUpdate, onSettle) {
     previousTime = frameTime;
 
     if (elapsed > 0) {
-      const acceleration = (
-        -SPRING_STIFFNESS * (position - target) - SPRING_DAMPING * velocity
-      );
+      const acceleration = -stiffness * (position - target) - damping * velocity;
 
       velocity += acceleration * elapsed;
       position += velocity * elapsed;
@@ -251,33 +254,42 @@ function createSpring(onUpdate, onSettle) {
   };
 }
 
-const distanceSpring = createSpring(
+const appearSpring = createSpring(
   (value) => {
-    distance.value = value;
-
-    if (!isRefreshing.value) {
-      pullProgress.value = triggerPx.value > 0 ? value / triggerPx.value : 0;
-    }
+    appear.value = value;
   },
   () => {
-    if (!isRefreshing.value && phase.value === 'collapse') {
+    if (phase.value === 'collapse') {
       phase.value = 'idle';
     }
   },
 );
-const scaleSpring = createSpring((value) => {
-  appearScale.value = value;
-});
+const placeholderSpring = createSpring(
+  (value) => {
+    // 空间弹簧带轻微回弹，过冲部分钳制在起点，避免出现负的占位高度。
+    placeholderSize.value = Math.max(0, value);
+  },
+  undefined,
+  PLACEHOLDER_SPRING_STIFFNESS,
+  PLACEHOLDER_SPRING_DAMPING,
+);
+
+function startAppear() {
+  appearSpring.start(appear.value, 1);
+}
 
 function enterRefresh(shouldEmit) {
-  distanceSpring.stop();
   isRefreshing.value = true;
   phase.value = 'refresh';
   wheelAccumulating = false;
   rawPulled = 0;
-  distance.value = triggerPx.value;
   pullProgress.value = 0;
-  scaleSpring.start(APPEAR_SCALE_FROM, 1);
+  placeholderSpring.start(placeholderSize.value, 0);
+
+  if (appear.value < 1) {
+    // 外部直接进入刷新：指示器在静止位播放入场动画。
+    startAppear();
+  }
 
   if (shouldEmit) {
     emit('update:modelValue', true);
@@ -286,13 +298,14 @@ function enterRefresh(shouldEmit) {
 }
 
 function startCollapse() {
-  if (distance.value <= 0) {
-    phase.value = 'idle';
+  if (phase.value === 'collapse') {
     return;
   }
 
   phase.value = 'collapse';
-  distanceSpring.start(distance.value, 0);
+  pullProgress.value = 0;
+  placeholderSpring.start(placeholderSize.value, 0);
+  appearSpring.start(appear.value, 0);
 }
 
 function endRefresh() {
@@ -321,7 +334,7 @@ function isAtStart() {
 }
 
 /**
- * 读取滚动元素在当前滚动轴起始边上的内边距，让指示器窗口从视口可见边缘开始裁剪。
+ * 读取滚动元素在当前滚动轴起始边上的内边距，把指示器静止位换算到视口可见边缘。
  *
  * @returns {void}
  */
@@ -344,7 +357,8 @@ function syncScrollPadding() {
 function applyPull() {
   const adjusted = rawPulled * DRAG_MULTIPLIER;
 
-  distance.value = Math.min(adjusted, triggerPx.value);
+  // placeholder 随拉动距离增长，拉满进度后停止。
+  placeholderSize.value = Math.min(adjusted, triggerPx.value);
   pullProgress.value = triggerPx.value > 0 ? adjusted / triggerPx.value : 0;
 }
 
@@ -384,7 +398,7 @@ function handlePointerMove(event) {
 
     engaged = true;
     releaseCaptureOnEnd = true;
-    distanceSpring.stop();
+    startAppear();
     currentScroller.setPointerCapture?.(event.pointerId);
   }
 
@@ -471,7 +485,7 @@ function handleWheel(event) {
     wheelAccumulating = true;
     rawPulled = 0;
     phase.value = 'drag';
-    distanceSpring.stop();
+    startAppear();
   }
 
   rawPulled = Math.max(0, rawPulled + outwardDelta);
@@ -556,13 +570,13 @@ watch(isHorizontal, () => {
 
 if (isRefreshing.value) {
   phase.value = 'refresh';
-  distance.value = triggerPx.value;
+  appear.value = 1;
 }
 
 onBeforeUnmount(() => {
   detachScroller();
-  distanceSpring.stop();
-  scaleSpring.stop();
+  appearSpring.stop();
+  placeholderSpring.stop();
   clearSuppressClick();
 });
 </script>
@@ -574,19 +588,17 @@ onBeforeUnmount(() => {
       'mat-pull-to-refresh--horizontal': isHorizontal,
       'mat-pull-to-refresh--placeholder': propsWithDefaults.placeholder,
       'mat-pull-to-refresh--refreshing': isRefreshing,
-      'mat-pull-to-refresh--active': distance > 0 || isRefreshing,
+      'mat-pull-to-refresh--active': appear > 0 || isRefreshing,
     }"
     :style="rootStyle"
   >
-    <div class="mat-pull-to-refresh__window">
-      <div class="mat-pull-to-refresh__indicator">
-        <MatLoading
-          :size="propsWithDefaults.size"
-          :color="propsWithDefaults.color"
-          :containment="propsWithDefaults.containment"
-          :progress="indicatorProgress"
-        />
-      </div>
+    <div class="mat-pull-to-refresh__indicator">
+      <MatLoading
+        :size="propsWithDefaults.size"
+        :color="propsWithDefaults.color"
+        :containment="propsWithDefaults.containment"
+        :progress="indicatorProgress"
+      />
     </div>
   </div>
 </template>
@@ -594,10 +606,12 @@ onBeforeUnmount(() => {
 <style scoped>
 @layer mde.components {
   .mat-pull-to-refresh {
-    --mat-pull-to-refresh-distance: 0;
-    --mat-pull-to-refresh-progress: 0;
-    --mat-pull-to-refresh-scale: 1;
+    --mat-pull-to-refresh-placeholder-size: 0;
+    --mat-pull-to-refresh-appear: 0;
     --mat-pull-to-refresh-scroll-padding: 0;
+
+    /* 指示器静止位距视口起始边缘 80px，对齐 androidx 行程终点 80dp。 */
+    --mat-pull-to-refresh-rest-distance: 80px;
     position: relative;
     display: block;
     box-sizing: border-box;
@@ -606,7 +620,7 @@ onBeforeUnmount(() => {
   }
 
   .mat-pull-to-refresh--placeholder {
-    block-size: var(--mat-pull-to-refresh-distance);
+    block-size: var(--mat-pull-to-refresh-placeholder-size);
   }
 
   .mat-pull-to-refresh--horizontal {
@@ -618,58 +632,34 @@ onBeforeUnmount(() => {
 
   .mat-pull-to-refresh--horizontal.mat-pull-to-refresh--placeholder {
     block-size: 100%;
-    inline-size: var(--mat-pull-to-refresh-distance);
+    inline-size: var(--mat-pull-to-refresh-placeholder-size);
   }
 
-  /* 裁剪窗口从视口可见起始边缘生长，指示器钉在移动边上并裁掉窗口外的部分。 */
-  .mat-pull-to-refresh__window {
+  /* 指示器始终固定在静止位：短暂淡入放大入场，取消或刷新结束时原位淡出。 */
+  .mat-pull-to-refresh__indicator {
     position: absolute;
     z-index: 1;
     visibility: hidden;
-    overflow: hidden;
     pointer-events: none;
-    opacity: calc(.3 + .7 * var(--mat-pull-to-refresh-progress));
+    opacity: var(--mat-pull-to-refresh-appear);
   }
 
-  .mat-pull-to-refresh--active .mat-pull-to-refresh__window {
+  .mat-pull-to-refresh--active .mat-pull-to-refresh__indicator {
     visibility: visible;
   }
 
-  /* 透明度渐变只用于拖动渐入；刷新中的指示器保持完全不透明。 */
-  .mat-pull-to-refresh--refreshing .mat-pull-to-refresh__window {
-    opacity: 1;
-  }
-
-  .mat-pull-to-refresh:not(.mat-pull-to-refresh--horizontal) .mat-pull-to-refresh__window {
-    top: calc(-1 * var(--mat-pull-to-refresh-scroll-padding));
-    left: 0;
-    right: 0;
-    block-size: var(--mat-pull-to-refresh-distance);
-  }
-
   .mat-pull-to-refresh:not(.mat-pull-to-refresh--horizontal) .mat-pull-to-refresh__indicator {
-    position: absolute;
-    bottom: 0;
+    top: calc(var(--mat-pull-to-refresh-rest-distance) - var(--mat-pull-to-refresh-scroll-padding));
     left: 50%;
-    translate: -50%;
-    scale: var(--mat-pull-to-refresh-scale);
-    transform-origin: center bottom;
-  }
-
-  .mat-pull-to-refresh--horizontal .mat-pull-to-refresh__window {
-    top: 0;
-    bottom: 0;
-    left: calc(-1 * var(--mat-pull-to-refresh-scroll-padding));
-    inline-size: var(--mat-pull-to-refresh-distance);
+    translate: -50% -100%;
+    scale: calc(.5 + .5 * var(--mat-pull-to-refresh-appear));
   }
 
   .mat-pull-to-refresh--horizontal .mat-pull-to-refresh__indicator {
-    position: absolute;
     top: 50%;
-    right: 0;
-    translate: 0 -50%;
-    scale: var(--mat-pull-to-refresh-scale);
-    transform-origin: right center;
+    left: calc(var(--mat-pull-to-refresh-rest-distance) - var(--mat-pull-to-refresh-scroll-padding));
+    translate: -100% -50%;
+    scale: calc(.5 + .5 * var(--mat-pull-to-refresh-appear));
   }
 }
 </style>
