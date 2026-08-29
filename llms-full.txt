@@ -9082,7 +9082,7 @@ import ProgressWaveMotionExample from '../examples/progress/ProgressWaveMotionEx
 
 ## 组件简介
 
-`<mat-pull-to-refresh>` 的组件导出名是 `MatPullToRefresh`。它在滚动区域起始端提供 Material 3 风格的下拉刷新手势：垂直 `mat-scroll-area` 滚动到顶部后继续向下拉动、水平 `mat-scroll-area` 滚动到最左端后继续向右拉动，都会以短暂的淡入放大动画显示内部的 `mat-loading` 指示器；释放时拉动距离达到触发距离即发出刷新，未达到则取消。鼠标、触摸、笔的拖拽与滚轮、触控板在边界朝界外的滚动都能触发。
+`<mat-pull-to-refresh>` 的组件导出名是 `MatPullToRefresh`。它在滚动区域起始端提供 Material 3 风格的下拉刷新手势：垂直 `mat-scroll-area` 滚动到顶部后继续向下拉动、水平 `mat-scroll-area` 滚动到最左端后继续向右拉动，都会以短暂的淡入放大动画显示内部的 `mat-loading` 指示器；释放时拉动距离达到触发距离即发出刷新，未达到则取消。鼠标、触摸、笔的拖拽与滚轮、触控板在边界朝界外的滚动都能触发。滚轮与触控板驱动的刷新必须从边界静止位开始：从内容中间连续滚动越过边界时不触发，滚轮活动静止约 600ms 后才视为新的手势，避免惯性滚动误触发。
 
 组件没有 Slots，只负责手势与指示器：把它作为 `mat-scroll-area` 内容的第一个子元素，列表或其他内容作为兄弟元素跟在组件后面，组件渲染为零尺寸元素悬浮在内容上方。开启 `placeholder` 后组件自身随拉动变高（水平时变宽），把后面的内容推离起点，呈现列表"被拉动"的视觉效果。入场与回弹动画的阈值、拖拽系数和弹簧参数对应 AndroidX Material 3 `PullToRefresh` 的官方数值，刷新期间指示器切换到 `mat-loading` 的自动旋转模式。
 
@@ -9686,7 +9686,7 @@ async function onRefresh() {
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
-| `refresh` | 无 | 拉动距离达到 `triggerDistance` 后释放，或滚轮在边界朝界外累积达到阈值时触发；刷新中不重复触发 |
+| `refresh` | 无 | 拉动距离达到 `triggerDistance` 后释放，或滚轮在边界朝界外累积达到阈值时触发；刷新中不重复触发。滚轮驱动的滚动需从边界静止位开始，从内容中间连续滚动越过边界时不触发，滚轮活动静止约 600ms 后恢复 |
 | `update:modelValue` | `boolean` | 触发刷新时载荷为 `true`；外部置回 `false` 结束刷新，指示器在原位淡出 |
 
 ## Slots

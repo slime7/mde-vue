@@ -422,6 +422,84 @@ describe('MatPullToRefresh', () => {
     expect(wrapper.emitted('update:modelValue')).toEqual([[true]]);
   });
 
+  it('从内容中间开始的滚轮滚动越过边界不触发刷新', () => {
+    const { wrapper, scroller } = mountComponent(
+      {},
+      'vertical',
+      createScroller('vertical', 10),
+    );
+
+    const first = dispatchWheel(scroller, { deltaY: -120 });
+    scroller.scrollTop = 0;
+    const second = dispatchWheel(scroller, { deltaY: -120 });
+    dispatchWheel(scroller, { deltaY: -120 });
+
+    expect(first.defaultPrevented).toBe(false);
+    expect(second.defaultPrevented).toBe(false);
+    expect(wrapper.emitted('refresh')).toBeUndefined();
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+  });
+
+  it('滚轮活动静止 600ms 后恢复触发刷新', () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+
+    try {
+      const { wrapper, scroller } = mountComponent(
+        {},
+        'vertical',
+        createScroller('vertical', 10),
+      );
+
+      dispatchWheel(scroller, { deltaY: -120 });
+      scroller.scrollTop = 0;
+      dispatchWheel(scroller, { deltaY: -120 });
+      dispatchWheel(scroller, { deltaY: -120 });
+
+      expect(wrapper.emitted('refresh')).toBeUndefined();
+
+      vi.advanceTimersByTime(600);
+
+      dispatchWheel(scroller, { deltaY: -120 });
+      dispatchWheel(scroller, { deltaY: -120 });
+
+      expect(wrapper.emitted('refresh')).toHaveLength(1);
+      expect(wrapper.emitted('update:modelValue')).toEqual([[true]]);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('连续滚轮活动顺延静止判定，静止后才恢复触发', () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+
+    try {
+      const { wrapper, scroller } = mountComponent(
+        {},
+        'vertical',
+        createScroller('vertical', 10),
+      );
+
+      dispatchWheel(scroller, { deltaY: -120 });
+      vi.advanceTimersByTime(500);
+      scroller.scrollTop = 0;
+      dispatchWheel(scroller, { deltaY: -120 });
+      vi.advanceTimersByTime(500);
+      dispatchWheel(scroller, { deltaY: -120 });
+      dispatchWheel(scroller, { deltaY: -120 });
+
+      expect(wrapper.emitted('refresh')).toBeUndefined();
+
+      vi.advanceTimersByTime(600);
+
+      dispatchWheel(scroller, { deltaY: -120 });
+      dispatchWheel(scroller, { deltaY: -120 });
+
+      expect(wrapper.emitted('refresh')).toHaveLength(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('与 mat-scroll-area 集成并跟随方向切换', async () => {
     const refreshing = ref(false);
     const wrapper = mount(MatScrollArea, {

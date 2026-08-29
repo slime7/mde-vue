@@ -12,6 +12,8 @@ const DEFAULT_TRIGGER_DISTANCE = 80;
 // androidx material3 PullToRefresh.kt：DragMultiplier = 0.5f
 const DRAG_MULTIPLIER = 0.5;
 const POINTER_SLOP = 4;
+// 滚轮驱动的滚动从非边界静止位越过边界时不得触发刷新；滚轮活动静止该时长后才视为新手势。
+const SCROLL_SETTLE_DELAY = 600;
 // androidx DefaultEffects 弹簧：dampingRatio 1.0、stiffness 1600；
 // 临界阻尼系数 c = 2 × sqrt(k) × ζ。
 const SPRING_STIFFNESS = 1600;
@@ -155,6 +157,8 @@ let wheelAccumulating = false;
 let rawPulled = 0;
 let suppressClick = false;
 let suppressClickTimer;
+let scrollCooldown = false;
+let scrollCooldownTimer;
 
 const rootStyle = computed(() => ({
   '--mat-pull-to-refresh-placeholder-size': `${placeholderSize.value}px`,
@@ -186,6 +190,28 @@ function suppressNextClick() {
     suppressClick = false;
     suppressClickTimer = undefined;
   }, 0);
+}
+
+function clearScrollCooldown() {
+  if (scrollCooldownTimer !== undefined) {
+    globalThis.clearTimeout(scrollCooldownTimer);
+    scrollCooldownTimer = undefined;
+  }
+
+  scrollCooldown = false;
+}
+
+function restartScrollCooldown() {
+  scrollCooldown = true;
+
+  if (scrollCooldownTimer !== undefined) {
+    globalThis.clearTimeout(scrollCooldownTimer);
+  }
+
+  scrollCooldownTimer = globalThis.setTimeout(() => {
+    scrollCooldownTimer = undefined;
+    scrollCooldown = false;
+  }, SCROLL_SETTLE_DELAY);
 }
 
 /**
@@ -508,7 +534,13 @@ function handleWheel(event) {
   const outwardDelta = isHorizontal.value ? -event.deltaX : -event.deltaY;
 
   if (!wheelAccumulating) {
-    if (!isAtStart() || outwardDelta <= 0) {
+    if (outwardDelta <= 0) {
+      return;
+    }
+
+    if (scrollCooldown || !isAtStart()) {
+      // 滚动不是从边界静止位开始的，越过边界也不触发刷新；滚轮持续活动则顺延冷却。
+      restartScrollCooldown();
       return;
     }
 
@@ -545,6 +577,7 @@ function handleScroll() {
 }
 
 function detachScroller() {
+  clearScrollCooldown();
   const element = currentScroller;
 
   if (!element) {
