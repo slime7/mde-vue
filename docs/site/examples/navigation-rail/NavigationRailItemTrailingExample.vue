@@ -76,4 +76,3 @@ const selected = ref('inbox');
 }
 </style>
 <!-- #endregion style -->
-

@@ -971,4 +971,3 @@ if (appContext) {
     }
   }
  </style>
-

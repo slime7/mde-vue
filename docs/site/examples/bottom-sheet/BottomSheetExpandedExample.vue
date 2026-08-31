@@ -23,4 +23,3 @@ const open = ref(false);
   </mat-bottom-sheet>
 </template>
 <!-- #endregion template -->
-

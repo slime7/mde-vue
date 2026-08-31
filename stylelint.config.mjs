@@ -7,6 +7,8 @@ export default {
   plugins: ['@stylistic/stylelint-plugin'],
   rules: {
     '@stylistic/indentation': 2,
+    '@stylistic/no-missing-end-of-source-newline': true,
+    '@stylistic/max-empty-lines': 1,
     'rule-empty-line-before': ['always', {
       except: ['first-nested', 'after-single-line-comment'],
     }],
