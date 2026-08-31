@@ -5,6 +5,7 @@ import MatSearch from './components/mat-search/MatSearch.vue';
 import MatBtn from './components/mat-btn/MatBtn.vue';
 import MatBtnGroup from './components/mat-btn-group/MatBtnGroup.vue';
 import MatFab from './components/mat-fab/MatFab.vue';
+import MatFabMenu from './components/mat-fab-menu/MatFabMenu.vue';
 import MatIcon from './components/mat-icon/MatIcon.vue';
 import MatImage from './components/mat-image/MatImage.vue';
 import MatSharedElement from './components/mat-shared-element/MatSharedElement.vue';
@@ -81,6 +82,7 @@ export const GLOBAL_COMPONENTS = [
   ['MatBtn', 'mat-btn', MatBtn],
   ['MatBtnGroup', 'mat-btn-group', MatBtnGroup],
   ['MatFab', 'mat-fab', MatFab],
+  ['MatFabMenu', 'mat-fab-menu', MatFabMenu],
   ['MatIcon', 'mat-icon', MatIcon],
   ['MatImage', 'mat-image', MatImage],
   ['MatSharedElement', 'mat-shared-element', MatSharedElement],

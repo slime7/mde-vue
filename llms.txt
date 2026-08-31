@@ -19,6 +19,7 @@
 - [Button 按钮](components/button.md): mat-btn 的普通与图标模式、尺寸、宽度、形态、配色、受控切换、事件和 slots。
 - [样式](guide/styles.md): 使用 mde-vue 的 CSS 级联层、公共设计令牌与 Tailwind CSS v4 语义映射。
 - [FAB 浮动操作按钮](components/fab.md): mat-fab 的纯图标 FAB 与 Extended FAB、尺寸、官方颜色角色、禁用状态和无障碍名称。
+- [FAB Menu 浮动操作菜单](components/fab-menu.md): mat-fab-menu 的折叠态主 FAB、展开列表操作按钮、固定右上角圆形关闭按钮、受控状态与 AppRoot 浮动层集成。
 - [Button group 按钮组](components/button-group.md): mat-btn-group 的标准与连接布局、级联属性、受控单选多选和事件。
 - [限制](guide/limitations.md): 记录 mde-vue 当前明确不支持的运行环境、分发方式。
 - [Split button 拆分按钮](components/split-button.md): mat-split-btn 的双按钮组合、受控展开、事件、菜单 ARIA 和 slots。

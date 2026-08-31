@@ -112,6 +112,7 @@ export default defineConfig({
               { text: 'Button group 按钮组', link: '/components/button-group' },
               { text: 'Dialog 对话框', link: '/components/dialog' },
               { text: 'FAB 浮动操作按钮', link: '/components/fab' },
+              { text: 'FAB Menu 浮动操作菜单', link: '/components/fab-menu' },
               { text: 'Hover 悬停状态', link: '/components/hover' },
               { text: 'Loading 加载指示器', link: '/components/loading' },
               { text: 'Progress 进度', link: '/components/progress' },

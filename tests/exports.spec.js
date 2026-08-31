@@ -35,6 +35,7 @@ import {
   MatExpansion as RootMatExpansion,
   MatExpansionPanel as RootMatExpansionPanel,
   MatFab as RootMatFab,
+  MatFabMenu as RootMatFabMenu,
   MatHover as RootMatHover,
   MatIcon as RootMatIcon,
   MatImage as RootMatImage,
@@ -86,6 +87,7 @@ const globalComponents = [
   ['MatBtn', 'mat-btn', RootMatBtn],
   ['MatBtnGroup', 'mat-btn-group', RootMatBtnGroup],
   ['MatFab', 'mat-fab', RootMatFab],
+  ['MatFabMenu', 'mat-fab-menu', RootMatFabMenu],
   ['MatIcon', 'mat-icon', RootMatIcon],
   ['MatImage', 'mat-image', RootMatImage],
   ['MatSharedElement', 'mat-shared-element', RootMatSharedElement, ['MdeSharedElement', 'mde-shared-element']],
@@ -237,6 +239,7 @@ describe('公共组件导出', () => {
     expect(app.component('mat-navigation-rail')).toBe(RootMatNavigationRail);
     expect(app.component('mat-navigation-rail-item')).toBe(RootMatNavigationRailItem);
     expect(app.component('mat-fab')).toBe(RootMatFab);
+    expect(app.component('mat-fab-menu')).toBe(RootMatFabMenu);
     expect(app.component('mat-icon')).toBe(RootMatIcon);
     expect(app.component('mat-image')).toBe(RootMatImage);
     expect(app.component('mat-avatar')).toBe(RootMatAvatar);

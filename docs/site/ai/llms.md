@@ -49,6 +49,7 @@ llms: false
 - Button group：`docs/site/components/button-group.md`
 - Split button：`docs/site/components/split-button.md`
 - FAB：`docs/site/components/fab.md`
+- FAB Menu：`docs/site/components/fab-menu.md`
 - Hover：`docs/site/components/hover.md`
 - Input base：`docs/site/components/input-base.md`
 - Text field 与 Textarea：`docs/site/components/text-field.md`

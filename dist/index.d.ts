@@ -427,6 +427,111 @@ export interface MatFabEmits {
 export type MatFabComponent = DefineComponent<MatFabProps, {}, {}, {}, {}, {}, {}, MatFabEmits>;
 export declare const MatFab: MatFabComponent;
 
+export interface MatFabMenuProps {
+  /**
+  * 折叠状态下主 FAB 的尺寸；可选值为 `small`、`medium`、`large`。
+  *
+  * @type {'small' | 'medium' | 'large'}
+  * @default 'medium'
+  */
+  size?: 'small' | 'medium' | 'large';
+  /**
+  * 折叠状态下主 FAB 显示的 Material Symbols 图标。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  icon?: string | undefined;
+  /**
+  * 折叠状态下主 FAB 的无障碍名称与默认 Tooltip 文本。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  label?: string | undefined;
+  /**
+  * 展开状态下关闭按钮显示的 Material Symbols 图标。
+  *
+  * @type {string}
+  * @default 'close'
+  */
+  closeIcon?: string;
+  /**
+  * 展开状态下关闭按钮的无障碍名称与 Tooltip 文本；缺省时回退到 '关闭'。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  closeLabel?: string | undefined;
+  /**
+  * 主 FAB 与关闭按钮的官方颜色角色；可选值为 `primary`、`secondary`、`tertiary`、`primary-container`、`secondary-container`、`tertiary-container`、`error`、`error-container`。
+  *
+  * @type {string}
+  * @default 'primary-container'
+  */
+  color?: string;
+  /**
+  * 禁用主按钮及菜单展开交互。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  disabled?: boolean;
+  /**
+  * 原生按钮类型；可选值为 `button`、`submit`、`reset`。
+  *
+  * @type {'button' | 'submit' | 'reset'}
+  * @default 'button'
+  */
+  type?: 'button' | 'submit' | 'reset';
+  /**
+  * 控制菜单的展开与折叠状态。
+  *
+  * @type {boolean | undefined}
+  * @default undefined
+  */
+  modelValue?: boolean | undefined;
+  /**
+  * 点击默认 Slot 内的按钮后是否自动收起菜单。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  closeOnClick?: boolean;
+  /**
+  * 按下 Escape 键时是否自动收起菜单。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  closeOnEsc?: boolean;
+  /**
+  * 点击菜单外部区域时是否自动收起菜单。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  closeOnClickOutside?: boolean;
+}
+
+export interface MatFabMenuEmits {
+  /**
+  * 展开状态改变时发出更新。
+  */
+  "update:modelValue": (payload: unknown) => unknown;
+  /**
+  * 菜单展开时触发。
+  */
+  "open": (payload: unknown) => unknown;
+  /**
+  * 菜单收起时触发。
+  */
+  "close": (payload: unknown) => unknown;
+}
+
+export type MatFabMenuComponent = DefineComponent<MatFabMenuProps, {}, {}, {}, {}, {}, {}, MatFabMenuEmits>;
+export declare const MatFabMenu: MatFabMenuComponent;
+
 export interface MatIconProps {
   /**
   * Material Symbols 字形文本；优先级低于 src。
@@ -3893,6 +3998,8 @@ declare module 'vue' {
     'mat-btn-group': typeof MatBtnGroup;
     MatFab: typeof MatFab;
     'mat-fab': typeof MatFab;
+    MatFabMenu: typeof MatFabMenu;
+    'mat-fab-menu': typeof MatFabMenu;
     MatIcon: typeof MatIcon;
     'mat-icon': typeof MatIcon;
     MatImage: typeof MatImage;

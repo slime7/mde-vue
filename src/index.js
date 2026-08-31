@@ -4,6 +4,7 @@ export { default as MatAppBar } from './components/mat-app-bar/MatAppBar.vue';
 export { default as MatSearch } from './components/mat-search/MatSearch.vue';
 export { default as MatBtnGroup } from './components/mat-btn-group/MatBtnGroup.vue';
 export { default as MatFab } from './components/mat-fab/MatFab.vue';
+export { default as MatFabMenu } from './components/mat-fab-menu/MatFabMenu.vue';
 export { default as MatIcon } from './components/mat-icon/MatIcon.vue';
 export { default as MatImage } from './components/mat-image/MatImage.vue';
 export { default as MatSharedElement } from './components/mat-shared-element/MatSharedElement.vue';
