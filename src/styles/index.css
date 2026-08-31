@@ -339,6 +339,7 @@
     --mat-menu-viewport-space: 8px;
     --mat-menu-anchor-space: 4px;
     --mat-menu-item-height: 48px;
+    --mat-menu-item-space: 2px;
     --mat-menu-group-space: 2px;
     --mat-menu-group-label-height: 32px;
 

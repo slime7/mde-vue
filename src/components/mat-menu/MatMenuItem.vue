@@ -313,10 +313,10 @@ onBeforeUnmount(() => {
     padding: 0;
     color: var(--mat-menu-content-color);
     text-align: start;
-    background: transparent;
+    background-color: transparent;
     border: 0;
     border-radius: var(--mat-sys-shape-corner-extra-small);
-    transition: border-radius var(--mat-sys-motion-spring-fast-spatial), color var(--mat-sys-motion-spring-fast-effects), background-color var(--mat-sys-motion-spring-fast-effects);
+    transition: border-radius var(--mat-sys-motion-spring-fast-spatial), border-shape var(--mat-sys-motion-spring-fast-spatial), color var(--mat-sys-motion-spring-fast-effects), background-color var(--mat-sys-motion-spring-fast-effects);
   }
 
   .mat-menu-item--first:not(.mat-menu-item--submenu-open):not(.mat-menu-item--selected) {
@@ -349,7 +349,7 @@ onBeforeUnmount(() => {
     --mat-item-label-color: var(--mat-menu-active-content-color);
     --mat-item-supporting-color: var(--mat-menu-active-content-color);
     color: var(--mat-menu-active-content-color);
-    background: var(--mat-menu-active-container-color);
+    background-color: var(--mat-menu-active-container-color);
     border-radius: var(--mat-sys-shape-corner-medium);
   }
 
@@ -365,6 +365,16 @@ onBeforeUnmount(() => {
   .mat-menu-item:disabled {
     color: var(--mat-menu-content-color);
     opacity: var(--mat-sys-state-disabled-content-opacity);
+  }
+
+  .mat-menu-item :deep([data-mat-item-content-leading]) {
+    transition: inline-size var(--mat-sys-motion-spring-fast-spatial), min-inline-size var(--mat-sys-motion-spring-fast-spatial), opacity var(--mat-sys-motion-spring-fast-effects), transform var(--mat-sys-motion-spring-fast-spatial), color var(--mat-sys-motion-spring-fast-effects);
+  }
+
+  .mat-menu-item :deep([data-mat-item-content-label]),
+  .mat-menu-item :deep([data-mat-item-content-supporting]),
+  .mat-menu-item :deep([data-mat-item-content-trailing]) {
+    transition: color var(--mat-sys-motion-spring-fast-effects);
   }
 
   @supports (border-shape: inset(0 round 1px)) {
@@ -416,6 +426,10 @@ onBeforeUnmount(() => {
 
   @media (prefers-reduced-motion: reduce) {
     .mat-menu-item,
+    .mat-menu-item :deep([data-mat-item-content-leading]),
+    .mat-menu-item :deep([data-mat-item-content-label]),
+    .mat-menu-item :deep([data-mat-item-content-supporting]),
+    .mat-menu-item :deep([data-mat-item-content-trailing]),
     .mat-menu-item__submenu-icon {
       transition-duration: 0s;
     }

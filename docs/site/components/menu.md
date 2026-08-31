@@ -410,7 +410,7 @@ Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项
 | --- | --- | --- | --- |
 | `label` | `string` | 未设置 | 可选的可见分组标签，同时作为 `role="group"` 的无障碍名称 |
 
-同一个 MatMenu 的直接子级应统一使用 MatMenuGroup，或统一直接放置 MatMenuItem 与 MatDivider，不混合两种组织方式。两个 Group 之间使用 2px 间隙；每个 Group 保留独立圆角表面和阴影。
+同一个 MatMenu 的直接子级应统一使用 MatMenuGroup，或统一直接放置 MatMenuItem 与 MatDivider，不混合两种组织方式。菜单项之间以及两个 Group 之间均使用 2px 间隙；每个 Group 保留独立圆角表面和阴影。
 
 ### MatMenuItem 属性
 

@@ -7932,7 +7932,7 @@ var Ra = {
 			])
 		], 64));
 	}
-}), [["__scopeId", "data-v-a7eb6274"]]), mo = { class: "mat-menu-item-host" }, ho = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-dd5aba13"]]), mo = { class: "mat-menu-item-host" }, ho = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatMenuItem",
 	inheritAttrs: !1
 }, {
@@ -8123,7 +8123,7 @@ var Ra = {
 			"use-cursor"
 		])), e.$slots.submenu ? M(e.$slots, "submenu", { key: 2 }, void 0, !0) : o("", !0)]));
 	}
-}), [["__scopeId", "data-v-b49b2225"]]), go = ["aria-labelledby"], _o = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-d5f6b373"]]), go = ["aria-labelledby"], _o = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatMenuGroup",
 	inheritAttrs: !1
 }, {
@@ -8160,7 +8160,7 @@ var Ra = {
 			class: "mat-menu-group__label mat-sys-typescale-label-large"
 		}, I(L(t).label), 1)) : o("", !0), M(e.$slots, "default", {}, void 0, !0)], 16, go));
 	}
-}), [["__scopeId", "data-v-802b4ec1"]]), vo = [
+}), [["__scopeId", "data-v-be91a1ff"]]), vo = [
 	"id",
 	"aria-describedby",
 	"aria-label",

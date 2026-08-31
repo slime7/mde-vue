@@ -89,7 +89,9 @@ onBeforeUnmount(() => menu?.unregisterGroup());
 <style scoped>
 @layer mde.components {
   .mat-menu-group {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: var(--mat-menu-item-space);
     box-sizing: border-box;
     min-inline-size: 100%;
     padding: var(--mat-menu-container-padding);
