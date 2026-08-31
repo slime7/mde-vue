@@ -112,6 +112,10 @@ const props = defineProps({
     type: String,
     default: 'auto',
   },
+  virtualExpand: {
+    type: Boolean,
+    default: false,
+  },
   width: {
     type: [Number, String],
     default: undefined,
@@ -167,6 +171,7 @@ const panelClasses = computed(() => [
   `mat-sheet__panel--position-${props.position}`,
   {
     'mat-sheet__panel--expanded': props.direction === 'bottom' && props.expanded,
+    'mat-sheet__panel--virtual-expand': props.direction === 'bottom' && props.virtualExpand,
     'mat-sheet__panel--dragging': dragging.value,
   },
 ]);
@@ -304,6 +309,50 @@ function buildScopeOptions(context) {
       ? null
       : context.contentElement.value,
   };
+}
+
+let contentTouchStartY = null;
+
+function handleContentWheel(event) {
+  if (props.direction !== 'bottom' || !props.virtualExpand || props.expanded) {
+    return;
+  }
+
+  if (event.deltaY > 0) {
+    event.preventDefault();
+    emit('update:expanded', true);
+  }
+}
+
+function handleContentPointerDown(event) {
+  if (props.direction !== 'bottom' || !props.virtualExpand || props.expanded) {
+    return;
+  }
+
+  if (event.pointerType === 'touch') {
+    contentTouchStartY = event.clientY;
+  }
+}
+
+function handleContentPointerMove(event) {
+  if (props.direction !== 'bottom' || !props.virtualExpand || props.expanded) {
+    return;
+  }
+
+  if (event.pointerType === 'touch' && contentTouchStartY !== null) {
+    const deltaY = contentTouchStartY - event.clientY;
+
+    if (deltaY >= 8) {
+      contentTouchStartY = null;
+      emit('update:expanded', true);
+    }
+  }
+}
+
+function handleContentPointerUp(event) {
+  if (event.pointerType === 'touch') {
+    contentTouchStartY = null;
+  }
 }
 
 function requestClose() {
@@ -575,6 +624,23 @@ function updateDragNow(event) {
   if (props.direction === 'bottom') {
     dragDistance = event.clientY - dragStart;
 
+    if (props.virtualExpand) {
+      if (!props.expanded) {
+        const maxUp = -dragStartExtent * 0.75;
+        const clampedDrag = dragDistance < maxUp
+          ? maxUp + (dragDistance - maxUp) * 0.2
+          : dragDistance;
+        writeDragStyle(clampedDrag, null);
+        return;
+      }
+
+      const clampedDrag = dragDistance < 0
+        ? dragDistance * 0.2
+        : dragDistance;
+      writeDragStyle(clampedDrag, null);
+      return;
+    }
+
     if ((!props.expanded && dragDistance < 0)
       || (props.expanded && dragDistance > 0)) {
       writeDragStyle(0, Math.max(0, dragStartExtent - dragDistance));
@@ -632,9 +698,9 @@ function finishDrag(event) {
     ? Math.abs(dragDistance)
     : dragOffset;
   const velocity = distance / elapsed;
-  const threshold = Math.min(160, Math.max(80, extent * 0.3));
+  const threshold = Math.min(120, Math.max(48, extent * 0.15));
   const reachedThreshold = distance >= threshold
-    || (distance >= 24 && velocity >= 0.5);
+    || (distance >= 20 && velocity >= 0.35);
 
   suppressHandleClick = distance >= 4;
   stopDragging();
@@ -689,7 +755,7 @@ function startDrag(event) {
     : dragElement.value?.getBoundingClientRect().width ?? 0;
   dragStartedAt = performance.now();
   dragDistance = 0;
-  writeDragStyle(0, props.direction === 'bottom' ? dragStartExtent : null);
+  writeDragStyle(0, (props.direction === 'bottom' && !props.virtualExpand) ? dragStartExtent : null);
   dragging.value = true;
   window.addEventListener('pointermove', updateDrag);
   window.addEventListener('pointerup', finishDrag);
@@ -729,6 +795,11 @@ function handleModalPointerDown(event) {
   if (isModal.value) {
     handleRootPointerDown(event);
   }
+}
+
+function handlePanelPointerDown(event) {
+  handleModalPointerDown(event);
+  handleContentPointerDown(event);
 }
 
 function updateViewportWidth() {
@@ -859,6 +930,7 @@ watch(() => props.closeLabel, (value) => {
           'mat-sheet--app-root': isAppRootScoped,
           'mat-sheet--dragging': dragging,
           'mat-sheet--expanded': direction === 'bottom' && expanded,
+          'mat-sheet--virtual-expand': direction === 'bottom' && virtualExpand,
           'mat-sheet--top': isTop,
           'mat-sheet--transparent-scrim': !scrim,
         },
@@ -871,13 +943,21 @@ watch(() => props.closeLabel, (value) => {
       @click="handleSheetClick"
       @keydown="handleKeyDown"
       @pointerdown="handleStandardPointerDown"
+      @pointermove="handleContentPointerMove"
+      @pointerup="handleContentPointerUp"
+      @pointercancel="handleContentPointerUp"
+      @wheel="handleContentWheel"
     >
       <div
         ref="panelElement"
         class="mat-sheet__panel"
         :class="panelClasses"
         :style="panelStyle"
-        @pointerdown="handleModalPointerDown"
+        @pointerdown="handlePanelPointerDown"
+        @pointermove="handleContentPointerMove"
+        @pointerup="handleContentPointerUp"
+        @pointercancel="handleContentPointerUp"
+        @wheel="handleContentWheel"
       >
         <button
           v-if="direction === 'bottom' && dragHandle"
@@ -929,6 +1009,11 @@ watch(() => props.closeLabel, (value) => {
           orientation="vertical"
           no-scroll-padding
           bar-width="thin"
+          @wheel="handleContentWheel"
+          @pointerdown="handleContentPointerDown"
+          @pointermove="handleContentPointerMove"
+          @pointerup="handleContentPointerUp"
+          @pointercancel="handleContentPointerUp"
         >
           <div class="mat-sheet__content-body">
             <template v-if="content !== undefined">
@@ -1030,9 +1115,9 @@ watch(() => props.closeLabel, (value) => {
       var(--mat-sys-shape-corner-extra-large)
       var(--mat-sys-shape-corner-none)
       var(--mat-sys-shape-corner-none);
-    box-shadow: var(--mat-sys-elevation-level1);
-    transform: translateY(var(--mat-sheet-drag-offset));
-    transition: block-size var(--mat-sys-motion-spring-fast-spatial);
+    box-shadow: var(--mat-sys-elevation-level1), 0 50vh 0 0 var(--mat-sheet-container-color);
+    transform: translateY(calc(var(--mat-sheet-virtual-offset, 0px) + var(--mat-sheet-drag-offset, 0px)));
+    transition: transform var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial);
   }
 
   .mat-sheet--modal .mat-sheet__panel--bottom {
@@ -1048,21 +1133,31 @@ watch(() => props.closeLabel, (value) => {
       var(--mat-sys-shape-corner-extra-large)
       var(--mat-sys-shape-corner-none)
       var(--mat-sys-shape-corner-none);
-    box-shadow: var(--mat-sys-elevation-level1);
-    transform: translateY(var(--mat-sheet-drag-offset));
-    transition: block-size var(--mat-sys-motion-spring-fast-spatial);
+    box-shadow: var(--mat-sys-elevation-level1), 0 50vh 0 0 var(--mat-sheet-container-color);
+    transform: translateY(calc(var(--mat-sheet-virtual-offset, 0px) + var(--mat-sheet-drag-offset, 0px)));
+    transition: transform var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial);
   }
 
-  .mat-sheet--modal .mat-sheet__panel--bottom:not(.mat-sheet__panel--expanded):not(.mat-sheet__panel--dragging) {
+  .mat-sheet--modal .mat-sheet__panel--bottom:not(.mat-sheet__panel--expanded):not(.mat-sheet__panel--dragging):not(.mat-sheet__panel--virtual-expand) {
     max-block-size: 50%;
   }
 
-  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--expanded {
+  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--expanded,
+  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--virtual-expand {
     block-size: calc(100dvb - 72px);
   }
 
-  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--expanded {
+  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--expanded,
+  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--virtual-expand {
     block-size: calc(100% - 72px);
+  }
+
+  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--virtual-expand:not(.mat-sheet--expanded) {
+    --mat-sheet-virtual-offset: 75%;
+  }
+
+  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--virtual-expand:not(.mat-sheet__panel--expanded) {
+    --mat-sheet-virtual-offset: 75%;
   }
 
   .mat-sheet--standard.mat-sheet--side {
@@ -1190,6 +1285,10 @@ watch(() => props.closeLabel, (value) => {
     flex-shrink: 0;
   }
 
+  .mat-sheet--virtual-expand:not(.mat-sheet--expanded) .mat-sheet__content {
+    overflow: hidden;
+  }
+
   .mat-sheet__content {
     display: flex;
     flex-direction: column;
@@ -1232,7 +1331,8 @@ watch(() => props.closeLabel, (value) => {
       max-block-size: calc(100dvb - 56px);
     }
 
-    .mat-sheet--standard.mat-sheet--bottom.mat-sheet--expanded {
+    .mat-sheet--standard.mat-sheet--bottom.mat-sheet--expanded,
+    .mat-sheet--standard.mat-sheet--bottom.mat-sheet--virtual-expand {
       block-size: calc(100dvb - 56px);
     }
 
@@ -1241,14 +1341,28 @@ watch(() => props.closeLabel, (value) => {
       max-block-size: calc(100% - 56px);
     }
 
-    .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--expanded {
+    .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--expanded,
+    .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--virtual-expand {
       block-size: calc(100% - 56px);
+    }
+
+    .mat-sheet--standard.mat-sheet--bottom.mat-sheet--virtual-expand:not(.mat-sheet--expanded) {
+      --mat-sheet-virtual-offset: 75%;
+    }
+
+    .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--virtual-expand:not(.mat-sheet__panel--expanded) {
+      --mat-sheet-virtual-offset: 75%;
     }
   }
 
-  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--dragging,
-  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--dragging {
+  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--dragging:not(.mat-sheet--virtual-expand),
+  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--dragging:not(.mat-sheet__panel--virtual-expand) {
     block-size: var(--mat-sheet-drag-size);
+    transition: none;
+  }
+
+  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--dragging.mat-sheet--virtual-expand,
+  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--dragging.mat-sheet__panel--virtual-expand {
     transition: none;
   }
 
@@ -1313,7 +1427,7 @@ watch(() => props.closeLabel, (value) => {
 
   @keyframes mat-bottom-sheet-exit {
     to {
-      transform: translateY(100%);
+      transform: translateY(calc(100% + var(--mat-sheet-drag-offset, 0px)));
     }
   }
 

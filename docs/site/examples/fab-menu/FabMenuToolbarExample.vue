@@ -16,9 +16,13 @@
       app
       :variant="isFloating ? 'floating-bottom' : 'docked'"
     >
-      <mat-btn variant="standard" prefix="menu">菜单</mat-btn>
+      <mat-btn variant="standard" prefix="menu">
+        菜单
+      </mat-btn>
       <mat-spacer />
-      <mat-btn variant="standard" prefix="search">搜索</mat-btn>
+      <mat-btn variant="standard" prefix="search">
+        搜索
+      </mat-btn>
     </mat-toolbar>
 
     <mat-fab-menu
@@ -27,9 +31,15 @@
       label="新建内容"
       close-label="关闭"
     >
-      <mat-btn size="small" prefix="edit" variant="filled">编辑草稿</mat-btn>
-      <mat-btn size="small" prefix="photo" variant="filled">上传图片</mat-btn>
-      <mat-btn size="small" prefix="description" variant="filled">创建文档</mat-btn>
+      <mat-btn size="small" prefix="edit" variant="filled">
+        编辑草稿
+      </mat-btn>
+      <mat-btn size="small" prefix="photo" variant="filled">
+        上传图片
+      </mat-btn>
+      <mat-btn size="small" prefix="description" variant="filled">
+        创建文档
+      </mat-btn>
     </mat-fab-menu>
   </mat-app-root>
 </template>

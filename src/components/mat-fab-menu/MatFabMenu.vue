@@ -466,19 +466,15 @@ onBeforeUnmount(() => {
     visibility: visible;
     pointer-events: auto;
     transform: scale(1);
-    transition: opacity var(--mat-sys-motion-spring-fast-effects),
-                transform var(--mat-sys-motion-spring-fast-spatial),
-                visibility 0s;
+    transition: opacity var(--mat-sys-motion-spring-fast-effects), transform var(--mat-sys-motion-spring-fast-spatial), visibility 0s;
   }
 
   .mat-fab-menu--open .mat-fab-menu__trigger-fab {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: scale(0.8);
-    transition: opacity var(--mat-sys-motion-spring-fast-effects),
-                transform var(--mat-sys-motion-spring-fast-spatial),
-                visibility 0s linear var(--mat-sys-motion-duration-short3);
+    transform: scale(.8);
+    transition: opacity var(--mat-sys-motion-spring-fast-effects), transform var(--mat-sys-motion-spring-fast-spatial), visibility 0s linear var(--mat-sys-motion-duration-short3);
   }
 
   .mat-fab-menu__close-btn {
@@ -501,10 +497,8 @@ onBeforeUnmount(() => {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: scale(0.8);
-    transition: opacity var(--mat-sys-motion-spring-fast-effects),
-                transform var(--mat-sys-motion-spring-fast-spatial),
-                visibility 0s linear var(--mat-sys-motion-duration-short3);
+    transform: scale(.8);
+    transition: opacity var(--mat-sys-motion-spring-fast-effects), transform var(--mat-sys-motion-spring-fast-spatial), visibility 0s linear var(--mat-sys-motion-duration-short3);
   }
 
   @media (hover: hover) {
@@ -518,9 +512,7 @@ onBeforeUnmount(() => {
     visibility: visible;
     pointer-events: auto;
     transform: scale(1);
-    transition: opacity var(--mat-sys-motion-spring-fast-effects),
-                transform var(--mat-sys-motion-spring-fast-spatial),
-                visibility 0s;
+    transition: opacity var(--mat-sys-motion-spring-fast-effects), transform var(--mat-sys-motion-spring-fast-spatial), visibility 0s;
   }
 
   .mat-fab-menu__close-icon {
@@ -549,10 +541,8 @@ onBeforeUnmount(() => {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translateY(16px) scale(0.92);
-    transition: opacity var(--mat-sys-motion-spring-fast-effects),
-                transform var(--mat-sys-motion-spring-fast-spatial),
-                visibility 0s linear var(--mat-sys-motion-duration-short3);
+    transform: translateY(16px) scale(.92);
+    transition: opacity var(--mat-sys-motion-spring-fast-effects), transform var(--mat-sys-motion-spring-fast-spatial), visibility 0s linear var(--mat-sys-motion-duration-short3);
   }
 
   .mat-fab-menu--open .mat-fab-menu__items {
@@ -560,9 +550,7 @@ onBeforeUnmount(() => {
     visibility: visible;
     pointer-events: auto;
     transform: translateY(0) scale(1);
-    transition: opacity var(--mat-sys-motion-spring-fast-effects),
-                transform var(--mat-sys-motion-spring-fast-spatial),
-                visibility 0s;
+    transition: opacity var(--mat-sys-motion-spring-fast-effects), transform var(--mat-sys-motion-spring-fast-spatial), visibility 0s;
   }
 
   @media (prefers-reduced-motion: reduce) {

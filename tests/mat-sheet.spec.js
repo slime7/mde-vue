@@ -253,6 +253,166 @@ describe('MatBottomSheet', () => {
     expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
 
+  it('virtualExpand 开启且在预览状态时，内容区滚轮向下滚动自动请求展开', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容预览',
+        modelValue: true,
+        title: '虚拟全高',
+        variant: 'modal',
+        virtualExpand: true,
+      },
+    });
+
+    await settleRender();
+
+    const content = document.body.querySelector('dialog .mat-sheet__content');
+
+    expect(content).not.toBeNull();
+
+    content.dispatchEvent(new WheelEvent('wheel', {
+      bubbles: true,
+      cancelable: true,
+      deltaY: -20,
+    }));
+
+    expect(wrapper.emitted('update:expanded')).toBeUndefined();
+
+    const wheelDownEvent = new WheelEvent('wheel', {
+      bubbles: true,
+      cancelable: true,
+      deltaY: 40,
+    });
+
+    content.dispatchEvent(wheelDownEvent);
+
+    expect(wheelDownEvent.defaultPrevented).toBe(true);
+    expect(wrapper.emitted('update:expanded')).toEqual([[true]]);
+  });
+
+  it('virtualExpand 开启且在预览状态时，触控向上滑动内容区自动请求展开', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容预览',
+        modelValue: true,
+        title: '虚拟全高触控',
+        variant: 'modal',
+        virtualExpand: true,
+      },
+    });
+
+    await settleRender();
+
+    const content = document.body.querySelector('dialog .mat-sheet__content');
+
+    dispatchPointer(content, 'pointerdown', {
+      button: 0,
+      clientY: 300,
+      pointerId: 10,
+      pointerType: 'touch',
+    });
+    dispatchPointer(content, 'pointermove', {
+      clientY: 280,
+      pointerId: 10,
+      pointerType: 'touch',
+    });
+    dispatchPointer(content, 'pointerup', {
+      clientY: 280,
+      pointerId: 10,
+      pointerType: 'touch',
+    });
+
+    expect(wrapper.emitted('update:expanded')).toEqual([[true]]);
+  });
+
+  it('virtualExpand 在已展开状态下滚动内容区不重复请求展开', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容预览',
+        expanded: true,
+        modelValue: true,
+        title: '虚拟全高已展开',
+        variant: 'modal',
+        virtualExpand: true,
+      },
+    });
+
+    await settleRender();
+
+    const content = document.body.querySelector('dialog .mat-sheet__content');
+
+    content.dispatchEvent(new WheelEvent('wheel', {
+      bubbles: true,
+      deltaY: 50,
+    }));
+
+    expect(wrapper.emitted('update:expanded')).toBeUndefined();
+  });
+
+  it('virtualExpand 开启且在 standard 模式预览状态时，内容区滚轮向下滚动自动请求展开', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: 'Standard 长内容',
+        modelValue: true,
+        title: '虚拟全高 standard',
+        variant: 'standard',
+        virtualExpand: true,
+      },
+    });
+
+    await settleRender();
+
+    const sheet = wrapper.get('aside');
+    const wheelDownEvent = new WheelEvent('wheel', {
+      bubbles: true,
+      cancelable: true,
+      deltaY: 50,
+    });
+
+    sheet.element.dispatchEvent(wheelDownEvent);
+
+    expect(wheelDownEvent.defaultPrevented).toBe(true);
+    expect(wrapper.emitted('update:expanded')).toEqual([[true]]);
+  });
+
+  it('virtualExpand 开启时拖拽把手向上拖动达到阈值正常请求展开', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容',
+        modelValue: true,
+        title: '拖拽把手展开',
+        variant: 'modal',
+        virtualExpand: true,
+      },
+    });
+
+    await settleRender();
+
+    const handle = document.body.querySelector('dialog button[aria-label="展开底部面板"]');
+
+    dispatchPointer(handle, 'pointerdown', {
+      button: 0,
+      clientY: 300,
+      pointerId: 5,
+      pointerType: 'touch',
+    });
+    dispatchPointer(window, 'pointermove', {
+      clientY: 180,
+      pointerId: 5,
+    });
+    dispatchPointer(window, 'pointerup', {
+      clientY: 180,
+      pointerId: 5,
+    });
+
+    expect(wrapper.emitted('update:expanded')).toEqual([[true]]);
+  });
+
   it('standard 把手可以通过点击和键盘在预览与全屏状态间循环', async () => {
     const wrapper = mount(MatBottomSheet, {
       attachTo: document.body,

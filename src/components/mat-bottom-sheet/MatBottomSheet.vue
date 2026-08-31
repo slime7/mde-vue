@@ -121,6 +121,16 @@ const props = defineProps({
     default: false,
   },
   /**
+   * 虚拟全高模式；开启后内容容器按展开态高度计算并下移截断，用户滚动或上拉时自动展开到全高。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  virtualExpand: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * 预览状态下拖动把手的可访问名称。
    *
    * @type {string}

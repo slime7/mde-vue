@@ -16,8 +16,12 @@
         </mat-btn>
       </template>
 
-      <mat-btn prefix="bookmark" variant="filled">收藏页面</mat-btn>
-      <mat-btn prefix="share" variant="filled">分享内容</mat-btn>
+      <mat-btn prefix="bookmark" variant="filled">
+        收藏页面
+      </mat-btn>
+      <mat-btn prefix="share" variant="filled">
+        分享内容
+      </mat-btn>
     </mat-fab-menu>
   </mat-app-root>
 </template>

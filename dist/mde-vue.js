@@ -3250,7 +3250,7 @@ var nr = ["aria-hidden"], rr = ["aria-hidden"], ir = /*#__PURE__*/ Q(/* @__PURE_
 			"use-cursor"
 		])], !0)])], 16));
 	}
-}), [["__scopeId", "data-v-4deeb02c"]]), ur = ["src"], dr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-4c519220"]]), ur = ["src"], dr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatImage",
 	inheritAttrs: !1
 }, {
@@ -9777,6 +9777,10 @@ var as = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			type: String,
 			default: "auto"
 		},
+		virtualExpand: {
+			type: Boolean,
+			default: !1
+		},
 		width: {
 			type: [Number, String],
 			default: void 0
@@ -9797,6 +9801,7 @@ var as = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			`mat-sheet__panel--position-${l.position}`,
 			{
 				"mat-sheet__panel--expanded": l.direction === "bottom" && l.expanded,
+				"mat-sheet__panel--virtual-expand": l.direction === "bottom" && l.virtualExpand,
 				"mat-sheet__panel--dragging": G.value
 			}
 		]), se = i(() => l.expanded ? Z.value ? l.expandedDragHandleLabel : l.collapseDragHandleLabel : l.dragHandleLabel), ce = i(() => re.value || ae.value || !!b.header || !!b.actions), le = i(() => Z.value ? "dialog" : "aside"), ue = i(() => {
@@ -9846,27 +9851,40 @@ var as = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				scrollElement: e.documentMode.value ? null : e.contentElement.value
 			};
 		}
-		function ke() {
+		let ke = null;
+		function Ae(e) {
+			l.direction !== "bottom" || !l.virtualExpand || l.expanded || e.deltaY > 0 && (e.preventDefault(), p("update:expanded", !0));
+		}
+		function je(e) {
+			l.direction !== "bottom" || !l.virtualExpand || l.expanded || e.pointerType === "touch" && (ke = e.clientY);
+		}
+		function Me(e) {
+			l.direction !== "bottom" || !l.virtualExpand || l.expanded || e.pointerType === "touch" && ke !== null && ke - e.clientY >= 8 && (ke = null, p("update:expanded", !0));
+		}
+		function Ne(e) {
+			e.pointerType === "touch" && (ke = null);
+		}
+		function Pe() {
 			p("update:modelValue", !1);
 		}
-		function Ae(e, t) {
+		function Fe(e, t) {
 			if (W = e, q.value?.style.setProperty("--mat-sheet-drag-offset", `${e}px`), t === null) {
 				q.value?.style.removeProperty("--mat-sheet-drag-size");
 				return;
 			}
 			q.value?.style.setProperty("--mat-sheet-drag-size", `${t}px`);
 		}
-		function je() {
-			Ae(0, null);
+		function Ie() {
+			Fe(0, null);
 		}
-		function Me() {
+		function Le() {
 			if (Ce) {
 				Ce = !1;
 				return;
 			}
 			if (l.expanded) {
 				if (Z.value) {
-					ke();
+					Pe();
 					return;
 				}
 				p("update:expanded", !1);
@@ -9874,19 +9892,19 @@ var as = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}
 			p("update:expanded", !0);
 		}
-		function Ne(e) {
-			e.key !== "Enter" && e.key !== " " || (e.preventDefault(), Me());
+		function Re(e) {
+			e.key !== "Enter" && e.key !== " " || (e.preventDefault(), Le());
 		}
-		function Pe() {
+		function ze() {
 			console.warn(`${l.componentName}: activator Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点`);
 		}
-		function Fe() {
+		function Be() {
 			!Z.value || re.value || h["aria-label"] || h["aria-labelledby"] || console.warn(`${l.componentName}: 必须通过 title、title Slot、aria-label 或 aria-labelledby 提供可访问名称`);
 		}
-		function Ie() {
+		function Ve() {
 			console.warn(`${l.componentName}: attach 必须指向当前 document 中存在的 HTMLElement`);
 		}
-		function Le() {
+		function He() {
 			let e = q.value;
 			e && (e.querySelector([
 				"[autofocus]",
@@ -9898,7 +9916,7 @@ var as = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				"[tabindex]:not([tabindex=\"-1\"])"
 			].join(",")) ?? e).focus({ preventScroll: !0 });
 		}
-		function Re() {
+		function Ue() {
 			let e = q.value;
 			if (e instanceof HTMLDialogElement) {
 				if (e.open || e.show(), J.value) {
@@ -9906,10 +9924,10 @@ var as = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 					if (!t) return;
 					ts(e, Oe(t.context));
 				} else ts(e);
-				Le();
+				He();
 			}
 		}
-		async function ze() {
+		async function We() {
 			if (we(), j.value) {
 				N.value = "opening", Te(400, () => {
 					N.value = "open", p("opened");
@@ -9918,127 +9936,139 @@ var as = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}
 			let e = ne.value ? Ee() : null;
 			if (ne.value && !e) {
-				Pe(), ke();
+				ze(), Pe();
 				return;
 			}
 			if (Z.value) {
 				let t = Q(), n = De(t), r = n ? n.target : t;
 				if (!r) {
-					Ie(), ke();
+					Ve(), Pe();
 					return;
 				}
 				L.value = n, P.value = r, ge = e ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
 			} else L.value = null;
-			_e = Z.value, j.value = !0, N.value = "opening", Fe(), await _(), !(!l.modelValue || !q.value) && (Z.value && Re(), Te(400, () => {
+			_e = Z.value, j.value = !0, N.value = "opening", Be(), await _(), !(!l.modelValue || !q.value) && (Z.value && Ue(), Te(400, () => {
 				N.value = "open", p("opened");
 			}));
 		}
-		function Be() {
+		function Ge() {
 			_e && ge?.isConnected && ge.focus({ preventScroll: !0 }), ge = null, _e = !1;
 		}
-		function Ve() {
+		function Ke() {
 			let e = q.value;
-			e instanceof HTMLDialogElement && (e.open && e.close(), ns(e)), L.value = null, j.value = !1, N.value = "closed", je(), _(() => {
-				Be(), p("closed");
+			e instanceof HTMLDialogElement && (e.open && e.close(), ns(e)), L.value = null, j.value = !1, N.value = "closed", Ie(), _(() => {
+				Ge(), p("closed");
 			});
 		}
-		async function He() {
-			j.value && (N.value = "closing", await _(), !(l.modelValue || N.value !== "closing" || !q.value) && Te(200, Ve));
+		async function qe() {
+			j.value && (N.value = "closing", await _(), !(l.modelValue || N.value !== "closing" || !q.value) && Te(200, Ke));
 		}
-		function Ue(e) {
-			e.preventDefault(), ke();
-		}
-		function We(e) {
-			e.key === "Escape" && (e.preventDefault(), ke());
-		}
-		function Ge(e) {
-			!Z.value || !l.closeOnBack || e.target !== q.value || ke();
-		}
-		function Ke(e) {
-			if (e.pointerId === ve) {
-				if (l.direction === "bottom") {
-					if (Se = e.clientY - ye, !l.expanded && Se < 0 || l.expanded && Se > 0) {
-						Ae(0, Math.max(0, be - Se));
-						return;
-					}
-					Ae(Math.max(0, Se), be);
-					return;
-				}
-				Ae(l.position === "start" ? Math.max(0, ye - e.clientX) : Math.max(0, e.clientX - ye), null);
-			}
-		}
-		let qe = ni(Ke);
 		function Je(e) {
-			e.pointerId === ve && qe.schedule(e);
+			e.preventDefault(), Pe();
 		}
-		function Ye() {
-			ve = null, G.value = !1, window.removeEventListener("pointermove", Je), window.removeEventListener("pointerup", Xe), window.removeEventListener("pointercancel", Ze);
+		function Ye(e) {
+			e.key === "Escape" && (e.preventDefault(), Pe());
 		}
 		function Xe(e) {
+			!Z.value || !l.closeOnBack || e.target !== q.value || Pe();
+		}
+		function Ze(e) {
+			if (e.pointerId === ve) {
+				if (l.direction === "bottom") {
+					if (Se = e.clientY - ye, l.virtualExpand) {
+						if (!l.expanded) {
+							let e = -be * .75;
+							Fe(Se < e ? e + (Se - e) * .2 : Se, null);
+							return;
+						}
+						Fe(Se < 0 ? Se * .2 : Se, null);
+						return;
+					}
+					if (!l.expanded && Se < 0 || l.expanded && Se > 0) {
+						Fe(0, Math.max(0, be - Se));
+						return;
+					}
+					Fe(Math.max(0, Se), be);
+					return;
+				}
+				Fe(l.position === "start" ? Math.max(0, ye - e.clientX) : Math.max(0, e.clientX - ye), null);
+			}
+		}
+		let Qe = ni(Ze);
+		function $e(e) {
+			e.pointerId === ve && Qe.schedule(e);
+		}
+		function et() {
+			ve = null, G.value = !1, window.removeEventListener("pointermove", $e), window.removeEventListener("pointerup", tt), window.removeEventListener("pointercancel", nt);
+		}
+		function tt(e) {
 			if (e.pointerId !== ve) return;
-			qe.flush();
-			let t = Y.value, n = l.direction === "bottom" ? t?.getBoundingClientRect().height ?? 0 : t?.getBoundingClientRect().width ?? 0, r = Math.max(1, performance.now() - xe), i = l.direction === "bottom" ? Math.abs(Se) : W, a = i / r, o = i >= Math.min(160, Math.max(80, n * .3)) || i >= 24 && a >= .5;
-			if (Ce = i >= 4, Ye(), l.direction === "bottom" && o) {
+			Qe.flush();
+			let t = Y.value, n = l.direction === "bottom" ? t?.getBoundingClientRect().height ?? 0 : t?.getBoundingClientRect().width ?? 0, r = Math.max(1, performance.now() - xe), i = l.direction === "bottom" ? Math.abs(Se) : W, a = i / r, o = i >= Math.min(120, Math.max(48, n * .15)) || i >= 20 && a >= .35;
+			if (Ce = i >= 4, et(), l.direction === "bottom" && o) {
 				if (!l.expanded && Se < 0) {
-					je(), p("update:expanded", !0);
+					Ie(), p("update:expanded", !0);
 					return;
 				}
 				if (l.expanded && Se > 0) {
-					je(), p("update:expanded", !1);
+					Ie(), p("update:expanded", !1);
 					return;
 				}
 				if (!l.expanded && Se > 0) {
-					Ae(W, null), ke();
+					Fe(W, null), Pe();
 					return;
 				}
 			}
 			if (l.direction === "side" && o) {
-				ke();
+				Pe();
 				return;
 			}
-			je();
-		}
-		function Ze() {
-			qe.cancel(), Ye(), je();
-		}
-		function Qe(e) {
-			!l.draggable || e.button !== 0 || ve !== null || (qe.cancel(), ve = e.pointerId, ye = l.direction === "bottom" ? e.clientY : e.clientX, be = l.direction === "bottom" ? Y.value?.getBoundingClientRect().height ?? 0 : Y.value?.getBoundingClientRect().width ?? 0, xe = performance.now(), Se = 0, Ae(0, l.direction === "bottom" ? be : null), G.value = !0, window.addEventListener("pointermove", Je), window.addEventListener("pointerup", Xe), window.addEventListener("pointercancel", Ze));
-		}
-		function $e(e) {
-			l.direction !== "side" || e.pointerType !== "touch" || e.target instanceof Element && e.target.closest("button, a, input, textarea, select, [contenteditable=\"true\"]") || Qe(e);
-		}
-		function et(e) {
-			Z.value || $e(e);
-		}
-		function tt(e) {
-			Z.value && $e(e);
+			Ie();
 		}
 		function nt() {
+			Qe.cancel(), et(), Ie();
+		}
+		function rt(e) {
+			!l.draggable || e.button !== 0 || ve !== null || (Qe.cancel(), ve = e.pointerId, ye = l.direction === "bottom" ? e.clientY : e.clientX, be = l.direction === "bottom" ? Y.value?.getBoundingClientRect().height ?? 0 : Y.value?.getBoundingClientRect().width ?? 0, xe = performance.now(), Se = 0, Fe(0, l.direction === "bottom" && !l.virtualExpand ? be : null), G.value = !0, window.addEventListener("pointermove", $e), window.addEventListener("pointerup", tt), window.addEventListener("pointercancel", nt));
+		}
+		function it(e) {
+			l.direction !== "side" || e.pointerType !== "touch" || e.target instanceof Element && e.target.closest("button, a, input, textarea, select, [contenteditable=\"true\"]") || rt(e);
+		}
+		function at(e) {
+			Z.value || it(e);
+		}
+		function ot(e) {
+			Z.value && it(e);
+		}
+		function st(e) {
+			ot(e), je(e);
+		}
+		function ct() {
 			H.value = window.innerWidth;
 		}
-		async function rt(e, t) {
+		async function lt(e, t) {
 			if (!j.value || !l.modelValue || e === t) return;
 			we();
 			let n = q.value;
-			if (t === "modal" && n instanceof HTMLDialogElement && (n.open && n.close(), ns(n), Be(), L.value = null), e === "modal") {
+			if (t === "modal" && n instanceof HTMLDialogElement && (n.open && n.close(), ns(n), Ge(), L.value = null), e === "modal") {
 				let e = Q(), t = De(e), n = t ? t.target : e;
 				if (!n) {
-					Ie(), ke();
+					Ve(), Pe();
 					return;
 				}
-				L.value = t, P.value = n, ge = document.activeElement instanceof HTMLElement ? document.activeElement : null, _e = !0, Fe();
+				L.value = t, P.value = n, ge = document.activeElement instanceof HTMLElement ? document.activeElement : null, _e = !0, Be();
 			}
-			N.value = "open", await _(), e === "modal" && l.modelValue && Re();
+			N.value = "open", await _(), e === "modal" && l.modelValue && Ue();
 		}
 		return C(() => {
-			me = !0, nt(), window.addEventListener("resize", nt), l.modelValue && ze();
+			me = !0, ct(), window.addEventListener("resize", ct), l.modelValue && We();
 		}), x(() => {
-			qe.cancel(), me = !1, we(), Ye(), window.removeEventListener("resize", nt);
+			Qe.cancel(), me = !1, we(), et(), window.removeEventListener("resize", ct);
 			let e = q.value;
 			e instanceof HTMLDialogElement && (ns(e), e.open && e.close());
 		}), V(() => l.modelValue, (e) => {
-			me && (e ? ze() : He());
-		}), V(X, rt), V(() => l.attach, () => {
+			me && (e ? We() : qe());
+		}), V(X, lt), V(() => l.attach, () => {
 			l.modelValue && j.value && Z.value && console.warn(`${l.componentName}: 打开期间修改 attach 将在下次打开时生效`);
 		}), V(() => l.closeLabel, (e) => {
 			e.trim().length === 0 && console.warn(`${l.componentName}: closeLabel 必须是非空字符串`);
@@ -10065,6 +10095,7 @@ var as = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 					"mat-sheet--app-root": J.value,
 					"mat-sheet--dragging": G.value,
 					"mat-sheet--expanded": e.direction === "bottom" && e.expanded,
+					"mat-sheet--virtual-expand": e.direction === "bottom" && e.virtualExpand,
 					"mat-sheet--top": te.value,
 					"mat-sheet--transparent-scrim": !e.scrim
 				}
@@ -10073,17 +10104,25 @@ var as = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"aria-labelledby": r.$attrs["aria-labelledby"] ?? (re.value ? ee : void 0),
 			"aria-modal": Z.value ? "true" : void 0,
 			tabindex: Z.value ? -1 : void 0,
-			onCancel: Ue,
-			onClick: Ge,
-			onKeydown: We,
-			onPointerdown: et
+			onCancel: Je,
+			onClick: Xe,
+			onKeydown: Ye,
+			onPointerdown: at,
+			onPointermove: Me,
+			onPointerup: Ne,
+			onPointercancel: Ne,
+			onWheel: Ae
 		}), {
 			default: U(() => [c("div", {
 				ref_key: "panelElement",
 				ref: A,
 				class: v(["mat-sheet__panel", oe.value]),
 				style: y(pe.value),
-				onPointerdown: tt
+				onPointerdown: st,
+				onPointermove: Me,
+				onPointerup: Ne,
+				onPointercancel: Ne,
+				onWheel: Ae
 			}, [
 				e.direction === "bottom" && e.dragHandle ? (T(), s("button", {
 					key: 0,
@@ -10091,9 +10130,9 @@ var as = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 					type: "button",
 					"data-sheet-drag-handle": "",
 					"aria-label": se.value,
-					onClick: Me,
-					onKeydown: Ne,
-					onPointerdown: K(Qe, ["stop"])
+					onClick: Le,
+					onKeydown: Re,
+					onPointerdown: K(rt, ["stop"])
 				}, [M(r.$slots, "drag-handle", {}, () => [i[0] ||= c("span", { class: "mat-sheet__drag-handle" }, null, -1)], !0)], 40, ps)) : o("", !0),
 				ce.value ? (T(), s("header", ms, [M(r.$slots, "header", {}, () => [
 					re.value ? (T(), s("h2", {
@@ -10109,7 +10148,7 @@ var as = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 						label: e.closeLabel,
 						size: "small",
 						variant: "standard",
-						onClick: ke
+						onClick: Pe
 					}, null, 8, ["label"])) : o("", !0)
 				], !0)])) : o("", !0),
 				ie.value ? (T(), a(ua, {
@@ -10117,7 +10156,12 @@ var as = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 					class: "mat-sheet__content mat-sys-typescale-body-medium",
 					orientation: "vertical",
 					"no-scroll-padding": "",
-					"bar-width": "thin"
+					"bar-width": "thin",
+					onWheel: Ae,
+					onPointerdown: je,
+					onPointermove: Me,
+					onPointerup: Ne,
+					onPointercancel: Ne
 				}, {
 					default: U(() => [c("div", gs, [e.content === void 0 ? M(r.$slots, "default", { key: 1 }, void 0, !0) : (T(), s(t, { key: 0 }, [u(I(e.content), 1)], 64))])]),
 					_: 3
@@ -10134,7 +10178,7 @@ var as = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"tabindex"
 		])], 8, ["to", "disabled"])) : o("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-9a53b49a"]]), ys = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-fd8503da"]]), ys = /*@__PURE__*/ Object.assign({
 	name: "MatBottomSheet",
 	inheritAttrs: !1
 }, {
@@ -10190,6 +10234,10 @@ var as = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			default: "折叠底部面板"
 		},
 		expanded: {
+			type: Boolean,
+			default: !1
+		},
+		virtualExpand: {
 			type: Boolean,
 			default: !1
 		},

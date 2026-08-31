@@ -17,9 +17,15 @@
       close-icon="close"
       close-label="关闭分享"
     >
-      <mat-btn prefix="link" variant="filled">复制链接</mat-btn>
-      <mat-btn prefix="mail" variant="filled">邮件发送</mat-btn>
-      <mat-btn prefix="send" variant="filled">直接发送</mat-btn>
+      <mat-btn prefix="link" variant="filled">
+        复制链接
+      </mat-btn>
+      <mat-btn prefix="mail" variant="filled">
+        邮件发送
+      </mat-btn>
+      <mat-btn prefix="send" variant="filled">
+        直接发送
+      </mat-btn>
     </mat-fab-menu>
   </mat-app-root>
 </template>

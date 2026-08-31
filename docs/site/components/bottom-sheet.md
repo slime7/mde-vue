@@ -37,6 +37,24 @@ Modal 默认以不超过视口高度 50% 的预览状态打开。`expanded` 可�
   </DocsPreview>
 </ClientOnly>
 
+### `virtualExpand` 虚拟全高
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/bottom-sheet/BottomSheetVirtualExpandExample.vue#template [template]
+
+<<< @/examples/bottom-sheet/BottomSheetVirtualExpandExample.vue#script [script]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Bottom sheet 虚拟全高预览">
+    <BottomSheetVirtualExpandExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `expanded` 预设高度
 
 :::: details 查看示例代码
@@ -110,6 +128,7 @@ Modal 默认以不超过视口高度 50% 的预览状态打开。`expanded` 可�
 | `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否允许点击 modal 帷幕关闭 |
 | `dragHandle` | `boolean` | `true` | 模板属性为 `drag-handle`；是否显示顶部拖动把手 |
 | `expanded` | `boolean` | `false` | 受控预设高度；false 为 modal 半屏预览状态，true 为展开状态，可使用 `v-model:expanded` |
+| `virtualExpand` | `boolean` | `false` | 模板属性为 `virtual-expand`；开启后内容容器按展开态全高计算并通过位移截断，用户滚动或向上拖动把手时自动展开到全高 |
 | `dragHandleLabel` | `string` | `'展开底部面板'` | 模板属性为 `drag-handle-label`；预览状态下把手的可访问名称 |
 | `collapseDragHandleLabel` | `string` | `'折叠底部面板'` | 模板属性为 `collapse-drag-handle-label`；展开的 standard 状态下把手的可访问名称 |
 | `expandedDragHandleLabel` | `string` | `'关闭底部面板'` | 模板属性为 `expanded-drag-handle-label`；展开的 modal 状态下把手的可访问名称 |
@@ -152,6 +171,7 @@ Bottom sheet 的宽度不超过 640px；窄屏可占满视口宽度，宽于 640
 
 <script setup>
 import BottomSheetResponsiveExample from '../examples/bottom-sheet/BottomSheetResponsiveExample.vue';
+import BottomSheetVirtualExpandExample from '../examples/bottom-sheet/BottomSheetVirtualExpandExample.vue';
 import BottomSheetExpandedExample from '../examples/bottom-sheet/BottomSheetExpandedExample.vue';
 import BottomSheetSlotsExample from '../examples/bottom-sheet/BottomSheetSlotsExample.vue';
 import BottomSheetVariantExample from '../examples/bottom-sheet/BottomSheetVariantExample.vue';
