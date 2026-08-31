@@ -3,6 +3,7 @@ import { h } from 'vue';
 import {
   afterEach, describe, expect, it, vi,
 } from 'vitest';
+import MAT_UI_KEY from '../src/mat-ui-context';
 import { MatBtn, MatIcon } from '../src';
 
 afterEach(() => {
@@ -408,5 +409,44 @@ describe('MatBtn', () => {
     const icon = wrapper.findComponent(MatIcon);
 
     expect(icon.props('fill')).toBe(1);
+  });
+
+  it('默认启用 morph（点击变形），不包含 no-morph 类', () => {
+    const wrapper = mount(MatBtn, {
+      slots: {
+        default: '点击',
+      },
+    });
+
+    expect(wrapper.classes()).not.toContain('mat-btn--no-morph');
+  });
+
+  it('morph=false 时添加 mat-btn--no-morph 类以关闭点击变形', () => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        morph: false,
+      },
+      slots: {
+        default: '点击',
+      },
+    });
+
+    expect(wrapper.classes()).toContain('mat-btn--no-morph');
+  });
+
+  it('支持通过 defaults.btn.morph 全局配置默认禁用点击变形', () => {
+    const wrapper = mount(MatBtn, {
+      global: {
+        provide: {
+          [MAT_UI_KEY]: {
+            defaults: {
+              btn: { morph: false },
+            },
+          },
+        },
+      },
+    });
+
+    expect(wrapper.classes()).toContain('mat-btn--no-morph');
   });
 });

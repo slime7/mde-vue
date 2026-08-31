@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils';
 import {
-  afterEach, beforeEach, describe, expect, it, vi,
+  afterEach, describe, expect, it, vi,
 } from 'vitest';
-import { defineComponent, h, nextTick, ref } from 'vue';
-import { MatBtn, MatFab, MatFabMenu } from '../src';
+import { h, nextTick } from 'vue';
+import { MatBtn, MatFabMenu } from '../src';
 import MatAppRoot from '../src/components/mat-app-root/MatAppRoot.vue';
 
 afterEach(() => {
@@ -216,4 +216,3 @@ describe('MatFabMenu', () => {
     expect(wrapper.emitted('open')?.length).toBe(1);
   });
 });
-

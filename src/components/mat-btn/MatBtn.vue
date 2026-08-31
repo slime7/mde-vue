@@ -208,6 +208,16 @@ const props = defineProps({
       return BUTTON_TYPES.includes(value);
     },
   },
+  /**
+   * 是否开启点击或激活时的圆角变形。
+   *
+   * @type {boolean}
+   * @default true
+   */
+  morph: {
+    type: Boolean,
+    default: true,
+  },
 });
 const propsWithDefaults = useMatProps('btn', props);
 
@@ -366,6 +376,7 @@ watchEffect(() => {
         'mat-btn--toggle': isToggle,
         'mat-btn--selected': isSelected,
         'mat-btn--split-leading': split?.role === 'leading',
+        'mat-btn--no-morph': !propsWithDefaults.morph,
       },
     ]"
     :style="buttonColorStyle"
@@ -590,6 +601,14 @@ watchEffect(() => {
 
   .mat-btn--shape-square.mat-btn--selected {
     --mat-button-radius: var(--mat-button-full-radius);
+  }
+
+  .mat-btn--no-morph {
+    --mat-button-pressed-radius: var(--mat-button-radius);
+    --mat-button-pressed-start-start-radius: var(--mat-button-start-start-radius);
+    --mat-button-pressed-start-end-radius: var(--mat-button-start-end-radius);
+    --mat-button-pressed-end-start-radius: var(--mat-button-end-start-radius);
+    --mat-button-pressed-end-end-radius: var(--mat-button-end-end-radius);
   }
 
   .mat-btn--elevated {

@@ -1607,6 +1607,10 @@ var On = {
 			validator(e) {
 				return Fe.includes(e);
 			}
+		},
+		morph: {
+			type: Boolean,
+			default: !0
 		}
 	},
 	emits: { click(e) {
@@ -1652,7 +1656,8 @@ var On = {
 					[`mat-btn--width-${L(r).width}`]: G.value,
 					"mat-btn--toggle": V.value,
 					"mat-btn--selected": W.value,
-					"mat-btn--split-leading": L(O)?.role === "leading"
+					"mat-btn--split-leading": L(O)?.role === "leading",
+					"mat-btn--no-morph": !L(r).morph
 				}
 			]],
 			style: P.value,
@@ -1734,7 +1739,7 @@ var On = {
 			"onClick"
 		]));
 	}
-}), [["__scopeId", "data-v-2514fbe1"]]), An = ["data-scrollable"], jn = { class: "mat-app-root__overlay" }, Mn = { class: "mat-app-root__bottom-stack" }, Nn = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-3f1b245d"]]), An = ["data-scrollable"], jn = { class: "mat-app-root__overlay" }, Mn = { class: "mat-app-root__bottom-stack" }, Nn = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatAppRoot",
 	inheritAttrs: !1
 }, {
@@ -3066,9 +3071,7 @@ var nr = ["aria-hidden"], rr = ["aria-hidden"], ir = /*#__PURE__*/ Q(/* @__PURE_
 		}
 	},
 	setup(e, { emit: t }) {
-		let r = $("fabMenu", e), l = t;
-		R();
-		let f = m(je, Ae), p = m(kt, null), h = k(null), _ = k(null), v = k(!1), y = z(), b = i(() => r.modelValue !== void 0), S = i(() => b.value ? !!r.modelValue : v.value), w = i(() => r.closeLabel || "关闭"), E = i(() => ({
+		let r = $("fabMenu", e), l = t, f = m(je, Ae), p = m(kt, null), h = k(null), _ = k(null), v = k(!1), y = z(), b = i(() => r.modelValue !== void 0), S = i(() => b.value ? !!r.modelValue : v.value), w = i(() => r.closeLabel || "关闭"), E = i(() => ({
 			"--mat-fab-menu-container-color": `var(--mat-sys-color-${r.color})`,
 			"--mat-fab-menu-content-color": `var(--mat-sys-color-on-${r.color})`,
 			"--mat-fab-menu-state-color": `var(--mat-sys-color-on-${r.color})`
@@ -3247,7 +3250,7 @@ var nr = ["aria-hidden"], rr = ["aria-hidden"], ir = /*#__PURE__*/ Q(/* @__PURE_
 			"use-cursor"
 		])], !0)])], 16));
 	}
-}), [["__scopeId", "data-v-33e243f6"]]), ur = ["src"], dr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-4deeb02c"]]), ur = ["src"], dr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatImage",
 	inheritAttrs: !1
 }, {

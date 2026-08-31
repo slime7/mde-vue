@@ -103,6 +103,24 @@ order: 50
   </DocsPreview>
 </ClientOnly>
 
+### `morph`
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonMorphExample.vue#template [template]
+
+<<< @/examples/button/ButtonMorphExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Button morph 预览">
+    <ButtonMorphExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `width`
 
 图标模式必须提供 `label`，它是展示 `width` 的必要依赖。
@@ -368,6 +386,7 @@ order: 50
 | `value` | `string \| number \| boolean` | 未设置 | 在 `MatBtnGroup` 选择模式中的项目值 |
 | `disabled` | `boolean` | `false` | 原生禁用状态；父组合组件也可强制禁用 |
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 原生按钮类型 |
+| `morph` | `boolean` | `true` | 是否开启点击或激活时的圆角变形 |
 
 未被组件消费的 `name`、`form`、`aria-*`、`data-*` 等属性传给内部 `<button>`。图标模式下显式 `title` 优先于 `label` 作为 Tooltip 文本，组件不会为图标按钮生成原生 HTML `title` 提示。`color` 支持四个语义色、对应的 `-container` 角色、`surface` 与 `surface-container-*` 等表面角色，以及严格六位十六进制种子色；`text` 形态额外支持 `on-*` 内容色令牌（如 `on-primary-container`），非 `text` 形态使用 `on-*` 会警告并按默认配色处理。
 
@@ -411,6 +430,7 @@ import ButtonDisabledExample from '../examples/button/ButtonDisabledExample.vue'
 import ButtonIconExample from '../examples/button/ButtonIconExample.vue';
 import ButtonIconComponentSlotExample from '../examples/button/ButtonIconComponentSlotExample.vue';
 import ButtonIconStringExample from '../examples/button/ButtonIconStringExample.vue';
+import ButtonMorphExample from '../examples/button/ButtonMorphExample.vue';
 import ButtonPrefixExample from '../examples/button/ButtonPrefixExample.vue';
 import ButtonPrefixSlotExample from '../examples/button/ButtonPrefixSlotExample.vue';
 import ButtonSelectedSlotExample from '../examples/button/ButtonSelectedSlotExample.vue';

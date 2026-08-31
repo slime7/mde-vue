@@ -1,2 +1,4 @@
-export { default as MatFabMenu } from './MatFabMenu.vue';
-export { default } from './MatFabMenu.vue';
+import MatFabMenu from './MatFabMenu.vue';
+
+export { MatFabMenu };
+export default MatFabMenu;

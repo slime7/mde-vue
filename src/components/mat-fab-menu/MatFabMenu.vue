@@ -5,7 +5,6 @@ import {
   onBeforeUnmount,
   onMounted,
   ref,
-  useAttrs,
   useId,
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
@@ -181,7 +180,6 @@ const emit = defineEmits({
   },
 });
 
-const attrs = useAttrs();
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const appContext = inject(MAT_APP_ROOT_KEY, null);
 const rootElement = ref(null);

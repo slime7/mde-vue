@@ -118,6 +118,13 @@ export interface MatBtnProps {
   * @default 'button'
   */
   type?: 'button' | 'submit' | 'reset';
+  /**
+  * 是否开启点击或激活时的圆角变形。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  morph?: boolean;
 }
 
 export interface MatBtnEmits {
