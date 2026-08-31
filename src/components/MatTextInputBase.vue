@@ -440,10 +440,6 @@ function handleModelValue(value) {
     inset-block-start: -8px;
   }
 
-  .mat-text-input__container:has(.mat-text-input__leading) .mat-text-input__outline {
-    padding-inline-start: 48px;
-  }
-
   .mat-text-input__outline-label {
     box-sizing: border-box;
     max-inline-size: calc(100% - 8px);
@@ -595,6 +591,11 @@ function handleModelValue(value) {
   .mat-text-input--outlined.mat-text-input--floating .mat-text-input__label {
     max-inline-size: calc(100% - 8px);
     transform: translateY(calc(-100% - 8px));
+  }
+
+  .mat-text-input--outlined.mat-text-input--floating:has(.mat-text-input__leading) .mat-text-input__label {
+    max-inline-size: calc(100% + 28px);
+    transform: translate(-36px, calc(-100% - 8px));
   }
 
   .mat-text-input--filled:not(.mat-text-input--textarea):has(.mat-text-input__label) .mat-text-input__control-row {

@@ -11548,12 +11548,30 @@ const description = ref('第一行\n第二行\n第三行\n第四行\n第五行\n
 
 ```vue
 <template>
-  <mat-text-field label="邮箱">
-    <template #leading>
-      <mat-icon icon="mail" aria-hidden="true" />
-    </template>
-  </mat-text-field>
+  <div class="example-stack">
+    <mat-text-field label="邮箱" variant="outlined">
+      <template #leading>
+        <mat-icon icon="mail" aria-hidden="true" />
+      </template>
+    </mat-text-field>
+
+    <mat-text-field label="邮箱" variant="filled">
+      <template #leading>
+        <mat-icon icon="mail" aria-hidden="true" />
+      </template>
+    </mat-text-field>
+  </div>
 </template>
+```
+```vue
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  inline-size: 100%;
+}
+</style>
 ```
 :::
 ::::
@@ -11574,13 +11592,13 @@ const description = ref('第一行\n第二行\n第三行\n第四行\n第五行\n
 ```vue
 <template>
   <div class="example-stack">
-    <mat-text-field label="搜索">
+    <mat-text-field label="搜索" variant="outlined">
       <template #trailing>
         <mat-btn icon="search" label="搜索" size="small" variant="standard" />
       </template>
     </mat-text-field>
 
-    <mat-text-field label="价格">
+    <mat-text-field label="价格" variant="filled">
       <template #trailing>
         <mat-icon icon="currency_yuan" aria-hidden="true" />
       </template>

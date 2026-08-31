@@ -1,13 +1,13 @@
 <!-- #region template -->
 <template>
   <div class="example-stack">
-    <mat-text-field label="搜索">
+    <mat-text-field label="搜索" variant="outlined">
       <template #trailing>
         <mat-btn icon="search" label="搜索" size="small" variant="standard" />
       </template>
     </mat-text-field>
 
-    <mat-text-field label="价格">
+    <mat-text-field label="价格" variant="filled">
       <template #trailing>
         <mat-icon icon="currency_yuan" aria-hidden="true" />
       </template>

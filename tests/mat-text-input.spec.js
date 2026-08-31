@@ -161,6 +161,28 @@ describe('文本输入组件', () => {
     expect(outline.get('legend').text()).toBe('邮箱');
   });
 
+  it('带 leading 的 outlined 文本框浮动时保持标准 fieldset 缺口', async () => {
+    const wrapper = mount(MatTextField, {
+      props: {
+        modelValue: '',
+        label: '搜索',
+        variant: 'outlined',
+      },
+      slots: {
+        leading: '<span class="search-icon">search</span>',
+      },
+    });
+    const input = wrapper.get('input');
+    const outline = wrapper.get('fieldset.mat-text-input__outline');
+
+    expect(outline.find('legend').exists()).toBe(false);
+
+    await input.trigger('focus');
+
+    expect(outline.find('legend').exists()).toBe(true);
+    expect(outline.get('legend').text()).toBe('搜索');
+  });
+
   it('errorText 替换辅助文字并建立错误说明关系', () => {
     const wrapper = mount(MatTextField, {
       props: {

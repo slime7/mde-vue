@@ -330,6 +330,8 @@ order: 90
 
 <<< @/examples/text-field/TextFieldLeadingSlotExample.vue#template [template]
 
+<<< @/examples/text-field/TextFieldLeadingSlotExample.vue#style [style]
+
 :::
 ::::
 
