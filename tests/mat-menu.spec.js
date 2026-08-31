@@ -10,6 +10,7 @@ import MatDivider from '../src/components/mat-divider/MatDivider.vue';
 import MatMenu from '../src/components/mat-menu/MatMenu.vue';
 import MatMenuGroup from '../src/components/mat-menu-group/MatMenuGroup.vue';
 import MatMenuItem from '../src/components/mat-menu/MatMenuItem.vue';
+import MatTooltip from '../src/components/mat-tooltip/MatTooltip.vue';
 import MAT_UI_KEY from '../src/mat-ui-context';
 
 function dispatchToggle(element, newState) {
@@ -821,5 +822,30 @@ describe('MatMenu', () => {
 
     expect(icon.element.tagName).toBe('SPAN');
     expect(icon.text()).toBe('chevron_right');
+  });
+
+  it('selected 属性为菜单项添加 selected 类名与 aria-selected', () => {
+    const wrapper = mount(MatMenuItem, {
+      props: { selected: true },
+      slots: { default: '已选项' },
+    });
+    const item = wrapper.get('[role="menuitem"]');
+
+    expect(item.classes()).toContain('mat-menu-item--selected');
+    expect(item.attributes('aria-selected')).toBe('true');
+  });
+
+  it('tooltip 属性为菜单项挂载 MatTooltip 并在未提供时不挂载', () => {
+    const withTooltip = mount(MatMenuItem, {
+      props: { tooltip: '完整详情提示' },
+      slots: { default: '长文本选项' },
+    });
+    const withoutTooltip = mount(MatMenuItem, {
+      slots: { default: '普通选项' },
+    });
+
+    expect(withTooltip.findComponent(MatTooltip).exists()).toBe(true);
+    expect(withTooltip.findComponent(MatTooltip).props('content')).toBe('完整详情提示');
+    expect(withoutTooltip.findComponent(MatTooltip).exists()).toBe(false);
   });
 });

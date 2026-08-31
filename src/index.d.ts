@@ -1991,6 +1991,15 @@ export interface MatSelectProps {
   error?: boolean;
   /** @type {string | undefined} @default undefined */
   placeholder?: string | undefined;
+  /**
+  * 选项选择指示器样式。
+  *
+  * 可选值为 `check`、`checkbox`、`none`。
+  *
+  * @type {'check' | 'checkbox' | 'none'}
+  * @default 'check'
+  */
+  selectionIndicator?: 'check' | 'checkbox' | 'none';
 }
 
 export interface MatSelectEmits {
@@ -2311,6 +2320,20 @@ export interface MatMenuItemProps {
   * @default false
   */
   disabled?: boolean;
+  /**
+  * 标记项目为已选状态。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  selected?: boolean;
+  /**
+  * 提示文本内容。传入非空字符串时自动挂载 Tooltip。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  tooltip?: string | undefined;
 }
 
 export interface MatMenuItemEmits {

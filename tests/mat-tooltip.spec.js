@@ -1176,4 +1176,43 @@ describe('MatTooltip', () => {
 
     wrapper.unmount();
   });
+
+  it('挂载至具有偏移量的顶层容器时正确补偿坐标', async () => {
+    const container = document.createElement('div');
+    container.id = 'offset-container';
+    container.setAttribute('popover', 'manual');
+    container.getBoundingClientRect = () => ({
+      left: 100,
+      top: 200,
+      right: 300,
+      bottom: 400,
+      width: 200,
+      height: 200,
+    });
+    document.body.append(container);
+
+    const wrapper = mount(MatTooltip, {
+      attachTo: container,
+      props: {
+        attach: '#offset-container',
+        content: '补偿提示',
+        modelValue: true,
+      },
+      slots: {
+        activator: () => h('button', { type: 'button' }, '触发器'),
+      },
+    });
+
+    await settleRender();
+    const tooltip = container.querySelector('[role="tooltip"]');
+
+    expect(tooltip).not.toBeNull();
+    const left = Number.parseFloat(tooltip.style.left);
+    const top = Number.parseFloat(tooltip.style.top);
+
+    expect(Number.isFinite(left)).toBe(true);
+    expect(Number.isFinite(top)).toBe(true);
+    wrapper.unmount();
+    container.remove();
+  });
 });

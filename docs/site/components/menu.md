@@ -243,6 +243,26 @@ order: 95
   </DocsPreview>
 </ClientOnly>
 
+### MenuItem 的 `tooltip` 与 `selected`
+
+MenuItem 支持通过 `tooltip` 属性展示悬停提示，通过 `selected` 属性展示 Material 3 Expressive 的激活高亮外观。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/menu/MenuItemTooltipExample.vue#template [template]
+
+<<< @/examples/menu/MenuItemTooltipExample.vue#script [script]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="MenuItem tooltip 与 selected 预览">
+    <MenuItemTooltipExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### MatMenu 默认 Slot
 
 :::: details 查看示例代码
@@ -396,6 +416,8 @@ Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `selected` | `boolean` | `false` | 标记项目为已选状态并应用激活高亮外观与 `aria-selected` |
+| `tooltip` | `string` | 未设置 | 悬停或键盘聚焦时显示的提示文本 |
 | `disabled` | `boolean` | `false` | 禁用原生按钮并从菜单方向键顺序中跳过 |
 
 组件没有 items 数据接口、选择模型、autocomplete、多选能力或公开方法。
@@ -452,6 +474,7 @@ import MenuItemDisabledExample from '../examples/menu/MenuItemDisabledExample.vu
 import MenuItemLeadingSlotExample from '../examples/menu/MenuItemLeadingSlotExample.vue';
 import MenuItemSubmenuSlotExample from '../examples/menu/MenuItemSubmenuSlotExample.vue';
 import MenuItemSupportingSlotExample from '../examples/menu/MenuItemSupportingSlotExample.vue';
+import MenuItemTooltipExample from '../examples/menu/MenuItemTooltipExample.vue';
 import MenuItemTrailingSlotExample from '../examples/menu/MenuItemTrailingSlotExample.vue';
 import MenuMaxLengthExample from '../examples/menu/MenuMaxLengthExample.vue';
 import MenuOpenAnchorExample from '../examples/menu/MenuOpenAnchorExample.vue';

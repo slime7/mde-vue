@@ -1240,9 +1240,15 @@ var dn = ["id", "data-location"], fn = {
 					width: window.innerWidth
 				}
 			});
-			K.value = a.location, ee.value = {
-				left: `${a.left}px`,
-				top: `${a.top}px`
+			K.value = a.location;
+			let o = 0, s = 0;
+			if (!N.value && j.value && j.value !== document.body) {
+				let e = j.value.getBoundingClientRect();
+				o = e.left, s = e.top;
+			}
+			ee.value = {
+				left: `${a.left - o}px`,
+				top: `${a.top - s}px`
 			}, W.value = !0;
 		}
 		function Ge() {
@@ -1433,7 +1439,7 @@ var dn = ["id", "data-location"], fn = {
 			], 64)) : L(p).content === void 0 ? M(r.$slots, "default", { key: 2 }, void 0, !0) : (T(), s(t, { key: 1 }, [u(I(L(p).content), 1)], 64))], 16, dn)], 8, ["to"])) : o("", !0)
 		], 64));
 	}
-}), [["__scopeId", "data-v-51edc383"]]), vn = Symbol("mde-vue-button-group"), yn = Symbol("mde-vue-split-button");
+}), [["__scopeId", "data-v-f2b76d86"]]), vn = Symbol("mde-vue-button-group"), yn = Symbol("mde-vue-split-button");
 //#endregion
 //#region src/components/use-button.js
 function bn(e, t) {
@@ -7918,74 +7924,153 @@ var Ra = {
 	inheritAttrs: !1
 }, {
 	__name: "MatMenuItem",
-	props: { disabled: {
-		type: Boolean,
-		default: !1
-	} },
+	props: {
+		disabled: {
+			type: Boolean,
+			default: !1
+		},
+		selected: {
+			type: Boolean,
+			default: !1
+		},
+		tooltip: {
+			type: String,
+			default: void 0
+		}
+	},
 	emits: { click: (e) => e instanceof MouseEvent },
 	setup(e, { emit: t }) {
-		let n = $("menuItem", e), r = t, c = B(), u = m(Ii, null), f = m(Ri, null), p = m(je, Ae), h = k(null), _ = i(() => h.value?.root ?? h.value?.$el ?? null), v = k(!1), y = k(void 0), b = k("only"), S, w = i(() => !!c.submenu);
-		function D({ focus: e = !1, immediate: t = !1 } = {}) {
-			v.value = !1, S?.close({
+		let n = $("menuItem", e), r = t, c = B(), u = m(Ii, null), f = m(Ri, null), p = m(je, Ae), h = k(null), _ = i(() => h.value?.root ?? h.value?.$el ?? null), v = k(!1), y = k(void 0), b = k("only"), S = i(() => !!f), w, D = i(() => !!c.submenu);
+		function O({ focus: e = !1, immediate: t = !1 } = {}) {
+			v.value = !1, w?.close({
 				focus: e,
 				immediate: t
 			});
 		}
-		async function O({ pointer: e = !1 } = {}) {
-			!w.value || n.disabled || e && u?.isPointerInOpenSubmenuTriangle?.() || (u?.closeOtherSubmenus(N), v.value = !0, await S?.open());
+		async function A({ pointer: e = !1 } = {}) {
+			!D.value || n.disabled || e && u?.isPointerInOpenSubmenuTriangle?.() || (u?.closeOtherSubmenus(P), v.value = !0, await w?.open());
 		}
-		function A(e) {
-			S = e, y.value = e.id.value;
+		function j(e) {
+			w = e, y.value = e.id.value;
 		}
-		function j() {
-			S = void 0, y.value = void 0, v.value = !1;
+		function N() {
+			w = void 0, y.value = void 0, v.value = !1;
 		}
-		let N = {
-			closeSubmenu: D,
+		let P = {
+			closeSubmenu: O,
 			element: _,
 			grouped: !!f,
 			setPosition(e) {
 				b.value = e;
 			},
-			submenuElement: i(() => S?.element?.value ?? null),
+			submenuElement: i(() => w?.element?.value ?? null),
 			submenuOpen: v
 		};
-		function P(e) {
-			if (w.value) {
-				O();
+		function F(e) {
+			if (D.value) {
+				A();
 				return;
 			}
 			r("click", e), u?.closeOnClick.value && u.closeTree();
 		}
-		function F(e) {
-			if (!w.value) return;
+		function I(e) {
+			if (!D.value) return;
 			let t = getComputedStyle(_.value).direction === "rtl" ? "ArrowLeft" : "ArrowRight";
-			(e.key === t || e.key === "Enter" || e.key === " ") && (e.preventDefault(), O());
+			(e.key === t || e.key === "Enter" || e.key === " ") && (e.preventDefault(), A());
 		}
 		return E(Li, {
 			element: _,
-			registerSubmenu: A,
+			registerSubmenu: j,
 			submenuOpen: v,
-			unregisterSubmenu: j
+			unregisterSubmenu: N
 		}), C(() => {
-			f?.registerItem(N), u?.registerItem(N);
+			f?.registerItem(P), u?.registerItem(P);
 		}), x(() => {
-			f?.unregisterItem(N), u?.unregisterItem(N);
-		}), (e, t) => (T(), s("span", mo, [d(De, g({
+			f?.unregisterItem(P), u?.unregisterItem(P);
+		}), (e, t) => (T(), s("span", mo, [L(n).tooltip ? (T(), a(_n, {
+			key: 0,
+			content: L(n).tooltip
+		}, {
+			activator: U(() => [d(De, g({
+				ref_key: "action",
+				ref: h
+			}, e.$attrs, {
+				class: ["mat-menu-item", [`mat-menu-item--${b.value}`, {
+					"mat-menu-item--grouped": S.value,
+					"mat-menu-item--selected": L(n).selected,
+					"mat-menu-item--submenu-open": v.value
+				}]],
+				"data-mat-menu-item": "",
+				"aria-controls": D.value ? y.value : void 0,
+				"aria-expanded": D.value ? String(v.value) : void 0,
+				"aria-haspopup": D.value ? "menu" : void 0,
+				"aria-selected": L(n).selected ? "true" : void 0,
+				disabled: L(n).disabled,
+				role: "menuitem",
+				"use-cursor": L(p).useCursor,
+				onClick: F,
+				onKeydown: I,
+				onPointerenter: t[0] ||= (e) => A({ pointer: !0 })
+			}), {
+				default: U(() => [d(xi, {
+					namespace: "mat-menu-item-content",
+					"label-typography-class": "mat-sys-typescale-label-large",
+					"line-count": e.$slots.supporting ? 2 : 1,
+					"supporting-typography-class": "mat-sys-typescale-body-small",
+					"trailing-typography-class": "mat-sys-typescale-label-large"
+				}, l({
+					trailing: U(() => [e.$slots.trailing ? M(e.$slots, "trailing", { key: 0 }, void 0, !0) : D.value ? (T(), a(pt, {
+						key: 1,
+						as: "span",
+						class: "mat-menu-item__submenu-icon",
+						icon: "chevron_right",
+						"optical-size": 20,
+						size: "small",
+						"aria-hidden": "true"
+					})) : o("", !0)]),
+					default: U(() => [M(e.$slots, "default", {}, void 0, !0)]),
+					_: 2
+				}, [e.$slots.leading ? {
+					name: "leading",
+					fn: U(() => [M(e.$slots, "leading", {}, void 0, !0)]),
+					key: "0"
+				} : void 0, e.$slots.supporting ? {
+					name: "supporting",
+					fn: U(() => [M(e.$slots, "supporting", {}, void 0, !0)]),
+					key: "1"
+				} : void 0]), 1032, ["line-count"])]),
+				_: 3
+			}, 16, [
+				"class",
+				"aria-controls",
+				"aria-expanded",
+				"aria-haspopup",
+				"aria-selected",
+				"disabled",
+				"use-cursor"
+			])]),
+			_: 3
+		}, 8, ["content"])) : (T(), a(De, g({
+			key: 1,
 			ref_key: "action",
 			ref: h
 		}, e.$attrs, {
-			class: ["mat-menu-item", [`mat-menu-item--${b.value}`, { "mat-menu-item--submenu-open": v.value }]],
+			class: ["mat-menu-item", [`mat-menu-item--${b.value}`, {
+				"mat-menu-item--grouped": S.value,
+				"mat-menu-item--selected": L(n).selected,
+				"mat-menu-item--submenu-open": v.value
+			}]],
 			"data-mat-menu-item": "",
-			"aria-controls": w.value ? y.value : void 0,
-			"aria-expanded": w.value ? String(v.value) : void 0,
-			"aria-haspopup": w.value ? "menu" : void 0,
+			"aria-controls": D.value ? y.value : void 0,
+			"aria-expanded": D.value ? String(v.value) : void 0,
+			"aria-haspopup": D.value ? "menu" : void 0,
+			"aria-selected": L(n).selected ? "true" : void 0,
 			disabled: L(n).disabled,
 			role: "menuitem",
 			"use-cursor": L(p).useCursor,
-			onClick: P,
-			onKeydown: F,
-			onPointerenter: t[0] ||= (e) => O({ pointer: !0 })
+			onClick: F,
+			onKeydown: I,
+			onPointerenter: t[1] ||= (e) => A({ pointer: !0 })
 		}), {
 			default: U(() => [d(xi, {
 				namespace: "mat-menu-item-content",
@@ -7994,7 +8079,7 @@ var Ra = {
 				"supporting-typography-class": "mat-sys-typescale-body-small",
 				"trailing-typography-class": "mat-sys-typescale-label-large"
 			}, l({
-				trailing: U(() => [e.$slots.trailing ? M(e.$slots, "trailing", { key: 0 }, void 0, !0) : w.value ? (T(), a(pt, {
+				trailing: U(() => [e.$slots.trailing ? M(e.$slots, "trailing", { key: 0 }, void 0, !0) : D.value ? (T(), a(pt, {
 					key: 1,
 					as: "span",
 					class: "mat-menu-item__submenu-icon",
@@ -8020,11 +8105,12 @@ var Ra = {
 			"aria-controls",
 			"aria-expanded",
 			"aria-haspopup",
+			"aria-selected",
 			"disabled",
 			"use-cursor"
-		]), e.$slots.submenu ? M(e.$slots, "submenu", { key: 0 }, void 0, !0) : o("", !0)]));
+		])), e.$slots.submenu ? M(e.$slots, "submenu", { key: 2 }, void 0, !0) : o("", !0)]));
 	}
-}), [["__scopeId", "data-v-cac5ebfb"]]), go = ["aria-labelledby"], _o = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-b49b2225"]]), go = ["aria-labelledby"], _o = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatMenuGroup",
 	inheritAttrs: !1
 }, {
@@ -8171,6 +8257,15 @@ var Ra = {
 		placeholder: {
 			type: String,
 			default: void 0
+		},
+		selectionIndicator: {
+			type: String,
+			default: "check",
+			validator: (e) => [
+				"check",
+				"checkbox",
+				"none"
+			].includes(e)
 		}
 	},
 	emits: {
@@ -8188,15 +8283,17 @@ var Ra = {
 				group: t,
 				subtitle: void 0,
 				title: e,
+				tooltip: void 0,
 				value: e
 			};
 			if (!e || typeof e != "object" || Array.isArray(e) || "items" in e) return null;
-			let n = e[r.itemTitle], i = e[r.itemValue], a = e[r.itemSubtitle];
+			let n = e[r.itemTitle], i = e[r.itemValue], a = e[r.itemSubtitle], o = typeof e.tooltip == "string" ? e.tooltip : void 0;
 			return typeof n != "string" || !qr(i) ? null : {
 				disabled: e.disabled === !0,
 				group: t,
 				subtitle: a === void 0 ? void 0 : String(a),
 				title: n,
+				tooltip: o,
 				value: i
 			};
 		}
@@ -8375,45 +8472,75 @@ var Ra = {
 				default: U(() => [O.value.groups.length === 0 ? (T(!0), s(t, { key: 0 }, j(O.value.ungrouped, (e) => (T(), a(ho, {
 					key: `${typeof e.value}:${String(e.value)}`,
 					disabled: e.disabled,
+					selected: L(r).selectionIndicator === "check" && B(e.value),
+					tooltip: e.tooltip,
 					onClick: (t) => H(e.value)
 				}, l({
 					default: U(() => [u(" " + I(e.title) + " ", 1)]),
 					_: 2
-				}, [L(r).multiple ? {
+				}, [(L(r).selectionIndicator === "check" ? B(e.value) : L(r).selectionIndicator === "checkbox") ? {
 					name: "leading",
-					fn: U(() => [d(Ji, {
+					fn: U(() => [L(r).selectionIndicator === "check" ? (T(), a(pt, {
+						key: 0,
+						"aria-hidden": "true",
+						as: "span",
+						icon: "check",
+						"optical-size": 20,
+						size: "20px"
+					})) : L(r).selectionIndicator === "checkbox" ? (T(), a(Ji, {
+						key: 1,
 						"aria-hidden": "true",
 						inert: "",
 						tabindex: "-1",
 						"model-value": B(e.value)
-					}, null, 8, ["model-value"])]),
+					}, null, 8, ["model-value"])) : o("", !0)]),
 					key: "0"
 				} : void 0, e.subtitle ? {
 					name: "supporting",
 					fn: U(() => [u(I(e.subtitle), 1)]),
 					key: "1"
-				} : void 0]), 1032, ["disabled", "onClick"]))), 128)) : O.value.ungrouped.length > 0 ? (T(), a(_o, { key: 1 }, {
+				} : void 0]), 1032, [
+					"disabled",
+					"selected",
+					"tooltip",
+					"onClick"
+				]))), 128)) : O.value.ungrouped.length > 0 ? (T(), a(_o, { key: 1 }, {
 					default: U(() => [(T(!0), s(t, null, j(O.value.ungrouped, (e) => (T(), a(ho, {
 						key: `${typeof e.value}:${String(e.value)}`,
 						disabled: e.disabled,
+						selected: L(r).selectionIndicator === "check" && B(e.value),
+						tooltip: e.tooltip,
 						onClick: (t) => H(e.value)
 					}, l({
 						default: U(() => [u(" " + I(e.title) + " ", 1)]),
 						_: 2
-					}, [L(r).multiple ? {
+					}, [(L(r).selectionIndicator === "check" ? B(e.value) : L(r).selectionIndicator === "checkbox") ? {
 						name: "leading",
-						fn: U(() => [d(Ji, {
+						fn: U(() => [L(r).selectionIndicator === "check" ? (T(), a(pt, {
+							key: 0,
+							"aria-hidden": "true",
+							as: "span",
+							icon: "check",
+							"optical-size": 20,
+							size: "20px"
+						})) : L(r).selectionIndicator === "checkbox" ? (T(), a(Ji, {
+							key: 1,
 							"aria-hidden": "true",
 							inert: "",
 							tabindex: "-1",
 							"model-value": B(e.value)
-						}, null, 8, ["model-value"])]),
+						}, null, 8, ["model-value"])) : o("", !0)]),
 						key: "0"
 					} : void 0, e.subtitle ? {
 						name: "supporting",
 						fn: U(() => [u(I(e.subtitle), 1)]),
 						key: "1"
-					} : void 0]), 1032, ["disabled", "onClick"]))), 128))]),
+					} : void 0]), 1032, [
+						"disabled",
+						"selected",
+						"tooltip",
+						"onClick"
+					]))), 128))]),
 					_: 1
 				})) : o("", !0), (T(!0), s(t, null, j(O.value.groups, (e) => (T(), a(_o, {
 					key: e.label,
@@ -8422,24 +8549,39 @@ var Ra = {
 					default: U(() => [(T(!0), s(t, null, j(e.options, (e) => (T(), a(ho, {
 						key: `${typeof e.value}:${String(e.value)}`,
 						disabled: e.disabled,
+						selected: L(r).selectionIndicator === "check" && B(e.value),
+						tooltip: e.tooltip,
 						onClick: (t) => H(e.value)
 					}, l({
 						default: U(() => [u(" " + I(e.title) + " ", 1)]),
 						_: 2
-					}, [L(r).multiple ? {
+					}, [(L(r).selectionIndicator === "check" ? B(e.value) : L(r).selectionIndicator === "checkbox") ? {
 						name: "leading",
-						fn: U(() => [d(Ji, {
+						fn: U(() => [L(r).selectionIndicator === "check" ? (T(), a(pt, {
+							key: 0,
+							"aria-hidden": "true",
+							as: "span",
+							icon: "check",
+							"optical-size": 20,
+							size: "20px"
+						})) : L(r).selectionIndicator === "checkbox" ? (T(), a(Ji, {
+							key: 1,
 							"aria-hidden": "true",
 							inert: "",
 							tabindex: "-1",
 							"model-value": B(e.value)
-						}, null, 8, ["model-value"])]),
+						}, null, 8, ["model-value"])) : o("", !0)]),
 						key: "0"
 					} : void 0, e.subtitle ? {
 						name: "supporting",
 						fn: U(() => [u(I(e.subtitle), 1)]),
 						key: "1"
-					} : void 0]), 1032, ["disabled", "onClick"]))), 128))]),
+					} : void 0]), 1032, [
+						"disabled",
+						"selected",
+						"tooltip",
+						"onClick"
+					]))), 128))]),
 					_: 2
 				}, 1032, ["label"]))), 128))]),
 				_: 1
@@ -8450,7 +8592,7 @@ var Ra = {
 			])
 		], 6));
 	}
-}), [["__scopeId", "data-v-d2753c32"]]), Eo = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-aca83b85"]]), Eo = /*@__PURE__*/ Object.assign({
 	name: "MatTextarea",
 	inheritAttrs: !1
 }, {

@@ -30,7 +30,7 @@ order: 88
 
 ### `multiple`
 
-多选项目的前置位置使用 Checkbox 指示状态。选中后菜单保持打开，便于连续选择。
+多选项目默认在已选项前置位置使用 Check 图标与高亮指示状态。选中后菜单保持打开，便于连续选择。
 
 :::: details 查看示例代码
 ::: code-group
@@ -40,6 +40,34 @@ order: 88
 ::::
 
 <ClientOnly><DocsPreview label="Select multiple 预览"><SelectMultipleExample /></DocsPreview></ClientOnly>
+
+### `selectionIndicator`
+
+`selectionIndicator` 控制选项的选择标记形态，支持 `'check'`（默认）、`'checkbox'` 和 `'none'`。单选与多选均默认使用 Check 勾选图标与高亮圆角容器。
+
+:::: details 查看示例代码
+::: code-group
+<<< @/examples/select/SelectSelectionIndicatorExample.vue#template [template]
+<<< @/examples/select/SelectSelectionIndicatorExample.vue#script [script]
+<<< @/examples/select/SelectSelectionIndicatorExample.vue#style [style]
+:::
+::::
+
+<ClientOnly><DocsPreview label="Select selectionIndicator 预览"><SelectSelectionIndicatorExample /></DocsPreview></ClientOnly>
+
+### 选项 `tooltip`
+
+对象项支持提供 `tooltip` 字符串字段，为长名称或长路径选项挂载浮层提示。
+
+:::: details 查看示例代码
+::: code-group
+<<< @/examples/select/SelectTooltipExample.vue#template [template]
+<<< @/examples/select/SelectTooltipExample.vue#script [script]
+<<< @/examples/select/SelectTooltipExample.vue#style [style]
+:::
+::::
+
+<ClientOnly><DocsPreview label="Select tooltip 预览"><SelectTooltipExample /></DocsPreview></ClientOnly>
 
 ### `chips`
 
@@ -130,6 +158,7 @@ order: 88
 | `itemTitle` | `string` | `'title'` | 对象项标题字段名 |
 | `itemValue` | `string` | `'value'` | 对象项基础值字段名 |
 | `itemSubtitle` | `string` | `'subtitle'` | 对象项菜单 supporting 文字字段名 |
+| `selectionIndicator` | `'check' \| 'checkbox' \| 'none'` | `'check'` | 选项选择指示器样式，单选与多选均默认使用 Check 图标与选中高亮 |
 | `label` | `string` | 未设置 | 字段浮动标签 |
 | `placeholder` | `string` | 未设置 | 没有选中值时显示的提示 |
 | `variant` | `'outlined' \| 'filled'` | `'outlined'` | 字段外观 |
@@ -143,7 +172,7 @@ order: 88
 | `required` | `boolean` | `false` | 标签显示星号，并同步隐藏 select 的 required |
 | `error` | `boolean` | `false` | 启用错误外观和 `aria-invalid` |
 
-对象项的 `disabled: true` 禁止选择。title 必须是字符串，value 只支持 `string`、`number`、`boolean`；非法项、嵌套分组、按 `Object.is()` 重复或 `String(value)` 冲突的后续项会在开发环境警告并跳过。
+对象项的 `disabled: true` 禁止选择，可选的 `tooltip` 字符串字段会自动挂载为菜单项提示。title 必须是字符串，value 只支持 `string`、`number`、`boolean`；非法项、嵌套分组、按 `Object.is()` 重复或 `String(value)` 冲突的后续项会在开发环境警告并跳过。
 
 `class` 和 `style` 应用于 Select 根；`id` 与 `aria-label` 应用于可见 combobox，`name` 与 `form` 应用于隐藏 select。number 与 boolean 在 Vue 模型中保留原类型，HTML 表单值按 `String(value)` 提交。组件没有公开方法。
 
@@ -180,8 +209,10 @@ import SelectChipsExample from '../examples/select/SelectChipsExample.vue';
 import SelectItemsExample from '../examples/select/SelectItemsExample.vue';
 import SelectMultipleExample from '../examples/select/SelectMultipleExample.vue';
 import SelectPrefixTextExample from '../examples/select/SelectPrefixTextExample.vue';
+import SelectSelectionIndicatorExample from '../examples/select/SelectSelectionIndicatorExample.vue';
 import SelectSlotsExample from '../examples/select/SelectSlotsExample.vue';
 import SelectStateExample from '../examples/select/SelectStateExample.vue';
 import SelectSuffixTextExample from '../examples/select/SelectSuffixTextExample.vue';
+import SelectTooltipExample from '../examples/select/SelectTooltipExample.vue';
 import SelectVariantExample from '../examples/select/SelectVariantExample.vue';
 </script>

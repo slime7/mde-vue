@@ -568,9 +568,18 @@ function updatePosition() {
   });
 
   appliedLocation.value = position.location;
+  let offsetLeft = 0;
+  let offsetTop = 0;
+
+  if (!isAppRootAttached.value && teleportTarget.value && teleportTarget.value !== document.body) {
+    const parentRect = teleportTarget.value.getBoundingClientRect();
+    offsetLeft = parentRect.left;
+    offsetTop = parentRect.top;
+  }
+
   positionStyle.value = {
-    left: `${position.left}px`,
-    top: `${position.top}px`,
+    left: `${position.left - offsetLeft}px`,
+    top: `${position.top - offsetTop}px`,
   };
   isPositioned.value = true;
 }

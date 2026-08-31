@@ -9788,7 +9788,7 @@ const items = [
 
 ### `multiple`
 
-多选项目的前置位置使用 Checkbox 指示状态。选中后菜单保持打开，便于连续选择。
+多选项目默认在已选项前置位置使用 Check 图标与高亮指示状态。选中后菜单保持打开，便于连续选择。
 
 :::: details 查看示例代码
 ::: code-group
@@ -9813,6 +9813,124 @@ const items = [
 ::::
 
 <ClientOnly><DocsPreview label="Select multiple 预览"><SelectMultipleExample /></DocsPreview></ClientOnly>
+
+### `selectionIndicator`
+
+`selectionIndicator` 控制选项的选择标记形态，支持 `'check'`（默认）、`'checkbox'` 和 `'none'`。单选与多选均默认使用 Check 勾选图标与高亮圆角容器。
+
+:::: details 查看示例代码
+::: code-group
+```vue
+<template>
+  <div class="select-indicator-demo">
+    <mat-select
+      v-model="singleValue"
+      label="Diet（单选 check）"
+      :items="items"
+    />
+
+    <mat-select
+      v-model="multiValue"
+      label="Diet（多选 check）"
+      :items="items"
+      multiple
+    />
+
+    <mat-select
+      v-model="multiValue"
+      label="Diet（多选 checkbox）"
+      :items="items"
+      multiple
+      selection-indicator="checkbox"
+    />
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const singleValue = ref('nut-free');
+const multiValue = ref(['nut-free', 'vegan']);
+const items = [
+  { title: 'Gluten-free', value: 'gluten-free' },
+  { title: 'Kosher', value: 'kosher' },
+  { title: 'Nut-free', value: 'nut-free' },
+  { title: 'Vegan', value: 'vegan' },
+  { title: 'Vegetarian', value: 'vegetarian' },
+];
+</script>
+```
+```vue
+<style scoped>
+.select-indicator-demo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-inline-size: 320px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly><DocsPreview label="Select selectionIndicator 预览"><SelectSelectionIndicatorExample /></DocsPreview></ClientOnly>
+
+### 选项 `tooltip`
+
+对象项支持提供 `tooltip` 字符串字段，为长名称或长路径选项挂载浮层提示。
+
+:::: details 查看示例代码
+::: code-group
+```vue
+<template>
+  <div class="select-tooltip-demo">
+    <mat-select
+      v-model="model"
+      label="模型选择"
+      :items="items"
+    />
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const model = ref('deepseek-v3');
+const items = [
+  {
+    title: 'DeepSeek-V3',
+    value: 'deepseek-v3',
+    subtitle: '通用大语言模型',
+    tooltip: 'deepseek-ai/DeepSeek-V3 (671B MoE)',
+  },
+  {
+    title: 'Claude 3.5 Sonnet',
+    value: 'claude-sonnet',
+    subtitle: 'Anthropic 前沿模型',
+    tooltip: 'claude-3-5-sonnet-20241022',
+  },
+  {
+    title: 'GPT-4o',
+    value: 'gpt-4o',
+    subtitle: 'OpenAI 多模态旗舰模型',
+    tooltip: 'gpt-4o-2024-11-20',
+  },
+];
+</script>
+```
+```vue
+<style scoped>
+.select-tooltip-demo {
+  max-inline-size: 320px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly><DocsPreview label="Select tooltip 预览"><SelectTooltipExample /></DocsPreview></ClientOnly>
 
 ### `chips`
 
@@ -10032,6 +10150,7 @@ const items = [
 | `itemTitle` | `string` | `'title'` | 对象项标题字段名 |
 | `itemValue` | `string` | `'value'` | 对象项基础值字段名 |
 | `itemSubtitle` | `string` | `'subtitle'` | 对象项菜单 supporting 文字字段名 |
+| `selectionIndicator` | `'check' \| 'checkbox' \| 'none'` | `'check'` | 选项选择指示器样式，单选与多选均默认使用 Check 图标与选中高亮 |
 | `label` | `string` | 未设置 | 字段浮动标签 |
 | `placeholder` | `string` | 未设置 | 没有选中值时显示的提示 |
 | `variant` | `'outlined' \| 'filled'` | `'outlined'` | 字段外观 |
@@ -10045,7 +10164,7 @@ const items = [
 | `required` | `boolean` | `false` | 标签显示星号，并同步隐藏 select 的 required |
 | `error` | `boolean` | `false` | 启用错误外观和 `aria-invalid` |
 
-对象项的 `disabled: true` 禁止选择。title 必须是字符串，value 只支持 `string`、`number`、`boolean`；非法项、嵌套分组、按 `Object.is()` 重复或 `String(value)` 冲突的后续项会在开发环境警告并跳过。
+对象项的 `disabled: true` 禁止选择，可选的 `tooltip` 字符串字段会自动挂载为菜单项提示。title 必须是字符串，value 只支持 `string`、`number`、`boolean`；非法项、嵌套分组、按 `Object.is()` 重复或 `String(value)` 冲突的后续项会在开发环境警告并跳过。
 
 `class` 和 `style` 应用于 Select 根；`id` 与 `aria-label` 应用于可见 combobox，`name` 与 `form` 应用于隐藏 select。number 与 boolean 在 Vue 模型中保留原类型，HTML 表单值按 `String(value)` 提交。组件没有公开方法。
 
@@ -10082,9 +10201,11 @@ import SelectChipsExample from '../examples/select/SelectChipsExample.vue';
 import SelectItemsExample from '../examples/select/SelectItemsExample.vue';
 import SelectMultipleExample from '../examples/select/SelectMultipleExample.vue';
 import SelectPrefixTextExample from '../examples/select/SelectPrefixTextExample.vue';
+import SelectSelectionIndicatorExample from '../examples/select/SelectSelectionIndicatorExample.vue';
 import SelectSlotsExample from '../examples/select/SelectSlotsExample.vue';
 import SelectStateExample from '../examples/select/SelectStateExample.vue';
 import SelectSuffixTextExample from '../examples/select/SelectSuffixTextExample.vue';
+import SelectTooltipExample from '../examples/select/SelectTooltipExample.vue';
 import SelectVariantExample from '../examples/select/SelectVariantExample.vue';
 </script>
 
@@ -12905,6 +13026,48 @@ const open = ref(false);
   </DocsPreview>
 </ClientOnly>
 
+### MenuItem 的 `tooltip` 与 `selected`
+
+MenuItem 支持通过 `tooltip` 属性展示悬停提示，通过 `selected` 属性展示 Material 3 Expressive 的激活高亮外观。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-btn id="menu-tooltip-trigger" @click="open = !open">
+    打开带提示菜单
+  </mat-btn>
+
+  <mat-menu v-model="open" anchor="menu-tooltip-trigger">
+    <mat-menu-item tooltip="创建新的代码文件 (Ctrl+N)">
+      新建文件
+    </mat-menu-item>
+    <mat-menu-item tooltip="从磁盘载入已有项目或工作区 (Ctrl+O)">
+      打开文件夹...
+    </mat-menu-item>
+    <mat-menu-item selected tooltip="当前选中的默认分支">
+      main (当前分支)
+    </mat-menu-item>
+  </mat-menu>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(false);
+</script>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="MenuItem tooltip 与 selected 预览">
+    <MenuItemTooltipExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### MatMenu 默认 Slot
 
 :::: details 查看示例代码
@@ -13242,6 +13405,8 @@ Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `selected` | `boolean` | `false` | 标记项目为已选状态并应用激活高亮外观与 `aria-selected` |
+| `tooltip` | `string` | 未设置 | 悬停或键盘聚焦时显示的提示文本 |
 | `disabled` | `boolean` | `false` | 禁用原生按钮并从菜单方向键顺序中跳过 |
 
 组件没有 items 数据接口、选择模型、autocomplete、多选能力或公开方法。
@@ -13298,6 +13463,7 @@ import MenuItemDisabledExample from '../examples/menu/MenuItemDisabledExample.vu
 import MenuItemLeadingSlotExample from '../examples/menu/MenuItemLeadingSlotExample.vue';
 import MenuItemSubmenuSlotExample from '../examples/menu/MenuItemSubmenuSlotExample.vue';
 import MenuItemSupportingSlotExample from '../examples/menu/MenuItemSupportingSlotExample.vue';
+import MenuItemTooltipExample from '../examples/menu/MenuItemTooltipExample.vue';
 import MenuItemTrailingSlotExample from '../examples/menu/MenuItemTrailingSlotExample.vue';
 import MenuMaxLengthExample from '../examples/menu/MenuMaxLengthExample.vue';
 import MenuOpenAnchorExample from '../examples/menu/MenuOpenAnchorExample.vue';

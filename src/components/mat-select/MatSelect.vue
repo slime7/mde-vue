@@ -94,6 +94,19 @@ const props = defineProps({
   error: { type: Boolean, default: false },
   /** @type {string | undefined} @default undefined */
   placeholder: { type: String, default: undefined },
+  /**
+   * 选项选择指示器样式。
+   *
+   * 可选值为 `check`、`checkbox`、`none`。
+   *
+   * @type {'check' | 'checkbox' | 'none'}
+   * @default 'check'
+   */
+  selectionIndicator: {
+    type: String,
+    default: 'check',
+    validator: (value) => ['check', 'checkbox', 'none'].includes(value),
+  },
 });
 const propsWithDefaults = useMatProps('select', props);
 const emit = defineEmits({
@@ -125,7 +138,7 @@ function warn(message) {
 function normalizeOption(item, group) {
   if (typeof item === 'string') {
     return {
-      disabled: false, group, subtitle: undefined, title: item, value: item,
+      disabled: false, group, subtitle: undefined, title: item, tooltip: undefined, value: item,
     };
   }
 
@@ -137,6 +150,7 @@ function normalizeOption(item, group) {
   const title = item[propsWithDefaults.itemTitle];
   const value = item[propsWithDefaults.itemValue];
   const subtitle = item[propsWithDefaults.itemSubtitle];
+  const tooltip = typeof item.tooltip === 'string' ? item.tooltip : undefined;
 
   if (typeof title !== 'string' || !isSelectionValue(value)) {
     warn('对象选项必须提供字符串 title 和基础类型 value');
@@ -148,6 +162,7 @@ function normalizeOption(item, group) {
     group,
     subtitle: subtitle === undefined ? undefined : String(subtitle),
     title,
+    tooltip,
     value,
   };
 }
@@ -400,10 +415,24 @@ function removeValue(value) {
           v-for="option in normalized.ungrouped"
           :key="`${typeof option.value}:${String(option.value)}`"
           :disabled="option.disabled"
+          :selected="propsWithDefaults.selectionIndicator === 'check' && isSelected(option.value)"
+          :tooltip="option.tooltip"
           @click="requestValue(option.value)"
         >
-          <template v-if="propsWithDefaults.multiple" #leading>
+          <template
+            v-if="propsWithDefaults.selectionIndicator === 'check' ? isSelected(option.value) : propsWithDefaults.selectionIndicator === 'checkbox'"
+            #leading
+          >
+            <MatIcon
+              v-if="propsWithDefaults.selectionIndicator === 'check'"
+              aria-hidden="true"
+              as="span"
+              icon="check"
+              :optical-size="20"
+              size="20px"
+            />
             <MatCheckbox
+              v-else-if="propsWithDefaults.selectionIndicator === 'checkbox'"
               aria-hidden="true"
               inert
               tabindex="-1"
@@ -422,10 +451,24 @@ function removeValue(value) {
           v-for="option in normalized.ungrouped"
           :key="`${typeof option.value}:${String(option.value)}`"
           :disabled="option.disabled"
+          :selected="propsWithDefaults.selectionIndicator === 'check' && isSelected(option.value)"
+          :tooltip="option.tooltip"
           @click="requestValue(option.value)"
         >
-          <template v-if="propsWithDefaults.multiple" #leading>
+          <template
+            v-if="propsWithDefaults.selectionIndicator === 'check' ? isSelected(option.value) : propsWithDefaults.selectionIndicator === 'checkbox'"
+            #leading
+          >
+            <MatIcon
+              v-if="propsWithDefaults.selectionIndicator === 'check'"
+              aria-hidden="true"
+              as="span"
+              icon="check"
+              :optical-size="20"
+              size="20px"
+            />
             <MatCheckbox
+              v-else-if="propsWithDefaults.selectionIndicator === 'checkbox'"
               aria-hidden="true"
               inert
               tabindex="-1"
@@ -448,10 +491,24 @@ function removeValue(value) {
           v-for="option in group.options"
           :key="`${typeof option.value}:${String(option.value)}`"
           :disabled="option.disabled"
+          :selected="propsWithDefaults.selectionIndicator === 'check' && isSelected(option.value)"
+          :tooltip="option.tooltip"
           @click="requestValue(option.value)"
         >
-          <template v-if="propsWithDefaults.multiple" #leading>
+          <template
+            v-if="propsWithDefaults.selectionIndicator === 'check' ? isSelected(option.value) : propsWithDefaults.selectionIndicator === 'checkbox'"
+            #leading
+          >
+            <MatIcon
+              v-if="propsWithDefaults.selectionIndicator === 'check'"
+              aria-hidden="true"
+              as="span"
+              icon="check"
+              :optical-size="20"
+              size="20px"
+            />
             <MatCheckbox
+              v-else-if="propsWithDefaults.selectionIndicator === 'checkbox'"
               aria-hidden="true"
               inert
               tabindex="-1"
