@@ -5514,9 +5514,18 @@ function Bi(e, t, n, r = "right") {
 	}, s = zi(t, a, o), c = zi(e, a, o), l = zi(t, e, o), u = zi(t, a, e);
 	return Math.abs(s - (c + l + u)) < .5;
 }
-function Vi(e) {
-	e.forEach((t, n) => {
-		e.length === 1 ? t.setPosition("only") : n === 0 ? t.setPosition("first") : n === e.length - 1 ? t.setPosition("last") : t.setPosition("middle");
+function Vi(e, t = []) {
+	let n = typeof Node < "u" ? Node.DOCUMENT_POSITION_FOLLOWING : 4, r = e.slice().sort((e, r) => {
+		let i = e.element?.value, a = r.element?.value;
+		if (!i || !a || i === a) return 0;
+		if (t.length > 0) {
+			let e = t.indexOf(i), n = t.indexOf(a);
+			if (e !== -1 && n !== -1) return e - n;
+		}
+		return typeof i.compareDocumentPosition == "function" ? i.compareDocumentPosition(a) & n ? -1 : 1 : 0;
+	});
+	r.forEach((e, t) => {
+		r.length === 1 ? e.setPosition("only") : t === 0 ? e.setPosition("first") : t === r.length - 1 ? e.setPosition("last") : e.setPosition("middle");
 	});
 }
 var Hi = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
@@ -7773,24 +7782,28 @@ var Ra = {
 			let t = e.target;
 			!(t instanceof Node) || D.value?.contains(t) || v.value?.contains(t) || G?.contains(t) || ze();
 		}
-		function Ue(e) {
-			W.set(e.element, e), Vi(Array.from(W.values()).filter((e) => !e.grouped)), Se.queueRefresh();
+		function Ue() {
+			let e = D.value, t = e ? Array.from(e.querySelectorAll("[data-mat-menu-item]")) : [];
+			Vi(Array.from(W.values()).filter((e) => !e.grouped), t);
 		}
 		function We(e) {
-			W.delete(e.element), Vi(Array.from(W.values()).filter((e) => !e.grouped)), Se.queueRefresh();
+			W.set(e.element, e), Ue(), _(Ue), Se.queueRefresh();
 		}
-		function Ge() {
-			H.value += 1, Se.queueRefresh();
+		function Ge(e) {
+			W.delete(e.element), Ue(), _(Ue), Se.queueRefresh();
 		}
 		function Ke() {
+			H.value += 1, Se.queueRefresh();
+		}
+		function qe() {
 			H.value = Math.max(0, H.value - 1), Se.queueRefresh();
 		}
-		function qe(e) {
+		function Je(e) {
 			W.forEach((t) => {
 				t !== e && t.closeSubmenu({ focus: !1 });
 			});
 		}
-		function Je() {
+		function Ye() {
 			let { current: e, previous: t } = I;
 			for (let n of W.values()) {
 				if (!n.submenuOpen?.value) continue;
@@ -7801,11 +7814,11 @@ var Ra = {
 			}
 			return !1;
 		}
-		function Ye(e) {
+		function Xe(e) {
 			let t = getComputedStyle(D.value).direction === "rtl" ? "ArrowRight" : "ArrowLeft";
 			e.key === "ArrowDown" || e.key === "ArrowUp" ? (e.preventDefault(), Se.move(e.target, e.key === "ArrowDown" ? 1 : -1)) : e.key === "Home" ? (e.preventDefault(), Se.focusFirst()) : e.key === "End" ? (e.preventDefault(), Se.focusLast()) : e.key === "Escape" || ae.value && e.key === t ? (e.preventDefault(), ze()) : e.key === "Tab" && Be();
 		}
-		function Xe(e) {
+		function Ze(e) {
 			if (K = e.newState === "open", K) {
 				Fe();
 				return;
@@ -7814,15 +7827,15 @@ var Ra = {
 			q = !1, Re(), ae.value && (N.value = !1, u.submenuOpen.value = !1), !(!fe.value || t) && (je(), ae.value || a("update:modelValue", !1), Le());
 		}
 		E(Ii, {
-			closeOtherSubmenus: qe,
+			closeOtherSubmenus: Je,
 			closeTree: Be,
 			closeOnClick: he,
 			color: me,
-			isPointerInOpenSubmenuTriangle: Je,
-			registerItem: Ue,
-			registerGroup: Ge,
-			unregisterItem: We,
-			unregisterGroup: Ke,
+			isPointerInOpenSubmenuTriangle: Ye,
+			registerItem: We,
+			registerGroup: Ke,
+			unregisterItem: Ge,
+			unregisterGroup: qe,
 			variant: pe
 		}), u && u.registerSubmenu({
 			close: ze,
@@ -7833,32 +7846,32 @@ var Ra = {
 			Se.observe(), window.addEventListener("resize", Fe), window.addEventListener("scroll", Fe, {
 				capture: !0,
 				passive: !0
-			}), fe.value && (Qe(), et()), typeof ResizeObserver < "u" && (X = new ResizeObserver(Fe), X.observe(D.value)), fe.value && Ie();
+			}), fe.value && ($e(), tt()), typeof ResizeObserver < "u" && (X = new ResizeObserver(Fe), X.observe(D.value)), fe.value && Ie();
 		}), w(() => {
-			ae.value || !fe.value || se.value || we() !== G && (Te(), Ie());
+			Ue(), !(ae.value || !fe.value || se.value) && we() !== G && (Te(), Ie());
 		}), x(() => {
-			Q(), Y !== void 0 && cancelAnimationFrame(Y), X?.disconnect(), window.removeEventListener("resize", Fe), window.removeEventListener("scroll", Fe, { capture: !0 }), $e(), tt(), Me({ immediate: !0 }), Oe(), Te(), u?.unregisterSubmenu();
+			Q(), Y !== void 0 && cancelAnimationFrame(Y), X?.disconnect(), window.removeEventListener("resize", Fe), window.removeEventListener("scroll", Fe, { capture: !0 }), et(), nt(), Me({ immediate: !0 }), Oe(), Te(), u?.unregisterSubmenu();
 		});
-		function Ze(e) {
+		function Qe(e) {
 			I.previous = I.current, I.current = {
 				x: e.clientX,
 				y: e.clientY
 			};
 		}
-		function Qe() {
-			f || te || (document.addEventListener("pointermove", Ze, !0), te = !0);
-		}
 		function $e() {
-			te &&= (document.removeEventListener("pointermove", Ze, !0), !1);
+			f || te || (document.addEventListener("pointermove", Qe, !0), te = !0);
 		}
 		function et() {
-			f || !ue.value || ne || (document.addEventListener("pointerdown", He, !0), ne = !0);
+			te &&= (document.removeEventListener("pointermove", Qe, !0), !1);
 		}
 		function tt() {
+			f || !ue.value || ne || (document.addEventListener("pointerdown", He, !0), ne = !0);
+		}
+		function nt() {
 			ne &&= (document.removeEventListener("pointerdown", He, !0), !1);
 		}
 		return V(fe, (e) => {
-			e ? (Qe(), et(), Ie()) : ($e(), tt(), Me());
+			e ? ($e(), tt(), Ie()) : (et(), nt(), Me());
 		}), V(() => r.anchor, async () => {
 			Te(), fe.value && await Ie();
 		}, { deep: !0 }), V(() => r.offset, async () => {
@@ -7866,7 +7879,7 @@ var Ra = {
 		}, { deep: !0 }), V(() => r.maxLength, async () => {
 			fe.value && (await _(), Fe());
 		}), V(() => r.scrim, async () => {
-			ae.value || (D.value && K && (K = !1, q = !0, D.value.hidePopover?.()), Oe(), tt(), await _(), fe.value && (et(), await Ie()));
+			ae.value || (D.value && K && (K = !1, q = !0, D.value.hidePopover?.()), Oe(), nt(), await _(), fe.value && (tt(), await Ie()));
 		}), p && V(p.publicContext.layout, Fe), (e, n) => (T(), s(t, null, [
 			!ae.value && oe.value ? (T(), s("span", {
 				key: 0,
@@ -7899,8 +7912,8 @@ var Ra = {
 				popover: de.value,
 				role: "menu",
 				onFocusin: L(Se).handleFocusIn,
-				onKeydown: Ye,
-				onToggle: Xe
+				onKeydown: Xe,
+				onToggle: Ze
 			}), {
 				default: U(() => [d(aa, {
 					class: "mat-menu__surface",
@@ -7919,7 +7932,7 @@ var Ra = {
 			])
 		], 64));
 	}
-}), [["__scopeId", "data-v-eaf43e88"]]), mo = { class: "mat-menu-item-host" }, ho = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-a7eb6274"]]), mo = { class: "mat-menu-item-host" }, ho = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatMenuItem",
 	inheritAttrs: !1
 }, {
@@ -8120,17 +8133,24 @@ var Ra = {
 		default: void 0
 	} },
 	setup(e) {
-		let t = $("menuGroup", e), n = R(), r = m(Ii, null), a = `${z().replace(/[^\w-]/g, "-")}-label`, c = i(() => t.label ? a : n["aria-labelledby"]), l = /* @__PURE__ */ new Set();
-		function u(e) {
-			l.add(e), Vi(Array.from(l));
+		let t = $("menuGroup", e), n = R(), r = m(Ii, null), a = `${z().replace(/[^\w-]/g, "-")}-label`, c = i(() => t.label ? a : n["aria-labelledby"]), l = k(null), u = /* @__PURE__ */ new Set();
+		function d() {
+			let e = l.value, t = e ? Array.from(e.querySelectorAll("[data-mat-menu-item]")) : [];
+			Vi(Array.from(u), t);
 		}
-		function d(e) {
-			l.delete(e), Vi(Array.from(l));
+		function f(e) {
+			u.add(e), d(), _(d);
+		}
+		function p(e) {
+			u.delete(e), d(), _(d);
 		}
 		return E(Ri, {
-			registerItem: u,
-			unregisterItem: d
-		}), C(() => r?.registerGroup()), x(() => r?.unregisterGroup()), (e, n) => (T(), s("div", g(e.$attrs, {
+			registerItem: f,
+			unregisterItem: p
+		}), C(() => r?.registerGroup()), w(d), x(() => r?.unregisterGroup()), (e, n) => (T(), s("div", g({
+			ref_key: "groupRoot",
+			ref: l
+		}, e.$attrs, {
 			class: "mat-menu-group",
 			"aria-labelledby": c.value,
 			role: "group"
@@ -8140,7 +8160,7 @@ var Ra = {
 			class: "mat-menu-group__label mat-sys-typescale-label-large"
 		}, I(L(t).label), 1)) : o("", !0), M(e.$slots, "default", {}, void 0, !0)], 16, go));
 	}
-}), [["__scopeId", "data-v-ef08bd1d"]]), vo = [
+}), [["__scopeId", "data-v-802b4ec1"]]), vo = [
 	"id",
 	"aria-describedby",
 	"aria-label",

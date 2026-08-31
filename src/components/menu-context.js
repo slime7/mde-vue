@@ -34,15 +34,45 @@ export function isPointInMenuSafeTriangle(point, origin, submenuRect, side = 'ri
 }
 
 /**
- * @param {Array<{setPosition: (position: 'first' | 'middle' | 'last' | 'only') => void}>} items
+ * @param {Array<{element?: import('vue').ComputedRef<HTMLElement | null>, setPosition: (position: 'first' | 'middle' | 'last' | 'only') => void}>} items
+ * @param {Array<HTMLElement>} [domNodes]
  */
-export function updateMenuItemPositions(items) {
-  items.forEach((item, index) => {
-    if (items.length === 1) {
+export function updateMenuItemPositions(items, domNodes = []) {
+  const DOCUMENT_POSITION_FOLLOWING = typeof Node !== 'undefined'
+    ? Node.DOCUMENT_POSITION_FOLLOWING
+    : 4;
+
+  const sorted = items.slice().sort((a, b) => {
+    const elA = a.element?.value;
+    const elB = b.element?.value;
+
+    if (!elA || !elB || elA === elB) {
+      return 0;
+    }
+
+    if (domNodes.length > 0) {
+      const indexA = domNodes.indexOf(elA);
+      const indexB = domNodes.indexOf(elB);
+
+      if (indexA !== -1 && indexB !== -1) {
+        return indexA - indexB;
+      }
+    }
+
+    if (typeof elA.compareDocumentPosition === 'function') {
+      // eslint-disable-next-line no-bitwise
+      return (elA.compareDocumentPosition(elB) & DOCUMENT_POSITION_FOLLOWING) ? -1 : 1;
+    }
+
+    return 0;
+  });
+
+  sorted.forEach((item, index) => {
+    if (sorted.length === 1) {
       item.setPosition('only');
     } else if (index === 0) {
       item.setPosition('first');
-    } else if (index === items.length - 1) {
+    } else if (index === sorted.length - 1) {
       item.setPosition('last');
     } else {
       item.setPosition('middle');

@@ -585,6 +585,18 @@ function handleDocumentPointerDown(event) {
   closeSelf();
 }
 
+function refreshMenuItemPositions() {
+  const rootElement = root.value;
+  const domNodes = rootElement
+    ? Array.from(rootElement.querySelectorAll('[data-mat-menu-item]'))
+    : [];
+
+  updateMenuItemPositions(
+    Array.from(itemApis.values()).filter((item) => !item.grouped),
+    domNodes,
+  );
+}
+
 /**
  * @param {object} api
  * @param {import('vue').Ref<HTMLElement | null>} api.element
@@ -592,9 +604,8 @@ function handleDocumentPointerDown(event) {
  */
 function registerItem(api) {
   itemApis.set(api.element, api);
-  updateMenuItemPositions(
-    Array.from(itemApis.values()).filter((item) => !item.grouped),
-  );
+  refreshMenuItemPositions();
+  nextTick(refreshMenuItemPositions);
   roving.queueRefresh();
 }
 
@@ -603,9 +614,8 @@ function registerItem(api) {
  */
 function unregisterItem(api) {
   itemApis.delete(api.element);
-  updateMenuItemPositions(
-    Array.from(itemApis.values()).filter((item) => !item.grouped),
-  );
+  refreshMenuItemPositions();
+  nextTick(refreshMenuItemPositions);
   roving.queueRefresh();
 }
 
@@ -765,6 +775,7 @@ onMounted(() => {
   }
 });
 onUpdated(() => {
+  refreshMenuItemPositions();
   if (isNested.value || !effectiveOpen.value || isCoordinateAnchor.value) {
     return;
   }

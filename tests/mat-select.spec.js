@@ -342,4 +342,30 @@ describe('MatSelect', () => {
     expect(readonly.get('[role="menu"]').element.showPopover).not.toHaveBeenCalled();
     expect(disabled.get('[role="combobox"]').attributes('tabindex')).toBe('-1');
   });
+
+  it('动态插入或前置选项时正确更新首末项目的位置与圆角类名', async () => {
+    const wrapper = mount(MatSelect, {
+      attachTo: document.body,
+      props: {
+        modelValue: null,
+        items: ['B', 'C'],
+      },
+    });
+
+    await wrapper.get('[role="combobox"]').trigger('click');
+    await nextTick();
+
+    let items = wrapper.findAllComponents(MatMenuItem);
+    expect(items[0].get('[role="menuitem"]').classes()).toContain('mat-menu-item--first');
+    expect(items[1].get('[role="menuitem"]').classes()).toContain('mat-menu-item--last');
+
+    await wrapper.setProps({ items: ['A', 'B', 'C'] });
+    await nextTick();
+
+    items = wrapper.findAllComponents(MatMenuItem);
+    expect(items).toHaveLength(3);
+    expect(items[0].get('[role="menuitem"]').classes()).toContain('mat-menu-item--first');
+    expect(items[1].get('[role="menuitem"]').classes()).toContain('mat-menu-item--middle');
+    expect(items[2].get('[role="menuitem"]').classes()).toContain('mat-menu-item--last');
+  });
 });

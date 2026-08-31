@@ -1,6 +1,6 @@
 <script setup>
 import {
-  computed, inject, onBeforeUnmount, onMounted, provide, useAttrs, useId,
+  computed, inject, nextTick, onBeforeUnmount, onMounted, onUpdated, provide, ref, useAttrs, useId,
 } from 'vue';
 import {
   MAT_MENU_GROUP_KEY, MAT_MENU_KEY, updateMenuItemPositions,
@@ -32,16 +32,28 @@ const labelId = `${generatedId}-label`;
 const labelledBy = computed(() => (
   propsWithDefaults.label ? labelId : attrs['aria-labelledby']
 ));
+const groupRoot = ref(null);
 const itemApis = new Set();
+
+function refreshGroupItemPositions() {
+  const rootElement = groupRoot.value;
+  const domNodes = rootElement
+    ? Array.from(rootElement.querySelectorAll('[data-mat-menu-item]'))
+    : [];
+
+  updateMenuItemPositions(Array.from(itemApis), domNodes);
+}
 
 function registerItem(api) {
   itemApis.add(api);
-  updateMenuItemPositions(Array.from(itemApis));
+  refreshGroupItemPositions();
+  nextTick(refreshGroupItemPositions);
 }
 
 function unregisterItem(api) {
   itemApis.delete(api);
-  updateMenuItemPositions(Array.from(itemApis));
+  refreshGroupItemPositions();
+  nextTick(refreshGroupItemPositions);
 }
 
 provide(MAT_MENU_GROUP_KEY, {
@@ -50,11 +62,13 @@ provide(MAT_MENU_GROUP_KEY, {
 });
 
 onMounted(() => menu?.registerGroup());
+onUpdated(refreshGroupItemPositions);
 onBeforeUnmount(() => menu?.unregisterGroup());
 </script>
 
 <template>
   <div
+    ref="groupRoot"
     v-bind="$attrs"
     class="mat-menu-group"
     :aria-labelledby="labelledBy"
