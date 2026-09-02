@@ -471,7 +471,7 @@ export interface MatFabMenuProps {
   */
   closeLabel?: string | undefined;
   /**
-  * 主 FAB 与关闭按钮的官方颜色角色；可选值为 `primary`、`secondary`、`tertiary`、`primary-container`、`secondary-container`、`tertiary-container`、`error`、`error-container`。
+  * 主 FAB 的官方颜色角色；可选值为 `primary`、`secondary`、`tertiary`、`primary-container`、`secondary-container`、`tertiary-container`、`error`、`error-container`。主体按钮使用对应的 `-container` 语义色（如 `primary-container`），展开后的关闭按钮使用对应的非 `-container` 语义色（如 `primary` 与 `on-primary`）。
   *
   * @type {string}
   * @default 'primary-container'

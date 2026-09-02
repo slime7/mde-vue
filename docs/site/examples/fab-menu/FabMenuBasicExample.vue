@@ -9,13 +9,13 @@
       close-icon="close"
       close-label="关闭"
     >
-      <mat-btn prefix="edit" variant="filled">
+      <mat-btn prefix="edit" variant="filled" color="primary-container">
         编辑草稿
       </mat-btn>
-      <mat-btn prefix="photo" variant="filled">
+      <mat-btn prefix="photo" variant="filled" color="primary-container">
         上传图片
       </mat-btn>
-      <mat-btn prefix="description" variant="filled">
+      <mat-btn prefix="description" variant="filled" color="primary-container">
         创建文档
       </mat-btn>
     </mat-fab-menu>

@@ -83,7 +83,7 @@ const props = defineProps({
     default: undefined,
   },
   /**
-   * 主 FAB 与关闭按钮的官方颜色角色；可选值为 `primary`、`secondary`、`tertiary`、`primary-container`、`secondary-container`、`tertiary-container`、`error`、`error-container`。
+   * 主 FAB 的官方颜色角色；可选值为 `primary`、`secondary`、`tertiary`、`primary-container`、`secondary-container`、`tertiary-container`、`error`、`error-container`。主体按钮使用对应的 `-container` 语义色（如 `primary-container`），展开后的关闭按钮使用对应的非 `-container` 语义色（如 `primary` 与 `on-primary`）。
    *
    * @type {string}
    * @default 'primary-container'
@@ -196,10 +196,18 @@ const closeButtonLabel = computed(() => (
   propsWithDefaults.closeLabel || '关闭'
 ));
 
+const baseColor = computed(() => (
+  propsWithDefaults.color.replace(/-container$/, '')
+));
+
+const triggerFabColor = computed(() => (
+  `${baseColor.value}-container`
+));
+
 const colorStyle = computed(() => ({
-  '--mat-fab-menu-container-color': `var(--mat-sys-color-${propsWithDefaults.color})`,
-  '--mat-fab-menu-content-color': `var(--mat-sys-color-on-${propsWithDefaults.color})`,
-  '--mat-fab-menu-state-color': `var(--mat-sys-color-on-${propsWithDefaults.color})`,
+  '--mat-fab-menu-close-container-color': `var(--mat-sys-color-${baseColor.value})`,
+  '--mat-fab-menu-close-content-color': `var(--mat-sys-color-on-${baseColor.value})`,
+  '--mat-fab-menu-state-color': `var(--mat-sys-color-on-${baseColor.value})`,
 }));
 
 const usesAppRoot = computed(() => Boolean(appContext));
@@ -298,7 +306,7 @@ onBeforeUnmount(() => {
         >
           <MatFab
             class="mat-fab-menu__trigger-fab"
-            :color="propsWithDefaults.color"
+            :color="triggerFabColor"
             :disabled="propsWithDefaults.disabled"
             :icon="propsWithDefaults.icon"
             :label="propsWithDefaults.label"
@@ -373,7 +381,7 @@ onBeforeUnmount(() => {
       >
         <MatFab
           class="mat-fab-menu__trigger-fab"
-          :color="propsWithDefaults.color"
+          :color="triggerFabColor"
           :disabled="propsWithDefaults.disabled"
           :icon="propsWithDefaults.icon"
           :label="propsWithDefaults.label"
@@ -478,8 +486,8 @@ onBeforeUnmount(() => {
   }
 
   .mat-fab-menu__close-btn {
-    --mat-button-container-color: var(--mat-fab-menu-container-color);
-    --mat-button-content-color: var(--mat-fab-menu-content-color);
+    --mat-button-container-color: var(--mat-fab-menu-close-container-color);
+    --mat-button-content-color: var(--mat-fab-menu-close-content-color);
     --mat-button-state-color: var(--mat-fab-menu-state-color);
     --mat-button-container-elevation: var(--mat-fab-rest-container-elevation, var(--mat-sys-elevation-level3));
     --mat-button-radius: var(--mat-sys-shape-corner-full, 9999px);
@@ -522,7 +530,7 @@ onBeforeUnmount(() => {
     block-size: 24px;
     align-items: center;
     justify-content: center;
-    color: var(--mat-fab-menu-content-color);
+    color: var(--mat-fab-menu-close-content-color);
   }
 
   .mat-fab-menu__items {

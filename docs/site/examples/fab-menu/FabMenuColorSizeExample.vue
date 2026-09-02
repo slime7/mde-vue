@@ -6,14 +6,14 @@
 
       <mat-fab-menu
         size="small"
-        color="tertiary-container"
+        color="tertiary"
         icon="palette"
         label="调色板"
       >
-        <mat-btn size="small" prefix="brush" variant="filled" color="tertiary">
+        <mat-btn size="small" prefix="brush" variant="filled" color="tertiary-container">
           画笔
         </mat-btn>
-        <mat-btn size="small" prefix="colorize" variant="filled" color="tertiary">
+        <mat-btn size="small" prefix="colorize" variant="filled" color="tertiary-container">
           取色
         </mat-btn>
       </mat-fab-menu>
@@ -24,14 +24,14 @@
 
       <mat-fab-menu
         size="medium"
-        color="primary-container"
+        color="primary"
         icon="add"
         label="新建"
       >
-        <mat-btn prefix="folder" variant="filled">
+        <mat-btn prefix="folder" variant="filled" color="primary-container">
           新建文件夹
         </mat-btn>
-        <mat-btn prefix="upload_file" variant="filled">
+        <mat-btn prefix="upload_file" variant="filled" color="primary-container">
           上传文件
         </mat-btn>
       </mat-fab-menu>
@@ -42,14 +42,14 @@
 
       <mat-fab-menu
         size="large"
-        color="secondary-container"
+        color="secondary"
         icon="edit"
         label="编辑"
       >
-        <mat-btn prefix="draw" variant="filled" color="secondary">
+        <mat-btn prefix="draw" variant="filled" color="secondary-container">
           涂鸦草稿
         </mat-btn>
-        <mat-btn prefix="crop" variant="filled" color="secondary">
+        <mat-btn prefix="crop" variant="filled" color="secondary-container">
           裁剪画面
         </mat-btn>
       </mat-fab-menu>

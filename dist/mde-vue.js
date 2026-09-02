@@ -3071,35 +3071,35 @@ var nr = ["aria-hidden"], rr = ["aria-hidden"], ir = /*#__PURE__*/ Q(/* @__PURE_
 		}
 	},
 	setup(e, { emit: t }) {
-		let r = $("fabMenu", e), l = t, f = m(je, Ae), p = m(kt, null), h = k(null), _ = k(null), v = k(!1), y = z(), b = i(() => r.modelValue !== void 0), S = i(() => b.value ? !!r.modelValue : v.value), w = i(() => r.closeLabel || "关闭"), E = i(() => ({
-			"--mat-fab-menu-container-color": `var(--mat-sys-color-${r.color})`,
-			"--mat-fab-menu-content-color": `var(--mat-sys-color-on-${r.color})`,
-			"--mat-fab-menu-state-color": `var(--mat-sys-color-on-${r.color})`
-		})), D = i(() => !!p), O = i(() => D.value ? p.floatingLayer.value : null);
-		function A(e) {
+		let r = $("fabMenu", e), l = t, f = m(je, Ae), p = m(kt, null), h = k(null), _ = k(null), v = k(!1), y = z(), b = i(() => r.modelValue !== void 0), S = i(() => b.value ? !!r.modelValue : v.value), w = i(() => r.closeLabel || "关闭"), E = i(() => r.color.replace(/-container$/, "")), D = i(() => `${E.value}-container`), O = i(() => ({
+			"--mat-fab-menu-close-container-color": `var(--mat-sys-color-${E.value})`,
+			"--mat-fab-menu-close-content-color": `var(--mat-sys-color-on-${E.value})`,
+			"--mat-fab-menu-state-color": `var(--mat-sys-color-on-${E.value})`
+		})), A = i(() => !!p), j = i(() => A.value ? p.floatingLayer.value : null);
+		function N(e) {
 			r.disabled || e !== S.value && (b.value || (v.value = e), l("update:modelValue", e), l(e ? "open" : "close"));
 		}
-		function j() {
-			A(!S.value);
-		}
-		function N(e) {
-			if (!r.closeOnClick) return;
-			let t = e.target;
-			t instanceof Element && t.closest("button, [role=\"button\"], a") && A(!1);
-		}
-		function P(e) {
-			r.closeOnEsc && S.value && e.key === "Escape" && A(!1);
+		function P() {
+			N(!S.value);
 		}
 		function F(e) {
-			r.closeOnClickOutside && S.value && h.value && (h.value.contains(e.target) || A(!1));
+			if (!r.closeOnClick) return;
+			let t = e.target;
+			t instanceof Element && t.closest("button, [role=\"button\"], a") && N(!1);
+		}
+		function R(e) {
+			r.closeOnEsc && S.value && e.key === "Escape" && N(!1);
+		}
+		function B(e) {
+			r.closeOnClickOutside && S.value && h.value && (h.value.contains(e.target) || N(!1));
 		}
 		return C(() => {
-			window.addEventListener("keydown", P), window.addEventListener("pointerdown", F);
+			window.addEventListener("keydown", R), window.addEventListener("pointerdown", B);
 		}), x(() => {
-			window.removeEventListener("keydown", P), window.removeEventListener("pointerdown", F);
-		}), (e, t) => O.value ? (T(), a(n, {
+			window.removeEventListener("keydown", R), window.removeEventListener("pointerdown", B);
+		}), (e, t) => j.value ? (T(), a(n, {
 			key: 0,
-			to: O.value
+			to: j.value
 		}, [c("div", g({
 			ref_key: "rootElement",
 			ref: h
@@ -3109,19 +3109,19 @@ var nr = ["aria-hidden"], rr = ["aria-hidden"], ir = /*#__PURE__*/ Q(/* @__PURE_
 				"mat-fab-menu--open": S.value,
 				"mat-fab-menu--disabled": L(r).disabled
 			}]],
-			style: E.value
+			style: O.value
 		}), [c("div", {
 			class: "mat-fab-menu__items",
 			"aria-hidden": S.value ? void 0 : "true",
-			onClick: N
+			onClick: F
 		}, [M(e.$slots, "default", {}, void 0, !0)], 8, ar), c("div", or, [M(e.$slots, "trigger", {
 			open: S.value,
-			toggle: j,
+			toggle: P,
 			size: L(r).size,
 			color: L(r).color
 		}, () => [d(ir, {
 			class: "mat-fab-menu__trigger-fab",
-			color: L(r).color,
+			color: D.value,
 			disabled: L(r).disabled,
 			icon: L(r).icon,
 			label: L(r).label,
@@ -3129,7 +3129,7 @@ var nr = ["aria-hidden"], rr = ["aria-hidden"], ir = /*#__PURE__*/ Q(/* @__PURE_
 			type: L(r).type,
 			"aria-haspopup": "true",
 			"aria-expanded": String(S.value),
-			onClick: t[0] ||= (e) => A(!0)
+			onClick: t[0] ||= (e) => N(!0)
 		}, null, 8, [
 			"color",
 			"disabled",
@@ -3146,7 +3146,7 @@ var nr = ["aria-hidden"], rr = ["aria-hidden"], ir = /*#__PURE__*/ Q(/* @__PURE_
 			disabled: L(r).disabled,
 			type: L(r).type,
 			"use-cursor": L(f).useCursor,
-			onClick: t[1] ||= (e) => A(!1)
+			onClick: t[1] ||= (e) => N(!1)
 		}, {
 			default: U(() => [d(pt, {
 				as: "span",
@@ -3183,19 +3183,19 @@ var nr = ["aria-hidden"], rr = ["aria-hidden"], ir = /*#__PURE__*/ Q(/* @__PURE_
 				"mat-fab-menu--open": S.value,
 				"mat-fab-menu--disabled": L(r).disabled
 			}]],
-			style: E.value
+			style: O.value
 		}), [c("div", {
 			class: "mat-fab-menu__items",
 			"aria-hidden": S.value ? void 0 : "true",
-			onClick: N
+			onClick: F
 		}, [M(e.$slots, "default", {}, void 0, !0)], 8, sr), c("div", cr, [M(e.$slots, "trigger", {
 			open: S.value,
-			toggle: j,
+			toggle: P,
 			size: L(r).size,
 			color: L(r).color
 		}, () => [d(ir, {
 			class: "mat-fab-menu__trigger-fab",
-			color: L(r).color,
+			color: D.value,
 			disabled: L(r).disabled,
 			icon: L(r).icon,
 			label: L(r).label,
@@ -3203,7 +3203,7 @@ var nr = ["aria-hidden"], rr = ["aria-hidden"], ir = /*#__PURE__*/ Q(/* @__PURE_
 			type: L(r).type,
 			"aria-haspopup": "true",
 			"aria-expanded": String(S.value),
-			onClick: t[2] ||= (e) => A(!0)
+			onClick: t[2] ||= (e) => N(!0)
 		}, null, 8, [
 			"color",
 			"disabled",
@@ -3220,7 +3220,7 @@ var nr = ["aria-hidden"], rr = ["aria-hidden"], ir = /*#__PURE__*/ Q(/* @__PURE_
 			disabled: L(r).disabled,
 			type: L(r).type,
 			"use-cursor": L(f).useCursor,
-			onClick: t[3] ||= (e) => A(!1)
+			onClick: t[3] ||= (e) => N(!1)
 		}, {
 			default: U(() => [d(pt, {
 				as: "span",
@@ -3250,7 +3250,7 @@ var nr = ["aria-hidden"], rr = ["aria-hidden"], ir = /*#__PURE__*/ Q(/* @__PURE_
 			"use-cursor"
 		])], !0)])], 16));
 	}
-}), [["__scopeId", "data-v-4c519220"]]), ur = ["src"], dr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-85f7f726"]]), ur = ["src"], dr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatImage",
 	inheritAttrs: !1
 }, {

@@ -4421,6 +4421,8 @@ import FabSizeExample from '../examples/fab/FabSizeExample.vue';
 
 组件的 `app` 浮动属性固定内置为 `true`，在 `MatAppRoot` 后代中使用时固定进入最近 `MatAppRoot` 的普通浮动层右下角，无需手动配置 `app` 或 `position` 属性；在 `MatAppRoot` 之外使用时保持在声明位置渲染。展开状态下的关闭按钮采用固定尺寸（56px）的纯圆按钮，定位固定于主 FAB 区域的右上角，展开与折叠过渡时按钮位置不发生跳动。列表操作按钮由调用方通过默认 Slot 放置带有图标与文字的按钮组件（如 `<mat-btn prefix="...">`）。
 
+根据 Material 3 Expressive 规范推荐，展开菜单中的操作按钮建议使用与当前主题对应的 `-container` 语义色（如 `color="primary-container"` 或 `color="secondary-container"`）。
+
 ## 示例
 
 ### 基础用法
@@ -4441,13 +4443,13 @@ import FabSizeExample from '../examples/fab/FabSizeExample.vue';
       close-icon="close"
       close-label="关闭"
     >
-      <mat-btn prefix="edit" variant="filled">
+      <mat-btn prefix="edit" variant="filled" color="primary-container">
         编辑草稿
       </mat-btn>
-      <mat-btn prefix="photo" variant="filled">
+      <mat-btn prefix="photo" variant="filled" color="primary-container">
         上传图片
       </mat-btn>
-      <mat-btn prefix="description" variant="filled">
+      <mat-btn prefix="description" variant="filled" color="primary-container">
         创建文档
       </mat-btn>
     </mat-fab-menu>
@@ -4563,14 +4565,14 @@ const open = ref(false);
 
       <mat-fab-menu
         size="small"
-        color="tertiary-container"
+        color="tertiary"
         icon="palette"
         label="调色板"
       >
-        <mat-btn size="small" prefix="brush" variant="filled" color="tertiary">
+        <mat-btn size="small" prefix="brush" variant="filled" color="tertiary-container">
           画笔
         </mat-btn>
-        <mat-btn size="small" prefix="colorize" variant="filled" color="tertiary">
+        <mat-btn size="small" prefix="colorize" variant="filled" color="tertiary-container">
           取色
         </mat-btn>
       </mat-fab-menu>
@@ -4581,14 +4583,14 @@ const open = ref(false);
 
       <mat-fab-menu
         size="medium"
-        color="primary-container"
+        color="primary"
         icon="add"
         label="新建"
       >
-        <mat-btn prefix="folder" variant="filled">
+        <mat-btn prefix="folder" variant="filled" color="primary-container">
           新建文件夹
         </mat-btn>
-        <mat-btn prefix="upload_file" variant="filled">
+        <mat-btn prefix="upload_file" variant="filled" color="primary-container">
           上传文件
         </mat-btn>
       </mat-fab-menu>
@@ -4599,14 +4601,14 @@ const open = ref(false);
 
       <mat-fab-menu
         size="large"
-        color="secondary-container"
+        color="secondary"
         icon="edit"
         label="编辑"
       >
-        <mat-btn prefix="draw" variant="filled" color="secondary">
+        <mat-btn prefix="draw" variant="filled" color="secondary-container">
           涂鸦草稿
         </mat-btn>
-        <mat-btn prefix="crop" variant="filled" color="secondary">
+        <mat-btn prefix="crop" variant="filled" color="secondary-container">
           裁剪画面
         </mat-btn>
       </mat-fab-menu>
@@ -4808,7 +4810,7 @@ const isFloating = ref(false);
 | `label` | `string` | 未设置 | 折叠状态下主 FAB 的无障碍名称和默认 Tooltip 文本 |
 | `closeIcon` | `string` | `'close'` | 展开状态下关闭按钮显示的 Material Symbols 图标 |
 | `closeLabel` | `string` | 未设置 | 展开状态下关闭按钮的无障碍名称和 Tooltip 文本；缺省时回退到 `'关闭'` |
-| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'primary-container' \| 'secondary-container' \| 'tertiary-container' \| 'error' \| 'error-container'` | `'primary-container'` | 颜色角色；只接受当前主题的官方颜色角色 |
+| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'primary-container' \| 'secondary-container' \| 'tertiary-container' \| 'error' \| 'error-container'` | `'primary-container'` | 颜色角色；主体 FAB 使用对应的 `-container` 语义色（如 `primary-container`），展开后的关闭按钮使用非 `-container` 语义色（如 `primary` 与 `on-primary`）；展开列表按钮由使用者自由定义，推荐搭配 `-container` 颜色 |
 | `disabled` | `boolean` | `false` | 禁用主按钮及菜单展开交互 |
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 主按钮原生类型 |
 | `modelValue` | `boolean` | 未设置 | 控制菜单展开与折叠状态；支持 `v-model` 双向绑定 |

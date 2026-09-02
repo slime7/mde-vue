@@ -13,6 +13,8 @@ order: 54
 
 组件的 `app` 浮动属性固定内置为 `true`，在 `MatAppRoot` 后代中使用时固定进入最近 `MatAppRoot` 的普通浮动层右下角，无需手动配置 `app` 或 `position` 属性；在 `MatAppRoot` 之外使用时保持在声明位置渲染。展开状态下的关闭按钮采用固定尺寸（56px）的纯圆按钮，定位固定于主 FAB 区域的右上角，展开与折叠过渡时按钮位置不发生跳动。列表操作按钮由调用方通过默认 Slot 放置带有图标与文字的按钮组件（如 `<mat-btn prefix="...">`）。
 
+根据 Material 3 Expressive 规范推荐，展开菜单中的操作按钮建议使用与当前主题对应的 `-container` 语义色（如 `color="primary-container"` 或 `color="secondary-container"`）。
+
 ## 示例
 
 ### 基础用法
@@ -130,7 +132,7 @@ order: 54
 | `label` | `string` | 未设置 | 折叠状态下主 FAB 的无障碍名称和默认 Tooltip 文本 |
 | `closeIcon` | `string` | `'close'` | 展开状态下关闭按钮显示的 Material Symbols 图标 |
 | `closeLabel` | `string` | 未设置 | 展开状态下关闭按钮的无障碍名称和 Tooltip 文本；缺省时回退到 `'关闭'` |
-| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'primary-container' \| 'secondary-container' \| 'tertiary-container' \| 'error' \| 'error-container'` | `'primary-container'` | 颜色角色；只接受当前主题的官方颜色角色 |
+| `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'primary-container' \| 'secondary-container' \| 'tertiary-container' \| 'error' \| 'error-container'` | `'primary-container'` | 颜色角色；主体 FAB 使用对应的 `-container` 语义色（如 `primary-container`），展开后的关闭按钮使用非 `-container` 语义色（如 `primary` 与 `on-primary`）；展开列表按钮由使用者自由定义，推荐搭配 `-container` 颜色 |
 | `disabled` | `boolean` | `false` | 禁用主按钮及菜单展开交互 |
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 主按钮原生类型 |
 | `modelValue` | `boolean` | 未设置 | 控制菜单展开与折叠状态；支持 `v-model` 双向绑定 |
