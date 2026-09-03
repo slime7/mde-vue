@@ -134,9 +134,39 @@ const surfaceClasses = computed(() => ({
 }));
 
 /**
+ * 判定目标节点是否属于尾部区域内的可交互元素。
+ *
+ * @param {EventTarget | null} target
+ * @param {HTMLElement | null} container
+ * @returns {boolean}
+ */
+function isInteractiveTrailingTarget(target, container) {
+  if (!(target instanceof HTMLElement) || !(container instanceof HTMLElement)) {
+    return false;
+  }
+
+  if (target === container) {
+    return false;
+  }
+
+  const interactive = target.closest(
+    'a[href], button, input, select, textarea, [contenteditable]:not([contenteditable="false"]), [role="button"], [role="checkbox"], [role="radio"], [role="switch"], [tabindex]:not([tabindex="-1"])',
+  );
+
+  return Boolean(interactive && container.contains(interactive));
+}
+
+/**
  * @param {MouseEvent} event
  */
 function handlePrimaryClick(event) {
+  if (hasTrailing.value && event.target instanceof HTMLElement) {
+    const trailingContainer = event.target.closest('[data-mat-list-trailing]');
+    if (trailingContainer && isInteractiveTrailingTarget(event.target, trailingContainer)) {
+      return;
+    }
+  }
+
   if (isSelectable.value) {
     list?.requestSelection(propsWithDefaults.value, event);
     return;
@@ -161,8 +191,26 @@ function handleOptionKeyDown(event) {
     return;
   }
 
+  if (hasTrailing.value && event.target instanceof HTMLElement) {
+    const trailingContainer = event.target.closest('[data-mat-list-trailing]');
+    if (trailingContainer && isInteractiveTrailingTarget(event.target, trailingContainer)) {
+      return;
+    }
+  }
+
   event.preventDefault();
   list?.requestSelection(propsWithDefaults.value, event);
+}
+
+/**
+ * @param {PointerEvent} event
+ */
+function handleTrailingPointerDown(event) {
+  if (event.target instanceof HTMLElement && event.currentTarget instanceof HTMLElement) {
+    if (isInteractiveTrailingTarget(event.target, event.currentTarget)) {
+      event.stopPropagation();
+    }
+  }
 }
 
 function validateProps() {
@@ -389,73 +437,16 @@ watch(
     </span>
   </li>
 
-  <div
-    v-else-if="isSelectable && shouldSeparateTrailing"
-    ref="itemRoot"
-    class="mat-list-item mat-list-item__surface mat-list-item--multi-action mat-list-item--selectable"
-    :class="surfaceClasses"
-    :aria-disabled="propsWithDefaults.disabled ? 'true' : undefined"
-    :data-mat-list-disabled="propsWithDefaults.disabled ? 'true' : undefined"
-  >
-    <MatActionBase
-      v-bind="$attrs"
-      as="div"
-      class="mat-list-item__primary"
-      data-mat-list-primary
-      :aria-selected="selected ? 'true' : 'false'"
-      :disabled="propsWithDefaults.disabled"
-      :focus-ring="true"
-      role="option"
-      :use-cursor="matUi.useCursor"
-      @click="handlePrimaryClick"
-      @keydown="handleOptionKeyDown"
-    >
-      <MatListItemContent
-        :line-count="lineCount"
-        presentation-slots
-        :separate-trailing="true"
-      >
-        <template
-          v-if="$slots.leading"
-          #leading
-        >
-          <slot name="leading" />
-        </template>
-
-        <template
-          v-if="$slots.overline"
-          #overline
-        >
-          <slot name="overline" />
-        </template>
-
-        <slot />
-
-        <template
-          v-if="$slots.supporting"
-          #supporting
-        >
-          <slot name="supporting" />
-        </template>
-      </MatListItemContent>
-    </MatActionBase>
-
-    <span
-      class="mat-list-item__separate-trailing mat-sys-typescale-label-small"
-      data-mat-list-trailing
-      :inert="propsWithDefaults.disabled ? '' : undefined"
-    >
-      <slot name="trailing" />
-    </span>
-  </div>
-
   <MatActionBase
     v-else
     ref="itemRoot"
     v-bind="$attrs"
     as="div"
     class="mat-list-item mat-list-item__surface mat-list-item--selectable"
-    :class="surfaceClasses"
+    :class="[
+      surfaceClasses,
+      { 'mat-list-item--separate-trailing': shouldSeparateTrailing },
+    ]"
     data-mat-list-primary
     :data-mat-list-disabled="propsWithDefaults.disabled ? 'true' : undefined"
     :aria-selected="selected ? 'true' : 'false'"
@@ -469,6 +460,7 @@ watch(
     <MatListItemContent
       :line-count="lineCount"
       presentation-slots
+      :separate-trailing="shouldSeparateTrailing"
     >
       <template
         v-if="$slots.leading"
@@ -494,12 +486,22 @@ watch(
       </template>
 
       <template
-        v-if="$slots.trailing"
+        v-if="$slots.trailing && !shouldSeparateTrailing"
         #trailing
       >
         <slot name="trailing" />
       </template>
     </MatListItemContent>
+
+    <span
+      v-if="shouldSeparateTrailing"
+      class="mat-list-item__separate-trailing mat-sys-typescale-label-small"
+      data-mat-list-trailing
+      :inert="propsWithDefaults.disabled ? '' : undefined"
+      @pointerdown="handleTrailingPointerDown"
+    >
+      <slot name="trailing" />
+    </span>
   </MatActionBase>
 </template>
 
@@ -572,6 +574,16 @@ watch(
   .mat-list-item--multi-action .mat-list-item__primary {
     flex: 1 1 auto;
     background: transparent;
+  }
+
+  .mat-list-item--separate-trailing {
+    display: flex;
+    align-items: center;
+  }
+
+  .mat-list-item--separate-trailing :deep(.mat-list-item-content) {
+    flex: 1 1 auto;
+    min-inline-size: 0;
   }
 
   .mat-list-item__separate-trailing {

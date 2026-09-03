@@ -16060,7 +16060,7 @@ const selected = ref('two');
 
 ### ListItem 的 `separateTrailing`
 
-在选择模式（`single-select` 或 `multi-select`）下，默认不开启 `separateTrailing` 时，尾部内容作为主选项的一部分，点击整行（包括尾部区域）均触发选择，适合放置展示型标记、`MatRadio` 或 `MatCheckbox`；开启 `separateTrailing` 后，尾部内容被提取至独立操作区，点击尾部按钮时不触发整行选中。
+在选择模式（`single-select` 或 `multi-select`）下，默认不开启 `separateTrailing` 时，尾部内容作为主选项的一部分，点击整行（包括尾部区域）均触发选择，适合放置展示型标记、`MatRadio` 或 `MatCheckbox`；开启 `separateTrailing` 后，尾部内容支持承载独立交互控件并与行选择解耦。此时整行仍保持统一连续的状态层（hover、按压与焦点环完整覆盖整行，视觉上不被割裂为两块），但尾部插槽内的交互控件享有最高点击与按压优先级，点击这些控件时优先响应其自身操作且不触发整行选中；点击尾部区域的空白留白处或非交互内容依然可正常触发整行选中。
 
 :::: details 查看示例代码
 ::: code-group

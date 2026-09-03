@@ -380,6 +380,67 @@ describe('MatList', () => {
     wrapper.unmount();
   });
 
+  it('选择模式下 separateTrailing 保持状态层统一，优先响应尾部交互且支持点击空白与文本触发选择', async () => {
+    const buttonClick = vi.fn();
+    const wrapper = mount(MatList, {
+      attachTo: document.body,
+      props: {
+        interaction: 'single-select',
+        selected: null,
+      },
+      slots: {
+        default: () => [
+          h(MatListItem, { value: 'item-1', separateTrailing: true }, {
+            default: () => '条目一',
+            trailing: () => [
+              h('span', { class: 'trailing-text' }, '提示文本'),
+              h(MatBtn, { label: '操作', onClick: buttonClick }),
+            ],
+          }),
+        ],
+      },
+    });
+    await flushFocusManagement();
+
+    const item = wrapper.find('[data-mat-list-primary]');
+    const trailingContainer = wrapper.find('[data-mat-list-trailing]');
+    const trailingBtn = wrapper.find('[data-mat-list-trailing] button');
+    const trailingText = wrapper.find('.trailing-text');
+
+    // 状态层宿主统一包含整行与 trailing
+    expect(item.attributes('data-mat-state-layer-host')).toBeDefined();
+    expect(item.element.contains(trailingContainer.element)).toBe(true);
+
+    // 在尾部交互按钮上按下 pointerdown，阻止冒泡到外层状态层
+    dispatchPointer(trailingBtn.element, 'pointerdown');
+    expect(item.attributes('data-mat-state-layer-pressed')).toBeUndefined();
+
+    // 点击尾部交互按钮，触发按钮逻辑，不触发 item 选中
+    await trailingBtn.trigger('click');
+    expect(buttonClick).toHaveBeenCalledOnce();
+    expect(wrapper.emitted('select')).toBeUndefined();
+
+    // 在尾部交互按钮上按 Space 或 Enter 键，不触发 item 选中
+    await trailingBtn.trigger('keydown', { key: ' ' });
+    await trailingBtn.trigger('keydown', { key: 'Enter' });
+    expect(wrapper.emitted('select')).toBeUndefined();
+
+    // 点击尾部非交互静态文本，正常触发整行选中
+    await trailingText.trigger('click');
+    expect(wrapper.emitted('select')).toHaveLength(1);
+    expect(wrapper.emitted('select')[0][0]).toMatchObject({
+      value: 'item-1',
+      selected: true,
+      nextSelected: 'item-1',
+    });
+
+    // 点击尾部容器自身空白处，也正常触发整行选中
+    await trailingContainer.trigger('click');
+    expect(wrapper.emitted('select')).toHaveLength(2);
+
+    wrapper.unmount();
+  });
+
   it('多操作模式为长标签和 supporting 文本保留 trailing 操作区', () => {
     const wrapper = mount(MatList, {
       props: { interaction: 'multi-action' },
