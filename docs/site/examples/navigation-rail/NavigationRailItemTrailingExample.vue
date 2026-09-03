@@ -3,6 +3,7 @@
 import { ref } from 'vue';
 
 const expanded = ref(true);
+const fullWidth = ref(false);
 const selected = ref('inbox');
 </script>
 <!-- #endregion script -->
@@ -13,30 +14,41 @@ const selected = ref('inbox');
     <mat-navigation-rail
       v-model="selected"
       v-model:expanded="expanded"
+      :full-width="fullWidth"
       collapsible
       aria-label="带 trailing 的导航"
     >
-      <mat-navigation-rail-item value="inbox" icon="inbox">
-        收件箱
-        <template #trailing="{ expanded: railExpanded, selected: itemSelected }">
-          <span
-            v-if="railExpanded"
-            class="navigation-rail-trailing-badge"
-          >
-            {{ itemSelected ? '12' : '3' }}
-          </span>
-        </template>
-      </mat-navigation-rail-item>
-      <mat-navigation-rail-item value="archive" icon="archive">
-        归档
-        <template #trailing>
-          <mat-icon icon="chevron_right" aria-hidden="true" />
-        </template>
-      </mat-navigation-rail-item>
+      <template #default="{ expanded: currentExpanded }">
+        <mat-btn
+          variant="standard"
+          :icon="currentExpanded ? 'menu_open' : 'menu'"
+          :label="currentExpanded ? '收起导航' : '展开导航'"
+          @click="expanded = !expanded"
+        />
+        <mat-navigation-rail-item value="inbox" icon="inbox">
+          收件箱
+          <template #trailing="{ expanded: railExpanded, selected: itemSelected }">
+            <span
+              v-if="railExpanded"
+              class="navigation-rail-trailing-badge"
+            >
+              {{ itemSelected ? '12' : '3' }}
+            </span>
+          </template>
+        </mat-navigation-rail-item>
+        <mat-navigation-rail-item value="archive" icon="archive">
+          归档
+          <template #trailing>
+            <mat-icon icon="chevron_right" aria-hidden="true" />
+          </template>
+        </mat-navigation-rail-item>
+      </template>
     </mat-navigation-rail>
 
     <div class="navigation-rail-example-content">
-      {{ expanded ? '展开状态' : '折叠状态' }}
+      <mat-switch v-model="fullWidth">
+        full-width：{{ fullWidth ? '已激活（trailing 在高亮背景内）' : '未激活（trailing 位于行末）' }}
+      </mat-switch>
     </div>
   </div>
 </template>
