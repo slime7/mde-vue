@@ -23,6 +23,11 @@
       </mat-text>
       <div class="navigation-rail-header-spacing-example-frame">
         <mat-navigation-rail expanded collapsible aria-label="仅菜单导航">
+          <mat-btn
+            variant="standard"
+            icon="menu_open"
+            label="收起导航"
+          />
           <mat-navigation-rail-item icon="home">
             首页
           </mat-navigation-rail-item>
@@ -39,9 +44,7 @@
       </mat-text>
       <div class="navigation-rail-header-spacing-example-frame">
         <mat-navigation-rail expanded aria-label="仅 FAB 导航">
-          <template #fab>
-            <mat-fab size="small" icon="add" label="新建" />
-          </template>
+          <mat-fab size="small" icon="add" label="新建" />
 
           <mat-navigation-rail-item icon="home">
             首页
@@ -59,9 +62,12 @@
       </mat-text>
       <div class="navigation-rail-header-spacing-example-frame">
         <mat-navigation-rail expanded collapsible aria-label="菜单和 FAB 导航">
-          <template #fab>
-            <mat-fab size="small" icon="add" label="新建" />
-          </template>
+          <mat-btn
+            variant="standard"
+            icon="menu_open"
+            label="收起导航"
+          />
+          <mat-fab size="small" icon="add" label="新建" />
 
           <mat-navigation-rail-item icon="home">
             首页

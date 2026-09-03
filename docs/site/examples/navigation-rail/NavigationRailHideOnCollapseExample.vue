@@ -16,16 +16,30 @@ const expanded = ref(false);
       layout="modal"
       aria-label="沉浸式导航"
     >
-      <mat-navigation-rail-item icon="home">
-        首页
-      </mat-navigation-rail-item>
-      <mat-navigation-rail-item icon="settings">
-        设置
-      </mat-navigation-rail-item>
+      <template #default="{ expanded: currentExpanded }">
+        <mat-btn
+          variant="standard"
+          :icon="currentExpanded ? 'menu_open' : 'menu'"
+          :label="currentExpanded ? '收起导航' : '展开导航'"
+          @click="expanded = !expanded"
+        />
+        <mat-navigation-rail-item icon="home">
+          首页
+        </mat-navigation-rail-item>
+        <mat-navigation-rail-item icon="settings">
+          设置
+        </mat-navigation-rail-item>
+      </template>
     </mat-navigation-rail>
 
     <div class="navigation-rail-example-content">
-      点击左上角菜单按钮{{ expanded ? '收起' : '展开' }}导航
+      <mat-btn
+        icon="menu"
+        label="展开导航"
+        @click="expanded = !expanded"
+      >
+        {{ expanded ? '收起' : '展开' }}导航
+      </mat-btn>
     </div>
   </div>
 </template>

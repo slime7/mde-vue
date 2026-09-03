@@ -13,7 +13,7 @@ order: 105
 
 官方把 Navigation rail 和 Navigation bar 定义为独立组件。本组件为减少重复 API 暂时组合两者，但仍保持规范边界：纵向模式只实现 rail；横向模式只实现 Navigation bar 的 horizontal items，不提供 vertical navigation bar，也不把横向模式称为 Navigation rail。
 
-纵向 rail 支持 3–7 个主要目的地、可选菜单、Header、固定 FAB 与底部自定义内容。纵向展开后，默认 Slot 还可以直接组合 FAB、图标按钮、Divider、Spacer、Headline 等内容；收缩状态和横向模式只显示直接子级 NavigationItem。默认在声明位置参与父容器布局；expanded rail 可以使用占据正文空间的 `standard` 布局或覆盖当前布局容器的 `modal` 布局。设置 `app` 后，省略 `attach` 且位于 `MatAppRoot` 内时自动登记应用起始边缘，否则固定到视口并挂载至 `attach`。
+纵向 rail 支持 3–7 个主要目的地、菜单按钮、FAB 与底部操作。菜单按钮、FAB、NavigationItem、Spacer 与底部按钮统一在默认 Slot 中混排，默认 Slot 提供 `{ expanded: currentExpanded, orientation }` 作用域传值；底部的操作按钮可使用 `<mat-spacer />` 推至末端。默认在声明位置参与父容器布局；expanded rail 可以使用占据正文空间的 `standard` 布局或覆盖当前布局容器的 `modal` 布局。设置 `app` 后，省略 `attach` 且位于 `MatAppRoot` 内时自动登记应用起始边缘，否则固定到视口并挂载至 `attach`。
 
 ## 示例
 
@@ -131,7 +131,7 @@ Badge 不提供专用 Slot，也不支持 `offset`。`location` 只接受八种�
 
 ### `collapsible` 与 `expanded`
 
-`collapsible` 为纵向 rail 添加菜单按钮，`expanded` 支持 `v-model:expanded`。collapsed Item 为图标上、标签下；expanded Item 的图标与标签位于同一个 56px 高活动指示器中。`open-icon` 和 `close-icon` 可以替换菜单按钮图标。
+`collapsible` 支持纵向 rail 折叠展开能力，`expanded` 支持 `v-model:expanded`。组件不再自带内置菜单按钮，使用方可直接在默认 Slot 混排自定义按钮进行切换，不添加则不显示。collapsed Item 为图标上、标签下；expanded Item 的图标与标签位于同一个 56px 高活动指示器中。
 
 展开与收回时，Item 下方的标签渐隐，活动指示器尺寸、Item 高度与间距平滑过渡（展开态 Item 之间间距为 0），展开状态的标签在指示器内逐渐出现；trailing 内容通过弹性 spacer 保持在 Item 尾部。
 
@@ -265,7 +265,7 @@ Badge 不提供专用 Slot，也不支持 `offset`。`location` 只接受八种�
 
 ### Horizontal flexible Navigation bar
 
-设置 `orientation="horizontal"` 后使用 Flexible navigation bar。`expanded` 为 `false` 时显示 80px 高的图标上、标签下 Item；`expanded` 为 `true` 时显示 64px 高的图标左、标签右 Item。`alignment` 在水平方向对齐 NavigationItem；其他默认 Slot 内容始终隐藏。此模式仍忽略 `collapsible`、`layout`、`hide-on-collapse`、Header、FAB 和 `end`。
+设置 `orientation="horizontal"` 后使用 Flexible navigation bar。`expanded` 为 `false` 时显示 80px 高的图标上、标签下 Item；`expanded` 为 `true` 时显示 64px 高的图标左、标签右 Item。`alignment` 在水平方向对齐 NavigationItem；其他默认 Slot 内容始终隐藏。此模式仍忽略 `collapsible`、`layout`、`hide-on-collapse`。
 
 :::: details 查看示例代码
 ::: code-group
@@ -285,9 +285,17 @@ Badge 不提供专用 Slot，也不支持 `offset`。`location` 只接受八种�
   </DocsPreview>
 </ClientOnly>
 
-### Header、FAB 与底部内容 Slots
+### 内容混排与弹性布局
 
-Header、菜单和具名 FAB 通过 sticky 固定在纵向 rail 顶部，`end` sticky 固定在底部；整栏共用同一个滚动区域和靠边的 thin 滚动条。Header 适合品牌标识，具名 `fab` 适合主要操作；Slot 的 `expanded` 参数可让 Extended FAB 在 rail 收缩时只保留图标。放入默认 Slot 的 FAB、按钮、Divider、Spacer 与文字会在纵向展开态显示并随内容滚动；收缩状态会隐藏这些元素，但不会卸载它们。
+菜单按钮、FAB、导航项与底部操作统一在默认 Slot 中混排。默认 Slot 暴露 `{ expanded: currentExpanded, orientation }` 作用域参数；结合 `<mat-spacer />` 可轻松将底部操作推至末尾。
+
+Material Design 规范推荐间距：
+- **菜单按钮与 FAB 之间**：推荐保持 **12px** 间距（`--mat-navigation-rail-header-gap`）。
+- **菜单按钮 / FAB 与导航项之间**：推荐保持 **40px** 间距（`--mat-navigation-rail-header-content-space`）。
+- **导航项之间**：收起态为 **4px**（`--mat-navigation-rail-item-space`），展开态为 **0px**。
+- **导航项与底部操作之间**：插入 `<mat-spacer />` 自动填充剩余可用空间。
+
+组件样式内置智能相邻选择器，当检测到菜单按钮与 FAB、或 FAB/按钮与导航项紧邻时会自动注入对应的 12px 与 40px 间距，用户亦可通过 inline style 显式指定。
 
 :::: details 查看示例代码
 ::: code-group
@@ -307,9 +315,9 @@ Header、菜单和具名 FAB 通过 sticky 固定在纵向 rail 顶部，`end` s
   </DocsPreview>
 </ClientOnly>
 
-### 顶部内容组合
+### 顶部元素间距与规范
 
-纵向容器顶部固定保留 44px。Header、菜单和具名 FAB 组成顶部固定区，内部元素相隔 12px；顶部固定区存在时，与默认 Slot 滚动区之间至少保留 40px。没有这些顶部内容时，默认 Slot 直接从 44px 留白后开始。
+纵向容器顶部固定保留 44px 留白。在默认 Slot 混排菜单按钮、FAB 与导航项时，组件会自动保持 M3 规范的 12px 与 40px 间隙。
 
 :::: details 查看示例代码
 ::: code-group
@@ -362,9 +370,9 @@ Item 的 `trailing` 只在展开态显示，通过前置弹性 spacer 保持在 
 | `expanded` | `boolean` | `false` | 受控展开状态，支持 `v-model:expanded`；horizontal 模式中决定纵向或横向 Item 排列 |
 | `width` | `number \| string` | `undefined` | expanded rail 宽度；数字与纯数字字符串按 px 处理（0 不带单位），其他字符串需为 trim 后合法的 CSS 宽度值，非法时使用默认宽度 |
 | `full-width` | `boolean` | `false` | 仅展开态有效；让全部 Item 的活动指示器铺满可用宽度 |
-| `collapsible` | `boolean` | `false` | 为纵向 rail 显示展开/收起菜单按钮 |
+| `collapsible` | `boolean` | `false` | 开启纵向 rail 折叠展开能力；不再自带内置菜单按钮，需自行从 slot 混排添加或外部受控 |
 | `layout` | `'standard' \| 'modal'` | `'standard'` | 纵向 expanded rail 占据空间或覆盖正文 |
-| `hide-on-collapse` | `boolean` | `false` | 未展开时隐藏 rail 容器并保留菜单按钮 |
+| `hide-on-collapse` | `boolean` | `false` | 未展开时隐藏 rail 容器（宽度置为 0） |
 | `alignment` | `'start' \| 'center' \| 'end'` | `'start'` | 默认 Slot 沿主轴对齐；纵向按剩余高度对齐，横向按可用宽度对齐 |
 | `open-icon` | `string` | `'menu'` | 未展开时的菜单按钮图标 |
 | `close-icon` | `string` | `'menu_open'` | 展开时的菜单按钮图标 |
@@ -399,10 +407,8 @@ Item 的 `trailing` 只在展开态显示，通过前置弹性 spacer 保持在 
 
 | 名称 | 组件 | 内容约束 |
 | --- | --- | --- |
-| 默认 | `MatNavigationRail` | 直接子级 NavigationItem 及纵向展开态的任意自定义内容；收缩态与横向模式只显示直接子级 NavigationItem。Slot 参数为 `{ expanded, orientation }` |
-| `header` | `MatNavigationRail` | 纵向 rail 顶部的非交互品牌标识；Slot 参数为 `{ expanded }` |
-| `fab` | `MatNavigationRail` | 纵向 rail 顶部、目的地之前的 FAB 或 Extended FAB；Slot 参数为 `{ expanded }` |
-| `end` | `MatNavigationRail` | 纵向 rail 底部的自定义内容；Slot 参数为 `{ expanded }` |
+| 默认 | `MatNavigationRail` | 混排菜单按钮、FAB、NavigationItem、NavigationGroup、Spacer 与底部操作。Slot 参数为 `{ expanded, orientation }` |
+| `header` | `MatNavigationRail` | 可选的纵向 rail 顶部品牌标识；Slot 参数为 `{ expanded }` |
 | 默认 | `MatNavigationRailItem` | 必填的简短目的地标签；单行显示，超长时隐藏溢出内容 |
 | `icon` | `MatNavigationRailItem` | 自定义图标内容；Slot 参数为 `{ selected }` |
 | `trailing` | `MatNavigationRailItem` | 展开态显示在 Item 尾部的内容，通过弹性 spacer 保持在末尾；Slot 参数为 `{ expanded, selected }` |

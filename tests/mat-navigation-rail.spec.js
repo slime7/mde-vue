@@ -249,19 +249,24 @@ describe('MatNavigationRail', () => {
     expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
 
-  it('collapsible 控制菜单按钮并通过 v-model:expanded 切换 rail', async () => {
+  it('collapsible 不再自带汉堡按钮，用户需自行在 slot 混排按钮切换 rail', async () => {
     const wrapper = mount(MatNavigationRail, {
       props: {
         collapsible: true,
         expanded: false,
-        openIcon: 'open-icon',
-        closeIcon: 'close-icon',
+      },
+      slots: {
+        default: ({ expanded }) => h('button', {
+          class: 'custom-menu-button',
+          onClick: () => wrapper.vm.$emit('update:expanded', !expanded),
+        }, expanded ? 'close' : 'open'),
       },
     });
 
-    expect(wrapper.find('.mat-navigation-rail__menu .mat-icon').text()).toBe('open-icon');
+    expect(wrapper.find('.mat-navigation-rail__menu').exists()).toBe(false);
+    expect(wrapper.find('.custom-menu-button').text()).toBe('open');
 
-    await wrapper.find('.mat-navigation-rail__menu').trigger('click');
+    await wrapper.find('.custom-menu-button').trigger('click');
 
     expect(wrapper.emitted('update:expanded')).toEqual([[true]]);
   });
@@ -284,7 +289,7 @@ describe('MatNavigationRail', () => {
     expect(wrapper.emitted('update:expanded')).toEqual([[false], [false]]);
   });
 
-  it('hide-on-collapse 隐藏 expanded rail 容器但保留可再次展开的菜单按钮', async () => {
+  it('hide-on-collapse 收起时隐藏 expanded rail 容器', async () => {
     const wrapper = mount(MatNavigationRail, {
       props: {
         collapsible: true,
@@ -298,11 +303,7 @@ describe('MatNavigationRail', () => {
 
     expect(wrapper.find('.mat-navigation-rail__content').exists()).toBe(false);
     expect(wrapper.find('.test-hidden-header').exists()).toBe(false);
-    expect(wrapper.find('.mat-navigation-rail__menu').attributes('aria-expanded')).toBe('false');
-
-    await wrapper.find('.mat-navigation-rail__menu').trigger('click');
-
-    expect(wrapper.emitted('update:expanded')).toEqual([[true]]);
+    expect(wrapper.find('.mat-navigation-rail-host--hidden').exists()).toBe(true);
   });
 
   it('hide-on-collapse 收起时保留内容直到实际退出动画完成', async () => {
@@ -353,18 +354,20 @@ describe('MatNavigationRail', () => {
     expect(wrapper.find('.mat-navigation-rail__content').exists()).toBe(false);
   });
 
-  it('支持默认内容对齐以及 header、fab Slots', () => {
+  it('支持默认内容对齐以及 default Slot 作用域传值', () => {
     const wrapper = mount(MatNavigationRail, {
       props: { alignment: 'center', expanded: true },
       slots: {
         header: ({ expanded }) => h('div', { class: 'test-header' }, String(expanded)),
-        fab: ({ expanded }) => h('button', { class: 'test-fab' }, String(expanded)),
-        default: navigationItems,
+        default: ({ expanded, orientation }) => [
+          h('button', { class: 'test-fab' }, `${expanded}-${orientation}`),
+          ...navigationItems(),
+        ],
       },
     });
 
     expect(wrapper.find('.test-header').text()).toBe('true');
-    expect(wrapper.find('.test-fab').text()).toBe('true');
+    expect(wrapper.find('.test-fab').text()).toBe('true-vertical');
   });
 
   it('缺省 icon 在收缩态使用圆点占位且展开态不保留图标', async () => {
@@ -427,17 +430,20 @@ describe('MatNavigationRail', () => {
     expect(wrapper.findAll('.test-trailing')[1].text()).toBe('true-false');
   });
 
-  it('end Slot 固定在纵向导航底部并接收展开状态', () => {
+  it('默认插槽支持混排 MatSpacer 进行弹性布局', () => {
     const wrapper = mount(MatNavigationRail, {
       props: { expanded: true },
       slots: {
-        default: navigationItems,
-        end: ({ expanded }) => h('button', { class: 'test-end' }, String(expanded)),
+        default: ({ expanded }) => [
+          ...navigationItems(),
+          h('span', { class: 'mat-spacer' }),
+          h('button', { class: 'test-bottom-btn' }, String(expanded)),
+        ],
       },
     });
 
-    expect(wrapper.find('.mat-navigation-rail__end').exists()).toBe(true);
-    expect(wrapper.find('.test-end').text()).toBe('true');
+    expect(wrapper.find('.mat-spacer').exists()).toBe(true);
+    expect(wrapper.find('.test-bottom-btn').text()).toBe('true');
   });
 
   it('Item 的 badge 只绑定图标区域并保留 Item 交互', async () => {

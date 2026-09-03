@@ -149,6 +149,7 @@ export default defineConfig({
               { text: 'Docked container 浮动容器', link: '/components/docked-container' },
               { text: 'Menu 菜单', link: '/components/menu' },
               { text: 'Navigation 导航', link: '/components/navigation-rail' },
+              { text: 'Navigation drawer 导航抽屉', link: '/components/navigation-drawer' },
               { text: 'Panes 布局面板', link: '/components/panes' },
               { text: 'Scroll area 滚动区域', link: '/components/scroll-area' },
               { text: 'Virtual scroll 虚拟滚动', link: '/components/virtual-scroll' },

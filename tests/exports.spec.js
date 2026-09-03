@@ -47,6 +47,8 @@ import {
   MatMenu as RootMatMenu,
   MatMenuGroup as RootMatMenuGroup,
   MatMenuItem as RootMatMenuItem,
+  MatNavigationDrawer as RootMatNavigationDrawer,
+  MatNavigationGroup as RootMatNavigationGroup,
   MatNavigationRail as RootMatNavigationRail,
   MatNavigationRailItem as RootMatNavigationRailItem,
   MatPane as RootMatPane,
@@ -140,6 +142,8 @@ const globalComponents = [
   ['MatPane', 'mat-pane', RootMatPane],
   ['MatNavigationRail', 'mat-navigation-rail', RootMatNavigationRail],
   ['MatNavigationRailItem', 'mat-navigation-rail-item', RootMatNavigationRailItem],
+  ['MatNavigationDrawer', 'mat-navigation-drawer', RootMatNavigationDrawer],
+  ['MatNavigationGroup', 'mat-navigation-group', RootMatNavigationGroup],
   ['MatVirtualScroll', 'mat-virtual-scroll', RootMatVirtualScroll, ['MdeVirtualScroll', 'mde-virtual-scroll']],
 ];
 
@@ -238,6 +242,8 @@ describe('公共组件导出', () => {
     expect(app.component('mat-pane')).toBe(RootMatPane);
     expect(app.component('mat-navigation-rail')).toBe(RootMatNavigationRail);
     expect(app.component('mat-navigation-rail-item')).toBe(RootMatNavigationRailItem);
+    expect(app.component('mat-navigation-drawer')).toBe(RootMatNavigationDrawer);
+    expect(app.component('mat-navigation-group')).toBe(RootMatNavigationGroup);
     expect(app.component('mat-fab')).toBe(RootMatFab);
     expect(app.component('mat-fab-menu')).toBe(RootMatFabMenu);
     expect(app.component('mat-icon')).toBe(RootMatIcon);

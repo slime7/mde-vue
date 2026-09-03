@@ -3880,6 +3880,140 @@ export interface MatNavigationRailItemEmits {
 export type MatNavigationRailItemComponent = DefineComponent<MatNavigationRailItemProps, {}, {}, {}, {}, {}, {}, MatNavigationRailItemEmits>;
 export declare const MatNavigationRailItem: MatNavigationRailItemComponent;
 
+export interface MatNavigationDrawerProps {
+  /**
+  * 受控当前目的地值。
+  *
+  * @type {string | number | boolean | null}
+  * @default null
+  */
+  modelValue?: string | number | boolean | null;
+  /**
+  * 是否展开 Navigation Drawer。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  expanded?: boolean;
+  /**
+  * expanded Drawer 的宽度；数字与纯数字字符串按 px 处理，
+  * 其他字符串 trim 后须为合法 CSS 宽度值，非法时使用默认宽度。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  width?: number | string | undefined;
+  /**
+  * 纵向 Drawer 布局；可选值为 standard、modal。
+  *
+  * @type {'standard' | 'modal'}
+  * @default 'standard'
+  */
+  layout?: 'standard' | 'modal';
+  /**
+  * 默认 Slot 在主轴上的对齐方式；可选值为 start、center、end。
+  *
+  * @type {'start' | 'center' | 'end'}
+  * @default 'start'
+  */
+  alignment?: 'start' | 'center' | 'end';
+  /**
+  * 模态遮罩与收起动作的无障碍名称。
+  *
+  * @type {string}
+  * @default '收起导航'
+  */
+  closeLabel?: string;
+  /**
+  * 是否 Teleport 到 attach 并固定到视口。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  app?: boolean;
+  /**
+  * app=true 时的固定挂载目标。
+  *
+  * @type {string | HTMLElement}
+  * @default 'body'
+  */
+  attach?: string | HTMLElement;
+  /**
+  * app=true 时在自然布局位置生成占位。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  placeholder?: boolean;
+  /**
+  * app=true 时的额外底部安全区；数字与纯数字字符串按 px 处理，
+  * 其他字符串 trim 后须为合法 CSS block-size 值，非法时回退 0。
+  *
+  * @type {number | string}
+  * @default 0
+  */
+  bottomPlaceholder?: number | string;
+}
+
+export interface MatNavigationDrawerEmits {
+  /**
+  * 子 Item 请求切换目的地时发出新的 value。
+  */
+  "update:modelValue": (payload: unknown) => unknown;
+  /**
+  * Drawer 请求切换展开状态时发出新的 boolean。
+  */
+  "update:expanded": (payload: boolean) => unknown;
+}
+
+export type MatNavigationDrawerComponent = DefineComponent<MatNavigationDrawerProps, {}, {}, {}, {}, {}, {}, MatNavigationDrawerEmits>;
+export declare const MatNavigationDrawer: MatNavigationDrawerComponent;
+
+export interface MatNavigationGroupProps {
+  /**
+  * 受控展开状态，支持 v-model:expanded 与 v-model。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  expanded?: boolean;
+  /**
+  * 受控展开状态（v-model 别名）。
+  *
+  * @type {boolean | undefined}
+  * @default undefined
+  */
+  modelValue?: boolean | undefined;
+  /**
+  * 分组标题文本；未提供 activator 插槽时作为默认折叠触发项。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  title?: string | undefined;
+  /**
+  * 二级子项的前置缩进量；数字按 px 处理，字符串按合法 CSS 长度处理。
+  *
+  * @type {number | string}
+  * @default 16
+  */
+  indent?: number | string;
+}
+
+export interface MatNavigationGroupEmits {
+  /**
+  * 请求切换展开状态时发出新的 boolean。
+  */
+  "update:expanded": (payload: boolean) => unknown;
+  /**
+  * 请求切换展开状态时发出新的 boolean（v-model）。
+  */
+  "update:modelValue": (payload: boolean) => unknown;
+}
+
+export type MatNavigationGroupComponent = DefineComponent<MatNavigationGroupProps, {}, {}, {}, {}, {}, {}, MatNavigationGroupEmits>;
+export declare const MatNavigationGroup: MatNavigationGroupComponent;
+
 export type MatThemeMode = 'light' | 'dark' | 'system';
 export type MatResolvedThemeMode = 'light' | 'dark';
 export type MatSchemeVariant = 'tonal-spot' | 'neutral' | 'vibrant' | 'expressive';
@@ -4138,5 +4272,9 @@ declare module 'vue' {
     'mat-navigation-rail': typeof MatNavigationRail;
     MatNavigationRailItem: typeof MatNavigationRailItem;
     'mat-navigation-rail-item': typeof MatNavigationRailItem;
+    MatNavigationDrawer: typeof MatNavigationDrawer;
+    'mat-navigation-drawer': typeof MatNavigationDrawer;
+    MatNavigationGroup: typeof MatNavigationGroup;
+    'mat-navigation-group': typeof MatNavigationGroup;
   }
 }

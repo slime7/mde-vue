@@ -63,6 +63,8 @@ import MatPanes from './components/mat-panes/MatPanes.vue';
 import MatPane from './components/mat-panes/MatPane.vue';
 import MatNavigationRail from './components/mat-navigation-rail/MatNavigationRail.vue';
 import MatNavigationRailItem from './components/mat-navigation-rail/MatNavigationRailItem.vue';
+import MatNavigationDrawer from './components/mat-navigation-drawer/MatNavigationDrawer.vue';
+import MatNavigationGroup from './components/mat-navigation-group/MatNavigationGroup.vue';
 import COMPONENT_ALIASES from './component-aliases';
 import { setImperativeContext } from './imperative-context';
 import MAT_UI_KEY, {
@@ -140,6 +142,8 @@ export const GLOBAL_COMPONENTS = [
   ['MatPane', 'mat-pane', MatPane],
   ['MatNavigationRail', 'mat-navigation-rail', MatNavigationRail],
   ['MatNavigationRailItem', 'mat-navigation-rail-item', MatNavigationRailItem],
+  ['MatNavigationDrawer', 'mat-navigation-drawer', MatNavigationDrawer],
+  ['MatNavigationGroup', 'mat-navigation-group', MatNavigationGroup],
 ];
 
 const COMPONENT_DEFAULTS_REGISTRY = new Map(
