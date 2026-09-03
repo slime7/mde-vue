@@ -417,8 +417,8 @@ describe('MatNavigationRail', () => {
     const items = wrapper.findAllComponents(MatNavigationRailItem);
     const trailing = wrapper.findAll('.test-trailing');
 
-    expect(items[0].find('.mat-navigation-rail-item__indicator .mat-navigation-rail-item__trailing').exists()).toBe(true);
-    expect(items[1].find('.mat-navigation-rail-item__indicator .mat-navigation-rail-item__trailing').exists()).toBe(true);
+    expect(items[0].find('.mat-navigation-rail-item > .mat-navigation-rail-item__trailing').exists()).toBe(true);
+    expect(items[1].find('.mat-navigation-rail-item > .mat-navigation-rail-item__trailing').exists()).toBe(true);
     expect(trailing).toHaveLength(2);
     expect(trailing[0].text()).toBe('false-true');
     expect(trailing[1].text()).toBe('false-false');
@@ -428,6 +428,12 @@ describe('MatNavigationRail', () => {
 
     expect(wrapper.findAll('.test-trailing')[0].text()).toBe('true-true');
     expect(wrapper.findAll('.test-trailing')[1].text()).toBe('true-false');
+    expect(items[0].find('.mat-navigation-rail-item > .mat-navigation-rail-item__trailing').exists()).toBe(true);
+
+    await wrapper.setProps({ fullWidth: true });
+    await nextTick();
+
+    expect(items[0].find('.mat-navigation-rail-item__indicator .mat-navigation-rail-item__trailing').exists()).toBe(true);
   });
 
   it('默认插槽支持混排 MatSpacer 进行弹性布局', () => {

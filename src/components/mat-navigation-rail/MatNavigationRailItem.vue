@@ -220,6 +220,33 @@ function handleClick(event) {
         </span>
       </span>
 
+      <template v-if="fullWidth">
+        <span
+          v-if="$slots.trailing"
+          class="mat-navigation-rail-item__spacer"
+          aria-hidden="true"
+        />
+
+        <span
+          v-if="$slots.trailing"
+          class="mat-navigation-rail-item__trailing"
+        >
+          <slot
+            name="trailing"
+            :expanded="expanded"
+            :selected="selected"
+          />
+        </span>
+      </template>
+    </span>
+
+    <span
+      :class="['mat-navigation-rail-item__label', collapsedLabelClass]"
+    >
+      <slot />
+    </span>
+
+    <template v-if="!fullWidth">
       <span
         v-if="$slots.trailing"
         class="mat-navigation-rail-item__spacer"
@@ -236,13 +263,7 @@ function handleClick(event) {
           :selected="selected"
         />
       </span>
-    </span>
-
-    <span
-      :class="['mat-navigation-rail-item__label', collapsedLabelClass]"
-    >
-      <slot />
-    </span>
+    </template>
   </MatActionBase>
 </template>
 
@@ -452,6 +473,10 @@ function handleClick(event) {
 
   .mat-navigation-rail-item--expanded .mat-navigation-rail-item__trailing {
     display: inline-flex;
+    margin-inline: var(--mat-navigation-rail-trailing-start-space) var(--mat-navigation-rail-trailing-end-space);
+  }
+
+  .mat-navigation-rail-item--expanded.mat-navigation-rail-item--full-width .mat-navigation-rail-item__trailing {
     margin-inline: var(--mat-navigation-rail-trailing-start-space, 12px) 0;
   }
 

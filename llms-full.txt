@@ -19516,7 +19516,7 @@ const selected = ref('inbox');
 
 ### Item 的 `trailing` Slot
 
-Item 的 `trailing` 只在展开态显示，位于活动指示器内部。在 `full-width` 展开模式下，选中的高亮背景与交互状态层完整包含 trailing 内容，使折叠展开箭头、徽标或操作图标与按钮背景视觉融为一体；通过前置弹性 spacer 保持在末尾。Slot 参数为 `{ expanded, selected }`。折叠态 rail 宽度不足，trailing 不渲染。
+Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导航抽屉或开启 `full-width` 的 Rail），trailing 内容置于活动指示器内部，选中的高亮背景与交互状态层完整包含 trailing 内容，使折叠展开箭头或操作图标与按钮背景视觉融为一体；未激活 `full-width` 时，保持原先处理，置于指示器外部的本行末尾。Slot 参数为 `{ expanded, selected }`。折叠态 rail 宽度不足，trailing 不渲染。
 
 :::: details 查看示例代码
 ::: code-group
