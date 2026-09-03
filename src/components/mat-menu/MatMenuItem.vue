@@ -320,27 +320,22 @@ onBeforeUnmount(() => {
   }
 
   .mat-menu-item--first:not(.mat-menu-item--submenu-open):not(.mat-menu-item--selected) {
-    border-radius: var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)
+    border-radius: var(--mat-menu-group-item-top-corner, var(--mat-sys-shape-corner-medium))
+      var(--mat-menu-group-item-top-corner, var(--mat-sys-shape-corner-medium))
       var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small);
   }
 
   .mat-menu-item--last:not(.mat-menu-item--submenu-open):not(.mat-menu-item--selected) {
     border-radius: var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
-      var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large);
-  }
-
-  .mat-menu-item--grouped.mat-menu-item--last:not(.mat-menu-item--submenu-open):not(.mat-menu-item--selected) {
-    border-radius: var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
-      var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small);
+      var(--mat-menu-group-item-bottom-corner, var(--mat-sys-shape-corner-medium))
+      var(--mat-menu-group-item-bottom-corner, var(--mat-sys-shape-corner-medium));
   }
 
   .mat-menu-item--only:not(.mat-menu-item--submenu-open):not(.mat-menu-item--selected) {
-    border-radius: var(--mat-sys-shape-corner-large);
-  }
-
-  .mat-menu-item--grouped.mat-menu-item--only:not(.mat-menu-item--submenu-open):not(.mat-menu-item--selected) {
-    border-radius: var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)
-      var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small);
+    border-radius: var(--mat-menu-group-item-top-corner, var(--mat-sys-shape-corner-medium))
+      var(--mat-menu-group-item-top-corner, var(--mat-sys-shape-corner-medium))
+      var(--mat-menu-group-item-bottom-corner, var(--mat-sys-shape-corner-medium))
+      var(--mat-menu-group-item-bottom-corner, var(--mat-sys-shape-corner-medium));
   }
 
   .mat-menu-item--selected,
@@ -390,7 +385,8 @@ onBeforeUnmount(() => {
     .mat-menu-item--first:not(.mat-menu-item--submenu-open):not(.mat-menu-item--selected) {
       border-shape: inset(
         0 round
-        var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)
+        var(--mat-menu-group-item-top-corner, var(--mat-sys-shape-corner-medium))
+        var(--mat-menu-group-item-top-corner, var(--mat-sys-shape-corner-medium))
         var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
       );
     }
@@ -399,27 +395,18 @@ onBeforeUnmount(() => {
       border-shape: inset(
         0 round
         var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
-        var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)
-      );
-    }
-
-    .mat-menu-item--grouped.mat-menu-item--last:not(.mat-menu-item--submenu-open):not(.mat-menu-item--selected) {
-      border-shape: inset(
-        0 round
-        var(--mat-sys-shape-corner-extra-small) var(--mat-sys-shape-corner-extra-small)
-        var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small)
+        var(--mat-menu-group-item-bottom-corner, var(--mat-sys-shape-corner-medium))
+        var(--mat-menu-group-item-bottom-corner, var(--mat-sys-shape-corner-medium))
       );
     }
 
     .mat-menu-item--only:not(.mat-menu-item--submenu-open):not(.mat-menu-item--selected) {
-      border-shape: inset(0 round var(--mat-sys-shape-corner-large));
-    }
-
-    .mat-menu-item--grouped.mat-menu-item--only:not(.mat-menu-item--submenu-open):not(.mat-menu-item--selected) {
       border-shape: inset(
         0 round
-        var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)
-        var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small)
+        var(--mat-menu-group-item-top-corner, var(--mat-sys-shape-corner-medium))
+        var(--mat-menu-group-item-top-corner, var(--mat-sys-shape-corner-medium))
+        var(--mat-menu-group-item-bottom-corner, var(--mat-sys-shape-corner-medium))
+        var(--mat-menu-group-item-bottom-corner, var(--mat-sys-shape-corner-medium))
       );
     }
   }

@@ -71,6 +71,7 @@ onBeforeUnmount(() => menu?.unregisterGroup());
     ref="groupRoot"
     v-bind="$attrs"
     class="mat-menu-group"
+    :class="{ 'mat-menu-group--labeled': Boolean(propsWithDefaults.label) }"
     :aria-labelledby="labelledBy"
     role="group"
   >
@@ -89,6 +90,8 @@ onBeforeUnmount(() => menu?.unregisterGroup());
 <style scoped>
 @layer mde.components {
   .mat-menu-group {
+    --mat-menu-group-item-top-corner: var(--mat-sys-shape-corner-small);
+    --mat-menu-group-item-bottom-corner: var(--mat-sys-shape-corner-small);
     display: flex;
     flex-direction: column;
     gap: var(--mat-menu-item-space);
@@ -100,18 +103,8 @@ onBeforeUnmount(() => menu?.unregisterGroup());
     border-radius: var(--mat-sys-shape-corner-small);
   }
 
-  .mat-menu-group:first-child:not(:last-child) {
-    border-radius: var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)
-      var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small);
-  }
-
-  .mat-menu-group:last-child:not(:first-child) {
-    border-radius: var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small)
-      var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large);
-  }
-
-  .mat-menu-group:only-child {
-    border-radius: var(--mat-sys-shape-corner-large);
+  .mat-menu-group--labeled {
+    --mat-menu-group-item-top-corner: var(--mat-sys-shape-corner-extra-small);
   }
 
   .mat-menu-group__label {
@@ -128,26 +121,6 @@ onBeforeUnmount(() => menu?.unregisterGroup());
   @supports (border-shape: inset(0 round 1px)) {
     .mat-menu-group {
       border-shape: inset(0 round var(--mat-sys-shape-corner-small));
-    }
-
-    .mat-menu-group:first-child:not(:last-child) {
-      border-shape: inset(
-        0 round
-        var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)
-        var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small)
-      );
-    }
-
-    .mat-menu-group:last-child:not(:first-child) {
-      border-shape: inset(
-        0 round
-        var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small)
-        var(--mat-sys-shape-corner-large) var(--mat-sys-shape-corner-large)
-      );
-    }
-
-    .mat-menu-group:only-child {
-      border-shape: inset(0 round var(--mat-sys-shape-corner-large));
     }
   }
 }

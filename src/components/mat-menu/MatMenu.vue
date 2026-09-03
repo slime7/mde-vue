@@ -1002,7 +1002,7 @@ if (appContext) {
     color: var(--mat-menu-content-color);
     background: transparent;
     border: 0;
-    border-radius: var(--mat-sys-shape-corner-large);
+    border-radius: var(--mat-sys-shape-corner-medium);
     box-shadow: var(--mat-sys-elevation-level2);
     opacity: 1;
     translate: calc(var(--mat-menu-offset-x, 0px) + var(--mat-menu-viewport-shift-x, 0px))
@@ -1121,7 +1121,7 @@ if (appContext) {
 
   @supports (border-shape: inset(0 round 1px)) {
     .mat-menu__surface {
-      border-shape: inset(0 round var(--mat-sys-shape-corner-large));
+      border-shape: inset(0 round var(--mat-sys-shape-corner-medium));
     }
   }
 

@@ -8166,7 +8166,7 @@ var Wa = {
 			])
 		], 64));
 	}
-}), [["__scopeId", "data-v-dd5aba13"]]), bo = { class: "mat-menu-item-host" }, xo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-3d303f7e"]]), bo = { class: "mat-menu-item-host" }, xo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatMenuItem",
 	inheritAttrs: !1
 }, {
@@ -8357,7 +8357,7 @@ var Wa = {
 			"use-cursor"
 		])), e.$slots.submenu ? P(e.$slots, "submenu", { key: 2 }, void 0, !0) : o("", !0)]));
 	}
-}), [["__scopeId", "data-v-d5f6b373"]]), So = ["aria-labelledby"], Co = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-76262001"]]), So = ["aria-labelledby"], Co = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatMenuGroup",
 	inheritAttrs: !1
 }, {
@@ -8385,7 +8385,7 @@ var Wa = {
 			ref_key: "groupRoot",
 			ref: l
 		}, e.$attrs, {
-			class: "mat-menu-group",
+			class: ["mat-menu-group", { "mat-menu-group--labeled": !!z(t).label }],
 			"aria-labelledby": c.value,
 			role: "group"
 		}), [z(t).label ? (D(), s("div", {
@@ -8394,7 +8394,7 @@ var Wa = {
 			class: "mat-menu-group__label mat-sys-typescale-label-large"
 		}, R(z(t).label), 1)) : o("", !0), P(e.$slots, "default", {}, void 0, !0)], 16, So));
 	}
-}), [["__scopeId", "data-v-be91a1ff"]]), wo = [
+}), [["__scopeId", "data-v-b34883b5"]]), wo = [
 	"id",
 	"aria-describedby",
 	"aria-label",
