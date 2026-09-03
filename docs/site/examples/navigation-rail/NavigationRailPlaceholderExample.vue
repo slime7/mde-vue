@@ -39,7 +39,7 @@ const active = ref(true);
 <style scoped>
 .navigation-rail-placeholder-example {
   position: relative;
-  min-block-size: 240px;
+  block-size: 200px;
   overflow: hidden;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-large);
