@@ -19664,7 +19664,6 @@ const selected = ref('inbox');
 | `open-icon` | `string` | `'menu'` | 未展开时的菜单按钮图标 |
 | `close-icon` | `string` | `'menu_open'` | 展开时的菜单按钮图标 |
 | `open-label` | `string` | `'展开导航'` | 未展开时菜单按钮的无障碍名称 |
-| `close-label` | `string` | `'收起导航'` | 展开时菜单按钮和 modal 遮罩的无障碍名称 |
 | `app` | `boolean` | `false` | 开启应用布局模式；位于 `MatAppRoot` 且省略 `attach` 时自动登记边缘，否则固定到显式目标 |
 | `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；一旦显式提供就优先于 AppRoot 自动接入 |
 | `placeholder` | `boolean` | `false` | 仅 `app=true` 有效；在声明位置为固定 rail 或 bar 预留实际尺寸 |

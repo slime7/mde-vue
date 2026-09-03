@@ -68,16 +68,6 @@ const props = defineProps({
     },
   },
   /**
-   * 模态遮罩与收起动作的无障碍名称。
-   *
-   * @type {string}
-   * @default '收起导航'
-   */
-  closeLabel: {
-    type: String,
-    default: '收起导航',
-  },
-  /**
    * 是否 Teleport 到 attach 并固定到视口。
    *
    * @type {boolean}
@@ -146,7 +136,6 @@ const emit = defineEmits({
     :width="propsWithDefaults.width"
     :layout="propsWithDefaults.layout"
     :alignment="propsWithDefaults.alignment"
-    :close-label="propsWithDefaults.closeLabel"
     :app="propsWithDefaults.app"
     :attach="propsWithDefaults.attach"
     :placeholder="propsWithDefaults.placeholder"

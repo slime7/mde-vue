@@ -162,16 +162,6 @@ const props = defineProps({
     default: '展开导航',
   },
   /**
-   * 展开状态菜单入口的非空可访问名称。
-   *
-   * @type {string}
-   * @default '收起导航'
-   */
-  closeLabel: {
-    type: String,
-    default: '收起导航',
-  },
-  /**
    * 是否 Teleport 到 attach 并固定到视口。
    *
    * @type {boolean}
@@ -581,7 +571,8 @@ watch([
         v-if="isModal && propsWithDefaults.expanded"
         class="mat-navigation-rail__scrim"
         type="button"
-        :aria-label="propsWithDefaults.closeLabel"
+        tabindex="-1"
+        aria-hidden="true"
         @click="requestCollapse"
       />
 

@@ -12054,13 +12054,13 @@ var Nc = { class: "mat-snackbar__text" }, Pc = {
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-838e5ee8"]]), al = ["aria-label"], ol = { class: "mat-navigation-rail__layout" }, sl = {
+}), [["__scopeId", "data-v-838e5ee8"]]), al = { class: "mat-navigation-rail__layout" }, ol = {
 	key: 0,
 	class: "mat-navigation-rail__header"
-}, cl = {
+}, sl = {
 	key: 1,
 	class: "mat-navigation-rail__content"
-}, ll = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, cl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationRail",
 	inheritAttrs: !1
 }, {
@@ -12131,10 +12131,6 @@ var Nc = { class: "mat-snackbar__text" }, Pc = {
 		openLabel: {
 			type: String,
 			default: "展开导航"
-		},
-		closeLabel: {
-			type: String,
-			default: "收起导航"
 		},
 		app: {
 			type: Boolean,
@@ -12321,9 +12317,10 @@ var Nc = { class: "mat-snackbar__text" }, Pc = {
 			key: 0,
 			class: "mat-navigation-rail__scrim",
 			type: "button",
-			"aria-label": z(p).closeLabel,
+			tabindex: "-1",
+			"aria-hidden": "true",
 			onClick: ye
-		}, null, 8, al)) : o("", !0), c("nav", _({
+		})) : o("", !0), c("nav", _({
 			ref_key: "railElement",
 			ref: ce
 		}, e.$attrs, { class: ["mat-navigation-rail", re.value] }), [d(fa, {
@@ -12333,11 +12330,11 @@ var Nc = { class: "mat-snackbar__text" }, Pc = {
 			"shadow-length": 0,
 			"no-scroll-padding": ""
 		}, {
-			default: W(() => [c("div", ol, [!N.value && U.value && B.value ? (D(), s("div", sl, [P(e.$slots, "header", { expanded: z(p).expanded }, void 0, !0)])) : o("", !0), B.value ? (D(), s("div", cl, [c("div", { class: y(["mat-navigation-rail__destinations", [`mat-navigation-rail__destinations--${z(p).alignment}`, { "mat-navigation-rail__destinations--show-custom-content": G.value }]]) }, [d(Y)], 2)])) : o("", !0)])]),
+			default: W(() => [c("div", al, [!N.value && U.value && B.value ? (D(), s("div", ol, [P(e.$slots, "header", { expanded: z(p).expanded }, void 0, !0)])) : o("", !0), B.value ? (D(), s("div", sl, [c("div", { class: y(["mat-navigation-rail__destinations", [`mat-navigation-rail__destinations--${z(p).alignment}`, { "mat-navigation-rail__destinations--show-custom-content": G.value }]]) }, [d(Y)], 2)])) : o("", !0)])]),
 			_: 3
 		}, 8, ["orientation"])], 16)], 6)) : o("", !0)], 8, ["to", "disabled"]))], 64));
 	}
-}), [["__scopeId", "data-v-b4be2ecf"]]), ul = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-0f9c748e"]]), ll = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationDrawer",
 	inheritAttrs: !1
 }, {
@@ -12378,10 +12375,6 @@ var Nc = { class: "mat-snackbar__text" }, Pc = {
 				].includes(e);
 			}
 		},
-		closeLabel: {
-			type: String,
-			default: "收起导航"
-		},
 		app: {
 			type: Boolean,
 			default: !1
@@ -12413,14 +12406,13 @@ var Nc = { class: "mat-snackbar__text" }, Pc = {
 	},
 	setup(e, { emit: t }) {
 		let n = $("navigationDrawer", e), r = t;
-		return (e, t) => (D(), a(ll, _(e.$attrs, {
+		return (e, t) => (D(), a(cl, _(e.$attrs, {
 			class: "mat-navigation-drawer",
 			"model-value": z(n).modelValue,
 			expanded: z(n).expanded,
 			width: z(n).width,
 			layout: z(n).layout,
 			alignment: z(n).alignment,
-			"close-label": z(n).closeLabel,
 			app: z(n).app,
 			attach: z(n).attach,
 			placeholder: z(n).placeholder,
@@ -12440,14 +12432,13 @@ var Nc = { class: "mat-snackbar__text" }, Pc = {
 			"width",
 			"layout",
 			"alignment",
-			"close-label",
 			"app",
 			"attach",
 			"placeholder",
 			"bottom-placeholder"
 		]));
 	}
-}), [["__scopeId", "data-v-c18ccb1b"]]), dl = ["aria-hidden"], fl = { class: "mat-navigation-group__items" }, pl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-b23fabc1"]]), ul = ["aria-hidden"], dl = { class: "mat-navigation-group__items" }, fl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationGroup",
 	inheritAttrs: !1
 }, {
@@ -12499,10 +12490,10 @@ var Nc = { class: "mat-snackbar__text" }, Pc = {
 		}, void 0, !0), c("div", {
 			class: "mat-navigation-group__content",
 			"aria-hidden": o.value ? void 0 : "true"
-		}, [c("div", fl, [P(e.$slots, "default", {}, void 0, !0)])], 8, dl)], 16));
+		}, [c("div", dl, [P(e.$slots, "default", {}, void 0, !0)])], 8, ul)], 16));
 	}
-}), [["__scopeId", "data-v-260c72e4"]]), ml = /* @__PURE__ */ new WeakMap();
-function hl(e) {
+}), [["__scopeId", "data-v-260c72e4"]]), pl = /* @__PURE__ */ new WeakMap();
+function ml(e) {
 	return typeof e == "function" ? {
 		handler: e,
 		options: {}
@@ -12511,15 +12502,15 @@ function hl(e) {
 		options: e.options ?? {}
 	} : { options: {} };
 }
-function gl(e, t) {
+function hl(e, t) {
 	if (typeof IntersectionObserver > "u") return;
-	let { handler: n, options: r } = hl(t.value), i = new IntersectionObserver((t, r) => {
-		let i = ml.get(e);
+	let { handler: n, options: r } = ml(t.value), i = new IntersectionObserver((t, r) => {
+		let i = pl.get(e);
 		if (!i || i.observer !== r) return;
 		let a = t.some((e) => e.isIntersecting), o = !i.initialized;
-		i.initialized = !0, n && !(i.quiet && o) && n(a, t, r), i.once && a && (r.unobserve(e), ml.delete(e));
+		i.initialized = !0, n && !(i.quiet && o) && n(a, t, r), i.once && a && (r.unobserve(e), pl.delete(e));
 	}, r);
-	ml.set(e, {
+	pl.set(e, {
 		handler: n,
 		observer: i,
 		once: !!t.modifiers?.once,
@@ -12527,59 +12518,59 @@ function gl(e, t) {
 		initialized: !1
 	}), i.observe(e);
 }
-function _l(e) {
-	let t = ml.get(e);
-	t && (t.observer.unobserve(e), ml.delete(e));
+function gl(e) {
+	let t = pl.get(e);
+	t && (t.observer.unobserve(e), pl.delete(e));
 }
-var vl = {
-	mounted: gl,
+var _l = {
+	mounted: hl,
 	updated(e, t) {
-		ml.has(e) && (_l(e), gl(e, t));
+		pl.has(e) && (gl(e), hl(e, t));
 	},
-	unmounted: _l
-}, yl = Object.freeze({
+	unmounted: gl
+}, vl = Object.freeze({
 	MatDynamicText: Object.freeze(["MdeDynamicText", "mde-dynamic-text"]),
 	MatSharedElement: Object.freeze(["MdeSharedElement", "mde-shared-element"]),
 	MatVirtualScroll: Object.freeze(["MdeVirtualScroll", "mde-virtual-scroll"])
-}), bl = Me, xl = null;
-function Sl(e, t) {
-	bl = e, xl = t;
+}), yl = Me, bl = null;
+function xl(e, t) {
+	yl = e, bl = t;
+}
+function Sl() {
+	return yl;
 }
 function Cl() {
 	return bl;
 }
-function wl() {
-	return xl;
-}
 //#endregion
 //#region src/theme.js
-var Tl = "#20a6fc", El = "(prefers-color-scheme: dark)";
-function Dl(e) {
+var wl = "#20a6fc", Tl = "(prefers-color-scheme: dark)";
+function El(e) {
 	if (![
 		"light",
 		"dark",
 		"system"
 	].includes(e)) throw TypeError("theme.mode 必须是 light、dark 或 system");
 }
-function Ol(e) {
+function Dl(e) {
 	if (!Qe.includes(e)) throw TypeError(`不支持主题配色变体：${String(e)}`);
 }
-function kl(e) {
+function Ol(e) {
 	if (typeof e != "number" || !Number.isFinite(e) || e < -1 || e > 1) throw RangeError("theme.contrastLevel 必须是 -1 到 1 之间的有限数字");
 }
-function Al(e) {
+function kl(e) {
 	if (!e || typeof e != "object" || typeof e.style?.setProperty != "function") throw TypeError("theme.target 必须是可设置 CSS 自定义属性的 HTML 元素");
 }
-function jl(e) {
+function Al(e) {
 	if (typeof e != "string" || !/^#(?:[\da-f]{3}|[\da-f]{6})$/i.test(e)) throw TypeError("theme.seedColor 必须是 #RGB 或 #RRGGBB 格式的十六进制颜色");
 }
-function Ml(e = {}) {
+function jl(e = {}) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("theme 选项必须是对象");
-	let t = e.mode ?? "system", n = e.seedColor ?? Tl, r = e.schemeVariant ?? "tonal-spot", i = e.contrastLevel ?? 0, a = e.target ?? document.documentElement;
-	Dl(t), jl(n), Ol(r), kl(i), Al(a);
+	let t = e.mode ?? "system", n = e.seedColor ?? wl, r = e.schemeVariant ?? "tonal-spot", i = e.contrastLevel ?? 0, a = e.target ?? document.documentElement;
+	El(t), Al(n), Dl(r), Ol(i), kl(a);
 	let o = j(t), s = j(it(n)), c = j(r), l = j(i), u = j("light"), d = null, f = !1, p = !1;
 	function m() {
-		return !d && typeof window.matchMedia == "function" && (d = window.matchMedia(El)), d;
+		return !d && typeof window.matchMedia == "function" && (d = window.matchMedia(Tl)), d;
 	}
 	function h() {
 		return o.value === "system" ? m()?.matches ? "dark" : "light" : o.value;
@@ -12608,16 +12599,16 @@ function Ml(e = {}) {
 		e && (e.addEventListener("change", _), f = !0);
 	}
 	function b(e) {
-		Dl(e), o.value = e, y(), g();
+		El(e), o.value = e, y(), g();
 	}
 	function x(e) {
-		jl(e), s.value = it(e), g();
+		Al(e), s.value = it(e), g();
 	}
 	function S(e) {
-		Ol(e), c.value = e, g();
+		Dl(e), c.value = e, g();
 	}
 	function C(e) {
-		kl(e), l.value = e, g();
+		Ol(e), l.value = e, g();
 	}
 	function w() {
 		p = !0, v(), Object.values($e).forEach((e) => {
@@ -12640,7 +12631,7 @@ function Ml(e = {}) {
 }
 //#endregion
 //#region src/plugin.js
-var Nl = [
+var Ml = [
 	[
 		"MatAppRoot",
 		"mat-app-root",
@@ -12954,7 +12945,7 @@ var Nl = [
 	[
 		"MatNavigationRail",
 		"mat-navigation-rail",
-		ll
+		cl
 	],
 	[
 		"MatNavigationRailItem",
@@ -12964,105 +12955,105 @@ var Nl = [
 	[
 		"MatNavigationDrawer",
 		"mat-navigation-drawer",
-		ul
+		ll
 	],
 	[
 		"MatNavigationGroup",
 		"mat-navigation-group",
-		pl
+		fl
 	]
-], Pl = new Map(Nl.map(([e, , t]) => [Pe(e), t]));
-function Fl(e, t) {
+], Nl = new Map(Ml.map(([e, , t]) => [Pe(e), t]));
+function Pl(e, t) {
 	let n = e[t];
 	if (n !== void 0 && typeof n != "boolean") throw TypeError(`createMatUi ${t} 必须是 boolean`);
 	return n ?? !1;
 }
-function Il(e) {
+function Fl(e) {
 	let t = e.iconClass;
 	if (t !== void 0 && typeof t != "string") throw TypeError("createMatUi iconClass 必须是 string");
 	return t ?? Me.iconClass;
 }
-function Ll(e, t) {
+function Il(e, t) {
 	let n = e[t];
 	if (n === void 0) return je[t];
 	if (typeof n != "number") throw TypeError(`createMatUi tooltip.${t} 必须是 number`);
 	if (!Number.isFinite(n) || n < 0) throw RangeError(`createMatUi tooltip.${t} 必须是非负有限数字`);
 	return n;
 }
-function Rl(e) {
+function Ll(e) {
 	if (e === void 0) return je;
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("createMatUi defaults.tooltip 必须是对象");
 	return Object.freeze({
-		openDelay: Ll(e, "openDelay"),
-		closeDelay: Ll(e, "closeDelay")
+		openDelay: Il(e, "openDelay"),
+		closeDelay: Il(e, "closeDelay")
 	});
 }
-function zl(e) {
+function Rl(e) {
 	let t = Object.keys(e.props ?? {}), n = new Set(Object.keys(e.emits ?? {}).filter((e) => e.startsWith("update:")).map((e) => e.slice(7)));
 	return new Set(t.filter((e) => !n.has(e)));
 }
-function Bl(e) {
+function zl(e) {
 	let t = e.defaults;
 	if (t === void 0) return Object.freeze({ tooltip: je });
 	if (!t || typeof t != "object" || Array.isArray(t)) throw TypeError("createMatUi defaults 必须是对象");
-	let n = { tooltip: Rl(t.tooltip) };
+	let n = { tooltip: Ll(t.tooltip) };
 	return Object.entries(t).forEach(([e, t]) => {
 		if (e === "tooltip") return;
-		let r = Pl.get(e);
+		let r = Nl.get(e);
 		if (!r) throw TypeError(`createMatUi defaults 未知组件键 ${e}`);
 		if (!t || typeof t != "object" || Array.isArray(t)) throw TypeError(`createMatUi defaults.${e} 必须是对象`);
-		let i = zl(r), a = {};
+		let i = Rl(r), a = {};
 		Object.entries(t).forEach(([t, n]) => {
 			if (!i.has(t)) throw TypeError(`createMatUi defaults.${e}.${t} 不是可配置属性`);
 			a[t] = n;
 		}), n[e] = Object.freeze(a);
 	}), Object.freeze(n);
 }
-function Vl(e = {}) {
+function Bl(e = {}) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("createMatUi 选项必须是对象");
 	let t = Object.freeze({
-		iconClass: Il(e),
-		useCursor: Fl(e, "useCursor"),
-		defaults: Bl(e)
-	}), n = Ml(e.theme);
+		iconClass: Fl(e),
+		useCursor: Pl(e, "useCursor"),
+		defaults: zl(e)
+	}), n = jl(e.theme);
 	return {
 		theme: n,
 		install(e) {
-			Nl.forEach(([t, n, r]) => {
-				e.component(t, r), e.component(n, r), (yl[t] ?? []).forEach((t) => {
+			Ml.forEach(([t, n, r]) => {
+				e.component(t, r), e.component(n, r), (vl[t] ?? []).forEach((t) => {
 					e.component(t, r);
 				});
-			}), e.directive("intersection", vl), e.directive("state-layer", Oe), e.provide(Ne, t), e.provide(ct, n), Sl(t, n);
+			}), e.directive("intersection", _l), e.directive("state-layer", Oe), e.provide(Ne, t), e.provide(ct, n), xl(t, n);
 		}
 	};
 }
-function Hl() {
+function Vl() {
 	let e = h(ct, null);
 	if (!e) throw Error("useMatTheme() 必须在已安装 mde-vue 插件的 Vue 应用中调用");
 	return e;
 }
 //#endregion
 //#region src/view-transition.js
-function Ul() {
+function Hl() {
 	return typeof globalThis.matchMedia == "function" && globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
-function Wl() {
+function Ul() {
 	return typeof document > "u" || typeof document.startViewTransition != "function" ? null : document.startViewTransition.bind(document);
 }
-function Gl(e) {
+function Wl(e) {
 	if (e === void 0) return [];
 	let t = Array.isArray(e) ? e : [e];
 	if (t.some((e) => typeof e != "string" || e.trim().length === 0)) throw TypeError("useMatViewTransition.start names 必须是非空字符串或非空字符串数组");
 	return [...new Set(t)];
 }
-function Kl() {
+function Gl() {
 	let e = null, t = null;
 	async function n(n, r = {}) {
 		if (typeof n != "function") throw TypeError("useMatViewTransition.start update 必须是函数");
-		let i = Gl(r.names);
+		let i = Wl(r.names);
 		t && await t, e &&= (e.skipTransition?.(), await e.finished.catch(() => {}), null);
-		let a = Wl();
-		if (r.skip || !a || Ul()) {
+		let a = Ul();
+		if (r.skip || !a || Hl()) {
 			await n();
 			return;
 		}
@@ -13079,15 +13070,15 @@ function Kl() {
 	}
 	return Object.freeze({
 		get supported() {
-			return !!Wl();
+			return !!Ul();
 		},
 		start: n
 	});
 }
-var ql = Kl, Jl = {
+var Kl = Gl, ql = {
 	key: 0,
 	class: "mat-dialog-prompt__content"
-}, Yl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatImperativeDialogHost" }, {
+}, Jl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatImperativeDialogHost" }, {
 	__name: "ImperativeDialogHost",
 	props: {
 		options: {
@@ -13113,8 +13104,8 @@ var ql = Kl, Jl = {
 	},
 	setup(e) {
 		let n = e;
-		O(Ne, Cl());
-		let r = wl();
+		O(Ne, Sl());
+		let r = Cl();
 		r && O(ct, r);
 		let c = j(!0), l = L(n.cancelValue), f = j(n.options.promptConfig?.defaultValue ?? ""), p = i(() => !!n.options.promptConfig), m = i(() => n.options.promptConfig?.required ?? !1), h = i(() => m.value && f.value.trim().length === 0), g = i(() => {
 			let e = { ...n.options };
@@ -13148,7 +13139,7 @@ var ql = Kl, Jl = {
 				"variant",
 				"onClick"
 			]))), 128))]),
-			default: W(() => [p.value ? (D(), s(t, { key: 0 }, [e.options.content ? (D(), s("p", Jl, R(e.options.content), 1)) : o("", !0), d(vo, {
+			default: W(() => [p.value ? (D(), s(t, { key: 0 }, [e.options.content ? (D(), s("p", ql, R(e.options.content), 1)) : o("", !0), d(vo, {
 				modelValue: f.value,
 				"onUpdate:modelValue": r[0] ||= (e) => f.value = e,
 				autofocus: "",
@@ -13164,34 +13155,34 @@ var ql = Kl, Jl = {
 			_: 1
 		}, 16, ["modelValue", "aria-label"]));
 	}
-}), [["__scopeId", "data-v-ba439738"]]), Xl = [
+}), [["__scopeId", "data-v-ba439738"]]), Yl = [
 	"elevated",
 	"filled",
 	"filled-tonal",
 	"outlined",
 	"standard",
 	"text"
-], Zl = [
+], Xl = [
 	"fullScreen",
 	"scrim",
 	"closeOnBack"
-], Ql = [
+], Zl = [
 	"title",
 	"content",
 	"icon",
 	"closeLabel",
 	"ariaLabel"
 ];
-function $l(e) {
+function Ql(e) {
 	return typeof e == "number" ? Number.isFinite(e) && e > 0 : typeof e == "string" && e.trim().length > 0;
 }
-function eu() {
+function $l() {
 	if (typeof window > "u" || typeof document > "u") throw Error("Dialog 命令式函数只能在客户端环境中调用");
 }
-function tu(e) {
+function eu(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("dialog options 必须是对象");
 }
-function nu(e) {
+function tu(e) {
 	let t = e ?? "body", n = null;
 	if (typeof t == "string") try {
 		n = document.querySelector(t);
@@ -13203,10 +13194,10 @@ function nu(e) {
 	if (!n) throw TypeError("dialog attach 未找到目标元素");
 	return n;
 }
-function ru(e) {
+function nu(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("dialog action 必须是对象");
 	if (typeof e.text != "string" || e.text.trim().length === 0) throw TypeError("dialog action text 必须是非空字符串");
-	if (e.variant !== void 0 && !Xl.includes(e.variant)) throw TypeError("dialog action variant 无效");
+	if (e.variant !== void 0 && !Yl.includes(e.variant)) throw TypeError("dialog action variant 无效");
 	if (e.color !== void 0 && !Ue(e.color)) throw TypeError("dialog action color 无效");
 	if (e.disabled !== void 0 && typeof e.disabled != "boolean") throw TypeError("dialog action disabled 必须是 boolean");
 	return {
@@ -13216,40 +13207,40 @@ function ru(e) {
 		variant: e.variant ?? "text"
 	};
 }
-function iu(e) {
-	if (tu(e), Zl.forEach((t) => {
+function ru(e) {
+	if (eu(e), Xl.forEach((t) => {
 		if (e[t] !== void 0 && typeof e[t] != "boolean") throw TypeError(`dialog ${t} 必须是 boolean`);
-	}), Ql.forEach((t) => {
+	}), Zl.forEach((t) => {
 		if (e[t] !== void 0 && typeof e[t] != "string") throw TypeError(`dialog ${t} 必须是 string`);
 	}), e.closeLabel !== void 0 && e.closeLabel.trim().length === 0) throw TypeError("dialog closeLabel 必须是非空字符串");
 	if (e.color !== void 0 && !Ue(e.color)) throw TypeError("dialog color 无效");
-	if (e.width !== void 0 && !$l(e.width)) throw TypeError("dialog width 无效");
+	if (e.width !== void 0 && !Ql(e.width)) throw TypeError("dialog width 无效");
 	if (e.actions !== void 0 && !Array.isArray(e.actions)) throw TypeError("dialog actions 必须是数组");
 	let t = {
 		actions: (e.actions ?? [{
 			text: "确定",
 			value: void 0
-		}]).map(ru),
-		attach: nu(e.attach)
+		}]).map(nu),
+		attach: tu(e.attach)
 	};
 	return [
+		...Xl,
 		...Zl,
-		...Ql,
 		"color",
 		"width"
 	].forEach((n) => {
 		e[n] !== void 0 && (t[n] = e[n]);
 	}), e.promptConfig && (t.promptConfig = e.promptConfig), t;
 }
-function au(e, t) {
+function iu(e, t) {
 	try {
-		eu();
-		let n = iu(e);
+		$l();
+		let n = ru(e);
 		return new Promise((e, r) => {
 			let i = document.createElement("div");
 			i.dataset.matDialogHost = "", document.body.append(i);
 			try {
-				M(m(Yl, {
+				M(m(Jl, {
 					cancelValue: t,
 					options: n,
 					onClosed(t) {
@@ -13264,13 +13255,13 @@ function au(e, t) {
 		return Promise.reject(e);
 	}
 }
-function ou(e = {}) {
-	return au(e, void 0);
+function au(e = {}) {
+	return iu(e, void 0);
 }
-function su(e = {}) {
+function ou(e = {}) {
 	try {
-		if (tu(e), e.confirmText !== void 0 && (typeof e.confirmText != "string" || e.confirmText.trim().length === 0)) throw TypeError("alert confirmText 必须是非空字符串");
-		return au({
+		if (eu(e), e.confirmText !== void 0 && (typeof e.confirmText != "string" || e.confirmText.trim().length === 0)) throw TypeError("alert confirmText 必须是非空字符串");
+		return iu({
 			...e,
 			actions: [{
 				text: e.confirmText ?? "确定",
@@ -13281,13 +13272,13 @@ function su(e = {}) {
 		return Promise.reject(e);
 	}
 }
-function cu(e = {}) {
+function su(e = {}) {
 	try {
-		tu(e);
+		eu(e);
 		let t = e.confirmText ?? "确定", n = e.cancelText ?? "取消";
 		if (typeof t != "string" || t.trim().length === 0) throw TypeError("confirm confirmText 必须是非空字符串");
 		if (typeof n != "string" || n.trim().length === 0) throw TypeError("confirm cancelText 必须是非空字符串");
-		return au({
+		return iu({
 			...e,
 			actions: [{
 				text: n,
@@ -13301,9 +13292,9 @@ function cu(e = {}) {
 		return Promise.reject(e);
 	}
 }
-function lu(e = {}) {
+function cu(e = {}) {
 	try {
-		tu(e);
+		eu(e);
 		let t = e.confirmText ?? "确定", n = e.cancelText ?? "取消", r = e.defaultValue ?? "", i = e.required ?? !1;
 		if ([
 			[
@@ -13334,7 +13325,7 @@ function lu(e = {}) {
 		].forEach(([e, t, n]) => {
 			if (t !== void 0 && (typeof t != "string" || n && t.trim().length === 0)) throw TypeError(`prompt ${e} 必须是${n ? "非空" : ""}字符串`);
 		}), typeof i != "boolean") throw TypeError("prompt required 必须是 boolean");
-		return au({
+		return iu({
 			...e,
 			actions: [{
 				text: n,
@@ -13356,7 +13347,7 @@ function lu(e = {}) {
 }
 //#endregion
 //#region src/components/mat-snackbar/ImperativeSnackbarHost.vue
-var uu = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
+var lu = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
 	__name: "ImperativeSnackbarHost",
 	props: {
 		options: {
@@ -13370,8 +13361,8 @@ var uu = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
 	},
 	setup(e) {
 		let t = e;
-		O(Ne, Cl()), O(Ec, !0);
-		let n = wl();
+		O(Ne, Sl()), O(Ec, !0);
+		let n = Cl();
 		n && O(ct, n);
 		let r = j(!0), o = i(() => {
 			let e = { ...t.options };
@@ -13391,24 +13382,24 @@ var uu = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
 			onClosed: s
 		}), null, 16, ["modelValue"]));
 	}
-}), du = [
+}), uu = [
 	"left",
 	"center",
 	"right"
-], fu = null;
-function pu() {
+], du = null;
+function fu() {
 	if (typeof document > "u" || !document.body) throw Error("Snackbar 命令式函数只能在客户端环境中调用");
 }
-function mu(e) {
+function pu(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("snackbar options 必须是对象");
 }
-function hu(e) {
-	if (mu(e), typeof e.text != "string" || e.text.trim().length === 0) throw TypeError("snackbar text 必须是非空字符串");
+function mu(e) {
+	if (pu(e), typeof e.text != "string" || e.text.trim().length === 0) throw TypeError("snackbar text 必须是非空字符串");
 	if (e.actionText !== void 0 && (typeof e.actionText != "string" || e.actionText.trim().length === 0)) throw TypeError("snackbar actionText 必须是非空字符串");
 	if (e.onAction !== void 0 && typeof e.onAction != "function") throw TypeError("snackbar onAction 必须是函数");
 	if (e.closable !== void 0 && typeof e.closable != "boolean") throw TypeError("snackbar closable 必须是 boolean");
 	if (e.closeLabel !== void 0 && (typeof e.closeLabel != "string" || e.closeLabel.trim().length === 0)) throw TypeError("snackbar closeLabel 必须是非空字符串");
-	if (e.position !== void 0 && !du.includes(e.position)) throw TypeError("snackbar position 无效");
+	if (e.position !== void 0 && !uu.includes(e.position)) throw TypeError("snackbar position 无效");
 	if (e.duration !== void 0 && (!Number.isFinite(e.duration) || e.duration < 0)) throw TypeError("snackbar duration 必须是大于等于 0 的有限数字");
 	return {
 		actionText: e.actionText,
@@ -13420,34 +13411,34 @@ function hu(e) {
 		text: e.text
 	};
 }
+function hu() {
+	return du?.isConnected ? du : (du = document.createElement("div"), du.dataset.matSnackbarHost = "", document.body.append(du), du);
+}
 function gu() {
-	return fu?.isConnected ? fu : (fu = document.createElement("div"), fu.dataset.matSnackbarHost = "", document.body.append(fu), fu);
+	!du || du.childNodes.length > 0 || (du.remove(), du = null);
 }
-function _u() {
-	!fu || fu.childNodes.length > 0 || (fu.remove(), fu = null);
-}
-function vu(e) {
+function _u(e) {
 	try {
-		pu();
-		let t = hu(e);
+		fu();
+		let t = mu(e);
 		return new Promise((e, n) => {
 			let r = !1, i;
 			function a() {
 				if (r) return;
 				r = !0;
-				let t = fu;
-				t && M(null, t), e(), Mc(i), _u();
+				let t = du;
+				t && M(null, t), e(), Mc(i), gu();
 			}
 			function o(e) {
 				if (r) return;
 				r = !0;
-				let t = fu;
-				t && M(null, t), n(e), Mc(i), _u();
+				let t = du;
+				t && M(null, t), n(e), Mc(i), gu();
 			}
 			i = { activate() {
 				try {
-					let e = gu();
-					M(m(uu, {
+					let e = hu();
+					M(m(lu, {
 						onClosed: a,
 						options: t
 					}), e);
@@ -13460,6 +13451,6 @@ function vu(e) {
 		return Promise.reject(e);
 	}
 }
-var yu = vu;
+var vu = _u;
 //#endregion
-export { vl as Intersection, qn as MatAppBar, Fn as MatAppRoot, xr as MatAvatar, oa as MatBadge, xs as MatBottomSheet, jn as MatBtn, $n as MatBtnGroup, Hr as MatCard, Wr as MatCardActionArea, Jr as MatCardActions, Kr as MatCardContent, Lr as MatCardHeadline, zr as MatCardMedia, Vr as MatCardSubhead, ta as MatCheckbox, da as MatChip, ma as MatChipSet, ws as MatContainer, ms as MatDialog, Yi as MatDivider, Bo as MatDockedContainer, Mr as MatDynamicText, wi as MatExpansion, Hi as MatExpansionPanel, or as MatFab, dr as MatFabMenu, Ot as MatHover, ht as MatIcon, pr as MatImage, Jn as MatInputBase, Si as MatList, zi as MatListGroup, Ii as MatListItem, Ms as MatLoading, bo as MatMenu, wo as MatMenuGroup, So as MatMenuItem, ul as MatNavigationDrawer, pl as MatNavigationGroup, ll as MatNavigationRail, il as MatNavigationRailItem, Yc as MatPane, Gc as MatPanes, Tc as MatProgress, Vs as MatPullToRefresh, ga as MatRadio, ya as MatRadioGroup, $a as MatRangeSlider, fa as MatScrollArea, Zn as MatSearch, Mo as MatSelect, Tr as MatShape, vr as MatSharedElement, vr as MdeSharedElement, Ss as MatSideSheet, Ya as MatSlider, Lc as MatSnackbar, ss as MatSpacer, Pr as MatSplitBtn, ba as MatSwitch, Ts as MatTableWrapper, Er as MatText, vo as MatTextField, No as MatTextarea, Hc as MatToolbar, yn as MatTooltip, Es as MatVirtualScroll, Es as MdeVirtualScroll, Oe as StateLayer, su as alert, cu as confirm, Vl as createMatUi, ou as dialog, lu as prompt, vu as snackbar, yu as toast, It as useMatApp, $ as useMatProps, Hl as useMatTheme, Kl as useMatViewTransition, ql as useMdeViewTransition };
+export { _l as Intersection, qn as MatAppBar, Fn as MatAppRoot, xr as MatAvatar, oa as MatBadge, xs as MatBottomSheet, jn as MatBtn, $n as MatBtnGroup, Hr as MatCard, Wr as MatCardActionArea, Jr as MatCardActions, Kr as MatCardContent, Lr as MatCardHeadline, zr as MatCardMedia, Vr as MatCardSubhead, ta as MatCheckbox, da as MatChip, ma as MatChipSet, ws as MatContainer, ms as MatDialog, Yi as MatDivider, Bo as MatDockedContainer, Mr as MatDynamicText, wi as MatExpansion, Hi as MatExpansionPanel, or as MatFab, dr as MatFabMenu, Ot as MatHover, ht as MatIcon, pr as MatImage, Jn as MatInputBase, Si as MatList, zi as MatListGroup, Ii as MatListItem, Ms as MatLoading, bo as MatMenu, wo as MatMenuGroup, So as MatMenuItem, ll as MatNavigationDrawer, fl as MatNavigationGroup, cl as MatNavigationRail, il as MatNavigationRailItem, Yc as MatPane, Gc as MatPanes, Tc as MatProgress, Vs as MatPullToRefresh, ga as MatRadio, ya as MatRadioGroup, $a as MatRangeSlider, fa as MatScrollArea, Zn as MatSearch, Mo as MatSelect, Tr as MatShape, vr as MatSharedElement, vr as MdeSharedElement, Ss as MatSideSheet, Ya as MatSlider, Lc as MatSnackbar, ss as MatSpacer, Pr as MatSplitBtn, ba as MatSwitch, Ts as MatTableWrapper, Er as MatText, vo as MatTextField, No as MatTextarea, Hc as MatToolbar, yn as MatTooltip, Es as MatVirtualScroll, Es as MdeVirtualScroll, Oe as StateLayer, ou as alert, su as confirm, Bl as createMatUi, au as dialog, cu as prompt, _u as snackbar, vu as toast, It as useMatApp, $ as useMatProps, Vl as useMatTheme, Gl as useMatViewTransition, Kl as useMdeViewTransition };

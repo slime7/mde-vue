@@ -3780,13 +3780,6 @@ export interface MatNavigationRailProps {
   */
   openLabel?: string;
   /**
-  * 展开状态菜单入口的非空可访问名称。
-  *
-  * @type {string}
-  * @default '收起导航'
-  */
-  closeLabel?: string;
-  /**
   * 是否 Teleport 到 attach 并固定到视口。
   *
   * @type {boolean}
@@ -3917,13 +3910,6 @@ export interface MatNavigationDrawerProps {
   * @default 'start'
   */
   alignment?: 'start' | 'center' | 'end';
-  /**
-  * 模态遮罩与收起动作的无障碍名称。
-  *
-  * @type {string}
-  * @default '收起导航'
-  */
-  closeLabel?: string;
   /**
   * 是否 Teleport 到 attach 并固定到视口。
   *
