@@ -15,6 +15,14 @@ order: 50
 
 代码默认收起，预览直接可见。
 
+### 交互参数配置
+
+<ClientOnly>
+  <DocsPlayground label="Button 交互参数配置预览">
+    <ButtonPlaygroundExample />
+  </DocsPlayground>
+</ClientOnly>
+
 ### 默认内容
 
 :::: details 查看示例代码
@@ -423,6 +431,7 @@ order: 50
 
 <script setup>
 import ButtonBlockExample from '../examples/button/ButtonBlockExample.vue';
+import ButtonPlaygroundExample from '../examples/button/ButtonPlaygroundExample.vue';
 import ButtonColorExample from '../examples/button/ButtonColorExample.vue';
 import ButtonDefaultOnlyExample from '../examples/button/ButtonDefaultOnlyExample.vue';
 import ButtonDefaultSlotExample from '../examples/button/ButtonDefaultSlotExample.vue';

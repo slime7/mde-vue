@@ -98,6 +98,16 @@ html[data-mat-theme='dark'] {
   overflow-x: auto;
 }
 
+.vp-doc .docs-playground {
+  max-inline-size: 100%;
+}
+
+/* 调大文档正文宽度（覆盖 VitePress 默认 has-aside 时的 688px 限制，提升权重以覆盖 scoped 样式） */
+.VPDoc.has-aside .container .content .content-container,
+.VPDoc.has-aside .content-container {
+  max-width: 100%;
+}
+
 .vp-doc div[class*='language-'] > pre {
   max-block-size: min(70dvh, 48rem);
   overflow-y: auto;

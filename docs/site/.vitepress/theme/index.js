@@ -3,6 +3,7 @@ import DefaultTheme from 'vitepress/theme-without-fonts';
 import { watch } from 'vue';
 import { createMatUi } from 'mde-vue';
 import DocsPreview from './DocsPreview.vue';
+import DocsPlayground from './DocsPlayground.vue';
 
 const DOCS_THEME_STORAGE_KEY = 'mde-vue.docs.theme';
 const THEME_MODES = ['light', 'dark', 'system'];
@@ -89,6 +90,7 @@ export default {
   extends: DefaultTheme,
   enhanceApp({ app }) {
     app.component('DocsPreview', DocsPreview);
+    app.component('DocsPlayground', DocsPlayground);
 
     if (typeof document !== 'undefined') {
       const matUi = createMatUi({
