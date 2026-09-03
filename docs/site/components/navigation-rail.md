@@ -287,7 +287,7 @@ Badge 不提供专用 Slot，也不支持 `offset`。`location` 只接受八种�
 
 ### 内容混排与弹性布局
 
-菜单按钮、FAB、导航项与底部操作统一在默认 Slot 中混排。默认 Slot 暴露 `{ expanded: currentExpanded, orientation }` 作用域参数；结合 `<mat-spacer />` 可轻松将底部操作推至末尾。
+菜单按钮、FAB、导航项与底部操作统一在默认 Slot 中混排。导航项本身无左右内边距，容器两侧的 16px 留白统一由父容器提供，使 FAB、按钮、分割线等各类混排元素都能获得一致的标准容器内边距。默认 Slot 暴露 `{ expanded: currentExpanded, orientation }` 作用域参数；结合 `<mat-spacer />` 可轻松将底部操作推至末尾。
 
 Material Design 规范推荐间距：
 - **菜单按钮与 FAB 之间**：推荐保持 **12px** 间距（`--mat-navigation-rail-header-gap`）。
@@ -337,7 +337,7 @@ Material Design 规范推荐间距：
 
 ### Item 的 `trailing` Slot
 
-Item 的 `trailing` 只在展开态显示，通过前置弹性 spacer 保持在 Item 尾部，并随 Item 宽度动画始终锚定在末尾；trailing 前后分别保留 12px 与 8px 间距，后部间距与展开侧边距合计在 rail 尾部空出 24px。适合放置徽标、状态图标或快捷键；Slot 参数为 `{ expanded, selected }`。折叠态 rail 宽度不足，trailing 不渲染。
+Item 的 `trailing` 只在展开态显示，位于活动指示器内部。在 `full-width` 展开模式下，选中的高亮背景与交互状态层完整包含 trailing 内容，使折叠展开箭头、徽标或操作图标与按钮背景视觉融为一体；通过前置弹性 spacer 保持在末尾。Slot 参数为 `{ expanded, selected }`。折叠态 rail 宽度不足，trailing 不渲染。
 
 :::: details 查看示例代码
 ::: code-group

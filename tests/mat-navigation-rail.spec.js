@@ -417,8 +417,8 @@ describe('MatNavigationRail', () => {
     const items = wrapper.findAllComponents(MatNavigationRailItem);
     const trailing = wrapper.findAll('.test-trailing');
 
-    expect(items[0].find('.mat-navigation-rail-item__trailing').exists()).toBe(true);
-    expect(items[1].find('.mat-navigation-rail-item__trailing').exists()).toBe(true);
+    expect(items[0].find('.mat-navigation-rail-item__indicator .mat-navigation-rail-item__trailing').exists()).toBe(true);
+    expect(items[1].find('.mat-navigation-rail-item__indicator .mat-navigation-rail-item__trailing').exists()).toBe(true);
     expect(trailing).toHaveLength(2);
     expect(trailing[0].text()).toBe('false-true');
     expect(trailing[1].text()).toBe('false-false');

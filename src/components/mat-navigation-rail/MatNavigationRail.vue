@@ -814,71 +814,21 @@ watch([
     padding-inline: var(--mat-navigation-rail-expanded-side-space);
   }
 
-  .mat-navigation-rail__menu--detached {
-    position: absolute;
-    z-index: 2;
-    inset-block-start: var(--mat-navigation-rail-top-space);
-    inset-inline-start: var(--mat-navigation-rail-hidden-menu-space);
-  }
-
-  .mat-navigation-rail__menu {
-    display: inline-flex;
-    flex: 0 0 auto;
-    inline-size: var(--mat-navigation-rail-menu-size);
-    block-size: var(--mat-navigation-rail-menu-size);
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    color: var(--mat-navigation-rail-content-color);
-    background: transparent;
-    border: 0;
-    border-radius: var(--mat-sys-shape-corner-full);
-  }
-
-  .mat-navigation-rail__menu:focus-visible {
-    outline: var(--mat-sys-interaction-focus-ring-width) solid var(--mat-sys-color-secondary);
-    outline-offset: var(--mat-sys-interaction-focus-ring-offset);
-  }
-
-  .mat-navigation-rail__fab {
-    display: flex;
-    flex: 0 0 auto;
-    align-items: center;
-    justify-content: center;
-  }
-
   .mat-navigation-rail__content {
     display: flex;
     flex: 1 0 auto;
     min-block-size: 0;
     flex-direction: column;
     padding-block: var(--mat-navigation-rail-top-space);
+    padding-inline: var(--mat-navigation-rail-collapsed-side-space);
+  }
+
+  .mat-navigation-rail--expanded .mat-navigation-rail__content {
+    padding-inline: var(--mat-navigation-rail-expanded-side-space);
   }
 
   .mat-navigation-rail--with-header .mat-navigation-rail__content {
     padding-block-start: var(--mat-navigation-rail-header-content-space);
-  }
-
-  .mat-navigation-rail--with-end .mat-navigation-rail__content {
-    padding-block-end: 0;
-  }
-
-  .mat-navigation-rail__end {
-    position: sticky;
-    z-index: 1;
-    inset-block-end: 0;
-    display: flex;
-    flex: 0 0 auto;
-    align-items: center;
-    justify-content: center;
-    padding-block-end: var(--mat-navigation-rail-top-space);
-    padding-inline: var(--mat-navigation-rail-collapsed-side-space);
-    background: var(--mat-navigation-rail-current-container-color);
-  }
-
-  .mat-navigation-rail--expanded .mat-navigation-rail__end {
-    justify-content: var(--mat-navigation-rail-item-inline-alignment);
-    padding-inline: var(--mat-navigation-rail-expanded-side-space);
   }
 
   .mat-navigation-rail--bar .mat-navigation-rail__content {

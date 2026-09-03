@@ -11914,11 +11914,11 @@ var Nc = { class: "mat-snackbar__text" }, Pc = {
 	key: 0,
 	class: "mat-navigation-rail-item__icon-wrap"
 }, $c = { class: "mat-navigation-rail-item__label-wrap" }, el = {
-	key: 0,
+	key: 1,
 	class: "mat-navigation-rail-item__spacer",
 	"aria-hidden": "true"
 }, tl = {
-	key: 1,
+	key: 2,
 	class: "mat-navigation-rail-item__trailing"
 }, nl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationRailItem",
@@ -11991,8 +11991,8 @@ var Nc = { class: "mat-snackbar__text" }, Pc = {
 			"use-cursor": z(f).useCursor,
 			onClick: k
 		}), {
-			default: W(() => [
-				c("span", Zc, [S.value ? (D(), s("span", Qc, [w.value ? (D(), a(oa, {
+			default: W(() => [c("span", Zc, [
+				S.value ? (D(), s("span", Qc, [w.value ? (D(), a(oa, {
 					key: 0,
 					color: w.value.color,
 					content: w.value.content,
@@ -12024,14 +12024,14 @@ var Nc = { class: "mat-snackbar__text" }, Pc = {
 					icon: C.value,
 					class: "mat-navigation-rail-item__icon",
 					"aria-hidden": "true"
-				}, null, 8, ["fill", "icon"]))], 64))])) : o("", !0), c("span", $c, [c("span", { class: y(["mat-navigation-rail-item__label", T.value]) }, [P(e.$slots, "default", {}, void 0, !0)], 2)])]),
-				c("span", { class: y(["mat-navigation-rail-item__label", E.value]) }, [P(e.$slots, "default", {}, void 0, !0)], 2),
+				}, null, 8, ["fill", "icon"]))], 64))])) : o("", !0),
+				c("span", $c, [c("span", { class: y(["mat-navigation-rail-item__label", T.value]) }, [P(e.$slots, "default", {}, void 0, !0)], 2)]),
 				e.$slots.trailing ? (D(), s("span", el)) : o("", !0),
 				e.$slots.trailing ? (D(), s("span", tl, [P(e.$slots, "trailing", {
 					expanded: m.value,
 					selected: b.value
 				}, void 0, !0)])) : o("", !0)
-			]),
+			]), c("span", { class: y(["mat-navigation-rail-item__label", E.value]) }, [P(e.$slots, "default", {}, void 0, !0)], 2)]),
 			_: 3
 		}, 16, [
 			"class",
@@ -12041,7 +12041,7 @@ var Nc = { class: "mat-snackbar__text" }, Pc = {
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-b18013ea"]]), rl = ["aria-label"], il = { class: "mat-navigation-rail__layout" }, al = {
+}), [["__scopeId", "data-v-654903c6"]]), rl = ["aria-label"], il = { class: "mat-navigation-rail__layout" }, al = {
 	key: 0,
 	class: "mat-navigation-rail__header"
 }, ol = {
@@ -12324,7 +12324,7 @@ var Nc = { class: "mat-snackbar__text" }, Pc = {
 			_: 3
 		}, 8, ["orientation"])], 16)], 6)) : o("", !0)], 8, ["to", "disabled"]))], 64));
 	}
-}), [["__scopeId", "data-v-dd7df921"]]), cl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-b4be2ecf"]]), cl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationDrawer",
 	inheritAttrs: !1
 }, {

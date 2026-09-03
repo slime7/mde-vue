@@ -219,29 +219,29 @@ function handleClick(event) {
           <slot />
         </span>
       </span>
+
+      <span
+        v-if="$slots.trailing"
+        class="mat-navigation-rail-item__spacer"
+        aria-hidden="true"
+      />
+
+      <span
+        v-if="$slots.trailing"
+        class="mat-navigation-rail-item__trailing"
+      >
+        <slot
+          name="trailing"
+          :expanded="expanded"
+          :selected="selected"
+        />
+      </span>
     </span>
 
     <span
       :class="['mat-navigation-rail-item__label', collapsedLabelClass]"
     >
       <slot />
-    </span>
-
-    <span
-      v-if="$slots.trailing"
-      class="mat-navigation-rail-item__spacer"
-      aria-hidden="true"
-    />
-
-    <span
-      v-if="$slots.trailing"
-      class="mat-navigation-rail-item__trailing"
-    >
-      <slot
-        name="trailing"
-        :expanded="expanded"
-        :selected="selected"
-      />
     </span>
   </MatActionBase>
 </template>
@@ -270,14 +270,14 @@ function handleClick(event) {
     justify-content: center;
     gap: var(--mat-navigation-rail-vertical-icon-label-space);
     padding-block: var(--mat-navigation-rail-item-space);
-    padding-inline: var(--mat-navigation-rail-collapsed-side-space);
+    padding-inline: 0;
     transition: min-block-size var(--mat-sys-motion-spring-default-spatial);
   }
 
   .mat-navigation-rail-item--expanded {
     min-block-size: var(--mat-navigation-rail-expanded-item-height);
     justify-content: var(--mat-navigation-rail-item-inline-alignment, flex-start);
-    padding-inline: var(--mat-navigation-rail-expanded-side-space);
+    padding-inline: 0;
     transition: min-block-size var(--mat-sys-motion-spring-default-spatial);
   }
 
@@ -452,7 +452,7 @@ function handleClick(event) {
 
   .mat-navigation-rail-item--expanded .mat-navigation-rail-item__trailing {
     display: inline-flex;
-    margin-inline: var(--mat-navigation-rail-trailing-start-space) var(--mat-navigation-rail-trailing-end-space);
+    margin-inline: var(--mat-navigation-rail-trailing-start-space, 12px) 0;
   }
 
   .mat-navigation-rail-item__spacer {
