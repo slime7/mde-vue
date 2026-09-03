@@ -2,23 +2,19 @@
 <script setup>
 import { ref } from 'vue';
 
-const active = ref(false);
+const active = ref(true);
 </script>
 <!-- #endregion script -->
 
 <!-- #region template -->
 <template>
-  <section
-    id="navigation-rail-placeholder-example"
+  <mat-app-root
+    :fill-viewport="false"
     class="navigation-rail-placeholder-example"
   >
-    <mat-switch v-model="active">
-      {{ active ? '隐藏应用导航' : '显示应用导航' }}
-    </mat-switch>
     <mat-navigation-rail
       v-if="active"
       app
-      attach="#navigation-rail-placeholder-example"
       placeholder
       aria-label="占位导航"
     >
@@ -29,22 +25,33 @@ const active = ref(false);
         项目
       </mat-navigation-rail-item>
     </mat-navigation-rail>
-    <p>占位保留固定 rail 的宽度，正文不会从其声明位置穿过。</p>
-  </section>
+    <div class="navigation-rail-placeholder-example-content">
+      <mat-switch v-model="active">
+        {{ active ? '隐藏应用导航' : '显示应用导航' }}
+      </mat-switch>
+      <p>占位保留固定 rail 的宽度，正文不会从其声明位置穿过。</p>
+    </div>
+  </mat-app-root>
 </template>
 <!-- #endregion template -->
 
 <!-- #region style -->
 <style scoped>
 .navigation-rail-placeholder-example {
-  display: flex;
-  gap: 16px;
-  min-block-size: 180px;
+  position: relative;
+  min-block-size: 240px;
+  overflow: hidden;
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+  background: var(--mat-sys-color-surface-container-low);
+}
+
+.navigation-rail-placeholder-example-content {
+  padding: 16px;
 }
 
 .navigation-rail-placeholder-example p {
-  align-self: center;
-  margin: 0;
+  margin-block: 12px 0;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

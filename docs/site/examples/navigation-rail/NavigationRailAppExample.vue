@@ -2,23 +2,19 @@
 <script setup>
 import { ref } from 'vue';
 
-const active = ref(false);
+const active = ref(true);
 </script>
 <!-- #endregion script -->
 
 <!-- #region template -->
 <template>
-  <section
-    id="navigation-rail-app-example"
+  <mat-app-root
+    :fill-viewport="false"
     class="navigation-rail-app-example"
   >
-    <mat-switch v-model="active">
-      {{ active ? '隐藏应用导航' : '显示应用导航' }}
-    </mat-switch>
     <mat-navigation-rail
       v-if="active"
       app
-      attach="#navigation-rail-app-example"
       aria-label="应用导航"
     >
       <mat-navigation-rail-item icon="home">
@@ -28,15 +24,29 @@ const active = ref(false);
         设置
       </mat-navigation-rail-item>
     </mat-navigation-rail>
-    <p>应用模式的 rail 固定在视口起始侧，并挂载到本示例容器。</p>
-  </section>
+    <div class="navigation-rail-app-example-content">
+      <mat-switch v-model="active">
+        {{ active ? '隐藏应用导航' : '显示应用导航' }}
+      </mat-switch>
+      <p>应用模式的 rail 位于 MatAppRoot 时自动登记起始侧，正文内容自动避让。</p>
+    </div>
+  </mat-app-root>
 </template>
 <!-- #endregion template -->
 
 <!-- #region style -->
 <style scoped>
 .navigation-rail-app-example {
-  min-block-size: 160px;
+  position: relative;
+  min-block-size: 240px;
+  overflow: hidden;
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+  background: var(--mat-sys-color-surface-container-low);
+}
+
+.navigation-rail-app-example-content {
+  padding: 16px;
 }
 
 .navigation-rail-app-example p {
