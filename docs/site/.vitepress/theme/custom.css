@@ -143,8 +143,9 @@ html[data-mat-theme='dark'] {
 
 .mde-docs-root .mat-navigation-rail-host--app-root {
   position: fixed;
-  block-size: 100dvb;
-  z-index: 25;
+  inset-block-start: 64px;
+  block-size: calc(100dvb - 64px);
+  z-index: 15;
 }
 
 .mde-docs-root .mat-navigation-rail-host--modal {
@@ -208,4 +209,9 @@ html[data-mat-theme='dark'] {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+}
+
+/* 隐藏 VitePress 默认上下页导航，由 Layout.vue 的 mat-card 替代 */
+.VPDocFooter .prev-next {
+  display: none !important;
 }

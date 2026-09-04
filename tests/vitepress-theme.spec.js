@@ -80,7 +80,7 @@ describe('VitePress 文档自定义主题', () => {
     expect(readThemeFile('index.js')).toContain("import Layout from './Layout.vue';");
   });
 
-  it('使用 Layout.vue 自定义根布局并实现侧栏优先于顶栏', () => {
+  it('使用 Layout.vue 自定义根布局并将 app-bar 置于侧栏前方', () => {
     const layoutSource = readThemeFile('Layout.vue');
 
     expect(layoutSource).toContain('<mat-app-root');
@@ -91,8 +91,10 @@ describe('VitePress 文档自定义主题', () => {
     const drawerIndex = layoutSource.indexOf('<mat-navigation-drawer');
     const appBarIndex = layoutSource.indexOf('<mat-app-bar');
 
-    expect(drawerIndex).toBeGreaterThan(-1);
-    expect(appBarIndex).toBeGreaterThan(drawerIndex);
+    expect(appBarIndex).toBeGreaterThan(-1);
+    expect(drawerIndex).toBeGreaterThan(appBarIndex);
+    expect(layoutSource).toContain('<mat-card');
+    expect(layoutSource).toContain('<mat-card-action-area');
   });
 
   it('主题设置页使用 mde-vue 组件展示可交互预览', () => {

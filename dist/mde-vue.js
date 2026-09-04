@@ -2209,11 +2209,11 @@ var Un = {
 				"--mat-app-bar-app-start-inset": `${O.value?.insets.start ?? 0}px`,
 				"--mat-app-bar-app-top-offset": `${O.value?.insets.top ?? 0}px`
 			};
-		}), q = !1, J;
-		function Y() {
+		}), q = !1, J, Y;
+		function X() {
 			return typeof CSS < "u" && typeof CSS.supports == "function" && CSS.supports("animation-timeline", "scroll()");
 		}
-		function X(e) {
+		function Z(e) {
 			if (e instanceof HTMLElement && e.ownerDocument === document) return e;
 			if (typeof e == "string") try {
 				return document.querySelector(e);
@@ -2222,33 +2222,44 @@ var Un = {
 			}
 			return null;
 		}
-		function Z() {
-			J?.(), J = void 0, E.value?.removeAttribute("data-timeline-active"), O.value?.unregister(), O.value = null;
+		function te() {
+			J?.(), J = void 0, Y?.(), Y = void 0, E.value?.removeAttribute("data-timeline-active"), E.value?.removeAttribute("data-scrolled"), O.value?.unregister(), O.value = null;
 		}
-		async function te() {
-			if (await v(), !q || !w.value || !E.value || (Z(), I.value && (O.value = g.publicContext.registerEdge({
+		async function ne() {
+			if (await v(), !q || !w.value || !E.value) return;
+			te(), I.value && (O.value = g.publicContext.registerEdge({
 				edge: "top",
 				element: w.value
-			})), !Y())) return;
-			let e = X(d.scrollTarget), t = I.value && g.rootElement.value?.dataset.scrollable === "true" ? g.contentElement.value : null, n = e ?? t ?? Vn(w.value);
+			}));
+			let e = Z(d.scrollTarget), t = I.value && g.rootElement.value?.dataset.scrollable === "true" ? g.contentElement.value : null, n = e ?? t ?? Vn(w.value);
 			if (!n) return;
-			let r = I.value ? g.rootElement.value : Hn(n, E.value);
-			r && (J = Bn({
+			let r = Hn(n, E.value);
+			X() && r && (J = Bn({
 				name: k,
 				scope: r,
 				source: n
 			}), E.value.dataset.timelineActive = "");
+			let i = n === document.documentElement || n === document.body || document.scrollingElement !== void 0 && n === document.scrollingElement, a = i ? window : n;
+			function o() {
+				return i ? window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0 : n.scrollTop || 0;
+			}
+			function s() {
+				o() > 0 ? E.value?.setAttribute("data-scrolled", "") : E.value?.removeAttribute("data-scrolled");
+			}
+			a.addEventListener("scroll", s, { passive: !0 }), s(), Y = () => {
+				a.removeEventListener("scroll", s);
+			};
 		}
 		return T(() => {
-			q = !0, te();
+			q = !0, ne();
 		}), C(() => {
-			q = !1, Z();
+			q = !1, te();
 		}), H([
 			() => d.app,
 			() => d.attach,
 			() => d.scrollTarget,
 			A
-		], te), (e, r) => (D(), s(t, null, [!z(d).app || R.value || I.value ? (D(), a(n, {
+		], ne), (e, r) => (D(), s(t, null, [!z(d).app || R.value || I.value ? (D(), a(n, {
 			key: 0,
 			disabled: !z(d).app || I.value,
 			to: R.value ?? "body"
@@ -2278,7 +2289,7 @@ var Un = {
 			style: x({ blockSize: `${ee.value}px` })
 		}, null, 4)) : o("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-fc6d49f0"]]), Jn = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-69d66385"]]), Jn = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatInputBase",
 	inheritAttrs: !1
 }, {

@@ -90,4 +90,35 @@ describe('MatAppBar', () => {
     expect(target.querySelector('header')?.textContent).toContain('显式目标');
     wrapper.unmount();
   });
+
+  it('滚动时为 small 与其他尺寸更新 data-scrolled 状态', async () => {
+    const target = document.createElement('div');
+    target.style.overflowY = 'scroll';
+    target.style.height = '200px';
+    document.body.append(target);
+
+    const wrapper = mount(MatAppBar, {
+      attachTo: document.body,
+      props: { scrollTarget: target, variant: 'small' },
+      slots: { default: () => '应用标题' },
+    });
+
+    await nextTick();
+    expect(wrapper.get('header').attributes('data-scrolled')).toBeUndefined();
+
+    target.scrollTop = 20;
+    target.dispatchEvent(new Event('scroll'));
+    await nextTick();
+
+    expect(wrapper.get('header').attributes('data-scrolled')).toBeDefined();
+
+    target.scrollTop = 0;
+    target.dispatchEvent(new Event('scroll'));
+    await nextTick();
+
+    expect(wrapper.get('header').attributes('data-scrolled')).toBeUndefined();
+
+    wrapper.unmount();
+    target.remove();
+  });
 });

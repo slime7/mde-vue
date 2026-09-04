@@ -209,6 +209,7 @@ const hostStyle = computed(() => {
 
 let mounted = false;
 let unregisterTimeline;
+let cleanupScrollListener;
 
 function supportsScrollTimeline() {
   return typeof CSS !== 'undefined'
@@ -235,7 +236,10 @@ function normalizeElement(value) {
 function stopRegistrations() {
   unregisterTimeline?.();
   unregisterTimeline = undefined;
+  cleanupScrollListener?.();
+  cleanupScrollListener = undefined;
   headerElement.value?.removeAttribute('data-timeline-active');
+  headerElement.value?.removeAttribute('data-scrolled');
   edgeRegistration.value?.unregister();
   edgeRegistration.value = null;
 }
@@ -256,10 +260,6 @@ async function syncRegistrations() {
     });
   }
 
-  if (!supportsScrollTimeline()) {
-    return;
-  }
-
   const explicitSource = normalizeElement(propsWithDefaults.scrollTarget);
   const appRootSource = usesAppRoot.value && appContext.rootElement.value?.dataset.scrollable === 'true'
     ? appContext.contentElement.value
@@ -270,20 +270,46 @@ async function syncRegistrations() {
     return;
   }
 
-  const scope = usesAppRoot.value
-    ? appContext.rootElement.value
-    : findTimelineScope(source, headerElement.value);
+  const scope = findTimelineScope(source, headerElement.value);
 
-  if (!scope) {
-    return;
+  if (supportsScrollTimeline() && scope) {
+    unregisterTimeline = registerAppBarTimeline({
+      name: timelineName,
+      scope,
+      source,
+    });
+    headerElement.value.dataset.timelineActive = '';
   }
 
-  unregisterTimeline = registerAppBarTimeline({
-    name: timelineName,
-    scope,
-    source,
-  });
-  headerElement.value.dataset.timelineActive = '';
+  const isDocSource = (
+    source === document.documentElement
+    || source === document.body
+    || (typeof document.scrollingElement !== 'undefined' && source === document.scrollingElement)
+  );
+  const scrollListenerTarget = isDocSource ? window : source;
+
+  function getScrollTop() {
+    if (isDocSource) {
+      return window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    }
+    return source.scrollTop || 0;
+  }
+
+  function handleScroll() {
+    const isScrolled = getScrollTop() > 0;
+    if (isScrolled) {
+      headerElement.value?.setAttribute('data-scrolled', '');
+    } else {
+      headerElement.value?.removeAttribute('data-scrolled');
+    }
+  }
+
+  scrollListenerTarget.addEventListener('scroll', handleScroll, { passive: true });
+  handleScroll();
+
+  cleanupScrollListener = () => {
+    scrollListenerTarget.removeEventListener('scroll', handleScroll);
+  };
 }
 
 onMounted(() => {
@@ -410,6 +436,25 @@ watch([
     background: var(--mat-sys-color-surface);
     content: '';
     pointer-events: none;
+  }
+
+  .mat-app-bar::after {
+    position: absolute;
+    z-index: 0;
+    inset-block-start: 0;
+    inset-inline: 0;
+    box-sizing: border-box;
+    block-size: var(--mat-app-bar-expanded-height);
+    clip-path: inset(0);
+    background: var(--mat-sys-color-surface-container);
+    opacity: 0;
+    transition: opacity var(--mat-sys-motion-spring-default-spatial, .3s ease);
+    content: '';
+    pointer-events: none;
+  }
+
+  .mat-app-bar[data-scrolled]::after {
+    opacity: 1;
   }
 
   .mat-app-bar__host--app .mat-app-bar {
@@ -566,23 +611,37 @@ watch([
   }
 
   @supports (animation-timeline: scroll()) {
-    .mat-app-bar[data-timeline-active]::before {
-      animation: mat-app-bar-small-scroll 1ms linear both;
+    .mat-app-bar[data-timeline-active]::after {
+      animation: mat-app-bar-tint-scroll 1ms linear both;
       animation-range: 0 16px;
       animation-timeline: var(--mat-app-bar-timeline);
-    }
-
-    .mat-app-bar--medium-flexible[data-timeline-active]::before,
-    .mat-app-bar--large-flexible[data-timeline-active]::before {
-      animation-name: mat-app-bar-flexible-scroll;
+      transition: none;
     }
 
     .mat-app-bar--medium-flexible[data-timeline-active]::before {
+      animation: mat-app-bar-flexible-collapse 1ms linear both;
       animation-range: 0 48px;
+      animation-timeline: var(--mat-app-bar-timeline);
     }
 
     .mat-app-bar--large-flexible[data-timeline-active]::before {
+      animation: mat-app-bar-flexible-collapse 1ms linear both;
       animation-range: 0 56px;
+      animation-timeline: var(--mat-app-bar-timeline);
+    }
+
+    .mat-app-bar--medium-flexible[data-timeline-active]::after {
+      animation: mat-app-bar-flexible-tint-scroll 1ms linear both;
+      animation-range: 0 48px;
+      animation-timeline: var(--mat-app-bar-timeline);
+      transition: none;
+    }
+
+    .mat-app-bar--large-flexible[data-timeline-active]::after {
+      animation: mat-app-bar-flexible-tint-scroll 1ms linear both;
+      animation-range: 0 56px;
+      animation-timeline: var(--mat-app-bar-timeline);
+      transition: none;
     }
 
     .mat-app-bar--medium-flexible[data-timeline-active] .mat-app-bar__main,
@@ -632,16 +691,31 @@ watch([
     }
   }
 
-  @keyframes mat-app-bar-small-scroll {
+  @keyframes mat-app-bar-tint-scroll {
+    from {
+      opacity: 0;
+    }
+
     to {
-      background: var(--mat-sys-color-surface-container);
+      opacity: 1;
     }
   }
 
-  @keyframes mat-app-bar-flexible-scroll {
+  @keyframes mat-app-bar-flexible-collapse {
     to {
       clip-path: inset(0 0 var(--mat-app-bar-collapsed-inset));
-      background: var(--mat-sys-color-surface-container);
+    }
+  }
+
+  @keyframes mat-app-bar-flexible-tint-scroll {
+    from {
+      clip-path: inset(0);
+      opacity: 0;
+    }
+
+    to {
+      clip-path: inset(0 0 var(--mat-app-bar-collapsed-inset));
+      opacity: 1;
     }
   }
 

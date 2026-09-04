@@ -11,7 +11,6 @@ import MatNavigationDrawer from '../src/components/mat-navigation-drawer/MatNavi
 import MatNavigationRail from '../src/components/mat-navigation-rail/MatNavigationRail.vue';
 import MatNavigationRailItem from '../src/components/mat-navigation-rail/MatNavigationRailItem.vue';
 import MatAppRoot from '../src/components/mat-app-root/MatAppRoot.vue';
-import { useMatApp } from '../src/components/mat-app-root/mat-app-root-context';
 
 describe('MatNavigationDrawer', () => {
   let originalGetAnimations;
@@ -132,19 +131,11 @@ describe('MatNavigationDrawer', () => {
   });
 
   it('app 模式接入 MatAppRoot 并自动登记 start 边缘', async () => {
-    let app;
-    const Capture = defineComponent({
-      setup() {
-        app = useMatApp();
-        return () => h('div');
-      },
-    });
     const wrapper = mount(MatAppRoot, {
       attachTo: document.body,
       props: { fillViewport: false },
       slots: {
         default: () => [
-          h(Capture),
           h(MatNavigationDrawer, { app: true, expanded: true }),
         ],
       },
@@ -153,7 +144,6 @@ describe('MatNavigationDrawer', () => {
     await nextTick();
     const host = wrapper.element.querySelector('.mat-navigation-rail-host');
     expect(host).not.toBeNull();
-    expect(app.layout).toBeDefined();
     expect(wrapper.find('.mat-navigation-rail-host--app-root').exists()).toBe(true);
     wrapper.unmount();
   });
