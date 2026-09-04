@@ -130,7 +130,6 @@ describe('MatDialog', () => {
 
   it('等待浏览器报告的实际动画完成后再关闭', async () => {
     let finishCloseAnimation;
-    let animationQueryCount = 0;
     const closeFinished = new Promise((resolve) => {
       finishCloseAnimation = resolve;
     });
@@ -138,12 +137,15 @@ describe('MatDialog', () => {
     Object.defineProperty(Element.prototype, 'getAnimations', {
       configurable: true,
       value() {
-        animationQueryCount += 1;
-
-        return [{
-          finished: animationQueryCount === 1 ? Promise.resolve() : closeFinished,
-          playState: 'running',
-        }];
+        return this.classList.contains('mat-dialog--closing')
+          ? [{
+            finished: closeFinished,
+            playState: 'running',
+          }]
+          : [{
+            finished: Promise.resolve(),
+            playState: 'running',
+          }];
       },
     });
 

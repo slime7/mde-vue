@@ -5,7 +5,7 @@ function prefersReducedMotion() {
 /**
  * 以浏览器实际运行的 CSS 动画作为组件阶段完成信号。
  *
- * @returns {{cancel: () => void, wait: (element: Element | null, fallbackDuration: number, callback: () => void) => void}}
+ * @returns {{cancel: () => void, wait: (element: Element | null, fallbackDuration: number, callback: () => void, options?: {fallbackWhenIdle?: boolean}) => void}}
  */
 export default function createMotionController() {
   let sequence = 0;
@@ -22,7 +22,17 @@ export default function createMotionController() {
     fallbackTimer = undefined;
   }
 
-  function wait(element, fallbackDuration, callback) {
+  function scheduleFallback(currentSequence, fallbackDuration, callback) {
+    fallbackTimer = globalThis.setTimeout(() => {
+      fallbackTimer = undefined;
+
+      if (sequence === currentSequence) {
+        callback();
+      }
+    }, fallbackDuration);
+  }
+
+  function wait(element, fallbackDuration, callback, { fallbackWhenIdle = false } = {}) {
     cancel();
     const currentSequence = sequence;
 
@@ -37,7 +47,12 @@ export default function createMotionController() {
       ));
 
       if (animations.length === 0) {
-        callback();
+        if (fallbackWhenIdle) {
+          scheduleFallback(currentSequence, fallbackDuration, callback);
+        } else {
+          callback();
+        }
+
         return;
       }
 
@@ -49,13 +64,7 @@ export default function createMotionController() {
       return;
     }
 
-    fallbackTimer = globalThis.setTimeout(() => {
-      fallbackTimer = undefined;
-
-      if (sequence === currentSequence) {
-        callback();
-      }
-    }, fallbackDuration);
+    scheduleFallback(currentSequence, fallbackDuration, callback);
   }
 
   return Object.freeze({ cancel, wait });

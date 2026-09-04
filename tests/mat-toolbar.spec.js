@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import {
   afterEach, describe, expect, it, vi,
 } from 'vitest';
@@ -21,6 +21,7 @@ function toolbarElement() {
 describe('MatToolbar', () => {
   afterEach(() => {
     vi.restoreAllMocks();
+    Reflect.deleteProperty(Element.prototype, 'getAnimations');
   });
 
   it('默认渲染 docked Toolbar，默认 Slot 可容纳按钮', async () => {
@@ -160,6 +161,49 @@ describe('MatToolbar', () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it('关闭阶段渲染刷新前保留 Toolbar，实际动画结束后再移除', async () => {
+    let finishCloseAnimation;
+    const closeFinished = new Promise((resolve) => {
+      finishCloseAnimation = resolve;
+    });
+
+    Object.defineProperty(Element.prototype, 'getAnimations', {
+      configurable: true,
+      value() {
+        if (!this.classList.contains('mat-toolbar--closing')) {
+          return [];
+        }
+
+        return [{
+          finished: closeFinished,
+          playState: 'running',
+        }];
+      },
+    });
+
+    const wrapper = mount(MatToolbar, {
+      attachTo: document.body,
+      props: {
+        modelValue: true,
+      },
+    });
+
+    await settleRender();
+    const toolbar = toolbarElement();
+
+    await wrapper.setProps({ modelValue: false });
+    await settleRender();
+
+    expect(document.body.contains(toolbar)).toBe(true);
+
+    finishCloseAnimation();
+    await flushPromises();
+    await settleRender();
+
+    expect(document.body.contains(toolbar)).toBe(false);
+    wrapper.unmount();
   });
 
   it('左右悬浮模式使用垂直方向，并设置 aria-orientation', async () => {

@@ -15,6 +15,7 @@ import {
   watchEffect,
 } from 'vue';
 import MatSurfaceBase from '../MatSurfaceBase.vue';
+import createCloseMotion from '../close-motion';
 import createMotionController from '../motion-controller';
 import { isComponentColor } from '../button-props';
 import { dialogStack, registerDialog, unregisterDialog } from '../dialog-stack';
@@ -219,6 +220,7 @@ const rootStyle = computed(() => [attrs.style]);
 const panelStyle = computed(() => [colorStyle.value, dialogWidthStyle.value]);
 let mounted = false;
 const phaseMotion = createMotionController();
+const closeMotion = createCloseMotion({ motion: phaseMotion });
 let previousFocus = null;
 
 useFocusTrap(root, computed(() => rendered.value && isTop.value));
@@ -431,12 +433,23 @@ function finishClose() {
 }
 
 function closeDialog() {
-  if (!rendered.value) {
+  if (!rendered.value || phase.value === 'closing') {
     return;
   }
 
-  phase.value = 'closing';
-  waitForPhase(200, finishClose);
+  closeMotion.start({
+    canStart: () => rendered.value && phase.value !== 'closing',
+    duration: 200,
+    getElement: () => root.value,
+    isActive: () => mounted && !propsWithDefaults.modelValue
+      && phase.value === 'closing'
+      && rendered.value
+      && Boolean(root.value),
+    onFinish: finishClose,
+    onStart: () => {
+      phase.value = 'closing';
+    },
+  });
 }
 
 /**

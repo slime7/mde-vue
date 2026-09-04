@@ -1,10 +1,10 @@
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import {
   h,
   nextTick,
 } from 'vue';
 import {
-  beforeEach, describe, expect, it, vi,
+  afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
 import MatDockedContainer from '../src/components/mat-docked-container/MatDockedContainer.vue';
 import MatAppRoot from '../src/components/mat-app-root/MatAppRoot.vue';
@@ -32,6 +32,10 @@ describe('MatDockedContainer', () => {
       delete this.dataset.popoverOpen;
       dispatchToggle(this, 'closed');
     });
+  });
+
+  afterEach(() => {
+    Reflect.deleteProperty(Element.prototype, 'getAnimations');
   });
 
   it('activator Slot 优先于 anchor prop，并在关闭后恢复触发器焦点', async () => {
@@ -247,6 +251,52 @@ describe('MatDockedContainer', () => {
     expect(wrapper.emitted('closed')).toBeTruthy();
     wrapper.unmount();
     vi.useRealTimers();
+  });
+
+  it('关闭阶段渲染刷新前保留 Popover，实际动画结束后再隐藏', async () => {
+    let finishCloseAnimation;
+    const closeFinished = new Promise((resolve) => {
+      finishCloseAnimation = resolve;
+    });
+
+    Object.defineProperty(Element.prototype, 'getAnimations', {
+      configurable: true,
+      value() {
+        if (!this.classList.contains('mat-docked-container--closing')) {
+          return [];
+        }
+
+        return [{
+          finished: closeFinished,
+          playState: 'running',
+        }];
+      },
+    });
+
+    const wrapper = mount(MatDockedContainer, {
+      attachTo: document.body,
+      props: {
+        anchor: [0, 0],
+        modelValue: true,
+      },
+      slots: { default: () => '容器内容' },
+    });
+
+    await nextTick();
+    const container = wrapper.get('.mat-docked-container').element;
+
+    await wrapper.setProps({ modelValue: false });
+    await nextTick();
+
+    expect(container.dataset.popoverOpen).toBe('');
+
+    finishCloseAnimation();
+    await flushPromises();
+    await nextTick();
+
+    expect(container.dataset.popoverOpen).toBeUndefined();
+    expect(wrapper.emitted('closed')).toHaveLength(1);
+    wrapper.unmount();
   });
 
   it('嵌套在 MatAppRoot 内时将遮罩限制在应用矩形中', async () => {

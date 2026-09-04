@@ -125,6 +125,41 @@ describe('MatBottomSheet', () => {
     expect(wrapper.emitted('closed')).toHaveLength(1);
   });
 
+  it('退出动画尚未被浏览器报告时，仍保留 DOM 至后备时长结束', async () => {
+    Object.defineProperty(Element.prototype, 'getAnimations', {
+      configurable: true,
+      value() {
+        return [];
+      },
+    });
+
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        modelValue: true,
+        title: '尚未报告动画',
+        variant: 'standard',
+      },
+    });
+
+    await settleRender();
+    const sheet = wrapper.get('aside').element;
+
+    await wrapper.setProps({ modelValue: false });
+    await nextTick();
+
+    expect(document.body.contains(sheet)).toBe(true);
+
+    await vi.advanceTimersByTimeAsync(199);
+
+    expect(document.body.contains(sheet)).toBe(true);
+
+    await vi.advanceTimersByTimeAsync(1);
+    await nextTick();
+
+    expect(document.body.contains(sheet)).toBe(false);
+  });
+
   it('auto 在窄屏使用 modal，在宽屏使用 standard', async () => {
     const compact = mount(MatBottomSheet, {
       props: {

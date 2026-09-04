@@ -1,10 +1,10 @@
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import {
   h,
   nextTick,
 } from 'vue';
 import {
-  beforeEach, describe, expect, it, vi,
+  afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
 import MatDivider from '../src/components/mat-divider/MatDivider.vue';
 import MatMenu from '../src/components/mat-menu/MatMenu.vue';
@@ -30,6 +30,10 @@ describe('MatMenu', () => {
       delete this.dataset.popoverOpen;
       dispatchToggle(this, 'closed');
     });
+  });
+
+  afterEach(() => {
+    Reflect.deleteProperty(Element.prototype, 'getAnimations');
   });
 
   it('activator Slot 优先于 anchor prop，并在关闭后恢复触发器焦点', async () => {
@@ -306,6 +310,55 @@ describe('MatMenu', () => {
     expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([false]);
     expect(wrapper.emitted('update:open')).toBeUndefined();
     expect(document.activeElement).toBe(anchor);
+  });
+
+  it('关闭阶段渲染刷新前保留 Popover，实际动画结束后再隐藏', async () => {
+    let finishCloseAnimation;
+    const closeFinished = new Promise((resolve) => {
+      finishCloseAnimation = resolve;
+    });
+
+    Object.defineProperty(Element.prototype, 'getAnimations', {
+      configurable: true,
+      value() {
+        if (!this.classList.contains('mat-menu--closing')) {
+          return [];
+        }
+
+        return [{
+          finished: closeFinished,
+          playState: 'running',
+        }];
+      },
+    });
+
+    const anchor = document.createElement('button');
+
+    anchor.id = 'animation-menu-trigger';
+    document.body.append(anchor);
+    const wrapper = mount(MatMenu, {
+      attachTo: document.body,
+      props: {
+        anchor: 'animation-menu-trigger',
+        modelValue: true,
+      },
+      slots: { default: () => h(MatMenuItem, null, () => '菜单项目') },
+    });
+
+    await nextTick();
+    const menu = wrapper.get('[role="menu"]').element;
+
+    await wrapper.setProps({ modelValue: false });
+    await nextTick();
+
+    expect(menu.dataset.popoverOpen).toBe('');
+
+    finishCloseAnimation();
+    await flushPromises();
+    await nextTick();
+
+    expect(menu.dataset.popoverOpen).toBeUndefined();
+    wrapper.unmount();
   });
 
   it('程序化关闭并重开后仍响应浏览器发起的关闭', async () => {

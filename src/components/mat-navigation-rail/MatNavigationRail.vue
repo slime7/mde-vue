@@ -4,6 +4,7 @@ import {
   onBeforeUnmount, onMounted, provide, ref, shallowRef, useSlots, watch,
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
+import createCloseMotion from '../close-motion';
 import createMotionController from '../motion-controller';
 import MatScrollArea from '../mat-scroll-area/MatScrollArea.vue';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
@@ -312,6 +313,7 @@ function NavigationRailContent() {
   }).map(renderDefaultNode);
 }
 const hideMotion = createMotionController();
+const closeMotion = createCloseMotion({ motion: hideMotion });
 const usesAppRoot = computed(() => (
   propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach
 ));
@@ -447,7 +449,7 @@ function warnForInvalidAttach() {
   }
 }
 
-async function syncExpandedPresentation() {
+function syncExpandedPresentation() {
   hideMotion.cancel();
 
   if (propsWithDefaults.expanded || !isHidden.value) {
@@ -456,20 +458,20 @@ async function syncExpandedPresentation() {
     return;
   }
 
-  showCollapsibleContent.value = true;
-  await nextTick();
-
-  if (!isHidden.value) {
-    return;
-  }
-
-  hideMotion.wait(hostElement.value, 200, () => {
-    if (!isHidden.value) {
-      return;
-    }
-
-    presentedExpanded.value = false;
-    showCollapsibleContent.value = false;
+  closeMotion.start({
+    canStart: () => isHidden.value,
+    duration: 200,
+    getElement: () => hostElement.value,
+    isActive: () => isHidden.value
+      && showCollapsibleContent.value
+      && Boolean(hostElement.value),
+    onFinish: () => {
+      presentedExpanded.value = false;
+      showCollapsibleContent.value = false;
+    },
+    onStart: () => {
+      showCollapsibleContent.value = true;
+    },
   });
 }
 

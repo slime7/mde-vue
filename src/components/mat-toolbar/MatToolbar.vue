@@ -13,6 +13,7 @@ import {
   watch,
 } from 'vue';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
+import createCloseMotion from '../close-motion';
 import createMotionController from '../motion-controller';
 import { registerToolbar } from '../toolbar-overlay';
 import { useMatProps } from '../use-mat-props';
@@ -260,6 +261,7 @@ let resizeObserver;
 let measuring = false;
 let mounted = false;
 const phaseMotion = createMotionController();
+const closeMotion = createCloseMotion({ motion: phaseMotion });
 let warnedForFabSlot = false;
 
 function clearPhaseTimer() {
@@ -273,10 +275,17 @@ function waitForAnimation(callback) {
   phaseMotion.wait(toolbarElement.value, TOOLBAR_ANIMATION_DURATION, callback);
 }
 
-function openToolbar() {
+async function openToolbar() {
   clearPhaseTimer();
   rendered.value = true;
   phase.value = 'opening';
+
+  await nextTick();
+
+  if (!mounted || !rendered.value || !propsWithDefaults.modelValue || phase.value !== 'opening') {
+    return;
+  }
+
   waitForAnimation(() => {
     if (rendered.value && propsWithDefaults.modelValue) {
       phase.value = 'open';
@@ -285,19 +294,29 @@ function openToolbar() {
 }
 
 function closeToolbar() {
-  clearPhaseTimer();
-
   if (!rendered.value) {
     phase.value = 'closed';
     return;
   }
 
-  phase.value = 'closing';
-  waitForAnimation(() => {
-    if (!propsWithDefaults.modelValue) {
+  if (phase.value === 'closing') {
+    return;
+  }
+
+  closeMotion.start({
+    canStart: () => rendered.value && phase.value !== 'closing',
+    duration: TOOLBAR_ANIMATION_DURATION,
+    getElement: () => toolbarElement.value,
+    isActive: () => mounted && !propsWithDefaults.modelValue
+      && rendered.value
+      && phase.value === 'closing',
+    onFinish: () => {
       rendered.value = false;
       phase.value = 'closed';
-    }
+    },
+    onStart: () => {
+      phase.value = 'closing';
+    },
   });
 }
 

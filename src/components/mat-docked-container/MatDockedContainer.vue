@@ -5,6 +5,7 @@ import {
 } from 'vue';
 import MatSurfaceBase from '../MatSurfaceBase.vue';
 import { addAnchorName, removeAnchorName } from '../../anchor-names';
+import createCloseMotion from '../close-motion';
 import createMotionController from '../motion-controller';
 import { isComponentColor } from '../button-props';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
@@ -189,6 +190,7 @@ let popoverShown = false;
 let scrimShown = false;
 let programmaticClose = false;
 const phaseMotion = createMotionController();
+const closeMotion = createCloseMotion({ motion: phaseMotion });
 let viewportFrame;
 let sizeObserver;
 let returnFocusElement = null;
@@ -416,8 +418,16 @@ function finishNativeClose() {
 }
 
 function animateNativeClose() {
-  phase.value = 'closing';
-  phaseMotion.wait(root.value, CLOSE_DURATION, finishNativeClose);
+  closeMotion.start({
+    canStart: () => Boolean(root.value) && phase.value !== 'closing',
+    duration: CLOSE_DURATION,
+    getElement: () => root.value,
+    isActive: () => phase.value === 'closing' && Boolean(root.value),
+    onFinish: finishNativeClose,
+    onStart: () => {
+      phase.value = 'closing';
+    },
+  });
 }
 
 function hidePopover({ immediate = false } = {}) {
@@ -437,8 +447,17 @@ function hidePopover({ immediate = false } = {}) {
     return;
   }
 
-  phase.value = 'closing';
-  phaseMotion.wait(root.value, CLOSE_DURATION, finishClose);
+  closeMotion.start({
+    canStart: () => Boolean(root.value && popoverShown)
+      && phase.value !== 'closing',
+    duration: CLOSE_DURATION,
+    getElement: () => root.value,
+    isActive: () => phase.value === 'closing' && Boolean(root.value),
+    onFinish: finishClose,
+    onStart: () => {
+      phase.value = 'closing';
+    },
+  });
 }
 
 function clampToViewport() {

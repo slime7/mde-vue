@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
@@ -41,6 +41,7 @@ describe('MatSnackbar', () => {
 
   afterEach(() => {
     wrappers.splice(0).reverse().forEach((wrapper) => wrapper.unmount());
+    Reflect.deleteProperty(Element.prototype, 'getAnimations');
     if (innerHeightDescriptor) {
       Object.defineProperty(window, 'innerHeight', innerHeightDescriptor);
     }
@@ -223,6 +224,50 @@ describe('MatSnackbar', () => {
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
 
     await finishExit();
+  });
+
+  it('关闭阶段渲染刷新前保留通知节点，实际动画结束后再移除', async () => {
+    let finishCloseAnimation;
+    const closeFinished = new Promise((resolve) => {
+      finishCloseAnimation = resolve;
+    });
+
+    Object.defineProperty(Element.prototype, 'getAnimations', {
+      configurable: true,
+      value() {
+        if (!this.classList.contains('mat-snackbar--closing')) {
+          return [];
+        }
+
+        return [{
+          finished: closeFinished,
+          playState: 'running',
+        }];
+      },
+    });
+
+    const wrapper = mountSnackbar({
+      props: {
+        duration: 0,
+        modelValue: true,
+        text: '动画通知',
+      },
+    });
+
+    await settleRender();
+    const element = snackbarElement();
+
+    await wrapper.setProps({ modelValue: false });
+    await settleRender();
+
+    expect(snackbarElement()).toBe(element);
+
+    finishCloseAnimation();
+    await flushPromises();
+    await settleRender();
+
+    expect(snackbarElement()).toBeNull();
+    expect(wrapper.emitted('closed')).toHaveLength(1);
   });
 
   it('所有模板实例共用 FIFO 队列，并在活动项退出后展示下一项', async () => {

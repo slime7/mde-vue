@@ -11,6 +11,7 @@ import {
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatActionBase from '../MatActionBase.vue';
+import createCloseMotion from '../close-motion';
 import createMotionController from '../motion-controller';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import MAT_SNACKBAR_EXTERNALLY_MANAGED_KEY from '../snackbar-context';
@@ -160,6 +161,7 @@ const resolvedCloseLabel = computed(() => (
 let mounted = false;
 let durationTimer;
 const phaseMotion = createMotionController();
+const closeMotion = createCloseMotion({ motion: phaseMotion });
 let warnedForMissingContent = false;
 let removeToolbarListener = null;
 
@@ -252,8 +254,18 @@ function dismissSnackbar() {
     return;
   }
 
-  phase.value = 'closing';
-  waitForPhase(200, finishClose);
+  closeMotion.start({
+    canStart: () => rendered.value && phase.value !== 'closing',
+    duration: 200,
+    getElement: () => snackbarElement.value,
+    isActive: () => mounted && rendered.value
+      && phase.value === 'closing'
+      && Boolean(snackbarElement.value),
+    onFinish: finishClose,
+    onStart: () => {
+      phase.value = 'closing';
+    },
+  });
 }
 
 function requestModelClose() {

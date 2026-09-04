@@ -13,6 +13,7 @@ import {
   useSlots,
   watch,
 } from 'vue';
+import createCloseMotion from './close-motion';
 import createFrameScheduler from './frame-scheduler';
 import createMotionController from './motion-controller';
 import {
@@ -214,6 +215,7 @@ const panelStyle = computed(() => [
 ]);
 let mounted = false;
 const phaseMotion = createMotionController();
+const closeMotion = createCloseMotion({ motion: phaseMotion });
 let previousFocus = null;
 let previousWasModal = false;
 let activePointerId = null;
@@ -567,19 +569,28 @@ function finishClose() {
   });
 }
 
-async function closeSheet() {
+function closeSheet() {
   if (!rendered.value) {
     return;
   }
 
-  phase.value = 'closing';
-  await nextTick();
-
-  if (props.modelValue || phase.value !== 'closing' || !root.value) {
+  if (phase.value === 'closing') {
     return;
   }
 
-  waitForPhase(200, finishClose);
+  closeMotion.start({
+    canStart: () => rendered.value && phase.value !== 'closing',
+    duration: 200,
+    getElement: () => root.value,
+    isActive: () => mounted && !props.modelValue
+      && phase.value === 'closing'
+      && rendered.value
+      && Boolean(root.value),
+    onFinish: finishClose,
+    onStart: () => {
+      phase.value = 'closing';
+    },
+  });
 }
 
 /**
@@ -1427,7 +1438,7 @@ watch(() => props.closeLabel, (value) => {
 
   @keyframes mat-bottom-sheet-exit {
     to {
-      transform: translateY(calc(100% + var(--mat-sheet-drag-offset, 0px)));
+      transform: translateY(100%);
     }
   }
 

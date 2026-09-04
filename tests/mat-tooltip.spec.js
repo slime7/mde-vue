@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
@@ -59,6 +59,7 @@ describe('MatTooltip', () => {
   });
 
   afterEach(() => {
+    Reflect.deleteProperty(Element.prototype, 'getAnimations');
     vi.useRealTimers();
   });
 
@@ -1001,6 +1002,52 @@ describe('MatTooltip', () => {
     await settleRender();
     expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
 
+    wrapper.unmount();
+  });
+
+  it('关闭阶段渲染刷新前保留 Tooltip 节点，实际动画结束后再移除', async () => {
+    let finishCloseAnimation;
+    const closeFinished = new Promise((resolve) => {
+      finishCloseAnimation = resolve;
+    });
+    const target = createTarget('animation-tooltip-target');
+
+    Object.defineProperty(Element.prototype, 'getAnimations', {
+      configurable: true,
+      value() {
+        if (!this.classList.contains('mat-tooltip--closing')) {
+          return [];
+        }
+
+        return [{
+          finished: closeFinished,
+          playState: 'running',
+        }];
+      },
+    });
+
+    const wrapper = mount(MatTooltip, {
+      attachTo: document.body,
+      props: {
+        content: '动画提示',
+        modelValue: true,
+        target,
+      },
+    });
+
+    await settleRender();
+    const element = document.body.querySelector('[role="tooltip"]');
+
+    await wrapper.setProps({ modelValue: false });
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBe(element);
+
+    finishCloseAnimation();
+    await flushPromises();
+    await settleRender();
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
     wrapper.unmount();
   });
 

@@ -17,6 +17,7 @@ import {
   watch,
 } from 'vue';
 import MatHover from '../mat-hover/MatHover.vue';
+import createCloseMotion from '../close-motion';
 import createMotionController from '../motion-controller';
 import { useMatProps } from '../use-mat-props';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
@@ -202,6 +203,7 @@ const isControlled = Object.prototype.hasOwnProperty.call(rawVNodeProps, 'modelV
 let closeTimer;
 let openTimer;
 const phaseMotion = createMotionController();
+const closeMotion = createCloseMotion({ motion: phaseMotion });
 let positionFrame;
 let positionFrameUsesAnimation = false;
 let connectionFrame;
@@ -440,14 +442,6 @@ function watchTargetConnection() {
   connectionFrame = window.requestAnimationFrame(check);
 }
 
-/**
- * @param {number} duration
- * @param {() => void} callback
- */
-function waitForPhase(duration, callback) {
-  phaseMotion.wait(tooltipElement.value, duration, callback);
-}
-
 function clearPositionFrame() {
   if (positionFrame === undefined) {
     return;
@@ -656,9 +650,19 @@ function hideTooltip({ immediate = false } = {}) {
     return;
   }
 
-  isDisplayed.value = false;
-  phase.value = 'closing';
-  waitForPhase(CLOSE_DURATION, finishClose);
+  closeMotion.start({
+    canStart: () => rendered.value && phase.value !== 'closing',
+    duration: CLOSE_DURATION,
+    getElement: () => tooltipElement.value,
+    isActive: () => mounted && rendered.value
+      && phase.value === 'closing'
+      && Boolean(tooltipElement.value),
+    onFinish: finishClose,
+    onStart: () => {
+      isDisplayed.value = false;
+      phase.value = 'closing';
+    },
+  });
 }
 
 function requestClose() {
