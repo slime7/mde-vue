@@ -111,16 +111,6 @@ async function toggleDetail() {
 
 <!-- #region style -->
 <style scoped>
-.shared-element-disabled-example {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 24px;
-  background: var(--mat-sys-color-surface-container);
-  border-radius: var(--mat-sys-shape-corner-large);
-}
-
 .shared-element-disabled-example__surface {
   inline-size: min(100%, 280px);
 }

@@ -40,9 +40,6 @@ const active = ref(true);
   position: relative;
   block-size: 220px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
-  background: var(--mat-sys-color-surface-container-low);
 }
 
 .navigation-rail-bottom-placeholder-example-content {

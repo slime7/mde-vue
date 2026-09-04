@@ -19,12 +19,6 @@
 
 <!-- #region style -->
 <style scoped>
-.shared-element-root-example {
-  padding: 24px;
-  background: var(--mat-sys-color-surface-container);
-  border-radius: var(--mat-sys-shape-corner-large);
-}
-
 .shared-element-root-example__article {
   display: flex;
   flex-direction: column;

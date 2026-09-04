@@ -1177,12 +1177,19 @@ export interface MatListProps {
   */
   expanded?: Array<string | number | boolean>;
   /**
-  * 语义色或六位十六进制种子色 `#RRGGBB`。
+  * 列表通常状态背景色使用的语义色或六位十六进制种子色 `#RRGGBB`。
   *
   * @type {string | undefined}
   * @default undefined
   */
   color?: string | undefined;
+  /**
+  * 选中列表项背景色使用的语义色或六位十六进制种子色 `#RRGGBB`。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  activeColor?: string | undefined;
   /**
   * 是否允许通过长按直属项目请求拖动排序。
   *

@@ -67,8 +67,6 @@ const alignment = ref('center');
   justify-content: space-between;
   gap: 12px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-bar-example-controls {

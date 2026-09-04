@@ -3,6 +3,7 @@ import {
   computed, inject, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch,
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
+import vStateLayer from '../../directives/state-layer';
 import MatActionBase from '../MatActionBase.vue';
 import { BUTTON_TYPES } from '../button-props';
 import { MAT_LIST_GROUP_ACTIVATOR_KEY, MAT_LIST_KEY } from '../list-context';
@@ -322,8 +323,9 @@ watch(
   <li
     v-else-if="interaction === 'none'"
     ref="itemRoot"
+    v-state-layer="{ color: 'var(--mat-action-state-color, currentcolor)' }"
     v-bind="$attrs"
-    class="mat-list-item mat-list-item__surface mat-list-item--static"
+    class="mat-list-item mat-list-item__surface"
     :class="surfaceClasses"
     :aria-disabled="propsWithDefaults.disabled ? 'true' : undefined"
     :data-mat-list-disabled="propsWithDefaults.disabled ? 'true' : undefined"
@@ -367,6 +369,7 @@ watch(
   <li
     v-else-if="isAction"
     ref="itemRoot"
+    v-state-layer="isMultiAction ? { color: 'var(--mat-action-state-color, currentcolor)' } : undefined"
     class="mat-list-item"
     :class="[
       surfaceClasses,
@@ -432,6 +435,7 @@ watch(
       class="mat-list-item__separate-trailing mat-sys-typescale-label-small"
       data-mat-list-trailing
       :inert="propsWithDefaults.disabled ? '' : undefined"
+      @pointerdown="handleTrailingPointerDown"
     >
       <slot name="trailing" />
     </span>
@@ -521,16 +525,16 @@ watch(
   }
 
   .mat-list-item__surface {
-    --mat-action-state-color: var(--mat-list-item-state-layer-color);
-    --mat-list-item-label-color: var(--mat-list-item-label-text-color);
-    --mat-list-item-supporting-color: var(--mat-list-item-supporting-text-color);
+    --mat-action-state-color: var(--mat-on-accent-container-color, var(--mat-list-item-state-layer-color));
+    --mat-list-item-label-color: var(--mat-on-accent-container-color, var(--mat-list-item-label-text-color));
+    --mat-list-item-supporting-color: var(--mat-on-accent-container-color, var(--mat-list-item-supporting-text-color));
     overflow: clip;
     overflow-clip-margin: 5px;
     inline-size: 100%;
     color: var(--mat-list-item-label-color);
     text-align: start;
     text-decoration: none;
-    background: var(--mat-list-item-container-color);
+    background: var(--mat-accent-container-color, var(--mat-list-item-container-color));
     border: 0;
     border-start-start-radius: var(--mat-list-item-start-start-shape);
     border-start-end-radius: var(--mat-list-item-start-end-shape);
@@ -572,6 +576,7 @@ watch(
   }
 
   .mat-list-item--multi-action .mat-list-item__primary {
+    --mat-action-state-color: transparent;
     flex: 1 1 auto;
     background: transparent;
   }
@@ -601,9 +606,11 @@ watch(
   }
 
   .mat-list-item--selected {
-    --mat-list-item-container-color: var(--mat-accent-container-color, var(--mat-list-item-selected-container-color));
-    --mat-list-item-label-color: var(--mat-on-accent-container-color, var(--mat-list-item-selected-label-text-color));
-    --mat-list-item-supporting-color: var(--mat-on-accent-container-color, var(--mat-list-item-selected-supporting-text-color));
+    --mat-list-item-container-color: var(--mat-active-container-color, var(--mat-list-item-selected-container-color));
+    --mat-list-item-label-color: var(--mat-on-active-container-color, var(--mat-list-item-selected-label-text-color));
+    --mat-list-item-supporting-color: var(--mat-on-active-container-color, var(--mat-list-item-selected-supporting-text-color));
+    --mat-action-state-color: var(--mat-on-active-container-color, var(--mat-list-item-selected-label-text-color));
+    background: var(--mat-active-container-color, var(--mat-list-item-selected-container-color));
     border-radius: var(--mat-list-item-selected-container-shape);
   }
 
@@ -615,7 +622,7 @@ watch(
     --mat-list-item-container-color: color-mix(
       in srgb,
       var(--mat-sys-color-on-surface) var(--mat-list-item-disabled-selected-container-opacity),
-      var(--mat-sys-color-surface)
+      var(--mat-sys-color-surface-container)
     );
     --mat-list-item-label-color: var(--mat-sys-color-on-surface);
     --mat-list-item-supporting-color: var(--mat-sys-color-on-surface);
@@ -629,6 +636,7 @@ watch(
 
   .mat-list-item--multi-action:not(.mat-list-item--disabled):has(.mat-list-item__primary:focus-visible),
   .mat-list-item--multi-action:not(.mat-list-item--disabled):has(.mat-list-item__primary:active),
+  .mat-list-item--multi-action[data-mat-state-layer-pressed],
   .mat-list-item--multi-action:has(.mat-list-item__primary[data-mat-state-layer-pressed]) {
     border-radius: var(--mat-list-item-interactive-container-shape);
   }
@@ -642,7 +650,7 @@ watch(
       border-radius: var(--mat-list-item-selected-container-shape);
     }
 
-    .mat-list-item--multi-action:not(.mat-list-item--disabled):has(.mat-list-item__primary:hover) {
+    .mat-list-item--multi-action:not(.mat-list-item--disabled):hover {
       border-radius: var(--mat-list-item-hover-container-shape);
     }
   }

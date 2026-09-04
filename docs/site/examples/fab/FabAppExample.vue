@@ -13,10 +13,6 @@
 <style scoped>
 .fab-app-example {
   block-size: 360px;
-  padding: 24px;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .fab-app-example p {

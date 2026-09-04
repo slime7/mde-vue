@@ -92,13 +92,6 @@ const current = ref('home');
 <style scoped>
 .app-root-components-example {
   block-size: 440px;
-  background: var(--mat-sys-color-surface-container-lowest);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
-}
-
-.app-root-components-example__content {
-  padding-block: 16px;
 }
 
 .app-root-components-example__content h3,

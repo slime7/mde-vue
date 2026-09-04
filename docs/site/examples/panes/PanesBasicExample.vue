@@ -53,8 +53,6 @@ function updateSizes(nextSizes) {
 .panes-example {
   block-size: 180px;
   inline-size: 100%;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-medium);
 }
 
 .panes-example__content {
@@ -62,7 +60,6 @@ function updateSizes(nextSizes) {
   block-size: 100%;
   place-items: center;
   color: var(--mat-sys-color-on-surface);
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 <!-- #endregion style -->

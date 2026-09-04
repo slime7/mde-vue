@@ -57,13 +57,6 @@ const isFloating = ref(false);
 <style scoped>
 .fab-menu-toolbar-example {
   block-size: 380px;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
-}
-
-.fab-menu-toolbar-example__body {
-  padding: 24px;
 }
 
 .fab-menu-toolbar-example__body h3,

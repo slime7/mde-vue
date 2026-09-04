@@ -79,9 +79,6 @@ function scrollTo(index) {
 .virtual-scroll-scroll-to-index-example__container {
   block-size: 200px;
   overflow-y: auto;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-medium);
-  background: var(--mat-sys-color-surface-container-low);
 }
 
 .virtual-scroll-scroll-to-index-example__item {

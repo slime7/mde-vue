@@ -26,8 +26,6 @@
 <style scoped>
 .scroll-area-snap-example {
   block-size: 280px;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .scroll-area-snap-example__list {

@@ -70,8 +70,6 @@ const selected = ref('inbox');
   inline-size: 100%;
   block-size: 440px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-rail-example-headline,

@@ -35,10 +35,6 @@ const LayoutReadout = defineComponent({
 <style scoped>
 .app-root-layout-example {
   min-block-size: 280px;
-  padding: 16px;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .app-root-layout-example p {
@@ -47,7 +43,6 @@ const LayoutReadout = defineComponent({
 
 .app-root-layout-example :deep(.app-root-layout-example__readout) {
   margin: 0;
-  padding: 16px;
   overflow: auto;
   color: var(--mat-sys-color-on-surface-variant);
   background: var(--mat-sys-color-surface-container);

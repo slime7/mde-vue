@@ -42,9 +42,6 @@ const items = ref(
 .virtual-scroll-fixed-example__container {
   block-size: 240px;
   overflow-y: auto;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-medium);
-  background: var(--mat-sys-color-surface-container-low);
 }
 
 .virtual-scroll-fixed-example__list {

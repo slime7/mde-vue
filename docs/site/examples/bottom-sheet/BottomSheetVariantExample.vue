@@ -48,8 +48,6 @@ const modalOpen = ref(false);
   flex-direction: column;
   min-block-size: 360px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-lowest);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .bottom-sheet-variant-example__content {
@@ -59,7 +57,6 @@ const modalOpen = ref(false);
   gap: 16px;
   align-items: flex-start;
   min-block-size: 0;
-  padding: 24px;
 }
 
 .bottom-sheet-variant-example__content p {

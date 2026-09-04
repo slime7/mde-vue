@@ -101,6 +101,27 @@ describe('MatList', () => {
     expect(wrapper.find('[role="option"]').attributes('aria-selected')).toBe('true');
   });
 
+  it('color 设置通常状态颜色，activeColor 设置选中项颜色，未设置 activeColor 时选中项沿用 secondary-container', () => {
+    const wrapper = mount(MatList, {
+      props: {
+        interaction: 'single-select',
+        selected: 'two',
+        color: 'primary',
+        activeColor: 'tertiary',
+      },
+      slots: {
+        default: () => [
+          h(MatListItem, { value: 'one' }, () => '普通项'),
+          h(MatListItem, { value: 'two' }, () => '选中项'),
+        ],
+      },
+    });
+
+    const style = wrapper.attributes('style');
+    expect(style).toContain('--mat-accent-container-color: var(--mat-sys-color-primary-container)');
+    expect(style).toContain('--mat-active-container-color: var(--mat-sys-color-tertiary-container)');
+  });
+
   it('单操作模式使用原生按钮或链接并只从主操作发出 click', async () => {
     const click = vi.fn();
     const secondaryClick = vi.fn();
@@ -439,6 +460,35 @@ describe('MatList', () => {
     expect(wrapper.emitted('select')).toHaveLength(2);
 
     wrapper.unmount();
+  });
+
+  it('未设置 interaction 时与多操作模式下，状态层宿主均覆盖整个列表项', async () => {
+    const defaultWrapper = mount(MatList, {
+      slots: {
+        default: () => h(MatListItem, null, {
+          default: () => '普通列表项',
+          trailing: () => '尾部',
+        }),
+      },
+    });
+    const defaultItem = defaultWrapper.find('.mat-list-item');
+    expect(defaultItem.attributes('data-mat-state-layer-host')).toBeDefined();
+    defaultWrapper.unmount();
+
+    const multiWrapper = mount(MatList, {
+      props: { interaction: 'multi-action' },
+      slots: {
+        default: () => h(MatListItem, null, {
+          default: () => '多操作项',
+          trailing: () => h(MatBtn, { icon: 'download', label: '下载' }),
+        }),
+      },
+    });
+    const multiItem = multiWrapper.find('.mat-list-item');
+    const multiTrailing = multiWrapper.find('[data-mat-list-trailing]');
+    expect(multiItem.attributes('data-mat-state-layer-host')).toBeDefined();
+    expect(multiItem.element.contains(multiTrailing.element)).toBe(true);
+    multiWrapper.unmount();
   });
 
   it('多操作模式为长标签和 supporting 文本保留 trailing 操作区', () => {

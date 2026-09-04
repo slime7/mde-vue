@@ -58,14 +58,12 @@ const widths = ref({});
 
 .panes-widths-example__layout {
   block-size: 120px;
-  border: 1px solid var(--mat-sys-color-outline-variant);
 }
 
 .panes-widths-example__panel {
   display: grid;
   block-size: 100%;
   place-items: center;
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 <!-- #endregion style -->

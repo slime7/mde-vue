@@ -38,8 +38,6 @@
   flex-direction: column;
   block-size: 320px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-low);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .container-height-example__header {

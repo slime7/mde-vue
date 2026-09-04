@@ -72,8 +72,6 @@ const selected = ref('inbox');
   inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-rail-badge-example-content {
@@ -84,7 +82,6 @@ const selected = ref('inbox');
   gap: 8px;
   color: var(--mat-sys-color-on-surface-variant);
   text-align: center;
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 <!-- #endregion style -->

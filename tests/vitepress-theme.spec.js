@@ -120,4 +120,14 @@ describe('VitePress 文档自定义主题', () => {
     expect(source).not.toContain('--vp-code-block-bg: var(--mat-sys-color-surface-container)');
     expect(readThemeFile('index.js')).toContain("classList.toggle('dark'");
   });
+
+  it('预览容器提供空的 MatAppRoot 上下文以允许示例内嵌套 MatAppRoot', () => {
+    const previewSource = readThemeFile('DocsPreview.vue');
+    const playgroundSource = readThemeFile('DocsPlayground.vue');
+
+    expect(previewSource).toContain('MAT_APP_ROOT_KEY');
+    expect(previewSource).toContain('provide(MAT_APP_ROOT_KEY, null);');
+    expect(playgroundSource).toContain('MAT_APP_ROOT_KEY');
+    expect(playgroundSource).toContain('provide(MAT_APP_ROOT_KEY, null);');
+  });
 });

@@ -139,7 +139,7 @@ order: 100
   </DocsPreview>
 </ClientOnly>
 
-### `color`
+### `color` 与 `activeColor`
 
 :::: details 查看示例代码
 ::: code-group
@@ -154,7 +154,7 @@ order: 100
 ::::
 
 <ClientOnly>
-  <DocsPreview label="List color 预览" stacked>
+  <DocsPreview label="List color 与 activeColor 预览" stacked>
     <ListColorExample />
   </DocsPreview>
 </ClientOnly>
@@ -413,7 +413,8 @@ order: 100
 | `interaction` | `'none' \| 'single-action' \| 'multi-action' \| 'single-select' \| 'multi-select'` | `'none'` | 整个 List 唯一的交互模式 |
 | `selected` | 基础值、基础值数组或 `null` | `null` | 受控选择值；single-select 使用单值，multi-select 使用数组 |
 | `expanded` | `(string \| number \| boolean)[]` | `[]` | 有值 MatListGroup 的受控展开值，可同时包含多个值 |
-| `color` | 语义色或 `#RRGGBB` | 未设置 | 选择项的局部 container/on-container 色对；省略时使用 secondary 色族 |
+| `color` | 语义色或 `#RRGGBB` | 未设置 | 列表通常状态（未选中项）的背景色；省略时默认使用 surface-container |
+| `activeColor` | 语义色或 `#RRGGBB` | 未设置 | 选中项的背景色；省略时默认使用 secondary-container 系列 |
 | `draggable` | `boolean` | `false` | 是否允许长按未禁用的直属 MatListItem 请求拖动排序 |
 | `virtual` | `boolean` | `false` | 是否启用虚拟滚动来优化长列表 DOM 性能 |
 | `items` | `Array<unknown>` | `[]` | 虚拟滚动的全量数据列表 |

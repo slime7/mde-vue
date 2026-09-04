@@ -68,10 +68,6 @@
 
 .fab-menu-mini-app {
   block-size: 360px;
-  padding: 16px;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .fab-menu-mini-app p {

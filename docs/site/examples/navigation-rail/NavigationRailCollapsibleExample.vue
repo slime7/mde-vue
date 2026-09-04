@@ -46,8 +46,6 @@ const selected = ref('overview');
   inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-rail-example-content {
@@ -56,7 +54,6 @@ const selected = ref('overview');
   min-inline-size: 0;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 <!-- #endregion style -->

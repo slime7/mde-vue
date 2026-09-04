@@ -24,8 +24,6 @@
 .app-bar-slots-example {
   position: static;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 </style>
 <!-- #endregion style -->

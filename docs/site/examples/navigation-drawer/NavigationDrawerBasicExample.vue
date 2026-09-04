@@ -56,8 +56,6 @@ const selected = ref('inbox');
   inline-size: 100%;
   min-block-size: 320px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-drawer-example-content {
@@ -66,7 +64,6 @@ const selected = ref('inbox');
   min-inline-size: 0;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 <!-- #endregion style -->

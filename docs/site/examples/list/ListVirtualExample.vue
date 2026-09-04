@@ -45,13 +45,10 @@ const selected = ref(null);
 .list-virtual-example-container {
   box-sizing: border-box;
   inline-size: 100%;
-  max-inline-size: 400px;
 }
 
 .list-virtual-example-scroll {
   block-size: 320px;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 </style>
 <!-- #endregion style -->

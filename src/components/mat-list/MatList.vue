@@ -70,12 +70,23 @@ const props = defineProps({
     },
   },
   /**
-   * 语义色或六位十六进制种子色 `#RRGGBB`。
+   * 列表通常状态背景色使用的语义色或六位十六进制种子色 `#RRGGBB`。
    *
    * @type {string | undefined}
    * @default undefined
    */
   color: {
+    type: String,
+    default: undefined,
+    validator: isComponentColor,
+  },
+  /**
+   * 选中列表项背景色使用的语义色或六位十六进制种子色 `#RRGGBB`。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
+  activeColor: {
     type: String,
     default: undefined,
     validator: isComponentColor,
@@ -209,6 +220,16 @@ const root = ref(null);
 const isSelectable = computed(() => isSelectableInteraction(propsWithDefaults.interaction));
 const rootTag = computed(() => (isSelectable.value ? 'div' : 'ul'));
 const { colorStyle } = useComponentColor(computed(() => propsWithDefaults.color));
+const { colorStyle: rawActiveColorStyle } = useComponentColor(computed(() => propsWithDefaults.activeColor));
+const activeColorStyle = computed(() => (
+  Object.fromEntries(
+    Object.entries(rawActiveColorStyle.value).map(([k, v]) => [k.replace('accent', 'active'), v]),
+  )
+));
+const mergedColorStyle = computed(() => ({
+  ...colorStyle.value,
+  ...activeColorStyle.value,
+}));
 const groupRecords = [];
 
 const FOCUSABLE_SELECTOR = [
@@ -518,7 +539,7 @@ defineExpose({
         'mat-list--dragging': dragSort.dragging.value,
       },
     ]"
-    :style="colorStyle"
+    :style="mergedColorStyle"
     :aria-multiselectable="propsWithDefaults.interaction === 'multi-select'
       ? 'true'
       : $attrs['aria-multiselectable']"

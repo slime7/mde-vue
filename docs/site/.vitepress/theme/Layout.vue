@@ -181,10 +181,12 @@ const pageTitle = computed(() => page.value.title || frontmatter.value.title || 
   <mat-app-root
     class="mde-docs-root"
     :fill-viewport="true"
+    :scrollable="true"
   >
     <mat-app-bar
       app
       variant="small"
+      class="mde-docs-app-bar"
     >
       <template #leading>
         <mat-btn
@@ -270,6 +272,7 @@ const pageTitle = computed(() => page.value.title || frontmatter.value.title || 
       app
       :layout="drawerLayout"
       :width="280"
+      class="mde-docs-drawer"
     >
       <div class="mde-docs-drawer-nav">
         <template v-for="(section, sIndex) in sidebarGroups" :key="sIndex">

@@ -81,7 +81,6 @@
   justify-content: center;
   min-inline-size: 168px;
   padding: 12px;
-  border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);
 }
 

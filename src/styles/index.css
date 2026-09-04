@@ -362,7 +362,7 @@
     /* List and divider component tokens */
     --mat-list-container-shape: var(--mat-sys-shape-corner-large);
     --mat-list-segmented-gap: 2px;
-    --mat-list-item-container-color: var(--mat-sys-color-surface);
+    --mat-list-item-container-color: var(--mat-sys-color-surface-container);
     --mat-list-item-label-text-color: var(--mat-sys-color-on-surface);
     --mat-list-item-supporting-text-color: var(--mat-sys-color-on-surface-variant);
     --mat-list-item-state-layer-color: var(--mat-sys-color-on-surface);

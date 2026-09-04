@@ -52,14 +52,12 @@ const resizable = ref(true);
 
 .panes-resizable-example__layout {
   block-size: 120px;
-  border: 1px solid var(--mat-sys-color-outline-variant);
 }
 
 .panes-resizable-example__layout :deep(.mat-pane) {
   display: grid;
   place-items: center;
   color: var(--mat-sys-color-on-surface);
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 <!-- #endregion style -->

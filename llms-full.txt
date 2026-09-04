@@ -3522,7 +3522,6 @@ import ShapeSlotExample from '../examples/shape/ShapeSlotExample.vue';
   justify-content: center;
   min-inline-size: 168px;
   padding: 12px;
-  border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);
 }
 
@@ -4346,10 +4345,6 @@ const colors = [
 <style scoped>
 .fab-app-example {
   block-size: 360px;
-  padding: 24px;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .fab-app-example p {
@@ -4469,10 +4464,6 @@ import FabSizeExample from '../examples/fab/FabSizeExample.vue';
 <style scoped>
 .fab-menu-app-example {
   block-size: 380px;
-  padding: 24px;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .fab-menu-app-example p {
@@ -4539,10 +4530,6 @@ const open = ref(false);
 <style scoped>
 .fab-menu-app-example {
   block-size: 380px;
-  padding: 24px;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .fab-menu-app-example__controls {
@@ -4635,10 +4622,6 @@ const open = ref(false);
 
 .fab-menu-mini-app {
   block-size: 360px;
-  padding: 16px;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .fab-menu-mini-app p {
@@ -4721,13 +4704,6 @@ const isFloating = ref(false);
 <style scoped>
 .fab-menu-toolbar-example {
   block-size: 380px;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
-}
-
-.fab-menu-toolbar-example__body {
-  padding: 24px;
 }
 
 .fab-menu-toolbar-example__body h3,
@@ -4788,10 +4764,6 @@ const isFloating = ref(false);
 <style scoped>
 .fab-menu-app-example {
   block-size: 380px;
-  padding: 24px;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .fab-menu-app-example p {
@@ -6279,13 +6251,6 @@ import SplitButtonVariantExample from '../examples/button/SplitButtonVariantExam
 .app-root-basic-example {
   min-block-size: 240px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
-}
-
-.app-root-basic-example__content {
-  padding: 24px;
 }
 
 .app-root-basic-example__content h3,
@@ -6332,9 +6297,6 @@ import SplitButtonVariantExample from '../examples/button/SplitButtonVariantExam
 <style scoped>
 .app-root-scrollable-example {
   block-size: 280px;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .app-root-scrollable-example__item {
@@ -6401,10 +6363,6 @@ const LayoutReadout = defineComponent({
 <style scoped>
 .app-root-layout-example {
   min-block-size: 280px;
-  padding: 16px;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .app-root-layout-example p {
@@ -6413,7 +6371,6 @@ const LayoutReadout = defineComponent({
 
 .app-root-layout-example :deep(.app-root-layout-example__readout) {
   margin: 0;
-  padding: 16px;
   overflow: auto;
   color: var(--mat-sys-color-on-surface-variant);
   background: var(--mat-sys-color-surface-container);
@@ -6482,9 +6439,6 @@ const RegisteredHeader = defineComponent({
 .app-root-register-edge-example {
   min-block-size: 280px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .app-root-register-edge-example :deep(.app-root-register-edge-example__header) {
@@ -6497,10 +6451,6 @@ const RegisteredHeader = defineComponent({
   padding: 20px 24px;
   color: var(--mat-sys-color-on-primary-container);
   background: var(--mat-sys-color-primary-container);
-}
-
-.app-root-register-edge-example__content {
-  padding: 24px;
 }
 
 .app-root-register-edge-example__content h3,
@@ -6617,13 +6567,6 @@ const current = ref('home');
 <style scoped>
 .app-root-components-example {
   block-size: 440px;
-  background: var(--mat-sys-color-surface-container-lowest);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
-}
-
-.app-root-components-example__content {
-  padding-block: 16px;
 }
 
 .app-root-components-example__content h3,
@@ -12514,9 +12457,6 @@ const query = ref('');
   align-items: stretch;
   gap: 16px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .app-bar-variant-example :deep(.mat-app-bar) {
@@ -12575,9 +12515,6 @@ const query = ref('');
   align-items: stretch;
   gap: 12px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .app-bar-content-example :deep(.mat-app-bar) {
@@ -12647,9 +12584,6 @@ const query = ref('');
   align-items: stretch;
   gap: 12px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .app-bar-align-example :deep(.mat-app-bar) {
@@ -12697,8 +12631,6 @@ const query = ref('');
 .app-bar-slots-example {
   position: static;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 </style>
 ```
@@ -12764,9 +12696,6 @@ const scrollTarget = ref(null);
   inline-size: 100%;
   block-size: 420px;
   overflow: auto;
-  background: var(--mat-sys-color-surface);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
   overscroll-behavior: contain;
 }
 
@@ -15472,13 +15401,10 @@ const selected = ref(null);
 .list-virtual-example-container {
   box-sizing: border-box;
   inline-size: 100%;
-  max-inline-size: 400px;
 }
 
 .list-virtual-example-scroll {
   block-size: 320px;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 </style>
 ```
@@ -15817,7 +15743,7 @@ const selected = ref('recent');
   </DocsPreview>
 </ClientOnly>
 
-### `color`
+### `color` 与 `activeColor`
 
 :::: details 查看示例代码
 ::: code-group
@@ -15827,16 +15753,17 @@ const selected = ref('recent');
   <mat-list
     interaction="single-select"
     :selected="selected"
-    color="secondary"
-    aria-label="配色列表"
+    color="surface-container-high"
+    activeColor="primary"
+    aria-label="通常与选中背景色示例"
     class="example-list"
     @select="selected = $event.nextSelected"
   >
     <mat-list-item value="primary">
-      primary
+      通常状态使用 color，选中项使用 activeColor
     </mat-list-item>
     <mat-list-item value="secondary">
-      secondary
+      第二项
     </mat-list-item>
   </mat-list>
 </template>
@@ -15859,7 +15786,7 @@ const selected = ref('primary');
 ::::
 
 <ClientOnly>
-  <DocsPreview label="List color 预览" stacked>
+  <DocsPreview label="List color 与 activeColor 预览" stacked>
     <ListColorExample />
   </DocsPreview>
 </ClientOnly>
@@ -16456,7 +16383,8 @@ const lastAction = ref('无');
 | `interaction` | `'none' \| 'single-action' \| 'multi-action' \| 'single-select' \| 'multi-select'` | `'none'` | 整个 List 唯一的交互模式 |
 | `selected` | 基础值、基础值数组或 `null` | `null` | 受控选择值；single-select 使用单值，multi-select 使用数组 |
 | `expanded` | `(string \| number \| boolean)[]` | `[]` | 有值 MatListGroup 的受控展开值，可同时包含多个值 |
-| `color` | 语义色或 `#RRGGBB` | 未设置 | 选择项的局部 container/on-container 色对；省略时使用 secondary 色族 |
+| `color` | 语义色或 `#RRGGBB` | 未设置 | 列表通常状态（未选中项）的背景色；省略时默认使用 surface-container |
+| `activeColor` | 语义色或 `#RRGGBB` | 未设置 | 选中项的背景色；省略时默认使用 secondary-container 系列 |
 | `draggable` | `boolean` | `false` | 是否允许长按未禁用的直属 MatListItem 请求拖动排序 |
 | `virtual` | `boolean` | `false` | 是否启用虚拟滚动来优化长列表 DOM 性能 |
 | `items` | `Array<unknown>` | `[]` | 虚拟滚动的全量数据列表 |
@@ -17039,8 +16967,6 @@ const modalOpen = ref(false);
   flex-direction: column;
   min-block-size: 360px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-lowest);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .bottom-sheet-variant-example__content {
@@ -17050,7 +16976,6 @@ const modalOpen = ref(false);
   gap: 16px;
   align-items: flex-start;
   min-block-size: 0;
-  padding: 24px;
 }
 
 .bottom-sheet-variant-example__content p {
@@ -17192,8 +17117,6 @@ const open = ref(false);
   flex-direction: column;
   min-block-size: 320px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-lowest);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .bottom-sheet-responsive-example__content {
@@ -17203,7 +17126,6 @@ const open = ref(false);
   gap: 16px;
   align-items: flex-start;
   min-block-size: 0;
-  padding: 24px;
 }
 
 .bottom-sheet-responsive-example__content p {
@@ -17410,9 +17332,6 @@ const modalOpen = ref(false);
   display: flex;
   min-block-size: 360px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-lowest);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .side-sheet-variant-example__content {
@@ -17422,7 +17341,6 @@ const modalOpen = ref(false);
   gap: 16px;
   align-items: flex-start;
   min-inline-size: 0;
-  padding: 24px;
 }
 
 .side-sheet-variant-example__content p {
@@ -17484,9 +17402,6 @@ const open = ref(false);
   display: flex;
   min-block-size: 320px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-lowest);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .side-sheet-responsive-example__content {
@@ -17496,7 +17411,6 @@ const open = ref(false);
   gap: 16px;
   align-items: flex-start;
   min-inline-size: 0;
-  padding: 24px;
 }
 
 .side-sheet-responsive-example__content p {
@@ -18303,8 +18217,6 @@ const selected = ref('home');
   inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-rail-example-content {
@@ -18313,7 +18225,6 @@ const selected = ref('home');
   min-inline-size: 0;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 ```
@@ -18407,8 +18318,6 @@ const selected = ref('inbox');
   inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-rail-badge-example-content {
@@ -18419,7 +18328,6 @@ const selected = ref('inbox');
   gap: 8px;
   color: var(--mat-sys-color-on-surface-variant);
   text-align: center;
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 ```
@@ -18479,9 +18387,6 @@ const active = ref(true);
   position: relative;
   block-size: 200px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
-  background: var(--mat-sys-color-surface-container-low);
 }
 
 .navigation-rail-app-example-content {
@@ -18551,9 +18456,6 @@ const active = ref(true);
   position: relative;
   block-size: 200px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
-  background: var(--mat-sys-color-surface-container-low);
 }
 
 .navigation-rail-placeholder-example-content {
@@ -18622,9 +18524,6 @@ const active = ref(true);
   position: relative;
   block-size: 220px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
-  background: var(--mat-sys-color-surface-container-low);
 }
 
 .navigation-rail-bottom-placeholder-example-content {
@@ -18701,8 +18600,6 @@ const selected = ref('overview');
   inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-rail-example-content {
@@ -18711,7 +18608,6 @@ const selected = ref('overview');
   min-inline-size: 0;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 ```
@@ -18794,8 +18690,6 @@ const width = ref(280);
   inline-size: 100%;
   min-block-size: 240px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-rail-width-example-content {
@@ -18804,7 +18698,6 @@ const width = ref(280);
   min-inline-size: 0;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 ```
@@ -18897,8 +18790,6 @@ const selected = ref('home');
   inline-size: 100%;
   min-block-size: 220px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-rail-example-content {
@@ -18907,7 +18798,6 @@ const selected = ref('home');
   min-inline-size: 0;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 ```
@@ -19007,8 +18897,6 @@ const alignment = ref('start');
   inline-size: 100%;
   min-block-size: 240px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-rail-alignment-example-content {
@@ -19017,7 +18905,6 @@ const alignment = ref('start');
   min-inline-size: 0;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 ```
@@ -19110,8 +18997,6 @@ const modalExpanded = ref(true);
   inline-size: 100%;
   min-block-size: 220px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-rail-example-content {
@@ -19120,7 +19005,6 @@ const modalExpanded = ref(true);
   min-inline-size: 0;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 ```
@@ -19192,8 +19076,6 @@ const expanded = ref(false);
   inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-rail-example-content {
@@ -19202,7 +19084,6 @@ const expanded = ref(false);
   min-inline-size: 0;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 ```
@@ -19289,8 +19170,6 @@ const alignment = ref('center');
   justify-content: space-between;
   gap: 12px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-bar-example-controls {
@@ -19400,8 +19279,6 @@ const selected = ref('inbox');
   inline-size: 100%;
   block-size: 440px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-rail-example-headline,
@@ -19535,8 +19412,6 @@ const selected = ref('inbox');
   min-block-size: 0;
   flex-grow: 1;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 </style>
 ```
@@ -19617,8 +19492,6 @@ const selected = ref('inbox');
   inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .navigation-rail-trailing-badge {
@@ -19640,7 +19513,6 @@ const selected = ref('inbox');
   min-inline-size: 0;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 ```
@@ -21688,8 +21560,6 @@ const colors = ['surface-container', 'surface-container-high', 'surface-containe
 <style scoped>
 .scroll-area-snap-example {
   block-size: 280px;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .scroll-area-snap-example__list {
@@ -22380,9 +22250,6 @@ const items = ref(
 .virtual-scroll-fixed-example__container {
   block-size: 240px;
   overflow-y: auto;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-medium);
-  background: var(--mat-sys-color-surface-container-low);
 }
 
 .virtual-scroll-fixed-example__list {
@@ -22487,9 +22354,6 @@ const items = ref(
 .virtual-scroll-dynamic-example__container {
   block-size: 260px;
   overflow-y: auto;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-medium);
-  background: var(--mat-sys-color-surface-container-low);
 }
 
 .virtual-scroll-dynamic-example__item {
@@ -22679,9 +22543,6 @@ function scrollTo(index) {
 .virtual-scroll-scroll-to-index-example__container {
   block-size: 200px;
   overflow-y: auto;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-medium);
-  background: var(--mat-sys-color-surface-container-low);
 }
 
 .virtual-scroll-scroll-to-index-example__item {
@@ -22833,10 +22694,6 @@ import SpacerFlexExample from '../examples/spacer/SpacerFlexExample.vue';
 ```
 ```vue
 <style scoped>
-.container-default-example {
-  background: var(--mat-sys-color-surface-container-low);
-}
-
 .container-default-example__body {
   padding: 24px;
   color: var(--mat-sys-color-on-surface);
@@ -22886,10 +22743,6 @@ import SpacerFlexExample from '../examples/spacer/SpacerFlexExample.vue';
 ```
 ```vue
 <style scoped>
-.container-fluid-example {
-  background: var(--mat-sys-color-surface-container-low);
-}
-
 .container-fluid-example__body {
   padding: 24px;
   color: var(--mat-sys-color-on-secondary-container);
@@ -22962,8 +22815,6 @@ import SpacerFlexExample from '../examples/spacer/SpacerFlexExample.vue';
   flex-direction: column;
   block-size: 320px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-low);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .container-height-example__header {
@@ -23244,8 +23095,6 @@ function updateSizes(nextSizes) {
 .panes-example {
   block-size: 180px;
   inline-size: 100%;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-medium);
 }
 
 .panes-example__content {
@@ -23253,7 +23102,6 @@ function updateSizes(nextSizes) {
   block-size: 100%;
   place-items: center;
   color: var(--mat-sys-color-on-surface);
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 ```
@@ -23314,14 +23162,12 @@ const rows = Array.from({ length: 12 }, (_, index) => `可滚动内容 ${index +
 .panes-scroll-example {
   block-size: 180px;
   inline-size: 100%;
-  border: 1px solid var(--mat-sys-color-outline-variant);
 }
 
 .panes-scroll-example__content {
   min-block-size: 100%;
   padding: 16px;
   color: var(--mat-sys-color-on-surface);
-  background: var(--mat-sys-color-surface-container-low);
 }
 
 .panes-scroll-example__content p {
@@ -23395,14 +23241,12 @@ const resizable = ref(true);
 
 .panes-resizable-example__layout {
   block-size: 120px;
-  border: 1px solid var(--mat-sys-color-outline-variant);
 }
 
 .panes-resizable-example__layout :deep(.mat-pane) {
   display: grid;
   place-items: center;
   color: var(--mat-sys-color-on-surface);
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 ```
@@ -23485,14 +23329,12 @@ function updateBreakpoint(nextBreakpoint) {
 
 .panes-breakpoint-example__layout {
   block-size: 140px;
-  border: 1px solid var(--mat-sys-color-outline-variant);
 }
 
 .panes-breakpoint-example__panel {
   display: grid;
   block-size: 100%;
   place-items: center;
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 ```
@@ -23570,14 +23412,12 @@ const widths = ref({});
 
 .panes-widths-example__layout {
   block-size: 120px;
-  border: 1px solid var(--mat-sys-color-outline-variant);
 }
 
 .panes-widths-example__panel {
   display: grid;
   block-size: 100%;
   place-items: center;
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 ```
@@ -24108,16 +23948,6 @@ function handleDialogModelValue(value) {
 ```
 ```vue
 <style scoped>
-.shared-element-example {
-  display: flex;
-  min-block-size: 360px;
-  align-items: stretch;
-  justify-content: center;
-  padding: 24px;
-  background: var(--mat-sys-color-surface-container);
-  border-radius: var(--mat-sys-shape-corner-large);
-}
-
 .shared-element-example__list {
   display: grid;
   inline-size: min(100%, 720px);
@@ -24231,12 +24061,6 @@ function handleDialogModelValue(value) {
 ```
 ```vue
 <style scoped>
-.shared-element-root-example {
-  padding: 24px;
-  background: var(--mat-sys-color-surface-container);
-  border-radius: var(--mat-sys-shape-corner-large);
-}
-
 .shared-element-root-example__article {
   display: flex;
   flex-direction: column;
@@ -24376,16 +24200,6 @@ async function toggleDetail() {
 ```
 ```vue
 <style scoped>
-.shared-element-disabled-example {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 24px;
-  background: var(--mat-sys-color-surface-container);
-  border-radius: var(--mat-sys-shape-corner-large);
-}
-
 .shared-element-disabled-example__surface {
   inline-size: min(100%, 280px);
 }

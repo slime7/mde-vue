@@ -45,9 +45,6 @@ const RegisteredHeader = defineComponent({
 .app-root-register-edge-example {
   min-block-size: 280px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .app-root-register-edge-example :deep(.app-root-register-edge-example__header) {
@@ -60,10 +57,6 @@ const RegisteredHeader = defineComponent({
   padding: 20px 24px;
   color: var(--mat-sys-color-on-primary-container);
   background: var(--mat-sys-color-primary-container);
-}
-
-.app-root-register-edge-example__content {
-  padding: 24px;
 }
 
 .app-root-register-edge-example__content h3,

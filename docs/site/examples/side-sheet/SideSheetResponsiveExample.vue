@@ -34,9 +34,6 @@ const open = ref(false);
   display: flex;
   min-block-size: 320px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-lowest);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .side-sheet-responsive-example__content {
@@ -46,7 +43,6 @@ const open = ref(false);
   gap: 16px;
   align-items: flex-start;
   min-inline-size: 0;
-  padding: 24px;
 }
 
 .side-sheet-responsive-example__content p {

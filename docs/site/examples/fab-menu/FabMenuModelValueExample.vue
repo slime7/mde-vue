@@ -43,10 +43,6 @@ const open = ref(false);
 <style scoped>
 .fab-menu-app-example {
   block-size: 380px;
-  padding: 24px;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .fab-menu-app-example__controls {

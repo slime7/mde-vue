@@ -104,8 +104,6 @@
   min-block-size: 0;
   flex-grow: 1;
   overflow: hidden;
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 </style>
 <!-- #endregion style -->

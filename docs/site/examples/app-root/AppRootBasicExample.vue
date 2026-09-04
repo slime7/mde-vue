@@ -15,13 +15,6 @@
 .app-root-basic-example {
   min-block-size: 240px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
-}
-
-.app-root-basic-example__content {
-  padding: 24px;
 }
 
 .app-root-basic-example__content h3,

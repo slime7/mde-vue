@@ -21,9 +21,6 @@
 <style scoped>
 .app-root-scrollable-example {
   block-size: 280px;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .app-root-scrollable-example__item {

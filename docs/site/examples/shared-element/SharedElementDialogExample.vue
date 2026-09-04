@@ -200,16 +200,6 @@ function handleDialogModelValue(value) {
 
 <!-- #region style -->
 <style scoped>
-.shared-element-example {
-  display: flex;
-  min-block-size: 360px;
-  align-items: stretch;
-  justify-content: center;
-  padding: 24px;
-  background: var(--mat-sys-color-surface-container);
-  border-radius: var(--mat-sys-shape-corner-large);
-}
-
 .shared-element-example__list {
   display: grid;
   inline-size: min(100%, 720px);

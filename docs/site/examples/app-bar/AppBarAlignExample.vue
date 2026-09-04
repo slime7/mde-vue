@@ -37,9 +37,6 @@
   align-items: stretch;
   gap: 12px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-low);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .app-bar-align-example :deep(.mat-app-bar) {

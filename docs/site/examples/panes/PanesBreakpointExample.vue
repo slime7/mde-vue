@@ -63,14 +63,12 @@ function updateBreakpoint(nextBreakpoint) {
 
 .panes-breakpoint-example__layout {
   block-size: 140px;
-  border: 1px solid var(--mat-sys-color-outline-variant);
 }
 
 .panes-breakpoint-example__panel {
   display: grid;
   block-size: 100%;
   place-items: center;
-  background: var(--mat-sys-color-surface-container-low);
 }
 </style>
 <!-- #endregion style -->

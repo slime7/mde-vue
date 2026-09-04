@@ -46,9 +46,6 @@ const modalOpen = ref(false);
   display: flex;
   min-block-size: 360px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-lowest);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .side-sheet-variant-example__content {
@@ -58,7 +55,6 @@ const modalOpen = ref(false);
   gap: 16px;
   align-items: flex-start;
   min-inline-size: 0;
-  padding: 24px;
 }
 
 .side-sheet-variant-example__content p {

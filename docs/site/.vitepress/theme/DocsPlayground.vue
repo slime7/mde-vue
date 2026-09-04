@@ -1,5 +1,8 @@
 <script setup>
-import { computed, useSlots } from 'vue';
+import { computed, provide, useSlots } from 'vue';
+import { MAT_APP_ROOT_KEY } from '../../../../src/components/mat-app-root/mat-app-root-context.js';
+
+provide(MAT_APP_ROOT_KEY, null);
 
 const props = defineProps({
   /**

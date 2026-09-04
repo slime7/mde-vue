@@ -14,10 +14,6 @@
 
 <!-- #region style -->
 <style scoped>
-.container-default-example {
-  background: var(--mat-sys-color-surface-container-low);
-}
-
 .container-default-example__body {
   padding: 24px;
   color: var(--mat-sys-color-on-surface);

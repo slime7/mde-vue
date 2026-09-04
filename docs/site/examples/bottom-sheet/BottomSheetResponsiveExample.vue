@@ -35,8 +35,6 @@ const open = ref(false);
   flex-direction: column;
   min-block-size: 320px;
   overflow: hidden;
-  background: var(--mat-sys-color-surface-container-lowest);
-  border-radius: var(--mat-sys-shape-corner-large);
 }
 
 .bottom-sheet-responsive-example__content {
@@ -46,7 +44,6 @@ const open = ref(false);
   gap: 16px;
   align-items: flex-start;
   min-block-size: 0;
-  padding: 24px;
 }
 
 .bottom-sheet-responsive-example__content p {

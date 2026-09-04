@@ -43,14 +43,12 @@ const rows = Array.from({ length: 12 }, (_, index) => `可滚动内容 ${index +
 .panes-scroll-example {
   block-size: 180px;
   inline-size: 100%;
-  border: 1px solid var(--mat-sys-color-outline-variant);
 }
 
 .panes-scroll-example__content {
   min-block-size: 100%;
   padding: 16px;
   color: var(--mat-sys-color-on-surface);
-  background: var(--mat-sys-color-surface-container-low);
 }
 
 .panes-scroll-example__content p {

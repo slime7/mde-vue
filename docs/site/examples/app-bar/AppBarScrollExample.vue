@@ -45,9 +45,6 @@ const scrollTarget = ref(null);
   inline-size: 100%;
   block-size: 420px;
   overflow: auto;
-  background: var(--mat-sys-color-surface);
-  border: 1px solid var(--mat-sys-color-outline-variant);
-  border-radius: var(--mat-sys-shape-corner-large);
   overscroll-behavior: contain;
 }
 

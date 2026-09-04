@@ -130,59 +130,6 @@ html[data-mat-theme='dark'] {
 }
 }
 
-/* 自定义文档站组件布局与边缘固定 */
-.mde-docs-root .mat-app-bar__host--app-root {
-  position: fixed;
-  z-index: 20;
-}
-
-.mde-docs-root .mat-app-root__overlay {
-  z-index: 300;
-  pointer-events: none;
-}
-
-.mde-docs-root .mat-navigation-rail-host--app-root {
-  position: fixed;
-  inset-block-start: 64px;
-  block-size: calc(100dvb - 64px);
-  z-index: 15;
-}
-
-.mde-docs-root .mat-navigation-rail-host--modal {
-  position: fixed !important;
-  inset: 0 !important;
-  inline-size: 0 !important;
-  block-size: 100dvb !important;
-  z-index: 50 !important;
-  pointer-events: none;
-}
-
-.mde-docs-root .mat-navigation-rail-host--modal .mat-navigation-rail__scrim {
-  position: fixed !important;
-  inset: 0 !important;
-  inline-size: 100vw !important;
-  block-size: 100vh !important;
-  z-index: 10 !important;
-  pointer-events: auto;
-}
-
-.mde-docs-root .mat-navigation-rail-host--modal .mat-navigation-rail--modal {
-  position: fixed !important;
-  inset-block: 0 !important;
-  inset-inline-start: 0 !important;
-  inline-size: min(280px, calc(100vw - 56px)) !important;
-  max-inline-size: calc(100vw - 56px) !important;
-  z-index: 11 !important;
-  pointer-events: auto;
-  translate: 0 0;
-  transition: translate var(--mat-sys-motion-spring-default-spatial, 0.3s ease), opacity var(--mat-sys-motion-spring-fast-effects, 0.2s ease) !important;
-}
-
-.mde-docs-root .mat-navigation-rail-host--modal .mat-navigation-rail--modal.mat-navigation-rail--hidden {
-  translate: -100% 0 !important;
-  opacity: 0 !important;
-}
-
 .mde-docs-root .VPContent {
   margin: 0 !important;
   padding-top: 0 !important;

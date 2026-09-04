@@ -14,10 +14,6 @@
 
 <!-- #region style -->
 <style scoped>
-.container-fluid-example {
-  background: var(--mat-sys-color-surface-container-low);
-}
-
 .container-fluid-example__body {
   padding: 24px;
   color: var(--mat-sys-color-on-secondary-container);
