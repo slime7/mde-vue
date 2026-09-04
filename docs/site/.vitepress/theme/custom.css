@@ -162,3 +162,8 @@ html[data-mat-theme='dark'] {
 .VPDocFooter .prev-next {
   display: none !important;
 }
+
+/* 锚点跳转时保持与顶栏的间距 */
+.vp-doc :where(h1, h2, h3, h4, h5, h6) {
+  scroll-margin-top: 16px;
+}

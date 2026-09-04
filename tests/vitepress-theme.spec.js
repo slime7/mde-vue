@@ -90,7 +90,9 @@ describe('VitePress 文档自定义主题', () => {
     expect(layoutSource).toContain('<mat-app-root');
     expect(layoutSource).toContain('<mat-navigation-drawer');
     expect(layoutSource).toContain('<mat-app-bar');
+    expect(layoutSource).toContain('<mat-scroll-area');
     expect(layoutSource).toContain('<VPContent');
+    expect(layoutSource).toContain('scroll-target=');
 
     const drawerIndex = layoutSource.indexOf('<mat-navigation-drawer');
     const appBarIndex = layoutSource.indexOf('<mat-app-bar');

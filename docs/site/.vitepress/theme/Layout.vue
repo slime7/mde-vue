@@ -1,6 +1,7 @@
 <script setup>
 import {
   computed,
+  nextTick,
   onMounted,
   onUnmounted,
   ref,
@@ -21,6 +22,7 @@ const isWideScreen = ref(true);
 const isDrawerOpen = ref(false);
 const isPcDrawerOpen = ref(true);
 const isThemeSettingsOpen = ref(false);
+const scrollAreaRef = ref(null);
 
 /** @type {MediaQueryList | null} */
 let mediaQuery = null;
@@ -32,17 +34,78 @@ function handleMediaChange(event) {
   }
 }
 
+function scrollToHash(hash, behavior = 'smooth') {
+  if (!hash || hash === '#') {
+    scrollAreaRef.value?.scrollTo?.({ top: 0, behavior });
+    return;
+  }
+  try {
+    const targetId = decodeURIComponent(hash).replace(/^#/, '');
+    const targetEl = document.getElementById(targetId);
+    targetEl?.scrollIntoView({ behavior });
+  } catch {}
+}
+
+function handleAnchorClick(event) {
+  if (
+    event.button !== 0 ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey ||
+    event.metaKey
+  ) {
+    return;
+  }
+  const link = event.target?.closest?.('a');
+  if (!link) {
+    return;
+  }
+  const href = link.getAttribute('href');
+  if (!href || !href.includes('#')) {
+    return;
+  }
+  try {
+    const url = new URL(href, window.location.href);
+    if (
+      url.origin === window.location.origin &&
+      url.pathname === window.location.pathname &&
+      url.hash
+    ) {
+      scrollToHash(url.hash, 'smooth');
+    }
+  } catch {}
+}
+
+function handleHashChange() {
+  if (window.location.hash) {
+    scrollToHash(window.location.hash, 'smooth');
+  }
+}
+
 onMounted(() => {
   if (typeof window !== 'undefined') {
     mediaQuery = window.matchMedia('(min-width: 960px)');
     isWideScreen.value = mediaQuery.matches;
     mediaQuery.addEventListener('change', handleMediaChange);
+
+    window.addEventListener('click', handleAnchorClick, true);
+    window.addEventListener('hashchange', handleHashChange);
+
+    if (window.location.hash) {
+      nextTick().then(() => {
+        scrollToHash(window.location.hash, 'instant');
+      });
+    }
   }
 });
 
 onUnmounted(() => {
   if (mediaQuery) {
     mediaQuery.removeEventListener('change', handleMediaChange);
+  }
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('click', handleAnchorClick, true);
+    window.removeEventListener('hashchange', handleHashChange);
   }
 });
 
@@ -58,11 +121,17 @@ function normalizeNavPath(path) {
 
 const activeNavValue = computed(() => normalizeNavPath(route.path));
 
-watch(() => route.path, () => {
+watch(() => route.path, async () => {
   if (!isWideScreen.value) {
     isDrawerOpen.value = false;
   }
   isThemeSettingsOpen.value = false;
+  await nextTick();
+  if (typeof window !== 'undefined' && window.location.hash) {
+    scrollToHash(window.location.hash, 'instant');
+  } else {
+    scrollAreaRef.value?.scrollTo?.({ top: 0, left: 0, behavior: 'instant' });
+  }
 });
 
 const drawerExpanded = computed({
@@ -181,12 +250,13 @@ const pageTitle = computed(() => page.value.title || frontmatter.value.title || 
   <mat-app-root
     class="mde-docs-root"
     :fill-viewport="true"
-    :scrollable="true"
+    :scrollable="false"
   >
     <mat-app-bar
       app
       variant="small"
       class="mde-docs-app-bar"
+      scroll-target=".mde-docs-scroll-area .mat-scroll-area__viewport"
     >
       <template #leading>
         <mat-btn
@@ -327,65 +397,78 @@ const pageTitle = computed(() => page.value.title || frontmatter.value.title || 
     </mat-navigation-drawer>
 
     <div class="mde-docs-content-wrapper">
-      <VPContent>
-        <template v-for="(_, slotName) in $slots" #[slotName]="slotProps">
-          <slot :name="slotName" v-bind="slotProps" />
-        </template>
+      <mat-scroll-area
+        ref="scrollAreaRef"
+        class="mde-docs-scroll-area"
+        bar-width="thin"
+        no-scroll-padding
+      >
+        <VPContent>
+          <template v-for="(_, slotName) in $slots" #[slotName]="slotProps">
+            <slot :name="slotName" v-bind="slotProps" />
+          </template>
 
-        <template #doc-footer-before>
-          <nav
-            v-if="control.prev?.link || control.next?.link"
-            class="mde-docs-pager"
-            aria-label="页脚上下页导航"
-          >
-            <mat-card
-              v-if="control.prev?.link"
-              class="mde-docs-pager-card mde-docs-pager-card--prev"
-              variant="outlined"
+          <template #doc-footer-before>
+            <nav
+              v-if="control.prev?.link || control.next?.link"
+              class="mde-docs-pager"
+              aria-label="页脚上下页导航"
             >
-              <mat-card-action-area
-                class="mde-docs-pager-action-area"
-                :href="normalizeLink(control.prev.link)"
+              <mat-card
+                v-if="control.prev?.link"
+                class="mde-docs-pager-card mde-docs-pager-card--prev"
+                variant="outlined"
               >
-                <mat-card-content class="mde-docs-pager-content">
-                  <div class="mde-docs-pager-direction">
-                    <mat-icon icon="arrow_back" class="mde-docs-pager-arrow" aria-hidden="true" />
-                    <span>{{ theme.docFooter?.prev || '上一页' }}</span>
-                  </div>
-                  <div class="mde-docs-pager-title" v-html="control.prev.text" />
-                </mat-card-content>
-              </mat-card-action-area>
-            </mat-card>
-            <div v-else class="mde-docs-pager-spacer" aria-hidden="true" />
+                <mat-card-action-area
+                  class="mde-docs-pager-action-area"
+                  :href="normalizeLink(control.prev.link)"
+                >
+                  <mat-card-content class="mde-docs-pager-content">
+                    <div class="mde-docs-pager-direction">
+                      <mat-icon icon="arrow_back" class="mde-docs-pager-arrow" aria-hidden="true" />
+                      <span>{{ theme.docFooter?.prev || '上一页' }}</span>
+                    </div>
+                    <div class="mde-docs-pager-title" v-html="control.prev.text" />
+                  </mat-card-content>
+                </mat-card-action-area>
+              </mat-card>
+              <div v-else class="mde-docs-pager-spacer" aria-hidden="true" />
 
-            <mat-card
-              v-if="control.next?.link"
-              class="mde-docs-pager-card mde-docs-pager-card--next"
-              variant="outlined"
-            >
-              <mat-card-action-area
-                class="mde-docs-pager-action-area"
-                :href="normalizeLink(control.next.link)"
+              <mat-card
+                v-if="control.next?.link"
+                class="mde-docs-pager-card mde-docs-pager-card--next"
+                variant="outlined"
               >
-                <mat-card-content class="mde-docs-pager-content">
-                  <div class="mde-docs-pager-direction">
-                    <span>{{ theme.docFooter?.next || '下一页' }}</span>
-                    <mat-icon icon="arrow_forward" class="mde-docs-pager-arrow" aria-hidden="true" />
-                  </div>
-                  <div class="mde-docs-pager-title" v-html="control.next.text" />
-                </mat-card-content>
-              </mat-card-action-area>
-            </mat-card>
-            <div v-else class="mde-docs-pager-spacer" aria-hidden="true" />
-          </nav>
-        </template>
-      </VPContent>
+                <mat-card-action-area
+                  class="mde-docs-pager-action-area"
+                  :href="normalizeLink(control.next.link)"
+                >
+                  <mat-card-content class="mde-docs-pager-content">
+                    <div class="mde-docs-pager-direction">
+                      <span>{{ theme.docFooter?.next || '下一页' }}</span>
+                      <mat-icon icon="arrow_forward" class="mde-docs-pager-arrow" aria-hidden="true" />
+                    </div>
+                    <div class="mde-docs-pager-title" v-html="control.next.text" />
+                  </mat-card-content>
+                </mat-card-action-area>
+              </mat-card>
+              <div v-else class="mde-docs-pager-spacer" aria-hidden="true" />
+            </nav>
+          </template>
+        </VPContent>
+      </mat-scroll-area>
     </div>
   </mat-app-root>
 </template>
 
 <style scoped>
 @layer mde.components {
+  .mde-docs-root {
+    block-size: 100dvb;
+    max-block-size: 100dvb;
+    overflow: clip;
+  }
+
   .mde-docs-app-bar-brand-title {
     display: flex;
     align-items: center;
@@ -455,7 +538,17 @@ const pageTitle = computed(() => page.value.title || frontmatter.value.title || 
     flex-direction: column;
     flex: 1 1 auto;
     inline-size: 100%;
+    block-size: 100%;
     min-inline-size: 0;
+    min-block-size: 0;
+    overflow: hidden;
+  }
+
+  .mde-docs-scroll-area {
+    inline-size: 100%;
+    block-size: 100%;
+    flex: 1 1 auto;
+    min-block-size: 0;
   }
 
   .mde-docs-pager {
