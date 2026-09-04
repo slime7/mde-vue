@@ -12,7 +12,7 @@ const selected = ref('primary');
     interaction="single-select"
     :selected="selected"
     color="surface-container-high"
-    activeColor="primary"
+    active-color="primary"
     aria-label="通常与选中背景色示例"
     class="example-list"
     @select="selected = $event.nextSelected"

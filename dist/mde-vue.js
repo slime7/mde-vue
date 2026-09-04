@@ -12236,7 +12236,7 @@ var Mc = { class: "mat-snackbar__text" }, Nc = {
 			}, de.value?.update());
 		}
 		async function me() {
-			fe?.disconnect(), fe = void 0, de.value?.unregister(), de.value = null, await v(), !(!p.app || !se.value) && (fe = typeof ResizeObserver > "u" ? void 0 : new ResizeObserver(pe), fe?.observe(se.value), X.value && (de.value = k.publicContext.registerEdge({
+			fe?.disconnect(), fe = void 0, de.value?.unregister(), de.value = null, await v(), !(!p.app || !se.value) && (fe = typeof ResizeObserver > "u" ? void 0 : new ResizeObserver(pe), fe?.observe(se.value), X.value && !p.placeholder && (de.value = k.publicContext.registerEdge({
 				edge: N.value ? "bottom" : "start",
 				element: se.value
 			})), pe());
@@ -12284,6 +12284,7 @@ var Mc = { class: "mat-snackbar__text" }, Nc = {
 			() => p.hideOnCollapse,
 			() => p.layout,
 			() => p.orientation,
+			() => p.placeholder,
 			() => p.width,
 			X
 		], () => {
@@ -12327,7 +12328,7 @@ var Mc = { class: "mat-snackbar__text" }, Nc = {
 			_: 3
 		}, 8, ["orientation"])], 16)], 6)) : o("", !0)], 8, ["to", "disabled"]))], 64));
 	}
-}), [["__scopeId", "data-v-1491c511"]]), cl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-44197a49"]]), cl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationDrawer",
 	inheritAttrs: !1
 }, {

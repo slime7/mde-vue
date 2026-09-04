@@ -431,7 +431,7 @@ async function syncRailMeasurement() {
     : new ResizeObserver(syncRailSize);
   resizeObserver?.observe(hostElement.value);
 
-  if (usesAppRoot.value) {
+  if (usesAppRoot.value && !propsWithDefaults.placeholder) {
     edgeRegistration.value = appContext.publicContext.registerEdge({
       edge: isHorizontal.value ? 'bottom' : 'start',
       element: hostElement.value,
@@ -535,6 +535,7 @@ watch([
   () => propsWithDefaults.hideOnCollapse,
   () => propsWithDefaults.layout,
   () => propsWithDefaults.orientation,
+  () => propsWithDefaults.placeholder,
   () => propsWithDefaults.width,
   usesAppRoot,
 ], () => {

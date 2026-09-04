@@ -197,6 +197,49 @@ describe('MatAppRoot 组件接入', () => {
     wrapper.unmount();
   });
 
+  it('NavigationRail 设置 placeholder=true 时在声明位置生成占位且不占用 AppRoot 边缘 padding', async () => {
+    let app;
+    const Capture = layoutCapture((value) => {
+      app = value;
+    });
+    const wrapper = mount(MatAppRoot, {
+      attachTo: document.body,
+      props: { fillViewport: false },
+      slots: {
+        default: () => [
+          h(Capture),
+          h(MatNavigationRail, {
+            app: true,
+            placeholder: true,
+          }),
+        ],
+      },
+    });
+
+    await settleRender();
+    const navigation = wrapper.element.querySelector('nav');
+
+    vi.spyOn(wrapper.element, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 700,
+      height: 700,
+      right: 1000,
+      width: 1000,
+    }));
+    vi.spyOn(navigation.parentElement, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 700,
+      height: 700,
+      right: 80,
+      width: 80,
+    }));
+    window.dispatchEvent(new Event('resize'));
+    await settleMeasurement();
+
+    expect(app.layout.padding.start).toBe(0);
+    expect(wrapper.element.querySelector('.mat-navigation-rail__placeholder')).not.toBeNull();
+
+    wrapper.unmount();
+  });
+
   it('Snackbar 和 app FAB 自动进入 AppRoot，且 Snackbar 始终位于普通浮动组上方', async () => {
     vi.useFakeTimers();
     const wrapper = mount(MatAppRoot, {

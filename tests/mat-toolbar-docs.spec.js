@@ -64,6 +64,22 @@ describe('Toolbar 文档', () => {
     });
   });
 
+  it('为设置 app 的占位和底部占位示例添加 mat-app-root 包裹', () => {
+    const placeholderExample = readFileSync(
+      resolve('docs/site/examples/toolbar/ToolbarPlaceholderExample.vue'),
+      'utf8',
+    );
+    const bottomPlaceholderExample = readFileSync(
+      resolve('docs/site/examples/toolbar/ToolbarBottomPlaceholderExample.vue'),
+      'utf8',
+    );
+
+    expect(placeholderExample).toContain('<mat-app-root');
+    expect(placeholderExample).toContain(':fill-viewport="false"');
+    expect(bottomPlaceholderExample).toContain('<mat-app-root');
+    expect(bottomPlaceholderExample).toContain(':fill-viewport="false"');
+  });
+
   it('使用现有 MatBtn 的图标模式作为 fab 示例', () => {
     const example = readFileSync(
       resolve('docs/site/examples/toolbar/ToolbarVariantExample.vue'),

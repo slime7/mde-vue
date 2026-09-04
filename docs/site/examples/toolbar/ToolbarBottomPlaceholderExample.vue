@@ -10,7 +10,10 @@ const bottomPlaceholder = ref(0);
 
 <!-- #region template -->
 <template>
-  <div class="toolbar-bottom-placeholder-example">
+  <mat-app-root
+    :fill-viewport="false"
+    class="toolbar-bottom-placeholder-example"
+  >
     <div class="toolbar-bottom-placeholder-example__actions">
       <mat-btn variant="outlined" @click="active = !active">
         {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
@@ -60,7 +63,7 @@ const bottomPlaceholder = ref(0);
         应用
       </mat-btn>
     </mat-toolbar>
-  </div>
+  </mat-app-root>
 </template>
 <!-- #endregion template -->
 

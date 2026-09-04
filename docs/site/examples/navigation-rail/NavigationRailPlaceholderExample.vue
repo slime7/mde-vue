@@ -43,7 +43,13 @@ const active = ref(true);
   overflow: hidden;
 }
 
+.navigation-rail-placeholder-example :deep(.mat-app-root__content) {
+  flex-direction: row;
+}
+
 .navigation-rail-placeholder-example-content {
+  flex: 1 1 auto;
+  min-inline-size: 0;
   padding: 16px;
 }
 

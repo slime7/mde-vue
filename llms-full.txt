@@ -15754,7 +15754,7 @@ const selected = ref('recent');
     interaction="single-select"
     :selected="selected"
     color="surface-container-high"
-    activeColor="primary"
+    active-color="primary"
     aria-label="通常与选中背景色示例"
     class="example-list"
     @select="selected = $event.nextSelected"
@@ -16685,16 +16685,21 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
 
 ```vue
 <template>
-  <div class="toolbar-placeholder-example">
-    <mat-btn variant="outlined" @click="active = !active">
-      {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
-    </mat-btn>
-    <mat-btn
-      variant="text"
-      @click="placeholderEnabled = !placeholderEnabled"
-    >
-      {{ placeholderEnabled ? '关闭自然占位' : '开启自然占位' }}
-    </mat-btn>
+  <mat-app-root
+    :fill-viewport="false"
+    class="toolbar-placeholder-example"
+  >
+    <div class="toolbar-placeholder-example__actions">
+      <mat-btn variant="outlined" @click="active = !active">
+        {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
+      </mat-btn>
+      <mat-btn
+        variant="text"
+        @click="placeholderEnabled = !placeholderEnabled"
+      >
+        {{ placeholderEnabled ? '关闭自然占位' : '开启自然占位' }}
+      </mat-btn>
+    </div>
     <p v-for="index in 5" :key="index">
       页面内容 {{ index }}：开启占位后，后续内容不会被绝对定位的 Toolbar 遮挡。
     </p>
@@ -16712,7 +16717,7 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
         完成
       </mat-btn>
     </mat-toolbar>
-  </div>
+  </mat-app-root>
 </template>
 ```
 ```vue
@@ -16727,6 +16732,12 @@ const placeholderEnabled = ref(true);
 <style scoped>
 .toolbar-placeholder-example {
   min-block-size: 320px;
+}
+
+.toolbar-placeholder-example__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .toolbar-placeholder-example p {
@@ -16752,7 +16763,10 @@ const placeholderEnabled = ref(true);
 
 ```vue
 <template>
-  <div class="toolbar-bottom-placeholder-example">
+  <mat-app-root
+    :fill-viewport="false"
+    class="toolbar-bottom-placeholder-example"
+  >
     <div class="toolbar-bottom-placeholder-example__actions">
       <mat-btn variant="outlined" @click="active = !active">
         {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
@@ -16802,7 +16816,7 @@ const placeholderEnabled = ref(true);
         应用
       </mat-btn>
     </mat-toolbar>
-  </div>
+  </mat-app-root>
 </template>
 ```
 ```vue
@@ -18458,7 +18472,13 @@ const active = ref(true);
   overflow: hidden;
 }
 
+.navigation-rail-placeholder-example :deep(.mat-app-root__content) {
+  flex-direction: row;
+}
+
 .navigation-rail-placeholder-example-content {
+  flex: 1 1 auto;
+  min-inline-size: 0;
   padding: 16px;
 }
 
