@@ -513,6 +513,7 @@ watch([
 
   .mat-app-root--document .mat-app-root__overlay {
     position: fixed;
+    z-index: var(--mat-sys-z-index-tooltip, 300);
   }
 
   .mat-app-root__bottom-stack {

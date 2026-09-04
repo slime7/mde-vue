@@ -1,5 +1,6 @@
 <script setup>
 import MatNavigationRail from '../mat-navigation-rail/MatNavigationRail.vue';
+import { computed, getCurrentInstance } from 'vue';
 import { isValidCssLength } from '../value-utils';
 import { useMatProps } from '../use-mat-props';
 
@@ -114,6 +115,10 @@ const props = defineProps({
   },
 });
 const propsWithDefaults = useMatProps('navigationDrawer', props);
+const instance = getCurrentInstance();
+const rawVNodeProps = instance?.vnode.props ?? {};
+const hasExplicitAttach = Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach') && rawVNodeProps.attach !== undefined;
+const forwardedAttach = computed(() => (hasExplicitAttach ? propsWithDefaults.attach : undefined));
 
 const emit = defineEmits({
   /**
@@ -137,7 +142,7 @@ const emit = defineEmits({
     :layout="propsWithDefaults.layout"
     :alignment="propsWithDefaults.alignment"
     :app="propsWithDefaults.app"
-    :attach="propsWithDefaults.attach"
+    :attach="forwardedAttach"
     :placeholder="propsWithDefaults.placeholder"
     :bottom-placeholder="propsWithDefaults.bottomPlaceholder"
     :full-width="true"

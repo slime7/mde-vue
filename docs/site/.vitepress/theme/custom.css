@@ -8,6 +8,8 @@
   --vp-c-brand-3: var(--mat-sys-color-primary-container, #cee5ff);
   --vp-c-brand-soft: color-mix(in srgb, var(--mat-sys-color-primary, #00639c) 14%, transparent);
   --vp-font-family-base: 'Noto Sans SC', system-ui, sans-serif;
+  --vp-nav-height: 64px;
+  --vp-sidebar-width: 0px;
   --mat-ref-typeface-brand: 'Noto Sans SC', system-ui, sans-serif;
   --mat-ref-typeface-plain: 'Noto Sans SC', system-ui, sans-serif;
 }
@@ -124,6 +126,86 @@ html[data-mat-theme='dark'] {
   }
 
   .vp-doc .custom-block.details > div[class*='language-'] {
-    margin-block-start: 8px;
+  margin-block-start: 8px;
+}
+}
+
+/* 自定义文档站组件布局与边缘固定 */
+.mde-docs-root .mat-app-bar__host--app-root {
+  position: fixed;
+  z-index: 20;
+}
+
+.mde-docs-root .mat-app-root__overlay {
+  z-index: 300;
+  pointer-events: none;
+}
+
+.mde-docs-root .mat-navigation-rail-host--app-root {
+  position: fixed;
+  block-size: 100dvb;
+  z-index: 25;
+}
+
+.mde-docs-root .mat-navigation-rail-host--modal {
+  position: fixed !important;
+  inset: 0 !important;
+  inline-size: 0 !important;
+  block-size: 100dvb !important;
+  z-index: 50 !important;
+  pointer-events: none;
+}
+
+.mde-docs-root .mat-navigation-rail-host--modal .mat-navigation-rail__scrim {
+  position: fixed !important;
+  inset: 0 !important;
+  inline-size: 100vw !important;
+  block-size: 100vh !important;
+  z-index: 10 !important;
+  pointer-events: auto;
+}
+
+.mde-docs-root .mat-navigation-rail-host--modal .mat-navigation-rail--modal {
+  position: fixed !important;
+  inset-block: 0 !important;
+  inset-inline-start: 0 !important;
+  inline-size: min(280px, calc(100vw - 56px)) !important;
+  max-inline-size: calc(100vw - 56px) !important;
+  z-index: 11 !important;
+  pointer-events: auto;
+  translate: 0 0;
+  transition: translate var(--mat-sys-motion-spring-default-spatial, 0.3s ease), opacity var(--mat-sys-motion-spring-fast-effects, 0.2s ease) !important;
+}
+
+.mde-docs-root .mat-navigation-rail-host--modal .mat-navigation-rail--modal.mat-navigation-rail--hidden {
+  translate: -100% 0 !important;
+  opacity: 0 !important;
+}
+
+.mde-docs-root .VPContent {
+  margin: 0 !important;
+  padding-top: 0 !important;
+}
+
+.mde-docs-root .VPContent.has-sidebar {
+  margin: 0 !important;
+  padding-left: 0 !important;
+}
+
+@media (min-width: 960px) {
+  .mde-docs-root .VPContent {
+    padding-top: 0 !important;
+  }
+
+  .mde-docs-root .VPContent.has-sidebar {
+    margin: 0 !important;
+    padding-left: 0 !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  .mde-docs-root .VPContent.has-sidebar {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }

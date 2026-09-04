@@ -225,7 +225,7 @@ const instance = getCurrentInstance();
 const slots = useSlots();
 const appContext = inject(MAT_APP_ROOT_KEY, null);
 const rawVNodeProps = instance?.vnode.props ?? {};
-const hasExplicitAttach = Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach');
+const hasExplicitAttach = Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach') && rawVNodeProps.attach !== undefined;
 const isHorizontal = computed(() => propsWithDefaults.orientation === 'horizontal');
 const isModal = computed(() => (
   !isHorizontal.value && propsWithDefaults.layout === 'modal'
@@ -568,8 +568,9 @@ watch([
       :style="railStyle"
     >
       <button
-        v-if="isModal && propsWithDefaults.expanded"
+        v-if="isModal && (propsWithDefaults.expanded || showCollapsibleContent)"
         class="mat-navigation-rail__scrim"
+        :class="{ 'mat-navigation-rail__scrim--hidden': !propsWithDefaults.expanded }"
         type="button"
         tabindex="-1"
         aria-hidden="true"
@@ -721,6 +722,28 @@ watch([
     padding-block-end: var(--mat-navigation-rail-bottom-placeholder);
   }
 
+  @keyframes mat-navigation-rail-modal-enter {
+    from {
+      translate: -100% 0;
+      opacity: 0;
+    }
+
+    to {
+      translate: 0 0;
+      opacity: 1;
+    }
+  }
+
+  @keyframes mat-navigation-rail-scrim-enter {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
   .mat-navigation-rail--modal {
     --mat-navigation-rail-current-container-color: var(--mat-navigation-rail-modal-container-color);
     position: absolute;
@@ -733,6 +756,15 @@ watch([
     border-start-end-radius: var(--mat-navigation-rail-modal-shape);
     border-end-end-radius: var(--mat-navigation-rail-modal-shape);
     box-shadow: var(--mat-navigation-rail-modal-elevation);
+    translate: 0 0;
+    animation: mat-navigation-rail-modal-enter var(--mat-sys-motion-spring-default-spatial);
+    transition: translate var(--mat-sys-motion-spring-default-spatial), opacity var(--mat-sys-motion-spring-fast-effects), border-radius var(--mat-sys-motion-spring-default-spatial);
+  }
+
+  .mat-navigation-rail--modal.mat-navigation-rail--hidden {
+    translate: -100% 0;
+    opacity: 0;
+    animation: none;
   }
 
   .mat-navigation-rail--app-root.mat-navigation-rail--modal {
@@ -779,6 +811,15 @@ watch([
     padding: 0;
     background: var(--mat-navigation-rail-scrim-color);
     border: 0;
+    opacity: 1;
+    animation: mat-navigation-rail-scrim-enter var(--mat-sys-motion-spring-fast-effects);
+    transition: opacity var(--mat-sys-motion-spring-fast-effects);
+  }
+
+  .mat-navigation-rail__scrim--hidden {
+    opacity: 0;
+    pointer-events: none;
+    animation: none;
   }
 
   .mat-navigation-rail-host--app-root .mat-navigation-rail__scrim {

@@ -2067,7 +2067,7 @@ var An = {
 			}, null, 512)
 		], 16, Mn));
 	}
-}), [["__scopeId", "data-v-a265e6d7"]]), In = /* @__PURE__ */ new WeakMap(), Ln = /* @__PURE__ */ new WeakMap();
+}), [["__scopeId", "data-v-a01799b6"]]), In = /* @__PURE__ */ new WeakMap(), Ln = /* @__PURE__ */ new WeakMap();
 function Rn(e, t, n) {
 	let r = [n.initialValue, ...n.names].filter((e) => e && e !== "none"), i = e.style;
 	i[t] = r.join(", ");
@@ -12138,7 +12138,7 @@ var Mc = { class: "mat-snackbar__text" }, Nc = {
 		function u(e) {
 			return e instanceof HTMLElement && e.ownerDocument === document ? e : null;
 		}
-		let p = $("navigationRail", e), b = l, S = h(Ne, Me), w = f(), E = V(), k = h(jt, null), A = w?.vnode.props ?? {}, M = Object.prototype.hasOwnProperty.call(A, "attach"), N = i(() => p.orientation === "horizontal"), F = i(() => !N.value && p.layout === "modal"), I = i(() => !N.value && p.hideOnCollapse && !p.expanded), R = j(p.expanded), B = j(!I.value), ee = i(() => R.value), U = i(() => B.value && !!E.header), G = i(() => !N.value && p.expanded);
+		let p = $("navigationRail", e), b = l, S = h(Ne, Me), w = f(), E = V(), k = h(jt, null), A = w?.vnode.props ?? {}, M = Object.prototype.hasOwnProperty.call(A, "attach") && A.attach !== void 0, N = i(() => p.orientation === "horizontal"), F = i(() => !N.value && p.layout === "modal"), I = i(() => !N.value && p.hideOnCollapse && !p.expanded), R = j(p.expanded), B = j(!I.value), ee = i(() => R.value), U = i(() => B.value && !!E.header), G = i(() => !N.value && p.expanded);
 		function K(e) {
 			return e.type === rl || e.type?.name === "MatNavigationRailItem";
 		}
@@ -12286,14 +12286,14 @@ var Mc = { class: "mat-snackbar__text" }, Nc = {
 			ref: se,
 			class: y(["mat-navigation-rail-host", ne.value]),
 			style: x(oe.value)
-		}, [F.value && z(p).expanded ? (D(), s("button", {
+		}, [F.value && (z(p).expanded || B.value) ? (D(), s("button", {
 			key: 0,
-			class: "mat-navigation-rail__scrim",
+			class: y(["mat-navigation-rail__scrim", { "mat-navigation-rail__scrim--hidden": !z(p).expanded }]),
 			type: "button",
 			tabindex: "-1",
 			"aria-hidden": "true",
 			onClick: ye
-		})) : o("", !0), c("nav", _({
+		}, null, 2)) : o("", !0), c("nav", _({
 			ref_key: "railElement",
 			ref: ce
 		}, e.$attrs, { class: ["mat-navigation-rail", re.value] }), [d(da, {
@@ -12307,7 +12307,7 @@ var Mc = { class: "mat-snackbar__text" }, Nc = {
 			_: 3
 		}, 8, ["orientation"])], 16)], 6)) : o("", !0)], 8, ["to", "disabled"]))], 64));
 	}
-}), [["__scopeId", "data-v-0f9c748e"]]), cl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-1491c511"]]), cl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationDrawer",
 	inheritAttrs: !1
 }, {
@@ -12378,7 +12378,7 @@ var Mc = { class: "mat-snackbar__text" }, Nc = {
 		"update:expanded": (e) => typeof e == "boolean"
 	},
 	setup(e, { emit: t }) {
-		let n = $("navigationDrawer", e), r = t;
+		let n = $("navigationDrawer", e), r = f()?.vnode.props ?? {}, o = Object.prototype.hasOwnProperty.call(r, "attach") && r.attach !== void 0, s = i(() => o ? n.attach : void 0), c = t;
 		return (e, t) => (D(), a(sl, _(e.$attrs, {
 			class: "mat-navigation-drawer",
 			"model-value": z(n).modelValue,
@@ -12387,15 +12387,15 @@ var Mc = { class: "mat-snackbar__text" }, Nc = {
 			layout: z(n).layout,
 			alignment: z(n).alignment,
 			app: z(n).app,
-			attach: z(n).attach,
+			attach: s.value,
 			placeholder: z(n).placeholder,
 			"bottom-placeholder": z(n).bottomPlaceholder,
 			"full-width": !0,
 			collapsible: !0,
 			"hide-on-collapse": !0,
 			orientation: "vertical",
-			"onUpdate:modelValue": t[0] ||= (e) => r("update:modelValue", e),
-			"onUpdate:expanded": t[1] ||= (e) => r("update:expanded", e)
+			"onUpdate:modelValue": t[0] ||= (e) => c("update:modelValue", e),
+			"onUpdate:expanded": t[1] ||= (e) => c("update:expanded", e)
 		}), l({ _: 2 }, [N(e.$slots, (t, n) => ({
 			name: n,
 			fn: W((t) => [P(e.$slots, n, b(p(t)), void 0, !0)])
@@ -12411,7 +12411,7 @@ var Mc = { class: "mat-snackbar__text" }, Nc = {
 			"bottom-placeholder"
 		]));
 	}
-}), [["__scopeId", "data-v-b23fabc1"]]), ll = ["aria-hidden"], ul = { class: "mat-navigation-group__items" }, dl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-6043bc4d"]]), ll = ["aria-hidden"], ul = { class: "mat-navigation-group__items" }, dl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationGroup",
 	inheritAttrs: !1
 }, {

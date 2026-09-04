@@ -4,6 +4,7 @@ import { watch } from 'vue';
 import { createMatUi } from 'mde-vue';
 import DocsPreview from './DocsPreview.vue';
 import DocsPlayground from './DocsPlayground.vue';
+import Layout from './Layout.vue';
 
 const DOCS_THEME_STORAGE_KEY = 'mde-vue.docs.theme';
 const THEME_MODES = ['light', 'dark', 'system'];
@@ -19,6 +20,20 @@ const SEED_COLOR_PATTERN = /^#(?:[\da-f]{3}|[\da-f]{6})$/i;
  * }}
  */
 function readStoredThemeOptions() {
+  if (typeof document === 'undefined') {
+    return {
+      mode: 'light',
+      target: {
+        style: {
+          setProperty() {},
+          removeProperty() {},
+        },
+        setAttribute() {},
+        removeAttribute() {},
+      },
+    };
+  }
+
   try {
     const storedValue = window.localStorage.getItem(DOCS_THEME_STORAGE_KEY);
 
@@ -88,17 +103,19 @@ function persistThemeOptions(mode, seedColor, schemeVariant, contrastLevel) {
 /** @type {import('vitepress').Theme} */
 export default {
   extends: DefaultTheme,
+  Layout,
   enhanceApp({ app }) {
     app.component('DocsPreview', DocsPreview);
     app.component('DocsPlayground', DocsPlayground);
 
-    if (typeof document !== 'undefined') {
-      const matUi = createMatUi({
-        iconClass: 'material-symbols-outlined',
-        theme: readStoredThemeOptions(),
-      });
+    const matUi = createMatUi({
+      iconClass: 'material-symbols-outlined',
+      theme: readStoredThemeOptions(),
+    });
 
-      app.use(matUi);
+    app.use(matUi);
+
+    if (typeof document !== 'undefined') {
       watch(() => matUi.theme.resolvedMode.value, (mode) => {
         document.documentElement.classList.toggle('dark', mode === 'dark');
       }, { immediate: true });
