@@ -57,19 +57,23 @@ describe('VitePress 文档自定义主题', () => {
   });
 
   it('提供主题设置页面组件并覆盖所有主题选项', () => {
-    const source = readThemeFile('ThemeSettings.vue');
+    const settingsSource = readThemeFile('ThemeSettings.vue');
+    const formSource = readThemeFile('ThemeForm.vue');
 
-    expect(source).toContain('useMatTheme');
-    expect(source).toContain('setMode');
-    expect(source).toContain('setSeedColor');
-    expect(source).toContain('setSchemeVariant');
-    expect(source).toContain('setContrastLevel');
-    expect(source).toContain('<mat-radio-group');
-    expect(source).toContain('<mat-text-field');
-    expect(source).toContain('type="color"');
-    expect(source).toContain('openColorPicker');
-    expect(source).toContain('#trailing');
-    expect(source).toContain('<mat-slider');
+    expect(settingsSource).toContain('ThemeForm');
+    expect(formSource).toContain('useMatTheme');
+    expect(formSource).toContain('setMode');
+    expect(formSource).toContain('setSeedColor');
+    expect(formSource).toContain('setSchemeVariant');
+    expect(formSource).toContain('setContrastLevel');
+    expect(formSource).toContain('<mat-radio-group');
+    expect(formSource).toContain('<mat-text-field');
+    expect(formSource).toContain('type="color"');
+    expect(formSource).toContain('openColorPicker');
+    expect(formSource).toContain('#trailing');
+    expect(formSource).toContain('<mat-slider');
+    expect(formSource).toContain('icon="casino"');
+    expect(formSource).toContain('theme-form__seed-row');
   });
 
   it('移除容易误解的默认外观开关并提供文字主题入口', () => {
@@ -95,6 +99,9 @@ describe('VitePress 文档自定义主题', () => {
     expect(drawerIndex).toBeGreaterThan(appBarIndex);
     expect(layoutSource).toContain('<mat-card');
     expect(layoutSource).toContain('<mat-card-action-area');
+    expect(layoutSource).toContain('<mat-docked-container');
+    expect(layoutSource).toContain('id="mde-docs-theme-settings-btn"');
+    expect(layoutSource).toContain('anchor="mde-docs-theme-settings-btn"');
   });
 
   it('主题设置页使用 mde-vue 组件展示可交互预览', () => {

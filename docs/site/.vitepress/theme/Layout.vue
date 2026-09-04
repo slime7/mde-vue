@@ -10,6 +10,7 @@ import { useData, useRoute } from 'vitepress';
 import VPContent from 'vitepress/dist/client/theme-default/components/VPContent.vue';
 import { usePrevNext } from 'vitepress/dist/client/theme-default/composables/prev-next.js';
 import { useMatTheme } from 'mde-vue';
+import ThemeForm from './ThemeForm.vue';
 
 const { site, theme, page, frontmatter } = useData();
 const route = useRoute();
@@ -19,6 +20,7 @@ const control = usePrevNext();
 const isWideScreen = ref(true);
 const isDrawerOpen = ref(false);
 const isPcDrawerOpen = ref(true);
+const isThemeSettingsOpen = ref(false);
 
 /** @type {MediaQueryList | null} */
 let mediaQuery = null;
@@ -60,6 +62,7 @@ watch(() => route.path, () => {
   if (!isWideScreen.value) {
     isDrawerOpen.value = false;
   }
+  isThemeSettingsOpen.value = false;
 });
 
 const drawerExpanded = computed({
@@ -226,6 +229,14 @@ const pageTitle = computed(() => page.value.title || frontmatter.value.title || 
         />
 
         <mat-btn
+          id="mde-docs-theme-settings-btn"
+          variant="standard"
+          icon="palette"
+          label="主题设置"
+          @click="isThemeSettingsOpen = !isThemeSettingsOpen"
+        />
+
+        <mat-btn
           variant="standard"
           icon="code"
           label="GitHub 仓库"
@@ -235,6 +246,23 @@ const pageTitle = computed(() => page.value.title || frontmatter.value.title || 
         />
       </template>
     </mat-app-bar>
+
+    <ClientOnly>
+      <mat-docked-container
+        v-model="isThemeSettingsOpen"
+        anchor="mde-docs-theme-settings-btn"
+        headline="主题设置"
+        :width="340"
+      >
+        <ThemeForm />
+        <template #actions>
+          <mat-spacer />
+          <mat-btn variant="text" @click="isThemeSettingsOpen = false">
+            完成
+          </mat-btn>
+        </template>
+      </mat-docked-container>
+    </ClientOnly>
 
     <mat-navigation-drawer
       v-model:expanded="drawerExpanded"
