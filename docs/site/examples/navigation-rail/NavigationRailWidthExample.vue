@@ -22,7 +22,7 @@ const width = ref(280);
       </mat-radio>
     </mat-radio-group>
 
-    <div class="navigation-rail-width-example-layout">
+    <mat-layout class="navigation-rail-width-example-layout">
       <mat-navigation-rail
         expanded
         :width="width"
@@ -39,7 +39,7 @@ const width = ref(280);
       <div class="navigation-rail-width-example-content">
         当前宽度：{{ width }}
       </div>
-    </div>
+    </mat-layout>
   </div>
 </template>
 <!-- #endregion template -->
@@ -59,7 +59,6 @@ const width = ref(280);
 }
 
 .navigation-rail-width-example-layout {
-  display: flex;
   inline-size: 100%;
   min-block-size: 240px;
   overflow: hidden;
@@ -67,8 +66,8 @@ const width = ref(280);
 
 .navigation-rail-width-example-content {
   display: grid;
-  flex: 1 1 auto;
   min-inline-size: 0;
+  min-block-size: 240px;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
 }

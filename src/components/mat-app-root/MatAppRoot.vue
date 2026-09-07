@@ -489,6 +489,7 @@ watch([
     flex-direction: column;
     padding-block: var(--mat-app-root-padding-top) var(--mat-app-root-padding-bottom);
     padding-inline: var(--mat-app-root-padding-start) var(--mat-app-root-padding-end);
+    transition: padding-block var(--mat-sys-motion-spring-default-spatial, .3s ease), padding-inline var(--mat-sys-motion-spring-default-spatial, .3s ease);
   }
 
   .mat-app-root--fill-viewport .mat-app-root__content {
@@ -560,6 +561,12 @@ watch([
     padding-inline: env(safe-area-inset-left, 0) env(safe-area-inset-right, 0);
     visibility: hidden;
     pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-app-root__content {
+      transition: none;
+    }
   }
 }
 </style>

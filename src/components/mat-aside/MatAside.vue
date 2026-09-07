@@ -106,7 +106,6 @@ const props = defineProps({
     default: undefined,
     validator: (value) => value === undefined || value === 'auto' || isValidCssLength(value, {
       property: 'block-size',
-      positive: true,
     }),
   },
   /**
@@ -238,6 +237,16 @@ const props = defineProps({
   transition: {
     type: Boolean,
     default: true,
+  },
+  /**
+   * modal=true 时附加到背景遮罩的额外类名。
+   *
+   * @type {string | undefined}
+   * @default undefined
+   */
+  scrimClass: {
+    type: String,
+    default: undefined,
   },
   /**
    * modal=true 时点击背景遮罩是否请求关闭。
@@ -414,6 +423,7 @@ const asideClass = computed(() => [
     'mat-aside--bordered': propsWithDefaults.bordered,
     'mat-aside--auto-size': isAutoSize.value,
     'mat-aside--modal': isModal.value,
+    'mat-aside--modal-scoped': isModal.value && isScopedToContainer.value,
     'mat-aside--top-scrim': isTop.value,
     'mat-aside--no-transition': !propsWithDefaults.transition,
     'mat-aside--app': propsWithDefaults.app,
@@ -437,31 +447,46 @@ const asideStyle = computed(() => [
   },
 ]);
 
-const attachTarget = computed(() => {
-  if (effectiveMode.value !== 'fixed') {
-    return null;
-  }
+const isScopedToContainer = computed(() => (
+  effectiveMode.value !== 'fixed' && Boolean(
+    layoutContext?.rootElement?.value || (appContext && !hasExplicitAttach.value && appContext.rootElement?.value),
+  )
+));
 
-  if (propsWithDefaults.attach instanceof HTMLElement
-    && propsWithDefaults.attach.ownerDocument === document) {
-    return propsWithDefaults.attach;
-  }
-
-  if (typeof propsWithDefaults.attach === 'string') {
-    try {
-      return document.querySelector(propsWithDefaults.attach);
-    } catch {
-      return null;
+const targetContainer = computed(() => {
+  if (hasExplicitAttach.value && propsWithDefaults.attach) {
+    if (propsWithDefaults.attach instanceof HTMLElement
+      && propsWithDefaults.attach.ownerDocument === document) {
+      return propsWithDefaults.attach;
+    }
+    if (typeof propsWithDefaults.attach === 'string') {
+      try {
+        return document.querySelector(propsWithDefaults.attach);
+      } catch {
+        return null;
+      }
     }
   }
 
-  return null;
+  if (effectiveMode.value !== 'fixed') {
+    if (layoutContext?.rootElement?.value) {
+      return layoutContext.rootElement.value;
+    }
+    if (appContext && !hasExplicitAttach.value && appContext.rootElement?.value) {
+      return appContext.rootElement.value;
+    }
+  }
+
+  return 'body';
 });
 
 const placeholderStyle = computed(() => {
   const isVertical = normalizedLocation.value === 'start' || normalizedLocation.value === 'end';
+  const isActive = isControlledOpen.value && phase.value !== 'closed';
   let size;
-  if (propsWithDefaults.placeholderSize !== undefined) {
+  if (!isActive) {
+    size = '0px';
+  } else if (propsWithDefaults.placeholderSize !== undefined) {
     size = toCssLength(propsWithDefaults.placeholderSize, {
       property: isVertical ? 'inline-size' : 'block-size',
       fallback: '0px',
@@ -493,6 +518,12 @@ function buildScopeOptions() {
       scrollElement: appContext.documentMode?.value ? null : (appContext.contentElement?.value ?? null),
     };
   }
+  if (layoutContext) {
+    return {
+      inertElement: layoutContext.contentElement?.value ?? null,
+      scrollElement: layoutContext.rootElement?.value ?? null,
+    };
+  }
   return {
     inertElement: null,
     scrollElement: null,
@@ -500,7 +531,14 @@ function buildScopeOptions() {
 }
 
 function syncModal() {
-  if (!mounted || !hostElement.value || !rendered.value || !isModal.value) {
+  if (
+    !mounted
+    || !hostElement.value
+    || !rendered.value
+    || !isModal.value
+    || !isControlledOpen.value
+    || phase.value === 'closed'
+  ) {
     if (hostElement.value) {
       unregisterDialog(hostElement.value);
     }
@@ -539,9 +577,17 @@ function syncMeasurement() {
     return;
   }
   const rect = hostElement.value.getBoundingClientRect();
+  const nextBlockSize = Math.max(0, Math.ceil(Number(rect.height) || 0));
+  const nextInlineSize = Math.max(0, Math.ceil(Number(rect.width) || 0));
+
+  if (measuredSize.value.blockSize === nextBlockSize
+    && measuredSize.value.inlineSize === nextInlineSize) {
+    return;
+  }
+
   measuredSize.value = {
-    blockSize: Math.max(0, Math.ceil(Number(rect.height) || 0)),
-    inlineSize: Math.max(0, Math.ceil(Number(rect.width) || 0)),
+    blockSize: nextBlockSize,
+    inlineSize: nextInlineSize,
   };
   edgeRegistration.value?.update();
 }
@@ -556,7 +602,8 @@ function syncRegistration() {
   edgeRegistration.value?.unregister();
   edgeRegistration.value = null;
 
-  if (effectiveMode.value === 'flow'
+  if (propsWithDefaults.placeholder
+    || effectiveMode.value === 'flow'
     || effectiveMode.value === 'sticky'
     || propsWithDefaults.modal) {
     return;
@@ -723,16 +770,19 @@ defineExpose({
 
     <Teleport
       v-if="effectiveMode === 'fixed'"
-      :to="attachTarget ?? 'body'"
-      :disabled="!attachTarget"
+      :to="targetContainer"
+      :disabled="!targetContainer"
     >
       <button
-        v-if="isModal && rendered"
+        v-if="isModal && rendered && phase !== 'closed'"
         class="mat-aside__scrim"
-        :class="{
-          'mat-aside__scrim--top': isTop,
-          'mat-aside__scrim--closing': phase === 'closing',
-        }"
+        :class="[
+          propsWithDefaults.scrimClass,
+          {
+            'mat-aside__scrim--top': isTop,
+            'mat-aside__scrim--closing': phase === 'closing',
+          },
+        ]"
         type="button"
         tabindex="-1"
         aria-hidden="true"
@@ -761,53 +811,65 @@ defineExpose({
       :class="asideClass"
       :style="asideStyle"
     >
-      <button
-        v-if="isModal"
-        class="mat-aside__scrim"
-        :class="{
-          'mat-aside__scrim--top': isTop,
-          'mat-aside__scrim--closing': phase === 'closing',
-        }"
-        type="button"
-        tabindex="-1"
-        aria-hidden="true"
-        @click="handleScrimClick"
-      />
+      <Teleport
+        v-if="isModal && rendered && phase !== 'closed'"
+        :to="targetContainer"
+        :disabled="!targetContainer"
+      >
+        <button
+          class="mat-aside__scrim"
+          :class="[
+            propsWithDefaults.scrimClass,
+            {
+              'mat-aside__scrim--top': isTop,
+              'mat-aside__scrim--closing': phase === 'closing',
+              'mat-aside__scrim--docked': isScopedToContainer,
+            },
+          ]"
+          type="button"
+          tabindex="-1"
+          aria-hidden="true"
+          @click="handleScrimClick"
+        />
+      </Teleport>
+
       <slot />
     </component>
   </template>
 
-  <template v-else-if="effectiveMode === 'fixed'">
-    <Teleport
-      :to="attachTarget ?? 'body'"
-      :disabled="!attachTarget"
-    >
-      <button
-        v-if="isModal && rendered"
-        class="mat-aside__scrim"
-        :class="{
+  <Teleport
+    v-else-if="effectiveMode === 'fixed'"
+    :to="targetContainer"
+    :disabled="!targetContainer"
+  >
+    <button
+      v-if="isModal && rendered && phase !== 'closed'"
+      class="mat-aside__scrim"
+      :class="[
+        propsWithDefaults.scrimClass,
+        {
           'mat-aside__scrim--top': isTop,
           'mat-aside__scrim--closing': phase === 'closing',
-        }"
-        type="button"
-        tabindex="-1"
-        aria-hidden="true"
-        @click="handleScrimClick"
-      />
+        },
+      ]"
+      type="button"
+      tabindex="-1"
+      aria-hidden="true"
+      @click="handleScrimClick"
+    />
 
-      <component
-        :is="propsWithDefaults.as"
-        v-if="rendered"
-        ref="hostElement"
-        v-bind="$attrs"
-        :hidden="phase === 'closed' && !propsWithDefaults.unmountOnClose ? true : undefined"
-        :class="asideClass"
-        :style="asideStyle"
-      >
-        <slot />
-      </component>
-    </Teleport>
-  </template>
+    <component
+      :is="propsWithDefaults.as"
+      v-if="rendered"
+      ref="hostElement"
+      v-bind="$attrs"
+      :hidden="phase === 'closed' && !propsWithDefaults.unmountOnClose ? true : undefined"
+      :class="asideClass"
+      :style="asideStyle"
+    >
+      <slot />
+    </component>
+  </Teleport>
 
   <component
     :is="propsWithDefaults.as"
@@ -818,18 +880,28 @@ defineExpose({
     :class="asideClass"
     :style="asideStyle"
   >
-    <button
-      v-if="isModal"
-      class="mat-aside__scrim"
-      :class="{
-        'mat-aside__scrim--top': isTop,
-        'mat-aside__scrim--closing': phase === 'closing',
-      }"
-      type="button"
-      tabindex="-1"
-      aria-hidden="true"
-      @click="handleScrimClick"
-    />
+    <Teleport
+      v-if="isModal && rendered && phase !== 'closed'"
+      :to="targetContainer"
+      :disabled="!targetContainer"
+    >
+      <button
+        class="mat-aside__scrim"
+        :class="[
+          propsWithDefaults.scrimClass,
+          {
+            'mat-aside__scrim--top': isTop,
+            'mat-aside__scrim--closing': phase === 'closing',
+            'mat-aside__scrim--docked': isScopedToContainer,
+          },
+        ]"
+        type="button"
+        tabindex="-1"
+        aria-hidden="true"
+        @click="handleScrimClick"
+      />
+    </Teleport>
+
     <slot />
   </component>
 </template>
@@ -839,7 +911,7 @@ defineExpose({
   .mat-aside {
     box-sizing: border-box;
     isolation: isolate;
-    transition: inset-block var(--mat-sys-motion-spring-default-spatial, .3s ease), inset-inline var(--mat-sys-motion-spring-default-spatial, .3s ease);
+    transition: inset-block var(--mat-sys-motion-spring-default-spatial, .3s ease), inset-inline var(--mat-sys-motion-spring-default-spatial, .3s ease), inline-size var(--mat-sys-motion-spring-default-spatial, .3s ease), block-size var(--mat-sys-motion-spring-default-spatial, .3s ease);
   }
 
   .mat-aside[hidden] {
@@ -855,6 +927,8 @@ defineExpose({
     display: block;
     pointer-events: none;
     box-sizing: border-box;
+    overflow: hidden;
+    transition: inline-size var(--mat-sys-motion-spring-default-spatial, .3s ease), block-size var(--mat-sys-motion-spring-default-spatial, .3s ease);
   }
 
   /* Scrim */
@@ -870,6 +944,10 @@ defineExpose({
     background: transparent;
     border: 0;
     pointer-events: auto;
+  }
+
+  .mat-aside__scrim--docked {
+    position: absolute;
   }
 
   .mat-aside__scrim--top:not(.mat-aside__scrim--closing) {
@@ -929,6 +1007,10 @@ defineExpose({
   .mat-aside--modal {
     position: fixed;
     z-index: calc(var(--mat-sys-z-index-dialog) + 1);
+  }
+
+  .mat-aside--mode-docked.mat-aside--modal {
+    position: absolute;
   }
 
   /* Top */

@@ -65,6 +65,9 @@ import MatPanes from './components/mat-panes/MatPanes.vue';
 import MatPane from './components/mat-panes/MatPane.vue';
 import MatNavigationRail from './components/mat-navigation-rail/MatNavigationRail.vue';
 import MatNavigationRailItem from './components/mat-navigation-rail/MatNavigationRailItem.vue';
+import MatNavigationBar from './components/mat-navigation-bar/MatNavigationBar.vue';
+import MatNavigationBarItem from './components/mat-navigation-bar/MatNavigationBarItem.vue';
+import MatNavigationItem from './components/mat-navigation-item/MatNavigationItem.vue';
 import MatNavigationDrawer from './components/mat-navigation-drawer/MatNavigationDrawer.vue';
 import MatNavigationGroup from './components/mat-navigation-group/MatNavigationGroup.vue';
 import COMPONENT_ALIASES from './component-aliases';
@@ -146,6 +149,9 @@ export const GLOBAL_COMPONENTS = [
   ['MatPane', 'mat-pane', MatPane],
   ['MatNavigationRail', 'mat-navigation-rail', MatNavigationRail],
   ['MatNavigationRailItem', 'mat-navigation-rail-item', MatNavigationRailItem],
+  ['MatNavigationBar', 'mat-navigation-bar', MatNavigationBar],
+  ['MatNavigationBarItem', 'mat-navigation-bar-item', MatNavigationBarItem],
+  ['MatNavigationItem', 'mat-navigation-item', MatNavigationItem],
   ['MatNavigationDrawer', 'mat-navigation-drawer', MatNavigationDrawer],
   ['MatNavigationGroup', 'mat-navigation-group', MatNavigationGroup],
 ];

@@ -9,7 +9,7 @@ const selected = ref('inbox');
 
 <!-- #region template -->
 <template>
-  <div class="navigation-rail-badge-example-shell">
+  <mat-layout class="navigation-rail-badge-example-shell">
     <mat-navigation-rail
       v-model="selected"
       v-model:expanded="expanded"
@@ -61,14 +61,13 @@ const selected = ref('inbox');
       <span>{{ expanded ? '展开态 Badge 显示在标签后' : '收缩态 Badge 附着图标' }}</span>
       <span>当前页面：{{ selected }}</span>
     </div>
-  </div>
+  </mat-layout>
 </template>
 <!-- #endregion template -->
 
 <!-- #region style -->
 <style scoped>
 .navigation-rail-badge-example-shell {
-  display: flex;
   inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
@@ -76,8 +75,8 @@ const selected = ref('inbox');
 
 .navigation-rail-badge-example-content {
   display: grid;
-  flex: 1 1 auto;
   min-inline-size: 0;
+  min-block-size: 280px;
   place-content: center;
   gap: 8px;
   color: var(--mat-sys-color-on-surface-variant);

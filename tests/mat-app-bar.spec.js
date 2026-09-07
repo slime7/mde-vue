@@ -1,8 +1,10 @@
 import { createApp, h, nextTick } from 'vue';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
+import MatAside from '../src/components/mat-aside/MatAside.vue';
 import MatAppBar from '../src/components/mat-app-bar/MatAppBar.vue';
 import MatAppRoot from '../src/components/mat-app-root/MatAppRoot.vue';
+import MatLayout from '../src/components/mat-layout/MatLayout.vue';
 import MatSearch from '../src/components/mat-search/MatSearch.vue';
 import * as library from '../src';
 import { createMatUi } from '../src/plugin.js';
@@ -66,6 +68,24 @@ describe('MatAppBar', () => {
     expect(wrapper.get('button[aria-label="更多"]').exists()).toBe(true);
   });
 
+  it.each([
+    ['medium-flexible', '48px'],
+    ['large-flexible', '56px'],
+  ])('flexible %s 保持 64px 根布局，并把展开差值放进占位', (variant, placeholderHeight) => {
+    const wrapper = mount(MatAppBar, {
+      props: { variant },
+      slots: {
+        default: () => '最近项目',
+        subtitle: () => '连接整合与表面填色',
+      },
+    });
+
+    expect(wrapper.findComponent(MatAside).props('blockSize')).toBe(64);
+    expect(wrapper.get('.mat-app-bar__placeholder').element.style.blockSize).toBe(placeholderHeight);
+
+    wrapper.unmount();
+  });
+
   it('app 模式接入最近的 MatAppRoot，显式 attach 时优先挂载到目标', async () => {
     const appWrapper = mount(MatAppRoot, {
       attachTo: document.body,
@@ -120,5 +140,20 @@ describe('MatAppBar', () => {
 
     wrapper.unmount();
     target.remove();
+  });
+
+  it('在 MatLayout 内未显式指定 mode 时保持 sticky，不向容器注册脱流内边距', async () => {
+    const wrapper = mount(MatLayout, {
+      attachTo: document.body,
+      slots: {
+        default: () => [
+          h(MatAppBar, null, () => '顶部标题'),
+          h('div', '正文内容'),
+        ],
+      },
+    });
+    await nextTick();
+    expect(wrapper.findComponent(MatAside).props('mode')).toBe('sticky');
+    wrapper.unmount();
   });
 });

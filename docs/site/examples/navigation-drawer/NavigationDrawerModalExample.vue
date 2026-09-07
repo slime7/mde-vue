@@ -9,7 +9,7 @@ const selected = ref('home');
 
 <!-- #region template -->
 <template>
-  <div class="navigation-drawer-example-shell">
+  <mat-layout class="navigation-drawer-example-shell">
     <mat-navigation-drawer
       v-model="selected"
       v-model:expanded="expanded"
@@ -44,7 +44,7 @@ const selected = ref('home');
         打开模态抽屉
       </mat-btn>
     </div>
-  </div>
+  </mat-layout>
 </template>
 <!-- #endregion template -->
 
@@ -52,7 +52,6 @@ const selected = ref('home');
 <style scoped>
 .navigation-drawer-example-shell {
   position: relative;
-  display: flex;
   inline-size: 100%;
   min-block-size: 320px;
   overflow: hidden;
@@ -60,8 +59,8 @@ const selected = ref('home');
 
 .navigation-drawer-example-content {
   display: grid;
-  flex: 1 1 auto;
   min-inline-size: 0;
+  min-block-size: 320px;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
 }

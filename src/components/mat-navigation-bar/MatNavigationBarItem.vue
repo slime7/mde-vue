@@ -3,7 +3,7 @@ import MatNavigationItem from '../mat-navigation-item/MatNavigationItem.vue';
 import { useMatProps } from '../use-mat-props';
 
 defineOptions({
-  name: 'MatNavigationRailItem',
+  name: 'MatNavigationBarItem',
   inheritAttrs: false,
 });
 
@@ -29,8 +29,7 @@ const props = defineProps({
     default: undefined,
   },
   /**
-   * 收缩态附着到图标区域的 Badge 配置；展开态隐藏指示器。
-   * location="inline" 不受支持，会回退为 top-end。
+   * 附着到图标区域的 Badge 配置。
    *
    * @type {{ content?: string | number, dot?: boolean, location?: 'top-start' | 'top' | 'top-end' | 'end' | 'bottom-end' | 'bottom' | 'bottom-start' | 'start', color?: string } | undefined}
    * @default undefined
@@ -60,7 +59,7 @@ const props = defineProps({
     default: false,
   },
 });
-const propsWithDefaults = useMatProps('navigationRailItem', props);
+const propsWithDefaults = useMatProps('navigationBarItem', props);
 
 const emit = defineEmits({
   /**
@@ -73,7 +72,7 @@ const emit = defineEmits({
 <template>
   <MatNavigationItem
     v-bind="{ ...$attrs, ...propsWithDefaults }"
-    component-name="MatNavigationRailItem"
+    component-name="MatNavigationBarItem"
     @click="emit('click', $event)"
   >
     <template v-for="(_, name) in $slots" #[name]="slotProps">

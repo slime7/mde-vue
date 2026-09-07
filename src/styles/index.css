@@ -832,6 +832,14 @@
 }
 
 @layer mde.components {
+  .mat-aside__placeholder {
+    display: block;
+    pointer-events: none;
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: inline-size var(--mat-sys-motion-spring-default-spatial, .3s ease), block-size var(--mat-sys-motion-spring-default-spatial, .3s ease);
+  }
+
   ::view-transition-group(*) {
     animation-duration: var(--mat-sys-motion-duration-medium4);
     animation-timing-function: var(--mat-sys-motion-easing-emphasized);

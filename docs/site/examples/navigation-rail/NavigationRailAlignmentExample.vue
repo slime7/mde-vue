@@ -32,7 +32,7 @@ const alignment = ref('start');
       </mat-radio-group>
     </div>
 
-    <div class="navigation-rail-alignment-example-layout">
+    <mat-layout class="navigation-rail-alignment-example-layout">
       <mat-navigation-rail
         v-model:expanded="expanded"
         :alignment="alignment"
@@ -49,7 +49,7 @@ const alignment = ref('start');
       <div class="navigation-rail-alignment-example-content">
         默认 Slot 位于剩余空间的 {{ alignment }} 位置。
       </div>
-    </div>
+    </mat-layout>
   </div>
 </template>
 <!-- #endregion template -->
@@ -76,7 +76,6 @@ const alignment = ref('start');
 }
 
 .navigation-rail-alignment-example-layout {
-  display: flex;
   inline-size: 100%;
   min-block-size: 240px;
   overflow: hidden;
@@ -84,8 +83,8 @@ const alignment = ref('start');
 
 .navigation-rail-alignment-example-content {
   display: grid;
-  flex: 1 1 auto;
   min-inline-size: 0;
+  min-block-size: 240px;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
 }

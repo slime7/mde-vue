@@ -9,7 +9,7 @@ const selected = ref('inbox');
 
 <!-- #region template -->
 <template>
-  <div class="navigation-drawer-example-shell">
+  <mat-layout class="navigation-drawer-example-shell">
     <mat-navigation-drawer
       v-model="selected"
       v-model:expanded="expanded"
@@ -45,14 +45,13 @@ const selected = ref('inbox');
       </mat-btn>
       <span v-else>抽屉已展开，选中：{{ selected }}</span>
     </div>
-  </div>
+  </mat-layout>
 </template>
 <!-- #endregion template -->
 
 <!-- #region style -->
 <style scoped>
 .navigation-drawer-example-shell {
-  display: flex;
   inline-size: 100%;
   min-block-size: 320px;
   overflow: hidden;
@@ -60,8 +59,8 @@ const selected = ref('inbox');
 
 .navigation-drawer-example-content {
   display: grid;
-  flex: 1 1 auto;
   min-inline-size: 0;
+  min-block-size: 320px;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
 }

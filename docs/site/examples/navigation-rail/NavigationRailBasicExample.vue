@@ -8,7 +8,7 @@ const selected = ref('home');
 
 <!-- #region template -->
 <template>
-  <div class="navigation-rail-example-shell">
+  <mat-layout class="navigation-rail-example-shell">
     <mat-navigation-rail
       v-model="selected"
       aria-label="主导航"
@@ -27,14 +27,13 @@ const selected = ref('home');
     <div class="navigation-rail-example-content">
       当前页面：{{ selected }}
     </div>
-  </div>
+  </mat-layout>
 </template>
 <!-- #endregion template -->
 
 <!-- #region style -->
 <style scoped>
 .navigation-rail-example-shell {
-  display: flex;
   inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
@@ -42,8 +41,8 @@ const selected = ref('home');
 
 .navigation-rail-example-content {
   display: grid;
-  flex: 1 1 auto;
   min-inline-size: 0;
+  min-block-size: 280px;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
 }

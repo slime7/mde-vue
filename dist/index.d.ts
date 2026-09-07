@@ -200,9 +200,77 @@ export interface MatAppBarProps {
   * @default undefined
   */
   scrollTarget?: string | HTMLElement | undefined;
+  /**
+  * 是否在自然布局位置生成占位。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  placeholder?: boolean;
+  /**
+  * 顶部安全区留白配置。
+  *
+  * @type {boolean | number | string}
+  * @default true
+  */
+  safeArea?: boolean | number | string;
+  /**
+  * 显式指定顶部安全区尺寸。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  safeAreaSize?: number | string | undefined;
+  /**
+  * 受控显示/隐藏状态，支持 v-model:open。
+  *
+  * @type {boolean | undefined}
+  * @default undefined
+  */
+  open?: boolean | undefined;
+  /**
+  * 受控显示/隐藏状态，支持 v-model。
+  *
+  * @type {boolean | undefined}
+  * @default undefined
+  */
+  modelValue?: boolean | undefined;
+  /**
+  * 是否在底部渲染 1px 细边框。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  bordered?: boolean;
+  /**
+  * 排布与定位模式。未指定时遵循 aside 默认行为。
+  *
+  * @type {'docked' | 'flow' | 'sticky' | 'fixed' | undefined}
+  * @default undefined
+  */
+  mode?: 'docked' | 'flow' | 'sticky' | 'fixed' | undefined;
+  /**
+  * 显式指定层级。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  zIndex?: number | string | undefined;
+  /**
+  * 是否启用切入退场动效。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  transition?: boolean;
 }
 
-export type MatAppBarComponent = DefineComponent<MatAppBarProps, {}, {}, {}, {}, {}, {}, {}>;
+export interface MatAppBarEmits {
+  "update:open": (payload: unknown) => unknown;
+  "update:modelValue": (payload: unknown) => unknown;
+}
+
+export type MatAppBarComponent = DefineComponent<MatAppBarProps, {}, {}, {}, {}, {}, {}, MatAppBarEmits>;
 export declare const MatAppBar: MatAppBarComponent;
 
 export interface MatSearchProps {
@@ -3121,6 +3189,13 @@ export interface MatAsideProps {
   */
   transition?: boolean;
   /**
+  * modal=true 时附加到背景遮罩的额外类名。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  scrimClass?: string | undefined;
+  /**
   * modal=true 时点击背景遮罩是否请求关闭。
   *
   * @type {boolean}
@@ -3860,13 +3935,6 @@ export declare const MatPane: MatPaneComponent;
 
 export interface MatNavigationRailProps {
   /**
-  * 导航方向；可选值为 `vertical`、`horizontal`。
-  *
-  * @type {'vertical' | 'horizontal'}
-  * @default 'vertical'
-  */
-  orientation?: 'vertical' | 'horizontal';
-  /**
   * 受控当前目的地值。
   *
   * @type {string | number | boolean | null}
@@ -3903,7 +3971,7 @@ export interface MatNavigationRailProps {
   */
   collapsible?: boolean;
   /**
-  * 纵向 Rail 布局；可选值为 `standard`、`modal`。
+  * 纵向 Rail 布局；可选值为 standard、modal。
   *
   * @type {'standard' | 'modal'}
   * @default 'standard'
@@ -3917,7 +3985,7 @@ export interface MatNavigationRailProps {
   */
   hideOnCollapse?: boolean;
   /**
-  * 默认 Slot 在主轴上的对齐方式；可选值为 `start`、`center`、`end`。
+  * 默认 Slot 在主轴上的对齐方式；可选值为 start、center、end。
   *
   * @type {'start' | 'center' | 'end'}
   * @default 'start'
@@ -3945,7 +4013,7 @@ export interface MatNavigationRailProps {
   */
   openLabel?: string;
   /**
-  * 是否 Teleport 到 attach 并固定到视口。
+  * 是否 Teleport 到 attach 并固定到视口或接入 MatAppRoot。
   *
   * @type {boolean}
   * @default false
@@ -3966,13 +4034,48 @@ export interface MatNavigationRailProps {
   */
   placeholder?: boolean;
   /**
-  * app=true 时的额外底部安全区；数字与纯数字字符串按 px 处理，
-  * 其他字符串 trim 后须为合法 CSS block-size 值，非法时回退 0。
+  * 受控显示/隐藏状态，支持 v-model:open。
+  * 省略时遵循 hideOnCollapse 或 modal 模式与 expanded 联动，其余场景默认开启。
   *
-  * @type {number | string}
-  * @default 0
+  * @type {boolean | undefined}
+  * @default undefined
   */
-  bottomPlaceholder?: number | string;
+  open?: boolean | undefined;
+  /**
+  * 安全区留白配置。
+  *
+  * @type {boolean | number | string}
+  * @default true
+  */
+  safeArea?: boolean | number | string;
+  /**
+  * 显式指定安全区留白大小。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  safeAreaSize?: number | string | undefined;
+  /**
+  * 排布与定位模式。未指定时遵循 aside 默认行为。
+  *
+  * @type {'docked' | 'flow' | 'sticky' | 'fixed' | undefined}
+  * @default undefined
+  */
+  mode?: 'docked' | 'flow' | 'sticky' | 'fixed' | undefined;
+  /**
+  * 是否启用展开收起过渡动效。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  transition?: boolean;
+  /**
+  * 显式指定层级。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  zIndex?: number | string | undefined;
 }
 
 export interface MatNavigationRailEmits {
@@ -3984,6 +4087,10 @@ export interface MatNavigationRailEmits {
   * Rail 请求切换展开状态时发出新的 boolean。
   */
   "update:expanded": (payload: boolean) => unknown;
+  /**
+  * Rail 请求切换打开/显隐状态时发出新的 boolean。
+  */
+  "update:open": (payload: boolean) => unknown;
 }
 
 export type MatNavigationRailComponent = DefineComponent<MatNavigationRailProps, {}, {}, {}, {}, {}, {}, MatNavigationRailEmits>;
@@ -4030,13 +4137,226 @@ export interface MatNavigationRailItemProps {
 
 export interface MatNavigationRailItemEmits {
   /**
-  * 启用的导航项被用户激活时转发原生点击事件，载荷为 `MouseEvent`。
+  * 启用的导航项被用户激活时转发原生点击事件，载荷为 MouseEvent。
   */
   "click": (payload: MouseEvent) => unknown;
 }
 
 export type MatNavigationRailItemComponent = DefineComponent<MatNavigationRailItemProps, {}, {}, {}, {}, {}, {}, MatNavigationRailItemEmits>;
 export declare const MatNavigationRailItem: MatNavigationRailItemComponent;
+
+export interface MatNavigationBarProps {
+  /**
+  * 受控当前目的地值。
+  *
+  * @type {string | number | boolean | null}
+  * @default null
+  */
+  modelValue?: string | number | boolean | null;
+  /**
+  * 默认 Slot 在主轴上的对齐方式；可选值为 start、center、end。
+  *
+  * @type {'start' | 'center' | 'end'}
+  * @default 'center'
+  */
+  alignment?: 'start' | 'center' | 'end';
+  /**
+  * 是否 Teleport 到 attach 并固定到视口或登记至 MatAppRoot 底部。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  app?: boolean;
+  /**
+  * app=true 时的固定挂载目标。
+  *
+  * @type {string | HTMLElement}
+  * @default 'body'
+  */
+  attach?: string | HTMLElement;
+  /**
+  * app=true 时在自然布局位置生成占位。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  placeholder?: boolean;
+  /**
+  * 导航栏高度尺寸；数字与纯数字字符串按 px 处理，其他字符串为合法 CSS 长度。
+  * 省略时使用默认高度 64px。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  height?: number | string | undefined;
+  /**
+  * 底部安全区留白配置。
+  *
+  * @type {boolean | number | string}
+  * @default true
+  */
+  safeArea?: boolean | number | string;
+  /**
+  * 显式指定底部安全区尺寸。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  safeAreaSize?: number | string | undefined;
+  /**
+  * 是否在顶部渲染 1px 细边框。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  bordered?: boolean;
+  /**
+  * 受控显示/隐藏状态，支持 v-model:open。
+  *
+  * @type {boolean | undefined}
+  * @default undefined
+  */
+  open?: boolean | undefined;
+  /**
+  * 是否启用滑入滑出动效。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  transition?: boolean;
+  /**
+  * 排布与定位模式。未指定时遵循 aside 默认行为。
+  *
+  * @type {'docked' | 'flow' | 'sticky' | 'fixed' | undefined}
+  * @default undefined
+  */
+  mode?: 'docked' | 'flow' | 'sticky' | 'fixed' | undefined;
+  /**
+  * 显式指定层级。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  zIndex?: number | string | undefined;
+}
+
+export interface MatNavigationBarEmits {
+  /**
+  * 子 Item 请求切换目的地时发出新的 value。
+  */
+  "update:modelValue": (payload: unknown) => unknown;
+  /**
+  * 请求切换显示状态时发出新的 boolean。
+  */
+  "update:open": (payload: boolean) => unknown;
+}
+
+export type MatNavigationBarComponent = DefineComponent<MatNavigationBarProps, {}, {}, {}, {}, {}, {}, MatNavigationBarEmits>;
+export declare const MatNavigationBar: MatNavigationBarComponent;
+
+export interface MatNavigationBarItemProps {
+  /**
+  * 当前导航目的地的稳定值。
+  *
+  * @type {string | number | boolean | undefined}
+  * @default undefined
+  */
+  value?: string | number | boolean | undefined;
+  /**
+  * Material Symbols 图标文本。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  icon?: string | undefined;
+  /**
+  * 附着到图标区域的 Badge 配置。
+  *
+  * @type {{ content?: string | number, dot?: boolean, location?: 'top-start' | 'top' | 'top-end' | 'end' | 'bottom-end' | 'bottom' | 'bottom-start' | 'start', color?: string } | undefined}
+  * @default undefined
+  */
+  badge?: { content?: string | number, dot?: boolean, location?: 'top-start' | 'top' | 'top-end' | 'end' | 'bottom-end' | 'bottom' | 'bottom-start' | 'start', color?: string } | undefined;
+  /**
+  * 设置后渲染原生链接。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  href?: string | undefined;
+  /**
+  * 禁止导航交互。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  disabled?: boolean;
+}
+
+export interface MatNavigationBarItemEmits {
+  /**
+  * 启用的导航项被用户激活时转发原生点击事件，载荷为 MouseEvent。
+  */
+  "click": (payload: MouseEvent) => unknown;
+}
+
+export type MatNavigationBarItemComponent = DefineComponent<MatNavigationBarItemProps, {}, {}, {}, {}, {}, {}, MatNavigationBarItemEmits>;
+export declare const MatNavigationBarItem: MatNavigationBarItemComponent;
+
+export interface MatNavigationItemProps {
+  /**
+  * 当前导航目的地的稳定值。
+  *
+  * @type {string | number | boolean | undefined}
+  * @default undefined
+  */
+  value?: string | number | boolean | undefined;
+  /**
+  * Material Symbols 图标文本。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  icon?: string | undefined;
+  /**
+  * 收缩态附着到图标区域的 Badge 配置；展开态隐藏指示器。
+  * location="inline" 不受支持，会回退为 top-end。
+  *
+  * @type {{ content?: string | number, dot?: boolean, location?: 'top-start' | 'top' | 'top-end' | 'end' | 'bottom-end' | 'bottom' | 'bottom-start' | 'start', color?: string } | undefined}
+  * @default undefined
+  */
+  badge?: { content?: string | number, dot?: boolean, location?: 'top-start' | 'top' | 'top-end' | 'end' | 'bottom-end' | 'bottom' | 'bottom-start' | 'start', color?: string } | undefined;
+  /**
+  * 设置后渲染原生链接。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  href?: string | undefined;
+  /**
+  * 禁止导航交互。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  disabled?: boolean;
+  /**
+  * 宿主组件名称，用于告警信息标识。
+  *
+  * @type {string}
+  * @default 'MatNavigationItem'
+  */
+  componentName?: string;
+}
+
+export interface MatNavigationItemEmits {
+  /**
+  * 启用的导航项被用户激活时转发原生点击事件，载荷为 MouseEvent。
+  */
+  "click": (payload: MouseEvent) => unknown;
+}
+
+export type MatNavigationItemComponent = DefineComponent<MatNavigationItemProps, {}, {}, {}, {}, {}, {}, MatNavigationItemEmits>;
+export declare const MatNavigationItem: MatNavigationItemComponent;
 
 export interface MatNavigationDrawerProps {
   /**
@@ -4076,7 +4396,7 @@ export interface MatNavigationDrawerProps {
   */
   alignment?: 'start' | 'center' | 'end';
   /**
-  * 是否 Teleport 到 attach 并固定到视口。
+  * 是否 Teleport 到 attach 并固定到视口或接入 MatAppRoot。
   *
   * @type {boolean}
   * @default false
@@ -4097,13 +4417,26 @@ export interface MatNavigationDrawerProps {
   */
   placeholder?: boolean;
   /**
-  * app=true 时的额外底部安全区；数字与纯数字字符串按 px 处理，
-  * 其他字符串 trim 后须为合法 CSS block-size 值，非法时回退 0。
+  * 安全区留白配置。
   *
-  * @type {number | string}
-  * @default 0
+  * @type {boolean | number | string}
+  * @default true
   */
-  bottomPlaceholder?: number | string;
+  safeArea?: boolean | number | string;
+  /**
+  * 显式指定安全区留白大小。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  safeAreaSize?: number | string | undefined;
+  /**
+  * 排布与定位模式。未指定时遵循 aside 默认行为。
+  *
+  * @type {'docked' | 'flow' | 'sticky' | 'fixed' | undefined}
+  * @default undefined
+  */
+  mode?: 'docked' | 'flow' | 'sticky' | 'fixed' | undefined;
 }
 
 export interface MatNavigationDrawerEmits {
@@ -4447,6 +4780,12 @@ declare module 'vue' {
     'mat-navigation-rail': typeof MatNavigationRail;
     MatNavigationRailItem: typeof MatNavigationRailItem;
     'mat-navigation-rail-item': typeof MatNavigationRailItem;
+    MatNavigationBar: typeof MatNavigationBar;
+    'mat-navigation-bar': typeof MatNavigationBar;
+    MatNavigationBarItem: typeof MatNavigationBarItem;
+    'mat-navigation-bar-item': typeof MatNavigationBarItem;
+    MatNavigationItem: typeof MatNavigationItem;
+    'mat-navigation-item': typeof MatNavigationItem;
     MatNavigationDrawer: typeof MatNavigationDrawer;
     'mat-navigation-drawer': typeof MatNavigationDrawer;
     MatNavigationGroup: typeof MatNavigationGroup;

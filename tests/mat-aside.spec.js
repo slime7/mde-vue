@@ -235,11 +235,30 @@ describe('MatAside 边缘组件', () => {
 
     const modalAside = wrapper.findComponent(MatAside);
     expect(modalAside.classes()).toContain('mat-aside--modal');
+    expect(modalAside.classes()).toContain('mat-aside--modal-scoped');
+    expect(wrapper.element.querySelector('.mat-aside__scrim--docked')).not.toBeNull();
     expect(dialogStack.value.length).toBeGreaterThan(0);
 
     await wrapper.setProps({ open: false });
     await settle();
     expect(dialogStack.value.length).toBe(0);
+    wrapper.unmount();
+  });
+
+  it('关闭的 modal 不渲染遮罩，也不占用 dialogStack', async () => {
+    const wrapper = mount(MatAside, {
+      attachTo: document.body,
+      props: {
+        modal: true,
+        modelValue: false,
+        transition: false,
+      },
+    });
+
+    await settle();
+    expect(document.body.querySelectorAll('.mat-aside__scrim')).toHaveLength(0);
+    expect(dialogStack.value).toHaveLength(0);
+
     wrapper.unmount();
   });
 
@@ -297,6 +316,29 @@ describe('MatAside 边缘组件', () => {
     expect(fixedAside).not.toBeNull();
     expect(fixedAside.classList.contains('mat-aside--app')).toBe(true);
     standaloneWrapper.unmount();
+  });
+
+  it('modal=true 时在 MatAppRoot 下遮罩和组件均作用在局部 AppRoot 内', async () => {
+    const appWrapper = mount(MatAppRoot, {
+      attachTo: document.body,
+      props: { fillViewport: false },
+      slots: {
+        default: () => [
+          h(MatAside, {
+            modal: true,
+            transition: false,
+            blockSize: 200,
+            modelValue: true,
+          }),
+        ],
+      },
+    });
+    await settle();
+    const modalAside = appWrapper.findComponent(MatAside);
+    expect(modalAside.classes()).toContain('mat-aside--modal');
+    expect(modalAside.classes()).toContain('mat-aside--modal-scoped');
+    expect(appWrapper.element.querySelector('.mat-aside__scrim--docked')).not.toBeNull();
+    appWrapper.unmount();
   });
 
   it('unmountOnClose: false 保留 DOM 并标记 hidden，unmountOnClose: true 销毁 DOM 节点', async () => {

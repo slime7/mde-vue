@@ -106,6 +106,17 @@ describe('VitePress 文档自定义主题', () => {
     expect(layoutSource).toContain('anchor="mde-docs-theme-settings-btn"');
   });
 
+  it('Navigation rail 的 modal 文档示例默认关闭遮罩并提供打开入口', () => {
+    const source = readFileSync(
+      resolve('docs/site/examples/navigation-rail/NavigationRailLayoutExample.vue'),
+      'utf8',
+    );
+
+    expect(source).toContain('const modalExpanded = ref(false);');
+    expect(source).toContain('打开模态导航');
+    expect(source).toContain('@click="modalExpanded = true"');
+  });
+
   it('主题设置页使用 mde-vue 组件展示可交互预览', () => {
     const source = readFileSync(resolve('docs/site/guide/theme.md'), 'utf8');
 

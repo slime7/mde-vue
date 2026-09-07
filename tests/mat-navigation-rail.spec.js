@@ -1,3 +1,4 @@
+/* eslint-disable vue/one-component-per-file */
 import {
   defineComponent, h, nextTick, onMounted,
 } from 'vue';
@@ -8,6 +9,7 @@ import {
 import MatBadge from '../src/components/mat-badge/MatBadge.vue';
 import MatNavigationRail from '../src/components/mat-navigation-rail/MatNavigationRail.vue';
 import MatNavigationRailItem from '../src/components/mat-navigation-rail/MatNavigationRailItem.vue';
+import MatAppRoot from '../src/components/mat-app-root/MatAppRoot.vue';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -34,6 +36,22 @@ describe('MatNavigationRail', () => {
     expect(MatNavigationRail.props.alignment.validator('center')).toBe(true);
     expect(MatNavigationRail.props.alignment.validator('end')).toBe(true);
     expect(MatNavigationRail.props.alignment.validator('top')).toBe(false);
+    expect(MatNavigationRail.props.location).toBeUndefined();
+    expect(MatNavigationRail.props.open).toBeDefined();
+  });
+
+  it('支持通过 open 属性显式受控显隐状态', async () => {
+    const wrapper = mount(MatNavigationRail, {
+      props: { open: false },
+      slots: { default: navigationItems },
+    });
+
+    expect(wrapper.find('nav').classes()).toContain('mat-aside--closed');
+
+    await wrapper.setProps({ open: true });
+    await settleRender();
+
+    expect(wrapper.find('nav').classes()).not.toContain('mat-aside--closed');
   });
 
   it('由 Navigation 的 full-width 统一控制所有 Item', async () => {
@@ -151,31 +169,6 @@ describe('MatNavigationRail', () => {
     expect(items[1].attributes('aria-current')).toBe('page');
   });
 
-  it('horizontal 模式由 expanded 在纵向 Item 与当前横向 Item 间切换', async () => {
-    const wrapper = mount(MatNavigationRail, {
-      props: {
-        orientation: 'horizontal',
-        expanded: false,
-        collapsible: true,
-        layout: 'modal',
-        modelValue: 'home',
-      },
-      slots: { default: navigationItems },
-    });
-
-    expect(wrapper.find('.mat-navigation-rail__menu').exists()).toBe(false);
-    expect(wrapper.find('.mat-navigation-rail__scrim').exists()).toBe(false);
-    expect(wrapper.find('.mat-navigation-rail-item__indicator .mat-navigation-rail-item__label').text())
-      .toBe('首页');
-    expect(wrapper.find('.mat-navigation-rail-item > .mat-navigation-rail-item__label').text())
-      .toBe('首页');
-
-    await wrapper.setProps({ expanded: true });
-
-    expect(wrapper.find('.mat-navigation-rail-item__indicator .mat-navigation-rail-item__label').text())
-      .toBe('首页');
-  });
-
   it('仅在纵向展开态显示默认 Slot 中的其他内容且切换时不卸载内容', async () => {
     let extraMountCount = 0;
     const ExtraContent = defineComponent({
@@ -208,12 +201,6 @@ describe('MatNavigationRail', () => {
     await wrapper.setProps({ expanded: true });
 
     expect(wrapper.find('.test-extra-content').element.hidden).toBe(false);
-    expect(wrapper.findComponent(MatNavigationRailItem).element).toBe(itemElement);
-    expect(extraMountCount).toBe(1);
-
-    await wrapper.setProps({ orientation: 'horizontal' });
-
-    expect(wrapper.find('.test-extra-content').element.hidden).toBe(true);
     expect(wrapper.findComponent(MatNavigationRailItem).element).toBe(itemElement);
     expect(extraMountCount).toBe(1);
   });
@@ -273,6 +260,7 @@ describe('MatNavigationRail', () => {
 
   it('modal expanded rail 使用遮罩，遮罩和 Escape 都请求收起', async () => {
     const wrapper = mount(MatNavigationRail, {
+      attachTo: document.body,
       props: {
         collapsible: true,
         expanded: true,
@@ -280,13 +268,30 @@ describe('MatNavigationRail', () => {
       },
     });
 
-    expect(wrapper.find('.mat-navigation-rail__scrim').exists()).toBe(true);
+    const scrim = document.body.querySelector('.mat-navigation-rail__scrim');
+    expect(scrim).toBeTruthy();
+    expect(document.body.querySelectorAll('.mat-aside__scrim')).toHaveLength(1);
+    expect(document.body.querySelectorAll('.mat-navigation-rail__scrim')).toHaveLength(1);
+    // scrim 必须渲染在 nav 容器外部平级，绝不能作为 nav 的子元素
+    expect(wrapper.find('nav').find('.mat-navigation-rail__scrim').exists()).toBe(false);
 
-    await wrapper.find('.mat-navigation-rail__scrim').trigger('click');
+    scrim.click();
+    expect(wrapper.emitted('update:expanded')).toEqual([[false]]);
+    wrapper.unmount();
+
+    const escWrapper = mount(MatNavigationRail, {
+      attachTo: document.body,
+      props: {
+        collapsible: true,
+        expanded: true,
+        layout: 'modal',
+      },
+    });
+    await settleRender();
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     await settleRender();
-
-    expect(wrapper.emitted('update:expanded')).toEqual([[false], [false]]);
+    expect(escWrapper.emitted('update:expanded')).toEqual([[false]]);
+    escWrapper.unmount();
   });
 
   it('hide-on-collapse 收起时隐藏 expanded rail 容器', async () => {
@@ -633,5 +638,39 @@ describe('MatNavigationRail', () => {
 
     expect(wrapper.findComponent(MatBadge).exists()).toBe(false);
     expect(MatNavigationRailItem.props.badge.default).toBeUndefined();
+  });
+
+  it('支持 placeholder 占位并在 open 切换时改变占位尺寸且不向 AppRoot 登记重复 padding', async () => {
+    const Harness = defineComponent({
+      props: { open: { type: Boolean, default: true } },
+      setup(props) {
+        return () => h(MatAppRoot, { fillViewport: false }, () => [
+          h(MatNavigationRail, {
+            app: true,
+            placeholder: true,
+            open: props.open,
+          }, {
+            default: navigationItems,
+          }),
+          h('div', { class: 'page-content' }, '正文'),
+        ]);
+      },
+    });
+
+    const wrapper = mount(Harness, { props: { open: true } });
+    await settleRender();
+
+    const placeholder = wrapper.find('.mat-navigation-rail__placeholder');
+    expect(placeholder.exists()).toBe(true);
+    // 占位开启时，不向 AppRoot 登记内边距（避免双重挤占）
+    const appRoot = wrapper.findComponent(MatAppRoot);
+    expect(appRoot.element.style.getPropertyValue('--mat-app-root-padding-start')).toBe('0px');
+    expect(placeholder.attributes('style')).toContain('80px');
+
+    await wrapper.setProps({ open: false });
+    await settleRender();
+
+    expect(placeholder.attributes('style')).toContain('inline-size: 0px');
+    wrapper.unmount();
   });
 });

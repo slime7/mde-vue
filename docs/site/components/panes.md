@@ -147,7 +147,7 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 | --- | --- | --- |
 | `MatPanes @update:sizes` | `Record<string, number>` | 指针拖动释放或一次键盘调整完成后，发送完整的下一组受控权重 |
 | `MatPanes @update:widths` | `Record<string, number>` | 初始布局、Pane 集合或实际宽度稳定后发送取整后的像素宽度；常规变化尾端防抖约 100ms，拖动提交后下一渲染帧补发 |
-| `MatPanes @update:breakpoint` | `'compact' | 'medium' | 'expanded' | 'large' | 'extra-large'` | 挂载时发送一次，之后仅在 `window.innerWidth` 跨过 `<600`、`600–839`、`840–1199`、`1200–1599` 或 `≥1600` 边界时发送 |
+| `MatPanes @update:breakpoint` | `'compact' \| 'medium' \| 'expanded' \| 'large' \| 'extra-large'` | 挂载时发送一次，之后仅在 `window.innerWidth` 跨过 `<600`、`600–839`、`840–1199`、`1200–1599` 或 `≥1600` 边界时发送 |
 
 组件不会保存尺寸、不根据断点自动调整 Pane，也不会代替应用决定何时使用 `v-if`。
 

@@ -8,7 +8,7 @@ const expanded = ref(false);
 
 <!-- #region template -->
 <template>
-  <div class="navigation-rail-example-shell">
+  <mat-layout class="navigation-rail-example-shell">
     <mat-navigation-rail
       v-model:expanded="expanded"
       collapsible
@@ -41,14 +41,13 @@ const expanded = ref(false);
         {{ expanded ? '收起' : '展开' }}导航
       </mat-btn>
     </div>
-  </div>
+  </mat-layout>
 </template>
 <!-- #endregion template -->
 
 <!-- #region style -->
 <style scoped>
 .navigation-rail-example-shell {
-  display: flex;
   inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
@@ -56,8 +55,8 @@ const expanded = ref(false);
 
 .navigation-rail-example-content {
   display: grid;
-  flex: 1 1 auto;
   min-inline-size: 0;
+  min-block-size: 280px;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
 }

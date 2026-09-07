@@ -2,7 +2,7 @@
 <script setup>
 import { ref } from 'vue';
 
-const modalExpanded = ref(true);
+const modalExpanded = ref(false);
 </script>
 <!-- #endregion script -->
 
@@ -11,7 +11,7 @@ const modalExpanded = ref(true);
   <div class="navigation-rail-layout-example">
     <section>
       <h3>standard：占据空间</h3>
-      <div class="navigation-rail-example-shell">
+      <mat-layout class="navigation-rail-example-shell">
         <mat-navigation-rail
           expanded
           layout="standard"
@@ -27,12 +27,12 @@ const modalExpanded = ref(true);
         <div class="navigation-rail-example-content">
           正文随 Rail 让位
         </div>
-      </div>
+      </mat-layout>
     </section>
 
     <section>
       <h3>modal：覆盖正文</h3>
-      <div class="navigation-rail-example-shell">
+      <mat-layout class="navigation-rail-example-shell">
         <mat-navigation-rail
           v-model:expanded="modalExpanded"
           collapsible
@@ -47,9 +47,15 @@ const modalExpanded = ref(true);
           </mat-navigation-rail-item>
         </mat-navigation-rail>
         <div class="navigation-rail-example-content">
-          正文保持原位
+          <mat-btn
+            icon="menu"
+            label="打开模态导航"
+            @click="modalExpanded = true"
+          >
+            打开模态导航
+          </mat-btn>
         </div>
-      </div>
+      </mat-layout>
     </section>
   </div>
 </template>
@@ -69,7 +75,6 @@ const modalExpanded = ref(true);
 }
 
 .navigation-rail-example-shell {
-  display: flex;
   inline-size: 100%;
   min-block-size: 220px;
   overflow: hidden;
@@ -77,8 +82,8 @@ const modalExpanded = ref(true);
 
 .navigation-rail-example-content {
   display: grid;
-  flex: 1 1 auto;
   min-inline-size: 0;
+  min-block-size: 220px;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
 }

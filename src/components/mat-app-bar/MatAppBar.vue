@@ -7,11 +7,11 @@ import {
   onBeforeUnmount,
   onMounted,
   ref,
-  shallowRef,
   useAttrs,
   watch,
 } from 'vue';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
+import MatAside from '../mat-aside/MatAside.vue';
 import {
   findNearestScrollSource,
   findTimelineScope,
@@ -99,18 +99,128 @@ const props = defineProps({
     type: [String, Object],
     default: undefined,
   },
+  /**
+   * 是否在自然布局位置生成占位。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  placeholder: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * 顶部安全区留白配置。
+   *
+   * @type {boolean | number | string}
+   * @default true
+   */
+  safeArea: {
+    type: [Boolean, Number, String],
+    default: true,
+  },
+  /**
+   * 显式指定顶部安全区尺寸。
+   *
+   * @type {number | string | undefined}
+   * @default undefined
+   */
+  safeAreaSize: {
+    type: [Number, String],
+    default: undefined,
+  },
+  /**
+   * 受控显示/隐藏状态，支持 v-model:open。
+   *
+   * @type {boolean | undefined}
+   * @default undefined
+   */
+  open: {
+    type: Boolean,
+    default: undefined,
+  },
+  /**
+   * 受控显示/隐藏状态，支持 v-model。
+   *
+   * @type {boolean | undefined}
+   * @default undefined
+   */
+  modelValue: {
+    type: Boolean,
+    default: undefined,
+  },
+  /**
+   * 是否在底部渲染 1px 细边框。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  bordered: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * 排布与定位模式。未指定时遵循 aside 默认行为。
+   *
+   * @type {'docked' | 'flow' | 'sticky' | 'fixed' | undefined}
+   * @default undefined
+   */
+  mode: {
+    type: String,
+    default: undefined,
+    validator(value) {
+      return value === undefined || ['docked', 'flow', 'sticky', 'fixed'].includes(value);
+    },
+  },
+  /**
+   * 显式指定层级。
+   *
+   * @type {number | string | undefined}
+   * @default undefined
+   */
+  zIndex: {
+    type: [Number, String],
+    default: undefined,
+  },
+  /**
+   * 是否启用切入退场动效。
+   *
+   * @type {boolean}
+   * @default true
+   */
+  transition: {
+    type: Boolean,
+    default: true,
+  },
 });
 const propsWithDefaults = useMatProps('appBar', props);
+
+const emit = defineEmits({
+  'update:open': (payload) => typeof payload === 'boolean',
+  'update:modelValue': (payload) => typeof payload === 'boolean',
+});
 
 const attrs = useAttrs();
 const instance = getCurrentInstance();
 const appContext = inject(MAT_APP_ROOT_KEY, null);
 const rawVNodeProps = instance?.vnode.props ?? {};
-const hasExplicitAttach = Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach');
-const hostElement = ref(null);
-const headerElement = ref(null);
-const edgeRegistration = shallowRef(null);
+const hasExplicitAttach = computed(() => (
+  Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach') && rawVNodeProps.attach !== undefined
+));
+const forwardedAttach = computed(() => (hasExplicitAttach.value ? propsWithDefaults.attach : undefined));
+const asideRef = ref(null);
+
+const effectiveMode = computed(() => {
+  if (propsWithDefaults.mode !== undefined) {
+    return propsWithDefaults.mode;
+  }
+  if (propsWithDefaults.app) {
+    return undefined;
+  }
+  return 'sticky';
+});
 const timelineName = `--mat-app-bar-${instance?.uid ?? Math.random().toString(36).slice(2)}`;
+
 const normalizedVariant = computed(() => (
   APP_BAR_VARIANTS.includes(propsWithDefaults.variant) ? propsWithDefaults.variant : 'small'
 ));
@@ -138,37 +248,18 @@ const expandedHeight = computed(() => {
   return 64;
 });
 const usesAppRoot = computed(() => (
-  propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach
+  propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach.value
 ));
-const attachTarget = computed(() => {
-  if (!propsWithDefaults.app || usesAppRoot.value) {
-    return null;
-  }
-
-  if (propsWithDefaults.attach instanceof HTMLElement
-    && propsWithDefaults.attach.ownerDocument === document) {
-    return propsWithDefaults.attach;
-  }
-
-  if (typeof propsWithDefaults.attach === 'string') {
-    try {
-      return document.querySelector(propsWithDefaults.attach);
-    } catch {
-      return null;
-    }
-  }
-
-  return null;
-});
 const placeholderHeight = computed(() => {
-  const flexibleHeight = expandedHeight.value - 64;
+  const flexibleHeight = Math.max(0, expandedHeight.value - 64);
 
-  if (!propsWithDefaults.app || usesAppRoot.value) {
+  if (flexibleHeight > 0) {
     return flexibleHeight;
   }
 
-  return expandedHeight.value;
+  return propsWithDefaults.placeholder ? 64 : 0;
 });
+
 const headerClass = computed(() => [
   `mat-app-bar--${normalizedVariant.value}`,
   `mat-app-bar--content-${normalizedContent.value}`,
@@ -191,21 +282,6 @@ const primaryTypographyClass = computed(() => {
 
   return getTypographyClass('title', 'large');
 });
-const hostClass = computed(() => ({
-  'mat-app-bar__host--app': propsWithDefaults.app,
-  'mat-app-bar__host--app-root': usesAppRoot.value,
-}));
-const hostStyle = computed(() => {
-  if (!usesAppRoot.value) {
-    return undefined;
-  }
-
-  return {
-    '--mat-app-bar-app-end-inset': `${edgeRegistration.value?.insets.end ?? 0}px`,
-    '--mat-app-bar-app-start-inset': `${edgeRegistration.value?.insets.start ?? 0}px`,
-    '--mat-app-bar-app-top-offset': `${edgeRegistration.value?.insets.top ?? 0}px`,
-  };
-});
 
 let mounted = false;
 let unregisterTimeline;
@@ -220,6 +296,10 @@ function supportsScrollTimeline() {
 function normalizeElement(value) {
   if (value instanceof HTMLElement && value.ownerDocument === document) {
     return value;
+  }
+
+  if (value?.$el instanceof HTMLElement && value.$el.ownerDocument === document) {
+    return value.$el;
   }
 
   if (typeof value === 'string') {
@@ -238,39 +318,32 @@ function stopRegistrations() {
   unregisterTimeline = undefined;
   cleanupScrollListener?.();
   cleanupScrollListener = undefined;
-  headerElement.value?.removeAttribute('data-timeline-active');
-  headerElement.value?.removeAttribute('data-scrolled');
-  edgeRegistration.value?.unregister();
-  edgeRegistration.value = null;
+  const el = asideRef.value?.hostElement;
+  el?.removeAttribute('data-timeline-active');
+  el?.removeAttribute('data-scrolled');
 }
 
 async function syncRegistrations() {
   await nextTick();
 
-  if (!mounted || !hostElement.value || !headerElement.value) {
+  const el = asideRef.value?.hostElement;
+  if (!mounted || !el) {
     return;
   }
 
   stopRegistrations();
 
-  if (usesAppRoot.value) {
-    edgeRegistration.value = appContext.publicContext.registerEdge({
-      edge: 'top',
-      element: hostElement.value,
-    });
-  }
-
   const explicitSource = normalizeElement(propsWithDefaults.scrollTarget);
   const appRootSource = usesAppRoot.value && appContext.rootElement.value?.dataset.scrollable === 'true'
     ? appContext.contentElement.value
     : null;
-  const source = explicitSource ?? appRootSource ?? findNearestScrollSource(hostElement.value);
+  const source = explicitSource ?? appRootSource ?? findNearestScrollSource(el);
 
   if (!source) {
     return;
   }
 
-  const scope = findTimelineScope(source, headerElement.value);
+  const scope = findTimelineScope(source, el);
 
   if (supportsScrollTimeline() && scope) {
     unregisterTimeline = registerAppBarTimeline({
@@ -278,7 +351,7 @@ async function syncRegistrations() {
       scope,
       source,
     });
-    headerElement.value.dataset.timelineActive = '';
+    el.dataset.timelineActive = '';
   }
 
   const isDocSource = (
@@ -298,9 +371,9 @@ async function syncRegistrations() {
   function handleScroll() {
     const isScrolled = getScrollTop() > 0;
     if (isScrolled) {
-      headerElement.value?.setAttribute('data-scrolled', '');
+      el?.setAttribute('data-scrolled', '');
     } else {
-      headerElement.value?.removeAttribute('data-scrolled');
+      el?.removeAttribute('data-scrolled');
     }
   }
 
@@ -328,47 +401,59 @@ watch([
   () => propsWithDefaults.scrollTarget,
   normalizedVariant,
 ], syncRegistrations);
+
+defineExpose({
+  asideRef,
+  hostElement: computed(() => asideRef.value?.hostElement),
+});
 </script>
 
 <template>
-  <Teleport
-    v-if="!propsWithDefaults.app || attachTarget || usesAppRoot"
-    :disabled="!propsWithDefaults.app || usesAppRoot"
-    :to="attachTarget ?? 'body'"
+  <MatAside
+    ref="asideRef"
+    as="header"
+    location="top"
+    :app="propsWithDefaults.app"
+    :attach="forwardedAttach"
+    :block-size="64"
+    :safe-area="propsWithDefaults.safeArea"
+    :safe-area-size="propsWithDefaults.safeAreaSize"
+    :open="propsWithDefaults.open"
+    :model-value="propsWithDefaults.modelValue"
+    :bordered="propsWithDefaults.bordered"
+    :mode="effectiveMode"
+    :z-index="propsWithDefaults.zIndex"
+    :transition="propsWithDefaults.transition"
+    class="mat-app-bar"
+    :class="headerClass"
+    :style="headerStyle"
+    v-bind="$attrs"
+    @update:open="emit('update:open', $event)"
+    @update:model-value="emit('update:modelValue', $event)"
   >
-    <div ref="hostElement" class="mat-app-bar__host" :class="hostClass" :style="hostStyle">
-      <header
-        ref="headerElement"
-        v-bind="attrs"
-        class="mat-app-bar"
-        :class="headerClass"
-        :style="headerStyle"
-      >
-        <div v-if="$slots.leading" class="mat-app-bar__leading">
-          <slot name="leading" />
-        </div>
-
-        <div class="mat-app-bar__main">
-          <div :class="['mat-app-bar__primary', primaryTypographyClass]">
-            <slot />
-          </div>
-
-          <div
-            v-if="$slots.subtitle"
-            class="mat-app-bar__subtitle mat-sys-typescale-body-medium"
-          >
-            <slot name="subtitle" />
-          </div>
-        </div>
-
-        <span class="mat-app-bar__spacer" aria-hidden="true" />
-
-        <div v-if="$slots.trailing" class="mat-app-bar__trailing">
-          <slot name="trailing" />
-        </div>
-      </header>
+    <div v-if="$slots.leading" class="mat-app-bar__leading">
+      <slot name="leading" />
     </div>
-  </Teleport>
+
+    <div class="mat-app-bar__main">
+      <div :class="['mat-app-bar__primary', primaryTypographyClass]">
+        <slot />
+      </div>
+
+      <div
+        v-if="$slots.subtitle"
+        class="mat-app-bar__subtitle mat-sys-typescale-body-medium"
+      >
+        <slot name="subtitle" />
+      </div>
+    </div>
+
+    <span class="mat-app-bar__spacer" aria-hidden="true" />
+
+    <div v-if="$slots.trailing" class="mat-app-bar__trailing">
+      <slot name="trailing" />
+    </div>
+  </MatAside>
 
   <span
     v-if="placeholderHeight > 0"
@@ -380,45 +465,14 @@ watch([
 
 <style scoped>
 @layer mde.components {
-  .mat-app-bar__placeholder {
-    display: block;
-    inline-size: 100%;
-    pointer-events: none;
-  }
-
-  .mat-app-bar__host {
-    display: contents;
-  }
-
-  .mat-app-bar__host--app {
-    position: fixed;
-    z-index: 8;
-    display: block;
-    box-sizing: border-box;
-    inset-block-start: var(--mat-app-bar-app-top-offset, 0);
-    inset-inline: var(--mat-app-bar-app-start-inset, 0) var(--mat-app-bar-app-end-inset, 0);
-    block-size: 64px;
-    pointer-events: none;
-  }
-
-  .mat-app-bar__host--app-root {
-    position: absolute;
-    inset-block-start: var(--mat-app-bar-app-top-offset, 0);
-    inset-inline: var(--mat-app-bar-app-start-inset, 0) var(--mat-app-bar-app-end-inset, 0);
-  }
-
   .mat-app-bar {
     --mat-app-bar-expanded-height: 64px;
     --mat-app-bar-collapsed-inset: 0;
-    position: sticky;
-    z-index: 8;
-    inset-block-start: 0;
     isolation: isolate;
     box-sizing: border-box;
     display: flex;
     inline-size: 100%;
     min-inline-size: 0;
-    block-size: 64px;
     align-items: center;
     padding-inline: 4px;
     color: var(--mat-sys-color-on-surface);
@@ -455,11 +509,6 @@ watch([
 
   .mat-app-bar[data-scrolled]::after {
     opacity: 1;
-  }
-
-  .mat-app-bar__host--app .mat-app-bar {
-    position: absolute;
-    inset: 0 0 auto;
   }
 
   .mat-app-bar--medium-flexible {
@@ -742,6 +791,12 @@ watch([
       opacity: 0;
       translate: 0 -8px;
     }
+  }
+
+  .mat-app-bar__placeholder {
+    display: block;
+    inline-size: 100%;
+    pointer-events: none;
   }
 
   @media (prefers-reduced-motion: reduce) {

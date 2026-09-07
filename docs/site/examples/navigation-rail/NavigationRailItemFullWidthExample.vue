@@ -11,7 +11,7 @@ const selected = ref('home');
   <div class="navigation-rail-full-width-example">
     <section>
       <h3>默认：指示器贴合内容</h3>
-      <div class="navigation-rail-example-shell">
+      <mat-layout class="navigation-rail-example-shell">
         <mat-navigation-rail
           v-model="selected"
           expanded
@@ -27,12 +27,12 @@ const selected = ref('home');
         <div class="navigation-rail-example-content">
           正文
         </div>
-      </div>
+      </mat-layout>
     </section>
 
     <section>
       <h3>full-width：指示器铺满宽度</h3>
-      <div class="navigation-rail-example-shell">
+      <mat-layout class="navigation-rail-example-shell">
         <mat-navigation-rail
           v-model="selected"
           expanded
@@ -49,7 +49,7 @@ const selected = ref('home');
         <div class="navigation-rail-example-content">
           正文
         </div>
-      </div>
+      </mat-layout>
     </section>
   </div>
 </template>
@@ -69,7 +69,6 @@ const selected = ref('home');
 }
 
 .navigation-rail-example-shell {
-  display: flex;
   inline-size: 100%;
   min-block-size: 220px;
   overflow: hidden;
@@ -77,8 +76,8 @@ const selected = ref('home');
 
 .navigation-rail-example-content {
   display: grid;
-  flex: 1 1 auto;
   min-inline-size: 0;
+  min-block-size: 220px;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
 }

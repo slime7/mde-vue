@@ -1,19 +1,17 @@
 ---
-title: Navigation 导航
-description: mat-navigation-rail 的 Expressive collapsed/expanded rail 与 horizontal flexible navigation bar。
+title: Navigation rail 导航栏
+description: mat-navigation-rail 的 Material 3 Expressive 纵向导航栏。
 llms: true
 order: 105
 ---
 
-# Navigation 导航
+# Navigation rail 导航栏
 
 ## 组件简介
 
-`<mat-navigation-rail>` 的组件导出名是 `MatNavigationRail`，`<mat-navigation-rail-item>` 的组件导出名是 `MatNavigationRailItem`。这组组件组合两种外观相近的 Material 3 Expressive 导航：默认的纵向 collapsed / expanded Navigation rail，以及 `orientation="horizontal"` 的 Flexible navigation bar。
+`<mat-navigation-rail>` 的组件导出名是 `MatNavigationRail`，配套子项组件 `<mat-navigation-rail-item>`（`MatNavigationRailItem`）或通用导航子项 `<mat-navigation-item>`（`MatNavigationItem`）。该组件遵循 Material 3 Expressive 规范，专用于在平板、桌面等中大尺寸屏幕中提供 3–7 个主要目的地、菜单入口、FAB 与底部操作的纵向导航栏。
 
-官方把 Navigation rail 和 Navigation bar 定义为独立组件。本组件为减少重复 API 暂时组合两者，但仍保持规范边界：纵向模式只实现 rail；横向模式只实现 Navigation bar 的 horizontal items，不提供 vertical navigation bar，也不把横向模式称为 Navigation rail。
-
-纵向 rail 支持 3–7 个主要目的地、菜单按钮、FAB 与底部操作。菜单按钮、FAB、NavigationItem、Spacer 与底部按钮统一在默认 Slot 中混排，默认 Slot 提供 `{ expanded: currentExpanded, orientation }` 作用域传值；底部的操作按钮可使用 `<mat-spacer />` 推至末端。默认在声明位置参与父容器布局；expanded rail 可以使用占据正文空间的 `standard` 布局或覆盖当前布局容器的 `modal` 布局。设置 `app` 后，省略 `attach` 且位于 `MatAppRoot` 内时自动登记应用起始边缘，否则固定到视口并挂载至 `attach`。
+组件底层根元素基于 `MatAside` 呈现，默认停靠在布局容器的 `start`（起始侧）边缘，统管侧边定位、安全区留白、展开收起动画和模态遮罩。设置 `app` 后，若位于 `MatAppRoot` 内部且未显式指定 `attach`，会自动向应用根布局登记起始侧边缘，主内容层自动避让；否则支持固定至视口并挂载至 `attach` 容器。
 
 ## 示例
 
@@ -104,28 +102,6 @@ Badge 不提供专用 Slot，也不支持 `offset`。`location` 只接受八种�
 <ClientOnly>
   <DocsPreview label="Navigation rail 自然占位预览">
     <NavigationRailPlaceholderExample />
-  </DocsPreview>
-</ClientOnly>
-
-### `bottomPlaceholder`
-
-`bottomPlaceholder` 只在 `app=true` 时预留底部手势区或安全区。它会抬高纵向 rail 的底部内容，并在 horizontal bar 底部增加同等空间。
-
-:::: details 查看示例代码
-::: code-group
-
-<<< @/examples/navigation-rail/NavigationRailBottomPlaceholderExample.vue#template [template]
-
-<<< @/examples/navigation-rail/NavigationRailBottomPlaceholderExample.vue#script [script]
-
-<<< @/examples/navigation-rail/NavigationRailBottomPlaceholderExample.vue#style [style]
-
-:::
-::::
-
-<ClientOnly>
-  <DocsPreview label="Navigation rail 底部安全区预览">
-    <NavigationRailBottomPlaceholderExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -221,7 +197,7 @@ Badge 不提供专用 Slot，也不支持 `offset`。`location` 只接受八种�
 
 ### `layout="standard"` 与 `layout="modal"`
 
-`standard` expanded rail 位于正文旁并占据布局空间。`modal` expanded rail 保留 collapsed rail 的布局宽度，在其布局容器内覆盖正文，并显示可点击遮罩；点击遮罩或按 Escape 会请求收起。
+`standard` expanded rail 位于正文旁并占据布局空间。`modal` expanded rail 保留 collapsed rail 的布局宽度，在其布局容器内覆盖正文，并显示可点击遮罩；点击遮罩或按 Escape 会请求收起。下方示例默认收起 modal rail，点击“打开模态导航”后查看覆盖正文的效果。
 
 :::: details 查看示例代码
 ::: code-group
@@ -260,28 +236,6 @@ Badge 不提供专用 Slot，也不支持 `offset`。`location` 只接受八种�
 <ClientOnly>
   <DocsPreview label="隐藏 expanded rail 预览">
     <NavigationRailHideOnCollapseExample />
-  </DocsPreview>
-</ClientOnly>
-
-### Horizontal flexible Navigation bar
-
-设置 `orientation="horizontal"` 后使用 Flexible navigation bar。`expanded` 为 `false` 时显示 80px 高的图标上、标签下 Item；`expanded` 为 `true` 时显示 64px 高的图标左、标签右 Item。`alignment` 在水平方向对齐 NavigationItem；其他默认 Slot 内容始终隐藏。此模式仍忽略 `collapsible`、`layout`、`hide-on-collapse`。
-
-:::: details 查看示例代码
-::: code-group
-
-<<< @/examples/navigation-rail/NavigationRailHorizontalExample.vue#template [template]
-
-<<< @/examples/navigation-rail/NavigationRailHorizontalExample.vue#script [script]
-
-<<< @/examples/navigation-rail/NavigationRailHorizontalExample.vue#style [style]
-
-:::
-::::
-
-<ClientOnly>
-  <DocsPreview label="Horizontal flexible Navigation bar 预览">
-    <NavigationRailHorizontalExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -366,7 +320,6 @@ Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导�
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `model-value` | `string \| number \| boolean \| null` | `null` | 受控的当前 Item `value`，支持 `v-model` |
-| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | 纵向 Expressive rail 或 horizontal Flexible navigation bar |
 | `expanded` | `boolean` | `false` | 受控展开状态，支持 `v-model:expanded`；horizontal 模式中决定纵向或横向 Item 排列 |
 | `width` | `number \| string` | `undefined` | expanded rail 宽度；数字与纯数字字符串按 px 处理（0 不带单位），其他字符串需为 trim 后合法的 CSS 宽度值，非法时使用默认宽度 |
 | `full-width` | `boolean` | `false` | 仅展开态有效；让全部 Item 的活动指示器铺满可用宽度 |
@@ -380,7 +333,7 @@ Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导�
 | `app` | `boolean` | `false` | 开启应用布局模式；位于 `MatAppRoot` 且省略 `attach` 时自动登记边缘，否则固定到显式目标 |
 | `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；一旦显式提供就优先于 AppRoot 自动接入 |
 | `placeholder` | `boolean` | `false` | 仅 `app=true` 有效；在声明位置为固定 rail 或 bar 预留实际尺寸 |
-| `bottom-placeholder` | `number \| string` | `0` | 仅 `app=true` 有效；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS block-size 值（如 `env(safe-area-inset-bottom)` 或 `calc(...)`），非法时回退 0 |
+| `open` | `boolean` | `undefined` | 受控显示/隐藏状态，支持 `v-model:open`；省略时遵循 `hide-on-collapse` 或 `modal` 模式与 `expanded` 联动 |
 
 #### `MatNavigationRailItem`
 
@@ -400,6 +353,7 @@ Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导�
 | --- | --- | --- | --- |
 | `MatNavigationRail` | `update:modelValue` | `string \| number \| boolean` | 未禁用、带 `value` 且尚未选中的 Item 被激活 |
 | `MatNavigationRail` | `update:expanded` | `boolean` | 菜单按钮、modal 遮罩或 modal 状态下的 Escape 请求改变展开状态 |
+| `MatNavigationRail` | `update:open` | `boolean` | 请求切换显示或隐藏状态时触发 |
 | `MatNavigationRailItem` | `click` | `MouseEvent` | Item 的原生按钮或链接被激活 |
 
 ## Slots
@@ -429,11 +383,9 @@ Navigation 使用覆盖整栏的 scroll-area：纵向 Header、具名 FAB 与 `e
 <script setup>
 import NavigationRailBasicExample from '../examples/navigation-rail/NavigationRailBasicExample.vue';
 import NavigationRailAppExample from '../examples/navigation-rail/NavigationRailAppExample.vue';
-import NavigationRailBottomPlaceholderExample from '../examples/navigation-rail/NavigationRailBottomPlaceholderExample.vue';
 import NavigationRailCollapsibleExample from '../examples/navigation-rail/NavigationRailCollapsibleExample.vue';
 import NavigationRailHideOnCollapseExample from '../examples/navigation-rail/NavigationRailHideOnCollapseExample.vue';
 import NavigationRailHeaderSpacingExample from '../examples/navigation-rail/NavigationRailHeaderSpacingExample.vue';
-import NavigationRailHorizontalExample from '../examples/navigation-rail/NavigationRailHorizontalExample.vue';
 import NavigationRailLayoutExample from '../examples/navigation-rail/NavigationRailLayoutExample.vue';
 import NavigationRailItemFullWidthExample from '../examples/navigation-rail/NavigationRailItemFullWidthExample.vue';
 import NavigationRailItemBadgeExample from '../examples/navigation-rail/NavigationRailItemBadgeExample.vue';

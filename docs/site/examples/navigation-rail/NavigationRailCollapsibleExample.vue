@@ -9,7 +9,7 @@ const selected = ref('overview');
 
 <!-- #region template -->
 <template>
-  <div class="navigation-rail-example-shell">
+  <mat-layout class="navigation-rail-example-shell">
     <mat-navigation-rail
       v-model="selected"
       v-model:expanded="expanded"
@@ -35,14 +35,13 @@ const selected = ref('overview');
     <div class="navigation-rail-example-content">
       {{ expanded ? '展开状态' : '折叠状态' }}
     </div>
-  </div>
+  </mat-layout>
 </template>
 <!-- #endregion template -->
 
 <!-- #region style -->
 <style scoped>
 .navigation-rail-example-shell {
-  display: flex;
   inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;
@@ -50,8 +49,8 @@ const selected = ref('overview');
 
 .navigation-rail-example-content {
   display: grid;
-  flex: 1 1 auto;
   min-inline-size: 0;
+  min-block-size: 280px;
   place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
 }

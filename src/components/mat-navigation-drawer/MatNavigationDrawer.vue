@@ -1,6 +1,6 @@
 <script setup>
-import MatNavigationRail from '../mat-navigation-rail/MatNavigationRail.vue';
 import { computed, getCurrentInstance } from 'vue';
+import MatNavigationRail from '../mat-navigation-rail/MatNavigationRail.vue';
 import { isValidCssLength } from '../value-utils';
 import { useMatProps } from '../use-mat-props';
 
@@ -69,7 +69,7 @@ const props = defineProps({
     },
   },
   /**
-   * 是否 Teleport 到 attach 并固定到视口。
+   * 是否 Teleport 到 attach 并固定到视口或接入 MatAppRoot。
    *
    * @type {boolean}
    * @default false
@@ -99,19 +99,37 @@ const props = defineProps({
     default: false,
   },
   /**
-   * app=true 时的额外底部安全区；数字与纯数字字符串按 px 处理，
-   * 其他字符串 trim 后须为合法 CSS block-size 值，非法时回退 0。
+   * 安全区留白配置。
    *
-   * @type {number | string}
-   * @default 0
+   * @type {boolean | number | string}
+   * @default true
    */
-  bottomPlaceholder: {
+  safeArea: {
+    type: [Boolean, Number, String],
+    default: true,
+  },
+  /**
+   * 显式指定安全区留白大小。
+   *
+   * @type {number | string | undefined}
+   * @default undefined
+   */
+  safeAreaSize: {
     type: [Number, String],
-    default: 0,
-    validator: (value) => isValidCssLength(value, {
-      property: 'block-size',
-      allowUndefined: false,
-    }),
+    default: undefined,
+  },
+  /**
+   * 排布与定位模式。未指定时遵循 aside 默认行为。
+   *
+   * @type {'docked' | 'flow' | 'sticky' | 'fixed' | undefined}
+   * @default undefined
+   */
+  mode: {
+    type: String,
+    default: undefined,
+    validator(value) {
+      return value === undefined || ['docked', 'flow', 'sticky', 'fixed'].includes(value);
+    },
   },
 });
 const propsWithDefaults = useMatProps('navigationDrawer', props);
@@ -144,11 +162,12 @@ const emit = defineEmits({
     :app="propsWithDefaults.app"
     :attach="forwardedAttach"
     :placeholder="propsWithDefaults.placeholder"
-    :bottom-placeholder="propsWithDefaults.bottomPlaceholder"
+    :safe-area="propsWithDefaults.safeArea"
+    :safe-area-size="propsWithDefaults.safeAreaSize"
+    :mode="propsWithDefaults.mode"
     :full-width="true"
     :collapsible="true"
     :hide-on-collapse="true"
-    orientation="vertical"
     @update:model-value="emit('update:modelValue', $event)"
     @update:expanded="emit('update:expanded', $event)"
   >

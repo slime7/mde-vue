@@ -15,6 +15,8 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 
 组件默认在声明位置参与文档布局并粘附到滚动容器顶部。small 与 search 在开始滚动时从 `surface` 连续过渡到 `surface container`；medium flexible 和 large flexible 还会分别在前 48px、56px 滚动距离内折叠到 64px。动画由 CSS `scroll-timeline` 和 `animation-timeline` 驱动，标题与图片通过 `scale`、`translate`、`clip-path` 和 `opacity` 在稳定布局盒中变化，不逐帧修改字号、块尺寸或执行 JavaScript 计算。不支持这些 CSS 能力的浏览器保持静态展开；减少动态效果时保留展开几何，仅播放表面填色。
 
+组件底层根元素基于 `MatAside`（`as="header"`）呈现，默认停靠在布局容器的 `top` 边缘，统管顶部定位、安全区预留与切入退场动效。
+
 ## 示例
 
 ### `variant`
@@ -132,14 +134,25 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 | `app` | `boolean` | `false` | 位于 `MatAppRoot` 且省略 `attach` 时登记应用顶边；其他场景固定到 `attach` |
 | `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；显式传入后优先于最近的 `MatAppRoot` |
 | `scrollTarget` | `string \| HTMLElement` | `undefined` | 显式 CSS 时间线滚动源；省略时依次选择可滚动的 AppRoot 正文、最近滚动祖先和 document |
+| `placeholder` | `boolean` | `false` | 是否在文档流中渲染占位节点；flexible 变体始终为展开差值（medium 48px、large 56px）保留占位 |
+| `safeArea` | `boolean \| number \| string` | `true` | 顶部安全区留白配置，为 `true` 时自适应环境安全区或 AppRoot 变量 |
+| `safeAreaSize` | `number \| string \| undefined` | `undefined` | 显式指定顶部安全区留白大小 |
+| `open` | `boolean \| undefined` | `undefined` | 受控显隐状态，支持 `v-model:open`，切换时触发滑入滑出动效 |
+| `mode` | `'docked' \| 'flow' \| 'sticky' \| 'fixed' \| undefined` | `undefined` | 排布定位模式，未指定时遵循 Aside 默认逻辑 |
+| `bordered` | `boolean` | `false` | 是否在底部边缘渲染 1px 细分割边框 |
+| `zIndex` | `number \| string \| undefined` | `undefined` | 显式指定层级 |
+| `transition` | `boolean` | `true` | 是否启用切入退场动效 |
 
-`app=true` 且自动接入 `MatAppRoot` 时，64px 收起高度登记为固定顶边，flexible 变体多出的 48px 或 56px 在声明位置成为可滚走的起始占位，从而避免折叠高度反复改变 AppRoot 正文 padding。显式 `attach` 无法解析时不渲染 App bar。
+`app=true` 且自动接入 `MatAppRoot` 时，64px 收起高度登记为固定顶边，flexible 变体多出的 48px 或 56px 在声明位置成为可滚走的起始占位，从而避免折叠高度反复改变 AppRoot 正文 padding。App bar 的根布局盒始终保持 64px，展开态的视觉背景和标题内容在该稳定盒外表达；显式 `attach` 无法解析时不渲染 App bar。
 
 `MatAppBar` 没有公开方法。未消费的属性、`class`、`style`、`id` 和 ARIA 属性传给原生 `<header>`。
 
 ## 事件
 
-`MatAppBar` 不定义自定义事件。
+| 事件名 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:open` | `boolean` | 请求切换显隐状态时发出新的布尔值 |
+| `update:modelValue` | `boolean` | 请求切换显隐状态时发出新的布尔值 |
 
 ## Slots
 

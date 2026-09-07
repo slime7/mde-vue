@@ -13,7 +13,7 @@ const active = ref(true);
     class="navigation-rail-placeholder-example"
   >
     <mat-navigation-rail
-      v-if="active"
+      v-model:open="active"
       app
       placeholder
       aria-label="占位导航"

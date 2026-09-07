@@ -148,7 +148,7 @@ describe('MatAppRoot 组件接入', () => {
     floatingWrapper.unmount();
   });
 
-  it('NavigationRail 自动注册逻辑边缘，modal 展开时只保留 collapsed host 宽度', async () => {
+  it('NavigationRail 自动注册逻辑边缘，standard 展开时占据 start 边缘宽度', async () => {
     let app;
     const Capture = layoutCapture((value) => {
       app = value;
@@ -162,7 +162,6 @@ describe('MatAppRoot 组件接入', () => {
           h(MatNavigationRail, {
             app: true,
             expanded: true,
-            layout: 'modal',
           }),
         ],
       },
@@ -177,22 +176,16 @@ describe('MatAppRoot 组件接入', () => {
       right: 1000,
       width: 1000,
     }));
-    vi.spyOn(navigation.parentElement, 'getBoundingClientRect').mockReturnValue(elementRect({
-      bottom: 700,
-      height: 700,
-      right: 96,
-      width: 96,
-    }));
     vi.spyOn(navigation, 'getBoundingClientRect').mockReturnValue(elementRect({
       bottom: 700,
       height: 700,
-      right: 360,
-      width: 360,
+      right: 240,
+      width: 240,
     }));
     window.dispatchEvent(new Event('resize'));
     await settleMeasurement();
 
-    expect(app.layout.padding.start).toBe(96);
+    expect(app.layout.padding.start).toBe(240);
 
     wrapper.unmount();
   });

@@ -44,7 +44,6 @@ describe('MatNavigationDrawer', () => {
 
     const rail = wrapper.findComponent(MatNavigationRail);
     expect(rail.exists()).toBe(true);
-    expect(rail.props('orientation')).toBe('vertical');
     expect(rail.props('fullWidth')).toBe(true);
     expect(rail.props('collapsible')).toBe(true);
     expect(rail.props('hideOnCollapse')).toBe(true);
@@ -92,6 +91,7 @@ describe('MatNavigationDrawer', () => {
 
   it('modal 模式下渲染遮罩，点击遮罩或按下 Escape 触发收起', async () => {
     const wrapper = mount(MatNavigationDrawer, {
+      attachTo: document.body,
       props: {
         expanded: true,
         layout: 'modal',
@@ -101,13 +101,47 @@ describe('MatNavigationDrawer', () => {
       },
     });
 
-    expect(wrapper.find('.mat-navigation-rail__scrim').exists()).toBe(true);
+    const scrim = document.body.querySelector('.mat-navigation-rail__scrim');
+    expect(scrim).toBeTruthy();
 
-    await wrapper.find('.mat-navigation-rail__scrim').trigger('click');
+    scrim.click();
     expect(wrapper.emitted('update:expanded')).toEqual([[false]]);
+    wrapper.unmount();
 
+    const escWrapper = mount(MatNavigationDrawer, {
+      attachTo: document.body,
+      props: {
+        expanded: true,
+        layout: 'modal',
+      },
+      slots: {
+        default: () => h(MatNavigationRailItem, { value: 'home', icon: 'home' }, () => '首页'),
+      },
+    });
+    await nextTick();
+    await nextTick();
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
-    expect(wrapper.emitted('update:expanded')).toEqual([[false], [false]]);
+    expect(escWrapper.emitted('update:expanded')).toEqual([[false]]);
+    escWrapper.unmount();
+  });
+
+  it('modal Drawer 在窄视口限制最大宽度，同时保留显式 width', () => {
+    const wrapper = mount(MatNavigationDrawer, {
+      attachTo: document.body,
+      props: {
+        expanded: true,
+        layout: 'modal',
+        width: 280,
+      },
+    });
+
+    const drawer = wrapper.get('nav');
+    expect(drawer.element.style.getPropertyValue('--mat-aside-block-size')).toBe('280px');
+    expect(drawer.element.style.maxInlineSize).toBe(
+      'calc(100dvi - var(--mat-navigation-rail-modal-edge-space, 8px))',
+    );
+
+    wrapper.unmount();
   });
 
   it('透传 modelValue 与 update:modelValue 事件', async () => {

@@ -10,7 +10,7 @@ const selected = ref('inbox');
 
 <!-- #region template -->
 <template>
-  <div class="navigation-rail-example-shell">
+  <mat-layout class="navigation-rail-example-shell">
     <mat-navigation-rail
       v-model="selected"
       v-model:expanded="expanded"
@@ -50,14 +50,13 @@ const selected = ref('inbox');
         full-width：{{ fullWidth ? '已激活（trailing 在高亮背景内）' : '未激活（trailing 位于行末）' }}
       </mat-switch>
     </div>
-  </div>
+  </mat-layout>
 </template>
 <!-- #endregion template -->
 
 <!-- #region style -->
 <style scoped>
 .navigation-rail-example-shell {
-  display: flex;
   inline-size: 100%;
   min-block-size: 280px;
   overflow: hidden;

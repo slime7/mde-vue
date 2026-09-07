@@ -9,7 +9,7 @@ const selected = ref('inbox');
 
 <!-- #region template -->
 <template>
-  <div class="navigation-rail-example-shell">
+  <mat-layout class="navigation-rail-example-shell">
     <mat-navigation-rail
       v-model="selected"
       v-model:expanded="expanded"
@@ -59,7 +59,7 @@ const selected = ref('inbox');
         <mat-btn icon="help" label="帮助" />
       </template>
     </mat-navigation-rail>
-  </div>
+  </mat-layout>
 </template>
 <!-- #endregion template -->
 
