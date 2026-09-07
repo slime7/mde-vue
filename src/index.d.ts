@@ -3005,16 +3005,26 @@ export interface MatAsideProps {
   /**
   * Aside 所依附的停靠边缘。
   *
-  * @type {'top' | 'bottom' | 'left' | 'right'}
-  * @default 'left'
+  * @type {'top' | 'bottom' | 'start' | 'end' | 'left' | 'right'}
+  * @default 'start'
   */
-  location?: 'top' | 'bottom' | 'left' | 'right';
+  location?: 'top' | 'bottom' | 'start' | 'end' | 'left' | 'right';
+  /**
+  * 排布与定位模式。
+  * docked 为容器内绝对定位避让；flow 为常规文档流；sticky 为粘性定位；fixed 为视口固定定位。
+  *
+  * @type {'docked' | 'flow' | 'sticky' | 'fixed'}
+  * @default 'docked'
+  */
+  mode?: 'docked' | 'flow' | 'sticky' | 'fixed';
   /**
   * 垂直于边缘方向的厚度尺寸（top/bottom 对应高度，left/right 对应宽度）。
+  * 省略或为 'auto' 时自适应内容。
   *
-  * @type {number | string}
+  * @type {number | string | undefined}
+  * @default undefined
   */
-  blockSize: number | string;
+  blockSize?: number | string | undefined;
   /**
   * 边缘方向的安全区留白大小。
   *
@@ -3043,6 +3053,41 @@ export interface MatAsideProps {
   * @default true
   */
   modelValue?: boolean;
+  /**
+  * 是否作为模态浮层呈现。开启时不挤占布局正文空间并接入全局遮罩。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  modal?: boolean;
+  /**
+  * mode="fixed" 时是否在自然文档流位置生成占位。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  placeholder?: boolean;
+  /**
+  * mode="fixed" 时的挂载目标。
+  *
+  * @type {string | HTMLElement}
+  * @default 'body'
+  */
+  attach?: string | HTMLElement;
+  /**
+  * 是否启用默认滑入滑出动效。设为 false 时立即切换。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  transition?: boolean;
+  /**
+  * modal=true 时点击背景遮罩是否请求关闭。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  closeOnBack?: boolean;
 }
 
 export interface MatAsideEmits {

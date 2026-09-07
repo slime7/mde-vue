@@ -3,6 +3,9 @@ import { mount } from '@vue/test-utils';
 import { h, nextTick } from 'vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import MatAside from '../src/components/mat-aside/MatAside.vue';
+import MatLayout from '../src/components/mat-layout/MatLayout.vue';
+import { useLayout } from '../src/components/mat-layout/layout-context';
+import { dialogStack } from '../src/components/dialog-stack';
 import MatAppRoot from '../src/components/mat-app-root/MatAppRoot.vue';
 
 function rect({ bottom, height, left = 0, right, top = 0, width }) {
@@ -116,5 +119,133 @@ describe('MatAside 边缘组件', () => {
 
     expect(asideElement).toBeTruthy();
     wrapper.unmount();
+  });
+
+  it('支持 start 与 end 逻辑停靠方向，且向后兼容 left 与 right', () => {
+    const startWrapper = mount(MatAside, { props: { location: 'start', blockSize: 100 } });
+    expect(startWrapper.classes()).toContain('mat-aside--start');
+    expect(startWrapper.classes()).toContain('mat-aside--left');
+
+    const endWrapper = mount(MatAside, { props: { location: 'end', blockSize: 100 } });
+    expect(endWrapper.classes()).toContain('mat-aside--end');
+    expect(endWrapper.classes()).toContain('mat-aside--right');
+  });
+
+  it('支持 mode="flow" 与 mode="sticky"，不向父级 MatLayout 注册脱流边缘内边距', async () => {
+    let capturedLayout;
+    const Reader = {
+      setup() {
+        capturedLayout = useLayout();
+        return () => h('div', 'content');
+      },
+    };
+
+    const wrapper = mount(MatLayout, {
+      slots: {
+        default: () => [
+          h(MatAside, { mode: 'flow', blockSize: 80 }),
+          h(MatAside, { mode: 'sticky', location: 'top', blockSize: 64 }),
+          h(Reader),
+        ],
+      },
+    });
+
+    await settle();
+    expect(capturedLayout.padding.start).toBe(0);
+    expect(capturedLayout.padding.top).toBe(0);
+    wrapper.unmount();
+  });
+
+  it('支持 mode="fixed" 并在开启 placeholder 时渲染占位节点', () => {
+    const wrapper = mount(MatAside, {
+      props: {
+        mode: 'fixed',
+        placeholder: true,
+        blockSize: 64,
+      },
+    });
+
+    const placeholder = wrapper.find('.mat-aside__placeholder');
+    expect(placeholder.exists()).toBe(true);
+    wrapper.unmount();
+  });
+
+  it('blockSize 为可选属性，省略或为 auto 时支持自适应内容渲染', () => {
+    const wrapper = mount(MatAside, {
+      slots: {
+        default: () => h('div', { style: 'height: 120px' }, 'Dynamic content'),
+      },
+    });
+
+    expect(wrapper.element.tagName).toBe('ASIDE');
+    expect(wrapper.text()).toContain('Dynamic content');
+    expect(wrapper.classes()).toContain('mat-aside--auto-size');
+    wrapper.unmount();
+  });
+
+  it('modal=true 时接入 dialogStack，不增加 MatLayout 内边距，且关闭时注销', async () => {
+    let capturedLayout;
+    const Reader = {
+      setup() {
+        capturedLayout = useLayout();
+        return () => h('div', 'content');
+      },
+    };
+    let showModal = true;
+    const Host = {
+      props: ['open'],
+      setup(props) {
+        return () => h(MatLayout, null, {
+          default: () => [
+            h(MatAside, { modal: true, transition: false, blockSize: 200, modelValue: props.open }),
+            h(Reader),
+          ],
+        });
+      },
+    };
+
+    const wrapper = mount(Host, {
+      attachTo: document.body,
+      props: { open: true },
+    });
+
+    await settle();
+    expect(capturedLayout.padding.start).toBe(0);
+    expect(capturedLayout.padding.left).toBe(0);
+
+    const modalAside = wrapper.findComponent(MatAside);
+    expect(modalAside.classes()).toContain('mat-aside--modal');
+    expect(dialogStack.value.length).toBeGreaterThan(0);
+
+    await wrapper.setProps({ open: false });
+    await settle();
+    expect(dialogStack.value.length).toBe(0);
+    wrapper.unmount();
+  });
+
+  it('多个模态同时打开时只有栈顶元素激活遮罩背景，验证单层遮罩不叠加', async () => {
+    const wrapper1 = mount(MatAside, { attachTo: document.body, props: { modal: true, blockSize: 200 } });
+    await settle();
+    const wrapper2 = mount(MatAside, { attachTo: document.body, props: { modal: true, blockSize: 250 } });
+    await settle();
+
+    expect(wrapper1.classes()).not.toContain('mat-aside--top-scrim');
+    expect(wrapper2.classes()).toContain('mat-aside--top-scrim');
+
+    wrapper2.unmount();
+    await settle();
+    expect(wrapper1.classes()).toContain('mat-aside--top-scrim');
+    wrapper1.unmount();
+  });
+
+  it('transition=false 时显隐切换立即生效，不触发延时动画', async () => {
+    const wrapper = mount(MatAside, {
+      props: { blockSize: 64, transition: false, modelValue: true },
+    });
+
+    expect(wrapper.classes()).toContain('mat-aside--open');
+    await wrapper.setProps({ modelValue: false });
+    await settle();
+    expect(wrapper.emitted('closed')).toBeTruthy();
   });
 });

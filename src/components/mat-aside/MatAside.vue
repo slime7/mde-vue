@@ -1,6 +1,7 @@
 <script setup>
 import {
   computed,
+  getCurrentInstance,
   inject,
   nextTick,
   onBeforeUnmount,
@@ -12,6 +13,11 @@ import {
 } from 'vue';
 import { MAT_LAYOUT_KEY } from '../mat-layout/layout-context';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
+import {
+  dialogStack,
+  registerDialog,
+  unregisterDialog,
+} from '../dialog-stack';
 import createCloseMotion from '../close-motion';
 import createMotionController from '../motion-controller';
 import { useMatProps } from '../use-mat-props';
@@ -53,25 +59,41 @@ const props = defineProps({
   /**
    * Aside 所依附的停靠边缘。
    *
-   * @type {'top' | 'bottom' | 'left' | 'right'}
-   * @default 'left'
+   * @type {'top' | 'bottom' | 'start' | 'end' | 'left' | 'right'}
+   * @default 'start'
    */
   location: {
     type: String,
-    default: 'left',
+    default: 'start',
     validator(value) {
-      return ['top', 'bottom', 'left', 'right'].includes(value);
+      return ['top', 'bottom', 'start', 'end', 'left', 'right'].includes(value);
+    },
+  },
+  /**
+   * 排布与定位模式。
+   * docked 为容器内绝对定位避让；flow 为常规文档流；sticky 为粘性定位；fixed 为视口固定定位。
+   *
+   * @type {'docked' | 'flow' | 'sticky' | 'fixed'}
+   * @default 'docked'
+   */
+  mode: {
+    type: String,
+    default: 'docked',
+    validator(value) {
+      return ['docked', 'flow', 'sticky', 'fixed'].includes(value);
     },
   },
   /**
    * 垂直于边缘方向的厚度尺寸（top/bottom 对应高度，left/right 对应宽度）。
+   * 省略或为 'auto' 时自适应内容。
    *
-   * @type {number | string}
+   * @type {number | string | undefined}
+   * @default undefined
    */
   blockSize: {
     type: [Number, String],
-    required: true,
-    validator: (value) => isValidCssLength(value, {
+    default: undefined,
+    validator: (value) => value === undefined || value === 'auto' || isValidCssLength(value, {
       property: 'block-size',
       positive: true,
     }),
@@ -120,6 +142,56 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  /**
+   * 是否作为模态浮层呈现。开启时不挤占布局正文空间并接入全局遮罩。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  modal: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * mode="fixed" 时是否在自然文档流位置生成占位。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  placeholder: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * mode="fixed" 时的挂载目标。
+   *
+   * @type {string | HTMLElement}
+   * @default 'body'
+   */
+  attach: {
+    type: [String, Object],
+    default: 'body',
+  },
+  /**
+   * 是否启用默认滑入滑出动效。设为 false 时立即切换。
+   *
+   * @type {boolean}
+   * @default true
+   */
+  transition: {
+    type: Boolean,
+    default: true,
+  },
+  /**
+   * modal=true 时点击背景遮罩是否请求关闭。
+   *
+   * @type {boolean}
+   * @default true
+   */
+  closeOnBack: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const propsWithDefaults = useMatProps('aside', props);
@@ -131,6 +203,7 @@ const emit = defineEmits({
 });
 
 const attrs = useAttrs();
+const instance = getCurrentInstance();
 const hostElement = ref(null);
 const edgeRegistration = shallowRef(null);
 const rendered = ref(propsWithDefaults.modelValue);
@@ -138,17 +211,41 @@ const phase = ref(propsWithDefaults.modelValue ? 'open' : 'closed');
 const motion = createMotionController();
 const closeMotion = createCloseMotion({ motion });
 let mounted = false;
+let resizeObserver;
 
 const layoutContext = inject(MAT_LAYOUT_KEY, null);
 const appContext = inject(MAT_APP_ROOT_KEY, null);
 
-const normalizedLocation = computed(() => (
-  ['top', 'bottom', 'left', 'right'].includes(propsWithDefaults.location)
-    ? propsWithDefaults.location
-    : 'left'
+const rawVNodeProps = instance?.vnode.props ?? {};
+const hasExplicitAttach = computed(() => Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach'));
+
+const normalizedLocation = computed(() => {
+  const loc = propsWithDefaults.location;
+  if (loc === 'left') {
+    return 'start';
+  }
+  if (loc === 'right') {
+    return 'end';
+  }
+  if (['top', 'bottom', 'start', 'end'].includes(loc)) {
+    return loc;
+  }
+  return 'start';
+});
+
+const isAutoSize = computed(() => (
+  propsWithDefaults.blockSize === undefined || propsWithDefaults.blockSize === 'auto'
 ));
 
+const measuredSize = ref({ blockSize: 0, inlineSize: 0 });
+
+const isModal = computed(() => Boolean(propsWithDefaults.modal));
+const isTop = computed(() => isModal.value && dialogStack.value.at(-1) === hostElement.value);
+
 const normalizedBlockSize = computed(() => {
+  if (isAutoSize.value) {
+    return 'auto';
+  }
   const css = toCssLength(propsWithDefaults.blockSize, {
     property: 'block-size',
     fallback: '0px',
@@ -165,6 +262,9 @@ const normalizedSafeAreaSize = computed(() => {
 });
 
 const totalBlockSize = computed(() => {
+  if (isAutoSize.value) {
+    return 'auto';
+  }
   const blockNum = parsePixelNumber(propsWithDefaults.blockSize);
   const safeNum = parsePixelNumber(propsWithDefaults.safeAreaSize);
   if (blockNum !== null && safeNum !== null) {
@@ -197,26 +297,131 @@ watch(() => edgeRegistration.value?.insets, (newInsets) => {
 const asideClass = computed(() => [
   'mat-aside',
   `mat-aside--${normalizedLocation.value}`,
+  normalizedLocation.value === 'start' ? 'mat-aside--left' : null,
+  normalizedLocation.value === 'end' ? 'mat-aside--right' : null,
+  `mat-aside--mode-${propsWithDefaults.mode}`,
   `mat-aside--${phase.value}`,
   {
     'mat-aside--bordered': propsWithDefaults.bordered,
+    'mat-aside--auto-size': isAutoSize.value,
+    'mat-aside--modal': isModal.value,
+    'mat-aside--top-scrim': isTop.value,
+    'mat-aside--no-transition': !propsWithDefaults.transition,
   },
 ]);
 
 const asideStyle = computed(() => [
   attrs.style,
   {
-    '--mat-aside-block-size': normalizedBlockSize.value,
+    '--mat-aside-block-size': isAutoSize.value ? 'auto' : normalizedBlockSize.value,
     '--mat-aside-safe-area-size': normalizedSafeAreaSize.value,
-    '--mat-aside-total-block-size': totalBlockSize.value,
+    '--mat-aside-total-block-size': isAutoSize.value ? 'auto' : totalBlockSize.value,
     '--mat-aside-insets-top': `${activeInsets.value.top}px`,
     '--mat-aside-insets-bottom': `${activeInsets.value.bottom}px`,
     '--mat-aside-insets-left': `${activeInsets.value.left}px`,
     '--mat-aside-insets-right': `${activeInsets.value.right}px`,
     '--mat-aside-insets-offset': `${activeInsets.value.offset}px`,
-    zIndex: propsWithDefaults.zIndex !== undefined ? String(propsWithDefaults.zIndex) : defaultZIndex.value,
+    zIndex: propsWithDefaults.zIndex !== undefined
+      ? String(propsWithDefaults.zIndex)
+      : (isModal.value ? 'calc(var(--mat-sys-z-index-dialog) + 1)' : defaultZIndex.value),
   },
 ]);
+
+const attachTarget = computed(() => {
+  if (propsWithDefaults.mode !== 'fixed') {
+    return null;
+  }
+
+  if (propsWithDefaults.attach instanceof HTMLElement
+    && propsWithDefaults.attach.ownerDocument === document) {
+    return propsWithDefaults.attach;
+  }
+
+  if (typeof propsWithDefaults.attach === 'string') {
+    try {
+      return document.querySelector(propsWithDefaults.attach);
+    } catch {
+      return null;
+    }
+  }
+
+  return null;
+});
+
+const placeholderStyle = computed(() => {
+  const isVertical = normalizedLocation.value === 'start' || normalizedLocation.value === 'end';
+  const size = isAutoSize.value
+    ? (isVertical ? `${measuredSize.value.inlineSize}px` : `${measuredSize.value.blockSize}px`)
+    : totalBlockSize.value;
+
+  if (isVertical) {
+    return {
+      inlineSize: size,
+      minBlockSize: '100%',
+      flexShrink: 0,
+    };
+  }
+  return {
+    blockSize: size,
+    inlineSize: '100%',
+    flexShrink: 0,
+  };
+});
+
+function buildScopeOptions() {
+  if (appContext && !hasExplicitAttach.value) {
+    return {
+      inertElement: appContext.contentElement?.value ?? null,
+      scrollElement: appContext.documentMode?.value ? null : (appContext.contentElement?.value ?? null),
+    };
+  }
+  return {
+    inertElement: null,
+    scrollElement: null,
+  };
+}
+
+function syncModal() {
+  if (!mounted || !hostElement.value || !rendered.value || !isModal.value) {
+    if (hostElement.value) {
+      unregisterDialog(hostElement.value);
+    }
+    return;
+  }
+  registerDialog(hostElement.value, buildScopeOptions());
+}
+
+function unregisterModal() {
+  if (hostElement.value) {
+    unregisterDialog(hostElement.value);
+  }
+}
+
+function handleScrimClick() {
+  if (!isModal.value || !propsWithDefaults.closeOnBack) {
+    return;
+  }
+  emit('update:modelValue', false);
+}
+
+function handleGlobalKeyDown(event) {
+  if (isModal.value && isTop.value && event.key === 'Escape') {
+    event.preventDefault();
+    emit('update:modelValue', false);
+  }
+}
+
+function syncMeasurement() {
+  if (!mounted || !hostElement.value) {
+    return;
+  }
+  const rect = hostElement.value.getBoundingClientRect();
+  measuredSize.value = {
+    blockSize: Math.max(0, Math.ceil(Number(rect.height) || 0)),
+    inlineSize: Math.max(0, Math.ceil(Number(rect.width) || 0)),
+  };
+  edgeRegistration.value?.update();
+}
 
 function syncRegistration() {
   if (!mounted || !hostElement.value || !rendered.value) {
@@ -228,18 +433,20 @@ function syncRegistration() {
   edgeRegistration.value?.unregister();
   edgeRegistration.value = null;
 
+  if (propsWithDefaults.mode === 'flow'
+    || propsWithDefaults.mode === 'sticky'
+    || propsWithDefaults.modal) {
+    return;
+  }
+
   if (layoutContext) {
     edgeRegistration.value = layoutContext.publicContext.registerEdge({
       edge: normalizedLocation.value,
       element: hostElement.value,
     });
   } else if (appContext) {
-    const appEdge = normalizedLocation.value === 'left'
-      ? 'start'
-      : (normalizedLocation.value === 'right' ? 'end' : normalizedLocation.value);
-
     edgeRegistration.value = appContext.publicContext.registerEdge({
-      edge: appEdge,
+      edge: normalizedLocation.value,
       element: hostElement.value,
     });
   }
@@ -248,9 +455,20 @@ function syncRegistration() {
 function openAside() {
   motion.cancel();
   rendered.value = true;
+  if (!propsWithDefaults.transition) {
+    phase.value = 'open';
+    nextTick().then(() => {
+      syncRegistration();
+      syncModal();
+      emit('opened');
+    });
+    return;
+  }
+
   phase.value = 'opening';
   nextTick().then(() => {
     syncRegistration();
+    syncModal();
     if (!mounted || !rendered.value || !propsWithDefaults.modelValue) {
       return;
     }
@@ -269,6 +487,16 @@ function closeAside() {
     return;
   }
 
+  if (!propsWithDefaults.transition) {
+    phase.value = 'closed';
+    rendered.value = false;
+    edgeRegistration.value?.unregister();
+    edgeRegistration.value = null;
+    unregisterModal();
+    emit('closed');
+    return;
+  }
+
   closeMotion.start({
     canStart: () => rendered.value && phase.value !== 'closing',
     duration: ASIDE_ANIMATION_DURATION,
@@ -282,6 +510,7 @@ function closeAside() {
     onFinish: () => {
       rendered.value = false;
       phase.value = 'closed';
+      unregisterModal();
       emit('closed');
     },
   });
@@ -295,31 +524,110 @@ watch(() => propsWithDefaults.modelValue, (val) => {
   }
 });
 
-watch(normalizedLocation, syncRegistration);
+watch(normalizedLocation, () => {
+  syncRegistration();
+  syncMeasurement();
+});
+
+watch([
+  () => propsWithDefaults.mode,
+  () => propsWithDefaults.modal,
+], () => {
+  syncRegistration();
+  syncModal();
+});
 
 onMounted(async () => {
   mounted = true;
+  if (typeof window !== 'undefined') {
+    window.addEventListener('keydown', handleGlobalKeyDown);
+  }
   if (rendered.value) {
+    await nextTick();
     syncRegistration();
+    syncModal();
+    resizeObserver = typeof ResizeObserver === 'undefined'
+      ? undefined
+      : new ResizeObserver(syncMeasurement);
+    if (hostElement.value) {
+      resizeObserver?.observe(hostElement.value);
+      syncMeasurement();
+    }
   }
 });
 
 onBeforeUnmount(() => {
   mounted = false;
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('keydown', handleGlobalKeyDown);
+  }
+  resizeObserver?.disconnect();
+  resizeObserver = undefined;
   edgeRegistration.value?.unregister();
   edgeRegistration.value = null;
+  unregisterModal();
 });
 </script>
 
 <template>
+  <template v-if="propsWithDefaults.mode === 'fixed'">
+    <span
+      v-if="propsWithDefaults.placeholder && rendered"
+      class="mat-aside__placeholder"
+      aria-hidden="true"
+      :style="placeholderStyle"
+    />
+
+    <Teleport
+      :to="attachTarget ?? 'body'"
+      :disabled="!attachTarget"
+    >
+      <button
+        v-if="isModal && rendered"
+        class="mat-aside__scrim"
+        :class="{
+          'mat-aside__scrim--top': isTop,
+          'mat-aside__scrim--closing': phase === 'closing',
+        }"
+        type="button"
+        tabindex="-1"
+        aria-hidden="true"
+        @click="handleScrimClick"
+      />
+
+      <component
+        :is="propsWithDefaults.as"
+        v-if="rendered"
+        ref="hostElement"
+        v-bind="$attrs"
+        :class="asideClass"
+        :style="asideStyle"
+      >
+        <slot />
+      </component>
+    </Teleport>
+  </template>
+
   <component
     :is="propsWithDefaults.as"
-    v-if="rendered"
+    v-else-if="rendered"
     ref="hostElement"
     v-bind="$attrs"
     :class="asideClass"
     :style="asideStyle"
   >
+    <button
+      v-if="isModal"
+      class="mat-aside__scrim"
+      :class="{
+        'mat-aside__scrim--top': isTop,
+        'mat-aside__scrim--closing': phase === 'closing',
+      }"
+      type="button"
+      tabindex="-1"
+      aria-hidden="true"
+      @click="handleScrimClick"
+    />
     <slot />
   </component>
 </template>
@@ -327,22 +635,116 @@ onBeforeUnmount(() => {
 <style scoped>
 @layer mde.components {
   .mat-aside {
-    position: absolute;
     box-sizing: border-box;
     isolation: isolate;
     transition: inset-block var(--mat-sys-motion-spring-default-spatial, .3s ease),
-      inset-inline var(--mat-sys-motion-spring-default-spatial, .3s ease),
-      left var(--mat-sys-motion-spring-default-spatial, .3s ease),
-      right var(--mat-sys-motion-spring-default-spatial, .3s ease);
+      inset-inline var(--mat-sys-motion-spring-default-spatial, .3s ease);
+  }
+
+  .mat-aside--no-transition {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .mat-aside__placeholder {
+    display: block;
+    pointer-events: none;
+    box-sizing: border-box;
+  }
+
+  /* Scrim */
+  .mat-aside__scrim {
+    position: fixed;
+    z-index: var(--mat-sys-z-index-dialog);
+    inset: 0;
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 100%;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: 0;
+    pointer-events: auto;
+  }
+
+  .mat-aside__scrim--top:not(.mat-aside__scrim--closing) {
+    background: color-mix(in srgb, var(--mat-sys-color-scrim) 32%, transparent);
+  }
+
+  .mat-aside__scrim--top {
+    animation: mat-dialog-scrim-enter var(--mat-sys-motion-spring-default-effects) both;
+  }
+
+  .mat-aside__scrim--closing {
+    animation: mat-dialog-scrim-exit var(--mat-sys-motion-spring-fast-effects) both;
+  }
+
+  @keyframes mat-dialog-scrim-enter {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes mat-dialog-scrim-exit {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Mode: Docked (default) */
+  .mat-aside--mode-docked {
+    position: absolute;
+  }
+
+  /* Mode: Flow */
+  .mat-aside--mode-flow {
+    position: relative;
+    flex: 0 0 auto;
+  }
+
+  /* Mode: Sticky */
+  .mat-aside--mode-sticky {
+    position: sticky;
+  }
+
+  /* Mode: Fixed */
+  .mat-aside--mode-fixed {
+    position: fixed;
+  }
+
+  /* Modal */
+  .mat-aside--modal {
+    position: fixed;
+    z-index: calc(var(--mat-sys-z-index-dialog) + 1);
   }
 
   /* Top */
-  .mat-aside--top {
+  .mat-aside--top.mat-aside--mode-docked {
     inset-block-start: var(--mat-aside-insets-top, 0px);
-    left: var(--mat-aside-insets-left, 0px);
-    right: var(--mat-aside-insets-right, 0px);
+    inset-inline-start: var(--mat-aside-insets-left, 0px);
+    inset-inline-end: var(--mat-aside-insets-right, 0px);
+  }
+
+  .mat-aside--top.mat-aside--mode-sticky,
+  .mat-aside--top.mat-aside--mode-fixed,
+  .mat-aside--top.mat-aside--modal {
+    inset-block-start: 0;
+    inset-inline: 0;
+  }
+
+  .mat-aside--top {
     block-size: var(--mat-aside-total-block-size);
     padding-block-start: var(--mat-aside-safe-area-size, 0px);
+  }
+
+  .mat-aside--top.mat-aside--auto-size {
+    block-size: auto;
   }
 
   .mat-aside--top.mat-aside--bordered {
@@ -358,16 +760,30 @@ onBeforeUnmount(() => {
   }
 
   .mat-aside--top.mat-aside--closed {
-    transform: translateY(-100%);
+    translate: 0 -100%;
   }
 
   /* Bottom */
-  .mat-aside--bottom {
+  .mat-aside--bottom.mat-aside--mode-docked {
     inset-block-end: var(--mat-aside-insets-bottom, 0px);
-    left: var(--mat-aside-insets-left, 0px);
-    right: var(--mat-aside-insets-right, 0px);
+    inset-inline-start: var(--mat-aside-insets-left, 0px);
+    inset-inline-end: var(--mat-aside-insets-right, 0px);
+  }
+
+  .mat-aside--bottom.mat-aside--mode-sticky,
+  .mat-aside--bottom.mat-aside--mode-fixed,
+  .mat-aside--bottom.mat-aside--modal {
+    inset-block-end: 0;
+    inset-inline: 0;
+  }
+
+  .mat-aside--bottom {
     block-size: var(--mat-aside-total-block-size);
     padding-block-end: var(--mat-aside-safe-area-size, 0px);
+  }
+
+  .mat-aside--bottom.mat-aside--auto-size {
+    block-size: auto;
   }
 
   .mat-aside--bottom.mat-aside--bordered {
@@ -383,138 +799,178 @@ onBeforeUnmount(() => {
   }
 
   .mat-aside--bottom.mat-aside--closed {
-    transform: translateY(100%);
+    translate: 0 100%;
   }
 
-  /* Left */
+  /* Start / Left */
+  .mat-aside--start.mat-aside--mode-docked,
+  .mat-aside--left.mat-aside--mode-docked {
+    inset-inline-start: var(--mat-aside-insets-left, 0px);
+    inset-block: var(--mat-aside-insets-top, 0px) var(--mat-aside-insets-bottom, 0px);
+  }
+
+  .mat-aside--start.mat-aside--mode-sticky,
+  .mat-aside--start.mat-aside--mode-fixed,
+  .mat-aside--start.mat-aside--modal,
+  .mat-aside--left.mat-aside--mode-sticky,
+  .mat-aside--left.mat-aside--mode-fixed,
+  .mat-aside--left.mat-aside--modal {
+    inset-inline-start: 0;
+    inset-block: 0;
+  }
+
+  .mat-aside--start,
   .mat-aside--left {
-    left: var(--mat-aside-insets-left, 0px);
-    inset-block: var(--mat-aside-insets-top, 0px) var(--mat-aside-insets-bottom, 0px);
     inline-size: var(--mat-aside-total-block-size);
-    padding-left: var(--mat-aside-safe-area-size, 0px);
+    padding-inline-start: var(--mat-aside-safe-area-size, 0px);
   }
 
+  .mat-aside--start.mat-aside--auto-size,
+  .mat-aside--left.mat-aside--auto-size {
+    inline-size: auto;
+  }
+
+  .mat-aside--start.mat-aside--bordered,
   .mat-aside--left.mat-aside--bordered {
-    border-right: 1px solid var(--mat-sys-color-outline-variant);
+    border-inline-end: 1px solid var(--mat-sys-color-outline-variant);
   }
 
+  .mat-aside--start.mat-aside--opening,
   .mat-aside--left.mat-aside--opening {
-    animation: mat-aside-left-enter var(--mat-sys-motion-spring-default-spatial, .3s ease) both;
+    animation: mat-aside-start-enter var(--mat-sys-motion-spring-default-spatial, .3s ease) both;
   }
 
+  .mat-aside--start.mat-aside--closing,
   .mat-aside--left.mat-aside--closing {
-    animation: mat-aside-left-exit var(--mat-sys-motion-spring-fast-effects, .2s ease) both;
+    animation: mat-aside-start-exit var(--mat-sys-motion-spring-fast-effects, .2s ease) both;
   }
 
+  .mat-aside--start.mat-aside--closed,
   .mat-aside--left.mat-aside--closed {
-    transform: translateX(-100%);
+    translate: -100% 0;
   }
 
-  /* Right */
-  .mat-aside--right {
-    right: var(--mat-aside-insets-right, 0px);
+  /* End / Right */
+  .mat-aside--end.mat-aside--mode-docked,
+  .mat-aside--right.mat-aside--mode-docked {
+    inset-inline-end: var(--mat-aside-insets-right, 0px);
     inset-block: var(--mat-aside-insets-top, 0px) var(--mat-aside-insets-bottom, 0px);
+  }
+
+  .mat-aside--end.mat-aside--mode-sticky,
+  .mat-aside--end.mat-aside--mode-fixed,
+  .mat-aside--end.mat-aside--modal,
+  .mat-aside--right.mat-aside--mode-sticky,
+  .mat-aside--right.mat-aside--mode-fixed,
+  .mat-aside--right.mat-aside--modal {
+    inset-inline-end: 0;
+    inset-block: 0;
+  }
+
+  .mat-aside--end,
+  .mat-aside--right {
     inline-size: var(--mat-aside-total-block-size);
-    padding-right: var(--mat-aside-safe-area-size, 0px);
+    padding-inline-end: var(--mat-aside-safe-area-size, 0px);
   }
 
+  .mat-aside--end.mat-aside--auto-size,
+  .mat-aside--right.mat-aside--auto-size {
+    inline-size: auto;
+  }
+
+  .mat-aside--end.mat-aside--bordered,
   .mat-aside--right.mat-aside--bordered {
-    border-left: 1px solid var(--mat-sys-color-outline-variant);
+    border-inline-start: 1px solid var(--mat-sys-color-outline-variant);
   }
 
+  .mat-aside--end.mat-aside--opening,
   .mat-aside--right.mat-aside--opening {
-    animation: mat-aside-right-enter var(--mat-sys-motion-spring-default-spatial, .3s ease) both;
+    animation: mat-aside-end-enter var(--mat-sys-motion-spring-default-spatial, .3s ease) both;
   }
 
+  .mat-aside--end.mat-aside--closing,
   .mat-aside--right.mat-aside--closing {
-    animation: mat-aside-right-exit var(--mat-sys-motion-spring-fast-effects, .2s ease) both;
+    animation: mat-aside-end-exit var(--mat-sys-motion-spring-fast-effects, .2s ease) both;
   }
 
+  .mat-aside--end.mat-aside--closed,
   .mat-aside--right.mat-aside--closed {
-    transform: translateX(100%);
+    translate: 100% 0;
   }
 
   .mat-aside--open {
-    transform: translate(0, 0);
+    translate: 0 0;
   }
 
   @keyframes mat-aside-top-enter {
     from {
-      transform: translateY(-100%);
+      translate: 0 -100%;
     }
-
     to {
-      transform: translateY(0);
+      translate: 0 0;
     }
   }
 
   @keyframes mat-aside-top-exit {
     from {
-      transform: translateY(0);
+      translate: 0 0;
     }
-
     to {
-      transform: translateY(-100%);
+      translate: 0 -100%;
     }
   }
 
   @keyframes mat-aside-bottom-enter {
     from {
-      transform: translateY(100%);
+      translate: 0 100%;
     }
-
     to {
-      transform: translateY(0);
+      translate: 0 0;
     }
   }
 
   @keyframes mat-aside-bottom-exit {
     from {
-      transform: translateY(0);
+      translate: 0 0;
     }
-
     to {
-      transform: translateY(100%);
+      translate: 0 100%;
     }
   }
 
-  @keyframes mat-aside-left-enter {
+  @keyframes mat-aside-start-enter {
     from {
-      transform: translateX(-100%);
+      translate: -100% 0;
     }
-
     to {
-      transform: translateX(0);
+      translate: 0 0;
     }
   }
 
-  @keyframes mat-aside-left-exit {
+  @keyframes mat-aside-start-exit {
     from {
-      transform: translateX(0);
+      translate: 0 0;
     }
-
     to {
-      transform: translateX(-100%);
+      translate: -100% 0;
     }
   }
 
-  @keyframes mat-aside-right-enter {
+  @keyframes mat-aside-end-enter {
     from {
-      transform: translateX(100%);
+      translate: 100% 0;
     }
-
     to {
-      transform: translateX(0);
+      translate: 0 0;
     }
   }
 
-  @keyframes mat-aside-right-exit {
+  @keyframes mat-aside-end-exit {
     from {
-      transform: translateX(0);
+      translate: 0 0;
     }
-
     to {
-      transform: translateX(100%);
+      translate: 100% 0;
     }
   }
 
@@ -526,4 +982,3 @@ onBeforeUnmount(() => {
   }
 }
 </style>
-

@@ -23254,11 +23254,17 @@ const visible = ref(true);
 | --- | --- | --- | --- |
 | `modelValue` | `boolean` | `true` | 受控显示状态，支持 `v-model` 双向绑定。 |
 | `as` | `string` | `'aside'` | 根元素渲染的 HTML 标签，如 `'aside'`、`'header'`、`'nav'` 等。 |
-| `location` | `'top' | 'bottom' | 'start' | 'end'` | `'start'` | 依附的停靠边缘。 |
-| `blockSize` | `number | string` | 必填 | 垂直于停靠边缘方向的占用厚度。数值自动转为 px。 |
-| `safeAreaSize` | `number | string` | `0` | 边缘方向的安全区留白大小。组件总厚度为 `blockSize + safeAreaSize`。 |
 | `bordered` | `boolean` | `false` | 是否在面向内容的一侧渲染 1px 分隔线。 |
-| `zIndex` | `number | string | undefined` | `undefined` | 显式指定 CSS 层级；省略时根据 `location` 提供预设层级。 |
+| `modal` | `boolean` | `false` | 是否作为模态浮层呈现。开启时不向布局容器申请内边距避让，并接入全局遮罩与滚动锁定。 |
+| `placeholder` | `boolean` | `false` | `mode="fixed"` 时是否在自然文档流位置保留同尺寸占位节点。 |
+| `location` | `'top' \| 'bottom' \| 'start' \| 'end' \| 'left' \| 'right'` | `'start'` | 依附的停靠边缘。`'left'` 等价映射为 `'start'`，`'right'` 等价映射为 `'end'`。 |
+| `mode` | `'docked' \| 'flow' \| 'sticky' \| 'fixed'` | `'docked'` | 排布与定位模式。`'docked'` 为容器内绝对定位避让，`'flow'` 为常规文档流，`'sticky'` 为粘性定位，`'fixed'` 为视口固定定位。 |
+| `blockSize` | `number \| string \| undefined` | `undefined` | 垂直于停靠边缘方向的占用厚度。数值自动转为 px；省略或传 `'auto'` 时自适应内容并由内部 ResizeObserver 自动测量。 |
+| `safeAreaSize` | `number \| string` | `0` | 边缘方向的安全区留白大小。组件总厚度为 `blockSize + safeAreaSize`。 |
+| `zIndex` | `number \| string \| undefined` | `undefined` | 显式指定 CSS 层级；省略时根据 `location` 提供预设层级。 |
+| `attach` | `string \| HTMLElement` | `'body'` | `mode="fixed"` 时的挂载目标。 |
+| `transition` | `boolean` | `true` | 是否启用默认滑入滑出过渡动效。设为 `false` 时立即切换显隐。 |
+| `closeOnBack` | `boolean` | `true` | `modal=true` 时点击背景遮罩是否请求关闭。 |
 
 组件没有公开方法。未被消费的属性、`class`、`style` 作用于外层根元素。
 

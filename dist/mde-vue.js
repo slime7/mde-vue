@@ -10702,20 +10702,34 @@ var Ds = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		},
 		location: {
 			type: String,
-			default: "left",
+			default: "start",
 			validator(e) {
 				return [
 					"top",
 					"bottom",
+					"start",
+					"end",
 					"left",
 					"right"
 				].includes(e);
 			}
 		},
+		mode: {
+			type: String,
+			default: "docked",
+			validator(e) {
+				return [
+					"docked",
+					"flow",
+					"sticky",
+					"fixed"
+				].includes(e);
+			}
+		},
 		blockSize: {
 			type: [Number, String],
-			required: !0,
-			validator: (e) => bt(e, {
+			default: void 0,
+			validator: (e) => e === void 0 || e === "auto" || bt(e, {
 				property: "block-size",
 				positive: !0
 			})
@@ -10739,6 +10753,26 @@ var Ds = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		modelValue: {
 			type: Boolean,
 			default: !0
+		},
+		modal: {
+			type: Boolean,
+			default: !1
+		},
+		placeholder: {
+			type: Boolean,
+			default: !1
+		},
+		attach: {
+			type: [String, Object],
+			default: "body"
+		},
+		transition: {
+			type: Boolean,
+			default: !0
+		},
+		closeOnBack: {
+			type: Boolean,
+			default: !0
 		}
 	},
 	emits: {
@@ -10746,8 +10780,8 @@ var Ds = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		opened: () => !0,
 		closed: () => !0
 	},
-	setup(e, { emit: t }) {
-		function n(e) {
+	setup(e, { emit: r }) {
+		function c(e) {
 			if (typeof e == "number") return Number.isFinite(e) ? e : null;
 			if (typeof e == "string") {
 				let t = e.trim();
@@ -10758,35 +10792,43 @@ var Ds = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}
 			return null;
 		}
-		let r = $("aside", e), s = t, c = B(), l = j(null), u = L(null), d = j(r.modelValue), f = j(r.modelValue ? "open" : "closed"), p = At(), m = jt({ motion: p }), g = !1, y = h(Ts, null), b = h(Mt, null), x = i(() => [
-			"top",
-			"bottom",
-			"left",
-			"right"
-		].includes(r.location) ? r.location : "left"), S = i(() => {
-			let e = xt(r.blockSize, {
+		let l = $("aside", e), u = r, d = B(), p = f(), m = j(null), g = L(null), b = j(l.modelValue), S = j(l.modelValue ? "open" : "closed"), w = At(), E = jt({ motion: w }), O = !1, k, A = h(Ts, null), M = h(Mt, null), N = p?.vnode.props ?? {}, I = i(() => Object.prototype.hasOwnProperty.call(N, "attach")), R = i(() => {
+			let e = l.location;
+			return e === "left" ? "start" : e === "right" ? "end" : [
+				"top",
+				"bottom",
+				"start",
+				"end"
+			].includes(e) ? e : "start";
+		}), ee = i(() => l.blockSize === void 0 || l.blockSize === "auto"), V = j({
+			blockSize: 0,
+			inlineSize: 0
+		}), U = i(() => !!l.modal), G = i(() => U.value && Vo.value.at(-1) === m.value), K = i(() => {
+			if (ee.value) return "auto";
+			let e = xt(l.blockSize, {
 				property: "block-size",
 				fallback: "0px"
 			});
 			return e === "0" ? "0px" : e;
-		}), w = i(() => {
-			let e = xt(r.safeAreaSize, {
+		}), te = i(() => {
+			let e = xt(l.safeAreaSize, {
 				property: "block-size",
 				fallback: "0px"
 			});
 			return e === "0" ? "0px" : e;
-		}), E = i(() => {
-			let e = n(r.blockSize), t = n(r.safeAreaSize);
-			return e !== null && t !== null ? `${e + t}px` : `calc(${S.value} + ${w.value})`;
-		}), O = i(() => x.value === "top" || x.value === "bottom" ? "8" : "7"), k = j({
+		}), q = i(() => {
+			if (ee.value) return "auto";
+			let e = c(l.blockSize), t = c(l.safeAreaSize);
+			return e !== null && t !== null ? `${e + t}px` : `calc(${K.value} + ${te.value})`;
+		}), J = i(() => R.value === "top" || R.value === "bottom" ? "8" : "7"), Y = j({
 			top: 0,
 			bottom: 0,
 			left: 0,
 			right: 0,
 			offset: 0
 		});
-		H(() => u.value?.insets, (e) => {
-			e && (k.value = {
+		H(() => g.value?.insets, (e) => {
+			e && (Y.value = {
 				top: e.top ?? 0,
 				bottom: e.bottom ?? 0,
 				left: e.left ?? e.start ?? 0,
@@ -10797,83 +10839,193 @@ var Ds = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			deep: !0,
 			immediate: !0
 		});
-		let A = i(() => [
+		let X = i(() => [
 			"mat-aside",
-			`mat-aside--${x.value}`,
-			`mat-aside--${f.value}`,
-			{ "mat-aside--bordered": r.bordered }
-		]), M = i(() => [c.style, {
-			"--mat-aside-block-size": S.value,
-			"--mat-aside-safe-area-size": w.value,
-			"--mat-aside-total-block-size": E.value,
-			"--mat-aside-insets-top": `${k.value.top}px`,
-			"--mat-aside-insets-bottom": `${k.value.bottom}px`,
-			"--mat-aside-insets-left": `${k.value.left}px`,
-			"--mat-aside-insets-right": `${k.value.right}px`,
-			"--mat-aside-insets-offset": `${k.value.offset}px`,
-			zIndex: r.zIndex === void 0 ? O.value : String(r.zIndex)
-		}]);
-		function N() {
-			if (!g || !l.value || !d.value) {
-				u.value?.unregister(), u.value = null;
+			`mat-aside--${R.value}`,
+			R.value === "start" ? "mat-aside--left" : null,
+			R.value === "end" ? "mat-aside--right" : null,
+			`mat-aside--mode-${l.mode}`,
+			`mat-aside--${S.value}`,
+			{
+				"mat-aside--bordered": l.bordered,
+				"mat-aside--auto-size": ee.value,
+				"mat-aside--modal": U.value,
+				"mat-aside--top-scrim": G.value,
+				"mat-aside--no-transition": !l.transition
+			}
+		]), Z = i(() => [d.style, {
+			"--mat-aside-block-size": ee.value ? "auto" : K.value,
+			"--mat-aside-safe-area-size": te.value,
+			"--mat-aside-total-block-size": ee.value ? "auto" : q.value,
+			"--mat-aside-insets-top": `${Y.value.top}px`,
+			"--mat-aside-insets-bottom": `${Y.value.bottom}px`,
+			"--mat-aside-insets-left": `${Y.value.left}px`,
+			"--mat-aside-insets-right": `${Y.value.right}px`,
+			"--mat-aside-insets-offset": `${Y.value.offset}px`,
+			zIndex: l.zIndex === void 0 ? U.value ? "calc(var(--mat-sys-z-index-dialog) + 1)" : J.value : String(l.zIndex)
+		}]), ne = i(() => {
+			if (l.mode !== "fixed") return null;
+			if (l.attach instanceof HTMLElement && l.attach.ownerDocument === document) return l.attach;
+			if (typeof l.attach == "string") try {
+				return document.querySelector(l.attach);
+			} catch {
+				return null;
+			}
+			return null;
+		}), re = i(() => {
+			let e = R.value === "start" || R.value === "end", t = ee.value ? e ? `${V.value.inlineSize}px` : `${V.value.blockSize}px` : q.value;
+			return e ? {
+				inlineSize: t,
+				minBlockSize: "100%",
+				flexShrink: 0
+			} : {
+				blockSize: t,
+				inlineSize: "100%",
+				flexShrink: 0
+			};
+		});
+		function ie() {
+			return M && !I.value ? {
+				inertElement: M.contentElement?.value ?? null,
+				scrollElement: M.documentMode?.value ? null : M.contentElement?.value ?? null
+			} : {
+				inertElement: null,
+				scrollElement: null
+			};
+		}
+		function ae() {
+			if (!O || !m.value || !b.value || !U.value) {
+				m.value && is(m.value);
 				return;
 			}
-			if (u.value?.unregister(), u.value = null, y) u.value = y.publicContext.registerEdge({
-				edge: x.value,
-				element: l.value
-			});
-			else if (b) {
-				let e = x.value === "left" ? "start" : x.value === "right" ? "end" : x.value;
-				u.value = b.publicContext.registerEdge({
-					edge: e,
-					element: l.value
-				});
-			}
+			rs(m.value, ie());
 		}
-		function I() {
-			p.cancel(), d.value = !0, f.value = "opening", v().then(() => {
-				N(), !(!g || !d.value || !r.modelValue) && p.wait(l.value, Os, () => {
-					d.value && r.modelValue && (f.value = "open", s("opened"));
-				});
-			});
+		function oe() {
+			m.value && is(m.value);
 		}
-		function R() {
-			if (!d.value) {
-				f.value = "closed";
+		function se() {
+			!U.value || !l.closeOnBack || u("update:modelValue", !1);
+		}
+		function ce(e) {
+			U.value && G.value && e.key === "Escape" && (e.preventDefault(), u("update:modelValue", !1));
+		}
+		function le() {
+			if (!O || !m.value) return;
+			let e = m.value.getBoundingClientRect();
+			V.value = {
+				blockSize: Math.max(0, Math.ceil(Number(e.height) || 0)),
+				inlineSize: Math.max(0, Math.ceil(Number(e.width) || 0))
+			}, g.value?.update();
+		}
+		function ue() {
+			if (!O || !m.value || !b.value) {
+				g.value?.unregister(), g.value = null;
 				return;
 			}
-			m.start({
-				canStart: () => d.value && f.value !== "closing",
+			g.value?.unregister(), g.value = null, !(l.mode === "flow" || l.mode === "sticky" || l.modal) && (A ? g.value = A.publicContext.registerEdge({
+				edge: R.value,
+				element: m.value
+			}) : M && (g.value = M.publicContext.registerEdge({
+				edge: R.value,
+				element: m.value
+			})));
+		}
+		function de() {
+			if (w.cancel(), b.value = !0, !l.transition) {
+				S.value = "open", v().then(() => {
+					ue(), ae(), u("opened");
+				});
+				return;
+			}
+			S.value = "opening", v().then(() => {
+				ue(), ae(), !(!O || !b.value || !l.modelValue) && w.wait(m.value, Os, () => {
+					b.value && l.modelValue && (S.value = "open", u("opened"));
+				});
+			});
+		}
+		function fe() {
+			if (!b.value) {
+				S.value = "closed";
+				return;
+			}
+			if (!l.transition) {
+				S.value = "closed", b.value = !1, g.value?.unregister(), g.value = null, oe(), u("closed");
+				return;
+			}
+			E.start({
+				canStart: () => b.value && S.value !== "closing",
 				duration: Os,
-				getElement: () => l.value,
-				isActive: () => g && !r.modelValue && d.value,
+				getElement: () => m.value,
+				isActive: () => O && !l.modelValue && b.value,
 				onStart: () => {
-					f.value = "closing", u.value?.unregister(), u.value = null;
+					S.value = "closing", g.value?.unregister(), g.value = null;
 				},
 				onFinish: () => {
-					d.value = !1, f.value = "closed", s("closed");
+					b.value = !1, S.value = "closed", oe(), u("closed");
 				}
 			});
 		}
-		return H(() => r.modelValue, (e) => {
-			e ? I() : R();
-		}), H(x, N), T(async () => {
-			g = !0, d.value && N();
+		return H(() => l.modelValue, (e) => {
+			e ? de() : fe();
+		}), H(R, () => {
+			ue(), le();
+		}), H([() => l.mode, () => l.modal], () => {
+			ue(), ae();
+		}), T(async () => {
+			O = !0, typeof window < "u" && window.addEventListener("keydown", ce), b.value && (await v(), ue(), ae(), k = typeof ResizeObserver > "u" ? void 0 : new ResizeObserver(le), m.value && (k?.observe(m.value), le()));
 		}), C(() => {
-			g = !1, u.value?.unregister(), u.value = null;
-		}), (e, t) => d.value ? (D(), a(F(z(r).as), _({
+			O = !1, typeof window < "u" && window.removeEventListener("keydown", ce), k?.disconnect(), k = void 0, g.value?.unregister(), g.value = null, oe();
+		}), (e, r) => z(l).mode === "fixed" ? (D(), s(t, { key: 0 }, [z(l).placeholder && b.value ? (D(), s("span", {
 			key: 0,
+			class: "mat-aside__placeholder",
+			"aria-hidden": "true",
+			style: x(re.value)
+		}, null, 4)) : o("", !0), (D(), a(n, {
+			to: ne.value ?? "body",
+			disabled: !ne.value
+		}, [U.value && b.value ? (D(), s("button", {
+			key: 0,
+			class: y(["mat-aside__scrim", {
+				"mat-aside__scrim--top": G.value,
+				"mat-aside__scrim--closing": S.value === "closing"
+			}]),
+			type: "button",
+			tabindex: "-1",
+			"aria-hidden": "true",
+			onClick: se
+		}, null, 2)) : o("", !0), b.value ? (D(), a(F(z(l).as), _({
+			key: 1,
 			ref_key: "hostElement",
-			ref: l
+			ref: m
 		}, e.$attrs, {
-			class: A.value,
-			style: M.value
+			class: X.value,
+			style: Z.value
 		}), {
 			default: W(() => [P(e.$slots, "default", {}, void 0, !0)]),
 			_: 3
+		}, 16, ["class", "style"])) : o("", !0)], 8, ["to", "disabled"]))], 64)) : b.value ? (D(), a(F(z(l).as), _({
+			key: 1,
+			ref_key: "hostElement",
+			ref: m
+		}, e.$attrs, {
+			class: X.value,
+			style: Z.value
+		}), {
+			default: W(() => [U.value ? (D(), s("button", {
+				key: 0,
+				class: y(["mat-aside__scrim", {
+					"mat-aside__scrim--top": G.value,
+					"mat-aside__scrim--closing": S.value === "closing"
+				}]),
+				type: "button",
+				tabindex: "-1",
+				"aria-hidden": "true",
+				onClick: se
+			}, null, 2)) : o("", !0), P(e.$slots, "default", {}, void 0, !0)]),
+			_: 3
 		}, 16, ["class", "style"])) : o("", !0);
 	}
-}), [["__scopeId", "data-v-16e86125"]]), As = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-d31ac299"]]), As = /*@__PURE__*/ Object.assign({
 	name: "MatTableWrapper",
 	inheritAttrs: !1
 }, {
