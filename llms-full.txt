@@ -22922,6 +22922,366 @@ import ContainerFluidExample from '../examples/container/ContainerFluidExample.v
 import ContainerHeightExample from '../examples/container/ContainerHeightExample.vue';
 </script>
 
+# Aside 边缘栏
+
+## 组件简介
+
+`<mat-aside>` 的组件导出名是 `MatAside`。它是专用于停靠在 `mat-layout` 或 `mat-app-root` 边缘的布局基础设施组件。通过统一管理四个停靠方向（`top`、`bottom`、`left`、`right`）的厚度尺寸与安全区留白，协调边缘占据与正交方向上的互斥避让，未来可作为各边缘组件（如顶部应用栏、导航侧栏、底部栏等）的底层根 DOM。
+
+组件的核心排布机制遵循“先出现先占满”原则：在模板 DOM 中居前的边缘组件优先占满延展方向（例如居前的顶部栏占满横向整宽），而居后的边缘组件根据前序组件的占用尺寸自动偏移避让（例如居后的侧边栏高度自动避让顶部栏）。
+
+## 示例
+
+### 基础使用
+
+设置 `location="left"` 与 `block-size="160"` 即可在布局左侧（或起始侧）建立固定宽度的边缘侧栏。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-layout class="aside-basic-example">
+    <mat-aside
+      location="left"
+      :block-size="160"
+      bordered
+      class="aside-basic-example__aside"
+    >
+      <div class="aside-basic-example__nav">
+        <strong>侧边栏</strong>
+        <span>固定 160px</span>
+      </div>
+    </mat-aside>
+
+    <div class="aside-basic-example__content">
+      <h3>基础边缘布局</h3>
+      <p>Aside 组件自动停靠于指定边缘，并在 Layout 容器内避让正文内容。</p>
+    </div>
+  </mat-layout>
+</template>
+```
+```vue
+<style scoped>
+.aside-basic-example {
+  min-block-size: 180px;
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-medium);
+  overflow: hidden;
+}
+
+.aside-basic-example__aside {
+  background: var(--mat-sys-color-surface-container);
+  color: var(--mat-sys-color-on-surface);
+}
+
+.aside-basic-example__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.aside-basic-example__content {
+  padding: 24px;
+  color: var(--mat-sys-color-on-surface);
+}
+
+.aside-basic-example__content h3,
+.aside-basic-example__content p {
+  margin: 0;
+}
+
+.aside-basic-example__content p {
+  margin-block-start: 8px;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Aside 基础使用预览" stacked>
+    <AsideBasicExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 组件顺序与避让
+
+在 DOM 树中先声明的边缘组件优先占满延展方向，后声明的组件根据前序组件尺寸避让。以下示例通过不同对比背景色，直观展示头部栏在前（顶部占满横向整宽）与侧边栏在前（侧边栏占满纵向整高）的排布效果。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="aside-order-stack">
+    <mat-layout class="aside-order-item">
+      <mat-aside
+        location="top"
+        :block-size="56"
+        as="header"
+        bordered
+        class="aside-order-item__top"
+      >
+        <div class="aside-order-item__header-content">
+          <strong>顶部栏</strong>
+        </div>
+      </mat-aside>
+
+      <mat-aside
+        location="left"
+        :block-size="160"
+        as="nav"
+        bordered
+        class="aside-order-item__left"
+      >
+        <div class="aside-order-item__nav-content">
+          <strong>侧边栏</strong>
+        </div>
+      </mat-aside>
+
+      <main class="aside-order-item__main">
+        <h4>头部栏在前</h4>
+        <p>顶部栏先声明并占满整宽，侧边栏高度从顶部栏下方开始延伸。</p>
+      </main>
+    </mat-layout>
+
+    <mat-layout class="aside-order-item">
+      <mat-aside
+        location="left"
+        :block-size="160"
+        as="nav"
+        bordered
+        class="aside-order-item__left"
+      >
+        <div class="aside-order-item__nav-content">
+          <strong>侧边栏</strong>
+        </div>
+      </mat-aside>
+
+      <mat-aside
+        location="top"
+        :block-size="56"
+        as="header"
+        bordered
+        class="aside-order-item__top"
+      >
+        <div class="aside-order-item__header-content">
+          <strong>顶部栏</strong>
+        </div>
+      </mat-aside>
+
+      <main class="aside-order-item__main">
+        <h4>侧边栏在前</h4>
+        <p>侧边栏先声明并占满整高，顶部栏横向起点避让侧边栏宽度。</p>
+      </main>
+    </mat-layout>
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.aside-order-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.aside-order-item {
+  min-block-size: 180px;
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-medium);
+  overflow: hidden;
+}
+
+.aside-order-item__top {
+  background: var(--mat-sys-color-primary-container);
+  color: var(--mat-sys-color-on-primary-container);
+}
+
+.aside-order-item__left {
+  background: var(--mat-sys-color-secondary-container);
+  color: var(--mat-sys-color-on-secondary-container);
+}
+
+.aside-order-item__header-content {
+  display: flex;
+  align-items: center;
+  padding-inline: 16px;
+  block-size: 100%;
+}
+
+.aside-order-item__nav-content {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+.aside-order-item__main {
+  padding: 20px;
+  color: var(--mat-sys-color-on-surface);
+}
+
+.aside-order-item__main h4,
+.aside-order-item__main p {
+  margin: 0;
+}
+
+.aside-order-item__main p {
+  margin-block-start: 6px;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Aside 组件顺序对照预览" stacked>
+    <AsideOrderExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 动态切换显隐与回流
+
+使用 `v-model` 控制 Aside 的显示与收起。收起时 Aside 沿边缘方向平滑滑出，Layout 容器的正文留白同步弹性收缩。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="aside-toggle-wrapper">
+    <div class="aside-toggle-toolbar">
+      <mat-btn size="small" variant="filled" @click="visible = !visible">
+        {{ visible ? '收起侧栏' : '展开侧栏' }}
+      </mat-btn>
+    </div>
+
+    <mat-layout class="aside-toggle-layout">
+      <mat-aside
+        v-model="visible"
+        location="left"
+        :block-size="160"
+        bordered
+        class="aside-toggle-layout__aside"
+      >
+        <div class="aside-toggle-layout__nav">
+          <strong>动态侧栏</strong>
+          <span>平滑滑入与滑出</span>
+        </div>
+      </mat-aside>
+
+      <div class="aside-toggle-layout__content">
+        <h3>平滑过渡回流</h3>
+        <p>通过 v-model 切换显隐时，Aside 沿对应边缘滑动切出，正文区域 padding 平滑同步回流。</p>
+      </div>
+    </mat-layout>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const visible = ref(true);
+</script>
+```
+```vue
+<style scoped>
+.aside-toggle-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.aside-toggle-toolbar {
+  display: flex;
+  align-items: center;
+}
+
+.aside-toggle-layout {
+  min-block-size: 180px;
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-medium);
+  overflow: hidden;
+}
+
+.aside-toggle-layout__aside {
+  background: var(--mat-sys-color-surface-container-high);
+  color: var(--mat-sys-color-on-surface);
+}
+
+.aside-toggle-layout__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.aside-toggle-layout__content {
+  padding: 24px;
+  color: var(--mat-sys-color-on-surface);
+}
+
+.aside-toggle-layout__content h3,
+.aside-toggle-layout__content p {
+  margin: 0;
+}
+
+.aside-toggle-layout__content p {
+  margin-block-start: 8px;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Aside 动态切换预览" stacked>
+    <AsideModelValueExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 名称 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `modelValue` | `boolean` | `true` | 受控显示状态，支持 `v-model` 双向绑定。 |
+| `as` | `string` | `'aside'` | 根元素渲染的 HTML 标签，如 `'aside'`、`'header'`、`'nav'` 等。 |
+| `location` | `'top' | 'bottom' | 'start' | 'end'` | `'start'` | 依附的停靠边缘。 |
+| `blockSize` | `number | string` | 必填 | 垂直于停靠边缘方向的占用厚度。数值自动转为 px。 |
+| `safeAreaSize` | `number | string` | `0` | 边缘方向的安全区留白大小。组件总厚度为 `blockSize + safeAreaSize`。 |
+| `bordered` | `boolean` | `false` | 是否在面向内容的一侧渲染 1px 分隔线。 |
+| `zIndex` | `number | string | undefined` | `undefined` | 显式指定 CSS 层级；省略时根据 `location` 提供预设层级。 |
+
+组件没有公开方法。未被消费的属性、`class`、`style` 作用于外层根元素。
+
+## 事件
+
+| 名称 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `boolean` | 组件显示状态请求变更时触发。 |
+| `opened` | 无 | 切入展开动画播放完毕后触发。 |
+| `closed` | 无 | 退场收起动画播放完毕且清理完成后触发。 |
+
+## Slots
+
+| 名称 | 说明 |
+| --- | --- |
+| 默认 Slot | 边缘栏内部呈现的具体内容。 |
+
+<script setup>
+import AsideBasicExample from '../examples/aside/AsideBasicExample.vue';
+import AsideOrderExample from '../examples/aside/AsideOrderExample.vue';
+import AsideModelValueExample from '../examples/aside/AsideModelValueExample.vue';
+</script>
+
 # Table wrapper 表格容器
 
 ## 组件简介
@@ -23045,6 +23405,126 @@ import ContainerHeightExample from '../examples/container/ContainerHeightExample
 
 <script setup>
 import TableWrapperBasicExample from '../examples/table-wrapper/TableWrapperBasicExample.vue';
+</script>
+
+# Layout 布局容器
+
+## 组件简介
+
+`<mat-layout>` 的组件导出名是 `MatLayout`。它为局部区域（如卡片、工作区或视口分屏）提供多边缘停靠协调上下文。通过与 `<mat-aside>` 搭配使用，自动收集并按 DOM 顺序计算顶、底、左、右各边缘的占用厚度，向正文内容区（`.mat-layout__content`）分发动态累加的内边距，实现无重叠的正交自适应避让。
+
+## 示例
+
+### 基础布局
+
+在 `<mat-layout>` 内声明顶部与侧栏 Aside，正文内容自动留白展示。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-layout class="layout-basic-example">
+    <mat-aside location="top" :block-size="52" bordered class="layout-basic-example__top">
+      <div class="layout-basic-example__top-content">
+        <strong>顶部标题栏</strong>
+      </div>
+    </mat-aside>
+
+    <mat-aside location="left" :block-size="160" bordered class="layout-basic-example__left">
+      <div class="layout-basic-example__nav-content">
+        <span>导航项 1</span>
+        <span>导航项 2</span>
+      </div>
+    </mat-aside>
+
+    <main class="layout-basic-example__main">
+      <h3>MatLayout 容器</h3>
+      <p>在任意卡片或局部区域内搭建由 Aside 边缘栏与正文构成的协调布局系统。</p>
+    </main>
+  </mat-layout>
+</template>
+```
+```vue
+<style scoped>
+.layout-basic-example {
+  min-block-size: 220px;
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-medium);
+  overflow: hidden;
+}
+
+.layout-basic-example__top {
+  background: var(--mat-sys-color-surface-container);
+  color: var(--mat-sys-color-on-surface);
+}
+
+.layout-basic-example__left {
+  background: var(--mat-sys-color-surface-container-low);
+  color: var(--mat-sys-color-on-surface);
+}
+
+.layout-basic-example__top-content {
+  display: flex;
+  align-items: center;
+  padding-inline: 16px;
+  block-size: 100%;
+}
+
+.layout-basic-example__nav-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.layout-basic-example__main {
+  padding: 24px;
+  color: var(--mat-sys-color-on-surface);
+}
+
+.layout-basic-example__main h3,
+.layout-basic-example__main p {
+  margin: 0;
+}
+
+.layout-basic-example__main p {
+  margin-block-start: 8px;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Layout 基础布局预览" stacked>
+    <LayoutBasicExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 名称 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `as` | `string` | `'div'` | 根容器渲染的 HTML 标签，如 `'div'`、`'section'`、`'main'` 等。 |
+
+组件没有公开方法。未被消费的属性、`class`、`style` 作用于外层根元素。
+
+## 事件
+
+组件不定义自定义事件。
+
+## Slots
+
+| 名称 | 说明 |
+| --- | --- |
+| 默认 Slot | 包含 `<mat-aside>` 边缘栏与主正文内容。 |
+
+<script setup>
+import LayoutBasicExample from '../examples/layout/LayoutBasicExample.vue';
 </script>
 
 # Panes 布局面板

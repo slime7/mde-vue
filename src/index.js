@@ -49,6 +49,8 @@ export { default as MatBottomSheet } from './components/mat-bottom-sheet/MatBott
 export { default as MatSideSheet } from './components/mat-side-sheet/MatSideSheet.vue';
 export { default as MatHover } from './components/mat-hover/MatHover.vue';
 export { default as MatContainer } from './components/mat-container/MatContainer.vue';
+export { default as MatLayout } from './components/mat-layout/MatLayout.vue';
+export { default as MatAside } from './components/mat-aside/MatAside.vue';
 export { default as MatSpacer } from './components/mat-spacer/MatSpacer.vue';
 export { default as MatTableWrapper } from './components/mat-table-wrapper/MatTableWrapper.vue';
 export { default as MatScrollArea } from './components/mat-scroll-area/MatScrollArea.vue';
@@ -76,7 +78,10 @@ export { useMatProps } from './components/use-mat-props.js';
 // eslint-disable-next-line import-x/extensions
 export { useMatViewTransition, useMdeViewTransition } from './view-transition.js';
 export { useMatApp } from './components/mat-app-root/mat-app-root-context';
+export { useLayout } from './components/mat-layout/layout-context';
 export {
   alert, confirm, dialog, prompt,
 } from './components/mat-dialog/dialog';
 export { snackbar, toast } from './components/mat-snackbar/snackbar';
+
+

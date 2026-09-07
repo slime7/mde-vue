@@ -144,9 +144,11 @@ export default defineConfig({
             items: [
               { text: 'App root 应用布局根', link: '/components/app-root' },
               { text: 'App bar 应用栏', link: '/components/app-bar' },
+              { text: 'Aside 边缘栏', link: '/components/aside' },
               { text: 'Bottom sheet 底部面板', link: '/components/bottom-sheet' },
               { text: 'Container 响应式容器', link: '/components/container' },
               { text: 'Docked container 浮动容器', link: '/components/docked-container' },
+              { text: 'Layout 布局容器', link: '/components/layout' },
               { text: 'Menu 菜单', link: '/components/menu' },
               { text: 'Navigation 导航', link: '/components/navigation-rail' },
               { text: 'Navigation drawer 导航抽屉', link: '/components/navigation-drawer' },

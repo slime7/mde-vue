@@ -2981,6 +2981,79 @@ export interface MatContainerProps {
 export type MatContainerComponent = DefineComponent<MatContainerProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatContainer: MatContainerComponent;
 
+export interface MatLayoutProps {
+  /**
+  * 根元素渲染的 HTML 标签。
+  *
+  * @type {string}
+  * @default 'div'
+  */
+  as?: string;
+}
+
+export type MatLayoutComponent = DefineComponent<MatLayoutProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatLayout: MatLayoutComponent;
+
+export interface MatAsideProps {
+  /**
+  * 根元素渲染的 HTML 标签。
+  *
+  * @type {string}
+  * @default 'aside'
+  */
+  as?: string;
+  /**
+  * Aside 所依附的停靠边缘。
+  *
+  * @type {'top' | 'bottom' | 'left' | 'right'}
+  * @default 'left'
+  */
+  location?: 'top' | 'bottom' | 'left' | 'right';
+  /**
+  * 垂直于边缘方向的厚度尺寸（top/bottom 对应高度，left/right 对应宽度）。
+  *
+  * @type {number | string}
+  */
+  blockSize: number | string;
+  /**
+  * 边缘方向的安全区留白大小。
+  *
+  * @type {number | string}
+  * @default 0
+  */
+  safeAreaSize?: number | string;
+  /**
+  * 是否在面向内容的一侧渲染 1px 细边框。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  bordered?: boolean;
+  /**
+  * 显式指定层级；省略时使用默认层级。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  zIndex?: number | string | undefined;
+  /**
+  * 受控显示/隐藏状态，支持 v-model。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  modelValue?: boolean;
+}
+
+export interface MatAsideEmits {
+  "update:modelValue": (payload: unknown) => unknown;
+  "opened": (payload: unknown) => unknown;
+  "closed": (payload: unknown) => unknown;
+}
+
+export type MatAsideComponent = DefineComponent<MatAsideProps, {}, {}, {}, {}, {}, {}, MatAsideEmits>;
+export declare const MatAside: MatAsideComponent;
+
 export interface MatSpacerProps {
 }
 
@@ -4081,6 +4154,26 @@ export interface MatAppContext {
   registerEdge(options: { edge: MatAppEdge; element: HTMLElement }): MatAppEdgeRegistration;
 }
 export declare function useMatApp(): MatAppContext;
+export type MatLayoutEdge = 'top' | 'bottom' | 'left' | 'right' | 'start' | 'end';
+export interface MatLayoutEdgeInsets {
+  readonly top: number;
+  readonly bottom: number;
+  readonly start: number;
+  readonly end: number;
+  readonly offset: number;
+}
+export interface MatLayoutEdgeRegistration {
+  readonly insets: Readonly<MatLayoutEdgeInsets>;
+  update(): void;
+  unregister(): void;
+}
+export interface MatLayoutContext {
+  readonly layout: Readonly<{ size: { width: number; height: number }; padding: { top: number; bottom: number; start: number; end: number } }>;
+  readonly padding: Readonly<{ top: number; bottom: number; start: number; end: number }>;
+  readonly size: Readonly<{ width: number; height: number }>;
+  registerEdge(options: { edge: MatLayoutEdge; element: HTMLElement }): MatLayoutEdgeRegistration;
+}
+export declare function useLayout(): MatLayoutContext;
 export declare const Intersection: import('vue').ObjectDirective<HTMLElement>;
 export interface StateLayerOptions {
   color?: string;
@@ -4233,6 +4326,10 @@ declare module 'vue' {
     'mat-hover': typeof MatHover;
     MatContainer: typeof MatContainer;
     'mat-container': typeof MatContainer;
+    MatLayout: typeof MatLayout;
+    'mat-layout': typeof MatLayout;
+    MatAside: typeof MatAside;
+    'mat-aside': typeof MatAside;
     MatSpacer: typeof MatSpacer;
     'mat-spacer': typeof MatSpacer;
     MatTableWrapper: typeof MatTableWrapper;

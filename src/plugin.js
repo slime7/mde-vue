@@ -49,6 +49,8 @@ import MatBottomSheet from './components/mat-bottom-sheet/MatBottomSheet.vue';
 import MatSideSheet from './components/mat-side-sheet/MatSideSheet.vue';
 import MatHover from './components/mat-hover/MatHover.vue';
 import MatContainer from './components/mat-container/MatContainer.vue';
+import MatLayout from './components/mat-layout/MatLayout.vue';
+import MatAside from './components/mat-aside/MatAside.vue';
 import MatSpacer from './components/mat-spacer/MatSpacer.vue';
 import MatTableWrapper from './components/mat-table-wrapper/MatTableWrapper.vue';
 import MatScrollArea from './components/mat-scroll-area/MatScrollArea.vue';
@@ -128,6 +130,8 @@ export const GLOBAL_COMPONENTS = [
   ['MatSideSheet', 'mat-side-sheet', MatSideSheet],
   ['MatHover', 'mat-hover', MatHover],
   ['MatContainer', 'mat-container', MatContainer],
+  ['MatLayout', 'mat-layout', MatLayout],
+  ['MatAside', 'mat-aside', MatAside],
   ['MatSpacer', 'mat-spacer', MatSpacer],
   ['MatTableWrapper', 'mat-table-wrapper', MatTableWrapper],
   ['MatScrollArea', 'mat-scroll-area', MatScrollArea],
@@ -357,3 +361,5 @@ export function useMatTheme() {
 
   return theme;
 }
+
+

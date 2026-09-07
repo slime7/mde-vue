@@ -27,8 +27,10 @@ import {
   MatCheckbox as RootMatCheckbox,
   MatChip as RootMatChip,
   MatChipSet as RootMatChipSet,
+  MatAside as RootMatAside,
   MatContainer as RootMatContainer,
   MatDialog as RootMatDialog,
+  MatLayout as RootMatLayout,
   MatDivider as RootMatDivider,
   MatDockedContainer as RootMatDockedContainer,
   MatDynamicText as RootMatDynamicText,
@@ -76,6 +78,7 @@ import {
   MdeSharedElement as RootMdeSharedElement,
   MdeVirtualScroll as RootMdeVirtualScroll,
   StateLayer as RootStateLayer,
+  useLayout,
   useMatApp,
   useMatProps,
   useMatViewTransition,
@@ -131,6 +134,8 @@ const globalComponents = [
   ['MatSideSheet', 'mat-side-sheet', RootMatSideSheet],
   ['MatHover', 'mat-hover', RootMatHover],
   ['MatContainer', 'mat-container', RootMatContainer],
+  ['MatLayout', 'mat-layout', RootMatLayout],
+  ['MatAside', 'mat-aside', RootMatAside],
   ['MatSpacer', 'mat-spacer', RootMatSpacer],
   ['MatLoading', 'mat-loading', RootMatLoading],
   ['MatProgress', 'mat-progress', RootMatProgress],
@@ -156,6 +161,9 @@ describe('公共组件导出', () => {
   it('从根入口导出应用布局组件与组合函数', () => {
     expect(RootMatAppRoot).toBeTruthy();
     expect(useMatApp).toBeTypeOf('function');
+    expect(useLayout).toBeTypeOf('function');
+    expect(RootMatLayout).toBeTruthy();
+    expect(RootMatAside).toBeTruthy();
     expect(useMatProps).toBeTypeOf('function');
   });
 
@@ -353,3 +361,5 @@ describe('公共组件导出', () => {
     expect(existsSync(new URL('../src/components/mat-extended-fab', import.meta.url))).toBe(false);
   });
 });
+
+
