@@ -291,15 +291,8 @@ onBeforeUnmount(() => {
     box-sizing: border-box;
     inline-size: 100%;
     min-inline-size: 0;
-    padding-top: var(--mat-layout-padding-top, 0px);
-    padding-bottom: var(--mat-layout-padding-bottom, 0px);
-    padding-left: var(--mat-layout-padding-left, 0px);
-    padding-right: var(--mat-layout-padding-right, 0px);
-    transition: padding-top var(--mat-sys-motion-spring-default-spatial, .3s ease),
-      padding-bottom var(--mat-sys-motion-spring-default-spatial, .3s ease),
-      padding-left var(--mat-sys-motion-spring-default-spatial, .3s ease),
-      padding-right var(--mat-sys-motion-spring-default-spatial, .3s ease);
+    padding: var(--mat-layout-padding-top, 0) var(--mat-layout-padding-right, 0) var(--mat-layout-padding-bottom, 0) var(--mat-layout-padding-left, 0);
+    transition: padding-top var(--mat-sys-motion-spring-default-spatial, .3s ease), padding-bottom var(--mat-sys-motion-spring-default-spatial, .3s ease), padding-left var(--mat-sys-motion-spring-default-spatial, .3s ease), padding-right var(--mat-sys-motion-spring-default-spatial, .3s ease);
   }
 }
 </style>
-

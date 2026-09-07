@@ -665,5 +665,3 @@ if (checkOnly) {
 } else {
   fs.writeFileSync(OUTPUT, generated, 'utf8');
 }
-
-

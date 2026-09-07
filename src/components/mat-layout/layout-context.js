@@ -46,4 +46,3 @@ export function useLayout() {
  * @property {Readonly<{width: number, height: number}>} size
  * @property {(options: {edge: MatLayoutEdge, element: HTMLElement}) => MatLayoutEdgeRegistration} registerEdge
  */
-

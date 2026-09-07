@@ -12,6 +12,7 @@ import {
   prompt,
   Intersection as RootIntersection,
   MatAppRoot as RootMatAppRoot,
+  MatAside as RootMatAside,
   MatAvatar as RootMatAvatar,
   MatBadge as RootMatBadge,
   MatBottomSheet as RootMatBottomSheet,
@@ -27,10 +28,8 @@ import {
   MatCheckbox as RootMatCheckbox,
   MatChip as RootMatChip,
   MatChipSet as RootMatChipSet,
-  MatAside as RootMatAside,
   MatContainer as RootMatContainer,
   MatDialog as RootMatDialog,
-  MatLayout as RootMatLayout,
   MatDivider as RootMatDivider,
   MatDockedContainer as RootMatDockedContainer,
   MatDynamicText as RootMatDynamicText,
@@ -42,6 +41,7 @@ import {
   MatIcon as RootMatIcon,
   MatImage as RootMatImage,
   MatInputBase as RootMatInputBase,
+  MatLayout as RootMatLayout,
   MatList as RootMatList,
   MatListGroup as RootMatListGroup,
   MatListItem as RootMatListItem,
@@ -361,5 +361,3 @@ describe('公共组件导出', () => {
     expect(existsSync(new URL('../src/components/mat-extended-fab', import.meta.url))).toBe(false);
   });
 });
-
-

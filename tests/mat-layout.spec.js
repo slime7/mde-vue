@@ -1,13 +1,20 @@
 /* eslint-disable vue/one-component-per-file -- 测试内组件只用于读取同一布局上下文。 */
+/* eslint-disable class-methods-use-this */
 import { mount } from '@vue/test-utils';
 import { defineComponent, h, nextTick } from 'vue';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  afterEach, beforeEach, describe, expect, it, vi,
+} from 'vitest';
 import MatLayout from '../src/components/mat-layout/MatLayout.vue';
 import MatAside from '../src/components/mat-aside/MatAside.vue';
 import { useLayout } from '../src/components/mat-layout/layout-context';
 
-function rect({ bottom, height, left = 0, right, top = 0, width }) {
-  return { bottom, height, left, right, top, width, x: left, y: top, toJSON() {} };
+function rect({
+  bottom, height, left = 0, right, top = 0, width,
+}) {
+  return {
+    bottom, height, left, right, top, width, x: left, y: top, toJSON() {},
+  };
 }
 
 async function settle() {
@@ -17,11 +24,22 @@ async function settle() {
 
 describe('MatLayout 布局容器', () => {
   beforeEach(() => {
-    vi.stubGlobal('requestAnimationFrame', (cb) => { cb(); return 1; });
+    vi.stubGlobal('requestAnimationFrame', (cb) => {
+      cb();
+      return 1;
+    });
     vi.stubGlobal('cancelAnimationFrame', vi.fn());
-    vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect() {} });
+    vi.stubGlobal('ResizeObserver', class {
+      observe() {}
+
+      unobserve() {}
+
+      disconnect() {}
+    });
   });
-  afterEach(() => { vi.restoreAllMocks(); });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   it('默认渲染 div 容器，支持 as 属性定制根标签', () => {
     const defaultWrapper = mount(MatLayout);
@@ -32,7 +50,12 @@ describe('MatLayout 布局容器', () => {
   });
 
   it('提供 useLayout 上下文，无布局容器调用时抛出错误', () => {
-    const Stray = defineComponent({ setup() { useLayout(); return () => null; } });
+    const Stray = defineComponent({
+      setup() {
+        useLayout();
+        return () => null;
+      },
+    });
     expect(() => mount(Stray)).toThrow('useLayout() 必须在 MatLayout 内调用');
   });
 
@@ -153,11 +176,21 @@ describe('MatLayout 布局容器', () => {
     const leftEl = wrapper.element.querySelector('.mat-aside--left');
     const rightEl = wrapper.element.querySelector('.mat-aside--right');
 
-    vi.spyOn(wrapper.element, 'getBoundingClientRect').mockReturnValue(rect({ bottom: 800, height: 800, right: 1000, width: 1000 }));
-    vi.spyOn(topEl, 'getBoundingClientRect').mockReturnValue(rect({ bottom: 50, height: 50, right: 1000, width: 1000 }));
-    vi.spyOn(bottomEl, 'getBoundingClientRect').mockReturnValue(rect({ bottom: 800, height: 60, top: 740, right: 1000, width: 1000 }));
-    vi.spyOn(leftEl, 'getBoundingClientRect').mockReturnValue(rect({ bottom: 740, height: 690, top: 50, right: 70, width: 70 }));
-    vi.spyOn(rightEl, 'getBoundingClientRect').mockReturnValue(rect({ bottom: 740, height: 690, top: 50, left: 920, right: 1000, width: 80 }));
+    vi.spyOn(wrapper.element, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 800, height: 800, right: 1000, width: 1000,
+    }));
+    vi.spyOn(topEl, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 50, height: 50, right: 1000, width: 1000,
+    }));
+    vi.spyOn(bottomEl, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 800, height: 60, top: 740, right: 1000, width: 1000,
+    }));
+    vi.spyOn(leftEl, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 740, height: 690, top: 50, right: 70, width: 70,
+    }));
+    vi.spyOn(rightEl, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 740, height: 690, top: 50, left: 920, right: 1000, width: 80,
+    }));
 
     window.dispatchEvent(new Event('resize'));
     await settle();

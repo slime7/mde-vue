@@ -3010,6 +3010,15 @@ export interface MatAsideProps {
   */
   location?: 'top' | 'bottom' | 'start' | 'end' | 'left' | 'right';
   /**
+  * 是否接入应用级外壳布局。
+  * 在 MatAppRoot 内且未显式指定 attach 时自动表现为 docked 并登记；
+  * 在外部或有显式 attach 时自动表现为 fixed 并 Teleport 至目标。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  app?: boolean;
+  /**
   * 排布与定位模式。
   * docked 为容器内绝对定位避让；flow 为常规文档流；sticky 为粘性定位；fixed 为视口固定定位。
   *
@@ -3026,12 +3035,34 @@ export interface MatAsideProps {
   */
   blockSize?: number | string | undefined;
   /**
+  * 边缘方向的安全区留白配置。
+  * true 时自适应当前 MatAppRoot 或环境安全区；false 时为 0；也可显式指定尺寸。
+  *
+  * @type {boolean | number | string}
+  * @default true
+  */
+  safeArea?: boolean | number | string;
+  /**
   * 边缘方向的安全区留白大小。
   *
-  * @type {number | string}
-  * @default 0
+  * @type {number | string | undefined}
+  * @default undefined
   */
-  safeAreaSize?: number | string;
+  safeAreaSize?: number | string | undefined;
+  /**
+  * 是否在文档流中渲染占位节点。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  placeholder?: boolean;
+  /**
+  * 显式指定占位节点尺寸。省略时跟随 Aside 自身总厚度。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  placeholderSize?: number | string | undefined;
   /**
   * 是否在面向内容的一侧渲染 1px 细边框。
   *
@@ -3047,12 +3078,27 @@ export interface MatAsideProps {
   */
   zIndex?: number | string | undefined;
   /**
+  * 受控显示/隐藏状态，支持 v-model:open。
+  *
+  * @type {boolean | undefined}
+  * @default undefined
+  */
+  open?: boolean | undefined;
+  /**
   * 受控显示/隐藏状态，支持 v-model。
   *
-  * @type {boolean}
-  * @default true
+  * @type {boolean | undefined}
+  * @default undefined
   */
-  modelValue?: boolean;
+  modelValue?: boolean | undefined;
+  /**
+  * 关闭时是否彻底从 DOM 树卸载节点。
+  * 默认 false（保活隐藏），关闭后保留 DOM 并使用 hidden 属性隐藏；设为 true 时退场后销毁节点。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  unmountOnClose?: boolean;
   /**
   * 是否作为模态浮层呈现。开启时不挤占布局正文空间并接入全局遮罩。
   *
@@ -3060,13 +3106,6 @@ export interface MatAsideProps {
   * @default false
   */
   modal?: boolean;
-  /**
-  * mode="fixed" 时是否在自然文档流位置生成占位。
-  *
-  * @type {boolean}
-  * @default false
-  */
-  placeholder?: boolean;
   /**
   * mode="fixed" 时的挂载目标。
   *
@@ -3091,6 +3130,7 @@ export interface MatAsideProps {
 }
 
 export interface MatAsideEmits {
+  "update:open": (payload: unknown) => unknown;
   "update:modelValue": (payload: unknown) => unknown;
   "opened": (payload: unknown) => unknown;
   "closed": (payload: unknown) => unknown;

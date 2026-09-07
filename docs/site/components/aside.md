@@ -77,32 +77,100 @@ order: 117
   </DocsPreview>
 </ClientOnly>
 
+### 多边缘停靠
+
+通过 `location` 属性将多个 Aside 放置在同一容器的边缘。当同一方向存在多个 Aside 时（如下例中在两侧边栏之后、底栏上方声明的第二个顶栏），后声明的 Aside 自动在纵向累加堆叠于主顶栏下方，并在横向避让两侧边栏，容器自动完成复合避让与内边距计算。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/aside/AsideLocationExample.vue#template [template]
+
+<<< @/examples/aside/AsideLocationExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Aside 多边缘停靠预览" stacked>
+    <AsideLocationExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 粘性停靠
+
+设置 `mode="sticky"` 使 Aside 在滚动容器中表现为粘性定位。当容器内部发生滚动时，Aside 会自然停靠在容器指定边缘，不脱离容器上下文。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/aside/AsideStickyExample.vue#template [template]
+
+<<< @/examples/aside/AsideStickyExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Aside 粘性停靠预览" stacked>
+    <AsideStickyExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 状态保活
+
+默认情况下 `unmountOnClose` 为 `false`，收起关闭时仅使用 `hidden` 属性隐藏节点并注销布局占用，不销毁底层 DOM。再次展开时，内部表单输入、滚动位置等状态均得以完整保留。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/aside/AsideKeepAliveExample.vue#template [template]
+
+<<< @/examples/aside/AsideKeepAliveExample.vue#script [script]
+
+<<< @/examples/aside/AsideKeepAliveExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Aside 状态保活预览" stacked>
+    <AsideKeepAliveExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
 
 | 名称 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `open` | `boolean` | `true` | 受控开闭状态，支持 `v-model:open` 双向绑定。 |
 | `modelValue` | `boolean` | `true` | 受控显示状态，支持 `v-model` 双向绑定。 |
 | `as` | `string` | `'aside'` | 根元素渲染的 HTML 标签，如 `'aside'`、`'header'`、`'nav'` 等。 |
+| `app` | `boolean` | `false` | 是否接入应用级外壳布局。在 `mat-app-root` 内未显式指定 `attach` 时自动表现为 `docked` 并登记避让；在外部或显式指定 `attach` 时自动表现为 `fixed` 并 Teleport 到目标。 |
 | `bordered` | `boolean` | `false` | 是否在面向内容的一侧渲染 1px 分隔线。 |
 | `modal` | `boolean` | `false` | 是否作为模态浮层呈现。开启时不向布局容器申请内边距避让，并接入全局遮罩与滚动锁定。 |
-| `placeholder` | `boolean` | `false` | `mode="fixed"` 时是否在自然文档流位置保留同尺寸占位节点。 |
+| `unmountOnClose` | `boolean` | `false` | 关闭时是否彻底卸载 DOM。默认 `false`（保活隐藏），关闭后保留 DOM 并使用 `hidden` 属性隐藏；设为 `true` 时在退场动画完成后销毁节点。 |
+| `placeholder` | `boolean` | `false` | 是否在自然文档流位置保留占位节点。 |
+| `placeholderSize` | `number \| string \| undefined` | `undefined` | 显式指定占位节点尺寸；省略时跟随组件自身总厚度。 |
 | `location` | `'top' \| 'bottom' \| 'start' \| 'end' \| 'left' \| 'right'` | `'start'` | 依附的停靠边缘。`'left'` 等价映射为 `'start'`，`'right'` 等价映射为 `'end'`。 |
 | `mode` | `'docked' \| 'flow' \| 'sticky' \| 'fixed'` | `'docked'` | 排布与定位模式。`'docked'` 为容器内绝对定位避让，`'flow'` 为常规文档流，`'sticky'` 为粘性定位，`'fixed'` 为视口固定定位。 |
 | `blockSize` | `number \| string \| undefined` | `undefined` | 垂直于停靠边缘方向的占用厚度。数值自动转为 px；省略或传 `'auto'` 时自适应内容并由内部 ResizeObserver 自动测量。 |
-| `safeAreaSize` | `number \| string` | `0` | 边缘方向的安全区留白大小。组件总厚度为 `blockSize + safeAreaSize`。 |
+| `safeArea` | `boolean \| number \| string` | `true` | 边缘安全区留白配置。`true` 时自适应当前 `mat-app-root` 或系统环境安全区；`false` 为 0；也可显式指定具体尺寸。 |
+| `safeAreaSize` | `number \| string \| undefined` | `undefined` | 兼容旧版边缘方向安全区大小。 |
 | `zIndex` | `number \| string \| undefined` | `undefined` | 显式指定 CSS 层级；省略时根据 `location` 提供预设层级。 |
 | `attach` | `string \| HTMLElement` | `'body'` | `mode="fixed"` 时的挂载目标。 |
 | `transition` | `boolean` | `true` | 是否启用默认滑入滑出过渡动效。设为 `false` 时立即切换显隐。 |
 | `closeOnBack` | `boolean` | `true` | `modal=true` 时点击背景遮罩是否请求关闭。 |
 
-组件没有公开方法。未被消费的属性、`class`、`style` 作用于外层根元素。
+组件没有公开方法。通过模板 ref 暴露 `hostElement`（根 DOM 元素）、`activeInsets`（当前生效的正交避让数据）和 `phase`（动效阶段）。未被消费的属性、`class`、`style` 作用于外层根元素。
 
 ## 事件
 
 | 名称 | 载荷 | 触发条件 |
 | --- | --- | --- |
+| `update:open` | `boolean` | 组件开闭状态请求变更时触发。 |
 | `update:modelValue` | `boolean` | 组件显示状态请求变更时触发。 |
 | `opened` | 无 | 切入展开动画播放完毕后触发。 |
 | `closed` | 无 | 退场收起动画播放完毕且清理完成后触发。 |
@@ -112,12 +180,13 @@ order: 117
 | 名称 | 说明 |
 | --- | --- |
 | 默认 Slot | 边缘栏内部呈现的具体内容。 |
+| `placeholder` | 自定义占位节点内容，提供 `{ style }` 作用域参数。 |
 
 <script setup>
 import AsideBasicExample from '../examples/aside/AsideBasicExample.vue';
 import AsideOrderExample from '../examples/aside/AsideOrderExample.vue';
 import AsideModelValueExample from '../examples/aside/AsideModelValueExample.vue';
+import AsideLocationExample from '../examples/aside/AsideLocationExample.vue';
+import AsideStickyExample from '../examples/aside/AsideStickyExample.vue';
+import AsideKeepAliveExample from '../examples/aside/AsideKeepAliveExample.vue';
 </script>
-
-
-

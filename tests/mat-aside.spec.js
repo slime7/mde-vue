@@ -1,15 +1,21 @@
-/* eslint-disable vue/one-component-per-file -- 测试内组件只用于读取布局上下文。 */
+/* eslint-disable class-methods-use-this */
 import { mount } from '@vue/test-utils';
 import { h, nextTick } from 'vue';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  afterEach, beforeEach, describe, expect, it, vi,
+} from 'vitest';
 import MatAside from '../src/components/mat-aside/MatAside.vue';
 import MatLayout from '../src/components/mat-layout/MatLayout.vue';
 import { useLayout } from '../src/components/mat-layout/layout-context';
 import { dialogStack } from '../src/components/dialog-stack';
 import MatAppRoot from '../src/components/mat-app-root/MatAppRoot.vue';
 
-function rect({ bottom, height, left = 0, right, top = 0, width }) {
-  return { bottom, height, left, right, top, width, x: left, y: top, toJSON() {} };
+function rect({
+  bottom, height, left = 0, right, top = 0, width,
+}) {
+  return {
+    bottom, height, left, right, top, width, x: left, y: top, toJSON() {},
+  };
 }
 
 async function settle() {
@@ -19,11 +25,22 @@ async function settle() {
 
 describe('MatAside 边缘组件', () => {
   beforeEach(() => {
-    vi.stubGlobal('requestAnimationFrame', (cb) => { cb(); return 1; });
+    vi.stubGlobal('requestAnimationFrame', (cb) => {
+      cb();
+      return 1;
+    });
     vi.stubGlobal('cancelAnimationFrame', vi.fn());
-    vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect() {} });
+    vi.stubGlobal('ResizeObserver', class {
+      observe() {}
+
+      unobserve() {}
+
+      disconnect() {}
+    });
   });
-  afterEach(() => { vi.restoreAllMocks(); });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   it('默认渲染 aside 标签且默认 location 为 left，支持 as 属性定制根节点', () => {
     const defaultWrapper = mount(MatAside, { props: { blockSize: 64 } });
@@ -73,21 +90,23 @@ describe('MatAside 边缘组件', () => {
     expect(wrapper.classes()).toContain('mat-aside--bordered');
   });
 
-  it('modelValue 控制打开与关闭，并发出对应事件', async () => {
+  it('open 与 modelValue 控制打开与关闭，并发出对应事件', async () => {
     vi.useFakeTimers();
     const wrapper = mount(MatAside, {
-      props: { blockSize: 64, modelValue: true },
+      props: { blockSize: 64, open: true },
     });
 
     expect(wrapper.classes()).toContain('mat-aside--open');
 
-    await wrapper.setProps({ modelValue: false });
+    await wrapper.setProps({ open: false });
     await settle();
     await vi.advanceTimersByTimeAsync(200);
     await settle();
     expect(wrapper.emitted('closed')).toBeTruthy();
+    // 默认保活：节点依然存在且带有 hidden
+    expect(wrapper.element.hidden).toBe(true);
 
-    await wrapper.setProps({ modelValue: true });
+    await wrapper.setProps({ open: true });
     await settle();
     await vi.advanceTimersByTimeAsync(200);
     await settle();
@@ -191,13 +210,14 @@ describe('MatAside 边缘组件', () => {
         return () => h('div', 'content');
       },
     };
-    let showModal = true;
     const Host = {
       props: ['open'],
       setup(props) {
         return () => h(MatLayout, null, {
           default: () => [
-            h(MatAside, { modal: true, transition: false, blockSize: 200, modelValue: props.open }),
+            h(MatAside, {
+              modal: true, transition: false, blockSize: 200, modelValue: props.open,
+            }),
             h(Reader),
           ],
         });
@@ -247,5 +267,104 @@ describe('MatAside 边缘组件', () => {
     await wrapper.setProps({ modelValue: false });
     await settle();
     expect(wrapper.emitted('closed')).toBeTruthy();
+    wrapper.unmount();
+  });
+
+  it('app=true 时在 MatAppRoot 下自动表现为 docked，在普通容器下自动表现为 fixed 挂载到 body', async () => {
+    // AppRoot 下
+    const appRootWrapper = mount(MatAppRoot, {
+      attachTo: document.body,
+      props: { fillViewport: false },
+      slots: {
+        default: () => [
+          h(MatAside, { app: true, location: 'top', blockSize: 64 }),
+        ],
+      },
+    });
+    await settle();
+    const dockedAside = appRootWrapper.findComponent(MatAside);
+    expect(dockedAside.classes()).toContain('mat-aside--mode-docked');
+    expect(appRootWrapper.element.contains(dockedAside.element)).toBe(true);
+    appRootWrapper.unmount();
+
+    // 普通容器下
+    const standaloneWrapper = mount(MatAside, {
+      attachTo: document.body,
+      props: { app: true, location: 'top', blockSize: 64 },
+    });
+    await settle();
+    const fixedAside = document.body.querySelector('.mat-aside--mode-fixed');
+    expect(fixedAside).not.toBeNull();
+    expect(fixedAside.classList.contains('mat-aside--app')).toBe(true);
+    standaloneWrapper.unmount();
+  });
+
+  it('unmountOnClose: false 保留 DOM 并标记 hidden，unmountOnClose: true 销毁 DOM 节点', async () => {
+    vi.useFakeTimers();
+    // unmountOnClose: false (默认)
+    const keepWrapper = mount(MatAside, {
+      props: { blockSize: 64, open: true, unmountOnClose: false },
+    });
+    await keepWrapper.setProps({ open: false });
+    await settle();
+    await vi.advanceTimersByTimeAsync(200);
+    await settle();
+    expect(keepWrapper.element.hidden).toBe(true);
+    keepWrapper.unmount();
+
+    // unmountOnClose: true
+    const unmountWrapper = mount(MatAside, {
+      props: { blockSize: 64, open: true, unmountOnClose: true },
+    });
+    await unmountWrapper.setProps({ open: false });
+    await settle();
+    await vi.advanceTimersByTimeAsync(200);
+    await settle();
+    expect(unmountWrapper.find('.mat-aside').exists()).toBe(false);
+    unmountWrapper.unmount();
+    vi.useRealTimers();
+  });
+
+  it('支持在任何模式下渲染 placeholder，且支持自定义 placeholderSize 与插槽', () => {
+    const wrapper = mount(MatAside, {
+      props: {
+        location: 'top',
+        mode: 'sticky',
+        placeholder: true,
+        placeholderSize: 48,
+        blockSize: 64,
+      },
+    });
+    const placeholder = wrapper.find('.mat-aside__placeholder');
+    expect(placeholder.exists()).toBe(true);
+    expect(placeholder.element.style.blockSize).toBe('48px');
+    wrapper.unmount();
+
+    const slotWrapper = mount(MatAside, {
+      props: {
+        mode: 'sticky',
+        placeholder: true,
+        blockSize: 64,
+      },
+      slots: {
+        placeholder: () => h('div', { class: 'custom-ph' }, 'custom placeholder'),
+      },
+    });
+    expect(slotWrapper.find('.custom-ph').text()).toBe('custom placeholder');
+    slotWrapper.unmount();
+  });
+
+  it('通过 defineExpose 暴露 hostElement、activeInsets 与 phase', async () => {
+    const wrapper = mount(MatAside, {
+      props: { blockSize: 64, open: true },
+    });
+    await settle();
+    const { vm } = wrapper;
+    expect(vm.hostElement).toBeTruthy();
+    expect(vm.hostElement.tagName).toBe('ASIDE');
+    expect(vm.activeInsets).toBeDefined();
+    expect(typeof vm.activeInsets.top).toBe('number');
+    expect(vm.phase).toBe('open');
+    wrapper.unmount();
   });
 });

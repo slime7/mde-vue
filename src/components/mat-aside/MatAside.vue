@@ -28,7 +28,6 @@ defineOptions({
   inheritAttrs: false,
 });
 
-const ASIDE_LOCATIONS = ['top', 'bottom', 'left', 'right'];
 const ASIDE_ANIMATION_DURATION = 200;
 
 function parsePixelNumber(val) {
@@ -70,6 +69,18 @@ const props = defineProps({
     },
   },
   /**
+   * 是否接入应用级外壳布局。
+   * 在 MatAppRoot 内且未显式指定 attach 时自动表现为 docked 并登记；
+   * 在外部或有显式 attach 时自动表现为 fixed 并 Teleport 至目标。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  app: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * 排布与定位模式。
    * docked 为容器内绝对定位避让；flow 为常规文档流；sticky 为粘性定位；fixed 为视口固定定位。
    *
@@ -99,18 +110,53 @@ const props = defineProps({
     }),
   },
   /**
-   * 边缘方向的安全区留白大小。
+   * 边缘方向的安全区留白配置。
+   * true 时自适应当前 MatAppRoot 或环境安全区；false 时为 0；也可显式指定尺寸。
    *
-   * @type {number | string}
-   * @default 0
+   * @type {boolean | number | string}
+   * @default true
    */
-  safeAreaSize: {
-    type: [Number, String],
-    default: 0,
-    validator: (value) => isValidCssLength(value, {
+  safeArea: {
+    type: [Boolean, Number, String],
+    default: true,
+    validator: (value) => typeof value === 'boolean' || isValidCssLength(value, {
       property: 'block-size',
       allowUndefined: false,
     }),
+  },
+  /**
+   * 边缘方向的安全区留白大小。
+   *
+   * @type {number | string | undefined}
+   * @default undefined
+   */
+  safeAreaSize: {
+    type: [Number, String],
+    default: undefined,
+    validator: (value) => value === undefined || isValidCssLength(value, {
+      property: 'block-size',
+      allowUndefined: false,
+    }),
+  },
+  /**
+   * 是否在文档流中渲染占位节点。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  placeholder: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * 显式指定占位节点尺寸。省略时跟随 Aside 自身总厚度。
+   *
+   * @type {number | string | undefined}
+   * @default undefined
+   */
+  placeholderSize: {
+    type: [Number, String],
+    default: undefined,
   },
   /**
    * 是否在面向内容的一侧渲染 1px 细边框。
@@ -133,14 +179,35 @@ const props = defineProps({
     default: undefined,
   },
   /**
+   * 受控显示/隐藏状态，支持 v-model:open。
+   *
+   * @type {boolean | undefined}
+   * @default undefined
+   */
+  open: {
+    type: Boolean,
+    default: undefined,
+  },
+  /**
    * 受控显示/隐藏状态，支持 v-model。
    *
-   * @type {boolean}
-   * @default true
+   * @type {boolean | undefined}
+   * @default undefined
    */
   modelValue: {
     type: Boolean,
-    default: true,
+    default: undefined,
+  },
+  /**
+   * 关闭时是否彻底从 DOM 树卸载节点。
+   * 默认 false（保活隐藏），关闭后保留 DOM 并使用 hidden 属性隐藏；设为 true 时退场后销毁节点。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  unmountOnClose: {
+    type: Boolean,
+    default: false,
   },
   /**
    * 是否作为模态浮层呈现。开启时不挤占布局正文空间并接入全局遮罩。
@@ -149,16 +216,6 @@ const props = defineProps({
    * @default false
    */
   modal: {
-    type: Boolean,
-    default: false,
-  },
-  /**
-   * mode="fixed" 时是否在自然文档流位置生成占位。
-   *
-   * @type {boolean}
-   * @default false
-   */
-  placeholder: {
     type: Boolean,
     default: false,
   },
@@ -197,6 +254,7 @@ const props = defineProps({
 const propsWithDefaults = useMatProps('aside', props);
 
 const emit = defineEmits({
+  'update:open': (payload) => typeof payload === 'boolean',
   'update:modelValue': (payload) => typeof payload === 'boolean',
   opened: () => true,
   closed: () => true,
@@ -206,8 +264,19 @@ const attrs = useAttrs();
 const instance = getCurrentInstance();
 const hostElement = ref(null);
 const edgeRegistration = shallowRef(null);
-const rendered = ref(propsWithDefaults.modelValue);
-const phase = ref(propsWithDefaults.modelValue ? 'open' : 'closed');
+
+const isControlledOpen = computed(() => {
+  if (propsWithDefaults.open !== undefined) {
+    return Boolean(propsWithDefaults.open);
+  }
+  if (propsWithDefaults.modelValue !== undefined) {
+    return Boolean(propsWithDefaults.modelValue);
+  }
+  return true;
+});
+
+const rendered = ref(propsWithDefaults.unmountOnClose ? isControlledOpen.value : true);
+const phase = ref(isControlledOpen.value ? 'open' : 'closed');
 const motion = createMotionController();
 const closeMotion = createCloseMotion({ motion });
 let mounted = false;
@@ -217,7 +286,19 @@ const layoutContext = inject(MAT_LAYOUT_KEY, null);
 const appContext = inject(MAT_APP_ROOT_KEY, null);
 
 const rawVNodeProps = instance?.vnode.props ?? {};
-const hasExplicitAttach = computed(() => Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach'));
+const hasExplicitAttach = computed(() => (
+  Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach') && rawVNodeProps.attach !== undefined
+));
+const usesAppRoot = computed(() => (
+  propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach.value
+));
+
+const effectiveMode = computed(() => {
+  if (propsWithDefaults.app) {
+    return usesAppRoot.value ? 'docked' : 'fixed';
+  }
+  return propsWithDefaults.mode;
+});
 
 const normalizedLocation = computed(() => {
   const loc = propsWithDefaults.location;
@@ -254,11 +335,36 @@ const normalizedBlockSize = computed(() => {
 });
 
 const normalizedSafeAreaSize = computed(() => {
-  const css = toCssLength(propsWithDefaults.safeAreaSize, {
-    property: 'block-size',
-    fallback: '0px',
-  });
-  return css === '0' ? '0px' : css;
+  if (propsWithDefaults.safeArea === false) {
+    return '0px';
+  }
+  if (propsWithDefaults.safeAreaSize !== undefined) {
+    const css = toCssLength(propsWithDefaults.safeAreaSize, {
+      property: 'block-size',
+      fallback: '0px',
+    });
+    return css === '0' ? '0px' : css;
+  }
+  if (typeof propsWithDefaults.safeArea === 'number'
+    || (typeof propsWithDefaults.safeArea === 'string' && propsWithDefaults.safeArea !== 'auto')) {
+    const css = toCssLength(propsWithDefaults.safeArea, {
+      property: 'block-size',
+      fallback: '0px',
+    });
+    return css === '0' ? '0px' : css;
+  }
+
+  const loc = normalizedLocation.value;
+  if (loc === 'top') {
+    return 'var(--mat-app-root-safe-area-top, env(safe-area-inset-top, 0px))';
+  }
+  if (loc === 'bottom') {
+    return 'var(--mat-app-root-safe-area-bottom, env(safe-area-inset-bottom, 0px))';
+  }
+  if (loc === 'start') {
+    return 'var(--mat-app-root-safe-area-start, env(safe-area-inset-left, 0px))';
+  }
+  return 'var(--mat-app-root-safe-area-end, env(safe-area-inset-right, 0px))';
 });
 
 const totalBlockSize = computed(() => {
@@ -266,7 +372,10 @@ const totalBlockSize = computed(() => {
     return 'auto';
   }
   const blockNum = parsePixelNumber(propsWithDefaults.blockSize);
-  const safeNum = parsePixelNumber(propsWithDefaults.safeAreaSize);
+  const safeProp = propsWithDefaults.safeAreaSize !== undefined
+    ? propsWithDefaults.safeAreaSize
+    : propsWithDefaults.safeArea;
+  const safeNum = parsePixelNumber(safeProp);
   if (blockNum !== null && safeNum !== null) {
     return `${blockNum + safeNum}px`;
   }
@@ -299,7 +408,7 @@ const asideClass = computed(() => [
   `mat-aside--${normalizedLocation.value}`,
   normalizedLocation.value === 'start' ? 'mat-aside--left' : null,
   normalizedLocation.value === 'end' ? 'mat-aside--right' : null,
-  `mat-aside--mode-${propsWithDefaults.mode}`,
+  `mat-aside--mode-${effectiveMode.value}`,
   `mat-aside--${phase.value}`,
   {
     'mat-aside--bordered': propsWithDefaults.bordered,
@@ -307,6 +416,7 @@ const asideClass = computed(() => [
     'mat-aside--modal': isModal.value,
     'mat-aside--top-scrim': isTop.value,
     'mat-aside--no-transition': !propsWithDefaults.transition,
+    'mat-aside--app': propsWithDefaults.app,
   },
 ]);
 
@@ -328,7 +438,7 @@ const asideStyle = computed(() => [
 ]);
 
 const attachTarget = computed(() => {
-  if (propsWithDefaults.mode !== 'fixed') {
+  if (effectiveMode.value !== 'fixed') {
     return null;
   }
 
@@ -350,9 +460,17 @@ const attachTarget = computed(() => {
 
 const placeholderStyle = computed(() => {
   const isVertical = normalizedLocation.value === 'start' || normalizedLocation.value === 'end';
-  const size = isAutoSize.value
-    ? (isVertical ? `${measuredSize.value.inlineSize}px` : `${measuredSize.value.blockSize}px`)
-    : totalBlockSize.value;
+  let size;
+  if (propsWithDefaults.placeholderSize !== undefined) {
+    size = toCssLength(propsWithDefaults.placeholderSize, {
+      property: isVertical ? 'inline-size' : 'block-size',
+      fallback: '0px',
+    });
+  } else if (isAutoSize.value) {
+    size = isVertical ? `${measuredSize.value.inlineSize}px` : `${measuredSize.value.blockSize}px`;
+  } else {
+    size = totalBlockSize.value;
+  }
 
   if (isVertical) {
     return {
@@ -397,17 +515,22 @@ function unregisterModal() {
   }
 }
 
+function requestClose() {
+  emit('update:open', false);
+  emit('update:modelValue', false);
+}
+
 function handleScrimClick() {
   if (!isModal.value || !propsWithDefaults.closeOnBack) {
     return;
   }
-  emit('update:modelValue', false);
+  requestClose();
 }
 
 function handleGlobalKeyDown(event) {
   if (isModal.value && isTop.value && event.key === 'Escape') {
     event.preventDefault();
-    emit('update:modelValue', false);
+    requestClose();
   }
 }
 
@@ -424,7 +547,7 @@ function syncMeasurement() {
 }
 
 function syncRegistration() {
-  if (!mounted || !hostElement.value || !rendered.value) {
+  if (!mounted || !hostElement.value || !rendered.value || !isControlledOpen.value || phase.value === 'closed') {
     edgeRegistration.value?.unregister();
     edgeRegistration.value = null;
     return;
@@ -433,13 +556,18 @@ function syncRegistration() {
   edgeRegistration.value?.unregister();
   edgeRegistration.value = null;
 
-  if (propsWithDefaults.mode === 'flow'
-    || propsWithDefaults.mode === 'sticky'
+  if (effectiveMode.value === 'flow'
+    || effectiveMode.value === 'sticky'
     || propsWithDefaults.modal) {
     return;
   }
 
-  if (layoutContext) {
+  if (propsWithDefaults.app && appContext) {
+    edgeRegistration.value = appContext.publicContext.registerEdge({
+      edge: normalizedLocation.value,
+      element: hostElement.value,
+    });
+  } else if (layoutContext) {
     edgeRegistration.value = layoutContext.publicContext.registerEdge({
       edge: normalizedLocation.value,
       element: hostElement.value,
@@ -469,11 +597,11 @@ function openAside() {
   nextTick().then(() => {
     syncRegistration();
     syncModal();
-    if (!mounted || !rendered.value || !propsWithDefaults.modelValue) {
+    if (!mounted || !rendered.value || !isControlledOpen.value) {
       return;
     }
     motion.wait(hostElement.value, ASIDE_ANIMATION_DURATION, () => {
-      if (rendered.value && propsWithDefaults.modelValue) {
+      if (rendered.value && isControlledOpen.value) {
         phase.value = 'open';
         emit('opened');
       }
@@ -482,14 +610,16 @@ function openAside() {
 }
 
 function closeAside() {
-  if (!rendered.value) {
+  if (!rendered.value || phase.value === 'closed') {
     phase.value = 'closed';
     return;
   }
 
   if (!propsWithDefaults.transition) {
     phase.value = 'closed';
-    rendered.value = false;
+    if (propsWithDefaults.unmountOnClose) {
+      rendered.value = false;
+    }
     edgeRegistration.value?.unregister();
     edgeRegistration.value = null;
     unregisterModal();
@@ -501,14 +631,16 @@ function closeAside() {
     canStart: () => rendered.value && phase.value !== 'closing',
     duration: ASIDE_ANIMATION_DURATION,
     getElement: () => hostElement.value,
-    isActive: () => mounted && !propsWithDefaults.modelValue && rendered.value,
+    isActive: () => mounted && !isControlledOpen.value && rendered.value,
     onStart: () => {
       phase.value = 'closing';
       edgeRegistration.value?.unregister();
       edgeRegistration.value = null;
     },
     onFinish: () => {
-      rendered.value = false;
+      if (propsWithDefaults.unmountOnClose) {
+        rendered.value = false;
+      }
       phase.value = 'closed';
       unregisterModal();
       emit('closed');
@@ -516,7 +648,7 @@ function closeAside() {
   });
 }
 
-watch(() => propsWithDefaults.modelValue, (val) => {
+watch(isControlledOpen, (val) => {
   if (val) {
     openAside();
   } else {
@@ -530,7 +662,8 @@ watch(normalizedLocation, () => {
 });
 
 watch([
-  () => propsWithDefaults.mode,
+  effectiveMode,
+  () => propsWithDefaults.app,
   () => propsWithDefaults.modal,
 ], () => {
   syncRegistration();
@@ -567,17 +700,84 @@ onBeforeUnmount(() => {
   edgeRegistration.value = null;
   unregisterModal();
 });
+
+defineExpose({
+  hostElement,
+  activeInsets,
+  phase,
+});
 </script>
 
 <template>
-  <template v-if="propsWithDefaults.mode === 'fixed'">
-    <span
-      v-if="propsWithDefaults.placeholder && rendered"
-      class="mat-aside__placeholder"
-      aria-hidden="true"
+  <template v-if="propsWithDefaults.placeholder && (rendered || !propsWithDefaults.unmountOnClose)">
+    <slot
+      name="placeholder"
       :style="placeholderStyle"
-    />
+    >
+      <span
+        class="mat-aside__placeholder"
+        aria-hidden="true"
+        :style="placeholderStyle"
+      />
+    </slot>
 
+    <Teleport
+      v-if="effectiveMode === 'fixed'"
+      :to="attachTarget ?? 'body'"
+      :disabled="!attachTarget"
+    >
+      <button
+        v-if="isModal && rendered"
+        class="mat-aside__scrim"
+        :class="{
+          'mat-aside__scrim--top': isTop,
+          'mat-aside__scrim--closing': phase === 'closing',
+        }"
+        type="button"
+        tabindex="-1"
+        aria-hidden="true"
+        @click="handleScrimClick"
+      />
+
+      <component
+        :is="propsWithDefaults.as"
+        v-if="rendered"
+        ref="hostElement"
+        v-bind="$attrs"
+        :hidden="phase === 'closed' && !propsWithDefaults.unmountOnClose ? true : undefined"
+        :class="asideClass"
+        :style="asideStyle"
+      >
+        <slot />
+      </component>
+    </Teleport>
+
+    <component
+      :is="propsWithDefaults.as"
+      v-else-if="rendered"
+      ref="hostElement"
+      v-bind="$attrs"
+      :hidden="phase === 'closed' && !propsWithDefaults.unmountOnClose ? true : undefined"
+      :class="asideClass"
+      :style="asideStyle"
+    >
+      <button
+        v-if="isModal"
+        class="mat-aside__scrim"
+        :class="{
+          'mat-aside__scrim--top': isTop,
+          'mat-aside__scrim--closing': phase === 'closing',
+        }"
+        type="button"
+        tabindex="-1"
+        aria-hidden="true"
+        @click="handleScrimClick"
+      />
+      <slot />
+    </component>
+  </template>
+
+  <template v-else-if="effectiveMode === 'fixed'">
     <Teleport
       :to="attachTarget ?? 'body'"
       :disabled="!attachTarget"
@@ -600,6 +800,7 @@ onBeforeUnmount(() => {
         v-if="rendered"
         ref="hostElement"
         v-bind="$attrs"
+        :hidden="phase === 'closed' && !propsWithDefaults.unmountOnClose ? true : undefined"
         :class="asideClass"
         :style="asideStyle"
       >
@@ -613,6 +814,7 @@ onBeforeUnmount(() => {
     v-else-if="rendered"
     ref="hostElement"
     v-bind="$attrs"
+    :hidden="phase === 'closed' && !propsWithDefaults.unmountOnClose ? true : undefined"
     :class="asideClass"
     :style="asideStyle"
   >
@@ -637,8 +839,11 @@ onBeforeUnmount(() => {
   .mat-aside {
     box-sizing: border-box;
     isolation: isolate;
-    transition: inset-block var(--mat-sys-motion-spring-default-spatial, .3s ease),
-      inset-inline var(--mat-sys-motion-spring-default-spatial, .3s ease);
+    transition: inset-block var(--mat-sys-motion-spring-default-spatial, .3s ease), inset-inline var(--mat-sys-motion-spring-default-spatial, .3s ease);
+  }
+
+  .mat-aside[hidden] {
+    display: none !important;
   }
 
   .mat-aside--no-transition {
@@ -683,6 +888,7 @@ onBeforeUnmount(() => {
     from {
       opacity: 0;
     }
+
     to {
       opacity: 1;
     }
@@ -692,6 +898,7 @@ onBeforeUnmount(() => {
     from {
       opacity: 1;
     }
+
     to {
       opacity: 0;
     }
@@ -726,9 +933,8 @@ onBeforeUnmount(() => {
 
   /* Top */
   .mat-aside--top.mat-aside--mode-docked {
-    inset-block-start: var(--mat-aside-insets-top, 0px);
-    inset-inline-start: var(--mat-aside-insets-left, 0px);
-    inset-inline-end: var(--mat-aside-insets-right, 0px);
+    inset-block-start: var(--mat-aside-insets-top, 0);
+    inset-inline: var(--mat-aside-insets-left, 0) var(--mat-aside-insets-right, 0);
   }
 
   .mat-aside--top.mat-aside--mode-sticky,
@@ -740,7 +946,7 @@ onBeforeUnmount(() => {
 
   .mat-aside--top {
     block-size: var(--mat-aside-total-block-size);
-    padding-block-start: var(--mat-aside-safe-area-size, 0px);
+    padding-block-start: var(--mat-aside-safe-area-size, 0);
   }
 
   .mat-aside--top.mat-aside--auto-size {
@@ -765,9 +971,8 @@ onBeforeUnmount(() => {
 
   /* Bottom */
   .mat-aside--bottom.mat-aside--mode-docked {
-    inset-block-end: var(--mat-aside-insets-bottom, 0px);
-    inset-inline-start: var(--mat-aside-insets-left, 0px);
-    inset-inline-end: var(--mat-aside-insets-right, 0px);
+    inset-block-end: var(--mat-aside-insets-bottom, 0);
+    inset-inline: var(--mat-aside-insets-left, 0) var(--mat-aside-insets-right, 0);
   }
 
   .mat-aside--bottom.mat-aside--mode-sticky,
@@ -779,7 +984,7 @@ onBeforeUnmount(() => {
 
   .mat-aside--bottom {
     block-size: var(--mat-aside-total-block-size);
-    padding-block-end: var(--mat-aside-safe-area-size, 0px);
+    padding-block-end: var(--mat-aside-safe-area-size, 0);
   }
 
   .mat-aside--bottom.mat-aside--auto-size {
@@ -805,8 +1010,8 @@ onBeforeUnmount(() => {
   /* Start / Left */
   .mat-aside--start.mat-aside--mode-docked,
   .mat-aside--left.mat-aside--mode-docked {
-    inset-inline-start: var(--mat-aside-insets-left, 0px);
-    inset-block: var(--mat-aside-insets-top, 0px) var(--mat-aside-insets-bottom, 0px);
+    inset-inline-start: var(--mat-aside-insets-left, 0);
+    inset-block: var(--mat-aside-insets-top, 0) var(--mat-aside-insets-bottom, 0);
   }
 
   .mat-aside--start.mat-aside--mode-sticky,
@@ -822,7 +1027,7 @@ onBeforeUnmount(() => {
   .mat-aside--start,
   .mat-aside--left {
     inline-size: var(--mat-aside-total-block-size);
-    padding-inline-start: var(--mat-aside-safe-area-size, 0px);
+    padding-inline-start: var(--mat-aside-safe-area-size, 0);
   }
 
   .mat-aside--start.mat-aside--auto-size,
@@ -853,8 +1058,8 @@ onBeforeUnmount(() => {
   /* End / Right */
   .mat-aside--end.mat-aside--mode-docked,
   .mat-aside--right.mat-aside--mode-docked {
-    inset-inline-end: var(--mat-aside-insets-right, 0px);
-    inset-block: var(--mat-aside-insets-top, 0px) var(--mat-aside-insets-bottom, 0px);
+    inset-inline-end: var(--mat-aside-insets-right, 0);
+    inset-block: var(--mat-aside-insets-top, 0) var(--mat-aside-insets-bottom, 0);
   }
 
   .mat-aside--end.mat-aside--mode-sticky,
@@ -870,7 +1075,7 @@ onBeforeUnmount(() => {
   .mat-aside--end,
   .mat-aside--right {
     inline-size: var(--mat-aside-total-block-size);
-    padding-inline-end: var(--mat-aside-safe-area-size, 0px);
+    padding-inline-end: var(--mat-aside-safe-area-size, 0);
   }
 
   .mat-aside--end.mat-aside--auto-size,
@@ -906,6 +1111,7 @@ onBeforeUnmount(() => {
     from {
       translate: 0 -100%;
     }
+
     to {
       translate: 0 0;
     }
@@ -915,6 +1121,7 @@ onBeforeUnmount(() => {
     from {
       translate: 0 0;
     }
+
     to {
       translate: 0 -100%;
     }
@@ -924,6 +1131,7 @@ onBeforeUnmount(() => {
     from {
       translate: 0 100%;
     }
+
     to {
       translate: 0 0;
     }
@@ -933,6 +1141,7 @@ onBeforeUnmount(() => {
     from {
       translate: 0 0;
     }
+
     to {
       translate: 0 100%;
     }
@@ -942,6 +1151,7 @@ onBeforeUnmount(() => {
     from {
       translate: -100% 0;
     }
+
     to {
       translate: 0 0;
     }
@@ -951,6 +1161,7 @@ onBeforeUnmount(() => {
     from {
       translate: 0 0;
     }
+
     to {
       translate: -100% 0;
     }
@@ -960,6 +1171,7 @@ onBeforeUnmount(() => {
     from {
       translate: 100% 0;
     }
+
     to {
       translate: 0 0;
     }
@@ -969,6 +1181,7 @@ onBeforeUnmount(() => {
     from {
       translate: 0 0;
     }
+
     to {
       translate: 100% 0;
     }
