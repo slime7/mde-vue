@@ -1,6 +1,7 @@
 ---
 layout: home
 title: mde-vue
+sidebar: false
 llms: false
 
 hero:

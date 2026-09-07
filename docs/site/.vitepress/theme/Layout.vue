@@ -244,6 +244,8 @@ function normalizeLink(link) {
 }
 
 const pageTitle = computed(() => page.value.title || frontmatter.value.title || '');
+const isHome = computed(() => frontmatter.value?.layout === 'home');
+const hasSidebar = computed(() => !isHome.value && frontmatter.value?.sidebar !== false);
 </script>
 
 <template>
@@ -258,7 +260,7 @@ const pageTitle = computed(() => page.value.title || frontmatter.value.title || 
       class="mde-docs-app-bar"
       scroll-target=".mde-docs-scroll-area .mat-scroll-area__viewport"
     >
-      <template #leading>
+      <template v-if="hasSidebar" #leading>
         <mat-btn
           variant="standard"
           icon="menu"
@@ -337,6 +339,7 @@ const pageTitle = computed(() => page.value.title || frontmatter.value.title || 
     </ClientOnly>
 
     <mat-navigation-drawer
+      v-if="hasSidebar"
       v-model:expanded="drawerExpanded"
       :model-value="activeNavValue"
       app
