@@ -661,7 +661,12 @@ defineExpose({
     transition: gap var(--mat-sys-motion-spring-default-spatial);
   }
 
+  .mat-navigation-rail__destinations > :deep(.mat-btn) {
+    align-self: var(--mat-navigation-rail-item-inline-alignment, flex-start);
+  }
+
   .mat-navigation-rail__destinations > :deep(.mat-fab) {
+    align-self: var(--mat-navigation-rail-item-inline-alignment, flex-start);
     margin-block-start: calc(var(--mat-navigation-rail-header-gap, 12px) - var(--mat-navigation-rail-item-space, 4px));
   }
 
