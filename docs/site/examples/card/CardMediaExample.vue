@@ -32,6 +32,7 @@
 
 .example-row > * {
   inline-size: 100%;
+  max-inline-size: 480px;
 }
 
 .media-placeholder {
