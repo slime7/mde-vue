@@ -139,6 +139,28 @@ order: 117
   </DocsPreview>
 </ClientOnly>
 
+### 模态浮层
+
+设置 `modal` 使 Aside 作为局部的模态浮层展现。开启时 Aside 不向 `mat-layout` 申请正文内边距避让，而是浮动覆盖在正文之上，并在其后渲染半透明背景遮罩，点击遮罩或按下 Escape 键可请求关闭。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/aside/AsideModalExample.vue#template [template]
+
+<<< @/examples/aside/AsideModalExample.vue#script [script]
+
+<<< @/examples/aside/AsideModalExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Aside 模态浮层预览" stacked>
+    <AsideModalExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -189,4 +211,5 @@ import AsideModelValueExample from '../examples/aside/AsideModelValueExample.vue
 import AsideLocationExample from '../examples/aside/AsideLocationExample.vue';
 import AsideStickyExample from '../examples/aside/AsideStickyExample.vue';
 import AsideKeepAliveExample from '../examples/aside/AsideKeepAliveExample.vue';
+import AsideModalExample from '../examples/aside/AsideModalExample.vue';
 </script>

@@ -11,6 +11,7 @@ import MatNavigationDrawer from '../src/components/mat-navigation-drawer/MatNavi
 import MatNavigationRail from '../src/components/mat-navigation-rail/MatNavigationRail.vue';
 import MatNavigationRailItem from '../src/components/mat-navigation-rail/MatNavigationRailItem.vue';
 import MatAppRoot from '../src/components/mat-app-root/MatAppRoot.vue';
+import MatLayout from '../src/components/mat-layout/MatLayout.vue';
 
 describe('MatNavigationDrawer', () => {
   let originalGetAnimations;
@@ -179,6 +180,40 @@ describe('MatNavigationDrawer', () => {
     const host = wrapper.element.querySelector('.mat-navigation-rail-host');
     expect(host).not.toBeNull();
     expect(wrapper.find('.mat-navigation-rail-host--app-root').exists()).toBe(true);
+    wrapper.unmount();
+  });
+
+  it('modal Drawer 打开时内部 Item 与按钮可正常点击交互，且不被遮罩阻挡', async () => {
+    const wrapper = mount(MatLayout, {
+      attachTo: document.body,
+      slots: {
+        default: () => [
+          h(MatNavigationDrawer, {
+            expanded: true,
+            layout: 'modal',
+            modelValue: 'home',
+          }, {
+            default: () => [
+              h(MatNavigationRailItem, { value: 'home', icon: 'home' }, () => '首页'),
+              h(MatNavigationRailItem, { value: 'explore', icon: 'explore' }, () => '探索'),
+            ],
+          }),
+          h('div', { class: 'content' }, '主内容'),
+        ],
+      },
+    });
+
+    await nextTick();
+    await nextTick();
+
+    const drawer = wrapper.findComponent(MatNavigationDrawer);
+    const items = drawer.findAllComponents(MatNavigationRailItem);
+
+    expect(drawer.find('nav').element.closest('[inert]')).toBeNull();
+
+    await items[1].trigger('click');
+    expect(drawer.emitted('update:modelValue')).toEqual([['explore']]);
+
     wrapper.unmount();
   });
 });

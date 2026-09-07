@@ -236,7 +236,9 @@ describe('MatAside 边缘组件', () => {
     const modalAside = wrapper.findComponent(MatAside);
     expect(modalAside.classes()).toContain('mat-aside--modal');
     expect(modalAside.classes()).toContain('mat-aside--modal-scoped');
-    expect(wrapper.element.querySelector('.mat-aside__scrim--docked')).not.toBeNull();
+    const scrim = wrapper.element.querySelector('.mat-aside__scrim--docked');
+    expect(scrim).not.toBeNull();
+    expect(scrim.tagName).toBe('DIV');
     expect(dialogStack.value.length).toBeGreaterThan(0);
 
     await wrapper.setProps({ open: false });
@@ -407,6 +409,36 @@ describe('MatAside 边缘组件', () => {
     expect(vm.activeInsets).toBeDefined();
     expect(typeof vm.activeInsets.top).toBe('number');
     expect(vm.phase).toBe('open');
+    wrapper.unmount();
+  });
+
+  it('modal=true 在 MatLayout 内展开时，宿主与子元素不被设为 inert，且支持遮罩与焦点拦截', async () => {
+    const wrapper = mount(MatLayout, {
+      attachTo: document.body,
+      slots: {
+        default: () => [
+          h(MatAside, {
+            modal: true,
+            transition: false,
+            blockSize: 200,
+            modelValue: true,
+          }, {
+            default: () => h('button', { id: 'aside-btn' }, '抽屉按钮'),
+          }),
+          h('div', { class: 'content' }, '主内容'),
+        ],
+      },
+    });
+
+    await settle();
+    const aside = wrapper.findComponent(MatAside);
+    expect(aside.element.closest('[inert]')).toBeNull();
+    const btn = wrapper.find('#aside-btn');
+    expect(btn.element.closest('[inert]')).toBeNull();
+
+    const scrim = wrapper.element.querySelector('.mat-aside__scrim--docked');
+    expect(scrim).not.toBeNull();
+
     wrapper.unmount();
   });
 });

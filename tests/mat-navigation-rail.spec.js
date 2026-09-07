@@ -10,6 +10,7 @@ import MatBadge from '../src/components/mat-badge/MatBadge.vue';
 import MatNavigationRail from '../src/components/mat-navigation-rail/MatNavigationRail.vue';
 import MatNavigationRailItem from '../src/components/mat-navigation-rail/MatNavigationRailItem.vue';
 import MatAppRoot from '../src/components/mat-app-root/MatAppRoot.vue';
+import MatLayout from '../src/components/mat-layout/MatLayout.vue';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -671,6 +672,36 @@ describe('MatNavigationRail', () => {
     await settleRender();
 
     expect(placeholder.attributes('style')).toContain('inline-size: 0px');
+    wrapper.unmount();
+  });
+
+  it('modal Rail 在 MatLayout 中展开时内部 Item 可正常交互，不被遮罩阻止', async () => {
+    const wrapper = mount(MatLayout, {
+      attachTo: document.body,
+      slots: {
+        default: () => [
+          h(MatNavigationRail, {
+            expanded: true,
+            layout: 'modal',
+            modelValue: 'home',
+          }, {
+            default: navigationItems,
+          }),
+          h('div', { class: 'page-content' }, '正文'),
+        ],
+      },
+    });
+
+    await settleRender();
+
+    const rail = wrapper.findComponent(MatNavigationRail);
+    const items = rail.findAllComponents(MatNavigationRailItem);
+
+    expect(rail.find('nav').element.closest('[inert]')).toBeNull();
+
+    await items[1].trigger('click');
+    expect(rail.emitted('update:modelValue')).toEqual([['settings']]);
+
     wrapper.unmount();
   });
 });

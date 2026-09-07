@@ -20,6 +20,7 @@ import {
 } from '../dialog-stack';
 import createCloseMotion from '../close-motion';
 import createMotionController from '../motion-controller';
+import useFocusTrap from '../use-focus-trap';
 import { useMatProps } from '../use-mat-props';
 import { isValidCssLength, toCssLength } from '../value-utils';
 
@@ -290,6 +291,14 @@ const motion = createMotionController();
 const closeMotion = createCloseMotion({ motion });
 let mounted = false;
 let resizeObserver;
+let previousFocus = null;
+
+function restoreFocus() {
+  if (previousFocus?.isConnected) {
+    previousFocus.focus({ preventScroll: true });
+  }
+  previousFocus = null;
+}
 
 const layoutContext = inject(MAT_LAYOUT_KEY, null);
 const appContext = inject(MAT_APP_ROOT_KEY, null);
@@ -331,6 +340,10 @@ const measuredSize = ref({ blockSize: 0, inlineSize: 0 });
 
 const isModal = computed(() => Boolean(propsWithDefaults.modal));
 const isTop = computed(() => isModal.value && dialogStack.value.at(-1) === hostElement.value);
+
+useFocusTrap(hostElement, computed(() => (
+  isModal.value && rendered.value && isTop.value
+)));
 
 const normalizedBlockSize = computed(() => {
   if (isAutoSize.value) {
@@ -513,14 +526,18 @@ const placeholderStyle = computed(() => {
 
 function buildScopeOptions() {
   if (appContext && !hasExplicitAttach.value) {
+    const content = appContext.contentElement?.value ?? null;
+    const isInsideContent = hostElement.value && content?.contains(hostElement.value);
     return {
-      inertElement: appContext.contentElement?.value ?? null,
-      scrollElement: appContext.documentMode?.value ? null : (appContext.contentElement?.value ?? null),
+      inertElement: isInsideContent ? null : content,
+      scrollElement: appContext.documentMode?.value ? null : content,
     };
   }
   if (layoutContext) {
+    const content = layoutContext.contentElement?.value ?? null;
+    const isInsideContent = hostElement.value && content?.contains(hostElement.value);
     return {
-      inertElement: layoutContext.contentElement?.value ?? null,
+      inertElement: isInsideContent ? null : content,
       scrollElement: layoutContext.rootElement?.value ?? null,
     };
   }
@@ -630,6 +647,9 @@ function syncRegistration() {
 function openAside() {
   motion.cancel();
   rendered.value = true;
+  if (isModal.value && typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
+    previousFocus = document.activeElement;
+  }
   if (!propsWithDefaults.transition) {
     phase.value = 'open';
     nextTick().then(() => {
@@ -670,6 +690,7 @@ function closeAside() {
     edgeRegistration.value?.unregister();
     edgeRegistration.value = null;
     unregisterModal();
+    restoreFocus();
     emit('closed');
     return;
   }
@@ -690,6 +711,7 @@ function closeAside() {
       }
       phase.value = 'closed';
       unregisterModal();
+      restoreFocus();
       emit('closed');
     },
   });
@@ -773,7 +795,7 @@ defineExpose({
       :to="targetContainer"
       :disabled="!targetContainer"
     >
-      <button
+      <div
         v-if="isModal && rendered && phase !== 'closed'"
         class="mat-aside__scrim"
         :class="[
@@ -783,8 +805,6 @@ defineExpose({
             'mat-aside__scrim--closing': phase === 'closing',
           },
         ]"
-        type="button"
-        tabindex="-1"
         aria-hidden="true"
         @click="handleScrimClick"
       />
@@ -816,7 +836,7 @@ defineExpose({
         :to="targetContainer"
         :disabled="!targetContainer"
       >
-        <button
+        <div
           class="mat-aside__scrim"
           :class="[
             propsWithDefaults.scrimClass,
@@ -826,8 +846,6 @@ defineExpose({
               'mat-aside__scrim--docked': isScopedToContainer,
             },
           ]"
-          type="button"
-          tabindex="-1"
           aria-hidden="true"
           @click="handleScrimClick"
         />
@@ -842,7 +860,7 @@ defineExpose({
     :to="targetContainer"
     :disabled="!targetContainer"
   >
-    <button
+    <div
       v-if="isModal && rendered && phase !== 'closed'"
       class="mat-aside__scrim"
       :class="[
@@ -852,8 +870,6 @@ defineExpose({
           'mat-aside__scrim--closing': phase === 'closing',
         },
       ]"
-      type="button"
-      tabindex="-1"
       aria-hidden="true"
       @click="handleScrimClick"
     />
@@ -885,7 +901,7 @@ defineExpose({
       :to="targetContainer"
       :disabled="!targetContainer"
     >
-      <button
+      <div
         class="mat-aside__scrim"
         :class="[
           propsWithDefaults.scrimClass,
@@ -895,8 +911,6 @@ defineExpose({
             'mat-aside__scrim--docked': isScopedToContainer,
           },
         ]"
-        type="button"
-        tabindex="-1"
         aria-hidden="true"
         @click="handleScrimClick"
       />
@@ -941,6 +955,7 @@ defineExpose({
     block-size: 100%;
     padding: 0;
     margin: 0;
+    cursor: default;
     background: transparent;
     border: 0;
     pointer-events: auto;
@@ -1009,7 +1024,8 @@ defineExpose({
     z-index: calc(var(--mat-sys-z-index-dialog) + 1);
   }
 
-  .mat-aside--mode-docked.mat-aside--modal {
+  .mat-aside--modal-scoped,
+  .mat-aside--mode-docked.mat-aside--modal-scoped {
     position: absolute;
   }
 
