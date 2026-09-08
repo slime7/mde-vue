@@ -334,8 +334,12 @@ function readExposedMethods(source) {
 
       const comment = [`/**${declaration[1]}*/`];
       const parameters = [...declaration[1].matchAll(
-        /@param\s+\{([^}]+)\}\s+([A-Za-z_$][\w$]*)/g,
-      )].map((parameter) => `${parameter[2]}: ${parameter[1]}`);
+        /@param\s+\{([^}]+)\}\s+(?:\[([A-Za-z_$][\w$]*)[^\]]*\]|([A-Za-z_$][\w$]*))/g,
+      )].map((parameter) => {
+        const isOptional = Boolean(parameter[2]);
+        const paramName = parameter[2] || parameter[3];
+        return `${paramName}${isOptional ? '?' : ''}: ${parameter[1]}`;
+      });
       const returnType = declaration[1].match(/@returns?\s+\{([^}]+)\}/)?.[1] ?? 'void';
 
       return {

@@ -9,6 +9,45 @@ import MatScrollArea from '../src/components/mat-scroll-area/MatScrollArea.vue';
 let resizeCallback;
 let observedElements = [];
 
+const ScrollAreaTestHost = defineComponent({
+  name: 'ScrollAreaTestHost',
+  props: {
+    items: {
+      type: Array,
+      default: () => [],
+    },
+    useInnerScroller: {
+      type: Boolean,
+      default: false,
+    },
+    height: {
+      type: String,
+      default: '300px',
+    },
+  },
+  render() {
+    const virtualScrollNode = h(MatVirtualScroll, {
+      ref: 'vs',
+      items: this.items,
+      itemHeight: 50,
+      buffer: 2,
+    }, {
+      default: ({ item }) => h('div', { class: 'nested-item' }, item.text),
+    });
+
+    const content = this.useInnerScroller
+      ? h('div', {
+        class: 'inner-scroll-container',
+        style: { height: '200px', overflowY: 'auto' },
+      }, [virtualScrollNode])
+      : virtualScrollNode;
+
+    return h(MatScrollArea, { style: { height: this.height } }, {
+      default: () => content,
+    });
+  },
+});
+
 function createItems(count) {
   return Array.from({ length: count }, (_, index) => ({
     id: index + 1,
@@ -175,22 +214,11 @@ describe('MatVirtualScroll', () => {
 
   it('优先联动祖先 MatScrollArea 滚动区域', async () => {
     const items = createItems(100);
-    const TestContainer = defineComponent({
-      render() {
-        return h(MatScrollArea, { style: { height: '300px' } }, {
-          default: () => h(MatVirtualScroll, {
-            ref: 'vs',
-            items,
-            itemHeight: 50,
-            buffer: 2,
-          }, {
-            default: ({ item }) => h('div', { class: 'nested-item' }, item.text),
-          }),
-        });
+    const wrapper = mount(ScrollAreaTestHost, {
+      props: {
+        items,
+        height: '300px',
       },
-    });
-
-    const wrapper = mount(TestContainer, {
       attachTo: document.body,
     });
 
@@ -203,6 +231,25 @@ describe('MatVirtualScroll', () => {
 
     const vsComponent = wrapper.findComponent(MatVirtualScroll);
     expect(vsComponent.vm.getScroller()).toBe(scroller);
+
+    wrapper.unmount();
+  });
+
+  it('当外层存在 MatScrollArea 但内部有更近的滚动容器时优先绑定内部滚动容器', async () => {
+    const items = createItems(100);
+    const wrapper = mount(ScrollAreaTestHost, {
+      props: {
+        items,
+        height: '500px',
+        useInnerScroller: true,
+      },
+      attachTo: document.body,
+    });
+
+    await nextTick();
+    const vsComponent = wrapper.findComponent(MatVirtualScroll);
+    const innerContainer = wrapper.find('.inner-scroll-container').element;
+    expect(vsComponent.vm.getScroller()).toBe(innerContainer);
 
     wrapper.unmount();
   });

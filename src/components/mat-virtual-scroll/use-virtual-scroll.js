@@ -5,7 +5,6 @@ import {
   onBeforeUnmount,
   onMounted,
   onUpdated,
-  reactive,
   ref,
   unref,
   watch,
@@ -49,14 +48,17 @@ export default function useVirtualScroll({
     normalizeNumber(props.buffer, { fallback: 3 })
   ));
 
-  const dynamicHeights = reactive(new Map());
+  const dynamicHeights = new Map();
   const elementToIndexMap = new Map();
   const indexToElementMap = new Map();
+  const itemRefCallbacks = new Map();
 
   const range = ref({ start: 0, end: 0 });
   const paddingTop = ref(0);
   const paddingBottom = ref(0);
 
+  let cachedPrefixSums = null;
+  let isPrefixSumsDirty = true;
   let itemResizeObserver;
   let containerResizeObserver;
   let scrollListenerTarget;
@@ -77,35 +79,47 @@ export default function useVirtualScroll({
   }
 
   /**
+   * 获取或计算当前项高度的前缀和数组。
+   *
+   * @param {number} totalCount
+   * @returns {number[]}
+   */
+  function getPrefixSums(totalCount) {
+    if (isPrefixSumsDirty || !cachedPrefixSums || cachedPrefixSums.length !== totalCount + 1) {
+      cachedPrefixSums = new Array(totalCount + 1);
+      cachedPrefixSums[0] = 0;
+      for (let i = 0; i < totalCount; i += 1) {
+        cachedPrefixSums[i + 1] = cachedPrefixSums[i] + getItemHeight(i);
+      }
+      isPrefixSumsDirty = false;
+    }
+    return cachedPrefixSums;
+  }
+
+  /**
    * 查找当前组件的有效滚动父容器。
    *
    * @returns {HTMLElement | Window | null}
    */
   function findScrollParent() {
-    if (injectedScrollArea?.getScroller?.()) {
-      const scroller = injectedScrollArea.getScroller();
-
-      if (scroller) {
-        return scroller;
-      }
-    }
-
     const element = root.value;
 
     if (!element) {
       return null;
     }
 
-    const nearestScrollArea = element.closest('.mat-scroll-area__viewport')
-      || element.closest('.mat-scroll-area')?.querySelector('.mat-scroll-area__viewport');
-
-    if (nearestScrollArea) {
-      return nearestScrollArea;
-    }
-
+    const injectedScroller = injectedScrollArea?.getScroller?.();
     let parent = element.parentElement;
 
     while (parent && parent !== document.body && parent !== document.documentElement) {
+      if (injectedScroller && parent === injectedScroller) {
+        return parent;
+      }
+
+      if (parent.classList?.contains('mat-scroll-area__viewport')) {
+        return parent;
+      }
+
       const style = getComputedStyle(parent);
       const overflowY = style.overflowY || style.overflow;
 
@@ -114,6 +128,10 @@ export default function useVirtualScroll({
       }
 
       parent = parent.parentElement;
+    }
+
+    if (injectedScroller && element.closest?.('.mat-scroll-area')?.contains(element)) {
+      return injectedScroller;
     }
 
     return window;
@@ -229,12 +247,7 @@ export default function useVirtualScroll({
           bottomSpacer = Math.max(0, (totalCount - end) * h);
         }
       } else {
-        const prefixSums = new Array(totalCount + 1);
-
-        prefixSums[0] = 0;
-        for (let i = 0; i < totalCount; i += 1) {
-          prefixSums[i + 1] = prefixSums[i] + getItemHeight(i);
-        }
+        const prefixSums = getPrefixSums(totalCount);
 
         const totalHeight = prefixSums[totalCount];
         const targetStart = relativeScrollTop;
@@ -373,6 +386,21 @@ export default function useVirtualScroll({
   }
 
   /**
+   * 获取供 Slot 中注册真实 item DOM 的稳定 ref 回调。
+   *
+   * @param {number} index
+   * @returns {(el: HTMLElement | null) => void}
+   */
+  function getItemRef(index) {
+    let cb = itemRefCallbacks.get(index);
+    if (!cb) {
+      cb = (el) => setItemRef(index, el);
+      itemRefCallbacks.set(index, cb);
+    }
+    return cb;
+  }
+
+  /**
    * 滚动到指定索引。
    *
    * @param {number} index
@@ -403,13 +431,8 @@ export default function useVirtualScroll({
       currentItemHeight = parsedItemHeight.value;
       itemTop = index * currentItemHeight;
     } else {
-      let sum = 0;
-
-      for (let i = 0; i < index; i += 1) {
-        sum += getItemHeight(i);
-      }
-
-      itemTop = sum;
+      const prefixSums = getPrefixSums(totalCount);
+      itemTop = prefixSums[index];
       currentItemHeight = getItemHeight(index);
     }
 
@@ -497,6 +520,8 @@ export default function useVirtualScroll({
     itemResizeObserver = null;
     elementToIndexMap.clear();
     indexToElementMap.clear();
+    itemRefCallbacks.clear();
+    isPrefixSumsDirty = true;
   }
 
   /**
@@ -544,8 +569,10 @@ export default function useVirtualScroll({
                 ?? entry.contentRect?.height
                 ?? entry.target.getBoundingClientRect().height;
 
-              if (height > 0 && dynamicHeights.get(index) !== height) {
+              const currentHeight = dynamicHeights.get(index);
+              if (height > 0 && (currentHeight === undefined || Math.abs(currentHeight - height) > 0.5)) {
                 dynamicHeights.set(index, height);
+                isPrefixSumsDirty = true;
                 changed = true;
               }
             }
@@ -564,6 +591,8 @@ export default function useVirtualScroll({
   watch(
     () => props.items,
     () => {
+      isPrefixSumsDirty = true;
+      itemRefCallbacks.clear();
       calculate();
     },
     { deep: false },
@@ -572,6 +601,7 @@ export default function useVirtualScroll({
   watch(
     [parsedItemHeight, parsedEstimatedHeight, parsedBuffer, isEnabled],
     () => {
+      isPrefixSumsDirty = true;
       setupListeners();
     },
   );
@@ -594,6 +624,7 @@ export default function useVirtualScroll({
     calculate,
     getItemHeight,
     getItemKey,
+    getItemRef,
     getScroller,
     paddingBottom,
     paddingTop,

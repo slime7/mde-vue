@@ -103,24 +103,75 @@ const emit = defineEmits({
 });
 
 const root = ref(null);
-const {
-  calculate,
-  getItemKey,
-  getScroller,
-  paddingBottom,
-  paddingTop,
-  refresh,
-  scrollTo,
-  scrollToIndex,
-  setItemRef,
-  visibleItems,
-} = useVirtualScroll({
+const virtualScroll = useVirtualScroll({
   root,
   props: propsWithDefaults,
   enabled: true,
   pinEdges: false,
   emit,
 });
+
+const {
+  getItemKey,
+  getItemRef,
+  paddingBottom,
+  paddingTop,
+  visibleItems,
+} = virtualScroll;
+
+/**
+ * @typedef {object} ScrollToIndexOptions
+ * @property {'start' | 'center' | 'end' | 'auto'} [align='auto'] 对齐方式。
+ * @property {ScrollBehavior} [behavior='auto'] 动画行为。
+ */
+
+/**
+ * 滚动使指定索引项进入视口。
+ *
+ * @param {number} index 目标数据项索引。
+ * @param {ScrollToIndexOptions} [options] 滚动对齐方式与动画行为。
+ * @returns {void}
+ */
+function scrollToIndex(index, options) {
+  virtualScroll.scrollToIndex(index, options);
+}
+
+/**
+ * 代理调用关联滚动容器的原生 scrollTo 方法。
+ *
+ * @param {ScrollToOptions} options 原生滚动选项。
+ * @returns {void}
+ */
+function scrollTo(options) {
+  virtualScroll.scrollTo(options);
+}
+
+/**
+ * 获取当前关联的滚动容器元素或窗口对象。
+ *
+ * @returns {HTMLElement | Window | null}
+ */
+function getScroller() {
+  return virtualScroll.getScroller();
+}
+
+/**
+ * 在 DOM 更新周期后强制重新计算可见区间与占位高度。
+ *
+ * @returns {Promise<void>}
+ */
+function refresh() {
+  return virtualScroll.refresh();
+}
+
+/**
+ * 立即执行可见区间与占位高度重新计算。
+ *
+ * @returns {void}
+ */
+function calculate() {
+  virtualScroll.calculate();
+}
 
 defineExpose({
   calculate,
@@ -150,7 +201,7 @@ defineExpose({
       <slot
         :item="itemRecord.item"
         :index="itemRecord.index"
-        :item-ref="(el) => setItemRef(itemRecord.index, el)"
+        :item-ref="getItemRef(itemRecord.index)"
       />
     </template>
 

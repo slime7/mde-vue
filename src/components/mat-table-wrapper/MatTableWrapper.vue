@@ -66,6 +66,11 @@ defineOptions({
     background: var(--mat-sys-color-surface-container-low);
     color: var(--mat-sys-color-on-surface-variant);
     font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .table-wrapper td code {
+    white-space: normal;
   }
 
   .table-wrapper thead:first-child tr:first-child th,

@@ -3405,7 +3405,43 @@ export interface MatVirtualScrollEmits {
   "visible-range-change": (payload: { startIndex: number, endIndex: number }) => unknown;
 }
 
-export type MatVirtualScrollComponent = DefineComponent<MatVirtualScrollProps, {}, {}, {}, {}, {}, {}, MatVirtualScrollEmits>;
+export interface MatVirtualScrollExposed {
+  /**
+ * 立即执行可见区间与占位高度重新计算。
+ *
+ * @returns {void}
+ */
+  calculate(): void;
+  /**
+ * 获取当前关联的滚动容器元素或窗口对象。
+ *
+ * @returns {HTMLElement | Window | null}
+ */
+  getScroller(): HTMLElement | Window | null;
+  /**
+ * 在 DOM 更新周期后强制重新计算可见区间与占位高度。
+ *
+ * @returns {Promise<void>}
+ */
+  refresh(): Promise<void>;
+  /**
+ * 代理调用关联滚动容器的原生 scrollTo 方法。
+ *
+ * @param {ScrollToOptions} options 原生滚动选项。
+ * @returns {void}
+ */
+  scrollTo(options: ScrollToOptions): void;
+  /**
+ * 滚动使指定索引项进入视口。
+ *
+ * @param {number} index 目标数据项索引。
+ * @param {ScrollToIndexOptions} [options] 滚动对齐方式与动画行为。
+ * @returns {void}
+ */
+  scrollToIndex(index: number, options?: ScrollToIndexOptions): void;
+}
+
+export type MatVirtualScrollComponent = DefineComponent<MatVirtualScrollProps, MatVirtualScrollExposed, {}, {}, {}, {}, {}, MatVirtualScrollEmits>;
 export declare const MatVirtualScroll: MatVirtualScrollComponent;
 
 export interface MdeVirtualScrollProps {
@@ -3469,7 +3505,43 @@ export interface MdeVirtualScrollEmits {
   "visible-range-change": (payload: { startIndex: number, endIndex: number }) => unknown;
 }
 
-export type MdeVirtualScrollComponent = DefineComponent<MdeVirtualScrollProps, {}, {}, {}, {}, {}, {}, MdeVirtualScrollEmits>;
+export interface MdeVirtualScrollExposed {
+  /**
+ * 立即执行可见区间与占位高度重新计算。
+ *
+ * @returns {void}
+ */
+  calculate(): void;
+  /**
+ * 获取当前关联的滚动容器元素或窗口对象。
+ *
+ * @returns {HTMLElement | Window | null}
+ */
+  getScroller(): HTMLElement | Window | null;
+  /**
+ * 在 DOM 更新周期后强制重新计算可见区间与占位高度。
+ *
+ * @returns {Promise<void>}
+ */
+  refresh(): Promise<void>;
+  /**
+ * 代理调用关联滚动容器的原生 scrollTo 方法。
+ *
+ * @param {ScrollToOptions} options 原生滚动选项。
+ * @returns {void}
+ */
+  scrollTo(options: ScrollToOptions): void;
+  /**
+ * 滚动使指定索引项进入视口。
+ *
+ * @param {number} index 目标数据项索引。
+ * @param {ScrollToIndexOptions} [options] 滚动对齐方式与动画行为。
+ * @returns {void}
+ */
+  scrollToIndex(index: number, options?: ScrollToIndexOptions): void;
+}
+
+export type MdeVirtualScrollComponent = DefineComponent<MdeVirtualScrollProps, MdeVirtualScrollExposed, {}, {}, {}, {}, {}, MdeVirtualScrollEmits>;
 export declare const MdeVirtualScroll: MdeVirtualScrollComponent;
 
 export interface MatLoadingProps {

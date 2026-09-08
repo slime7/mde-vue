@@ -78,6 +78,11 @@ html[data-mat-theme='dark'] {
 
 .vp-doc .table-wrapper th {
   text-align: revert;
+  white-space: nowrap;
+}
+
+.vp-doc .table-wrapper td code {
+  white-space: normal;
 }
 
 /* 预览容器内的表格容器不额外增加外边距。 */

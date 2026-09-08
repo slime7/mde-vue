@@ -159,6 +159,7 @@ describe('VitePress 文档自定义主题', () => {
     expect(previewSource).toContain('docs-preview__body');
     expect(previewSource).toContain('padding: 16px;');
     expect(previewSource).toContain('background: var(--mat-sys-color-background);');
+    expect(previewSource).not.toContain('docs-preview__body--stacked > :deep(*)');
 
     expect(configSource).toContain('registerMergeDocsPreviewRule');
     expect(configSource).toContain('merge_docs_preview');

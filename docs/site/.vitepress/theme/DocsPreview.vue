@@ -2,8 +2,10 @@
 import { computed, provide, ref, useSlots } from 'vue';
 import { withBase } from 'vitepress';
 import { MAT_APP_ROOT_KEY } from '../../../../src/components/mat-app-root/mat-app-root-context.js';
+import { MAT_SCROLL_AREA_KEY } from '../../../../src/components/scroll-area-context.js';
 
 provide(MAT_APP_ROOT_KEY, null);
+provide(MAT_SCROLL_AREA_KEY, null);
 
 const props = defineProps({
   label: {
@@ -181,11 +183,6 @@ function toggleCode() {
 .docs-preview__body > :deep(*) {
   flex-shrink: 1;
   min-inline-size: 0;
-}
-
-.docs-preview__body--stacked > :deep(*),
-.docs-preview__body:has(> :only-child) > :deep(*) {
-  inline-size: 100%;
 }
 
 .docs-preview__body :deep(.docs-preview-menu) {

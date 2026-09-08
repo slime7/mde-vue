@@ -4795,24 +4795,27 @@ function Oi({ root: e, props: t, enabled: n = !0, pinEdges: r = !1, emit: a }) {
 	})), d = i(() => u.value !== void 0), f = i(() => Dt(t.estimatedItemHeight, {
 		positive: !0,
 		fallback: 48
-	})), p = i(() => Dt(t.buffer, { fallback: 3 })), m = k(/* @__PURE__ */ new Map()), g = /* @__PURE__ */ new Map(), _ = /* @__PURE__ */ new Map(), y = j({
+	})), p = i(() => Dt(t.buffer, { fallback: 3 })), m = /* @__PURE__ */ new Map(), g = /* @__PURE__ */ new Map(), _ = /* @__PURE__ */ new Map(), y = /* @__PURE__ */ new Map(), b = j({
 		start: 0,
 		end: 0
-	}), b = j(0), x = j(0), S, w, D, O = !1;
-	function A(e) {
+	}), x = j(0), S = j(0), w = null, D = !0, O, k, A, M = !1;
+	function N(e) {
 		return d.value ? u.value : m.get(e) ?? f.value;
 	}
-	function M() {
-		if (s?.getScroller?.()) {
-			let e = s.getScroller();
-			if (e) return e;
+	function P(e) {
+		if (D || !w || w.length !== e + 1) {
+			w = Array(e + 1), w[0] = 0;
+			for (let t = 0; t < e; t += 1) w[t + 1] = w[t] + N(t);
+			D = !1;
 		}
+		return w;
+	}
+	function F() {
 		let t = e.value;
 		if (!t) return null;
-		let n = t.closest(".mat-scroll-area__viewport") || t.closest(".mat-scroll-area")?.querySelector(".mat-scroll-area__viewport");
-		if (n) return n;
-		let r = t.parentElement;
+		let n = s?.getScroller?.(), r = t.parentElement;
 		for (; r && r !== document.body && r !== document.documentElement;) {
+			if (n && r === n || r.classList?.contains("mat-scroll-area__viewport")) return r;
 			let e = getComputedStyle(r), t = e.overflowY || e.overflow;
 			if ([
 				"auto",
@@ -4821,9 +4824,9 @@ function Oi({ root: e, props: t, enabled: n = !0, pinEdges: r = !1, emit: a }) {
 			].includes(t)) return r;
 			r = r.parentElement;
 		}
-		return window;
+		return n && t.closest?.(".mat-scroll-area")?.contains(t) ? n : window;
 	}
-	function N() {
+	function I() {
 		let t = o.value, n = e.value;
 		if (!t || !n) return {
 			scrollTop: 0,
@@ -4854,19 +4857,19 @@ function Oi({ root: e, props: t, enabled: n = !0, pinEdges: r = !1, emit: a }) {
 			offsetInParent: s
 		};
 	}
-	function P() {
-		if (!(O || !c.value)) {
-			O = !0;
+	function L() {
+		if (!(M || !c.value)) {
+			M = !0;
 			try {
 				let e = (t.items || []).length;
 				if (e === 0) {
-					y.value = {
+					b.value = {
 						start: 0,
 						end: 0
-					}, b.value = 0, x.value = 0;
+					}, x.value = 0, S.value = 0;
 					return;
 				}
-				let { scrollTop: n, viewportHeight: r, scrollHeight: i, offsetInParent: o } = N(), s = Math.max(0, n - o), c = r || 300, f = p.value, m = 0, h = 0, g = 0, _ = 0;
+				let { scrollTop: n, viewportHeight: r, scrollHeight: i, offsetInParent: o } = I(), s = Math.max(0, n - o), c = r || 300, f = p.value, m = 0, h = 0, g = 0, _ = 0;
 				if (d.value) {
 					let t = u.value;
 					if (m = Math.max(0, Math.floor(s / t) - f), h = Math.min(e, Math.ceil((s + c) / t) + f), l.value && e >= 3) {
@@ -4874,10 +4877,7 @@ function Oi({ root: e, props: t, enabled: n = !0, pinEdges: r = !1, emit: a }) {
 						g = Math.max(0, (n - 1) * t), _ = Math.max(0, (e - 1 - r) * t), m = n, h = r;
 					} else l.value ? (m = 0, h = e, g = 0, _ = 0) : (g = m * t, _ = Math.max(0, (e - h) * t));
 				} else {
-					let t = Array(e + 1);
-					t[0] = 0;
-					for (let n = 0; n < e; n += 1) t[n + 1] = t[n] + A(n);
-					let n = t[e], r = s, i = s + c, a = 0, o = e, u = 0, d = e - 1;
+					let t = P(e), n = t[e], r = s, i = s + c, a = 0, o = e, u = 0, d = e - 1;
 					for (; u <= d;) {
 						let e = Math.floor((u + d) / 2);
 						t[e + 1] > r ? (a = e, d = e - 1) : u = e + 1;
@@ -4891,11 +4891,11 @@ function Oi({ root: e, props: t, enabled: n = !0, pinEdges: r = !1, emit: a }) {
 						g = Math.max(0, t[n] - t[1]), _ = Math.max(0, t[e - 1] - t[r]), m = n, h = r;
 					} else l.value ? (m = 0, h = e, g = 0, _ = 0) : (g = t[m], _ = Math.max(0, n - t[h]));
 				}
-				let v = y.value.start, S = y.value.end;
-				y.value = {
+				let v = b.value.start, y = b.value.end;
+				b.value = {
 					start: m,
 					end: h
-				}, b.value = g, x.value = _, (m !== v || h !== S) && a?.("visible-range-change", {
+				}, x.value = g, S.value = _, (m !== v || h !== y) && a?.("visible-range-change", {
 					startIndex: m,
 					endIndex: h
 				}), a?.("scroll", {
@@ -4906,33 +4906,32 @@ function Oi({ root: e, props: t, enabled: n = !0, pinEdges: r = !1, emit: a }) {
 					endIndex: h
 				});
 			} finally {
-				O = !1;
+				M = !1;
 			}
 		}
 	}
-	async function F() {
-		await v(), P();
+	async function R() {
+		await v(), L();
 	}
-	function I(e, n) {
+	function ee(e, n) {
 		return typeof t.itemKey == "function" ? t.itemKey(e, n) : typeof t.itemKey == "string" && e && typeof e == "object" ? e[t.itemKey] ?? n : n;
 	}
-	function L(e, t) {
-		if (d.value || !S) return;
+	function te(e, t) {
+		if (d.value || !O) return;
 		let n = _.get(e);
-		n && n !== t && (S.unobserve(n), g.delete(n), _.delete(e)), t && t instanceof HTMLElement && (g.set(t, e), _.set(e, t), S.observe(t));
+		n && n !== t && (O.unobserve(n), g.delete(n), _.delete(e)), t && t instanceof HTMLElement && (g.set(t, e), _.set(e, t), O.observe(t));
 	}
-	function R(e, n = {}) {
+	function B(e) {
+		let t = y.get(e);
+		return t || (t = (t) => te(e, t), y.set(e, t)), t;
+	}
+	function H(e, n = {}) {
 		let r = (t.items || []).length;
 		if (e < 0 || e >= r) return;
 		let i = o.value;
 		if (!i) return;
-		let { offsetInParent: a, viewportHeight: s, scrollTop: c } = N(), { align: l = "auto", behavior: f = "auto" } = n, p = 0, m = 0;
-		if (d.value) m = u.value, p = e * m;
-		else {
-			let t = 0;
-			for (let n = 0; n < e; n += 1) t += A(n);
-			p = t, m = A(e);
-		}
+		let { offsetInParent: a, viewportHeight: s, scrollTop: c } = I(), { align: l = "auto", behavior: f = "auto" } = n, p = 0, m = 0;
+		d.value ? (m = u.value, p = e * m) : (p = P(r)[e], m = N(e));
 		let h = p + a, g = c;
 		l === "start" ? g = h : l === "end" ? g = h + m - s : l === "center" ? g = h + m / 2 - s / 2 : h < c ? g = h : h + m > c + s && (g = h + m - s), i === window ? window.scrollTo({
 			top: Math.max(0, g),
@@ -4942,68 +4941,69 @@ function Oi({ root: e, props: t, enabled: n = !0, pinEdges: r = !1, emit: a }) {
 			behavior: f
 		});
 	}
-	function ee(e) {
+	function U(e) {
 		let t = o.value;
 		t && t.scrollTo(e);
 	}
-	function te() {
+	function W() {
 		return o.value;
 	}
-	let B = i(() => {
-		let e = t.items || [], { start: n, end: r } = y.value, i = [];
+	let G = i(() => {
+		let e = t.items || [], { start: n, end: r } = b.value, i = [];
 		for (let t = n; t < r && t < e.length; t += 1) i.push({
 			index: t,
 			item: e[t]
 		});
 		return i;
 	});
-	function H() {
-		D &&= (D.removeEventListener("scroll", P), null), o.value === window && window.removeEventListener("resize", P), w?.disconnect(), w = null, S?.disconnect(), S = null, g.clear(), _.clear();
+	function K() {
+		A &&= (A.removeEventListener("scroll", L), null), o.value === window && window.removeEventListener("resize", L), k?.disconnect(), k = null, O?.disconnect(), O = null, g.clear(), _.clear(), y.clear(), D = !0;
 	}
-	function U() {
-		if (H(), !c.value) return;
-		let e = M();
-		o.value = e, e && (D = e, D.addEventListener("scroll", P, { passive: !0 }), typeof ResizeObserver == "function" && (e === window ? window.addEventListener("resize", P, { passive: !0 }) : (w = new ResizeObserver(() => {
-			P();
-		}), w.observe(e)), d.value || (S = new ResizeObserver((e) => {
+	function q() {
+		if (K(), !c.value) return;
+		let e = F();
+		o.value = e, e && (A = e, A.addEventListener("scroll", L, { passive: !0 }), typeof ResizeObserver == "function" && (e === window ? window.addEventListener("resize", L, { passive: !0 }) : (k = new ResizeObserver(() => {
+			L();
+		}), k.observe(e)), d.value || (O = new ResizeObserver((e) => {
 			let t = !1;
 			e.forEach((e) => {
 				let n = g.get(e.target);
 				if (n !== void 0) {
-					let r = e.borderBoxSize?.[0]?.blockSize ?? e.contentRect?.height ?? e.target.getBoundingClientRect().height;
-					r > 0 && m.get(n) !== r && (m.set(n, r), t = !0);
+					let r = e.borderBoxSize?.[0]?.blockSize ?? e.contentRect?.height ?? e.target.getBoundingClientRect().height, i = m.get(n);
+					r > 0 && (i === void 0 || Math.abs(i - r) > .5) && (m.set(n, r), D = !0, t = !0);
 				}
-			}), t && P();
-		}))), P());
+			}), t && L();
+		}))), L());
 	}
 	return V(() => t.items, () => {
-		P();
+		D = !0, y.clear(), L();
 	}, { deep: !1 }), V([
 		u,
 		f,
 		p,
 		c
 	], () => {
-		U();
+		D = !0, q();
 	}), T(() => {
-		U();
+		q();
 	}), E(() => {
-		c.value && !o.value && U();
+		c.value && !o.value && q();
 	}), C(() => {
-		H();
+		K();
 	}), {
-		calculate: P,
-		getItemHeight: A,
-		getItemKey: I,
-		getScroller: te,
-		paddingBottom: x,
-		paddingTop: b,
-		range: y,
-		refresh: F,
-		scrollTo: ee,
-		scrollToIndex: R,
-		setItemRef: L,
-		visibleItems: B
+		calculate: L,
+		getItemHeight: N,
+		getItemKey: ee,
+		getItemRef: B,
+		getScroller: W,
+		paddingBottom: S,
+		paddingTop: x,
+		range: b,
+		refresh: R,
+		scrollTo: U,
+		scrollToIndex: H,
+		setItemRef: te,
+		visibleItems: G
 	};
 }
 //#endregion
@@ -11291,19 +11291,34 @@ var go = {
 		"visible-range-change": (e) => typeof e?.startIndex == "number" && typeof e?.endIndex == "number"
 	},
 	setup(e, { expose: n, emit: r }) {
-		let i = $("virtualScroll", e), o = r, l = j(null), { calculate: u, getItemKey: d, getScroller: f, paddingBottom: p, paddingTop: m, refresh: h, scrollTo: g, scrollToIndex: _, setItemRef: v, visibleItems: y } = Oi({
+		let i = $("virtualScroll", e), o = r, l = j(null), u = Oi({
 			root: l,
 			props: i,
 			enabled: !0,
 			pinEdges: !1,
 			emit: o
-		});
+		}), { getItemKey: d, getItemRef: f, paddingBottom: p, paddingTop: m, visibleItems: h } = u;
+		function g(e, t) {
+			u.scrollToIndex(e, t);
+		}
+		function _(e) {
+			u.scrollTo(e);
+		}
+		function v() {
+			return u.getScroller();
+		}
+		function y() {
+			return u.refresh();
+		}
+		function b() {
+			u.calculate();
+		}
 		return n({
-			calculate: u,
-			getScroller: f,
-			refresh: h,
-			scrollTo: g,
-			scrollToIndex: _
+			calculate: b,
+			getScroller: v,
+			refresh: y,
+			scrollTo: _,
+			scrollToIndex: g
 		}), (e, n) => (D(), a(F(z(i).as), {
 			ref_key: "root",
 			ref: l,
@@ -11315,11 +11330,11 @@ var go = {
 					style: x({ height: `${z(m)}px` }),
 					"aria-hidden": "true"
 				}, null, 4),
-				(D(!0), s(t, null, N(z(y), (t) => P(e.$slots, "default", {
+				(D(!0), s(t, null, N(z(h), (t) => P(e.$slots, "default", {
 					key: z(d)(t.item, t.index),
 					item: t.item,
 					index: t.index,
-					itemRef: (e) => z(v)(t.index, e)
+					itemRef: z(f)(t.index)
 				}, void 0, !0)), 128)),
 				c("div", {
 					class: "mat-virtual-scroll__spacer",
@@ -11330,7 +11345,7 @@ var go = {
 			_: 3
 		}, 512));
 	}
-}), [["__scopeId", "data-v-98962098"]]), Ms = ["aria-valuenow"], Ns = 48, Ps = 24, Fs = 240, Is = 650, Ls = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-9159f242"]]), Ms = ["aria-valuenow"], Ns = 48, Ps = 24, Fs = 240, Is = 650, Ls = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatLoading",
 	inheritAttrs: !1
 }, {
