@@ -22,9 +22,5 @@
   gap: 16px;
   align-items: flex-start;
 }
-
-.as-example :deep(*) {
-  margin: 0;
-}
 </style>
 <!-- #endregion style -->

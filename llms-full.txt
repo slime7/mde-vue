@@ -2249,10 +2249,6 @@ emphasized 样式用于局部传达层级或重要性，例如选中或激活的
   gap: 16px;
   align-items: flex-start;
 }
-
-.as-example :deep(*) {
-  margin: 0;
-}
 </style>
 ```
 :::
