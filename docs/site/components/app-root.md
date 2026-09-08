@@ -101,7 +101,7 @@ order: 69
 
 ### 布局组件自动接入与正文滚动
 
-位于 AppRoot 内且设置 `app` 的 Toolbar、Navigation rail 和 FAB 会自动接入当前应用布局并保持在边缘固定；正文区域可方便组合 `<mat-scroll-area>` 与 `<mat-container>` 进行滚动，Navigation 与 App bar 不会被正文滚动带走。示例展示底部 docked Toolbar、FAB、Snackbar 和 Tooltip 在正文滚动时的自动避让与层级排列。
+位于 AppRoot 内且设置 `app` 的 Toolbar、Navigation rail 和 FAB 会自动接入当前应用布局并保持在边缘固定；正文区域可方便组合 `<mat-scroll-area>` 与 `<mat-container>` 进行滚动，Navigation 与 App bar 不会被正文滚动带走。示例在 AppRoot 前放置了外部宿主元素来模拟应用的作用范围，展示依附于 AppRoot 的底部 docked Toolbar、FAB、Snackbar 和 Tooltip 在正文滚动时的自动避让与层级排列，并确保所有依附组件严格处于 AppRoot 范围内。
 
 :::: details 查看示例代码
 ::: code-group

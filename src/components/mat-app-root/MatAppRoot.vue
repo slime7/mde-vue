@@ -492,11 +492,11 @@ watch([
     transition: padding-block var(--mat-sys-motion-spring-default-spatial, .3s ease), padding-inline var(--mat-sys-motion-spring-default-spatial, .3s ease);
   }
 
-  .mat-app-root--fill-viewport .mat-app-root__content {
+  .mat-app-root--fill-viewport > .mat-app-root__content {
     min-block-size: 100dvb;
   }
 
-  .mat-app-root--scrollable .mat-app-root__content {
+  .mat-app-root--scrollable > .mat-app-root__content {
     block-size: 100%;
     min-block-size: 0;
     overflow: auto;
@@ -507,12 +507,13 @@ watch([
   .mat-app-root__free-layer,
   .mat-app-root__modal-layer,
   .mat-app-root__bottom-stack {
+    box-sizing: border-box;
     position: absolute;
     inset: 0;
     pointer-events: none;
   }
 
-  .mat-app-root--document .mat-app-root__overlay {
+  .mat-app-root--document > .mat-app-root__overlay {
     position: fixed;
     z-index: var(--mat-sys-z-index-tooltip, 300);
   }

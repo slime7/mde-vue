@@ -6466,13 +6466,18 @@ const RegisteredHeader = defineComponent({
 
 ### 布局组件自动接入与正文滚动
 
-位于 AppRoot 内且设置 `app` 的 Toolbar、Navigation rail 和 FAB 会自动接入当前应用布局并保持在边缘固定；正文区域可方便组合 `<mat-scroll-area>` 与 `<mat-container>` 进行滚动，Navigation 与 App bar 不会被正文滚动带走。示例展示底部 docked Toolbar、FAB、Snackbar 和 Tooltip 在正文滚动时的自动避让与层级排列。
+位于 AppRoot 内且设置 `app` 的 Toolbar、Navigation rail 和 FAB 会自动接入当前应用布局并保持在边缘固定；正文区域可方便组合 `<mat-scroll-area>` 与 `<mat-container>` 进行滚动，Navigation 与 App bar 不会被正文滚动带走。示例在 AppRoot 前放置了外部宿主元素来模拟应用的作用范围，展示依附于 AppRoot 的底部 docked Toolbar、FAB、Snackbar 和 Tooltip 在正文滚动时的自动避让与层级排列，并确保所有依附组件严格处于 AppRoot 范围内。
 
 :::: details 查看示例代码
 ::: code-group
 
 ```vue
 <template>
+  <div class="app-root-components-example-container">
+    <div class="app-root-components-example__external">
+      外部宿主区域（模拟非 AppRoot 作用范围）
+    </div>
+
   <mat-app-root
     :fill-viewport="false"
     class="app-root-components-example"
@@ -6549,6 +6554,7 @@ const RegisteredHeader = defineComponent({
       position="right"
     />
   </mat-app-root>
+  </div>
 </template>
 ```
 ```vue
@@ -6561,8 +6567,29 @@ const current = ref('home');
 ```
 ```vue
 <style scoped>
+.app-root-components-example-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  inline-size: 100%;
+}
+
+.app-root-components-example__external {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  color: var(--mat-sys-color-on-surface-variant);
+  background: var(--mat-sys-color-surface-container-high);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+
 .app-root-components-example {
+  position: relative;
   block-size: 440px;
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+  overflow: hidden;
 }
 
 .app-root-components-example__content h3,

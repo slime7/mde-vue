@@ -9,6 +9,11 @@ const current = ref('home');
 
 <!-- #region template -->
 <template>
+  <div class="app-root-components-example-container">
+    <div class="app-root-components-example__external">
+      外部宿主区域（模拟非 AppRoot 作用范围）
+    </div>
+
   <mat-app-root
     :fill-viewport="false"
     class="app-root-components-example"
@@ -85,13 +90,35 @@ const current = ref('home');
       position="right"
     />
   </mat-app-root>
+  </div>
 </template>
 <!-- #endregion template -->
 
 <!-- #region style -->
 <style scoped>
+.app-root-components-example-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  inline-size: 100%;
+}
+
+.app-root-components-example__external {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  color: var(--mat-sys-color-on-surface-variant);
+  background: var(--mat-sys-color-surface-container-high);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+
 .app-root-components-example {
+  position: relative;
   block-size: 440px;
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+  overflow: hidden;
 }
 
 .app-root-components-example__content h3,

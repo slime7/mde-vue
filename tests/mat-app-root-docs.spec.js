@@ -69,5 +69,7 @@ describe('AppRoot 文档', () => {
     expect(scrollable).toContain('scrollable');
     expect(scrollable).toContain('block-size: 280px;');
     expect(components).toContain('block-size: 440px;');
+    expect(components).toContain('app-root-components-example__external');
+    expect(components).toContain('overflow: hidden;');
   });
 });
