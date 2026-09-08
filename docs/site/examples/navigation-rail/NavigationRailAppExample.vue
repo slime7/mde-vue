@@ -15,6 +15,7 @@ const open = ref(true);
     <mat-navigation-rail
       v-model:open="open"
       app
+      bordered
       aria-label="应用导航"
     >
       <mat-navigation-rail-item icon="home">

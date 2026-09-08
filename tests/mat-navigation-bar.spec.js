@@ -5,6 +5,7 @@ import { mount } from '@vue/test-utils';
 import {
   afterEach, describe, expect, it, vi,
 } from 'vitest';
+import MatAside from '../src/components/mat-aside/MatAside.vue';
 import MatNavigationBar from '../src/components/mat-navigation-bar/MatNavigationBar.vue';
 import MatNavigationBarItem from '../src/components/mat-navigation-bar/MatNavigationBarItem.vue';
 import MatNavigationItem from '../src/components/mat-navigation-item/MatNavigationItem.vue';
@@ -59,6 +60,17 @@ describe('MatNavigationBar 底部导航栏', () => {
     expect(nav.classes()).toContain('mat-aside');
     expect(nav.classes()).toContain('mat-aside--bottom');
     expect(nav.classes()).toContain('mat-navigation-bar');
+  });
+
+  it('公开 bordered 属性并转交给 MatAside', () => {
+    expect(MatNavigationBar.props.bordered.default).toBe(false);
+
+    const wrapper = mount(MatNavigationBar, {
+      props: { bordered: true },
+      slots: { default: barItems },
+    });
+
+    expect(wrapper.findComponent(MatAside).props('bordered')).toBe(true);
   });
 
   it('受控 v-model 选中状态并在点击子项时发出 update:modelValue', async () => {

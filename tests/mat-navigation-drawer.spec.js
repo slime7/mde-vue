@@ -33,6 +33,19 @@ describe('MatNavigationDrawer', () => {
     });
   });
 
+  it('公开 bordered 属性并转交给 NavigationRail', () => {
+    expect(MatNavigationDrawer.props.bordered.default).toBe(false);
+
+    const wrapper = mount(MatNavigationDrawer, {
+      props: {
+        bordered: true,
+        expanded: true,
+      },
+    });
+
+    expect(wrapper.findComponent(MatNavigationRail).props('bordered')).toBe(true);
+  });
+
   it('固定使用 vertical 方向、full-width、collapsible 与 hide-on-collapse', () => {
     const wrapper = mount(MatNavigationDrawer, {
       props: {

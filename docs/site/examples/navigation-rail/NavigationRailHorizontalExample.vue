@@ -38,6 +38,7 @@ const alignment = ref('center');
       :expanded="expanded"
       :alignment="alignment"
       orientation="horizontal"
+      bordered
       aria-label="底部导航"
     >
       <mat-navigation-rail-item value="home" icon="home">

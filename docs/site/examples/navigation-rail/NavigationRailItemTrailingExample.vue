@@ -16,6 +16,7 @@ const selected = ref('inbox');
       v-model:expanded="expanded"
       :full-width="fullWidth"
       collapsible
+      bordered
       aria-label="带 trailing 的导航"
     >
       <template #default="{ expanded: currentExpanded }">

@@ -7,6 +7,7 @@ import {
   afterEach, describe, expect, it, vi,
 } from 'vitest';
 import MatBadge from '../src/components/mat-badge/MatBadge.vue';
+import MatAside from '../src/components/mat-aside/MatAside.vue';
 import MatNavigationRail from '../src/components/mat-navigation-rail/MatNavigationRail.vue';
 import MatNavigationRailItem from '../src/components/mat-navigation-rail/MatNavigationRailItem.vue';
 import MatAppRoot from '../src/components/mat-app-root/MatAppRoot.vue';
@@ -30,6 +31,17 @@ function navigationItems() {
 }
 
 describe('MatNavigationRail', () => {
+  it('公开 bordered 属性并转交给 MatAside', () => {
+    expect(MatNavigationRail.props.bordered.default).toBe(false);
+
+    const wrapper = mount(MatNavigationRail, {
+      props: { bordered: true },
+      slots: { default: navigationItems },
+    });
+
+    expect(wrapper.findComponent(MatAside).props('bordered')).toBe(true);
+  });
+
   it('使用 alignment 控制默认内容定位且不再公开 position', () => {
     expect(MatNavigationRail.props.position).toBeUndefined();
     expect(MatNavigationRail.props.alignment.default).toBe('start');

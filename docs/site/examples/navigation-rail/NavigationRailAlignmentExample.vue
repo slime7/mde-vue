@@ -36,6 +36,7 @@ const alignment = ref('start');
       <mat-navigation-rail
         v-model:expanded="expanded"
         :alignment="alignment"
+        bordered
         aria-label="内容对齐导航"
       >
         <mat-navigation-rail-item icon="home">

@@ -13,6 +13,7 @@ const selected = ref('inbox');
     <mat-navigation-drawer
       v-model="selected"
       v-model:expanded="expanded"
+      bordered
       aria-label="基础导航抽屉"
     >
       <template #default="{ expanded: currentExpanded }">

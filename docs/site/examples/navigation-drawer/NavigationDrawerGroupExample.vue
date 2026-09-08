@@ -14,6 +14,7 @@ const selected = ref('file-1');
     <mat-navigation-drawer
       v-model="selected"
       v-model:expanded="expanded"
+      bordered
       aria-label="二级分组抽屉"
     >
       <template #default="{ expanded: currentExpanded }">

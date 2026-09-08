@@ -92,6 +92,7 @@ Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail`
 | `app` | `boolean` | `false` | 开启应用级导航模式，省略 `attach` 且位于 `MatAppRoot` 内时自动登记边缘 |
 | `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 挂载目标 |
 | `placeholder` | `boolean` | `false` | `app=true` 时在声明位置生成占位 |
+| `bordered` | `boolean` | `false` | 是否复用 Aside 的边框修饰，在面向内容的一侧渲染 1px 细边框 |
 
 注：`full-width`、`collapsible` 与 `hide-on-collapse` 在组件内部固定为 `true`，无需且不可配置。
 

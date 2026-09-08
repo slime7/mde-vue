@@ -16,6 +16,7 @@ const active = ref(true);
       v-if="active"
       app
       bottom-placeholder="48px"
+      bordered
       aria-label="底部安全区导航"
     >
       <mat-navigation-rail-item icon="home">

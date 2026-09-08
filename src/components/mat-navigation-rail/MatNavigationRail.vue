@@ -171,6 +171,16 @@ const props = defineProps({
     default: false,
   },
   /**
+   * 是否在面向内容的一侧渲染 1px 细边框。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  bordered: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * 受控显示/隐藏状态，支持 v-model:open。
    * 省略时遵循 hideOnCollapse 或 modal 模式与 expanded 联动，其余场景默认开启。
    *
@@ -501,6 +511,7 @@ defineExpose({
     :app="propsWithDefaults.app"
     :attach="forwardedAttach"
     :placeholder="propsWithDefaults.placeholder"
+    :bordered="propsWithDefaults.bordered"
     :modal="isModal"
     :open="isAsideOpen"
     :block-size="effectiveBlockSize"

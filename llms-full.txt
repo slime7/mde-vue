@@ -6482,82 +6482,83 @@ const RegisteredHeader = defineComponent({
       外部宿主区域（模拟非 AppRoot 作用范围）
     </div>
 
-  <mat-app-root
-    :fill-viewport="false"
-    class="app-root-components-example"
-  >
-    <mat-navigation-rail
-      v-model="current"
-      app
+    <mat-app-root
+      :fill-viewport="false"
+      class="app-root-components-example"
     >
-      <mat-navigation-rail-item value="home" icon="home">
-        首页
-      </mat-navigation-rail-item>
-      <mat-navigation-rail-item value="settings" icon="settings">
-        设置
-      </mat-navigation-rail-item>
-    </mat-navigation-rail>
+      <mat-navigation-rail
+        v-model="current"
+        app
+        bordered
+      >
+        <mat-navigation-rail-item value="home" icon="home">
+          首页
+        </mat-navigation-rail-item>
+        <mat-navigation-rail-item value="settings" icon="settings">
+          设置
+        </mat-navigation-rail-item>
+      </mat-navigation-rail>
 
-    <mat-app-bar app>
-      应用标题
-    </mat-app-bar>
+      <mat-app-bar app>
+        应用标题
+      </mat-app-bar>
 
-    <mat-scroll-area>
-      <mat-container>
-        <section class="app-root-components-example__content">
-          <h3>组件自动接入与正文滚动</h3>
-          <p>Navigation 与底部 docked Toolbar 自动登记边缘；正文使用 MatScrollArea 和 MatContainer 组合进行滚动，FAB、Snackbar 和 Tooltip 自动浮动于正文与 Toolbar 之上。</p>
-          <mat-btn
-            id="app-root-tooltip-target"
-            @click="snackbarOpen = true"
-          >
-            显示 Snackbar
-          </mat-btn>
-          <mat-tooltip
-            content="这个 Tooltip 属于当前 AppRoot"
-            target="#app-root-tooltip-target"
-          />
+      <mat-scroll-area>
+        <mat-container>
+          <section class="app-root-components-example__content">
+            <h3>组件自动接入与正文滚动</h3>
+            <p>Navigation 与底部 docked Toolbar 自动登记边缘；正文使用 MatScrollArea 和 MatContainer 组合进行滚动，FAB、Snackbar 和 Tooltip 自动浮动于正文与 Toolbar 之上。</p>
+            <mat-btn
+              id="app-root-tooltip-target"
+              @click="snackbarOpen = true"
+            >
+              显示 Snackbar
+            </mat-btn>
+            <mat-tooltip
+              content="这个 Tooltip 属于当前 AppRoot"
+              target="#app-root-tooltip-target"
+            />
 
-          <article
-            v-for="item in 4"
-            :key="item"
-            class="app-root-components-example__card"
-          >
-            <h4>滚动列表项 {{ item }}</h4>
-            <p>正文内容在 ScrollArea 内部滚动，Navigation 不会被滚动带走。</p>
-          </article>
-        </section>
-      </mat-container>
-    </mat-scroll-area>
+            <article
+              v-for="item in 4"
+              :key="item"
+              class="app-root-components-example__card"
+            >
+              <h4>滚动列表项 {{ item }}</h4>
+              <p>正文内容在 ScrollArea 内部滚动，Navigation 不会被滚动带走。</p>
+            </article>
+          </section>
+        </mat-container>
+      </mat-scroll-area>
 
-    <mat-toolbar
-      app
-      variant="docked"
-    >
-      <mat-btn variant="standard">
-        取消
-      </mat-btn>
-      <mat-spacer />
-      <mat-btn variant="standard">
-        保存
-      </mat-btn>
-    </mat-toolbar>
+      <mat-toolbar
+        app
+        variant="docked"
+      >
+        <mat-btn variant="standard">
+          取消
+        </mat-btn>
+        <mat-spacer />
+        <mat-btn variant="standard">
+          保存
+        </mat-btn>
+      </mat-toolbar>
 
-    <mat-fab
-      app
-      icon="add"
-      label="新建"
-      position="end"
-      @click="snackbarOpen = true"
-    />
+      <mat-fab
+        app
+        icon="add"
+        label="新建"
+        position="end"
+        @click="snackbarOpen = true"
+      />
 
-    <mat-snackbar
-      v-model="snackbarOpen"
-      text="AppRoot 已自动排列浮动组件"
-      closable
-      position="right"
-    />
-  </mat-app-root>
+      <mat-snackbar
+        v-model="snackbarOpen"
+        text="AppRoot 已自动排列浮动组件"
+        closable
+        position="right"
+      />
+    </mat-app-root>
   </div>
 </template>
 ```
@@ -18264,6 +18265,7 @@ import ExpansionVariantExample from '../examples/expansion/ExpansionVariantExamp
   <mat-layout class="navigation-rail-example-shell">
     <mat-navigation-rail
       v-model="selected"
+      bordered
       aria-label="主导航"
     >
       <mat-navigation-rail-item value="home" icon="home">
@@ -18333,6 +18335,7 @@ Badge 不提供专用 Slot，也不支持 `offset`。`location` 只接受八种�
       v-model="selected"
       v-model:expanded="expanded"
       collapsible
+      bordered
       aria-label="带通知徽标的导航"
     >
       <mat-navigation-rail-item
@@ -18436,6 +18439,7 @@ const selected = ref('inbox');
     <mat-navigation-rail
       v-model:open="open"
       app
+      bordered
       aria-label="应用导航"
     >
       <mat-navigation-rail-item icon="home">
@@ -18505,6 +18509,7 @@ const open = ref(true);
       v-model:open="active"
       app
       placeholder
+      bordered
       aria-label="占位导航"
     >
       <mat-navigation-rail-item icon="home">
@@ -18579,6 +18584,7 @@ const active = ref(true);
       v-model="selected"
       v-model:expanded="expanded"
       collapsible
+      bordered
       aria-label="可展开导航"
     >
       <template #default="{ expanded: currentExpanded }">
@@ -18665,6 +18671,7 @@ const selected = ref('overview');
       <mat-navigation-rail
         expanded
         :width="width"
+        bordered
         aria-label="自定义宽度导航"
       >
         <mat-navigation-rail-item icon="home">
@@ -18744,6 +18751,7 @@ const width = ref(280);
         <mat-navigation-rail
           v-model="selected"
           expanded
+          bordered
           aria-label="贴合内容导航"
         >
           <mat-navigation-rail-item value="home" icon="home">
@@ -18766,6 +18774,7 @@ const width = ref(280);
           v-model="selected"
           expanded
           full-width
+          bordered
           aria-label="铺满宽度导航"
         >
           <mat-navigation-rail-item value="home" icon="home">
@@ -18865,6 +18874,7 @@ const selected = ref('home');
       <mat-navigation-rail
         v-model:expanded="expanded"
         :alignment="alignment"
+        bordered
         aria-label="内容对齐导航"
       >
         <mat-navigation-rail-item icon="home">
@@ -18952,6 +18962,7 @@ const alignment = ref('start');
         <mat-navigation-rail
           expanded
           layout="standard"
+          bordered
           aria-label="标准导航"
         >
           <mat-navigation-rail-item icon="home">
@@ -18974,6 +18985,7 @@ const alignment = ref('start');
           v-model:expanded="modalExpanded"
           collapsible
           layout="modal"
+          bordered
           aria-label="模态导航"
         >
           <mat-navigation-rail-item icon="home">
@@ -19058,6 +19070,7 @@ const modalExpanded = ref(false);
       collapsible
       hide-on-collapse
       layout="modal"
+      bordered
       aria-label="沉浸式导航"
     >
       <template #default="{ expanded: currentExpanded }">
@@ -19144,6 +19157,7 @@ Material Design 规范推荐间距：
       v-model="selected"
       v-model:expanded="expanded"
       collapsible
+      bordered
       aria-label="带扩展内容的导航"
     >
       <template #default="{ expanded: currentExpanded }">
@@ -19243,7 +19257,7 @@ const selected = ref('inbox');
         无菜单、无 FAB
       </mat-text>
       <mat-layout class="navigation-rail-header-spacing-example-frame">
-        <mat-navigation-rail expanded aria-label="无顶部操作导航">
+        <mat-navigation-rail expanded bordered aria-label="无顶部操作导航">
           <mat-navigation-rail-item icon="home">
             首页
           </mat-navigation-rail-item>
@@ -19259,7 +19273,7 @@ const selected = ref('inbox');
         仅菜单
       </mat-text>
       <mat-layout class="navigation-rail-header-spacing-example-frame">
-        <mat-navigation-rail expanded collapsible aria-label="仅菜单导航">
+        <mat-navigation-rail expanded collapsible bordered aria-label="仅菜单导航">
           <mat-btn
             variant="standard"
             icon="menu_open"
@@ -19280,7 +19294,7 @@ const selected = ref('inbox');
         仅 FAB
       </mat-text>
       <mat-layout class="navigation-rail-header-spacing-example-frame">
-        <mat-navigation-rail expanded aria-label="仅 FAB 导航">
+        <mat-navigation-rail expanded bordered aria-label="仅 FAB 导航">
           <mat-fab size="small" icon="add" label="新建" />
 
           <mat-navigation-rail-item icon="home">
@@ -19298,7 +19312,7 @@ const selected = ref('inbox');
         菜单和 FAB
       </mat-text>
       <mat-layout class="navigation-rail-header-spacing-example-frame">
-        <mat-navigation-rail expanded collapsible aria-label="菜单和 FAB 导航">
+        <mat-navigation-rail expanded collapsible bordered aria-label="菜单和 FAB 导航">
           <mat-btn
             variant="standard"
             icon="menu_open"
@@ -19367,6 +19381,7 @@ Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导�
       v-model:expanded="expanded"
       :full-width="fullWidth"
       collapsible
+      bordered
       aria-label="带 trailing 的导航"
     >
       <template #default="{ expanded: currentExpanded }">
@@ -19476,6 +19491,7 @@ const selected = ref('inbox');
 | `app` | `boolean` | `false` | 开启应用布局模式；位于 `MatAppRoot` 且省略 `attach` 时自动登记边缘，否则固定到显式目标 |
 | `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；一旦显式提供就优先于 AppRoot 自动接入 |
 | `placeholder` | `boolean` | `false` | 仅 `app=true` 有效；在声明位置为固定 rail 或 bar 预留实际尺寸 |
+| `bordered` | `boolean` | `false` | 是否复用 Aside 的边框修饰，在面向内容的一侧渲染 1px 细边框 |
 | `open` | `boolean` | `undefined` | 受控显示/隐藏状态，支持 `v-model:open`；省略时遵循 `hide-on-collapse` 或 `modal` 模式与 `expanded` 联动 |
 
 #### `MatNavigationRailItem`

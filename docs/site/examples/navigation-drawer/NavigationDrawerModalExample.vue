@@ -14,6 +14,7 @@ const selected = ref('home');
       v-model="selected"
       v-model:expanded="expanded"
       layout="modal"
+      bordered
       aria-label="模态导航抽屉"
     >
       <template #default="{ expanded: currentExpanded }">

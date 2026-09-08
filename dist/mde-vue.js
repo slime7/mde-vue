@@ -13011,6 +13011,10 @@ var Rc = { class: "mat-snackbar__text" }, zc = {
 			type: Boolean,
 			default: !1
 		},
+		bordered: {
+			type: Boolean,
+			default: !1
+		},
 		open: {
 			type: Boolean,
 			default: void 0
@@ -13171,6 +13175,7 @@ var Rc = { class: "mat-snackbar__text" }, zc = {
 			app: z(u).app,
 			attach: A.value,
 			placeholder: z(u).placeholder,
+			bordered: z(u).bordered,
 			modal: F.value,
 			open: H.value,
 			"block-size": ae.value,
@@ -13204,6 +13209,7 @@ var Rc = { class: "mat-snackbar__text" }, zc = {
 			"app",
 			"attach",
 			"placeholder",
+			"bordered",
 			"modal",
 			"open",
 			"block-size",
@@ -13216,7 +13222,7 @@ var Rc = { class: "mat-snackbar__text" }, zc = {
 			"style"
 		])) : o("", !0);
 	}
-}), [["__scopeId", "data-v-9da0c291"]]), hl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-5f42e80e"]]), hl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationBar",
 	inheritAttrs: !1
 }, {
@@ -13459,6 +13465,10 @@ var Rc = { class: "mat-snackbar__text" }, zc = {
 			type: Boolean,
 			default: !1
 		},
+		bordered: {
+			type: Boolean,
+			default: !1
+		},
 		safeArea: {
 			type: [
 				Boolean,
@@ -13501,6 +13511,7 @@ var Rc = { class: "mat-snackbar__text" }, zc = {
 			width: z(n).width,
 			layout: z(n).layout,
 			alignment: z(n).alignment,
+			bordered: z(n).bordered,
 			app: z(n).app,
 			attach: s.value,
 			placeholder: z(n).placeholder,
@@ -13521,6 +13532,7 @@ var Rc = { class: "mat-snackbar__text" }, zc = {
 			"width",
 			"layout",
 			"alignment",
+			"bordered",
 			"app",
 			"attach",
 			"placeholder",
@@ -13529,7 +13541,7 @@ var Rc = { class: "mat-snackbar__text" }, zc = {
 			"mode"
 		]));
 	}
-}), [["__scopeId", "data-v-a42e437a"]]), vl = ["aria-hidden"], yl = { class: "mat-navigation-group__items" }, bl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-badedcb7"]]), vl = ["aria-hidden"], yl = { class: "mat-navigation-group__items" }, bl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationGroup",
 	inheritAttrs: !1
 }, {

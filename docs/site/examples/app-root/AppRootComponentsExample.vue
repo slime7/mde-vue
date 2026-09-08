@@ -14,82 +14,83 @@ const current = ref('home');
       外部宿主区域（模拟非 AppRoot 作用范围）
     </div>
 
-  <mat-app-root
-    :fill-viewport="false"
-    class="app-root-components-example"
-  >
-    <mat-navigation-rail
-      v-model="current"
-      app
+    <mat-app-root
+      :fill-viewport="false"
+      class="app-root-components-example"
     >
-      <mat-navigation-rail-item value="home" icon="home">
-        首页
-      </mat-navigation-rail-item>
-      <mat-navigation-rail-item value="settings" icon="settings">
-        设置
-      </mat-navigation-rail-item>
-    </mat-navigation-rail>
+      <mat-navigation-rail
+        v-model="current"
+        app
+        bordered
+      >
+        <mat-navigation-rail-item value="home" icon="home">
+          首页
+        </mat-navigation-rail-item>
+        <mat-navigation-rail-item value="settings" icon="settings">
+          设置
+        </mat-navigation-rail-item>
+      </mat-navigation-rail>
 
-    <mat-app-bar app>
-      应用标题
-    </mat-app-bar>
+      <mat-app-bar app>
+        应用标题
+      </mat-app-bar>
 
-    <mat-scroll-area>
-      <mat-container>
-        <section class="app-root-components-example__content">
-          <h3>组件自动接入与正文滚动</h3>
-          <p>Navigation 与底部 docked Toolbar 自动登记边缘；正文使用 MatScrollArea 和 MatContainer 组合进行滚动，FAB、Snackbar 和 Tooltip 自动浮动于正文与 Toolbar 之上。</p>
-          <mat-btn
-            id="app-root-tooltip-target"
-            @click="snackbarOpen = true"
-          >
-            显示 Snackbar
-          </mat-btn>
-          <mat-tooltip
-            content="这个 Tooltip 属于当前 AppRoot"
-            target="#app-root-tooltip-target"
-          />
+      <mat-scroll-area>
+        <mat-container>
+          <section class="app-root-components-example__content">
+            <h3>组件自动接入与正文滚动</h3>
+            <p>Navigation 与底部 docked Toolbar 自动登记边缘；正文使用 MatScrollArea 和 MatContainer 组合进行滚动，FAB、Snackbar 和 Tooltip 自动浮动于正文与 Toolbar 之上。</p>
+            <mat-btn
+              id="app-root-tooltip-target"
+              @click="snackbarOpen = true"
+            >
+              显示 Snackbar
+            </mat-btn>
+            <mat-tooltip
+              content="这个 Tooltip 属于当前 AppRoot"
+              target="#app-root-tooltip-target"
+            />
 
-          <article
-            v-for="item in 4"
-            :key="item"
-            class="app-root-components-example__card"
-          >
-            <h4>滚动列表项 {{ item }}</h4>
-            <p>正文内容在 ScrollArea 内部滚动，Navigation 不会被滚动带走。</p>
-          </article>
-        </section>
-      </mat-container>
-    </mat-scroll-area>
+            <article
+              v-for="item in 4"
+              :key="item"
+              class="app-root-components-example__card"
+            >
+              <h4>滚动列表项 {{ item }}</h4>
+              <p>正文内容在 ScrollArea 内部滚动，Navigation 不会被滚动带走。</p>
+            </article>
+          </section>
+        </mat-container>
+      </mat-scroll-area>
 
-    <mat-toolbar
-      app
-      variant="docked"
-    >
-      <mat-btn variant="standard">
-        取消
-      </mat-btn>
-      <mat-spacer />
-      <mat-btn variant="standard">
-        保存
-      </mat-btn>
-    </mat-toolbar>
+      <mat-toolbar
+        app
+        variant="docked"
+      >
+        <mat-btn variant="standard">
+          取消
+        </mat-btn>
+        <mat-spacer />
+        <mat-btn variant="standard">
+          保存
+        </mat-btn>
+      </mat-toolbar>
 
-    <mat-fab
-      app
-      icon="add"
-      label="新建"
-      position="end"
-      @click="snackbarOpen = true"
-    />
+      <mat-fab
+        app
+        icon="add"
+        label="新建"
+        position="end"
+        @click="snackbarOpen = true"
+      />
 
-    <mat-snackbar
-      v-model="snackbarOpen"
-      text="AppRoot 已自动排列浮动组件"
-      closable
-      position="right"
-    />
-  </mat-app-root>
+      <mat-snackbar
+        v-model="snackbarOpen"
+        text="AppRoot 已自动排列浮动组件"
+        closable
+        position="right"
+      />
+    </mat-app-root>
   </div>
 </template>
 <!-- #endregion template -->

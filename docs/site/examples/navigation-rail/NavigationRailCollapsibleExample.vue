@@ -14,6 +14,7 @@ const selected = ref('overview');
       v-model="selected"
       v-model:expanded="expanded"
       collapsible
+      bordered
       aria-label="可展开导航"
     >
       <template #default="{ expanded: currentExpanded }">

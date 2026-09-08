@@ -16,6 +16,7 @@ const active = ref(true);
       v-model:open="active"
       app
       placeholder
+      bordered
       aria-label="占位导航"
     >
       <mat-navigation-rail-item icon="home">

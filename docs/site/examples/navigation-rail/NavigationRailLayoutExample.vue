@@ -15,6 +15,7 @@ const modalExpanded = ref(false);
         <mat-navigation-rail
           expanded
           layout="standard"
+          bordered
           aria-label="标准导航"
         >
           <mat-navigation-rail-item icon="home">
@@ -37,6 +38,7 @@ const modalExpanded = ref(false);
           v-model:expanded="modalExpanded"
           collapsible
           layout="modal"
+          bordered
           aria-label="模态导航"
         >
           <mat-navigation-rail-item icon="home">

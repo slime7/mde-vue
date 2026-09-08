@@ -11,6 +11,7 @@ const selected = ref('home');
   <mat-layout class="navigation-rail-example-shell">
     <mat-navigation-rail
       v-model="selected"
+      bordered
       aria-label="主导航"
     >
       <mat-navigation-rail-item value="home" icon="home">

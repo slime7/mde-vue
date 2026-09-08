@@ -99,6 +99,16 @@ const props = defineProps({
     default: false,
   },
   /**
+   * 是否在面向内容的一侧渲染 1px 细边框。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  bordered: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * 安全区留白配置。
    *
    * @type {boolean | number | string}
@@ -159,6 +169,7 @@ const emit = defineEmits({
     :width="propsWithDefaults.width"
     :layout="propsWithDefaults.layout"
     :alignment="propsWithDefaults.alignment"
+    :bordered="propsWithDefaults.bordered"
     :app="propsWithDefaults.app"
     :attach="forwardedAttach"
     :placeholder="propsWithDefaults.placeholder"

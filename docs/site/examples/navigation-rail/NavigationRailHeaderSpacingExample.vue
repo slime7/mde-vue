@@ -6,7 +6,7 @@
         无菜单、无 FAB
       </mat-text>
       <mat-layout class="navigation-rail-header-spacing-example-frame">
-        <mat-navigation-rail expanded aria-label="无顶部操作导航">
+        <mat-navigation-rail expanded bordered aria-label="无顶部操作导航">
           <mat-navigation-rail-item icon="home">
             首页
           </mat-navigation-rail-item>
@@ -22,7 +22,7 @@
         仅菜单
       </mat-text>
       <mat-layout class="navigation-rail-header-spacing-example-frame">
-        <mat-navigation-rail expanded collapsible aria-label="仅菜单导航">
+        <mat-navigation-rail expanded collapsible bordered aria-label="仅菜单导航">
           <mat-btn
             variant="standard"
             icon="menu_open"
@@ -43,7 +43,7 @@
         仅 FAB
       </mat-text>
       <mat-layout class="navigation-rail-header-spacing-example-frame">
-        <mat-navigation-rail expanded aria-label="仅 FAB 导航">
+        <mat-navigation-rail expanded bordered aria-label="仅 FAB 导航">
           <mat-fab size="small" icon="add" label="新建" />
 
           <mat-navigation-rail-item icon="home">
@@ -61,7 +61,7 @@
         菜单和 FAB
       </mat-text>
       <mat-layout class="navigation-rail-header-spacing-example-frame">
-        <mat-navigation-rail expanded collapsible aria-label="菜单和 FAB 导航">
+        <mat-navigation-rail expanded collapsible bordered aria-label="菜单和 FAB 导航">
           <mat-btn
             variant="standard"
             icon="menu_open"

@@ -14,6 +14,7 @@ const expanded = ref(false);
       collapsible
       hide-on-collapse
       layout="modal"
+      bordered
       aria-label="沉浸式导航"
     >
       <template #default="{ expanded: currentExpanded }">

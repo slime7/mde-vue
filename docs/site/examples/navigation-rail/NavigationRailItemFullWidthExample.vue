@@ -15,6 +15,7 @@ const selected = ref('home');
         <mat-navigation-rail
           v-model="selected"
           expanded
+          bordered
           aria-label="贴合内容导航"
         >
           <mat-navigation-rail-item value="home" icon="home">
@@ -37,6 +38,7 @@ const selected = ref('home');
           v-model="selected"
           expanded
           full-width
+          bordered
           aria-label="铺满宽度导航"
         >
           <mat-navigation-rail-item value="home" icon="home">

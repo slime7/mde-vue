@@ -14,6 +14,7 @@ const selected = ref('inbox');
       v-model="selected"
       v-model:expanded="expanded"
       collapsible
+      bordered
       aria-label="带通知徽标的导航"
     >
       <mat-navigation-rail-item

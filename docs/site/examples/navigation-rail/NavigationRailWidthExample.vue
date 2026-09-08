@@ -26,6 +26,7 @@ const width = ref(280);
       <mat-navigation-rail
         expanded
         :width="width"
+        bordered
         aria-label="自定义宽度导航"
       >
         <mat-navigation-rail-item icon="home">
