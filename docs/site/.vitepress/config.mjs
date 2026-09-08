@@ -54,6 +54,90 @@ function createVitePressStylesLayerPlugin() {
   };
 }
 
+/**
+ * 注册将示例代码块合并入 DocsPreview 的 markdown-it 规则。
+ *
+ * @param {import('markdown-it')} md MarkdownIt 实例。
+ */
+function registerMergeDocsPreviewRule(md) {
+  md.core.ruler.push('merge_docs_preview', (state) => {
+    const { tokens } = state;
+    let i = 0;
+    while (i < tokens.length) {
+      if (tokens[i].type === 'container_details_open' && tokens[i].info.includes('查看示例代码')) {
+        const openIdx = i;
+        let closeIdx = -1;
+        let depth = 1;
+        for (let j = openIdx + 1; j < tokens.length; j += 1) {
+          if (tokens[j].type === 'container_details_open') depth += 1;
+          if (tokens[j].type === 'container_details_close') {
+            depth -= 1;
+            if (depth === 0) {
+              closeIdx = j;
+              break;
+            }
+          }
+        }
+
+        if (closeIdx !== -1) {
+          let previewIdx = -1;
+          for (let j = closeIdx + 1; j < Math.min(closeIdx + 5, tokens.length); j += 1) {
+            if (tokens[j].type === 'html_block' && tokens[j].content.includes('<DocsPreview')) {
+              previewIdx = j;
+              break;
+            }
+          }
+
+          if (previewIdx !== -1) {
+            let examplePath = '';
+            for (let k = openIdx; k < closeIdx; k += 1) {
+              const [srcFile] = tokens[k].src || [];
+              if (srcFile) {
+                const normalizedSrc = srcFile.replaceAll('\\', '/');
+                const match = normalizedSrc.match(/\/examples\/([^/]+)\/([^/]+)\.vue$/);
+                if (match) {
+                  const [, componentKey, exampleName] = match;
+                  examplePath = `${componentKey}/${exampleName}`;
+                  break;
+                }
+              }
+            }
+
+            tokens[openIdx].type = 'html_block';
+            tokens[openIdx].content = '<template #code>';
+            tokens[closeIdx].type = 'html_block';
+            tokens[closeIdx].content = '</template>';
+
+            const codeTokens = tokens.splice(openIdx, closeIdx - openIdx + 1);
+            const newPreviewIdx = previewIdx - codeTokens.length;
+
+            const previewToken = tokens[newPreviewIdx];
+            let previewContent = previewToken.content;
+            if (examplePath && !previewContent.includes('example=')) {
+              previewContent = previewContent.replace(
+                /(<DocsPreview\b[^>]*)/,
+                `$1 example="${examplePath}"`,
+              );
+            }
+
+            const [, previewOpenTag, previewRestContent] = previewContent
+              .match(/(^[\s\S]*?<DocsPreview\b[^>]*>)([\s\S]*)/) || [];
+            if (previewOpenTag) {
+              previewToken.content = previewOpenTag;
+              const restToken = new state.Token('html_block', '', 0);
+              restToken.content = previewRestContent;
+              tokens.splice(newPreviewIdx + 1, 0, ...codeTokens, restToken);
+            }
+
+            i = newPreviewIdx + codeTokens.length;
+          }
+        }
+      }
+      i += 1;
+    }
+  });
+}
+
 export default defineConfig({
   base: process.env.VITEPRESS_BASE || '/',
   title: 'mde-vue',
@@ -76,6 +160,7 @@ export default defineConfig({
   ],
   markdown: {
     config(md) {
+      registerMergeDocsPreviewRule(md);
       const tableOpen = md.renderer.rules.table_open;
 
       // VitePress 的 markdown 配置钩子要求就地修改渲染规则。

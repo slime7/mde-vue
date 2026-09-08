@@ -41,7 +41,7 @@
     "types:check": "node scripts/build-types.mjs --check",
     "docs:llms": "node scripts/build-llms.mjs",
     "docs:check": "node scripts/build-llms.mjs --check",
-    "docs:build": "node scripts/build-llms.mjs && vitepress build docs/site",
+    "docs:build": "node scripts/build-llms.mjs && node --max-old-space-size=8192 ./node_modules/vitepress/bin/vitepress.js build docs/site",
     "docs:preview": "vitepress preview docs/site",
     "lint": "eslint . && stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\"",
     "lint:js": "eslint .",
@@ -52,7 +52,7 @@
     "test": "vitest",
     "test:run": "vitest run",
     "validate:agent-docs": "python scripts/validate-agent-docs.py .",
-    "check": "eslint . && stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\" && node scripts/build-types.mjs && node scripts/build-package.mjs && vitest run && node scripts/build-llms.mjs --check && vitepress build docs/site && python scripts/validate-agent-docs.py ."
+    "check": "eslint . && stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\" && node scripts/build-types.mjs && node scripts/build-package.mjs && vitest run && node scripts/build-llms.mjs --check && node --max-old-space-size=8192 ./node_modules/vitepress/bin/vitepress.js build docs/site && python scripts/validate-agent-docs.py ."
   },
   "dependencies": {
     "@material/material-color-utilities": "^0.4.0"

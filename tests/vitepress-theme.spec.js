@@ -143,4 +143,24 @@ describe('VitePress 文档自定义主题', () => {
     expect(playgroundSource).toContain('MAT_APP_ROOT_KEY');
     expect(playgroundSource).toContain('provide(MAT_APP_ROOT_KEY, null);');
   });
+
+  it('示例预览组件合并代码块并提供演练场跳转与折叠操作栏', () => {
+    const previewSource = readThemeFile('DocsPreview.vue');
+    const configSource = readFileSync(resolve('docs/site/.vitepress/config.mjs'), 'utf8');
+
+    expect(previewSource).toContain('docs-preview__header');
+    expect(previewSource).toContain('docs-preview__header-actions');
+    expect(previewSource).toContain('playgroundUrl');
+    expect(previewSource).toContain('target="_blank"');
+    expect(previewSource).toContain('icon="terminal"');
+    expect(previewSource).toContain('icon="code"');
+    expect(previewSource).toContain('docs-preview__code');
+    expect(previewSource).toContain('name="code"');
+    expect(previewSource).toContain('docs-preview__body');
+    expect(previewSource).toContain('padding: 16px;');
+    expect(previewSource).toContain('background: var(--mat-sys-color-background);');
+
+    expect(configSource).toContain('registerMergeDocsPreviewRule');
+    expect(configSource).toContain('merge_docs_preview');
+  });
 });
