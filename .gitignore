@@ -25,3 +25,6 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+# Playground assets
+docs/site/public/playground/assets/

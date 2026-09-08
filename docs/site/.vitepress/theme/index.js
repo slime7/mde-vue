@@ -4,6 +4,7 @@ import { watch } from 'vue';
 import { createMatUi } from 'mde-vue';
 import DocsPreview from './DocsPreview.vue';
 import DocsPlayground from './DocsPlayground.vue';
+import PlaygroundView from './playground/PlaygroundView.vue';
 import Layout from './Layout.vue';
 
 const DOCS_THEME_STORAGE_KEY = 'mde-vue.docs.theme';
@@ -107,6 +108,7 @@ export default {
   enhanceApp({ app }) {
     app.component('DocsPreview', DocsPreview);
     app.component('DocsPlayground', DocsPlayground);
+    app.component('PlaygroundView', PlaygroundView);
 
     const matUi = createMatUi({
       iconClass: 'material-symbols-outlined',

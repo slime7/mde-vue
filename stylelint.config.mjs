@@ -4,6 +4,11 @@ export default {
     'stylelint-config-standard',
     'stylelint-config-recommended-vue',
   ],
+  ignoreFiles: [
+    'dist/**',
+    'docs/site/public/**',
+    'docs/site/.vitepress/dist/**',
+  ],
   plugins: ['@stylistic/stylelint-plugin'],
   rules: {
     '@stylistic/indentation': 2,

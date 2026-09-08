@@ -8,6 +8,7 @@ import {
   copyLlmsArtifacts,
   createLlmsArtifactsPlugin,
 } from '../../../scripts/build-llms.mjs';
+import { buildPlaygroundAssets } from '../../../scripts/build-playground-assets.mjs';
 /* eslint-enable import-x/extensions */
 
 const googleFontsApiUrl = 'https://fonts.googleapis.com/css2';
@@ -22,6 +23,15 @@ const materialSymbolsUrl = [
   'opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
   '&display=block',
 ].join('');
+
+function createPlaygroundAssetsPlugin() {
+  return {
+    name: 'mde-vue-playground-assets',
+    async buildStart() {
+      await buildPlaygroundAssets();
+    },
+  };
+}
 
 function createVitePressStylesLayerPlugin() {
   const themeStylesPath = '/vitepress/dist/client/theme-default/styles/';
@@ -85,6 +95,7 @@ export default defineConfig({
       { text: '指南', link: '/guide/overview' },
       { text: '组件', link: '/components/button' },
       { text: '主题设置', link: '/guide/theme' },
+      { text: '演练场', link: '/playground', target: '_blank' },
       { text: 'AI', link: '/ai/llms' },
     ],
     sidebar: [
@@ -212,6 +223,7 @@ export default defineConfig({
       createVitePressStylesLayerPlugin(),
       tailwindcss(),
       createLlmsArtifactsPlugin(),
+      createPlaygroundAssetsPlugin(),
     ],
     resolve: {
       alias: [

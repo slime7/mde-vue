@@ -245,7 +245,8 @@ function normalizeLink(link) {
 
 const pageTitle = computed(() => page.value.title || frontmatter.value.title || '');
 const isHome = computed(() => frontmatter.value?.layout === 'home');
-const hasSidebar = computed(() => !isHome.value && frontmatter.value?.sidebar !== false);
+const isPlayground = computed(() => frontmatter.value?.layout === 'playground');
+const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontmatter.value?.sidebar !== false);
 </script>
 
 <template>
@@ -290,6 +291,8 @@ const hasSidebar = computed(() => !isHome.value && frontmatter.value?.sidebar !=
             :key="idx"
             variant="standard"
             :href="normalizeLink(navItem.link)"
+            :target="navItem.target"
+            :rel="navItem.target === '_blank' ? (navItem.rel || 'noopener noreferrer') : navItem.rel"
           >
             {{ navItem.text }}
           </mat-btn>
@@ -399,8 +402,15 @@ const hasSidebar = computed(() => !isHome.value && frontmatter.value?.sidebar !=
       </div>
     </mat-navigation-drawer>
 
-    <div class="mde-docs-content-wrapper">
+    <div
+      class="mde-docs-content-wrapper"
+      :class="{ 'mde-docs-content-wrapper--playground': isPlayground }"
+    >
+      <div v-if="isPlayground" class="mde-docs-playground-container">
+        <PlaygroundView />
+      </div>
       <mat-scroll-area
+        v-else
         ref="scrollAreaRef"
         class="mde-docs-scroll-area"
         bar-width="thin"
@@ -472,6 +482,12 @@ const hasSidebar = computed(() => !isHome.value && frontmatter.value?.sidebar !=
     overflow: clip;
   }
 
+  .mde-docs-root :deep(.mat-app-root__content) {
+    block-size: 100%;
+    max-block-size: 100%;
+    min-block-size: 0;
+  }
+
   .mde-docs-app-bar-brand-title {
     display: flex;
     align-items: center;
@@ -537,6 +553,21 @@ const hasSidebar = computed(() => !isHome.value && frontmatter.value?.sidebar !=
   }
 
   .mde-docs-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    inline-size: 100%;
+    block-size: 100%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: hidden;
+  }
+
+  .mde-docs-content-wrapper--playground {
+    overflow: hidden;
+  }
+
+  .mde-docs-playground-container {
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
