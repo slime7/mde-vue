@@ -8,7 +8,7 @@ const scrollTarget = ref(null);
 
 <!-- #region template -->
 <template>
-  <div ref="scrollTarget" class="app-bar-scroll-example" tabindex="0">
+  <mat-layout ref="scrollTarget" class="app-bar-scroll-example" tabindex="0">
     <mat-app-bar
       variant="large-flexible"
       :scroll-target="scrollTarget"
@@ -35,7 +35,7 @@ const scrollTarget = ref(null);
         <span>用于验证应用栏在真实滚动内容上方的折叠表现。</span>
       </article>
     </main>
-  </div>
+  </mat-layout>
 </template>
 <!-- #endregion template -->
 

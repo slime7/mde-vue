@@ -12476,7 +12476,7 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 
 ```vue
 <template>
-  <div class="app-bar-variant-example">
+  <mat-layout class="app-bar-variant-example">
     <mat-app-bar variant="search">
       <mat-search v-model="query" label="搜索项目" />
     </mat-app-bar>
@@ -12492,7 +12492,7 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
     <mat-app-bar variant="large-flexible">
       大型灵活应用栏
     </mat-app-bar>
-  </div>
+  </mat-layout>
 </template>
 ```
 ```vue
@@ -12510,7 +12510,7 @@ const query = ref('');
   flex-direction: column;
   align-items: stretch;
   gap: 16px;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .app-bar-variant-example :deep(.mat-app-bar) {
@@ -12535,7 +12535,7 @@ const query = ref('');
 
 ```vue
 <template>
-  <div class="app-bar-content-example">
+  <mat-layout class="app-bar-content-example">
     <mat-app-bar content="headline">
       项目
     </mat-app-bar>
@@ -12550,7 +12550,7 @@ const query = ref('');
     <mat-app-bar content="search">
       <mat-search v-model="query" label="搜索文档" />
     </mat-app-bar>
-  </div>
+  </mat-layout>
 </template>
 ```
 ```vue
@@ -12568,7 +12568,7 @@ const query = ref('');
   flex-direction: column;
   align-items: stretch;
   gap: 12px;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .app-bar-content-example :deep(.mat-app-bar) {
@@ -12602,7 +12602,7 @@ const query = ref('');
 
 ```vue
 <template>
-  <div class="app-bar-align-example">
+  <mat-layout class="app-bar-align-example">
     <mat-app-bar align="start">
       起始对齐
 
@@ -12626,7 +12626,7 @@ const query = ref('');
         <mat-btn icon="favorite" label="收藏" size="small" variant="standard" />
       </template>
     </mat-app-bar>
-  </div>
+  </mat-layout>
 </template>
 ```
 ```vue
@@ -12637,7 +12637,7 @@ const query = ref('');
   flex-direction: column;
   align-items: stretch;
   gap: 12px;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .app-bar-align-example :deep(.mat-app-bar) {
@@ -12662,29 +12662,34 @@ const query = ref('');
 
 ```vue
 <template>
-  <mat-app-bar class="app-bar-slots-example" variant="medium-flexible">
-    项目工作区
+  <mat-layout class="app-bar-slots-example">
+    <mat-app-bar variant="medium-flexible">
+      项目工作区
 
-    <template #leading>
-      <mat-btn icon="menu" label="菜单" size="small" variant="standard" />
-    </template>
+      <template #leading>
+        <mat-btn icon="menu" label="菜单" size="small" variant="standard" />
+      </template>
 
-    <template #subtitle>
-      3 个成员正在编辑
-    </template>
+      <template #subtitle>
+        3 个成员正在编辑
+      </template>
 
-    <template #trailing>
-      <mat-btn icon="share" label="分享" size="small" variant="filled-tonal" />
-      <mat-btn icon="more_vert" label="更多" size="small" variant="standard" />
-    </template>
-  </mat-app-bar>
+      <template #trailing>
+        <mat-btn icon="share" label="分享" size="small" variant="filled-tonal" />
+        <mat-btn icon="more_vert" label="更多" size="small" variant="standard" />
+      </template>
+    </mat-app-bar>
+  </mat-layout>
 </template>
 ```
 ```vue
 <style scoped>
 .app-bar-slots-example {
+  overflow: auto;
+}
+
+.app-bar-slots-example :deep(.mat-app-bar) {
   position: static;
-  overflow: hidden;
 }
 </style>
 ```
@@ -12707,7 +12712,7 @@ const query = ref('');
 
 ```vue
 <template>
-  <div ref="scrollTarget" class="app-bar-scroll-example" tabindex="0">
+  <mat-layout ref="scrollTarget" class="app-bar-scroll-example" tabindex="0">
     <mat-app-bar
       variant="large-flexible"
       :scroll-target="scrollTarget"
@@ -12734,7 +12739,7 @@ const query = ref('');
         <span>用于验证应用栏在真实滚动内容上方的折叠表现。</span>
       </article>
     </main>
-  </div>
+  </mat-layout>
 </template>
 ```
 ```vue

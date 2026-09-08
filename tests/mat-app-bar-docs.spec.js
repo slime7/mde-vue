@@ -59,4 +59,16 @@ describe('App bar 文档', () => {
     expect(example).toContain('variant="large-flexible"');
     expect(example).toContain('v-for="index in 8"');
   });
+
+  it('所有示例都使用局部 Layout 容器隔离滚动源', () => {
+    exampleNames.forEach((exampleName) => {
+      const example = readFileSync(
+        resolve('docs/site/examples/app-bar', `${exampleName}.vue`),
+        'utf8',
+      );
+
+      expect(example).toContain('<mat-layout');
+      expect(example).toContain('overflow: auto;');
+    });
+  });
 });

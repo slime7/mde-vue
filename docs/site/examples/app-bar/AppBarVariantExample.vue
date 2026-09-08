@@ -1,6 +1,6 @@
 <!-- #region template -->
 <template>
-  <div class="app-bar-variant-example">
+  <mat-layout class="app-bar-variant-example">
     <mat-app-bar variant="search">
       <mat-search v-model="query" label="搜索项目" />
     </mat-app-bar>
@@ -16,7 +16,7 @@
     <mat-app-bar variant="large-flexible">
       大型灵活应用栏
     </mat-app-bar>
-  </div>
+  </mat-layout>
 </template>
 <!-- #endregion template -->
 
@@ -36,7 +36,7 @@ const query = ref('');
   flex-direction: column;
   align-items: stretch;
   gap: 16px;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .app-bar-variant-example :deep(.mat-app-bar) {

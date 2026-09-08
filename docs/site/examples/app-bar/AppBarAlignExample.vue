@@ -1,6 +1,6 @@
 <!-- #region template -->
 <template>
-  <div class="app-bar-align-example">
+  <mat-layout class="app-bar-align-example">
     <mat-app-bar align="start">
       起始对齐
 
@@ -24,7 +24,7 @@
         <mat-btn icon="favorite" label="收藏" size="small" variant="standard" />
       </template>
     </mat-app-bar>
-  </div>
+  </mat-layout>
 </template>
 <!-- #endregion template -->
 
@@ -36,7 +36,7 @@
   flex-direction: column;
   align-items: stretch;
   gap: 12px;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .app-bar-align-example :deep(.mat-app-bar) {

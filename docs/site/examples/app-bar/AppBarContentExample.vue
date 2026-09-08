@@ -1,6 +1,6 @@
 <!-- #region template -->
 <template>
-  <div class="app-bar-content-example">
+  <mat-layout class="app-bar-content-example">
     <mat-app-bar content="headline">
       项目
     </mat-app-bar>
@@ -15,7 +15,7 @@
     <mat-app-bar content="search">
       <mat-search v-model="query" label="搜索文档" />
     </mat-app-bar>
-  </div>
+  </mat-layout>
 </template>
 <!-- #endregion template -->
 
@@ -35,7 +35,7 @@ const query = ref('');
   flex-direction: column;
   align-items: stretch;
   gap: 12px;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .app-bar-content-example :deep(.mat-app-bar) {
