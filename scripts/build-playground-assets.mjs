@@ -103,14 +103,36 @@ export async function buildPlaygroundAssets() {
     import { createMatUi } from 'mde-vue';
 
     let currentApp = null;
+    let currentMatUiInstance = null;
     let currentStyleTag = document.getElementById('playground-dynamic-style');
     let currentThemeOptions = {};
+    let isUserThemeCustomized = false;
 
-    function applyThemeToDocument(options) {
-      if (options && options.mode === 'dark') {
+    function applyThemeToSandbox(options) {
+      if (!options || typeof options !== 'object') {
+        return;
+      }
+
+      if (options.mode === 'dark') {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
+      }
+
+      if (currentMatUiInstance && currentMatUiInstance.theme && !isUserThemeCustomized) {
+        const themeController = currentMatUiInstance.theme;
+        if (options.mode && themeController.mode?.value !== options.mode) {
+          themeController.setMode(options.mode);
+        }
+        if (options.seedColor && themeController.seedColor?.value !== options.seedColor) {
+          themeController.setSeedColor(options.seedColor);
+        }
+        if (options.schemeVariant && themeController.schemeVariant?.value !== options.schemeVariant) {
+          themeController.setSchemeVariant(options.schemeVariant);
+        }
+        if (typeof options.contrastLevel === 'number' && themeController.contrastLevel?.value !== options.contrastLevel) {
+          themeController.setContrastLevel(options.contrastLevel);
+        }
       }
     }
 
@@ -122,7 +144,7 @@ export async function buildPlaygroundAssets() {
 
       if (data.type === 'UPDATE_THEME') {
         currentThemeOptions = data.theme || {};
-        applyThemeToDocument(currentThemeOptions);
+        applyThemeToSandbox(currentThemeOptions);
         return;
       }
 
@@ -130,7 +152,6 @@ export async function buildPlaygroundAssets() {
         const { code, css, matUiCode, theme } = data;
         if (theme) {
           currentThemeOptions = theme;
-          applyThemeToDocument(currentThemeOptions);
         }
 
         try {
@@ -159,7 +180,9 @@ export async function buildPlaygroundAssets() {
           }
 
           let matUiInstance;
+          isUserThemeCustomized = false;
           if (matUiCode && matUiCode.trim()) {
+            isUserThemeCustomized = /\\btheme\\s*:/.test(matUiCode);
             const matUiBlob = new Blob([matUiCode], { type: 'application/javascript' });
             const matUiBlobUrl = URL.createObjectURL(matUiBlob);
             try {
@@ -176,6 +199,9 @@ export async function buildPlaygroundAssets() {
               theme: currentThemeOptions,
             });
           }
+
+          currentMatUiInstance = matUiInstance;
+          applyThemeToSandbox(currentThemeOptions);
 
           currentApp = createApp({
             render() {

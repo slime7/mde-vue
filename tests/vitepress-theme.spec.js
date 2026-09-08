@@ -163,4 +163,17 @@ describe('VitePress 文档自定义主题', () => {
     expect(configSource).toContain('registerMergeDocsPreviewRule');
     expect(configSource).toContain('merge_docs_preview');
   });
+
+  it('演练场沙箱支持与外层页面主题及设计令牌实时联动', () => {
+    const sandboxHtml = readFileSync(resolve('docs/site/public/playground/sandbox.html'), 'utf8');
+    const playgroundView = readFileSync(resolve('docs/site/.vitepress/theme/playground/PlaygroundView.vue'), 'utf8');
+
+    expect(playgroundView).toContain("type: 'UPDATE_THEME'");
+    expect(playgroundView).toContain('SANDBOX_READY');
+    expect(sandboxHtml).toContain('applyThemeToSandbox');
+    expect(sandboxHtml).toContain('currentMatUiInstance.theme');
+    expect(sandboxHtml).toContain('themeController.setSeedColor');
+    expect(sandboxHtml).toContain('themeController.setMode');
+    expect(sandboxHtml).toContain('isUserThemeCustomized');
+  });
 });

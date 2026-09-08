@@ -185,6 +185,15 @@ function handleIframeMessage(event) {
 
   if (data.type === 'SANDBOX_READY') {
     isSandboxReady.value = true;
+    iframeRef.value?.contentWindow?.postMessage({
+      type: 'UPDATE_THEME',
+      theme: {
+        mode: matTheme.resolvedMode.value,
+        seedColor: matTheme.seedColor.value,
+        schemeVariant: matTheme.schemeVariant.value,
+        contrastLevel: matTheme.contrastLevel.value,
+      },
+    }, '*');
     triggerCompile();
   } else if (data.type === 'SANDBOX_RENDER_SUCCESS') {
     runtimeError.value = '';
