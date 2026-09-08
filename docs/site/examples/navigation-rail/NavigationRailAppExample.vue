@@ -2,7 +2,7 @@
 <script setup>
 import { ref } from 'vue';
 
-const active = ref(true);
+const open = ref(true);
 </script>
 <!-- #endregion script -->
 
@@ -13,7 +13,7 @@ const active = ref(true);
     class="navigation-rail-app-example"
   >
     <mat-navigation-rail
-      v-if="active"
+      v-model:open="open"
       app
       aria-label="应用导航"
     >
@@ -25,8 +25,8 @@ const active = ref(true);
       </mat-navigation-rail-item>
     </mat-navigation-rail>
     <div class="navigation-rail-app-example-content">
-      <mat-switch v-model="active">
-        {{ active ? '隐藏应用导航' : '显示应用导航' }}
+      <mat-switch v-model="open">
+        {{ open ? '隐藏应用导航' : '显示应用导航' }}
       </mat-switch>
       <p>应用模式的 rail 位于 MatAppRoot 时自动登记起始侧，正文内容自动避让。</p>
     </div>

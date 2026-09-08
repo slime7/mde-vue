@@ -427,7 +427,6 @@
     --mat-navigation-bar-height: 64px;
     --mat-navigation-bar-collapsed-height: 80px;
     --mat-navigation-bar-container-color: var(--mat-sys-color-surface-container);
-    --mat-navigation-bar-elevation: var(--mat-sys-elevation-level2);
     --mat-navigation-bar-edge-space: 16px;
     --mat-navigation-bar-item-space: 0;
     --mat-navigation-bar-horizontal-item-width: 128px;

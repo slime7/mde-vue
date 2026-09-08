@@ -13346,7 +13346,7 @@ var Rc = { class: "mat-snackbar__text" }, zc = {
 			"z-index"
 		]));
 	}
-}), [["__scopeId", "data-v-b10bce5e"]]), gl = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-fd7cd9aa"]]), gl = /*@__PURE__*/ Object.assign({
 	name: "MatNavigationBarItem",
 	inheritAttrs: !1
 }, {

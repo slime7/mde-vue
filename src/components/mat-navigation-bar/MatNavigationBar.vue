@@ -256,7 +256,6 @@ defineExpose({
     inline-size: 100%;
     color: var(--mat-navigation-rail-content-color);
     background: var(--mat-navigation-bar-current-container-color);
-    box-shadow: var(--mat-navigation-bar-elevation);
   }
 
   .mat-navigation-bar__content {
