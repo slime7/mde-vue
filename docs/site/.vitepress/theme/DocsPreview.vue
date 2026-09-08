@@ -165,10 +165,6 @@ function toggleCode() {
 }
 
 .docs-preview__body {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
   min-block-size: 80px;
   padding: 16px;
   color: var(--mat-sys-color-on-surface);
@@ -249,12 +245,13 @@ function toggleCode() {
 }
 
 .docs-preview__body--stacked {
+  display: flex;
   flex-direction: column;
+  gap: 16px;
   align-items: stretch;
 }
 
 .docs-preview__body > :deep(*) {
-  flex-shrink: 1;
   min-inline-size: 0;
 }
 

@@ -65,7 +65,7 @@ const backgroundCount = ref(0);
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  min-block-size: 180px;
+  block-size: 180px;
 }
 
 .example-menu__hint {

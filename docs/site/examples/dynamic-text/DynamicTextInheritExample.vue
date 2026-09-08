@@ -19,9 +19,10 @@
 <!-- #region style -->
 <style scoped>
 .example {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 24px;
-  justify-items: start;
 }
 
 .heading {

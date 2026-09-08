@@ -46,20 +46,22 @@ function handleIntersection() {
 }
 
 .intersection-example__hint {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: none;
   min-block-size: 176px;
   margin: 0;
-  place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
   text-align: center;
 }
 
 .intersection-example__target {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: none;
   min-block-size: 120px;
-  place-items: center;
   color: var(--mat-sys-color-on-tertiary-container);
   background: var(--mat-sys-color-tertiary-container);
   border-radius: var(--mat-sys-shape-corner-medium);

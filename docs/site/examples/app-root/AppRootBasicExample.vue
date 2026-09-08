@@ -13,7 +13,7 @@
 <!-- #region style -->
 <style scoped>
 .app-root-basic-example {
-  min-block-size: 240px;
+  block-size: 240px;
   overflow: hidden;
 }
 

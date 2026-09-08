@@ -22,8 +22,9 @@ const target = ref(null);
 <!-- #region style -->
 <style scoped>
 .hover-target-example {
-  display: grid;
-  justify-items: start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
 }
 

@@ -42,14 +42,16 @@ const manual = ref(true);
 <!-- #region style -->
 <style scoped>
 .loading-progress-example {
-  display: grid;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 20px;
   inline-size: 100%;
 }
 
 .controls {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   inline-size: min(100%, 320px);
 }

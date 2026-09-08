@@ -72,15 +72,16 @@ const selected = ref('file-1');
 <style scoped>
 .navigation-drawer-example-shell {
   inline-size: 100%;
-  min-block-size: 380px;
+  block-size: 380px;
   overflow: hidden;
 }
 
 .navigation-drawer-example-content {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-inline-size: 0;
-  min-block-size: 380px;
-  place-items: center;
+  block-size: 380px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

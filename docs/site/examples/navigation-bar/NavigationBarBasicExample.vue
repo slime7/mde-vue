@@ -35,17 +35,18 @@ const selected = ref('home');
 <style scoped>
 .navigation-bar-example-shell {
   inline-size: 100%;
-  min-block-size: 200px;
+  block-size: 200px;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);
   overflow: hidden;
 }
 
 .navigation-bar-example-content {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-inline-size: 0;
-  min-block-size: 200px;
-  place-items: center;
+  block-size: 200px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

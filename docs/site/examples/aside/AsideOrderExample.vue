@@ -75,7 +75,7 @@
 }
 
 .aside-order-item {
-  min-block-size: 180px;
+  block-size: 180px;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);
   overflow: hidden;

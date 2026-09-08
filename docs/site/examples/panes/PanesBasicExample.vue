@@ -56,9 +56,10 @@ function updateSizes(nextSizes) {
 }
 
 .panes-example__content {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   block-size: 100%;
-  place-items: center;
   color: var(--mat-sys-color-on-surface);
 }
 </style>

@@ -40,14 +40,16 @@ const vertical = ref(70);
 }
 
 .example__horizontal {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   flex: 1;
   gap: 12px;
 }
 
 .example__vertical {
-  display: grid;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 12px;
 }
 </style>

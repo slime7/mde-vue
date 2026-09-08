@@ -33,7 +33,7 @@ const open = ref(false);
 .bottom-sheet-responsive-example {
   display: flex;
   flex-direction: column;
-  min-block-size: 320px;
+  block-size: 320px;
   overflow: hidden;
 }
 

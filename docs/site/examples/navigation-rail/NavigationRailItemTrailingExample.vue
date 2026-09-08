@@ -58,16 +58,17 @@ const selected = ref('inbox');
 <style scoped>
 .navigation-rail-example-shell {
   inline-size: 100%;
-  min-block-size: 280px;
+  block-size: 280px;
   overflow: hidden;
 }
 
 .navigation-rail-trailing-badge {
-  display: inline-grid;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   box-sizing: border-box;
   min-inline-size: 20px;
   block-size: 20px;
-  place-items: center;
   padding-inline: 6px;
   color: var(--mat-sys-color-on-error-container);
   background: var(--mat-sys-color-error-container);
@@ -76,10 +77,11 @@ const selected = ref('inbox');
 }
 
 .navigation-rail-example-content {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 1 1 auto;
   min-inline-size: 0;
-  place-items: center;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

@@ -69,15 +69,16 @@ const selected = ref('inbox');
 <style scoped>
 .navigation-rail-badge-example-shell {
   inline-size: 100%;
-  min-block-size: 280px;
+  block-size: 280px;
   overflow: hidden;
 }
 
 .navigation-rail-badge-example-content {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-inline-size: 0;
-  min-block-size: 280px;
-  place-content: center;
+  block-size: 280px;
   gap: 8px;
   color: var(--mat-sys-color-on-surface-variant);
   text-align: center;

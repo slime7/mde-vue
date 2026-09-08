@@ -1,6 +1,6 @@
 <!-- #region template -->
 <template>
-  <div class="example-grid">
+  <div class="example-row">
     <mat-fab
       v-for="color in colors"
       :key="color"
@@ -30,7 +30,7 @@ const colors = [
 
 <!-- #region style -->
 <style scoped>
-.example-grid {
+.example-row {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;

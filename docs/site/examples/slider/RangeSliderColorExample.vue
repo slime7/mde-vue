@@ -29,7 +29,8 @@ const seededRange = ref([35, 80]);
 <!-- #region style -->
 <style scoped>
 .example {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
   inline-size: 100%;
 }

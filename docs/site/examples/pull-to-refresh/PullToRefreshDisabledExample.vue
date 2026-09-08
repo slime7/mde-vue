@@ -52,8 +52,9 @@ async function onRefresh() {
 <style scoped>
 .pull-to-refresh-disabled-example {
   user-select: none;
-  display: grid;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 12px;
   inline-size: 100%;
 }

@@ -49,15 +49,16 @@ const expanded = ref(false);
 <style scoped>
 .navigation-rail-example-shell {
   inline-size: 100%;
-  min-block-size: 280px;
+  block-size: 280px;
   overflow: hidden;
 }
 
 .navigation-rail-example-content {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-inline-size: 0;
-  min-block-size: 280px;
-  place-items: center;
+  block-size: 280px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

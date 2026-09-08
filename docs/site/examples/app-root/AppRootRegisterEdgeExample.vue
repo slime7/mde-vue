@@ -43,7 +43,7 @@ const RegisteredHeader = defineComponent({
 <!-- #region style -->
 <style scoped>
 .app-root-register-edge-example {
-  min-block-size: 280px;
+  block-size: 280px;
   overflow: hidden;
 }
 

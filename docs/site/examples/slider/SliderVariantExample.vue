@@ -26,7 +26,8 @@ const balance = ref(-20);
 <!-- #region style -->
 <style scoped>
 .example {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   inline-size: 100%;
 }

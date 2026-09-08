@@ -25,7 +25,7 @@
 <!-- #region style -->
 <style scoped>
 .layout-basic-example {
-  min-block-size: 220px;
+  block-size: 220px;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);
   overflow: hidden;

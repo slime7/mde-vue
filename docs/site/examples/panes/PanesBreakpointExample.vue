@@ -56,7 +56,8 @@ function updateBreakpoint(nextBreakpoint) {
 <!-- #region style -->
 <style scoped>
 .panes-breakpoint-example {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   inline-size: 100%;
 }
@@ -66,9 +67,10 @@ function updateBreakpoint(nextBreakpoint) {
 }
 
 .panes-breakpoint-example__panel {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   block-size: 100%;
-  place-items: center;
 }
 </style>
 <!-- #endregion style -->

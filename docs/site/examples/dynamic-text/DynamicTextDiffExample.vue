@@ -40,15 +40,17 @@ function toggleFull() {
 <!-- #region style -->
 <style scoped>
 .example {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 24px;
-  justify-items: start;
 }
 
 .row {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 8px;
-  justify-items: start;
 }
 </style>
 <!-- #endregion style -->

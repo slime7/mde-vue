@@ -61,7 +61,7 @@ const alignment = ref('center');
 .navigation-bar-example-shell {
   display: flex;
   inline-size: 100%;
-  min-block-size: 112px;
+  block-size: 112px;
   flex-direction: column;
   align-items: stretch;
   justify-content: space-between;

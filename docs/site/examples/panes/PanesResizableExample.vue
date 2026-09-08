@@ -45,7 +45,8 @@ const resizable = ref(true);
 <!-- #region style -->
 <style scoped>
 .panes-resizable-example {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   inline-size: 100%;
 }
@@ -55,8 +56,9 @@ const resizable = ref(true);
 }
 
 .panes-resizable-example__layout :deep(.mat-pane) {
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--mat-sys-color-on-surface);
 }
 </style>

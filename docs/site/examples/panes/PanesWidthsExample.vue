@@ -46,7 +46,8 @@ const widths = ref({});
 <!-- #region style -->
 <style scoped>
 .panes-widths-example {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   inline-size: 100%;
 }
@@ -61,9 +62,10 @@ const widths = ref({});
 }
 
 .panes-widths-example__panel {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   block-size: 100%;
-  place-items: center;
 }
 </style>
 <!-- #endregion style -->

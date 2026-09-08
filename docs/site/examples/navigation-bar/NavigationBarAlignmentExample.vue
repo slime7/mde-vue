@@ -64,17 +64,18 @@ const selected = ref('explore');
 
 .navigation-bar-align-layout {
   inline-size: 100%;
-  min-block-size: 180px;
+  block-size: 180px;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);
   overflow: hidden;
 }
 
 .navigation-bar-align-content {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-inline-size: 0;
-  min-block-size: 180px;
-  place-items: center;
+  block-size: 180px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

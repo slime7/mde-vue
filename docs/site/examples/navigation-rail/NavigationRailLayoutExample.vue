@@ -64,7 +64,8 @@ const modalExpanded = ref(false);
 <!-- #region style -->
 <style scoped>
 .navigation-rail-layout-example {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   inline-size: 100%;
   gap: 16px;
 }
@@ -76,15 +77,16 @@ const modalExpanded = ref(false);
 
 .navigation-rail-example-shell {
   inline-size: 100%;
-  min-block-size: 220px;
+  block-size: 220px;
   overflow: hidden;
 }
 
 .navigation-rail-example-content {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-inline-size: 0;
-  min-block-size: 220px;
-  place-items: center;
+  block-size: 220px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

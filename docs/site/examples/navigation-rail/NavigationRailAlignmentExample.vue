@@ -77,15 +77,16 @@ const alignment = ref('start');
 
 .navigation-rail-alignment-example-layout {
   inline-size: 100%;
-  min-block-size: 240px;
+  block-size: 240px;
   overflow: hidden;
 }
 
 .navigation-rail-alignment-example-content {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-inline-size: 0;
-  min-block-size: 240px;
-  place-items: center;
+  block-size: 240px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

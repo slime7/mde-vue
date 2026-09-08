@@ -44,10 +44,10 @@ const items = [
 <!-- #region style -->
 <style scoped>
 .select-indicator-demo {
+  inline-size: 100%;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-inline-size: 320px;
 }
 </style>
 <!-- #endregion style -->

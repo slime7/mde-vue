@@ -44,8 +44,9 @@ async function onRefresh() {
 <style scoped>
 .pull-to-refresh-placeholder-example {
   user-select: none;
-  display: grid;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 12px;
   inline-size: 100%;
 }

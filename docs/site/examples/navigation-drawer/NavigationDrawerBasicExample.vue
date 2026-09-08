@@ -53,15 +53,16 @@ const selected = ref('inbox');
 <style scoped>
 .navigation-drawer-example-shell {
   inline-size: 100%;
-  min-block-size: 320px;
+  block-size: 320px;
   overflow: hidden;
 }
 
 .navigation-drawer-example-content {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-inline-size: 0;
-  min-block-size: 320px;
-  place-items: center;
+  block-size: 320px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

@@ -48,7 +48,8 @@ const placeholderEnabled = ref(true);
 <!-- #region style -->
 <style scoped>
 .toolbar-placeholder-example {
-  min-block-size: 320px;
+  block-size: 360px;
+  overflow: hidden;
 }
 
 .toolbar-placeholder-example__actions {

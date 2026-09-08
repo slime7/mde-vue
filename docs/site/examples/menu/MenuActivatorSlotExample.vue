@@ -32,7 +32,7 @@ const open = ref(false);
 <!-- #region style -->
 <style scoped>
 .example-menu {
-  min-block-size: 120px;
+  block-size: 120px;
 }
 </style>
 <!-- #endregion style -->

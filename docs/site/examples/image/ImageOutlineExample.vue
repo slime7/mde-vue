@@ -1,6 +1,6 @@
 <!-- #region template -->
 <template>
-  <div class="example-grid">
+  <div class="example-row">
     <mat-image
       :src="source"
       alt="默认 outline 描边"
@@ -32,12 +32,12 @@ const source = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
 
 <!-- #region style -->
 <style scoped>
-.example-grid {
+.example-row {
   display: flex;
   gap: 16px;
 }
 
-.example-grid > :deep(*) {
+.example-row > :deep(*) {
   flex: 1 1 0;
   min-inline-size: 0;
 }

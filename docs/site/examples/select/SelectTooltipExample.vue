@@ -41,7 +41,7 @@ const items = [
 <!-- #region style -->
 <style scoped>
 .select-tooltip-demo {
-  max-inline-size: 320px;
+  inline-size: 100%;
 }
 </style>
 <!-- #endregion style -->

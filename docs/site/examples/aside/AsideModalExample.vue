@@ -42,7 +42,7 @@ const open = ref(false);
 <style scoped>
 .aside-modal-example-layout {
   position: relative;
-  min-block-size: 260px;
+  block-size: 260px;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);
   overflow: hidden;
@@ -72,9 +72,10 @@ const open = ref(false);
 }
 
 .aside-modal-example-layout__content {
-  display: grid;
-  place-items: center;
-  min-block-size: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  block-size: 260px;
 }
 </style>
 <!-- #endregion style -->

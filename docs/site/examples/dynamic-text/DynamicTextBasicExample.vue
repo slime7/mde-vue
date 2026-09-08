@@ -24,9 +24,10 @@ function increase() {
 <!-- #region style -->
 <style scoped>
 .example {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 16px;
-  justify-items: start;
 }
 </style>
 <!-- #endregion style -->

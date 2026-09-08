@@ -46,7 +46,7 @@ const modalOpen = ref(false);
 .bottom-sheet-variant-example {
   display: flex;
   flex-direction: column;
-  min-block-size: 360px;
+  block-size: 360px;
   overflow: hidden;
 }
 
