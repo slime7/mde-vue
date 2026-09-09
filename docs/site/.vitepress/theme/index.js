@@ -118,6 +118,8 @@ export default {
     app.use(matUi);
 
     if (typeof document !== 'undefined') {
+      document.documentElement.classList.add('mat-scrollbar', 'mat-scrollbar--thin');
+
       watch(() => matUi.theme.resolvedMode.value, (mode) => {
         document.documentElement.classList.toggle('dark', mode === 'dark');
       }, { immediate: true });
