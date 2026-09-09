@@ -48,6 +48,20 @@ describe('MatNavigationDrawer', () => {
     expect(wrapper.findComponent(MatNavigationRail).props('bordered')).toBe(true);
   });
 
+  it('公开 container-color 属性并转交给 NavigationRail', () => {
+    expect(MatNavigationDrawer.props.containerColor.default).toBe(false);
+    expect(MatNavigationDrawer.props.containerColor.type).toBe(Boolean);
+
+    const wrapper = mount(MatNavigationDrawer, {
+      props: {
+        containerColor: true,
+        expanded: true,
+      },
+    });
+
+    expect(wrapper.findComponent(MatNavigationRail).props('containerColor')).toBe(true);
+  });
+
   it('固定使用 vertical 方向、full-width、collapsible 与 hide-on-collapse', () => {
     const wrapper = mount(MatNavigationDrawer, {
       props: {

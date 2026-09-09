@@ -78,6 +78,28 @@ Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail`
   </DocsPreview>
 </ClientOnly>
 
+### `container-color`
+
+`container-color` 默认关闭。开启后，standard Drawer 的容器背景改用与 `layout="modal"` 相同的语义色；`layout="modal"` 本身始终使用 modal 语义色，不受该属性影响。下方示例在同一个 standard Drawer 上切换该属性，以便观察容器色变化。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/navigation-drawer/NavigationDrawerContainerColorExample.vue#template [template]
+
+<<< @/examples/navigation-drawer/NavigationDrawerContainerColorExample.vue#script [script]
+
+<<< @/examples/navigation-drawer/NavigationDrawerContainerColorExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation drawer 容器语义色预览">
+    <NavigationDrawerContainerColorExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### MatNavigationDrawer 属性
@@ -93,6 +115,7 @@ Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail`
 | `attach` | `string \| HTMLElement` | `undefined` | 仅 `mode="fixed"` 时指定 Teleport 目标；省略时保留在声明位置 |
 | `placeholder` | `boolean` | `false` | 仅 modal 抽屉在声明位置生成占位；standard 抽屉使用最近根的 padding |
 | `bordered` | `boolean` | `false` | 是否复用 Aside 的边框修饰，在面向内容的一侧渲染 1px 细边框 |
+| `container-color` | `boolean` | `false` | 非 modal 布局使用与 modal 相同的容器背景语义色；modal 布局始终使用 modal 语义色 |
 
 注：`full-width`、`collapsible` 与 `hide-on-collapse` 在组件内部固定为 `true`，无需且不可配置。
 
@@ -127,6 +150,7 @@ Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail`
 
 <script setup>
 import NavigationDrawerBasicExample from '../examples/navigation-drawer/NavigationDrawerBasicExample.vue';
+import NavigationDrawerContainerColorExample from '../examples/navigation-drawer/NavigationDrawerContainerColorExample.vue';
 import NavigationDrawerModalExample from '../examples/navigation-drawer/NavigationDrawerModalExample.vue';
 import NavigationDrawerGroupExample from '../examples/navigation-drawer/NavigationDrawerGroupExample.vue';
 </script>

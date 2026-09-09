@@ -3,6 +3,7 @@ import {
   afterEach, beforeAll, beforeEach, describe, expect, it, vi,
 } from 'vitest';
 import { h, nextTick } from 'vue';
+import MatSheetBase from '../src/components/MatSheetBase.vue';
 import MatBottomSheet from '../src/components/mat-bottom-sheet/MatBottomSheet.vue';
 import MatSideSheet from '../src/components/mat-side-sheet/MatSideSheet.vue';
 
@@ -83,6 +84,19 @@ describe('MatBottomSheet', () => {
     expect(sheet.text()).toContain('筛选条件');
     expect(document.documentElement.style.overflow).not.toBe('hidden');
     expect(document.activeElement).toBe(trigger);
+  });
+
+  it('公开 container-color 属性并转交给共享 Sheet 表面', () => {
+    expect(MatBottomSheet.props.containerColor.default).toBe(false);
+    expect(MatBottomSheet.props.containerColor.type).toBe(Boolean);
+
+    const wrapper = mount(MatBottomSheet, {
+      props: {
+        containerColor: true,
+      },
+    });
+
+    expect(wrapper.findComponent(MatSheetBase).props('containerColor')).toBe(true);
   });
 
   it('modal 使用原生 dialog，关闭完成后清理并恢复焦点', async () => {
@@ -686,6 +700,19 @@ describe('MatSideSheet', () => {
     expect(sheet.text()).toContain('订单详情内容');
     expect(sheet.text()).toContain('保存');
     expect(document.documentElement.style.overflow).not.toBe('hidden');
+  });
+
+  it('公开 container-color 属性并转交给共享 Sheet 表面', () => {
+    expect(MatSideSheet.props.containerColor.default).toBe(false);
+    expect(MatSideSheet.props.containerColor.type).toBe(Boolean);
+
+    const wrapper = mount(MatSideSheet, {
+      props: {
+        containerColor: true,
+      },
+    });
+
+    expect(wrapper.findComponent(MatSheetBase).props('containerColor')).toBe(true);
   });
 
   it('modal 在 position="end" 时面板不设置负偏移样式', async () => {

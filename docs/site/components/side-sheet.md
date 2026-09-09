@@ -97,6 +97,28 @@ order: 102
   </DocsPreview>
 </ClientOnly>
 
+### `container-color`
+
+`container-color` 默认关闭。开启后，standard Side sheet 的面板背景改用与 `variant="modal"` 相同的 surface-container-low 语义色；`variant="modal"` 本身始终使用该语义色，不受属性影响。下方示例在同一个 standard Side sheet 上切换该属性，以便观察容器色变化。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/side-sheet/SideSheetContainerColorExample.vue#template [template]
+
+<<< @/examples/side-sheet/SideSheetContainerColorExample.vue#script [script]
+
+<<< @/examples/side-sheet/SideSheetContainerColorExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Side sheet 容器语义色预览">
+    <SideSheetContainerColorExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -116,6 +138,7 @@ order: 102
 | `closeLabel` | `string` | `'关闭'` | 模板属性为 `close-label`；内置关闭按钮的非空可访问名称 |
 | `title` | `string` | 未设置 | 简单标题；优先于 `title` Slot |
 | `content` | `string` | 未设置 | 简单正文；优先于默认 Slot |
+| `containerColor` | `boolean` | `false` | standard 布局使用与 modal 相同的容器背景语义色；modal 布局始终使用该语义色 |
 
 未消费的属性、原生事件、`class` 和 `style` 传给根元素。Modal 根为原生 `<dialog>`（铺满坐标空间的帷幕容器，可见面板位于内部），standard 根为原生 `<aside>`。Modal 没有标题时必须提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。显式 `attach` 指向非 AppRoot 元素时保持铺满视口的原有行为。
 
@@ -149,6 +172,7 @@ Standard 必须放在横向 flex 父容器中才能与主内容并排；主内�
 结构、位置、standard/modal 用途和响应式原则依据 Material 3 的 [Side sheets overview](https://m3.material.io/components/side-sheets/overview)、[specs](https://m3.material.io/components/side-sheets/specs) 与 [guidelines](https://m3.material.io/components/side-sheets/guidelines)。Web 端没有对应的 Material Web 组件，本实现使用 Vue、原生 `<dialog>` 和 CSS 复刻用户可观察行为。
 
 <script setup>
+import SideSheetContainerColorExample from '../examples/side-sheet/SideSheetContainerColorExample.vue';
 import SideSheetPositionExample from '../examples/side-sheet/SideSheetPositionExample.vue';
 import SideSheetResponsiveExample from '../examples/side-sheet/SideSheetResponsiveExample.vue';
 import SideSheetSlotsExample from '../examples/side-sheet/SideSheetSlotsExample.vue';

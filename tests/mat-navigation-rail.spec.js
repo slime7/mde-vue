@@ -66,6 +66,18 @@ describe('MatNavigationRail', () => {
     expect(wrapper.findComponent(MatAside).props('bordered')).toBe(true);
   });
 
+  it('公开 container-color 属性，默认关闭', () => {
+    expect(MatNavigationRail.props.containerColor.default).toBe(false);
+    expect(MatNavigationRail.props.containerColor.type).toBe(Boolean);
+
+    const wrapper = mount(MatNavigationRail, {
+      props: { containerColor: true },
+      slots: { default: navigationItems },
+    });
+
+    expect(wrapper.props('containerColor')).toBe(true);
+  });
+
   it('使用 alignment 控制默认内容定位且不再公开 position', () => {
     expect(MatNavigationRail.props.position).toBeUndefined();
     expect(MatNavigationRail.props.alignment.default).toBe('start');

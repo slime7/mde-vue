@@ -17351,6 +17351,77 @@ const open = ref(false);
   </DocsPreview>
 </ClientOnly>
 
+### `container-color`
+
+`container-color` 默认关闭。开启后，standard Bottom sheet 的面板背景改用与 `variant="modal"` 相同的 surface-container-low 语义色；`variant="modal"` 本身始终使用该语义色，不受属性影响。下方示例在同一个 standard Bottom sheet 上切换该属性，以便观察容器色变化。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="bottom-sheet-container-color-example">
+    <div class="bottom-sheet-container-color-example__content">
+      <mat-btn
+        variant="outlined"
+        @click="containerColor = !containerColor"
+      >
+        {{ containerColor ? '恢复 standard 容器色' : '启用 modal 容器色' }}
+      </mat-btn>
+      <p>当前容器色：{{ containerColor ? 'modal 语义' : 'standard 语义' }}</p>
+    </div>
+
+    <mat-bottom-sheet
+      model-value
+      variant="standard"
+      :container-color="containerColor"
+      title="容器配色面板"
+      content="Standard Bottom sheet 可切换为 modal 容器语义色。"
+      closable
+    />
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const containerColor = ref(false);
+</script>
+```
+```vue
+<style scoped>
+.bottom-sheet-container-color-example {
+  display: flex;
+  flex-direction: column;
+  block-size: 360px;
+  overflow: hidden;
+}
+
+.bottom-sheet-container-color-example__content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: center;
+  min-block-size: 0;
+}
+
+.bottom-sheet-container-color-example__content p {
+  margin: 0;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Bottom sheet 容器语义色预览">
+    <BottomSheetContainerColorExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -17375,6 +17446,7 @@ const open = ref(false);
 | `closeLabel` | `string` | `'关闭'` | 模板属性为 `close-label`；内置关闭按钮的非空可访问名称 |
 | `title` | `string` | 未设置 | 简单标题；优先于 `title` Slot |
 | `content` | `string` | 未设置 | 简单正文；优先于默认 Slot |
+| `containerColor` | `boolean` | `false` | standard 布局使用与 modal 相同的容器背景语义色；modal 布局始终使用该语义色 |
 
 未消费的属性、原生事件、`class` 和 `style` 传给根元素。Modal 根为原生 `<dialog>`（铺满坐标空间的帷幕容器，可见面板位于内部），standard 根为原生 `<aside>`。Modal 没有标题时必须提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。显式 `attach` 指向非 AppRoot 元素时保持铺满视口的原有行为。
 
@@ -17408,6 +17480,7 @@ Bottom sheet 的宽度不超过 640px；窄屏可占满视口宽度，宽于 640
 结构、尺寸、standard/modal 用途和响应式原则依据 Material 3 的 [Bottom sheets overview](https://m3.material.io/components/bottom-sheets/overview)、[specs](https://m3.material.io/components/bottom-sheets/specs) 与 [guidelines](https://m3.material.io/components/bottom-sheets/guidelines)。Web 端没有对应的 Material Web 组件，本实现使用 Vue、原生 `<dialog>` 和 CSS 复刻用户可观察行为。
 
 <script setup>
+import BottomSheetContainerColorExample from '../examples/bottom-sheet/BottomSheetContainerColorExample.vue';
 import BottomSheetResponsiveExample from '../examples/bottom-sheet/BottomSheetResponsiveExample.vue';
 import BottomSheetVirtualExpandExample from '../examples/bottom-sheet/BottomSheetVirtualExpandExample.vue';
 import BottomSheetExpandedExample from '../examples/bottom-sheet/BottomSheetExpandedExample.vue';
@@ -17691,6 +17764,76 @@ const open = ref(false);
   </DocsPreview>
 </ClientOnly>
 
+### `container-color`
+
+`container-color` 默认关闭。开启后，standard Side sheet 的面板背景改用与 `variant="modal"` 相同的 surface-container-low 语义色；`variant="modal"` 本身始终使用该语义色，不受属性影响。下方示例在同一个 standard Side sheet 上切换该属性，以便观察容器色变化。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="side-sheet-container-color-example">
+    <main class="side-sheet-container-color-example__content">
+      <mat-btn
+        variant="outlined"
+        @click="containerColor = !containerColor"
+      >
+        {{ containerColor ? '恢复 standard 容器色' : '启用 modal 容器色' }}
+      </mat-btn>
+      <p>当前容器色：{{ containerColor ? 'modal 语义' : 'standard 语义' }}</p>
+    </main>
+
+    <mat-side-sheet
+      model-value
+      variant="standard"
+      :container-color="containerColor"
+      :width="280"
+      title="容器配色面板"
+      content="Standard Side sheet 可切换为 modal 容器语义色。"
+    />
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const containerColor = ref(false);
+</script>
+```
+```vue
+<style scoped>
+.side-sheet-container-color-example {
+  display: flex;
+  block-size: 360px;
+  overflow: hidden;
+}
+
+.side-sheet-container-color-example__content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: center;
+  min-inline-size: 0;
+}
+
+.side-sheet-container-color-example__content p {
+  margin: 0;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Side sheet 容器语义色预览">
+    <SideSheetContainerColorExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -17710,6 +17853,7 @@ const open = ref(false);
 | `closeLabel` | `string` | `'关闭'` | 模板属性为 `close-label`；内置关闭按钮的非空可访问名称 |
 | `title` | `string` | 未设置 | 简单标题；优先于 `title` Slot |
 | `content` | `string` | 未设置 | 简单正文；优先于默认 Slot |
+| `containerColor` | `boolean` | `false` | standard 布局使用与 modal 相同的容器背景语义色；modal 布局始终使用该语义色 |
 
 未消费的属性、原生事件、`class` 和 `style` 传给根元素。Modal 根为原生 `<dialog>`（铺满坐标空间的帷幕容器，可见面板位于内部），standard 根为原生 `<aside>`。Modal 没有标题时必须提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。显式 `attach` 指向非 AppRoot 元素时保持铺满视口的原有行为。
 
@@ -17743,6 +17887,7 @@ Standard 必须放在横向 flex 父容器中才能与主内容并排；主内�
 结构、位置、standard/modal 用途和响应式原则依据 Material 3 的 [Side sheets overview](https://m3.material.io/components/side-sheets/overview)、[specs](https://m3.material.io/components/side-sheets/specs) 与 [guidelines](https://m3.material.io/components/side-sheets/guidelines)。Web 端没有对应的 Material Web 组件，本实现使用 Vue、原生 `<dialog>` 和 CSS 复刻用户可观察行为。
 
 <script setup>
+import SideSheetContainerColorExample from '../examples/side-sheet/SideSheetContainerColorExample.vue';
 import SideSheetPositionExample from '../examples/side-sheet/SideSheetPositionExample.vue';
 import SideSheetResponsiveExample from '../examples/side-sheet/SideSheetResponsiveExample.vue';
 import SideSheetSlotsExample from '../examples/side-sheet/SideSheetSlotsExample.vue';
@@ -19427,6 +19572,87 @@ const selected = ref('inbox');
   </DocsPreview>
 </ClientOnly>
 
+### `container-color`
+
+`container-color` 默认关闭。开启后，standard Rail 的容器背景改用与 `layout="modal"` 相同的语义色；`layout="modal"` 本身始终使用 modal 语义色，不受该属性影响。下方示例在同一个 standard Rail 上切换该属性，以便观察容器色变化。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-layout class="navigation-rail-container-color-example__shell">
+    <mat-navigation-rail
+      v-model="selected"
+      expanded
+      :container-color="containerColor"
+      bordered
+      aria-label="容器配色导航"
+    >
+      <mat-navigation-rail-item value="home" icon="home">
+        首页
+      </mat-navigation-rail-item>
+      <mat-navigation-rail-item value="projects" icon="folder">
+        项目
+      </mat-navigation-rail-item>
+      <mat-navigation-rail-item value="settings" icon="settings">
+        设置
+      </mat-navigation-rail-item>
+    </mat-navigation-rail>
+
+    <div class="navigation-rail-container-color-example__content">
+      <mat-btn
+        variant="outlined"
+        @click="containerColor = !containerColor"
+      >
+        {{ containerColor ? '恢复 standard 容器色' : '启用 modal 容器色' }}
+      </mat-btn>
+      <p>当前容器色：{{ containerColor ? 'modal 语义' : 'standard 语义' }}</p>
+    </div>
+  </mat-layout>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const containerColor = ref(false);
+const selected = ref('home');
+</script>
+```
+```vue
+<style scoped>
+.navigation-rail-container-color-example__shell {
+  inline-size: 100%;
+  block-size: 280px;
+  overflow: hidden;
+}
+
+.navigation-rail-container-color-example__content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 0;
+  block-size: 280px;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+
+.navigation-rail-container-color-example__content p {
+  margin: 0;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail 容器语义色预览">
+    <NavigationRailContainerColorExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### Item 的 `trailing` Slot
 
 Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导航抽屉或开启 `full-width` 的 Rail），trailing 内容置于活动指示器内部，选中的高亮背景与交互状态层完整包含 trailing 内容，使折叠展开箭头或操作图标与按钮背景视觉融为一体；未激活 `full-width` 时，保持原先处理，置于指示器外部的本行末尾。Slot 参数为 `{ expanded, selected }`。折叠态 rail 宽度不足，trailing 不渲染。
@@ -19551,6 +19777,7 @@ const selected = ref('inbox');
 | `attach` | `string \| HTMLElement` | `undefined` | 仅 `mode="fixed"` 时指定 Teleport 目标；省略时保留在声明位置 |
 | `placeholder` | `boolean` | `false` | 仅 `layout="modal"` 有效；在声明位置为 modal rail 预留实际尺寸，standard rail 使用最近根的 padding |
 | `bordered` | `boolean` | `false` | 是否复用 Aside 的边框修饰，在面向内容的一侧渲染 1px 细边框 |
+| `container-color` | `boolean` | `false` | 非 modal 布局使用与 modal 相同的容器背景语义色；modal 布局始终使用 modal 语义色 |
 | `open` | `boolean` | `undefined` | 受控显示/隐藏状态，支持 `v-model:open`；省略时遵循 `hide-on-collapse` 或 `modal` 模式与 `expanded` 联动 |
 
 ### MatNavigationRailItem 属性
@@ -19610,6 +19837,7 @@ import NavigationRailItemBadgeExample from '../examples/navigation-rail/Navigati
 import NavigationRailItemTrailingExample from '../examples/navigation-rail/NavigationRailItemTrailingExample.vue';
 import NavigationRailAlignmentExample from '../examples/navigation-rail/NavigationRailAlignmentExample.vue';
 import NavigationRailPlaceholderExample from '../examples/navigation-rail/NavigationRailPlaceholderExample.vue';
+import NavigationRailContainerColorExample from '../examples/navigation-rail/NavigationRailContainerColorExample.vue';
 import NavigationRailSlotsExample from '../examples/navigation-rail/NavigationRailSlotsExample.vue';
 import NavigationRailWidthExample from '../examples/navigation-rail/NavigationRailWidthExample.vue';
 </script>

@@ -289,6 +289,28 @@ Material Design 规范推荐间距：
   </DocsPreview>
 </ClientOnly>
 
+### `container-color`
+
+`container-color` 默认关闭。开启后，standard Rail 的容器背景改用与 `layout="modal"` 相同的语义色；`layout="modal"` 本身始终使用 modal 语义色，不受该属性影响。下方示例在同一个 standard Rail 上切换该属性，以便观察容器色变化。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/navigation-rail/NavigationRailContainerColorExample.vue#template [template]
+
+<<< @/examples/navigation-rail/NavigationRailContainerColorExample.vue#script [script]
+
+<<< @/examples/navigation-rail/NavigationRailContainerColorExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation rail 容器语义色预览">
+    <NavigationRailContainerColorExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### Item 的 `trailing` Slot
 
 Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导航抽屉或开启 `full-width` 的 Rail），trailing 内容置于活动指示器内部，选中的高亮背景与交互状态层完整包含 trailing 内容，使折叠展开箭头或操作图标与按钮背景视觉融为一体；未激活 `full-width` 时，保持原先处理，置于指示器外部的本行末尾。Slot 参数为 `{ expanded, selected }`。折叠态 rail 宽度不足，trailing 不渲染。
@@ -332,6 +354,7 @@ Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导�
 | `attach` | `string \| HTMLElement` | `undefined` | 仅 `mode="fixed"` 时指定 Teleport 目标；省略时保留在声明位置 |
 | `placeholder` | `boolean` | `false` | 仅 `layout="modal"` 有效；在声明位置为 modal rail 预留实际尺寸，standard rail 使用最近根的 padding |
 | `bordered` | `boolean` | `false` | 是否复用 Aside 的边框修饰，在面向内容的一侧渲染 1px 细边框 |
+| `container-color` | `boolean` | `false` | 非 modal 布局使用与 modal 相同的容器背景语义色；modal 布局始终使用 modal 语义色 |
 | `open` | `boolean` | `undefined` | 受控显示/隐藏状态，支持 `v-model:open`；省略时遵循 `hide-on-collapse` 或 `modal` 模式与 `expanded` 联动 |
 
 ### MatNavigationRailItem 属性
@@ -391,6 +414,7 @@ import NavigationRailItemBadgeExample from '../examples/navigation-rail/Navigati
 import NavigationRailItemTrailingExample from '../examples/navigation-rail/NavigationRailItemTrailingExample.vue';
 import NavigationRailAlignmentExample from '../examples/navigation-rail/NavigationRailAlignmentExample.vue';
 import NavigationRailPlaceholderExample from '../examples/navigation-rail/NavigationRailPlaceholderExample.vue';
+import NavigationRailContainerColorExample from '../examples/navigation-rail/NavigationRailContainerColorExample.vue';
 import NavigationRailSlotsExample from '../examples/navigation-rail/NavigationRailSlotsExample.vue';
 import NavigationRailWidthExample from '../examples/navigation-rail/NavigationRailWidthExample.vue';
 </script>

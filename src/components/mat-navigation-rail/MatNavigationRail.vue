@@ -170,6 +170,17 @@ const props = defineProps({
     default: false,
   },
   /**
+   * 是否在非 modal 布局中使用与 modal 相同的容器背景语义色；
+   * modal 布局始终使用 modal 语义色，不受该属性影响。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  containerColor: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * 受控显示/隐藏状态，支持 v-model:open。
    * 省略时遵循 hideOnCollapse 或 modal 模式与 expanded 联动，其余场景默认开启。
    *
@@ -399,6 +410,9 @@ const hostClasses = computed(() => ({
   'mat-navigation-rail--collapsed': !propsWithDefaults.expanded,
   'mat-navigation-rail--modal': isModal.value && propsWithDefaults.expanded,
   'mat-navigation-rail--with-header': hasFixedHeader.value,
+  'mat-navigation-rail--explicit-container-color': (
+    propsWithDefaults.containerColor && !isModal.value
+  ),
 }));
 
 const hostStyles = computed(() => {
@@ -532,6 +546,10 @@ defineExpose({
     color: var(--mat-navigation-rail-content-color);
     background: var(--mat-navigation-rail-current-container-color);
     transition: inset-block var(--mat-sys-motion-spring-default-spatial, .3s ease), inset-inline var(--mat-sys-motion-spring-default-spatial, .3s ease), inline-size var(--mat-sys-motion-spring-default-spatial, .3s ease), block-size var(--mat-sys-motion-spring-default-spatial, .3s ease), border-radius var(--mat-sys-motion-spring-default-spatial, .3s ease);
+  }
+
+  .mat-navigation-rail--explicit-container-color {
+    --mat-navigation-rail-current-container-color: var(--mat-navigation-rail-modal-container-color);
   }
 
   .mat-navigation-rail-host--hidden {

@@ -241,6 +241,8 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 Standard 使用原生 `aside`，在声明位置参与父级布局，不使用 Teleport、不锁页面滚动且不主动移动焦点；Bottom sheet 适合作为纵向 flex 容器末端区域，Side sheet 适合作为横向 flex 容器的不可压缩侧栏。Modal 使用原生 `<dialog>` 元素（非模态 `show()`）、Teleport、共享 Dialog 堆叠、焦点陷阱与滚动锁，不依赖浏览器 top layer；页面存在经典滚动条时临时保留其槽位，避免锁定根滚动造成页面横向位移，没有经典滚动条时不预留额外空间。只有顶层模态表面显示帷幕颜色，关闭完成后恢复打开前焦点。Escape 始终请求关闭，`closeOnBack` 只控制帷幕点击，`scrim=false` 只隐藏颜色而不恢复背景交互。
 
+ 两个 Sheet 的 `containerColor` 默认 `false`，只把 standard 容器背景切换为与 modal 相同的 surface-container-low 语义色；modal 形态始终使用该语义色，不接受此属性改变。auto 跨越断点时按当前实际 variant 应用同一规则。
+
 Bottom sheet 最大宽度固定为 640px，使用顶部 extra-large 圆角和可选 drag handle。Modal 默认处于不超过半屏的预览高度，`expanded` 表达展开预设高度；预览状态向上拖动或通过键盘选择把手请求展开，展开状态向下拖动请求折叠，展开的 standard 选择把手也请求折叠，展开的 modal 则请求关闭；预览状态向下拖动请求关闭。拖动时面板高度或位移连续跟随指针，关闭动画从释放位置继续。内置关闭按钮默认不显示，由 `closable` 显式开启。Side sheet 使用 start/end 逻辑边缘，默认及最大宽度均为 400px、默认显示关闭入口，并允许触摸用户向依附边缘滑动关闭。标题、正文、header、actions、footer 和 activator 由两者共享；Side sheet 不提供 Bottom sheet 的 drag-handle Slot。
 
 ## Tooltip
@@ -278,6 +280,8 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 `<mat-navigation-rail>` 与 `<mat-navigation-drawer>` 通过 `modelValue` 受控选择唯一目的地，直接子级 `<mat-navigation-rail-item>` 使用稳定 `value` 请求更新。纵向模式表达 Material 3 Expressive collapsed/expanded rail；组件位于最近的 `MatLayout` 或 `MatAppRoot` 时统一登记逻辑 `start` 边缘，`expanded` 只由使用方控制，`layout="standard"` 占据正文空间，`layout="modal"` 在当前布局容器内覆盖正文并通过遮罩或 Escape 请求收起。Navigation rail/drawer 不再公开 `app` 开关；`attach` 仅在显式 `mode="fixed"` 时沿用 Aside 的挂载能力。AppRoot 只提供覆盖层、Snackbar、布局尺寸和边缘上下文等应用能力，modal 展开只以 collapsed host 宽度参与 padding。`placeholder` 和 `bottomPlaceholder` 按对应布局能力生效。collapsed rail 默认保持可见；`hideOnCollapse` 只用于沉浸式展开导航。
 
 `width` 只覆写 expanded rail 的宽度：数字与纯数字字符串转换为 px（0 不带单位），其他字符串须为 trim 后合法的 CSS 宽度值，非法时使用默认宽度。纵向使用覆盖整栏且贴边的 thin ScrollArea；菜单折叠按钮、FAB、导航项与底部操作统一在默认 Slot 中混排，默认 Slot 提供 `{ expanded, orientation }` 作用域上下文；底部的操作按钮由使用方在导航项与底部操作之间放置 `<mat-spacer />`（`flex-grow: 1`）推至末端。混排间距遵循 Material Design 规范：菜单按钮与 FAB 之间为 12px，菜单/FAB 与导航项之间为 40px，导航项之间收起态为 4px、展开态为 0px。展开态显示全部直接子内容，收缩态保留直接子级 Item、FAB、操作按钮与 Spacer 而不卸载；FAB 随 Slot 传入的 `expanded` 参数收缩为纯图标。`alignment` 使用 start/center/end 在剩余高度内对齐默认内容，`fullWidth` 由 Navigation 统一控制全部 Item 的展开态指示器。`<mat-navigation-group>` 作为导航分组容器，提供 `#activator` 与缩进的子项 Slot，配合 `v-model:expanded` 实现二级子菜单折叠。`<mat-navigation-drawer>` 具备固定的 `fullWidth=true`、`collapsible=true`、`hideOnCollapse=true` 与 `orientation="vertical"`，在收起时尺寸完全为 0 并隐藏，展开时作为标准或模态抽屉显示。
+
+ `containerColor` 默认 `false`，只把 standard 容器背景切换为与 modal 相同的 surface-container 语义色；modal 形态始终使用该语义色，不接受此属性改变。
 
 `orientation="horizontal"` 表达 Flexible navigation bar；`expanded=false` 使用图标上、标签下的纵向 Item，`expanded=true` 使用图标左、标签右的横向 Item，`alignment` 改为沿可用宽度对齐，并始终隐藏非 Item 默认内容。横向模式不响应 `collapsible`、`layout`、`hideOnCollapse`。组件不自动监听窗口尺寸，应用负责在 compact、medium 及更大断点间切换 bar 与 rail，且同一布局不得同时显示两者。Item 使用原生按钮或链接、`aria-current="page"`、完整宽度命中区域和指示器状态层；缺省 icon 在展开态不占空间，收缩态使用圆点占位，展开与方向切换继续过渡标签和指示器。
 

@@ -2858,6 +2858,14 @@ export interface MatBottomSheetProps {
   * @default undefined
   */
   content?: string | undefined;
+  /**
+  * 是否在 standard 布局中使用与 modal 相同的容器背景语义色；
+  * modal 布局始终使用 modal 语义色，不受该属性影响。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  containerColor?: boolean;
 }
 
 export interface MatBottomSheetEmits {
@@ -2975,6 +2983,14 @@ export interface MatSideSheetProps {
   * @default undefined
   */
   content?: string | undefined;
+  /**
+  * 是否在 standard 布局中使用与 modal 相同的容器背景语义色；
+  * modal 布局始终使用 modal 语义色，不受该属性影响。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  containerColor?: boolean;
 }
 
 export interface MatSideSheetEmits {
@@ -4115,6 +4131,14 @@ export interface MatNavigationRailProps {
   */
   bordered?: boolean;
   /**
+  * 是否在非 modal 布局中使用与 modal 相同的容器背景语义色；
+  * modal 布局始终使用 modal 语义色，不受该属性影响。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  containerColor?: boolean;
+  /**
   * 受控显示/隐藏状态，支持 v-model:open。
   * 省略时遵循 hideOnCollapse 或 modal 模式与 expanded 联动，其余场景默认开启。
   *
@@ -4497,6 +4521,14 @@ export interface MatNavigationDrawerProps {
   * @default false
   */
   bordered?: boolean;
+  /**
+  * 是否在非 modal 布局中使用与 modal 相同的容器背景语义色；
+  * modal 布局始终使用 modal 语义色，不受该属性影响。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  containerColor?: boolean;
   /**
   * 安全区留白配置。
   *

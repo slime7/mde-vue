@@ -98,6 +98,17 @@ const props = defineProps({
     default: false,
   },
   /**
+   * 是否在非 modal 布局中使用与 modal 相同的容器背景语义色；
+   * modal 布局始终使用 modal 语义色，不受该属性影响。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  containerColor: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * 安全区留白配置。
    *
    * @type {boolean | number | string}
@@ -155,6 +166,7 @@ const emit = defineEmits({
     :layout="propsWithDefaults.layout"
     :alignment="propsWithDefaults.alignment"
     :bordered="propsWithDefaults.bordered"
+    :container-color="propsWithDefaults.containerColor"
     :attach="propsWithDefaults.attach"
     :placeholder="propsWithDefaults.placeholder"
     :safe-area="propsWithDefaults.safeArea"

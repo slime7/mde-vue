@@ -65,6 +65,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  containerColor: {
+    type: Boolean,
+    default: false,
+  },
   content: {
     type: String,
     default: undefined,
@@ -944,6 +948,7 @@ watch(() => props.closeLabel, (value) => {
           'mat-sheet--virtual-expand': direction === 'bottom' && virtualExpand,
           'mat-sheet--top': isTop,
           'mat-sheet--transparent-scrim': !scrim,
+          'mat-sheet--explicit-container-color': props.containerColor && !isModal,
         },
       ]"
       :style="rootStyle"
@@ -1179,6 +1184,11 @@ watch(() => props.closeLabel, (value) => {
     min-block-size: 0;
     border-radius: var(--mat-sys-shape-corner-large);
     touch-action: pan-y;
+  }
+
+  .mat-sheet--explicit-container-color,
+  .mat-sheet--standard.mat-sheet--side.mat-sheet--explicit-container-color {
+    --mat-sheet-container-color: var(--mat-sys-color-surface-container-low);
   }
 
   .mat-sheet--standard.mat-sheet--side.mat-sheet--position-end {

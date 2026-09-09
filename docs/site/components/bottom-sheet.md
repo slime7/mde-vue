@@ -113,6 +113,28 @@ Modal 默认以不超过视口高度 50% 的预览状态打开。`expanded` 可�
   </DocsPreview>
 </ClientOnly>
 
+### `container-color`
+
+`container-color` 默认关闭。开启后，standard Bottom sheet 的面板背景改用与 `variant="modal"` 相同的 surface-container-low 语义色；`variant="modal"` 本身始终使用该语义色，不受属性影响。下方示例在同一个 standard Bottom sheet 上切换该属性，以便观察容器色变化。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/bottom-sheet/BottomSheetContainerColorExample.vue#template [template]
+
+<<< @/examples/bottom-sheet/BottomSheetContainerColorExample.vue#script [script]
+
+<<< @/examples/bottom-sheet/BottomSheetContainerColorExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Bottom sheet 容器语义色预览">
+    <BottomSheetContainerColorExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -137,6 +159,7 @@ Modal 默认以不超过视口高度 50% 的预览状态打开。`expanded` 可�
 | `closeLabel` | `string` | `'关闭'` | 模板属性为 `close-label`；内置关闭按钮的非空可访问名称 |
 | `title` | `string` | 未设置 | 简单标题；优先于 `title` Slot |
 | `content` | `string` | 未设置 | 简单正文；优先于默认 Slot |
+| `containerColor` | `boolean` | `false` | standard 布局使用与 modal 相同的容器背景语义色；modal 布局始终使用该语义色 |
 
 未消费的属性、原生事件、`class` 和 `style` 传给根元素。Modal 根为原生 `<dialog>`（铺满坐标空间的帷幕容器，可见面板位于内部），standard 根为原生 `<aside>`。Modal 没有标题时必须提供 `aria-label` 或 `aria-labelledby`。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。显式 `attach` 指向非 AppRoot 元素时保持铺满视口的原有行为。
 
@@ -170,6 +193,7 @@ Bottom sheet 的宽度不超过 640px；窄屏可占满视口宽度，宽于 640
 结构、尺寸、standard/modal 用途和响应式原则依据 Material 3 的 [Bottom sheets overview](https://m3.material.io/components/bottom-sheets/overview)、[specs](https://m3.material.io/components/bottom-sheets/specs) 与 [guidelines](https://m3.material.io/components/bottom-sheets/guidelines)。Web 端没有对应的 Material Web 组件，本实现使用 Vue、原生 `<dialog>` 和 CSS 复刻用户可观察行为。
 
 <script setup>
+import BottomSheetContainerColorExample from '../examples/bottom-sheet/BottomSheetContainerColorExample.vue';
 import BottomSheetResponsiveExample from '../examples/bottom-sheet/BottomSheetResponsiveExample.vue';
 import BottomSheetVirtualExpandExample from '../examples/bottom-sheet/BottomSheetVirtualExpandExample.vue';
 import BottomSheetExpandedExample from '../examples/bottom-sheet/BottomSheetExpandedExample.vue';

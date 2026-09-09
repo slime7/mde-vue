@@ -200,6 +200,17 @@ const props = defineProps({
     type: String,
     default: undefined,
   },
+  /**
+   * 是否在 standard 布局中使用与 modal 相同的容器背景语义色；
+   * modal 布局始终使用 modal 语义色，不受该属性影响。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  containerColor: {
+    type: Boolean,
+    default: false,
+  },
 });
 const propsWithDefaults = useMatProps('bottomSheet', props);
 const instance = getCurrentInstance();
