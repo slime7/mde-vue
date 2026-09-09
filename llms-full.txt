@@ -23654,6 +23654,10 @@ const visible = ref(true);
   </DocsPreview>
 </ClientOnly>
 
+### 固定停靠
+
+设置 `mode="fixed"` 后，Aside 会挂载到 `attach` 指定的目标（默认是 `body`），并继续依据父级 `mat-layout` 的声明顺序进行边缘避让与同向堆叠。由于 fixed 示例会覆盖当前文档页面的视口边缘，这里只提供演练场入口：<a href="/playground?example=aside%2FAsideFixedExample" target="_blank" rel="noopener noreferrer">在演练场中打开 fixed 多边缘停靠示例</a>。
+
 ### 粘性停靠
 
 设置 `mode="sticky"` 使 Aside 在滚动容器中表现为粘性定位。当容器内部发生滚动时，Aside 会自然停靠在容器指定边缘，不脱离容器上下文。

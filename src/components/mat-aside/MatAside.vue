@@ -1035,8 +1035,12 @@ defineExpose({
     inset-inline: var(--mat-aside-insets-left, 0) var(--mat-aside-insets-right, 0);
   }
 
+  .mat-aside--top.mat-aside--mode-fixed:not(.mat-aside--modal) {
+    inset-block-start: var(--mat-aside-insets-top, 0);
+    inset-inline: var(--mat-aside-insets-left, 0) var(--mat-aside-insets-right, 0);
+  }
+
   .mat-aside--top.mat-aside--mode-sticky,
-  .mat-aside--top.mat-aside--mode-fixed,
   .mat-aside--top.mat-aside--modal {
     inset-block-start: 0;
     inset-inline: 0;
@@ -1073,8 +1077,12 @@ defineExpose({
     inset-inline: var(--mat-aside-insets-left, 0) var(--mat-aside-insets-right, 0);
   }
 
+  .mat-aside--bottom.mat-aside--mode-fixed:not(.mat-aside--modal) {
+    inset-block-end: var(--mat-aside-insets-bottom, 0);
+    inset-inline: var(--mat-aside-insets-left, 0) var(--mat-aside-insets-right, 0);
+  }
+
   .mat-aside--bottom.mat-aside--mode-sticky,
-  .mat-aside--bottom.mat-aside--mode-fixed,
   .mat-aside--bottom.mat-aside--modal {
     inset-block-end: 0;
     inset-inline: 0;
@@ -1112,11 +1120,15 @@ defineExpose({
     inset-block: var(--mat-aside-insets-top, 0) var(--mat-aside-insets-bottom, 0);
   }
 
+  .mat-aside--start.mat-aside--mode-fixed:not(.mat-aside--modal),
+  .mat-aside--left.mat-aside--mode-fixed:not(.mat-aside--modal) {
+    inset-inline-start: var(--mat-aside-insets-left, 0);
+    inset-block: var(--mat-aside-insets-top, 0) var(--mat-aside-insets-bottom, 0);
+  }
+
   .mat-aside--start.mat-aside--mode-sticky,
-  .mat-aside--start.mat-aside--mode-fixed,
   .mat-aside--start.mat-aside--modal,
   .mat-aside--left.mat-aside--mode-sticky,
-  .mat-aside--left.mat-aside--mode-fixed,
   .mat-aside--left.mat-aside--modal {
     inset-inline-start: 0;
     inset-block: 0;
@@ -1160,11 +1172,15 @@ defineExpose({
     inset-block: var(--mat-aside-insets-top, 0) var(--mat-aside-insets-bottom, 0);
   }
 
+  .mat-aside--end.mat-aside--mode-fixed:not(.mat-aside--modal),
+  .mat-aside--right.mat-aside--mode-fixed:not(.mat-aside--modal) {
+    inset-inline-end: var(--mat-aside-insets-right, 0);
+    inset-block: var(--mat-aside-insets-top, 0) var(--mat-aside-insets-bottom, 0);
+  }
+
   .mat-aside--end.mat-aside--mode-sticky,
-  .mat-aside--end.mat-aside--mode-fixed,
   .mat-aside--end.mat-aside--modal,
   .mat-aside--right.mat-aside--mode-sticky,
-  .mat-aside--right.mat-aside--mode-fixed,
   .mat-aside--right.mat-aside--modal {
     inset-inline-end: 0;
     inset-block: 0;
