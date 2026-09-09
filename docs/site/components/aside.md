@@ -99,7 +99,7 @@ order: 117
 
 ### 固定停靠
 
-设置 `mode="fixed"` 后，Aside 会挂载到 `attach` 指定的目标（默认是 `body`），并继续依据父级 `mat-layout` 的声明顺序进行边缘避让与同向堆叠。由于 fixed 示例会覆盖当前文档页面的视口边缘，这里只提供演练场入口：<a href="/playground?example=aside%2FAsideFixedExample" target="_blank" rel="noopener noreferrer">在演练场中打开 fixed 多边缘停靠示例</a>。
+设置 `mode="fixed"` 后，Aside 会保留在当前声明位置，并继续依据父级 `mat-layout` 的声明顺序进行边缘避让与同向堆叠。只有显式指定 `attach` 时才会 Teleport 到目标节点。由于 fixed 示例会覆盖当前文档页面的视口边缘，这里只提供演练场入口：<a href="/playground?example=aside%2FAsideFixedExample" target="_blank" rel="noopener noreferrer">在演练场中打开 fixed 多边缘停靠示例</a>。
 
 ### 粘性停靠
 
@@ -174,7 +174,7 @@ order: 117
 | `open` | `boolean` | `true` | 受控开闭状态，支持 `v-model:open` 双向绑定。 |
 | `modelValue` | `boolean` | `true` | 受控显示状态，支持 `v-model` 双向绑定。 |
 | `as` | `string` | `'aside'` | 根元素渲染的 HTML 标签，如 `'aside'`、`'header'`、`'nav'` 等。 |
-| `app` | `boolean` | `false` | 是否接入应用级外壳布局。在 `mat-app-root` 内未显式指定 `attach` 时自动表现为 `docked` 并登记避让；在外部或显式指定 `attach` 时自动表现为 `fixed` 并 Teleport 到目标。 |
+| `app` | `boolean` | `false` | 是否接入应用级外壳布局。在 `mat-app-root` 内未显式指定 `attach` 时自动表现为 `docked` 并登记避让；在外部或显式指定 `attach` 时自动表现为 `fixed`，只有后者会 Teleport 到目标。 |
 | `bordered` | `boolean` | `false` | 是否在面向内容的一侧渲染 1px 分隔线。 |
 | `modal` | `boolean` | `false` | 是否作为模态浮层呈现。开启时不向布局容器申请内边距避让，并接入全局遮罩与滚动锁定。 |
 | `unmountOnClose` | `boolean` | `false` | 关闭时是否彻底卸载 DOM。默认 `false`（保活隐藏），关闭后保留 DOM 并使用 `hidden` 属性隐藏；设为 `true` 时在退场动画完成后销毁节点。 |
@@ -186,7 +186,7 @@ order: 117
 | `safeArea` | `boolean \| number \| string` | `true` | 边缘安全区留白配置。`true` 时自适应当前 `mat-app-root` 或系统环境安全区；`false` 为 0；也可显式指定具体尺寸。 |
 | `safeAreaSize` | `number \| string \| undefined` | `undefined` | 兼容旧版边缘方向安全区大小。 |
 | `zIndex` | `number \| string \| undefined` | `undefined` | 显式指定 CSS 层级；省略时根据 `location` 提供预设层级。 |
-| `attach` | `string \| HTMLElement` | `'body'` | `mode="fixed"` 时的挂载目标。 |
+| `attach` | `string \| HTMLElement` | `undefined` | `mode="fixed"` 时的挂载目标。未指定时保留在声明位置，显式传入后才 Teleport 到目标。 |
 | `transition` | `boolean` | `true` | 是否启用默认滑入滑出过渡动效。设为 `false` 时立即切换显隐。 |
 | `closeOnBack` | `boolean` | `true` | `modal=true` 时点击背景遮罩是否请求关闭。 |
 

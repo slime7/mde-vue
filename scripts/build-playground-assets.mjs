@@ -73,7 +73,6 @@ export async function buildPlaygroundAssets() {
 
     body {
       box-sizing: border-box;
-      padding: 24px;
     }
 
     #app {
@@ -82,6 +81,8 @@ export async function buildPlaygroundAssets() {
 
     .playground-preview-wrapper {
       min-block-size: 100%;
+      box-sizing: border-box;
+      padding: 24px;
     }
   </style>
   <style id="playground-dynamic-style"></style>

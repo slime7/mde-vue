@@ -2337,7 +2337,7 @@ var ar = 200, or = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		},
 		attach: {
 			type: [String, Object],
-			default: "body"
+			default: void 0
 		},
 		transition: {
 			type: Boolean,
@@ -2374,7 +2374,7 @@ var ar = 200, or = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		function R() {
 			I?.isConnected && I.focus({ preventScroll: !0 }), I = null;
 		}
-		let te = h(Ln, null), B = h(Mt, null), H = g?.vnode.props ?? {}, W = i(() => Object.prototype.hasOwnProperty.call(H, "attach") && H.attach !== void 0), G = i(() => d.app && !!B && !W.value), K = i(() => d.app ? G.value ? "docked" : "fixed" : d.mode), q = i(() => {
+		let te = h(Ln, null), B = h(Mt, null), H = g?.vnode.props ?? {}, W = i(() => Object.prototype.hasOwnProperty.call(H, "attach") && H.attach !== void 0), G = i(() => d.app && !!B && !W.value), K = i(() => d.app ? G.value ? "docked" : "fixed" : d.mode), q = i(() => K.value === "fixed" && W.value), J = i(() => {
 			let e = d.location;
 			return e === "left" ? "start" : e === "right" ? "end" : [
 				"top",
@@ -2382,19 +2382,19 @@ var ar = 200, or = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				"start",
 				"end"
 			].includes(e) ? e : "start";
-		}), J = i(() => d.blockSize === void 0 || d.blockSize === "auto"), Y = j({
+		}), Y = i(() => d.blockSize === void 0 || d.blockSize === "auto"), X = j({
 			blockSize: 0,
 			inlineSize: 0
-		}), X = i(() => !!d.modal), Z = i(() => X.value && zn.value.at(-1) === b.value);
-		ir(b, i(() => X.value && E.value && Z.value));
-		let ne = i(() => {
-			if (J.value) return "auto";
+		}), Z = i(() => !!d.modal), ne = i(() => Z.value && zn.value.at(-1) === b.value);
+		ir(b, i(() => Z.value && E.value && ne.value));
+		let re = i(() => {
+			if (Y.value) return "auto";
 			let e = xt(d.blockSize, {
 				property: "block-size",
 				fallback: "0px"
 			});
 			return e === "0" ? "0px" : e;
-		}), re = i(() => {
+		}), ie = i(() => {
 			if (d.safeArea === !1) return "0px";
 			if (d.safeAreaSize !== void 0) {
 				let e = xt(d.safeAreaSize, {
@@ -2410,13 +2410,13 @@ var ar = 200, or = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				});
 				return e === "0" ? "0px" : e;
 			}
-			let e = q.value;
+			let e = J.value;
 			return e === "top" ? "var(--mat-app-root-safe-area-top, env(safe-area-inset-top, 0px))" : e === "bottom" ? "var(--mat-app-root-safe-area-bottom, env(safe-area-inset-bottom, 0px))" : e === "start" ? "var(--mat-app-root-safe-area-start, env(safe-area-inset-left, 0px))" : "var(--mat-app-root-safe-area-end, env(safe-area-inset-right, 0px))";
-		}), ie = i(() => {
-			if (J.value) return "auto";
+		}), ae = i(() => {
+			if (Y.value) return "auto";
 			let e = u(d.blockSize), t = u(d.safeAreaSize === void 0 ? d.safeArea : d.safeAreaSize);
-			return e !== null && t !== null ? `${e + t}px` : `calc(${ne.value} + ${re.value})`;
-		}), ae = i(() => q.value === "top" || q.value === "bottom" ? "8" : "7"), oe = j({
+			return e !== null && t !== null ? `${e + t}px` : `calc(${re.value} + ${ie.value})`;
+		}), oe = i(() => J.value === "top" || J.value === "bottom" ? "8" : "7"), se = j({
 			top: 0,
 			bottom: 0,
 			left: 0,
@@ -2424,7 +2424,7 @@ var ar = 200, or = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			offset: 0
 		});
 		V(() => S.value?.insets, (e) => {
-			e && (oe.value = {
+			e && (se.value = {
 				top: e.top ?? 0,
 				bottom: e.bottom ?? 0,
 				left: e.left ?? e.start ?? 0,
@@ -2435,33 +2435,33 @@ var ar = 200, or = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			deep: !0,
 			immediate: !0
 		});
-		let se = i(() => [
+		let ce = i(() => [
 			"mat-aside",
-			`mat-aside--${q.value}`,
-			q.value === "start" ? "mat-aside--left" : null,
-			q.value === "end" ? "mat-aside--right" : null,
+			`mat-aside--${J.value}`,
+			J.value === "start" ? "mat-aside--left" : null,
+			J.value === "end" ? "mat-aside--right" : null,
 			`mat-aside--mode-${K.value}`,
 			`mat-aside--${O.value}`,
 			{
 				"mat-aside--bordered": d.bordered,
-				"mat-aside--auto-size": J.value,
-				"mat-aside--modal": X.value,
-				"mat-aside--modal-scoped": X.value && le.value,
-				"mat-aside--top-scrim": Z.value,
+				"mat-aside--auto-size": Y.value,
+				"mat-aside--modal": Z.value,
+				"mat-aside--modal-scoped": Z.value && ue.value,
+				"mat-aside--top-scrim": ne.value,
 				"mat-aside--no-transition": !d.transition,
 				"mat-aside--app": d.app
 			}
-		]), ce = i(() => [m.style, {
-			"--mat-aside-block-size": J.value ? "auto" : ne.value,
-			"--mat-aside-safe-area-size": re.value,
-			"--mat-aside-total-block-size": J.value ? "auto" : ie.value,
-			"--mat-aside-insets-top": `${oe.value.top}px`,
-			"--mat-aside-insets-bottom": `${oe.value.bottom}px`,
-			"--mat-aside-insets-left": `${oe.value.left}px`,
-			"--mat-aside-insets-right": `${oe.value.right}px`,
-			"--mat-aside-insets-offset": `${oe.value.offset}px`,
-			zIndex: d.zIndex === void 0 ? X.value ? "calc(var(--mat-sys-z-index-dialog) + 1)" : ae.value : String(d.zIndex)
-		}]), le = i(() => K.value !== "fixed" && !!(te?.rootElement?.value || B && !W.value && B.rootElement?.value)), ue = i(() => {
+		]), le = i(() => [m.style, {
+			"--mat-aside-block-size": Y.value ? "auto" : re.value,
+			"--mat-aside-safe-area-size": ie.value,
+			"--mat-aside-total-block-size": Y.value ? "auto" : ae.value,
+			"--mat-aside-insets-top": `${se.value.top}px`,
+			"--mat-aside-insets-bottom": `${se.value.bottom}px`,
+			"--mat-aside-insets-left": `${se.value.left}px`,
+			"--mat-aside-insets-right": `${se.value.right}px`,
+			"--mat-aside-insets-offset": `${se.value.offset}px`,
+			zIndex: d.zIndex === void 0 ? Z.value ? "calc(var(--mat-sys-z-index-dialog) + 1)" : oe.value : String(d.zIndex)
+		}]), ue = i(() => K.value !== "fixed" && !!(te?.rootElement?.value || B && !W.value && B.rootElement?.value)), de = i(() => {
 			if (W.value && d.attach) {
 				if (d.attach instanceof HTMLElement && d.attach.ownerDocument === document) return d.attach;
 				if (typeof d.attach == "string") try {
@@ -2474,10 +2474,10 @@ var ar = 200, or = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				if (te?.rootElement?.value) return te.rootElement.value;
 				if (B && !W.value && B.rootElement?.value) return B.rootElement.value;
 			}
-			return "body";
-		}), de = i(() => {
-			let e = q.value === "start" || q.value === "end", t = w.value && O.value !== "closed", n;
-			return n = t ? d.placeholderSize === void 0 ? J.value ? e ? `${Y.value.inlineSize}px` : `${Y.value.blockSize}px` : ie.value : xt(d.placeholderSize, {
+			return K.value === "fixed" ? null : "body";
+		}), fe = i(() => {
+			let e = J.value === "start" || J.value === "end", t = w.value && O.value !== "closed", n;
+			return n = t ? d.placeholderSize === void 0 ? Y.value ? e ? `${X.value.inlineSize}px` : `${X.value.blockSize}px` : ae.value : xt(d.placeholderSize, {
 				property: e ? "inline-size" : "block-size",
 				fallback: "0px"
 			}) : "0px", e ? {
@@ -2490,7 +2490,7 @@ var ar = 200, or = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				flexShrink: 0
 			};
 		});
-		function fe() {
+		function pe() {
 			if (B && !W.value) {
 				let e = B.contentElement?.value ?? null;
 				return {
@@ -2510,69 +2510,69 @@ var ar = 200, or = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				scrollElement: null
 			};
 		}
-		function pe() {
-			if (!M || !b.value || !E.value || !X.value || !w.value || O.value === "closed") {
+		function me() {
+			if (!M || !b.value || !E.value || !Z.value || !w.value || O.value === "closed") {
 				b.value && nr(b.value);
 				return;
 			}
-			tr(b.value, fe());
-		}
-		function me() {
-			b.value && nr(b.value);
+			tr(b.value, pe());
 		}
 		function he() {
-			p("update:open", !1), p("update:modelValue", !1);
+			b.value && nr(b.value);
 		}
 		function ge() {
-			!X.value || !d.closeOnBack || he();
+			p("update:open", !1), p("update:modelValue", !1);
 		}
-		function _e(e) {
-			X.value && Z.value && e.key === "Escape" && (e.preventDefault(), he());
+		function _e() {
+			!Z.value || !d.closeOnBack || ge();
 		}
-		function ve() {
+		function ve(e) {
+			Z.value && ne.value && e.key === "Escape" && (e.preventDefault(), ge());
+		}
+		function ye() {
 			if (!M || !b.value) return;
 			let e = b.value.getBoundingClientRect(), t = Math.max(0, Math.ceil(Number(e.height) || 0)), n = Math.max(0, Math.ceil(Number(e.width) || 0));
-			Y.value.blockSize === t && Y.value.inlineSize === n || (Y.value = {
+			X.value.blockSize === t && X.value.inlineSize === n || (X.value = {
 				blockSize: t,
 				inlineSize: n
 			}, S.value?.update());
 		}
-		function ye() {
+		function be() {
 			if (!M || !b.value || !E.value || !w.value || O.value === "closed") {
 				S.value?.unregister(), S.value = null;
 				return;
 			}
 			S.value?.unregister(), S.value = null, !(d.placeholder || K.value === "flow" || K.value === "sticky" || d.modal) && (d.app && B ? S.value = B.publicContext.registerEdge({
-				edge: q.value,
+				edge: J.value,
 				element: b.value
 			}) : te ? S.value = te.publicContext.registerEdge({
-				edge: q.value,
+				edge: J.value,
 				element: b.value
 			}) : B && (S.value = B.publicContext.registerEdge({
-				edge: q.value,
+				edge: J.value,
 				element: b.value
 			})));
 		}
-		function be() {
-			if (k.cancel(), E.value = !0, X.value && typeof document < "u" && document.activeElement instanceof HTMLElement && (I = document.activeElement), !d.transition) {
+		function xe() {
+			if (k.cancel(), E.value = !0, Z.value && typeof document < "u" && document.activeElement instanceof HTMLElement && (I = document.activeElement), !d.transition) {
 				O.value = "open", v().then(() => {
-					ye(), pe(), p("opened");
+					be(), me(), p("opened");
 				});
 				return;
 			}
 			O.value = "opening", v().then(() => {
-				ye(), pe(), !(!M || !E.value || !w.value) && k.wait(b.value, ar, () => {
+				be(), me(), !(!M || !E.value || !w.value) && k.wait(b.value, ar, () => {
 					E.value && w.value && (O.value = "open", p("opened"));
 				});
 			});
 		}
-		function xe() {
+		function Se() {
 			if (!E.value || O.value === "closed") {
 				O.value = "closed";
 				return;
 			}
 			if (!d.transition) {
-				O.value = "closed", d.unmountOnClose && (E.value = !1), S.value?.unregister(), S.value = null, me(), R(), p("closed");
+				O.value = "closed", d.unmountOnClose && (E.value = !1), S.value?.unregister(), S.value = null, he(), R(), p("closed");
 				return;
 			}
 			A.start({
@@ -2584,52 +2584,52 @@ var ar = 200, or = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 					O.value = "closing", S.value?.unregister(), S.value = null;
 				},
 				onFinish: () => {
-					d.unmountOnClose && (E.value = !1), O.value = "closed", me(), R(), p("closed");
+					d.unmountOnClose && (E.value = !1), O.value = "closed", he(), R(), p("closed");
 				}
 			});
 		}
 		return V(w, (e) => {
-			e ? be() : xe();
-		}), V(q, () => {
-			ye(), ve();
+			e ? xe() : Se();
+		}), V(J, () => {
+			be(), ye();
 		}), V([
 			K,
 			() => d.app,
 			() => d.modal
 		], () => {
-			ye(), pe();
+			be(), me();
 		}), T(async () => {
-			M = !0, typeof window < "u" && window.addEventListener("keydown", _e), E.value && (await v(), ye(), pe(), N = typeof ResizeObserver > "u" ? void 0 : new ResizeObserver(ve), b.value && (N?.observe(b.value), ve()));
+			M = !0, typeof window < "u" && window.addEventListener("keydown", ve), E.value && (await v(), be(), me(), N = typeof ResizeObserver > "u" ? void 0 : new ResizeObserver(ye), b.value && (N?.observe(b.value), ye()));
 		}), C(() => {
-			M = !1, typeof window < "u" && window.removeEventListener("keydown", _e), N?.disconnect(), N = void 0, S.value?.unregister(), S.value = null, me();
+			M = !1, typeof window < "u" && window.removeEventListener("keydown", ve), N?.disconnect(), N = void 0, S.value?.unregister(), S.value = null, he();
 		}), r({
 			hostElement: b,
-			activeInsets: oe,
+			activeInsets: se,
 			phase: O
-		}), (e, r) => z(d).placeholder && (E.value || !z(d).unmountOnClose) ? (D(), s(t, { key: 0 }, [P(e.$slots, "placeholder", { style: x(de.value) }, () => [c("span", {
+		}), (e, r) => z(d).placeholder && (E.value || !z(d).unmountOnClose) ? (D(), s(t, { key: 0 }, [P(e.$slots, "placeholder", { style: x(fe.value) }, () => [c("span", {
 			class: "mat-aside__placeholder",
 			"aria-hidden": "true",
-			style: x(de.value)
-		}, null, 4)], !0), K.value === "fixed" ? (D(), a(n, {
+			style: x(fe.value)
+		}, null, 4)], !0), q.value ? (D(), a(n, {
 			key: 0,
-			to: ue.value,
-			disabled: !ue.value
-		}, [X.value && E.value && O.value !== "closed" ? (D(), s("div", {
+			to: de.value,
+			disabled: !de.value
+		}, [Z.value && E.value && O.value !== "closed" ? (D(), s("div", {
 			key: 0,
 			class: y(["mat-aside__scrim", [z(d).scrimClass, {
-				"mat-aside__scrim--top": Z.value,
+				"mat-aside__scrim--top": ne.value,
 				"mat-aside__scrim--closing": O.value === "closing"
 			}]]),
 			"aria-hidden": "true",
-			onClick: ge
+			onClick: _e
 		}, null, 2)) : o("", !0), E.value ? (D(), a(F(z(d).as), _({
 			key: 1,
 			ref_key: "hostElement",
 			ref: b
 		}, e.$attrs, {
 			hidden: O.value === "closed" && !z(d).unmountOnClose || void 0,
-			class: se.value,
-			style: ce.value
+			class: ce.value,
+			style: le.value
 		}), {
 			default: U(() => [P(e.$slots, "default", {}, void 0, !0)]),
 			_: 3
@@ -2643,47 +2643,47 @@ var ar = 200, or = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			ref: b
 		}, e.$attrs, {
 			hidden: O.value === "closed" && !z(d).unmountOnClose || void 0,
-			class: se.value,
-			style: ce.value
+			class: ce.value,
+			style: le.value
 		}), {
-			default: U(() => [X.value && E.value && O.value !== "closed" ? (D(), a(n, {
+			default: U(() => [Z.value && E.value && O.value !== "closed" ? (D(), a(n, {
 				key: 0,
-				to: ue.value,
-				disabled: !ue.value
+				to: de.value,
+				disabled: !de.value
 			}, [c("div", {
 				class: y(["mat-aside__scrim", [z(d).scrimClass, {
-					"mat-aside__scrim--top": Z.value,
+					"mat-aside__scrim--top": ne.value,
 					"mat-aside__scrim--closing": O.value === "closing",
-					"mat-aside__scrim--docked": le.value
+					"mat-aside__scrim--docked": ue.value
 				}]]),
 				"aria-hidden": "true",
-				onClick: ge
+				onClick: _e
 			}, null, 2)], 8, ["to", "disabled"])) : o("", !0), P(e.$slots, "default", {}, void 0, !0)]),
 			_: 3
 		}, 16, [
 			"hidden",
 			"class",
 			"style"
-		])) : o("", !0)], 64)) : K.value === "fixed" ? (D(), a(n, {
+		])) : o("", !0)], 64)) : q.value ? (D(), a(n, {
 			key: 1,
-			to: ue.value,
-			disabled: !ue.value
-		}, [X.value && E.value && O.value !== "closed" ? (D(), s("div", {
+			to: de.value,
+			disabled: !de.value
+		}, [Z.value && E.value && O.value !== "closed" ? (D(), s("div", {
 			key: 0,
 			class: y(["mat-aside__scrim", [z(d).scrimClass, {
-				"mat-aside__scrim--top": Z.value,
+				"mat-aside__scrim--top": ne.value,
 				"mat-aside__scrim--closing": O.value === "closing"
 			}]]),
 			"aria-hidden": "true",
-			onClick: ge
+			onClick: _e
 		}, null, 2)) : o("", !0), E.value ? (D(), a(F(z(d).as), _({
 			key: 1,
 			ref_key: "hostElement",
 			ref: b
 		}, e.$attrs, {
 			hidden: O.value === "closed" && !z(d).unmountOnClose || void 0,
-			class: se.value,
-			style: ce.value
+			class: ce.value,
+			style: le.value
 		}), {
 			default: U(() => [P(e.$slots, "default", {}, void 0, !0)]),
 			_: 3
@@ -2697,21 +2697,21 @@ var ar = 200, or = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			ref: b
 		}, e.$attrs, {
 			hidden: O.value === "closed" && !z(d).unmountOnClose || void 0,
-			class: se.value,
-			style: ce.value
+			class: ce.value,
+			style: le.value
 		}), {
-			default: U(() => [X.value && E.value && O.value !== "closed" ? (D(), a(n, {
+			default: U(() => [Z.value && E.value && O.value !== "closed" ? (D(), a(n, {
 				key: 0,
-				to: ue.value,
-				disabled: !ue.value
+				to: de.value,
+				disabled: !de.value
 			}, [c("div", {
 				class: y(["mat-aside__scrim", [z(d).scrimClass, {
-					"mat-aside__scrim--top": Z.value,
+					"mat-aside__scrim--top": ne.value,
 					"mat-aside__scrim--closing": O.value === "closing",
-					"mat-aside__scrim--docked": le.value
+					"mat-aside__scrim--docked": ue.value
 				}]]),
 				"aria-hidden": "true",
-				onClick: ge
+				onClick: _e
 			}, null, 2)], 8, ["to", "disabled"])) : o("", !0), P(e.$slots, "default", {}, void 0, !0)]),
 			_: 3
 		}, 16, [
@@ -2720,7 +2720,7 @@ var ar = 200, or = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"style"
 		])) : o("", !0);
 	}
-}), [["__scopeId", "data-v-ad3df489"]]), sr = /* @__PURE__ */ new WeakMap(), cr = /* @__PURE__ */ new WeakMap();
+}), [["__scopeId", "data-v-63fcf731"]]), sr = /* @__PURE__ */ new WeakMap(), cr = /* @__PURE__ */ new WeakMap();
 function lr(e, t, n) {
 	let r = [n.initialValue, ...n.names].filter((e) => e && e !== "none"), i = e.style;
 	i[t] = r.join(", ");

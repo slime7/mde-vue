@@ -104,6 +104,55 @@ describe('MatLayout 布局容器', () => {
     wrapper.unmount();
   });
 
+  it('fixed 模式在 MatLayout 内保留声明位置并使用相同的边缘避让', async () => {
+    let layoutData;
+    const Capture = defineComponent({
+      setup() {
+        layoutData = useLayout();
+        return () => h('div', { class: 'main-content' }, 'content');
+      },
+    });
+
+    const wrapper = mount(MatLayout, {
+      attachTo: document.body,
+      slots: {
+        default: () => [
+          h(MatAside, {
+            mode: 'fixed', transition: false, location: 'top', blockSize: 64,
+          }),
+          h(MatAside, {
+            mode: 'fixed', transition: false, location: 'left', blockSize: 200,
+          }),
+          h(Capture),
+        ],
+      },
+    });
+
+    const [topAside, leftAside] = wrapper.findAllComponents(MatAside);
+    expect(wrapper.element.contains(topAside.element)).toBe(true);
+    expect(wrapper.element.contains(leftAside.element)).toBe(true);
+
+    vi.spyOn(wrapper.element, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 600, height: 600, right: 800, width: 800,
+    }));
+    vi.spyOn(topAside.element, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 64, height: 64, right: 800, width: 800,
+    }));
+    vi.spyOn(leftAside.element, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 600, height: 536, right: 200, top: 64, width: 200,
+    }));
+
+    window.dispatchEvent(new Event('resize'));
+    await settle();
+
+    expect(layoutData.padding.top).toBe(64);
+    expect(layoutData.padding.left).toBe(200);
+    expect(topAside.vm.activeInsets.left).toBe(0);
+    expect(leftAside.vm.activeInsets.top).toBe(64);
+
+    wrapper.unmount();
+  });
+
   it('Left 在前、Top 在后时：Left 占满纵向，Top 避让 Left', async () => {
     let layoutData;
     const Capture = defineComponent({

@@ -189,6 +189,43 @@ describe('MatAside 边缘组件', () => {
     wrapper.unmount();
   });
 
+  it('fixed 未显式指定 attach 时保留声明位置，显式 attach 时才移动到目标容器', async () => {
+    const source = document.createElement('section');
+    const target = document.createElement('main');
+    document.body.append(source, target);
+
+    const localWrapper = mount(MatAside, {
+      attachTo: source,
+      props: {
+        mode: 'fixed',
+        transition: false,
+        blockSize: 64,
+      },
+    });
+    await settle();
+
+    expect(source.querySelector('.mat-aside')).not.toBeNull();
+    expect(target.querySelector('.mat-aside')).toBeNull();
+    localWrapper.unmount();
+
+    const teleportWrapper = mount(MatAside, {
+      attachTo: source,
+      props: {
+        mode: 'fixed',
+        attach: target,
+        transition: false,
+        blockSize: 64,
+      },
+    });
+    await settle();
+
+    expect(source.querySelector('.mat-aside')).toBeNull();
+    expect(target.querySelector('.mat-aside')).not.toBeNull();
+    teleportWrapper.unmount();
+    source.remove();
+    target.remove();
+  });
+
   it('blockSize 为可选属性，省略或为 auto 时支持自适应内容渲染', () => {
     const wrapper = mount(MatAside, {
       slots: {
@@ -291,7 +328,7 @@ describe('MatAside 边缘组件', () => {
     wrapper.unmount();
   });
 
-  it('app=true 时在 MatAppRoot 下自动表现为 docked，在普通容器下自动表现为 fixed 挂载到 body', async () => {
+  it('app=true 时在 MatAppRoot 下自动表现为 docked，在普通容器下自动表现为 fixed', async () => {
     // AppRoot 下
     const appRootWrapper = mount(MatAppRoot, {
       attachTo: document.body,

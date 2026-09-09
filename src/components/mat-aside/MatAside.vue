@@ -72,7 +72,7 @@ const props = defineProps({
   /**
    * 是否接入应用级外壳布局。
    * 在 MatAppRoot 内且未显式指定 attach 时自动表现为 docked 并登记；
-   * 在外部或有显式 attach 时自动表现为 fixed 并 Teleport 至目标。
+   * 在外部或有显式 attach 时自动表现为 fixed；仅显式指定 attach 时 Teleport 至目标。
    *
    * @type {boolean}
    * @default false
@@ -221,13 +221,14 @@ const props = defineProps({
   },
   /**
    * mode="fixed" 时的挂载目标。
+   * 未显式指定时保留在声明位置；传入该属性后才 Teleport 至目标。
    *
    * @type {string | HTMLElement}
-   * @default 'body'
+   * @default undefined
    */
   attach: {
     type: [String, Object],
-    default: 'body',
+    default: undefined,
   },
   /**
    * 是否启用默认滑入滑出动效。设为 false 时立即切换。
@@ -317,6 +318,10 @@ const effectiveMode = computed(() => {
   }
   return propsWithDefaults.mode;
 });
+
+const shouldTeleport = computed(() => (
+  effectiveMode.value === 'fixed' && hasExplicitAttach.value
+));
 
 const normalizedLocation = computed(() => {
   const loc = propsWithDefaults.location;
@@ -490,7 +495,7 @@ const targetContainer = computed(() => {
     }
   }
 
-  return 'body';
+  return effectiveMode.value === 'fixed' ? null : 'body';
 });
 
 const placeholderStyle = computed(() => {
@@ -791,7 +796,7 @@ defineExpose({
     </slot>
 
     <Teleport
-      v-if="effectiveMode === 'fixed'"
+      v-if="shouldTeleport"
       :to="targetContainer"
       :disabled="!targetContainer"
     >
@@ -856,7 +861,7 @@ defineExpose({
   </template>
 
   <Teleport
-    v-else-if="effectiveMode === 'fixed'"
+    v-else-if="shouldTeleport"
     :to="targetContainer"
     :disabled="!targetContainer"
   >
