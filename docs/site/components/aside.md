@@ -11,6 +11,8 @@ order: 117
 
 `<mat-aside>` 的组件导出名是 `MatAside`。它是专用于停靠在 `mat-layout` 或 `mat-app-root` 边缘的布局基础设施组件。通过统一管理四个停靠方向（`top`、`bottom`、`left`、`right`）的厚度尺寸与安全区留白，协调边缘占据与正交方向上的互斥避让，未来可作为各边缘组件（如顶部应用栏、导航侧栏、底部栏等）的底层根 DOM。
 
+同一个组件树同时存在 `MatLayout` 与 `MatAppRoot` 时，Aside 只向最近的一个根登记一次，不会同时改变两层正文 padding。`docked` 与 `fixed` 都会参与最近根的边缘计算；`flow` 与 `sticky` 不登记边缘。`fixed` 组件显式 Teleport 后仍沿用原有挂载行为，但不会因为 Teleport 目标产生第二份登记。
+
 组件的核心排布机制遵循“先出现先占满”原则：在模板 DOM 中居前的边缘组件优先占满延展方向（例如居前的顶部栏占满横向整宽），而居后的边缘组件根据前序组件的占用尺寸自动偏移避让（例如居后的侧边栏高度自动避让顶部栏）。
 
 ## 示例
@@ -99,7 +101,7 @@ order: 117
 
 ### 固定停靠
 
-设置 `mode="fixed"` 后，Aside 会保留在当前声明位置，并继续依据父级 `mat-layout` 的声明顺序进行边缘避让与同向堆叠。只有显式指定 `attach` 时才会 Teleport 到目标节点。由于 fixed 示例会覆盖当前文档页面的视口边缘，这里只提供演练场入口：<a href="/playground?example=aside%2FAsideFixedExample" target="_blank" rel="noopener noreferrer">在演练场中打开 fixed 多边缘停靠示例</a>。
+设置 `mode="fixed"` 后，Aside 会保留在当前声明位置，并继续依据最近的 `mat-layout` 或 `mat-app-root` 的声明顺序进行边缘避让与同向堆叠，同时为正文产生对应 padding。只有显式指定 `attach` 时才会 Teleport 到目标节点。由于 fixed 示例会覆盖当前文档页面的视口边缘，这里只提供演练场入口：<a href="/playground?example=aside%2FAsideFixedExample" target="_blank" rel="noopener noreferrer">在演练场中打开 fixed 多边缘停靠示例</a>。
 
 ### 粘性停靠
 
@@ -145,7 +147,7 @@ order: 117
 
 ### 模态浮层
 
-设置 `modal` 使 Aside 作为局部的模态浮层展现。开启时 Aside 不向 `mat-layout` 申请正文内边距避让，而是浮动覆盖在正文之上，并在其后渲染半透明背景遮罩，点击遮罩或按下 Escape 键可请求关闭。
+设置 `modal` 使 Aside 作为局部的模态浮层展现。开启时 Aside 不向 `mat-layout` 或 `mat-app-root` 申请正文内边距避让，而是浮动覆盖在正文之上，并在其后渲染半透明背景遮罩，点击遮罩或按下 Escape 键可请求关闭。此时 `placeholder` 才会在声明位置生效；普通边缘模式直接使用根布局 padding，不需要 placeholder。
 
 :::: details 查看示例代码
 ::: code-group
@@ -178,8 +180,8 @@ order: 117
 | `bordered` | `boolean` | `false` | 是否在面向内容的一侧渲染 1px 分隔线。 |
 | `modal` | `boolean` | `false` | 是否作为模态浮层呈现。开启时不向布局容器申请内边距避让，并接入全局遮罩与滚动锁定。 |
 | `unmountOnClose` | `boolean` | `false` | 关闭时是否彻底卸载 DOM。默认 `false`（保活隐藏），关闭后保留 DOM 并使用 `hidden` 属性隐藏；设为 `true` 时在退场动画完成后销毁节点。 |
-| `placeholder` | `boolean` | `false` | 是否在自然文档流位置保留占位节点。 |
-| `placeholderSize` | `number \| string \| undefined` | `undefined` | 显式指定占位节点尺寸；省略时跟随组件自身总厚度。 |
+| `placeholder` | `boolean` | `false` | `modal=true` 时是否在自然文档流位置保留占位节点；普通 `docked`、`fixed`、`flow` 与 `sticky` 模式忽略该属性。 |
+| `placeholderSize` | `number \| string \| undefined` | `undefined` | modal placeholder 的显式尺寸；省略时跟随组件自身总厚度。 |
 | `location` | `'top' \| 'bottom' \| 'start' \| 'end' \| 'left' \| 'right'` | `'start'` | 依附的停靠边缘。`'left'` 等价映射为 `'start'`，`'right'` 等价映射为 `'end'`。 |
 | `mode` | `'docked' \| 'flow' \| 'sticky' \| 'fixed'` | `'docked'` | 排布与定位模式。`'docked'` 为容器内绝对定位避让，`'flow'` 为常规文档流，`'sticky'` 为粘性定位，`'fixed'` 为视口固定定位。 |
 | `blockSize` | `number \| string \| undefined` | `undefined` | 垂直于停靠边缘方向的占用厚度。数值自动转为 px；省略或传 `'auto'` 时自适应内容并由内部 ResizeObserver 自动测量。 |

@@ -4,6 +4,7 @@ import { ref } from 'vue';
 
 const snackbarOpen = ref(false);
 const current = ref('home');
+const secondary = ref('projects');
 </script>
 <!-- #endregion script -->
 
@@ -31,6 +32,22 @@ const current = ref('home');
         </mat-navigation-rail-item>
       </mat-navigation-rail>
 
+      <mat-navigation-rail
+        v-model="secondary"
+        app
+        expanded
+        full-width
+        bordered
+        aria-label="项目导航"
+      >
+        <mat-navigation-rail-item value="projects" icon="folder">
+          项目
+        </mat-navigation-rail-item>
+        <mat-navigation-rail-item value="reports" icon="assessment">
+          报表
+        </mat-navigation-rail-item>
+      </mat-navigation-rail>
+
       <mat-app-bar app>
         应用标题
       </mat-app-bar>
@@ -39,7 +56,7 @@ const current = ref('home');
         <mat-container>
           <section class="app-root-components-example__content">
             <h3>组件自动接入与正文滚动</h3>
-            <p>Navigation 与底部 docked Toolbar 自动登记边缘；正文使用 MatScrollArea 和 MatContainer 组合进行滚动，FAB、Snackbar 和 Tooltip 自动浮动于正文与 Toolbar 之上。</p>
+            <p>两个 Navigation rail 与底部 docked Toolbar 按声明顺序登记边缘；展开 rail 的宽度变化会同步更新正文 padding。正文使用 MatScrollArea 和 MatContainer 组合进行滚动，FAB、Snackbar 和 Tooltip 自动浮动于正文与 Toolbar 之上。</p>
             <mat-btn
               id="app-root-tooltip-target"
               @click="snackbarOpen = true"

@@ -1,3 +1,4 @@
+/* eslint-disable vue/one-component-per-file */
 import { mount } from '@vue/test-utils';
 import {
   defineComponent, h, nextTick, ref,
@@ -6,6 +7,9 @@ import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
 import MatAppRoot from '../src/components/mat-app-root/MatAppRoot.vue';
+import MatAside from '../src/components/mat-aside/MatAside.vue';
+import MatLayout from '../src/components/mat-layout/MatLayout.vue';
+import { useLayout } from '../src/components/mat-layout/layout-context';
 import { useMatApp } from '../src/components/mat-app-root/mat-app-root-context';
 import MatFab from '../src/components/mat-fab/MatFab.vue';
 import MatNavigationRail from '../src/components/mat-navigation-rail/MatNavigationRail.vue';
@@ -45,6 +49,15 @@ function layoutCapture(onCapture) {
   return defineComponent({
     setup() {
       onCapture(useMatApp());
+      return () => null;
+    },
+  });
+}
+
+function matLayoutCapture(onCapture) {
+  return defineComponent({
+    setup() {
+      onCapture(useLayout());
       return () => null;
     },
   });
@@ -190,26 +203,29 @@ describe('MatAppRoot 组件接入', () => {
     wrapper.unmount();
   });
 
-  it('NavigationRail 设置 placeholder=true 时在声明位置生成占位且不占用 AppRoot 边缘 padding', async () => {
+  it('嵌套 MatLayout 时 NavigationRail 只登记最近的 Layout，不重复登记 AppRoot', async () => {
     let app;
+    let layout;
     const Capture = layoutCapture((value) => {
       app = value;
+    });
+    const LayoutCapture = matLayoutCapture((value) => {
+      layout = value;
     });
     const wrapper = mount(MatAppRoot, {
       attachTo: document.body,
       props: { fillViewport: false },
       slots: {
-        default: () => [
+        default: () => h(MatLayout, { class: 'nested-layout' }, () => [
           h(Capture),
-          h(MatNavigationRail, {
-            app: true,
-            placeholder: true,
-          }),
-        ],
+          h(LayoutCapture),
+          h(MatNavigationRail, { app: true }),
+        ]),
       },
     });
 
     await settleRender();
+    const nestedLayout = wrapper.element.querySelector('.nested-layout');
     const navigation = wrapper.element.querySelector('nav');
 
     vi.spyOn(wrapper.element, 'getBoundingClientRect').mockReturnValue(elementRect({
@@ -218,7 +234,13 @@ describe('MatAppRoot 组件接入', () => {
       right: 1000,
       width: 1000,
     }));
-    vi.spyOn(navigation.parentElement, 'getBoundingClientRect').mockReturnValue(elementRect({
+    vi.spyOn(nestedLayout, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 700,
+      height: 700,
+      right: 1000,
+      width: 1000,
+    }));
+    vi.spyOn(navigation, 'getBoundingClientRect').mockReturnValue(elementRect({
       bottom: 700,
       height: 700,
       right: 80,
@@ -228,7 +250,66 @@ describe('MatAppRoot 组件接入', () => {
     await settleMeasurement();
 
     expect(app.layout.padding.start).toBe(0);
-    expect(wrapper.element.querySelector('.mat-navigation-rail__placeholder')).not.toBeNull();
+    expect(layout.padding.start).toBe(80);
+
+    wrapper.unmount();
+  });
+
+  it('嵌套 MatAppRoot 时 fixed Aside 只登记最近的 AppRoot，不登记外层 Layout', async () => {
+    let app;
+    let layout;
+    const AppCapture = layoutCapture((value) => {
+      app = value;
+    });
+    const LayoutCapture = matLayoutCapture((value) => {
+      layout = value;
+    });
+    const wrapper = mount(MatLayout, {
+      attachTo: document.body,
+      slots: {
+        default: () => [
+          h(LayoutCapture),
+          h(MatAppRoot, { fillViewport: false }, () => [
+            h(AppCapture),
+            h(MatAside, {
+              location: 'top',
+              mode: 'fixed',
+              blockSize: 64,
+              transition: false,
+            }),
+          ]),
+        ],
+      },
+    });
+
+    await settleRender();
+    const layoutElement = wrapper.element;
+    const appRootElement = wrapper.element.querySelector('.mat-app-root');
+    const asideElement = wrapper.element.querySelector('.mat-aside');
+
+    vi.spyOn(layoutElement, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 700,
+      height: 700,
+      right: 1000,
+      width: 1000,
+    }));
+    vi.spyOn(appRootElement, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 700,
+      height: 700,
+      right: 1000,
+      width: 1000,
+    }));
+    vi.spyOn(asideElement, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 64,
+      height: 64,
+      right: 1000,
+      width: 1000,
+    }));
+    window.dispatchEvent(new Event('resize'));
+    await settleMeasurement();
+
+    expect(layout.padding.top).toBe(0);
+    expect(app.layout.padding.top).toBe(64);
 
     wrapper.unmount();
   });
@@ -419,6 +500,9 @@ describe('MatAppRoot 组件接入', () => {
 
     expect(app.layout.padding.start).toBe(320);
     expect(app.layout.content.width).toBe(880);
+    const railComponents = wrapper.findAllComponents(MatNavigationRail);
+    expect(railComponents[0].findComponent(MatAside).vm.activeInsets.left).toBe(0);
+    expect(railComponents[1].findComponent(MatAside).vm.activeInsets.left).toBe(80);
 
     wrapper.unmount();
   });

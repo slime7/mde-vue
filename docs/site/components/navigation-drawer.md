@@ -8,7 +8,7 @@ outline: [2, 3]
 
 `<mat-navigation-drawer>` 的组件导出名是 `MatNavigationDrawer`，配套的二级菜单分组组件为 `<mat-navigation-group>`（组件导出名 `MatNavigationGroup`）。
 
-Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail` 的 `hide-on-collapse` 沉浸隐藏模式，固定采用纵向全宽布局（`full-width`、`collapsible`、`hide-on-collapse`）。未展开时整体隐藏（宽度置为 0），展开时呈现标准抽屉（占据布局空间）或模态抽屉（覆盖页面并带有遮罩）。模态抽屉的宽度不会超过当前视口并保留 8px 边缘间距。默认 Slot 支持混排菜单切换按钮、FAB、导航项以及结合 `<mat-spacer />` 的底部操作。
+Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail` 的 `hide-on-collapse` 沉浸隐藏模式，固定采用纵向全宽布局（`full-width`、`collapsible`、`hide-on-collapse`）。未展开时整体隐藏（宽度置为 0），展开时呈现标准抽屉（向最近的 `MatLayout` 或 `MatAppRoot` 登记并占据布局空间）或模态抽屉（覆盖页面并带有遮罩）。模态抽屉的宽度不会超过当前视口并保留 8px 边缘间距。默认 Slot 支持混排菜单切换按钮、FAB、导航项以及结合 `<mat-spacer />` 的底部操作。
 
 ## 示例
 
@@ -91,7 +91,7 @@ Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail`
 | `alignment` | `'start' \| 'center' \| 'end'` | `'start'` | 默认 Slot 内容在纵向轴上的对齐方式 |
 | `app` | `boolean` | `false` | 开启应用级导航模式，省略 `attach` 且位于 `MatAppRoot` 内时自动登记边缘 |
 | `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 挂载目标 |
-| `placeholder` | `boolean` | `false` | `app=true` 时在声明位置生成占位 |
+| `placeholder` | `boolean` | `false` | 仅 modal 抽屉在声明位置生成占位；standard 抽屉使用最近根的 padding |
 | `bordered` | `boolean` | `false` | 是否复用 Aside 的边框修饰，在面向内容的一侧渲染 1px 细边框 |
 
 注：`full-width`、`collapsible` 与 `hide-on-collapse` 在组件内部固定为 `true`，无需且不可配置。

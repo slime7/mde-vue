@@ -11,7 +11,7 @@ order: 105
 
 `<mat-navigation-rail>` 的组件导出名是 `MatNavigationRail`，配套子项组件 `<mat-navigation-rail-item>`（`MatNavigationRailItem`）或通用导航子项 `<mat-navigation-item>`（`MatNavigationItem`）。该组件遵循 Material 3 Expressive 规范，专用于在平板、桌面等中大尺寸屏幕中提供 3–7 个主要目的地、菜单入口、FAB 与底部操作的纵向导航栏。
 
-组件底层根元素基于 `MatAside` 呈现，默认停靠在布局容器的 `start`（起始侧）边缘，统管侧边定位、安全区留白、展开收起动画和模态遮罩。设置 `app` 后，若位于 `MatAppRoot` 内部且未显式指定 `attach`，会自动向应用根布局登记起始侧边缘，主内容层自动避让；否则支持固定至视口并挂载至 `attach` 容器。
+组件底层根元素基于 `MatAside` 呈现，默认停靠在布局容器的 `start`（起始侧）边缘，统管侧边定位、安全区留白、展开收起动画和模态遮罩。设置 `app` 后，若位于 `MatAppRoot` 或 `MatLayout` 内部且未显式指定 `attach`，会向最近的一个根登记起始侧边缘，主内容层自动避让；否则支持固定至视口并挂载至 `attach` 容器。组件树中同时存在两个根时不会重复登记。
 
 ## 示例
 
@@ -85,7 +85,7 @@ Badge 不提供专用 Slot，也不支持 `offset`。`location` 只接受八种�
 
 ### `placeholder`
 
-`placeholder` 只在 `app=true` 时有效。它在声明位置按实际应用级 rail 或 bar 尺寸保留空间，避免固定导航遮挡相邻正文。
+`placeholder` 只在 `layout="modal"` 时有效。modal rail 不登记根布局边缘，启用 placeholder 后会在声明位置按实际 rail 尺寸保留空间；standard rail 使用最近 `MatLayout` 或 `MatAppRoot` 的 padding，不需要 placeholder。
 
 :::: details 查看示例代码
 ::: code-group
@@ -109,7 +109,7 @@ Badge 不提供专用 Slot，也不支持 `offset`。`location` 只接受八种�
 
 `collapsible` 支持纵向 rail 折叠展开能力，`expanded` 支持 `v-model:expanded`。组件不再自带内置菜单按钮，使用方可直接在默认 Slot 混排自定义按钮进行切换，不添加则不显示。collapsed Item 为图标上、标签下；expanded Item 的图标与标签位于同一个 56px 高活动指示器中。
 
-展开与收回时，Item 下方的标签渐隐，活动指示器尺寸、Item 高度与间距平滑过渡（展开态 Item 之间间距为 0），展开状态的标签在指示器内逐渐出现；trailing 内容通过弹性 spacer 保持在 Item 尾部。
+展开与收回时，Item 下方的标签渐隐，活动指示器尺寸、Item 高度与间距平滑过渡（展开态 Item 之间间距为 0），展开状态的标签在指示器内逐渐出现；trailing 内容通过弹性 spacer 保持在 Item 尾部。standard rail 的实际宽度变化会同步更新最近根的 padding；多个同向 rail 的总占位和后续 rail 偏移也会随展开、收缩、隐藏和重新打开重新计算。
 
 :::: details 查看示例代码
 ::: code-group
@@ -332,7 +332,7 @@ Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导�
 | `open-label` | `string` | `'展开导航'` | 未展开时菜单按钮的无障碍名称 |
 | `app` | `boolean` | `false` | 开启应用布局模式；位于 `MatAppRoot` 且省略 `attach` 时自动登记边缘，否则固定到显式目标 |
 | `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；一旦显式提供就优先于 AppRoot 自动接入 |
-| `placeholder` | `boolean` | `false` | 仅 `app=true` 有效；在声明位置为固定 rail 或 bar 预留实际尺寸 |
+| `placeholder` | `boolean` | `false` | 仅 `layout="modal"` 有效；在声明位置为 modal rail 预留实际尺寸，standard rail 使用最近根的 padding |
 | `bordered` | `boolean` | `false` | 是否复用 Aside 的边框修饰，在面向内容的一侧渲染 1px 细边框 |
 | `open` | `boolean` | `undefined` | 受控显示/隐藏状态，支持 `v-model:open`；省略时遵循 `hide-on-collapse` 或 `modal` 模式与 `expanded` 联动 |
 

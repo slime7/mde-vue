@@ -89,7 +89,7 @@ const props = defineProps({
     default: 'body',
   },
   /**
-   * app=true 时在自然布局位置生成占位。
+   * modal 布局在自然布局位置生成占位；standard 布局使用最近 MatLayout 或 MatAppRoot 的 padding。
    *
    * @type {boolean}
    * @default false

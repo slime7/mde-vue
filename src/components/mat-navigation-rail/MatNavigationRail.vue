@@ -161,7 +161,7 @@ const props = defineProps({
     default: 'body',
   },
   /**
-   * app=true 时在自然布局位置生成占位。
+   * modal 布局在自然布局位置生成占位；standard 布局使用最近 MatLayout 或 MatAppRoot 的 padding。
    *
    * @type {boolean}
    * @default false
@@ -595,7 +595,7 @@ defineExpose({
     inline-size: 0;
   }
 
-  .mat-navigation-rail__placeholder {
+  :deep(.mat-navigation-rail__placeholder) {
     display: block;
     pointer-events: none;
     box-sizing: border-box;
@@ -717,7 +717,7 @@ defineExpose({
 
   @media (prefers-reduced-motion: reduce) {
     .mat-navigation-rail,
-    .mat-navigation-rail__placeholder {
+    :deep(.mat-navigation-rail__placeholder) {
       transition-duration: 0s;
     }
   }

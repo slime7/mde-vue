@@ -13,11 +13,10 @@ const active = ref(true);
     class="navigation-rail-placeholder-example"
   >
     <mat-navigation-rail
-      v-model:open="active"
-      app
+      v-model:expanded="active"
+      layout="modal"
       placeholder
-      bordered
-      aria-label="占位导航"
+      aria-label="模态占位导航"
     >
       <mat-navigation-rail-item icon="home">
         首页
@@ -28,9 +27,9 @@ const active = ref(true);
     </mat-navigation-rail>
     <div class="navigation-rail-placeholder-example-content">
       <mat-switch v-model="active">
-        {{ active ? '隐藏应用导航' : '显示应用导航' }}
+        {{ active ? '关闭模态导航' : '打开模态导航' }}
       </mat-switch>
-      <p>占位保留固定 rail 的宽度，正文不会从其声明位置穿过。</p>
+      <p>modal rail 不登记 AppRoot padding，placeholder 只在声明位置保留展开后的实际宽度。</p>
     </div>
   </mat-app-root>
 </template>

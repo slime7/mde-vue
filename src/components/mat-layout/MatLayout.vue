@@ -11,6 +11,7 @@ import {
   useAttrs,
 } from 'vue';
 import { createEdgeLayoutController } from '../layout/edge-layout';
+import { MAT_EDGE_LAYOUT_KEY } from '../layout/edge-layout-context';
 import { MAT_LAYOUT_KEY } from './layout-context';
 import { useMatProps } from '../use-mat-props';
 
@@ -113,10 +114,16 @@ const publicContext = Object.freeze({
   registerEdge,
 });
 
-provide(MAT_LAYOUT_KEY, {
+const layoutContext = {
   publicContext,
   rootElement: readonly(rootElement),
   contentElement: readonly(contentElement),
+};
+
+provide(MAT_LAYOUT_KEY, layoutContext);
+provide(MAT_EDGE_LAYOUT_KEY, {
+  kind: 'layout',
+  ...layoutContext,
 });
 
 onMounted(async () => {

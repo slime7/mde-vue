@@ -59,7 +59,7 @@ const props = defineProps({
     default: 'body',
   },
   /**
-   * app=true 时在自然布局位置生成占位。
+   * 预留的 modal 占位属性；NavigationBar 本身不提供 modal 布局，应用级导航使用最近 MatLayout 或 MatAppRoot 的 padding。
    *
    * @type {boolean}
    * @default false

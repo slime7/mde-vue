@@ -13,6 +13,7 @@ import {
 } from 'vue';
 import { MAT_LAYOUT_KEY } from '../mat-layout/layout-context';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
+import { MAT_EDGE_LAYOUT_KEY } from '../layout/edge-layout-context';
 import {
   dialogStack,
   registerDialog,
@@ -139,7 +140,8 @@ const props = defineProps({
     }),
   },
   /**
-   * 是否在文档流中渲染占位节点。
+   * 是否在 modal 模式的声明位置渲染占位节点。
+   * 普通 docked、fixed、flow 与 sticky 模式使用根布局 padding 或自身布局，不渲染该占位节点。
    *
    * @type {boolean}
    * @default false
@@ -276,6 +278,38 @@ const instance = getCurrentInstance();
 const hostElement = ref(null);
 const edgeRegistration = shallowRef(null);
 
+/**
+ * 收集动态根元素需要继承的父级 SFC 作用域属性。
+ * MatAside 使用动态 component、Teleport 和多分支模板渲染宿主元素，
+ * Vue 无法像单一原生根节点那样自动把父级作用域属性传递到最终宿主。
+ *
+ * @returns {Record<string, string>}
+ */
+function getHostScopeAttributes() {
+  const scopeIds = new Set();
+  let current = instance;
+
+  while (current) {
+    const vnode = current.vnode;
+    if (current.type?.__scopeId) {
+      scopeIds.add(current.type.__scopeId);
+    }
+    if (vnode?.scopeId) {
+      scopeIds.add(vnode.scopeId);
+    }
+    vnode?.slotScopeIds?.forEach((scopeId) => scopeIds.add(scopeId));
+    current = current.parent;
+  }
+
+  return Object.fromEntries([...scopeIds].map((scopeId) => [scopeId, '']));
+}
+
+const hostScopeAttributes = getHostScopeAttributes();
+const hostAttributes = computed(() => ({
+  ...attrs,
+  ...hostScopeAttributes,
+}));
+
 const isControlledOpen = computed(() => {
   if (propsWithDefaults.open !== undefined) {
     return Boolean(propsWithDefaults.open);
@@ -303,25 +337,29 @@ function restoreFocus() {
 
 const layoutContext = inject(MAT_LAYOUT_KEY, null);
 const appContext = inject(MAT_APP_ROOT_KEY, null);
+const edgeContext = inject(MAT_EDGE_LAYOUT_KEY, null);
 
 const rawVNodeProps = instance?.vnode.props ?? {};
 const hasExplicitAttach = computed(() => (
   Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach') && rawVNodeProps.attach !== undefined
 ));
+function hasExplicitMode() {
+  const vnodeProps = instance?.vnode.props ?? {};
+  return Object.prototype.hasOwnProperty.call(vnodeProps, 'mode') && vnodeProps.mode !== undefined;
+}
 const usesAppRoot = computed(() => (
   propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach.value
 ));
 
 const effectiveMode = computed(() => {
+  if (hasExplicitMode()) {
+    return propsWithDefaults.mode;
+  }
   if (propsWithDefaults.app) {
     return usesAppRoot.value ? 'docked' : 'fixed';
   }
   return propsWithDefaults.mode;
 });
-
-const shouldTeleport = computed(() => (
-  effectiveMode.value === 'fixed' && hasExplicitAttach.value
-));
 
 const normalizedLocation = computed(() => {
   const loc = propsWithDefaults.location;
@@ -344,6 +382,9 @@ const isAutoSize = computed(() => (
 const measuredSize = ref({ blockSize: 0, inlineSize: 0 });
 
 const isModal = computed(() => Boolean(propsWithDefaults.modal));
+const shouldRenderPlaceholder = computed(() => (
+  isModal.value && propsWithDefaults.placeholder
+));
 const isTop = computed(() => isModal.value && dialogStack.value.at(-1) === hostElement.value);
 
 useFocusTrap(hostElement, computed(() => (
@@ -467,8 +508,13 @@ const asideStyle = computed(() => [
 
 const isScopedToContainer = computed(() => (
   effectiveMode.value !== 'fixed' && Boolean(
-    layoutContext?.rootElement?.value || (appContext && !hasExplicitAttach.value && appContext.rootElement?.value),
+    edgeContext?.rootElement?.value
+      && (edgeContext.kind !== 'app-root' || !hasExplicitAttach.value),
   )
+));
+
+const shouldTeleport = computed(() => (
+  effectiveMode.value === 'fixed' && hasExplicitAttach.value
 ));
 
 const targetContainer = computed(() => {
@@ -487,15 +533,19 @@ const targetContainer = computed(() => {
   }
 
   if (effectiveMode.value !== 'fixed') {
-    if (layoutContext?.rootElement?.value) {
-      return layoutContext.rootElement.value;
-    }
-    if (appContext && !hasExplicitAttach.value && appContext.rootElement?.value) {
-      return appContext.rootElement.value;
+    if (edgeContext?.rootElement?.value) {
+      return edgeContext.rootElement.value;
     }
   }
 
   return effectiveMode.value === 'fixed' ? null : 'body';
+});
+
+const scrimContainer = computed(() => {
+  if (isModal.value && isScopedToContainer.value) {
+    return edgeContext?.contentElement?.value ?? targetContainer.value;
+  }
+  return targetContainer.value;
 });
 
 const placeholderStyle = computed(() => {
@@ -530,25 +580,31 @@ const placeholderStyle = computed(() => {
 });
 
 function buildScopeOptions() {
-  if (appContext && !hasExplicitAttach.value) {
-    const content = appContext.contentElement?.value ?? null;
+  const scopeContext = hasExplicitAttach.value
+    ? layoutContext
+    : edgeContext ?? layoutContext ?? appContext;
+
+  if (!scopeContext) {
+    return {
+      inertElement: null,
+      scrollElement: null,
+    };
+  }
+
+  if (scopeContext.kind === 'app-root' || scopeContext === appContext) {
+    const content = scopeContext.contentElement?.value ?? null;
     const isInsideContent = hostElement.value && content?.contains(hostElement.value);
     return {
       inertElement: isInsideContent ? null : content,
-      scrollElement: appContext.documentMode?.value ? null : content,
+      scrollElement: scopeContext.documentMode?.value ? null : content,
     };
   }
-  if (layoutContext) {
-    const content = layoutContext.contentElement?.value ?? null;
-    const isInsideContent = hostElement.value && content?.contains(hostElement.value);
-    return {
-      inertElement: isInsideContent ? null : content,
-      scrollElement: layoutContext.rootElement?.value ?? null,
-    };
-  }
+
+  const content = scopeContext.contentElement?.value ?? null;
+  const isInsideContent = hostElement.value && content?.contains(hostElement.value);
   return {
-    inertElement: null,
-    scrollElement: null,
+    inertElement: isInsideContent ? null : content,
+    scrollElement: scopeContext.rootElement?.value ?? null,
   };
 }
 
@@ -614,6 +670,18 @@ function syncMeasurement() {
   edgeRegistration.value?.update();
 }
 
+function scheduleMeasurement() {
+  if (!mounted) {
+    return;
+  }
+
+  nextTick().then(() => {
+    if (mounted) {
+      syncMeasurement();
+    }
+  });
+}
+
 function syncRegistration() {
   if (!mounted || !hostElement.value || !rendered.value || !isControlledOpen.value || phase.value === 'closed') {
     edgeRegistration.value?.unregister();
@@ -624,25 +692,14 @@ function syncRegistration() {
   edgeRegistration.value?.unregister();
   edgeRegistration.value = null;
 
-  if (propsWithDefaults.placeholder
-    || effectiveMode.value === 'flow'
+  if (effectiveMode.value === 'flow'
     || effectiveMode.value === 'sticky'
     || propsWithDefaults.modal) {
     return;
   }
 
-  if (propsWithDefaults.app && appContext) {
-    edgeRegistration.value = appContext.publicContext.registerEdge({
-      edge: normalizedLocation.value,
-      element: hostElement.value,
-    });
-  } else if (layoutContext) {
-    edgeRegistration.value = layoutContext.publicContext.registerEdge({
-      edge: normalizedLocation.value,
-      element: hostElement.value,
-    });
-  } else if (appContext) {
-    edgeRegistration.value = appContext.publicContext.registerEdge({
+  if (edgeContext) {
+    edgeRegistration.value = edgeContext.publicContext.registerEdge({
       edge: normalizedLocation.value,
       element: hostElement.value,
     });
@@ -728,6 +785,7 @@ watch(isControlledOpen, (val) => {
   } else {
     closeAside();
   }
+  scheduleMeasurement();
 });
 
 watch(normalizedLocation, () => {
@@ -743,6 +801,11 @@ watch([
   syncRegistration();
   syncModal();
 });
+
+watch([
+  normalizedBlockSize,
+  normalizedSafeAreaSize,
+], scheduleMeasurement, { flush: 'post' });
 
 onMounted(async () => {
   mounted = true;
@@ -783,7 +846,7 @@ defineExpose({
 </script>
 
 <template>
-  <template v-if="propsWithDefaults.placeholder && (rendered || !propsWithDefaults.unmountOnClose)">
+  <template v-if="shouldRenderPlaceholder && (rendered || !propsWithDefaults.unmountOnClose)">
     <slot
       name="placeholder"
       :style="placeholderStyle"
@@ -808,6 +871,7 @@ defineExpose({
           {
             'mat-aside__scrim--top': isTop,
             'mat-aside__scrim--closing': phase === 'closing',
+            'mat-aside__scrim--docked': isScopedToContainer,
           },
         ]"
         aria-hidden="true"
@@ -818,7 +882,7 @@ defineExpose({
         :is="propsWithDefaults.as"
         v-if="rendered"
         ref="hostElement"
-        v-bind="$attrs"
+        v-bind="hostAttributes"
         :hidden="phase === 'closed' && !propsWithDefaults.unmountOnClose ? true : undefined"
         :class="asideClass"
         :style="asideStyle"
@@ -831,15 +895,15 @@ defineExpose({
       :is="propsWithDefaults.as"
       v-else-if="rendered"
       ref="hostElement"
-      v-bind="$attrs"
+      v-bind="hostAttributes"
       :hidden="phase === 'closed' && !propsWithDefaults.unmountOnClose ? true : undefined"
       :class="asideClass"
       :style="asideStyle"
     >
       <Teleport
         v-if="isModal && rendered && phase !== 'closed'"
-        :to="targetContainer"
-        :disabled="!targetContainer"
+        :to="scrimContainer"
+        :disabled="!scrimContainer"
       >
         <div
           class="mat-aside__scrim"
@@ -873,6 +937,7 @@ defineExpose({
         {
           'mat-aside__scrim--top': isTop,
           'mat-aside__scrim--closing': phase === 'closing',
+          'mat-aside__scrim--docked': isScopedToContainer,
         },
       ]"
       aria-hidden="true"
@@ -883,7 +948,7 @@ defineExpose({
       :is="propsWithDefaults.as"
       v-if="rendered"
       ref="hostElement"
-      v-bind="$attrs"
+      v-bind="hostAttributes"
       :hidden="phase === 'closed' && !propsWithDefaults.unmountOnClose ? true : undefined"
       :class="asideClass"
       :style="asideStyle"
@@ -896,15 +961,15 @@ defineExpose({
     :is="propsWithDefaults.as"
     v-else-if="rendered"
     ref="hostElement"
-    v-bind="$attrs"
+    v-bind="hostAttributes"
     :hidden="phase === 'closed' && !propsWithDefaults.unmountOnClose ? true : undefined"
     :class="asideClass"
     :style="asideStyle"
   >
     <Teleport
       v-if="isModal && rendered && phase !== 'closed'"
-      :to="targetContainer"
-      :disabled="!targetContainer"
+      :to="scrimContainer"
+      :disabled="!scrimContainer"
     >
       <div
         class="mat-aside__scrim"

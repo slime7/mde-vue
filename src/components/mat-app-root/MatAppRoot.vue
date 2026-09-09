@@ -18,6 +18,7 @@ import {
   unregisterAppRoot,
 } from './mat-app-root-context';
 import { createEdgeLayoutController, EDGE_NAMES } from '../layout/edge-layout';
+import { MAT_EDGE_LAYOUT_KEY } from '../layout/edge-layout-context';
 import { useMatProps } from '../use-mat-props';
 
 const BREAKPOINTS = [
@@ -276,6 +277,12 @@ const internalContext = {
 };
 
 provide(MAT_APP_ROOT_KEY, internalContext);
+provide(MAT_EDGE_LAYOUT_KEY, {
+  kind: 'app-root',
+  publicContext,
+  rootElement: internalContext.rootElement,
+  contentElement: internalContext.contentElement,
+});
 
 function addViewportListeners() {
   window.addEventListener('resize', scheduleMeasure);

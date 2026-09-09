@@ -3125,7 +3125,8 @@ export interface MatAsideProps {
   */
   safeAreaSize?: number | string | undefined;
   /**
-  * 是否在文档流中渲染占位节点。
+  * 是否在 modal 模式的声明位置渲染占位节点。
+  * 普通 docked、fixed、flow 与 sticky 模式使用根布局 padding 或自身布局，不渲染该占位节点。
   *
   * @type {boolean}
   * @default false
@@ -4107,7 +4108,7 @@ export interface MatNavigationRailProps {
   */
   attach?: string | HTMLElement;
   /**
-  * app=true 时在自然布局位置生成占位。
+  * modal 布局在自然布局位置生成占位；standard 布局使用最近 MatLayout 或 MatAppRoot 的 padding。
   *
   * @type {boolean}
   * @default false
@@ -4262,7 +4263,7 @@ export interface MatNavigationBarProps {
   */
   attach?: string | HTMLElement;
   /**
-  * app=true 时在自然布局位置生成占位。
+  * 预留的 modal 占位属性；NavigationBar 本身不提供 modal 布局，应用级导航使用最近 MatLayout 或 MatAppRoot 的 padding。
   *
   * @type {boolean}
   * @default false
@@ -4497,7 +4498,7 @@ export interface MatNavigationDrawerProps {
   */
   attach?: string | HTMLElement;
   /**
-  * app=true 时在自然布局位置生成占位。
+  * modal 布局在自然布局位置生成占位；standard 布局使用最近 MatLayout 或 MatAppRoot 的 padding。
   *
   * @type {boolean}
   * @default false

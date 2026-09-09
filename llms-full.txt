@@ -6224,6 +6224,8 @@ import SplitButtonVariantExample from '../examples/button/SplitButtonVariantExam
 
 `<mat-app-root>` 的组件导出名是 `MatAppRoot`。它在 Vue 应用内承担通常由 `body` 承担的页面布局职责：建立隔离的覆盖层坐标系，统一处理安全区、固定边缘占位、正文避让、浮动组件排列和基于容器宽度的断点。边缘登记遵循与 `<mat-layout>` 相同的六向顺序计算规则，AppRoot 自己保留应用覆盖层和滚动能力。应用通常只放置一个铺满视口的 AppRoot；文档预览等容器化场景可以放置多个同级实例，但 AppRoot 不允许嵌套。
 
+边缘组件只登记到组件树中最近的一个 `MatLayout` 或 `MatAppRoot`。因此当 AppRoot 内还有 Layout，或 Layout 内还有 AppRoot 时，外层根不会重复计算同一个边缘。`docked` 与 `fixed` 都会让最近根的正文获得对应 padding；`modal` 组件不登记边缘，只有显式启用的 modal placeholder 才会在声明位置占位。
+
 默认模式沿用 Vuetify `VApp`/`VMain` 的文档滚动思路：AppRoot 至少铺满动态视口，内容增长时由 `document`/`body` 滚动，组件不会修改 `html` 或 `body` 的 `overflow`。设置 `scrollable` 后，AppRoot 保持确定高度，正文层改为内部滚动容器；`fillViewport=false` 与 `scrollable=true` 组合使用时，必须通过自身样式或父级布局提供确定的块轴高度。
 
 ## 示例
@@ -6509,7 +6511,7 @@ const RegisteredHeader = defineComponent({
 
 ### 布局组件自动接入与正文滚动
 
-位于 AppRoot 内且设置 `app` 的 Toolbar、Navigation rail 和 FAB 会自动接入当前应用布局并保持在边缘固定；正文区域可方便组合 `<mat-scroll-area>` 与 `<mat-container>` 进行滚动，Navigation 与 App bar 不会被正文滚动带走。示例在 AppRoot 前放置了外部宿主元素来模拟应用的作用范围，展示依附于 AppRoot 的底部 docked Toolbar、FAB、Snackbar 和 Tooltip 在正文滚动时的自动避让与层级排列，并确保所有依附组件严格处于 AppRoot 范围内。
+位于 AppRoot 内且设置 `app` 的 Toolbar、Navigation rail 和 FAB 会自动接入当前应用布局并保持在边缘固定；多个 Navigation rail 会按照声明顺序叠加，展开与收缩时会重新计算正文 padding。正文区域可方便组合 `<mat-scroll-area>` 与 `<mat-container>` 进行滚动，Navigation 与 App bar 不会被正文滚动带走。示例在 AppRoot 前放置了外部宿主元素来模拟应用的作用范围，展示依附于 AppRoot 的 Navigation、顶部 App bar、底部 docked Toolbar、FAB、Snackbar 和 Tooltip 在正文滚动时的自动避让与层级排列，并确保所有依附组件严格处于 AppRoot 范围内。
 
 :::: details 查看示例代码
 ::: code-group
@@ -6538,6 +6540,22 @@ const RegisteredHeader = defineComponent({
         </mat-navigation-rail-item>
       </mat-navigation-rail>
 
+      <mat-navigation-rail
+        v-model="secondary"
+        app
+        expanded
+        full-width
+        bordered
+        aria-label="项目导航"
+      >
+        <mat-navigation-rail-item value="projects" icon="folder">
+          项目
+        </mat-navigation-rail-item>
+        <mat-navigation-rail-item value="reports" icon="assessment">
+          报表
+        </mat-navigation-rail-item>
+      </mat-navigation-rail>
+
       <mat-app-bar app>
         应用标题
       </mat-app-bar>
@@ -6546,7 +6564,7 @@ const RegisteredHeader = defineComponent({
         <mat-container>
           <section class="app-root-components-example__content">
             <h3>组件自动接入与正文滚动</h3>
-            <p>Navigation 与底部 docked Toolbar 自动登记边缘；正文使用 MatScrollArea 和 MatContainer 组合进行滚动，FAB、Snackbar 和 Tooltip 自动浮动于正文与 Toolbar 之上。</p>
+            <p>两个 Navigation rail 与底部 docked Toolbar 按声明顺序登记边缘；展开 rail 的宽度变化会同步更新正文 padding。正文使用 MatScrollArea 和 MatContainer 组合进行滚动，FAB、Snackbar 和 Tooltip 自动浮动于正文与 Toolbar 之上。</p>
             <mat-btn
               id="app-root-tooltip-target"
               @click="snackbarOpen = true"
@@ -6607,6 +6625,7 @@ import { ref } from 'vue';
 
 const snackbarOpen = ref(false);
 const current = ref('home');
+const secondary = ref('projects');
 </script>
 ```
 ```vue
@@ -6721,7 +6740,7 @@ const { layout, registerEdge } = useMatApp();
 ## 组件接入规则
 
 - `MatToolbar app`：省略 `attach` 时自动进入当前 AppRoot。docked 登记 `bottom`；所有 floating 变体不占布局，但会避让已登记边缘。floating 仍可显式设置 `placeholder`，为声明处的长内容保留滚动末端空间。显式 `attach` 始终优先，并沿用视口固定模式。
-- `MatNavigationRail app`：省略 `attach` 时自动进入当前 AppRoot。纵向固定登记 `start`，横向登记 `bottom`；modal 展开层覆盖正文，只以 collapsed host 宽度参与布局。显式 `attach` 保留原行为。
+- `MatNavigationRail app`：省略 `attach` 时自动进入最近的 AppRoot 或 Layout。纵向登记 `start`，横向登记 `bottom`；standard rail 的 collapsed/expanded 实际宽度都会同步到最近根的 padding，modal 展开层覆盖正文且不登记边缘。显式 `attach` 保留原行为。
 - `MatSnackbar`：模板实例自动进入当前 AppRoot 的 Snackbar 组，并由 AppRoot 处理安全区、边缘避让和 16px 容器边距；内部滚动模式下，该间距从浮动组边界向内计算，不把滚动条占用计作间距。命令式 `snackbar()`/`toast()` 仍挂载到 body，并使用旧 Toolbar 几何注册表。
 - `MatFab app`：自动进入普通浮动组，与容器边缘保持 16px 间距；内部滚动模式下同样从浮动组边界向内计算。`position` 控制 `start`、`center`、`end` 对齐；未设置 `app` 时仍是声明位置的原生按钮。
 - `MatTooltip`：省略 `attach` 且展示目标位于当前 AppRoot 时进入应用覆盖层，并避让 `layout.padding`；目标位于 AppRoot 外时回退到 body。已打开的 dialog/Popover 和显式 `attach` 仍具有更高优先级。
@@ -12505,7 +12524,7 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 
 组件默认在声明位置参与文档布局并粘附到滚动容器顶部。small 与 search 在开始滚动时从 `surface` 连续过渡到 `surface container`；medium flexible 和 large flexible 还会分别在前 48px、56px 滚动距离内折叠到 64px。动画由 CSS `scroll-timeline` 和 `animation-timeline` 驱动，标题与图片通过 `scale`、`translate`、`clip-path` 和 `opacity` 在稳定布局盒中变化，不逐帧修改字号、块尺寸或执行 JavaScript 计算。不支持这些 CSS 能力的浏览器保持静态展开；减少动态效果时保留展开几何，仅播放表面填色。
 
-组件底层根元素基于 `MatAside`（`as="header"`）呈现，默认停靠在布局容器的 `top` 边缘，统管顶部定位、安全区预留与切入退场动效。
+组件底层根元素基于 `MatAside`（`as="header"`）呈现，默认停靠在布局容器的 `top` 边缘，统管顶部定位、安全区预留与切入退场动效。位于 `MatLayout` 或 `MatAppRoot` 内时，`docked` 与 `fixed` 都只登记到最近的一个根并产生正文 padding。
 
 ## 示例
 
@@ -12846,7 +12865,7 @@ const scrollTarget = ref(null);
 | `app` | `boolean` | `false` | 位于 `MatAppRoot` 且省略 `attach` 时登记应用顶边；其他场景固定到 `attach` |
 | `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；显式传入后优先于最近的 `MatAppRoot` |
 | `scrollTarget` | `string \| HTMLElement` | `undefined` | 显式 CSS 时间线滚动源；省略时依次选择可滚动的 AppRoot 正文、最近滚动祖先和 document |
-| `placeholder` | `boolean` | `false` | 是否在文档流中渲染占位节点；flexible 变体始终为展开差值（medium 48px、large 56px）保留占位 |
+| `placeholder` | `boolean` | `false` | small/search 变体是否在声明位置保留 64px 内部占位；flexible 变体始终为展开差值（medium 48px、large 56px）保留内部占位。该占位属于 AppBar 折叠机制，不是 MatAside 的 modal placeholder |
 | `safeArea` | `boolean \| number \| string` | `true` | 顶部安全区留白配置，为 `true` 时自适应环境安全区或 AppRoot 变量 |
 | `safeAreaSize` | `number \| string \| undefined` | `undefined` | 显式指定顶部安全区留白大小 |
 | `open` | `boolean \| undefined` | `undefined` | 受控显隐状态，支持 `v-model:open`，切换时触发滑入滑出动效 |
@@ -12855,7 +12874,7 @@ const scrollTarget = ref(null);
 | `zIndex` | `number \| string \| undefined` | `undefined` | 显式指定层级 |
 | `transition` | `boolean` | `true` | 是否启用切入退场动效 |
 
-`app=true` 且自动接入 `MatAppRoot` 时，64px 收起高度登记为固定顶边，flexible 变体多出的 48px 或 56px 在声明位置成为可滚走的起始占位，从而避免折叠高度反复改变 AppRoot 正文 padding。App bar 的根布局盒始终保持 64px，展开态的视觉背景和标题内容在该稳定盒外表达；显式 `attach` 无法解析时不渲染 App bar。
+`app=true` 且自动接入最近的 `MatLayout` 或 `MatAppRoot` 时，64px 收起高度登记为固定顶边，flexible 变体多出的 48px 或 56px 在声明位置成为可滚走的起始占位，从而避免折叠高度反复改变根布局正文 padding。App bar 的根布局盒始终保持 64px，展开态的视觉背景和标题内容在该稳定盒外表达；显式 `attach` 无法解析时不渲染 App bar。
 
 `MatAppBar` 没有公开方法。未消费的属性、`class`、`style`、`id` 和 ARIA 属性传给原生 `<header>`。
 
@@ -18295,7 +18314,7 @@ import ExpansionVariantExample from '../examples/expansion/ExpansionVariantExamp
 
 `<mat-navigation-rail>` 的组件导出名是 `MatNavigationRail`，配套子项组件 `<mat-navigation-rail-item>`（`MatNavigationRailItem`）或通用导航子项 `<mat-navigation-item>`（`MatNavigationItem`）。该组件遵循 Material 3 Expressive 规范，专用于在平板、桌面等中大尺寸屏幕中提供 3–7 个主要目的地、菜单入口、FAB 与底部操作的纵向导航栏。
 
-组件底层根元素基于 `MatAside` 呈现，默认停靠在布局容器的 `start`（起始侧）边缘，统管侧边定位、安全区留白、展开收起动画和模态遮罩。设置 `app` 后，若位于 `MatAppRoot` 内部且未显式指定 `attach`，会自动向应用根布局登记起始侧边缘，主内容层自动避让；否则支持固定至视口并挂载至 `attach` 容器。
+组件底层根元素基于 `MatAside` 呈现，默认停靠在布局容器的 `start`（起始侧）边缘，统管侧边定位、安全区留白、展开收起动画和模态遮罩。设置 `app` 后，若位于 `MatAppRoot` 或 `MatLayout` 内部且未显式指定 `attach`，会向最近的一个根登记起始侧边缘，主内容层自动避让；否则支持固定至视口并挂载至 `attach` 容器。组件树中同时存在两个根时不会重复登记。
 
 ## 示例
 
@@ -18540,7 +18559,7 @@ const open = ref(true);
 
 ### `placeholder`
 
-`placeholder` 只在 `app=true` 时有效。它在声明位置按实际应用级 rail 或 bar 尺寸保留空间，避免固定导航遮挡相邻正文。
+`placeholder` 只在 `layout="modal"` 时有效。modal rail 不登记根布局边缘，启用 placeholder 后会在声明位置按实际 rail 尺寸保留空间；standard rail 使用最近 `MatLayout` 或 `MatAppRoot` 的 padding，不需要 placeholder。
 
 :::: details 查看示例代码
 ::: code-group
@@ -18552,11 +18571,10 @@ const open = ref(true);
     class="navigation-rail-placeholder-example"
   >
     <mat-navigation-rail
-      v-model:open="active"
-      app
+      v-model:expanded="active"
+      layout="modal"
       placeholder
-      bordered
-      aria-label="占位导航"
+      aria-label="模态占位导航"
     >
       <mat-navigation-rail-item icon="home">
         首页
@@ -18567,9 +18585,9 @@ const open = ref(true);
     </mat-navigation-rail>
     <div class="navigation-rail-placeholder-example-content">
       <mat-switch v-model="active">
-        {{ active ? '隐藏应用导航' : '显示应用导航' }}
+        {{ active ? '关闭模态导航' : '打开模态导航' }}
       </mat-switch>
-      <p>占位保留固定 rail 的宽度，正文不会从其声明位置穿过。</p>
+      <p>modal rail 不登记 AppRoot padding，placeholder 只在声明位置保留展开后的实际宽度。</p>
     </div>
   </mat-app-root>
 </template>
@@ -18618,7 +18636,7 @@ const active = ref(true);
 
 `collapsible` 支持纵向 rail 折叠展开能力，`expanded` 支持 `v-model:expanded`。组件不再自带内置菜单按钮，使用方可直接在默认 Slot 混排自定义按钮进行切换，不添加则不显示。collapsed Item 为图标上、标签下；expanded Item 的图标与标签位于同一个 56px 高活动指示器中。
 
-展开与收回时，Item 下方的标签渐隐，活动指示器尺寸、Item 高度与间距平滑过渡（展开态 Item 之间间距为 0），展开状态的标签在指示器内逐渐出现；trailing 内容通过弹性 spacer 保持在 Item 尾部。
+展开与收回时，Item 下方的标签渐隐，活动指示器尺寸、Item 高度与间距平滑过渡（展开态 Item 之间间距为 0），展开状态的标签在指示器内逐渐出现；trailing 内容通过弹性 spacer 保持在 Item 尾部。standard rail 的实际宽度变化会同步更新最近根的 padding；多个同向 rail 的总占位和后续 rail 偏移也会随展开、收缩、隐藏和重新打开重新计算。
 
 :::: details 查看示例代码
 ::: code-group
@@ -19536,7 +19554,7 @@ const selected = ref('inbox');
 | `open-label` | `string` | `'展开导航'` | 未展开时菜单按钮的无障碍名称 |
 | `app` | `boolean` | `false` | 开启应用布局模式；位于 `MatAppRoot` 且省略 `attach` 时自动登记边缘，否则固定到显式目标 |
 | `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；一旦显式提供就优先于 AppRoot 自动接入 |
-| `placeholder` | `boolean` | `false` | 仅 `app=true` 有效；在声明位置为固定 rail 或 bar 预留实际尺寸 |
+| `placeholder` | `boolean` | `false` | 仅 `layout="modal"` 有效；在声明位置为 modal rail 预留实际尺寸，standard rail 使用最近根的 padding |
 | `bordered` | `boolean` | `false` | 是否复用 Aside 的边框修饰，在面向内容的一侧渲染 1px 细边框 |
 | `open` | `boolean` | `undefined` | 受控显示/隐藏状态，支持 `v-model:open`；省略时遵循 `hide-on-collapse` 或 `modal` 模式与 `expanded` 联动 |
 
@@ -20131,7 +20149,7 @@ import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
 
 `<mat-navigation-bar>` 的组件导出名是 `MatNavigationBar`，配套子项组件 `<mat-navigation-bar-item>`（`MatNavigationBarItem`）或通用导航子项 `<mat-navigation-item>`（`MatNavigationItem`）。该组件遵循 Material 3 Navigation Bar 设计规范，专用于在移动端或紧凑型应用窗口底部呈现 3–5 个核心顶级导航目的地。
 
-组件底层根元素基于 `MatAside` 呈现，默认停靠在布局容器的 `bottom` 边缘，统管底部定位、安全区预留与切入退场动效。开启 `app` 属性后，若位于 `MatAppRoot` 内部且未显式指定 `attach`，会自动向应用根布局登记底部边缘并自适应底部安全区，正文内容自动获得相应内边距避让；否则支持固定至视口并挂载至指定 `attach` 容器。
+组件底层根元素基于 `MatAside` 呈现，默认停靠在布局容器的 `bottom` 边缘，统管底部定位、安全区预留与切入退场动效。开启 `app` 属性后，若位于 `MatAppRoot` 或 `MatLayout` 内部且未显式指定 `attach`，会向最近的一个根登记底部边缘并自适应底部安全区，正文内容自动获得相应内边距避让；否则支持固定至视口并挂载至指定 `attach` 容器。
 
 ## 示例
 
@@ -20390,7 +20408,7 @@ const selected = ref('dashboard');
 | `height` | `number \| string \| undefined` | `undefined` | 显式指定导航栏高度，默认使用 64px 令牌高度。 |
 | `app` | `boolean` | `false` | 是否接入应用级外壳布局，自动登记并停靠在 `MatAppRoot` 底部边缘。 |
 | `attach` | `string \| HTMLElement` | `'body'` | `app=true` 且脱离 `MatAppRoot` 或有显式挂载需求时的 Teleport 目标。 |
-| `placeholder` | `boolean` | `false` | 是否在文档流中渲染占位节点，避免脱流覆盖正文内容。 |
+| `placeholder` | `boolean` | `false` | 保留的 modal 占位属性；NavigationBar 没有 modal 布局，应用级导航使用最近根的 padding。 |
 | `safeArea` | `boolean \| number \| string` | `true` | 底部安全区留白配置，为 `true` 时自适应环境安全区或 AppRoot 变量。 |
 | `safeAreaSize` | `number \| string \| undefined` | `undefined` | 显式指定底部安全区留白大小。 |
 | `bordered` | `boolean` | `false` | 是否在顶部边缘渲染 1px 细分割边框。 |
@@ -23217,6 +23235,8 @@ import ContainerHeightExample from '../examples/container/ContainerHeightExample
 
 `<mat-aside>` 的组件导出名是 `MatAside`。它是专用于停靠在 `mat-layout` 或 `mat-app-root` 边缘的布局基础设施组件。通过统一管理四个停靠方向（`top`、`bottom`、`left`、`right`）的厚度尺寸与安全区留白，协调边缘占据与正交方向上的互斥避让，未来可作为各边缘组件（如顶部应用栏、导航侧栏、底部栏等）的底层根 DOM。
 
+同一个组件树同时存在 `MatLayout` 与 `MatAppRoot` 时，Aside 只向最近的一个根登记一次，不会同时改变两层正文 padding。`docked` 与 `fixed` 都会参与最近根的边缘计算；`flow` 与 `sticky` 不登记边缘。`fixed` 组件显式 Teleport 后仍沿用原有挂载行为，但不会因为 Teleport 目标产生第二份登记。
+
 组件的核心排布机制遵循“先出现先占满”原则：在模板 DOM 中居前的边缘组件优先占满延展方向（例如居前的顶部栏占满横向整宽），而居后的边缘组件根据前序组件的占用尺寸自动偏移避让（例如居后的侧边栏高度自动避让顶部栏）。
 
 ## 示例
@@ -23697,7 +23717,7 @@ const visible = ref(true);
 
 ### 固定停靠
 
-设置 `mode="fixed"` 后，Aside 会保留在当前声明位置，并继续依据父级 `mat-layout` 的声明顺序进行边缘避让与同向堆叠。只有显式指定 `attach` 时才会 Teleport 到目标节点。由于 fixed 示例会覆盖当前文档页面的视口边缘，这里只提供演练场入口：<a href="/playground?example=aside%2FAsideFixedExample" target="_blank" rel="noopener noreferrer">在演练场中打开 fixed 多边缘停靠示例</a>。
+设置 `mode="fixed"` 后，Aside 会保留在当前声明位置，并继续依据最近的 `mat-layout` 或 `mat-app-root` 的声明顺序进行边缘避让与同向堆叠，同时为正文产生对应 padding。只有显式指定 `attach` 时才会 Teleport 到目标节点。由于 fixed 示例会覆盖当前文档页面的视口边缘，这里只提供演练场入口：<a href="/playground?example=aside%2FAsideFixedExample" target="_blank" rel="noopener noreferrer">在演练场中打开 fixed 多边缘停靠示例</a>。
 
 ### 粘性停靠
 
@@ -23925,7 +23945,7 @@ const draftText = ref('保留的表单内容');
 
 ### 模态浮层
 
-设置 `modal` 使 Aside 作为局部的模态浮层展现。开启时 Aside 不向 `mat-layout` 申请正文内边距避让，而是浮动覆盖在正文之上，并在其后渲染半透明背景遮罩，点击遮罩或按下 Escape 键可请求关闭。
+设置 `modal` 使 Aside 作为局部的模态浮层展现。开启时 Aside 不向 `mat-layout` 或 `mat-app-root` 申请正文内边距避让，而是浮动覆盖在正文之上，并在其后渲染半透明背景遮罩，点击遮罩或按下 Escape 键可请求关闭。此时 `placeholder` 才会在声明位置生效；普通边缘模式直接使用根布局 padding，不需要 placeholder。
 
 :::: details 查看示例代码
 ::: code-group
@@ -24031,8 +24051,8 @@ const open = ref(false);
 | `bordered` | `boolean` | `false` | 是否在面向内容的一侧渲染 1px 分隔线。 |
 | `modal` | `boolean` | `false` | 是否作为模态浮层呈现。开启时不向布局容器申请内边距避让，并接入全局遮罩与滚动锁定。 |
 | `unmountOnClose` | `boolean` | `false` | 关闭时是否彻底卸载 DOM。默认 `false`（保活隐藏），关闭后保留 DOM 并使用 `hidden` 属性隐藏；设为 `true` 时在退场动画完成后销毁节点。 |
-| `placeholder` | `boolean` | `false` | 是否在自然文档流位置保留占位节点。 |
-| `placeholderSize` | `number \| string \| undefined` | `undefined` | 显式指定占位节点尺寸；省略时跟随组件自身总厚度。 |
+| `placeholder` | `boolean` | `false` | `modal=true` 时是否在自然文档流位置保留占位节点；普通 `docked`、`fixed`、`flow` 与 `sticky` 模式忽略该属性。 |
+| `placeholderSize` | `number \| string \| undefined` | `undefined` | modal placeholder 的显式尺寸；省略时跟随组件自身总厚度。 |
 | `location` | `'top' \| 'bottom' \| 'start' \| 'end' \| 'left' \| 'right'` | `'start'` | 依附的停靠边缘。`'left'` 等价映射为 `'start'`，`'right'` 等价映射为 `'end'`。 |
 | `mode` | `'docked' \| 'flow' \| 'sticky' \| 'fixed'` | `'docked'` | 排布与定位模式。`'docked'` 为容器内绝对定位避让，`'flow'` 为常规文档流，`'sticky'` 为粘性定位，`'fixed'` 为视口固定定位。 |
 | `blockSize` | `number \| string \| undefined` | `undefined` | 垂直于停靠边缘方向的占用厚度。数值自动转为 px；省略或传 `'auto'` 时自适应内容并由内部 ResizeObserver 自动测量。 |

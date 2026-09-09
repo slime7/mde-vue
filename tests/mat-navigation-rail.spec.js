@@ -12,6 +12,7 @@ import MatNavigationRail from '../src/components/mat-navigation-rail/MatNavigati
 import MatNavigationRailItem from '../src/components/mat-navigation-rail/MatNavigationRailItem.vue';
 import MatAppRoot from '../src/components/mat-app-root/MatAppRoot.vue';
 import MatLayout from '../src/components/mat-layout/MatLayout.vue';
+import { useMatApp } from '../src/components/mat-app-root/mat-app-root-context';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -28,6 +29,29 @@ function navigationItems() {
     h(MatNavigationRailItem, { value: 'home', icon: 'home' }, () => '首页'),
     h(MatNavigationRailItem, { value: 'settings', icon: 'settings' }, () => '设置'),
   ];
+}
+
+function elementRect({
+  bottom, height, left = 0, right, top = 0, width,
+}) {
+  return {
+    bottom,
+    height,
+    left,
+    right,
+    top,
+    width,
+    x: left,
+    y: top,
+    toJSON() {},
+  };
+}
+
+async function settleMeasurement() {
+  await new Promise((resolve) => {
+    window.setTimeout(resolve, 20);
+  });
+  await settleRender();
 }
 
 describe('MatNavigationRail', () => {
@@ -653,37 +677,133 @@ describe('MatNavigationRail', () => {
     expect(MatNavigationRailItem.props.badge.default).toBeUndefined();
   });
 
-  it('支持 placeholder 占位并在 open 切换时改变占位尺寸且不向 AppRoot 登记重复 padding', async () => {
+  it('expanded 切换时重新测量 NavigationRail 并同步 AppRoot padding', async () => {
+    let app;
+    const Capture = defineComponent({
+      setup() {
+        app = useMatApp();
+        return () => null;
+      },
+    });
     const Harness = defineComponent({
-      props: { open: { type: Boolean, default: true } },
+      props: {
+        expanded: {
+          type: Boolean,
+          default: false,
+        },
+      },
       setup(props) {
-        return () => h(MatAppRoot, { fillViewport: false }, () => [
+        return () => h(MatAppRoot, {
+          fillViewport: false,
+        }, () => [
+          h(Capture),
           h(MatNavigationRail, {
             app: true,
             placeholder: true,
-            open: props.open,
+            expanded: props.expanded,
+            transition: false,
           }, {
             default: navigationItems,
           }),
-          h('div', { class: 'page-content' }, '正文'),
         ]);
       },
     });
+    const wrapper = mount(Harness, { attachTo: document.body });
 
-    const wrapper = mount(Harness, { props: { open: true } });
     await settleRender();
+    const appRootElement = wrapper.element;
+    const railElement = wrapper.element.querySelector('.mat-navigation-rail-host');
+    let railWidth = 80;
+    vi.spyOn(appRootElement, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 700,
+      height: 700,
+      right: 1000,
+      width: 1000,
+    }));
+    vi.spyOn(railElement, 'getBoundingClientRect').mockImplementation(() => elementRect({
+      bottom: 700,
+      height: 700,
+      right: railWidth,
+      width: railWidth,
+    }));
+    window.dispatchEvent(new Event('resize'));
+    await settleMeasurement();
+    expect(app.layout.padding.start).toBe(80);
+    expect(wrapper.find('.mat-navigation-rail__placeholder').exists()).toBe(false);
 
-    const placeholder = wrapper.find('.mat-navigation-rail__placeholder');
-    expect(placeholder.exists()).toBe(true);
-    // 占位开启时，不向 AppRoot 登记内边距（避免双重挤占）
-    const appRoot = wrapper.findComponent(MatAppRoot);
-    expect(appRoot.element.style.getPropertyValue('--mat-app-root-padding-start')).toBe('0px');
-    expect(placeholder.attributes('style')).toContain('80px');
+    railWidth = 240;
+    await wrapper.setProps({ expanded: true });
+    await settleMeasurement();
+    expect(app.layout.padding.start).toBe(240);
 
-    await wrapper.setProps({ open: false });
+    railWidth = 80;
+    await wrapper.setProps({ expanded: false });
+    await settleMeasurement();
+    expect(app.layout.padding.start).toBe(80);
+
+    wrapper.unmount();
+  });
+
+  it('hideOnCollapse 切换时回收并恢复最近 AppRoot 的 padding', async () => {
+    let app;
+    const Capture = defineComponent({
+      setup() {
+        app = useMatApp();
+        return () => null;
+      },
+    });
+    const Harness = defineComponent({
+      props: {
+        expanded: {
+          type: Boolean,
+          default: true,
+        },
+      },
+      setup(props) {
+        return () => h(MatAppRoot, {
+          fillViewport: false,
+        }, () => [
+          h(Capture),
+          h(MatNavigationRail, {
+            app: true,
+            expanded: props.expanded,
+            hideOnCollapse: true,
+            transition: false,
+          }, {
+            default: navigationItems,
+          }),
+        ]);
+      },
+    });
+    const wrapper = mount(Harness, { attachTo: document.body });
+
     await settleRender();
+    const appRootElement = wrapper.element;
+    const railElement = wrapper.element.querySelector('.mat-navigation-rail-host');
+    vi.spyOn(appRootElement, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 700,
+      height: 700,
+      right: 1000,
+      width: 1000,
+    }));
+    vi.spyOn(railElement, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 700,
+      height: 700,
+      right: 240,
+      width: 240,
+    }));
+    window.dispatchEvent(new Event('resize'));
+    await settleMeasurement();
+    expect(app.layout.padding.start).toBe(240);
 
-    expect(placeholder.attributes('style')).toContain('inline-size: 0px');
+    await wrapper.setProps({ expanded: false });
+    await settleMeasurement();
+    expect(app.layout.padding.start).toBe(0);
+
+    await wrapper.setProps({ expanded: true });
+    await settleMeasurement();
+    expect(app.layout.padding.start).toBe(240);
+
     wrapper.unmount();
   });
 
@@ -713,6 +833,39 @@ describe('MatNavigationRail', () => {
 
     await items[1].trigger('click');
     expect(rail.emitted('update:modelValue')).toEqual([['settings']]);
+
+    wrapper.unmount();
+  });
+
+  it('AppRoot 中的 modal rail 与局部遮罩保持同一层级，避免导航本体被遮罩压暗', async () => {
+    const wrapper = mount(MatAppRoot, {
+      attachTo: document.body,
+      props: {
+        fillViewport: false,
+      },
+      slots: {
+        default: () => h(MatNavigationRail, {
+          expanded: true,
+          layout: 'modal',
+          placeholder: true,
+        }, {
+          default: navigationItems,
+        }),
+      },
+    });
+
+    await settleRender();
+
+    const appRootElement = wrapper.element;
+    const contentElement = appRootElement.querySelector('.mat-app-root__content');
+    const railElement = appRootElement.querySelector('.mat-navigation-rail-host');
+    const scrimElement = appRootElement.querySelector('.mat-aside__scrim');
+
+    expect(contentElement.querySelector('.mat-navigation-rail__placeholder')).toBeTruthy();
+    expect(railElement.parentElement).toBe(contentElement);
+    expect(railElement.closest('.mat-app-root__content')).toBe(contentElement);
+    expect(scrimElement.parentElement).toBe(contentElement);
+    expect(scrimElement.classList.contains('mat-aside__scrim--docked')).toBe(true);
 
     wrapper.unmount();
   });

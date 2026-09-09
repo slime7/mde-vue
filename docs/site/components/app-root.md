@@ -11,6 +11,8 @@ order: 69
 
 `<mat-app-root>` 的组件导出名是 `MatAppRoot`。它在 Vue 应用内承担通常由 `body` 承担的页面布局职责：建立隔离的覆盖层坐标系，统一处理安全区、固定边缘占位、正文避让、浮动组件排列和基于容器宽度的断点。边缘登记遵循与 `<mat-layout>` 相同的六向顺序计算规则，AppRoot 自己保留应用覆盖层和滚动能力。应用通常只放置一个铺满视口的 AppRoot；文档预览等容器化场景可以放置多个同级实例，但 AppRoot 不允许嵌套。
 
+边缘组件只登记到组件树中最近的一个 `MatLayout` 或 `MatAppRoot`。因此当 AppRoot 内还有 Layout，或 Layout 内还有 AppRoot 时，外层根不会重复计算同一个边缘。`docked` 与 `fixed` 都会让最近根的正文获得对应 padding；`modal` 组件不登记边缘，只有显式启用的 modal placeholder 才会在声明位置占位。
+
 默认模式沿用 Vuetify `VApp`/`VMain` 的文档滚动思路：AppRoot 至少铺满动态视口，内容增长时由 `document`/`body` 滚动，组件不会修改 `html` 或 `body` 的 `overflow`。设置 `scrollable` 后，AppRoot 保持确定高度，正文层改为内部滚动容器；`fillViewport=false` 与 `scrollable=true` 组合使用时，必须通过自身样式或父级布局提供确定的块轴高度。
 
 ## 示例
@@ -121,7 +123,7 @@ order: 69
 
 ### 布局组件自动接入与正文滚动
 
-位于 AppRoot 内且设置 `app` 的 Toolbar、Navigation rail 和 FAB 会自动接入当前应用布局并保持在边缘固定；正文区域可方便组合 `<mat-scroll-area>` 与 `<mat-container>` 进行滚动，Navigation 与 App bar 不会被正文滚动带走。示例在 AppRoot 前放置了外部宿主元素来模拟应用的作用范围，展示依附于 AppRoot 的底部 docked Toolbar、FAB、Snackbar 和 Tooltip 在正文滚动时的自动避让与层级排列，并确保所有依附组件严格处于 AppRoot 范围内。
+位于 AppRoot 内且设置 `app` 的 Toolbar、Navigation rail 和 FAB 会自动接入当前应用布局并保持在边缘固定；多个 Navigation rail 会按照声明顺序叠加，展开与收缩时会重新计算正文 padding。正文区域可方便组合 `<mat-scroll-area>` 与 `<mat-container>` 进行滚动，Navigation 与 App bar 不会被正文滚动带走。示例在 AppRoot 前放置了外部宿主元素来模拟应用的作用范围，展示依附于 AppRoot 的 Navigation、顶部 App bar、底部 docked Toolbar、FAB、Snackbar 和 Tooltip 在正文滚动时的自动避让与层级排列，并确保所有依附组件严格处于 AppRoot 范围内。
 
 :::: details 查看示例代码
 ::: code-group
@@ -196,7 +198,7 @@ const { layout, registerEdge } = useMatApp();
 ## 组件接入规则
 
 - `MatToolbar app`：省略 `attach` 时自动进入当前 AppRoot。docked 登记 `bottom`；所有 floating 变体不占布局，但会避让已登记边缘。floating 仍可显式设置 `placeholder`，为声明处的长内容保留滚动末端空间。显式 `attach` 始终优先，并沿用视口固定模式。
-- `MatNavigationRail app`：省略 `attach` 时自动进入当前 AppRoot。纵向固定登记 `start`，横向登记 `bottom`；modal 展开层覆盖正文，只以 collapsed host 宽度参与布局。显式 `attach` 保留原行为。
+- `MatNavigationRail app`：省略 `attach` 时自动进入最近的 AppRoot 或 Layout。纵向登记 `start`，横向登记 `bottom`；standard rail 的 collapsed/expanded 实际宽度都会同步到最近根的 padding，modal 展开层覆盖正文且不登记边缘。显式 `attach` 保留原行为。
 - `MatSnackbar`：模板实例自动进入当前 AppRoot 的 Snackbar 组，并由 AppRoot 处理安全区、边缘避让和 16px 容器边距；内部滚动模式下，该间距从浮动组边界向内计算，不把滚动条占用计作间距。命令式 `snackbar()`/`toast()` 仍挂载到 body，并使用旧 Toolbar 几何注册表。
 - `MatFab app`：自动进入普通浮动组，与容器边缘保持 16px 间距；内部滚动模式下同样从浮动组边界向内计算。`position` 控制 `start`、`center`、`end` 对齐；未设置 `app` 时仍是声明位置的原生按钮。
 - `MatTooltip`：省略 `attach` 且展示目标位于当前 AppRoot 时进入应用覆盖层，并避让 `layout.padding`；目标位于 AppRoot 外时回退到 body。已打开的 dialog/Popover 和显式 `attach` 仍具有更高优先级。

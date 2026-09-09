@@ -11,7 +11,7 @@ order: 106
 
 `<mat-navigation-bar>` 的组件导出名是 `MatNavigationBar`，配套子项组件 `<mat-navigation-bar-item>`（`MatNavigationBarItem`）或通用导航子项 `<mat-navigation-item>`（`MatNavigationItem`）。该组件遵循 Material 3 Navigation Bar 设计规范，专用于在移动端或紧凑型应用窗口底部呈现 3–5 个核心顶级导航目的地。
 
-组件底层根元素基于 `MatAside` 呈现，默认停靠在布局容器的 `bottom` 边缘，统管底部定位、安全区预留与切入退场动效。开启 `app` 属性后，若位于 `MatAppRoot` 内部且未显式指定 `attach`，会自动向应用根布局登记底部边缘并自适应底部安全区，正文内容自动获得相应内边距避让；否则支持固定至视口并挂载至指定 `attach` 容器。
+组件底层根元素基于 `MatAside` 呈现，默认停靠在布局容器的 `bottom` 边缘，统管底部定位、安全区预留与切入退场动效。开启 `app` 属性后，若位于 `MatAppRoot` 或 `MatLayout` 内部且未显式指定 `attach`，会向最近的一个根登记底部边缘并自适应底部安全区，正文内容自动获得相应内边距避让；否则支持固定至视口并挂载至指定 `attach` 容器。
 
 ## 示例
 
@@ -98,7 +98,7 @@ order: 106
 | `height` | `number \| string \| undefined` | `undefined` | 显式指定导航栏高度，默认使用 64px 令牌高度。 |
 | `app` | `boolean` | `false` | 是否接入应用级外壳布局，自动登记并停靠在 `MatAppRoot` 底部边缘。 |
 | `attach` | `string \| HTMLElement` | `'body'` | `app=true` 且脱离 `MatAppRoot` 或有显式挂载需求时的 Teleport 目标。 |
-| `placeholder` | `boolean` | `false` | 是否在文档流中渲染占位节点，避免脱流覆盖正文内容。 |
+| `placeholder` | `boolean` | `false` | 保留的 modal 占位属性；NavigationBar 没有 modal 布局，应用级导航使用最近根的 padding。 |
 | `safeArea` | `boolean \| number \| string` | `true` | 底部安全区留白配置，为 `true` 时自适应环境安全区或 AppRoot 变量。 |
 | `safeAreaSize` | `number \| string \| undefined` | `undefined` | 显式指定底部安全区留白大小。 |
 | `bordered` | `boolean` | `false` | 是否在顶部边缘渲染 1px 细分割边框。 |

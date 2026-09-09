@@ -175,17 +175,68 @@ describe('MatAside 边缘组件', () => {
     wrapper.unmount();
   });
 
-  it('支持 mode="fixed" 并在开启 placeholder 时渲染占位节点', () => {
-    const wrapper = mount(MatAside, {
-      props: {
-        mode: 'fixed',
-        placeholder: true,
-        blockSize: 64,
+  it('fixed 在 MatLayout 内通过根 padding 登记，普通模式的 placeholder 不生效', async () => {
+    let capturedLayout;
+    const Reader = {
+      setup() {
+        capturedLayout = useLayout();
+        return () => h('div', 'content');
+      },
+    };
+    const wrapper = mount(MatLayout, {
+      attachTo: document.body,
+      slots: {
+        default: () => [
+          h(MatAside, {
+            location: 'top',
+            mode: 'fixed',
+            placeholder: true,
+            blockSize: 64,
+            transition: false,
+          }),
+          h(Reader),
+        ],
       },
     });
 
-    const placeholder = wrapper.find('.mat-aside__placeholder');
-    expect(placeholder.exists()).toBe(true);
+    await settle();
+    const asideElement = wrapper.element.querySelector('.mat-aside');
+    vi.spyOn(wrapper.element, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 600,
+      height: 600,
+      right: 800,
+      width: 800,
+    }));
+    vi.spyOn(asideElement, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 64,
+      height: 64,
+      right: 800,
+      width: 800,
+    }));
+    window.dispatchEvent(new Event('resize'));
+    await settle();
+
+    expect(capturedLayout.padding.top).toBe(64);
+    expect(wrapper.find('.mat-aside__placeholder').exists()).toBe(false);
+    wrapper.unmount();
+  });
+
+  it('app=true 时显式 mode="fixed" 保留 fixed 定位', async () => {
+    const wrapper = mount(MatAppRoot, {
+      attachTo: document.body,
+      props: { fillViewport: false },
+      slots: {
+        default: () => h(MatAside, {
+          app: true,
+          mode: 'fixed',
+          blockSize: 64,
+          transition: false,
+        }),
+      },
+    });
+
+    await settle();
+    expect(wrapper.find('.mat-aside').classes()).toContain('mat-aside--mode-fixed');
     wrapper.unmount();
   });
 
@@ -406,8 +457,8 @@ describe('MatAside 边缘组件', () => {
     vi.useRealTimers();
   });
 
-  it('支持在任何模式下渲染 placeholder，且支持自定义 placeholderSize 与插槽', () => {
-    const wrapper = mount(MatAside, {
+  it('placeholder 仅在 modal 模式生效，且支持自定义 placeholderSize 与插槽', () => {
+    const regularWrapper = mount(MatAside, {
       props: {
         location: 'top',
         mode: 'sticky',
@@ -416,14 +467,28 @@ describe('MatAside 边缘组件', () => {
         blockSize: 64,
       },
     });
-    const placeholder = wrapper.find('.mat-aside__placeholder');
-    expect(placeholder.exists()).toBe(true);
-    expect(placeholder.element.style.blockSize).toBe('48px');
-    wrapper.unmount();
+    expect(regularWrapper.find('.mat-aside__placeholder').exists()).toBe(false);
+    regularWrapper.unmount();
+
+    const modalWrapper = mount(MatAside, {
+      props: {
+        location: 'top',
+        mode: 'sticky',
+        modal: true,
+        placeholder: true,
+        placeholderSize: 48,
+        blockSize: 64,
+      },
+    });
+    const modalPlaceholder = modalWrapper.find('.mat-aside__placeholder');
+    expect(modalPlaceholder.exists()).toBe(true);
+    expect(modalPlaceholder.element.style.blockSize).toBe('48px');
+    modalWrapper.unmount();
 
     const slotWrapper = mount(MatAside, {
       props: {
         mode: 'sticky',
+        modal: true,
         placeholder: true,
         blockSize: 64,
       },
