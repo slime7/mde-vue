@@ -596,11 +596,11 @@ defineExpose({
     <div
       ref="scroller"
       v-bind="scrollerAttrs"
-      class="mat-scroll-area__viewport"
+      class="mat-scroll-area__viewport mat-scrollbar"
       :style="scrollerStyle"
       :class="[
         `mat-scroll-area__viewport--${normalizedOrientation}`,
-        `mat-scroll-area__viewport--bar-${propsWithDefaults.barWidth}`,
+        `mat-scrollbar--${propsWithDefaults.barWidth}`,
         {
           'mat-scroll-area__viewport--dragging': isDragging,
           'mat-scroll-area__viewport--no-scroll-padding': propsWithDefaults.noScrollPadding,
@@ -663,7 +663,6 @@ defineExpose({
     block-size: 100%;
     min-inline-size: 0;
     min-block-size: 0;
-    scrollbar-color: var(--mat-sys-color-primary) transparent;
   }
 
   .mat-scroll-area__viewport--vertical {
@@ -701,12 +700,6 @@ defineExpose({
 
   .mat-scroll-area__viewport--dragging { user-select: none; }
 
-  .mat-scroll-area__viewport--bar-default { scrollbar-width: auto; }
-
-  .mat-scroll-area__viewport--bar-thin { scrollbar-width: thin; }
-
-  .mat-scroll-area__viewport--bar-hidden { scrollbar-width: none; }
-
   .mat-scroll-area__viewport--vertical.mat-scroll-area__viewport--start-overflow {
     --mat-scroll-area-content-mask: linear-gradient(to bottom, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) 100%);
   }
@@ -729,22 +722,6 @@ defineExpose({
 
   .mat-scroll-area__viewport--horizontal.mat-scroll-area__viewport--start-overflow.mat-scroll-area__viewport--end-overflow {
     --mat-scroll-area-content-mask: linear-gradient(to right, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
-  }
-
-  .mat-scroll-area__viewport::-webkit-scrollbar {
-    width: var(--mat-scroll-area-scrollbar-width);
-    height: var(--mat-scroll-area-scrollbar-width);
-    background: transparent;
-  }
-
-  .mat-scroll-area__viewport::-webkit-scrollbar-track,
-  .mat-scroll-area__viewport::-webkit-scrollbar-corner {
-    background: transparent;
-  }
-
-  .mat-scroll-area__viewport::-webkit-scrollbar-thumb {
-    background: var(--mat-sys-color-primary);
-    border-radius: var(--mat-sys-shape-corner-full);
   }
 }
 </style>

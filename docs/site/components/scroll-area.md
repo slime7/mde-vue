@@ -1,6 +1,6 @@
 ---
 title: Scroll area 滚动区域
-description: mat-scroll-area 与 MatScrollArea 为单轴内容提供边缘渐隐、容器配色、圆角和无限滚动事件。
+description: mat-scroll-area 与 MatScrollArea 为单轴内容提供边缘渐隐、容器配色、圆角、公共滚动条样式和无限滚动事件。
 llms: true
 order: 114
 ---
@@ -207,6 +207,8 @@ order: 114
 
 `barWidth` 支持 `default`、`thin` 和 `hidden`，组件默认使用 `thin`。`thin` 使用 8px 滚动条，`default` 使用 16px 滚动条，`hidden` 隐藏滚动条但不影响滚动操作。滚动条拇指使用 primary 令牌并带完整圆角，轨道与角落透明；尺寸同时以内联 CSS 变量 `--mat-scroll-area-scrollbar-width` 置于组件根元素，子元素可以读取该变量。
 
+同一套滚动条样式也通过 `mde-vue/styles.css` 以公共 class 输出。给任意自行设置了 `overflow: auto` 或 `overflow: scroll` 的原生滚动元素添加 `.mat-scrollbar`，即可获得 primary 色拇指、透明轨道和 thin 尺寸；再添加 `.mat-scrollbar--default`、`.mat-scrollbar--thin` 或 `.mat-scrollbar--hidden` 选择 16px、8px 或隐藏滚动条。`mat-scroll-area` 内部会自动使用这套公共样式，公共 class 不负责设置元素的溢出方式。
+
 :::: details 查看示例代码
 ::: code-group
 
@@ -222,6 +224,28 @@ order: 114
 <ClientOnly>
   <DocsPreview label="Scroll area 滚动条宽度预览">
     <ScrollAreaBarWidthExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 公共滚动条样式
+
+公共 class 可以脱离组件应用到原生滚动元素；下面的示例只使用 `div` 和 `mde-vue/styles.css` 提供的 `.mat-scrollbar` 样式。元素仍需自行设置 `overflow`、尺寸和内容布局。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/scroll-area/ScrollAreaScrollbarStyleExample.vue#template [template]
+
+<<< @/examples/scroll-area/ScrollAreaScrollbarStyleExample.vue#script [script]
+
+<<< @/examples/scroll-area/ScrollAreaScrollbarStyleExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Scroll area 公共滚动条样式预览">
+    <ScrollAreaScrollbarStyleExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -325,4 +349,5 @@ import ScrollAreaRoundedExample from '../examples/scroll-area/ScrollAreaRoundedE
 import ScrollAreaShadowOffsetExample from '../examples/scroll-area/ScrollAreaShadowOffsetExample.vue';
 import ScrollAreaShadowLengthExample from '../examples/scroll-area/ScrollAreaShadowLengthExample.vue';
 import ScrollAreaSnapExample from '../examples/scroll-area/ScrollAreaSnapExample.vue';
+import ScrollAreaScrollbarStyleExample from '../examples/scroll-area/ScrollAreaScrollbarStyleExample.vue';
 </script>

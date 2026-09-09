@@ -839,6 +839,50 @@
     transition: inline-size var(--mat-sys-motion-spring-default-spatial, .3s ease), block-size var(--mat-sys-motion-spring-default-spatial, .3s ease);
   }
 
+  .mat-scrollbar {
+    scrollbar-color: var(--mat-sys-color-primary) transparent;
+    scrollbar-width: thin;
+  }
+
+  .mat-scrollbar--thin {
+    scrollbar-width: thin;
+  }
+
+  .mat-scrollbar--default {
+    scrollbar-width: auto;
+  }
+
+  .mat-scrollbar--hidden {
+    scrollbar-width: none;
+  }
+
+  .mat-scrollbar::-webkit-scrollbar,
+  .mat-scrollbar--thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background: transparent;
+  }
+
+  .mat-scrollbar--default::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+  }
+
+  .mat-scrollbar--hidden::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  .mat-scrollbar::-webkit-scrollbar-track,
+  .mat-scrollbar::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  .mat-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--mat-sys-color-primary);
+    border-radius: var(--mat-sys-shape-corner-full);
+  }
+
   ::view-transition-group(*) {
     animation-duration: var(--mat-sys-motion-duration-medium4);
     animation-timing-function: var(--mat-sys-motion-easing-emphasized);

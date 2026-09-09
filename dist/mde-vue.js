@@ -7303,9 +7303,9 @@ var Pa = ["data-dot"], Fa = ["data-dot"], Ia = /*#__PURE__*/ Q(/* @__PURE__ */ O
 			ref_key: "scroller",
 			ref: f
 		}, q.value, {
-			class: ["mat-scroll-area__viewport", [
+			class: ["mat-scroll-area__viewport mat-scrollbar", [
 				`mat-scroll-area__viewport--${N.value}`,
-				`mat-scroll-area__viewport--bar-${z(r).barWidth}`,
+				`mat-scrollbar--${z(r).barWidth}`,
 				{
 					"mat-scroll-area__viewport--dragging": h.value,
 					"mat-scroll-area__viewport--no-scroll-padding": z(r).noScrollPadding,
@@ -7323,7 +7323,7 @@ var Pa = ["data-dot"], Fa = ["data-dot"], Ia = /*#__PURE__*/ Q(/* @__PURE__ */ O
 			onScroll: te
 		}), [P(e.$slots, "default", {}, void 0, !0)], 16)], 16));
 	}
-}), [["__scopeId", "data-v-235ce304"]]), Ua = { class: "mat-chip-set__scroll-content" }, Wa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatChipSet" }, {
+}), [["__scopeId", "data-v-f222c54b"]]), Ua = { class: "mat-chip-set__scroll-content" }, Wa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatChipSet" }, {
 	__name: "MatChipSet",
 	props: {
 		layout: {
