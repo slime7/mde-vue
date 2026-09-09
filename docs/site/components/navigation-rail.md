@@ -313,9 +313,7 @@ Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导�
 
 ## API
 
-### 属性
-
-#### `MatNavigationRail`
+### MatNavigationRail 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -336,7 +334,7 @@ Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导�
 | `bordered` | `boolean` | `false` | 是否复用 Aside 的边框修饰，在面向内容的一侧渲染 1px 细边框 |
 | `open` | `boolean` | `undefined` | 受控显示/隐藏状态，支持 `v-model:open`；省略时遵循 `hide-on-collapse` 或 `modal` 模式与 `expanded` 联动 |
 
-#### `MatNavigationRailItem`
+### MatNavigationRailItem 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |

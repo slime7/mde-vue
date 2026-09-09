@@ -80,7 +80,7 @@ Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail`
 
 ## API
 
-#### MatNavigationDrawer
+### MatNavigationDrawer 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -96,7 +96,7 @@ Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail`
 
 注：`full-width`、`collapsible` 与 `hide-on-collapse` 在组件内部固定为 `true`，无需且不可配置。
 
-#### MatNavigationGroup
+### MatNavigationGroup 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
