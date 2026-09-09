@@ -21,6 +21,7 @@
       as="nav"
       bordered
       class="aside-fixed-example__start"
+      v-model="leftAsideOpen"
     >
       <div class="aside-fixed-example__nav">
         <span>起始侧 (fixed start)</span>
@@ -68,6 +69,11 @@
       <article class="aside-fixed-example__article">
         <h4>fixed 多边缘协同与正文滚动</h4>
         <p>边缘栏保留在 mat-layout 的声明位置，仍按声明顺序完成避让、同向堆叠和层级叠加。</p>
+        <div class="aside-fixed-example__controls">
+          <mat-switch v-model="leftAsideOpen">
+            {{ leftAsideOpen ? '左侧栏：已开启' : '左侧栏：已关闭' }}
+          </mat-switch>
+        </div>
         <p
           v-for="(paragraph, index) in paragraphs"
           :key="index"
@@ -82,6 +88,10 @@
 
 <!-- #region script -->
 <script setup>
+import { ref } from 'vue';
+
+const leftAsideOpen = ref(true);
+
 const paragraphs = [
   'fixed 模式适合由应用框架独占整个窗口的场景，正文可以继续使用 document/body 作为滚动容器。',
   '主顶栏先登记 top 边缘，第二条顶栏会在它的下方继续堆叠，而不会覆盖主顶栏的内容。',
@@ -158,6 +168,13 @@ const paragraphs = [
   justify-content: center;
   padding: 12px;
   text-align: center;
+}
+
+.aside-fixed-example__controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-block: 28px 32px;
 }
 
 .aside-fixed-example__content {
