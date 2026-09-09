@@ -84,15 +84,22 @@ describe('VitePress 文档自定义主题', () => {
     expect(readThemeFile('index.js')).toContain("import Layout from './Layout.vue';");
   });
 
-  it('使用 Layout.vue 自定义根布局并将 app-bar 置于侧栏前方', () => {
+  it('使用文档自动滚动并固定 app-bar 与侧栏', () => {
     const layoutSource = readThemeFile('Layout.vue');
 
     expect(layoutSource).toContain('<mat-app-root');
     expect(layoutSource).toContain('<mat-navigation-drawer');
     expect(layoutSource).toContain('<mat-app-bar');
-    expect(layoutSource).toContain('<mat-scroll-area');
     expect(layoutSource).toContain('<VPContent');
-    expect(layoutSource).toContain('scroll-target=');
+    expect(layoutSource).toContain('scroll-target="html"');
+    expect(layoutSource).toContain('window.scrollTo({ top: 0, behavior });');
+    expect(layoutSource).toContain("window.scrollTo({ top: 0, left: 0, behavior: 'instant' });");
+    expect(layoutSource).not.toContain('<mat-scroll-area');
+    expect(layoutSource).not.toContain('scrollAreaRef');
+    expect(layoutSource.match(/mode="fixed"/g)).toHaveLength(2);
+    expect(layoutSource).toContain(":class=\"{ 'mde-docs-root--playground': isPlayground }\"");
+    expect(layoutSource).toContain('.mde-docs-root--playground {');
+    expect(layoutSource).toContain('.mde-docs-root--playground :deep(.mat-app-root__content) {');
 
     const drawerIndex = layoutSource.indexOf('<mat-navigation-drawer');
     const appBarIndex = layoutSource.indexOf('<mat-app-bar');

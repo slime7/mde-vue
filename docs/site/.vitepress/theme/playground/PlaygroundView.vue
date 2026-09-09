@@ -247,11 +247,6 @@ onBeforeUnmount(() => {
   <div class="mde-playground-root">
     <header class="mde-playground-header">
       <div class="mde-playground-header__start">
-        <div class="mde-playground-header__title">
-          <mat-icon icon="terminal" class="mde-playground-header__icon" aria-hidden="true" />
-          <span>演练场</span>
-        </div>
-
         <mat-select
           :model-value="selectedComponentKey"
           label="组件"
@@ -419,20 +414,6 @@ onBeforeUnmount(() => {
     gap: 16px;
   }
 
-  .mde-playground-header__title {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--mat-sys-color-primary);
-    margin-inline-end: 8px;
-  }
-
-  .mde-playground-header__icon {
-    font-size: 22px;
-  }
-
   .mde-playground-select--component {
     inline-size: 210px;
   }
@@ -501,7 +482,7 @@ onBeforeUnmount(() => {
     gap: 6px;
     padding-inline: 14px;
     padding-block: 6px;
-    font-size: 0.8125rem;
+    font-size: .8125rem;
     font-family: var(--mat-ref-typeface-plain, sans-serif);
     color: var(--mat-sys-color-on-surface-variant);
     background: transparent;
@@ -511,7 +492,7 @@ onBeforeUnmount(() => {
     cursor: default;
     outline: none;
     white-space: nowrap;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    transition: background .15s, color .15s, border-color .15s;
   }
 
   .mde-playground-tab:hover {
@@ -557,7 +538,7 @@ onBeforeUnmount(() => {
     justify-content: center;
     background: var(--mat-sys-color-surface-container);
     border-inline: 1px solid var(--mat-sys-color-outline-variant);
-    transition: background 0.2s;
+    transition: background .2s;
   }
 
   .mde-playground-resizer:hover,
@@ -599,7 +580,7 @@ onBeforeUnmount(() => {
     background: var(--mat-sys-color-error-container);
     color: var(--mat-sys-color-on-error-container);
     border-radius: var(--mat-sys-shape-corner-medium, 8px);
-    font-size: 0.8125rem;
+    font-size: .8125rem;
     line-height: 1.4;
     box-shadow: var(--mat-sys-elevation-level2);
     z-index: 10;
@@ -617,7 +598,7 @@ onBeforeUnmount(() => {
     white-space: pre-wrap;
   }
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     .mde-playground-workspace {
       flex-direction: column;
     }

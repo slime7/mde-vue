@@ -22,7 +22,6 @@ const isWideScreen = ref(true);
 const isDrawerOpen = ref(false);
 const isPcDrawerOpen = ref(true);
 const isThemeSettingsOpen = ref(false);
-const scrollAreaRef = ref(null);
 
 /** @type {MediaQueryList | null} */
 let mediaQuery = null;
@@ -36,7 +35,9 @@ function handleMediaChange(event) {
 
 function scrollToHash(hash, behavior = 'smooth') {
   if (!hash || hash === '#') {
-    scrollAreaRef.value?.scrollTo?.({ top: 0, behavior });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior });
+    }
     return;
   }
   try {
@@ -129,8 +130,8 @@ watch(() => route.path, async () => {
   await nextTick();
   if (typeof window !== 'undefined' && window.location.hash) {
     scrollToHash(window.location.hash, 'instant');
-  } else {
-    scrollAreaRef.value?.scrollTo?.({ top: 0, left: 0, behavior: 'instant' });
+  } else if (typeof window !== 'undefined') {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }
 });
 
@@ -252,14 +253,16 @@ const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontm
 <template>
   <mat-app-root
     class="mde-docs-root"
+    :class="{ 'mde-docs-root--playground': isPlayground }"
     :fill-viewport="true"
     :scrollable="false"
   >
     <mat-app-bar
       app
+      mode="fixed"
       variant="small"
       class="mde-docs-app-bar"
-      scroll-target=".mde-docs-scroll-area .mat-scroll-area__viewport"
+      scroll-target="html"
     >
       <template v-if="hasSidebar" #leading>
         <mat-btn
@@ -345,8 +348,8 @@ const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontm
       v-if="hasSidebar"
       v-model:expanded="drawerExpanded"
       :model-value="activeNavValue"
-      app
       :layout="drawerLayout"
+      mode="fixed"
       :width="280"
       class="mde-docs-drawer"
     >
@@ -409,67 +412,59 @@ const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontm
       <div v-if="isPlayground" class="mde-docs-playground-container">
         <PlaygroundView />
       </div>
-      <mat-scroll-area
-        v-else
-        ref="scrollAreaRef"
-        class="mde-docs-scroll-area"
-        bar-width="thin"
-        no-scroll-padding
-      >
-        <VPContent>
-          <template v-for="(_, slotName) in $slots" #[slotName]="slotProps">
-            <slot :name="slotName" v-bind="slotProps" />
-          </template>
+      <VPContent v-else>
+        <template v-for="(_, slotName) in $slots" #[slotName]="slotProps">
+          <slot :name="slotName" v-bind="slotProps" />
+        </template>
 
-          <template #doc-footer-before>
-            <nav
-              v-if="control.prev?.link || control.next?.link"
-              class="mde-docs-pager"
-              aria-label="页脚上下页导航"
+        <template #doc-footer-before>
+          <nav
+            v-if="control.prev?.link || control.next?.link"
+            class="mde-docs-pager"
+            aria-label="页脚上下页导航"
+          >
+            <mat-card
+              v-if="control.prev?.link"
+              class="mde-docs-pager-card mde-docs-pager-card--prev"
+              variant="outlined"
             >
-              <mat-card
-                v-if="control.prev?.link"
-                class="mde-docs-pager-card mde-docs-pager-card--prev"
-                variant="outlined"
+              <mat-card-action-area
+                class="mde-docs-pager-action-area"
+                :href="normalizeLink(control.prev.link)"
               >
-                <mat-card-action-area
-                  class="mde-docs-pager-action-area"
-                  :href="normalizeLink(control.prev.link)"
-                >
-                  <mat-card-content class="mde-docs-pager-content">
-                    <div class="mde-docs-pager-direction">
-                      <mat-icon icon="arrow_back" class="mde-docs-pager-arrow" aria-hidden="true" />
-                      <span>{{ theme.docFooter?.prev || '上一页' }}</span>
-                    </div>
-                    <div class="mde-docs-pager-title" v-html="control.prev.text" />
-                  </mat-card-content>
-                </mat-card-action-area>
-              </mat-card>
-              <div v-else class="mde-docs-pager-spacer" aria-hidden="true" />
+                <mat-card-content class="mde-docs-pager-content">
+                  <div class="mde-docs-pager-direction">
+                    <mat-icon icon="arrow_back" class="mde-docs-pager-arrow" aria-hidden="true" />
+                    <span>{{ theme.docFooter?.prev || '上一页' }}</span>
+                  </div>
+                  <div class="mde-docs-pager-title" v-html="control.prev.text" />
+                </mat-card-content>
+              </mat-card-action-area>
+            </mat-card>
+            <div v-else class="mde-docs-pager-spacer" aria-hidden="true" />
 
-              <mat-card
-                v-if="control.next?.link"
-                class="mde-docs-pager-card mde-docs-pager-card--next"
-                variant="outlined"
+            <mat-card
+              v-if="control.next?.link"
+              class="mde-docs-pager-card mde-docs-pager-card--next"
+              variant="outlined"
+            >
+              <mat-card-action-area
+                class="mde-docs-pager-action-area"
+                :href="normalizeLink(control.next.link)"
               >
-                <mat-card-action-area
-                  class="mde-docs-pager-action-area"
-                  :href="normalizeLink(control.next.link)"
-                >
-                  <mat-card-content class="mde-docs-pager-content">
-                    <div class="mde-docs-pager-direction">
-                      <span>{{ theme.docFooter?.next || '下一页' }}</span>
-                      <mat-icon icon="arrow_forward" class="mde-docs-pager-arrow" aria-hidden="true" />
-                    </div>
-                    <div class="mde-docs-pager-title" v-html="control.next.text" />
-                  </mat-card-content>
-                </mat-card-action-area>
-              </mat-card>
-              <div v-else class="mde-docs-pager-spacer" aria-hidden="true" />
-            </nav>
-          </template>
-        </VPContent>
-      </mat-scroll-area>
+                <mat-card-content class="mde-docs-pager-content">
+                  <div class="mde-docs-pager-direction">
+                    <span>{{ theme.docFooter?.next || '下一页' }}</span>
+                    <mat-icon icon="arrow_forward" class="mde-docs-pager-arrow" aria-hidden="true" />
+                  </div>
+                  <div class="mde-docs-pager-title" v-html="control.next.text" />
+                </mat-card-content>
+              </mat-card-action-area>
+            </mat-card>
+            <div v-else class="mde-docs-pager-spacer" aria-hidden="true" />
+          </nav>
+        </template>
+      </VPContent>
     </div>
   </mat-app-root>
 </template>
@@ -477,12 +472,21 @@ const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontm
 <style scoped>
 @layer mde.components {
   .mde-docs-root {
+    min-block-size: 100dvb;
+  }
+
+  .mde-docs-root :deep(.mat-app-root__content) {
+    block-size: auto;
+    min-block-size: 100dvb;
+  }
+
+  .mde-docs-root--playground {
     block-size: 100dvb;
     max-block-size: 100dvb;
     overflow: clip;
   }
 
-  .mde-docs-root :deep(.mat-app-root__content) {
+  .mde-docs-root--playground :deep(.mat-app-root__content) {
     block-size: 100%;
     max-block-size: 100%;
     min-block-size: 0;
@@ -519,7 +523,7 @@ const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontm
 
   .mde-docs-page-title {
     font-family: var(--mat-ref-typeface-plain);
-    font-size: 0.875rem;
+    font-size: .875rem;
     font-weight: 400;
     color: var(--mat-sys-color-on-surface-variant);
     overflow: hidden;
@@ -538,10 +542,10 @@ const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontm
   .mde-docs-section-title {
     padding-inline: 16px;
     padding-block: 12px 6px;
-    font-size: 0.75rem;
+    font-size: .75rem;
     font-weight: 600;
     color: var(--mat-sys-color-on-surface-variant);
-    letter-spacing: 0.05em;
+    letter-spacing: .05em;
     text-transform: uppercase;
   }
 
@@ -553,17 +557,16 @@ const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontm
   }
 
   .mde-docs-content-wrapper {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
     inline-size: 100%;
-    block-size: 100%;
     min-inline-size: 0;
-    min-block-size: 0;
-    overflow: hidden;
   }
 
   .mde-docs-content-wrapper--playground {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    block-size: 100%;
+    min-block-size: 0;
     overflow: hidden;
   }
 
@@ -578,13 +581,6 @@ const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontm
     overflow: hidden;
   }
 
-  .mde-docs-scroll-area {
-    inline-size: 100%;
-    block-size: 100%;
-    flex: 1 1 auto;
-    min-block-size: 0;
-  }
-
   .mde-docs-pager {
     display: grid;
     grid-template-columns: 1fr;
@@ -592,7 +588,7 @@ const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontm
     margin-block-start: 32px;
   }
 
-  @media (min-width: 640px) {
+  @media (width >= 640px) {
     .mde-docs-pager {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -637,7 +633,7 @@ const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontm
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.75rem;
+    font-size: .75rem;
     font-weight: 500;
     color: var(--mat-sys-color-on-surface-variant);
   }
@@ -658,7 +654,7 @@ const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontm
     display: none;
   }
 
-  @media (min-width: 640px) {
+  @media (width >= 640px) {
     .mde-docs-pager-spacer {
       display: block;
     }
