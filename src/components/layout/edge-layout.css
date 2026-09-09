@@ -1,0 +1,13 @@
+@layer mde.components {
+  .mat-edge-layout__content {
+    box-sizing: border-box;
+    min-inline-size: 0;
+    transition: padding-top var(--mat-sys-motion-spring-default-spatial, .3s ease), padding-bottom var(--mat-sys-motion-spring-default-spatial, .3s ease), padding-left var(--mat-sys-motion-spring-default-spatial, .3s ease), padding-right var(--mat-sys-motion-spring-default-spatial, .3s ease);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-edge-layout__content {
+      transition: none;
+    }
+  }
+}

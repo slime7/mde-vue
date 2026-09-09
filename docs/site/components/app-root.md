@@ -1,6 +1,6 @@
 ---
 title: App root 应用布局根
-description: mat-app-root 的应用坐标系、文档与内部滚动模式、边缘登记、响应式布局数据和浮动组件自动接入。
+description: mat-app-root 的应用坐标系、文档与内部滚动模式、六向边缘登记、响应式布局数据和浮动组件自动接入。
 llms: true
 order: 69
 ---
@@ -9,7 +9,7 @@ order: 69
 
 ## 组件简介
 
-`<mat-app-root>` 的组件导出名是 `MatAppRoot`。它在 Vue 应用内承担通常由 `body` 承担的页面布局职责：建立隔离的覆盖层坐标系，统一处理安全区、固定边缘占位、正文避让、浮动组件排列和基于容器宽度的断点。应用通常只放置一个铺满视口的 AppRoot；文档预览等容器化场景可以放置多个同级实例，但 AppRoot 不允许嵌套。
+`<mat-app-root>` 的组件导出名是 `MatAppRoot`。它在 Vue 应用内承担通常由 `body` 承担的页面布局职责：建立隔离的覆盖层坐标系，统一处理安全区、固定边缘占位、正文避让、浮动组件排列和基于容器宽度的断点。边缘登记遵循与 `<mat-layout>` 相同的六向顺序计算规则，AppRoot 自己保留应用覆盖层和滚动能力。应用通常只放置一个铺满视口的 AppRoot；文档预览等容器化场景可以放置多个同级实例，但 AppRoot 不允许嵌套。
 
 默认模式沿用 Vuetify `VApp`/`VMain` 的文档滚动思路：AppRoot 至少铺满动态视口，内容增长时由 `document`/`body` 滚动，组件不会修改 `html` 或 `body` 的 `overflow`。设置 `scrollable` 后，AppRoot 保持确定高度，正文层改为内部滚动容器；`fillViewport=false` 与 `scrollable=true` 组合使用时，必须通过自身样式或父级布局提供确定的块轴高度。
 
@@ -52,6 +52,26 @@ order: 69
 <ClientOnly>
   <DocsPreview label="AppRoot 内部滚动预览">
     <AppRootScrollableExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `as`
+
+需要自定义语义根标签时，可以使用 `as`；AppRoot 的布局、覆盖层和上下文行为保持不变。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/app-root/AppRootAsExample.vue#template [template]
+
+<<< @/examples/app-root/AppRootAsExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="AppRoot 语义根标签预览">
+    <AppRootAsExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -127,6 +147,7 @@ order: 69
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `as` | `string` | `'div'` | 根容器渲染的 HTML 标签，如 `'div'`、`'main'`、`'section'` 等 |
 | `fillViewport` | `boolean` | `true` | 至少铺满 `100dvb`；与 `scrollable` 同时启用时使用确定的 `100dvb` 高度 |
 | `scrollable` | `boolean` | `false` | `false` 时内容增长并由 document/body 滚动；`true` 时正文层成为内部滚动容器 |
 
@@ -152,13 +173,13 @@ const { layout, registerEdge } = useMatApp();
 | 字段 | 说明 |
 | --- | --- |
 | `size { width, height }` | 当前应用布局坐标区尺寸；默认文档滚动模式使用视口高度，内部滚动和容器化模式使用 AppRoot 边框盒 |
-| `padding { top, bottom, start, end }` | 安全区与各边缘元素外延共同形成的正文避让值 |
+| `padding { top, bottom, left, right, start, end }` | 安全区与各边缘元素外延共同形成的正文避让值；`left/right` 与 `start/end` 会按统一六向算法同步计算 |
 | `content { width, height }` | `size` 减去对应两侧 `padding` 后的非负尺寸 |
 | `breakpoint` | 按 AppRoot 宽度计算的 `compact`、`medium`、`expanded`、`large` 或 `extra-large` |
 | `breakpointRange { min, max }` | 当前断点的闭区间；五档边界依次为 0、600、840、1200、1600px，最后一档 `max` 为 `Infinity` |
-| `edges` | `top`、`bottom`、`start`、`end` 的 `{ size, startInset, endInset }` 汇总 |
+| `edges` | `top`、`bottom`、`left`、`right`、`start`、`end` 的 `{ size, startInset, endInset }` 汇总 |
 
-`registerEdge({ edge, element })` 的 `edge` 只接受 `top`、`bottom`、`start`、`end`，`element` 必须是当前 document 中的 `HTMLElement`。返回值包含只读响应式 `insets { start, end }`、`update()` 和幂等的 `unregister()`。
+`registerEdge({ edge, element })` 的 `edge` 接受 `top`、`bottom`、`left`、`right`、`start`、`end`，`element` 必须是当前 document 中的 `HTMLElement`。返回值包含只读响应式 `insets { top, bottom, left, right, start, end, offset }`、`update()` 和幂等的 `unregister()`。
 
 边缘组件接入遵循“先出现先占有”的通栏排布规则：在 AppRoot 容器内先出现的组件占据该方向的通栏（例如先 Navigation 后 AppBar 时 Navigation 高度为页面高度，AppBar 宽度为页面宽度扣去 Navigation 宽度；反之 AppBar 占满整宽，Navigation 高度扣去 AppBar 高度）。同向连续放置多个组件时（如先后放置两个 Navigation rail）按顺序依次偏移并累加占据宽度，可用于组合两级导航菜单。
 
@@ -189,6 +210,7 @@ const { layout, registerEdge } = useMatApp();
 浮动边距与排列遵循 Material 3 的 [FAB specs](https://m3.material.io/components/fab/specs)、[Extended FAB specs](https://m3.material.io/components/extended-fab/specs)、[Snackbar guidelines](https://m3.material.io/components/snackbar/guidelines) 和 [Toolbars guidelines](https://m3.material.io/components/toolbars/guidelines)：FAB 与容器边缘保持 16dp，Snackbar 不贴边并位于 FAB 上方，floating Toolbar 使用自身推荐边距；docked Toolbar 仍保持横向贴边。
 
 <script setup>
+import AppRootAsExample from '../examples/app-root/AppRootAsExample.vue';
 import AppRootBasicExample from '../examples/app-root/AppRootBasicExample.vue';
 import AppRootComponentsExample from '../examples/app-root/AppRootComponentsExample.vue';
 import AppRootLayoutExample from '../examples/app-root/AppRootLayoutExample.vue';

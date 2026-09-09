@@ -184,6 +184,8 @@ describe('MatAppRoot', () => {
     expect(app.layout.padding).toEqual({
       bottom: 0,
       end: 0,
+      left: 0,
+      right: 0,
       start: 0,
       top: 144,
     });
@@ -203,6 +205,87 @@ describe('MatAppRoot', () => {
     handles[0].unregister();
     await settleLayout();
     expect(app.layout.padding.top).toBe(48);
+
+    wrapper.unmount();
+  });
+
+  it('按 MatLayout 的六向顺序计算物理边缘，并向 AppRoot 暴露完整 inset', async () => {
+    const topElement = document.createElement('header');
+    const leftElement = document.createElement('aside');
+    const rightElement = document.createElement('aside');
+    const handles = [];
+    let app;
+    const Consumer = defineComponent({
+      setup() {
+        app = useMatApp();
+        onMounted(() => {
+          handles.push(app.registerEdge({ edge: 'top', element: topElement }));
+          handles.push(app.registerEdge({ edge: 'left', element: leftElement }));
+          handles.push(app.registerEdge({ edge: 'right', element: rightElement }));
+        });
+        return () => null;
+      },
+    });
+    const wrapper = mount(MatAppRoot, {
+      props: { fillViewport: false },
+      slots: { default: () => h(Consumer) },
+    });
+
+    vi.spyOn(wrapper.element, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 600,
+      height: 600,
+      right: 800,
+      width: 800,
+    }));
+    vi.spyOn(topElement, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 40,
+      height: 40,
+      right: 800,
+      width: 800,
+    }));
+    vi.spyOn(leftElement, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 600,
+      height: 560,
+      right: 80,
+      top: 40,
+      width: 80,
+    }));
+    vi.spyOn(rightElement, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 600,
+      height: 560,
+      left: 740,
+      right: 800,
+      top: 40,
+      width: 60,
+    }));
+
+    handles[0].update();
+    await settleLayout();
+
+    expect(app.layout.padding).toEqual({
+      bottom: 0,
+      end: 60,
+      left: 80,
+      right: 60,
+      start: 80,
+      top: 40,
+    });
+    expect(app.layout.content).toEqual({ width: 660, height: 560 });
+    expect(handles[1].insets).toEqual({
+      bottom: 0,
+      end: 0,
+      left: 0,
+      offset: 0,
+      right: 0,
+      start: 0,
+      top: 40,
+    });
+    expect(handles[2].insets.top).toBe(40);
+    expect(app.layout.edges.left).toEqual({
+      endInset: 0,
+      size: 80,
+      startInset: 40,
+    });
 
     wrapper.unmount();
   });
@@ -263,7 +346,7 @@ describe('MatAppRoot', () => {
     wrapper.unmount();
   });
 
-  it('拒绝非法 edge、非 HTMLElement 和重复注销后的更新', async () => {
+  it('接受六向 edge，并拒绝非法 edge、非 HTMLElement 和重复注销后的更新', async () => {
     let app;
     const Consumer = defineComponent({
       setup() {
@@ -275,8 +358,10 @@ describe('MatAppRoot', () => {
       slots: { default: () => h(Consumer) },
     });
 
-    expect(() => app.registerEdge({ edge: 'left', element: document.body }))
-      .toThrow('registerEdge() 的 edge 必须是 top、bottom、start 或 end');
+    const leftHandle = app.registerEdge({ edge: 'left', element: document.body });
+    leftHandle.unregister();
+    expect(() => app.registerEdge({ edge: 'diagonal', element: document.body }))
+      .toThrow('registerEdge() 的 edge 必须是 top、bottom、left、right、start 或 end');
     expect(() => app.registerEdge({ edge: 'top', element: {} }))
       .toThrow('registerEdge() 的 element 必须是当前 document 中的 HTMLElement');
 
@@ -287,6 +372,17 @@ describe('MatAppRoot', () => {
     expect(handle.update).not.toThrow();
 
     wrapper.unmount();
+  });
+
+  it('支持使用 as 属性定制 AppRoot 根标签', () => {
+    expect(MatAppRoot.props.as.default).toBe('div');
+    const wrapper = mount(MatAppRoot, {
+      props: { as: 'main' },
+      slots: { default: () => h('p', '正文') },
+    });
+
+    expect(wrapper.element.tagName).toBe('MAIN');
+    expect(wrapper.text()).toContain('正文');
   });
 
   it('默认采用文档滚动模式，并允许显式切换为内部滚动模式', () => {

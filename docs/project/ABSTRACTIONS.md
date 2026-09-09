@@ -140,9 +140,9 @@ Tailwind CSS v4 使用方必须预先声明 `tailwind-theme`、`tailwind-reset`�
 
 `<mat-app-root>` 与导出 `MatAppRoot` 建立应用坐标系。默认 `fillViewport=true` 且 `scrollable=false`：根至少为 `100dvb`，正文增长并由 document/body 滚动；`scrollable=true` 把正文切换为内部滚动容器，`fillViewport=false` 时使用方必须提供确定高度。组件不修改 `html`、`body` 或挂载节点。允许多个同级容器化 AppRoot，不允许嵌套。
 
-`useMatApp()` 只在 AppRoot 后代 setup 中可用，返回同一个深只读响应式 `layout` 与 `registerEdge()`。断点按 AppRoot 宽度的 600/840/1200/1600 边界计算；layout 同时提供布局 size、四向 padding、扣除 padding 的 content、breakpointRange 和四向 edges。安全区由 AppRoot 统一并入 padding。
+`useMatApp()` 只在 AppRoot 后代 setup 中可用，返回同一个深只读响应式 `layout` 与 `registerEdge()`。断点按 AppRoot 宽度的 600/840/1200/1600 边界计算；layout 同时提供布局 size、六向 padding、扣除 padding 的 content、breakpointRange 和六向 edges。安全区由 AppRoot 统一并入 padding；`as` 只改变 AppRoot 根标签，不改变应用覆盖层、滚动模式或上下文。
 
-`registerEdge({ edge, element })` 接受当前 document 中的 HTMLElement，并返回只读响应式 `insets`、`update()`、幂等 `unregister()`。同侧外延取最大值而不累加；正交边缘按登记顺序确定优先级，较晚登记项通过 cross-axis insets 避让较早项。默认 Slot 只承载正文和布局组件，覆盖层不作为公共 Slot 暴露。
+`registerEdge({ edge, element })` 接受 `top`、`bottom`、`left`、`right`、`start`、`end` 六向边缘和当前 document 中的 HTMLElement，并返回包含完整六向 `insets` 的只读响应式对象、`update()`、幂等 `unregister()`。同侧连续登记项按 DOM 顺序累加；正交边缘按登记顺序确定优先级，较晚登记项通过 cross-axis insets 避让较早项。默认 Slot 只承载正文和布局组件，覆盖层不作为公共 Slot 暴露。
 
 内部覆盖层按层级依次承载固定边缘、自由定位、Snackbar 与普通浮动组件、模态层。位于 AppRoot 内且省略 `attach` 的 Dialog 与 modal Bottom/Side sheet 进入模态层，表面与帷幕限制在应用矩形内，正文层设为 `inert`，AppRoot 外的内容保持可交互；Menu 的视口夹紧与透明 scrim 同样以应用矩形为边界。document 模式（`fillViewport=true` 且 `scrollable=false`）下应用范围等于视口，任务栏等 AppRoot 外内容应使用 `scrollable` 或 `fillViewport=false` 布局。
 

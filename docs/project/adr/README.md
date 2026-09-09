@@ -26,7 +26,7 @@
 | [0018](0018-distribute-prebuilt-esm-from-private-git.md) | superseded | 通过私有 Git 分发预构建 ESM |
 | [0019](0019-minimize-esm-distribution-files.md) | superseded | 将 ESM 分发压缩为三个文件 |
 | [0020](0020-tailwind-css.md) | active | 恢复 tailwind.css 独立分发入口 |
-| [0021](0021-app-root-layout-context.md) | active | 采用 AppRoot 应用布局上下文 |
+| [0021](0021-app-root-layout-context.md) | superseded | 采用 AppRoot 应用布局上下文 |
 | [0022](0022-rename-project-to-mde-vue.md) | active | 项目更名为 mde-vue |
 | [0023](0023-mat-ui-component-defaults.md) | active | createMatUi 组件默认属性 defaults 配置 |
 | [0024](0024-system-color-roles-in-component-color.md) | active | 扩展公共 color 输入到系统颜色角色 |
@@ -37,6 +37,7 @@
 | [0030](0030-interleave-external-css-layers-and-final-safety-layer.md) | active | 交错外部 CSS 层并增加最终安全层 |
 | [0031](0031-tooltip-group-display-state-skip.md) | superseded | 同组 Tooltip 延迟跳过基于当前显示状态（已由 0032 替代：移除分组容器） |
 | [0032](0032-tooltip-global-delay-skip.md) | active | 移除 Tooltip 分组容器，延迟跳过全局生效 |
+| [0033](0033-shared-edge-layout-controller.md) | active | MatLayout 与 AppRoot 共享六向边缘布局控制器 |
 
 ## 何时创建 ADR
 

@@ -23,7 +23,7 @@
 - [Button group 按钮组](components/button-group.md): mat-btn-group 的标准与连接布局、级联属性、受控单选多选和事件。
 - [限制](guide/limitations.md): 记录 mde-vue 当前明确不支持的运行环境、分发方式。
 - [Split button 拆分按钮](components/split-button.md): mat-split-btn 的双按钮组合、受控展开、事件、菜单 ARIA 和 slots。
-- [App root 应用布局根](components/app-root.md): mat-app-root 的应用坐标系、文档与内部滚动模式、边缘登记、响应式布局数据和浮动组件自动接入。
+- [App root 应用布局根](components/app-root.md): mat-app-root 的应用坐标系、文档与内部滚动模式、六向边缘登记、响应式布局数据和浮动组件自动接入。
 - [Checkbox 复选框](components/checkbox.md): mat-checkbox 的布尔与数组 v-model、不确定态、配色、事件和默认 slot。
 - [Radio 单选按钮与单选组](components/radio.md): mat-radio 与 mat-radio-group 的独立或成组 v-model、标签、禁用、配色和键盘交互。
 - [Chips 标签](components/chip.md): mat-chip 与 mat-chip-set 的用途形态、受控选中外观、内容 slot 和布局。
@@ -58,7 +58,7 @@
 - [Container 响应式容器](components/container.md): mat-container 统一正文的响应式水平内边距、最大宽度和流式布局。
 - [Aside 边缘栏](components/aside.md): mat-aside 停靠于布局容器边缘，提供统一的边缘占用、正交避让与切入退场过渡。
 - [Table wrapper 表格容器](components/table-wrapper.md): mat-table-wrapper 以 table-wrapper 容器优化表格展示：横向滚动、圆角边框、单元格内边距与表头底色。
-- [Layout 布局容器](components/layout.md): mat-layout 建立局部边缘布局坐标系，协调四周 aside 的空间占用与正文自适应避让。
+- [Layout 布局容器](components/layout.md): mat-layout 建立局部边缘布局坐标系，协调六向 aside 的空间占用与正文自适应避让。
 - [Panes 布局面板](components/panes.md): mat-panes 与 mat-pane 的横向多窗口布局、受控宽度调整、断点事件和低频宽度信息。
 - [Hover 悬停状态](components/hover.md): mat-hover 的作用域 Slot、受控状态和进入离开延迟。
 - [Shared Element 同元素转移](components/shared-element.md): mat-shared-element 与 mde-shared-element 的 View Transitions 同元素转移动效。

@@ -10,10 +10,9 @@ import {
   ref,
   useAttrs,
 } from 'vue';
+import { createEdgeLayoutController } from '../layout/edge-layout';
 import { MAT_LAYOUT_KEY } from './layout-context';
 import { useMatProps } from '../use-mat-props';
-
-const EDGES = ['top', 'bottom', 'left', 'right', 'start', 'end'];
 
 defineOptions({
   name: 'MatLayout',
@@ -57,7 +56,6 @@ const rootStyle = computed(() => [
   },
 ]);
 
-const registrations = [];
 let mounted = false;
 let resizeObserver;
 let measureFrame;
@@ -71,79 +69,10 @@ function measureLayout() {
   const rootRect = rootElement.value.getBoundingClientRect();
   const width = Math.max(0, Number(rootRect.width) || 0);
   const height = Math.max(0, Number(rootRect.height) || 0);
-  const currentInsets = {
-    top: 0, bottom: 0, left: 0, right: 0, start: 0, end: 0,
-  };
+  const measured = edgeLayout.measure({ width, height });
 
-  const activeRegistrations = registrations.filter((r) => r.active);
-  activeRegistrations.sort((a, b) => {
-    if (a.element === b.element) {
-      return 0;
-    }
-    if (a.element.isConnected && b.element.isConnected) {
-      const position = a.element.compareDocumentPosition(b.element);
-      if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
-        return -1;
-      }
-      if (position & Node.DOCUMENT_POSITION_PRECEDING) {
-        return 1;
-      }
-    }
-    return registrations.indexOf(a) - registrations.indexOf(b);
-  });
-
-  activeRegistrations.forEach((registration) => {
-    const rect = registration.element.getBoundingClientRect();
-    const edge = registration.edge;
-    const mutableInsets = registration.insets;
-
-    if (edge === 'top') {
-      const extent = Math.max(0, Number(rect.height) || (rect.bottom - rect.top) || 0);
-      mutableInsets.top = currentInsets.top;
-      mutableInsets.left = currentInsets.left;
-      mutableInsets.start = currentInsets.left;
-      mutableInsets.right = currentInsets.right;
-      mutableInsets.end = currentInsets.right;
-      mutableInsets.bottom = 0;
-      mutableInsets.offset = currentInsets.top;
-      currentInsets.top += extent;
-    } else if (edge === 'bottom') {
-      const extent = Math.max(0, Number(rect.height) || (rect.bottom - rect.top) || 0);
-      mutableInsets.bottom = currentInsets.bottom;
-      mutableInsets.left = currentInsets.left;
-      mutableInsets.start = currentInsets.left;
-      mutableInsets.right = currentInsets.right;
-      mutableInsets.end = currentInsets.right;
-      mutableInsets.top = 0;
-      mutableInsets.offset = currentInsets.bottom;
-      currentInsets.bottom += extent;
-    } else if (edge === 'left' || edge === 'start') {
-      const extent = Math.max(0, Number(rect.width) || (rect.right - rect.left) || 0);
-      mutableInsets.left = currentInsets.left;
-      mutableInsets.start = currentInsets.left;
-      mutableInsets.top = currentInsets.top;
-      mutableInsets.bottom = currentInsets.bottom;
-      mutableInsets.right = 0;
-      mutableInsets.end = 0;
-      mutableInsets.offset = currentInsets.left;
-      currentInsets.left += extent;
-      currentInsets.start += extent;
-    } else if (edge === 'right' || edge === 'end') {
-      const extent = Math.max(0, Number(rect.width) || (rect.right - rect.left) || 0);
-      mutableInsets.right = currentInsets.right;
-      mutableInsets.end = currentInsets.right;
-      mutableInsets.top = currentInsets.top;
-      mutableInsets.bottom = currentInsets.bottom;
-      mutableInsets.left = 0;
-      mutableInsets.start = 0;
-      mutableInsets.offset = currentInsets.right;
-      currentInsets.right += extent;
-      currentInsets.end += extent;
-    }
-  });
-
-  Object.assign(layoutState.size, { width, height });
-  Object.assign(layoutState.padding, currentInsets);
+  Object.assign(layoutState.size, measured.size);
+  Object.assign(layoutState.padding, measured.padding);
 }
 
 function scheduleMeasure() {
@@ -166,57 +95,16 @@ function scheduleMeasure() {
   measureFrame = setTimeout(run, 0);
 }
 
-function registerEdge({ edge, element } = {}) {
-  if (!EDGES.includes(edge)) {
-    throw new TypeError('registerEdge() 的 edge 必须是 top、bottom、left、right、start 或 end');
-  }
+const edgeLayout = createEdgeLayoutController({ scheduleMeasure });
 
-  if (!(element instanceof HTMLElement) || element.ownerDocument !== document) {
-    throw new TypeError('registerEdge() 的 element 必须是当前 document 中的 HTMLElement');
-  }
-
-  const insets = reactive({
-    bottom: 0,
-    end: 0,
-    left: 0,
-    offset: 0,
-    right: 0,
-    start: 0,
-    top: 0,
-  });
-  const registration = {
-    active: true,
-    edge,
-    element,
-    insets,
-  };
-  const unregister = () => {
-    if (!registration.active) {
-      return;
-    }
-
-    registration.active = false;
-    resizeObserver?.unobserve?.(element);
-    scheduleMeasure();
-  };
-  const update = () => {
-    if (!registration.active) {
-      return;
-    }
-
-    scheduleMeasure();
-  };
-
-  registrations.push(registration);
-  resizeObserver?.observe(element);
-  scheduleMeasure();
-
-  return Object.freeze({
-    insets: readonly(insets),
-    unregister,
-    update,
-  });
-}
+/**
+ * 注册占用布局边缘的元素。
+ *
+ * @param {{edge: 'top' | 'bottom' | 'left' | 'right' | 'start' | 'end', element: HTMLElement}} options
+ * @returns {{insets: Readonly<object>, update: () => void, unregister: () => void}}
+ * @throws {TypeError} edge 或 element 无效时抛出。
+ */
+const registerEdge = edgeLayout.registerEdge;
 
 const publicContext = Object.freeze({
   layout,
@@ -237,11 +125,7 @@ onMounted(async () => {
     ? undefined
     : new ResizeObserver(scheduleMeasure);
   resizeObserver?.observe(rootElement.value);
-  registrations.forEach((registration) => {
-    if (registration.active) {
-      resizeObserver?.observe(registration.element);
-    }
-  });
+  edgeLayout.setResizeObserver(resizeObserver);
   window.addEventListener('resize', scheduleMeasure);
   await nextTick();
   scheduleMeasure();
@@ -249,6 +133,7 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   mounted = false;
+  edgeLayout.setResizeObserver(undefined);
   resizeObserver?.disconnect();
   resizeObserver = undefined;
   window.removeEventListener('resize', scheduleMeasure);
@@ -271,7 +156,7 @@ onBeforeUnmount(() => {
     class="mat-layout"
     :style="rootStyle"
   >
-    <div ref="contentElement" class="mat-layout__content">
+    <div ref="contentElement" class="mat-layout__content mat-edge-layout__content">
       <slot />
     </div>
   </component>
@@ -288,11 +173,9 @@ onBeforeUnmount(() => {
   }
 
   .mat-layout__content {
-    box-sizing: border-box;
     inline-size: 100%;
-    min-inline-size: 0;
     padding: var(--mat-layout-padding-top, 0) var(--mat-layout-padding-right, 0) var(--mat-layout-padding-bottom, 0) var(--mat-layout-padding-left, 0);
-    transition: padding-top var(--mat-sys-motion-spring-default-spatial, .3s ease), padding-bottom var(--mat-sys-motion-spring-default-spatial, .3s ease), padding-left var(--mat-sys-motion-spring-default-spatial, .3s ease), padding-right var(--mat-sys-motion-spring-default-spatial, .3s ease);
   }
 }
 </style>
+<style scoped src="../layout/edge-layout.css"></style>

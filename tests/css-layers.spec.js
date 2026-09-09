@@ -1,5 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
-import { extname, join } from 'node:path';
+import {
+  dirname, extname, join, resolve,
+} from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const mdeLayerOrder = '@layer mde.tokens, mde.components, mde.utilities;';
@@ -30,11 +32,24 @@ describe('CSS Layer 公共契约', () => {
 
   it('所有 Vue SFC 样式显式归入组件层', () => {
     const styleBlocks = listVueFiles('src')
-      .flatMap((file) => [...readFileSync(file, 'utf8').matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gu)]
-        .map((match) => ({ file, styles: match[1].trim() })));
+      .flatMap((file) => [...readFileSync(file, 'utf8').matchAll(/<style\b([^>]*)>([\s\S]*?)<\/style>/gu)]
+        .map((match) => ({
+          file,
+          attributes: match[1],
+          styles: match[2].trim(),
+        })));
 
     expect(styleBlocks.length).toBeGreaterThan(0);
-    styleBlocks.forEach(({ file, styles }) => {
+    styleBlocks.forEach(({ attributes, file, styles }) => {
+      if (attributes.includes('src=')) {
+        const source = attributes.match(/src=["']([^"']+)["']/u)?.[1];
+        expect(source, file).toBeTruthy();
+        const externalStyles = readFileSync(resolve(dirname(file), source), 'utf8').trim();
+        expect(externalStyles, file).toMatch(/^@layer mde\.components\s*\{/u);
+        expect(externalStyles, file).toMatch(/\}\s*$/u);
+        return;
+      }
+
       expect(styles, file).toMatch(/^@layer mde\.components\s*\{/u);
       expect(styles, file).toMatch(/\}\s*$/u);
     });

@@ -50,7 +50,7 @@ export function useMatApp() {
 }
 
 /**
- * @typedef {'top' | 'bottom' | 'start' | 'end'} MatAppEdge
+ * @typedef {'top' | 'bottom' | 'left' | 'right' | 'start' | 'end'} MatAppEdge
  */
 
 /**
@@ -59,11 +59,13 @@ export function useMatApp() {
 
 /**
  * @typedef {object} MatAppEdgeInsets
+ * @property {number} top
+ * @property {number} bottom
+ * @property {number} left
+ * @property {number} right
  * @property {number} start
  * @property {number} end
- * @property {number} [top]
- * @property {number} [bottom]
- * @property {number} [offset]
+ * @property {number} offset
  */
 
 /**
@@ -76,11 +78,11 @@ export function useMatApp() {
 /**
  * @typedef {object} MatAppLayout
  * @property {{width: number, height: number}} size
- * @property {{top: number, bottom: number, start: number, end: number}} padding
+ * @property {{top: number, bottom: number, left: number, right: number, start: number, end: number}} padding
  * @property {{width: number, height: number}} content
  * @property {MatAppBreakpoint} breakpoint
  * @property {{min: number, max: number}} breakpointRange
- * @property {{top: MatAppEdgeInfo, bottom: MatAppEdgeInfo, start: MatAppEdgeInfo, end: MatAppEdgeInfo}} edges
+ * @property {{top: MatAppEdgeInfo, bottom: MatAppEdgeInfo, left: MatAppEdgeInfo, right: MatAppEdgeInfo, start: MatAppEdgeInfo, end: MatAppEdgeInfo}} edges
  */
 
 /**

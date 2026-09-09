@@ -6,6 +6,7 @@ const pagePath = 'docs/site/components/app-root.md';
 const exampleNames = [
   'AppRootBasicExample',
   'AppRootScrollableExample',
+  'AppRootAsExample',
   'AppRootLayoutExample',
   'AppRootRegisterEdgeExample',
   'AppRootComponentsExample',

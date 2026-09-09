@@ -28,8 +28,8 @@ export function useLayout() {
  * @property {number} bottom
  * @property {number} left
  * @property {number} right
- * @property {number} [start]
- * @property {number} [end]
+ * @property {number} start
+ * @property {number} end
  * @property {number} offset
  */
 

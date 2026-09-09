@@ -139,6 +139,13 @@ export declare const MatBtn: MatBtnComponent;
 
 export interface MatAppRootProps {
   /**
+  * 根元素渲染的 HTML 标签。
+  *
+  * @type {string}
+  * @default 'div'
+  */
+  as?: string;
+  /**
   * 是否至少铺满动态视口高度。
   *
   * @type {boolean}
@@ -4630,11 +4637,16 @@ export interface MatViewTransitionController {
 }
 export declare function useMatViewTransition(): MatViewTransitionController;
 export declare const useMdeViewTransition: typeof useMatViewTransition;
-export type MatAppEdge = 'top' | 'bottom' | 'start' | 'end';
+export type MatAppEdge = 'top' | 'bottom' | 'left' | 'right' | 'start' | 'end';
 export type MatAppBreakpoint = 'compact' | 'medium' | 'expanded' | 'large' | 'extra-large';
 export interface MatAppEdgeInsets {
+  readonly top: number;
+  readonly bottom: number;
+  readonly left: number;
+  readonly right: number;
   readonly start: number;
   readonly end: number;
+  readonly offset: number;
 }
 export interface MatAppEdgeInfo {
   readonly size: number;
@@ -4643,7 +4655,7 @@ export interface MatAppEdgeInfo {
 }
 export interface MatAppLayout {
   readonly size: Readonly<{ width: number; height: number }>;
-  readonly padding: Readonly<{ top: number; bottom: number; start: number; end: number }>;
+  readonly padding: Readonly<{ top: number; bottom: number; left: number; right: number; start: number; end: number }>;
   readonly content: Readonly<{ width: number; height: number }>;
   readonly breakpoint: MatAppBreakpoint;
   readonly breakpointRange: Readonly<{ min: number; max: number }>;
@@ -4663,6 +4675,8 @@ export type MatLayoutEdge = 'top' | 'bottom' | 'left' | 'right' | 'start' | 'end
 export interface MatLayoutEdgeInsets {
   readonly top: number;
   readonly bottom: number;
+  readonly left: number;
+  readonly right: number;
   readonly start: number;
   readonly end: number;
   readonly offset: number;
@@ -4673,8 +4687,8 @@ export interface MatLayoutEdgeRegistration {
   unregister(): void;
 }
 export interface MatLayoutContext {
-  readonly layout: Readonly<{ size: { width: number; height: number }; padding: { top: number; bottom: number; start: number; end: number } }>;
-  readonly padding: Readonly<{ top: number; bottom: number; start: number; end: number }>;
+  readonly layout: Readonly<{ size: { width: number; height: number }; padding: { top: number; bottom: number; left: number; right: number; start: number; end: number } }>;
+  readonly padding: Readonly<{ top: number; bottom: number; left: number; right: number; start: number; end: number }>;
   readonly size: Readonly<{ width: number; height: number }>;
   registerEdge(options: { edge: MatLayoutEdge; element: HTMLElement }): MatLayoutEdgeRegistration;
 }

@@ -1,6 +1,6 @@
 ---
 title: Layout 布局容器
-description: mat-layout 建立局部边缘布局坐标系，协调四周 aside 的空间占用与正文自适应避让。
+description: mat-layout 建立局部边缘布局坐标系，协调六向 aside 的空间占用与正文自适应避让。
 llms: true
 order: 118
 ---
@@ -9,7 +9,7 @@ order: 118
 
 ## 组件简介
 
-`<mat-layout>` 的组件导出名是 `MatLayout`。它为局部区域（如卡片、工作区或视口分屏）提供多边缘停靠协调上下文。通过与 `<mat-aside>` 搭配使用，自动收集并按 DOM 顺序计算顶、底、左、右各边缘的占用厚度，向正文内容区（`.mat-layout__content`）分发动态累加的内边距，实现无重叠的正交自适应避让。
+`<mat-layout>` 的组件导出名是 `MatLayout`。它为局部区域（如卡片、工作区或视口分屏）提供多边缘停靠协调上下文。通过与 `<mat-aside>` 搭配使用，自动收集并按 DOM 顺序计算顶、底、左、右、起始、末端各边缘的占用厚度，向正文内容区（`.mat-layout__content`）分发动态累加的内边距，实现无重叠的正交自适应避让。AppRoot 复用同一套内部六向计算规则，但仍保留独立的应用覆盖层上下文。
 
 ## 示例
 
@@ -56,4 +56,3 @@ order: 118
 <script setup>
 import LayoutBasicExample from '../examples/layout/LayoutBasicExample.vue';
 </script>
-
