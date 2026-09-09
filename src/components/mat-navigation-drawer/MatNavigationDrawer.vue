@@ -1,5 +1,4 @@
 <script setup>
-import { computed, getCurrentInstance } from 'vue';
 import MatNavigationRail from '../mat-navigation-rail/MatNavigationRail.vue';
 import { isValidCssLength } from '../value-utils';
 import { useMatProps } from '../use-mat-props';
@@ -69,24 +68,14 @@ const props = defineProps({
     },
   },
   /**
-   * 是否 Teleport 到 attach 并固定到视口或接入 MatAppRoot。
+   * mode="fixed" 时的挂载目标；省略时保留在声明位置。
    *
-   * @type {boolean}
-   * @default false
-   */
-  app: {
-    type: Boolean,
-    default: false,
-  },
-  /**
-   * app=true 时的固定挂载目标。
-   *
-   * @type {string | HTMLElement}
-   * @default 'body'
+   * @type {string | HTMLElement | undefined}
+   * @default undefined
    */
   attach: {
     type: [String, Object],
-    default: 'body',
+    default: undefined,
   },
   /**
    * modal 布局在自然布局位置生成占位；standard 布局使用最近 MatLayout 或 MatAppRoot 的 padding。
@@ -143,10 +132,6 @@ const props = defineProps({
   },
 });
 const propsWithDefaults = useMatProps('navigationDrawer', props);
-const instance = getCurrentInstance();
-const rawVNodeProps = instance?.vnode.props ?? {};
-const hasExplicitAttach = Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach') && rawVNodeProps.attach !== undefined;
-const forwardedAttach = computed(() => (hasExplicitAttach ? propsWithDefaults.attach : undefined));
 
 const emit = defineEmits({
   /**
@@ -170,8 +155,7 @@ const emit = defineEmits({
     :layout="propsWithDefaults.layout"
     :alignment="propsWithDefaults.alignment"
     :bordered="propsWithDefaults.bordered"
-    :app="propsWithDefaults.app"
-    :attach="forwardedAttach"
+    :attach="propsWithDefaults.attach"
     :placeholder="propsWithDefaults.placeholder"
     :safe-area="propsWithDefaults.safeArea"
     :safe-area-size="propsWithDefaults.safeAreaSize"

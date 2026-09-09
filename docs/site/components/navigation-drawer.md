@@ -88,9 +88,9 @@ Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail`
 | `expanded` | `boolean` | `false` | 受控展开状态，支持 `v-model:expanded`；收起时抽屉隐藏，展开时显示 |
 | `width` | `number \| string` | `undefined` | 展开状态宽度；数字按 px 处理，字符串须为合法 CSS 宽度，非法时使用默认宽度 |
 | `layout` | `'standard' \| 'modal'` | `'standard'` | 抽屉布局；`standard` 占据空间，`modal` 覆盖内容并附带遮罩 |
+| `mode` | `'docked' \| 'flow' \| 'sticky' \| 'fixed'` | `undefined` | 排布与定位模式；省略时在最近 Layout/AppRoot 中自动 docked，其他场景保留 Aside 的 flow 行为 |
 | `alignment` | `'start' \| 'center' \| 'end'` | `'start'` | 默认 Slot 内容在纵向轴上的对齐方式 |
-| `app` | `boolean` | `false` | 开启应用级导航模式，省略 `attach` 且位于 `MatAppRoot` 内时自动登记边缘 |
-| `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 挂载目标 |
+| `attach` | `string \| HTMLElement` | `undefined` | 仅 `mode="fixed"` 时指定 Teleport 目标；省略时保留在声明位置 |
 | `placeholder` | `boolean` | `false` | 仅 modal 抽屉在声明位置生成占位；standard 抽屉使用最近根的 padding |
 | `bordered` | `boolean` | `false` | 是否复用 Aside 的边框修饰，在面向内容的一侧渲染 1px 细边框 |
 

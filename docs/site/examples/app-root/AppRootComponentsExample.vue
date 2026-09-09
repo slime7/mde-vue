@@ -21,7 +21,6 @@ const secondary = ref('projects');
     >
       <mat-navigation-rail
         v-model="current"
-        app
         bordered
       >
         <mat-navigation-rail-item value="home" icon="home">
@@ -34,7 +33,6 @@ const secondary = ref('projects');
 
       <mat-navigation-rail
         v-model="secondary"
-        app
         expanded
         full-width
         bordered

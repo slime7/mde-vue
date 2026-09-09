@@ -12,6 +12,7 @@ import MatLayout from '../src/components/mat-layout/MatLayout.vue';
 import { useLayout } from '../src/components/mat-layout/layout-context';
 import { useMatApp } from '../src/components/mat-app-root/mat-app-root-context';
 import MatFab from '../src/components/mat-fab/MatFab.vue';
+import MatNavigationDrawer from '../src/components/mat-navigation-drawer/MatNavigationDrawer.vue';
 import MatNavigationRail from '../src/components/mat-navigation-rail/MatNavigationRail.vue';
 import MatSnackbar from '../src/components/mat-snackbar/MatSnackbar.vue';
 import MatToolbar from '../src/components/mat-toolbar/MatToolbar.vue';
@@ -173,7 +174,6 @@ describe('MatAppRoot 组件接入', () => {
         default: () => [
           h(Capture),
           h(MatNavigationRail, {
-            app: true,
             expanded: true,
           }),
         ],
@@ -219,7 +219,7 @@ describe('MatAppRoot 组件接入', () => {
         default: () => h(MatLayout, { class: 'nested-layout' }, () => [
           h(Capture),
           h(LayoutCapture),
-          h(MatNavigationRail, { app: true }),
+          h(MatNavigationRail),
         ]),
       },
     });
@@ -406,7 +406,7 @@ describe('MatAppRoot 组件接入', () => {
       slots: {
         default: () => [
           h(Capture),
-          h(MatNavigationRail, { app: true }),
+          h(MatNavigationRail),
           h(MatToolbar, { app: true, variant: 'docked' }),
         ],
       },
@@ -463,8 +463,8 @@ describe('MatAppRoot 组件接入', () => {
       slots: {
         default: () => [
           h(Capture),
-          h(MatNavigationRail, { app: true }),
-          h(MatNavigationRail, { app: true, expanded: true, fullWidth: true }),
+          h(MatNavigationRail),
+          h(MatNavigationRail, { expanded: true, fullWidth: true }),
         ],
       },
     });
@@ -504,6 +504,50 @@ describe('MatAppRoot 组件接入', () => {
     expect(railComponents[0].findComponent(MatAside).vm.activeInsets.left).toBe(0);
     expect(railComponents[1].findComponent(MatAside).vm.activeInsets.left).toBe(80);
 
+    wrapper.unmount();
+  });
+
+  it('NavigationDrawer 在 AppRoot 内无需 app 也会登记 start 边缘并避让正文', async () => {
+    let app;
+    const Capture = layoutCapture((value) => {
+      app = value;
+    });
+    const wrapper = mount(MatAppRoot, {
+      attachTo: document.body,
+      props: { fillViewport: false },
+      slots: {
+        default: () => [
+          h(Capture),
+          h(MatNavigationDrawer, {
+            expanded: true,
+            width: 280,
+            transition: false,
+          }),
+        ],
+      },
+    });
+
+    await settleRender();
+    const drawer = wrapper.element.querySelector('.mat-navigation-rail-host');
+
+    vi.spyOn(wrapper.element, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 700,
+      height: 700,
+      right: 1000,
+      width: 1000,
+    }));
+    vi.spyOn(drawer, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 700,
+      height: 700,
+      right: 280,
+      top: 0,
+      width: 280,
+    }));
+
+    window.dispatchEvent(new Event('resize'));
+    await settleMeasurement();
+
+    expect(app.layout.padding.start).toBe(280);
     wrapper.unmount();
   });
 });

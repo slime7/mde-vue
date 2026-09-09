@@ -35,6 +35,8 @@ describe('MatNavigationDrawer', () => {
 
   it('公开 bordered 属性并转交给 NavigationRail', () => {
     expect(MatNavigationDrawer.props.bordered.default).toBe(false);
+    expect(MatNavigationDrawer.props.app).toBeUndefined();
+    expect(MatNavigationDrawer.props.attach).toBeDefined();
 
     const wrapper = mount(MatNavigationDrawer, {
       props: {
@@ -178,13 +180,13 @@ describe('MatNavigationDrawer', () => {
     expect(wrapper.emitted('update:modelValue')).toEqual([['starred']]);
   });
 
-  it('app 模式接入 MatAppRoot 并自动登记 start 边缘', async () => {
+  it('在 MatAppRoot 中自动登记 start 边缘且不公开 app 机制', async () => {
     const wrapper = mount(MatAppRoot, {
       attachTo: document.body,
       props: { fillViewport: false },
       slots: {
         default: () => [
-          h(MatNavigationDrawer, { app: true, expanded: true }),
+          h(MatNavigationDrawer, { expanded: true }),
         ],
       },
     });
@@ -192,7 +194,6 @@ describe('MatNavigationDrawer', () => {
     await nextTick();
     const host = wrapper.element.querySelector('.mat-navigation-rail-host');
     expect(host).not.toBeNull();
-    expect(wrapper.find('.mat-navigation-rail-host--app-root').exists()).toBe(true);
     wrapper.unmount();
   });
 

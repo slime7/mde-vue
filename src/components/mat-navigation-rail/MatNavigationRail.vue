@@ -1,11 +1,10 @@
 <script setup>
 import {
-  cloneVNode, computed, Fragment, getCurrentInstance, h, inject, isVNode,
-  onBeforeUnmount, onMounted, provide, ref, useSlots, watch,
+  cloneVNode, computed, Fragment, h, inject, isVNode,
+  onBeforeUnmount, provide, ref, useAttrs, useSlots, watch,
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
-import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
-import { MAT_LAYOUT_KEY } from '../mat-layout/layout-context';
+import { MAT_EDGE_LAYOUT_KEY } from '../layout/edge-layout-context';
 import MatAside from '../mat-aside/MatAside.vue';
 import MatScrollArea from '../mat-scroll-area/MatScrollArea.vue';
 import createCloseMotion from '../close-motion';
@@ -141,24 +140,14 @@ const props = defineProps({
     default: '展开导航',
   },
   /**
-   * 是否 Teleport 到 attach 并固定到视口或接入 MatAppRoot。
+   * mode="fixed" 时的挂载目标；省略时保留在声明位置。
    *
-   * @type {boolean}
-   * @default false
-   */
-  app: {
-    type: Boolean,
-    default: false,
-  },
-  /**
-   * app=true 时的固定挂载目标。
-   *
-   * @type {string | HTMLElement}
-   * @default 'body'
+   * @type {string | HTMLElement | undefined}
+   * @default undefined
    */
   attach: {
     type: [String, Object],
-    default: 'body',
+    default: undefined,
   },
   /**
    * modal 布局在自然布局位置生成占位；standard 布局使用最近 MatLayout 或 MatAppRoot 的 padding。
@@ -264,27 +253,20 @@ const emit = defineEmits({
 
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const slots = useSlots();
-const appContext = inject(MAT_APP_ROOT_KEY, null);
-const layoutContext = inject(MAT_LAYOUT_KEY, null);
-const instance = getCurrentInstance();
-const rawVNodeProps = instance?.vnode.props ?? {};
-const hasExplicitAttach = computed(() => (
-  Object.prototype.hasOwnProperty.call(rawVNodeProps, 'attach') && rawVNodeProps.attach !== undefined
-));
-const forwardedAttach = computed(() => (hasExplicitAttach.value ? propsWithDefaults.attach : undefined));
+const attrs = useAttrs();
+const edgeContext = inject(MAT_EDGE_LAYOUT_KEY, null);
+const forwardedAttrs = computed(() => {
+  const nextAttrs = { ...attrs };
+  delete nextAttrs.app;
+  return nextAttrs;
+});
 const asideRef = ref(null);
 
 const effectiveMode = computed(() => {
   if (propsWithDefaults.mode !== undefined) {
     return propsWithDefaults.mode;
   }
-  if (propsWithDefaults.app) {
-    return undefined;
-  }
-  if (layoutContext || (isModal.value && appContext)) {
-    return 'docked';
-  }
-  return 'flow';
+  return edgeContext ? 'docked' : 'flow';
 });
 
 const isModal = computed(() => propsWithDefaults.layout === 'modal');
@@ -332,34 +314,6 @@ function syncExpandedPresentation() {
 }
 
 watch(() => propsWithDefaults.expanded, syncExpandedPresentation);
-
-const usesAppRoot = computed(() => (
-  propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach.value
-));
-
-const attachTarget = computed(() => {
-  if (!propsWithDefaults.app || usesAppRoot.value) {
-    return null;
-  }
-  if (typeof propsWithDefaults.attach === 'string') {
-    try {
-      return document.querySelector(propsWithDefaults.attach);
-    } catch {
-      return null;
-    }
-  }
-  return propsWithDefaults.attach instanceof HTMLElement ? propsWithDefaults.attach : null;
-});
-
-const canRender = computed(() => (
-  !propsWithDefaults.app || usesAppRoot.value || Boolean(attachTarget.value)
-));
-
-function warnForInvalidAttach() {
-  if (propsWithDefaults.app && !usesAppRoot.value && !attachTarget.value) {
-    console.warn('MatNavigationRail: attach 必须指向当前 document 中存在的 HTMLElement');
-  }
-}
 
 function isNavigationItemVNode(vnode) {
   return vnode.type === MatNavigationRailItem
@@ -441,13 +395,10 @@ const hostClasses = computed(() => ({
   'mat-navigation-rail-host--collapsed': !propsWithDefaults.expanded,
   'mat-navigation-rail-host--modal': isModal.value,
   'mat-navigation-rail-host--hidden': isHidden.value,
-  'mat-navigation-rail-host--app': propsWithDefaults.app,
-  'mat-navigation-rail-host--app-root': propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach.value,
   'mat-navigation-rail--expanded': propsWithDefaults.expanded,
   'mat-navigation-rail--collapsed': !propsWithDefaults.expanded,
   'mat-navigation-rail--modal': isModal.value && propsWithDefaults.expanded,
   'mat-navigation-rail--with-header': hasFixedHeader.value,
-  'mat-navigation-rail--app': propsWithDefaults.app,
 }));
 
 const hostStyles = computed(() => {
@@ -459,7 +410,7 @@ const hostStyles = computed(() => {
     }
   }
   if (isModal.value) {
-    styles.maxInlineSize = usesAppRoot.value
+    styles.maxInlineSize = edgeContext?.rootElement?.value
       ? 'calc(100% - var(--mat-navigation-rail-modal-edge-space, 8px))'
       : 'calc(100dvi - var(--mat-navigation-rail-modal-edge-space, 8px))';
   }
@@ -486,15 +437,9 @@ provide(MAT_NAVIGATION_KEY, {
   useCursor: matUi.useCursor,
 });
 
-onMounted(() => {
-  warnForInvalidAttach();
-});
-
 onBeforeUnmount(() => {
   hideMotion.cancel();
 });
-
-watch([() => propsWithDefaults.app, () => propsWithDefaults.attach, usesAppRoot], warnForInvalidAttach);
 
 defineExpose({
   asideRef,
@@ -504,12 +449,10 @@ defineExpose({
 
 <template>
   <MatAside
-    v-if="canRender"
     ref="asideRef"
     as="nav"
     location="start"
-    :app="propsWithDefaults.app"
-    :attach="forwardedAttach"
+    :attach="propsWithDefaults.attach"
     :placeholder="propsWithDefaults.placeholder"
     :bordered="propsWithDefaults.bordered"
     :modal="isModal"
@@ -524,7 +467,7 @@ defineExpose({
     :close-on-back="true"
     :class="hostClasses"
     :style="hostStyles"
-    v-bind="$attrs"
+    v-bind="forwardedAttrs"
     @update:open="handleAsideUpdateOpen"
   >
     <template #placeholder="{ style }">
@@ -588,7 +531,7 @@ defineExpose({
     align-items: stretch;
     color: var(--mat-navigation-rail-content-color);
     background: var(--mat-navigation-rail-current-container-color);
-    transition: inline-size var(--mat-sys-motion-spring-default-spatial), border-radius var(--mat-sys-motion-spring-default-spatial);
+    transition: inset-block var(--mat-sys-motion-spring-default-spatial, .3s ease), inset-inline var(--mat-sys-motion-spring-default-spatial, .3s ease), inline-size var(--mat-sys-motion-spring-default-spatial, .3s ease), block-size var(--mat-sys-motion-spring-default-spatial, .3s ease), border-radius var(--mat-sys-motion-spring-default-spatial, .3s ease);
   }
 
   .mat-navigation-rail-host--hidden {

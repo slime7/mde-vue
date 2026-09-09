@@ -119,7 +119,8 @@ describe('MatNavigationRail', () => {
   });
 
   it('默认渲染只用于纵向布局的 collapsed Expressive rail', () => {
-    expect(MatNavigationRail.props.app.default).toBe(false);
+    expect(MatNavigationRail.props.app).toBeUndefined();
+    expect(MatNavigationRail.props.attach).toBeDefined();
 
     const wrapper = mount(MatNavigationRail, {
       props: { modelValue: 'home' },
@@ -145,7 +146,7 @@ describe('MatNavigationRail', () => {
     expect(host.style.getPropertyValue('--mat-navigation-rail-expanded-width')).toBe('0');
   });
 
-  it('默认在声明容器布局，app=true 时 Teleport 到 attach', async () => {
+  it('移除 app 后，fixed 模式仍可通过 attach 指定挂载目标', async () => {
     const source = document.createElement('section');
     const attach = document.createElement('main');
     attach.id = 'navigation-rail-app-target';
@@ -153,15 +154,13 @@ describe('MatNavigationRail', () => {
     const wrapper = mount(MatNavigationRail, {
       attachTo: source,
       props: {
+        app: true,
         attach: '#navigation-rail-app-target',
+        mode: 'fixed',
       },
       slots: { default: navigationItems },
     });
 
-    expect(source.querySelector('nav')).not.toBeNull();
-    expect(attach.querySelector('nav')).toBeNull();
-
-    await wrapper.setProps({ app: true });
     await settleRender();
 
     expect(source.querySelector('nav')).toBeNull();
@@ -172,24 +171,50 @@ describe('MatNavigationRail', () => {
     attach.remove();
   });
 
-  it('app=true 的无效 attach 给出警告且不渲染 Navigation rail', async () => {
-    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const wrapper = mount(MatNavigationRail, {
-      attachTo: document.body,
-      props: {
-        app: true,
-        attach: '#missing-navigation-rail-app-target',
+  it('显式 mode="flow" 时仍保持流式布局并不登记 AppRoot 边缘', async () => {
+    let app;
+    const Capture = defineComponent({
+      setup() {
+        app = useMatApp();
+        return () => null;
       },
-      slots: { default: navigationItems },
+    });
+    const wrapper = mount(MatAppRoot, {
+      attachTo: document.body,
+      props: { fillViewport: false },
+      slots: {
+        default: () => [
+          h(Capture),
+          h(MatNavigationRail, {
+            expanded: true,
+            mode: 'flow',
+          }, {
+            default: navigationItems,
+          }),
+        ],
+      },
     });
 
     await settleRender();
+    const appRootElement = wrapper.element;
+    const railElement = wrapper.element.querySelector('.mat-navigation-rail-host');
+    vi.spyOn(appRootElement, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 700,
+      height: 700,
+      right: 1000,
+      width: 1000,
+    }));
+    vi.spyOn(railElement, 'getBoundingClientRect').mockReturnValue(elementRect({
+      bottom: 700,
+      height: 700,
+      right: 240,
+      width: 240,
+    }));
 
-    expect(document.body.querySelector('.mat-navigation-rail')).toBeNull();
-    expect(warning).toHaveBeenCalledWith(
-      'MatNavigationRail: attach 必须指向当前 document 中存在的 HTMLElement',
-    );
+    window.dispatchEvent(new Event('resize'));
+    await settleMeasurement();
 
+    expect(app.layout.padding.start).toBe(0);
     wrapper.unmount();
   });
 
@@ -698,7 +723,6 @@ describe('MatNavigationRail', () => {
         }, () => [
           h(Capture),
           h(MatNavigationRail, {
-            app: true,
             placeholder: true,
             expanded: props.expanded,
             transition: false,
@@ -765,7 +789,6 @@ describe('MatNavigationRail', () => {
         }, () => [
           h(Capture),
           h(MatNavigationRail, {
-            app: true,
             expanded: props.expanded,
             hideOnCollapse: true,
             transition: false,

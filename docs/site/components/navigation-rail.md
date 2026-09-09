@@ -11,7 +11,7 @@ order: 105
 
 `<mat-navigation-rail>` 的组件导出名是 `MatNavigationRail`，配套子项组件 `<mat-navigation-rail-item>`（`MatNavigationRailItem`）或通用导航子项 `<mat-navigation-item>`（`MatNavigationItem`）。该组件遵循 Material 3 Expressive 规范，专用于在平板、桌面等中大尺寸屏幕中提供 3–7 个主要目的地、菜单入口、FAB 与底部操作的纵向导航栏。
 
-组件底层根元素基于 `MatAside` 呈现，默认停靠在布局容器的 `start`（起始侧）边缘，统管侧边定位、安全区留白、展开收起动画和模态遮罩。设置 `app` 后，若位于 `MatAppRoot` 或 `MatLayout` 内部且未显式指定 `attach`，会向最近的一个根登记起始侧边缘，主内容层自动避让；否则支持固定至视口并挂载至 `attach` 容器。组件树中同时存在两个根时不会重复登记。
+组件底层根元素基于 `MatAside` 呈现，默认停靠在布局容器的 `start`（起始侧）边缘，统管侧边定位、安全区留白、展开收起动画和模态遮罩。位于 `MatAppRoot` 或 `MatLayout` 内时会自动向最近的根登记起始侧边缘，主内容层自动避让；组件树中同时存在两个根时不会重复登记。AppRoot 只额外提供覆盖层、Snackbar、布局尺寸和边缘上下文等应用能力，不改变 Navigation rail 的停靠规则。
 
 ## 示例
 
@@ -61,9 +61,9 @@ Badge 不提供专用 Slot，也不支持 `offset`。`location` 只接受八种�
   </DocsPreview>
 </ClientOnly>
 
-### `app` 与 `attach`
+### AppRoot 与 Layout 自动接入
 
-`app=true` 将 Navigation rail 作为应用级固定导航。位于 `MatAppRoot` 且省略 `attach` 时，纵向登记 `start`，horizontal bar 登记 `bottom`；显式 `attach` 时沿用视口固定模式。`app=false` 时 `attach` 不生效，组件保留在声明位置。
+Navigation rail 在 `MatLayout` 或 `MatAppRoot` 内统一登记 `start` 边缘，并让正文自动避让。无论组件位于哪一种布局根内，使用方式和停靠行为都相同；组件不再提供 `app` 属性。若明确选择 `mode="fixed"`，仍可使用 `attach` 指定 Teleport 目标，这与 `MatAside` 的固定模式一致。
 
 :::: details 查看示例代码
 ::: code-group
@@ -78,7 +78,7 @@ Badge 不提供专用 Slot，也不支持 `offset`。`location` 只接受八种�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation rail 应用挂载预览">
+  <DocsPreview label="Navigation rail 自动接入预览">
     <NavigationRailAppExample />
   </DocsPreview>
 </ClientOnly>
@@ -326,12 +326,12 @@ Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导�
 | `collapsible` | `boolean` | `false` | 开启纵向 rail 折叠展开能力；不再自带内置菜单按钮，需自行从 slot 混排添加或外部受控 |
 | `layout` | `'standard' \| 'modal'` | `'standard'` | 纵向 expanded rail 占据空间或覆盖正文 |
 | `hide-on-collapse` | `boolean` | `false` | 未展开时隐藏 rail 容器（宽度置为 0） |
+| `mode` | `'docked' \| 'flow' \| 'sticky' \| 'fixed'` | `undefined` | 排布与定位模式；省略时在最近 Layout/AppRoot 中自动 docked，其他场景保留 Aside 的 flow 行为 |
 | `alignment` | `'start' \| 'center' \| 'end'` | `'start'` | 默认 Slot 沿主轴对齐；纵向按剩余高度对齐，横向按可用宽度对齐 |
 | `open-icon` | `string` | `'menu'` | 未展开时的菜单按钮图标 |
 | `close-icon` | `string` | `'menu_open'` | 展开时的菜单按钮图标 |
 | `open-label` | `string` | `'展开导航'` | 未展开时菜单按钮的无障碍名称 |
-| `app` | `boolean` | `false` | 开启应用布局模式；位于 `MatAppRoot` 且省略 `attach` 时自动登记边缘，否则固定到显式目标 |
-| `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；一旦显式提供就优先于 AppRoot 自动接入 |
+| `attach` | `string \| HTMLElement` | `undefined` | 仅 `mode="fixed"` 时指定 Teleport 目标；省略时保留在声明位置 |
 | `placeholder` | `boolean` | `false` | 仅 `layout="modal"` 有效；在声明位置为 modal rail 预留实际尺寸，standard rail 使用最近根的 padding |
 | `bordered` | `boolean` | `false` | 是否复用 Aside 的边框修饰，在面向内容的一侧渲染 1px 细边框 |
 | `open` | `boolean` | `undefined` | 受控显示/隐藏状态，支持 `v-model:open`；省略时遵循 `hide-on-collapse` 或 `modal` 模式与 `expanded` 联动 |
@@ -373,7 +373,7 @@ Badge 通过 `badge` 属性配置，不新增 Badge 专用 Slot。
 
 根导航使用原生 `<nav>`；应用应通过 `aria-label` 或 `aria-labelledby` 区分页面中的多个导航区域。选中 Item 使用 `aria-current="page"`。Item 保留原生按钮或链接的 Tab 顺序，完整 Item 宽度都是命中区域，焦点环和状态层显示在活动指示器上。
 
-默认纵向 rail 位于应用布局容器的起始侧，由父容器决定滚动边界；需要作为固定应用导航时设置 `app`。AppRoot 模式会统一处理安全区；`layout="modal"` 展开时只用 collapsed host 宽度推动正文，展开表面覆盖正文。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 不自动监听窗口宽度，应用可读取 AppRoot 断点切换。显式 `attach` 无法解析时组件给出警告且不渲染应用布局。Item 的 Badge 数量不会自动修改无障碍名称，需要时由应用在 `aria-label` 或关联描述中补充业务语义。
+默认纵向 rail 位于最近应用布局容器的起始侧，由 `MatLayout` 或 `MatAppRoot` 自动登记并决定滚动边界。AppRoot 模式会统一处理安全区；`layout="modal"` 展开时只用 collapsed host 宽度推动正文，展开表面覆盖正文。不要同时显示 rail 与 bar；compact 窗口使用 bar，medium 及更大窗口根据目的地数量和可用空间选择 rail。横向 bar 不自动监听窗口宽度，应用可读取 AppRoot 断点切换。Item 的 Badge 数量不会自动修改无障碍名称，需要时由应用在 `aria-label` 或关联描述中补充业务语义。
 
 Navigation 使用覆盖整栏的 scroll-area：纵向 Header、具名 FAB 与 `end` 在其中 sticky 固定，默认内容从它们之间滚过；横向 bar 超出可用宽度时沿水平方向滚动。滚动条使用 8px thin 尺寸并贴住容器逻辑末端，纵向容器上下各保留 44px，顶部固定区与默认内容之间保留 40px。
 

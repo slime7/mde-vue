@@ -14,7 +14,6 @@ const open = ref(true);
   >
     <mat-navigation-rail
       v-model:open="open"
-      app
       bordered
       aria-label="应用导航"
     >
@@ -29,7 +28,7 @@ const open = ref(true);
       <mat-switch v-model="open">
         {{ open ? '隐藏应用导航' : '显示应用导航' }}
       </mat-switch>
-      <p>应用模式的 rail 位于 MatAppRoot 时自动登记起始侧，正文内容自动避让。</p>
+      <p>rail 位于 MatAppRoot 时会自动登记起始侧，正文内容自动避让。</p>
     </div>
   </mat-app-root>
 </template>

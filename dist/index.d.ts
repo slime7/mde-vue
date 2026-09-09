@@ -4094,19 +4094,12 @@ export interface MatNavigationRailProps {
   */
   openLabel?: string;
   /**
-  * 是否 Teleport 到 attach 并固定到视口或接入 MatAppRoot。
+  * mode="fixed" 时的挂载目标；省略时保留在声明位置。
   *
-  * @type {boolean}
-  * @default false
+  * @type {string | HTMLElement | undefined}
+  * @default undefined
   */
-  app?: boolean;
-  /**
-  * app=true 时的固定挂载目标。
-  *
-  * @type {string | HTMLElement}
-  * @default 'body'
-  */
-  attach?: string | HTMLElement;
+  attach?: string | HTMLElement | undefined;
   /**
   * modal 布局在自然布局位置生成占位；standard 布局使用最近 MatLayout 或 MatAppRoot 的 padding。
   *
@@ -4484,19 +4477,12 @@ export interface MatNavigationDrawerProps {
   */
   alignment?: 'start' | 'center' | 'end';
   /**
-  * 是否 Teleport 到 attach 并固定到视口或接入 MatAppRoot。
+  * mode="fixed" 时的挂载目标；省略时保留在声明位置。
   *
-  * @type {boolean}
-  * @default false
+  * @type {string | HTMLElement | undefined}
+  * @default undefined
   */
-  app?: boolean;
-  /**
-  * app=true 时的固定挂载目标。
-  *
-  * @type {string | HTMLElement}
-  * @default 'body'
-  */
-  attach?: string | HTMLElement;
+  attach?: string | HTMLElement | undefined;
   /**
   * modal 布局在自然布局位置生成占位；standard 布局使用最近 MatLayout 或 MatAppRoot 的 padding。
   *
