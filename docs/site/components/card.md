@@ -258,18 +258,50 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
 
 ## Slots
 
-| 组件 | 名称 | 内容约束 |
-| --- | --- | --- |
-| `MatCard` | 默认 | 卡片内容，通常由各子部件、ActionArea、Content 和 Actions 组合构成 |
-| `MatCard` | `headline` | Headline 内容；Card 自动使用 `MatCardHeadline` 渲染 |
-| `MatCard` | `subhead` | Subhead 内容；Card 自动使用 `MatCardSubhead` 渲染 |
-| `MatCard` | `media` | 图片、视频、缩略图或其他媒体；Card 自动使用 `MatCardMedia` 渲染 |
-| `MatCardHeadline` | 默认 | 卡片主题或名称的标题内容 |
-| `MatCardSubhead` | 默认 | 作者、标签、地点等较小的次要文字 |
-| `MatCardMedia` | 默认 | 图片、视频、缩略图或其他图形内容 |
-| `MatCardActionArea` | 默认 | 完整的可点击内容；不能包含按钮、链接或其他交互元素 |
-| `MatCardContent` | 默认 | 支持文字或其他非固定结构的卡片内容 |
-| `MatCardActions` | 默认 | 与 ActionArea 同级的按钮、链接或其他独立操作 |
+### MatCard Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 卡片内容，通常由各子部件、ActionArea、Content 和 Actions 组合构成 |
+| `headline` | Headline 内容；Card 自动使用 `MatCardHeadline` 渲染 |
+| `subhead` | Subhead 内容；Card 自动使用 `MatCardSubhead` 渲染 |
+| `media` | 图片、视频、缩略图或其他媒体；Card 自动使用 `MatCardMedia` 渲染 |
+
+### MatCardHeadline Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 卡片主题或名称的标题内容 |
+
+### MatCardSubhead Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 作者、标签、地点等较小的次要文字 |
+
+### MatCardMedia Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 图片、视频、缩略图或其他图形内容 |
+
+### MatCardActionArea Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 完整的可点击内容；不能包含按钮、链接或其他交互元素 |
+
+### MatCardContent Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 支持文字或其他非固定结构的卡片内容 |
+
+### MatCardActions Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 与 ActionArea 同级的按钮、链接或其他独立操作 |
 
 ## 状态
 

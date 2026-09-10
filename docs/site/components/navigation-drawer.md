@@ -141,12 +141,19 @@ Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail`
 
 ## Slots
 
-| 名称 | 组件 | 内容约束 |
-| --- | --- | --- |
-| 默认 | `MatNavigationDrawer` | 混排菜单按钮、FAB、NavigationItem、NavigationGroup、Spacer 与底部操作。Slot 参数为 `{ expanded, orientation }` |
-| `header` | `MatNavigationDrawer` | 可选的顶部品牌标识区域；Slot 参数为 `{ expanded }` |
-| 默认 | `MatNavigationGroup` | 二级导航子项内容，自动应用前置缩进 |
-| `activator` | `MatNavigationGroup` | 一级触发项插槽；Slot 参数为 `{ expanded, toggle }` |
+### MatNavigationDrawer Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 混排菜单按钮、FAB、NavigationItem、NavigationGroup、Spacer 与底部操作。Slot 参数为 `{ expanded, orientation }` |
+| `header` | 可选的顶部品牌标识区域；Slot 参数为 `{ expanded }` |
+
+### MatNavigationGroup Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 二级导航子项内容，自动应用前置缩进 |
+| `activator` | 一级触发项插槽；Slot 参数为 `{ expanded, toggle }` |
 
 <script setup>
 import NavigationDrawerBasicExample from '../examples/navigation-drawer/NavigationDrawerBasicExample.vue';

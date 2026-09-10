@@ -475,16 +475,28 @@ single-select 再次激活当前项不会取消选择，也不会发出 `select`
 
 ## Slots
 
-| 组件 | 名称 | 内容约束 |
-| --- | --- | --- |
-| `MatList` | 默认 | 常规模式直接放置 `MatListItem` 等；虚拟滚动模式接收 `{ item, index, itemRef, isFirst, isLast }` 作用域参数 |
-| `MatListGroup` | `activator` | 必须且只能放置一个 `MatListItem`；接收 `{ expanded: boolean }`，trailing 只放展示内容 |
-| `MatListGroup` | 默认 | 直接放置该组的 `MatListItem` 和 `MatDivider` |
-| `MatListItem` | 默认 | 必需的主要标签文字 |
-| `MatListItem` | `leading` | 图标、40px 头像、56px 图片、媒体或非交互选择标记 |
-| `MatListItem` | `overline` | 标签上方的短文本 |
-| `MatListItem` | `supporting` | 一至三行辅助文字 |
-| `MatListItem` | `trailing` | 尾部短文本、图标；multi-action 或开启 separateTrailing 的选择项可放置可聚焦操作 |
+### MatList Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 常规模式直接放置 `MatListItem` 等；虚拟滚动模式接收 `{ item, index, itemRef, isFirst, isLast }` 作用域参数 |
+
+### MatListGroup Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| `activator` | 必须且只能放置一个 `MatListItem`；接收 `{ expanded: boolean }`，trailing 只放展示内容 |
+| 默认 | 直接放置该组的 `MatListItem` 和 `MatDivider` |
+
+### MatListItem Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 必需的主要标签文字 |
+| `leading` | 图标、40px 头像、56px 图片、媒体或非交互选择标记 |
+| `overline` | 标签上方的短文本 |
+| `supporting` | 一至三行辅助文字 |
+| `trailing` | 尾部短文本、图标；multi-action 或开启 separateTrailing 的选择项可放置可聚焦操作 |
 
 single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌套其他交互元素。选择模式中的 leading 和默认 trailing 作为展示内容处理，选择状态由 `aria-selected` 表达；若需要在选择模式下放置独立操作按钮，可设置 `separateTrailing` 将尾部操作区与行选择解耦。
 

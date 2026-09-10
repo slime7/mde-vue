@@ -153,10 +153,17 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 
 ## Slots
 
-| 组件 | 名称 | 内容约束 |
-| --- | --- | --- |
-| `MatPanes` | 默认 | 直接放置一个或多个 `MatPane`；组件按 Slot 顺序识别相邻 Pane |
-| `MatPane` | 默认 | Pane 内任意 Vue 内容；内容超出可用高度时由 Pane 自己滚动 |
+### MatPanes Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 直接放置一个或多个 `MatPane`；组件按 Slot 顺序识别相邻 Pane |
+
+### MatPane Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | Pane 内任意 Vue 内容；内容超出可用高度时由 Pane 自己滚动 |
 
 ## 状态与键盘
 

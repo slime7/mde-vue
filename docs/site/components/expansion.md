@@ -159,11 +159,18 @@ order: 105
 
 ## Slots
 
-| 组件 | 名称 | 内容约束 |
-| --- | --- | --- |
-| `MatExpansion` | 默认 | 放置一个或多个 `MatExpansionPanel` |
-| `MatExpansionPanel` | `activator` | 自定义触发器；接收 `{ expanded: boolean }` 参数，推荐放置 `MatListItem` |
-| `MatExpansionPanel` | 默认 | `split=true` 时放置 `MatListItem`；`split=false` 时可放置任意自由内容 |
+### MatExpansion Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 放置一个或多个 `MatExpansionPanel` |
+
+### MatExpansionPanel Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| `activator` | 自定义触发器；接收 `{ expanded: boolean }` 参数，推荐放置 `MatListItem` |
+| 默认 | `split=true` 时放置 `MatListItem`；`split=false` 时可放置任意自由内容 |
 
 ## 状态与无障碍
 

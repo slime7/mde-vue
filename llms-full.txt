@@ -11532,18 +11532,50 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
 
 ## Slots
 
-| 组件 | 名称 | 内容约束 |
-| --- | --- | --- |
-| `MatCard` | 默认 | 卡片内容，通常由各子部件、ActionArea、Content 和 Actions 组合构成 |
-| `MatCard` | `headline` | Headline 内容；Card 自动使用 `MatCardHeadline` 渲染 |
-| `MatCard` | `subhead` | Subhead 内容；Card 自动使用 `MatCardSubhead` 渲染 |
-| `MatCard` | `media` | 图片、视频、缩略图或其他媒体；Card 自动使用 `MatCardMedia` 渲染 |
-| `MatCardHeadline` | 默认 | 卡片主题或名称的标题内容 |
-| `MatCardSubhead` | 默认 | 作者、标签、地点等较小的次要文字 |
-| `MatCardMedia` | 默认 | 图片、视频、缩略图或其他图形内容 |
-| `MatCardActionArea` | 默认 | 完整的可点击内容；不能包含按钮、链接或其他交互元素 |
-| `MatCardContent` | 默认 | 支持文字或其他非固定结构的卡片内容 |
-| `MatCardActions` | 默认 | 与 ActionArea 同级的按钮、链接或其他独立操作 |
+### MatCard Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 卡片内容，通常由各子部件、ActionArea、Content 和 Actions 组合构成 |
+| `headline` | Headline 内容；Card 自动使用 `MatCardHeadline` 渲染 |
+| `subhead` | Subhead 内容；Card 自动使用 `MatCardSubhead` 渲染 |
+| `media` | 图片、视频、缩略图或其他媒体；Card 自动使用 `MatCardMedia` 渲染 |
+
+### MatCardHeadline Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 卡片主题或名称的标题内容 |
+
+### MatCardSubhead Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 作者、标签、地点等较小的次要文字 |
+
+### MatCardMedia Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 图片、视频、缩略图或其他图形内容 |
+
+### MatCardActionArea Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 完整的可点击内容；不能包含按钮、链接或其他交互元素 |
+
+### MatCardContent Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 支持文字或其他非固定结构的卡片内容 |
+
+### MatCardActions Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 与 ActionArea 同级的按钮、链接或其他独立操作 |
 
 ## 状态
 
@@ -13989,16 +14021,28 @@ MatMenuGroup 没有自定义事件。包含 submenu 的项目把点击、Enter�
 
 ## Slots
 
-| 组件 | 名称 | 内容约束 |
-| --- | --- | --- |
-| `MatMenu` | `activator` | 唯一的当前 document 中 HTMLElement 根节点，作为根菜单锚点；存在时优先于 `anchor` |
-| `MatMenu` | 默认 | 直接放置 MatMenuItem 和 MatDivider，或统一放置 MatMenuGroup |
-| `MatMenuGroup` | 默认 | 直接放置 MatMenuItem 和可选 MatDivider |
-| `MatMenuItem` | 默认 | 必需的简短操作标签 |
-| `MatMenuItem` | `leading` | 20px 图标或简短展示内容 |
-| `MatMenuItem` | `supporting` | 标签下方的一行简短辅助文字 |
-| `MatMenuItem` | `trailing` | 使用 `label-large` 的快捷键或短文本，也可放置自带尺寸的图标；省略时子菜单项自动显示 20px 方向图标 |
-| `MatMenuItem` | `submenu` | 直接放置一个 MatMenu；可以继续递归嵌套 |
+### MatMenu Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| `activator` | 唯一的当前 document 中 HTMLElement 根节点，作为根菜单锚点；存在时优先于 `anchor` |
+| 默认 | 直接放置 MatMenuItem 和 MatDivider，或统一放置 MatMenuGroup |
+
+### MatMenuGroup Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 直接放置 MatMenuItem 和可选 MatDivider |
+
+### MatMenuItem Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 必需的简短操作标签 |
+| `leading` | 20px 图标或简短展示内容 |
+| `supporting` | 标签下方的一行简短辅助文字 |
+| `trailing` | 使用 `label-large` 的快捷键或短文本，也可放置自带尺寸的图标；省略时子菜单项自动显示 20px 方向图标 |
+| `submenu` | 直接放置一个 MatMenu；可以继续递归嵌套 |
 
 MenuItem 的 Slots 只构成一个操作，不应嵌套按钮、开关或其他独立交互控件。MatDivider 在 Menu 中自动使用 `role="separator"` 和菜单间距。
 
@@ -16574,16 +16618,28 @@ single-select 再次激活当前项不会取消选择，也不会发出 `select`
 
 ## Slots
 
-| 组件 | 名称 | 内容约束 |
-| --- | --- | --- |
-| `MatList` | 默认 | 常规模式直接放置 `MatListItem` 等；虚拟滚动模式接收 `{ item, index, itemRef, isFirst, isLast }` 作用域参数 |
-| `MatListGroup` | `activator` | 必须且只能放置一个 `MatListItem`；接收 `{ expanded: boolean }`，trailing 只放展示内容 |
-| `MatListGroup` | 默认 | 直接放置该组的 `MatListItem` 和 `MatDivider` |
-| `MatListItem` | 默认 | 必需的主要标签文字 |
-| `MatListItem` | `leading` | 图标、40px 头像、56px 图片、媒体或非交互选择标记 |
-| `MatListItem` | `overline` | 标签上方的短文本 |
-| `MatListItem` | `supporting` | 一至三行辅助文字 |
-| `MatListItem` | `trailing` | 尾部短文本、图标；multi-action 或开启 separateTrailing 的选择项可放置可聚焦操作 |
+### MatList Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 常规模式直接放置 `MatListItem` 等；虚拟滚动模式接收 `{ item, index, itemRef, isFirst, isLast }` 作用域参数 |
+
+### MatListGroup Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| `activator` | 必须且只能放置一个 `MatListItem`；接收 `{ expanded: boolean }`，trailing 只放展示内容 |
+| 默认 | 直接放置该组的 `MatListItem` 和 `MatDivider` |
+
+### MatListItem Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 必需的主要标签文字 |
+| `leading` | 图标、40px 头像、56px 图片、媒体或非交互选择标记 |
+| `overline` | 标签上方的短文本 |
+| `supporting` | 一至三行辅助文字 |
+| `trailing` | 尾部短文本、图标；multi-action 或开启 separateTrailing 的选择项可放置可聚焦操作 |
 
 single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌套其他交互元素。选择模式中的 leading 和默认 trailing 作为展示内容处理，选择状态由 `aria-selected` 表达；若需要在选择模式下放置独立操作按钮，可设置 `separateTrailing` 将尾部操作区与行选择解耦。
 
@@ -18424,11 +18480,18 @@ section {
 
 ## Slots
 
-| 组件 | 名称 | 内容约束 |
-| --- | --- | --- |
-| `MatExpansion` | 默认 | 放置一个或多个 `MatExpansionPanel` |
-| `MatExpansionPanel` | `activator` | 自定义触发器；接收 `{ expanded: boolean }` 参数，推荐放置 `MatListItem` |
-| `MatExpansionPanel` | 默认 | `split=true` 时放置 `MatListItem`；`split=false` 时可放置任意自由内容 |
+### MatExpansion Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 放置一个或多个 `MatExpansionPanel` |
+
+### MatExpansionPanel Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| `activator` | 自定义触发器；接收 `{ expanded: boolean }` 参数，推荐放置 `MatListItem` |
+| 默认 | `split=true` 时放置 `MatListItem`；`split=false` 时可放置任意自由内容 |
 
 ## 状态与无障碍
 
@@ -19803,13 +19866,20 @@ const selected = ref('inbox');
 
 ## Slots
 
-| 名称 | 组件 | 内容约束 |
-| --- | --- | --- |
-| 默认 | `MatNavigationRail` | 混排菜单按钮、FAB、NavigationItem、NavigationGroup、Spacer 与底部操作。Slot 参数为 `{ expanded, orientation }` |
-| `header` | `MatNavigationRail` | 可选的纵向 rail 顶部品牌标识；Slot 参数为 `{ expanded }` |
-| 默认 | `MatNavigationRailItem` | 必填的简短目的地标签；单行显示，超长时隐藏溢出内容 |
-| `icon` | `MatNavigationRailItem` | 自定义图标内容；Slot 参数为 `{ selected }` |
-| `trailing` | `MatNavigationRailItem` | 展开态显示在 Item 尾部的内容，通过弹性 spacer 保持在末尾；Slot 参数为 `{ expanded, selected }` |
+### MatNavigationRail Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 混排菜单按钮、FAB、NavigationItem、NavigationGroup、Spacer 与底部操作。Slot 参数为 `{ expanded, orientation }` |
+| `header` | 可选的纵向 rail 顶部品牌标识；Slot 参数为 `{ expanded }` |
+
+### MatNavigationRailItem Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 必填的简短目的地标签；单行显示，超长时隐藏溢出内容 |
+| `icon` | 自定义图标内容；Slot 参数为 `{ selected }` |
+| `trailing` | 展开态显示在 Item 尾部的内容，通过弹性 spacer 保持在末尾；Slot 参数为 `{ expanded, selected }` |
 
 Badge 通过 `badge` 属性配置，不新增 Badge 专用 Slot。
 
@@ -25087,10 +25157,17 @@ const widths = ref({});
 
 ## Slots
 
-| 组件 | 名称 | 内容约束 |
-| --- | --- | --- |
-| `MatPanes` | 默认 | 直接放置一个或多个 `MatPane`；组件按 Slot 顺序识别相邻 Pane |
-| `MatPane` | 默认 | Pane 内任意 Vue 内容；内容超出可用高度时由 Pane 自己滚动 |
+### MatPanes Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 直接放置一个或多个 `MatPane`；组件按 Slot 顺序识别相邻 Pane |
+
+### MatPane Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | Pane 内任意 Vue 内容；内容超出可用高度时由 Pane 自己滚动 |
 
 ## 状态与键盘
 

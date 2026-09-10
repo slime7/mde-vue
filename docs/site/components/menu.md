@@ -433,16 +433,28 @@ MatMenuGroup 没有自定义事件。包含 submenu 的项目把点击、Enter�
 
 ## Slots
 
-| 组件 | 名称 | 内容约束 |
-| --- | --- | --- |
-| `MatMenu` | `activator` | 唯一的当前 document 中 HTMLElement 根节点，作为根菜单锚点；存在时优先于 `anchor` |
-| `MatMenu` | 默认 | 直接放置 MatMenuItem 和 MatDivider，或统一放置 MatMenuGroup |
-| `MatMenuGroup` | 默认 | 直接放置 MatMenuItem 和可选 MatDivider |
-| `MatMenuItem` | 默认 | 必需的简短操作标签 |
-| `MatMenuItem` | `leading` | 20px 图标或简短展示内容 |
-| `MatMenuItem` | `supporting` | 标签下方的一行简短辅助文字 |
-| `MatMenuItem` | `trailing` | 使用 `label-large` 的快捷键或短文本，也可放置自带尺寸的图标；省略时子菜单项自动显示 20px 方向图标 |
-| `MatMenuItem` | `submenu` | 直接放置一个 MatMenu；可以继续递归嵌套 |
+### MatMenu Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| `activator` | 唯一的当前 document 中 HTMLElement 根节点，作为根菜单锚点；存在时优先于 `anchor` |
+| 默认 | 直接放置 MatMenuItem 和 MatDivider，或统一放置 MatMenuGroup |
+
+### MatMenuGroup Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 直接放置 MatMenuItem 和可选 MatDivider |
+
+### MatMenuItem Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 必需的简短操作标签 |
+| `leading` | 20px 图标或简短展示内容 |
+| `supporting` | 标签下方的一行简短辅助文字 |
+| `trailing` | 使用 `label-large` 的快捷键或短文本，也可放置自带尺寸的图标；省略时子菜单项自动显示 20px 方向图标 |
+| `submenu` | 直接放置一个 MatMenu；可以继续递归嵌套 |
 
 MenuItem 的 Slots 只构成一个操作，不应嵌套按钮、开关或其他独立交互控件。MatDivider 在 Menu 中自动使用 `role="separator"` 和菜单间距。
 

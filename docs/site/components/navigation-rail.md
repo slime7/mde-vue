@@ -380,13 +380,20 @@ Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导�
 
 ## Slots
 
-| 名称 | 组件 | 内容约束 |
-| --- | --- | --- |
-| 默认 | `MatNavigationRail` | 混排菜单按钮、FAB、NavigationItem、NavigationGroup、Spacer 与底部操作。Slot 参数为 `{ expanded, orientation }` |
-| `header` | `MatNavigationRail` | 可选的纵向 rail 顶部品牌标识；Slot 参数为 `{ expanded }` |
-| 默认 | `MatNavigationRailItem` | 必填的简短目的地标签；单行显示，超长时隐藏溢出内容 |
-| `icon` | `MatNavigationRailItem` | 自定义图标内容；Slot 参数为 `{ selected }` |
-| `trailing` | `MatNavigationRailItem` | 展开态显示在 Item 尾部的内容，通过弹性 spacer 保持在末尾；Slot 参数为 `{ expanded, selected }` |
+### MatNavigationRail Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 混排菜单按钮、FAB、NavigationItem、NavigationGroup、Spacer 与底部操作。Slot 参数为 `{ expanded, orientation }` |
+| `header` | 可选的纵向 rail 顶部品牌标识；Slot 参数为 `{ expanded }` |
+
+### MatNavigationRailItem Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 必填的简短目的地标签；单行显示，超长时隐藏溢出内容 |
+| `icon` | 自定义图标内容；Slot 参数为 `{ selected }` |
+| `trailing` | 展开态显示在 Item 尾部的内容，通过弹性 spacer 保持在末尾；Slot 参数为 `{ expanded, selected }` |
 
 Badge 通过 `badge` 属性配置，不新增 Badge 专用 Slot。
 
