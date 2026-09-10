@@ -1,65 +1,12 @@
-const rawExampleModules = import.meta.glob('../../../examples/**/*.vue', {
-  query: '?raw',
-  import: 'default',
-});
+import { withBase } from 'vitepress';
 
-const COMPONENT_TITLES = {
-  'app-bar': 'App bar 应用栏',
-  'app-root': 'App root 应用布局根',
-  aside: 'Aside 边缘栏',
-  avatar: 'Avatar 头像',
-  badge: 'Badge 徽标',
-  'bottom-sheet': 'Bottom sheet 底部面板',
-  button: 'Button 按钮',
-  'button-group': 'Button group 按钮组',
-  card: 'Card 卡片',
-  checkbox: 'Checkbox 复选框',
-  chip: 'Chips 标签',
-  container: 'Container 容器',
-  dialog: 'Dialog 对话框',
-  divider: 'Divider 分隔线',
-  'docked-container': 'Docked container 浮动容器',
-  'dynamic-text': 'Dynamic text 动态文字',
-  expansion: 'Expansion 折叠面板',
-  fab: 'FAB 浮动操作按钮',
-  'fab-menu': 'FAB Menu 浮动操作菜单',
-  hover: 'Hover 悬停状态',
-  icon: 'Icon 图标',
-  image: 'Image 图片',
-  'input-base': 'Input base 输入基础层',
-  intersection: 'Intersection 相交观察',
-  layout: 'Layout 布局容器',
-  list: 'List 列表',
-  loading: 'Loading 加载指示器',
-  menu: 'Menu 菜单',
-  'navigation-bar': 'Navigation bar 底部导航栏',
-  'navigation-drawer': 'Navigation drawer 导航抽屉',
-  'navigation-rail': 'Navigation rail 导航栏',
-  panes: 'Panes 布局面板',
-  progress: 'Progress 进度',
-  'pull-to-refresh': 'PullToRefresh 下拉刷新',
-  radio: 'Radio 单选按钮',
-  'range-slider': 'Range slider 范围滑块',
-  'scroll-area': 'Scroll area 滚动区域',
-  search: 'Search 搜索',
-  select: 'Select 选择器',
-  selection: 'Selection 选择',
-  shape: 'Shape 形状',
-  'shared-element': 'Shared Element 同元素转移',
-  'side-sheet': 'Side sheet 侧边面板',
-  slider: 'Slider 滑块',
-  snackbar: 'Snackbar 消息提示',
-  spacer: 'Spacer 弹性占位',
-  'split-button': 'Split button 拆分按钮',
-  'state-layer': 'State layer 状态层',
-  switch: 'Switch 开关',
-  'table-wrapper': 'Table wrapper 表格容器',
-  text: 'Text 文字',
-  'text-field': 'Text field 文本输入',
-  toolbar: 'Toolbar 工具栏',
-  tooltip: 'Tooltip 文字提示',
-  'virtual-scroll': 'Virtual scroll 虚拟滚动',
-};
+/** playground 默认打开的示例，与 `?example=` 查询参数使用同一套标识 */
+export const DEFAULT_EXAMPLE_KEY = 'button/ButtonVariantExample';
+
+const EXAMPLE_KEY_PATTERN = /^[\w.-]+\/[\w.-]+$/;
+
+/** @type {Promise<Array<{ key: string, label: string, examples: Array<{ key: string, name: string }> }>> | null} */
+let indexPromise = null;
 
 /**
  * 过滤掉示例代码中的 VitePress 区域标记注释
@@ -78,51 +25,55 @@ export function cleanExampleCode(rawCode) {
 }
 
 /**
- * 构建组件分类列表与各组件下的示例文件清单
+ * @returns {Promise<Array<{ key: string, label: string, examples: Array<{ key: string, name: string }> }>>}
  */
-const componentMap = new Map();
-const exampleLoaders = new Map();
+async function requestExampleIndex() {
+  const response = await fetch(withBase('/playground/examples.json'));
 
-Object.entries(rawExampleModules).forEach(([path, loader]) => {
-  const normalizedPath = path.replaceAll('\\', '/');
-  const match = normalizedPath.match(/\/examples\/([^/]+)\/([^/]+)\.vue$/);
-  if (match) {
-    const [, componentKey, exampleName] = match;
-    const key = `${componentKey}/${exampleName}`;
-    exampleLoaders.set(key, loader);
-
-    if (!componentMap.has(componentKey)) {
-      componentMap.set(componentKey, {
-        key: componentKey,
-        label: COMPONENT_TITLES[componentKey] || componentKey,
-        examples: [],
-      });
-    }
-    componentMap.get(componentKey).examples.push({
-      key,
-      name: exampleName,
-      componentKey,
-    });
+  if (!response.ok) {
+    throw new Error(`示例索引加载失败：HTTP ${response.status}`);
   }
-});
 
-export const componentList = Array.from(componentMap.values()).sort((a, b) => (
-  a.label.localeCompare(b.label, 'zh-CN')
-));
-
-export const DEFAULT_EXAMPLE_KEY = 'button/ButtonVariantExample';
+  return response.json();
+}
 
 /**
- * 异步加载指定示例的源代码
+ * 拉取示例索引（组件分类与各组件下的示例清单）。
  *
- * @param {string} key - 如 'button/ButtonVariantExample'
- * @returns {Promise<string>}
+ * 索引由 `scripts/build-playground-assets.mjs` 生成到 public 目录，只在首次调用时请求一次；
+ * 请求失败后不缓存结果，下一次调用会重新尝试。
+ *
+ * @returns {Promise<Array<{ key: string, label: string, examples: Array<{ key: string, name: string }> }>>}
+ * @throws {Error} 索引请求失败或响应不是有效 JSON 时抛出。
+ */
+export async function loadExampleIndex() {
+  if (!indexPromise) {
+    indexPromise = requestExampleIndex().catch((error) => {
+      indexPromise = null;
+      throw error;
+    });
+  }
+
+  return indexPromise;
+}
+
+/**
+ * 按需拉取指定示例的源码，只在用户选中示例时发起请求。
+ *
+ * @param {string} key 形如 `button/ButtonVariantExample` 的示例标识。
+ * @returns {Promise<string>} 去掉 VitePress 区域标记后的示例源码。
+ * @throws {Error} 示例标识不合法或源码请求失败时抛出。
  */
 export async function loadExampleSource(key) {
-  const loader = exampleLoaders.get(key) || exampleLoaders.get(DEFAULT_EXAMPLE_KEY);
-  if (!loader) {
-    return '<template>\n  <mat-btn>Hello mde-vue</mat-btn>\n</template>';
+  if (!EXAMPLE_KEY_PATTERN.test(key)) {
+    throw new Error(`示例标识不合法：${key}`);
   }
-  const raw = await loader();
-  return cleanExampleCode(raw);
+
+  const response = await fetch(withBase(`/playground/examples/${key}.vue`));
+
+  if (!response.ok) {
+    throw new Error(`示例源码加载失败：HTTP ${response.status}`);
+  }
+
+  return cleanExampleCode(await response.text());
 }

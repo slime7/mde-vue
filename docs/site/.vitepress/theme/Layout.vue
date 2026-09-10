@@ -1,6 +1,7 @@
 <script setup>
 import {
   computed,
+  defineAsyncComponent,
   nextTick,
   onMounted,
   onUnmounted,
@@ -12,6 +13,10 @@ import VPContent from 'vitepress/dist/client/theme-default/components/VPContent.
 import { usePrevNext } from 'vitepress/dist/client/theme-default/composables/prev-next.js';
 import { useMatTheme } from 'mde-vue';
 import ThemeForm from './ThemeForm.vue';
+
+// 演练场只在一个页面使用，且会连带浏览器版 Vue 编译器与 Monaco Editor，
+// 因此按需加载，避免进入所有页面共享的 theme 分块。
+const PlaygroundView = defineAsyncComponent(() => import('./playground/PlaygroundView.vue'));
 
 const { site, theme, page, frontmatter } = useData();
 const route = useRoute();

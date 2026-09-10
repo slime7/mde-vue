@@ -6,5 +6,3 @@ sidebar: false
 outline: false
 ---
 
-<PlaygroundView />
-

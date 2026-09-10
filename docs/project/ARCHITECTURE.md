@@ -109,7 +109,7 @@ Checkbox 以布尔值或基础值数组表达受控选择，数组更新始终�
 
 `docs/site/` 是 VitePress 的唯一源目录，包含中文使用文档、AI 使用指南和组件实时预览。预览保持 `mde-vue` 根入口写法，但由 Vite alias 直接解析到 `src/index.js` 与源码样式，使示例和热更新始终验证维护权威；不另建独立 demo 页面。`docs/project/` 保存产品愿景、架构、公共抽象、开发入门和 ADR，不进入 VitePress 构建。
 
-`docs/site/` 中带 frontmatter 标记的 Markdown 页面按顺序生成根目录 `llms.txt` 和 `llms-full.txt`。组件示例保存在 `docs/site/examples/`，同一 Vue 文件既由 VitePress 作为代码片段展示，也作为页面中的真实组件渲染；AI 文档生成器会把代码片段包含指令展开为完整代码块。项目维护文档和纯交互页面不进入 AI 使用文档。
+`docs/site/` 中带 frontmatter 标记的 Markdown 页面按顺序生成根目录 `llms.txt` 和 `llms-full.txt`。组件示例保存在 `docs/site/examples/`，同一 Vue 文件既由 VitePress 作为代码片段展示，也作为页面中的真实组件渲染；AI 文档生成器会把代码片段包含指令展开为完整代码块。演练场另行把示例源码同步到 `docs/site/public/playground/` 并生成示例索引，页面在选中示例后才按需拉取单个文件，示例代码不进入打包产物。项目维护文档和纯交互页面不进入 AI 使用文档。
 
 ## 关键数据流
 

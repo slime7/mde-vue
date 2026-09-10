@@ -11,16 +11,17 @@ import { withBase } from 'vitepress';
 import MonacoEditor from './MonacoEditor.vue';
 import { compileSfc } from './compileSfc.js';
 import {
-  componentList,
   DEFAULT_EXAMPLE_KEY,
+  loadExampleIndex,
   loadExampleSource,
 } from './examples.js';
 
 const matTheme = useMatTheme();
 const isDark = computed(() => matTheme.resolvedMode.value === 'dark');
 
-const selectedComponentKey = ref('button');
-const selectedExampleKey = ref(DEFAULT_EXAMPLE_KEY);
+const componentList = ref([]);
+const selectedComponentKey = ref('');
+const selectedExampleKey = ref('');
 const currentCode = ref('');
 const originalCode = ref('');
 const DEFAULT_MAT_UI_CODE = `import { createMatUi } from 'mde-vue';
@@ -48,11 +49,11 @@ const containerRef = ref(null);
 const sandboxSrc = computed(() => withBase('/playground/sandbox.html'));
 
 const currentComponentExamples = computed(() => {
-  const found = componentList.find((c) => c.key === selectedComponentKey.value);
+  const found = componentList.value.find((c) => c.key === selectedComponentKey.value);
   return found ? found.examples : [];
 });
 
-const componentOptions = computed(() => componentList.map((c) => ({
+const componentOptions = computed(() => componentList.value.map((c) => ({
   title: c.label,
   value: c.key,
 })));
@@ -99,17 +100,26 @@ function triggerCompile() {
  * @param {string} key
  */
 async function loadExample(key) {
-  const code = await loadExampleSource(key);
-  currentCode.value = code;
-  originalCode.value = code;
-  runtimeError.value = '';
-  compileErrors.value = [];
-  triggerCompile();
+  if (!key) {
+    return;
+  }
 
-  if (typeof window !== 'undefined') {
-    const url = new URL(window.location.href);
-    url.searchParams.set('example', key);
-    window.history.replaceState(null, '', `${url.pathname}${url.search}`);
+  try {
+    const code = await loadExampleSource(key);
+
+    currentCode.value = code;
+    originalCode.value = code;
+    runtimeError.value = '';
+    compileErrors.value = [];
+    triggerCompile();
+
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('example', key);
+      window.history.replaceState(null, '', `${url.pathname}${url.search}`);
+    }
+  } catch (error) {
+    runtimeError.value = error?.message || '示例代码加载失败';
   }
 }
 
@@ -216,21 +226,50 @@ watch([
   }
 });
 
-onMounted(() => {
+/**
+ * 解析首个要打开的示例：优先使用地址栏中的 `?example=` 参数，
+ * 参数缺失或已失效时回退到默认示例，再回退到索引中的第一个示例。
+ *
+ * @returns {string} 示例标识，索引为空时返回空字符串。
+ */
+function resolveInitialExampleKey() {
+  const availableKeys = componentList.value
+    .flatMap((component) => component.examples.map((example) => example.key));
+  const requestedKey = new URLSearchParams(window.location.search).get('example');
+
+  if (requestedKey && availableKeys.includes(requestedKey)) {
+    return requestedKey;
+  }
+
+  if (availableKeys.includes(DEFAULT_EXAMPLE_KEY)) {
+    return DEFAULT_EXAMPLE_KEY;
+  }
+
+  return availableKeys[0] || '';
+}
+
+onMounted(async () => {
   window.addEventListener('message', handleIframeMessage);
   window.addEventListener('mousemove', onMouseMove);
   window.addEventListener('mouseup', onMouseUp);
 
-  const searchParams = new URLSearchParams(window.location.search);
-  const paramKey = searchParams.get('example');
-  if (paramKey && paramKey.includes('/')) {
-    const [compKey] = paramKey.split('/');
-    selectedComponentKey.value = compKey;
-    selectedExampleKey.value = paramKey;
-    loadExample(paramKey);
-  } else {
-    loadExample(DEFAULT_EXAMPLE_KEY);
+  try {
+    componentList.value = await loadExampleIndex();
+  } catch (error) {
+    runtimeError.value = error?.message || '示例索引加载失败';
+    return;
   }
+
+  const initialKey = resolveInitialExampleKey();
+
+  if (!initialKey) {
+    runtimeError.value = '没有可用的示例';
+    return;
+  }
+
+  selectedComponentKey.value = initialKey.split('/')[0];
+  selectedExampleKey.value = initialKey;
+  loadExample(initialKey);
 });
 
 onBeforeUnmount(() => {

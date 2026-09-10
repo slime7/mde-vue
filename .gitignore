@@ -26,5 +26,11 @@ yarn-error.log*
 *.sln
 *.sw*
 
+# Lint caches
+.eslintcache
+.stylelintcache
+
 # Playground assets
 docs/site/public/playground/assets/
+docs/site/public/playground/examples/
+docs/site/public/playground/examples.json

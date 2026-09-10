@@ -1,19 +1,116 @@
 import {
   copyFile,
   mkdir,
+  readdir,
+  rm,
+  stat,
   writeFile,
 } from 'node:fs/promises';
 import process from 'node:process';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from 'vite';
+import { componentTitles } from '../docs/site/.vitepress/theme/playground/componentTitles.js';
 
 const projectRoot = resolve(fileURLToPath(import.meta.url), '../..');
 const playgroundDir = resolve(projectRoot, 'docs/site/public/playground');
 const assetsDir = resolve(playgroundDir, 'assets');
+const examplesSrcDir = resolve(projectRoot, 'docs/site/examples');
+const examplesDir = resolve(playgroundDir, 'examples');
+const examplesIndexPath = resolve(playgroundDir, 'examples.json');
+
+/**
+ * 判断目标文件是否已经与源文件一致。
+ *
+ * `copyFile` 在 Windows 上会保留源文件时间戳，在其它平台使用复制时刻，
+ * 因此比较「源文件不晚于目标文件」即可同时覆盖两种行为。
+ *
+ * @param {string} srcPath 源文件路径。
+ * @param {string} destPath 目标文件路径。
+ * @returns {Promise<boolean>} 目标文件存在且大小与修改时间均未落后时为 true。
+ */
+async function isUpToDate(srcPath, destPath) {
+  try {
+    const [srcStat, destStat] = await Promise.all([stat(srcPath), stat(destPath)]);
+    return srcStat.size === destStat.size && srcStat.mtimeMs <= destStat.mtimeMs;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * 把目录树同步到目标位置，跳过未变化的文件并清理源目录中已删除的条目。
+ *
+ * @param {string} srcDir 源目录。
+ * @param {string} destDir 目标目录。
+ * @returns {Promise<void>}
+ */
+async function syncDirectory(srcDir, destDir) {
+  await mkdir(destDir, { recursive: true });
+  const entries = await readdir(srcDir, { withFileTypes: true });
+  const expectedNames = new Set(entries.map((entry) => entry.name));
+
+  await Promise.all(entries.map(async (entry) => {
+    const srcPath = resolve(srcDir, entry.name);
+    const destPath = resolve(destDir, entry.name);
+
+    if (entry.isDirectory()) {
+      await syncDirectory(srcPath, destPath);
+      return;
+    }
+
+    if (await isUpToDate(srcPath, destPath)) {
+      return;
+    }
+
+    await copyFile(srcPath, destPath);
+  }));
+
+  const existingEntries = await readdir(destDir, { withFileTypes: true });
+  await Promise.all(existingEntries
+    .filter((entry) => !expectedNames.has(entry.name))
+    .map((entry) => rm(resolve(destDir, entry.name), { recursive: true, force: true })));
+}
+
+/**
+ * 生成示例索引，供 playground 在运行时填充组件与示例下拉框。
+ *
+ * @returns {Promise<void>}
+ */
+async function writeExamplesIndex() {
+  const componentEntries = await readdir(examplesSrcDir, { withFileTypes: true });
+
+  const components = (await Promise.all(componentEntries
+    .filter((entry) => entry.isDirectory())
+    .map(async (entry) => {
+      const files = (await readdir(resolve(examplesSrcDir, entry.name)))
+        .filter((file) => file.endsWith('.vue'))
+        .sort();
+
+      if (files.length === 0) {
+        return null;
+      }
+
+      return {
+        key: entry.name,
+        label: componentTitles[entry.name] || entry.name,
+        examples: files.map((file) => {
+          const name = file.slice(0, -'.vue'.length);
+          return { key: `${entry.name}/${name}`, name };
+        }),
+      };
+    })))
+    .filter(Boolean);
+
+  components.sort((a, b) => a.label.localeCompare(b.label, 'zh-CN'));
+
+  await writeFile(examplesIndexPath, `${JSON.stringify(components, null, 2)}\n`, 'utf8');
+}
 
 export async function buildPlaygroundAssets() {
   await mkdir(assetsDir, { recursive: true });
+  await syncDirectory(examplesSrcDir, examplesDir);
+  await writeExamplesIndex();
 
   const vueSrc = resolve(projectRoot, 'node_modules/vue/dist/vue.esm-browser.js');
   const vueDest = resolve(assetsDir, 'vue.esm-browser.js');

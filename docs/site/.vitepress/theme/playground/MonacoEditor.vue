@@ -39,7 +39,8 @@ onMounted(async () => {
   }
 
   try {
-    monaco = await import('monaco-editor');
+    const monacoModule = await import('./monaco.js');
+    monaco = monacoModule.default;
 
     if (!window.MonacoEnvironment) {
       window.MonacoEnvironment = {
