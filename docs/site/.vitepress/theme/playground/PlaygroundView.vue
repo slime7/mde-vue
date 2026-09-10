@@ -284,48 +284,6 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="mde-playground-root">
-    <header class="mde-playground-header">
-      <div class="mde-playground-header__start">
-        <mat-select
-          :model-value="selectedComponentKey"
-          label="组件"
-          variant="outlined"
-          :items="componentOptions"
-          class="mde-playground-select mde-playground-select--component"
-          @update:model-value="handleComponentChange"
-        />
-
-        <mat-select
-          :model-value="selectedExampleKey"
-          label="示例"
-          variant="outlined"
-          :items="exampleOptions"
-          class="mde-playground-select mde-playground-select--example"
-          @update:model-value="handleExampleChange"
-        />
-      </div>
-
-      <div class="mde-playground-header__end">
-        <mat-btn
-          variant="standard"
-          icon="restart_alt"
-          label="重置代码"
-          @click="resetCode"
-        >
-          重置
-        </mat-btn>
-
-        <mat-btn
-          variant="standard"
-          :icon="isCopied ? 'check' : 'content_copy'"
-          label="复制代码"
-          @click="copyCode"
-        >
-          {{ isCopied ? '已复制' : '复制' }}
-        </mat-btn>
-      </div>
-    </header>
-
     <div
       ref="containerRef"
       class="mde-playground-workspace"
@@ -335,6 +293,48 @@ onBeforeUnmount(() => {
         class="mde-playground-pane mde-playground-pane--editor"
         :style="{ inlineSize: `${splitPercent}%` }"
       >
+        <header class="mde-playground-header">
+          <div class="mde-playground-header__start">
+            <mat-select
+              :model-value="selectedComponentKey"
+              label="组件"
+              variant="outlined"
+              :items="componentOptions"
+              class="mde-playground-select mde-playground-select--component"
+              @update:model-value="handleComponentChange"
+            />
+
+            <mat-select
+              :model-value="selectedExampleKey"
+              label="示例"
+              variant="outlined"
+              :items="exampleOptions"
+              class="mde-playground-select mde-playground-select--example"
+              @update:model-value="handleExampleChange"
+            />
+          </div>
+
+          <div class="mde-playground-header__end">
+            <mat-btn
+              variant="standard"
+              icon="restart_alt"
+              label="重置代码"
+              @click="resetCode"
+            >
+              重置
+            </mat-btn>
+
+            <mat-btn
+              variant="standard"
+              :icon="isCopied ? 'check' : 'content_copy'"
+              label="复制代码"
+              @click="copyCode"
+            >
+              {{ isCopied ? '已复制' : '复制' }}
+            </mat-btn>
+          </div>
+        </header>
+
         <div class="mde-playground-tabs" role="tablist" aria-label="文件标签页">
           <button
             type="button"
@@ -476,6 +476,7 @@ onBeforeUnmount(() => {
     min-block-size: 0;
     overflow: hidden;
     position: relative;
+    border-block-start: 1px solid var(--mat-sys-color-outline-variant);
   }
 
   .mde-playground-workspace.is-dragging {
