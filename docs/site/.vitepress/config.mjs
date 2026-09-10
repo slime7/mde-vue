@@ -33,6 +33,23 @@ function createPlaygroundAssetsPlugin() {
   };
 }
 
+function createMonacoSourceMapPlugin() {
+  return {
+    name: 'mde-vue-monaco-source-map',
+    apply: 'serve',
+    enforce: 'pre',
+    async load(id) {
+      const normalizedId = id.replaceAll('\\', '/').split('?', 1)[0];
+      if (!normalizedId.endsWith('/monaco-editor/esm/vs/base/common/marked/marked.js')) {
+        return null;
+      }
+
+      const source = await readFile(normalizedId, 'utf8');
+      return source.replace(/\n\/\/# sourceMappingURL=marked\.umd\.js\.map\s*$/, '\n');
+    },
+  };
+}
+
 function createVitePressStylesLayerPlugin() {
   const themeStylesPath = '/vitepress/dist/client/theme-default/styles/';
 
@@ -309,7 +326,13 @@ export default defineConfig({
       tailwindcss(),
       createLlmsArtifactsPlugin(),
       createPlaygroundAssetsPlugin(),
+      createMonacoSourceMapPlugin(),
     ],
+    optimizeDeps: {
+      // Monaco 的语言贡献模块会继续按 moduleId 动态加载语言服务；预构建会把
+      // 这些动态依赖拆成易失的缓存 chunk，开发服务器重建后可能留下失效引用。
+      exclude: ['monaco-editor'],
+    },
     resolve: {
       alias: [
         {

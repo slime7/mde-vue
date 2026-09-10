@@ -32,6 +32,16 @@ describe('VitePress 文档自定义主题', () => {
     expect(config).toContain('@layer docs-base');
   });
 
+  it('开发服务器不预构建 Monaco 的动态语言模块', () => {
+    const config = readFileSync(resolve('docs/site/.vitepress/config.mjs'), 'utf8');
+
+    expect(config).toContain('optimizeDeps: {');
+    expect(config).toContain("exclude: ['monaco-editor']");
+    expect(config).toContain("name: 'mde-vue-monaco-source-map'");
+    expect(config).toContain("apply: 'serve'");
+    expect(config).toContain('marked\\.umd\\.js\\.map');
+  });
+
   it('在主题插件初始化时同步 VitePress 的高亮配色模式', () => {
     const source = readThemeFile('index.js');
     const settingsSource = readThemeFile('ThemeSettings.vue');
@@ -183,5 +193,30 @@ describe('VitePress 文档自定义主题', () => {
     expect(sandboxHtml).toContain('themeController.setSeedColor');
     expect(sandboxHtml).toContain('themeController.setMode');
     expect(sandboxHtml).toContain('isUserThemeCustomized');
+  });
+
+  it('演练场 Monaco Editor 为语言服务配置对应 worker', () => {
+    const monacoSource = readThemeFile('playground/monaco.js');
+
+    expect(monacoSource).toContain('monaco-editor/esm/vs/editor/editor.worker?worker');
+    expect(monacoSource).toContain('monaco-editor/esm/vs/language/html/html.worker?worker');
+    expect(monacoSource).toContain('monaco-editor/esm/vs/language/css/css.worker?worker');
+    expect(monacoSource).toContain('monaco-editor/esm/vs/language/typescript/ts.worker?worker');
+    expect(monacoSource).toContain('monaco-editor/esm/vs/language/html/monaco.contribution');
+    expect(monacoSource).toContain('monaco-editor/esm/vs/language/css/monaco.contribution');
+    expect(monacoSource).toContain('monaco-editor/esm/vs/language/typescript/monaco.contribution');
+    expect(monacoSource).toContain('getWorker');
+    expect(monacoSource).not.toContain('return null');
+  });
+
+  it('Aside 固定停靠演练场链接适配文档 base 路径', () => {
+    const asideSource = readFileSync(resolve('docs/site/components/aside.md'), 'utf8');
+
+    expect(asideSource).toContain(
+      '<a href="../playground?example=aside%2FAsideFixedExample"',
+    );
+    expect(asideSource).not.toContain(
+      '<a href="/playground?example=aside%2FAsideFixedExample"',
+    );
   });
 });

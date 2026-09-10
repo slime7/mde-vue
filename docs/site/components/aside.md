@@ -101,7 +101,7 @@ order: 117
 
 ### 固定停靠
 
-设置 `mode="fixed"` 后，Aside 会保留在当前声明位置，并继续依据最近的 `mat-layout` 或 `mat-app-root` 的声明顺序进行边缘避让与同向堆叠，同时为正文产生对应 padding。只有显式指定 `attach` 时才会 Teleport 到目标节点。由于 fixed 示例会覆盖当前文档页面的视口边缘，这里只提供演练场入口：<a href="/playground?example=aside%2FAsideFixedExample" target="_blank" rel="noopener noreferrer">在演练场中打开 fixed 多边缘停靠示例</a>。
+设置 `mode="fixed"` 后，Aside 会保留在当前声明位置，并继续依据最近的 `mat-layout` 或 `mat-app-root` 的声明顺序进行边缘避让与同向堆叠，同时为正文产生对应 padding。只有显式指定 `attach` 时才会 Teleport 到目标节点。由于 fixed 示例会覆盖当前文档页面的视口边缘，这里只提供演练场入口：<a href="../playground?example=aside%2FAsideFixedExample" target="_blank" rel="noopener noreferrer">在演练场中打开 fixed 多边缘停靠示例</a>。
 
 ### 粘性停靠
 

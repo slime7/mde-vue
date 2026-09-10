@@ -42,14 +42,6 @@ onMounted(async () => {
     const monacoModule = await import('./monaco.js');
     monaco = monacoModule.default;
 
-    if (!window.MonacoEnvironment) {
-      window.MonacoEnvironment = {
-        getWorker() {
-          return null;
-        },
-      };
-    }
-
     editor = monaco.editor.create(containerRef.value, {
       theme: props.isDark ? 'vs-dark' : 'vs',
       automaticLayout: true,
