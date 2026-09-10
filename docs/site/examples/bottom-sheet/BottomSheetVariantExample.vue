@@ -26,8 +26,10 @@ const modalOpen = ref(false);
       v-model="standardOpen"
       variant="standard"
     >
-      <h2>播放队列</h2>
-      <p>Standard Bottom sheet 与主内容共存。</p>
+      <div class="bottom-sheet-variant-example__sheet-body">
+        <h2>播放队列</h2>
+        <p>Standard Bottom sheet 与主内容共存。</p>
+      </div>
     </mat-bottom-sheet>
   </div>
 
@@ -36,11 +38,13 @@ const modalOpen = ref(false);
     variant="modal"
     aria-label="选择排序方式"
   >
-    <h2>选择排序方式</h2>
-    <p>Modal Bottom sheet 会阻止背景交互。</p>
-    <mat-btn variant="filled-tonal" @click="modalOpen = false">
-      完成
-    </mat-btn>
+    <div class="bottom-sheet-variant-example__sheet-body">
+      <h2>选择排序方式</h2>
+      <p>Modal Bottom sheet 会阻止背景交互。</p>
+      <mat-btn variant="filled-tonal" @click="modalOpen = false">
+        完成
+      </mat-btn>
+    </div>
   </mat-bottom-sheet>
 </template>
 <!-- #endregion template -->
@@ -71,6 +75,10 @@ const modalOpen = ref(false);
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+}
+
+.bottom-sheet-variant-example__sheet-body {
+  padding: 24px;
 }
 </style>
 <!-- #endregion style -->

@@ -1404,13 +1404,15 @@ watch(() => props.closeLabel, (value) => {
     box-sizing: border-box;
     min-inline-size: 0;
     inline-size: 100%;
-    padding-block: 16px 24px;
-    padding-inline: 24px calc(24px - var(--mat-scroll-area-scrollbar-width, 0px));
     overflow-wrap: anywhere;
   }
 
-  .mat-sheet__drag-handle-target + .mat-sheet__content .mat-sheet__content-body,
-  .mat-sheet__content:first-child .mat-sheet__content-body {
+  .mat-sheet--side .mat-sheet__content-body {
+    padding-block: 16px 24px;
+    padding-inline: 24px calc(24px - var(--mat-scroll-area-scrollbar-width, 0px));
+  }
+
+  .mat-sheet--side .mat-sheet__content:first-child .mat-sheet__content-body {
     padding-block-start: 24px;
   }
 

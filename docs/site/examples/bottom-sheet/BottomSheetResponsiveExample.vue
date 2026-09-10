@@ -22,8 +22,10 @@ const open = ref(false);
       v-model="open"
       aria-label="自适应筛选"
     >
-      <h2>自适应筛选</h2>
-      <p>调整浏览器宽度后再次打开，可观察布局变体变化。</p>
+      <div class="bottom-sheet-responsive-example__sheet-body">
+        <h2>自适应筛选</h2>
+        <p>调整浏览器宽度后再次打开，可观察布局变体变化。</p>
+      </div>
     </mat-bottom-sheet>
   </div>
 </template>
@@ -50,6 +52,10 @@ const open = ref(false);
 .bottom-sheet-responsive-example__content p {
   max-inline-size: 560px;
   margin: 0;
+}
+
+.bottom-sheet-responsive-example__sheet-body {
+  padding: 24px;
 }
 </style>
 <!-- #endregion style -->

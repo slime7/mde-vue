@@ -18,9 +18,19 @@ const shadow = ref(true);
       variant="standard"
       :shadow="shadow"
     >
-      <h2>阴影状态</h2>
-      <p>当前 shadow：{{ shadow }}。切换时使用快速效果过渡。</p>
+      <div class="bottom-sheet-shadow-example__sheet-body">
+        <h2>阴影状态</h2>
+        <p>当前 shadow：{{ shadow }}。切换时使用快速效果过渡。</p>
+      </div>
     </mat-bottom-sheet>
   </div>
 </template>
 <!-- #endregion template -->
+
+<!-- #region style -->
+<style scoped>
+.bottom-sheet-shadow-example__sheet-body {
+  padding: 24px;
+}
+</style>
+<!-- #endregion style -->

@@ -58,6 +58,7 @@ const open = ref(false);
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding: 24px;
 }
 
 .bottom-sheet-slots-example__heading {

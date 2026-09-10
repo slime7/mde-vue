@@ -11,7 +11,7 @@ order: 101
 
 `<mat-bottom-sheet>` 的组件导出名是 `MatBottomSheet`。它把补充内容固定在可用区域底部，提供 Material 3 的 `standard` 与 `modal` 两种变体，并保留 `auto` 自适应模式。
 
-Bottom sheet 内置的布局只有 drag handle、用户内容区域和 `footer`。标题、说明、操作控件以及其他内容都应由使用者放入默认 Slot；`content` 仅用于需要显示一段纯文本时的便利场景。`drag-handle` Slot 只替换把手行中的视觉内容，整行至少提供 48px 的拖动命中区域。
+Bottom sheet 内置的布局只有 drag handle、用户内容区域和 `footer`。标题、说明、操作控件以及其他内容都应由使用者放入默认 Slot；内容区域不附加内边距，需要留白时由使用者在自己的内容根元素上设置。`content` 仅用于需要显示一段纯文本时的便利场景，也不会附加内边距。`drag-handle` Slot 只替换把手行中的视觉内容，整行至少提供 48px 的拖动命中区域。
 
 Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦点；modal 使用原生 `<dialog>`、帷幕和 Vue Teleport，组件负责焦点陷阱、背景交互拦截以及关闭后的焦点恢复。Modal 没有内置标题，因此必须由使用者提供 `aria-label` 或 `aria-labelledby`，默认 Slot 中的标题由使用者自行关联。位于 `MatAppRoot` 内且省略 `attach` 时，modal 自动进入该 AppRoot 的模态层。
 
@@ -51,6 +51,8 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 <<< @/examples/bottom-sheet/BottomSheetVirtualExpandExample.vue#template [template]
 
 <<< @/examples/bottom-sheet/BottomSheetVirtualExpandExample.vue#script [script]
+
+<<< @/examples/bottom-sheet/BottomSheetVirtualExpandExample.vue#style [style]
 
 :::
 ::::
@@ -92,6 +94,8 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 
 <<< @/examples/bottom-sheet/BottomSheetShadowExample.vue#script [script]
 
+<<< @/examples/bottom-sheet/BottomSheetShadowExample.vue#style [style]
+
 :::
 ::::
 
@@ -109,6 +113,8 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 <<< @/examples/bottom-sheet/BottomSheetRoundedExample.vue#template [template]
 
 <<< @/examples/bottom-sheet/BottomSheetRoundedExample.vue#script [script]
+
+<<< @/examples/bottom-sheet/BottomSheetRoundedExample.vue#style [style]
 
 :::
 ::::
@@ -201,14 +207,14 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 | `collapseDragHandleLabel` | `string` | `'折叠底部面板'` | 模板属性为 `collapse-drag-handle-label`；展开的 standard 状态下把手的可访问名称 |
 | `expandedDragHandleLabel` | `string` | `'关闭底部面板'` | 模板属性为 `expanded-drag-handle-label`；展开的 modal 状态下把手的可访问名称 |
 | `draggable` | `boolean` | `true` | 是否允许通过把手拖动展开、回到 normal 或关闭 |
-| `content` | `string` | 未设置 | 纯文本内容便利属性；需要标题、说明或操作布局时使用默认 Slot |
+| `content` | `string` | 未设置 | 纯文本内容便利属性，不附加内边距；需要标题、说明、操作布局或自定义留白时使用默认 Slot |
 | `containerColor` | `boolean` | `false` | standard 布局使用与 modal 相同的容器背景语义色；modal 布局始终使用该语义色 |
 | `shadow` | `boolean` | `true` | 是否显示 Material 3 level 1 阴影，切换带效果过渡 |
 | `rounded` | `boolean` | `true` | 是否显示顶部 extra-large 圆角，切换带效果过渡 |
 
 未消费的属性、原生事件、`class` 和 `style` 传给根元素；BottomSheet 会过滤已移除的 `closable`、`closeLabel` 和 `title` 属性。Modal 根为原生 `<dialog>`，standard 根为原生 `<aside>`。Modal 必须提供 `aria-label` 或 `aria-labelledby`；如果使用默认 Slot 中的标题，请自行设置对应的 `id` 并通过 `aria-labelledby` 关联。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。
 
-Bottom sheet 的宽度不超过 640px。宽屏顶部安全间距至少为 56px，窄屏至少为 72px；normal 状态按内容自然高度展示，超出最大高度时只滚动内容区域。`footer` 固定在内容区下方。把手的完整交互行至少为 48px，灰色视觉条只负责显示。
+Bottom sheet 的宽度不超过 640px。宽屏顶部安全间距至少为 56px，窄屏至少为 72px；normal 状态按内容自然高度展示，超出最大高度时只滚动内容区域。默认内容区域没有内边距，`footer` 固定在内容区下方。把手的完整交互行至少为 48px，灰色视觉条只负责显示。
 
 ### 方法
 
@@ -231,7 +237,7 @@ Bottom sheet 的宽度不超过 640px。宽屏顶部安全间距至少为 56px�
 | --- | --- |
 | `activator` | 唯一的当前 document 中 HTMLElement 根节点，作为 modal 关闭后的焦点恢复目标 |
 | `drag-handle` | 替换默认 drag handle 行中的视觉内容；不能放置其他交互元素，只有 `dragHandle=true` 时渲染 |
-| 默认 | 用户自行布局标题、说明、操作控件和其他内容的主要区域；内容过长时该区域可滚动 |
+| 默认 | 用户自行布局标题、说明、操作控件、内边距和其他内容的主要区域；内容过长时该区域可滚动 |
 | `footer` | 固定在内容区下方的用户内容区域 |
 
 ## 参考来源

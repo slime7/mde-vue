@@ -24,8 +24,10 @@ const containerColor = ref(false);
       variant="standard"
       :container-color="containerColor"
     >
-      <h2>容器配色面板</h2>
-      <p>Standard Bottom sheet 可切换为 modal 容器语义色。</p>
+      <div class="bottom-sheet-container-color-example__sheet-body">
+        <h2>容器配色面板</h2>
+        <p>Standard Bottom sheet 可切换为 modal 容器语义色。</p>
+      </div>
     </mat-bottom-sheet>
   </div>
 </template>
@@ -52,6 +54,10 @@ const containerColor = ref(false);
 
 .bottom-sheet-container-color-example__content p {
   margin: 0;
+}
+
+.bottom-sheet-container-color-example__sheet-body {
+  padding: 24px;
 }
 </style>
 <!-- #endregion style -->

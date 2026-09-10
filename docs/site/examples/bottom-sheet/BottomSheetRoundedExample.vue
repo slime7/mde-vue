@@ -18,9 +18,19 @@ const rounded = ref(true);
       variant="standard"
       :rounded="rounded"
     >
-      <h2>圆角状态</h2>
-      <p>当前 rounded：{{ rounded }}。切换时使用快速效果过渡。</p>
+      <div class="bottom-sheet-rounded-example__sheet-body">
+        <h2>圆角状态</h2>
+        <p>当前 rounded：{{ rounded }}。切换时使用快速效果过渡。</p>
+      </div>
     </mat-bottom-sheet>
   </div>
 </template>
 <!-- #endregion template -->
+
+<!-- #region style -->
+<style scoped>
+.bottom-sheet-rounded-example__sheet-body {
+  padding: 24px;
+}
+</style>
+<!-- #endregion style -->
