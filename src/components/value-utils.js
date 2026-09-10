@@ -9,6 +9,21 @@
  */
 
 const NUMERIC_STRING = /^-?\d+(\.\d+)?$/;
+const CSS_BLOCK_SIZE_KEYWORDS = new Set([
+  'auto',
+  'contain',
+  'fit-content',
+  'inherit',
+  'initial',
+  'max-content',
+  'min-content',
+  'revert',
+  'revert-layer',
+  'stretch',
+  'unset',
+]);
+const CSS_BLOCK_SIZE_LENGTH = /^[-+]?(?:\d+\.?(?:\d*)?|\.\d+)(?:%|cap|ch|cm|cqb|cqh|cqi|cqw|cqmax|cqmin|dvb|dvh|dvi|dvw|em|ex|ic|in|lh|lvb|lvh|lvi|lvw|mm|pc|pt|px|q|rem|rlh|svb|svh|svi|svw|vb|vh|vi|vmax|vmin|vw)$/i;
+const CSS_BLOCK_SIZE_FUNCTION = /^(?:anchor-size|calc|calc-size|clamp|env|fit-content|max|min|var)\(.+\)$/i;
 
 /**
  * 把数字或纯数字字符串转换为有限数字；其他输入返回 NaN。
@@ -112,6 +127,42 @@ export function isValidCssLength(value, {
   }
 
   return isCssSupported(value, property);
+}
+
+/**
+ * 校验 Bottom sheet 可接受的 CSS block-size 值。
+ *
+ * 当测试环境或运行时没有 CSS.supports 时，使用 block-size 的常见静态语法
+ * 过滤明显非法的字符串，避免把任意标识符写入高度样式。
+ *
+ * @param {unknown} value
+ * @param {{ allowNegative?: boolean }} options
+ * @returns {boolean}
+ */
+export function isValidCssBlockSize(value, { allowNegative = false } = {}) {
+  const valid = isValidCssLength(value, {
+    allowNegative,
+    allowUndefined: false,
+    property: 'block-size',
+  });
+
+  if (!valid || typeof value !== 'string') {
+    return valid;
+  }
+
+  if (typeof CSS !== 'undefined' && typeof CSS.supports === 'function') {
+    return true;
+  }
+
+  const cssValue = value.trim().toLowerCase();
+
+  if (NUMERIC_STRING.test(cssValue)) {
+    return true;
+  }
+
+  return CSS_BLOCK_SIZE_KEYWORDS.has(cssValue)
+    || CSS_BLOCK_SIZE_LENGTH.test(cssValue)
+    || CSS_BLOCK_SIZE_FUNCTION.test(cssValue);
 }
 
 /**

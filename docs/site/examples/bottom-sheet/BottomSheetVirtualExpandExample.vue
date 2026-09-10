@@ -3,14 +3,14 @@
 import { ref } from 'vue';
 
 const open = ref(false);
-const expanded = ref(false);
+const expanded = ref('normal');
 </script>
 <!-- #endregion script -->
 
 <!-- #region template -->
 <template>
-  <mat-btn @click="open = true; expanded = false">
-    打开虚拟全高 Modal
+  <mat-btn @click="open = true; expanded = 'normal'">
+    打开 virtualExpand Modal
   </mat-btn>
 
   <mat-bottom-sheet
@@ -18,10 +18,12 @@ const expanded = ref(false);
     v-model:expanded="expanded"
     variant="modal"
     virtual-expand
-    title="长列表内容"
+    aria-label="长列表内容"
   >
+    <h2>长列表内容</h2>
+    <p>当前状态：{{ expanded }}。向下滚动或向上滑动内容区会请求 full。</p>
     <p v-for="index in 20" :key="index">
-      第 {{ index }} 项内容：开启 virtual-expand 时，打开默认处于25% 预览状态（expanded=false），内容按全高展开态计算并下移截断；向下滑动滚轮、上滑触控或上拉拖拽把手时自动展开到全高。
+      第 {{ index }} 项内容：normal 状态按内容和最大高度布局，向下滚动或向上滑动时自动展开。
     </p>
   </mat-bottom-sheet>
 </template>

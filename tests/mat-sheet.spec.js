@@ -69,10 +69,11 @@ describe('MatBottomSheet', () => {
     const wrapper = mount(MatBottomSheet, {
       attachTo: document.body,
       props: {
-        content: '筛选条件',
         modelValue: true,
-        title: '筛选',
         variant: 'standard',
+      },
+      slots: {
+        default: '<h2>筛选</h2><p>筛选条件</p>',
       },
     });
 
@@ -99,6 +100,58 @@ describe('MatBottomSheet', () => {
     expect(wrapper.findComponent(MatSheetBase).props('containerColor')).toBe(true);
   });
 
+  it('公开 shadow、rounded 和新的 expanded 类型与默认值', async () => {
+    expect(MatBottomSheet.props.shadow.default).toBe(true);
+    expect(MatBottomSheet.props.shadow.type).toBe(Boolean);
+    expect(MatBottomSheet.props.rounded.default).toBe(true);
+    expect(MatBottomSheet.props.rounded.type).toBe(Boolean);
+    expect(MatBottomSheet.props.expanded.default).toBe('normal');
+    expect(MatBottomSheet.props.expanded.type).toEqual([String, Number]);
+
+    const isValidExpanded = MatBottomSheet.props.expanded.validator;
+
+    expect(isValidExpanded('normal')).toBe(true);
+    expect(isValidExpanded('full')).toBe(true);
+    expect(isValidExpanded(320)).toBe(true);
+    expect(isValidExpanded('320px')).toBe(true);
+    expect(isValidExpanded('50dvh')).toBe(true);
+    expect(isValidExpanded('invalid-height')).toBe(false);
+
+    const wrapper = mount(MatBottomSheet, {
+      props: {
+        modelValue: true,
+        shadow: false,
+        rounded: false,
+        variant: 'standard',
+      },
+    });
+    await settleRender();
+
+    const sheet = wrapper.find('aside');
+
+    expect(wrapper.findComponent(MatSheetBase).props('rounded')).toBe(false);
+    expect(wrapper.findComponent(MatSheetBase).props('shadow')).toBe(false);
+    expect(sheet.classes()).toContain('mat-sheet--no-rounded');
+    expect(sheet.classes()).toContain('mat-sheet--no-shadow');
+  });
+
+  it('自定义展开高度低于 64px 时只把渲染高度限制为 64px', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        expanded: '32px',
+        modelValue: true,
+        variant: 'standard',
+      },
+    });
+
+    await settleRender();
+
+    expect(wrapper.props('expanded')).toBe('32px');
+    expect(wrapper.get('aside').element.style.getPropertyValue('--mat-sheet-expanded-block-size'))
+      .toBe('max(64px, 32px)');
+  });
+
   it('modal 使用原生 dialog，关闭完成后清理并恢复焦点', async () => {
     const trigger = document.createElement('button');
 
@@ -108,8 +161,10 @@ describe('MatBottomSheet', () => {
     const wrapper = mount(MatBottomSheet, {
       props: {
         modelValue: true,
-        title: '筛选',
         variant: 'modal',
+      },
+      attrs: {
+        'aria-label': '筛选面板',
       },
       slots: {
         default: '<button>应用</button>',
@@ -151,7 +206,6 @@ describe('MatBottomSheet', () => {
       attachTo: document.body,
       props: {
         modelValue: true,
-        title: '尚未报告动画',
         variant: 'standard',
       },
     });
@@ -178,7 +232,9 @@ describe('MatBottomSheet', () => {
     const compact = mount(MatBottomSheet, {
       props: {
         modelValue: true,
-        title: '窄屏',
+      },
+      attrs: {
+        'aria-label': '窄屏面板',
       },
     });
 
@@ -194,7 +250,9 @@ describe('MatBottomSheet', () => {
       attachTo: document.body,
       props: {
         modelValue: true,
-        title: '宽屏',
+      },
+      attrs: {
+        'aria-label': '宽屏面板',
       },
     });
 
@@ -209,7 +267,9 @@ describe('MatBottomSheet', () => {
       attachTo: document.body,
       props: {
         modelValue: true,
-        title: '响应式切换',
+      },
+      attrs: {
+        'aria-label': '响应式切换面板',
       },
     });
 
@@ -239,7 +299,6 @@ describe('MatBottomSheet', () => {
       attachTo: document.body,
       props: {
         modelValue: true,
-        title: '拖动关闭',
         variant: 'standard',
       },
       slots: {
@@ -274,7 +333,6 @@ describe('MatBottomSheet', () => {
       attachTo: document.body,
       props: {
         modelValue: true,
-        title: '向上展开',
         variant: 'standard',
       },
     });
@@ -298,7 +356,7 @@ describe('MatBottomSheet', () => {
       pointerId: 4,
     });
 
-    expect(wrapper.emitted('update:expanded')).toEqual([[true]]);
+    expect(wrapper.emitted('update:expanded')).toEqual([['full']]);
     expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
 
@@ -308,9 +366,11 @@ describe('MatBottomSheet', () => {
       props: {
         content: '长内容预览',
         modelValue: true,
-        title: '虚拟全高',
         variant: 'modal',
         virtualExpand: true,
+      },
+      attrs: {
+        'aria-label': '虚拟全高',
       },
     });
 
@@ -337,7 +397,7 @@ describe('MatBottomSheet', () => {
     content.dispatchEvent(wheelDownEvent);
 
     expect(wheelDownEvent.defaultPrevented).toBe(true);
-    expect(wrapper.emitted('update:expanded')).toEqual([[true]]);
+    expect(wrapper.emitted('update:expanded')).toEqual([['full']]);
   });
 
   it('virtualExpand 开启且在预览状态时，触控向上滑动内容区自动请求展开', async () => {
@@ -346,9 +406,11 @@ describe('MatBottomSheet', () => {
       props: {
         content: '长内容预览',
         modelValue: true,
-        title: '虚拟全高触控',
         variant: 'modal',
         virtualExpand: true,
+      },
+      attrs: {
+        'aria-label': '虚拟全高触控',
       },
     });
 
@@ -373,7 +435,7 @@ describe('MatBottomSheet', () => {
       pointerType: 'touch',
     });
 
-    expect(wrapper.emitted('update:expanded')).toEqual([[true]]);
+    expect(wrapper.emitted('update:expanded')).toEqual([['full']]);
   });
 
   it('virtualExpand 在已展开状态下滚动内容区不重复请求展开', async () => {
@@ -381,11 +443,13 @@ describe('MatBottomSheet', () => {
       attachTo: document.body,
       props: {
         content: '长内容预览',
-        expanded: true,
+        expanded: 'full',
         modelValue: true,
-        title: '虚拟全高已展开',
         variant: 'modal',
         virtualExpand: true,
+      },
+      attrs: {
+        'aria-label': '虚拟全高已展开',
       },
     });
 
@@ -407,7 +471,6 @@ describe('MatBottomSheet', () => {
       props: {
         content: 'Standard 长内容',
         modelValue: true,
-        title: '虚拟全高 standard',
         variant: 'standard',
         virtualExpand: true,
       },
@@ -425,7 +488,7 @@ describe('MatBottomSheet', () => {
     sheet.element.dispatchEvent(wheelDownEvent);
 
     expect(wheelDownEvent.defaultPrevented).toBe(true);
-    expect(wrapper.emitted('update:expanded')).toEqual([[true]]);
+    expect(wrapper.emitted('update:expanded')).toEqual([['full']]);
   });
 
   it('virtualExpand 开启时拖拽把手向上拖动达到阈值正常请求展开', async () => {
@@ -434,9 +497,11 @@ describe('MatBottomSheet', () => {
       props: {
         content: '长内容',
         modelValue: true,
-        title: '拖拽把手展开',
         variant: 'modal',
         virtualExpand: true,
+      },
+      attrs: {
+        'aria-label': '拖拽把手展开',
       },
     });
 
@@ -459,15 +524,14 @@ describe('MatBottomSheet', () => {
       pointerId: 5,
     });
 
-    expect(wrapper.emitted('update:expanded')).toEqual([[true]]);
+    expect(wrapper.emitted('update:expanded')).toEqual([['full']]);
   });
 
-  it('standard 把手可以通过点击和键盘在预览与全屏状态间循环', async () => {
+  it('standard 把手点击不切换，键盘在 normal 与 full 状态间循环', async () => {
     const wrapper = mount(MatBottomSheet, {
       attachTo: document.body,
       props: {
         modelValue: true,
-        title: '高度状态',
         variant: 'standard',
       },
     });
@@ -478,14 +542,18 @@ describe('MatBottomSheet', () => {
 
     await handle.trigger('click');
 
-    expect(wrapper.emitted('update:expanded')).toEqual([[true]]);
+    expect(wrapper.emitted('update:expanded')).toBeUndefined();
 
-    await wrapper.setProps({ expanded: true });
+    await handle.trigger('keydown', { key: 'Enter' });
+
+    expect(wrapper.emitted('update:expanded')).toEqual([['full']]);
+
+    await wrapper.setProps({ expanded: 'full' });
 
     expect(wrapper.get('button[aria-label="折叠底部面板"]')).toBeTruthy();
     await wrapper.get('button[aria-label="折叠底部面板"]').trigger('keydown', { key: 'Enter' });
 
-    expect(wrapper.emitted('update:expanded')).toEqual([[true], [false]]);
+    expect(wrapper.emitted('update:expanded')).toEqual([['full'], ['normal']]);
     expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
 
@@ -493,9 +561,8 @@ describe('MatBottomSheet', () => {
     const wrapper = mount(MatBottomSheet, {
       attachTo: document.body,
       props: {
-        expanded: true,
+        expanded: 'full',
         modelValue: true,
-        title: '全屏内容',
         variant: 'standard',
       },
     });
@@ -519,79 +586,59 @@ describe('MatBottomSheet', () => {
       pointerId: 3,
     });
 
-    expect(wrapper.emitted('update:expanded')).toEqual([[false]]);
+    expect(wrapper.emitted('update:expanded')).toEqual([['normal']]);
     expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
 
-  it('展开的 modal 默认不显示关闭按钮，closable 时显示', async () => {
-    mount(MatBottomSheet, {
-      props: {
-        dragHandle: false,
-        expanded: true,
-        modelValue: true,
-        title: '全屏详情',
-        variant: 'modal',
-      },
-    });
-
-    await settleRender();
-
-    expect(document.body.querySelector('dialog button[aria-label="关闭"]')).toBeNull();
+  it('BottomSheet 不声明旧标题、关闭按钮属性，也不转发旧布局 Slot', async () => {
+    expect(MatBottomSheet.props.closable).toBeUndefined();
+    expect(MatBottomSheet.props.closeLabel).toBeUndefined();
+    expect(MatBottomSheet.props.title).toBeUndefined();
 
     const wrapper = mount(MatBottomSheet, {
       props: {
-        dragHandle: false,
-        expanded: true,
-        modelValue: true,
         closable: true,
-        title: '全屏详情',
-        variant: 'modal',
+        closeLabel: '关闭旧入口',
+        modelValue: true,
+        title: '旧标题',
+        variant: 'standard',
+      },
+      slots: {
+        actions: '<button data-testid="actions">操作</button>',
+        header: '<div data-testid="header">头部</div>',
+        title: '<h2 data-testid="title">标题</h2>',
       },
     });
 
     await settleRender();
 
-    const closeButton = document.body.querySelector('dialog button[aria-label="关闭"]');
-
-    expect(closeButton).not.toBeNull();
-    closeButton.click();
-
-    expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
-  });
-
-  it('closable 在预览状态下也显示关闭按钮', async () => {
-    const wrapper = mount(MatBottomSheet, {
-      props: {
-        modelValue: true,
-        closable: true,
-        title: '预览详情',
-        variant: 'modal',
-      },
-    });
-
-    await settleRender();
-
-    const closeButton = document.body.querySelector('dialog button[aria-label="关闭"]');
-
-    expect(closeButton).not.toBeNull();
-    closeButton.click();
-
-    expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
+    expect(wrapper.find('[data-testid="actions"]').exists()).toBe(false);
+    expect(wrapper.find('[data-testid="header"]').exists()).toBe(false);
+    expect(wrapper.find('[data-testid="title"]').exists()).toBe(false);
+    expect(wrapper.find('button[aria-label="关闭"]').exists()).toBe(false);
+    expect(wrapper.get('aside').attributes('title')).toBeUndefined();
   });
 
   it('展开的 modal 把手通过键盘请求关闭', async () => {
     const wrapper = mount(MatBottomSheet, {
       props: {
-        expanded: true,
+        expanded: 'full',
         modelValue: true,
-        title: '全屏详情',
         variant: 'modal',
+      },
+      attrs: {
+        'aria-label': '全屏详情',
       },
     });
 
     await settleRender();
 
     const handle = document.body.querySelector('dialog button[aria-label="关闭底部面板"]');
+
+    handle.click();
+
+    expect(wrapper.emitted('update:expanded')).toBeUndefined();
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
 
     handle.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 
@@ -602,8 +649,10 @@ describe('MatBottomSheet', () => {
     const wrapper = mount(MatBottomSheet, {
       props: {
         modelValue: true,
-        title: '关闭行为',
         variant: 'modal',
+      },
+      attrs: {
+        'aria-label': '关闭行为',
       },
     });
 
@@ -655,7 +704,7 @@ describe('MatBottomSheet', () => {
         class: 'custom-sheet',
       },
       slots: {
-        header: '<div>自定义头部</div>',
+        default: '<h2>自定义内容</h2>',
       },
     });
     await settleRender();
@@ -665,9 +714,9 @@ describe('MatBottomSheet', () => {
     expect(sheet?.getAttribute('aria-label')).toBe('筛选面板');
     expect(sheet?.getAttribute('data-testid')).toBe('bottom-sheet');
     expect(sheet?.classList.contains('custom-sheet')).toBe(true);
-    expect(sheet?.textContent).toContain('自定义头部');
+    expect(sheet?.textContent).toContain('自定义内容');
     expect(warning).not.toHaveBeenCalledWith(
-      'MatBottomSheet: 必须通过 title、title Slot、aria-label 或 aria-labelledby 提供可访问名称',
+      'MatBottomSheet: 必须通过 aria-label 或 aria-labelledby 提供可访问名称',
     );
   });
 });
@@ -926,12 +975,14 @@ describe.each([
       },
     });
 
+    const isBottomSheet = Component === MatBottomSheet;
     const wrapper = mount(Component, {
       props: {
         modelValue: true,
-        title,
+        ...(isBottomSheet ? {} : { title }),
         variant: 'modal',
       },
+      attrs: isBottomSheet ? { 'aria-label': title } : undefined,
     });
 
     await settleRender();

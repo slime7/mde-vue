@@ -20,10 +20,11 @@ const open = ref(false);
 
     <mat-bottom-sheet
       v-model="open"
-      title="自适应筛选"
-      content="调整浏览器宽度后再次打开，可观察布局变体变化。"
-      closable
-    />
+      aria-label="自适应筛选"
+    >
+      <h2>自适应筛选</h2>
+      <p>调整浏览器宽度后再次打开，可观察布局变体变化。</p>
+    </mat-bottom-sheet>
   </div>
 </template>
 <!-- #endregion template -->

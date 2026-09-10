@@ -283,8 +283,8 @@ describe('MatAppRoot 模态与浮层范围', () => {
       props: { fillViewport: false },
       slots: {
         default: () => h(MatBottomSheet, {
+          'aria-label': '底部面板',
           modelValue: open.value,
-          title: '底部面板',
           variant: 'modal',
           'onUpdate:modelValue': (value) => {
             open.value = value;
@@ -312,7 +312,6 @@ describe('MatAppRoot 模态与浮层范围', () => {
       slots: {
         default: () => h(MatBottomSheet, {
           modelValue: true,
-          title: '标准面板',
           variant: 'standard',
         }),
       },

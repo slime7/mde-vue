@@ -25,19 +25,23 @@ const modalOpen = ref(false);
     <mat-bottom-sheet
       v-model="standardOpen"
       variant="standard"
-      title="播放队列"
-      content="Standard Bottom sheet 与主内容共存。"
-      closable
-    />
+    >
+      <h2>播放队列</h2>
+      <p>Standard Bottom sheet 与主内容共存。</p>
+    </mat-bottom-sheet>
   </div>
 
   <mat-bottom-sheet
     v-model="modalOpen"
     variant="modal"
-    title="选择排序方式"
-    content="Modal Bottom sheet 会阻止背景交互。"
-    closable
-  />
+    aria-label="选择排序方式"
+  >
+    <h2>选择排序方式</h2>
+    <p>Modal Bottom sheet 会阻止背景交互。</p>
+    <mat-btn variant="filled-tonal" @click="modalOpen = false">
+      完成
+    </mat-btn>
+  </mat-bottom-sheet>
 </template>
 <!-- #endregion template -->
 

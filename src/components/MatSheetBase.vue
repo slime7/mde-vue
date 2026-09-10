@@ -29,7 +29,11 @@ import useFocusTrap from './use-focus-trap';
 import MatBtn from './mat-btn/MatBtn.vue';
 import MatSurfaceBase from './MatSurfaceBase.vue';
 import MatScrollArea from './mat-scroll-area/MatScrollArea.vue';
-import { normalizeNumber, toCssLength } from './value-utils';
+import {
+  isValidCssBlockSize,
+  normalizeNumber,
+  toCssLength,
+} from './value-utils';
 
 defineOptions({
   name: 'MatSheetBase',
@@ -90,7 +94,7 @@ const props = defineProps({
     default: true,
   },
   expanded: {
-    type: Boolean,
+    type: [Boolean, String, Number],
     default: false,
   },
   expandedDragHandleLabel: {
@@ -101,11 +105,19 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  rounded: {
+    type: Boolean,
+    default: true,
+  },
   position: {
     type: String,
     default: 'end',
   },
   scrim: {
+    type: Boolean,
+    default: true,
+  },
+  shadow: {
     type: Boolean,
     default: true,
   },
@@ -130,7 +142,9 @@ const props = defineProps({
 const emit = defineEmits({
   closed: () => true,
   opened: () => true,
-  'update:expanded': (payload) => typeof payload === 'boolean',
+  'update:expanded': (payload) => typeof payload === 'boolean'
+    || payload === 'normal'
+    || payload === 'full',
   'update:modelValue': (payload) => typeof payload === 'boolean',
 });
 const attrs = useAttrs();
@@ -171,17 +185,62 @@ const hasActivatorSlot = computed(() => Boolean(slots.activator));
 const hasTitle = computed(() => props.title !== undefined || Boolean(slots.title));
 const hasContent = computed(() => props.content !== undefined || Boolean(slots.default));
 const showCloseButton = computed(() => props.closable);
+/**
+ * @param {unknown} value
+ * @returns {'normal'|'full'|string|number}
+ */
+function resolveBottomExpanded(value) {
+  if (value === 'full' || value === true) {
+    return 'full';
+  }
+
+  if (value === 'normal' || value === false || value === undefined) {
+    return 'normal';
+  }
+
+  if (isValidCssBlockSize(value, { allowNegative: true })) {
+    return value;
+  }
+
+  return 'normal';
+}
+const bottomExpanded = computed(() => (
+  props.direction === 'bottom' ? resolveBottomExpanded(props.expanded) : props.expanded
+));
+const isBottomExpanded = computed(() => (
+  props.direction === 'bottom' && bottomExpanded.value !== 'normal'
+));
+const expandedBlockSize = computed(() => {
+  if (!isBottomExpanded.value || bottomExpanded.value === 'full') {
+    return undefined;
+  }
+
+  const length = toCssLength(bottomExpanded.value, {
+    allowNegative: true,
+    property: 'block-size',
+  });
+
+  if (!length) {
+    return undefined;
+  }
+
+  if (/^(auto|contain|fit-content(?:\(.+\))?|inherit|initial|max-content|min-content|revert(?:-layer)?|stretch|unset)$/i.test(length)) {
+    return length;
+  }
+
+  return `max(64px, ${length})`;
+});
 const panelClasses = computed(() => [
   `mat-sheet__panel--${props.direction}`,
   `mat-sheet__panel--position-${props.position}`,
   {
-    'mat-sheet__panel--expanded': props.direction === 'bottom' && props.expanded,
+    'mat-sheet__panel--expanded': isBottomExpanded.value,
     'mat-sheet__panel--virtual-expand': props.direction === 'bottom' && props.virtualExpand,
     'mat-sheet__panel--dragging': dragging.value,
   },
 ]);
 const resolvedDragHandleLabel = computed(() => {
-  if (!props.expanded) {
+  if (!isBottomExpanded.value) {
     return props.dragHandleLabel;
   }
 
@@ -213,9 +272,16 @@ const sizeStyle = computed(() => {
 });
 const rootStyle = computed(() => [
   attrs.style,
+  sizeStyle.value,
+  expandedBlockSize.value ? {
+    '--mat-sheet-expanded-block-size': expandedBlockSize.value,
+  } : undefined,
 ]);
 const panelStyle = computed(() => [
   sizeStyle.value,
+  expandedBlockSize.value ? {
+    '--mat-sheet-expanded-block-size': expandedBlockSize.value,
+  } : undefined,
 ]);
 let mounted = false;
 const phaseMotion = createMotionController();
@@ -320,18 +386,18 @@ function buildScopeOptions(context) {
 let contentTouchStartY = null;
 
 function handleContentWheel(event) {
-  if (props.direction !== 'bottom' || !props.virtualExpand || props.expanded) {
+  if (props.direction !== 'bottom' || !props.virtualExpand || isBottomExpanded.value) {
     return;
   }
 
   if (event.deltaY > 0) {
     event.preventDefault();
-    emit('update:expanded', true);
+    emit('update:expanded', 'full');
   }
 }
 
 function handleContentPointerDown(event) {
-  if (props.direction !== 'bottom' || !props.virtualExpand || props.expanded) {
+  if (props.direction !== 'bottom' || !props.virtualExpand || isBottomExpanded.value) {
     return;
   }
 
@@ -341,7 +407,7 @@ function handleContentPointerDown(event) {
 }
 
 function handleContentPointerMove(event) {
-  if (props.direction !== 'bottom' || !props.virtualExpand || props.expanded) {
+  if (props.direction !== 'bottom' || !props.virtualExpand || isBottomExpanded.value) {
     return;
   }
 
@@ -350,7 +416,7 @@ function handleContentPointerMove(event) {
 
     if (deltaY >= 8) {
       contentTouchStartY = null;
-      emit('update:expanded', true);
+      emit('update:expanded', 'full');
     }
   }
 }
@@ -390,18 +456,6 @@ function handleDragHandleClick() {
     suppressHandleClick = false;
     return;
   }
-
-  if (props.expanded) {
-    if (isModal.value) {
-      requestClose();
-      return;
-    }
-
-    emit('update:expanded', false);
-    return;
-  }
-
-  emit('update:expanded', true);
 }
 
 /**
@@ -413,7 +467,18 @@ function handleDragHandleKeydown(event) {
   }
 
   event.preventDefault();
-  handleDragHandleClick();
+
+  if (!isBottomExpanded.value) {
+    emit('update:expanded', 'full');
+    return;
+  }
+
+  if (isModal.value) {
+    requestClose();
+    return;
+  }
+
+  emit('update:expanded', 'normal');
 }
 
 function warnForInvalidActivator() {
@@ -423,13 +488,19 @@ function warnForInvalidActivator() {
 }
 
 function warnForAccessibleName() {
-  if (!isModal.value || hasTitle.value || attrs['aria-label'] || attrs['aria-labelledby']) {
+  if (!isModal.value || attrs['aria-label'] || attrs['aria-labelledby']) {
     return;
   }
 
-  console.warn(
-    `${props.componentName}: 必须通过 title、title Slot、aria-label 或 aria-labelledby 提供可访问名称`,
-  );
+  if (props.direction === 'side' && hasTitle.value) {
+    return;
+  }
+
+  const message = props.direction === 'bottom'
+    ? '必须通过 aria-label 或 aria-labelledby 提供可访问名称'
+    : '必须通过 title、title Slot、aria-label 或 aria-labelledby 提供可访问名称';
+
+  console.warn(`${props.componentName}: ${message}`);
 }
 
 function warnForInvalidAttach() {
@@ -640,7 +711,7 @@ function updateDragNow(event) {
     dragDistance = event.clientY - dragStart;
 
     if (props.virtualExpand) {
-      if (!props.expanded) {
+      if (!isBottomExpanded.value) {
         const maxUp = -dragStartExtent * 0.75;
         const clampedDrag = dragDistance < maxUp
           ? maxUp + (dragDistance - maxUp) * 0.2
@@ -656,8 +727,8 @@ function updateDragNow(event) {
       return;
     }
 
-    if ((!props.expanded && dragDistance < 0)
-      || (props.expanded && dragDistance > 0)) {
+    if ((!isBottomExpanded.value && dragDistance < 0)
+      || (isBottomExpanded.value && dragDistance > 0)) {
       writeDragStyle(0, Math.max(0, dragStartExtent - dragDistance));
       return;
     }
@@ -721,19 +792,19 @@ function finishDrag(event) {
   stopDragging();
 
   if (props.direction === 'bottom' && reachedThreshold) {
-    if (!props.expanded && dragDistance < 0) {
+    if (!isBottomExpanded.value && dragDistance < 0) {
       clearDragStyle();
-      emit('update:expanded', true);
+      emit('update:expanded', 'full');
       return;
     }
 
-    if (props.expanded && dragDistance > 0) {
+    if (isBottomExpanded.value && dragDistance > 0) {
       clearDragStyle();
-      emit('update:expanded', false);
+      emit('update:expanded', 'normal');
       return;
     }
 
-    if (!props.expanded && dragDistance > 0) {
+    if (!isBottomExpanded.value && dragDistance > 0) {
       writeDragStyle(dragOffset, null);
       requestClose();
       return;
@@ -944,15 +1015,17 @@ watch(() => props.closeLabel, (value) => {
         {
           'mat-sheet--app-root': isAppRootScoped,
           'mat-sheet--dragging': dragging,
-          'mat-sheet--expanded': direction === 'bottom' && expanded,
+          'mat-sheet--expanded': isBottomExpanded,
           'mat-sheet--virtual-expand': direction === 'bottom' && virtualExpand,
+          'mat-sheet--no-shadow': !shadow,
+          'mat-sheet--no-rounded': !rounded,
           'mat-sheet--top': isTop,
           'mat-sheet--transparent-scrim': !scrim,
           'mat-sheet--explicit-container-color': props.containerColor && !isModal,
         },
       ]"
       :style="rootStyle"
-      :aria-labelledby="$attrs['aria-labelledby'] ?? (hasTitle ? titleId : undefined)"
+      :aria-labelledby="$attrs['aria-labelledby'] ?? (direction === 'side' && hasTitle ? titleId : undefined)"
       :aria-modal="isModal ? 'true' : undefined"
       :tabindex="isModal ? -1 : undefined"
       @cancel="handleCancel"
@@ -990,7 +1063,7 @@ watch(() => props.closeLabel, (value) => {
           </slot>
         </button>
 
-        <header v-if="hasHeader" class="mat-sheet__header">
+        <header v-if="direction === 'side' && hasHeader" class="mat-sheet__header">
           <slot name="header">
             <h2
               v-if="hasTitle"
@@ -1032,10 +1105,13 @@ watch(() => props.closeLabel, (value) => {
           @pointercancel="handleContentPointerUp"
         >
           <div class="mat-sheet__content-body">
-            <template v-if="content !== undefined">
+            <template v-if="direction !== 'bottom' && content !== undefined">
               {{ content }}
             </template>
-            <slot v-else />
+            <slot v-else-if="$slots.default" />
+            <template v-else-if="content !== undefined">
+              {{ content }}
+            </template>
           </div>
         </MatScrollArea>
 
@@ -1124,6 +1200,7 @@ watch(() => props.closeLabel, (value) => {
   .mat-sheet--standard.mat-sheet--bottom {
     interpolate-size: allow-keywords;
     align-self: center;
+    block-size: fit-content;
     inline-size: min(var(--mat-sheet-preferred-width), 100%);
     max-inline-size: min(640px, 100%);
     max-block-size: calc(100dvb - 72px);
@@ -1132,8 +1209,8 @@ watch(() => props.closeLabel, (value) => {
       var(--mat-sys-shape-corner-none)
       var(--mat-sys-shape-corner-none);
     box-shadow: var(--mat-sys-elevation-level1), 0 50vh 0 0 var(--mat-sheet-container-color);
-    transform: translateY(calc(var(--mat-sheet-virtual-offset, 0px) + var(--mat-sheet-drag-offset, 0px)));
-    transition: transform var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial);
+    transform: translateY(var(--mat-sheet-drag-offset, 0));
+    transition: transform var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial), box-shadow var(--mat-sys-motion-spring-fast-effects), border-radius var(--mat-sys-motion-spring-fast-effects);
   }
 
   .mat-sheet--modal .mat-sheet__panel--bottom {
@@ -1141,6 +1218,7 @@ watch(() => props.closeLabel, (value) => {
     position: absolute;
     inset-block-end: 0;
     inset-inline: 0;
+    block-size: fit-content;
     inline-size: min(var(--mat-sheet-preferred-width), 100%);
     max-inline-size: min(640px, 100%);
     max-block-size: calc(100% - 72px);
@@ -1150,30 +1228,26 @@ watch(() => props.closeLabel, (value) => {
       var(--mat-sys-shape-corner-none)
       var(--mat-sys-shape-corner-none);
     box-shadow: var(--mat-sys-elevation-level1), 0 50vh 0 0 var(--mat-sheet-container-color);
-    transform: translateY(calc(var(--mat-sheet-virtual-offset, 0px) + var(--mat-sheet-drag-offset, 0px)));
-    transition: transform var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial);
+    transform: translateY(var(--mat-sheet-drag-offset, 0));
+    transition: transform var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial), box-shadow var(--mat-sys-motion-spring-fast-effects), border-radius var(--mat-sys-motion-spring-fast-effects);
   }
 
-  .mat-sheet--modal .mat-sheet__panel--bottom:not(.mat-sheet__panel--expanded):not(.mat-sheet__panel--dragging):not(.mat-sheet__panel--virtual-expand) {
-    max-block-size: 50%;
+  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--expanded {
+    block-size: var(--mat-sheet-expanded-block-size, calc(100dvb - 72px));
   }
 
-  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--expanded,
-  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--virtual-expand {
-    block-size: calc(100dvb - 72px);
+  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--expanded {
+    block-size: var(--mat-sheet-expanded-block-size, calc(100% - 72px));
   }
 
-  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--expanded,
-  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--virtual-expand {
-    block-size: calc(100% - 72px);
+  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--no-shadow,
+  .mat-sheet--modal.mat-sheet--no-shadow .mat-sheet__panel--bottom {
+    box-shadow: none;
   }
 
-  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--virtual-expand:not(.mat-sheet--expanded) {
-    --mat-sheet-virtual-offset: 75%;
-  }
-
-  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--virtual-expand:not(.mat-sheet__panel--expanded) {
-    --mat-sheet-virtual-offset: 75%;
+  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--no-rounded,
+  .mat-sheet--modal.mat-sheet--no-rounded .mat-sheet__panel--bottom {
+    border-radius: var(--mat-sys-shape-corner-none);
   }
 
   .mat-sheet--standard.mat-sheet--side {
@@ -1306,10 +1380,6 @@ watch(() => props.closeLabel, (value) => {
     flex-shrink: 0;
   }
 
-  .mat-sheet--virtual-expand:not(.mat-sheet--expanded) .mat-sheet__content {
-    overflow: hidden;
-  }
-
   .mat-sheet__content {
     display: flex;
     flex-direction: column;
@@ -1352,9 +1422,8 @@ watch(() => props.closeLabel, (value) => {
       max-block-size: calc(100dvb - 56px);
     }
 
-    .mat-sheet--standard.mat-sheet--bottom.mat-sheet--expanded,
-    .mat-sheet--standard.mat-sheet--bottom.mat-sheet--virtual-expand {
-      block-size: calc(100dvb - 56px);
+    .mat-sheet--standard.mat-sheet--bottom.mat-sheet--expanded {
+      block-size: var(--mat-sheet-expanded-block-size, calc(100dvb - 56px));
     }
 
     .mat-sheet--modal .mat-sheet__panel--bottom {
@@ -1362,17 +1431,8 @@ watch(() => props.closeLabel, (value) => {
       max-block-size: calc(100% - 56px);
     }
 
-    .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--expanded,
-    .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--virtual-expand {
-      block-size: calc(100% - 56px);
-    }
-
-    .mat-sheet--standard.mat-sheet--bottom.mat-sheet--virtual-expand:not(.mat-sheet--expanded) {
-      --mat-sheet-virtual-offset: 75%;
-    }
-
-    .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--virtual-expand:not(.mat-sheet__panel--expanded) {
-      --mat-sheet-virtual-offset: 75%;
+    .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--expanded {
+      block-size: var(--mat-sheet-expanded-block-size, calc(100% - 56px));
     }
   }
 

@@ -23,10 +23,10 @@ const containerColor = ref(false);
       model-value
       variant="standard"
       :container-color="containerColor"
-      title="容器配色面板"
-      content="Standard Bottom sheet 可切换为 modal 容器语义色。"
-      closable
-    />
+    >
+      <h2>容器配色面板</h2>
+      <p>Standard Bottom sheet 可切换为 modal 容器语义色。</p>
+    </mat-bottom-sheet>
   </div>
 </template>
 <!-- #endregion template -->

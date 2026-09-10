@@ -2789,28 +2789,29 @@ export interface MatBottomSheetProps {
   */
   dragHandle?: boolean;
   /**
-  * 展开的 standard 状态下拖动把手的可访问名称。
+  * full 或自定义高度的 standard 状态下拖动把手的可访问名称。
   *
   * @type {string}
   * @default '折叠底部面板'
   */
   collapseDragHandleLabel?: string;
   /**
-  * 预设高度状态；false 为不超过半屏的预览状态，true 为展开状态。
+  * 展开高度。normal 使用内容自然高度，full 使用当前可用最大高度，数字与纯数字字符串按 px
+  * 处理，其他字符串须为合法的 CSS block-size 值。
   *
-  * @type {boolean}
-  * @default false
+  * @type {'normal'|'full'|number|string}
+  * @default 'normal'
   */
-  expanded?: boolean;
+  expanded?: 'normal'|'full'|number|string;
   /**
-  * 虚拟全高模式；开启后内容容器按展开态高度计算并下移截断，用户滚动或上拉时自动展开到全高。
+  * 虚拟展开模式；开启后 normal 状态下内容区继续支持滚动，并在向下滚动或向上滑动时请求 full。
   *
   * @type {boolean}
   * @default false
   */
   virtualExpand?: boolean;
   /**
-  * 预览状态下拖动把手的可访问名称。
+  * normal 状态下拖动把手的可访问名称。
   *
   * @type {string}
   * @default '展开底部面板'
@@ -2824,35 +2825,14 @@ export interface MatBottomSheetProps {
   */
   expandedDragHandleLabel?: string;
   /**
-  * 是否允许通过把手向上展开，以及向下折叠或关闭。
+  * 是否允许通过把手拖动在 normal 与 full 间切换，或在 normal 状态下关闭。
   *
   * @type {boolean}
   * @default true
   */
   draggable?: boolean;
   /**
-  * 是否显示内置关闭按钮。
-  *
-  * @type {boolean}
-  * @default false
-  */
-  closable?: boolean;
-  /**
-  * 内置关闭按钮的非空可访问名称。
-  *
-  * @type {string}
-  * @default '关闭'
-  */
-  closeLabel?: string;
-  /**
-  * 简单标题；设置后优先于 title Slot。
-  *
-  * @type {string | undefined}
-  * @default undefined
-  */
-  title?: string | undefined;
-  /**
-  * 简单正文；设置后优先于默认 Slot。
+  * 纯文本内容便利属性；提供默认 Slot 时优先使用默认 Slot。
   *
   * @type {string | undefined}
   * @default undefined
@@ -2866,6 +2846,20 @@ export interface MatBottomSheetProps {
   * @default false
   */
   containerColor?: boolean;
+  /**
+  * 是否显示 Material 3 level 1 阴影。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  shadow?: boolean;
+  /**
+  * 是否显示顶部 extra-large 圆角。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  rounded?: boolean;
 }
 
 export interface MatBottomSheetEmits {
@@ -2874,7 +2868,7 @@ export interface MatBottomSheetEmits {
   */
   "update:modelValue": (payload: unknown) => unknown;
   /**
-  * 通过把手请求切换预设高度时发出。
+  * 通过把手、拖动或内容手势请求切换高度时发出 normal 或 full。
   */
   "update:expanded": (payload: unknown) => unknown;
   /**
