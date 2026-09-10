@@ -17,7 +17,7 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 
 默认 `variant="auto"`：视口宽度小于 `breakpoint` 时使用 modal，达到断点后使用 standard。默认断点为 840px。自动模式只改变 Bottom sheet 自身的布局方式，不会把它替换成 Side sheet。
 
-`normal` 状态按内容自然高度展示；内容超过当前最大展开高度时，只有内容区域滚动。`full` 状态使用扣除顶部安全间距后的最大高度。`expanded` 也可以设置数字、纯数字字符串或合法 CSS `block-size` 值；手动高度低于 64px 时只把实际渲染高度限制为 64px，不修改受控值。高度切换、阴影开关和圆角开关都使用 Material motion 过渡，拖动时会暂时关闭高度过渡以跟随指针，释放后恢复动画。
+`normal` 状态按内容自然高度展示；内容超过当前最大展开高度时，只有内容区域滚动。开启 `virtualExpand` 后，normal 状态会保留 full 的面板高度并向下偏移，初始只显示底部预览区域，内容滚动条按 full 高度计算；内容区向下滚轮或向上滑动时请求 `full`。`full` 状态使用扣除顶部安全间距后的最大高度。`expanded` 也可以设置数字、纯数字字符串或合法 CSS `block-size` 值；手动高度低于 64px 时只把实际渲染高度限制为 64px，不修改受控值。高度切换、阴影开关和圆角开关都使用 Material motion 过渡，拖动时会暂时关闭高度过渡以跟随指针，释放后恢复动画。
 
 把手的鼠标点击不会切换高度；键盘 Enter/Space 仍然执行可访问的状态操作：normal 请求 `full`，standard 的展开状态请求 `normal`，modal 的展开状态请求关闭。normal 状态向上拖动请求 `full`，向下拖动达到阈值请求关闭；full 或自定义高度向下拖动请求 `normal`。开启 `virtualExpand` 后，normal 状态下内容区向下滚轮或向上滑动会请求 `full`，已经展开时不会重复请求。
 
@@ -71,6 +71,8 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 <<< @/examples/bottom-sheet/BottomSheetExpandedExample.vue#template [template]
 
 <<< @/examples/bottom-sheet/BottomSheetExpandedExample.vue#script [script]
+
+<<< @/examples/bottom-sheet/BottomSheetExpandedExample.vue#style [style]
 
 :::
 ::::
@@ -194,7 +196,7 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 | `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否允许点击 modal 帷幕关闭 |
 | `dragHandle` | `boolean` | `true` | 模板属性为 `drag-handle`；是否显示顶部拖动把手 |
 | `expanded` | `'normal' \| 'full' \| number \| string` | `'normal'` | normal 使用自然内容高度，full 使用当前最大展开高度；数字与纯数字字符串按 px 处理，其他字符串按合法 CSS `block-size` 处理；实际高度不会低于 64px，非法值回退 normal |
-| `virtualExpand` | `boolean` | `false` | 模板属性为 `virtual-expand`；normal 状态下内容区向下滚轮或向上滑动时请求 full |
+| `virtualExpand` | `boolean` | `false` | 模板属性为 `virtual-expand`；normal 状态保留 full 的面板高度并只显示底部预览区域，滚动条按 full 高度计算；内容区向下滚轮或向上滑动时请求 full |
 | `dragHandleLabel` | `string` | `'展开底部面板'` | 模板属性为 `drag-handle-label`；预览状态下把手的可访问名称 |
 | `collapseDragHandleLabel` | `string` | `'折叠底部面板'` | 模板属性为 `collapse-drag-handle-label`；展开的 standard 状态下把手的可访问名称 |
 | `expandedDragHandleLabel` | `string` | `'关闭底部面板'` | 模板属性为 `expanded-drag-handle-label`；展开的 modal 状态下把手的可访问名称 |

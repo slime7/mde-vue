@@ -379,6 +379,8 @@ describe('MatBottomSheet', () => {
     const content = document.body.querySelector('dialog .mat-sheet__content');
 
     expect(content).not.toBeNull();
+    expect(wrapper.props('expanded')).toBe('normal');
+    expect(wrapper.emitted('update:expanded')).toBeUndefined();
 
     content.dispatchEvent(new WheelEvent('wheel', {
       bubbles: true,

@@ -1209,7 +1209,7 @@ watch(() => props.closeLabel, (value) => {
       var(--mat-sys-shape-corner-none)
       var(--mat-sys-shape-corner-none);
     box-shadow: var(--mat-sys-elevation-level1), 0 50vh 0 0 var(--mat-sheet-container-color);
-    transform: translateY(var(--mat-sheet-drag-offset, 0));
+    transform: translateY(var(--mat-sheet-virtual-offset, 0%)) translateY(var(--mat-sheet-drag-offset, 0));
     transition: transform var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial), box-shadow var(--mat-sys-motion-spring-fast-effects), border-radius var(--mat-sys-motion-spring-fast-effects);
   }
 
@@ -1228,7 +1228,7 @@ watch(() => props.closeLabel, (value) => {
       var(--mat-sys-shape-corner-none)
       var(--mat-sys-shape-corner-none);
     box-shadow: var(--mat-sys-elevation-level1), 0 50vh 0 0 var(--mat-sheet-container-color);
-    transform: translateY(var(--mat-sheet-drag-offset, 0));
+    transform: translateY(var(--mat-sheet-virtual-offset, 0%)) translateY(var(--mat-sheet-drag-offset, 0));
     transition: transform var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial), box-shadow var(--mat-sys-motion-spring-fast-effects), border-radius var(--mat-sys-motion-spring-fast-effects);
   }
 
@@ -1238,6 +1238,16 @@ watch(() => props.closeLabel, (value) => {
 
   .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--expanded {
     block-size: var(--mat-sheet-expanded-block-size, calc(100% - 72px));
+  }
+
+  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--virtual-expand:not(.mat-sheet--expanded) {
+    --mat-sheet-virtual-offset: 75%;
+    block-size: calc(100dvb - 72px);
+  }
+
+  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--virtual-expand:not(.mat-sheet__panel--expanded) {
+    --mat-sheet-virtual-offset: 75%;
+    block-size: calc(100% - 72px);
   }
 
   .mat-sheet--standard.mat-sheet--bottom.mat-sheet--no-shadow,
@@ -1426,6 +1436,10 @@ watch(() => props.closeLabel, (value) => {
       block-size: var(--mat-sheet-expanded-block-size, calc(100dvb - 56px));
     }
 
+    .mat-sheet--standard.mat-sheet--bottom.mat-sheet--virtual-expand:not(.mat-sheet--expanded) {
+      block-size: calc(100dvb - 56px);
+    }
+
     .mat-sheet--modal .mat-sheet__panel--bottom {
       max-inline-size: min(640px, calc(100% - 112px));
       max-block-size: calc(100% - 56px);
@@ -1433,6 +1447,10 @@ watch(() => props.closeLabel, (value) => {
 
     .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--expanded {
       block-size: var(--mat-sheet-expanded-block-size, calc(100% - 56px));
+    }
+
+    .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--virtual-expand:not(.mat-sheet__panel--expanded) {
+      block-size: calc(100% - 56px);
     }
   }
 
