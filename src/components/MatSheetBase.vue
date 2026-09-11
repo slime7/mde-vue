@@ -30,6 +30,7 @@ import {
   resolveBottomSheetDragGeometry,
   resolveBottomSheetDragTarget,
   resolveBottomSheetPreviewOffset,
+  resolveBottomSheetPreviewVisible,
   resolveBottomSheetTiers,
 } from './bottom-sheet-drag';
 import useFocusTrap from './use-focus-trap';
@@ -230,9 +231,14 @@ const isBottomCollapsed = computed(() => (
 ));
 const isBottomExpanded = computed(() => props.direction === 'bottom' && !isBottomCollapsed.value);
 // min、full 与自定义高度使用显式 block-size；normal 与 max 按内容自然高度渲染。
+// 虚拟展开下面板始终保留内容高度，min 与 normal 只通过整体位移控制露出多少。
 const usesExplicitBlockSize = computed(() => {
   if (props.direction !== 'bottom') {
     return false;
+  }
+
+  if (bottomExpanded.value === 'min') {
+    return !props.virtualExpand;
   }
 
   return bottomExpanded.value !== 'normal' && bottomExpanded.value !== 'max';
@@ -439,14 +445,14 @@ function buildScopeOptions(context) {
 let contentTouchStartY = null;
 
 /**
- * 虚拟预览是否生效：只有 Bottom sheet 的 normal 档才保留内容高度并向下偏移。
+ * 虚拟预览是否生效：Bottom sheet 的 min 与 normal 档保留内容高度并向下偏移。
  *
  * @returns {boolean}
  */
 function isVirtualPreviewActive() {
   return props.direction === 'bottom'
     && props.virtualExpand
-    && bottomExpanded.value === 'normal';
+    && (bottomExpanded.value === 'min' || bottomExpanded.value === 'normal');
 }
 
 /**
@@ -500,7 +506,7 @@ function resolveContentExtent() {
 
 /**
  * 更新虚拟预览偏移：面板按 min(内容高度, 可用高度) 布局，只把下半部分移出屏幕，
- * 让可见高度等于 normal 档上限。
+ * 让可见高度等于当前档位应露出的高度。
  */
 function updateVirtualPreviewOffset() {
   if (!isVirtualPreviewActive()) {
@@ -516,7 +522,10 @@ function updateVirtualPreviewOffset() {
 
   virtualPreviewOffset.value = resolveBottomSheetPreviewOffset({
     panelExtent: max,
-    visibleExtent: availableExtent / 2,
+    visibleExtent: resolveBottomSheetPreviewVisible({
+      availableExtent,
+      value: bottomExpanded.value,
+    }),
   });
 }
 
@@ -886,6 +895,7 @@ function updateDragNow(event) {
     if (props.virtualExpand) {
       writeDragStyle(
         resolveBottomSheetPreviewOffset({
+          overshootLimit: dragOvershootLimit,
           panelExtent: dragStartExtent,
           visibleExtent: extent,
         }) - dragPreviewOffset,

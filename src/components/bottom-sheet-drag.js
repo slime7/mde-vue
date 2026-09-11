@@ -116,16 +116,48 @@ export function resolveBottomSheetDragGeometry({
 }
 
 /**
+ * 计算虚拟预览在指定档位应露出的高度。
+ *
+ * 虚拟预览下面板始终按 min(内容高度, 可用高度) 布局，档位只决定露出多少：
+ * min 露出 64px，normal 露出可用高度的一半；因此 normal 与 min 之间切换时
+ * 面板高度不变，只有整体位移变化。
+ *
+ * @param {{ availableExtent: number, value: unknown }} geometry
+ * @returns {number}
+ */
+export function resolveBottomSheetPreviewVisible({ availableExtent, value }) {
+  if (value === 'min') {
+    return MIN_BLOCK_SIZE;
+  }
+
+  return Math.max(0, availableExtent) / 2;
+}
+
+/**
  * 计算虚拟预览拖动时的整体偏移。
  *
  * 面板保持已布局高度，只把下半部分移出屏幕，可见高度因此等于传入的
- * visibleExtent，最小为 0、最大为面板高度。
+ * visibleExtent，最小为 0、最大为面板高度；继续向上拖动时按阻尼改为负偏移，
+ * 让整块面板可见后仍有跟手反馈。
  *
- * @param {{ panelExtent: number, visibleExtent: number }} geometry
+ * @param {{ overshootLimit?: number, panelExtent: number, visibleExtent: number }} geometry
  * @returns {number}
  */
-export function resolveBottomSheetPreviewOffset({ panelExtent, visibleExtent }) {
+export function resolveBottomSheetPreviewOffset({
+  overshootLimit = 0,
+  panelExtent,
+  visibleExtent,
+}) {
   const panel = Math.max(0, panelExtent);
+
+  if (visibleExtent > panel) {
+    const overshoot = Math.min(
+      (visibleExtent - panel) * OVERSHOOT_DAMPING,
+      Math.max(0, overshootLimit),
+    );
+
+    return overshoot > 0 ? -overshoot : 0;
+  }
 
   return Math.min(panel, Math.max(0, panel - visibleExtent));
 }

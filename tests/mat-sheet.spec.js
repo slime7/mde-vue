@@ -8,6 +8,7 @@ import {
   resolveBottomSheetDragGeometry,
   resolveBottomSheetDragTarget,
   resolveBottomSheetPreviewOffset,
+  resolveBottomSheetPreviewVisible,
   resolveBottomSheetTiers,
 } from '../src/components/bottom-sheet-drag';
 import MatSheetBase from '../src/components/MatSheetBase.vue';
@@ -1066,6 +1067,60 @@ describe('MatBottomSheet', () => {
     expect(wrapper.emitted('update:expanded')).toBeUndefined();
     expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
+
+  it('virtualExpand 下 min 与 normal 都保留内容高度，只用位移控制可见高度', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容',
+        expanded: 'normal',
+        modelValue: true,
+        variant: 'modal',
+        virtualExpand: true,
+      },
+      attrs: {
+        'aria-label': '虚拟预览档位',
+      },
+    });
+
+    await settleRender();
+
+    const sheet = document.body.querySelector('dialog');
+    const panel = sheet.querySelector('.mat-sheet__panel');
+
+    stubExtent(sheet, 768);
+    stubBottomSheetLayout(panel, { contentHeight: 1048, panelHeight: 696 });
+    window.dispatchEvent(new Event('resize'));
+    await settleRender();
+
+    // 可用高度 768 - 72 = 696：normal 露出 348，min 露出 64。
+    expect(sheet.style.getPropertyValue('--mat-sheet-virtual-offset')).toBe('348px');
+    expect(panel.classList.contains('mat-sheet__panel--sized')).toBe(false);
+    expect(sheet.style.getPropertyValue('--mat-sheet-expanded-block-size')).toBe('');
+
+    await wrapper.setProps({ expanded: 'min' });
+    await settleRender();
+
+    expect(sheet.style.getPropertyValue('--mat-sheet-virtual-offset')).toBe('632px');
+    expect(panel.classList.contains('mat-sheet__panel--sized')).toBe(false);
+    expect(sheet.style.getPropertyValue('--mat-sheet-expanded-block-size')).toBe('');
+  });
+
+  it('virtualExpand 关闭时 min 仍使用 64px 的显式高度', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        expanded: 'min',
+        modelValue: true,
+        variant: 'standard',
+      },
+    });
+
+    await settleRender();
+
+    expect(wrapper.get('aside').element.style.getPropertyValue('--mat-sheet-expanded-block-size'))
+      .toBe('var(--mat-sheet-min-block-size)');
+  });
 });
 
 describe('Bottom sheet 拖拽档位几何', () => {
@@ -1139,6 +1194,25 @@ describe('Bottom sheet 拖拽档位几何', () => {
     expect(resolveBottomSheetPreviewOffset({ panelExtent: 696, visibleExtent: 348 })).toBe(348);
     expect(resolveBottomSheetPreviewOffset({ panelExtent: 200, visibleExtent: 348 })).toBe(0);
     expect(resolveBottomSheetPreviewOffset({ panelExtent: 696, visibleExtent: -100 })).toBe(696);
+  });
+
+  it('虚拟预览拖动超出面板高度后改为负偏移并受上限封顶', () => {
+    expect(resolveBottomSheetPreviewOffset({
+      overshootLimit: 56,
+      panelExtent: 696,
+      visibleExtent: 796,
+    })).toBe(-25);
+
+    expect(resolveBottomSheetPreviewOffset({
+      overshootLimit: 56,
+      panelExtent: 696,
+      visibleExtent: 2000,
+    })).toBe(-56);
+  });
+
+  it('虚拟预览的可见高度按档位取 min 与可用高度一半', () => {
+    expect(resolveBottomSheetPreviewVisible({ availableExtent: 664, value: 'min' })).toBe(64);
+    expect(resolveBottomSheetPreviewVisible({ availableExtent: 664, value: 'normal' })).toBe(332);
   });
 
   it('只有触控向下位移达到 48px 且速度不小于 0.5px/ms 才算甩动', () => {
