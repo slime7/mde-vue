@@ -99,6 +99,7 @@ function stubBottomSheetLayout(panel, { contentHeight, panelHeight }) {
 async function dragHandleTo(handle, {
   from,
   pointerId = 1,
+  pointerType = 'touch',
   slow = true,
   target = window,
   to,
@@ -107,7 +108,7 @@ async function dragHandleTo(handle, {
     button: 0,
     clientY: from,
     pointerId,
-    pointerType: 'touch',
+    pointerType,
   });
 
   if (slow) {
@@ -864,6 +865,72 @@ describe('MatBottomSheet', () => {
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
   });
 
+  it('鼠标快速下拉不请求关闭，拖进关闭分区才关闭', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容',
+        modelValue: true,
+        variant: 'standard',
+      },
+    });
+
+    await settleRender();
+
+    const sheet = wrapper.get('aside').element;
+
+    stubBottomSheetLayout(sheet, { contentHeight: 1048, panelHeight: 348 });
+
+    const handle = wrapper.get('button[aria-label="展开底部面板"]').element;
+
+    await dragHandleTo(handle, {
+      from: 200,
+      pointerId: 15,
+      pointerType: 'mouse',
+      slow: false,
+      to: 260,
+    });
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+    expect(wrapper.emitted('update:expanded')).toBeUndefined();
+
+    await dragHandleTo(handle, {
+      from: 200,
+      pointerId: 16,
+      pointerType: 'mouse',
+      to: 200 + 330,
+    });
+
+    expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
+  });
+
+  it('max 高于可用高度时向上拖动仍跟手并在松手后回到 max', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容',
+        expanded: 'max',
+        modelValue: true,
+        variant: 'standard',
+      },
+    });
+
+    await settleRender();
+
+    const sheet = wrapper.get('aside').element;
+
+    stubBottomSheetLayout(sheet, { contentHeight: 2000, panelHeight: 696 });
+
+    await dragHandleTo(wrapper.get('button[aria-label="折叠底部面板"]').element, {
+      from: 400,
+      pointerId: 17,
+      to: 100,
+    });
+
+    expect(wrapper.emitted('update:expanded')).toBeUndefined();
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+  });
+
   it('从把手向上拖拽并在帷幕内松手时不请求关闭', async () => {
     const wrapper = mount(MatBottomSheet, {
       attachTo: document.body,
@@ -1054,17 +1121,48 @@ describe('Bottom sheet 拖拽档位几何', () => {
       .toEqual({ offset: 0, size: 696 });
   });
 
+  it('超出可用高度后按阻尼继续放大并受上限封顶', () => {
+    expect(resolveBottomSheetDragGeometry({
+      availableExtent: 696,
+      extent: 896,
+      overshootLimit: 72,
+    })).toEqual({ offset: 0, size: 696 + 200 * 0.25 });
+
+    expect(resolveBottomSheetDragGeometry({
+      availableExtent: 696,
+      extent: 2000,
+      overshootLimit: 72,
+    })).toEqual({ offset: 0, size: 696 + 72 });
+  });
+
   it('虚拟预览偏移把面板下半部分留在屏幕下方', () => {
     expect(resolveBottomSheetPreviewOffset({ panelExtent: 696, visibleExtent: 348 })).toBe(348);
     expect(resolveBottomSheetPreviewOffset({ panelExtent: 200, visibleExtent: 348 })).toBe(0);
     expect(resolveBottomSheetPreviewOffset({ panelExtent: 696, visibleExtent: -100 })).toBe(696);
   });
 
-  it('只有向下位移达到 20px 且速度不小于 0.35px/ms 才算甩动', () => {
-    expect(isBottomSheetFlick({ distance: 120, draggingDown: true, velocity: 1 })).toBe(true);
-    expect(isBottomSheetFlick({ distance: 120, draggingDown: true, velocity: 0.2 })).toBe(false);
-    expect(isBottomSheetFlick({ distance: 120, draggingDown: false, velocity: 1 })).toBe(false);
-    expect(isBottomSheetFlick({ distance: 10, draggingDown: true, velocity: 1 })).toBe(false);
+  it('只有触控向下位移达到 48px 且速度不小于 0.5px/ms 才算甩动', () => {
+    expect(isBottomSheetFlick({
+      distance: 120, draggingDown: true, pointerType: 'touch', velocity: 1,
+    })).toBe(true);
+    expect(isBottomSheetFlick({
+      distance: 120, draggingDown: true, pointerType: 'touch', velocity: 0.2,
+    })).toBe(false);
+    expect(isBottomSheetFlick({
+      distance: 120, draggingDown: false, pointerType: 'touch', velocity: 1,
+    })).toBe(false);
+    expect(isBottomSheetFlick({
+      distance: 20, draggingDown: true, pointerType: 'touch', velocity: 1,
+    })).toBe(false);
+  });
+
+  it('鼠标拖动不参与甩动判定', () => {
+    expect(isBottomSheetFlick({
+      distance: 400, draggingDown: true, pointerType: 'mouse', velocity: 3,
+    })).toBe(false);
+    expect(isBottomSheetFlick({
+      distance: 400, draggingDown: true, pointerType: 'pen', velocity: 3,
+    })).toBe(true);
   });
 });
 

@@ -9,10 +9,13 @@
 export const MIN_BLOCK_SIZE = 64;
 
 /** 判定向下甩动所需的最小位移，单位为 CSS px。 */
-export const FLICK_DISTANCE = 20;
+export const FLICK_DISTANCE = 48;
 
 /** 判定向下甩动所需的最小速度，单位为 px/ms。 */
-export const FLICK_VELOCITY = 0.35;
+export const FLICK_VELOCITY = 0.5;
+
+/** 向上拖动超过可用高度后的阻尼系数，越小越沉。 */
+export const OVERSHOOT_DAMPING = 0.25;
 
 /** 具名档位，其余取值按自定义高度处理。 */
 const NAMED_EXTENTS = ['min', 'normal', 'max'];
@@ -83,15 +86,32 @@ export function resolveBottomSheetDragTarget(geometry, extent) {
  * 计算折叠档跟手拖动时的面板尺寸与整体偏移。
  *
  * 向下拖动先把面板缩到 min，越过后固定 min 高度、改用偏移继续下滑；向上
- * 拖动最多放大到可用高度，超过部分不再跟手。
+ * 拖动先放大到可用高度，超过部分按阻尼系数继续放大并受 overshootLimit 封顶，
+ * 让档位无法提升时仍有跟手反馈。
  *
- * @param {{ availableExtent: number, extent: number }} geometry
+ * @param {{ availableExtent: number, extent: number, overshootLimit?: number }} geometry
  * @returns {{ offset: number, size: number }}
  */
-export function resolveBottomSheetDragGeometry({ availableExtent, extent }) {
+export function resolveBottomSheetDragGeometry({
+  availableExtent,
+  extent,
+  overshootLimit = 0,
+}) {
+  const available = Math.max(0, availableExtent);
+  const requested = Math.max(0, extent);
+
+  if (requested > available) {
+    const overshoot = Math.min(
+      (requested - available) * OVERSHOOT_DAMPING,
+      Math.max(0, overshootLimit),
+    );
+
+    return { offset: 0, size: available + overshoot };
+  }
+
   return {
-    offset: Math.max(0, MIN_BLOCK_SIZE - extent),
-    size: Math.min(Math.max(0, availableExtent), Math.max(MIN_BLOCK_SIZE, extent)),
+    offset: Math.max(0, MIN_BLOCK_SIZE - requested),
+    size: Math.min(available, Math.max(MIN_BLOCK_SIZE, requested)),
   };
 }
 
@@ -113,9 +133,21 @@ export function resolveBottomSheetPreviewOffset({ panelExtent, visibleExtent }) 
 /**
  * 判断松手动作是否为向下甩动。
  *
- * @param {{ distance: number, draggingDown: boolean, velocity: number }} input
+ * 鼠标拖动不参与甩动判定：鼠标位移小、速度快，轻微下拉就会误判为关闭，
+ * 因此鼠标只能通过把落点拖进关闭分区来关闭。
+ *
+ * @param {{ distance: number, draggingDown: boolean, pointerType?: string, velocity: number }} input
  * @returns {boolean}
  */
-export function isBottomSheetFlick({ distance, draggingDown, velocity }) {
+export function isBottomSheetFlick({
+  distance,
+  draggingDown,
+  pointerType,
+  velocity,
+}) {
+  if (pointerType === 'mouse') {
+    return false;
+  }
+
   return draggingDown && distance >= FLICK_DISTANCE && velocity >= FLICK_VELOCITY;
 }

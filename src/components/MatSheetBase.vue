@@ -340,6 +340,8 @@ let dragStartExtent = 0;
 let dragStartVisibleExtent = 0;
 let dragContentExtent = 0;
 let dragAvailableExtent = 0;
+let dragOvershootLimit = 0;
+let dragPointerType = null;
 let dragPreviewOffset = 0;
 let sheetPressTarget = null;
 let dragStartedAt = 0;
@@ -448,6 +450,15 @@ function isVirtualPreviewActive() {
 }
 
 /**
+ * 顶部安全间距：宽屏 56px、窄屏 72px，同时也是向上拖动超出可用高度后的上限。
+ *
+ * @returns {number}
+ */
+function resolveTopGap() {
+  return window.innerWidth >= 641 ? 56 : 72;
+}
+
+/**
  * 可用高度，即 full 档使用的高度：容器高度减去顶部安全间距。
  *
  * standard 以视口为容器，modal 以铺满坐标空间的根元素为容器。
@@ -455,12 +466,11 @@ function isVirtualPreviewActive() {
  * @returns {number}
  */
 function resolveAvailableExtent() {
-  const topGap = window.innerWidth >= 641 ? 56 : 72;
   const containerExtent = isModal.value
     ? root.value?.getBoundingClientRect().height ?? 0
     : window.innerHeight;
 
-  return Math.max(0, containerExtent - topGap);
+  return Math.max(0, containerExtent - resolveTopGap());
 }
 
 /**
@@ -887,6 +897,7 @@ function updateDragNow(event) {
     const geometry = resolveBottomSheetDragGeometry({
       availableExtent: dragAvailableExtent,
       extent,
+      overshootLimit: dragOvershootLimit,
     });
 
     writeDragStyle(geometry.offset, geometry.size);
@@ -953,6 +964,7 @@ function finishBottomDrag({ distance, velocity }) {
   const flicked = isBottomSheetFlick({
     distance,
     draggingDown: dragDistance > 0,
+    pointerType: dragPointerType,
     velocity,
   });
 
@@ -1037,6 +1049,7 @@ function startDrag(event) {
   dragStartExtent = props.direction === 'bottom'
     ? dragElement.value?.getBoundingClientRect().height ?? 0
     : dragElement.value?.getBoundingClientRect().width ?? 0;
+  dragPointerType = event.pointerType ?? null;
   dragStartedAt = performance.now();
   dragDistance = 0;
 
@@ -1045,6 +1058,7 @@ function startDrag(event) {
     dragStartVisibleExtent = Math.max(0, dragStartExtent - dragPreviewOffset);
     dragContentExtent = resolveContentExtent();
     dragAvailableExtent = resolveAvailableExtent();
+    dragOvershootLimit = resolveTopGap();
     writeDragStyle(0, props.virtualExpand ? null : dragStartExtent);
   } else {
     writeDragStyle(0, null);
@@ -1659,9 +1673,11 @@ watch(() => props.closeLabel, (value) => {
     }
   }
 
+  /* 跟手拖动不受当前档位上限约束，向上超出可用高度的部分由阻尼值给出。 */
   .mat-sheet--standard.mat-sheet--bottom.mat-sheet--dragging:not(.mat-sheet--virtual-expand),
   .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--dragging:not(.mat-sheet__panel--virtual-expand) {
     block-size: var(--mat-sheet-drag-size);
+    max-block-size: none;
     transition: none;
   }
 
