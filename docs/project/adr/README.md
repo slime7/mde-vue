@@ -38,6 +38,7 @@
 | [0031](0031-tooltip-group-display-state-skip.md) | superseded | 同组 Tooltip 延迟跳过基于当前显示状态（已由 0032 替代：移除分组容器） |
 | [0032](0032-tooltip-global-delay-skip.md) | active | 移除 Tooltip 分组容器，延迟跳过全局生效 |
 | [0033](0033-shared-edge-layout-controller.md) | active | MatLayout 与 AppRoot 共享六向边缘布局控制器 |
+| [0034](0034-bottom-sheet-drag-tiers.md) | active | Bottom sheet 采用 min、normal、max 拖动档位与内容高度预览 |
 
 ## 何时创建 ADR
 

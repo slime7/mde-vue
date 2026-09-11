@@ -21,10 +21,16 @@ const open = ref(false);
   >
     <div class="bottom-sheet-expanded-example__body">
       <h2>播放队列</h2>
-      <p>当前高度：{{ expanded }}。点击按钮或拖动顶部把手，可以在 normal、full 和自定义高度之间切换。</p>
+      <p>当前高度：{{ expanded }}。点击按钮或拖动顶部把手，可以在 min、normal、max、full 和自定义高度之间切换。</p>
       <div class="bottom-sheet-expanded-example__actions">
+        <mat-btn variant="outlined" @click="expanded = 'min'">
+          min
+        </mat-btn>
         <mat-btn variant="outlined" @click="expanded = 'normal'">
           normal
+        </mat-btn>
+        <mat-btn variant="outlined" @click="expanded = 'max'">
+          max
         </mat-btn>
         <mat-btn variant="outlined" @click="expanded = 'full'">
           full

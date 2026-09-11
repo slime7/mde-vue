@@ -17116,9 +17116,11 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 
 默认 `variant="auto"`：视口宽度小于 `breakpoint` 时使用 modal，达到断点后使用 standard。默认断点为 840px。自动模式只改变 Bottom sheet 自身的布局方式，不会把它替换成 Side sheet。
 
-`normal` 状态按内容自然高度展示；内容超过当前最大展开高度时，只有内容区域滚动。开启 `virtualExpand` 后，normal 状态会保留 full 的面板高度并向下偏移，初始只显示底部预览区域，内容滚动条按 full 高度计算；内容区向下滚轮或向上滑动时请求 `full`。`full` 状态使用扣除顶部安全间距后的最大高度。`expanded` 也可以设置数字、纯数字字符串或合法 CSS `block-size` 值；手动高度低于 64px 时只把实际渲染高度限制为 64px，不修改受控值。高度切换、阴影开关和圆角开关都使用 Material motion 过渡，拖动时会暂时关闭高度过渡以跟随指针，释放后恢复动画。
+`expanded` 有四个具名档位，按高度从小到大是 `min`、`normal`、`max` 和 `full`。可用高度指容器高度减去顶部安全间距（宽屏 56px、窄屏 72px）：`min` 固定 64px；`normal` 取内容完整高度并以可用高度一半封顶；`max` 按内容完整高度展开且不超过可用高度；`full` 直接使用可用高度。面板高度不低于 64px，`normal` 与 `max` 都按内容自然高度渲染，内容超出面板高度时只有内容区滚动。`expanded` 也可以设置数字、纯数字字符串或合法 CSS `block-size` 值；手动高度低于 64px 时只把实际渲染高度限制为 64px，不修改受控值。高度切换、阴影开关和圆角开关都使用 Material motion 过渡，拖动时会暂时关闭高度过渡以跟随指针，释放后恢复动画。
 
-把手的鼠标点击不会切换高度；键盘 Enter/Space 仍然执行可访问的状态操作：normal 请求 `full`，standard 的展开状态请求 `normal`，modal 的展开状态请求关闭。normal 状态向上拖动请求 `full`，向下拖动达到阈值请求关闭；full 或自定义高度向下拖动请求 `normal`。开启 `virtualExpand` 后，normal 状态下内容区向下滚轮或向上滑动会请求 `full`，已经展开时不会重复请求。
+开启 `virtualExpand` 后，`normal` 状态的面板按 `min(内容高度, 可用高度)` 布局，滚动容器覆盖这段完整内容，再通过向下偏移只露出上半部分，屏幕下方仍然保留内容；偏移量等于 `max(0, 面板高度 − 可用高度 ÷ 2)`，内容不足时偏移为 0，表现与不开启时一致。不开启 `virtualExpand` 时面板高度等于可见高度，内容在面板内部滚动，屏幕下方没有内容。内容区向下滚轮或向上滑动时请求 `max`，已经展开时不会重复请求。
+
+把手的鼠标点击不会切换高度；键盘 Enter/Space 仍然执行可访问的状态操作：`min` 与 `normal` 请求 `max`，standard 的展开档请求 `normal`，modal 的展开档请求关闭。拖动时面板先跟手缩放到 `min`，越过后改为整体下滑，向上最多放大到可用高度；松手按相邻档位中点吸附到 `min`、`normal` 或 `max`，落点低于 32px 或向下快速甩动（位移至少 20px、速度不低于 0.35px/ms）时请求关闭。`full` 与自定义高度继续向上拖动不会切换档位，小幅向下拖动也会先回到当前高度；两者都不会成为拖动结果。开启 `virtualExpand` 时拖动只改变预览偏移，向上最多把整块面板移回屏幕，松手后回到吸附到的档位。
 
 ## 示例
 
@@ -17238,9 +17240,9 @@ const modalOpen = ref(false);
   >
     <div class="bottom-sheet-virtual-expand-example__body">
       <h2>长列表内容</h2>
-      <p>当前状态：{{ expanded }}。normal 状态保留 full 的面板高度，只显示底部预览区域；向下滚动或向上滑动内容区会请求 full。</p>
+      <p>当前状态：{{ expanded }}。normal 状态按 min(内容高度, full 高度) 布局面板，只显示上半部分，其余内容留在屏幕下方；向下滚动或向上滑动内容区会请求 max。</p>
       <p v-for="index in 20" :key="index">
-        第 {{ index }} 项内容：初始预览时滚动条按 full 高度计算，向下滚动或向上滑动时自动展开。
+        第 {{ index }} 项内容：初始预览时滚动条覆盖屏幕下方的内容，向下滚动或向上滑动时自动展开。
       </p>
     </div>
   </mat-bottom-sheet>
@@ -17272,7 +17274,7 @@ const expanded = ref('normal');
 
 ### `expanded` 高度状态
 
-示例通过同一个受控值演示 `normal`、`full` 和 `320px` 三种合法状态。自定义高度可以使用数字或 CSS `block-size` 字符串。
+示例通过同一个受控值演示 `min`、`normal`、`max`、`full` 和 `320px` 五种合法状态。自定义高度可以使用数字或 CSS `block-size` 字符串。
 
 :::: details 查看示例代码
 ::: code-group
@@ -17291,10 +17293,16 @@ const expanded = ref('normal');
   >
     <div class="bottom-sheet-expanded-example__body">
       <h2>播放队列</h2>
-      <p>当前高度：{{ expanded }}。点击按钮或拖动顶部把手，可以在 normal、full 和自定义高度之间切换。</p>
+      <p>当前高度：{{ expanded }}。点击按钮或拖动顶部把手，可以在 min、normal、max、full 和自定义高度之间切换。</p>
       <div class="bottom-sheet-expanded-example__actions">
+        <mat-btn variant="outlined" @click="expanded = 'min'">
+          min
+        </mat-btn>
         <mat-btn variant="outlined" @click="expanded = 'normal'">
           normal
+        </mat-btn>
+        <mat-btn variant="outlined" @click="expanded = 'max'">
+          max
         </mat-btn>
         <mat-btn variant="outlined" @click="expanded = 'full'">
           full
@@ -17692,12 +17700,12 @@ const containerColor = ref(false);
 | `scrim` | `boolean` | `true` | modal 是否显示帷幕；false 时仍阻止背景指针交互 |
 | `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否允许点击 modal 帷幕关闭 |
 | `dragHandle` | `boolean` | `true` | 模板属性为 `drag-handle`；是否显示顶部拖动把手 |
-| `expanded` | `'normal' \| 'full' \| number \| string` | `'normal'` | normal 使用自然内容高度，full 使用当前最大展开高度；数字与纯数字字符串按 px 处理，其他字符串按合法 CSS `block-size` 处理；实际高度不会低于 64px，非法值回退 normal |
-| `virtualExpand` | `boolean` | `false` | 模板属性为 `virtual-expand`；normal 状态保留 full 的面板高度并只显示底部预览区域，滚动条按 full 高度计算；内容区向下滚轮或向上滑动时请求 full |
-| `dragHandleLabel` | `string` | `'展开底部面板'` | 模板属性为 `drag-handle-label`；预览状态下把手的可访问名称 |
-| `collapseDragHandleLabel` | `string` | `'折叠底部面板'` | 模板属性为 `collapse-drag-handle-label`；展开的 standard 状态下把手的可访问名称 |
-| `expandedDragHandleLabel` | `string` | `'关闭底部面板'` | 模板属性为 `expanded-drag-handle-label`；展开的 modal 状态下把手的可访问名称 |
-| `draggable` | `boolean` | `true` | 是否允许通过把手拖动展开、回到 normal 或关闭 |
+| `expanded` | `'min' \| 'normal' \| 'max' \| 'full' \| number \| string` | `'normal'` | min 固定 64px；normal 取内容完整高度并以可用高度一半封顶；max 按内容完整高度展开且不超过可用高度；full 使用当前最大展开高度；数字与纯数字字符串按 px 处理，其他字符串按合法 CSS `block-size` 处理；实际高度不会低于 64px，非法值回退 normal |
+| `virtualExpand` | `boolean` | `false` | 模板属性为 `virtual-expand`；normal 状态按 min(内容高度, 可用高度) 布局面板并把下半部分留在屏幕下方，内容区可滚动；内容区向下滚轮或向上滑动时请求 max |
+| `dragHandleLabel` | `string` | `'展开底部面板'` | 模板属性为 `drag-handle-label`；min 与 normal 档下把手的可访问名称 |
+| `collapseDragHandleLabel` | `string` | `'折叠底部面板'` | 模板属性为 `collapse-drag-handle-label`；已展开的 standard 状态下把手的可访问名称，用于 max、full 与自定义高度 |
+| `expandedDragHandleLabel` | `string` | `'关闭底部面板'` | 模板属性为 `expanded-drag-handle-label`；已展开的 modal 状态下把手的可访问名称 |
+| `draggable` | `boolean` | `true` | 是否允许通过把手拖动在 min、normal、max 之间切换，或向下拖动关闭 |
 | `content` | `string` | 未设置 | 纯文本内容便利属性，不附加内边距；需要标题、说明、操作布局或自定义留白时使用默认 Slot |
 | `containerColor` | `boolean` | `false` | standard 布局使用与 modal 相同的容器背景语义色；modal 布局始终使用该语义色 |
 | `shadow` | `boolean` | `true` | 是否显示 Material 3 level 1 阴影，切换带效果过渡 |
@@ -17705,7 +17713,7 @@ const containerColor = ref(false);
 
 未消费的属性、原生事件、`class` 和 `style` 传给根元素；BottomSheet 会过滤已移除的 `closable`、`closeLabel` 和 `title` 属性。Modal 根为原生 `<dialog>`，standard 根为原生 `<aside>`。Modal 必须提供 `aria-label` 或 `aria-labelledby`；如果使用默认 Slot 中的标题，请自行设置对应的 `id` 并通过 `aria-labelledby` 关联。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。
 
-Bottom sheet 的宽度不超过 640px。宽屏顶部安全间距至少为 56px，窄屏至少为 72px；normal 状态按内容自然高度展示，超出最大高度时只滚动内容区域。默认内容区域没有内边距，`footer` 固定在内容区下方。把手的完整交互行至少为 48px，灰色视觉条只负责显示。
+Bottom sheet 的宽度不超过 640px。宽屏顶部安全间距至少为 56px，窄屏至少为 72px；`normal` 与 `max` 都按内容自然高度渲染，超出面板高度时只滚动内容区域。默认内容区域没有内边距，`footer` 固定在内容区下方。把手的完整交互行至少为 48px，灰色视觉条只负责显示。
 
 ### 方法
 
@@ -17715,12 +17723,12 @@ Bottom sheet 的宽度不超过 640px。宽屏顶部安全间距至少为 56px�
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
-| `update:modelValue` | `boolean` | Escape、允许的帷幕点击，或 normal 状态向下拖动达到阈值时请求关闭并发出 `false` |
-| `update:expanded` | `'normal' \| 'full'` | 键盘操作、拖动或 `virtualExpand` 内容手势请求高度状态变化时发出；自定义高度向下拖动统一请求 `normal` |
+| `update:modelValue` | `boolean` | Escape、允许的帷幕点击，或向下拖动落在关闭分区、快速甩动时请求关闭并发出 `false` |
+| `update:expanded` | `'min' \| 'normal' \| 'max'` | 键盘操作、拖动或 `virtualExpand` 内容手势请求高度状态变化时发出；`full` 与自定义高度只能由绑定值设置，拖动不会发出 |
 | `opened` | 无 | 进入动画完成后触发 |
 | `closed` | 无 | 退出动画完成且 DOM 清理后触发 |
 
-组件是受控的：收到 `update:modelValue(false)` 或 `update:expanded` 后，使用者需要更新对应绑定值。把手的鼠标点击不会发出 `update:expanded`；Enter/Space 仍然执行键盘状态操作。Modal 打开后聚焦显式 `autofocus` 或第一个可交互元素，退出完成后恢复原焦点。Standard 不主动移动焦点，也不锁定页面滚动。
+组件是受控的：收到 `update:modelValue(false)` 或 `update:expanded` 后，使用者需要更新对应绑定值。把手的鼠标点击不会发出 `update:expanded`；Enter/Space 仍然执行键盘状态操作。拖动产生的关闭请求会保留当前拖拽尺寸与偏移，让退出动画从可见位置继续播放。Modal 打开后聚焦显式 `autofocus` 或第一个可交互元素，退出完成后恢复原焦点。Standard 不主动移动焦点，也不锁定页面滚动。
 
 ## Slots
 

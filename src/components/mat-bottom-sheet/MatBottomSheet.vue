@@ -101,7 +101,7 @@ const props = defineProps({
     default: true,
   },
   /**
-   * full 或自定义高度的 standard 状态下拖动把手的可访问名称。
+   * 已展开的 standard 状态下拖动把手的可访问名称，用于 max、full 或自定义高度。
    *
    * @type {string}
    * @default '折叠底部面板'
@@ -111,21 +111,23 @@ const props = defineProps({
     default: '折叠底部面板',
   },
   /**
-   * 展开高度。normal 使用内容自然高度，full 使用当前可用最大高度，数字与纯数字字符串按 px
-   * 处理，其他字符串须为合法的 CSS block-size 值。
+   * 展开高度。min 固定 64px，normal 取内容自然高度并以可用高度一半封顶，max 按内容自然高度
+   * 展开且不超过可用高度，full 使用当前可用最大高度；数字与纯数字字符串按 px 处理，
+   * 其他字符串须为合法的 CSS block-size 值。
    *
-   * @type {'normal'|'full'|number|string}
+   * @type {'min'|'normal'|'max'|'full'|number|string}
    * @default 'normal'
    */
   expanded: {
     type: [String, Number],
     default: 'normal',
-    validator: (value) => value === 'normal'
+    validator: (value) => ['min', 'normal', 'max'].includes(value)
       || value === 'full'
       || isValidCssBlockSize(value, { allowNegative: true }),
   },
   /**
-   * 虚拟展开模式；开启后 normal 状态下内容区继续支持滚动，并在向下滚动或向上滑动时请求 full。
+   * 虚拟展开模式；开启后 normal 状态保留 min(内容高度, 可用高度) 的面板高度，
+   * 内容区继续支持滚动，并在向下滚动或向上滑动时请求 max。
    *
    * @type {boolean}
    * @default false
@@ -135,7 +137,7 @@ const props = defineProps({
     default: false,
   },
   /**
-   * normal 状态下拖动把手的可访问名称。
+   * 折叠档（min 与 normal）下拖动把手的可访问名称。
    *
    * @type {string}
    * @default '展开底部面板'
@@ -155,7 +157,7 @@ const props = defineProps({
     default: '关闭底部面板',
   },
   /**
-   * 是否允许通过把手拖动在 normal 与 full 间切换，或在 normal 状态下关闭。
+   * 是否允许通过把手拖动在 min、normal 与 max 之间切换，或向下拖动关闭。
    *
    * @type {boolean}
    * @default true
@@ -240,9 +242,11 @@ const emit = defineEmits({
    */
   'update:modelValue': (payload) => typeof payload === 'boolean',
   /**
-   * 通过把手、拖动或内容手势请求切换高度时发出 normal 或 full。
+   * 通过把手、拖动或内容手势请求切换高度时发出 min、normal 或 max。
    */
-  'update:expanded': (payload) => payload === 'normal' || payload === 'full',
+  'update:expanded': (payload) => payload === 'min'
+    || payload === 'normal'
+    || payload === 'max',
   /**
    * 进入动画完成后触发。
    */

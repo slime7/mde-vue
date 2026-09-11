@@ -25,6 +25,13 @@ import {
   getAppRootContext,
   MAT_APP_ROOT_KEY,
 } from './mat-app-root/mat-app-root-context';
+import {
+  isBottomSheetFlick,
+  resolveBottomSheetDragGeometry,
+  resolveBottomSheetDragTarget,
+  resolveBottomSheetPreviewOffset,
+  resolveBottomSheetTiers,
+} from './bottom-sheet-drag';
 import useFocusTrap from './use-focus-trap';
 import MatBtn from './mat-btn/MatBtn.vue';
 import MatSurfaceBase from './MatSurfaceBase.vue';
@@ -142,9 +149,9 @@ const props = defineProps({
 const emit = defineEmits({
   closed: () => true,
   opened: () => true,
-  'update:expanded': (payload) => typeof payload === 'boolean'
+  'update:expanded': (payload) => payload === 'min'
     || payload === 'normal'
-    || payload === 'full',
+    || payload === 'max',
   'update:modelValue': (payload) => typeof payload === 'boolean',
 });
 const attrs = useAttrs();
@@ -165,6 +172,7 @@ const scopedContext = shallowRef(null);
 const viewportWidth = ref(typeof window === 'undefined' ? 0 : window.innerWidth);
 let dragOffset = 0;
 const dragging = ref(false);
+const virtualPreviewOffset = ref(0);
 const titleId = `${useId().replace(/[^\w-]/g, '-')}-title`;
 const root = computed(() => surface.value?.root ?? surface.value?.$el ?? null);
 const isAppRootScoped = computed(() => Boolean(scopedContext.value));
@@ -186,12 +194,20 @@ const hasTitle = computed(() => props.title !== undefined || Boolean(slots.title
 const hasContent = computed(() => props.content !== undefined || Boolean(slots.default));
 const showCloseButton = computed(() => props.closable);
 /**
+ * 解析 Bottom sheet 的展开值：min 与 normal 是折叠档，max、full 与自定义
+ * 高度都表示面板已经展开；normal 按内容自然高度渲染并以可用高度一半封顶，
+ * max 同样按自然高度渲染但只受可用高度限制。
+ *
  * @param {unknown} value
- * @returns {'normal'|'full'|string|number}
+ * @returns {'min'|'normal'|'max'|'full'|string|number}
  */
 function resolveBottomExpanded(value) {
   if (value === 'full' || value === true) {
     return 'full';
+  }
+
+  if (value === 'min' || value === 'max') {
+    return value;
   }
 
   if (value === 'normal' || value === false || value === undefined) {
@@ -207,12 +223,27 @@ function resolveBottomExpanded(value) {
 const bottomExpanded = computed(() => (
   props.direction === 'bottom' ? resolveBottomExpanded(props.expanded) : props.expanded
 ));
-const isBottomExpanded = computed(() => (
-  props.direction === 'bottom' && bottomExpanded.value !== 'normal'
+const isBottomCollapsed = computed(() => (
+  props.direction !== 'bottom'
+  || bottomExpanded.value === 'min'
+  || bottomExpanded.value === 'normal'
 ));
+const isBottomExpanded = computed(() => props.direction === 'bottom' && !isBottomCollapsed.value);
+// min、full 与自定义高度使用显式 block-size；normal 与 max 按内容自然高度渲染。
+const usesExplicitBlockSize = computed(() => {
+  if (props.direction !== 'bottom') {
+    return false;
+  }
+
+  return bottomExpanded.value !== 'normal' && bottomExpanded.value !== 'max';
+});
 const expandedBlockSize = computed(() => {
-  if (!isBottomExpanded.value || bottomExpanded.value === 'full') {
+  if (!usesExplicitBlockSize.value || bottomExpanded.value === 'full') {
     return undefined;
+  }
+
+  if (bottomExpanded.value === 'min') {
+    return 'var(--mat-sheet-min-block-size)';
   }
 
   const length = toCssLength(bottomExpanded.value, {
@@ -230,17 +261,25 @@ const expandedBlockSize = computed(() => {
 
   return `max(64px, ${length})`;
 });
+// normal 档的上限；虚拟预览保留 full 上限并按偏移只露出下半部分。
+const normalMaxBlockSize = computed(() => (
+  props.direction === 'bottom'
+  && !props.virtualExpand
+  && bottomExpanded.value === 'normal'
+    ? 'calc(var(--mat-sheet-full-block-size) / 2)'
+    : undefined
+));
 const panelClasses = computed(() => [
   `mat-sheet__panel--${props.direction}`,
   `mat-sheet__panel--position-${props.position}`,
   {
-    'mat-sheet__panel--expanded': isBottomExpanded.value,
+    'mat-sheet__panel--sized': usesExplicitBlockSize.value,
     'mat-sheet__panel--virtual-expand': props.direction === 'bottom' && props.virtualExpand,
     'mat-sheet__panel--dragging': dragging.value,
   },
 ]);
 const resolvedDragHandleLabel = computed(() => {
-  if (!isBottomExpanded.value) {
+  if (isBottomCollapsed.value) {
     return props.dragHandleLabel;
   }
 
@@ -270,19 +309,26 @@ const sizeStyle = computed(() => {
     '--mat-sheet-preferred-width': resolvedWidth.value,
   };
 });
-const rootStyle = computed(() => [
-  attrs.style,
-  sizeStyle.value,
-  expandedBlockSize.value ? {
-    '--mat-sheet-expanded-block-size': expandedBlockSize.value,
-  } : undefined,
-]);
-const panelStyle = computed(() => [
-  sizeStyle.value,
-  expandedBlockSize.value ? {
-    '--mat-sheet-expanded-block-size': expandedBlockSize.value,
-  } : undefined,
-]);
+// 高度基准、显式高度上限与虚拟预览偏移都由组件内部变量表达。
+const bottomSizeStyle = computed(() => {
+  const style = {};
+
+  if (expandedBlockSize.value) {
+    style['--mat-sheet-expanded-block-size'] = expandedBlockSize.value;
+  }
+
+  if (normalMaxBlockSize.value) {
+    style['--mat-sheet-max-block-size'] = normalMaxBlockSize.value;
+  }
+
+  if (virtualPreviewOffset.value > 0) {
+    style['--mat-sheet-virtual-offset'] = `${virtualPreviewOffset.value}px`;
+  }
+
+  return Object.keys(style).length > 0 ? style : undefined;
+});
+const rootStyle = computed(() => [attrs.style, sizeStyle.value, bottomSizeStyle.value]);
+const panelStyle = computed(() => [sizeStyle.value, bottomSizeStyle.value]);
 let mounted = false;
 const phaseMotion = createMotionController();
 const closeMotion = createCloseMotion({ motion: phaseMotion });
@@ -291,9 +337,14 @@ let previousWasModal = false;
 let activePointerId = null;
 let dragStart = 0;
 let dragStartExtent = 0;
+let dragStartVisibleExtent = 0;
+let dragContentExtent = 0;
+let dragAvailableExtent = 0;
+let dragPreviewOffset = 0;
+let sheetPressTarget = null;
 let dragStartedAt = 0;
 let dragDistance = 0;
-let suppressHandleClick = false;
+let panelResizeObserver = null;
 
 useFocusTrap(root, computed(() => (
   isModal.value && rendered.value && isTop.value
@@ -385,6 +436,107 @@ function buildScopeOptions(context) {
 
 let contentTouchStartY = null;
 
+/**
+ * 虚拟预览是否生效：只有 Bottom sheet 的 normal 档才保留内容高度并向下偏移。
+ *
+ * @returns {boolean}
+ */
+function isVirtualPreviewActive() {
+  return props.direction === 'bottom'
+    && props.virtualExpand
+    && bottomExpanded.value === 'normal';
+}
+
+/**
+ * 可用高度，即 full 档使用的高度：容器高度减去顶部安全间距。
+ *
+ * standard 以视口为容器，modal 以铺满坐标空间的根元素为容器。
+ *
+ * @returns {number}
+ */
+function resolveAvailableExtent() {
+  const topGap = window.innerWidth >= 641 ? 56 : 72;
+  const containerExtent = isModal.value
+    ? root.value?.getBoundingClientRect().height ?? 0
+    : window.innerHeight;
+
+  return Math.max(0, containerExtent - topGap);
+}
+
+/**
+ * 内容完整高度：把手行、内容主体与页脚按布局高度相加。
+ *
+ * 各部分只受自身内容影响，不受面板当前高度的过渡影响；都取不到时退回面板高度。
+ *
+ * @returns {number}
+ */
+function resolveContentExtent() {
+  const panel = dragElement.value;
+
+  if (!panel) {
+    return 0;
+  }
+
+  const extent = [
+    '.mat-sheet__drag-handle-target',
+    '.mat-sheet__content-body',
+    '.mat-sheet__footer',
+  ].reduce((total, selector) => (
+    total + (panel.querySelector(selector)?.getBoundingClientRect().height ?? 0)
+  ), 0);
+
+  return extent > 0 ? extent : panel.getBoundingClientRect().height;
+}
+
+/**
+ * 更新虚拟预览偏移：面板按 min(内容高度, 可用高度) 布局，只把下半部分移出屏幕，
+ * 让可见高度等于 normal 档上限。
+ */
+function updateVirtualPreviewOffset() {
+  if (!isVirtualPreviewActive()) {
+    virtualPreviewOffset.value = 0;
+    return;
+  }
+
+  const availableExtent = resolveAvailableExtent();
+  const { max } = resolveBottomSheetTiers({
+    availableExtent,
+    contentExtent: resolveContentExtent(),
+  });
+
+  virtualPreviewOffset.value = resolveBottomSheetPreviewOffset({
+    panelExtent: max,
+    visibleExtent: availableExtent / 2,
+  });
+}
+
+function stopPanelObserver() {
+  panelResizeObserver?.disconnect();
+  panelResizeObserver = null;
+}
+
+/**
+ * 监听面板尺寸，内容高度变化后重新计算虚拟预览偏移。
+ */
+function startPanelObserver() {
+  stopPanelObserver();
+
+  if (typeof ResizeObserver !== 'function'
+    || props.direction !== 'bottom'
+    || !props.virtualExpand) {
+    return;
+  }
+
+  const element = dragElement.value;
+
+  if (!element) {
+    return;
+  }
+
+  panelResizeObserver = new ResizeObserver(updateVirtualPreviewOffset);
+  panelResizeObserver.observe(element);
+}
+
 function handleContentWheel(event) {
   if (props.direction !== 'bottom' || !props.virtualExpand || isBottomExpanded.value) {
     return;
@@ -392,7 +544,7 @@ function handleContentWheel(event) {
 
   if (event.deltaY > 0) {
     event.preventDefault();
-    emit('update:expanded', 'full');
+    emit('update:expanded', 'max');
   }
 }
 
@@ -416,7 +568,7 @@ function handleContentPointerMove(event) {
 
     if (deltaY >= 8) {
       contentTouchStartY = null;
-      emit('update:expanded', 'full');
+      emit('update:expanded', 'max');
     }
   }
 }
@@ -451,13 +603,6 @@ function clearDragStyle() {
   writeDragStyle(0, null);
 }
 
-function handleDragHandleClick() {
-  if (suppressHandleClick) {
-    suppressHandleClick = false;
-    return;
-  }
-}
-
 /**
  * @param {KeyboardEvent} event
  */
@@ -468,8 +613,8 @@ function handleDragHandleKeydown(event) {
 
   event.preventDefault();
 
-  if (!isBottomExpanded.value) {
-    emit('update:expanded', 'full');
+  if (isBottomCollapsed.value) {
+    emit('update:expanded', 'max');
     return;
   }
 
@@ -554,9 +699,14 @@ function showModalRoot() {
 
 async function openSheet() {
   clearPhaseTimer();
+  stopDragging();
+  clearDragStyle();
 
   if (rendered.value) {
     phase.value = 'opening';
+    await nextTick();
+    updateVirtualPreviewOffset();
+    startPanelObserver();
     waitForPhase(400, () => {
       phase.value = 'open';
       emit('opened');
@@ -608,6 +758,8 @@ async function openSheet() {
     showModalRoot();
   }
 
+  updateVirtualPreviewOffset();
+  startPanelObserver();
   waitForPhase(400, () => {
     phase.value = 'open';
     emit('opened');
@@ -637,6 +789,9 @@ function finishClose() {
   scopedContext.value = null;
   rendered.value = false;
   phase.value = 'closed';
+  stopDragging();
+  stopPanelObserver();
+  virtualPreviewOffset.value = 0;
   clearDragStyle();
   nextTick(() => {
     restoreFocus();
@@ -696,6 +851,13 @@ function handleSheetClick(event) {
     return;
   }
 
+  // 只接受按下与抬起都落在帷幕上的点击；从把手开始、松手落到帷幕上的拖拽不关闭。
+  if (sheetPressTarget !== root.value) {
+    sheetPressTarget = null;
+    return;
+  }
+
+  sheetPressTarget = null;
   requestClose();
 }
 
@@ -709,31 +871,25 @@ function updateDragNow(event) {
 
   if (props.direction === 'bottom') {
     dragDistance = event.clientY - dragStart;
+    const extent = dragStartVisibleExtent - dragDistance;
 
     if (props.virtualExpand) {
-      if (!isBottomExpanded.value) {
-        const maxUp = -dragStartExtent * 0.75;
-        const clampedDrag = dragDistance < maxUp
-          ? maxUp + (dragDistance - maxUp) * 0.2
-          : dragDistance;
-        writeDragStyle(clampedDrag, null);
-        return;
-      }
-
-      const clampedDrag = dragDistance < 0
-        ? dragDistance * 0.2
-        : dragDistance;
-      writeDragStyle(clampedDrag, null);
+      writeDragStyle(
+        resolveBottomSheetPreviewOffset({
+          panelExtent: dragStartExtent,
+          visibleExtent: extent,
+        }) - dragPreviewOffset,
+        null,
+      );
       return;
     }
 
-    if ((!isBottomExpanded.value && dragDistance < 0)
-      || (isBottomExpanded.value && dragDistance > 0)) {
-      writeDragStyle(0, Math.max(0, dragStartExtent - dragDistance));
-      return;
-    }
+    const geometry = resolveBottomSheetDragGeometry({
+      availableExtent: dragAvailableExtent,
+      extent,
+    });
 
-    writeDragStyle(Math.max(0, dragDistance), dragStartExtent);
+    writeDragStyle(geometry.offset, geometry.size);
     return;
   }
 
@@ -758,12 +914,80 @@ function updateDrag(event) {
   dragFrame.schedule(event);
 }
 
-function stopDragging() {
+/**
+ * @param {{keepDragging?: boolean}} [options] 关闭动画需要沿用拖拽几何时保留拖动状态
+ */
+function stopDragging({ keepDragging = false } = {}) {
   activePointerId = null;
-  dragging.value = false;
+  dragging.value = keepDragging;
   window.removeEventListener('pointermove', updateDrag);
   window.removeEventListener('pointerup', finishDrag);
   window.removeEventListener('pointercancel', cancelDrag);
+}
+
+/**
+ * 请求关闭并保留当前拖拽几何，让退出动画从可见位置继续播放；
+ * 使用者没有接受关闭请求时恢复常态，避免面板停留在拖拽尺寸。
+ */
+function requestCloseFromDrag() {
+  requestClose();
+
+  nextTick(() => {
+    if (props.modelValue) {
+      stopDragging();
+      clearDragStyle();
+    }
+  });
+}
+
+/**
+ * @param {{distance: number, velocity: number}} input
+ */
+function finishBottomDrag({ distance, velocity }) {
+  const target = resolveBottomSheetDragTarget({
+    availableExtent: dragAvailableExtent,
+    contentExtent: dragContentExtent,
+    currentExtent: dragStartVisibleExtent,
+    currentValue: bottomExpanded.value,
+  }, dragStartVisibleExtent - dragDistance);
+  const flicked = isBottomSheetFlick({
+    distance,
+    draggingDown: dragDistance > 0,
+    velocity,
+  });
+
+  if (target.close || flicked) {
+    stopDragging({ keepDragging: true });
+    requestCloseFromDrag();
+    return;
+  }
+
+  const unchanged = target.value === bottomExpanded.value
+    || target.size === dragStartVisibleExtent;
+
+  stopDragging();
+  clearDragStyle();
+
+  if (!unchanged) {
+    emit('update:expanded', target.value);
+  }
+}
+
+/**
+ * @param {{distance: number, threshold: number, velocity: number}} input
+ */
+function finishSideDrag({ distance, threshold, velocity }) {
+  const reachedThreshold = distance >= threshold
+    || (distance >= 20 && velocity >= 0.35);
+
+  stopDragging();
+
+  if (reachedThreshold) {
+    requestClose();
+    return;
+  }
+
+  clearDragStyle();
 }
 
 /**
@@ -775,48 +999,22 @@ function finishDrag(event) {
   }
 
   dragFrame.flush();
-  const element = dragElement.value;
-  const extent = props.direction === 'bottom'
-    ? element?.getBoundingClientRect().height ?? 0
-    : element?.getBoundingClientRect().width ?? 0;
   const elapsed = Math.max(1, performance.now() - dragStartedAt);
   const distance = props.direction === 'bottom'
     ? Math.abs(dragDistance)
     : dragOffset;
   const velocity = distance / elapsed;
-  const threshold = Math.min(120, Math.max(48, extent * 0.15));
-  const reachedThreshold = distance >= threshold
-    || (distance >= 20 && velocity >= 0.35);
 
-  suppressHandleClick = distance >= 4;
-  stopDragging();
-
-  if (props.direction === 'bottom' && reachedThreshold) {
-    if (!isBottomExpanded.value && dragDistance < 0) {
-      clearDragStyle();
-      emit('update:expanded', 'full');
-      return;
-    }
-
-    if (isBottomExpanded.value && dragDistance > 0) {
-      clearDragStyle();
-      emit('update:expanded', 'normal');
-      return;
-    }
-
-    if (!isBottomExpanded.value && dragDistance > 0) {
-      writeDragStyle(dragOffset, null);
-      requestClose();
-      return;
-    }
-  }
-
-  if (props.direction === 'side' && reachedThreshold) {
-    requestClose();
+  if (props.direction === 'bottom') {
+    finishBottomDrag({ distance, velocity });
     return;
   }
 
-  clearDragStyle();
+  finishSideDrag({
+    distance,
+    threshold: Math.min(120, Math.max(48, dragStartExtent * 0.15)),
+    velocity,
+  });
 }
 
 function cancelDrag() {
@@ -841,7 +1039,17 @@ function startDrag(event) {
     : dragElement.value?.getBoundingClientRect().width ?? 0;
   dragStartedAt = performance.now();
   dragDistance = 0;
-  writeDragStyle(0, (props.direction === 'bottom' && !props.virtualExpand) ? dragStartExtent : null);
+
+  if (props.direction === 'bottom') {
+    dragPreviewOffset = virtualPreviewOffset.value;
+    dragStartVisibleExtent = Math.max(0, dragStartExtent - dragPreviewOffset);
+    dragContentExtent = resolveContentExtent();
+    dragAvailableExtent = resolveAvailableExtent();
+    writeDragStyle(0, props.virtualExpand ? null : dragStartExtent);
+  } else {
+    writeDragStyle(0, null);
+  }
+
   dragging.value = true;
   window.addEventListener('pointermove', updateDrag);
   window.addEventListener('pointerup', finishDrag);
@@ -866,9 +1074,13 @@ function handleRootPointerDown(event) {
 }
 
 /**
+ * 记录按下目标并处理根元素上的拖动；帷幕点击只接受按下与抬起都落在根元素上的序列。
+ *
  * @param {PointerEvent} event
  */
-function handleStandardPointerDown(event) {
+function handleRootPress(event) {
+  sheetPressTarget = event.target instanceof Node ? event.target : null;
+
   if (!isModal.value) {
     handleRootPointerDown(event);
   }
@@ -890,6 +1102,7 @@ function handlePanelPointerDown(event) {
 
 function updateViewportWidth() {
   viewportWidth.value = window.innerWidth;
+  updateVirtualPreviewOffset();
 }
 
 /**
@@ -940,6 +1153,9 @@ async function handleVariantChange(nextVariant, previousVariant) {
   if (nextVariant === 'modal' && props.modelValue) {
     showModalRoot();
   }
+
+  updateVirtualPreviewOffset();
+  startPanelObserver();
 }
 
 onMounted(() => {
@@ -956,6 +1172,7 @@ onBeforeUnmount(() => {
   mounted = false;
   clearPhaseTimer();
   stopDragging();
+  stopPanelObserver();
   window.removeEventListener('resize', updateViewportWidth);
 
   const element = root.value;
@@ -980,6 +1197,11 @@ watch(() => props.modelValue, (open) => {
   }
 });
 watch(resolvedVariant, handleVariantChange);
+watch([() => props.virtualExpand, bottomExpanded], async () => {
+  await nextTick();
+  updateVirtualPreviewOffset();
+  startPanelObserver();
+});
 watch(() => props.attach, () => {
   if (props.modelValue && rendered.value && isModal.value) {
     console.warn(`${props.componentName}: 打开期间修改 attach 将在下次打开时生效`);
@@ -1015,7 +1237,7 @@ watch(() => props.closeLabel, (value) => {
         {
           'mat-sheet--app-root': isAppRootScoped,
           'mat-sheet--dragging': dragging,
-          'mat-sheet--expanded': isBottomExpanded,
+          'mat-sheet--sized': usesExplicitBlockSize,
           'mat-sheet--virtual-expand': direction === 'bottom' && virtualExpand,
           'mat-sheet--no-shadow': !shadow,
           'mat-sheet--no-rounded': !rounded,
@@ -1031,7 +1253,7 @@ watch(() => props.closeLabel, (value) => {
       @cancel="handleCancel"
       @click="handleSheetClick"
       @keydown="handleKeyDown"
-      @pointerdown="handleStandardPointerDown"
+      @pointerdown="handleRootPress"
       @pointermove="handleContentPointerMove"
       @pointerup="handleContentPointerUp"
       @pointercancel="handleContentPointerUp"
@@ -1054,7 +1276,6 @@ watch(() => props.closeLabel, (value) => {
           type="button"
           data-sheet-drag-handle
           :aria-label="resolvedDragHandleLabel"
-          @click="handleDragHandleClick"
           @keydown="handleDragHandleKeydown"
           @pointerdown.stop="startDrag"
         >
@@ -1132,8 +1353,11 @@ watch(() => props.closeLabel, (value) => {
   .mat-sheet {
     --mat-sheet-container-color: var(--mat-sys-color-surface-container-low);
     --mat-sheet-content-color: var(--mat-sys-color-on-surface-variant);
+    --mat-sheet-full-block-size: calc(100dvb - 72px);
+    --mat-sheet-min-block-size: 64px;
     --mat-sheet-preferred-width: 100%;
     --mat-sheet-drag-offset: 0;
+    --mat-sheet-virtual-offset: 0;
     box-sizing: border-box;
     min-inline-size: 0;
     padding: 0;
@@ -1198,12 +1422,14 @@ watch(() => props.closeLabel, (value) => {
   }
 
   .mat-sheet--standard.mat-sheet--bottom {
+    --mat-sheet-full-block-size: calc(100dvb - 72px);
     interpolate-size: allow-keywords;
     align-self: center;
     block-size: fit-content;
+    min-block-size: var(--mat-sheet-min-block-size);
     inline-size: min(var(--mat-sheet-preferred-width), 100%);
     max-inline-size: min(640px, 100%);
-    max-block-size: calc(100dvb - 72px);
+    max-block-size: var(--mat-sheet-max-block-size, var(--mat-sheet-full-block-size));
     border-radius: var(--mat-sys-shape-corner-extra-large)
       var(--mat-sys-shape-corner-extra-large)
       var(--mat-sys-shape-corner-none)
@@ -1214,14 +1440,16 @@ watch(() => props.closeLabel, (value) => {
   }
 
   .mat-sheet--modal .mat-sheet__panel--bottom {
+    --mat-sheet-full-block-size: calc(100% - 72px);
     interpolate-size: allow-keywords;
     position: absolute;
     inset-block-end: 0;
     inset-inline: 0;
     block-size: fit-content;
+    min-block-size: var(--mat-sheet-min-block-size);
     inline-size: min(var(--mat-sheet-preferred-width), 100%);
     max-inline-size: min(640px, 100%);
-    max-block-size: calc(100% - 72px);
+    max-block-size: var(--mat-sheet-max-block-size, var(--mat-sheet-full-block-size));
     margin-inline: auto;
     border-radius: var(--mat-sys-shape-corner-extra-large)
       var(--mat-sys-shape-corner-extra-large)
@@ -1232,22 +1460,13 @@ watch(() => props.closeLabel, (value) => {
     transition: transform var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial), box-shadow var(--mat-sys-motion-spring-fast-effects), border-radius var(--mat-sys-motion-spring-fast-effects);
   }
 
-  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--expanded {
-    block-size: var(--mat-sheet-expanded-block-size, calc(100dvb - 72px));
+  /* min、full 与自定义高度使用显式 block-size；normal 与 max 按内容自然高度渲染。 */
+  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--sized {
+    block-size: var(--mat-sheet-expanded-block-size, var(--mat-sheet-full-block-size));
   }
 
-  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--expanded {
-    block-size: var(--mat-sheet-expanded-block-size, calc(100% - 72px));
-  }
-
-  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--virtual-expand:not(.mat-sheet--expanded) {
-    --mat-sheet-virtual-offset: 75%;
-    block-size: calc(100dvb - 72px);
-  }
-
-  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--virtual-expand:not(.mat-sheet__panel--expanded) {
-    --mat-sheet-virtual-offset: 75%;
-    block-size: calc(100% - 72px);
+  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--sized {
+    block-size: var(--mat-sheet-expanded-block-size, var(--mat-sheet-full-block-size));
   }
 
   .mat-sheet--standard.mat-sheet--bottom.mat-sheet--no-shadow,
@@ -1430,29 +1649,13 @@ watch(() => props.closeLabel, (value) => {
 
   @media (width >= 641px) {
     .mat-sheet--standard.mat-sheet--bottom {
+      --mat-sheet-full-block-size: calc(100dvb - 56px);
       max-inline-size: min(640px, calc(100% - 112px));
-      max-block-size: calc(100dvb - 56px);
-    }
-
-    .mat-sheet--standard.mat-sheet--bottom.mat-sheet--expanded {
-      block-size: var(--mat-sheet-expanded-block-size, calc(100dvb - 56px));
-    }
-
-    .mat-sheet--standard.mat-sheet--bottom.mat-sheet--virtual-expand:not(.mat-sheet--expanded) {
-      block-size: calc(100dvb - 56px);
     }
 
     .mat-sheet--modal .mat-sheet__panel--bottom {
+      --mat-sheet-full-block-size: calc(100% - 56px);
       max-inline-size: min(640px, calc(100% - 112px));
-      max-block-size: calc(100% - 56px);
-    }
-
-    .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--expanded {
-      block-size: var(--mat-sheet-expanded-block-size, calc(100% - 56px));
-    }
-
-    .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--virtual-expand:not(.mat-sheet__panel--expanded) {
-      block-size: calc(100% - 56px);
     }
   }
 
