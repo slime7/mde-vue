@@ -1,6 +1,6 @@
 ---
 title: Bottom sheet 底部面板
-description: mat-bottom-sheet 的 standard、modal、自适应布局、自然高度、受控展开与拖动行为。
+description: mat-bottom-sheet 的 standard、modal、自适应布局、内容高度、受控展开与拖动行为。
 llms: true
 order: 101
 ---
@@ -17,7 +17,9 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 
 默认 `variant="auto"`：视口宽度小于 `breakpoint` 时使用 modal，达到断点后使用 standard。默认断点为 840px。自动模式只改变 Bottom sheet 自身的布局方式，不会把它替换成 Side sheet。
 
-`expanded` 有四个具名档位，按高度从小到大是 `min`、`normal`、`max` 和 `full`。可用高度指容器高度减去顶部安全间距（宽屏 56px、窄屏 72px）：`min` 固定 64px；`normal` 取内容完整高度并以可用高度一半封顶；`max` 按内容完整高度展开且不超过可用高度；`full` 直接使用可用高度。面板高度不低于 64px，`normal` 与 `max` 都按内容自然高度渲染，内容超出面板高度时只有内容区滚动。`expanded` 也可以设置数字、纯数字字符串或合法 CSS `block-size` 值；手动高度低于 64px 时只把实际渲染高度限制为 64px，不修改受控值。高度切换、阴影开关和圆角开关都使用 Material motion 过渡，拖动时会暂时关闭高度过渡以跟随指针，释放后恢复动画。
+`expanded` 有四个具名档位，按高度从小到大是 `min`、`normal`、`max` 和 `full`。可用高度指容器高度减去顶部安全间距（宽屏 56px、窄屏 72px）：`min` 固定 64px；`normal` 取内容完整高度并以可用高度一半封顶；`max` 按内容完整高度展开且不超过可用高度；`full` 直接使用可用高度。面板高度不低于 64px，内容超出面板高度时只有内容区滚动。`expanded` 也可以设置数字、纯数字字符串或合法 CSS `block-size` 值；手动高度低于 64px 时只把实际渲染高度限制为 64px，不修改受控值。
+
+组件会测量把手行、内容主体与页脚的高度，把 `normal` 与 `max` 渲染成实测像素值而不是 CSS 关键字，因此 `min`、`normal`、`max`、`full` 与自定义高度之间的切换都是可插值的高度过渡；内容或容器尺寸变化后重新测量并平滑更新高度。高度切换、阴影开关和圆角开关都使用 Material motion 过渡，拖动时会暂时关闭高度过渡以跟随指针，释放后恢复动画。
 
 开启 `virtualExpand` 后，`min` 与 `normal` 两档都按 `min(内容高度, 可用高度)` 布局面板，滚动容器覆盖这段完整内容，再通过向下偏移控制露出多少：`min` 露出 64px，`normal` 露出可用高度的一半，其余内容留在屏幕下方；两档之间切换时面板高度不变，只有整体位移变化，因此内容不会被压缩或重新排布。内容不足时偏移为 0，表现与不开启时一致。不开启 `virtualExpand` 时面板高度等于可见高度，内容在面板内部滚动，屏幕下方没有内容。内容区向下滚轮或向上滑动时请求 `max`，已经展开时不会重复请求。
 
@@ -67,7 +69,7 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 
 ### `expanded` 高度状态
 
-示例通过同一个受控值演示 `min`、`normal`、`max`、`full` 和 `320px` 五种合法状态。自定义高度可以使用数字或 CSS `block-size` 字符串。
+示例通过同一个受控值演示 `min`、`normal`、`max`、`full` 和 `320px` 五种合法状态，正文是六条播放队列内容，因此四档高度互不相同，可以直接观察高度过渡。自定义高度可以使用数字或 CSS `block-size` 字符串。
 
 :::: details 查看示例代码
 ::: code-group
@@ -216,7 +218,7 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 
 未消费的属性、原生事件、`class` 和 `style` 传给根元素；BottomSheet 会过滤已移除的 `closable`、`closeLabel` 和 `title` 属性。Modal 根为原生 `<dialog>`，standard 根为原生 `<aside>`。Modal 必须提供 `aria-label` 或 `aria-labelledby`；如果使用默认 Slot 中的标题，请自行设置对应的 `id` 并通过 `aria-labelledby` 关联。`attach` 无法解析时组件会给出警告并请求把 `modelValue` 更新为 `false`。
 
-Bottom sheet 的宽度不超过 640px。宽屏顶部安全间距至少为 56px，窄屏至少为 72px；`normal` 与 `max` 都按内容自然高度渲染，超出面板高度时只滚动内容区域。默认内容区域没有内边距，`footer` 固定在内容区下方。把手的完整交互行至少为 48px，灰色视觉条只负责显示。
+Bottom sheet 的宽度不超过 640px。宽屏顶部安全间距至少为 56px，窄屏至少为 72px；`normal` 与 `max` 都取内容完整高度，内容超出面板高度时只滚动内容区域。默认内容区域没有内边距，`footer` 固定在内容区下方。把手的完整交互行至少为 48px，灰色视觉条只负责显示。
 
 ### 方法
 

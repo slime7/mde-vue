@@ -76,6 +76,38 @@ function stubExtent(element, height) {
 }
 
 /**
+ * 用可控的 ResizeObserver 替身替代浏览器实现，便于手动触发尺寸回调。
+ */
+function stubResizeObserver() {
+  const instances = [];
+
+  class FakeResizeObserver {
+    constructor(callback) {
+      this.callback = callback;
+      this.targets = [];
+      instances.push(this);
+    }
+
+    disconnect() {
+      this.targets = [];
+    }
+
+    observe(target) {
+      this.targets.push(target);
+    }
+  }
+
+  vi.stubGlobal('ResizeObserver', FakeResizeObserver);
+
+  return {
+    instances,
+    trigger() {
+      instances.forEach((instance) => instance.callback([], instance));
+    },
+  };
+}
+
+/**
  * 给 Bottom sheet 模拟一次真实布局：面板高度与内容完整高度分别设定，供拖拽分档使用。
  * 窄屏可用高度为 768 - 72 = 696px，因此 normal 上限是 348px。
  */
@@ -218,6 +250,94 @@ describe('MatBottomSheet', () => {
     expect(wrapper.props('expanded')).toBe('32px');
     expect(wrapper.get('aside').element.style.getPropertyValue('--mat-sheet-expanded-block-size'))
       .toBe('max(64px, 32px)');
+  });
+
+  it('normal 与 max 使用实测内容高度，让各档位高度可以过渡', async () => {
+    const { trigger } = stubResizeObserver();
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容',
+        modelValue: true,
+        variant: 'modal',
+      },
+      attrs: {
+        'aria-label': '实测高度',
+      },
+    });
+
+    await settleRender();
+
+    const sheet = document.body.querySelector('dialog');
+    const panel = sheet.querySelector('.mat-sheet__panel--bottom');
+
+    stubExtent(sheet, 768);
+    stubBottomSheetLayout(panel, { contentHeight: 500, panelHeight: 348 });
+    trigger();
+    await settleRender();
+
+    expect(sheet.style.getPropertyValue('--mat-sheet-expanded-block-size'))
+      .toBe('max(64px, min(500px, calc(var(--mat-sheet-full-block-size) / 2)))');
+
+    await wrapper.setProps({ expanded: 'max' });
+    await settleRender();
+
+    expect(sheet.style.getPropertyValue('--mat-sheet-expanded-block-size'))
+      .toBe('max(64px, min(500px, var(--mat-sheet-full-block-size)))');
+
+    await wrapper.setProps({ expanded: 'min' });
+    await settleRender();
+
+    expect(sheet.style.getPropertyValue('--mat-sheet-expanded-block-size'))
+      .toBe('var(--mat-sheet-min-block-size)');
+  });
+
+  it('内容高度变化后 normal 与 max 的实测高度随之更新', async () => {
+    const { trigger } = stubResizeObserver();
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容',
+        modelValue: true,
+        variant: 'standard',
+      },
+    });
+
+    await settleRender();
+
+    const sheet = wrapper.get('aside').element;
+
+    stubBottomSheetLayout(sheet, { contentHeight: 500, panelHeight: 348 });
+    trigger();
+    await settleRender();
+
+    expect(sheet.style.getPropertyValue('--mat-sheet-expanded-block-size'))
+      .toContain('500px');
+
+    stubBottomSheetLayout(sheet, { contentHeight: 900, panelHeight: 348 });
+    trigger();
+    await settleRender();
+
+    expect(sheet.style.getPropertyValue('--mat-sheet-expanded-block-size'))
+      .toContain('900px');
+  });
+
+  it('无法测量内容高度时 normal 与 max 仍按内容自然高度渲染', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        modelValue: true,
+        variant: 'standard',
+      },
+    });
+
+    await settleRender();
+
+    const sheet = wrapper.get('aside').element;
+
+    expect(sheet.style.getPropertyValue('--mat-sheet-expanded-block-size')).toBe('');
+    expect(sheet.style.getPropertyValue('--mat-sheet-max-block-size'))
+      .toBe('calc(var(--mat-sheet-full-block-size) / 2)');
   });
 
   it('modal 使用原生 dialog，关闭完成后清理并恢复焦点', async () => {

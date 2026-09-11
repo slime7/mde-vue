@@ -6,6 +6,7 @@ import {
   nextTick,
   onBeforeUnmount,
   onMounted,
+  onUpdated,
   ref,
   shallowRef,
   useAttrs,
@@ -174,6 +175,7 @@ const viewportWidth = ref(typeof window === 'undefined' ? 0 : window.innerWidth)
 let dragOffset = 0;
 const dragging = ref(false);
 const virtualPreviewOffset = ref(0);
+const contentBlockSize = ref(0);
 const titleId = `${useId().replace(/[^\w-]/g, '-')}-title`;
 const root = computed(() => surface.value?.root ?? surface.value?.$el ?? null);
 const isAppRootScoped = computed(() => Boolean(scopedContext.value));
@@ -230,18 +232,24 @@ const isBottomCollapsed = computed(() => (
   || bottomExpanded.value === 'normal'
 ));
 const isBottomExpanded = computed(() => props.direction === 'bottom' && !isBottomCollapsed.value);
-// min、full 与自定义高度使用显式 block-size；normal 与 max 按内容自然高度渲染。
 // 虚拟展开下面板始终保留内容高度，min 与 normal 只通过整体位移控制露出多少。
+const isVirtualPreview = computed(() => (
+  props.direction === 'bottom'
+  && props.virtualExpand
+  && (bottomExpanded.value === 'min' || bottomExpanded.value === 'normal')
+));
+// min、full 与自定义高度始终使用显式 block-size；normal 与 max 在测量到内容高度后
+// 改用实测值，避免长度与 fit-content 之间无法插值而丢失高度切换动画。
 const usesExplicitBlockSize = computed(() => {
-  if (props.direction !== 'bottom') {
+  if (props.direction !== 'bottom' || isVirtualPreview.value) {
     return false;
   }
 
-  if (bottomExpanded.value === 'min') {
-    return !props.virtualExpand;
+  if (bottomExpanded.value === 'normal' || bottomExpanded.value === 'max') {
+    return contentBlockSize.value > 0;
   }
 
-  return bottomExpanded.value !== 'normal' && bottomExpanded.value !== 'max';
+  return true;
 });
 const expandedBlockSize = computed(() => {
   if (!usesExplicitBlockSize.value || bottomExpanded.value === 'full') {
@@ -250,6 +258,14 @@ const expandedBlockSize = computed(() => {
 
   if (bottomExpanded.value === 'min') {
     return 'var(--mat-sheet-min-block-size)';
+  }
+
+  if (bottomExpanded.value === 'normal' || bottomExpanded.value === 'max') {
+    const limit = bottomExpanded.value === 'normal'
+      ? 'calc(var(--mat-sheet-full-block-size) / 2)'
+      : 'var(--mat-sheet-full-block-size)';
+
+    return `max(64px, min(${contentBlockSize.value}px, ${limit}))`;
   }
 
   const length = toCssLength(bottomExpanded.value, {
@@ -352,7 +368,8 @@ let dragPreviewOffset = 0;
 let sheetPressTarget = null;
 let dragStartedAt = 0;
 let dragDistance = 0;
-let panelResizeObserver = null;
+let contentObserver = null;
+let contentObserverTargets = [];
 
 useFocusTrap(root, computed(() => (
   isModal.value && rendered.value && isTop.value
@@ -445,17 +462,6 @@ function buildScopeOptions(context) {
 let contentTouchStartY = null;
 
 /**
- * 虚拟预览是否生效：Bottom sheet 的 min 与 normal 档保留内容高度并向下偏移。
- *
- * @returns {boolean}
- */
-function isVirtualPreviewActive() {
-  return props.direction === 'bottom'
-    && props.virtualExpand
-    && (bottomExpanded.value === 'min' || bottomExpanded.value === 'normal');
-}
-
-/**
  * 顶部安全间距：宽屏 56px、窄屏 72px，同时也是向上拖动超出可用高度后的上限。
  *
  * @returns {number}
@@ -480,28 +486,42 @@ function resolveAvailableExtent() {
 }
 
 /**
- * 内容完整高度：把手行、内容主体与页脚按布局高度相加。
+ * 内容完整高度：把手行、内容主体与页脚按布局高度相加，无法测量时返回 0。
  *
- * 各部分只受自身内容影响，不受面板当前高度的过渡影响；都取不到时退回面板高度。
+ * 各部分只受自身内容影响，不受面板当前高度的过渡影响，因此折叠状态下也能量到
+ * 完整内容高度。
  *
  * @returns {number}
  */
-function resolveContentExtent() {
+function measureBottomContentExtent() {
   const panel = dragElement.value;
 
   if (!panel) {
     return 0;
   }
 
-  const extent = [
+  return [
     '.mat-sheet__drag-handle-target',
     '.mat-sheet__content-body',
     '.mat-sheet__footer',
   ].reduce((total, selector) => (
     total + (panel.querySelector(selector)?.getBoundingClientRect().height ?? 0)
   ), 0);
+}
 
-  return extent > 0 ? extent : panel.getBoundingClientRect().height;
+/**
+ * 拖动用的内容完整高度：测量不到时退回当前面板高度。
+ *
+ * @returns {number}
+ */
+function resolveContentExtent() {
+  const extent = measureBottomContentExtent();
+
+  if (extent > 0) {
+    return extent;
+  }
+
+  return dragElement.value?.getBoundingClientRect().height ?? 0;
 }
 
 /**
@@ -509,7 +529,7 @@ function resolveContentExtent() {
  * 让可见高度等于当前档位应露出的高度。
  */
 function updateVirtualPreviewOffset() {
-  if (!isVirtualPreviewActive()) {
+  if (!isVirtualPreview.value) {
     virtualPreviewOffset.value = 0;
     return;
   }
@@ -529,31 +549,73 @@ function updateVirtualPreviewOffset() {
   });
 }
 
-function stopPanelObserver() {
-  panelResizeObserver?.disconnect();
-  panelResizeObserver = null;
+/**
+ * 记录内容完整高度，供 normal 与 max 写出可插值的显式高度。
+ */
+function updateBottomContentExtent() {
+  if (props.direction !== 'bottom') {
+    return;
+  }
+
+  const extent = measureBottomContentExtent();
+
+  if (extent !== contentBlockSize.value) {
+    contentBlockSize.value = extent;
+  }
 }
 
 /**
- * 监听面板尺寸，内容高度变化后重新计算虚拟预览偏移。
+ * 监听内容与页脚尺寸，内容变化后重新测量高度并更新虚拟预览偏移。
+ *
+ * 只在观测目标变化时重建观察器，避免每次渲染都重新连接。
  */
-function startPanelObserver() {
-  stopPanelObserver();
+function observeBottomContent() {
+  const panel = props.direction === 'bottom' && typeof ResizeObserver === 'function'
+    ? dragElement.value
+    : null;
+  const targets = panel
+    ? [
+      '.mat-sheet__drag-handle-target',
+      '.mat-sheet__content-body',
+      '.mat-sheet__footer',
+    ].map((selector) => panel.querySelector(selector)).filter(Boolean)
+    : [];
+  const unchanged = targets.length === contentObserverTargets.length
+    && targets.every((target, index) => target === contentObserverTargets[index]);
 
-  if (typeof ResizeObserver !== 'function'
-    || props.direction !== 'bottom'
-    || !props.virtualExpand) {
+  if (unchanged) {
     return;
   }
 
-  const element = dragElement.value;
+  contentObserverTargets = targets;
+  contentObserver?.disconnect();
+  contentObserver = null;
 
-  if (!element) {
+  if (targets.length === 0) {
     return;
   }
 
-  panelResizeObserver = new ResizeObserver(updateVirtualPreviewOffset);
-  panelResizeObserver.observe(element);
+  contentObserver = new ResizeObserver(updateBottomContentExtent);
+  targets.forEach((target) => contentObserver.observe(target));
+}
+
+/**
+ * 重新测量内容高度、连接观察器并刷新虚拟预览偏移。
+ */
+function refreshBottomGeometry() {
+  if (props.direction !== 'bottom') {
+    return;
+  }
+
+  updateBottomContentExtent();
+  observeBottomContent();
+  updateVirtualPreviewOffset();
+}
+
+function stopContentObserver() {
+  contentObserver?.disconnect();
+  contentObserver = null;
+  contentObserverTargets = [];
 }
 
 function handleContentWheel(event) {
@@ -724,8 +786,7 @@ async function openSheet() {
   if (rendered.value) {
     phase.value = 'opening';
     await nextTick();
-    updateVirtualPreviewOffset();
-    startPanelObserver();
+    refreshBottomGeometry();
     waitForPhase(400, () => {
       phase.value = 'open';
       emit('opened');
@@ -777,8 +838,7 @@ async function openSheet() {
     showModalRoot();
   }
 
-  updateVirtualPreviewOffset();
-  startPanelObserver();
+  refreshBottomGeometry();
   waitForPhase(400, () => {
     phase.value = 'open';
     emit('opened');
@@ -809,7 +869,7 @@ function finishClose() {
   rendered.value = false;
   phase.value = 'closed';
   stopDragging();
-  stopPanelObserver();
+  stopContentObserver();
   virtualPreviewOffset.value = 0;
   clearDragStyle();
   nextTick(() => {
@@ -1126,7 +1186,7 @@ function handlePanelPointerDown(event) {
 
 function updateViewportWidth() {
   viewportWidth.value = window.innerWidth;
-  updateVirtualPreviewOffset();
+  refreshBottomGeometry();
 }
 
 /**
@@ -1178,8 +1238,7 @@ async function handleVariantChange(nextVariant, previousVariant) {
     showModalRoot();
   }
 
-  updateVirtualPreviewOffset();
-  startPanelObserver();
+  refreshBottomGeometry();
 }
 
 onMounted(() => {
@@ -1191,12 +1250,14 @@ onMounted(() => {
     openSheet();
   }
 });
+// 渲染后重新测量：内容、页脚或把手行换元素时观察目标需要重建。
+onUpdated(refreshBottomGeometry);
 onBeforeUnmount(() => {
   dragFrame.cancel();
   mounted = false;
   clearPhaseTimer();
   stopDragging();
-  stopPanelObserver();
+  stopContentObserver();
   window.removeEventListener('resize', updateViewportWidth);
 
   const element = root.value;
@@ -1221,11 +1282,6 @@ watch(() => props.modelValue, (open) => {
   }
 });
 watch(resolvedVariant, handleVariantChange);
-watch([() => props.virtualExpand, bottomExpanded], async () => {
-  await nextTick();
-  updateVirtualPreviewOffset();
-  startPanelObserver();
-});
 watch(() => props.attach, () => {
   if (props.modelValue && rendered.value && isModal.value) {
     console.warn(`${props.componentName}: 打开期间修改 attach 将在下次打开时生效`);
