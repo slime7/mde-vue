@@ -87,6 +87,7 @@
 .navigation-rail-header-spacing-example {
   display: grid;
   inline-size: 100%;
+  block-size: 100%;
   grid-template-columns: repeat(4, minmax(220px, 1fr));
   gap: 12px;
   overflow-x: auto;
@@ -94,7 +95,7 @@
 
 .navigation-rail-header-spacing-example section {
   display: flex;
-  block-size: 440px;
+  block-size: 100%;
   min-inline-size: 220px;
   flex-direction: column;
   gap: 8px;

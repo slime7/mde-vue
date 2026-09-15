@@ -30,7 +30,7 @@ Toolbar 默认显示，使用 `modelValue` 或 `v-model` 可以播放进入、�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Toolbar 分组控制与 fab Slot 预览">
+  <DocsPreview label="Toolbar 分组控制与 fab Slot 预览" height="392px">
     <ToolbarVariantExample />
   </DocsPreview>
 </ClientOnly>
@@ -50,7 +50,7 @@ Toolbar 默认显示，使用 `modelValue` 或 `v-model` 可以播放进入、�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Toolbar 自然布局占位预览">
+  <DocsPreview label="Toolbar 自然布局占位预览" height="392px">
     <ToolbarPlaceholderExample />
   </DocsPreview>
 </ClientOnly>
@@ -72,7 +72,7 @@ Toolbar 默认显示，使用 `modelValue` 或 `v-model` 可以播放进入、�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Toolbar 底部安全区滑块预览">
+  <DocsPreview label="Toolbar 底部安全区滑块预览" height="352px">
     <ToolbarBottomPlaceholderExample />
   </DocsPreview>
 </ClientOnly>

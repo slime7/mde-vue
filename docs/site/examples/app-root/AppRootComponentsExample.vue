@@ -117,6 +117,7 @@ const secondary = ref('projects');
   flex-direction: column;
   gap: 12px;
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .app-root-components-example__external {
@@ -131,7 +132,8 @@ const secondary = ref('projects');
 
 .app-root-components-example {
   position: relative;
-  block-size: 440px;
+  flex: 1 1 auto;
+  min-block-size: 0;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-large);
   overflow: hidden;

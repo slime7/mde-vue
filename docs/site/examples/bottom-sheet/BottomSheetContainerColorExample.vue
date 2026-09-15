@@ -38,7 +38,7 @@ const containerColor = ref(false);
 .bottom-sheet-container-color-example {
   display: flex;
   flex-direction: column;
-  block-size: 360px;
+  block-size: 100%;
   overflow: hidden;
 }
 

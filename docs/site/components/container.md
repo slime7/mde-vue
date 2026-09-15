@@ -66,7 +66,7 @@ order: 116
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Container 确定高度布局预览" stacked>
+  <DocsPreview label="Container 确定高度布局预览" stacked height="352px">
     <ContainerHeightExample />
   </DocsPreview>
 </ClientOnly>

@@ -32,7 +32,7 @@ order: 69
 ::::
 
 <ClientOnly>
-  <DocsPreview label="AppRoot 容器化布局预览">
+  <DocsPreview label="AppRoot 容器化布局预览" height="272px">
     <AppRootBasicExample />
   </DocsPreview>
 </ClientOnly>
@@ -52,7 +52,7 @@ order: 69
 ::::
 
 <ClientOnly>
-  <DocsPreview label="AppRoot 内部滚动预览">
+  <DocsPreview label="AppRoot 内部滚动预览" height="312px">
     <AppRootScrollableExample />
   </DocsPreview>
 </ClientOnly>
@@ -72,7 +72,7 @@ order: 69
 ::::
 
 <ClientOnly>
-  <DocsPreview label="AppRoot 语义根标签预览">
+  <DocsPreview label="AppRoot 语义根标签预览" height="212px">
     <AppRootAsExample />
   </DocsPreview>
 </ClientOnly>
@@ -94,7 +94,7 @@ order: 69
 ::::
 
 <ClientOnly>
-  <DocsPreview label="AppRoot 实时布局数据预览">
+  <DocsPreview label="AppRoot 实时布局数据预览" height="312px">
     <AppRootLayoutExample />
   </DocsPreview>
 </ClientOnly>
@@ -116,7 +116,7 @@ order: 69
 ::::
 
 <ClientOnly>
-  <DocsPreview label="AppRoot 自定义边缘登记预览">
+  <DocsPreview label="AppRoot 自定义边缘登记预览" height="312px">
     <AppRootRegisterEdgeExample />
   </DocsPreview>
 </ClientOnly>
@@ -138,7 +138,7 @@ order: 69
 ::::
 
 <ClientOnly>
-  <DocsPreview label="AppRoot 相关组件自动接入预览">
+  <DocsPreview label="AppRoot 相关组件自动接入预览" height="472px">
     <AppRootComponentsExample />
   </DocsPreview>
 </ClientOnly>

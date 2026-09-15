@@ -67,9 +67,17 @@ const modalExpanded = ref(false);
 <style scoped>
 .navigation-rail-layout-example {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   inline-size: 100%;
+  block-size: 100%;
   gap: 16px;
+}
+
+.navigation-rail-layout-example > section {
+  display: flex;
+  flex: 1 1 340px;
+  min-block-size: 0;
+  flex-direction: column;
 }
 
 .navigation-rail-layout-example h3 {
@@ -79,7 +87,8 @@ const modalExpanded = ref(false);
 
 .navigation-rail-example-shell {
   inline-size: 100%;
-  block-size: 220px;
+  flex: 1 1 auto;
+  min-block-size: 0;
   overflow: hidden;
 }
 
@@ -88,7 +97,6 @@ const modalExpanded = ref(false);
   align-items: center;
   justify-content: center;
   min-inline-size: 0;
-  block-size: 220px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

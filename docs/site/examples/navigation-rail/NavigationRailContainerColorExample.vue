@@ -45,7 +45,7 @@ const selected = ref('home');
 <style scoped>
 .navigation-rail-container-color-example__shell {
   inline-size: 100%;
-  block-size: 280px;
+  block-size: 100%;
   overflow: hidden;
 }
 
@@ -56,7 +56,6 @@ const selected = ref('home');
   align-items: center;
   justify-content: center;
   min-inline-size: 0;
-  block-size: 280px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 

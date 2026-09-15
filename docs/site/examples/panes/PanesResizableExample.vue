@@ -49,10 +49,12 @@ const resizable = ref(true);
   flex-direction: column;
   gap: 12px;
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .panes-resizable-example__layout {
-  block-size: 120px;
+  flex: 1 1 auto;
+  min-block-size: 0;
 }
 
 .panes-resizable-example__layout :deep(.mat-pane) {

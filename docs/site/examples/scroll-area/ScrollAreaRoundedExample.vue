@@ -2,7 +2,7 @@
 <template>
   <div class="scroll-area-rounded-example">
     <mat-scroll-area
-      class="scroll-area-rounded-example__area"
+      class="scroll-area-rounded-example__area scroll-area-rounded-example__area--vertical"
       color="surface-container"
       rounded
       aria-label="纵向圆角滚动区域"
@@ -14,7 +14,7 @@
     </mat-scroll-area>
 
     <mat-scroll-area
-      class="scroll-area-rounded-example__area"
+      class="scroll-area-rounded-example__area scroll-area-rounded-example__area--horizontal"
       orientation="horizontal"
       color="surface-container"
       rounded
@@ -38,10 +38,17 @@
   flex-direction: column;
   gap: 24px;
   inline-size: 100%;
+  block-size: 100%;
 }
 
-.scroll-area-rounded-example__area {
-  block-size: 200px;
+.scroll-area-rounded-example__area--vertical {
+  flex: 1 1 0;
+  min-block-size: 0;
+}
+
+.scroll-area-rounded-example__area--horizontal {
+  flex: 0 0 auto;
+  block-size: auto;
 }
 
 .scroll-area-rounded-example__area p {

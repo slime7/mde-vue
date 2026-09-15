@@ -38,7 +38,7 @@ const open = ref(true);
 <style scoped>
 .navigation-rail-app-example {
   position: relative;
-  block-size: 200px;
+  block-size: 100%;
   overflow: hidden;
 }
 

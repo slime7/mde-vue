@@ -38,7 +38,6 @@ function showContextMenu(event) {
   display: flex;
   align-items: center;
   justify-content: center;
-  block-size: 160px;
   inline-size: 100%;
   color: var(--mat-sys-color-on-surface-variant);
   background: var(--mat-sys-color-surface-container);

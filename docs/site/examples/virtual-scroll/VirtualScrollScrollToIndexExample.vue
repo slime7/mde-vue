@@ -68,6 +68,7 @@ function scrollTo(index) {
   flex-direction: column;
   gap: 16px;
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .virtual-scroll-scroll-to-index-example__actions {
@@ -77,7 +78,8 @@ function scrollTo(index) {
 }
 
 .virtual-scroll-scroll-to-index-example__container {
-  block-size: 200px;
+  flex: 1 1 auto;
+  min-block-size: 0;
   overflow-y: auto;
 }
 

@@ -172,7 +172,7 @@ FAB 只接受当前主题中的八组官方颜色角色，不接受十六进制�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="FAB AppRoot 浮动排列预览">
+  <DocsPreview label="FAB AppRoot 浮动排列预览" height="392px">
     <FabAppExample />
   </DocsPreview>
 </ClientOnly>

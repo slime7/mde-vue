@@ -50,7 +50,7 @@ order: 100
 ::::
 
 <ClientOnly>
-  <DocsPreview label="List 虚拟滚动预览">
+  <DocsPreview label="List 虚拟滚动预览" height="352px">
     <ListVirtualExample />
   </DocsPreview>
 </ClientOnly>

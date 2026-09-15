@@ -39,11 +39,15 @@ function loadMore({ distance }) {
 <!-- #region style -->
 <style scoped>
 .scroll-area-reach-example {
+  display: flex;
+  flex-direction: column;
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .scroll-area-reach-example__area {
-  block-size: 220px;
+  flex: 1 1 auto;
+  min-block-size: 0;
   padding-inline: 16px;
 }
 </style>

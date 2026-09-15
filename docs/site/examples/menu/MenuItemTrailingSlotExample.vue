@@ -8,30 +8,20 @@ const open = ref(false);
 
 <!-- #region template -->
 <template>
-  <div class="example-menu">
-    <mat-btn id="trailing-slot-menu-trigger" @click="open = !open">
-      trailing
-    </mat-btn>
-    <mat-menu
-      id="trailing-slot-menu"
-      v-model="open"
-      anchor="trailing-slot-menu-trigger"
-    >
-      <mat-menu-item>
-        保存
-        <template #trailing>
-          Ctrl+S
-        </template>
-      </mat-menu-item>
-    </mat-menu>
-  </div>
+  <mat-btn id="trailing-slot-menu-trigger" @click="open = !open">
+    trailing
+  </mat-btn>
+  <mat-menu
+    id="trailing-slot-menu"
+    v-model="open"
+    anchor="trailing-slot-menu-trigger"
+  >
+    <mat-menu-item>
+      保存
+      <template #trailing>
+        Ctrl+S
+      </template>
+    </mat-menu-item>
+  </mat-menu>
 </template>
 <!-- #endregion template -->
-
-<!-- #region style -->
-<style scoped>
-.example-menu {
-  block-size: 160px;
-}
-</style>
-<!-- #endregion style -->

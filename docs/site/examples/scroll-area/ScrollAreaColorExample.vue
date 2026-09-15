@@ -32,12 +32,14 @@ const colors = ['surface-container', 'surface-container-high', 'surface-containe
   flex-wrap: wrap;
   gap: 16px;
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .scroll-area-color-example section {
   display: flex;
   flex: 1 1 180px;
   min-inline-size: 0;
+  min-block-size: 0;
   flex-direction: column;
   gap: 8px;
 }
@@ -49,7 +51,8 @@ const colors = ['surface-container', 'surface-container-high', 'surface-containe
 }
 
 .scroll-area-color-example__area {
-  block-size: 180px;
+  flex: 1 1 0;
+  min-block-size: 0;
 }
 
 .scroll-area-color-example__area p {

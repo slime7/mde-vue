@@ -41,7 +41,7 @@ import VirtualScrollScrollToIndexExample from '../examples/virtual-scroll/Virtua
 ::::
 
 <ClientOnly>
-  <DocsPreview label="固定高度虚拟滚动预览">
+  <DocsPreview label="固定高度虚拟滚动预览" height="272px">
     <VirtualScrollFixedExample />
   </DocsPreview>
 </ClientOnly>
@@ -63,7 +63,7 @@ import VirtualScrollScrollToIndexExample from '../examples/virtual-scroll/Virtua
 ::::
 
 <ClientOnly>
-  <DocsPreview label="动态高度虚拟滚动预览">
+  <DocsPreview label="动态高度虚拟滚动预览" height="292px">
     <VirtualScrollDynamicExample />
   </DocsPreview>
 </ClientOnly>
@@ -85,7 +85,7 @@ import VirtualScrollScrollToIndexExample from '../examples/virtual-scroll/Virtua
 ::::
 
 <ClientOnly>
-  <DocsPreview label="联动 Scroll area 预览">
+  <DocsPreview label="联动 Scroll area 预览" height="272px">
     <VirtualScrollScrollAreaExample />
   </DocsPreview>
 </ClientOnly>
@@ -107,7 +107,7 @@ import VirtualScrollScrollToIndexExample from '../examples/virtual-scroll/Virtua
 ::::
 
 <ClientOnly>
-  <DocsPreview label="虚拟滚动定位预览">
+  <DocsPreview label="虚拟滚动定位预览" height="232px">
     <VirtualScrollScrollToIndexExample />
   </DocsPreview>
 </ClientOnly>

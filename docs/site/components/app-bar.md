@@ -117,7 +117,7 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 ::::
 
 <ClientOnly>
-  <DocsPreview label="App bar CSS 时间线折叠预览">
+  <DocsPreview label="App bar CSS 时间线折叠预览" height="452px">
     <AppBarScrollExample />
   </DocsPreview>
 </ClientOnly>

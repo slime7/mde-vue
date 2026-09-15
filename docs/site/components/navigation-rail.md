@@ -32,7 +32,7 @@ order: 105
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation rail 基础导航预览">
+  <DocsPreview label="Navigation rail 基础导航预览" height="312px">
     <NavigationRailBasicExample />
   </DocsPreview>
 </ClientOnly>
@@ -56,7 +56,7 @@ Badge 不提供专用 Slot，也不支持 `offset`。`location` 只接受八种�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation rail Item Badge 预览">
+  <DocsPreview label="Navigation rail Item Badge 预览" height="312px">
     <NavigationRailItemBadgeExample />
   </DocsPreview>
 </ClientOnly>
@@ -78,7 +78,7 @@ Navigation rail 在 `MatLayout` 或 `MatAppRoot` 内统一登记 `start` 边缘�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation rail 自动接入预览">
+  <DocsPreview label="Navigation rail 自动接入预览" height="232px">
     <NavigationRailAppExample />
   </DocsPreview>
 </ClientOnly>
@@ -100,7 +100,7 @@ Navigation rail 在 `MatLayout` 或 `MatAppRoot` 内统一登记 `start` 边缘�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation rail 自然占位预览">
+  <DocsPreview label="Navigation rail 自然占位预览" height="232px">
     <NavigationRailPlaceholderExample />
   </DocsPreview>
 </ClientOnly>
@@ -124,7 +124,7 @@ Navigation rail 在 `MatLayout` 或 `MatAppRoot` 内统一登记 `start` 边缘�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation rail 展开与折叠预览">
+  <DocsPreview label="Navigation rail 展开与折叠预览" height="312px">
     <NavigationRailCollapsibleExample />
   </DocsPreview>
 </ClientOnly>
@@ -146,7 +146,7 @@ Navigation rail 在 `MatLayout` 或 `MatAppRoot` 内统一登记 `start` 边缘�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation rail 自定义展开宽度预览">
+  <DocsPreview label="Navigation rail 自定义展开宽度预览" height="328px">
     <NavigationRailWidthExample />
   </DocsPreview>
 </ClientOnly>
@@ -168,7 +168,7 @@ Navigation rail 在 `MatLayout` 或 `MatAppRoot` 内统一登记 `start` 边缘�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation rail full-width 预览">
+  <DocsPreview label="Navigation rail full-width 预览" height="312px">
     <NavigationRailItemFullWidthExample />
   </DocsPreview>
 </ClientOnly>
@@ -190,7 +190,7 @@ Navigation rail 在 `MatLayout` 或 `MatAppRoot` 内统一登记 `start` 边缘�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation rail 默认内容对齐预览">
+  <DocsPreview label="Navigation rail 默认内容对齐预览" height="328px">
     <NavigationRailAlignmentExample />
   </DocsPreview>
 </ClientOnly>
@@ -212,7 +212,7 @@ Navigation rail 在 `MatLayout` 或 `MatAppRoot` 内统一登记 `start` 边缘�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation rail standard 与 modal 预览">
+  <DocsPreview label="Navigation rail standard 与 modal 预览" height="312px">
     <NavigationRailLayoutExample />
   </DocsPreview>
 </ClientOnly>
@@ -234,7 +234,7 @@ Navigation rail 在 `MatLayout` 或 `MatAppRoot` 内统一登记 `start` 边缘�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="隐藏 expanded rail 预览">
+  <DocsPreview label="隐藏 expanded rail 预览" height="312px">
     <NavigationRailHideOnCollapseExample />
   </DocsPreview>
 </ClientOnly>
@@ -264,7 +264,7 @@ Material Design 规范推荐间距：
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation rail Header 与 FAB 预览">
+  <DocsPreview label="Navigation rail Header 与 FAB 预览" height="472px">
     <NavigationRailSlotsExample />
   </DocsPreview>
 </ClientOnly>
@@ -284,7 +284,7 @@ Material Design 规范推荐间距：
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation rail 顶部内容组合预览">
+  <DocsPreview label="Navigation rail 顶部内容组合预览" height="472px">
     <NavigationRailHeaderSpacingExample />
   </DocsPreview>
 </ClientOnly>
@@ -306,7 +306,7 @@ Material Design 规范推荐间距：
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation rail 容器语义色预览">
+  <DocsPreview label="Navigation rail 容器语义色预览" height="312px">
     <NavigationRailContainerColorExample />
   </DocsPreview>
 </ClientOnly>
@@ -328,7 +328,7 @@ Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation rail Item trailing 预览">
+  <DocsPreview label="Navigation rail Item trailing 预览" height="312px">
     <NavigationRailItemTrailingExample />
   </DocsPreview>
 </ClientOnly>

@@ -32,7 +32,7 @@ const open = ref(false);
 <style scoped>
 .side-sheet-responsive-example {
   display: flex;
-  block-size: 320px;
+  block-size: 100%;
   overflow: hidden;
 }
 

@@ -54,6 +54,7 @@ const selected = ref('explore');
   display: flex;
   flex-direction: column;
   inline-size: 100%;
+  block-size: 100%;
   gap: 12px;
 }
 
@@ -63,8 +64,9 @@ const selected = ref('explore');
 }
 
 .navigation-bar-align-layout {
+  flex: 1;
+  min-block-size: 0;
   inline-size: 100%;
-  block-size: 180px;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);
   overflow: hidden;
@@ -75,7 +77,6 @@ const selected = ref('explore');
   align-items: center;
   justify-content: center;
   min-inline-size: 0;
-  block-size: 180px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

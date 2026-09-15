@@ -57,7 +57,7 @@ const openCustom = ref(false);
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  block-size: 140px;
+  block-size: 100%;
 }
 </style>
 <!-- #endregion style -->

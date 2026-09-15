@@ -43,6 +43,7 @@ const visible = ref(true);
 .aside-toggle-wrapper {
   display: flex;
   flex-direction: column;
+  block-size: 100%;
   gap: 12px;
 }
 
@@ -52,7 +53,8 @@ const visible = ref(true);
 }
 
 .aside-toggle-layout {
-  block-size: 180px;
+  flex: 1;
+  min-block-size: 0;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);
   overflow: hidden;

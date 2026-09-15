@@ -78,7 +78,6 @@ const lastAction = ref('尚未点击项目');
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  block-size: 220px;
 }
 
 .example-menu__status {

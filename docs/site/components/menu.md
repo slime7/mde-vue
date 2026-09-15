@@ -24,8 +24,6 @@ order: 95
 
 <<< @/examples/menu/MenuOpenAnchorExample.vue#script [script]
 
-<<< @/examples/menu/MenuOpenAnchorExample.vue#style [style]
-
 :::
 ::::
 
@@ -44,8 +42,6 @@ order: 95
 
 <<< @/examples/menu/MenuActivatorSlotExample.vue#script [script]
 
-<<< @/examples/menu/MenuActivatorSlotExample.vue#style [style]
-
 :::
 ::::
 
@@ -63,8 +59,6 @@ order: 95
 <<< @/examples/menu/MenuGroupExample.vue#template [template]
 
 <<< @/examples/menu/MenuGroupExample.vue#script [script]
-
-<<< @/examples/menu/MenuGroupExample.vue#style [style]
 
 :::
 ::::
@@ -106,8 +100,6 @@ order: 95
 
 <<< @/examples/menu/MenuOffsetExample.vue#script [script]
 
-<<< @/examples/menu/MenuOffsetExample.vue#style [style]
-
 :::
 ::::
 
@@ -127,8 +119,6 @@ order: 95
 <<< @/examples/menu/MenuMaxLengthExample.vue#template [template]
 
 <<< @/examples/menu/MenuMaxLengthExample.vue#script [script]
-
-<<< @/examples/menu/MenuMaxLengthExample.vue#style [style]
 
 :::
 ::::
@@ -192,8 +182,6 @@ order: 95
 
 <<< @/examples/menu/MenuVariantExample.vue#script [script]
 
-<<< @/examples/menu/MenuVariantExample.vue#style [style]
-
 :::
 ::::
 
@@ -212,8 +200,6 @@ order: 95
 
 <<< @/examples/menu/MenuColorExample.vue#script [script]
 
-<<< @/examples/menu/MenuColorExample.vue#style [style]
-
 :::
 ::::
 
@@ -231,8 +217,6 @@ order: 95
 <<< @/examples/menu/MenuItemDisabledExample.vue#template [template]
 
 <<< @/examples/menu/MenuItemDisabledExample.vue#script [script]
-
-<<< @/examples/menu/MenuItemDisabledExample.vue#style [style]
 
 :::
 ::::
@@ -272,8 +256,6 @@ MenuItem 支持通过 `tooltip` 属性展示悬停提示，通过 `selected` 属
 
 <<< @/examples/menu/MenuDefaultSlotExample.vue#script [script]
 
-<<< @/examples/menu/MenuDefaultSlotExample.vue#style [style]
-
 :::
 ::::
 
@@ -291,8 +273,6 @@ MenuItem 支持通过 `tooltip` 属性展示悬停提示，通过 `selected` 属
 <<< @/examples/menu/MenuItemDefaultSlotExample.vue#template [template]
 
 <<< @/examples/menu/MenuItemDefaultSlotExample.vue#script [script]
-
-<<< @/examples/menu/MenuItemDefaultSlotExample.vue#style [style]
 
 :::
 ::::
@@ -312,8 +292,6 @@ MenuItem 支持通过 `tooltip` 属性展示悬停提示，通过 `selected` 属
 
 <<< @/examples/menu/MenuItemLeadingSlotExample.vue#script [script]
 
-<<< @/examples/menu/MenuItemLeadingSlotExample.vue#style [style]
-
 :::
 ::::
 
@@ -331,8 +309,6 @@ MenuItem 支持通过 `tooltip` 属性展示悬停提示，通过 `selected` 属
 <<< @/examples/menu/MenuItemSupportingSlotExample.vue#template [template]
 
 <<< @/examples/menu/MenuItemSupportingSlotExample.vue#script [script]
-
-<<< @/examples/menu/MenuItemSupportingSlotExample.vue#style [style]
 
 :::
 ::::
@@ -354,8 +330,6 @@ MenuItem 支持通过 `tooltip` 属性展示悬停提示，通过 `selected` 属
 
 <<< @/examples/menu/MenuItemTrailingSlotExample.vue#script [script]
 
-<<< @/examples/menu/MenuItemTrailingSlotExample.vue#style [style]
-
 :::
 ::::
 
@@ -373,8 +347,6 @@ MenuItem 支持通过 `tooltip` 属性展示悬停提示，通过 `selected` 属
 <<< @/examples/menu/MenuItemSubmenuSlotExample.vue#template [template]
 
 <<< @/examples/menu/MenuItemSubmenuSlotExample.vue#script [script]
-
-<<< @/examples/menu/MenuItemSubmenuSlotExample.vue#style [style]
 
 :::
 ::::

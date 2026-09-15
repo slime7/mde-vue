@@ -44,7 +44,7 @@ const modalOpen = ref(false);
 <style scoped>
 .side-sheet-variant-example {
   display: flex;
-  block-size: 360px;
+  block-size: 100%;
   overflow: hidden;
 }
 

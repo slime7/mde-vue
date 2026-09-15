@@ -61,9 +61,17 @@ const selected = ref('home');
 <style scoped>
 .navigation-rail-full-width-example {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   inline-size: 100%;
+  block-size: 100%;
   gap: 16px;
+}
+
+.navigation-rail-full-width-example > section {
+  display: flex;
+  flex: 1 1 340px;
+  min-block-size: 0;
+  flex-direction: column;
 }
 
 .navigation-rail-full-width-example h3 {
@@ -73,7 +81,8 @@ const selected = ref('home');
 
 .navigation-rail-example-shell {
   inline-size: 100%;
-  block-size: 220px;
+  flex: 1 1 auto;
+  min-block-size: 0;
   overflow: hidden;
 }
 
@@ -82,7 +91,6 @@ const selected = ref('home');
   align-items: center;
   justify-content: center;
   min-inline-size: 0;
-  block-size: 220px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

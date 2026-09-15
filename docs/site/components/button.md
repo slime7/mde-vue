@@ -158,10 +158,6 @@ order: 50
 
 <<< @/examples/button/ButtonIconExample.vue#template [template]
 
-<<< @/examples/button/ButtonIconStringExample.vue#template [template]
-
-<<< @/examples/button/ButtonIconComponentSlotExample.vue#template [template]
-
 <<< @/examples/button/ButtonIconExample.vue#style [style]
 
 :::
@@ -170,8 +166,6 @@ order: 50
 <ClientOnly>
   <DocsPreview label="Button icon 预览">
     <ButtonIconExample />
-    <ButtonIconStringExample />
-    <ButtonIconComponentSlotExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -437,8 +431,6 @@ import ButtonDefaultOnlyExample from '../examples/button/ButtonDefaultOnlyExampl
 import ButtonDefaultSlotExample from '../examples/button/ButtonDefaultSlotExample.vue';
 import ButtonDisabledExample from '../examples/button/ButtonDisabledExample.vue';
 import ButtonIconExample from '../examples/button/ButtonIconExample.vue';
-import ButtonIconComponentSlotExample from '../examples/button/ButtonIconComponentSlotExample.vue';
-import ButtonIconStringExample from '../examples/button/ButtonIconStringExample.vue';
 import ButtonMorphExample from '../examples/button/ButtonMorphExample.vue';
 import ButtonPrefixExample from '../examples/button/ButtonPrefixExample.vue';
 import ButtonPrefixSlotExample from '../examples/button/ButtonPrefixSlotExample.vue';

@@ -40,7 +40,7 @@ const selected = ref('dashboard');
 <style scoped>
 .navigation-bar-app-example {
   position: relative;
-  block-size: 200px;
+  block-size: 100%;
   overflow: hidden;
 }
 

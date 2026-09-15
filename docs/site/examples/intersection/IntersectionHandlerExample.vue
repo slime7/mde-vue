@@ -38,7 +38,7 @@ function handleIntersection(value) {
   flex-direction: column;
   gap: 16px;
   inline-size: 100%;
-  block-size: 240px;
+  block-size: 100%;
   padding: 16px;
   overflow-block: auto;
   overscroll-behavior: contain;

@@ -37,7 +37,7 @@ const open = ref(false);
 <!-- #region style -->
 <style scoped>
 .docked-container-example {
-  block-size: 140px;
+  block-size: 100%;
 }
 </style>
 <!-- #endregion style -->

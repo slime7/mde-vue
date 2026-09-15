@@ -34,12 +34,14 @@ const barWidths = ['default', 'thin', 'hidden'];
   flex-wrap: wrap;
   gap: 16px;
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .scroll-area-bar-width-example section {
   display: flex;
   flex: 1 1 180px;
   min-inline-size: 0;
+  min-block-size: 0;
   flex-direction: column;
   gap: 8px;
 }
@@ -51,7 +53,8 @@ const barWidths = ['default', 'thin', 'hidden'];
 }
 
 .scroll-area-bar-width-example__area {
-  block-size: 150px;
+  flex: 1 1 0;
+  min-block-size: 0;
   padding-inline: 16px;
 }
 

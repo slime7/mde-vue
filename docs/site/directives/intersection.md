@@ -28,7 +28,7 @@ order: 120
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Intersection 处理函数预览">
+  <DocsPreview label="Intersection 处理函数预览" height="272px">
     <IntersectionHandlerExample />
   </DocsPreview>
 </ClientOnly>
@@ -48,7 +48,7 @@ order: 120
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Intersection options 预览">
+  <DocsPreview label="Intersection options 预览" height="272px">
     <IntersectionOptionsExample />
   </DocsPreview>
 </ClientOnly>
@@ -68,7 +68,7 @@ order: 120
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Intersection 修饰符预览">
+  <DocsPreview label="Intersection 修饰符预览" height="272px">
     <IntersectionModifiersExample />
   </DocsPreview>
 </ClientOnly>

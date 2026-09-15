@@ -70,7 +70,7 @@ const selected = ref('inbox');
 <style scoped>
 .navigation-rail-badge-example-shell {
   inline-size: 100%;
-  block-size: 280px;
+  block-size: 100%;
   overflow: hidden;
 }
 
@@ -79,7 +79,6 @@ const selected = ref('inbox');
   align-items: center;
   justify-content: center;
   min-inline-size: 0;
-  block-size: 280px;
   gap: 8px;
   color: var(--mat-sys-color-on-surface-variant);
   text-align: center;

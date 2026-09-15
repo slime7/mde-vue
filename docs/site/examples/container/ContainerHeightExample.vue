@@ -36,7 +36,7 @@
 .container-height-example {
   display: flex;
   flex-direction: column;
-  block-size: 320px;
+  block-size: 100%;
   overflow: hidden;
 }
 

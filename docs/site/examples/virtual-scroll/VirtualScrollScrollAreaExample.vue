@@ -39,10 +39,11 @@ const items = ref(
 <style scoped>
 .virtual-scroll-scroll-area-example {
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .virtual-scroll-scroll-area-example__area {
-  block-size: 240px;
+  block-size: 100%;
 }
 
 .virtual-scroll-scroll-area-example__item {

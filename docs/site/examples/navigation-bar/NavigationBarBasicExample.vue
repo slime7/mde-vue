@@ -35,7 +35,7 @@ const selected = ref('home');
 <style scoped>
 .navigation-bar-example-shell {
   inline-size: 100%;
-  block-size: 200px;
+  block-size: 100%;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);
   overflow: hidden;
@@ -46,7 +46,6 @@ const selected = ref('home');
   align-items: center;
   justify-content: center;
   min-inline-size: 0;
-  block-size: 200px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

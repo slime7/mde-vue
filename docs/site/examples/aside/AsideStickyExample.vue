@@ -27,7 +27,7 @@
 <!-- #region style -->
 <style scoped>
 .aside-sticky-container {
-  block-size: 200px;
+  block-size: 100%;
   overflow-y: auto;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);

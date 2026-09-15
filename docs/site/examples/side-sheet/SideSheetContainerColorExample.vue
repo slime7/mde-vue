@@ -35,7 +35,7 @@ const containerColor = ref(false);
 <style scoped>
 .side-sheet-container-color-example {
   display: flex;
-  block-size: 360px;
+  block-size: 100%;
   overflow: hidden;
 }
 

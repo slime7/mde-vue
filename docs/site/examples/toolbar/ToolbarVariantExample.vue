@@ -111,7 +111,9 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
 <!-- #region style -->
 <style scoped>
 .toolbar-variant-example {
-  block-size: 360px;
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
   overflow: hidden;
 }
 
@@ -143,7 +145,8 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
 
 .toolbar-variant-example__preview {
   position: relative;
-  block-size: 160px;
+  flex: 1;
+  min-block-size: 0;
   margin-block-start: 16px;
 }
 </style>

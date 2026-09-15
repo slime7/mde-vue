@@ -8,27 +8,17 @@ const open = ref(false);
 
 <!-- #region template -->
 <template>
-  <div class="example-menu">
-    <mat-btn id="default-slot-menu-trigger" @click="open = !open">
-      默认 Slot
-    </mat-btn>
-    <mat-menu
-      id="default-slot-menu"
-      v-model="open"
-      anchor="default-slot-menu-trigger"
-    >
-      <mat-menu-item>直接放置的项目</mat-menu-item>
-      <mat-divider />
-      <mat-menu-item>直接放置的分隔线</mat-menu-item>
-    </mat-menu>
-  </div>
+  <mat-btn id="default-slot-menu-trigger" @click="open = !open">
+    默认 Slot
+  </mat-btn>
+  <mat-menu
+    id="default-slot-menu"
+    v-model="open"
+    anchor="default-slot-menu-trigger"
+  >
+    <mat-menu-item>直接放置的项目</mat-menu-item>
+    <mat-divider />
+    <mat-menu-item>直接放置的分隔线</mat-menu-item>
+  </mat-menu>
 </template>
 <!-- #endregion template -->
-
-<!-- #region style -->
-<style scoped>
-.example-menu {
-  block-size: 180px;
-}
-</style>
-<!-- #endregion style -->

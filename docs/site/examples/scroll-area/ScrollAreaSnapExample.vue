@@ -25,7 +25,7 @@
 <!-- #region style -->
 <style scoped>
 .scroll-area-snap-example {
-  block-size: 280px;
+  block-size: 100%;
 }
 
 .scroll-area-snap-example__list {

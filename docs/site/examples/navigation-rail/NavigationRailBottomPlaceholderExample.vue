@@ -38,7 +38,7 @@ const active = ref(true);
 <style scoped>
 .navigation-rail-bottom-placeholder-example {
   position: relative;
-  block-size: 220px;
+  block-size: 100%;
   overflow: hidden;
 }
 

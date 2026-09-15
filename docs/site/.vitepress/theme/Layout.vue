@@ -480,7 +480,7 @@ const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontm
     min-block-size: 100dvb;
   }
 
-  .mde-docs-root :deep(.mat-app-root__content) {
+  .mde-docs-root > :deep(.mat-app-root__content) {
     block-size: auto;
     min-block-size: 100dvb;
   }
@@ -491,7 +491,7 @@ const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontm
     overflow: clip;
   }
 
-  .mde-docs-root--playground :deep(.mat-app-root__content) {
+  .mde-docs-root--playground > :deep(.mat-app-root__content) {
     block-size: 100%;
     max-block-size: 100%;
     min-block-size: 0;

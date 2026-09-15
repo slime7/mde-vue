@@ -43,7 +43,7 @@ const notifications = ref(true);
 <!-- #region style -->
 <style scoped>
 .docked-container-example {
-  block-size: 140px;
+  block-size: 100%;
 }
 
 .docked-settings-content {

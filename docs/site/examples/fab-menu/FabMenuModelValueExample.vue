@@ -42,7 +42,7 @@ const open = ref(false);
 <!-- #region style -->
 <style scoped>
 .fab-menu-app-example {
-  block-size: 380px;
+  block-size: 100%;
 }
 
 .fab-menu-app-example__controls {

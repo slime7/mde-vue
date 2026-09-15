@@ -109,7 +109,8 @@ describe('VitePress 文档自定义主题', () => {
     expect(layoutSource.match(/mode="fixed"/g)).toHaveLength(2);
     expect(layoutSource).toContain(":class=\"{ 'mde-docs-root--playground': isPlayground }\"");
     expect(layoutSource).toContain('.mde-docs-root--playground {');
-    expect(layoutSource).toContain('.mde-docs-root--playground :deep(.mat-app-root__content) {');
+    expect(layoutSource).toContain('.mde-docs-root > :deep(.mat-app-root__content) {');
+    expect(layoutSource).toContain('.mde-docs-root--playground > :deep(.mat-app-root__content) {');
 
     const drawerIndex = layoutSource.indexOf('<mat-navigation-drawer');
     const appBarIndex = layoutSource.indexOf('<mat-app-bar');
@@ -177,6 +178,11 @@ describe('VitePress 文档自定义主题', () => {
     expect(previewSource).toContain('padding: 16px;');
     expect(previewSource).toContain('background: var(--mat-sys-color-background);');
     expect(previewSource).not.toContain('docs-preview__body--stacked > :deep(*)');
+    expect(previewSource).toContain('height: {');
+    expect(previewSource).toContain('maxHeight: {');
+    expect(previewSource).toContain('--docs-preview-body-height');
+    expect(previewSource).toContain('--docs-preview-body-max-height');
+    expect(previewSource).toContain('overflow: auto;');
 
     expect(configSource).toContain('registerMergeDocsPreviewRule');
     expect(configSource).toContain('merge_docs_preview');

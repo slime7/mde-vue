@@ -51,7 +51,7 @@ function updateSizes(nextSizes) {
 <!-- #region style -->
 <style scoped>
 .panes-example {
-  block-size: 180px;
+  block-size: 100%;
   inline-size: 100%;
 }
 

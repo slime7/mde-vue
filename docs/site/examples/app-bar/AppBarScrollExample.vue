@@ -43,7 +43,7 @@ const scrollTarget = ref(null);
 <style scoped>
 .app-bar-scroll-example {
   inline-size: 100%;
-  block-size: 420px;
+  block-size: 100%;
   overflow: auto;
   overscroll-behavior: contain;
 }

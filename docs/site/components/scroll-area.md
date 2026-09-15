@@ -34,7 +34,7 @@ order: 114
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Scroll area 方向预览">
+  <DocsPreview label="Scroll area 方向预览" height="212px">
     <ScrollAreaOrientationExample />
   </DocsPreview>
 </ClientOnly>
@@ -54,7 +54,7 @@ order: 114
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Scroll area 圆角预览">
+  <DocsPreview label="Scroll area 圆角预览" height="352px">
     <ScrollAreaRoundedExample />
   </DocsPreview>
 </ClientOnly>
@@ -76,7 +76,7 @@ order: 114
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Scroll area 容器配色预览">
+  <DocsPreview label="Scroll area 容器配色预览" height="260px">
     <ScrollAreaColorExample />
   </DocsPreview>
 </ClientOnly>
@@ -96,7 +96,7 @@ order: 114
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Scroll area 搭配 Container 预览">
+  <DocsPreview label="Scroll area 搭配 Container 预览" height="352px">
     <ScrollAreaContainerExample />
   </DocsPreview>
 </ClientOnly>
@@ -116,7 +116,7 @@ order: 114
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Scroll area 关闭滚动方向内边距预览">
+  <DocsPreview label="Scroll area 关闭滚动方向内边距预览" height="480px">
     <ScrollAreaNoScrollPaddingExample />
   </DocsPreview>
 </ClientOnly>
@@ -136,7 +136,7 @@ order: 114
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Scroll area 滚动停靠预览">
+  <DocsPreview label="Scroll area 滚动停靠预览" height="312px">
     <ScrollAreaSnapExample />
   </DocsPreview>
 </ClientOnly>
@@ -158,7 +158,7 @@ order: 114
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Scroll area 无限滚动预览">
+  <DocsPreview label="Scroll area 无限滚动预览" height="252px">
     <ScrollAreaReachExample />
   </DocsPreview>
 </ClientOnly>
@@ -178,7 +178,7 @@ order: 114
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Scroll area 阴影偏移预览">
+  <DocsPreview label="Scroll area 阴影偏移预览" height="292px">
     <ScrollAreaShadowOffsetExample />
   </DocsPreview>
 </ClientOnly>
@@ -198,7 +198,7 @@ order: 114
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Scroll area 阴影长度预览">
+  <DocsPreview label="Scroll area 阴影长度预览" height="624px">
     <ScrollAreaShadowLengthExample />
   </DocsPreview>
 </ClientOnly>
@@ -222,7 +222,7 @@ order: 114
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Scroll area 滚动条宽度预览">
+  <DocsPreview label="Scroll area 滚动条宽度预览" height="182px">
     <ScrollAreaBarWidthExample />
   </DocsPreview>
 </ClientOnly>
@@ -244,7 +244,7 @@ order: 114
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Scroll area 公共滚动条样式预览">
+  <DocsPreview label="Scroll area 公共滚动条样式预览" height="182px">
     <ScrollAreaScrollbarStyleExample />
   </DocsPreview>
 </ClientOnly>
@@ -286,7 +286,7 @@ order: 114
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Scroll area 方法预览">
+  <DocsPreview label="Scroll area 方法预览" height="232px">
     <ScrollAreaMethodsExample />
   </DocsPreview>
 </ClientOnly>

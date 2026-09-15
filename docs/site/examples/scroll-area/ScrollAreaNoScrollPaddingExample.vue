@@ -65,16 +65,18 @@
 <!-- #region style -->
 <style scoped>
 .scroll-area-no-scroll-padding-example {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-rows: minmax(0, 1fr) auto;
   gap: 16px;
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .scroll-area-no-scroll-padding-example section {
   display: flex;
-  flex: 1 1 220px;
   min-inline-size: 0;
+  min-block-size: 0;
   flex-direction: column;
   gap: 8px;
 }
@@ -86,11 +88,12 @@
 }
 
 .scroll-area-no-scroll-padding-example__area {
-  block-size: 200px;
+  flex: 1 1 0;
+  min-block-size: 0;
 }
 
 .scroll-area-no-scroll-padding-example__area--horizontal {
-  flex-basis: 100%;
+  grid-column: 1 / -1;
 }
 
 .scroll-area-no-scroll-padding-example__row {

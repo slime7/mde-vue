@@ -64,10 +64,13 @@
   flex-direction: column;
   gap: 24px;
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .scroll-area-shadow-length-example section {
   display: flex;
+  flex: 1 1 0;
+  min-block-size: 0;
   flex-direction: column;
   gap: 8px;
 }
@@ -79,7 +82,8 @@
 }
 
 .scroll-area-shadow-length-example__area {
-  block-size: 180px;
+  flex: 1 1 auto;
+  min-block-size: 0;
   padding-inline: 16px;
 }
 

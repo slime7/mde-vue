@@ -32,7 +32,7 @@ order: 54
 ::::
 
 <ClientOnly>
-  <DocsPreview label="FAB Menu 基础用法预览">
+  <DocsPreview label="FAB Menu 基础用法预览" height="412px">
     <FabMenuBasicExample />
   </DocsPreview>
 </ClientOnly>
@@ -54,7 +54,7 @@ order: 54
 ::::
 
 <ClientOnly>
-  <DocsPreview label="FAB Menu 受控展开预览">
+  <DocsPreview label="FAB Menu 受控展开预览" height="412px">
     <FabMenuModelValueExample />
   </DocsPreview>
 </ClientOnly>
@@ -74,7 +74,7 @@ order: 54
 ::::
 
 <ClientOnly>
-  <DocsPreview label="FAB Menu 尺寸与颜色预览">
+  <DocsPreview label="FAB Menu 尺寸与颜色预览" height="392px">
     <FabMenuColorSizeExample />
   </DocsPreview>
 </ClientOnly>
@@ -96,7 +96,7 @@ order: 54
 ::::
 
 <ClientOnly>
-  <DocsPreview label="FAB Menu 底部 Toolbar 协作预览">
+  <DocsPreview label="FAB Menu 底部 Toolbar 协作预览" height="412px">
     <FabMenuToolbarExample />
   </DocsPreview>
 </ClientOnly>
@@ -116,7 +116,7 @@ order: 54
 ::::
 
 <ClientOnly>
-  <DocsPreview label="FAB Menu 自定义触发器预览">
+  <DocsPreview label="FAB Menu 自定义触发器预览" height="412px">
     <FabMenuCustomTriggerExample />
   </DocsPreview>
 </ClientOnly>

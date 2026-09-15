@@ -30,7 +30,7 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Panes 受控尺寸预览" stacked>
+  <DocsPreview label="Panes 受控尺寸预览" stacked height="212px">
     <PanesBasicExample />
   </DocsPreview>
 </ClientOnly>
@@ -50,7 +50,7 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Panes 等高滚动预览" stacked>
+  <DocsPreview label="Panes 等高滚动预览" stacked height="212px">
     <PanesScrollExample />
   </DocsPreview>
 </ClientOnly>
@@ -70,7 +70,7 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Panes 开关调整预览" stacked>
+  <DocsPreview label="Panes 开关调整预览" stacked height="152px">
     <PanesResizableExample />
   </DocsPreview>
 </ClientOnly>
@@ -92,7 +92,7 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Panes 断点与显隐预览" stacked>
+  <DocsPreview label="Panes 断点与显隐预览" stacked height="172px">
     <PanesBreakpointExample />
   </DocsPreview>
 </ClientOnly>
@@ -114,7 +114,7 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Panes 宽度信息预览" stacked>
+  <DocsPreview label="Panes 宽度信息预览" stacked height="152px">
     <PanesWidthsExample />
   </DocsPreview>
 </ClientOnly>

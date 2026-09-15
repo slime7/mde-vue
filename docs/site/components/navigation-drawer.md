@@ -29,7 +29,7 @@ Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail`
 ::::
 
 <ClientOnly>
-  <DocsPreview label="基础导航抽屉预览">
+  <DocsPreview label="基础导航抽屉预览" height="352px">
     <NavigationDrawerBasicExample />
   </DocsPreview>
 </ClientOnly>
@@ -51,7 +51,7 @@ Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail`
 ::::
 
 <ClientOnly>
-  <DocsPreview label="模态导航抽屉预览">
+  <DocsPreview label="模态导航抽屉预览" height="352px">
     <NavigationDrawerModalExample />
   </DocsPreview>
 </ClientOnly>
@@ -73,7 +73,7 @@ Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail`
 ::::
 
 <ClientOnly>
-  <DocsPreview label="二级菜单分组抽屉预览">
+  <DocsPreview label="二级菜单分组抽屉预览" height="412px">
     <NavigationDrawerGroupExample />
   </DocsPreview>
 </ClientOnly>
@@ -95,7 +95,7 @@ Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail`
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation drawer 容器语义色预览">
+  <DocsPreview label="Navigation drawer 容器语义色预览" height="352px">
     <NavigationDrawerContainerColorExample />
   </DocsPreview>
 </ClientOnly>

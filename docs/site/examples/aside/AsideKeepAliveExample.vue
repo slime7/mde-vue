@@ -52,6 +52,7 @@ const draftText = ref('保留的表单内容');
 .aside-keep-alive-wrapper {
   display: flex;
   flex-direction: column;
+  block-size: 100%;
   gap: 12px;
 }
 
@@ -67,7 +68,8 @@ const draftText = ref('保留的表单内容');
 }
 
 .aside-keep-alive-layout {
-  block-size: 180px;
+  flex: 1;
+  min-block-size: 0;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);
   overflow: hidden;

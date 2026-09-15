@@ -34,7 +34,7 @@ order: 106
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation bar 基础导航预览">
+  <DocsPreview label="Navigation bar 基础导航预览" height="232px">
     <NavigationBarBasicExample />
   </DocsPreview>
 </ClientOnly>
@@ -58,7 +58,7 @@ order: 106
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation bar 对齐预览">
+  <DocsPreview label="Navigation bar 对齐预览" height="272px">
     <NavigationBarAlignmentExample />
   </DocsPreview>
 </ClientOnly>
@@ -82,7 +82,7 @@ order: 106
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Navigation bar 应用级挂载预览">
+  <DocsPreview label="Navigation bar 应用级挂载预览" height="232px">
     <NavigationBarAppExample />
   </DocsPreview>
 </ClientOnly>

@@ -70,7 +70,7 @@
 <!-- #region style -->
 <style scoped>
 .aside-location-example {
-  block-size: 260px;
+  block-size: 100%;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);
   overflow: hidden;

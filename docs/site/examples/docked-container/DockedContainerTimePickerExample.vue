@@ -87,7 +87,7 @@ const period = ref('AM');
 <!-- #region style -->
 <style scoped>
 .docked-time-picker-example {
-  block-size: 200px;
+  block-size: 100%;
 }
 
 .time-picker-body {

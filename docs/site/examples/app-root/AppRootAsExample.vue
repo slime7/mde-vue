@@ -10,7 +10,7 @@
 <!-- #region style -->
 <style scoped>
 .app-root-as-example {
-  block-size: 180px;
+  block-size: 100%;
   padding: 20px;
   overflow: hidden;
   background: var(--mat-sys-color-surface-container);

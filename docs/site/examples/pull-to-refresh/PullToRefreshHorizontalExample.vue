@@ -49,11 +49,13 @@ async function onRefresh() {
   align-items: center;
   gap: 12px;
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .area {
   inline-size: min(100%, 480px);
-  block-size: 160px;
+  flex: 1 1 auto;
+  min-block-size: 0;
 }
 
 .cards {

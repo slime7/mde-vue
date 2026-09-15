@@ -54,7 +54,7 @@ const selected = ref('home');
 .navigation-drawer-example-shell {
   position: relative;
   inline-size: 100%;
-  block-size: 320px;
+  block-size: 100%;
   overflow: hidden;
 }
 
@@ -63,7 +63,6 @@ const selected = ref('home');
   align-items: center;
   justify-content: center;
   min-inline-size: 0;
-  block-size: 320px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

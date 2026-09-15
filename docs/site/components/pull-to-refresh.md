@@ -36,7 +36,7 @@ order: 88
 ::::
 
 <ClientOnly>
-  <DocsPreview label="PullToRefresh 基础用法预览" stacked>
+  <DocsPreview label="PullToRefresh 基础用法预览" stacked height="272px">
     <PullToRefreshBasicExample />
   </DocsPreview>
 </ClientOnly>
@@ -58,7 +58,7 @@ order: 88
 ::::
 
 <ClientOnly>
-  <DocsPreview label="PullToRefresh placeholder 预览" stacked>
+  <DocsPreview label="PullToRefresh placeholder 预览" stacked height="272px">
     <PullToRefreshPlaceholderExample />
   </DocsPreview>
 </ClientOnly>
@@ -80,7 +80,7 @@ order: 88
 ::::
 
 <ClientOnly>
-  <DocsPreview label="PullToRefresh disabled 预览" stacked>
+  <DocsPreview label="PullToRefresh disabled 预览" stacked height="272px">
     <PullToRefreshDisabledExample />
   </DocsPreview>
 </ClientOnly>
@@ -102,7 +102,7 @@ order: 88
 ::::
 
 <ClientOnly>
-  <DocsPreview label="PullToRefresh triggerDistance 预览" stacked>
+  <DocsPreview label="PullToRefresh triggerDistance 预览" stacked height="280px">
     <PullToRefreshTriggerDistanceExample />
   </DocsPreview>
 </ClientOnly>
@@ -124,7 +124,7 @@ order: 88
 ::::
 
 <ClientOnly>
-  <DocsPreview label="PullToRefresh loading 属性透传预览" stacked>
+  <DocsPreview label="PullToRefresh loading 属性透传预览" stacked height="252px">
     <PullToRefreshLoadingExample />
   </DocsPreview>
 </ClientOnly>
@@ -146,7 +146,7 @@ order: 88
 ::::
 
 <ClientOnly>
-  <DocsPreview label="PullToRefresh 水平滚动区域预览" stacked>
+  <DocsPreview label="PullToRefresh 水平滚动区域预览" stacked height="192px">
     <PullToRefreshHorizontalExample />
   </DocsPreview>
 </ClientOnly>

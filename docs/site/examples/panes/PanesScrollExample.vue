@@ -41,7 +41,7 @@ const rows = Array.from({ length: 12 }, (_, index) => `可滚动内容 ${index +
 <!-- #region style -->
 <style scoped>
 .panes-scroll-example {
-  block-size: 180px;
+  block-size: 100%;
   inline-size: 100%;
 }
 

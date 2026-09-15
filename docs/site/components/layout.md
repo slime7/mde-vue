@@ -28,7 +28,7 @@ order: 118
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Layout 基础布局预览" stacked>
+  <DocsPreview label="Layout 基础布局预览" stacked height="252px">
     <LayoutBasicExample />
   </DocsPreview>
 </ClientOnly>

@@ -12,7 +12,7 @@
 <!-- #region style -->
 <style scoped>
 .fab-app-example {
-  block-size: 360px;
+  block-size: 100%;
 }
 
 .fab-app-example p {

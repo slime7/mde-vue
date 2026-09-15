@@ -32,7 +32,7 @@ order: 102
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Side sheet 变体预览">
+  <DocsPreview label="Side sheet 变体预览" height="392px">
     <SideSheetVariantExample />
   </DocsPreview>
 </ClientOnly>
@@ -52,7 +52,7 @@ order: 102
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Side sheet 自适应预览">
+  <DocsPreview label="Side sheet 自适应预览" height="352px">
     <SideSheetResponsiveExample />
   </DocsPreview>
 </ClientOnly>
@@ -114,7 +114,7 @@ order: 102
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Side sheet 容器语义色预览">
+  <DocsPreview label="Side sheet 容器语义色预览" height="392px">
     <SideSheetContainerColorExample />
   </DocsPreview>
 </ClientOnly>

@@ -30,7 +30,7 @@ order: 97
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Docked container modelValue 与元素 anchor 预览">
+  <DocsPreview label="Docked container modelValue 与元素 anchor 预览" height="172px">
     <DockedContainerOpenAnchorExample />
   </DocsPreview>
 </ClientOnly>
@@ -50,7 +50,7 @@ order: 97
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Docked container activator Slot 预览">
+  <DocsPreview label="Docked container activator Slot 预览" height="172px">
     <DockedContainerActivatorSlotExample />
   </DocsPreview>
 </ClientOnly>
@@ -72,7 +72,7 @@ order: 97
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Docked container 尺寸预设与自定义 width 预览">
+  <DocsPreview label="Docked container 尺寸预设与自定义 width 预览" height="172px">
     <DockedContainerSizeExample />
   </DocsPreview>
 </ClientOnly>
@@ -94,7 +94,7 @@ order: 97
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Docked container 时间选择器浮动面板预览">
+  <DocsPreview label="Docked container 时间选择器浮动面板预览" height="232px">
     <DockedContainerTimePickerExample />
   </DocsPreview>
 </ClientOnly>

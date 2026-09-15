@@ -70,7 +70,7 @@ const bottomPlaceholder = ref(0);
 <!-- #region style -->
 <style scoped>
 .toolbar-bottom-placeholder-example {
-  block-size: 320px;
+  block-size: 100%;
   overflow: hidden;
 }
 

@@ -41,10 +41,12 @@
   flex-direction: column;
   gap: 24px;
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .scroll-area-orientation-example__vertical {
-  block-size: 180px;
+  flex: 1 1 auto;
+  min-block-size: 0;
   padding-inline: 16px;
 }
 

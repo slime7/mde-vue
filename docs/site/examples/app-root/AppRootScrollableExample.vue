@@ -20,7 +20,7 @@
 <!-- #region style -->
 <style scoped>
 .app-root-scrollable-example {
-  block-size: 280px;
+  block-size: 100%;
 }
 
 .app-root-scrollable-example__item {

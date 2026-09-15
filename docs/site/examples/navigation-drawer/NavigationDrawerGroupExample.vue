@@ -73,7 +73,7 @@ const selected = ref('file-1');
 <style scoped>
 .navigation-drawer-example-shell {
   inline-size: 100%;
-  block-size: 380px;
+  block-size: 100%;
   overflow: hidden;
 }
 
@@ -82,7 +82,6 @@ const selected = ref('file-1');
   align-items: center;
   justify-content: center;
   min-inline-size: 0;
-  block-size: 380px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

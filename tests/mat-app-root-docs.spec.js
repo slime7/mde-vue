@@ -48,7 +48,9 @@ describe('AppRoot 文档', () => {
     });
   });
 
-  it('容器化示例关闭视口填充，内部滚动示例提供确定高度', () => {
+  it('容器化示例关闭视口填充，舞台高度自适应预览窗口', () => {
+    const page = readFileSync(resolve(pagePath), 'utf8');
+
     exampleNames.forEach((exampleName) => {
       const example = readFileSync(
         resolve('docs/site/examples/app-root', `${exampleName}.vue`),
@@ -56,6 +58,12 @@ describe('AppRoot 文档', () => {
       );
 
       expect(example, exampleName).toContain(':fill-viewport="false"');
+
+      const previewBlock = page.match(
+        new RegExp(`<DocsPreview[^>]*>\\s*<${exampleName} />`),
+      );
+
+      expect(previewBlock?.[0], exampleName).toContain('height=');
     });
 
     const scrollable = readFileSync(
@@ -68,8 +76,8 @@ describe('AppRoot 文档', () => {
     );
 
     expect(scrollable).toContain('scrollable');
-    expect(scrollable).toContain('block-size: 280px;');
-    expect(components).toContain('block-size: 440px;');
+    expect(scrollable).toContain('block-size: 100%;');
+    expect(components).toContain('block-size: 100%;');
     expect(components).toContain('app-root-components-example__external');
     expect(components).toContain('overflow: hidden;');
   });

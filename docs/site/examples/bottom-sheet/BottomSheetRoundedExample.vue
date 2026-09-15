@@ -29,6 +29,20 @@ const rounded = ref(true);
 
 <!-- #region style -->
 <style scoped>
+.bottom-sheet-rounded-example {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: hidden;
+}
+
+.bottom-sheet-rounded-example > mat-bottom-sheet {
+  margin-block-start: auto;
+}
+
 .bottom-sheet-rounded-example__sheet-body {
   padding: 24px;
 }

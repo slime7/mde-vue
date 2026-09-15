@@ -67,7 +67,7 @@
 }
 
 .fab-menu-mini-app {
-  block-size: 360px;
+  block-size: 100%;
 }
 
 .fab-menu-mini-app p {

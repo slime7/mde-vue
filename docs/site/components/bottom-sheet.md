@@ -42,7 +42,7 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Bottom sheet 变体预览">
+  <DocsPreview label="Bottom sheet 变体预览" height="392px">
     <BottomSheetVariantExample />
   </DocsPreview>
 </ClientOnly>
@@ -104,7 +104,7 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Bottom sheet 阴影预览">
+  <DocsPreview label="Bottom sheet 阴影预览" height="392px">
     <BottomSheetShadowExample />
   </DocsPreview>
 </ClientOnly>
@@ -124,7 +124,7 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Bottom sheet 圆角预览">
+  <DocsPreview label="Bottom sheet 圆角预览" height="392px">
     <BottomSheetRoundedExample />
   </DocsPreview>
 </ClientOnly>
@@ -144,7 +144,7 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Bottom sheet 自适应预览">
+  <DocsPreview label="Bottom sheet 自适应预览" height="352px">
     <BottomSheetResponsiveExample />
   </DocsPreview>
 </ClientOnly>
@@ -186,7 +186,7 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Bottom sheet 容器语义色预览">
+  <DocsPreview label="Bottom sheet 容器语义色预览" height="392px">
     <BottomSheetContainerColorExample />
   </DocsPreview>
 </ClientOnly>

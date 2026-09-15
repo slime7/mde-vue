@@ -51,10 +51,11 @@ const items = ref(
 <style scoped>
 .virtual-scroll-dynamic-example {
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .virtual-scroll-dynamic-example__container {
-  block-size: 260px;
+  block-size: 100%;
   overflow-y: auto;
 }
 

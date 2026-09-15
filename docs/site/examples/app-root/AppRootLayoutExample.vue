@@ -34,7 +34,7 @@ const LayoutReadout = defineComponent({
 <!-- #region style -->
 <style scoped>
 .app-root-layout-example {
-  block-size: 280px;
+  block-size: 100%;
 }
 
 .app-root-layout-example p {

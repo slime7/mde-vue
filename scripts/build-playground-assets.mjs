@@ -160,7 +160,7 @@ export async function buildPlaygroundAssets() {
     html, body {
       margin: 0;
       padding: 0;
-      min-block-size: 100%;
+      block-size: 100%;
       background: var(--mat-sys-color-surface, #fef7ff);
       color: var(--mat-sys-color-on-surface, #1d1b20);
       font-family: var(--mat-ref-typeface-plain, "Noto Sans SC", sans-serif);
@@ -173,11 +173,11 @@ export async function buildPlaygroundAssets() {
     }
 
     #app {
-      min-block-size: 100%;
+      block-size: 100%;
     }
 
     .playground-preview-wrapper {
-      min-block-size: 100%;
+      block-size: 100%;
       box-sizing: border-box;
       padding: 24px;
     }

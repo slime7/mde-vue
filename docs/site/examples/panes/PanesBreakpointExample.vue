@@ -60,10 +60,12 @@ function updateBreakpoint(nextBreakpoint) {
   flex-direction: column;
   gap: 12px;
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .panes-breakpoint-example__layout {
-  block-size: 140px;
+  flex: 1 1 auto;
+  min-block-size: 0;
 }
 
 .panes-breakpoint-example__panel {

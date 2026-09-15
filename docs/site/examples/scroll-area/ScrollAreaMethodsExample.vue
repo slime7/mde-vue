@@ -49,7 +49,10 @@ function scrollToEnd() {
 <!-- #region style -->
 <style scoped>
 .scroll-area-methods-example {
+  display: flex;
+  flex-direction: column;
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .scroll-area-methods-example__actions {
@@ -59,7 +62,8 @@ function scrollToEnd() {
 }
 
 .scroll-area-methods-example__area {
-  block-size: 200px;
+  flex: 1 1 auto;
+  min-block-size: 0;
   padding-inline: 16px;
 }
 </style>

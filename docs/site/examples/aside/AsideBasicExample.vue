@@ -24,7 +24,7 @@
 <!-- #region style -->
 <style scoped>
 .aside-basic-example {
-  block-size: 180px;
+  block-size: 100%;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);
   overflow: hidden;

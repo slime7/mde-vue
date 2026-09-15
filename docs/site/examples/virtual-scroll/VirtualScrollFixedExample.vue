@@ -37,10 +37,11 @@ const items = ref(
 <style scoped>
 .virtual-scroll-fixed-example {
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .virtual-scroll-fixed-example__container {
-  block-size: 240px;
+  block-size: 100%;
   overflow-y: auto;
 }
 

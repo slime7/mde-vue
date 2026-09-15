@@ -71,11 +71,16 @@
 .aside-order-stack {
   display: flex;
   flex-direction: column;
+  block-size: 100%;
   gap: 16px;
 }
 
+.aside-order-stack > .aside-order-item {
+  flex: 1 1 0;
+  min-block-size: 0;
+}
+
 .aside-order-item {
-  block-size: 180px;
   border: 1px solid var(--mat-sys-color-outline-variant);
   border-radius: var(--mat-sys-shape-corner-medium);
   overflow: hidden;

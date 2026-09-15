@@ -23,7 +23,7 @@
 <!-- #region style -->
 <style scoped>
 .scroll-area-container-example {
-  block-size: 320px;
+  block-size: 100%;
 }
 
 .scroll-area-container-example__area {

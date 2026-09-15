@@ -69,7 +69,7 @@ const selected = ref('inbox');
 .navigation-rail-example-shell {
   display: flex;
   inline-size: 100%;
-  block-size: 440px;
+  block-size: 100%;
   overflow: hidden;
 }
 

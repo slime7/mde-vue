@@ -59,7 +59,7 @@ const selected = ref('inbox');
 <style scoped>
 .navigation-rail-example-shell {
   inline-size: 100%;
-  block-size: 280px;
+  block-size: 100%;
   overflow: hidden;
 }
 

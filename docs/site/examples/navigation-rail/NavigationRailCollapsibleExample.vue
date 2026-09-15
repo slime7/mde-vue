@@ -44,7 +44,7 @@ const selected = ref('overview');
 <style scoped>
 .navigation-rail-example-shell {
   inline-size: 100%;
-  block-size: 280px;
+  block-size: 100%;
   overflow: hidden;
 }
 
@@ -53,7 +53,6 @@ const selected = ref('overview');
   align-items: center;
   justify-content: center;
   min-inline-size: 0;
-  block-size: 280px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

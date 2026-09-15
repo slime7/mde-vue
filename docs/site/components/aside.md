@@ -32,7 +32,7 @@ order: 117
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Aside 基础使用预览" stacked>
+  <DocsPreview label="Aside 基础使用预览" stacked height="212px">
     <AsideBasicExample />
   </DocsPreview>
 </ClientOnly>
@@ -52,7 +52,7 @@ order: 117
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Aside 组件顺序对照预览" stacked>
+  <DocsPreview label="Aside 组件顺序对照预览" stacked height="408px">
     <AsideOrderExample />
   </DocsPreview>
 </ClientOnly>
@@ -74,7 +74,7 @@ order: 117
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Aside 动态切换预览" stacked>
+  <DocsPreview label="Aside 动态切换预览" stacked height="212px">
     <AsideModelValueExample />
   </DocsPreview>
 </ClientOnly>
@@ -94,7 +94,7 @@ order: 117
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Aside 多边缘停靠预览" stacked>
+  <DocsPreview label="Aside 多边缘停靠预览" stacked height="292px">
     <AsideLocationExample />
   </DocsPreview>
 </ClientOnly>
@@ -118,7 +118,7 @@ order: 117
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Aside 粘性停靠预览" stacked>
+  <DocsPreview label="Aside 粘性停靠预览" stacked height="232px">
     <AsideStickyExample />
   </DocsPreview>
 </ClientOnly>
@@ -140,7 +140,7 @@ order: 117
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Aside 状态保活预览" stacked>
+  <DocsPreview label="Aside 状态保活预览" stacked height="212px">
     <AsideKeepAliveExample />
   </DocsPreview>
 </ClientOnly>
@@ -162,7 +162,7 @@ order: 117
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Aside 模态浮层预览" stacked>
+  <DocsPreview label="Aside 模态浮层预览" stacked height="292px">
     <AsideModalExample />
   </DocsPreview>
 </ClientOnly>

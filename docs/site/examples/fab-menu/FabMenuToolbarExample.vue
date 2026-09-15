@@ -56,7 +56,7 @@ const isFloating = ref(false);
 <!-- #region style -->
 <style scoped>
 .fab-menu-toolbar-example {
-  block-size: 380px;
+  block-size: 100%;
 }
 
 .fab-menu-toolbar-example__body h3,

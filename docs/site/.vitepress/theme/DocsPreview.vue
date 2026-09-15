@@ -20,10 +20,52 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * 预览区的固定高度，用于模拟浏览器窗口；数字按 px 处理。
+   *
+   * @type {string | number}
+   * @default ''
+   */
+  height: {
+    type: [String, Number],
+    default: '',
+  },
+  /**
+   * 预览区的最大高度，达到前随内容自适应；数字按 px 处理。
+   *
+   * @type {string | number}
+   * @default ''
+   */
+  maxHeight: {
+    type: [String, Number],
+    default: '',
+  },
 });
 
 const slots = useSlots();
 const isCodeOpen = ref(false);
+
+function toCssSize(value) {
+  if (value === '' || value === null || value === undefined) {
+    return '';
+  }
+  return typeof value === 'number' ? `${value}px` : value;
+}
+
+const bodyStyle = computed(() => {
+  const height = toCssSize(props.height);
+  const maxHeight = toCssSize(props.maxHeight);
+  const style = {};
+  if (height) {
+    style['--docs-preview-body-height'] = height;
+  }
+  if (maxHeight) {
+    style['--docs-preview-body-max-height'] = maxHeight;
+  }
+  return style;
+});
+
+const isBodyScrollable = computed(() => Boolean(bodyStyle.value['--docs-preview-body-height'] || bodyStyle.value['--docs-preview-body-max-height']));
 
 const playgroundUrl = computed(() => (
   props.example ? withBase(`/playground?example=${encodeURIComponent(props.example)}`) : ''
@@ -80,7 +122,11 @@ function toggleCode() {
 
     <div
       class="docs-preview__body"
-      :class="{ 'docs-preview__body--stacked': stacked }"
+      :class="{
+        'docs-preview__body--stacked': stacked,
+        'docs-preview__body--scrollable': isBodyScrollable,
+      }"
+      :style="bodyStyle"
     >
       <slot />
     </div>
@@ -166,9 +212,16 @@ function toggleCode() {
 
 .docs-preview__body {
   min-block-size: 80px;
+  box-sizing: border-box;
+  block-size: var(--docs-preview-body-height, auto);
+  max-block-size: var(--docs-preview-body-max-height, none);
   padding: 16px;
   color: var(--mat-sys-color-on-surface);
   background: var(--mat-sys-color-background);
+}
+
+.docs-preview__body--scrollable {
+  overflow: auto;
 }
 
 @layer docs-base {

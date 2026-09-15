@@ -60,6 +60,7 @@ const alignment = ref('start');
 .navigation-rail-alignment-example-shell {
   display: flex;
   inline-size: 100%;
+  block-size: 100%;
   flex-direction: column;
   gap: 12px;
 }
@@ -77,8 +78,9 @@ const alignment = ref('start');
 }
 
 .navigation-rail-alignment-example-layout {
+  flex: 1;
+  min-block-size: 0;
   inline-size: 100%;
-  block-size: 240px;
   overflow: hidden;
 }
 
@@ -87,7 +89,6 @@ const alignment = ref('start');
   align-items: center;
   justify-content: center;
   min-inline-size: 0;
-  block-size: 240px;
   color: var(--mat-sys-color-on-surface-variant);
 }
 </style>

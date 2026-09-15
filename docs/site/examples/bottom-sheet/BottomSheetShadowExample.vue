@@ -29,6 +29,20 @@ const shadow = ref(true);
 
 <!-- #region style -->
 <style scoped>
+.bottom-sheet-shadow-example {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: hidden;
+}
+
+.bottom-sheet-shadow-example > mat-bottom-sheet {
+  margin-block-start: auto;
+}
+
 .bottom-sheet-shadow-example__sheet-body {
   padding: 24px;
 }
