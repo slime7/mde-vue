@@ -401,6 +401,7 @@ watchEffect(() => {
     align-items: center;
     justify-content: center;
     color: var(--mat-fab-content-color);
+    transition: inline-size var(--mat-button-size-motion), block-size var(--mat-button-size-motion);
   }
 
   .mat-fab__label {

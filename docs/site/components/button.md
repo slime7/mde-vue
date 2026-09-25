@@ -1,6 +1,6 @@
 ---
 title: Button 按钮
-description: mat-btn 的普通与图标模式、尺寸、宽度、形态、配色、受控切换、事件和 slots。
+description: mat-btn 的普通与图标模式、尺寸与尺寸过渡、宽度、形态、配色、受控切换、事件和 slots。
 llms: true
 order: 50
 ---
@@ -90,6 +90,28 @@ order: 50
 <ClientOnly>
   <DocsPreview label="Button size 预览">
     <ButtonSizeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 尺寸过渡
+
+运行中改变 `size` 时，容器高度、宽度、内边距、图标尺寸和排版尺寸一起过渡，尺寸变化过程连续而不是逐项跳变。图标模式与标签模式之间的切换属于结构性变化，宽度直接到位，图标尺寸和内边距仍然过渡。`standard` 变体的按钮组保留按压扩展的逐帧动画，组内子按钮的尺寸切换直接到位。减少动态效果偏好下所有尺寸变化直接呈现最终状态。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonSizeMotionExample.vue#template [template]
+
+<<< @/examples/button/ButtonSizeMotionExample.vue#script [script]
+
+<<< @/examples/button/ButtonSizeMotionExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Button 尺寸过渡预览">
+    <ButtonSizeMotionExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -436,6 +458,7 @@ import ButtonPrefixExample from '../examples/button/ButtonPrefixExample.vue';
 import ButtonPrefixSlotExample from '../examples/button/ButtonPrefixSlotExample.vue';
 import ButtonSelectedSlotExample from '../examples/button/ButtonSelectedSlotExample.vue';
 import ButtonSizeExample from '../examples/button/ButtonSizeExample.vue';
+import ButtonSizeMotionExample from '../examples/button/ButtonSizeMotionExample.vue';
 import ButtonShapeExample from '../examples/button/ButtonShapeExample.vue';
 import ButtonSuffixExample from '../examples/button/ButtonSuffixExample.vue';
 import ButtonSuffixSlotExample from '../examples/button/ButtonSuffixSlotExample.vue';

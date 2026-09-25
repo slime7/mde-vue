@@ -427,6 +427,7 @@ onBeforeUnmount(() => {
 <style scoped>
 @layer mde.components {
   .mat-fab-menu {
+    --mat-fab-menu-size-motion: var(--mat-sys-motion-spring-fast-spatial);
     position: relative;
     display: inline-flex;
     flex-direction: column;
@@ -464,6 +465,7 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     z-index: 2;
+    transition: inline-size var(--mat-fab-menu-size-motion), block-size var(--mat-fab-menu-size-motion);
   }
 
   .mat-fab-menu__trigger-fab {
@@ -564,7 +566,8 @@ onBeforeUnmount(() => {
   @media (prefers-reduced-motion: reduce) {
     .mat-fab-menu__trigger-fab,
     .mat-fab-menu__close-btn,
-    .mat-fab-menu__items {
+    .mat-fab-menu__items,
+    .mat-fab-menu__trigger-box {
       transition: none;
     }
   }

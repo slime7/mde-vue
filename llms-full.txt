@@ -3217,6 +3217,89 @@ import ShapeSlotExample from '../examples/shape/ShapeSlotExample.vue';
   </DocsPreview>
 </ClientOnly>
 
+### 尺寸过渡
+
+运行中改变 `size` 时，容器高度、宽度、内边距、图标尺寸和排版尺寸一起过渡，尺寸变化过程连续而不是逐项跳变。图标模式与标签模式之间的切换属于结构性变化，宽度直接到位，图标尺寸和内边距仍然过渡。`standard` 变体的按钮组保留按压扩展的逐帧动画，组内子按钮的尺寸切换直接到位。减少动态效果偏好下所有尺寸变化直接呈现最终状态。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example-stack">
+    <mat-btn-group
+      selection="single"
+      :selected="size"
+      @select="size = $event.nextSelected"
+    >
+      <mat-btn
+        v-for="option in sizes"
+        :key="option"
+        :value="option"
+      >
+        {{ option }}
+      </mat-btn>
+    </mat-btn-group>
+
+    <div class="example-row">
+      <mat-btn
+        :size="size"
+        variant="filled"
+        prefix="bluetooth"
+      >
+        蓝牙
+      </mat-btn>
+      <mat-btn
+        :size="size"
+        variant="outlined"
+        prefix="link"
+      >
+        链接
+      </mat-btn>
+      <mat-btn
+        :size="size"
+        variant="standard"
+        icon="favorite"
+        label="收藏"
+      />
+    </div>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const sizes = ['extra-small', 'small', 'medium', 'large', 'extra-large'];
+const size = ref('small');
+</script>
+```
+```vue
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Button 尺寸过渡预览">
+    <ButtonSizeMotionExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `shape`
 
 :::: details 查看示例代码
@@ -3885,6 +3968,7 @@ import ButtonPrefixExample from '../examples/button/ButtonPrefixExample.vue';
 import ButtonPrefixSlotExample from '../examples/button/ButtonPrefixSlotExample.vue';
 import ButtonSelectedSlotExample from '../examples/button/ButtonSelectedSlotExample.vue';
 import ButtonSizeExample from '../examples/button/ButtonSizeExample.vue';
+import ButtonSizeMotionExample from '../examples/button/ButtonSizeMotionExample.vue';
 import ButtonShapeExample from '../examples/button/ButtonShapeExample.vue';
 import ButtonSuffixExample from '../examples/button/ButtonSuffixExample.vue';
 import ButtonSuffixSlotExample from '../examples/button/ButtonSuffixSlotExample.vue';
@@ -4196,6 +4280,81 @@ const expanded = ref(true);
   </DocsPreview>
 </ClientOnly>
 
+### 尺寸过渡
+
+运行中改变 `size` 时，容器高度、宽度、内边距、图标尺寸和标签排版尺寸一起过渡；纯图标 FAB 的宽度与高度始终相等，Extended FAB 的宽度随标签内容连续变化。尺寸过渡使用与展开收缩相同的系统空间动效令牌，减少动态效果偏好下直接呈现最终状态。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example-stack">
+    <mat-btn-group
+      selection="single"
+      :selected="size"
+      @select="size = $event.nextSelected"
+    >
+      <mat-btn
+        v-for="option in sizes"
+        :key="option"
+        :value="option"
+      >
+        {{ option }}
+      </mat-btn>
+    </mat-btn-group>
+
+    <div class="example-row">
+      <mat-fab
+        :size="size"
+        icon="add"
+        label="新建"
+      />
+      <mat-fab
+        :size="size"
+        icon="edit"
+        label="编辑"
+      >
+        编辑
+      </mat-fab>
+    </div>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const sizes = ['small', 'medium', 'large'];
+const size = ref('medium');
+</script>
+```
+```vue
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="FAB 尺寸过渡预览">
+    <FabSizeMotionExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `color`
 
 FAB 只接受当前主题中的八组官方颜色角色，不接受十六进制种子色。
@@ -4422,6 +4581,7 @@ import FabDisabledExample from '../examples/fab/FabDisabledExample.vue';
 import FabExpandedExample from '../examples/fab/FabExpandedExample.vue';
 import FabExtendedExample from '../examples/fab/FabExtendedExample.vue';
 import FabSizeExample from '../examples/fab/FabSizeExample.vue';
+import FabSizeMotionExample from '../examples/fab/FabSizeMotionExample.vue';
 </script>
 
 # FAB Menu 浮动操作菜单

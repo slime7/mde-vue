@@ -1,6 +1,6 @@
 ---
 title: FAB 浮动操作按钮
-description: mat-fab 的纯图标 FAB 与 Extended FAB、尺寸、官方颜色角色、禁用状态和无障碍名称。
+description: mat-fab 的纯图标 FAB 与 Extended FAB、尺寸与尺寸过渡、官方颜色角色、禁用状态和无障碍名称。
 llms: true
 order: 53
 ---
@@ -92,6 +92,28 @@ order: 53
 <ClientOnly>
   <DocsPreview label="FAB 三种尺寸预览">
     <FabSizeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 尺寸过渡
+
+运行中改变 `size` 时，容器高度、宽度、内边距、图标尺寸和标签排版尺寸一起过渡；纯图标 FAB 的宽度与高度始终相等，Extended FAB 的宽度随标签内容连续变化。尺寸过渡使用与展开收缩相同的系统空间动效令牌，减少动态效果偏好下直接呈现最终状态。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/fab/FabSizeMotionExample.vue#template [template]
+
+<<< @/examples/fab/FabSizeMotionExample.vue#script [script]
+
+<<< @/examples/fab/FabSizeMotionExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="FAB 尺寸过渡预览">
+    <FabSizeMotionExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -231,4 +253,5 @@ import FabDisabledExample from '../examples/fab/FabDisabledExample.vue';
 import FabExpandedExample from '../examples/fab/FabExpandedExample.vue';
 import FabExtendedExample from '../examples/fab/FabExtendedExample.vue';
 import FabSizeExample from '../examples/fab/FabSizeExample.vue';
+import FabSizeMotionExample from '../examples/fab/FabSizeMotionExample.vue';
 </script>

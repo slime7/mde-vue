@@ -754,6 +754,7 @@ watchEffect(() => {
     color: var(--mat-btn-icon-color);
     font-size: var(--mat-btn-icon-size);
     line-height: 1;
+    transition: inline-size var(--mat-button-size-motion), block-size var(--mat-button-size-motion);
   }
 
   .mat-btn__label {
@@ -795,6 +796,12 @@ watchEffect(() => {
   .mat-btn--text:disabled,
   .mat-btn--standard:disabled {
     --mat-button-container-color: transparent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-btn__icon {
+      transition-duration: 0s;
+    }
   }
 }
 </style>
