@@ -133,6 +133,15 @@ const surfaceClasses = computed(() => ({
   'mat-list-item--selected': selected.value,
   [`mat-list-item--lines-${lineCount.value}`]: true,
 }));
+const itemStateLayerOptions = computed(() => {
+  if (!isMultiAction.value) {
+    // single-action 的状态层由 primary 自行渲染并随其圆角形变；
+    // 列表项自身没有圆角，状态层必须透明，否则直角层会盖过圆角 item。
+    return { color: 'transparent' };
+  }
+
+  return { color: 'var(--mat-action-state-color, currentcolor)' };
+});
 
 /**
  * 判定目标节点是否属于尾部区域内的可交互元素。
@@ -369,7 +378,7 @@ watch(
   <li
     v-else-if="isAction"
     ref="itemRoot"
-    v-state-layer="isMultiAction ? { color: 'var(--mat-action-state-color, currentcolor)' } : undefined"
+    v-state-layer="itemStateLayerOptions"
     class="mat-list-item"
     :class="[
       surfaceClasses,

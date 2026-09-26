@@ -6166,16 +6166,16 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"mat-list-item--disabled": n.disabled,
 			"mat-list-item--selected": S.value,
 			[`mat-list-item--lines-${F.value}`]: !0
-		}));
-		function L(e, t) {
+		})), L = i(() => b.value ? { color: "var(--mat-action-state-color, currentcolor)" } : { color: "transparent" });
+		function R(e, t) {
 			if (!(e instanceof HTMLElement) || !(t instanceof HTMLElement) || e === t) return !1;
 			let n = e.closest("a[href], button, input, select, textarea, [contenteditable]:not([contenteditable=\"false\"]), [role=\"button\"], [role=\"checkbox\"], [role=\"radio\"], [role=\"switch\"], [tabindex]:not([tabindex=\"-1\"])");
 			return !!(n && t.contains(n));
 		}
-		function R(e) {
+		function ee(e) {
 			if (w.value && e.target instanceof HTMLElement) {
 				let t = e.target.closest("[data-mat-list-trailing]");
-				if (t && L(e.target, t)) return;
+				if (t && R(e.target, t)) return;
 			}
 			if (x.value) {
 				u?.requestSelection(n.value, e);
@@ -6183,26 +6183,26 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}
 			g.value && r("click", e);
 		}
-		function ee() {
+		function B() {
 			n.disabled || f?.toggle();
 		}
-		function B(e) {
+		function U(e) {
 			if (!(n.disabled || e.repeat || ![" ", "Enter"].includes(e.key))) {
 				if (w.value && e.target instanceof HTMLElement) {
 					let t = e.target.closest("[data-mat-list-trailing]");
-					if (t && L(e.target, t)) return;
+					if (t && R(e.target, t)) return;
 				}
 				e.preventDefault(), u?.requestSelection(n.value, e);
 			}
 		}
-		function U(e) {
-			e.target instanceof HTMLElement && e.currentTarget instanceof HTMLElement && L(e.target, e.currentTarget) && e.stopPropagation();
+		function K(e) {
+			e.target instanceof HTMLElement && e.currentTarget instanceof HTMLElement && R(e.target, e.currentTarget) && e.stopPropagation();
 		}
-		function K() {
+		function q() {
 			n.href !== void 0 && !f && !g.value && console.warn("MatListItem: href 仅在 single-action 或 multi-action 模式下生效");
 		}
 		return T(async () => {
-			K(), u?.registerDragItem?.({
+			q(), u?.registerDragItem?.({
 				token: k,
 				element: A,
 				value: M,
@@ -6217,7 +6217,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			m.value,
 			n.separateTrailing
 		], async () => {
-			K(), u?.requestDragValidation?.(), await v(), u?.requestFocusRefresh();
+			q(), u?.requestDragValidation?.(), await v(), u?.requestFocusRefresh();
 		}), (e, t) => z(f)?.static.value ? (D(), s("div", _({
 			key: 0,
 			ref_key: "itemRoot",
@@ -6270,7 +6270,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"focus-ring": !0,
 			type: "button",
 			"use-cursor": z(p).useCursor,
-			onClick: ee
+			onClick: B
 		}), {
 			default: W(() => [d(ya, {
 				"line-count": F.value,
@@ -6361,7 +6361,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			href: z(n).href,
 			type: z(n).type,
 			"use-cursor": z(p).useCursor,
-			onClick: R
+			onClick: ee
 		}), {
 			default: W(() => [d(ya, {
 				"line-count": F.value,
@@ -6404,8 +6404,8 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			class: "mat-list-item__separate-trailing mat-sys-typescale-label-small",
 			"data-mat-list-trailing": "",
 			inert: z(n).disabled ? "" : void 0,
-			onPointerdown: U
-		}, [P(e.$slots, "trailing", {}, void 0, !0)], 40, Ca)) : o("", !0)], 10, Sa)), [[z(Oe), b.value ? { color: "var(--mat-action-state-color, currentcolor)" } : void 0]]) : (D(), a(ke, _({
+			onPointerdown: K
+		}, [P(e.$slots, "trailing", {}, void 0, !0)], 40, Ca)) : o("", !0)], 10, Sa)), [[z(Oe), L.value]]) : (D(), a(ke, _({
 			key: 4,
 			ref_key: "itemRoot",
 			ref: O
@@ -6419,8 +6419,8 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"focus-ring": !0,
 			role: "option",
 			"use-cursor": z(p).useCursor,
-			onClick: R,
-			onKeydown: B
+			onClick: ee,
+			onKeydown: U
 		}), {
 			default: W(() => [d(ya, {
 				"line-count": F.value,
@@ -6455,7 +6455,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				class: "mat-list-item__separate-trailing mat-sys-typescale-label-small",
 				"data-mat-list-trailing": "",
 				inert: z(n).disabled ? "" : void 0,
-				onPointerdown: U
+				onPointerdown: K
 			}, [P(e.$slots, "trailing", {}, void 0, !0)], 40, wa)) : o("", !0)]),
 			_: 3
 		}, 16, [
@@ -6466,7 +6466,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-5efcd385"]]), Ea = /*@__PURE__*/ Object.assign({ name: "MatListGroupActivatorProvider" }, {
+}), [["__scopeId", "data-v-1247285a"]]), Ea = /*@__PURE__*/ Object.assign({ name: "MatListGroupActivatorProvider" }, {
 	__name: "MatListGroupActivatorProvider",
 	props: { context: {
 		type: Object,
