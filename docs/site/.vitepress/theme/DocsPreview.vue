@@ -304,7 +304,9 @@ function toggleCode() {
   align-items: stretch;
 }
 
-.docs-preview__body > :deep(*) {
+/* 防止宽示例撑破预览容器；弹出层（菜单等 popover）以固定定位展示，
+   不参与预览布局，必须排除以免覆盖组件分层样式的最小宽度。 */
+.docs-preview__body > :deep(*):not([popover]) {
   min-inline-size: 0;
 }
 

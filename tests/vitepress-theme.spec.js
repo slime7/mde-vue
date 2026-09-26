@@ -178,6 +178,9 @@ describe('VitePress 文档自定义主题', () => {
     expect(previewSource).toContain('padding: 16px;');
     expect(previewSource).toContain('background: var(--mat-sys-color-background);');
     expect(previewSource).not.toContain('docs-preview__body--stacked > :deep(*)');
+    // 预览体的 min-inline-size 重置不得命中弹出层，否则会覆盖菜单等组件的分层最小宽度
+    expect(previewSource).toContain('.docs-preview__body > :deep(*):not([popover])');
+    expect(previewSource).not.toContain('.docs-preview__body > :deep(*) {');
     expect(previewSource).toContain('height: {');
     expect(previewSource).toContain('maxHeight: {');
     expect(previewSource).toContain('--docs-preview-body-height');
