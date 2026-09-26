@@ -1,6 +1,6 @@
 ---
 title: Button 按钮
-description: mat-btn 的普通与图标模式、尺寸与尺寸过渡、宽度、形态、配色、受控切换、事件和 slots。
+description: mat-btn 的普通与图标模式、尺寸与尺寸过渡、宽度、形态、配色、受控切换、loading 状态、事件和 slots。
 llms: true
 order: 50
 ---
@@ -283,6 +283,28 @@ order: 50
   </DocsPreview>
 </ClientOnly>
 
+### `loading`
+
+加载中的按钮渲染内建指示器替换 prefix 图标或图标模式的图标，阻止点击并声明 `aria-busy`，同时锁定最小宽度避免宽度抖动。内建指示器复用 Loading 组件的形状变形动画，颜色跟随按钮文字色，尺寸跟随按钮的图标尺寸档位（20px、24px、32px、40px），由按钮内部越过 Loading 公共 `size` 范围的下限渲染。提供 `loading` Slot 时用 Slot 内容替换内建指示器；Slot 中的自定义指示器仍须遵守各组件的公共 API，最后一个按钮使用了官方最小 24px 的环形进度。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/button/ButtonLoadingExample.vue#template [template]
+
+<<< @/examples/button/ButtonLoadingExample.vue#script [script]
+
+<<< @/examples/button/ButtonLoadingExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Button loading 预览">
+    <ButtonLoadingExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `type`
 
 :::: details 查看示例代码
@@ -409,6 +431,7 @@ order: 50
 | `selected` | `boolean` | `false` | 受控选中状态，仅在 toggle 或选择组中生效 |
 | `value` | `string \| number \| boolean` | 未设置 | 在 `MatBtnGroup` 选择模式中的项目值 |
 | `disabled` | `boolean` | `false` | 原生禁用状态；父组合组件也可强制禁用 |
+| `loading` | `boolean` | `false` | 显示加载状态：渲染内建指示器（或 `loading` Slot 内容）、阻止点击、声明 `aria-busy` 并锁定最小宽度 |
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 原生按钮类型 |
 | `morph` | `boolean` | `true` | 是否开启点击或激活时的圆角变形 |
 
@@ -426,6 +449,7 @@ order: 50
 | `prefix` | 普通模式的前置 SVG 或自定义图标；同名 prop 存在时忽略 |
 | `suffix` | 普通模式的后置 SVG 或自定义图标；同名 prop 存在时忽略 |
 | `selected` | 普通模式 toggle 选中时替换默认标签；图标模式忽略 |
+| `loading` | 加载中替换内建指示器的内容，可放置图标、进度组件等任意图形；未提供时使用内建旋转指示器 |
 
 ### 状态
 
@@ -436,10 +460,11 @@ order: 50
 | pressed | 显示 12% 状态层并按尺寸改变圆角；快速点击仍会完成一次可见的圆角往返过渡 |
 | selected | 切换形状和颜色；图标模式复用同一图标并切换 FILL 轴，设置 `aria-pressed="true"` |
 | disabled | 容器使用 `on-surface` 10%，内容使用 38%，取消阴影和点击 |
+| loading | 渲染内建形状变形指示器（复用 Loading 组件）或 `loading` Slot 内容并替换前缀图标（图标模式替换图标），保留变体正常配色，原生禁用语义阻止点击，`aria-busy="true"`，指示器持续变形旋转；减少动态效果偏好下指示器静止 |
 
 `extra-small` 与 `small` 的视觉高度分别是 32px 和 40px，但交互目标至少为 48px。减少动态效果偏好下保留最终状态并取消过渡。
 
-组件没有公开方法，也不提供 loading、链接模式、涟漪、密度参数或完整表单方法代理。
+组件没有公开方法，也不提供链接模式、涟漪、密度参数或完整表单方法代理。
 
 ## 参考来源
 
@@ -453,6 +478,7 @@ import ButtonDefaultOnlyExample from '../examples/button/ButtonDefaultOnlyExampl
 import ButtonDefaultSlotExample from '../examples/button/ButtonDefaultSlotExample.vue';
 import ButtonDisabledExample from '../examples/button/ButtonDisabledExample.vue';
 import ButtonIconExample from '../examples/button/ButtonIconExample.vue';
+import ButtonLoadingExample from '../examples/button/ButtonLoadingExample.vue';
 import ButtonMorphExample from '../examples/button/ButtonMorphExample.vue';
 import ButtonPrefixExample from '../examples/button/ButtonPrefixExample.vue';
 import ButtonPrefixSlotExample from '../examples/button/ButtonPrefixSlotExample.vue';

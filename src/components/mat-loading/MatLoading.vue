@@ -4,6 +4,7 @@ import {
 } from 'vue';
 import MatShape from '../mat-shape/MatShape.vue';
 import { isComponentColor } from '../button-props';
+import { useLoadingCompactSize } from '../loading-context';
 import useComponentColor from '../use-component-color';
 import { normalizeNumber } from '../value-utils';
 import { useMatProps } from '../use-mat-props';
@@ -74,13 +75,21 @@ const props = defineProps({
 const propsWithDefaults = useMatProps('loading', props);
 
 const { colorStyle } = useComponentColor(computed(() => propsWithDefaults.color));
+const compactSize = useLoadingCompactSize();
 const currentShapeIndex = ref(0);
 let animationFrame;
 let accumulatedTime = 0;
 let previousFrameTime;
 let reducedMotionQuery;
 
+/* 内部紧凑尺寸跳过公共下限，只保留上限约束；公共输入仍钳制在 24 至 240。 */
 const resolvedSize = computed(() => {
+  const compact = compactSize?.value;
+
+  if (typeof compact === 'number' && Number.isFinite(compact) && compact > 0) {
+    return Math.min(compact, MAX_SIZE);
+  }
+
   const numeric = normalizeNumber(propsWithDefaults.size, {
     positive: true,
     fallback: DEFAULT_SIZE,

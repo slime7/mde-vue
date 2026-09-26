@@ -901,6 +901,9 @@
     position: absolute;
     z-index: 0;
     position-area: center;
+
+    /* position-area: center 会把默认对齐改为居中而不是拉伸，必须显式撑满锚点区域。 */
+    place-self: stretch;
     inset: 0;
     overflow: hidden;
     border-radius: inherit;

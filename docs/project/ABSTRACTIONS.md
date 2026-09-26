@@ -130,7 +130,9 @@ Tailwind CSS v4 使用方必须预先声明 `tailwind-theme`、`tailwind-reset`�
 
 `<mat-btn-group>` 只接收 `<mat-btn>`，负责 standard/connected 布局以及受控 none/single/multiple 选择；standard 保留内容宽度与按钮间距，按压时当前按钮增宽并压缩相邻按钮，connected 只改变当前按压形状，`fullWidth` 时等分父容器。standard 选中时反转 round/square；connected 选中按钮的四角都使用 round checked shape，`shape` 只决定未选中组的外部轮廓。connected 要求子按钮使用相同颜色和视觉层级，不使用 text 或 standard。组容器不进入 Tab 顺序，子按钮保持独立停靠点。图标模式的显式 `width` 不根据组内子项数量变化。`<mat-split-btn>` 的 leading 和 trailing 都接收 `<mat-btn>`，trailing 支持 `icon=true` 默认 Slot 文本或字符串 `icon` 的图标模式按钮；split button 只协调视觉、事件、`aria-haspopup`、`aria-expanded` 与可选 `aria-controls`，菜单始终由应用管理。
 
-当前按钮体系不包含 loading、链接模式、涟漪、密度参数、内置菜单或完整表单代理方法。
+按钮提供布尔 `loading` 状态：加载中渲染复用 Loading 组件形状变形动画的内建指示器（或 `loading` Slot 内容）并替换 prefix 图标与图标模式的图标，同时使用原生禁用语义阻止点击、声明 `aria-busy`，并把加载开始时测得的最小宽度锁定为内联 `min-inline-size`，避免内容宽度抖动；指示器颜色沿用按钮文字色。内建指示器是按钮内部实现，尺寸跟随按钮的图标尺寸档位，通过内部上下文越过 Loading 公共尺寸范围的下限；`loading` Slot 中的自定义指示器仍须遵守各组件的公共 API。
+
+当前按钮体系不包含链接模式、涟漪、密度参数、内置菜单或完整表单代理方法。
 
 ## `<mat-fab>`
 

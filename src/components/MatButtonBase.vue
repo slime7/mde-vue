@@ -15,6 +15,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
   type: {
     type: String,
     default: 'button',
@@ -39,6 +43,7 @@ const emit = defineEmits(['click']);
     :class="{
       'mat-button-base--block': block,
       'mat-button-base--use-cursor': useCursor,
+      'mat-button-base--loading': loading,
     }"
     :aria-pressed="ariaPressed"
     :disabled="disabled"
@@ -135,11 +140,15 @@ const emit = defineEmits(['click']);
   }
 
   .mat-button-base:disabled {
+    cursor: not-allowed;
+  }
+
+  /* loading 复用原生禁用语义阻止交互，但保留变体的正常配色。 */
+  .mat-button-base:disabled:not(.mat-button-base--loading) {
     --mat-button-container-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-container-opacity) * 100%), transparent);
     --mat-button-content-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-content-opacity) * 100%), transparent);
     --mat-button-border-color: transparent;
     --mat-button-container-elevation: none;
-    cursor: not-allowed;
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -1,10 +1,12 @@
 <script setup>
 import {
-  computed, Fragment, isVNode, onMounted, ref, useAttrs, useId, useSlots, watchEffect,
+  computed, Fragment, isVNode, onMounted, ref, useAttrs, useId, useSlots, watch, watchEffect,
 } from 'vue';
 import MatButtonBase from '../MatButtonBase.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
+import MatLoading from '../mat-loading/MatLoading.vue';
 import MatTooltip from '../mat-tooltip/MatTooltip.vue';
+import { provideLoadingCompactSize } from '../loading-context';
 import {
   BUTTON_SHAPES,
   BUTTON_SIZES,
@@ -196,6 +198,18 @@ const props = defineProps({
     default: false,
   },
   /**
+   * 显示加载状态：渲染形状变形加载指示器（复用 Loading 组件，或 `loading` Slot 内容）
+   * 替换前缀图标，使用原生禁用语义阻止点击并声明 `aria-busy`，
+   * 同时锁定当前最小宽度避免内容宽度抖动。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * 原生按钮类型；可选值为 `button`、`submit`、`reset`。
    *
    * @type {'button' | 'submit' | 'reset'}
@@ -266,6 +280,20 @@ const iconFill = computed(() => {
 
   return isSelected.value ? 1 : 0;
 });
+const isLoading = computed(() => propsWithDefaults.loading);
+const buttonDisabled = computed(() => effectiveDisabled.value || isLoading.value);
+const loadingMinInlineSize = ref(null);
+watch(isLoading, (loading) => {
+  if (!loading) {
+    loadingMinInlineSize.value = null;
+    return;
+  }
+
+  const element = buttonElement.value?.$el ?? buttonElement.value;
+  const width = element instanceof HTMLElement ? element.offsetWidth : 0;
+
+  loadingMinInlineSize.value = width > 0 ? `${width}px` : null;
+});
 
 /**
  * @param {unknown[]} nodes
@@ -328,6 +356,8 @@ const iconOpticalSize = computed(() => ({
   large: 32,
   'extra-large': 40,
 })[effectiveSize.value]);
+/* 仅在 loading 期间为内部 MatLoading 提供图标档位尺寸，避免影响 Slot 中的公共使用。 */
+provideLoadingCompactSize(computed(() => (isLoading.value ? iconOpticalSize.value : null)));
 const typographyClass = computed(() => {
   const [type, size] = {
     'extra-small': ['label', 'large'],
@@ -377,47 +407,72 @@ watchEffect(() => {
         'mat-btn--selected': isSelected,
         'mat-btn--split-leading': split?.role === 'leading',
         'mat-btn--no-morph': !propsWithDefaults.morph,
+        'mat-btn--loading': isLoading,
       },
     ]"
-    :style="buttonColorStyle"
+    :style="[buttonColorStyle, loadingMinInlineSize ? { 'min-inline-size': loadingMinInlineSize } : null]"
     :aria-label="isIcon ? accessibleLabel : $attrs['aria-label']"
+    :aria-busy="isLoading ? 'true' : undefined"
     :aria-controls="split?.role === 'trailing' ? split.controls.value : undefined"
     :aria-expanded="split?.role === 'trailing' ? split.expanded.value : undefined"
     :aria-haspopup="split?.role === 'trailing' ? 'menu' : undefined"
     :aria-pressed="isToggle ? isSelected : undefined"
     :block="propsWithDefaults.block"
-    :disabled="effectiveDisabled"
+    :disabled="buttonDisabled"
+    :loading="isLoading"
     :title="isIcon ? undefined : $attrs.title"
     :type="propsWithDefaults.type"
     :use-cursor="useCursor"
     @click="handleClick"
   >
-    <MatIcon
-      v-if="isIcon"
-      as="span"
-      class="mat-btn__icon mat-btn__icon--only"
-      :fill="iconFill"
-      :optical-size="iconOpticalSize"
-      size="var(--mat-btn-icon-size)"
-      aria-hidden="true"
-    >
-      {{ iconText }}
-    </MatIcon>
+    <template v-if="isIcon">
+      <slot
+        v-if="isLoading"
+        name="loading"
+      >
+        <MatLoading
+          class="mat-btn__loading"
+          aria-hidden="true"
+        />
+      </slot>
+      <MatIcon
+        v-else
+        as="span"
+        class="mat-btn__icon mat-btn__icon--only"
+        :fill="iconFill"
+        :optical-size="iconOpticalSize"
+        size="var(--mat-btn-icon-size)"
+        aria-hidden="true"
+      >
+        {{ iconText }}
+      </MatIcon>
+    </template>
 
-    <MatIcon
-      v-if="hasPrefix"
-      as="span"
-      class="mat-btn__icon mat-btn__icon--prefix"
-      :fill="iconFill"
-      :optical-size="iconOpticalSize"
-      size="var(--mat-btn-icon-size)"
-      aria-hidden="true"
-    >
-      <template v-if="propsWithDefaults.prefix !== undefined">
-        {{ propsWithDefaults.prefix }}
-      </template>
-      <slot v-else name="prefix" />
-    </MatIcon>
+    <template v-if="!isIcon">
+      <slot
+        v-if="isLoading"
+        name="loading"
+      >
+        <MatLoading
+          class="mat-btn__loading"
+          aria-hidden="true"
+        />
+      </slot>
+      <MatIcon
+        v-else-if="hasPrefix"
+        as="span"
+        class="mat-btn__icon mat-btn__icon--prefix"
+        :fill="iconFill"
+        :optical-size="iconOpticalSize"
+        size="var(--mat-btn-icon-size)"
+        aria-hidden="true"
+      >
+        <template v-if="propsWithDefaults.prefix !== undefined">
+          {{ propsWithDefaults.prefix }}
+        </template>
+        <slot v-else name="prefix" />
+      </MatIcon>
+    </template>
 
     <span v-if="!isIcon" class="mat-btn__label">
       <slot v-if="hasSelectedLabel" name="selected" />
@@ -779,7 +834,7 @@ watchEffect(() => {
     }
   }
 
-  .mat-btn:disabled {
+  .mat-btn:disabled:not(.mat-btn--loading) {
     --mat-button-container-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-container-opacity) * 100%), transparent);
     --mat-btn-label-text-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-content-opacity) * 100%), transparent);
     --mat-btn-icon-color: var(--mat-btn-label-text-color);
@@ -788,14 +843,22 @@ watchEffect(() => {
     --mat-button-border-width: 0;
   }
 
-  .mat-btn--outlined:disabled {
+  .mat-btn--outlined:disabled:not(.mat-btn--loading) {
     --mat-button-container-color: transparent;
     --mat-button-border-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-container-opacity) * 100%), transparent);
   }
 
-  .mat-btn--text:disabled,
-  .mat-btn--standard:disabled {
+  .mat-btn--text:disabled:not(.mat-btn--loading),
+  .mat-btn--standard:disabled:not(.mat-btn--loading) {
     --mat-button-container-color: transparent;
+  }
+
+  .mat-btn__loading {
+    /* 指示器颜色跟随按钮文字色，而不是 Loading 默认的 primary 强调色。 */
+    --mat-accent-color: var(--mat-btn-label-text-color);
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
   }
 
   @media (prefers-reduced-motion: reduce) {

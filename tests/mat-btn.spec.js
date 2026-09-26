@@ -4,7 +4,7 @@ import {
   afterEach, describe, expect, it, vi,
 } from 'vitest';
 import MAT_UI_KEY from '../src/mat-ui-context';
-import { MatBtn, MatIcon } from '../src';
+import { MatBtn, MatIcon, MatLoading } from '../src';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -448,5 +448,110 @@ describe('MatBtn', () => {
     });
 
     expect(wrapper.classes()).toContain('mat-btn--no-morph');
+  });
+
+  it('loading 时使用原生禁用语义阻止点击并声明 aria-busy', () => {
+    const handleClick = vi.fn();
+    const wrapper = mount(MatBtn, {
+      props: {
+        loading: true,
+      },
+      slots: {
+        default: '搜索插件',
+      },
+      attrs: {
+        onClick: handleClick,
+      },
+    });
+
+    expect(wrapper.attributes('disabled')).toBeDefined();
+    expect(wrapper.attributes('aria-busy')).toBe('true');
+    expect(wrapper.text()).toBe('搜索插件');
+
+    wrapper.element.click();
+    expect(handleClick).not.toHaveBeenCalled();
+  });
+
+  it('loading 结束后恢复点击并移除加载状态', async () => {
+    const handleClick = vi.fn();
+    const wrapper = mount(MatBtn, {
+      props: {
+        loading: true,
+      },
+      attrs: {
+        onClick: handleClick,
+      },
+    });
+
+    await wrapper.setProps({ loading: false });
+    wrapper.element.click();
+
+    expect(wrapper.attributes('disabled')).toBeUndefined();
+    expect(wrapper.attributes('aria-busy')).toBeUndefined();
+    expect(handleClick).toHaveBeenCalledOnce();
+  });
+
+  it('loading 时渲染形状变形内建指示器并替换 prefix 图标，标签保持可见', () => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        prefix: 'favorite',
+        loading: true,
+      },
+      slots: {
+        default: '搜索插件',
+      },
+    });
+
+    expect(wrapper.findComponent(MatLoading).exists()).toBe(true);
+    expect(wrapper.text()).toContain('搜索插件');
+    expect(wrapper.text()).not.toContain('favorite');
+  });
+
+  it('loading Slot 优先于内建指示器', () => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        loading: true,
+      },
+      slots: {
+        default: '下载更新',
+        loading: '<span class="custom-loading">…</span>',
+      },
+    });
+
+    expect(wrapper.get('.custom-loading').exists()).toBe(true);
+    expect(wrapper.findComponent(MatLoading).exists()).toBe(false);
+  });
+
+  it('图标模式 loading 时用指示器替换图标并保留可访问名称', () => {
+    const wrapper = mount(MatBtn, {
+      props: {
+        icon: 'refresh',
+        label: '刷新日志',
+        loading: true,
+      },
+    });
+
+    expect(wrapper.findComponent(MatLoading).exists()).toBe(true);
+    expect(wrapper.attributes('aria-label')).toBe('刷新日志');
+    expect(wrapper.text()).not.toContain('refresh');
+  });
+
+  it('支持通过 defaults.btn.loading 全局开启加载态', () => {
+    const wrapper = mount(MatBtn, {
+      global: {
+        provide: {
+          [MAT_UI_KEY]: {
+            defaults: {
+              btn: { loading: true },
+            },
+          },
+        },
+      },
+      slots: {
+        default: '搜索',
+      },
+    });
+
+    expect(wrapper.attributes('aria-busy')).toBe('true');
   });
 });

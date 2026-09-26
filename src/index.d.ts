@@ -112,6 +112,15 @@ export interface MatBtnProps {
   */
   disabled?: boolean;
   /**
+  * 显示加载状态：渲染形状变形加载指示器（复用 Loading 组件，或 `loading` Slot 内容）
+  * 替换前缀图标，使用原生禁用语义阻止点击并声明 `aria-busy`，
+  * 同时锁定当前最小宽度避免内容宽度抖动。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  loading?: boolean;
+  /**
   * 原生按钮类型；可选值为 `button`、`submit`、`reset`。
   *
   * @type {'button' | 'submit' | 'reset'}
@@ -1231,12 +1240,12 @@ export interface MatListProps {
   */
   variant?: 'standard' | 'segmented';
   /**
-  * 交互模式；可选值为 `none`、`single-select`、`multi-select`。
+  * 交互模式；可选值为 `none`、`single-action`、`multi-action`、`single-select`、`multi-select`。
   *
-  * @type {string}
+  * @type {'none' | 'single-action' | 'multi-action' | 'single-select' | 'multi-select'}
   * @default 'none'
   */
-  interaction?: string;
+  interaction?: 'none' | 'single-action' | 'multi-action' | 'single-select' | 'multi-select';
   /**
   * 受控选中值；single-select 使用单值，multi-select 使用数组。
   *

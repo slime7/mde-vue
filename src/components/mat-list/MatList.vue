@@ -34,9 +34,9 @@ const props = defineProps({
     },
   },
   /**
-   * 交互模式；可选值为 `none`、`single-select`、`multi-select`。
+   * 交互模式；可选值为 `none`、`single-action`、`multi-action`、`single-select`、`multi-select`。
    *
-   * @type {string}
+   * @type {'none' | 'single-action' | 'multi-action' | 'single-select' | 'multi-select'}
    * @default 'none'
    */
   interaction: {

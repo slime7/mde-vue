@@ -44,6 +44,24 @@ describe('MatProgress', () => {
     expect(clamped.attributes('aria-valuenow')).toBe('2');
   });
 
+  it('环形尺寸钳制在官方规格的 24px 下限，支持紧凑场景的最小档', () => {
+    const compact = mount(MatProgress, {
+      props: {
+        variant: 'circular',
+        size: 24,
+      },
+    });
+    expect(compact.find('svg').attributes('viewBox')).toBe('0 0 24 24');
+
+    const smaller = mount(MatProgress, {
+      props: {
+        variant: 'circular',
+        size: 8,
+      },
+    });
+    expect(smaller.find('svg').attributes('viewBox')).toBe('0 0 24 24');
+  });
+
   it('校验规格规定的变体、形状、尺寸和粗细档位', () => {
     expect(MatProgress.props.variant.validator('linear')).toBe(true);
     expect(MatProgress.props.variant.validator('circular')).toBe(true);
