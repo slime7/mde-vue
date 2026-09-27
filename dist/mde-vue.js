@@ -7015,7 +7015,7 @@ function Ka(e) {
 }
 //#endregion
 //#region src/components/mat-badge/MatBadge.vue
-var qa = ["data-dot"], Ja = ["data-dot"], Ya = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatBadge",
 	inheritAttrs: !1
 }, {
@@ -7046,6 +7046,10 @@ var qa = ["data-dot"], Ja = ["data-dot"], Ya = /*#__PURE__*/ Q(/* @__PURE__ */ O
 			type: String,
 			default: "error",
 			validator: Ue
+		},
+		border: {
+			type: Boolean,
+			default: !1
 		}
 	},
 	setup(e) {
@@ -7064,19 +7068,27 @@ var qa = ["data-dot"], Ja = ["data-dot"], Ya = /*#__PURE__*/ Q(/* @__PURE__ */ O
 			"--mat-badge-offset-block": a.value ? void 0 : d(t.offset?.block)
 		}));
 		return (e, r) => a.value && l.value ? (D(), s("span", _({ key: 0 }, z(n), {
-			class: ["mat-badge__indicator mat-badge__indicator--inline", { "mat-badge__indicator--dot": z(t).dot }],
+			class: ["mat-badge__indicator mat-badge__indicator--inline", {
+				"mat-badge__indicator--dot": z(t).dot,
+				"mat-badge__indicator--border": z(t).border
+			}],
 			style: f.value,
 			"aria-hidden": "true",
-			"data-dot": z(t).dot ? "" : void 0
+			"data-dot": z(t).dot ? "" : void 0,
+			"data-border": z(t).border ? "" : void 0
 		}), R(u.value), 17, qa)) : a.value ? o("", !0) : (D(), s("span", _({ key: 1 }, z(n), { class: "mat-badge" }), [P(e.$slots, "default", {}, void 0, !0), l.value ? (D(), s("span", {
 			key: 0,
-			class: y(["mat-badge__indicator", [`mat-badge__indicator--${z(t).location}`, { "mat-badge__indicator--dot": z(t).dot }]]),
+			class: y(["mat-badge__indicator", [`mat-badge__indicator--${z(t).location}`, {
+				"mat-badge__indicator--dot": z(t).dot,
+				"mat-badge__indicator--border": z(t).border
+			}]]),
 			style: x(f.value),
 			"aria-hidden": "true",
-			"data-dot": z(t).dot ? "" : void 0
+			"data-dot": z(t).dot ? "" : void 0,
+			"data-border": z(t).border ? "" : void 0
 		}, R(u.value), 15, Ja)) : o("", !0)], 16));
 	}
-}), [["__scopeId", "data-v-9406a351"]]), Xa = Symbol("mat-chip-set"), Za = {
+}), [["__scopeId", "data-v-a4190aa1"]]), Xa = Symbol("mat-chip-set"), Za = {
 	key: 0,
 	class: "mat-chip__avatar",
 	"aria-hidden": "true",

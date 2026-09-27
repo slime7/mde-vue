@@ -10,6 +10,7 @@ const exampleNames = [
   'BadgeOffsetExample',
   'BadgeInlineExample',
   'BadgeColorExample',
+  'BadgeBorderExample',
 ];
 
 describe('Badge 文档', () => {

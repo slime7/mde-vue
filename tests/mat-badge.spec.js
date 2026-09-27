@@ -161,6 +161,56 @@ describe('MatBadge', () => {
     expect(empty.find('*').exists()).toBe(false);
   });
 
+  it('border 默认关闭，开启后覆盖与 inline 两条渲染路径都生效', () => {
+    const off = mount(MatBadge, {
+      props: { content: 5 },
+    });
+    const overlay = mount(MatBadge, {
+      props: {
+        content: 5,
+        border: true,
+      },
+    });
+    const inline = mount(MatBadge, {
+      props: {
+        content: 5,
+        border: true,
+        location: 'inline',
+      },
+    });
+
+    expect(off.props('border')).toBe(false);
+    expect(off.find('[data-border]').exists()).toBe(false);
+    expect(overlay.get('[data-border]').exists()).toBe(true);
+    expect(overlay.text()).toBe('5');
+    expect(inline.get('[data-border]').exists()).toBe(true);
+    expect(inline.text()).toBe('5');
+  });
+
+  it('读取 defaults.badge.border，显式属性优先', () => {
+    const plugin = createMatUi({
+      defaults: {
+        badge: {
+          border: true,
+        },
+      },
+    });
+    const defaults = mount(MatBadge, {
+      props: { content: 5 },
+      global: { plugins: [plugin] },
+    });
+    const explicit = mount(MatBadge, {
+      props: {
+        content: 5,
+        border: false,
+      },
+      global: { plugins: [plugin] },
+    });
+
+    expect(defaults.get('[data-border]').exists()).toBe(true);
+    expect(explicit.find('[data-border]').exists()).toBe(false);
+  });
+
   it('读取 defaults.badge，显式属性优先', () => {
     const plugin = createMatUi({
       defaults: {

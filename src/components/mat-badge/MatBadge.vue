@@ -70,6 +70,17 @@ const props = defineProps({
     default: 'error',
     validator: isComponentColor,
   },
+  /**
+   * 在指示器外围显示约 2px 的主题背景色边框，从视觉上截断被覆盖的内容；
+   * 不改变指示器的位置和尺寸。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  border: {
+    type: Boolean,
+    default: false,
+  },
 });
 const propsWithDefaults = useMatProps('badge', props);
 const attrs = useAttrs();
@@ -116,10 +127,14 @@ const indicatorStyle = computed(() => ({
     v-if="isInline && isVisible"
     v-bind="attrs"
     class="mat-badge__indicator mat-badge__indicator--inline"
-    :class="{ 'mat-badge__indicator--dot': propsWithDefaults.dot }"
+    :class="{
+      'mat-badge__indicator--dot': propsWithDefaults.dot,
+      'mat-badge__indicator--border': propsWithDefaults.border,
+    }"
     :style="indicatorStyle"
     aria-hidden="true"
     :data-dot="propsWithDefaults.dot ? '' : undefined"
+    :data-border="propsWithDefaults.border ? '' : undefined"
   >
     {{ renderedContent }}
   </span>
@@ -136,11 +151,15 @@ const indicatorStyle = computed(() => ({
       class="mat-badge__indicator"
       :class="[
         `mat-badge__indicator--${propsWithDefaults.location}`,
-        { 'mat-badge__indicator--dot': propsWithDefaults.dot },
+        {
+          'mat-badge__indicator--dot': propsWithDefaults.dot,
+          'mat-badge__indicator--border': propsWithDefaults.border,
+        },
       ]"
       :style="indicatorStyle"
       aria-hidden="true"
       :data-dot="propsWithDefaults.dot ? '' : undefined"
+      :data-border="propsWithDefaults.border ? '' : undefined"
     >
       {{ renderedContent }}
     </span>
@@ -183,6 +202,18 @@ const indicatorStyle = computed(() => ({
     inline-size: 6px;
     block-size: 6px;
     padding: 0;
+  }
+
+  /* 伪元素外扩 2px，mask 挖掉与指示器重合的内部，只留盒子外侧的背景色环。 */
+  .mat-badge__indicator--border::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    padding: 2px;
+    border-radius: inherit;
+    background: var(--mat-sys-color-surface);
+    mask: linear-gradient(black, black) content-box, linear-gradient(black, black);
+    mask-composite: exclude;
   }
 
   .mat-badge__indicator--inline {

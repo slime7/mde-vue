@@ -1545,6 +1545,14 @@ export interface MatBadgeProps {
   * @default 'error'
   */
   color?: string;
+  /**
+  * 在指示器外围显示约 2px 的主题背景色边框，从视觉上截断被覆盖的内容；
+  * 不改变指示器的位置和尺寸。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  border?: boolean;
 }
 
 export type MatBadgeComponent = DefineComponent<MatBadgeProps, {}, {}, {}, {}, {}, {}, {}>;

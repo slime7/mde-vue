@@ -1,6 +1,6 @@
 ---
 title: Badge 徽标
-description: mat-badge 的点型、内容型、覆盖方位、偏移、行内布局和配色。
+description: mat-badge 的点型、内容型、覆盖方位、偏移、背景色边框、行内布局和配色。
 llms: true
 order: 37
 ---
@@ -123,6 +123,24 @@ order: 37
   </DocsPreview>
 </ClientOnly>
 
+### `border`
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/badge/BadgeBorderExample.vue#template [template]
+
+<<< @/examples/badge/BadgeBorderExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Badge 背景色边框预览">
+    <BadgeBorderExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -134,6 +152,7 @@ order: 37
 | `location` | `top-start \| top \| top-end \| end \| bottom-end \| bottom \| bottom-start \| start \| inline` | `top-end` | 覆盖方位；`inline` 只渲染 Badge 自身并忽略默认 Slot。 |
 | `offset` | `{ inline?: number \| string, block?: number \| string }` | `{ inline: 0, block: 0 }` | 覆盖模式的逻辑轴微调；数字按 px，字符串须为合法 CSS 长度。Inline 模式忽略。 |
 | `color` | `string` | `error` | Material 语义色、系统颜色角色或六位十六进制种子色。 |
+| `border` | `boolean` | `false` | 在指示器外围显示约 2px 的主题背景色边框，从视觉上截断被覆盖的内容；不改变指示器的位置和尺寸。 |
 
 组件没有公开方法。
 
@@ -153,11 +172,14 @@ order: 37
 
 点型使用约 6px 圆形，自身边缘与 `location` 指定的目标边缘重合；内容型保持约 16px 高、四向 4px 内边距，以目标中线为左右锚点并随内容扩宽。Material 建议内容型最多使用四个字符，本组件不强制截断，使用方需要自行避免与邻近元素碰撞。
 
+开启 `border` 后，指示器外围增加约 2px 的主题背景色边框，边框会覆盖并截断被指示器压住的内容，视觉上把指示器与目标内容隔开；指示器自身的位置、尺寸和文字排布保持不变。
+
 ## 参考
 
 尺寸、形态和默认位置参考 Material 3 [Badge specs](https://m3.material.io/components/badges/specs) 与 [Badge guidelines](https://m3.material.io/components/badges/guidelines)。
 
 <script setup>
+import BadgeBorderExample from '../examples/badge/BadgeBorderExample.vue';
 import BadgeColorExample from '../examples/badge/BadgeColorExample.vue';
 import BadgeContentExample from '../examples/badge/BadgeContentExample.vue';
 import BadgeDotExample from '../examples/badge/BadgeDotExample.vue';
