@@ -40,6 +40,7 @@
 | [0033](0033-shared-edge-layout-controller.md) | active | MatLayout 与 AppRoot 共享六向边缘布局控制器 |
 | [0034](0034-bottom-sheet-drag-tiers.md) | active | Bottom sheet 采用 min、normal、max 拖动档位与内容高度预览 |
 | [0035](0035-playwright-e2e-testing.md) | active | 引入 Playwright 端到端测试 |
+| [0036](0036-stdio-mcp-docs-examples.md) | active | 通过 stdio MCP 提供文档与示例查询 |
 
 ## 何时创建 ADR
 

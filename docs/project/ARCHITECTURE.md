@@ -112,6 +112,8 @@ Checkbox 以布尔值或基础值数组表达受控选择，数组更新始终�
 
 `docs/site/` 中带 frontmatter 标记的 Markdown 页面按顺序生成根目录 `llms.txt` 和 `llms-full.txt`。组件示例保存在 `docs/site/examples/`，同一 Vue 文件既由 VitePress 作为代码片段展示，也作为页面中的真实组件渲染；AI 文档生成器会把代码片段包含指令展开为完整代码块。演练场另行把示例源码同步到 `docs/site/public/playground/` 并生成示例索引，页面在选中示例后才按需拉取单个文件，示例代码不进入打包产物。项目维护文档和纯交互页面不进入 AI 使用文档。
 
+仓库另提供 `scripts/docs-mcp.mjs` 文档查询 MCP 服务（stdio 传输，见 [0036](adr/0036-stdio-mcp-docs-examples.md)）：它复用本节的文档收集逻辑与示例文件，向其他项目的 AI 客户端按页提供使用文档、示例源码和关键词搜索；该服务是开发工具，不进入包 `exports` 与 `dist/`。
+
 ## 关键数据流
 
 ```mermaid
@@ -166,27 +168,3 @@ flowchart LR
 - `system` 模式创建的媒体查询监听必须可清理，避免应用卸载后继续更新状态。
 - 组件不执行网络请求，不持有业务数据，也不承担表单校验或权限控制。
 - 选择控件只管理 Vue 受控状态；透传的原生 input 属性不构成完整表单生命周期保证。
-
-## 相关决策
-
-- [0001 — 通过私有 Git 直接分发源码](adr/0001-distribute-source-from-private-git.md)
-- [0002 — 采用运行时令牌与 Tailwind 适配双层主题（已由 0006 替代）](adr/0002-runtime-and-tailwind-theme-layers.md)
-- [0003 — 从 Markdown 生成 AI 使用文档](adr/0003-generate-ai-docs-from-markdown.md)
-- [0004 — 采用 Material 2025 动态配色规格](adr/0004-material-2025-dynamic-color.md)
-- [0005 — 采用组件级种子配色与父子继承](adr/0005-component-seed-color-inheritance.md)
-- [0006 — 采用 Material 3 分层令牌与完整组件属性名（已由 0007 替代）](adr/0006-material-3-layered-tokens-and-full-property-names.md)
-- [0007 — 保留内部组件令牌但不提供公共定制入口](adr/0007-internal-component-tokens-without-public-customization.md)
-- [0009 — 采用公共 Icon 与可配置图标类](adr/0009-public-icon-and-configurable-icon-class.md)
-- [0010 — 合并 Button 与 Icon button](adr/0010-merge-button-and-icon-button.md)
-- [0011 — 采用共享 Dialog 宿主与关闭后 Promise 结算](adr/0011-dialog-imperative-host-and-promise-settlement.md)
-- [0012 — 使用内部 Toolbar 几何注册协调覆盖层](adr/0012-toolbar-overlay-geometry-registry.md)
-- [0013 — 重构按钮组与图标按钮语义（已由 0014 替代）](adr/0013-button-icon-group-semantics.md)
-- [0014 — 连接按钮组选中态使用全圆形状（已由 0015 替代）](adr/0014-connected-button-group-checked-shape.md)
-- [0015 — 连接按钮组选中态完整覆盖组外轮廓](adr/0015-connected-button-group-checked-shape-overrides-outer-shape.md)
-- [0016 — 公开 MatInputBase 作为可组合文本输入基础组件](adr/0016-public-input-base.md)
-- [0021 — 采用 AppRoot 应用布局上下文](adr/0021-app-root-layout-context.md)
-- [0022 — 项目更名为 mde-vue](adr/0022-rename-project-to-mde-vue.md)
-- [0023 — createMatUi 组件默认属性 defaults 配置](adr/0023-mat-ui-component-defaults.md)
-- [0026 — 采用 Material 3 Expressive Web 动效令牌](adr/0026-material-3-expressive-motion-tokens.md)
-- [0027 — AppRoot 内模态与浮层按应用范围展示](adr/0027-approot.md)
-- [0028 — 公共 State layer 指令统一交互状态层](adr/0028-public-state-layer-directive.md)

@@ -170,7 +170,7 @@ async function expandCodeSnippets(content, documentPath) {
  *
  * @returns {Promise<DocumentEntry[]>} 已排序的页面。
  */
-async function collectDocuments() {
+export async function collectDocuments() {
   const markdownFiles = await findMarkdownFiles(docsDirectory);
   const documents = await Promise.all(markdownFiles.map(async (absolutePath) => {
     const source = await readFile(absolutePath, 'utf8');

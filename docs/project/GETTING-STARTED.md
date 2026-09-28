@@ -70,9 +70,37 @@ pnpm docs:dev
 | `tests/` | 单元测试（`tests/unit/`）与 Playwright 端到端测试（`tests/e2e/`，含 fixture 应用） |
 | `scripts/` | AI 文档生成、项目验证与 ADR 创建脚本 |
 | `llms.txt`、`llms-full.txt` | 从 Markdown 生成的 AI 文档产物 |
+| `scripts/` | AI 文档生成、文档查询 MCP、项目验证与 ADR 创建脚本 |
 | `licenses/` | 第三方许可原文 |
 
 实际源码边界和数据流见 [架构说明](ARCHITECTURE.md)。
+
+## 文档查询 MCP
+
+`pnpm docs:mcp` 启动 stdio 传输的文档查询 MCP 服务（`scripts/docs-mcp.mjs`），供本仓库或其他项目中的 AI 客户端按页查询使用文档与示例源码，决策背景见 [0036 — 通过 stdio MCP 提供文档与示例查询](adr/0036-stdio-mcp-docs-examples.md)。服务复用 `docs/site` 的 Markdown 来源与 `docs/site/examples/` 示例文件，不读取可能过期的 `llms.txt` 生成产物，提供五个工具：
+
+| 工具 | 用途 |
+| --- | --- |
+| `list_docs` | 列出全部文档页面的路径、标题和简介 |
+| `get_doc` | 按路径读取单个文档页面的完整 Markdown（示例代码已展开） |
+| `search_docs` | 在标题、简介和正文中做大小写不敏感的关键词搜索 |
+| `list_examples` | 列出示例文件，可按组件目录名或 `mat-*` 标签过滤 |
+| `get_example` | 按文件名读取单个示例的完整 Vue 源码 |
+
+在其他项目的 AI 客户端中，把 stdio 命令指向本仓库检出位置的脚本即可，例如：
+
+```json
+{
+  "mcpServers": {
+    "mde-vue-docs": {
+      "command": "node",
+      "args": ["F:\\private\\mde-vue\\scripts\\docs-mcp.mjs"]
+    }
+  }
+}
+```
+
+服务无网络监听，进程由客户端启动和回收；运行前需在本仓库执行 `pnpm install` 安装 `@modelcontextprotocol/sdk`。无法访问本仓库检出目录的环境继续使用文档站的 `llms.txt` 与 `llms-full.txt`。
 
 ## 测试先行
 
