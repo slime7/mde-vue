@@ -51,6 +51,9 @@
     "lint:styles:fix": "stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\" --fix --cache",
     "test": "vitest",
     "test:run": "vitest run",
+    "e2e": "playwright test --config tests/e2e/playwright.config.js",
+    "e2e:headed": "playwright test --config tests/e2e/playwright.config.js --headed",
+    "e2e:install": "playwright install chromium",
     "validate:agent-docs": "python scripts/validate-agent-docs.py .",
     "check": "eslint . --cache && stylelint \"src/**/*.{css,vue}\" \"docs/**/*.{css,vue}\" --cache && node scripts/build-types.mjs && node scripts/build-package.mjs && vitest run && node scripts/build-llms.mjs --check && node --max-old-space-size=8192 ./node_modules/vitepress/bin/vitepress.js build docs/site && python scripts/validate-agent-docs.py ."
   },
@@ -69,6 +72,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.29.7",
     "@babel/plugin-syntax-import-attributes": "^7.29.7",
+    "@playwright/test": "^1.63.0",
     "@stylistic/stylelint-plugin": "^5.2.1",
     "@tailwindcss/vite": "^4.3.2",
     "@vitejs/plugin-vue": "^6.0.7",

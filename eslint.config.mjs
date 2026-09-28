@@ -121,7 +121,7 @@ export default [
     },
   },
   {
-    files: ['scripts/**/*.{js,mjs}', 'tests/**/*.js', '*.{js,mjs}'],
+    files: ['scripts/**/*.{js,mjs}', 'tests/**/*.{js,mjs}', '*.{js,mjs}'],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -141,6 +141,16 @@ export default [
         requireConfigFile: false,
         babelOptions,
       },
+    },
+  },
+  {
+    // E2E 用例需要分帧模拟指针拖拽，无法避免在循环中等待；
+    // window.__events 是 fixture 的事件记录总线，忽略下划线限制。
+    files: ['tests/e2e/**/*.js', 'tests/e2e/**/*.mjs'],
+    rules: {
+      'no-await-in-loop': 'off',
+      'no-underscore-dangle': 'off',
+      'import-x/prefer-default-export': 'off',
     },
   },
 ];

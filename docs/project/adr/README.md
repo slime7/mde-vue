@@ -39,6 +39,7 @@
 | [0032](0032-tooltip-global-delay-skip.md) | active | 移除 Tooltip 分组容器，延迟跳过全局生效 |
 | [0033](0033-shared-edge-layout-controller.md) | active | MatLayout 与 AppRoot 共享六向边缘布局控制器 |
 | [0034](0034-bottom-sheet-drag-tiers.md) | active | Bottom sheet 采用 min、normal、max 拖动档位与内容高度预览 |
+| [0035](0035-playwright-e2e-testing.md) | active | 引入 Playwright 端到端测试 |
 
 ## 何时创建 ADR
 

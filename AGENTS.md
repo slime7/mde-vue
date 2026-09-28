@@ -48,6 +48,7 @@
 ```text
 pnpm lint
 pnpm test:run
+pnpm e2e
 pnpm types:build
 pnpm types:check
 pnpm build:check
@@ -56,6 +57,8 @@ pnpm docs:check
 pnpm docs:build
 pnpm validate:agent-docs
 ```
+
+`pnpm e2e` 按改动范围单独运行（首次使用先执行 `pnpm e2e:install` 安装 Chromium），不并入 `pnpm check`。
 
 本地查看组件 demo 使用 `pnpm dev`，查看 VitePress 文档使用 `pnpm docs:dev`，以监视模式运行测试使用 `pnpm test`。完整命令说明以 `docs/project/GETTING-STARTED.md` 为准。
 

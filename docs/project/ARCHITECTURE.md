@@ -33,6 +33,7 @@
 | Vite | 生成保留模块边界的 ESM 分发产物与提供 VitePress 开发服务 |
 | VitePress | 中文文档和交互示例 |
 | Vitest 与 Vue Test Utils | 组件和主题行为测试 |
+| Playwright | 浏览器端到端测试（仅 Chromium） |
 
 ## 模块边界
 
@@ -157,7 +158,7 @@ flowchart LR
 
 ## 构建与验证
 
-`pnpm build` 先生成完整根入口类型声明，再以 Vue 和 Material Color Utilities 为外部依赖编译单一 `dist/mde-vue.js`，将基础令牌与组件样式合并为 `dist/styles.css`。该样式入口固定声明 `mde.tokens`、`mde.components`、`mde.utilities` 与顶层 `mde-final`；SFC 源码样式直接归入 `mde.components`，最终层只保护不会阻断 Vue 运行时样式控制的少量不变量。构建另复制独立的 `src/styles/tailwind.css` 至 `dist/tailwind.css`，并复制 `dist/index.d.ts`。构建后 `dist/` 必须恰好包含这四个文件。`dist/` 随源码提交，公开入口测试从包自身 `exports` 加载产物并检查文件集合。VitePress 只构建 `docs/site/`，并在其 Vite 配置中把公共导入别名解析到 `src/`；文档站按 `tailwind-theme`、`tailwind-reset`、`mde`、`tailwind-utilities`、`mde-final` 的顺序模拟真实 Tailwind 使用方，文档、测试和静态检查在 Node.js 24 环境中运行。
+`pnpm build` 先生成完整根入口类型声明，再以 Vue 和 Material Color Utilities 为外部依赖编译单一 `dist/mde-vue.js`，将基础令牌与组件样式合并为 `dist/styles.css`。该样式入口固定声明 `mde.tokens`、`mde.components`、`mde.utilities` 与顶层 `mde-final`；SFC 源码样式直接归入 `mde.components`，最终层只保护不会阻断 Vue 运行时样式控制的少量不变量。构建另复制独立的 `src/styles/tailwind.css` 至 `dist/tailwind.css`，并复制 `dist/index.d.ts`。构建后 `dist/` 必须恰好包含这四个文件。`dist/` 随源码提交，公开入口测试从包自身 `exports` 加载产物并检查文件集合。VitePress 只构建 `docs/site/`，并在其 Vite 配置中把公共导入别名解析到 `src/`；文档站按 `tailwind-theme`、`tailwind-reset`、`mde`、`tailwind-utilities`、`mde-final` 的顺序模拟真实 Tailwind 使用方，文档、测试和静态检查在 Node.js 24 环境中运行。单元测试位于 `tests/unit/`，端到端测试位于 `tests/e2e/`：fixture 应用以同样的 Vite alias 直连 `src/`，由 Playwright 在真实 Chromium 中验证浮层定位、模态焦点、指针手势与应用布局等浏览器行为，不参与 `dist/` 与公共入口。
 
 ## 安全与可靠性边界
 

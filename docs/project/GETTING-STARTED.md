@@ -45,6 +45,9 @@ pnpm docs:dev
 | `pnpm lint` | 运行 JavaScript、Vue 和 CSS 静态检查 |
 | `pnpm test` | 以监视模式运行 Vitest 组件与主题测试 |
 | `pnpm test:run` | 单次运行全部 Vitest 测试 |
+| `pnpm e2e` | 运行 Playwright 端到端测试（首次运行前先执行 `pnpm e2e:install`） |
+| `pnpm e2e:headed` | 以有头浏览器模式运行端到端测试 |
+| `pnpm e2e:install` | 安装端到端测试所需的 Chromium 浏览器 |
 | `pnpm types:build` | 根据公共组件 JSDoc 生成 `src/index.d.ts` |
 | `pnpm types:check` | 检查 `src/index.d.ts` 是否与公共组件 JSDoc 同步 |
 | `pnpm build` | 生成单一 ESM、基础与组件 CSS、Tailwind CSS 映射和根入口类型声明四个分发文件 |
@@ -64,7 +67,7 @@ pnpm docs:dev
 | `dist/` | 由 `pnpm build` 生成并提交的 `mde-vue.js`、`styles.css`、`tailwind.css`、`index.d.ts` |
 | `docs/site/` | VitePress 使用文档、AI 使用指南和组件实时预览 |
 | `docs/project/` | 产品愿景、架构、公共抽象、开发入门和 ADR |
-| `tests/` | 主题及跨入口的测试辅助内容 |
+| `tests/` | 单元测试（`tests/unit/`）与 Playwright 端到端测试（`tests/e2e/`，含 fixture 应用） |
 | `scripts/` | AI 文档生成、项目验证与 ADR 创建脚本 |
 | `llms.txt`、`llms-full.txt` | 从 Markdown 生成的 AI 文档产物 |
 | `licenses/` | 第三方许可原文 |
