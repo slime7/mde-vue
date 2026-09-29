@@ -4,7 +4,7 @@ let componentOptions = DEFAULT_MAT_UI_OPTIONS;
 let theme = null;
 
 /**
- * @param {Readonly<{iconClass: string, useCursor: boolean}>} options
+ * @param {Readonly<{iconClass: string, useCursor: boolean, useRipple: boolean}>} options
  * @param {import('./theme.js').MatThemeController} themeController
  */
 export function setImperativeContext(options, themeController) {

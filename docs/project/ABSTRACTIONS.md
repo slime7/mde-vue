@@ -22,7 +22,7 @@
 
 `createMatUi({ theme, useCursor, iconClass, defaults })` 创建一次 Vue 插件安装单元。插件负责以 `mat-*` 和对应 `Mat*` 名称全局注册组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
 
-`useCursor` 必须是 boolean，默认 `false`，控制可用交互组件是否从 `cursor: default` 改为 `cursor: pointer`。`iconClass` 必须是 string，默认 `material-symbols-outlined`，作为公共 Icon 与组件图标容器的全局 class；组件级 `iconClass` 可以覆盖或以空字符串关闭它。`defaults` 按组件键设置公共组件的 prop 默认值，键是 `mat-*` 标签去掉前缀后的 camelCase；显式传入的 prop 优先于 defaults，defaults 优先于组件定义默认值，`v-model` 相关属性不接受 defaults 配置。`defaults.tooltip.openDelay` 与 `defaults.tooltip.closeDelay` 必须是非负有限数字，默认分别为 `0` 与 `600`；`openDelay` 是未显式设置 `openDelay` 时的自动打开延迟，`closeDelay` 是未显式设置 `closeDelay` 时的自动关闭延迟，任一 Tooltip 显示时切换进入其他实例可跳过打开延迟。插件不下载字体或图标资源，未安装插件的按需组件使用组件定义默认值。
+`useCursor` 必须是 boolean，默认 `false`，控制可用交互组件是否从 `cursor: default` 改为 `cursor: pointer`。`useRipple` 必须是 boolean，默认 `false`，控制基于 `MatActionBase` 的操作类组件是否在主指针按压时显示涟漪；涟漪绘制在状态层之上，可通过 `v-ripple` 的 `disabled` 选项逐宿主关闭。`iconClass` 必须是 string，默认 `material-symbols-outlined`，作为公共 Icon 与组件图标容器的全局 class；组件级 `iconClass` 可以覆盖或以空字符串关闭它。`defaults` 按组件键设置公共组件的 prop 默认值，键是 `mat-*` 标签去掉前缀后的 camelCase；显式传入的 prop 优先于 defaults，defaults 优先于组件定义默认值，`v-model` 相关属性不接受 defaults 配置。`defaults.tooltip.openDelay` 与 `defaults.tooltip.closeDelay` 必须是非负有限数字，默认分别为 `0` 与 `600`；`openDelay` 是未显式设置 `openDelay` 时的自动打开延迟，`closeDelay` 是未显式设置 `closeDelay` 时的自动关闭延迟，任一 Tooltip 显示时切换进入其他实例可跳过打开延迟。插件不下载字体或图标资源，未安装插件的按需组件使用组件定义默认值。
 
 任一 Tooltip 显示时，其他实例切换进入可跳过打开延迟；Tooltip 关闭后、尚未显示和重新进入同一实例不得共享延迟。受控 Tooltip 不参与该自动状态。
 
@@ -39,6 +39,8 @@
 `v-intersection` 是客户端原生 `IntersectionObserver` 指令，不渲染包装元素。绑定值可以是处理函数或带 `handler`、`options` 的对象；`options` 保持原生观察器配置，回调的 `isIntersecting` 取本次 entries 是否存在相交项。`.quiet` 只跳过首次投递，`.once` 在首次相交后解除观察；观察器不支持时保持静默，卸载和绑定更新必须清理旧实例。
 
 `v-state-layer` 是公共视觉状态指令，绑定值为可扩展对象，当前只公开可选 `color`。它在能容纳子元素且非 `display: contents` 的宿主中加入无障碍隐藏层，使用 CSS Anchor Positioning 覆盖宿主，并以系统透明度令牌表达 hover、focus-visible 和 pressed。指令按原生标签与 `role` 推导键盘 pressed，但不赋予焦点、点击、ARIA 或键盘激活语义；短按至少显示 150ms，属于项目视觉保持策略。内部节点、属性、class 和 anchor 名称不是公共接口。
+
+`v-ripple` 是公共视觉状态指令，绑定值为可扩展对象，当前公开可选 `color`、`variant` 与 `disabled`。它在能容纳子元素且非 `display: contents` 的宿主中加入无障碍隐藏的涟漪容器，渲染在同一宿主状态层之上，并使用 CSS Anchor Positioning 覆盖宿主、按宿主圆角裁剪波纹。主指针按压从接触点产生波纹：默认实心圆扩大并移动到宿主中心后保持，释放后淡出；`variant: 'dots'` 以固定不动的波点阵列替代实心圆填充（网格把完整圆点对齐到按压点，间距按宿主尺寸取整），可见范围由与实心圆同轨迹的扩张遮罩逐渐显示（遮罩从按压点扩张并迁移到宿主中心）；`variant: 'glow'` 以边缘羽化的光斑停留在按压点按相同节奏放大并保持；`variant: 'rings'` 与 `variant: 'burst'` 是不保持按压的瞬时反馈（两圈细环先后扩散出宿主、八道细光线从按压点放射），播放结束后自行从 DOM 移除，释放或快速连点只会提前结束它们。细线条与羽化结构的透明度取按压状态层令牌的四倍（上限 1）作感知补偿。快速连点产生新波纹并立即结束仍在展示的旧波纹。`disabled` 为 true 时跳过涟漪并在动态切换时按需挂载或清理。透明度读取按压状态层系统令牌，时长与缓动参考 AndroidX Compose material-ripple。指令不赋予焦点、点击、ARIA 或键盘激活语义，键盘 pressed 由 `v-state-layer` 表达；内部节点、属性、class 和 anchor 名称不是公共接口。
 
 ## 主题配置
 

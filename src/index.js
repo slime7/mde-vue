@@ -72,6 +72,7 @@ export { default as MatNavigationItem } from './components/mat-navigation-item/M
 export { default as MatNavigationDrawer } from './components/mat-navigation-drawer/MatNavigationDrawer.vue';
 export { default as MatNavigationGroup } from './components/mat-navigation-group/MatNavigationGroup.vue';
 export { default as Intersection } from './directives/intersection';
+export { default as Ripple } from './directives/ripple';
 export { default as StateLayer } from './directives/state-layer';
 // Node/Vitest 直接解析包源码时需要保留 JavaScript 扩展名。
 // eslint-disable-next-line import-x/extensions

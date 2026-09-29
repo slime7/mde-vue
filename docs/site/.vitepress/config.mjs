@@ -299,6 +299,7 @@ export default defineConfig({
         items: [
           { text: 'Intersection 相交观察', link: '/directives/intersection' },
           { text: 'State layer 状态层', link: '/directives/state-layer' },
+          { text: 'Ripple 涟漪', link: '/directives/ripple' },
         ],
       },
       {

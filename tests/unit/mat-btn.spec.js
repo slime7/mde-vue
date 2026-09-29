@@ -450,6 +450,40 @@ describe('MatBtn', () => {
     expect(wrapper.classes()).toContain('mat-btn--no-morph');
   });
 
+  it('插件 useRipple 开启时按压产生涟漪，默认关闭', () => {
+    const enabled = mount(MatBtn, {
+      global: {
+        provide: {
+          [MAT_UI_KEY]: { useRipple: true },
+        },
+      },
+      slots: {
+        default: '涟漪按钮',
+      },
+    });
+
+    const layers = enabled.findAll('[aria-hidden="true"]');
+
+    expect(layers).toHaveLength(2);
+    expect(layers[1].element.childElementCount).toBe(0);
+
+    const press = new Event('pointerdown', { bubbles: true });
+    Object.defineProperties(press, {
+      button: { value: 0 },
+      pointerId: { value: 1 },
+    });
+    enabled.element.dispatchEvent(press);
+    expect(layers[1].element.childElementCount).toBe(1);
+
+    const plain = mount(MatBtn, {
+      slots: {
+        default: '普通按钮',
+      },
+    });
+
+    expect(plain.findAll('[aria-hidden="true"]')).toHaveLength(1);
+  });
+
   it('loading 时使用原生禁用语义阻止点击并声明 aria-busy', () => {
     const handleClick = vi.fn();
     const wrapper = mount(MatBtn, {

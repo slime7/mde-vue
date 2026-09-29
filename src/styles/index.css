@@ -926,6 +926,27 @@
     opacity: var(--mat-sys-state-pressed-state-layer-opacity);
   }
 
+  .mat-ripple {
+    position: absolute;
+    z-index: 0;
+    position-area: center;
+
+    /* position-area: center 会把默认对齐改为居中而不是拉伸，必须显式撑满锚点区域。 */
+    place-self: stretch;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .mat-ripple-wave {
+    position: absolute;
+    border-radius: 50%;
+    background-color: currentcolor;
+    opacity: 0;
+    pointer-events: none;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     ::view-transition-group(*),
     ::view-transition-old(*),
@@ -1188,6 +1209,11 @@
   }
 
   .mat-state-layer {
+    pointer-events: none;
+  }
+
+  .mat-ripple,
+  .mat-ripple-wave {
     pointer-events: none;
   }
 }

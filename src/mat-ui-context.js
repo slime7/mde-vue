@@ -6,6 +6,7 @@ export const DEFAULT_TOOLTIP_OPTIONS = Object.freeze({
 export const DEFAULT_MAT_UI_OPTIONS = Object.freeze({
   iconClass: 'material-symbols-outlined',
   useCursor: false,
+  useRipple: false,
   defaults: Object.freeze({
     tooltip: DEFAULT_TOOLTIP_OPTIONS,
   }),

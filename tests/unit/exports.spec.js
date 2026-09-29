@@ -77,6 +77,7 @@ import {
   MatVirtualScroll as RootMatVirtualScroll,
   MdeSharedElement as RootMdeSharedElement,
   MdeVirtualScroll as RootMdeVirtualScroll,
+  Ripple as RootRipple,
   StateLayer as RootStateLayer,
   useLayout,
   useMatApp,
@@ -157,6 +158,9 @@ describe('公共组件导出', () => {
     expect(RootMdeSharedElement).toBe(RootMatSharedElement);
     expect(RootMdeVirtualScroll).toBe(RootMatVirtualScroll);
     expect(useMdeViewTransition).toBe(useMatViewTransition);
+  });
+  it('从根入口导出涟漪指令并全局注册', () => {
+    expect(RootRipple).toBeTruthy();
   });
   it('从根入口导出应用布局组件与组合函数', () => {
     expect(RootMatAppRoot).toBeTruthy();
@@ -240,6 +244,7 @@ describe('公共组件导出', () => {
     expect(app.component('mat-container')).toBe(RootMatContainer);
     expect(app.directive('intersection')).toBe(RootIntersection);
     expect(app.directive('state-layer')).toBe(RootStateLayer);
+    expect(app.directive('ripple')).toBe(RootRipple);
     expect(app.component('mat-spacer')).toBe(RootMatSpacer);
     expect(app.component('mat-loading')).toBe(RootMatLoading);
     expect(app.component('mat-progress')).toBe(RootMatProgress);

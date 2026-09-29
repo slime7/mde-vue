@@ -13,8 +13,8 @@ function oe(e, t) {
 	n.length > 0 ? e.style.setProperty("anchor-name", n.join(", ")) : e.style.removeProperty("anchor-name");
 }
 //#endregion
-//#region src/directives/state-layer/index.js
-var se = "currentcolor", ce = "data-mat-state-layer-host", le = 150, ue = /* @__PURE__ */ new Set([
+//#region src/directives/common.js
+var se = "currentcolor", ce = /* @__PURE__ */ new Set([
 	"AREA",
 	"AUDIO",
 	"BASE",
@@ -37,69 +37,326 @@ var se = "currentcolor", ce = "data-mat-state-layer-host", le = 150, ue = /* @__
 	"TRACK",
 	"VIDEO",
 	"WBR"
-]), de = /* @__PURE__ */ new Set(["color"]), fe = /* @__PURE__ */ new WeakMap(), pe = 0;
-function me(e) {
-	return e === void 0 || typeof e != "object" || !e || Array.isArray(e) ? {} : (Object.keys(e).forEach((e) => {
-		de.has(e) || `${e}`;
+]);
+function le(e) {
+	return (e) => {};
+}
+function ue(e, t, n) {
+	return e === void 0 ? {} : typeof e != "object" || !e || Array.isArray(e) ? (n("绑定值必须是对象；已使用默认配置。"), {}) : (Object.keys(e).forEach((e) => {
+		t.has(e) || n(`未知选项“${e}”已忽略。`);
 	}), e);
 }
-function he(e) {
-	return e.color === void 0 || typeof e.color != "string" || !(typeof CSS > "u" || CSS.supports("color", e.color)) ? se : e.color;
+function de(e, t) {
+	return e === void 0 ? se : typeof e != "string" || typeof CSS < "u" && !CSS.supports("color", e) ? (t("color 必须是有效的 CSS 颜色；已回退为 currentcolor。"), se) : e;
 }
-function ge(e) {
+function fe(e) {
 	return e.matches(":disabled") || e.getAttribute("aria-disabled") === "true";
 }
-function _e(e, t) {
+function pe(e) {
+	return !ce.has(e.tagName) && getComputedStyle(e).display !== "contents";
+}
+//#endregion
+//#region src/directives/ripple/index.js
+var me = 75, he = 225, ge = 150, _e = "cubic-bezier(0.4, 0, 0.2, 1)", ve = 10, ye = .3, be = "--mat-sys-state-pressed-state-layer-opacity", xe = .12, Se = "circle", Ce = "dots", we = "glow", Te = "rings", Ee = "burst", De = /* @__PURE__ */ new Set([
+	Se,
+	Ce,
+	we,
+	Te,
+	Ee
+]), Oe = 12, ke = "radial-gradient(circle, currentcolor 3px, transparent 3px)", Ae = `${Oe}px ${Oe}px`, je = "radial-gradient(circle, currentcolor 0%, currentcolor 32%, transparent 72%)", Me = 4, Ne = 2, Pe = 2, Fe = "0.06", Ie = .15, Le = 520, Re = 160, ze = 8, Be = 2, Ve = .12, He = .55, Ue = 22.5, We = 20, Ge = .25, Ke = 460, qe = "cubic-bezier(0.2, 0, 0, 1)", Je = /* @__PURE__ */ new Set([
+	"color",
+	"variant",
+	"disabled"
+]), Ye = le("v-ripple"), Xe = /* @__PURE__ */ new WeakMap(), Ze = 0;
+function Qe() {
+	return globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? !1;
+}
+function $e(e) {
+	e.forEach((e) => {
+		try {
+			e.cancel();
+		} catch {}
+	});
+}
+function et(e) {
+	let t = e.disabled;
+	return t === void 0 ? !1 : typeof t == "boolean" ? t : (Ye("disabled 必须是 boolean；已忽略。"), !1);
+}
+function tt(e) {
+	return e === void 0 ? Se : De.has(e) ? e : (Ye(`variant 必须是 '${Se}'、'${Ce}'、'${we}'、'${Te}' 或 '${Ee}'；已回退为 '${Se}'。`), Se);
+}
+function nt() {
+	return {
+		activePointers: null,
+		anchorName: void 0,
+		container: null,
+		observer: null,
+		removeEventListeners: () => {},
+		variant: Se,
+		waves: null
+	};
+}
+function rt(e) {
+	return e <= 0 ? Oe : e / Math.max(1, Math.round(e / Oe));
+}
+var it = class {
+	constructor(e, t) {
+		if (this.record = e, this.startedAt = Date.now(), this.alpha = t, this.variant = e.variant, this.dots = this.variant === Ce, this.glow = this.variant === we, this.transient = this.variant === Te || this.variant === Ee, this.animated = !1, this.opacity = this.glow || this.transient ? Math.min(1, t * Me) : t, this.enterAnimations = [], this.children = [], this.exitTimer = void 0, this.exiting = !1, this.removed = !1, this.element = document.createElement("span"), this.element.className = "mat-ripple-wave", this.dots && (this.element.style.backgroundColor = "transparent", this.element.style.backgroundImage = ke, this.element.style.backgroundSize = Ae, this.element.style.backgroundRepeat = "round", this.element.style.borderRadius = "0"), this.glow && (this.element.style.backgroundColor = "transparent", this.element.style.backgroundImage = je), this.variant === Te) {
+			this.element.style.backgroundColor = "transparent";
+			for (let e = 0; e < Ne; e += 1) {
+				let e = document.createElement("span");
+				e.style.position = "absolute", e.style.border = `${Pe}px solid currentcolor`, e.style.borderRadius = "50%", e.style.opacity = "0", this.children.push(e), this.element.append(e);
+			}
+		}
+		if (this.variant === Ee) {
+			this.element.style.backgroundColor = "transparent";
+			for (let e = 0; e < ze; e += 1) {
+				let e = document.createElement("span");
+				e.style.position = "absolute", e.style.width = `${Be}px`, e.style.borderRadius = `${Be}px`, e.style.background = "currentcolor", e.style.transformOrigin = "50% 100%", e.style.opacity = "0", this.children.push(e), this.element.append(e);
+			}
+		}
+		this.transient && (this.element.style.opacity = "1");
+	}
+	place(e, t, n) {
+		let r = e.getBoundingClientRect(), i = Math.max(r.width, r.height) * ye, a = Math.hypot(r.width, r.height) / 2 + ve;
+		if (this.animated = !Qe() && typeof this.element.animate == "function", this.dots ? (this.element.style.width = "100%", this.element.style.height = "100%", this.element.style.left = "0px", this.element.style.top = "0px", this.element.style.backgroundPosition = `${Math.round(t - rt(r.width) / 2)}px ${Math.round(n - rt(r.height) / 2)}px`) : this.glow ? (this.element.style.width = `${a * 2}px`, this.element.style.height = `${a * 2}px`, this.element.style.left = `${t - a}px`, this.element.style.top = `${n - a}px`) : this.transient ? (this.element.style.width = "100%", this.element.style.height = "100%", this.element.style.left = "0px", this.element.style.top = "0px", this.placeTransient(t, n, r, a)) : (this.element.style.width = `${a * 2}px`, this.element.style.height = `${a * 2}px`, this.element.style.left = `${t - a}px`, this.element.style.top = `${n - a}px`), !this.animated) {
+			if (this.transient) for (let e = 0; e < this.children.length; e += 1) this.children[e].style.opacity = String(this.opacity);
+			else this.element.style.opacity = String(this.opacity);
+			return;
+		}
+		if (this.transient) {
+			this.playTransient();
+			return;
+		}
+		if (this.enterAnimations.push(this.element.animate([{ opacity: "0" }, { opacity: String(this.opacity) }], {
+			duration: me,
+			easing: "linear",
+			fill: "forwards"
+		})), this.dots) {
+			this.enterAnimations.push(this.element.animate([{ clipPath: `circle(${i}px at ${t}px ${n}px)` }, { clipPath: `circle(${a}px at ${r.width / 2}px ${r.height / 2}px)` }], {
+				duration: he,
+				easing: _e,
+				fill: "forwards"
+			}));
+			return;
+		}
+		this.enterAnimations.push(this.element.animate([{ scale: `${i / a}` }, { scale: "1" }], {
+			duration: he,
+			easing: _e,
+			fill: "forwards"
+		})), this.glow || this.enterAnimations.push(this.element.animate([{ translate: "0px 0px" }, { translate: `${r.width / 2 - t}px ${r.height / 2 - n}px` }], {
+			duration: he,
+			easing: "linear",
+			fill: "forwards"
+		}));
+	}
+	placeTransient(e, t, n, r) {
+		if (this.variant === Te) {
+			for (let n = 0; n < this.children.length; n += 1) {
+				let i = this.children[n];
+				i.style.width = `${r * 2}px`, i.style.height = `${r * 2}px`, i.style.left = `${e - r}px`, i.style.top = `${t - r}px`;
+			}
+			return;
+		}
+		let i = Math.hypot(n.width, n.height) / 2;
+		for (let n = 0; n < this.children.length; n += 1) {
+			let r = this.children[n];
+			r.style.height = `${i}px`, r.style.left = `${e - Be / 2}px`, r.style.top = `${t - i}px`, r.style.rotate = `${360 / ze * n + Ue}deg`;
+		}
+	}
+	playTransient() {
+		this.variant === Te ? this.children.forEach((e, t) => {
+			this.enterAnimations.push(e.animate([
+				{
+					opacity: "0",
+					scale: Fe
+				},
+				{
+					opacity: String(this.opacity),
+					offset: Ie
+				},
+				{
+					opacity: "0",
+					scale: "1"
+				}
+			], {
+				duration: Le,
+				delay: t * Re,
+				easing: qe,
+				fill: "both"
+			}));
+		}) : this.children.forEach((e, t) => {
+			this.enterAnimations.push(e.animate([
+				{
+					opacity: "0",
+					scale: `1 ${Ve}`
+				},
+				{
+					opacity: String(this.opacity),
+					offset: Ge,
+					scale: `1 ${He}`
+				},
+				{
+					opacity: "0",
+					scale: "1 1"
+				}
+			], {
+				duration: Ke,
+				delay: t * We,
+				easing: qe,
+				fill: "both"
+			}));
+		}), this.exitTimer = globalThis.setTimeout(() => {
+			this.exitTimer = void 0, this.remove();
+		}, this.transientDuration()), this.enterAnimations[this.enterAnimations.length - 1].finished.then(() => this.remove(), () => this.remove());
+	}
+	transientDuration() {
+		return this.variant === Te ? 680 : 600;
+	}
+	finish() {
+		if (this.exiting || this.transient && this.animated) return;
+		this.exiting = !0;
+		let [e] = this.enterAnimations;
+		if (e && e.playState !== "finished") try {
+			e.finish();
+		} catch {}
+		let t = Math.max(0, he - (Date.now() - this.startedAt));
+		this.exitTimer = globalThis.setTimeout(() => {
+			this.exitTimer = void 0, this.startExit();
+		}, t);
+	}
+	abort() {
+		if (this.transient) {
+			this.remove();
+			return;
+		}
+		this.finish();
+	}
+	startExit() {
+		typeof this.element.animate == "function" && this.element.animate([{ opacity: String(this.transient ? 1 : this.opacity) }, { opacity: "0" }], {
+			duration: ge,
+			easing: "linear",
+			fill: "forwards"
+		}).finished.then(() => this.remove(), () => this.remove()), this.exitTimer = globalThis.setTimeout(() => this.remove(), ge);
+	}
+	remove() {
+		this.removed || (this.removed = !0, this.exitTimer !== void 0 && (globalThis.clearTimeout(this.exitTimer), this.exitTimer = void 0), $e(this.enterAnimations), this.element.remove(), this.record.waves.delete(this));
+	}
+};
+function at(e) {
+	let t = Number.parseFloat(getComputedStyle(e).getPropertyValue(be));
+	return !Number.isFinite(t) || t < 0 || t > 1 ? xe : t;
+}
+function ot(e, t) {
+	let n = Xe.get(e);
+	if (!n || t.button !== 0 || fe(e)) return;
+	n.waves.forEach((e) => e.abort());
+	let r = e.getBoundingClientRect(), i = Number.isFinite(t.clientX) ? t.clientX - r.left : r.width / 2, a = Number.isFinite(t.clientY) ? t.clientY - r.top : r.height / 2, o = new it(n, at(e));
+	o.place(e, i, a), n.container.append(o.element), n.waves.add(o), n.activePointers.set(t.pointerId, o);
+}
+function st(e, t) {
+	if (et(t)) {
+		Xe.set(e, nt());
+		return;
+	}
+	if (!pe(e)) {
+		Ye(`<${e.tagName.toLowerCase()}> 无法容纳涟漪；指令已跳过。`);
+		return;
+	}
+	Ze += 1;
+	let n = `--mat-ripple-${Ze}`, r = document.createElement("span");
+	r.className = "mat-ripple", r.setAttribute("aria-hidden", "true"), r.style.setProperty("position-anchor", n), r.style.color = de(t.color, Ye), ae(e, n), e.append(r);
+	let i = {
+		activePointers: /* @__PURE__ */ new Map(),
+		anchorName: n,
+		container: r,
+		observer: void 0,
+		removeEventListeners: () => {},
+		variant: tt(t.variant),
+		waves: /* @__PURE__ */ new Set()
+	}, a = (t) => ot(e, t), o = (e) => {
+		let t = i.activePointers.get(e.pointerId);
+		t && (i.activePointers.delete(e.pointerId), t.finish());
+	}, s = () => {
+		i.activePointers.forEach((e) => e.abort()), i.activePointers.clear();
+	}, c = new MutationObserver(() => {
+		fe(e) && s();
+	});
+	i.observer = c, Xe.set(e, i), e.addEventListener("pointerdown", a), window.addEventListener("pointerup", o), window.addEventListener("pointercancel", o), e.addEventListener("blur", s), e.addEventListener("lostpointercapture", s), c.observe(e, {
+		attributeFilter: ["aria-disabled", "disabled"],
+		attributes: !0
+	}), i.removeEventListeners = () => {
+		e.removeEventListener("pointerdown", a), window.removeEventListener("pointerup", o), window.removeEventListener("pointercancel", o), e.removeEventListener("blur", s), e.removeEventListener("lostpointercapture", s);
+	};
+}
+function ct(e) {
+	let t = Xe.get(e);
+	t && (t.container && (t.activePointers.clear(), t.waves.forEach((e) => e.remove()), t.removeEventListeners(), t.observer.disconnect(), t.container.remove(), oe(e, t.anchorName)), Xe.delete(e));
+}
+var lt = {
+	mounted(e, t) {
+		st(e, ue(t.value, Je, Ye));
+	},
+	updated(e, t) {
+		let n = Xe.get(e);
+		if (!n) return;
+		let r = ue(t.value, Je, Ye);
+		if (n.container) {
+			et(r) ? (ct(e), Xe.set(e, nt())) : (n.container.style.color = de(r.color, Ye), n.variant = tt(r.variant));
+			return;
+		}
+		et(r) || st(e, r);
+	},
+	unmounted: ct
+}, ut = "data-mat-state-layer-host", dt = 150, ft = /* @__PURE__ */ new Set(["color"]), pt = le("v-state-layer"), mt = /* @__PURE__ */ new WeakMap(), ht = 0;
+function gt(e, t) {
 	let n = e.getAttribute("role"), r = e.tagName === "BUTTON" || n === "button", i = e.tagName === "A" && e.hasAttribute("href") || n === "link";
 	return r ? t === " " || t === "Enter" : i && t === "Enter";
 }
-function ve(e) {
-	let t = fe.get(e);
+function _t(e) {
+	let t = mt.get(e);
 	t?.releaseTimer !== void 0 && (globalThis.clearTimeout(t.releaseTimer), t.releaseTimer = void 0);
 }
-function ye(e) {
-	let t = fe.get(e);
-	t && (ve(e), t.activePointerId = void 0, t.activeKey = void 0, t.removeGlobalPointerListeners(), e.removeAttribute("data-mat-state-layer-pressed"));
+function vt(e) {
+	let t = mt.get(e);
+	t && (_t(e), t.activePointerId = void 0, t.activeKey = void 0, t.removeGlobalPointerListeners(), e.removeAttribute("data-mat-state-layer-pressed"));
 }
-function be(e) {
-	let t = fe.get(e);
-	!t || ge(e) || (ve(e), t.pressStartedAt = Date.now(), e.setAttribute("data-mat-state-layer-pressed", ""));
+function yt(e) {
+	let t = mt.get(e);
+	!t || fe(e) || (_t(e), t.pressStartedAt = Date.now(), e.setAttribute("data-mat-state-layer-pressed", ""));
 }
-function xe(e) {
-	let t = fe.get(e);
-	!t || !e.hasAttribute("data-mat-state-layer-pressed") || (t.activePointerId = void 0, t.activeKey = void 0, t.removeGlobalPointerListeners(), ve(e), t.releaseTimer = globalThis.setTimeout(() => {
+function bt(e) {
+	let t = mt.get(e);
+	!t || !e.hasAttribute("data-mat-state-layer-pressed") || (t.activePointerId = void 0, t.activeKey = void 0, t.removeGlobalPointerListeners(), _t(e), t.releaseTimer = globalThis.setTimeout(() => {
 		e.removeAttribute("data-mat-state-layer-pressed"), t.releaseTimer = void 0;
-	}, Math.max(0, le - (Date.now() - t.pressStartedAt))));
+	}, Math.max(0, dt - (Date.now() - t.pressStartedAt))));
 }
-function Se(e, t) {
-	let n = fe.get(e);
-	if (!n || t.button !== 0 || n.activePointerId !== void 0 || (be(e), !e.hasAttribute("data-mat-state-layer-pressed"))) return;
+function xt(e, t) {
+	let n = mt.get(e);
+	if (!n || t.button !== 0 || n.activePointerId !== void 0 || (yt(e), !e.hasAttribute("data-mat-state-layer-pressed"))) return;
 	n.activePointerId = t.pointerId;
 	let r = (t) => {
-		t.pointerId === n.activePointerId && xe(e);
+		t.pointerId === n.activePointerId && bt(e);
 	};
 	window.addEventListener("pointerup", r), window.addEventListener("pointercancel", r), n.removeGlobalPointerListeners = () => {
 		window.removeEventListener("pointerup", r), window.removeEventListener("pointercancel", r), n.removeGlobalPointerListeners = () => {};
 	};
 }
-function Ce(e, t) {
-	let n = fe.get(e);
-	!n || t.repeat || n.activeKey !== void 0 || !_e(e, t.key) || (be(e), e.hasAttribute("data-mat-state-layer-pressed") && (n.activeKey = t.key));
+function St(e, t) {
+	let n = mt.get(e);
+	!n || t.repeat || n.activeKey !== void 0 || !gt(e, t.key) || (yt(e), e.hasAttribute("data-mat-state-layer-pressed") && (n.activeKey = t.key));
 }
-function we(e, t) {
-	fe.get(e)?.activeKey === t.key && xe(e);
+function Ct(e, t) {
+	mt.get(e)?.activeKey === t.key && bt(e);
 }
-function Te(e) {
-	return !ue.has(e.tagName) && getComputedStyle(e).display !== "contents";
-}
-function Ee(e, t) {
-	if (!Te(e)) {
-		`${e.tagName.toLowerCase()}`;
+function wt(e, t) {
+	if (!pe(e)) {
+		pt(`<${e.tagName.toLowerCase()}> 无法容纳状态层；指令已跳过。`);
 		return;
 	}
-	pe += 1;
-	let n = `--mat-state-layer-${pe}`, r = document.createElement("span");
-	r.className = "mat-state-layer", r.setAttribute("aria-hidden", "true"), r.style.setProperty("position-anchor", n), r.style.backgroundColor = he(me(t.value)), ae(e, n), e.setAttribute(ce, ""), e.prepend(r);
+	ht += 1;
+	let n = `--mat-state-layer-${ht}`, r = document.createElement("span");
+	r.className = "mat-state-layer", r.setAttribute("aria-hidden", "true"), r.style.setProperty("position-anchor", n), r.style.backgroundColor = de(ue(t.value, ft, pt).color, pt), ae(e, n), e.setAttribute(ut, ""), e.prepend(r);
 	let i = {
 		activeKey: void 0,
 		activePointerId: void 0,
@@ -109,10 +366,10 @@ function Ee(e, t) {
 		pressStartedAt: 0,
 		releaseTimer: void 0,
 		removeGlobalPointerListeners: () => {}
-	}, a = (t) => Se(e, t), o = (t) => Ce(e, t), s = (t) => we(e, t), c = () => xe(e), l = new MutationObserver(() => {
-		ge(e) && ye(e);
+	}, a = (t) => xt(e, t), o = (t) => St(e, t), s = (t) => Ct(e, t), c = () => bt(e), l = new MutationObserver(() => {
+		fe(e) && vt(e);
 	});
-	i.observer = l, fe.set(e, i), e.addEventListener("pointerdown", a), e.addEventListener("keydown", o), e.addEventListener("keyup", s), e.addEventListener("blur", c), e.addEventListener("lostpointercapture", c), l.observe(e, {
+	i.observer = l, mt.set(e, i), e.addEventListener("pointerdown", a), e.addEventListener("keydown", o), e.addEventListener("keyup", s), e.addEventListener("blur", c), e.addEventListener("lostpointercapture", c), l.observe(e, {
 		attributeFilter: [
 			"aria-disabled",
 			"disabled",
@@ -124,22 +381,36 @@ function Ee(e, t) {
 		e.removeEventListener("pointerdown", a), e.removeEventListener("keydown", o), e.removeEventListener("keyup", s), e.removeEventListener("blur", c), e.removeEventListener("lostpointercapture", c);
 	};
 }
-function De(e) {
-	let t = fe.get(e);
-	t && (ye(e), t.removeEventListeners(), t.observer.disconnect(), t.layer.remove(), e.removeAttribute(ce), oe(e, t.anchorName), fe.delete(e));
+function Tt(e) {
+	let t = mt.get(e);
+	t && (vt(e), t.removeEventListeners(), t.observer.disconnect(), t.layer.remove(), e.removeAttribute(ut), oe(e, t.anchorName), mt.delete(e));
 }
-var Oe = {
-	mounted: Ee,
+var Et = {
+	mounted: wt,
 	updated(e, t) {
-		let n = fe.get(e);
-		n && (n.layer.style.backgroundColor = he(me(t.value)));
+		let n = mt.get(e);
+		n && (n.layer.style.backgroundColor = de(ue(t.value, ft, pt).color, pt));
 	},
-	unmounted: De
-}, Q = (e, t) => {
+	unmounted: Tt
+}, Dt = Object.freeze({
+	openDelay: 0,
+	closeDelay: 600
+}), Ot = Object.freeze({
+	iconClass: "material-symbols-outlined",
+	useCursor: !1,
+	useRipple: !1,
+	defaults: Object.freeze({ tooltip: Dt })
+}), kt = Symbol("mde-vue-options");
+function At(e) {
+	return e.replace(/^Mat/, "").replace(/^./, (e) => e.toLowerCase());
+}
+//#endregion
+//#region \0plugin-vue:export-helper
+var Q = (e, t) => {
 	let n = e.__vccOpts || e;
 	for (let [e, r] of t) n[e] = r;
 	return n;
-}, ke = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, jt = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatActionBase",
 	inheritAttrs: !1
 }, {
@@ -174,30 +445,30 @@ var Oe = {
 		return e instanceof MouseEvent;
 	} },
 	setup(e, { expose: t, emit: n }) {
-		let r = e, o = n, s = i(() => r.href !== void 0), c = i(() => s.value ? "a" : r.as), l = i(() => c.value === "button"), u = j(null);
-		function d(e) {
+		let r = e, o = n, s = h(kt, Ot), c = i(() => s.useRipple ? void 0 : { disabled: !0 }), l = i(() => r.href !== void 0), u = i(() => l.value ? "a" : r.as), d = i(() => u.value === "button"), f = j(null);
+		function p(e) {
 			if (r.disabled) {
 				e.preventDefault(), e.stopImmediatePropagation();
 				return;
 			}
 			o("click", e);
 		}
-		return t({ root: u }), (t, n) => G((D(), a(F(c.value), _({
+		return t({ root: f }), (t, n) => G((D(), a(F(u.value), _({
 			ref_key: "root",
-			ref: u
+			ref: f
 		}, t.$attrs, {
 			class: ["mat-action-base", {
 				"mat-action-base--disabled": e.disabled,
 				"mat-action-base--use-cursor": e.useCursor,
 				"mat-action-base--focus-ring": e.focusRing
 			}],
-			"aria-disabled": !l.value && e.disabled ? "true" : t.$attrs["aria-disabled"],
-			disabled: l.value ? e.disabled : void 0,
-			href: s.value && !e.disabled ? e.href : void 0,
-			role: s.value && e.disabled ? "link" : t.$attrs.role,
-			tabindex: !l.value && e.disabled ? -1 : t.$attrs.tabindex,
-			type: l.value ? e.type : void 0,
-			onClick: d
+			"aria-disabled": !d.value && e.disabled ? "true" : t.$attrs["aria-disabled"],
+			disabled: d.value ? e.disabled : void 0,
+			href: l.value && !e.disabled ? e.href : void 0,
+			role: l.value && e.disabled ? "link" : t.$attrs.role,
+			tabindex: !d.value && e.disabled ? -1 : t.$attrs.tabindex,
+			type: d.value ? e.type : void 0,
+			onClick: p
 		}), {
 			default: W(() => [P(t.$slots, "default", {}, void 0, !0)]),
 			_: 3
@@ -209,9 +480,9 @@ var Oe = {
 			"role",
 			"tabindex",
 			"type"
-		])), [[z(Oe), { color: "var(--mat-action-state-color, currentcolor)" }]]);
+		])), [[z(Et), { color: "var(--mat-action-state-color, currentcolor)" }], [z(lt), c.value]]);
 	}
-}), [["__scopeId", "data-v-8533911d"]]), Ae = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-afbe7280"]]), Mt = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatButtonBase",
 	inheritAttrs: !1
 }, {
@@ -245,7 +516,7 @@ var Oe = {
 	emits: ["click"],
 	setup(e, { emit: t }) {
 		let n = t;
-		return (t, r) => (D(), a(ke, _(t.$attrs, {
+		return (t, r) => (D(), a(jt, _(t.$attrs, {
 			class: ["mat-button-base", {
 				"mat-button-base--block": e.block,
 				"mat-button-base--use-cursor": e.useCursor,
@@ -265,35 +536,22 @@ var Oe = {
 			"type"
 		]));
 	}
-}), [["__scopeId", "data-v-884e296c"]]), je = Object.freeze({
-	openDelay: 0,
-	closeDelay: 600
-}), Me = Object.freeze({
-	iconClass: "material-symbols-outlined",
-	useCursor: !1,
-	defaults: Object.freeze({ tooltip: je })
-}), Ne = Symbol("mde-vue-options");
-function Pe(e) {
-	return e.replace(/^Mat/, "").replace(/^./, (e) => e.toLowerCase());
-}
-//#endregion
-//#region src/components/button-props.js
-var Fe = [
+}), [["__scopeId", "data-v-884e296c"]]), Nt = [
 	"extra-small",
 	"small",
 	"medium",
 	"large",
 	"extra-large"
-], Ie = ["round", "square"], Le = [
+], Pt = ["round", "square"], Ft = [
 	"button",
 	"submit",
 	"reset"
-], Re = [
+], It = [
 	"primary",
 	"secondary",
 	"tertiary",
 	"error"
-], ze = [
+], Lt = [
 	"primary-container",
 	"secondary-container",
 	"tertiary-container",
@@ -307,7 +565,7 @@ var Fe = [
 	"surface-container",
 	"surface-container-high",
 	"surface-container-highest"
-], Be = {
+], Rt = {
 	"primary-container": "on-primary-container",
 	"secondary-container": "on-secondary-container",
 	"tertiary-container": "on-tertiary-container",
@@ -321,7 +579,7 @@ var Fe = [
 	"surface-container": "on-surface",
 	"surface-container-high": "on-surface",
 	"surface-container-highest": "on-surface"
-}, Ve = [
+}, zt = [
 	"on-primary",
 	"on-secondary",
 	"on-tertiary",
@@ -333,15 +591,15 @@ var Fe = [
 	"on-surface",
 	"on-surface-variant"
 ];
-function He(e) {
-	return typeof e == "string" && Ve.includes(e);
+function Bt(e) {
+	return typeof e == "string" && zt.includes(e);
 }
-function Ue(e) {
-	return e === void 0 || Re.includes(e) || ze.includes(e) || typeof e == "string" && /^#[\da-f]{6}$/i.test(e);
+function Vt(e) {
+	return e === void 0 || It.includes(e) || Lt.includes(e) || typeof e == "string" && /^#[\da-f]{6}$/i.test(e);
 }
 //#endregion
 //#region src/components/icon-props.js
-var We = Object.freeze({
+var Ht = Object.freeze({
 	small: {
 		fontSize: "20px",
 		opticalSize: 20
@@ -358,33 +616,33 @@ var We = Object.freeze({
 		fontSize: "48px",
 		opticalSize: 48
 	}
-}), Ge = /^(?:(?:\d+(?:\.\d+)?|\.\d+)(?:cap|ch|cm|cqb|cqh|cqi|cqmax|cqmin|cqw|dvb|dvh|dvi|dvw|em|ex|ic|in|lh|lvb|lvh|lvi|lvw|mm|pc|pt|px|q|rem|rlh|svb|svh|svi|svw|vb|vh|vi|vmax|vmin|vw|%)|(?:calc|clamp|max|min|var)\(.+\))$/i;
-function Ke(e) {
-	return typeof e == "string" && (Object.hasOwn(We, e) || Ge.test(e));
+}), Ut = /^(?:(?:\d+(?:\.\d+)?|\.\d+)(?:cap|ch|cm|cqb|cqh|cqi|cqmax|cqmin|cqw|dvb|dvh|dvi|dvw|em|ex|ic|in|lh|lvb|lvh|lvi|lvw|mm|pc|pt|px|q|rem|rlh|svb|svh|svi|svw|vb|vh|vi|vmax|vmin|vw|%)|(?:calc|clamp|max|min|var)\(.+\))$/i;
+function Wt(e) {
+	return typeof e == "string" && (Object.hasOwn(Ht, e) || Ut.test(e));
 }
-function qe(e) {
+function Gt(e) {
 	return typeof e == "string" && /^[a-z][\w-]*$/i.test(e);
 }
-function Je(e) {
+function Kt(e) {
 	return typeof e == "number" && e >= 0 && e <= 1;
 }
-function Ye(e) {
+function qt(e) {
 	return typeof e == "number" && e >= 100 && e <= 700;
 }
-function Xe(e) {
+function Jt(e) {
 	return typeof e == "number" && e >= -50 && e <= 200;
 }
-function Ze(e) {
+function Yt(e) {
 	return e === void 0 || typeof e == "number" && e >= 20 && e <= 48;
 }
 //#endregion
 //#region src/material-color.js
-var Qe = [
+var Xt = [
 	"tonal-spot",
 	"neutral",
 	"vibrant",
 	"expressive"
-], $e = {
+], Zt = {
 	primary: "primary",
 	primaryDim: "primary-dim",
 	onPrimary: "on-primary",
@@ -438,71 +696,71 @@ var Qe = [
 	shadow: "shadow",
 	scrim: "scrim",
 	surfaceTint: "surface-tint"
-}, et = {
+}, Qt = {
 	"tonal-spot": ne,
 	neutral: Y,
 	vibrant: X,
 	expressive: te
-}, tt = [
+}, $t = [
 	"primary",
 	"onPrimary",
 	"primaryContainer",
 	"onPrimaryContainer"
-], nt = 64, rt = /* @__PURE__ */ new Map();
-function it(e) {
+], en = 64, tn = /* @__PURE__ */ new Map();
+function nn(e) {
 	if (typeof e != "string" || !/^#(?:[\da-f]{3}|[\da-f]{6})$/i.test(e)) throw TypeError("颜色必须是 #RGB 或 #RRGGBB 格式的十六进制颜色");
 	return e.length === 4 ? `#${[...e.slice(1)].map((e) => e.repeat(2)).join("")}`.toLowerCase() : e.toLowerCase();
 }
-function at({ seedColor: e, isDark: t, schemeVariant: n, contrastLevel: r }) {
-	let i = et[n];
+function rn({ seedColor: e, isDark: t, schemeVariant: n, contrastLevel: r }) {
+	let i = Qt[n];
 	if (!i) throw TypeError(`不支持主题配色变体：${String(n)}`);
-	let a = new i(J.fromInt(re(it(e))), t, r, "2025", "phone");
+	let a = new i(J.fromInt(re(nn(e))), t, r, "2025", "phone");
 	if (a.specVersion !== "2025" || a.platform !== "phone") throw Error("Material Color Utilities 未生成请求的 2025 phone 配色");
 	return a;
 }
-function ot(e, t) {
+function an(e, t) {
 	return Object.freeze(Object.fromEntries(t.map((t) => [t, Z(e[t])])));
 }
-function st(e, t = "tonal-spot", n = 0) {
-	let r = it(e), i = `${r}|${t}|${n}|2025|phone`, a = rt.get(i);
-	if (a) return rt.delete(i), rt.set(i, a), a;
+function on(e, t = "tonal-spot", n = 0) {
+	let r = nn(e), i = `${r}|${t}|${n}|2025|phone`, a = tn.get(i);
+	if (a) return tn.delete(i), tn.set(i, a), a;
 	let o = Object.freeze({
-		light: ot(at({
+		light: an(rn({
 			seedColor: r,
 			isDark: !1,
 			schemeVariant: t,
 			contrastLevel: n
-		}), tt),
-		dark: ot(at({
+		}), $t),
+		dark: an(rn({
 			seedColor: r,
 			isDark: !0,
 			schemeVariant: t,
 			contrastLevel: n
-		}), tt)
+		}), $t)
 	});
-	if (rt.set(i, o), rt.size > nt) {
-		let e = rt.keys().next().value;
-		rt.delete(e);
+	if (tn.set(i, o), tn.size > en) {
+		let e = tn.keys().next().value;
+		tn.delete(e);
 	}
 	return o;
 }
 //#endregion
 //#region src/theme-context.js
-var ct = Symbol("mde-vue-theme"), lt = "tonal-spot", ut = 0;
-function dt(e) {
-	let t = h(ct, null), n = i(() => z(e) !== void 0);
+var sn = Symbol("mde-vue-theme"), cn = "tonal-spot", ln = 0;
+function un(e) {
+	let t = h(sn, null), n = i(() => z(e) !== void 0);
 	return {
 		colorStyle: i(() => {
 			let n = z(e);
-			if (!n || !Ue(n) && !He(n)) return {};
-			if (Re.includes(n)) return {
+			if (!n || !Vt(n) && !Bt(n)) return {};
+			if (It.includes(n)) return {
 				"--mat-accent-color": `var(--mat-sys-color-${n})`,
 				"--mat-on-accent-color": `var(--mat-sys-color-on-${n})`,
 				"--mat-accent-container-color": `var(--mat-sys-color-${n}-container)`,
 				"--mat-on-accent-container-color": `var(--mat-sys-color-on-${n}-container)`
 			};
-			if (ze.includes(n)) {
-				let e = Be[n];
+			if (Lt.includes(n)) {
+				let e = Rt[n];
 				return {
 					"--mat-accent-color": `var(--mat-sys-color-${n})`,
 					"--mat-on-accent-color": `var(--mat-sys-color-${e})`,
@@ -510,11 +768,11 @@ function dt(e) {
 					"--mat-on-accent-container-color": `var(--mat-sys-color-${e})`
 				};
 			}
-			if (He(n)) return {
+			if (Bt(n)) return {
 				"--mat-accent-color": `var(--mat-sys-color-${n})`,
 				"--mat-on-accent-color": `var(--mat-sys-color-${n})`
 			};
-			let r = st(n, t?.schemeVariant.value ?? lt, t?.contrastLevel.value ?? ut);
+			let r = on(n, t?.schemeVariant.value ?? cn, t?.contrastLevel.value ?? ln);
 			return {
 				"--mat-accent-color": `light-dark(${r.light.primary}, ${r.dark.primary})`,
 				"--mat-on-accent-color": `light-dark(${r.light.onPrimary}, ${r.dark.onPrimary})`,
@@ -527,24 +785,24 @@ function dt(e) {
 }
 //#endregion
 //#region src/components/use-mat-props.js
-var ft = Object.freeze({});
-function pt(e) {
+var dn = Object.freeze({});
+function fn(e) {
 	return e.replace(/\B([A-Z])/g, "-$1").toLowerCase();
 }
 function $(e, t) {
 	let n = f();
 	if (!n) throw Error("useMatProps() 必须在组件 setup 中调用");
-	let r = h(Ne, Me).defaults?.[e] ?? ft, a = [.../* @__PURE__ */ new Set([...Object.keys(t), ...Object.keys(r)])], o = {};
+	let r = h(kt, Ot).defaults?.[e] ?? dn, a = [.../* @__PURE__ */ new Set([...Object.keys(t), ...Object.keys(r)])], o = {};
 	return a.forEach((e) => {
 		o[e] = i(() => {
-			let i = n.vnode.props ?? ft;
-			return [e, pt(e)].some((e) => e in i && i[e] !== void 0) ? t[e] : r[e] ?? t[e];
+			let i = n.vnode.props ?? dn;
+			return [e, fn(e)].some((e) => e in i && i[e] !== void 0) ? t[e] : r[e] ?? t[e];
 		});
 	}), k(o);
 }
 //#endregion
 //#region src/components/mat-icon/MatIcon.vue
-var mt = ["src"], ht = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+var pn = ["src"], mn = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatIcon",
 	inheritAttrs: !1
 }, {
@@ -564,32 +822,32 @@ var mt = ["src"], ht = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		size: {
 			type: String,
 			default: "medium",
-			validator: Ke
+			validator: Wt
 		},
 		fill: {
 			type: Number,
 			default: 0,
-			validator: Je
+			validator: Kt
 		},
 		weight: {
 			type: Number,
 			default: 400,
-			validator: Ye
+			validator: qt
 		},
 		grade: {
 			type: Number,
 			default: 0,
-			validator: Xe
+			validator: Jt
 		},
 		opticalSize: {
 			type: Number,
 			default: void 0,
-			validator: Ze
+			validator: Yt
 		},
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		fontColor: {
 			type: String,
@@ -598,7 +856,7 @@ var mt = ["src"], ht = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		as: {
 			type: String,
 			default: "i",
-			validator: qe
+			validator: Gt
 		},
 		iconClass: {
 			type: String,
@@ -606,7 +864,7 @@ var mt = ["src"], ht = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		}
 	},
 	setup(e) {
-		let n = $("icon", e), r = h(Ne, Me), { colorStyle: o, hasExplicitColor: c } = dt(i(() => n.color)), l = i(() => n.iconClass ?? r.iconClass), d = i(() => n.icon !== void 0), f = i(() => We[n.size]?.fontSize ?? n.size), p = i(() => n.opticalSize ?? We[n.size]?.opticalSize ?? 24), m = i(() => ({
+		let n = $("icon", e), r = h(kt, Ot), { colorStyle: o, hasExplicitColor: c } = un(i(() => n.color)), l = i(() => n.iconClass ?? r.iconClass), d = i(() => n.icon !== void 0), f = i(() => Ht[n.size]?.fontSize ?? n.size), p = i(() => n.opticalSize ?? Ht[n.size]?.opticalSize ?? 24), m = i(() => ({
 			...o.value,
 			"--mat-icon-size": f.value,
 			display: "inline-flex",
@@ -623,11 +881,11 @@ var mt = ["src"], ht = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				class: "mat-icon__image",
 				src: z(n).src,
 				alt: ""
-			}, null, 8, mt))]),
+			}, null, 8, pn))]),
 			_: 3
 		}, 16, ["class", "style"]));
 	}
-}), [["__scopeId", "data-v-b3defc6b"]]), gt = /^-?\d+(\.\d+)?$/, _t = /* @__PURE__ */ new Set([
+}), [["__scopeId", "data-v-b3defc6b"]]), hn = /^-?\d+(\.\d+)?$/, gn = /* @__PURE__ */ new Set([
 	"auto",
 	"contain",
 	"fit-content",
@@ -639,40 +897,40 @@ var mt = ["src"], ht = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	"revert-layer",
 	"stretch",
 	"unset"
-]), vt = /^[-+]?(?:\d+\.?(?:\d*)?|\.\d+)(?:%|cap|ch|cm|cqb|cqh|cqi|cqw|cqmax|cqmin|dvb|dvh|dvi|dvw|em|ex|ic|in|lh|lvb|lvh|lvi|lvw|mm|pc|pt|px|q|rem|rlh|svb|svh|svi|svw|vb|vh|vi|vmax|vmin|vw)$/i, yt = /^(?:anchor-size|calc|calc-size|clamp|env|fit-content|max|min|var)\(.+\)$/i;
-function bt(e) {
+]), _n = /^[-+]?(?:\d+\.?(?:\d*)?|\.\d+)(?:%|cap|ch|cm|cqb|cqh|cqi|cqw|cqmax|cqmin|dvb|dvh|dvi|dvw|em|ex|ic|in|lh|lvb|lvh|lvi|lvw|mm|pc|pt|px|q|rem|rlh|svb|svh|svi|svw|vb|vh|vi|vmax|vmin|vw)$/i, vn = /^(?:anchor-size|calc|calc-size|clamp|env|fit-content|max|min|var)\(.+\)$/i;
+function yn(e) {
 	if (typeof e == "number") return Number.isFinite(e) ? e : NaN;
 	if (typeof e == "string") {
 		let t = e.trim();
-		return t && gt.test(t) ? Number(t) : NaN;
+		return t && hn.test(t) ? Number(t) : NaN;
 	}
 	return NaN;
 }
-function xt(e, { positive: t = !1, max: n } = {}) {
-	let r = bt(e);
+function bn(e, { positive: t = !1, max: n } = {}) {
+	let r = yn(e);
 	return !Number.isFinite(r) || (t ? r <= 0 : r < 0) ? !1 : n === void 0 || r <= n;
 }
-function St(e, t) {
+function xn(e, t) {
 	if (typeof e != "string") return !1;
 	let n = e.trim();
 	return !n || /[;{}]/.test(n) ? !1 : typeof CSS > "u" || typeof CSS.supports != "function" || CSS.supports(t, n);
 }
-function Ct(e, { property: t, positive: n = !1, max: r, allowUndefined: i = !0, allowNegative: a = !1 } = {}) {
+function Sn(e, { property: t, positive: n = !1, max: r, allowUndefined: i = !0, allowNegative: a = !1 } = {}) {
 	if (e === void 0) return i;
-	if (typeof e == "number" || typeof e == "string" && gt.test(e.trim())) {
+	if (typeof e == "number" || typeof e == "string" && hn.test(e.trim())) {
 		if (a) {
-			let t = bt(e);
+			let t = yn(e);
 			return Number.isFinite(t) && (r === void 0 || t <= r);
 		}
-		return xt(e, {
+		return bn(e, {
 			positive: n,
 			max: r
 		});
 	}
-	return typeof e != "string" || !t ? !1 : St(e, t);
+	return typeof e != "string" || !t ? !1 : xn(e, t);
 }
-function wt(e, { allowNegative: t = !1 } = {}) {
-	let n = Ct(e, {
+function Cn(e, { allowNegative: t = !1 } = {}) {
+	let n = Sn(e, {
 		allowNegative: t,
 		allowUndefined: !1,
 		property: "block-size"
@@ -680,43 +938,43 @@ function wt(e, { allowNegative: t = !1 } = {}) {
 	if (!n || typeof e != "string") return n;
 	if (typeof CSS < "u" && typeof CSS.supports == "function") return !0;
 	let r = e.trim().toLowerCase();
-	return gt.test(r) ? !0 : _t.has(r) || vt.test(r) || yt.test(r);
+	return hn.test(r) ? !0 : gn.has(r) || _n.test(r) || vn.test(r);
 }
-function Tt(e, { property: t, positive: n = !1, max: r, fallback: i, allowNegative: a = !1 } = {}) {
-	if (Ct(e, {
+function wn(e, { property: t, positive: n = !1, max: r, fallback: i, allowNegative: a = !1 } = {}) {
+	if (Sn(e, {
 		property: t,
 		positive: n,
 		max: r,
 		allowUndefined: !1,
 		allowNegative: a
 	})) {
-		let t = bt(e);
+		let t = yn(e);
 		return Number.isFinite(t) ? t === 0 ? "0" : `${t}px` : e.trim();
 	}
 	return i;
 }
-function Et(e, { property: t, positive: n = !1, fallback: r } = {}) {
-	if (Ct(e, {
+function Tn(e, { property: t, positive: n = !1, fallback: r } = {}) {
+	if (Sn(e, {
 		property: t,
 		positive: n,
 		allowUndefined: !1
 	})) {
-		let t = bt(e);
+		let t = yn(e);
 		return Number.isFinite(t) ? String(t) : e.trim();
 	}
 	return r;
 }
-function Dt(e, { allowUndefined: t = !0 } = {}) {
-	return e === void 0 ? t : typeof e == "number" || typeof e == "string" && gt.test(e.trim()) ? xt(e) : !e || Array.isArray(e) ? !1 : ["start", "end"].every((t) => e[t] === void 0 || xt(e[t]));
+function En(e, { allowUndefined: t = !0 } = {}) {
+	return e === void 0 ? t : typeof e == "number" || typeof e == "string" && hn.test(e.trim()) ? bn(e) : !e || Array.isArray(e) ? !1 : ["start", "end"].every((t) => e[t] === void 0 || bn(e[t]));
 }
-function Ot(e, t) {
-	let n = bt(e);
+function Dn(e, t) {
+	let n = yn(e);
 	if (Number.isFinite(n)) return {
 		start: n,
 		end: n
 	};
 	function r(e) {
-		let n = bt(e);
+		let n = yn(e);
 		return Number.isFinite(n) ? n : t;
 	}
 	return {
@@ -724,19 +982,19 @@ function Ot(e, t) {
 		end: r(e?.end ?? t)
 	};
 }
-function kt(e, { allowUndefined: t = !0 } = {}) {
-	return e === void 0 ? t : xt(e);
+function On(e, { allowUndefined: t = !0 } = {}) {
+	return e === void 0 ? t : bn(e);
 }
-function At(e, t = 0) {
-	return xt(e) ? bt(e) : t;
+function kn(e, t = 0) {
+	return bn(e) ? yn(e) : t;
 }
-function jt(e, { positive: t = !1, fallback: n, allowNegative: r = !1 } = {}) {
-	let i = bt(e);
+function An(e, { positive: t = !1, fallback: n, allowNegative: r = !1 } = {}) {
+	let i = yn(e);
 	return !Number.isFinite(i) || (t ? i <= 0 : !r && i < 0) ? n : i;
 }
 //#endregion
 //#region src/components/mat-shape/shape-paths.js
-var Mt = Object.freeze({
+var jn = Object.freeze({
 	circle: "shape(from 100% 50%, curve to 97.573% 65.326% with 100% 55.173% / 99.191% 60.345%, curve to 79.556% 90.124% with 94.336% 75.287% / 88.029% 83.967%, curve to 50.405% 99.595% with 71.083% 96.28% / 60.878% 99.595%, curve to 21.253% 90.124% with 39.931% 99.595% / 29.726% 96.28%, curve to 3.236% 65.326% with 12.78% 83.967% / 6.473% 75.287%, curve to 3.236% 34.674% with 0% 55.365% / 0% 44.635%, curve to 21.253% 9.876% with 6.473% 24.713% / 12.78% 16.033%, curve to 50.405% 0.405% with 29.726% 3.72% / 39.931% 0.405%, curve to 79.556% 9.876% with 60.878% 0.405% / 71.083% 3.72%, curve to 97.573% 34.674% with 88.029% 16.033% / 94.336% 24.713%, curve to 100% 50% with 99.191% 39.655% / 100% 44.827%, close)",
 	square: "shape(from 91.213% 91.213%, curve to 70% 100% with 85.784% 96.642% / 78.284% 100%, curve to 30% 100% with 56.667% 100% / 43.333% 100%, curve to 0% 70% with 13.431% 100% / 0% 86.569%, curve to 0% 30% with 0% 56.667% / 0% 43.333%, curve to 30% 0% with 0% 13.431% / 13.431% 0%, curve to 70% 0% with 43.333% 0% / 56.667% 0%, curve to 100% 30% with 86.569% 0% / 100% 13.431%, curve to 100% 70% with 100% 43.333% / 100% 56.667%, curve to 91.213% 91.213% with 100% 78.284% / 96.642% 85.784%, close)",
 	slanted: "shape(from 87.553% 91.402%, curve to 85.041% 93.306% with 86.773% 92.106% / 85.933% 92.742%, curve to 61.38% 96.138% with 80.464% 96.198% / 74.103% 96.178%, curve to 20.195% 96.007% with 47.652% 96.094% / 33.923% 96.051%, curve to 18.5% 95.994% with 19.245% 96.004% / 18.769% 96.003%, curve to 0.749% 76.289% with 8.063% 95.655% / 0% 86.705%, curve to 0.912% 74.602% with 0.768% 76.021% / 0.816% 75.548%, curve to 5.015% 34.136% with 2.28% 61.113% / 3.647% 47.625%, curve to 10.293% 10.898% with 6.298% 21.478% / 6.94% 15.149%, curve to 14.959% 6.694% with 11.598% 9.242% / 13.176% 7.821%, curve to 38.62% 3.862% with 19.536% 3.802% / 25.897% 3.822%, curve to 79.805% 3.993% with 52.348% 3.906% / 66.077% 3.949%, curve to 81.5% 4.006% with 80.755% 3.996% / 81.231% 3.997%, curve to 99.251% 23.711% with 91.937% 4.345% / 100% 13.295%, curve to 99.088% 25.398% with 99.232% 23.979% / 99.184% 24.452%, curve to 94.985% 65.864% with 97.72% 38.887% / 96.353% 52.375%, curve to 89.707% 89.102% with 93.702% 78.522% / 93.06% 84.851%, curve to 87.553% 91.402% with 89.054% 89.93% / 88.334% 90.699%, close)",
@@ -773,11 +1031,11 @@ var Mt = Object.freeze({
 	bun: "shape(from 79.6% 50%, curve to 80.694% 50.345% with 79.965% 50.115% / 80.329% 50.23%, curve to 89.048% 54.847% with 83.737% 51.306% / 86.572% 52.834%, curve to 98.351% 76.156% with 95.417% 60.024% / 98.884% 67.965%, curve to 98.347% 76.208% with 98.35% 76.173% / 98.349% 76.191%, curve to 72.958% 100% with 97.477% 89.591% / 86.369% 100%, curve to 27.042% 100% with 57.653% 100% / 42.347% 100%, curve to 1.653% 76.208% with 13.631% 100% / 2.523% 89.591%, curve to 1.649% 76.156% with 1.651% 76.191% / 1.65% 76.173%, curve to 10.952% 54.847% with 1.116% 67.965% / 4.583% 60.024%, curve to 19.306% 50.345% with 13.428% 52.834% / 16.263% 51.306%, curve to 20.4% 50% with 19.671% 50.23% / 20.035% 50.115%, curve to 19.306% 49.655% with 20.035% 49.885% / 19.671% 49.77%, curve to 10.952% 45.153% with 16.263% 48.694% / 13.428% 47.166%, curve to 1.649% 23.844% with 4.583% 39.976% / 1.116% 32.035%, curve to 1.653% 23.792% with 1.65% 23.827% / 1.651% 23.809%, curve to 27.042% 0% with 2.523% 10.409% / 13.631% 0%, curve to 72.958% 0% with 42.347% 0% / 57.653% 0%, curve to 98.347% 23.792% with 86.369% 0% / 97.477% 10.409%, curve to 98.351% 23.844% with 98.349% 23.809% / 98.35% 23.827%, curve to 89.048% 45.153% with 98.884% 32.035% / 95.417% 39.976%, curve to 80.694% 49.655% with 86.572% 47.166% / 83.737% 48.694%, curve to 79.6% 50% with 80.329% 49.77% / 79.965% 49.885%, close)",
 	heart: "shape(from 50% 28.592%, curve to 50.443% 28.391% with 50.163% 28.592% / 50.326% 28.525%, curve to 61.997% 15.175% with 54.294% 23.986% / 58.146% 19.581%, curve to 93.632% 15.911% with 70.461% 5.494% / 85.628% 5.847%, curve to 93.266% 43.133% with 100% 23.918% / 99.847% 35.301%, curve to 50.159% 94.432% with 78.897% 60.233% / 64.528% 77.332%, curve to 50% 94.506% with 50.12% 94.479% / 50.061% 94.506%, curve to 49.841% 94.432% with 49.939% 94.506% / 49.88% 94.479%, curve to 6.734% 43.133% with 35.472% 77.332% / 21.103% 60.233%, curve to 6.368% 15.911% with 0.153% 35.301% / 0% 23.918%, curve to 38.003% 15.175% with 14.372% 5.847% / 29.539% 5.494%, curve to 49.557% 28.391% with 41.854% 19.581% / 45.706% 23.986%, curve to 50% 28.592% with 49.674% 28.525% / 49.837% 28.592%, close)"
 });
-Object.freeze(Object.keys(Mt));
-function Nt(e) {
-	return typeof e == "string" && Object.hasOwn(Mt, e);
+Object.freeze(Object.keys(jn));
+function Mn(e) {
+	return typeof e == "string" && Object.hasOwn(jn, e);
 }
-var Pt = Object.freeze([
+var Nn = Object.freeze([
 	"soft-burst",
 	"9-sided-cookie",
 	"pentagon",
@@ -785,7 +1043,7 @@ var Pt = Object.freeze([
 	"sunny",
 	"4-sided-cookie",
 	"oval"
-]), Ft = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+]), Pn = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatShape",
 	inheritAttrs: !1
 }, {
@@ -794,12 +1052,12 @@ var Pt = Object.freeze([
 		name: {
 			type: String,
 			default: "circle",
-			validator: Nt
+			validator: Mn
 		},
 		size: {
 			type: [Number, String],
 			default: 48,
-			validator: (e) => Ct(e, {
+			validator: (e) => Sn(e, {
 				property: "width",
 				positive: !0
 			})
@@ -807,24 +1065,24 @@ var Pt = Object.freeze([
 		color: {
 			type: String,
 			default: "primary",
-			validator: Ue
+			validator: Vt
 		},
 		as: {
 			type: String,
 			default: "div",
-			validator: qe
+			validator: Gt
 		}
 	},
 	setup(e) {
-		let t = $("shape", e), { colorStyle: n } = dt(i(() => t.color)), r = i(() => Tt(t.size, {
+		let t = $("shape", e), { colorStyle: n } = un(i(() => t.color)), r = i(() => wn(t.size, {
 			property: "width",
 			positive: !0,
 			fallback: "48px"
-		})), o = i(() => Nt(t.name) ? t.name : "circle"), s = i(() => ({
+		})), o = i(() => Mn(t.name) ? t.name : "circle"), s = i(() => ({
 			...n.value,
 			inlineSize: r.value,
 			blockSize: r.value,
-			clipPath: Mt[o.value]
+			clipPath: jn[o.value]
 		}));
 		return (e, n) => (D(), a(F(z(t).as), _(e.$attrs, {
 			class: "mat-shape",
@@ -834,16 +1092,16 @@ var Pt = Object.freeze([
 			_: 3
 		}, 16, ["style"]));
 	}
-}), [["__scopeId", "data-v-d3e79d42"]]), It = Symbol("mat-loading-compact");
-function Lt(e) {
-	O(It, e);
+}), [["__scopeId", "data-v-d3e79d42"]]), Fn = Symbol("mat-loading-compact");
+function In(e) {
+	O(Fn, e);
 }
-function Rt() {
-	return h(It, null);
+function Ln() {
+	return h(Fn, null);
 }
 //#endregion
 //#region src/components/mat-loading/MatLoading.vue
-var zt = ["aria-valuenow"], Bt = 48, Vt = 24, Ht = 240, Ut = 650, Wt = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+var Rn = ["aria-valuenow"], zn = 48, Bn = 24, Vn = 240, Hn = 650, Un = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatLoading",
 	inheritAttrs: !1
 }, {
@@ -861,7 +1119,7 @@ var zt = ["aria-valuenow"], Bt = 48, Vt = 24, Ht = 240, Ut = 650, Wt = /*#__PURE
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		progress: {
 			type: Number,
@@ -870,19 +1128,19 @@ var zt = ["aria-valuenow"], Bt = 48, Vt = 24, Ht = 240, Ut = 650, Wt = /*#__PURE
 		}
 	},
 	setup(e) {
-		let t = $("loading", e), { colorStyle: n } = dt(i(() => t.color)), r = Rt(), a = j(0), o, c = 0, l, u, f = i(() => {
+		let t = $("loading", e), { colorStyle: n } = un(i(() => t.color)), r = Ln(), a = j(0), o, c = 0, l, u, f = i(() => {
 			let e = r?.value;
-			if (typeof e == "number" && Number.isFinite(e) && e > 0) return Math.min(e, Ht);
-			let n = jt(t.size, {
+			if (typeof e == "number" && Number.isFinite(e) && e > 0) return Math.min(e, Vn);
+			let n = An(t.size, {
 				positive: !0,
-				fallback: Bt
+				fallback: zn
 			});
-			return Math.min(Math.max(n, Vt), Ht);
+			return Math.min(Math.max(n, Bn), Vn);
 		}), p = i(() => ({ "--mat-loading-size": `${f.value}px` })), m = i(() => Number.isFinite(t.progress)), h = i(() => m.value ? Math.max(t.progress, 0) : 0), g = i(() => Math.min(h.value, 1)), v = i(() => m.value ? { "--mat-loading-determinate-morph-progress": `${g.value}` } : {}), y = i(() => ({
 			...n.value,
 			...p.value,
 			...v.value
-		})), b = i(() => f.value * (38 / 48)), S = i(() => m.value ? g.value >= 1 ? "soft-burst" : "circle" : Pt[a.value]), w = i(() => {
+		})), b = i(() => f.value * (38 / 48)), S = i(() => m.value ? g.value >= 1 ? "soft-burst" : "circle" : Nn[a.value]), w = i(() => {
 			if (m.value) return { rotate: String(-h.value * 180) + "deg" };
 		});
 		function E() {
@@ -897,7 +1155,7 @@ var zt = ["aria-valuenow"], Bt = 48, Vt = 24, Ht = 240, Ut = 650, Wt = /*#__PURE
 		function A(e) {
 			if (o = void 0, m.value) return;
 			l !== void 0 && (c += e - l), l = e;
-			let t = Math.floor(c / Ut) % Pt.length;
+			let t = Math.floor(c / Hn) % Nn.length;
 			t !== a.value && (a.value = t), E() || (o = globalThis.requestAnimationFrame(A));
 		}
 		function M() {
@@ -923,7 +1181,7 @@ var zt = ["aria-valuenow"], Bt = 48, Vt = 24, Ht = 240, Ut = 650, Wt = /*#__PURE
 			"aria-valuemin": "0",
 			"aria-valuemax": "1",
 			"aria-valuenow": m.value ? g.value : void 0
-		}), [d(Ft, {
+		}), [d(Pn, {
 			class: "mat-loading__active-indicator",
 			name: S.value,
 			size: b.value,
@@ -935,9 +1193,9 @@ var zt = ["aria-valuenow"], Bt = 48, Vt = 24, Ht = 240, Ut = 650, Wt = /*#__PURE
 			"size",
 			"color",
 			"style"
-		])], 16, zt));
+		])], 16, Rn));
 	}
-}), [["__scopeId", "data-v-b810f3e1"]]), Gt = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-b810f3e1"]]), Wn = /*@__PURE__*/ Object.assign({
 	name: "MatHover",
 	inheritAttrs: !1
 }, {
@@ -954,12 +1212,12 @@ var zt = ["aria-valuenow"], Bt = 48, Vt = 24, Ht = 240, Ut = 650, Wt = /*#__PURE
 		closeDelay: {
 			type: [Number, String],
 			default: 0,
-			validator: (e) => kt(e, { allowUndefined: !1 })
+			validator: (e) => On(e, { allowUndefined: !1 })
 		},
 		openDelay: {
 			type: [Number, String],
 			default: 0,
-			validator: (e) => kt(e, { allowUndefined: !1 })
+			validator: (e) => On(e, { allowUndefined: !1 })
 		},
 		target: {
 			type: [String, Object],
@@ -977,7 +1235,7 @@ var zt = ["aria-valuenow"], Bt = 48, Vt = 24, Ht = 240, Ut = 650, Wt = /*#__PURE
 		}
 		function v(e, t) {
 			g();
-			let n = At(t, 0);
+			let n = kn(t, 0);
 			if (n === 0) {
 				_(e);
 				return;
@@ -1035,10 +1293,10 @@ var zt = ["aria-valuenow"], Bt = 48, Vt = 24, Ht = 240, Ut = 650, Wt = /*#__PURE
 });
 //#endregion
 //#region src/components/motion-controller.js
-function Kt() {
+function Gn() {
 	return globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? !1;
 }
-function qt() {
+function Kn() {
 	let e = 0, t;
 	function n() {
 		e += 1, t !== void 0 && (globalThis.clearTimeout(t), t = void 0);
@@ -1051,7 +1309,7 @@ function qt() {
 	function i(t, i, a, { fallbackWhenIdle: o = !1 } = {}) {
 		n();
 		let s = e;
-		if (Kt()) {
+		if (Gn()) {
 			a();
 			return;
 		}
@@ -1075,7 +1333,7 @@ function qt() {
 }
 //#endregion
 //#region src/components/close-motion.js
-function Jt({ motion: e = qt() } = {}) {
+function qn({ motion: e = Kn() } = {}) {
 	async function t({ canStart: t = !0, duration: n, getElement: r, isActive: i, onFinish: a, onStart: o }) {
 		(typeof t == "function" ? t() : t) && (e.cancel(), o(), await v(), i() && e.wait(r(), n, () => {
 			i() && a();
@@ -1088,24 +1346,24 @@ function Jt({ motion: e = qt() } = {}) {
 }
 //#endregion
 //#region src/components/mat-app-root/mat-app-root-context.js
-var Yt = Symbol("mat-app-root"), Xt = /* @__PURE__ */ new WeakMap();
-function Zt(e, t) {
-	Xt.set(e, t);
+var Jn = Symbol("mat-app-root"), Yn = /* @__PURE__ */ new WeakMap();
+function Xn(e, t) {
+	Yn.set(e, t);
 }
-function Qt(e) {
-	Xt.delete(e);
+function Zn(e) {
+	Yn.delete(e);
 }
-function $t(e) {
-	return Xt.get(e) ?? null;
+function Qn(e) {
+	return Yn.get(e) ?? null;
 }
-function en() {
-	let e = h(Yt, null);
+function $n() {
+	let e = h(Jn, null);
 	if (!e) throw Error("useMatApp() 必须在 MatAppRoot 内调用");
 	return e.publicContext;
 }
 //#endregion
 //#region src/components/tooltip-position.js
-var tn = [
+var er = [
 	"top",
 	"top-start",
 	"top-end",
@@ -1118,13 +1376,13 @@ var tn = [
 	"left",
 	"left-start",
 	"left-end"
-], nn = {
+], tr = {
 	bottom: "top",
 	left: "right",
 	right: "left",
 	top: "bottom"
 };
-function rn(e) {
+function nr(e) {
 	let t = Number(e.left) || 0, n = Number(e.top) || 0, r = Number.isFinite(Number(e.width)) ? Number(e.width) : Math.max(0, (Number(e.right) || t) - t), i = Number.isFinite(Number(e.height)) ? Number(e.height) : Math.max(0, (Number(e.bottom) || n) - n);
 	return {
 		bottom: Number.isFinite(Number(e.bottom)) ? Number(e.bottom) : n + i,
@@ -1135,40 +1393,40 @@ function rn(e) {
 		width: r
 	};
 }
-function an(e, t, n) {
+function rr(e, t, n) {
 	return e === "start" ? t.left : e === "end" ? t.right - n.width : t.left + (t.width - n.width) / 2;
 }
-function on(e, t, n) {
+function ir(e, t, n) {
 	return e === "start" ? t.top : e === "end" ? t.bottom - n.height : t.top + (t.height - n.height) / 2;
 }
-function sn(e, t, n) {
+function ar(e, t, n) {
 	return Math.min(n, Math.max(t, e));
 }
-function cn(e, t, n, r, i) {
+function or(e, t, n, r, i) {
 	return e === "top" ? t.top - r - i : e === "bottom" ? n.height - t.bottom - r - i : e === "left" ? t.left - r - i : n.width - t.right - r - i;
 }
-function ln(e, t, n, r, i) {
+function sr(e, t, n, r, i) {
 	return e === "top" || e === "bottom" ? {
-		left: an(t, n, r),
+		left: rr(t, n, r),
 		top: e === "top" ? n.top - r.height - i : n.bottom + i
 	} : {
 		left: e === "left" ? n.left - r.width - i : n.right + i,
-		top: on(t, n, r)
+		top: ir(t, n, r)
 	};
 }
-function un(e) {
+function cr(e) {
 	return [
 		e,
-		nn[e],
+		tr[e],
 		...[
 			"top",
 			"right",
 			"bottom",
 			"left"
-		].filter((t) => t !== e && t !== nn[e])
+		].filter((t) => t !== e && t !== tr[e])
 	];
 }
-function dn(e, t) {
+function lr(e, t) {
 	return {
 		bottom: e.top + t.height,
 		left: e.left,
@@ -1176,51 +1434,51 @@ function dn(e, t) {
 		top: e.top
 	};
 }
-function fn(e, t) {
+function ur(e, t) {
 	return e.left < t.right && e.right > t.left && e.top < t.bottom && e.bottom > t.top;
 }
-function pn(e, t, n, r, i, a, o, s) {
-	let c = ln(e, t, n, r, o), l = Math.max(a, i.width - r.width - a), u = Math.max(a, i.height - r.height - a), d = {
-		left: sn(c.left, a, l),
-		top: sn(c.top, a, u)
-	}, f = dn(d, r);
-	return fn(f, n) || s.some((e) => fn(f, rn(e))) ? null : d;
+function dr(e, t, n, r, i, a, o, s) {
+	let c = sr(e, t, n, r, o), l = Math.max(a, i.width - r.width - a), u = Math.max(a, i.height - r.height - a), d = {
+		left: ar(c.left, a, l),
+		top: ar(c.top, a, u)
+	}, f = lr(d, r);
+	return ur(f, n) || s.some((e) => ur(f, nr(e))) ? null : d;
 }
-function mn({ avoidRects: e = [], gap: t = 4, location: n = "top", margin: r = 8, targetRect: i, tooltipRect: a, viewport: o = {
+function fr({ avoidRects: e = [], gap: t = 4, location: n = "top", margin: r = 8, targetRect: i, tooltipRect: a, viewport: o = {
 	height: window.innerHeight,
 	width: window.innerWidth
 } }) {
-	let s = rn(i), c = rn(a), [l, u = "center"] = (tn.includes(n) ? n : "top").split("-"), d = u === "start" || u === "end" ? u : "center", f = l === "top" || l === "bottom" ? c.height : c.width, p = cn(l, s, o, r, t), m = nn[l], h = cn(m, s, o, r, t), g = f > p && h > p ? m : l, _ = Math.max(r, o.width - c.width - r), v = Math.max(r, o.height - c.height - r), y = un(g), b = e.map((e) => rn(e)), x = y.find((e) => cn(e, s, o, r, t) >= f && pn(e, d, s, c, o, r, t, b)) ?? y.find((e) => pn(e, d, s, c, o, r, t, b)) ?? g, S = d === "center" ? x : `${x}-${d}`, C = ln(x, d, s, c, t);
+	let s = nr(i), c = nr(a), [l, u = "center"] = (er.includes(n) ? n : "top").split("-"), d = u === "start" || u === "end" ? u : "center", f = l === "top" || l === "bottom" ? c.height : c.width, p = or(l, s, o, r, t), m = tr[l], h = or(m, s, o, r, t), g = f > p && h > p ? m : l, _ = Math.max(r, o.width - c.width - r), v = Math.max(r, o.height - c.height - r), y = cr(g), b = e.map((e) => nr(e)), x = y.find((e) => or(e, s, o, r, t) >= f && dr(e, d, s, c, o, r, t, b)) ?? y.find((e) => dr(e, d, s, c, o, r, t, b)) ?? g, S = d === "center" ? x : `${x}-${d}`, C = sr(x, d, s, c, t);
 	return {
-		left: Math.round(sn(C.left, r, _)),
+		left: Math.round(ar(C.left, r, _)),
 		location: S,
-		top: Math.round(sn(C.top, r, v))
+		top: Math.round(ar(C.top, r, v))
 	};
 }
 //#endregion
 //#region src/components/tooltip-stack.js
-var hn = null, gn = "pointer";
+var pr = null, mr = "pointer";
 typeof window < "u" && (window.addEventListener("keydown", () => {
-	gn = "keyboard";
+	mr = "keyboard";
 }, !0), window.addEventListener("pointerdown", () => {
-	gn = "pointer";
+	mr = "pointer";
 }, !0));
-function _n() {
-	return gn === "keyboard";
+function hr() {
+	return mr === "keyboard";
 }
-function vn(e) {
-	hn && hn !== e && hn.close(), hn = e;
+function gr(e) {
+	pr && pr !== e && pr.close(), pr = e;
 }
-function yn(e) {
-	hn === e && (hn = null);
+function _r(e) {
+	pr === e && (pr = null);
 }
-function bn() {
-	return hn !== null;
+function vr() {
+	return pr !== null;
 }
 //#endregion
 //#region src/components/toolbar-overlay.js
-var xn = /* @__PURE__ */ new Map(), Sn = /* @__PURE__ */ new Set(), Cn = 0;
-function wn(e) {
+var yr = /* @__PURE__ */ new Map(), br = /* @__PURE__ */ new Set(), xr = 0;
+function Sr(e) {
 	let t = Number(e?.left) || 0, n = Number(e?.top) || 0, r = Number.isFinite(Number(e?.width)) ? Number(e.width) : Math.max(0, (Number(e?.right) || t) - t), i = Number.isFinite(Number(e?.height)) ? Number(e.height) : Math.max(0, (Number(e?.bottom) || n) - n);
 	return {
 		bottom: Number.isFinite(Number(e?.bottom)) ? Number(e.bottom) : n + i,
@@ -1231,67 +1489,67 @@ function wn(e) {
 		width: r
 	};
 }
-function Tn() {
-	Sn.forEach((e) => e());
+function Cr() {
+	br.forEach((e) => e());
 }
-function En() {
-	xn.forEach((e, t) => {
-		e.element.isConnected || xn.delete(t);
+function wr() {
+	yr.forEach((e, t) => {
+		e.element.isConnected || yr.delete(t);
 	});
 }
-function Dn(e, t = {}) {
+function Tr(e, t = {}) {
 	if (!(e instanceof HTMLElement)) throw TypeError("registerToolbar element 必须是 HTMLElement");
-	let n = Cn;
-	Cn += 1;
+	let n = xr;
+	xr += 1;
 	let r = {
 		element: e,
 		getRect: t.getRect ?? (() => e.getBoundingClientRect()),
 		isBottom: t.isBottom ?? (() => !1)
 	}, i = !0;
-	return xn.set(n, r), Tn(), {
+	return yr.set(n, r), Cr(), {
 		unregister() {
-			i && (i = !1, xn.delete(n), Tn());
+			i && (i = !1, yr.delete(n), Cr());
 		},
 		update() {
-			i && Tn();
+			i && Cr();
 		}
 	};
 }
-function On() {
-	return En(), [...xn.values()].flatMap((e) => {
+function Er() {
+	return wr(), [...yr.values()].flatMap((e) => {
 		try {
-			return [wn(e.getRect())];
+			return [Sr(e.getRect())];
 		} catch {
 			return [];
 		}
 	});
 }
-function kn(e = window.innerHeight) {
-	En();
+function Dr(e = window.innerHeight) {
+	wr();
 	let t = Number.isFinite(Number(e)) ? Number(e) : 0;
-	return Math.max(0, ...[...xn.values()].filter((e) => e.isBottom()).flatMap((e) => {
+	return Math.max(0, ...[...yr.values()].filter((e) => e.isBottom()).flatMap((e) => {
 		try {
-			return [Math.max(0, t - wn(e.getRect()).top)];
+			return [Math.max(0, t - Sr(e.getRect()).top)];
 		} catch {
 			return [];
 		}
 	}));
 }
-function An(e) {
+function Or(e) {
 	if (typeof e != "function") throw TypeError("subscribeToolbarOverlay callback 必须是函数");
-	return Sn.add(e), e(), () => {
-		Sn.delete(e);
+	return br.add(e), e(), () => {
+		br.delete(e);
 	};
 }
 //#endregion
 //#region src/components/mat-tooltip/MatTooltip.vue
-var jn = ["id", "data-location"], Mn = {
+var kr = ["id", "data-location"], Ar = {
 	key: 0,
 	class: "mat-tooltip__subhead mat-sys-typescale-title-small"
-}, Nn = { class: "mat-tooltip__content mat-sys-typescale-body-medium" }, Pn = {
+}, jr = { class: "mat-tooltip__content mat-sys-typescale-body-medium" }, Mr = {
 	key: 1,
 	class: "mat-tooltip__actions"
-}, Fn = 600, In = 150, Ln = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, Nr = 600, Pr = 150, Fr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatTooltip",
 	inheritAttrs: !1
 }, {
@@ -1325,23 +1583,23 @@ var jn = ["id", "data-location"], Mn = {
 			type: String,
 			default: "top",
 			validator(e) {
-				return tn.includes(e);
+				return er.includes(e);
 			}
 		},
 		openDelay: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => kt(e)
+			validator: (e) => On(e)
 		},
 		closeDelay: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => kt(e)
+			validator: (e) => On(e)
 		}
 	},
 	emits: { "update:modelValue": (e) => typeof e == "boolean" },
 	setup(e, { emit: r }) {
-		let l = e, d = r, p = $("tooltip", l), m = ee(), g = V(), y = f(), b = h(Yt, null), x = j(null), O = L(null), k = { value: O }, A = L(null), M = j(!1), N = j(null), F = j(!1), I = j(!1), U = j(!1), W = j("closed"), G = j("top"), K = j({}), q = j(!1), J = `${B().replace(/[^\w-]/g, "-")}-tooltip`, te = i(() => typeof m.id == "string" ? m.id : J), Y = i(() => p.content === void 0 ? !!g.default : p.content.length > 0), ne = i(() => p.subhead === void 0 ? !!g.subhead : p.subhead.length > 0), X = i(() => p.rich || ne.value || !!g.action), re = i(() => !!g.activator), Z = y?.vnode.props ?? {}, ie = Object.prototype.hasOwnProperty.call(Z, "modelValue") || Object.prototype.hasOwnProperty.call(Z, "model-value"), ae, oe, se = qt(), ce = Jt({ motion: se }), le, ue = !1, de, fe, pe = null, me = null, he = null, ge = null, _e = null, ve = !1, ye = !0, be = !1, xe = !1, Se = !1, Ce = { close: Ye };
+		let l = e, d = r, p = $("tooltip", l), m = ee(), g = V(), y = f(), b = h(Jn, null), x = j(null), O = L(null), k = { value: O }, A = L(null), M = j(!1), N = j(null), F = j(!1), I = j(!1), U = j(!1), W = j("closed"), G = j("top"), K = j({}), q = j(!1), J = `${B().replace(/[^\w-]/g, "-")}-tooltip`, te = i(() => typeof m.id == "string" ? m.id : J), Y = i(() => p.content === void 0 ? !!g.default : p.content.length > 0), ne = i(() => p.subhead === void 0 ? !!g.subhead : p.subhead.length > 0), X = i(() => p.rich || ne.value || !!g.action), re = i(() => !!g.activator), Z = y?.vnode.props ?? {}, ie = Object.prototype.hasOwnProperty.call(Z, "modelValue") || Object.prototype.hasOwnProperty.call(Z, "model-value"), ae, oe, se = Kn(), ce = qn({ motion: se }), le, ue = !1, de, fe, pe = null, me = null, he = null, ge = null, _e = null, ve = !1, ye = !0, be = !1, xe = !1, Se = !1, Ce = { close: Xe };
 		function we(e) {
 			return !e || typeof HTMLElement > "u" ? null : e instanceof HTMLElement && e.ownerDocument === document ? e : typeof e == "object" ? "value" in e ? we(e.value) : "$el" in e ? we(e.$el) : null : null;
 		}
@@ -1362,14 +1620,14 @@ var jn = ["id", "data-location"], Mn = {
 		function Oe() {
 			return re.value ? De() : Ee();
 		}
-		function Q() {
-			return ke() ? typeof p.attach == "string" ? Te(p.attach) : we(p.attach) : Me() || (b?.rootElement.value?.contains(O.value) && b.freeLayer.value ? b.freeLayer.value : document.body);
-		}
 		function ke() {
+			return Ae() ? typeof p.attach == "string" ? Te(p.attach) : we(p.attach) : Ne() || (b?.rootElement.value?.contains(O.value) && b.freeLayer.value ? b.freeLayer.value : document.body);
+		}
+		function Ae() {
 			let e = y?.vnode.props ?? {};
 			return Object.prototype.hasOwnProperty.call(e, "attach");
 		}
-		function Ae(e) {
+		function je(e) {
 			if (!e.hasAttribute("popover")) return !1;
 			try {
 				return e.matches(":popover-open") || e.hasAttribute("data-popover-open");
@@ -1377,65 +1635,65 @@ var jn = ["id", "data-location"], Mn = {
 				return e.hasAttribute("data-popover-open");
 			}
 		}
-		function je(e) {
-			return e.localName === "dialog" && e.hasAttribute("open") || Ae(e);
+		function Me(e) {
+			return e.localName === "dialog" && e.hasAttribute("open") || je(e);
 		}
-		function Me() {
+		function Ne() {
 			let e = O.value;
 			for (; e;) {
-				if (je(e)) return e;
+				if (Me(e)) return e;
 				e = e.parentElement;
 			}
 			return null;
 		}
-		function Ne() {
-			let e = p.openDelay;
-			return At(e, 0);
-		}
 		function Pe() {
-			let e = p.closeDelay;
-			return At(e, Fn);
+			let e = p.openDelay;
+			return kn(e, 0);
 		}
 		function Fe() {
-			oe !== void 0 && (window.clearTimeout(oe), oe = void 0);
+			let e = p.closeDelay;
+			return kn(e, Nr);
 		}
 		function Ie() {
-			ae !== void 0 && (window.clearTimeout(ae), ae = void 0);
+			oe !== void 0 && (window.clearTimeout(oe), oe = void 0);
 		}
 		function Le() {
-			se.cancel();
+			ae !== void 0 && (window.clearTimeout(ae), ae = void 0);
 		}
 		function Re() {
-			de !== void 0 && (window.cancelAnimationFrame(de), de = void 0);
+			se.cancel();
 		}
 		function ze() {
-			Re(), I.value && (de = window.requestAnimationFrame(() => {
+			de !== void 0 && (window.cancelAnimationFrame(de), de = void 0);
+		}
+		function Be() {
+			ze(), I.value && (de = window.requestAnimationFrame(() => {
 				if (de = void 0, I.value) {
 					if (O.value && !O.value.isConnected) {
-						Je({ immediate: !0 });
+						Ye({ immediate: !0 });
 						return;
 					}
-					ze();
+					Be();
 				}
 			}));
 		}
-		function Be() {
+		function Ve() {
 			le !== void 0 && (ue ? window.cancelAnimationFrame(le) : window.clearTimeout(le), le = void 0, ue = !1);
 		}
-		function Ve() {
+		function He() {
 			ge && (_e === null ? ge.removeAttribute("aria-describedby") : ge.setAttribute("aria-describedby", _e), ge = null, _e = null);
 		}
-		function He() {
+		function Ue() {
 			let e = O.value;
 			if (!I.value || !e || ge === e) return;
-			Ve(), ge = e, _e = e.getAttribute("aria-describedby");
+			He(), ge = e, _e = e.getAttribute("aria-describedby");
 			let t = (_e ?? "").split(/\s+/).filter(Boolean);
 			t.includes(te.value) || t.push(te.value), e.setAttribute("aria-describedby", t.join(" "));
 		}
-		function Ue() {
-			Be(), fe?.disconnect(), fe = void 0, me &&= (me(), null), he &&= (he(), null);
-		}
 		function We() {
+			Ve(), fe?.disconnect(), fe = void 0, me &&= (me(), null), he &&= (he(), null);
+		}
+		function Ge() {
 			if (!I.value || !O.value || !N.value) return;
 			let e = M.value ? b.getLayoutRect() : null, t = O.value.getBoundingClientRect(), n = e ? {
 				bottom: t.bottom - e.top,
@@ -1469,7 +1727,7 @@ var jn = ["id", "data-location"], Mn = {
 					left: r.size.width - r.padding.end,
 					right: r.size.width
 				}
-			] : On(), a = mn({
+			] : Er(), a = fr({
 				location: p.location,
 				targetRect: n,
 				tooltipRect: N.value.getBoundingClientRect(),
@@ -1493,10 +1751,10 @@ var jn = ["id", "data-location"], Mn = {
 				top: `${a.top - s}px`
 			}, U.value = !0;
 		}
-		function Ge() {
+		function Ke() {
 			if (!I.value || le !== void 0) return;
 			let e = () => {
-				le = void 0, ue = !1, We();
+				le = void 0, ue = !1, Ge();
 			};
 			if (typeof window.requestAnimationFrame == "function") {
 				ue = !0, le = window.requestAnimationFrame(e);
@@ -1504,159 +1762,159 @@ var jn = ["id", "data-location"], Mn = {
 			}
 			le = window.setTimeout(e, 0);
 		}
-		function Ke() {
-			me || (window.addEventListener("resize", Ge), document.addEventListener("scroll", Ge, !0), me = () => {
-				window.removeEventListener("resize", Ge), document.removeEventListener("scroll", Ge, !0);
-			}, he = An(Ge), typeof ResizeObserver < "u" && (fe = new ResizeObserver(Ge), fe.observe(O.value), fe.observe(N.value)));
-		}
 		function qe() {
+			me || (window.addEventListener("resize", Ke), document.addEventListener("scroll", Ke, !0), me = () => {
+				window.removeEventListener("resize", Ke), document.removeEventListener("scroll", Ke, !0);
+			}, he = Or(Ke), typeof ResizeObserver < "u" && (fe = new ResizeObserver(Ke), fe.observe(O.value), fe.observe(N.value)));
+		}
+		function Je() {
 			F.value = !1, W.value = "closed", I.value = !1, U.value = !1, A.value = null, M.value = !1;
 		}
-		function Je({ immediate: e = !1 } = {}) {
-			if (Fe(), Ie(), Re(), Ue(), Ve(), yn(Ce), !F.value) {
-				qe();
+		function Ye({ immediate: e = !1 } = {}) {
+			if (Ie(), Le(), ze(), We(), He(), _r(Ce), !F.value) {
+				Je();
 				return;
 			}
 			if (!(!e && W.value === "closing")) {
 				if (e) {
-					Le(), qe();
+					Re(), Je();
 					return;
 				}
 				ce.start({
 					canStart: () => F.value && W.value !== "closing",
-					duration: In,
+					duration: Pr,
 					getElement: () => N.value,
 					isActive: () => ve && F.value && W.value === "closing" && !!N.value,
-					onFinish: qe,
+					onFinish: Je,
 					onStart: () => {
 						I.value = !1, W.value = "closing";
 					}
 				});
 			}
 		}
-		function Ye() {
-			ie && (q.value = !0, d("update:modelValue", !1)), Je();
-		}
 		function Xe() {
+			ie && (q.value = !0, d("update:modelValue", !1)), Ye();
+		}
+		function Ze() {
 			Se || (Se = !0, console.warn(re.value ? "MatTooltip: activator Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点" : "MatTooltip: target 必须指向当前 document 中存在的 HTMLElement"));
 		}
-		function Ze({ warn: e = !0 } = {}) {
+		function Qe({ warn: e = !0 } = {}) {
 			let t = Oe();
-			if (!t && I.value && Je({ immediate: !0 }), t === O.value) {
-				!t && Y.value && e && Xe();
+			if (!t && I.value && Ye({ immediate: !0 }), t === O.value) {
+				!t && Y.value && e && Ze();
 				return;
 			}
 			let n = O.value !== null;
-			Ve(), ct(), O.value = t, Se = !1, !t && Y.value && e && Xe(), lt(), n && I.value && Ye();
+			He(), lt(), O.value = t, Se = !1, !t && Y.value && e && Ze(), ut(), n && I.value && Xe();
 		}
-		function Qe() {
-			if (Ie(), ie || I.value || q.value || !Y.value) return;
-			let e = bn() ? 0 : Ne();
+		function $e() {
+			if (Le(), ie || I.value || q.value || !Y.value) return;
+			let e = vr() ? 0 : Pe();
 			if (e === 0) {
-				ut();
+				dt();
 				return;
 			}
 			oe === void 0 && (oe = window.setTimeout(() => {
-				oe = void 0, ut();
+				oe = void 0, dt();
 			}, e));
 		}
-		function $e() {
-			Fe(), !(ie || !I.value || be || xe) && ae === void 0 && (ae = window.setTimeout(() => {
-				ae = void 0, Ye();
-			}, Pe()));
-		}
 		function et() {
+			Ie(), !(ie || !I.value || be || xe) && ae === void 0 && (ae = window.setTimeout(() => {
+				ae = void 0, Xe();
+			}, Fe()));
+		}
+		function tt() {
 			if (be || xe) {
-				Qe();
+				$e();
 				return;
 			}
-			$e();
+			et();
 		}
-		function tt(e) {
-			be = e, et();
+		function nt(e) {
+			be = e, tt();
 		}
-		function nt() {
-			_n() && (xe = !0, et());
+		function rt() {
+			hr() && (xe = !0, tt());
 		}
-		function rt(e) {
-			O.value?.contains(e.relatedTarget) || X.value && N.value?.contains(e.relatedTarget) || (xe = !1, et());
-		}
-		function it() {
-			X.value && (be = !0, et());
+		function it(e) {
+			O.value?.contains(e.relatedTarget) || X.value && N.value?.contains(e.relatedTarget) || (xe = !1, tt());
 		}
 		function at() {
-			X.value && (be = !1, et());
+			X.value && (be = !0, tt());
 		}
 		function ot() {
-			X.value && (xe = !0, et());
+			X.value && (be = !1, tt());
 		}
-		function st(e) {
-			e.key === "Escape" && (e.preventDefault(), Ye());
+		function st() {
+			X.value && (xe = !0, tt());
 		}
-		function ct() {
-			pe && (pe(), pe = null, be = !1, xe = !1);
+		function ct(e) {
+			e.key === "Escape" && (e.preventDefault(), Xe());
 		}
 		function lt() {
+			pe && (pe(), pe = null, be = !1, xe = !1);
+		}
+		function ut() {
 			let e = O.value;
-			e && (e.addEventListener("keydown", st), !ie && Y.value && (e.addEventListener("focusin", nt), e.addEventListener("focusout", rt)), pe = () => {
-				e.removeEventListener("keydown", st), e.removeEventListener("focusin", nt), e.removeEventListener("focusout", rt);
+			e && (e.addEventListener("keydown", ct), !ie && Y.value && (e.addEventListener("focusin", rt), e.addEventListener("focusout", it)), pe = () => {
+				e.removeEventListener("keydown", ct), e.removeEventListener("focusin", rt), e.removeEventListener("focusout", it);
 			});
 		}
-		async function ut() {
+		async function dt() {
 			if (!ve || !ye || q.value || !Y.value) return;
-			if (Ze({ warn: !0 }), !O.value) {
-				Ye();
+			if (Qe({ warn: !0 }), !O.value) {
+				Xe();
 				return;
 			}
-			let e = Q();
+			let e = ke();
 			if (!e) {
-				console.warn("MatTooltip: attach 必须指向当前 document 中存在的 HTMLElement"), Ye();
+				console.warn("MatTooltip: attach 必须指向当前 document 中存在的 HTMLElement"), Xe();
 				return;
 			}
-			Fe(), Ie(), Le(), vn(Ce), A.value = e, M.value = e === b?.freeLayer.value, G.value = p.location, K.value = {
+			Ie(), Le(), Re(), gr(Ce), A.value = e, M.value = e === b?.freeLayer.value, G.value = p.location, K.value = {
 				left: "0px",
 				top: "0px"
-			}, U.value = !1, W.value = "opening", F.value = !0, I.value = !0, await v(), !(!ve || !ye || !I.value) && (He(), We(), Ke(), ze());
+			}, U.value = !1, W.value = "opening", F.value = !0, I.value = !0, await v(), !(!ve || !ye || !I.value) && (Ue(), Ge(), qe(), Be());
 		}
 		return T(async () => {
-			ve = !0, Ze({ warn: !1 }), await v(), ve && (Ze({ warn: !1 }), ie && p.modelValue && ut());
+			ve = !0, Qe({ warn: !1 }), await v(), ve && (Qe({ warn: !1 }), ie && p.modelValue && dt());
 		}), E(() => {
-			Ze({ warn: !1 }), I.value && Ge();
+			Qe({ warn: !1 }), I.value && Ke();
 		}), S(() => {
-			ye || (ye = !0, Ze({ warn: !1 }), ie && p.modelValue && ut());
+			ye || (ye = !0, Qe({ warn: !1 }), ie && p.modelValue && dt());
 		}), w(() => {
-			ye = !1, Le(), Re(), ct(), Je({ immediate: !0 });
+			ye = !1, Re(), ze(), lt(), Ye({ immediate: !0 });
 		}), C(() => {
-			ve = !1, Le(), Re(), ct(), I.value && Je({ immediate: !0 });
+			ve = !1, Re(), ze(), lt(), I.value && Ye({ immediate: !0 });
 		}), H(() => p.modelValue, (e) => {
 			if (!(!ve || !ye || !ie)) {
 				if (e) {
-					q.value = !1, ut();
+					q.value = !1, dt();
 					return;
 				}
-				q.value = !1, Je();
+				q.value = !1, Ye();
 			}
 		}), H([() => p.content, () => p.target], async () => {
 			await v();
 			let e = O.value;
-			Ze({ warn: !1 }), O.value === e && (ct(), lt()), Y.value || Ye();
+			Qe({ warn: !1 }), O.value === e && (lt(), ut()), Y.value || Xe();
 		}), H(() => p.attach, async () => {
 			if (!I.value) return;
-			let e = Q();
+			let e = ke();
 			if (!e) {
-				console.warn("MatTooltip: attach 必须指向当前 document 中存在的 HTMLElement"), Ye();
+				console.warn("MatTooltip: attach 必须指向当前 document 中存在的 HTMLElement"), Xe();
 				return;
 			}
-			A.value = e, M.value = e === b?.freeLayer.value, await v(), Ge();
+			A.value = e, M.value = e === b?.freeLayer.value, await v(), Ke();
 		}), H(() => p.location, () => {
-			I.value && Ge();
+			I.value && Ke();
 		}), H(te, () => {
-			!I.value || !ge || (Ve(), He());
-		}), b && H(b.publicContext.layout, Ge), (r, i) => (D(), s(t, null, [
-			!z(ie) && Y.value ? (D(), a(Gt, {
+			!I.value || !ge || (He(), Ue());
+		}), b && H(b.publicContext.layout, Ke), (r, i) => (D(), s(t, null, [
+			!z(ie) && Y.value ? (D(), a(Wn, {
 				key: 0,
 				target: k,
-				"onUpdate:modelValue": tt
+				"onUpdate:modelValue": nt
 			})) : o("", !0),
 			re.value || !e.target ? (D(), s("span", {
 				key: 1,
@@ -1679,22 +1937,22 @@ var jn = ["id", "data-location"], Mn = {
 				"data-location": G.value,
 				style: [K.value, r.$attrs.style],
 				role: "tooltip",
-				onFocusin: ot,
-				onFocusout: rt,
-				onMouseenter: it,
-				onMouseleave: at
+				onFocusin: st,
+				onFocusout: it,
+				onMouseenter: at,
+				onMouseleave: ot
 			}), [X.value ? (D(), s(t, { key: 0 }, [
-				ne.value ? (D(), s("span", Mn, [z(p).subhead === void 0 ? P(r.$slots, "subhead", { key: 1 }, void 0, !0) : (D(), s(t, { key: 0 }, [u(R(z(p).subhead), 1)], 64))])) : o("", !0),
-				c("span", Nn, [z(p).content === void 0 ? P(r.$slots, "default", { key: 1 }, void 0, !0) : (D(), s(t, { key: 0 }, [u(R(z(p).content), 1)], 64))]),
-				r.$slots.action ? (D(), s("span", Pn, [P(r.$slots, "action", {}, void 0, !0)])) : o("", !0)
-			], 64)) : z(p).content === void 0 ? P(r.$slots, "default", { key: 2 }, void 0, !0) : (D(), s(t, { key: 1 }, [u(R(z(p).content), 1)], 64))], 16, jn)], 8, ["to"])) : o("", !0)
+				ne.value ? (D(), s("span", Ar, [z(p).subhead === void 0 ? P(r.$slots, "subhead", { key: 1 }, void 0, !0) : (D(), s(t, { key: 0 }, [u(R(z(p).subhead), 1)], 64))])) : o("", !0),
+				c("span", jr, [z(p).content === void 0 ? P(r.$slots, "default", { key: 1 }, void 0, !0) : (D(), s(t, { key: 0 }, [u(R(z(p).content), 1)], 64))]),
+				r.$slots.action ? (D(), s("span", Mr, [P(r.$slots, "action", {}, void 0, !0)])) : o("", !0)
+			], 64)) : z(p).content === void 0 ? P(r.$slots, "default", { key: 2 }, void 0, !0) : (D(), s(t, { key: 1 }, [u(R(z(p).content), 1)], 64))], 16, kr)], 8, ["to"])) : o("", !0)
 		], 64));
 	}
-}), [["__scopeId", "data-v-cc34425b"]]), Rn = Symbol("mde-vue-button-group"), zn = Symbol("mde-vue-split-button");
+}), [["__scopeId", "data-v-cc34425b"]]), Ir = Symbol("mde-vue-button-group"), Lr = Symbol("mde-vue-split-button");
 //#endregion
 //#region src/components/use-button.js
-function Bn(e, t) {
-	let n = h(Ne, Me), r = h(Rn, null), a = h(zn, null), o = i(() => a?.size.value ?? e.size ?? r?.size.value ?? "small"), s = i(() => a ? "round" : e.shape ?? r?.shape.value ?? "round"), c = i(() => a?.variant.value ?? e.variant), l = i(() => a?.color.value ?? e.color ?? r?.color.value), u = i(() => e.disabled || !!a?.disabled.value || !!r?.disabled.value), d = i(() => !!(r && r.selection.value !== "none")), f = i(() => a?.role === "trailing" ? a.expanded.value : d.value ? r.isSelected(e.value) : e.selected), p = i(() => a?.role === "trailing" || d.value || e.toggle), { colorStyle: m, hasExplicitColor: g } = dt(l);
+function Rr(e, t) {
+	let n = h(kt, Ot), r = h(Ir, null), a = h(Lr, null), o = i(() => a?.size.value ?? e.size ?? r?.size.value ?? "small"), s = i(() => a ? "round" : e.shape ?? r?.shape.value ?? "round"), c = i(() => a?.variant.value ?? e.variant), l = i(() => a?.color.value ?? e.color ?? r?.color.value), u = i(() => e.disabled || !!a?.disabled.value || !!r?.disabled.value), d = i(() => !!(r && r.selection.value !== "none")), f = i(() => a?.role === "trailing" ? a.expanded.value : d.value ? r.isSelected(e.value) : e.selected), p = i(() => a?.role === "trailing" || d.value || e.toggle), { colorStyle: m, hasExplicitColor: g } = un(l);
 	function _(n) {
 		d.value && r.requestSelection(e.value, n), t("click", n);
 	}
@@ -1716,44 +1974,44 @@ function Bn(e, t) {
 }
 //#endregion
 //#region src/components/typography.js
-var Vn = Object.freeze([
+var zr = Object.freeze([
 	"display",
 	"headline",
 	"title",
 	"body",
 	"label"
-]), Hn = Object.freeze([
+]), Br = Object.freeze([
 	"large",
 	"medium",
 	"small"
-]), Un = Object.freeze({
+]), Vr = Object.freeze({
 	L: "large",
 	M: "medium",
 	S: "small"
 });
-function Wn(e) {
-	return Vn.includes(e);
+function Hr(e) {
+	return zr.includes(e);
 }
-function Gn(e) {
-	return Hn.includes(e) || Object.hasOwn(Un, e);
+function Ur(e) {
+	return Br.includes(e) || Object.hasOwn(Vr, e);
 }
-function Kn(e) {
-	return Un[e] ?? e;
+function Wr(e) {
+	return Vr[e] ?? e;
 }
-function qn(e, t, n = !1) {
+function Gr(e, t, n = !1) {
 	return [
 		"mat-sys-typescale",
 		n ? "emphasized" : void 0,
 		e,
-		Kn(t)
+		Wr(t)
 	].filter(Boolean).join("-");
 }
 //#endregion
 //#region src/components/mat-btn/MatBtn.vue
-var Jn = {
+var Kr = {
 	key: 2,
 	class: "mat-btn__label"
-}, Yn = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, qr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatBtn",
 	inheritAttrs: !1
 }, {
@@ -1781,14 +2039,14 @@ var Jn = {
 			type: String,
 			default: void 0,
 			validator(e) {
-				return Fe.includes(e);
+				return Nt.includes(e);
 			}
 		},
 		shape: {
 			type: String,
 			default: void 0,
 			validator(e) {
-				return Ie.includes(e);
+				return Pt.includes(e);
 			}
 		},
 		width: {
@@ -1829,7 +2087,7 @@ var Jn = {
 			type: String,
 			default: void 0,
 			validator(e) {
-				return Ue(e) || He(e);
+				return Vt(e) || Bt(e);
 			}
 		},
 		toggle: {
@@ -1860,7 +2118,7 @@ var Jn = {
 			type: String,
 			default: "button",
 			validator(e) {
-				return Le.includes(e);
+				return Ft.includes(e);
 			}
 		},
 		morph: {
@@ -1872,7 +2130,7 @@ var Jn = {
 		return e instanceof MouseEvent;
 	} },
 	setup(e, { emit: n }) {
-		let r = $("btn", e), c = n, l = ee(), f = V(), p = j(null), m = B(), { colorStyle: h, effectiveColor: v, effectiveDisabled: y, effectiveSelected: b, effectiveShape: x, effectiveSize: S, effectiveToggle: C, effectiveVariant: w, handleClick: E, hasExplicitColor: O, split: k, useCursor: A } = Bn(r, c), M = i(() => He(v.value)), N = i(() => !M.value || w.value === "text"), F = i(() => N.value ? h.value : {}), I = i(() => N.value && O.value), L = i(() => C.value && w.value !== "text"), G = i(() => L.value && b.value), K = i(() => r.icon === !0 || typeof r.icon == "string" && r.icon.trim().length > 0), q = i(() => r.fill === void 0 ? +!!G.value : r.fill), J = i(() => r.loading), te = i(() => y.value || J.value), Y = j(null);
+		let r = $("btn", e), c = n, l = ee(), f = V(), p = j(null), m = B(), { colorStyle: h, effectiveColor: v, effectiveDisabled: y, effectiveSelected: b, effectiveShape: x, effectiveSize: S, effectiveToggle: C, effectiveVariant: w, handleClick: E, hasExplicitColor: O, split: k, useCursor: A } = Rr(r, c), M = i(() => Bt(v.value)), N = i(() => !M.value || w.value === "text"), F = i(() => N.value ? h.value : {}), I = i(() => N.value && O.value), L = i(() => C.value && w.value !== "text"), G = i(() => L.value && b.value), K = i(() => r.icon === !0 || typeof r.icon == "string" && r.icon.trim().length > 0), q = i(() => r.fill === void 0 ? +!!G.value : r.fill), J = i(() => r.loading), te = i(() => y.value || J.value), Y = j(null);
 		H(J, (e) => {
 			if (!e) {
 				Y.value = null;
@@ -1891,7 +2149,7 @@ var Jn = {
 			large: 32,
 			"extra-large": 40
 		})[S.value]);
-		Lt(i(() => J.value ? ce.value : null));
+		In(i(() => J.value ? ce.value : null));
 		let le = i(() => {
 			let [e, t] = {
 				"extra-small": ["label", "large"],
@@ -1900,13 +2158,13 @@ var Jn = {
 				large: ["headline", "small"],
 				"extra-large": ["headline", "large"]
 			}[S.value];
-			return qn(e, t, !0);
+			return Gr(e, t, !0);
 		});
 		return T(() => {
 			r.icon === !0 && !X.value && console.warn("MatBtn: icon=true 必须在默认 Slot 提供非空 Material Symbols 文本");
 		}), U(() => {
 			r.toggle && r.variant === "text" && console.warn("MatBtn: text 形态不支持 toggle，当前按普通文本按钮处理"), M.value && w.value !== "text" && console.warn("MatBtn: on-* 内容色只支持 text 形态，当前按默认配色处理"), K.value && (!Z.value || Z.value.trim().length === 0) && console.warn("MatBtn: 图标模式必须提供非空 label 或 aria-label");
-		}), (e, n) => (D(), a(Ae, _({
+		}), (e, n) => (D(), a(Mt, _({
 			ref_key: "buttonElement",
 			ref: p
 		}, z(l), {
@@ -1942,10 +2200,10 @@ var Jn = {
 			onClick: z(E)
 		}), {
 			default: W(() => [
-				K.value ? (D(), s(t, { key: 0 }, [J.value ? P(e.$slots, "loading", { key: 0 }, () => [d(Wt, {
+				K.value ? (D(), s(t, { key: 0 }, [J.value ? P(e.$slots, "loading", { key: 0 }, () => [d(Un, {
 					class: "mat-btn__loading",
 					"aria-hidden": "true"
-				})], !0) : (D(), a(ht, {
+				})], !0) : (D(), a(mn, {
 					key: 1,
 					as: "span",
 					class: "mat-btn__icon mat-btn__icon--only",
@@ -1957,10 +2215,10 @@ var Jn = {
 					default: W(() => [u(R(re.value), 1)]),
 					_: 1
 				}, 8, ["fill", "optical-size"]))], 64)) : o("", !0),
-				K.value ? o("", !0) : (D(), s(t, { key: 1 }, [J.value ? P(e.$slots, "loading", { key: 0 }, () => [d(Wt, {
+				K.value ? o("", !0) : (D(), s(t, { key: 1 }, [J.value ? P(e.$slots, "loading", { key: 0 }, () => [d(Un, {
 					class: "mat-btn__loading",
 					"aria-hidden": "true"
-				})], !0) : ae.value ? (D(), a(ht, {
+				})], !0) : ae.value ? (D(), a(mn, {
 					key: 1,
 					as: "span",
 					class: "mat-btn__icon mat-btn__icon--prefix",
@@ -1972,8 +2230,8 @@ var Jn = {
 					default: W(() => [z(r).prefix === void 0 ? P(e.$slots, "prefix", { key: 1 }, void 0, !0) : (D(), s(t, { key: 0 }, [u(R(z(r).prefix), 1)], 64))]),
 					_: 3
 				}, 8, ["fill", "optical-size"])) : o("", !0)], 64)),
-				K.value ? o("", !0) : (D(), s("span", Jn, [se.value ? P(e.$slots, "selected", { key: 0 }, void 0, !0) : P(e.$slots, "default", { key: 1 }, void 0, !0)])),
-				oe.value ? (D(), a(ht, {
+				K.value ? o("", !0) : (D(), s("span", Kr, [se.value ? P(e.$slots, "selected", { key: 0 }, void 0, !0) : P(e.$slots, "default", { key: 1 }, void 0, !0)])),
+				oe.value ? (D(), a(mn, {
 					key: 3,
 					as: "span",
 					class: "mat-btn__icon mat-btn__icon--suffix",
@@ -1985,7 +2243,7 @@ var Jn = {
 					default: W(() => [z(r).suffix === void 0 ? P(e.$slots, "suffix", { key: 1 }, void 0, !0) : (D(), s(t, { key: 0 }, [u(R(z(r).suffix), 1)], 64))]),
 					_: 3
 				}, 8, ["fill", "optical-size"])) : o("", !0),
-				K.value && ie.value ? (D(), a(Ln, {
+				K.value && ie.value ? (D(), a(Fr, {
 					key: 4,
 					content: ie.value,
 					id: `${z(m)}-tooltip`,
@@ -2015,7 +2273,7 @@ var Jn = {
 			"onClick"
 		]));
 	}
-}), [["__scopeId", "data-v-3251a7ec"]]), Xn = Object.freeze([
+}), [["__scopeId", "data-v-3251a7ec"]]), Jr = Object.freeze([
 	"top",
 	"bottom",
 	"left",
@@ -2023,13 +2281,13 @@ var Jn = {
 	"start",
 	"end"
 ]);
-function Zn(e, t) {
+function Yr(e, t) {
 	let n = Number(e[t]);
 	if (n) return Math.max(0, n);
 	let r = t === "height" ? e.top : e.left, i = t === "height" ? e.bottom : e.right;
 	return Math.max(0, (Number(i) || 0) - (Number(r) || 0));
 }
-function Qn(e = {}) {
+function Xr(e = {}) {
 	return {
 		top: Math.max(0, Number(e.top) || 0),
 		bottom: Math.max(0, Number(e.bottom) || 0),
@@ -2039,19 +2297,19 @@ function Qn(e = {}) {
 		end: Math.max(0, Number(e.end) || 0)
 	};
 }
-function $n(e, t) {
+function Zr(e, t) {
 	return Math.floor(e / t) % 2 == 1;
 }
-function er(e, t, n) {
+function Qr(e, t, n) {
 	if (t.element === n.element) return 0;
 	if (t.element.isConnected && n.element.isConnected) {
 		let e = t.element.compareDocumentPosition(n.element);
-		if ($n(e, Node.DOCUMENT_POSITION_FOLLOWING)) return -1;
-		if ($n(e, Node.DOCUMENT_POSITION_PRECEDING)) return 1;
+		if (Zr(e, Node.DOCUMENT_POSITION_FOLLOWING)) return -1;
+		if (Zr(e, Node.DOCUMENT_POSITION_PRECEDING)) return 1;
 	}
 	return e.indexOf(t) - e.indexOf(n);
 }
-function tr({ scheduleMeasure: e } = {}) {
+function $r({ scheduleMeasure: e } = {}) {
 	let t = [], n;
 	function r(e) {
 		n = e, t.forEach((e) => {
@@ -2059,27 +2317,27 @@ function tr({ scheduleMeasure: e } = {}) {
 		});
 	}
 	function i({ baseInsets: e, width: n = 0, height: r = 0 } = {}) {
-		let i = Qn(e), a = Object.fromEntries(Xn.map((e) => [e, {
+		let i = Xr(e), a = Object.fromEntries(Jr.map((e) => [e, {
 			startInset: 0,
 			endInset: 0
 		}]));
-		t.filter((e) => e.active).sort((e, n) => er(t, e, n)).forEach((e) => {
+		t.filter((e) => e.active).sort((e, n) => Qr(t, e, n)).forEach((e) => {
 			let t = e.element.getBoundingClientRect(), { edge: n } = e, r = e.insets;
 			if (n === "top") {
-				let e = Zn(t, "height");
+				let e = Yr(t, "height");
 				r.top = i.top, r.bottom = 0, r.left = i.left, r.right = i.right, r.start = i.start, r.end = i.end, r.offset = i.top, a.top.startInset = Math.max(a.top.startInset, i.start), a.top.endInset = Math.max(a.top.endInset, i.end), i.top += e;
 			} else if (n === "bottom") {
-				let e = Zn(t, "height");
+				let e = Yr(t, "height");
 				r.top = 0, r.bottom = i.bottom, r.left = i.left, r.right = i.right, r.start = i.start, r.end = i.end, r.offset = i.bottom, a.bottom.startInset = Math.max(a.bottom.startInset, i.start), a.bottom.endInset = Math.max(a.bottom.endInset, i.end), i.bottom += e;
 			} else if (n === "left" || n === "start") {
-				let e = Zn(t, "width");
+				let e = Yr(t, "width");
 				r.top = i.top, r.bottom = i.bottom, r.left = i.left, r.right = 0, r.start = i.start, r.end = 0, r.offset = i.left, a[n].startInset = Math.max(a[n].startInset, i.top), a[n].endInset = Math.max(a[n].endInset, i.bottom), i.left += e, i.start += e;
 			} else if (n === "right" || n === "end") {
-				let e = Zn(t, "width");
+				let e = Yr(t, "width");
 				r.top = i.top, r.bottom = i.bottom, r.left = 0, r.right = i.right, r.start = 0, r.end = i.end, r.offset = i.right, a[n].startInset = Math.max(a[n].startInset, i.top), a[n].endInset = Math.max(a[n].endInset, i.bottom), i.right += e, i.end += e;
 			}
 		});
-		let o = Object.fromEntries(Xn.map((e) => [e, {
+		let o = Object.fromEntries(Jr.map((e) => [e, {
 			size: i[e],
 			...a[e]
 		}]));
@@ -2093,7 +2351,7 @@ function tr({ scheduleMeasure: e } = {}) {
 		};
 	}
 	function a({ edge: r, element: i } = {}) {
-		if (!Xn.includes(r)) throw TypeError("registerEdge() 的 edge 必须是 top、bottom、left、right、start 或 end");
+		if (!Jr.includes(r)) throw TypeError("registerEdge() 的 edge 必须是 top、bottom、left、right、start 或 end");
 		if (!(i instanceof HTMLElement) || i.ownerDocument !== document) throw TypeError("registerEdge() 的 element 必须是当前 document 中的 HTMLElement");
 		let a = k({
 			bottom: 0,
@@ -2127,7 +2385,7 @@ function tr({ scheduleMeasure: e } = {}) {
 }
 //#endregion
 //#region src/components/layout/edge-layout-context.js
-var nr = Symbol("mat-edge-layout"), rr = { class: "mat-app-root__overlay" }, ir = { class: "mat-app-root__bottom-stack" }, ar = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+var ei = Symbol("mat-edge-layout"), ti = { class: "mat-app-root__overlay" }, ni = { class: "mat-app-root__bottom-stack" }, ri = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatAppRoot",
 	inheritAttrs: !1
 }, {
@@ -2174,7 +2432,7 @@ var nr = Symbol("mat-edge-layout"), rr = { class: "mat-app-root__overlay" }, ir 
 				name: "extra-large"
 			}
 		], n = $("appRoot", e);
-		if (h(Yt, null)) throw Error("MatAppRoot 不允许嵌套");
+		if (h(Jn, null)) throw Error("MatAppRoot 不允许嵌套");
 		let r = ee(), o = j(null), s = j(null), l = j(null), u = j(null), d = j(null), f = j(null), p = j(null), m = j(null), g = k({
 			size: {
 				width: 0,
@@ -2289,7 +2547,7 @@ var nr = Symbol("mat-edge-layout"), rr = { class: "mat-app-root__overlay" }, ir 
 			}), g.breakpoint = s.name, Object.assign(g.breakpointRange, {
 				min: s.min,
 				max: s.max
-			}), Xn.forEach((e) => {
+			}), Jr.forEach((e) => {
 				Object.assign(g.edges[e], l.edges[e]);
 			});
 		}
@@ -2305,7 +2563,7 @@ var nr = Symbol("mat-edge-layout"), rr = { class: "mat-app-root__overlay" }, ir 
 			}
 			M = window.setTimeout(e, 0);
 		}
-		let V = tr({ scheduleMeasure: B }), U = V.registerEdge, G = Object.freeze({
+		let V = $r({ scheduleMeasure: B }), U = V.registerEdge, G = Object.freeze({
 			layout: y,
 			registerEdge: U
 		});
@@ -2344,7 +2602,7 @@ var nr = Symbol("mat-edge-layout"), rr = { class: "mat-app-root__overlay" }, ir 
 			documentMode: i(() => n.fillViewport && !n.scrollable),
 			getLayoutRect: K
 		};
-		O(Yt, q), O(nr, {
+		O(Jn, q), O(ei, {
 			kind: "app-root",
 			publicContext: G,
 			rootElement: q.rootElement,
@@ -2357,9 +2615,9 @@ var nr = Symbol("mat-edge-layout"), rr = { class: "mat-app-root__overlay" }, ir 
 			window.removeEventListener("resize", B), document.removeEventListener("scroll", B, !0), window.visualViewport?.removeEventListener("resize", B), window.visualViewport?.removeEventListener("scroll", B);
 		}
 		return T(async () => {
-			w = !0, Zt(o.value, q), E = typeof ResizeObserver > "u" ? void 0 : new ResizeObserver(B), E?.observe(o.value), V.setResizeObserver(E), J(), await v(), B();
+			w = !0, Xn(o.value, q), E = typeof ResizeObserver > "u" ? void 0 : new ResizeObserver(B), E?.observe(o.value), V.setResizeObserver(E), J(), await v(), B();
 		}), C(() => {
-			w = !1, V.setResizeObserver(void 0), Qt(o.value), E?.disconnect(), E = void 0, te(), M !== void 0 && (typeof window.cancelAnimationFrame == "function" ? window.cancelAnimationFrame(M) : window.clearTimeout(M));
+			w = !1, V.setResizeObserver(void 0), Zn(o.value), E?.disconnect(), E = void 0, te(), M !== void 0 && (typeof window.cancelAnimationFrame == "function" ? window.cancelAnimationFrame(M) : window.clearTimeout(M));
 		}), H([() => n.fillViewport, () => n.scrollable], B), (e, t) => (D(), a(F(z(n).as), _({
 			ref_key: "rootElement",
 			ref: o
@@ -2374,13 +2632,13 @@ var nr = Symbol("mat-edge-layout"), rr = { class: "mat-app-root__overlay" }, ir 
 					ref: s,
 					class: "mat-app-root__content mat-edge-layout__content"
 				}, [P(e.$slots, "default", {}, void 0, !0)], 512),
-				c("div", rr, [
+				c("div", ti, [
 					c("div", {
 						ref_key: "freeLayer",
 						ref: u,
 						class: "mat-app-root__free-layer"
 					}, null, 512),
-					c("div", ir, [
+					c("div", ni, [
 						t[0] ||= c("span", {
 							class: "mat-app-root__stack-spacer",
 							"aria-hidden": "true"
@@ -2416,109 +2674,109 @@ var nr = Symbol("mat-edge-layout"), rr = { class: "mat-app-root__overlay" }, ir 
 			"style"
 		]));
 	}
-}), [["__scopeId", "data-v-05570144"]]), or = Symbol("mat-layout");
-function sr() {
-	let e = h(or, null);
+}), [["__scopeId", "data-v-05570144"]]), ii = Symbol("mat-layout");
+function ai() {
+	let e = h(ii, null);
 	if (!e) throw Error("useLayout() 必须在 MatLayout 内调用");
 	return e.publicContext;
 }
 //#endregion
 //#region src/components/dialog-stack.js
-var cr = L([]), lr = L(0), ur = Symbol("mat-dialog-document-scope"), dr = /* @__PURE__ */ new WeakMap(), fr = /* @__PURE__ */ new Map();
-function pr(e) {
-	return fr.has(e) || fr.set(e, {
+var oi = L([]), si = L(0), ci = Symbol("mat-dialog-document-scope"), li = /* @__PURE__ */ new WeakMap(), ui = /* @__PURE__ */ new Map();
+function di(e) {
+	return ui.has(e) || ui.set(e, {
 		count: 0,
 		inert: !1,
 		inertElement: null,
 		lockedScrollbarGutter: null,
 		overflow: "",
 		scrollbarGutter: ""
-	}), fr.get(e);
+	}), ui.get(e);
 }
-function mr(e, t) {
-	let n = pr(e);
-	!t || t === n.inertElement || (n.inertElement && !n.inert && n.inertElement.removeAttribute("inert"), fr.set(e, {
+function fi(e, t) {
+	let n = di(e);
+	!t || t === n.inertElement || (n.inertElement && !n.inert && n.inertElement.removeAttribute("inert"), ui.set(e, {
 		...n,
 		inert: t.hasAttribute("inert"),
 		inertElement: t
 	}), t.setAttribute("inert", ""));
 }
-function hr(e) {
-	let t = fr.get(e);
-	t?.inertElement && (t.inert || t.inertElement.removeAttribute("inert"), fr.set(e, {
+function pi(e) {
+	let t = ui.get(e);
+	t?.inertElement && (t.inert || t.inertElement.removeAttribute("inert"), ui.set(e, {
 		...t,
 		inert: !1,
 		inertElement: null
 	}));
 }
-function gr(e) {
-	let t = pr(e), n = document.documentElement, r = n.clientWidth > 0 ? Math.max(0, window.innerWidth - n.clientWidth) : 0, i = getComputedStyle(n).scrollbarGutter, a = r > 0 && !i.includes("stable") ? "stable" : null;
-	fr.set(e, {
+function mi(e) {
+	let t = di(e), n = document.documentElement, r = n.clientWidth > 0 ? Math.max(0, window.innerWidth - n.clientWidth) : 0, i = getComputedStyle(n).scrollbarGutter, a = r > 0 && !i.includes("stable") ? "stable" : null;
+	ui.set(e, {
 		...t,
 		lockedScrollbarGutter: a,
 		overflow: n.style.overflow,
 		scrollbarGutter: n.style.scrollbarGutter
-	}), a && (n.style.scrollbarGutter = a, lr.value = r), n.style.overflow = "hidden";
+	}), a && (n.style.scrollbarGutter = a, si.value = r), n.style.overflow = "hidden";
 }
-function _r(e) {
-	let t = fr.get(e);
+function hi(e) {
+	let t = ui.get(e);
 	if (!t) return;
 	let n = document.documentElement;
-	n.style.overflow === "hidden" && (n.style.overflow = t.overflow), t.lockedScrollbarGutter !== null && n.style.scrollbarGutter === t.lockedScrollbarGutter && (n.style.scrollbarGutter = t.scrollbarGutter), t.lockedScrollbarGutter !== null && (lr.value = 0);
+	n.style.overflow === "hidden" && (n.style.overflow = t.overflow), t.lockedScrollbarGutter !== null && n.style.scrollbarGutter === t.lockedScrollbarGutter && (n.style.scrollbarGutter = t.scrollbarGutter), t.lockedScrollbarGutter !== null && (si.value = 0);
 }
-function vr(e) {
-	let t = e, n = pr(e), r = getComputedStyle(t), i = (Number.parseFloat(r.borderLeftWidth) || 0) + (Number.parseFloat(r.borderRightWidth) || 0), a = Math.max(0, t.offsetWidth - t.clientWidth - i) > 0 && !r.scrollbarGutter.includes("stable") ? "stable" : null;
-	fr.set(e, {
+function gi(e) {
+	let t = e, n = di(e), r = getComputedStyle(t), i = (Number.parseFloat(r.borderLeftWidth) || 0) + (Number.parseFloat(r.borderRightWidth) || 0), a = Math.max(0, t.offsetWidth - t.clientWidth - i) > 0 && !r.scrollbarGutter.includes("stable") ? "stable" : null;
+	ui.set(e, {
 		...n,
 		lockedScrollbarGutter: a,
 		overflow: t.style.overflow,
 		scrollbarGutter: t.style.scrollbarGutter
 	}), a && (t.style.scrollbarGutter = a), t.style.overflow = "hidden";
 }
-function yr(e) {
-	let t = e, n = fr.get(e);
+function _i(e) {
+	let t = e, n = ui.get(e);
 	n && (t.style.overflow === "hidden" && (t.style.overflow = n.overflow), n.lockedScrollbarGutter !== null && t.style.scrollbarGutter === n.lockedScrollbarGutter && (t.style.scrollbarGutter = n.scrollbarGutter));
 }
-function br(e) {
-	let t = fr.get(e);
-	!t || t.count > 0 || (e === ur ? _r(e) : yr(e), hr(e), fr.delete(e));
+function vi(e) {
+	let t = ui.get(e);
+	!t || t.count > 0 || (e === ci ? hi(e) : _i(e), pi(e), ui.delete(e));
 }
-function xr() {
-	[...fr.keys()].forEach((e) => {
-		e === ur ? _r(e) : yr(e), hr(e);
-	}), fr.clear();
+function yi() {
+	[...ui.keys()].forEach((e) => {
+		e === ci ? hi(e) : _i(e), pi(e);
+	}), ui.clear();
 }
-function Sr({ inertElement: e = null, scrollElement: t } = {}) {
-	let n = t instanceof HTMLElement ? t : ur, r = pr(n);
-	r.count === 0 ? (n === ur ? gr(n) : vr(n), mr(n, e)) : e && r.inertElement !== e && mr(n, e);
-	let i = pr(n);
-	fr.set(n, {
+function bi({ inertElement: e = null, scrollElement: t } = {}) {
+	let n = t instanceof HTMLElement ? t : ci, r = di(n);
+	r.count === 0 ? (n === ci ? mi(n) : gi(n), fi(n, e)) : e && r.inertElement !== e && fi(n, e);
+	let i = di(n);
+	ui.set(n, {
 		...i,
 		count: i.count + 1
 	});
 }
-function Cr(e) {
-	let t = e?.scrollElement instanceof HTMLElement ? e.scrollElement : ur, n = fr.get(t);
-	n && (fr.set(t, {
+function xi(e) {
+	let t = e?.scrollElement instanceof HTMLElement ? e.scrollElement : ci, n = ui.get(t);
+	n && (ui.set(t, {
 		...n,
 		count: Math.max(0, n.count - 1)
-	}), br(t));
+	}), vi(t));
 }
-function wr(e, t) {
-	let n = cr.value.filter((e) => e.isConnected);
-	if (n.length === 0 && xr(), n.includes(e)) {
-		cr.value = n;
+function Si(e, t) {
+	let n = oi.value.filter((e) => e.isConnected);
+	if (n.length === 0 && yi(), n.includes(e)) {
+		oi.value = n;
 		return;
 	}
-	dr.set(e, t), cr.value = [...n, e], Sr(t);
+	li.set(e, t), oi.value = [...n, e], bi(t);
 }
-function Tr(e) {
-	let t = dr.get(e);
-	dr.delete(e), cr.value = cr.value.filter((t) => t !== e && t.isConnected), t && Cr(t), cr.value.length === 0 && xr();
+function Ci(e) {
+	let t = li.get(e);
+	li.delete(e), oi.value = oi.value.filter((t) => t !== e && t.isConnected), t && xi(t), oi.value.length === 0 && yi();
 }
 //#endregion
 //#region src/components/use-focus-trap.js
-var Er = [
+var wi = [
 	"a[href]",
 	"button:not([disabled])",
 	"input:not([disabled])",
@@ -2526,11 +2784,11 @@ var Er = [
 	"textarea:not([disabled])",
 	"[tabindex]:not([tabindex=\"-1\"])"
 ].join(",");
-function Dr(e, t) {
+function Ti(e, t) {
 	let n = null, r = !1;
 	function i() {
 		let t = e.value;
-		return t ? [...t.querySelectorAll(Er)].filter((e) => e instanceof HTMLElement) : [];
+		return t ? [...t.querySelectorAll(wi)].filter((e) => e instanceof HTMLElement) : [];
 	}
 	function a(t) {
 		if (t.key !== "Tab") return;
@@ -2565,7 +2823,7 @@ function Dr(e, t) {
 }
 //#endregion
 //#region src/components/mat-aside/MatAside.vue
-var Or = 200, kr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+var Ei = 200, Di = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatAside",
 	inheritAttrs: !1
 }, {
@@ -2608,7 +2866,7 @@ var Or = 200, kr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		blockSize: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => e === void 0 || e === "auto" || Ct(e, { property: "block-size" })
+			validator: (e) => e === void 0 || e === "auto" || Sn(e, { property: "block-size" })
 		},
 		safeArea: {
 			type: [
@@ -2617,7 +2875,7 @@ var Or = 200, kr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				String
 			],
 			default: !0,
-			validator: (e) => typeof e == "boolean" || Ct(e, {
+			validator: (e) => typeof e == "boolean" || Sn(e, {
 				property: "block-size",
 				allowUndefined: !1
 			})
@@ -2625,7 +2883,7 @@ var Or = 200, kr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		safeAreaSize: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => e === void 0 || Ct(e, {
+			validator: (e) => e === void 0 || Sn(e, {
 				property: "block-size",
 				allowUndefined: !1
 			})
@@ -2709,11 +2967,11 @@ var Or = 200, kr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		let E = w(), O = i(() => ({
 			...m,
 			...E
-		})), k = i(() => d.open === void 0 ? d.modelValue === void 0 || !!d.modelValue : !!d.open), A = j(!d.unmountOnClose || k.value), M = j(k.value ? "open" : "closed"), N = qt(), I = Jt({ motion: N }), R = !1, B, V = null;
+		})), k = i(() => d.open === void 0 ? d.modelValue === void 0 || !!d.modelValue : !!d.open), A = j(!d.unmountOnClose || k.value), M = j(k.value ? "open" : "closed"), N = Kn(), I = qn({ motion: N }), R = !1, B, V = null;
 		function U() {
 			V?.isConnected && V.focus({ preventScroll: !0 }), V = null;
 		}
-		let G = h(or, null), K = h(Yt, null), q = h(nr, null), J = g?.vnode.props ?? {}, te = i(() => Object.prototype.hasOwnProperty.call(J, "attach") && J.attach !== void 0);
+		let G = h(ii, null), K = h(Jn, null), q = h(ei, null), J = g?.vnode.props ?? {}, te = i(() => Object.prototype.hasOwnProperty.call(J, "attach") && J.attach !== void 0);
 		function Y() {
 			let e = g?.vnode.props ?? {};
 			return Object.prototype.hasOwnProperty.call(e, "mode") && e.mode !== void 0;
@@ -2729,11 +2987,11 @@ var Or = 200, kr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		}), Z = i(() => d.blockSize === void 0 || d.blockSize === "auto"), ie = j({
 			blockSize: 0,
 			inlineSize: 0
-		}), ae = i(() => !!d.modal), oe = i(() => ae.value && d.placeholder), se = i(() => ae.value && cr.value.at(-1) === b.value);
-		Dr(b, i(() => ae.value && A.value && se.value));
+		}), ae = i(() => !!d.modal), oe = i(() => ae.value && d.placeholder), se = i(() => ae.value && oi.value.at(-1) === b.value);
+		Ti(b, i(() => ae.value && A.value && se.value));
 		let ce = i(() => {
 			if (Z.value) return "auto";
-			let e = Tt(d.blockSize, {
+			let e = wn(d.blockSize, {
 				property: "block-size",
 				fallback: "0px"
 			});
@@ -2741,14 +2999,14 @@ var Or = 200, kr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		}), le = i(() => {
 			if (d.safeArea === !1) return "0px";
 			if (d.safeAreaSize !== void 0) {
-				let e = Tt(d.safeAreaSize, {
+				let e = wn(d.safeAreaSize, {
 					property: "block-size",
 					fallback: "0px"
 				});
 				return e === "0" ? "0px" : e;
 			}
 			if (typeof d.safeArea == "number" || typeof d.safeArea == "string" && d.safeArea !== "auto") {
-				let e = Tt(d.safeArea, {
+				let e = wn(d.safeArea, {
 					property: "block-size",
 					fallback: "0px"
 				});
@@ -2817,7 +3075,7 @@ var Or = 200, kr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			return X.value !== "fixed" && q?.rootElement?.value ? q.rootElement.value : X.value === "fixed" ? null : "body";
 		}), ve = i(() => ae.value && he.value ? q?.contentElement?.value ?? _e.value : _e.value), ye = i(() => {
 			let e = re.value === "start" || re.value === "end", t = k.value && M.value !== "closed", n;
-			return n = t ? d.placeholderSize === void 0 ? Z.value ? e ? `${ie.value.inlineSize}px` : `${ie.value.blockSize}px` : ue.value : Tt(d.placeholderSize, {
+			return n = t ? d.placeholderSize === void 0 ? Z.value ? e ? `${ie.value.inlineSize}px` : `${ie.value.blockSize}px` : ue.value : wn(d.placeholderSize, {
 				property: e ? "inline-size" : "block-size",
 				fallback: "0px"
 			}) : "0px", e ? {
@@ -2851,13 +3109,13 @@ var Or = 200, kr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		}
 		function xe() {
 			if (!R || !b.value || !A.value || !ae.value || !k.value || M.value === "closed") {
-				b.value && Tr(b.value);
+				b.value && Ci(b.value);
 				return;
 			}
-			wr(b.value, be());
+			Si(b.value, be());
 		}
 		function Se() {
-			b.value && Tr(b.value);
+			b.value && Ci(b.value);
 		}
 		function Ce() {
 			p("update:open", !1), p("update:modelValue", !1);
@@ -2891,7 +3149,7 @@ var Or = 200, kr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				element: b.value
 			}));
 		}
-		function Q() {
+		function ke() {
 			if (N.cancel(), A.value = !0, ae.value && typeof document < "u" && document.activeElement instanceof HTMLElement && (V = document.activeElement), !d.transition) {
 				M.value = "open", v().then(() => {
 					Oe(), xe(), p("opened");
@@ -2899,12 +3157,12 @@ var Or = 200, kr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				return;
 			}
 			M.value = "opening", v().then(() => {
-				Oe(), xe(), !(!R || !A.value || !k.value) && N.wait(b.value, Or, () => {
+				Oe(), xe(), !(!R || !A.value || !k.value) && N.wait(b.value, Ei, () => {
 					A.value && k.value && (M.value = "open", p("opened"));
 				});
 			});
 		}
-		function ke() {
+		function Ae() {
 			if (!A.value || M.value === "closed") {
 				M.value = "closed";
 				return;
@@ -2915,7 +3173,7 @@ var Or = 200, kr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}
 			I.start({
 				canStart: () => A.value && M.value !== "closing",
-				duration: Or,
+				duration: Ei,
 				getElement: () => b.value,
 				isActive: () => R && !k.value && A.value,
 				onStart: () => {
@@ -2927,7 +3185,7 @@ var Or = 200, kr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			});
 		}
 		return H(k, (e) => {
-			e ? Q() : ke(), De();
+			e ? ke() : Ae(), De();
 		}), H(re, () => {
 			Oe(), Ee();
 		}), H([
@@ -3060,36 +3318,36 @@ var Or = 200, kr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"style"
 		])) : o("", !0);
 	}
-}), [["__scopeId", "data-v-dc44c35a"]]), Ar = /* @__PURE__ */ new WeakMap(), jr = /* @__PURE__ */ new WeakMap();
-function Mr(e, t, n) {
+}), [["__scopeId", "data-v-dc44c35a"]]), Oi = /* @__PURE__ */ new WeakMap(), ki = /* @__PURE__ */ new WeakMap();
+function Ai(e, t, n) {
 	let r = [n.initialValue, ...n.names].filter((e) => e && e !== "none"), i = e.style;
 	i[t] = r.join(", ");
 }
-function Nr(e, t, n, r) {
+function ji(e, t, n, r) {
 	let i = e.get(t);
 	return i || (i = {
 		initialValue: t.style[n],
 		names: /* @__PURE__ */ new Set()
-	}, e.set(t, i)), i.names.add(r), Mr(t, n, i), () => {
+	}, e.set(t, i)), i.names.add(r), Ai(t, n, i), () => {
 		if (i.names.delete(r), i.names.size > 0) {
-			Mr(t, n, i);
+			Ai(t, n, i);
 			return;
 		}
 		let a = t.style;
 		a[n] = i.initialValue, e.delete(t);
 	};
 }
-function Pr({ name: e, scope: t, source: n }) {
-	let r = Ar.get(n)?.initialAxis ?? n.style.scrollTimelineAxis, i = Nr(Ar, n, "scrollTimelineName", e), a = Ar.get(n);
+function Mi({ name: e, scope: t, source: n }) {
+	let r = Oi.get(n)?.initialAxis ?? n.style.scrollTimelineAxis, i = ji(Oi, n, "scrollTimelineName", e), a = Oi.get(n);
 	a.initialAxis = r;
 	let o = n.style;
 	o.scrollTimelineAxis = "block";
-	let s = Nr(jr, t, "timelineScope", e);
+	let s = ji(ki, t, "timelineScope", e);
 	return () => {
-		s(), i(), Ar.has(n) || (o.scrollTimelineAxis = r);
+		s(), i(), Oi.has(n) || (o.scrollTimelineAxis = r);
 	};
 }
-function Fr(e) {
+function Ni(e) {
 	let t = e.parentElement;
 	for (; t;) {
 		let e = window.getComputedStyle(t).overflowY;
@@ -3098,7 +3356,7 @@ function Fr(e) {
 	}
 	return document.scrollingElement instanceof HTMLElement ? document.scrollingElement : document.documentElement;
 }
-function Ir(e, t) {
+function Pi(e, t) {
 	let n = /* @__PURE__ */ new Set(), r = e;
 	for (; r;) n.add(r), r = r.parentElement;
 	for (r = t; r;) {
@@ -3109,16 +3367,16 @@ function Ir(e, t) {
 }
 //#endregion
 //#region src/components/mat-app-bar/MatAppBar.vue
-var Lr = {
+var Fi = {
 	key: 0,
 	class: "mat-app-bar__leading"
-}, Rr = { class: "mat-app-bar__main" }, zr = {
+}, Ii = { class: "mat-app-bar__main" }, Li = {
 	key: 0,
 	class: "mat-app-bar__subtitle mat-sys-typescale-body-medium"
-}, Br = {
+}, Ri = {
 	key: 1,
 	class: "mat-app-bar__trailing"
-}, Vr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, zi = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatAppBar",
 	inheritAttrs: !1
 }, {
@@ -3229,7 +3487,7 @@ var Lr = {
 			"headline",
 			"image",
 			"search"
-		], u = ["start", "center"], p = $("appBar", e), m = r, g = ee(), b = f(), S = h(Yt, null), w = b?.vnode.props ?? {}, E = i(() => Object.prototype.hasOwnProperty.call(w, "attach") && w.attach !== void 0), O = i(() => E.value ? p.attach : void 0), k = j(null), A = i(() => {
+		], u = ["start", "center"], p = $("appBar", e), m = r, g = ee(), b = f(), S = h(Jn, null), w = b?.vnode.props ?? {}, E = i(() => Object.prototype.hasOwnProperty.call(w, "attach") && w.attach !== void 0), O = i(() => E.value ? p.attach : void 0), k = j(null), A = i(() => {
 			if (p.mode !== void 0) return p.mode;
 			if (!p.app) return "sticky";
 		}), M = `--mat-app-bar-${b?.uid ?? Math.random().toString(36).slice(2)}`, N = i(() => a.includes(p.variant) ? p.variant : "small"), F = i(() => N.value === "search" ? "search" : l.includes(p.content) ? p.content : "headline"), I = i(() => u.includes(p.align) ? p.align : "start"), L = i(() => N.value === "medium-flexible" ? 112 : N.value === "large-flexible" ? 120 : 64), R = i(() => p.app && !!S && !E.value), B = i(() => {
@@ -3239,7 +3497,7 @@ var Lr = {
 			`mat-app-bar--${N.value}`,
 			`mat-app-bar--content-${F.value}`,
 			`mat-app-bar--align-${I.value}`
-		]), U = i(() => [g.style, { "--mat-app-bar-timeline": M }]), G = i(() => N.value === "medium-flexible" ? qn("headline", "small") : N.value === "large-flexible" ? qn("headline", "medium") : qn("title", "large")), K = !1, q, J;
+		]), U = i(() => [g.style, { "--mat-app-bar-timeline": M }]), G = i(() => N.value === "medium-flexible" ? Gr("headline", "small") : N.value === "large-flexible" ? Gr("headline", "medium") : Gr("title", "large")), K = !1, q, J;
 		function te() {
 			return typeof CSS < "u" && typeof CSS.supports == "function" && CSS.supports("animation-timeline", "scroll()");
 		}
@@ -3263,10 +3521,10 @@ var Lr = {
 			let e = k.value?.hostElement;
 			if (!K || !e) return;
 			ne();
-			let t = Y(p.scrollTarget), n = R.value && S.rootElement.value?.dataset.scrollable === "true" ? S.contentElement.value : null, r = t ?? n ?? Fr(e);
+			let t = Y(p.scrollTarget), n = R.value && S.rootElement.value?.dataset.scrollable === "true" ? S.contentElement.value : null, r = t ?? n ?? Ni(e);
 			if (!r) return;
-			let i = Ir(r, e);
-			te() && i && (q = Pr({
+			let i = Pi(r, e);
+			te() && i && (q = Mi({
 				name: M,
 				scope: i,
 				source: r
@@ -3294,7 +3552,7 @@ var Lr = {
 		], X), n({
 			asideRef: k,
 			hostElement: i(() => k.value?.hostElement)
-		}), (e, n) => (D(), s(t, null, [d(kr, _({
+		}), (e, n) => (D(), s(t, null, [d(Di, _({
 			ref_key: "asideRef",
 			ref: k,
 			as: "header",
@@ -3317,13 +3575,13 @@ var Lr = {
 			"onUpdate:modelValue": n[1] ||= (e) => m("update:modelValue", e)
 		}), {
 			default: W(() => [
-				e.$slots.leading ? (D(), s("div", Lr, [P(e.$slots, "leading", {}, void 0, !0)])) : o("", !0),
-				c("div", Rr, [c("div", { class: y(["mat-app-bar__primary", G.value]) }, [P(e.$slots, "default", {}, void 0, !0)], 2), e.$slots.subtitle ? (D(), s("div", zr, [P(e.$slots, "subtitle", {}, void 0, !0)])) : o("", !0)]),
+				e.$slots.leading ? (D(), s("div", Fi, [P(e.$slots, "leading", {}, void 0, !0)])) : o("", !0),
+				c("div", Ii, [c("div", { class: y(["mat-app-bar__primary", G.value]) }, [P(e.$slots, "default", {}, void 0, !0)], 2), e.$slots.subtitle ? (D(), s("div", Li, [P(e.$slots, "subtitle", {}, void 0, !0)])) : o("", !0)]),
 				n[2] ||= c("span", {
 					class: "mat-app-bar__spacer",
 					"aria-hidden": "true"
 				}, null, -1),
-				e.$slots.trailing ? (D(), s("div", Br, [P(e.$slots, "trailing", {}, void 0, !0)])) : o("", !0)
+				e.$slots.trailing ? (D(), s("div", Ri, [P(e.$slots, "trailing", {}, void 0, !0)])) : o("", !0)
 			]),
 			_: 3
 		}, 16, [
@@ -3346,7 +3604,7 @@ var Lr = {
 			style: x({ blockSize: `${B.value}px` })
 		}, null, 4)) : o("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-abe3039f"]]), Hr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-abe3039f"]]), Bi = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatInputBase",
 	inheritAttrs: !1
 }, {
@@ -3426,10 +3684,10 @@ var Lr = {
 			"value"
 		]));
 	}
-}), [["__scopeId", "data-v-ace9bd51"]]), Ur = { class: "mat-search__leading" }, Wr = {
+}), [["__scopeId", "data-v-ace9bd51"]]), Vi = { class: "mat-search__leading" }, Hi = {
 	key: 0,
 	class: "mat-search__trailing"
-}, Gr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, Ui = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatSearch",
 	inheritAttrs: !1
 }, {
@@ -3489,7 +3747,7 @@ var Lr = {
 			role: "search",
 			onSubmit: q(m, ["prevent"])
 		}), [
-			c("span", Ur, [P(e.$slots, "leading", {}, () => [d(Yn, {
+			c("span", Vi, [P(e.$slots, "leading", {}, () => [d(qr, {
 				disabled: z(r).disabled,
 				icon: "search",
 				label: z(r).label,
@@ -3498,7 +3756,7 @@ var Lr = {
 				variant: "standard",
 				onClick: m
 			}, null, 8, ["disabled", "label"])], !0)]),
-			d(Hr, _({
+			d(Bi, _({
 				ref_key: "inputBase",
 				ref: u
 			}, p.value, {
@@ -3521,10 +3779,10 @@ var Lr = {
 				"readonly",
 				"onKeydown"
 			]),
-			e.$slots.trailing ? (D(), s("span", Wr, [P(e.$slots, "trailing", {}, void 0, !0)])) : o("", !0)
+			e.$slots.trailing ? (D(), s("span", Hi, [P(e.$slots, "trailing", {}, void 0, !0)])) : o("", !0)
 		], 16));
 	}
-}), [["__scopeId", "data-v-7c60e904"]]), Kr = 150, qr = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-7c60e904"]]), Wi = 150, Gi = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatBtnGroup",
 	inheritAttrs: !1
 }, {
@@ -3545,20 +3803,20 @@ var Lr = {
 			type: String,
 			default: "small",
 			validator(e) {
-				return Fe.includes(e);
+				return Nt.includes(e);
 			}
 		},
 		shape: {
 			type: String,
 			default: "round",
 			validator(e) {
-				return Ie.includes(e);
+				return Pt.includes(e);
 			}
 		},
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		disabled: {
 			type: Boolean,
@@ -3597,7 +3855,7 @@ var Lr = {
 		return e && Object.hasOwn(e, "value") && Object.hasOwn(e, "nextSelected") && e.originalEvent instanceof MouseEvent;
 	} },
 	setup(e, { emit: t }) {
-		let n = $("btnGroup", e), r = t, a = j(null), o = j(null), c = /* @__PURE__ */ new WeakMap(), l = /* @__PURE__ */ new WeakMap(), u = /* @__PURE__ */ new WeakMap(), d = /* @__PURE__ */ new Set(), f, p, m, h = Kr, g = !0, y = !1, { colorStyle: b } = dt(i(() => n.color));
+		let n = $("btnGroup", e), r = t, a = j(null), o = j(null), c = /* @__PURE__ */ new WeakMap(), l = /* @__PURE__ */ new WeakMap(), u = /* @__PURE__ */ new WeakMap(), d = /* @__PURE__ */ new Set(), f, p, m, h = Wi, g = !0, y = !1, { colorStyle: b } = un(i(() => n.color));
 		function x(e) {
 			return n.selection === "multiple" ? Array.isArray(n.selected) && n.selected.some((t) => Object.is(t, e)) : n.selection === "single" && Object.is(n.selected, e);
 		}
@@ -3628,7 +3886,7 @@ var Lr = {
 				});
 			}
 		}
-		O(Rn, {
+		O(Ir, {
 			color: i(() => n.color),
 			disabled: i(() => n.disabled),
 			isSelected: x,
@@ -3648,7 +3906,7 @@ var Lr = {
 			return t[2] === "s" ? n * 1e3 : n;
 		}
 		function A() {
-			return k(getComputedStyle(a.value).getPropertyValue("--mat-btn-group-size-animation-duration")) ?? Kr;
+			return k(getComputedStyle(a.value).getPropertyValue("--mat-btn-group-size-animation-duration")) ?? Wi;
 		}
 		function M() {
 			return typeof window.matchMedia == "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -3705,7 +3963,7 @@ var Lr = {
 					paddingInlineStart: "",
 					paddingInlineEnd: ""
 				}), c.delete(t), l.delete(t);
-			}), d.clear(), o.value && delete o.value.dataset.matGroupPressed, m &&= (m.style.removeProperty("--mat-button-visual-scale"), void 0), o.value = null, h = Kr, g = !0, y = !1;
+			}), d.clear(), o.value && delete o.value.dataset.matGroupPressed, m &&= (m.style.removeProperty("--mat-button-visual-scale"), void 0), o.value = null, h = Wi, g = !0, y = !1;
 		}
 		function ee() {
 			if (!o.value) return;
@@ -3833,11 +4091,11 @@ var Lr = {
 			onPointerupCapture: B
 		}), [P(e.$slots, "default", {}, void 0, !0)], 16));
 	}
-}), [["__scopeId", "data-v-05cf7ce9"]]), Jr = [
+}), [["__scopeId", "data-v-05cf7ce9"]]), Ki = [
 	"small",
 	"medium",
 	"large"
-], Yr = [
+], qi = [
 	"primary",
 	"secondary",
 	"tertiary",
@@ -3846,17 +4104,17 @@ var Lr = {
 	"tertiary-container",
 	"error",
 	"error-container"
-], Xr = [
+], Ji = [
 	"button",
 	"submit",
 	"reset"
 ];
-function Zr(e) {
-	return typeof e == "string" && Yr.includes(e);
+function Yi(e) {
+	return typeof e == "string" && qi.includes(e);
 }
 //#endregion
 //#region src/components/mat-fab/MatFab.vue
-var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+var Xi = ["aria-hidden"], Zi = ["aria-hidden"], Qi = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatFab",
 	inheritAttrs: !1
 }, {
@@ -3866,7 +4124,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			type: String,
 			default: "medium",
 			validator(e) {
-				return Jr.includes(e);
+				return Ki.includes(e);
 			}
 		},
 		icon: {
@@ -3887,7 +4145,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 		color: {
 			type: String,
 			default: "primary-container",
-			validator: Zr
+			validator: Yi
 		},
 		disabled: {
 			type: Boolean,
@@ -3897,7 +4155,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			type: String,
 			default: "button",
 			validator(e) {
-				return Xr.includes(e);
+				return Ji.includes(e);
 			}
 		},
 		app: {
@@ -3920,7 +4178,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 		return e instanceof MouseEvent;
 	} },
 	setup(t, { emit: r }) {
-		let c = $("fab", t), l = r, f = ee(), p = V(), m = h(Ne, Me), g = h(Yt, null), v = j(null), y = B(), b = i(() => (p.default?.() ?? []).some((t) => t.type === e ? !1 : typeof t.children != "string" || t.children.trim().length > 0)), x = i(() => c.expanded && b.value), S = i(() => typeof c.icon == "string" && c.icon.trim().length > 0), C = i(() => !x.value), w = i(() => C.value ? f.title ?? c.label : void 0), T = i(() => C.value ? c.label : f["aria-label"]), E = i(() => ({
+		let c = $("fab", t), l = r, f = ee(), p = V(), m = h(kt, Ot), g = h(Jn, null), v = j(null), y = B(), b = i(() => (p.default?.() ?? []).some((t) => t.type === e ? !1 : typeof t.children != "string" || t.children.trim().length > 0)), x = i(() => c.expanded && b.value), S = i(() => typeof c.icon == "string" && c.icon.trim().length > 0), C = i(() => !x.value), w = i(() => C.value ? f.title ?? c.label : void 0), T = i(() => C.value ? c.label : f["aria-label"]), E = i(() => ({
 			small: 24,
 			medium: 28,
 			large: 36
@@ -3930,7 +4188,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 				medium: ["title", "large"],
 				large: ["headline", "small"]
 			}[c.size];
-			return qn(e, t);
+			return Gr(e, t);
 		}), k = i(() => ({
 			"--mat-fab-container-color": `var(--mat-sys-color-${c.color})`,
 			"--mat-fab-content-color": `var(--mat-sys-color-on-${c.color})`,
@@ -3941,7 +4199,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 		}), (e, t) => A.value ? M.value ? (D(), a(n, {
 			key: 1,
 			to: M.value
-		}, [d(Ae, _({
+		}, [d(Mt, _({
 			ref_key: "buttonElement",
 			ref: v
 		}, e.$attrs, {
@@ -3964,7 +4222,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			onClick: t[1] ||= (e) => l("click", e)
 		}), {
 			default: W(() => [
-				S.value ? (D(), a(ht, {
+				S.value ? (D(), a(mn, {
 					key: 0,
 					as: "span",
 					class: "mat-fab__icon",
@@ -3980,8 +4238,8 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 					key: 1,
 					class: "mat-fab__label",
 					"aria-hidden": x.value ? void 0 : "true"
-				}, [P(e.$slots, "default", {}, void 0, !0)], 8, $r)) : o("", !0),
-				C.value && w.value ? (D(), a(Ln, {
+				}, [P(e.$slots, "default", {}, void 0, !0)], 8, Zi)) : o("", !0),
+				C.value && w.value ? (D(), a(Fr, {
 					key: 2,
 					content: w.value,
 					id: `${z(y)}-tooltip`,
@@ -4001,7 +4259,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			"title",
 			"type",
 			"use-cursor"
-		])], 8, ["to"])) : o("", !0) : (D(), a(Ae, _({
+		])], 8, ["to"])) : o("", !0) : (D(), a(Mt, _({
 			key: 0,
 			ref_key: "buttonElement",
 			ref: v
@@ -4023,7 +4281,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			onClick: t[0] ||= (e) => l("click", e)
 		}), {
 			default: W(() => [
-				S.value ? (D(), a(ht, {
+				S.value ? (D(), a(mn, {
 					key: 0,
 					as: "span",
 					class: "mat-fab__icon",
@@ -4039,8 +4297,8 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 					key: 1,
 					class: "mat-fab__label",
 					"aria-hidden": x.value ? void 0 : "true"
-				}, [P(e.$slots, "default", {}, void 0, !0)], 8, Qr)) : o("", !0),
-				C.value && w.value ? (D(), a(Ln, {
+				}, [P(e.$slots, "default", {}, void 0, !0)], 8, Xi)) : o("", !0),
+				C.value && w.value ? (D(), a(Fr, {
 					key: 2,
 					content: w.value,
 					id: `${z(y)}-tooltip`,
@@ -4062,7 +4320,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-01889ab8"]]), ti = ["aria-hidden"], ni = { class: "mat-fab-menu__trigger-box" }, ri = ["aria-hidden"], ii = { class: "mat-fab-menu__trigger-box" }, ai = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-01889ab8"]]), $i = ["aria-hidden"], ea = { class: "mat-fab-menu__trigger-box" }, ta = ["aria-hidden"], na = { class: "mat-fab-menu__trigger-box" }, ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatFabMenu",
 	inheritAttrs: !1
 }, {
@@ -4072,7 +4330,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			type: String,
 			default: "medium",
 			validator(e) {
-				return Jr.includes(e);
+				return Ki.includes(e);
 			}
 		},
 		icon: {
@@ -4097,7 +4355,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 		color: {
 			type: String,
 			default: "primary-container",
-			validator: Zr
+			validator: Yi
 		},
 		disabled: {
 			type: Boolean,
@@ -4107,7 +4365,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			type: String,
 			default: "button",
 			validator(e) {
-				return Xr.includes(e);
+				return Ji.includes(e);
 			}
 		},
 		modelValue: {
@@ -4139,7 +4397,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 		}
 	},
 	setup(e, { emit: t }) {
-		let r = $("fabMenu", e), l = t, f = h(Ne, Me), p = h(Yt, null), m = j(null), g = j(null), v = j(!1), y = B(), b = i(() => r.modelValue !== void 0), x = i(() => b.value ? !!r.modelValue : v.value), S = i(() => r.closeLabel || "关闭"), w = i(() => r.color.replace(/-container$/, "")), E = i(() => `${w.value}-container`), O = i(() => ({
+		let r = $("fabMenu", e), l = t, f = h(kt, Ot), p = h(Jn, null), m = j(null), g = j(null), v = j(!1), y = B(), b = i(() => r.modelValue !== void 0), x = i(() => b.value ? !!r.modelValue : v.value), S = i(() => r.closeLabel || "关闭"), w = i(() => r.color.replace(/-container$/, "")), E = i(() => `${w.value}-container`), O = i(() => ({
 			"--mat-fab-menu-close-container-color": `var(--mat-sys-color-${w.value})`,
 			"--mat-fab-menu-close-content-color": `var(--mat-sys-color-on-${w.value})`,
 			"--mat-fab-menu-state-color": `var(--mat-sys-color-on-${w.value})`
@@ -4182,12 +4440,12 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			class: "mat-fab-menu__items",
 			"aria-hidden": x.value ? void 0 : "true",
 			onClick: F
-		}, [P(e.$slots, "default", {}, void 0, !0)], 8, ti), c("div", ni, [P(e.$slots, "trigger", {
+		}, [P(e.$slots, "default", {}, void 0, !0)], 8, $i), c("div", ea, [P(e.$slots, "trigger", {
 			open: x.value,
 			toggle: N,
 			size: z(r).size,
 			color: z(r).color
-		}, () => [d(ei, {
+		}, () => [d(Qi, {
 			class: "mat-fab-menu__trigger-fab",
 			color: E.value,
 			disabled: z(r).disabled,
@@ -4206,7 +4464,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			"size",
 			"type",
 			"aria-expanded"
-		]), d(Ae, {
+		]), d(Mt, {
 			ref_key: "closeButtonElement",
 			ref: g,
 			class: "mat-fab-menu__close-btn",
@@ -4216,7 +4474,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			"use-cursor": z(f).useCursor,
 			onClick: t[1] ||= (e) => M(!1)
 		}, {
-			default: W(() => [d(ht, {
+			default: W(() => [d(mn, {
 				as: "span",
 				class: "mat-fab-menu__close-icon",
 				fill: 1,
@@ -4226,7 +4484,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			}, {
 				default: W(() => [u(R(z(r).closeIcon || "close"), 1)]),
 				_: 1
-			}), S.value ? (D(), a(Ln, {
+			}), S.value ? (D(), a(Fr, {
 				key: 0,
 				content: S.value,
 				id: `${z(y)}-close-tooltip`,
@@ -4256,12 +4514,12 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			class: "mat-fab-menu__items",
 			"aria-hidden": x.value ? void 0 : "true",
 			onClick: F
-		}, [P(e.$slots, "default", {}, void 0, !0)], 8, ri), c("div", ii, [P(e.$slots, "trigger", {
+		}, [P(e.$slots, "default", {}, void 0, !0)], 8, ta), c("div", na, [P(e.$slots, "trigger", {
 			open: x.value,
 			toggle: N,
 			size: z(r).size,
 			color: z(r).color
-		}, () => [d(ei, {
+		}, () => [d(Qi, {
 			class: "mat-fab-menu__trigger-fab",
 			color: E.value,
 			disabled: z(r).disabled,
@@ -4280,7 +4538,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			"size",
 			"type",
 			"aria-expanded"
-		]), d(Ae, {
+		]), d(Mt, {
 			ref_key: "closeButtonElement",
 			ref: g,
 			class: "mat-fab-menu__close-btn",
@@ -4290,7 +4548,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			"use-cursor": z(f).useCursor,
 			onClick: t[3] ||= (e) => M(!1)
 		}, {
-			default: W(() => [d(ht, {
+			default: W(() => [d(mn, {
 				as: "span",
 				class: "mat-fab-menu__close-icon",
 				fill: 1,
@@ -4300,7 +4558,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			}, {
 				default: W(() => [u(R(z(r).closeIcon || "close"), 1)]),
 				_: 1
-			}), S.value ? (D(), a(Ln, {
+			}), S.value ? (D(), a(Fr, {
 				key: 0,
 				content: S.value,
 				id: `${z(y)}-close-tooltip`,
@@ -4318,7 +4576,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			"use-cursor"
 		])], !0)])], 16));
 	}
-}), [["__scopeId", "data-v-76aa1a6c"]]), oi = ["src"], si = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-76aa1a6c"]]), ia = ["src"], aa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatImage",
 	inheritAttrs: !1
 }, {
@@ -4334,7 +4592,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 		radius: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => Ct(e, { property: "border-radius" })
+			validator: (e) => Sn(e, { property: "border-radius" })
 		},
 		fit: {
 			type: String,
@@ -4350,7 +4608,7 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 		aspectRatio: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => Ct(e, {
+			validator: (e) => Sn(e, {
 				property: "aspect-ratio",
 				positive: !0
 			})
@@ -4377,11 +4635,11 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			class: n.class,
 			style: n.style
 		})), a = i(() => Object.fromEntries(Object.entries(n).filter(([e]) => !["class", "style"].includes(e)))), o = i(() => ({
-			aspectRatio: Et(t.aspectRatio, {
+			aspectRatio: Tn(t.aspectRatio, {
 				property: "aspect-ratio",
 				positive: !0
 			}),
-			borderRadius: t.radius === void 0 ? "var(--mat-sys-shape-corner-extra-large)" : Tt(t.radius, {
+			borderRadius: t.radius === void 0 ? "var(--mat-sys-shape-corner-extra-large)" : wn(t.radius, {
 				property: "border-radius",
 				fallback: "var(--mat-sys-shape-corner-extra-large)"
 			}),
@@ -4400,18 +4658,18 @@ var Qr = ["aria-hidden"], $r = ["aria-hidden"], ei = /*#__PURE__*/ Q(/* @__PURE_
 			class: ["mat-image__img", z(t).imgClass],
 			style: l.value,
 			src: z(t).src
-		}), null, 16, oi)], 16));
+		}), null, 16, ia)], 16));
 	}
-}), [["__scopeId", "data-v-d5f3cb83"]]), ci = L(/* @__PURE__ */ new Set()), li = 0;
-function ui(e) {
-	return li += 1, ci.value = new Set(e), li;
+}), [["__scopeId", "data-v-d5f3cb83"]]), oa = L(/* @__PURE__ */ new Set()), sa = 0;
+function ca(e) {
+	return sa += 1, oa.value = new Set(e), sa;
 }
-function di(e) {
-	e === li && (ci.value = /* @__PURE__ */ new Set());
+function la(e) {
+	e === sa && (oa.value = /* @__PURE__ */ new Set());
 }
 //#endregion
 //#region src/components/mat-shared-element/MatSharedElement.vue
-var fi = /*@__PURE__*/ Object.assign({
+var ua = /*@__PURE__*/ Object.assign({
 	name: "MatSharedElement",
 	inheritAttrs: !1
 }, {
@@ -4425,7 +4683,7 @@ var fi = /*@__PURE__*/ Object.assign({
 		as: {
 			type: String,
 			default: "div",
-			validator: qe
+			validator: Gt
 		},
 		disabled: {
 			type: Boolean,
@@ -4433,16 +4691,16 @@ var fi = /*@__PURE__*/ Object.assign({
 		}
 	},
 	setup(e) {
-		let t = $("sharedElement", e), n = ee(), r = i(() => !t.disabled && ci.value.has(t.name) ? t.name : void 0), o = i(() => [n.style, { viewTransitionName: r.value }]);
+		let t = $("sharedElement", e), n = ee(), r = i(() => !t.disabled && oa.value.has(t.name) ? t.name : void 0), o = i(() => [n.style, { viewTransitionName: r.value }]);
 		return (e, r) => (D(), a(F(z(t).as), _(z(n), { style: o.value }), {
 			default: W(() => [P(e.$slots, "default")]),
 			_: 3
 		}, 16, ["style"]));
 	}
-}), pi = ["src"], mi = {
+}), da = ["src"], fa = {
 	key: 2,
 	class: "mat-avatar__content"
-}, hi = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, pa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatAvatar",
 	inheritAttrs: !1
 }, {
@@ -4462,19 +4720,19 @@ var fi = /*@__PURE__*/ Object.assign({
 		color: {
 			type: String,
 			default: "primary",
-			validator: Ue
+			validator: Vt
 		},
 		size: {
 			type: [Number, String],
 			default: 40,
-			validator: (e) => Ct(e, {
+			validator: (e) => Sn(e, {
 				property: "width",
 				positive: !0
 			})
 		}
 	},
 	setup(e) {
-		let t = $("avatar", e), { colorStyle: n } = dt(i(() => t.color)), r = i(() => Tt(t.size, {
+		let t = $("avatar", e), { colorStyle: n } = un(i(() => t.color)), r = i(() => wn(t.size, {
 			property: "width",
 			positive: !0,
 			fallback: "40px"
@@ -4492,27 +4750,27 @@ var fi = /*@__PURE__*/ Object.assign({
 			class: "mat-avatar__image",
 			src: z(t).src,
 			alt: ""
-		}, null, 8, pi)) : z(t).icon ? (D(), a(ht, {
+		}, null, 8, da)) : z(t).icon ? (D(), a(mn, {
 			key: 1,
 			as: "span",
 			class: "mat-avatar__icon",
 			icon: z(t).icon,
 			size: "var(--mat-avatar-icon-size)",
 			"aria-hidden": "true"
-		}, null, 8, ["icon"])) : (D(), s("span", mi, [P(e.$slots, "default", {}, void 0, !0)]))], 16));
+		}, null, 8, ["icon"])) : (D(), s("span", fa, [P(e.$slots, "default", {}, void 0, !0)]))], 16));
 	}
-}), [["__scopeId", "data-v-a04143bf"]]), gi = /*@__PURE__*/ Object.assign({ name: "MatText" }, {
+}), [["__scopeId", "data-v-a04143bf"]]), ma = /*@__PURE__*/ Object.assign({ name: "MatText" }, {
 	__name: "MatText",
 	props: {
 		type: {
 			type: String,
 			default: "body",
-			validator: Wn
+			validator: Hr
 		},
 		size: {
 			type: String,
 			default: "medium",
-			validator: Gn
+			validator: Ur
 		},
 		emphasized: {
 			type: Boolean,
@@ -4521,20 +4779,20 @@ var fi = /*@__PURE__*/ Object.assign({
 		as: {
 			type: String,
 			default: "span",
-			validator: qe
+			validator: Gt
 		}
 	},
 	setup(e) {
-		let t = $("text", e), n = i(() => qn(t.type, t.size, t.emphasized));
+		let t = $("text", e), n = i(() => Gr(t.type, t.size, t.emphasized));
 		return (e, r) => (D(), a(F(z(t).as), { class: y(n.value) }, {
 			default: W(() => [P(e.$slots, "default")]),
 			_: 3
 		}, 8, ["class"]));
 	}
-}), _i = ["data-char", "onAnimationend"], vi = { class: "mat-dynamic-text__stage" }, yi = {
+}), ha = ["data-char", "onAnimationend"], ga = { class: "mat-dynamic-text__stage" }, _a = {
 	key: 1,
 	class: "mat-dynamic-text__char mat-dynamic-text__char--exiting"
-}, bi = 25, xi = 300, Si = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatDynamicText" }, {
+}, va = 25, ya = 300, ba = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatDynamicText" }, {
 	__name: "MatDynamicText",
 	props: {
 		text: {
@@ -4544,7 +4802,7 @@ var fi = /*@__PURE__*/ Object.assign({
 		as: {
 			type: String,
 			default: "span",
-			validator: qe
+			validator: Gt
 		},
 		diff: {
 			type: Boolean,
@@ -4589,7 +4847,7 @@ var fi = /*@__PURE__*/ Object.assign({
 			n && (n.char ? (n.oldChar = null, n.animating = !1) : l.value = l.value.filter((t) => t.id !== e));
 		}
 		function _(e, t) {
-			let n = t * bi + xi, r = setTimeout(() => g(e), n);
+			let n = t * va + ya, r = setTimeout(() => g(e), n);
 			u.set(e, r);
 		}
 		function v(e, t) {
@@ -4648,14 +4906,14 @@ var fi = /*@__PURE__*/ Object.assign({
 				"data-char": e.char || e.oldChar || "",
 				"aria-hidden": "true",
 				onAnimationend: (t) => g(e.id)
-			}, [c("span", vi, [e.char ? (D(), s("span", {
+			}, [c("span", ga, [e.char ? (D(), s("span", {
 				key: 0,
 				class: y(["mat-dynamic-text__char", e.animating ? "mat-dynamic-text__char--entering" : "mat-dynamic-text__char--idle"])
-			}, R(e.char), 3)) : o("", !0), e.oldChar ? (D(), s("span", yi, R(e.oldChar), 1)) : o("", !0)])], 44, _i))), 128))]),
+			}, R(e.char), 3)) : o("", !0), e.oldChar ? (D(), s("span", _a, R(e.oldChar), 1)) : o("", !0)])], 44, ha))), 128))]),
 			_: 1
 		}, 8, ["aria-label"]));
 	}
-}), [["__scopeId", "data-v-314708d8"]]), Ci = /*@__PURE__*/ Object.assign({ name: "MatSplitSegment" }, {
+}), [["__scopeId", "data-v-314708d8"]]), xa = /*@__PURE__*/ Object.assign({ name: "MatSplitSegment" }, {
 	__name: "MatSplitSegment",
 	props: { role: {
 		type: String,
@@ -4665,8 +4923,8 @@ var fi = /*@__PURE__*/ Object.assign({
 		}
 	} },
 	setup(e) {
-		let n = e, r = h(zn), i = V();
-		O(zn, {
+		let n = e, r = h(Lr), i = V();
+		O(Lr, {
 			...r,
 			role: n.role
 		});
@@ -4678,7 +4936,7 @@ var fi = /*@__PURE__*/ Object.assign({
 		}
 		return (e, t) => (D(), a(s));
 	}
-}), wi = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), Sa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatSplitBtn",
 	inheritAttrs: !1
 }, {
@@ -4704,13 +4962,13 @@ var fi = /*@__PURE__*/ Object.assign({
 			type: String,
 			default: "small",
 			validator(e) {
-				return Fe.includes(e);
+				return Nt.includes(e);
 			}
 		},
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		disabled: {
 			type: Boolean,
@@ -4731,8 +4989,8 @@ var fi = /*@__PURE__*/ Object.assign({
 		"update:expanded": (e) => typeof e == "boolean"
 	},
 	setup(e, { emit: t }) {
-		let n = $("splitBtn", e), r = t, a = j(null), o = V(), { colorStyle: l, hasExplicitColor: u } = dt(i(() => n.color));
-		O(zn, {
+		let n = $("splitBtn", e), r = t, a = j(null), o = V(), { colorStyle: l, hasExplicitColor: u } = un(i(() => n.color));
+		O(Lr, {
 			color: i(() => n.color),
 			controls: i(() => n.controls),
 			disabled: i(() => n.disabled),
@@ -4772,18 +5030,18 @@ var fi = /*@__PURE__*/ Object.assign({
 		}), [c("span", {
 			class: "mat-split-btn__segment mat-split-btn__leading",
 			onClick: f
-		}, [d(Ci, { role: "leading" }, {
+		}, [d(xa, { role: "leading" }, {
 			default: W(() => [P(e.$slots, "leading", {}, void 0, !0)]),
 			_: 3
 		})]), c("span", {
 			class: "mat-split-btn__segment mat-split-btn__trailing",
 			onClick: p
-		}, [d(Ci, { role: "trailing" }, {
+		}, [d(xa, { role: "trailing" }, {
 			default: W(() => [P(e.$slots, "trailing", {}, void 0, !0)]),
 			_: 3
 		})])], 16));
 	}
-}), [["__scopeId", "data-v-30ec286f"]]), Ti = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-30ec286f"]]), Ca = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatSurfaceBase",
 	inheritAttrs: !1
 }, {
@@ -4802,22 +5060,22 @@ var fi = /*@__PURE__*/ Object.assign({
 			_: 3
 		}, 16));
 	}
-}), [["__scopeId", "data-v-73d1306b"]]), Ei = { class: "mat-card-headline mat-sys-typescale-title-large" }, Di = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatCardHeadline" }, {
+}), [["__scopeId", "data-v-73d1306b"]]), wa = { class: "mat-card-headline mat-sys-typescale-title-large" }, Ta = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatCardHeadline" }, {
 	__name: "MatCardHeadline",
 	setup(e) {
-		return (e, t) => (D(), s("div", Ei, [P(e.$slots, "default", {}, void 0, !0)]));
+		return (e, t) => (D(), s("div", wa, [P(e.$slots, "default", {}, void 0, !0)]));
 	}
-}), [["__scopeId", "data-v-53a5927c"]]), Oi = { class: "mat-card-media" }, ki = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatCardMedia" }, {
+}), [["__scopeId", "data-v-53a5927c"]]), Ea = { class: "mat-card-media" }, Da = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatCardMedia" }, {
 	__name: "MatCardMedia",
 	setup(e) {
-		return (e, t) => (D(), s("div", Oi, [P(e.$slots, "default", {}, void 0, !0)]));
+		return (e, t) => (D(), s("div", Ea, [P(e.$slots, "default", {}, void 0, !0)]));
 	}
-}), [["__scopeId", "data-v-c38ab1c6"]]), Ai = { class: "mat-card-subhead mat-sys-typescale-body-medium" }, ji = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatCardSubhead" }, {
+}), [["__scopeId", "data-v-c38ab1c6"]]), Oa = { class: "mat-card-subhead mat-sys-typescale-body-medium" }, ka = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatCardSubhead" }, {
 	__name: "MatCardSubhead",
 	setup(e) {
-		return (e, t) => (D(), s("div", Ai, [P(e.$slots, "default", {}, void 0, !0)]));
+		return (e, t) => (D(), s("div", Oa, [P(e.$slots, "default", {}, void 0, !0)]));
 	}
-}), [["__scopeId", "data-v-c437408b"]]), Mi = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-c437408b"]]), Aa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatCard",
 	inheritAttrs: !1
 }, {
@@ -4835,7 +5093,7 @@ var fi = /*@__PURE__*/ Object.assign({
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		as: {
 			type: String,
@@ -4849,22 +5107,22 @@ var fi = /*@__PURE__*/ Object.assign({
 		}
 	},
 	setup(e) {
-		let t = $("card", e), { colorStyle: n, hasExplicitColor: r } = dt(i(() => t.color));
-		return (e, i) => (D(), a(Ti, _(e.$attrs, {
+		let t = $("card", e), { colorStyle: n, hasExplicitColor: r } = un(i(() => t.color));
+		return (e, i) => (D(), a(Ca, _(e.$attrs, {
 			class: ["mat-card", [`mat-card--${z(t).variant}`, { "mat-card--explicit-color": z(r) }]],
 			style: z(n),
 			as: z(t).as
 		}), {
 			default: W(() => [
-				e.$slots.media ? (D(), a(ki, { key: 0 }, {
+				e.$slots.media ? (D(), a(Da, { key: 0 }, {
 					default: W(() => [P(e.$slots, "media", {}, void 0, !0)]),
 					_: 3
 				})) : o("", !0),
-				e.$slots.headline ? (D(), a(Di, { key: 1 }, {
+				e.$slots.headline ? (D(), a(Ta, { key: 1 }, {
 					default: W(() => [P(e.$slots, "headline", {}, void 0, !0)]),
 					_: 3
 				})) : o("", !0),
-				e.$slots.subhead ? (D(), a(ji, { key: 2 }, {
+				e.$slots.subhead ? (D(), a(ka, { key: 2 }, {
 					default: W(() => [P(e.$slots, "subhead", {}, void 0, !0)]),
 					_: 3
 				})) : o("", !0),
@@ -4877,7 +5135,7 @@ var fi = /*@__PURE__*/ Object.assign({
 			"as"
 		]));
 	}
-}), [["__scopeId", "data-v-cb7bd9d9"]]), Ni = { class: "mat-card-action-area__content" }, Pi = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-cb7bd9d9"]]), ja = { class: "mat-card-action-area__content" }, Ma = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatCardActionArea",
 	inheritAttrs: !1
 }, {
@@ -4894,15 +5152,15 @@ var fi = /*@__PURE__*/ Object.assign({
 		type: {
 			type: String,
 			default: "button",
-			validator: (e) => Le.includes(e)
+			validator: (e) => Ft.includes(e)
 		}
 	},
 	emits: { click(e) {
 		return e instanceof MouseEvent;
 	} },
 	setup(e, { emit: t }) {
-		let n = e, r = t, i = $("cardActionArea", n), o = h(Ne, Me);
-		return (e, t) => (D(), a(ke, _(e.$attrs, {
+		let n = e, r = t, i = $("cardActionArea", n), o = h(kt, Ot);
+		return (e, t) => (D(), a(jt, _(e.$attrs, {
 			class: "mat-card-action-area",
 			disabled: z(i).disabled,
 			"focus-ring": !1,
@@ -4911,7 +5169,7 @@ var fi = /*@__PURE__*/ Object.assign({
 			"use-cursor": z(o).useCursor,
 			onClick: t[0] ||= (e) => r("click", e)
 		}), {
-			default: W(() => [c("span", Ni, [P(e.$slots, "default", {}, void 0, !0)])]),
+			default: W(() => [c("span", ja, [P(e.$slots, "default", {}, void 0, !0)])]),
 			_: 3
 		}, 16, [
 			"disabled",
@@ -4920,29 +5178,29 @@ var fi = /*@__PURE__*/ Object.assign({
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-c7ecd12e"]]), Fi = { class: "mat-card-content" }, Ii = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatCardContent" }, {
+}), [["__scopeId", "data-v-c7ecd12e"]]), Na = { class: "mat-card-content" }, Pa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatCardContent" }, {
 	__name: "MatCardContent",
 	setup(e) {
-		return (e, t) => (D(), s("div", Fi, [P(e.$slots, "default", {}, void 0, !0)]));
+		return (e, t) => (D(), s("div", Na, [P(e.$slots, "default", {}, void 0, !0)]));
 	}
-}), [["__scopeId", "data-v-9ba80632"]]), Li = { class: "mat-card-actions" }, Ri = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatCardActions" }, {
+}), [["__scopeId", "data-v-9ba80632"]]), Fa = { class: "mat-card-actions" }, Ia = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatCardActions" }, {
 	__name: "MatCardActions",
 	setup(e) {
-		return (e, t) => (D(), s("div", Li, [P(e.$slots, "default", {}, void 0, !0)]));
+		return (e, t) => (D(), s("div", Fa, [P(e.$slots, "default", {}, void 0, !0)]));
 	}
-}), [["__scopeId", "data-v-69850177"]]), zi = [
+}), [["__scopeId", "data-v-69850177"]]), La = [
 	"none",
 	"single-action",
 	"multi-action",
 	"single-select",
 	"multi-select"
-], Bi = Symbol("mat-list"), Vi = Symbol("mat-list-group-activator");
-function Hi(e) {
+], Ra = Symbol("mat-list"), za = Symbol("mat-list-group-activator");
+function Ba(e) {
 	return e === "single-select" || e === "multi-select";
 }
 //#endregion
 //#region src/components/use-roving-focus.js
-function Ui(e) {
+function Va(e) {
 	let t = /* @__PURE__ */ new Map(), n = null, r, i = !1;
 	function a() {
 		return e.root.value ? [...e.root.value.querySelectorAll(e.selector)].filter((e) => e instanceof HTMLElement).filter((n) => {
@@ -5015,29 +5273,29 @@ function Ui(e) {
 }
 //#endregion
 //#region src/components/selection-control.js
-function Wi(e) {
+function Ha(e) {
 	return [
 		"string",
 		"number",
 		"boolean"
 	].includes(typeof e);
 }
-function Gi(e) {
-	return typeof e == "boolean" || Array.isArray(e) && e.every(Wi);
+function Ua(e) {
+	return typeof e == "boolean" || Array.isArray(e) && e.every(Ha);
 }
 //#endregion
 //#region src/components/scroll-area-context.js
-var Ki = Symbol("mat-scroll-area");
+var Wa = Symbol("mat-scroll-area");
 //#endregion
 //#region src/components/mat-virtual-scroll/use-virtual-scroll.js
-function qi({ root: e, props: t, enabled: n = !0, pinEdges: r = !1, emit: a }) {
-	let o = j(null), s = h(Ki, null), c = i(() => !!z(n)), l = i(() => !!z(r)), u = i(() => jt(t.itemHeight, {
+function Ga({ root: e, props: t, enabled: n = !0, pinEdges: r = !1, emit: a }) {
+	let o = j(null), s = h(Wa, null), c = i(() => !!z(n)), l = i(() => !!z(r)), u = i(() => An(t.itemHeight, {
 		positive: !0,
 		fallback: void 0
-	})), d = i(() => u.value !== void 0), f = i(() => jt(t.estimatedItemHeight, {
+	})), d = i(() => u.value !== void 0), f = i(() => An(t.estimatedItemHeight, {
 		positive: !0,
 		fallback: 48
-	})), p = i(() => jt(t.buffer, { fallback: 3 })), m = /* @__PURE__ */ new Map(), g = /* @__PURE__ */ new Map(), _ = /* @__PURE__ */ new Map(), y = /* @__PURE__ */ new Map(), b = j({
+	})), p = i(() => An(t.buffer, { fallback: 3 })), m = /* @__PURE__ */ new Map(), g = /* @__PURE__ */ new Map(), _ = /* @__PURE__ */ new Map(), y = /* @__PURE__ */ new Map(), b = j({
 		start: 0,
 		end: 0
 	}), x = j(0), S = j(0), w = null, D = !0, O, k, A, M = !1;
@@ -5250,7 +5508,7 @@ function qi({ root: e, props: t, enabled: n = !0, pinEdges: r = !1, emit: a }) {
 }
 //#endregion
 //#region src/components/frame-scheduler.js
-function Ji(e) {
+function Ka(e) {
 	let t, n = !1, r;
 	function i() {
 		t !== void 0 && (globalThis.cancelAnimationFrame(t), t = void 0);
@@ -5276,20 +5534,20 @@ function Ji(e) {
 }
 //#endregion
 //#region src/components/mat-list/use-list-drag-sort.js
-var Yi = 500, Xi = 8, Zi = 48, Qi = 24, $i = "color-mix(\n  in srgb,\n  var(--mat-list-drag-content-color) calc(var(--mat-sys-state-dragged-state-layer-opacity) * 100%),\n  var(--mat-list-drag-container-color)\n)", ea = "data-mat-list-drag-selection-lock", ta = 0;
-function na(e) {
+var qa = 500, Ja = 8, Ya = 48, Xa = 24, Za = "color-mix(\n  in srgb,\n  var(--mat-list-drag-content-color) calc(var(--mat-sys-state-dragged-state-layer-opacity) * 100%),\n  var(--mat-list-drag-container-color)\n)", Qa = "data-mat-list-drag-selection-lock", $a = 0;
+function eo(e) {
 	e.cancelable && e.preventDefault();
 }
-function ra() {
-	ta === 0 && (document.documentElement.setAttribute(ea, ""), document.addEventListener("selectstart", na, !0)), ta += 1, globalThis.getSelection?.()?.removeAllRanges();
+function to() {
+	$a === 0 && (document.documentElement.setAttribute(Qa, ""), document.addEventListener("selectstart", eo, !0)), $a += 1, globalThis.getSelection?.()?.removeAllRanges();
 }
-function ia() {
-	ta !== 0 && (--ta, ta === 0 && (document.documentElement.removeAttribute(ea), document.removeEventListener("selectstart", na, !0)));
+function no() {
+	$a !== 0 && (--$a, $a === 0 && (document.documentElement.removeAttribute(Qa), document.removeEventListener("selectstart", eo, !0)));
 }
-function aa(e) {
+function ro(e) {
 	return Object.is(e, -0) ? "number:-0" : `${typeof e}:${String(e)}`;
 }
-function oa(e) {
+function io(e) {
 	let t = e.parentElement;
 	for (; t && t !== document.body;) {
 		let e = getComputedStyle(t);
@@ -5298,25 +5556,25 @@ function oa(e) {
 	}
 	return document.scrollingElement instanceof HTMLElement ? document.scrollingElement : document.documentElement;
 }
-function sa(e) {
+function ao(e) {
 	e.removeAttribute("id"), e.querySelectorAll("[id]").forEach((e) => {
 		e.removeAttribute("id");
 	}), e.querySelectorAll("[tabindex]").forEach((e) => {
 		e.setAttribute("tabindex", "-1");
 	});
 }
-function ca(e, t) {
+function oo(e, t) {
 	let { style: n } = e;
-	n.setProperty("--mat-list-drag-container-color", t.backgroundColor), n.setProperty("--mat-list-drag-content-color", t.color), n.background = $i;
+	n.setProperty("--mat-list-drag-container-color", t.backgroundColor), n.setProperty("--mat-list-drag-content-color", t.color), n.background = Za;
 }
-function la(e, t) {
+function so(e, t) {
 	let n = e.cloneNode(!0), r = getComputedStyle(e), i = e.matches(".mat-list-item__surface") ? e : e.querySelector(".mat-list-item__surface") ?? e, a = n.matches(".mat-list-item__surface") ? n : n.querySelector(".mat-list-item__surface") ?? n;
-	sa(n), n.setAttribute("aria-hidden", "true"), n.setAttribute("data-mat-list-drag-preview", ""), n.setAttribute("inert", "");
+	ao(n), n.setAttribute("aria-hidden", "true"), n.setAttribute("data-mat-list-drag-preview", ""), n.setAttribute("inert", "");
 	for (let e = 0; e < r.length; e += 1) {
 		let t = r.item(e);
 		t.startsWith("--mat-") && n.style.setProperty(t, r.getPropertyValue(t));
 	}
-	return ca(a, getComputedStyle(i)), Object.assign(n.style, {
+	return oo(a, getComputedStyle(i)), Object.assign(n.style, {
 		position: "fixed",
 		zIndex: "1000",
 		boxSizing: "border-box",
@@ -5331,7 +5589,7 @@ function la(e, t) {
 		willChange: "transform"
 	}), document.body.append(n), n;
 }
-function ua(e) {
+function co(e) {
 	if (globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return { duration: 0 };
 	let t = getComputedStyle(e).getPropertyValue("--mat-sys-motion-spring-fast-spatial").trim().match(/^([\d.]+)ms\s+(.+)$/u);
 	return t ? {
@@ -5342,7 +5600,7 @@ function ua(e) {
 		easing: "ease-out"
 	};
 }
-function da(e) {
+function lo(e) {
 	let t = j(!1), n = /* @__PURE__ */ new Map(), r = !1, i = "", a, o, s, c, l, u = {};
 	function d(e) {
 		u[e.type]?.(e);
@@ -5372,7 +5630,7 @@ function da(e) {
 		let t = f().map((e) => e.record).filter((e) => e !== void 0), n = t.filter((e) => {
 			let { value: n } = e.value;
 			return n === void 0 || t.some((t) => t !== e && Object.is(t.value.value, n));
-		}).map((e) => aa(e.value.value)).sort().join("|");
+		}).map((e) => ro(e.value.value)).sort().join("|");
 		!n || n === i || (i = n, console.warn("MatList: draggable 模式下的直属 MatListItem 必须提供稳定且唯一的 value；无效项目将作为固定边界"));
 	}
 	function h() {
@@ -5391,7 +5649,7 @@ function da(e) {
 		a &&= (globalThis.clearTimeout(a.timer), void 0);
 	}
 	function x() {
-		o && (o.source.style.display = o.sourceDisplay, o.placeholder.remove(), o.preview.remove(), ia(), o = void 0, t.value = !1);
+		o && (o.source.style.display = o.sourceDisplay, o.placeholder.remove(), o.preview.remove(), no(), o = void 0, t.value = !1);
 	}
 	function S() {
 		b(), l?.cancel(), x(), y();
@@ -5401,7 +5659,7 @@ function da(e) {
 	}
 	function T(t, n) {
 		if (!e.root.value || typeof Element.prototype.animate != "function") return;
-		let r = ua(e.root.value);
+		let r = co(e.root.value);
 		n.forEach((e) => {
 			let n = t.get(e), i = e.getBoundingClientRect(), a = n ? n.top - i.top : 0;
 			a !== 0 && e.animate([{ transform: `translateY(${a}px)` }, { transform: "translateY(0)" }], r);
@@ -5413,7 +5671,7 @@ function da(e) {
 			top: 0,
 			bottom: globalThis.innerHeight
 		} : t.getBoundingClientRect(), r = 0;
-		if (e < n.top + Zi ? r = -Math.ceil(Qi * ((n.top + Zi - e) / Zi)) : e > n.bottom - Zi && (r = Math.ceil(Qi * ((e - n.bottom + Zi) / Zi))), r === 0) return 0;
+		if (e < n.top + Ya ? r = -Math.ceil(Xa * ((n.top + Ya - e) / Ya)) : e > n.bottom - Ya && (r = Math.ceil(Xa * ((e - n.bottom + Ya) / Ya))), r === 0) return 0;
 		let i = t.scrollTop;
 		return t.scrollTop += r, t.scrollTop - i;
 	}
@@ -5435,7 +5693,7 @@ function da(e) {
 		}
 		E(t.clientY) !== 0 && l.schedule(t);
 	}
-	l = Ji(D);
+	l = Ka(D);
 	function O() {
 		window.addEventListener("pointermove", d, { passive: !1 }), window.addEventListener("pointerup", d), window.addEventListener("pointercancel", d), window.addEventListener("blur", d), document.addEventListener("keydown", d);
 	}
@@ -5454,8 +5712,8 @@ function da(e) {
 			S();
 			return;
 		}
-		let h = m.getBoundingClientRect(), g = document.createElement(m.tagName.toLowerCase()), _ = la(m, h), v = m.matches(".mat-list-item__surface") ? m : m.querySelector(".mat-list-item__surface") ?? m, y = getComputedStyle(v), b = m.style.display, x = u.indexOf(n.record);
-		g.setAttribute("aria-hidden", "true"), g.setAttribute("data-mat-list-drag-placeholder", ""), g.style.blockSize = `${h.height}px`, g.style.inlineSize = `${h.width}px`, ca(g, y), e.root.value.insertBefore(g, m), m.style.display = "none", o = {
+		let h = m.getBoundingClientRect(), g = document.createElement(m.tagName.toLowerCase()), _ = so(m, h), v = m.matches(".mat-list-item__surface") ? m : m.querySelector(".mat-list-item__surface") ?? m, y = getComputedStyle(v), b = m.style.display, x = u.indexOf(n.record);
+		g.setAttribute("aria-hidden", "true"), g.setAttribute("data-mat-list-drag-placeholder", ""), g.style.blockSize = `${h.height}px`, g.style.inlineSize = `${h.width}px`, oo(g, y), e.root.value.insertBefore(g, m), m.style.display = "none", o = {
 			record: n.record,
 			source: m,
 			sourceDisplay: b,
@@ -5470,16 +5728,16 @@ function da(e) {
 			segment: u,
 			segmentStartIndex: d.indexOf(u[0]),
 			boundaryAfter: r[l + 1]?.element ?? null,
-			scrollContainer: oa(m),
+			scrollContainer: io(m),
 			value: n.record.value.value
-		}, a = void 0, ra(), t.value = !0;
+		}, a = void 0, to(), t.value = !0;
 		try {
 			m.setPointerCapture?.(o.pointerId);
 		} catch {}
 	}
 	function A(e) {
 		if (a && e.pointerId === a.pointerId) {
-			Math.hypot(e.clientX - a.clientX, e.clientY - a.clientY) > Xi && S();
+			Math.hypot(e.clientX - a.clientX, e.clientY - a.clientY) > Ja && S();
 			return;
 		}
 		!o || e.pointerId !== o.pointerId || (e.cancelable && e.preventDefault(), l.schedule(e));
@@ -5522,7 +5780,7 @@ function da(e) {
 			pointerId: t.pointerId,
 			clientX: t.clientX,
 			clientY: t.clientY,
-			timer: globalThis.setTimeout(k, Yi)
+			timer: globalThis.setTimeout(k, qa)
 		}, O());
 	}
 	function L(e) {
@@ -5554,7 +5812,7 @@ function da(e) {
 		unregisterItem: z
 	};
 }
-var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+var uo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatList",
 	inheritAttrs: !1
 }, {
@@ -5571,7 +5829,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			type: String,
 			default: "none",
 			validator(e) {
-				return zi.includes(e);
+				return La.includes(e);
 			}
 		},
 		selected: {
@@ -5587,18 +5845,18 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			type: Array,
 			default: () => [],
 			validator(e) {
-				return e.every(Wi);
+				return e.every(Ha);
 			}
 		},
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		activeColor: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		draggable: {
 			type: Boolean,
@@ -5615,12 +5873,12 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		itemHeight: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => Ct(e, { positive: !0 })
+			validator: (e) => Sn(e, { positive: !0 })
 		},
 		estimatedItemHeight: {
 			type: [Number, String],
 			default: 48,
-			validator: (e) => Ct(e, {
+			validator: (e) => Sn(e, {
 				positive: !0,
 				allowUndefined: !1
 			})
@@ -5628,7 +5886,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		buffer: {
 			type: [Number, String],
 			default: 3,
-			validator: (e) => Ct(e, { allowUndefined: !1 })
+			validator: (e) => Sn(e, { allowUndefined: !1 })
 		},
 		itemKey: {
 			type: [Function, String],
@@ -5640,7 +5898,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			return e && Object.hasOwn(e, "value") && Object.hasOwn(e, "nextSelected") && e.originalEvent instanceof Event;
 		},
 		"update:expanded"(e) {
-			return Array.isArray(e) && e.every(Wi);
+			return Array.isArray(e) && e.every(Ha);
 		},
 		reorder(e) {
 			return e && Object.hasOwn(e, "value") && Number.isInteger(e.fromIndex) && Number.isInteger(e.toIndex) && e.originalEvent instanceof PointerEvent;
@@ -5653,7 +5911,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		}
 	},
 	setup(e, { expose: n, emit: r }) {
-		let c = $("list", e), l = r, u = j(null), d = i(() => Hi(c.interaction)), f = i(() => d.value ? "div" : "ul"), { colorStyle: p } = dt(i(() => c.color)), { colorStyle: m } = dt(i(() => c.activeColor)), h = i(() => Object.fromEntries(Object.entries(m.value).map(([e, t]) => [e.replace("accent", "active"), t]))), g = i(() => ({
+		let c = $("list", e), l = r, u = j(null), d = i(() => Ba(c.interaction)), f = i(() => d.value ? "div" : "ul"), { colorStyle: p } = un(i(() => c.color)), { colorStyle: m } = un(i(() => c.activeColor)), h = i(() => Object.fromEntries(Object.entries(m.value).map(([e, t]) => [e.replace("accent", "active"), t]))), g = i(() => ({
 			...p.value,
 			...h.value
 		})), y = [], b = [
@@ -5721,7 +5979,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}
 			return e[0] ?? null;
 		}
-		let L = Ui({
+		let L = Va({
 			root: u,
 			selector: b,
 			isAvailable: M,
@@ -5733,7 +5991,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				"href",
 				"inert"
 			]
-		}), { calculate: R, getItemKey: ee, getScroller: B, paddingBottom: V, paddingTop: U, refresh: G, scrollTo: K, scrollToIndex: q, setItemRef: J, visibleItems: te } = qi({
+		}), { calculate: R, getItemKey: ee, getScroller: B, paddingBottom: V, paddingTop: U, refresh: G, scrollTo: K, scrollToIndex: q, setItemRef: J, visibleItems: te } = Ga({
 			root: u,
 			props: c,
 			enabled: i(() => c.virtual),
@@ -5751,7 +6009,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				};
 			}
 			return null;
-		}), re = da({
+		}), re = lo({
 			root: u,
 			enabled: i(() => c.draggable),
 			emitReorder(e) {
@@ -5767,7 +6025,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}[e.key];
 			t === void 0 || !(e.target instanceof HTMLElement) || (e.preventDefault(), L.move(e.target, t));
 		}
-		return O(Bi, {
+		return O(Ra, {
 			interaction: i(() => c.interaction),
 			isSelectable: d,
 			variant: i(() => c.variant),
@@ -5861,7 +6119,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"onPointerdown"
 		]));
 	}
-}), [["__scopeId", "data-v-31945145"]]), pa = Symbol("mat-expansion"), ma = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-31945145"]]), fo = Symbol("mat-expansion"), po = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatExpansion",
 	inheritAttrs: !1
 }, {
@@ -5876,7 +6134,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			],
 			default: void 0,
 			validator(e) {
-				return e == null ? !0 : Array.isArray(e) ? e.every(Wi) : Wi(e);
+				return e == null ? !0 : Array.isArray(e) ? e.every(Ha) : Ha(e);
 			}
 		},
 		multiple: {
@@ -5886,7 +6144,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		disabled: {
 			type: Boolean,
@@ -5905,10 +6163,10 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		}
 	},
 	emits: { "update:modelValue"(e) {
-		return e == null ? !0 : Array.isArray(e) ? e.every(Wi) : Wi(e);
+		return e == null ? !0 : Array.isArray(e) ? e.every(Ha) : Ha(e);
 	} },
 	setup(e, { emit: t }) {
-		let n = $("expansion", e), r = t, o = j(n.multiple ? [] : null), { colorStyle: s, hasExplicitColor: c } = dt(i(() => n.color)), l = i(() => n.modelValue !== void 0), u = i(() => l.value ? n.modelValue : o.value), f = i(() => {
+		let n = $("expansion", e), r = t, o = j(n.multiple ? [] : null), { colorStyle: s, hasExplicitColor: c } = un(i(() => n.color)), l = i(() => n.modelValue !== void 0), u = i(() => l.value ? n.modelValue : o.value), f = i(() => {
 			let e = u.value;
 			return n.multiple ? Array.isArray(e) ? e : [] : e == null ? [] : [e];
 		});
@@ -5923,7 +6181,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		function m(e) {
 			return f.value.some((t) => Object.is(t, e));
 		}
-		return O(pa, {
+		return O(fo, {
 			isExpanded: m,
 			color: i(() => n.color),
 			disabled: i(() => n.disabled),
@@ -5933,7 +6191,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			class: ["mat-expansion", { "mat-expansion--explicit-color": z(c) }],
 			style: z(s)
 		}), {
-			default: W(() => [d(fa, {
+			default: W(() => [d(uo, {
 				variant: z(n).variant,
 				color: z(n).color,
 				expanded: f.value,
@@ -5949,7 +6207,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			_: 3
 		}, 16, ["class", "style"]));
 	}
-}), [["__scopeId", "data-v-f96e5c0a"]]), ha = ["data-line-count"], ga = ["inert"], _a = ["inert"], va = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatItemContentBase" }, {
+}), [["__scopeId", "data-v-f96e5c0a"]]), mo = ["data-line-count"], ho = ["inert"], go = ["inert"], _o = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatItemContentBase" }, {
 	__name: "MatItemContentBase",
 	props: {
 		namespace: {
@@ -6003,7 +6261,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				"data-mat-item-content-leading": "",
 				class: y(`${e.namespace}__leading`),
 				inert: e.presentationSlots ? "" : void 0
-			}, [P(t.$slots, "leading", {}, void 0, !0)], 10, ga)) : o("", !0),
+			}, [P(t.$slots, "leading", {}, void 0, !0)], 10, ho)) : o("", !0),
 			c("span", {
 				"data-mat-item-content-text": "",
 				class: y(`${e.namespace}__text`)
@@ -6028,10 +6286,10 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				"data-mat-item-content-trailing": "",
 				class: y([`${e.namespace}__trailing`, e.trailingTypographyClass]),
 				inert: e.presentationSlots ? "" : void 0
-			}, [P(t.$slots, "trailing", {}, void 0, !0)], 10, _a)) : o("", !0)
-		], 10, ha));
+			}, [P(t.$slots, "trailing", {}, void 0, !0)], 10, go)) : o("", !0)
+		], 10, mo));
 	}
-}), [["__scopeId", "data-v-3223d16a"]]), ya = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatListItemContent" }, {
+}), [["__scopeId", "data-v-3223d16a"]]), vo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatListItemContent" }, {
 	__name: "MatListItemContent",
 	props: {
 		lineCount: {
@@ -6063,7 +6321,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			await v(), d();
 		}), E(d), C(() => {
 			c?.disconnect();
-		}), (t, r) => (D(), a(va, {
+		}), (t, r) => (D(), a(_o, {
 			ref_key: "contentRoot",
 			ref: n,
 			namespace: "mat-list-item-content",
@@ -6105,11 +6363,11 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"separate-trailing"
 		]));
 	}
-}), [["__scopeId", "data-v-c5a4a0b9"]]), ba = [
+}), [["__scopeId", "data-v-c5a4a0b9"]]), yo = [
 	"id",
 	"aria-disabled",
 	"data-mat-list-disabled"
-], xa = ["aria-disabled", "data-mat-list-disabled"], Sa = ["aria-disabled", "data-mat-list-disabled"], Ca = ["inert"], wa = ["inert"], Ta = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+], bo = ["aria-disabled", "data-mat-list-disabled"], xo = ["aria-disabled", "data-mat-list-disabled"], So = ["inert"], Co = ["inert"], wo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatListItem",
 	inheritAttrs: !1
 }, {
@@ -6131,7 +6389,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			type: String,
 			default: "button",
 			validator(e) {
-				return Le.includes(e);
+				return Ft.includes(e);
 			}
 		},
 		disabled: {
@@ -6158,7 +6416,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		return e instanceof MouseEvent;
 	} },
 	setup(e, { emit: t }) {
-		let n = $("listItem", e), r = t, c = V(), u = h(Bi, null), f = h(Vi, null), p = h(Ne, Me), m = i(() => u?.interaction.value ?? "none"), g = i(() => m.value === "single-action" || m.value === "multi-action"), b = i(() => m.value === "multi-action"), x = i(() => u?.isSelectable.value ?? !1), S = i(() => u?.isSelected(n.value) ?? !1), w = i(() => !!c.trailing), E = i(() => w.value && (b.value || x.value && n.separateTrailing)), O = j(null), k = Symbol("mat-list-item-drag"), A = i(() => O.value instanceof HTMLElement ? O.value : O.value?.$el instanceof HTMLElement ? O.value.$el : null), M = i(() => n.value), N = i(() => n.disabled || !!f), F = i(() => {
+		let n = $("listItem", e), r = t, c = V(), u = h(Ra, null), f = h(za, null), p = h(kt, Ot), m = i(() => u?.interaction.value ?? "none"), g = i(() => m.value === "single-action" || m.value === "multi-action"), b = i(() => m.value === "multi-action"), x = i(() => u?.isSelectable.value ?? !1), S = i(() => u?.isSelected(n.value) ?? !1), w = i(() => !!c.trailing), E = i(() => w.value && (b.value || x.value && n.separateTrailing)), O = j(null), k = Symbol("mat-list-item-drag"), A = i(() => O.value instanceof HTMLElement ? O.value : O.value?.$el instanceof HTMLElement ? O.value.$el : null), M = i(() => n.value), N = i(() => n.disabled || !!f), F = i(() => {
 			if (n.lines !== void 0) return n.lines;
 			let e = Number(!!c.overline) + Number(!!c.supporting);
 			return Math.min(3, 1 + e);
@@ -6228,7 +6486,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"data-mat-list-group-label": "",
 			"aria-disabled": z(n).disabled ? "true" : void 0,
 			"data-mat-list-disabled": z(n).disabled ? "true" : void 0
-		}), [d(ya, {
+		}), [d(vo, {
 			"line-count": F.value,
 			"presentation-slots": !1
 		}, l({
@@ -6255,7 +6513,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				fn: W(() => [P(e.$slots, "trailing", {}, void 0, !0)]),
 				key: "3"
 			} : void 0
-		]), 1032, ["line-count"])], 16, ba)) : z(f) ? (D(), a(ke, _({
+		]), 1032, ["line-count"])], 16, yo)) : z(f) ? (D(), a(jt, _({
 			key: 1,
 			ref_key: "itemRoot",
 			ref: O
@@ -6272,7 +6530,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"use-cursor": z(p).useCursor,
 			onClick: B
 		}), {
-			default: W(() => [d(ya, {
+			default: W(() => [d(vo, {
 				"line-count": F.value,
 				"presentation-slots": !1
 			}, l({
@@ -6316,7 +6574,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			class: ["mat-list-item mat-list-item__surface", I.value],
 			"aria-disabled": z(n).disabled ? "true" : void 0,
 			"data-mat-list-disabled": z(n).disabled ? "true" : void 0
-		}), [d(ya, {
+		}), [d(vo, {
 			"line-count": F.value,
 			"presentation-slots": !1
 		}, l({
@@ -6343,7 +6601,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				fn: W(() => [P(e.$slots, "trailing", {}, void 0, !0)]),
 				key: "3"
 			} : void 0
-		]), 1032, ["line-count"])], 16, xa)), [[z(Oe), { color: "var(--mat-action-state-color, currentcolor)" }]]) : g.value ? G((D(), s("li", {
+		]), 1032, ["line-count"])], 16, bo)), [[z(Et), { color: "var(--mat-action-state-color, currentcolor)" }]]) : g.value ? G((D(), s("li", {
 			key: 3,
 			ref_key: "itemRoot",
 			ref: O,
@@ -6353,7 +6611,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}]]),
 			"aria-disabled": z(n).disabled ? "true" : void 0,
 			"data-mat-list-disabled": z(n).disabled ? "true" : void 0
-		}, [d(ke, _(e.$attrs, {
+		}, [d(jt, _(e.$attrs, {
 			class: ["mat-list-item__primary", { "mat-list-item__surface": !b.value }],
 			"data-mat-list-primary": "",
 			disabled: z(n).disabled,
@@ -6363,7 +6621,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"use-cursor": z(p).useCursor,
 			onClick: ee
 		}), {
-			default: W(() => [d(ya, {
+			default: W(() => [d(vo, {
 				"line-count": F.value,
 				"presentation-slots": !1,
 				"separate-trailing": b.value && w.value
@@ -6405,7 +6663,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"data-mat-list-trailing": "",
 			inert: z(n).disabled ? "" : void 0,
 			onPointerdown: K
-		}, [P(e.$slots, "trailing", {}, void 0, !0)], 40, Ca)) : o("", !0)], 10, Sa)), [[z(Oe), L.value]]) : (D(), a(ke, _({
+		}, [P(e.$slots, "trailing", {}, void 0, !0)], 40, So)) : o("", !0)], 10, xo)), [[z(Et), L.value]]) : (D(), a(jt, _({
 			key: 4,
 			ref_key: "itemRoot",
 			ref: O
@@ -6422,7 +6680,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			onClick: ee,
 			onKeydown: U
 		}), {
-			default: W(() => [d(ya, {
+			default: W(() => [d(vo, {
 				"line-count": F.value,
 				"presentation-slots": "",
 				"separate-trailing": E.value
@@ -6456,7 +6714,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				"data-mat-list-trailing": "",
 				inert: z(n).disabled ? "" : void 0,
 				onPointerdown: K
-			}, [P(e.$slots, "trailing", {}, void 0, !0)], 40, wa)) : o("", !0)]),
+			}, [P(e.$slots, "trailing", {}, void 0, !0)], 40, Co)) : o("", !0)]),
 			_: 3
 		}, 16, [
 			"class",
@@ -6466,20 +6724,20 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-1247285a"]]), Ea = /*@__PURE__*/ Object.assign({ name: "MatListGroupActivatorProvider" }, {
+}), [["__scopeId", "data-v-1247285a"]]), To = /*@__PURE__*/ Object.assign({ name: "MatListGroupActivatorProvider" }, {
 	__name: "MatListGroupActivatorProvider",
 	props: { context: {
 		type: Object,
 		required: !0
 	} },
 	setup(e) {
-		return O(Vi, e.context), (e, t) => P(e.$slots, "default");
+		return O(za, e.context), (e, t) => P(e.$slots, "default");
 	}
-}), Da = [
+}), Eo = [
 	"role",
 	"aria-hidden",
 	"inert"
-], Oa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+], Do = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatListGroup",
 	inheritAttrs: !1
 }, {
@@ -6499,7 +6757,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		}
 	},
 	setup(n) {
-		let r = $("listGroup", n), o = h(Bi, null), s = V(), l = j(null), u = j(!1), f = j(null), p = Symbol("mat-list-group"), m = B().replace(/[^\w-]/g, "-"), y = `mat-list-group-${m}-content`, b = `mat-list-group-${m}-label`, x = !1, S, w = i(() => r.value !== void 0), O = i(() => o?.isSelectable.value ?? !1), k = i(() => w.value ? o?.isGroupExpanded(r.value) ?? !1 : u.value);
+		let r = $("listGroup", n), o = h(Ra, null), s = V(), l = j(null), u = j(!1), f = j(null), p = Symbol("mat-list-group"), m = B().replace(/[^\w-]/g, "-"), y = `mat-list-group-${m}-content`, b = `mat-list-group-${m}-label`, x = !1, S, w = i(() => r.value !== void 0), O = i(() => o?.isSelectable.value ?? !1), k = i(() => w.value ? o?.isGroupExpanded(r.value) ?? !1 : u.value);
 		function A(n) {
 			return n.flatMap((n) => g(n) ? n.type === e ? [] : n.type === t && Array.isArray(n.children) ? A(n.children) : [n] : typeof n == "string" && n.trim().length > 0 ? [n] : []);
 		}
@@ -6507,7 +6765,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			let e = A(s.activator?.({ expanded: k.value }) ?? []);
 			if (e.length !== 1 || !g(e[0])) return !1;
 			let t = e[0].type;
-			return t === Ta || typeof t == "object" && (t.name === "MatListItem" || t.__name === "MatListItem");
+			return t === wo || typeof t == "object" && (t.name === "MatListItem" || t.__name === "MatListItem");
 		}), N = i(() => f.value ?? M.value), I = i(() => O.value || !N.value || k.value), L = i(() => o?.variant.value ?? "segmented");
 		function R() {
 			(l.value?.querySelector(":scope > [data-mat-list-group-content]"))?.contains(document.activeElement) && l.value?.querySelector(":scope > [data-mat-list-group-activator]")?.focus();
@@ -6566,7 +6824,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			role: O.value ? "group" : void 0,
 			"aria-labelledby": O.value ? b : void 0
 		}), {
-			default: W(() => [d(Ea, { context: U }, {
+			default: W(() => [d(To, { context: U }, {
 				default: W(() => [P(e.$slots, "activator", { expanded: I.value }, void 0, !0)]),
 				_: 3
 			}), c("div", {
@@ -6582,7 +6840,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}, {
 				default: W(() => [P(e.$slots, "default", {}, void 0, !0)]),
 				_: 3
-			}, 8, ["role"]))], 8, Da)]),
+			}, 8, ["role"]))], 8, Eo)]),
 			_: 3
 		}, 16, [
 			"class",
@@ -6590,13 +6848,13 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"aria-labelledby"
 		]));
 	}
-}), [["__scopeId", "data-v-0cfce62b"]]), ka = {
+}), [["__scopeId", "data-v-0cfce62b"]]), Oo = {
 	key: 0,
 	class: "mat-expansion-panel__body"
-}, Aa = {
+}, ko = {
 	key: 0,
 	class: "mat-expansion-panel__body"
-}, ja = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, Ao = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatExpansionPanel",
 	inheritAttrs: !1
 }, {
@@ -6625,7 +6883,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		disabled: {
 			type: Boolean,
@@ -6640,7 +6898,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		return typeof e == "boolean";
 	} },
 	setup(e, { emit: t }) {
-		let n = $("expansionPanel", e), r = t, o = f(), c = h(pa, null), l = "expansion-panel-" + B().replace(/[^\w-]/g, "-"), p = i(() => n.value === void 0 ? l : n.value), m = i(() => n.disabled || !!c?.disabled.value), g = i(() => n.color || c?.color.value), v = i(() => c?.variant.value ?? "segmented"), { colorStyle: b, hasExplicitColor: x } = dt(i(() => n.color || c?.color.value)), S = i(() => {
+		let n = $("expansionPanel", e), r = t, o = f(), c = h(fo, null), l = "expansion-panel-" + B().replace(/[^\w-]/g, "-"), p = i(() => n.value === void 0 ? l : n.value), m = i(() => n.disabled || !!c?.disabled.value), g = i(() => n.color || c?.color.value), v = i(() => c?.variant.value ?? "segmented"), { colorStyle: b, hasExplicitColor: x } = un(i(() => n.color || c?.color.value)), S = i(() => {
 			let e = o?.vnode?.props ?? {};
 			return "modelValue" in e || "model-value" in e;
 		}), C = j(!!n.modelValue);
@@ -6652,7 +6910,7 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			let t = e.includes(p.value);
 			S.value || (C.value = t), r("update:modelValue", t);
 		}
-		return (e, t) => z(c) ? (D(), a(Oa, _({ key: 0 }, e.$attrs, {
+		return (e, t) => z(c) ? (D(), a(Do, _({ key: 0 }, e.$attrs, {
 			value: p.value,
 			as: z(n).as,
 			class: ["mat-expansion-panel", [z(n).split ? "mat-expansion-panel--split" : "mat-expansion-panel--unsplit", {
@@ -6661,29 +6919,29 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			}]],
 			style: z(b)
 		}), {
-			activator: W(({ expanded: t }) => [P(e.$slots, "activator", { expanded: t }, () => [d(Ta, { disabled: m.value }, {
-				trailing: W(() => [d(ht, {
+			activator: W(({ expanded: t }) => [P(e.$slots, "activator", { expanded: t }, () => [d(wo, { disabled: m.value }, {
+				trailing: W(() => [d(mn, {
 					icon: "expand_more",
 					class: y(["mat-expansion-panel__indicator", { "mat-expansion-panel__indicator--expanded": t }])
 				}, null, 8, ["class"])]),
 				default: W(() => [u(R(z(n).title) + " ", 1)]),
 				_: 2
 			}, 1032, ["disabled"])], !0)]),
-			default: W(() => [z(n).split ? P(e.$slots, "default", { key: 1 }, void 0, !0) : (D(), s("div", ka, [P(e.$slots, "default", {}, void 0, !0)]))]),
+			default: W(() => [z(n).split ? P(e.$slots, "default", { key: 1 }, void 0, !0) : (D(), s("div", Oo, [P(e.$slots, "default", {}, void 0, !0)]))]),
 			_: 3
 		}, 16, [
 			"value",
 			"as",
 			"class",
 			"style"
-		])) : (D(), a(fa, {
+		])) : (D(), a(uo, {
 			key: 1,
 			variant: v.value,
 			color: g.value,
 			expanded: T.value,
 			"onUpdate:expanded": E
 		}, {
-			default: W(() => [d(Oa, _(e.$attrs, {
+			default: W(() => [d(Do, _(e.$attrs, {
 				value: p.value,
 				class: ["mat-expansion-panel", [z(n).split ? "mat-expansion-panel--split" : "mat-expansion-panel--unsplit", {
 					"mat-expansion-panel--expanded": w.value,
@@ -6691,15 +6949,15 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				}]],
 				style: z(b)
 			}), {
-				activator: W(({ expanded: t }) => [P(e.$slots, "activator", { expanded: t }, () => [d(Ta, { disabled: m.value }, {
-					trailing: W(() => [d(ht, {
+				activator: W(({ expanded: t }) => [P(e.$slots, "activator", { expanded: t }, () => [d(wo, { disabled: m.value }, {
+					trailing: W(() => [d(mn, {
 						icon: "expand_more",
 						class: y(["mat-expansion-panel__indicator", { "mat-expansion-panel__indicator--expanded": t }])
 					}, null, 8, ["class"])]),
 					default: W(() => [u(R(z(n).title) + " ", 1)]),
 					_: 2
 				}, 1032, ["disabled"])], !0)]),
-				default: W(() => [z(n).split ? P(e.$slots, "default", { key: 1 }, void 0, !0) : (D(), s("div", Aa, [P(e.$slots, "default", {}, void 0, !0)]))]),
+				default: W(() => [z(n).split ? P(e.$slots, "default", { key: 1 }, void 0, !0) : (D(), s("div", ko, [P(e.$slots, "default", {}, void 0, !0)]))]),
 				_: 3
 			}, 16, [
 				"value",
@@ -6713,21 +6971,21 @@ var fa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"expanded"
 		]));
 	}
-}), [["__scopeId", "data-v-75c0236c"]]), Ma = Symbol("mat-menu"), Na = Symbol("mat-menu-item"), Pa = Symbol("mat-menu-group");
-function Fa(e, t, n) {
+}), [["__scopeId", "data-v-75c0236c"]]), jo = Symbol("mat-menu"), Mo = Symbol("mat-menu-item"), No = Symbol("mat-menu-group");
+function Po(e, t, n) {
 	return Math.abs((e.x * (t.y - n.y) + t.x * (n.y - e.y) + n.x * (e.y - t.y)) / 2);
 }
-function Ia(e, t, n, r = "right") {
+function Fo(e, t, n, r = "right") {
 	let i = r === "left" ? n.right : n.left, a = {
 		x: i,
 		y: n.top
 	}, o = {
 		x: i,
 		y: n.bottom
-	}, s = Fa(t, a, o), c = Fa(e, a, o), l = Fa(t, e, o), u = Fa(t, a, e);
+	}, s = Po(t, a, o), c = Po(e, a, o), l = Po(t, e, o), u = Po(t, a, e);
 	return Math.abs(s - (c + l + u)) < .5;
 }
-function La(e, t = []) {
+function Io(e, t = []) {
 	let n = typeof Node < "u" ? Node.DOCUMENT_POSITION_FOLLOWING : 4, r = e.slice().sort((e, r) => {
 		let i = e.element?.value, a = r.element?.value;
 		if (!i || !a || i === a) return 0;
@@ -6741,7 +6999,7 @@ function La(e, t = []) {
 		r.length === 1 ? e.setPosition("only") : t === 0 ? e.setPosition("first") : t === r.length - 1 ? e.setPosition("last") : e.setPosition("middle");
 	});
 }
-var Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+var Lo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatDivider",
 	inheritAttrs: !1
 }, {
@@ -6764,7 +7022,7 @@ var Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		}
 	},
 	setup(e) {
-		let t = $("divider", e), n = h(Bi, null), r = h(Ma, null), o = i(() => !!n), s = i(() => !!r), c = i(() => n?.isSelectable.value ?? !1), l = i(() => t.inset === !0 ? "middle" : t.inset === !1 ? "none" : t.inset), u = i(() => o.value ? c.value ? "div" : "li" : s.value ? "div" : "hr");
+		let t = $("divider", e), n = h(Ra, null), r = h(jo, null), o = i(() => !!n), s = i(() => !!r), c = i(() => n?.isSelectable.value ?? !1), l = i(() => t.inset === !0 ? "middle" : t.inset === !1 ? "none" : t.inset), u = i(() => o.value ? c.value ? "div" : "li" : s.value ? "div" : "hr");
 		return (e, n) => (D(), a(F(u.value), _(e.$attrs, {
 			class: ["mat-divider", [`mat-divider--${l.value}`, {
 				"mat-divider--menu": s.value,
@@ -6780,7 +7038,7 @@ var Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"role"
 		]));
 	}
-}), [["__scopeId", "data-v-88c82c06"]]), za = { class: "mat-selection-control__target" }, Ba = [
+}), [["__scopeId", "data-v-88c82c06"]]), Ro = { class: "mat-selection-control__target" }, zo = [
 	"aria-checked",
 	"checked",
 	"disabled",
@@ -6789,13 +7047,13 @@ var Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	"tabindex",
 	"type",
 	"value"
-], Va = {
+], Bo = {
 	class: "mat-selection-control__indicator",
 	"aria-hidden": "true"
-}, Ha = {
+}, Vo = {
 	key: 0,
 	class: "mat-selection-control__label"
-}, Ua = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, Ho = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatSelectionControlBase",
 	inheritAttrs: !1
 }, {
@@ -6808,7 +7066,7 @@ var Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		disabled: {
 			type: Boolean,
@@ -6855,7 +7113,7 @@ var Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		}
 	},
 	setup(e, { expose: t, emit: n }) {
-		let r = e, a = n, l = ee(), u = V(), d = j(null), f = h(Ne, Me), { colorStyle: p } = dt(i(() => r.color)), m = i(() => {
+		let r = e, a = n, l = ee(), u = V(), d = j(null), f = h(kt, Ot), { colorStyle: p } = un(i(() => r.color)), m = i(() => {
 			let e = {};
 			return [
 				"class",
@@ -6889,7 +7147,7 @@ var Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				"mat-selection-control--use-cursor": z(f).useCursor
 			}],
 			style: v.value
-		}), [c("span", za, [
+		}), [c("span", Ro, [
 			c("input", _({
 				ref_key: "input",
 				ref: d
@@ -6905,7 +7163,7 @@ var Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				value: e.inputValue,
 				onChange: n[0] ||= (e) => a("change", e),
 				onKeydown: n[1] ||= (e) => a("keydown", e)
-			}), null, 16, Ba),
+			}), null, 16, zo),
 			n[2] ||= c("span", {
 				class: "mat-selection-control__state-layer",
 				"aria-hidden": "true"
@@ -6914,10 +7172,10 @@ var Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				class: "mat-selection-control__focus-ring",
 				"aria-hidden": "true"
 			}, null, -1),
-			c("span", Va, [P(t.$slots, "indicator", {}, void 0, !0)])
-		]), z(u).default ? (D(), s("span", Ha, [P(t.$slots, "default", {}, void 0, !0)])) : o("", !0)], 16));
+			c("span", Bo, [P(t.$slots, "indicator", {}, void 0, !0)])
+		]), z(u).default ? (D(), s("span", Vo, [P(t.$slots, "default", {}, void 0, !0)])) : o("", !0)], 16));
 	}
-}), [["__scopeId", "data-v-5041102c"]]), Wa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-5041102c"]]), Uo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatCheckbox",
 	inheritAttrs: !1
 }, {
@@ -6926,7 +7184,7 @@ var Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		modelValue: {
 			type: [Boolean, Array],
 			default: !1,
-			validator: Gi
+			validator: Ua
 		},
 		value: {
 			type: [
@@ -6935,7 +7193,7 @@ var Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				Boolean
 			],
 			default: !0,
-			validator: Wi
+			validator: Ha
 		},
 		indeterminate: {
 			type: Boolean,
@@ -6948,11 +7206,11 @@ var Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		}
 	},
 	emits: {
-		"update:modelValue": Gi,
+		"update:modelValue": Ua,
 		"update:indeterminate"(e) {
 			return typeof e == "boolean";
 		},
@@ -6970,7 +7228,7 @@ var Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			} else r("update:modelValue", t);
 			r("update:indeterminate", !1), r("change", e);
 		}
-		return (e, t) => (D(), a(Ua, _(e.$attrs, {
+		return (e, t) => (D(), a(Ho, _(e.$attrs, {
 			class: ["mat-checkbox", {
 				"mat-checkbox--checked": o.value,
 				"mat-checkbox--indeterminate": z(n).indeterminate
@@ -6996,7 +7254,7 @@ var Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"input-value"
 		]));
 	}
-}), [["__scopeId", "data-v-ed555593"]]), Ga = [
+}), [["__scopeId", "data-v-ed555593"]]), Wo = [
 	"top-start",
 	"top",
 	"top-end",
@@ -7007,15 +7265,15 @@ var Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	"start",
 	"inline"
 ];
-function Ka(e) {
-	return !e || typeof e != "object" || Array.isArray(e) || Object.keys(e).some((e) => !["inline", "block"].includes(e)) ? !1 : ["inline", "block"].every((t) => Ct(e[t], {
+function Go(e) {
+	return !e || typeof e != "object" || Array.isArray(e) || Object.keys(e).some((e) => !["inline", "block"].includes(e)) ? !1 : ["inline", "block"].every((t) => Sn(e[t], {
 		property: "margin",
 		allowNegative: !0
 	}));
 }
 //#endregion
 //#region src/components/mat-badge/MatBadge.vue
-var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+var Ko = ["data-dot", "data-border"], qo = ["data-dot", "data-border"], Jo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatBadge",
 	inheritAttrs: !1
 }, {
@@ -7032,7 +7290,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 		location: {
 			type: String,
 			default: "top-end",
-			validator: (e) => Ga.includes(e)
+			validator: (e) => Wo.includes(e)
 		},
 		offset: {
 			type: Object,
@@ -7040,12 +7298,12 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 				inline: 0,
 				block: 0
 			}),
-			validator: Ka
+			validator: Go
 		},
 		color: {
 			type: String,
 			default: "error",
-			validator: Ue
+			validator: Vt
 		},
 		border: {
 			type: Boolean,
@@ -7053,9 +7311,9 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 		}
 	},
 	setup(e) {
-		let t = $("badge", e), n = ee(), { colorStyle: r } = dt(i(() => t.color)), a = i(() => t.location === "inline"), c = i(() => t.content !== void 0 && String(t.content).length > 0), l = i(() => t.dot || c.value), u = i(() => t.dot ? void 0 : t.content);
+		let t = $("badge", e), n = ee(), { colorStyle: r } = un(i(() => t.color)), a = i(() => t.location === "inline"), c = i(() => t.content !== void 0 && String(t.content).length > 0), l = i(() => t.dot || c.value), u = i(() => t.dot ? void 0 : t.content);
 		function d(e) {
-			let t = Tt(e ?? 0, {
+			let t = wn(e ?? 0, {
 				property: "margin",
 				allowNegative: !0,
 				fallback: "0px"
@@ -7076,7 +7334,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 			"aria-hidden": "true",
 			"data-dot": z(t).dot ? "" : void 0,
 			"data-border": z(t).border ? "" : void 0
-		}), R(u.value), 17, qa)) : a.value ? o("", !0) : (D(), s("span", _({ key: 1 }, z(n), { class: "mat-badge" }), [P(e.$slots, "default", {}, void 0, !0), l.value ? (D(), s("span", {
+		}), R(u.value), 17, Ko)) : a.value ? o("", !0) : (D(), s("span", _({ key: 1 }, z(n), { class: "mat-badge" }), [P(e.$slots, "default", {}, void 0, !0), l.value ? (D(), s("span", {
 			key: 0,
 			class: y(["mat-badge__indicator", [`mat-badge__indicator--${z(t).location}`, {
 				"mat-badge__indicator--dot": z(t).dot,
@@ -7086,19 +7344,19 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 			"aria-hidden": "true",
 			"data-dot": z(t).dot ? "" : void 0,
 			"data-border": z(t).border ? "" : void 0
-		}, R(u.value), 15, Ja)) : o("", !0)], 16));
+		}, R(u.value), 15, qo)) : o("", !0)], 16));
 	}
-}), [["__scopeId", "data-v-a4190aa1"]]), Xa = Symbol("mat-chip-set"), Za = {
+}), [["__scopeId", "data-v-a4190aa1"]]), Yo = Symbol("mat-chip-set"), Xo = {
 	key: 0,
 	class: "mat-chip__avatar",
 	"aria-hidden": "true",
 	inert: ""
-}, Qa = {
+}, Zo = {
 	key: 1,
 	class: "mat-chip__icon mat-chip__icon--leading",
 	"aria-hidden": "true",
 	inert: ""
-}, $a = { class: "mat-chip__label" }, eo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, Qo = { class: "mat-chip__label" }, $o = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatChip",
 	inheritAttrs: !1
 }, {
@@ -7143,7 +7401,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 			],
 			default: void 0,
 			validator(e) {
-				return e === void 0 || Wi(e);
+				return e === void 0 || Ha(e);
 			}
 		},
 		disabled: {
@@ -7153,13 +7411,13 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		type: {
 			type: String,
 			default: "button",
 			validator(e) {
-				return Le.includes(e);
+				return Ft.includes(e);
 			}
 		}
 	},
@@ -7172,14 +7430,14 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 		}
 	},
 	setup(e, { emit: t }) {
-		let n = $("chip", e), r = t, l = V(), u = h(Ne, Me), d = h(Xa, null), f = i(() => ["filter", "input"].includes(n.variant)), p = i(() => !!d && f.value && n.value !== void 0 && d.selection.value !== "none"), m = i(() => p.value ? d.isSelected(n.value) : f.value && n.selected), g = i(() => !!l.avatar), v = i(() => !g.value && !!l.leading), y = i(() => n.variant === "filter" && m.value && !g.value && !v.value && !n.hideSelectedIcon), b = i(() => g.value || v.value || y.value), x = i(() => n.variant === "input"), { colorStyle: S, hasExplicitColor: C } = dt(i(() => n.color));
+		let n = $("chip", e), r = t, l = V(), u = h(kt, Ot), d = h(Yo, null), f = i(() => ["filter", "input"].includes(n.variant)), p = i(() => !!d && f.value && n.value !== void 0 && d.selection.value !== "none"), m = i(() => p.value ? d.isSelected(n.value) : f.value && n.selected), g = i(() => !!l.avatar), v = i(() => !g.value && !!l.leading), y = i(() => n.variant === "filter" && m.value && !g.value && !v.value && !n.hideSelectedIcon), b = i(() => g.value || v.value || y.value), x = i(() => n.variant === "input"), { colorStyle: S, hasExplicitColor: C } = un(i(() => n.color));
 		function w(e) {
 			r("click", e), p.value && d.requestSelection(n.value, e);
 		}
 		function T(e) {
 			n.variant === "input" && (e.stopPropagation(), n.disabled || r("remove", e));
 		}
-		return (e, t) => (D(), a(ke, _(e.$attrs, {
+		return (e, t) => (D(), a(jt, _(e.$attrs, {
 			class: ["mat-chip mat-sys-typescale-label-large", [`mat-chip--${z(n).variant}`, {
 				"mat-chip--elevated": z(n).elevated,
 				"mat-chip--selected": m.value,
@@ -7196,21 +7454,21 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 			onClick: w
 		}), {
 			default: W(() => [
-				g.value ? (D(), s("span", Za, [P(e.$slots, "avatar", {}, void 0, !0)])) : v.value || y.value ? (D(), s("span", Qa, [v.value ? P(e.$slots, "leading", { key: 0 }, void 0, !0) : (D(), a(ht, {
+				g.value ? (D(), s("span", Xo, [P(e.$slots, "avatar", {}, void 0, !0)])) : v.value || y.value ? (D(), s("span", Zo, [v.value ? P(e.$slots, "leading", { key: 0 }, void 0, !0) : (D(), a(mn, {
 					key: 1,
 					as: "span",
 					icon: "check",
 					"optical-size": 20,
 					size: "18px"
 				}))])) : o("", !0),
-				c("span", $a, [P(e.$slots, "default", {}, void 0, !0)]),
+				c("span", Qo, [P(e.$slots, "default", {}, void 0, !0)]),
 				x.value ? (D(), s("span", {
 					key: 2,
 					class: "mat-chip__icon mat-chip__remove-icon",
 					"aria-hidden": "true",
 					onPointerdown: t[0] ||= q(() => {}, ["stop"]),
 					onClick: T
-				}, [e.$slots["remove-icon"] ? P(e.$slots, "remove-icon", { key: 0 }, void 0, !0) : (D(), a(ht, {
+				}, [e.$slots["remove-icon"] ? P(e.$slots, "remove-icon", { key: 0 }, void 0, !0) : (D(), a(mn, {
 					key: 1,
 					as: "span",
 					icon: z(n).removeIcon,
@@ -7228,7 +7486,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-f6054847"]]), to = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-f6054847"]]), es = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatScrollArea",
 	inheritAttrs: !1
 }, {
@@ -7262,12 +7520,12 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 		snapPadding: {
 			type: Number,
 			default: 0,
-			validator: (e) => Ct(e, { allowUndefined: !1 })
+			validator: (e) => Sn(e, { allowUndefined: !1 })
 		},
 		shadowLength: {
 			type: [Number, Object],
 			default: void 0,
-			validator: (e) => Dt(e)
+			validator: (e) => En(e)
 		},
 		barWidth: {
 			type: String,
@@ -7287,12 +7545,12 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 		reachThreshold: {
 			type: [Number, Object],
 			default: 0,
-			validator: (e) => Dt(e, { allowUndefined: !1 })
+			validator: (e) => En(e, { allowUndefined: !1 })
 		},
 		shadowOffset: {
 			type: [Number, Object],
 			default: 0,
-			validator: (e) => Dt(e, { allowUndefined: !1 })
+			validator: (e) => En(e, { allowUndefined: !1 })
 		},
 		rounded: {
 			type: Boolean,
@@ -7305,7 +7563,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		}
 	},
 	emits: {
@@ -7313,11 +7571,11 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 		"reach-end": (e) => typeof e?.distance == "number" && e.target instanceof HTMLElement
 	},
 	setup(e, { expose: t, emit: n }) {
-		let r = $("scrollArea", e), { colorStyle: a, hasExplicitColor: o } = dt(i(() => r.color)), l = n, u = ee(), d = j(null), f = j(null), p = j(!1), m = j(!1), h = j(!1), g = j(!1), y = j(!1), b, x, S, w = 0, k = 0, A = !1, M, N = i(() => [
+		let r = $("scrollArea", e), { colorStyle: a, hasExplicitColor: o } = un(i(() => r.color)), l = n, u = ee(), d = j(null), f = j(null), p = j(!1), m = j(!1), h = j(!1), g = j(!1), y = j(!1), b, x, S, w = 0, k = 0, A = !1, M, N = i(() => [
 			"horizontal",
 			"x",
 			"h"
-		].includes(r.orientation) ? "horizontal" : "vertical"), F = i(() => r.dragScroll && N.value === "horizontal"), I = i(() => Ot(r.reachThreshold, 0)), L = i(() => Ot(r.shadowOffset, 0)), R = i(() => Ot(r.shadowLength, 16)), B = i(() => r.barWidth === "hidden" ? 0 : r.barWidth === "thin" ? 8 : 16), V = j({
+		].includes(r.orientation) ? "horizontal" : "vertical"), F = i(() => r.dragScroll && N.value === "horizontal"), I = i(() => Dn(r.reachThreshold, 0)), L = i(() => Dn(r.shadowOffset, 0)), R = i(() => Dn(r.shadowLength, 16)), B = i(() => r.barWidth === "hidden" ? 0 : r.barWidth === "thin" ? 8 : 16), V = j({
 			left: 0,
 			right: 0,
 			top: 0,
@@ -7335,7 +7593,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 			n.left === r.left && n.right === r.right && n.top === r.top && n.bottom === r.bottom || (V.value = n);
 		}
 		let W = i(() => {
-			let e = N.value === "horizontal", t = Tt(r.snapPadding, { fallback: "0" });
+			let e = N.value === "horizontal", t = wn(r.snapPadding, { fallback: "0" });
 			return {
 				scrollPaddingBottom: e ? void 0 : t,
 				scrollPaddingLeft: e ? t : void 0,
@@ -7438,7 +7696,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 		function fe(e) {
 			f.value?.scrollTo(e);
 		}
-		return O(Ki, {
+		return O(Wa, {
 			getScroller: de,
 			scrollTo: fe,
 			scroller: f,
@@ -7491,7 +7749,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 			onScroll: ne
 		}), [P(e.$slots, "default", {}, void 0, !0)], 16)], 16));
 	}
-}), [["__scopeId", "data-v-f222c54b"]]), no = { class: "mat-chip-set__scroll-content" }, ro = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatChipSet" }, {
+}), [["__scopeId", "data-v-f222c54b"]]), ts = { class: "mat-chip-set__scroll-content" }, ns = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatChipSet" }, {
 	__name: "MatChipSet",
 	props: {
 		layout: {
@@ -7521,12 +7779,12 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 			],
 			default: null,
 			validator(e) {
-				return e === null || Wi(e) || Array.isArray(e) && e.every(Wi);
+				return e === null || Ha(e) || Array.isArray(e) && e.every(Ha);
 			}
 		}
 	},
 	emits: { "update:modelValue"(e) {
-		return e === null || Wi(e) || Array.isArray(e) && e.every(Wi);
+		return e === null || Ha(e) || Array.isArray(e) && e.every(Ha);
 	} },
 	setup(e, { emit: t }) {
 		let n = $("chipSet", e), r = t, o = i(() => n.selection);
@@ -7544,14 +7802,14 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 				r("update:modelValue", t ? i.filter((t) => !Object.is(t, e)) : [...i, e]);
 			}
 		}
-		return O(Xa, {
+		return O(Yo, {
 			isSelected: l,
 			requestSelection: u,
 			selection: o
 		}), (e, t) => (D(), s("div", {
 			class: y(["mat-chip-set", `mat-chip-set--${z(n).layout}`]),
 			role: "group"
-		}, [z(n).layout === "scroll" ? (D(), a(to, {
+		}, [z(n).layout === "scroll" ? (D(), a(es, {
 			key: 0,
 			class: "mat-chip-set__scroll-area",
 			orientation: "horizontal",
@@ -7559,11 +7817,11 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 			"drag-scroll": "",
 			"shadow-length": 48
 		}, {
-			default: W(() => [c("div", no, [P(e.$slots, "default", {}, void 0, !0)])]),
+			default: W(() => [c("div", ts, [P(e.$slots, "default", {}, void 0, !0)])]),
 			_: 3
 		})) : P(e.$slots, "default", { key: 1 }, void 0, !0)], 2));
 	}
-}), [["__scopeId", "data-v-e907c0ea"]]), io = Symbol("mde-vue-radio-group"), ao = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-e907c0ea"]]), rs = Symbol("mde-vue-radio-group"), is = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatRadio",
 	inheritAttrs: !1
 }, {
@@ -7577,7 +7835,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 			],
 			default: void 0,
 			validator(e) {
-				return e == null || Wi(e);
+				return e == null || Ha(e);
 			}
 		},
 		value: {
@@ -7587,7 +7845,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 				Boolean
 			],
 			required: !0,
-			validator: Wi
+			validator: Ha
 		},
 		disabled: {
 			type: Boolean,
@@ -7596,19 +7854,19 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		}
 	},
 	emits: {
 		"update:modelValue"(e) {
-			return e === null || Wi(e);
+			return e === null || Ha(e);
 		},
 		change(e) {
 			return e instanceof Event;
 		}
 	},
 	setup(e, { emit: t }) {
-		let n = $("radio", e), r = t, o = f(), s = h(io, null), l = j(null), u = i(() => n.value), d = i(() => n.disabled || !!s?.disabled.value), p = i(() => n.color ?? s?.color.value), m = i(() => s ? s.isSelected(n.value) : Object.is(n.modelValue, n.value));
+		let n = $("radio", e), r = t, o = f(), s = h(rs, null), l = j(null), u = i(() => n.value), d = i(() => n.disabled || !!s?.disabled.value), p = i(() => n.color ?? s?.color.value), m = i(() => s ? s.isSelected(n.value) : Object.is(n.modelValue, n.value));
 		function g(e) {
 			d.value || m.value || (s ? s.requestSelection(n.value, e) : r("update:modelValue", n.value), r("change", e));
 		}
@@ -7633,7 +7891,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 		function b(e) {
 			!s || e.repeat || (["ArrowRight", "ArrowDown"].includes(e.key) ? s.move(v, 1, e) : ["ArrowLeft", "ArrowUp"].includes(e.key) && s.move(v, -1, e));
 		}
-		return (e, t) => (D(), a(Ua, _({
+		return (e, t) => (D(), a(Ho, _({
 			ref_key: "base",
 			ref: l
 		}, e.$attrs, {
@@ -7660,7 +7918,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 			"tabindex"
 		]));
 	}
-}), [["__scopeId", "data-v-dae1f87b"]]), oo = ["aria-disabled"], so = { class: "mat-radio-group__label mat-sys-typescale-title-medium" }, co = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-dae1f87b"]]), as = ["aria-disabled"], os = { class: "mat-radio-group__label mat-sys-typescale-title-medium" }, ss = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatRadioGroup",
 	inheritAttrs: !1
 }, {
@@ -7674,7 +7932,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 			],
 			default: null,
 			validator(e) {
-				return e === null || Wi(e);
+				return e === null || Ha(e);
 			}
 		},
 		label: {
@@ -7688,19 +7946,19 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		}
 	},
 	emits: {
 		"update:modelValue"(e) {
-			return e === null || Wi(e);
+			return e === null || Ha(e);
 		},
 		change(e) {
 			return e instanceof Event;
 		}
 	},
 	setup(e, { emit: t }) {
-		let n = $("radioGroup", e), r = t, a = ee(), o = L([]), { colorStyle: l } = dt(i(() => n.color)), u = i(() => Object.fromEntries(Object.entries(a).filter(([e]) => e !== "style"))), d = i(() => [l.value, a.style]);
+		let n = $("radioGroup", e), r = t, a = ee(), o = L([]), { colorStyle: l } = un(i(() => n.color)), u = i(() => Object.fromEntries(Object.entries(a).filter(([e]) => e !== "style"))), d = i(() => [l.value, a.style]);
 		function f(e) {
 			return Object.is(n.modelValue, e);
 		}
@@ -7733,7 +7991,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 			let a = r[(i + t + r.length) % r.length];
 			a.focus(), a.activate(n);
 		}
-		return O(io, {
+		return O(rs, {
 			color: i(() => n.color),
 			disabled: i(() => n.disabled),
 			getTabIndex: g,
@@ -7747,9 +8005,9 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 			"aria-disabled": z(n).disabled || void 0,
 			style: d.value,
 			role: "radiogroup"
-		}), [c("legend", so, R(z(n).label), 1), P(e.$slots, "default", {}, void 0, !0)], 16, oo));
+		}), [c("legend", os, R(z(n).label), 1), P(e.$slots, "default", {}, void 0, !0)], 16, as));
 	}
-}), [["__scopeId", "data-v-77c4f2f2"]]), lo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-77c4f2f2"]]), cs = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatSwitch",
 	inheritAttrs: !1
 }, {
@@ -7777,7 +8035,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		}
 	},
 	emits: {
@@ -7793,7 +8051,7 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 		function i(e) {
 			r("update:modelValue", e.target.checked), r("change", e);
 		}
-		return (e, t) => (D(), a(Ua, _(e.$attrs, {
+		return (e, t) => (D(), a(Ho, _(e.$attrs, {
 			class: ["mat-switch", [`mat-switch--icons-${z(n).icons}`, { "mat-switch--checked": z(n).modelValue }]],
 			checked: z(n).modelValue,
 			color: z(n).color,
@@ -7813,83 +8071,83 @@ var qa = ["data-dot", "data-border"], Ja = ["data-dot", "data-border"], Ya = /*#
 			"disabled"
 		]));
 	}
-}), [["__scopeId", "data-v-6efac2c1"]]), uo = Object.freeze(["horizontal", "vertical"]), fo = Object.freeze([
+}), [["__scopeId", "data-v-6efac2c1"]]), ls = Object.freeze(["horizontal", "vertical"]), us = Object.freeze([
 	"extra-small",
 	"small",
 	"medium",
 	"large",
 	"extra-large"
-]), po = Object.freeze(["standard", "centered"]), mo = 12;
-function ho(e) {
+]), ds = Object.freeze(["standard", "centered"]), fs = 12;
+function ps(e) {
 	return typeof e == "number" && Number.isFinite(e);
 }
-function go(e) {
-	return ho(e) && e > 0;
+function ms(e) {
+	return ps(e) && e > 0;
 }
-function _o(e) {
-	return uo.includes(e);
+function hs(e) {
+	return ls.includes(e);
 }
-function vo(e) {
-	return fo.includes(e);
+function gs(e) {
+	return us.includes(e);
 }
-function yo(e) {
-	return po.includes(e);
+function _s(e) {
+	return ds.includes(e);
 }
-function bo(e) {
-	return Array.isArray(e) && e.length === 2 && e.every(ho);
+function vs(e) {
+	return Array.isArray(e) && e.length === 2 && e.every(ps);
 }
-function xo(e) {
+function ys(e) {
 	let t = e.toString().match(/(?:\.(\d+))?(?:e([+-]?\d+))?$/i);
 	if (!t) return 0;
 	let n = t[1]?.length ?? 0, r = Number(t[2] ?? 0);
 	return Math.max(0, n - r);
 }
-function So(e, t) {
-	return Number(e.toFixed(Math.min(mo, t)));
+function bs(e, t) {
+	return Number(e.toFixed(Math.min(fs, t)));
 }
-function Co(e, t) {
-	let n = ho(e) ? e : 0, r = ho(t) ? t : 100;
+function xs(e, t) {
+	let n = ps(e) ? e : 0, r = ps(t) ? t : 100;
 	return {
 		min: n,
 		max: r > n ? r : n + 1
 	};
 }
-function wo(e) {
-	return go(e) ? e : 1;
+function Ss(e) {
+	return ms(e) ? e : 1;
 }
-function To(e, t) {
+function Cs(e, t) {
 	return Math.min(Math.max(e, t.min), t.max);
 }
-function Eo(e, t, n) {
-	let r = To(ho(e) ? e : t.min, t), i = Math.round((r - t.min) / n), a = Math.max(xo(t.min), xo(t.max), xo(n));
-	return So(To(t.min + i * n, t), a);
+function ws(e, t, n) {
+	let r = Cs(ps(e) ? e : t.min, t), i = Math.round((r - t.min) / n), a = Math.max(ys(t.min), ys(t.max), ys(n));
+	return bs(Cs(t.min + i * n, t), a);
 }
-function Do(e, t, n) {
-	return Eo(ho(e) ? e : (t.min + t.max) / 2, t, n);
+function Ts(e, t, n) {
+	return ws(ps(e) ? e : (t.min + t.max) / 2, t, n);
 }
-function Oo(e, t) {
-	return So((To(e, t) - t.min) / (t.max - t.min) * 100, 3);
+function Es(e, t) {
+	return bs((Cs(e, t) - t.min) / (t.max - t.min) * 100, 3);
 }
-function ko(e) {
+function Ds(e) {
 	return Number(e.toFixed(3)).toString();
 }
-function Ao(e) {
-	let t = Math.min(Math.max(e, 0), 100), n = ko(t), r = So(6 * (1 - t * 2 / 100), 3);
-	return t === 0 ? "6px" : t === 100 ? "calc(100% - 6px)" : r === 0 ? `${n}%` : `calc(${n}% ${r > 0 ? "+" : "-"} ${ko(Math.abs(r))}px)`;
+function Os(e) {
+	let t = Math.min(Math.max(e, 0), 100), n = Ds(t), r = bs(6 * (1 - t * 2 / 100), 3);
+	return t === 0 ? "6px" : t === 100 ? "calc(100% - 6px)" : r === 0 ? `${n}%` : `calc(${n}% ${r > 0 ? "+" : "-"} ${Ds(Math.abs(r))}px)`;
 }
-function jo(e, t) {
-	let n = Math.floor((e.max - e.min) / t), r = Math.max(xo(e.min), xo(e.max), xo(t)), i = Array.from({ length: n + 1 }, (n, i) => So(e.min + i * t, r));
+function ks(e, t) {
+	let n = Math.floor((e.max - e.min) / t), r = Math.max(ys(e.min), ys(e.max), ys(t)), i = Array.from({ length: n + 1 }, (n, i) => bs(e.min + i * t, r));
 	return i.at(-1) !== e.max && i.push(e.max), i;
 }
-function Mo(e, t, n, r, i) {
+function As(e, t, n, r, i) {
 	let a = t.getBoundingClientRect(), o = i === "vertical" ? e.clientY : e.clientX, s = i === "vertical" ? a.height : a.width;
 	if (!Number.isFinite(o) || s <= 0) return;
 	let c = i === "vertical" ? a.bottom - o : o - a.left, l = s - 12, u = Math.min(Math.max(l > 0 ? (c - 6) / l : c / s, 0), 1);
-	return Eo(n.min + (n.max - n.min) * u, n, r);
+	return ws(n.min + (n.max - n.min) * u, n, r);
 }
-function No(e, t, n, r) {
+function js(e, t, n, r) {
 	if (t === "Home") return n.min;
-	if (t === "End") return Eo(n.max, n, r);
+	if (t === "End") return ws(n.max, n, r);
 	let i = {
 		ArrowDown: -1,
 		ArrowLeft: -1,
@@ -7898,18 +8156,18 @@ function No(e, t, n, r) {
 		PageDown: -10,
 		PageUp: 10
 	}[t];
-	if (i !== void 0) return Eo(e + i * r, n, r);
+	if (i !== void 0) return ws(e + i * r, n, r);
 }
-function Po(e, t, n, r) {
-	let i = Eo(e, n, r), a = Eo(t, n, r);
+function Ms(e, t, n, r) {
+	let i = ws(e, n, r), a = ws(t, n, r);
 	return i <= a ? [i, a] : [a, i];
 }
 //#endregion
 //#region src/components/mat-slider/MatSlider.vue
-var Fo = {
+var Ns = {
 	class: "mat-slider__track",
 	"aria-hidden": "true"
-}, Io = { class: "mat-slider__inset-icon-layer" }, Lo = { class: "mat-slider__inset-icon-layer mat-slider__inset-icon-layer--active" }, Ro = [
+}, Ps = { class: "mat-slider__inset-icon-layer" }, Fs = { class: "mat-slider__inset-icon-layer mat-slider__inset-icon-layer--active" }, Is = [
 	"aria-label",
 	"aria-orientation",
 	"aria-valuemax",
@@ -7920,7 +8178,7 @@ var Fo = {
 	"min",
 	"step",
 	"value"
-], zo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+], Ls = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatSlider",
 	inheritAttrs: !1
 }, {
@@ -7929,33 +8187,33 @@ var Fo = {
 		modelValue: {
 			type: Number,
 			default: 0,
-			validator: ho
+			validator: ps
 		},
 		min: {
 			type: Number,
 			default: 0,
-			validator: ho
+			validator: ps
 		},
 		max: {
 			type: Number,
 			default: 100,
-			validator: ho
+			validator: ps
 		},
 		step: {
 			type: Number,
 			default: 1,
-			validator: go
+			validator: ms
 		},
 		variant: {
 			type: String,
 			default: "standard",
-			validator: yo
+			validator: _s
 		},
 		center: {
 			type: Number,
 			default: void 0,
 			validator(e) {
-				return e === void 0 || ho(e);
+				return e === void 0 || ps(e);
 			}
 		},
 		disabled: {
@@ -7965,17 +8223,17 @@ var Fo = {
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		orientation: {
 			type: String,
 			default: "horizontal",
-			validator: _o
+			validator: hs
 		},
 		size: {
 			type: String,
 			default: "extra-small",
-			validator: vo
+			validator: gs
 		},
 		insetIcon: {
 			type: String,
@@ -7995,7 +8253,7 @@ var Fo = {
 	},
 	emits: {
 		"update:modelValue"(e) {
-			return ho(e);
+			return ps(e);
 		},
 		input(e) {
 			return e instanceof Event;
@@ -8005,7 +8263,7 @@ var Fo = {
 		}
 	},
 	setup(e, { emit: n }) {
-		let r = $("slider", e), l = n, f = ee(), p = V(), m = j(null), g = j(null), v = j(null), b = j(null), S = j(!1), w = j(void 0), E = j(void 0), O = j(!1), k = j(!1), A = j("active"), M = h(Ne, Me), { colorStyle: F } = dt(i(() => r.color)), I = i(() => Co(r.min, r.max)), L = i(() => wo(r.step)), B = i(() => Eo(r.modelValue, I.value, L.value)), U = i(() => S.value ? E.value : B.value), G = i(() => Do(r.center, I.value, L.value)), K = i(() => r.variant === "centered" ? G.value : I.value.min), q = i(() => Oo(U.value, I.value)), J = i(() => Oo(K.value, I.value)), te = i(() => Ao(q.value)), Y = i(() => r.variant === "standard" ? "0%" : Ao(J.value)), ne = i(() => Math.sign(q.value - J.value)), X = i(() => ne.value >= 0 ? Y.value : `calc(${te.value} + var(--mat-slider-handle-track-gap))`), re = i(() => ne.value > 0 ? `max(0px, calc(${te.value} - ${Y.value} - var(--mat-slider-handle-track-gap)))` : ne.value < 0 ? `max(0px, calc(${Y.value} - ${te.value} - var(--mat-slider-handle-track-gap)))` : "0px"), Z = i(() => ne.value > 0 ? Y.value : `max(0px, calc(${te.value} - var(--mat-slider-handle-track-gap)))`), ie = i(() => ne.value < 0 ? Y.value : `calc(${te.value} + var(--mat-slider-handle-track-gap))`), ae = i(() => ne.value < 0 ? `calc(100% - ${Y.value})` : `max(0px, calc(100% - ${te.value} - var(--mat-slider-handle-track-gap)))`), oe = i(() => r.showStopIndicator ? jo(I.value, L.value) : r.variant === "centered" ? [I.value.min, I.value.max] : [I.value.max]), se = i(() => r.insetIcon !== void 0 && [
+		let r = $("slider", e), l = n, f = ee(), p = V(), m = j(null), g = j(null), v = j(null), b = j(null), S = j(!1), w = j(void 0), E = j(void 0), O = j(!1), k = j(!1), A = j("active"), M = h(kt, Ot), { colorStyle: F } = un(i(() => r.color)), I = i(() => xs(r.min, r.max)), L = i(() => Ss(r.step)), B = i(() => ws(r.modelValue, I.value, L.value)), U = i(() => S.value ? E.value : B.value), G = i(() => Ts(r.center, I.value, L.value)), K = i(() => r.variant === "centered" ? G.value : I.value.min), q = i(() => Es(U.value, I.value)), J = i(() => Es(K.value, I.value)), te = i(() => Os(q.value)), Y = i(() => r.variant === "standard" ? "0%" : Os(J.value)), ne = i(() => Math.sign(q.value - J.value)), X = i(() => ne.value >= 0 ? Y.value : `calc(${te.value} + var(--mat-slider-handle-track-gap))`), re = i(() => ne.value > 0 ? `max(0px, calc(${te.value} - ${Y.value} - var(--mat-slider-handle-track-gap)))` : ne.value < 0 ? `max(0px, calc(${Y.value} - ${te.value} - var(--mat-slider-handle-track-gap)))` : "0px"), Z = i(() => ne.value > 0 ? Y.value : `max(0px, calc(${te.value} - var(--mat-slider-handle-track-gap)))`), ie = i(() => ne.value < 0 ? Y.value : `calc(${te.value} + var(--mat-slider-handle-track-gap))`), ae = i(() => ne.value < 0 ? `calc(100% - ${Y.value})` : `max(0px, calc(100% - ${te.value} - var(--mat-slider-handle-track-gap)))`), oe = i(() => r.showStopIndicator ? ks(I.value, L.value) : r.variant === "centered" ? [I.value.min, I.value.max] : [I.value.max]), se = i(() => r.insetIcon !== void 0 && [
 			"medium",
 			"large",
 			"extra-large"
@@ -8042,9 +8300,9 @@ var Fo = {
 			return e === void 0 || e === n ? !1 : (S.value && (E.value = e), l("update:modelValue", e), l("input", t), !0);
 		}
 		function me(e) {
-			return v.value ? pe(Mo(e, v.value, I.value, L.value, r.orientation), e) : !1;
+			return v.value ? pe(As(e, v.value, I.value, L.value, r.orientation), e) : !1;
 		}
-		let he = Ji((e) => {
+		let he = Ka((e) => {
 			O.value = me(e) || O.value;
 		});
 		function ge(e) {
@@ -8061,7 +8319,7 @@ var Fo = {
 		});
 		function ye(e) {
 			if (r.disabled) return;
-			let t = No(B.value, e.key, I.value, L.value);
+			let t = js(B.value, e.key, I.value, L.value);
 			t !== void 0 && (e.preventDefault(), pe(t, e) && l("change", e));
 		}
 		return (n, i) => (D(), s("div", _({
@@ -8080,16 +8338,16 @@ var Fo = {
 			]],
 			style: ue.value
 		}), [
-			c("span", Fo, [
+			c("span", Ns, [
 				i[6] ||= c("span", { class: "mat-slider__inactive-track mat-slider__inactive-track--before" }, null, -1),
 				c("span", { class: y(["mat-slider__active-track", { "mat-slider__active-track--from-start": z(r).variant === "standard" }]) }, null, 2),
 				i[7] ||= c("span", { class: "mat-slider__inactive-track mat-slider__inactive-track--after" }, null, -1),
 				(D(!0), s(t, null, N(oe.value, (e) => (D(), s("span", {
 					key: e,
 					class: y(["mat-slider__stop", { "mat-slider__stop--active": e >= Math.min(K.value, U.value) && e <= Math.max(K.value, U.value) }]),
-					style: x({ "--mat-slider-stop-position": z(Ao)(z(Oo)(e, I.value)) })
+					style: x({ "--mat-slider-stop-position": z(Os)(z(Es)(e, I.value)) })
 				}, null, 6))), 128)),
-				se.value && z(r).variant === "standard" ? (D(), a(ht, {
+				se.value && z(r).variant === "standard" ? (D(), a(mn, {
 					key: 0,
 					class: "mat-slider__inset-icon",
 					"font-color": A.value === "active" ? "var(--mat-on-accent-color, var(--mat-slider-inset-icon-color))" : "var(--mat-slider-inset-icon-inactive-color)",
@@ -8101,14 +8359,14 @@ var Fo = {
 					"font-color",
 					"icon",
 					"optical-size"
-				])) : se.value ? (D(), s(t, { key: 1 }, [c("span", Io, [d(ht, {
+				])) : se.value ? (D(), s(t, { key: 1 }, [c("span", Ps, [d(mn, {
 					class: "mat-slider__inset-icon mat-slider__inset-icon--inactive",
 					"font-color": "var(--mat-slider-inset-icon-inactive-color)",
 					icon: z(r).insetIcon,
 					"optical-size": ce.value,
 					size: "var(--mat-slider-current-inset-icon-size)",
 					"aria-hidden": "true"
-				}, null, 8, ["icon", "optical-size"])]), c("span", Lo, [d(ht, {
+				}, null, 8, ["icon", "optical-size"])]), c("span", Fs, [d(mn, {
 					class: "mat-slider__inset-icon mat-slider__inset-icon--active",
 					"font-color": "var(--mat-on-accent-color, var(--mat-slider-inset-icon-color))",
 					icon: z(r).insetIcon,
@@ -8122,7 +8380,7 @@ var Fo = {
 					class: "mat-slider__handle"
 				}, [...i[5] ||= [c("span", { class: "mat-slider__handle-shape" }, null, -1)]], 512)
 			]),
-			d(Ln, {
+			d(Fr, {
 				class: "mat-slider__value-indicator",
 				"data-slider-value-indicator": "",
 				location: e.orientation === "vertical" ? "right" : "top",
@@ -8168,13 +8426,13 @@ var Fo = {
 				onBlur: i[3] ||= (e) => k.value = !1,
 				onFocus: i[4] ||= (e) => k.value = !0,
 				onKeydown: ye
-			}, null, 40, Ro)
+			}, null, 40, Is)
 		], 16));
 	}
-}), [["__scopeId", "data-v-a629b223"]]), Bo = {
+}), [["__scopeId", "data-v-a629b223"]]), Rs = {
 	class: "mat-range-slider__track",
 	"aria-hidden": "true"
-}, Vo = [
+}, zs = [
 	"aria-label",
 	"aria-orientation",
 	"aria-valuemax",
@@ -8185,7 +8443,7 @@ var Fo = {
 	"min",
 	"step",
 	"value"
-], Ho = [
+], Bs = [
 	"aria-label",
 	"aria-orientation",
 	"aria-valuemax",
@@ -8196,7 +8454,7 @@ var Fo = {
 	"min",
 	"step",
 	"value"
-], Uo = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+], Vs = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatRangeSlider",
 	inheritAttrs: !1
 }, {
@@ -8207,22 +8465,22 @@ var Fo = {
 			default() {
 				return [0, 100];
 			},
-			validator: bo
+			validator: vs
 		},
 		min: {
 			type: Number,
 			default: 0,
-			validator: ho
+			validator: ps
 		},
 		max: {
 			type: Number,
 			default: 100,
-			validator: ho
+			validator: ps
 		},
 		step: {
 			type: Number,
 			default: 1,
-			validator: go
+			validator: ms
 		},
 		disabled: {
 			type: Boolean,
@@ -8231,17 +8489,17 @@ var Fo = {
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		orientation: {
 			type: String,
 			default: "horizontal",
-			validator: _o
+			validator: hs
 		},
 		size: {
 			type: String,
 			default: "extra-small",
-			validator: vo
+			validator: gs
 		},
 		showStopIndicator: {
 			type: Boolean,
@@ -8268,7 +8526,7 @@ var Fo = {
 	},
 	emits: {
 		"update:modelValue"(e) {
-			return bo(e);
+			return vs(e);
 		},
 		input(e) {
 			return e instanceof Event;
@@ -8278,7 +8536,7 @@ var Fo = {
 		}
 	},
 	setup(e, { emit: n }) {
-		let r = $("rangeSlider", e), a = n, o = ee(), l = V(), f = j([]), p = j(null), m = j(null), g = j(null), v = j(0), b = j(void 0), S = j(!1), w = j(void 0), T = j(void 0), E = j(!1), O = h(Ne, Me), { colorStyle: k } = dt(i(() => r.color)), A = i(() => Co(r.min, r.max)), M = i(() => wo(r.step)), F = i(() => Po(r.modelValue?.[0], r.modelValue?.[1], A.value, M.value)), I = i(() => S.value ? T.value : F.value), L = i(() => Oo(I.value[0], A.value)), B = i(() => Oo(I.value[1], A.value)), H = i(() => Ao(L.value)), U = i(() => Ao(B.value)), G = i(() => r.showStopIndicator ? jo(A.value, M.value) : [A.value.min, A.value.max]), K = i(() => f.value[v.value] ?? null), q = i(() => I.value[v.value]), J = i(() => r.showValueIndicator && (S.value || b.value === v.value)), te = i(() => ({
+		let r = $("rangeSlider", e), a = n, o = ee(), l = V(), f = j([]), p = j(null), m = j(null), g = j(null), v = j(0), b = j(void 0), S = j(!1), w = j(void 0), T = j(void 0), E = j(!1), O = h(kt, Ot), { colorStyle: k } = un(i(() => r.color)), A = i(() => xs(r.min, r.max)), M = i(() => Ss(r.step)), F = i(() => Ms(r.modelValue?.[0], r.modelValue?.[1], A.value, M.value)), I = i(() => S.value ? T.value : F.value), L = i(() => Es(I.value[0], A.value)), B = i(() => Es(I.value[1], A.value)), H = i(() => Os(L.value)), U = i(() => Os(B.value)), G = i(() => r.showStopIndicator ? ks(A.value, M.value) : [A.value.min, A.value.max]), K = i(() => f.value[v.value] ?? null), q = i(() => I.value[v.value]), J = i(() => r.showValueIndicator && (S.value || b.value === v.value)), te = i(() => ({
 			...k.value,
 			"--mat-range-slider-active-visible-size": `max(0px, calc(${U.value} - ${H.value} - (var(--mat-slider-handle-track-gap) * 2)))`,
 			"--mat-range-slider-active-visible-start": `calc(${H.value} + var(--mat-slider-handle-track-gap))`,
@@ -8302,16 +8560,16 @@ var Fo = {
 		}
 		function re(e) {
 			if (!p.value) return !1;
-			let t = Mo(e, p.value, A.value, M.value, r.orientation);
+			let t = As(e, p.value, A.value, M.value, r.orientation);
 			return X(v.value, t, e);
 		}
-		let Z = Ji((e) => {
+		let Z = Ka((e) => {
 			E.value = re(e) || E.value;
 		});
 		function ie(e) {
 			if (r.disabled || !p.value) return;
 			Z.cancel();
-			let t = Mo(e, p.value, A.value, M.value, r.orientation);
+			let t = As(e, p.value, A.value, M.value, r.orientation);
 			t !== void 0 && (v.value = ne(t), w.value = e.pointerId, T.value = [...F.value], E.value = !1, S.value = !0, Y(v.value)?.focus(), p.value.setPointerCapture?.(e.pointerId), E.value = X(v.value, t, e));
 		}
 		function ae(e) {
@@ -8325,7 +8583,7 @@ var Fo = {
 		});
 		function se(e, t) {
 			if (r.disabled) return;
-			let n = No(F.value[e], t.key, A.value, M.value);
+			let n = js(F.value[e], t.key, A.value, M.value);
 			n !== void 0 && (t.preventDefault(), v.value = e, X(e, n, t) && a("change", t));
 		}
 		function ce(e) {
@@ -8349,14 +8607,14 @@ var Fo = {
 			]],
 			style: te.value
 		}), [
-			c("span", Bo, [
+			c("span", Rs, [
 				n[10] ||= c("span", { class: "mat-range-slider__inactive-track mat-range-slider__inactive-track--before" }, null, -1),
 				n[11] ||= c("span", { class: "mat-range-slider__active-track" }, null, -1),
 				n[12] ||= c("span", { class: "mat-range-slider__inactive-track mat-range-slider__inactive-track--after" }, null, -1),
 				(D(!0), s(t, null, N(G.value, (e) => (D(), s("span", {
 					key: e,
 					class: y(["mat-range-slider__stop", { "mat-range-slider__stop--active": e >= I.value[0] && e <= I.value[1] }]),
-					style: x({ "--mat-range-slider-stop-position": z(Ao)(z(Oo)(e, A.value)) })
+					style: x({ "--mat-range-slider-stop-position": z(Os)(z(Es)(e, A.value)) })
 				}, null, 6))), 128)),
 				(D(!0), s(t, null, N(I.value, (e, t) => (D(), s("span", {
 					key: t,
@@ -8365,7 +8623,7 @@ var Fo = {
 					class: y(["mat-range-slider__handle", [`mat-range-slider__handle--${t === 0 ? "start" : "end"}`, { "mat-range-slider__handle--active": v.value === t }]])
 				}, [...n[9] ||= [c("span", { class: "mat-range-slider__handle-shape" }, null, -1)]], 2))), 128))
 			]),
-			d(Ln, {
+			d(Fr, {
 				class: "mat-range-slider__value-indicator",
 				"data-slider-value-indicator": "",
 				location: z(r).orientation === "vertical" ? "right" : "top",
@@ -8412,7 +8670,7 @@ var Fo = {
 				onBlur: n[3] ||= (e) => le(0),
 				onFocus: n[4] ||= (e) => ce(0),
 				onKeydown: n[5] ||= (e) => se(0, e)
-			}, null, 40, Vo),
+			}, null, 40, zs),
 			c("input", {
 				ref_key: "endInput",
 				ref: g,
@@ -8431,39 +8689,39 @@ var Fo = {
 				onBlur: n[6] ||= (e) => le(1),
 				onFocus: n[7] ||= (e) => ce(1),
 				onKeydown: n[8] ||= (e) => se(1, e)
-			}, null, 40, Ho)
+			}, null, 40, Bs)
 		], 16));
 	}
-}), [["__scopeId", "data-v-6c96f4bf"]]), Wo = ["inert", "aria-hidden"], Go = { class: "mat-text-input__container" }, Ko = {
+}), [["__scopeId", "data-v-6c96f4bf"]]), Hs = ["inert", "aria-hidden"], Us = { class: "mat-text-input__container" }, Ws = {
 	key: 0,
 	class: "mat-text-input__outline",
 	"aria-hidden": "true"
-}, qo = {
+}, Gs = {
 	key: 0,
 	class: "mat-text-input__outline-label mat-sys-typescale-body-small"
-}, Jo = { key: 0 }, Yo = {
+}, Ks = { key: 0 }, qs = {
 	key: 1,
 	class: "mat-text-input__indicator",
 	"aria-hidden": "true"
-}, Xo = {
+}, Js = {
 	key: 2,
 	class: "mat-text-input__icon mat-text-input__leading"
-}, Zo = {
+}, Ys = {
 	key: 0,
 	"aria-hidden": "true"
-}, Qo = { class: "mat-text-input__control-row" }, $o = {
+}, Xs = { class: "mat-text-input__control-row" }, Zs = {
 	key: 0,
 	class: "mat-text-input__affix mat-text-input__prefix"
-}, es = {
+}, Qs = {
 	key: 3,
 	class: "mat-text-input__affix mat-text-input__suffix"
-}, ts = {
+}, $s = {
 	key: 3,
 	class: "mat-text-input__icon mat-text-input__trailing"
-}, ns = { class: "mat-text-input__supporting-text" }, rs = {
+}, ec = { class: "mat-text-input__supporting-text" }, tc = {
 	key: 0,
 	class: "mat-text-input__counter"
-}, is = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, nc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatTextInputBase",
 	inheritAttrs: !1
 }, {
@@ -8563,7 +8821,7 @@ var Fo = {
 	},
 	emits: { "update:modelValue": (e) => typeof e == "string" },
 	setup(e, { emit: t }) {
-		let n = e, r = t, l = ee(), d = j(!1), f = j(n.modelValue), p = j(), m = B(), h = `${m}-supporting`, g = i(() => l.id || m), { colorStyle: b } = dt(i(() => n.color)), S = i(() => !!l.placeholder), w = i(() => n.control === "custom" ? n.customFocused : d.value), E = i(() => w.value || f.value.length > 0 || S.value), O = i(() => n.error ? n.errorText : n.supportingText), k = i(() => !!O.value || n.maxLength !== void 0), A = i(() => {
+		let n = e, r = t, l = ee(), d = j(!1), f = j(n.modelValue), p = j(), m = B(), h = `${m}-supporting`, g = i(() => l.id || m), { colorStyle: b } = un(i(() => n.color)), S = i(() => !!l.placeholder), w = i(() => n.control === "custom" ? n.customFocused : d.value), E = i(() => w.value || f.value.length > 0 || S.value), O = i(() => n.error ? n.errorText : n.supportingText), k = i(() => !!O.value || n.maxLength !== void 0), A = i(() => {
 			let e = [l["aria-describedby"]];
 			return k.value && e.push(h), e.filter(Boolean).join(" ") || void 0;
 		}), M = i(() => [b.value, l.style]), N = /* @__PURE__ */ new Set([
@@ -8633,10 +8891,10 @@ var Fo = {
 			style: x(M.value),
 			inert: t.$attrs.inert,
 			"aria-hidden": t.$attrs["aria-hidden"]
-		}, [c("div", Go, [
-			e.variant === "outlined" ? (D(), s("fieldset", Ko, [E.value && e.label ? (D(), s("legend", qo, [u(R(e.label), 1), e.required ? (D(), s("span", Jo, " *")) : o("", !0)])) : o("", !0)])) : o("", !0),
-			e.variant === "filled" ? (D(), s("span", Yo)) : o("", !0),
-			t.$slots.leading ? (D(), s("span", Xo, [P(t.$slots, "leading", {}, void 0, !0)])) : o("", !0),
+		}, [c("div", Us, [
+			e.variant === "outlined" ? (D(), s("fieldset", Ws, [E.value && e.label ? (D(), s("legend", Gs, [u(R(e.label), 1), e.required ? (D(), s("span", Ks, " *")) : o("", !0)])) : o("", !0)])) : o("", !0),
+			e.variant === "filled" ? (D(), s("span", qs)) : o("", !0),
+			t.$slots.leading ? (D(), s("span", Js, [P(t.$slots, "leading", {}, void 0, !0)])) : o("", !0),
 			(D(), a(F(e.control === "custom" ? "div" : "label"), {
 				class: "mat-text-input__main",
 				for: e.control === "custom" ? void 0 : g.value,
@@ -8645,13 +8903,13 @@ var Fo = {
 				default: W(() => [e.label ? (D(), s("span", {
 					key: 0,
 					class: y(["mat-text-input__label", E.value ? "mat-sys-typescale-body-small" : "mat-sys-typescale-body-large"])
-				}, [u(R(e.label), 1), e.required ? (D(), s("span", Zo, " *")) : o("", !0)], 2)) : o("", !0), c("span", Qo, [
-					e.prefixText ? (D(), s("span", $o, R(e.prefixText), 1)) : o("", !0),
+				}, [u(R(e.label), 1), e.required ? (D(), s("span", Ys, " *")) : o("", !0)], 2)) : o("", !0), c("span", Xs, [
+					e.prefixText ? (D(), s("span", Zs, R(e.prefixText), 1)) : o("", !0),
 					e.control === "custom" ? P(t.$slots, "control", {
 						key: 1,
 						controlId: g.value,
 						describedBy: A.value
-					}, void 0, !0) : (D(), a(Hr, _({
+					}, void 0, !0) : (D(), a(Bi, _({
 						key: 2,
 						ref_key: "controlElement",
 						ref: p
@@ -8684,18 +8942,18 @@ var Fo = {
 						"control",
 						"model-value"
 					])),
-					e.suffixText ? (D(), s("span", es, R(e.suffixText), 1)) : o("", !0)
+					e.suffixText ? (D(), s("span", Qs, R(e.suffixText), 1)) : o("", !0)
 				])]),
 				_: 3
 			}, 8, ["for"])),
-			t.$slots.trailing ? (D(), s("span", ts, [P(t.$slots, "trailing", {}, void 0, !0)])) : o("", !0)
+			t.$slots.trailing ? (D(), s("span", $s, [P(t.$slots, "trailing", {}, void 0, !0)])) : o("", !0)
 		]), k.value ? (D(), s("span", {
 			key: 0,
 			id: h,
 			class: "mat-text-input__supporting mat-sys-typescale-body-small"
-		}, [c("span", ns, R(O.value), 1), e.maxLength === void 0 ? o("", !0) : (D(), s("span", rs, R(e.modelValue.length) + " / " + R(e.maxLength), 1))])) : o("", !0)], 14, Wo));
+		}, [c("span", ec, R(O.value), 1), e.maxLength === void 0 ? o("", !0) : (D(), s("span", tc, R(e.modelValue.length) + " / " + R(e.maxLength), 1))])) : o("", !0)], 14, Hs));
 	}
-}), [["__scopeId", "data-v-ca1b6083"]]), as = ["filled", "outlined"], os = {
+}), [["__scopeId", "data-v-ca1b6083"]]), rc = ["filled", "outlined"], ic = {
 	modelValue: {
 		type: String,
 		default: ""
@@ -8708,13 +8966,13 @@ var Fo = {
 		type: String,
 		default: "outlined",
 		validator(e) {
-			return as.includes(e);
+			return rc.includes(e);
 		}
 	},
 	color: {
 		type: String,
 		default: void 0,
-		validator: Ue
+		validator: Vt
 	},
 	supportingText: {
 		type: String,
@@ -8755,13 +9013,13 @@ var Fo = {
 		type: Boolean,
 		default: !1
 	}
-}, ss = /*@__PURE__*/ Object.assign({
+}, ac = /*@__PURE__*/ Object.assign({
 	name: "MatTextField",
 	inheritAttrs: !1
 }, {
 	__name: "MatTextField",
 	props: {
-		...os,
+		...ic,
 		type: {
 			type: String,
 			default: "text"
@@ -8770,7 +9028,7 @@ var Fo = {
 	emits: { "update:modelValue": (e) => typeof e == "string" },
 	setup(e, { emit: t }) {
 		let n = $("textField", e), r = t;
-		return (e, t) => (D(), a(is, _({
+		return (e, t) => (D(), a(nc, _({
 			...e.$attrs,
 			...z(n)
 		}, {
@@ -8786,7 +9044,7 @@ var Fo = {
 			key: "1"
 		} : void 0]), 1040));
 	}
-}), cs = 200, ls = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), oc = 200, sc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatMenu",
 	inheritAttrs: !1
 }, {
@@ -8820,7 +9078,7 @@ var Fo = {
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		closeOnClick: {
 			type: Boolean,
@@ -8829,7 +9087,7 @@ var Fo = {
 		maxLength: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => Ct(e, {
+			validator: (e) => Sn(e, {
 				property: "max-block-size",
 				positive: !0
 			})
@@ -8841,7 +9099,7 @@ var Fo = {
 	},
 	emits: { "update:modelValue": (e) => typeof e == "boolean" },
 	setup(e, { emit: n }) {
-		let r = $("menu", e), a = n, c = ee(), l = V(), u = h(Na, null), f = h(Ma, null), p = h(Yt, null), m = j(null), g = j(null), y = j(null), b = L(null), S = i(() => y.value?.root ?? y.value?.$el ?? null), w = B().replace(/[^\w-]/g, "-"), k = i(() => c.id ?? `${w}-menu`), A = `--mat-menu-anchor-${w}`, M = j(!1), N = j("closed"), F = f?.pointerHistory ?? {
+		let r = $("menu", e), a = n, c = ee(), l = V(), u = h(Mo, null), f = h(jo, null), p = h(Jn, null), m = j(null), g = j(null), y = j(null), b = L(null), S = i(() => y.value?.root ?? y.value?.$el ?? null), w = B().replace(/[^\w-]/g, "-"), k = i(() => c.id ?? `${w}-menu`), A = `--mat-menu-anchor-${w}`, M = j(!1), N = j("closed"), F = f?.pointerHistory ?? {
 			current: {
 				x: 0,
 				y: 0
@@ -8850,9 +9108,9 @@ var Fo = {
 				x: 0,
 				y: 0
 			}
-		}, I = j(0), R = /* @__PURE__ */ new Map(), U = null, G = !1, K = !1, q = !1, J = qt(), te = Jt({ motion: J }), Y, ne, X = null, re = !1, Z = !1, ie = i(() => !!u), se = i(() => !!l.activator), ce = i(() => !ie.value && !se.value && we(r.anchor)), le = i(() => I.value > 0), ue = i(() => !ie.value && r.scrim), de = i(() => !ue.value || !!p), fe = i(() => ue.value ? "manual" : "auto"), pe = i(() => ie.value ? M.value : r.modelValue), me = i(() => r.variant ?? f?.variant.value ?? "standard"), he = i(() => r.color ?? f?.color.value), ge = i(() => r.closeOnClick), { colorStyle: _e } = dt(he), ve = i(() => {
+		}, I = j(0), R = /* @__PURE__ */ new Map(), U = null, G = !1, K = !1, q = !1, J = Kn(), te = qn({ motion: J }), Y, ne, X = null, re = !1, Z = !1, ie = i(() => !!u), se = i(() => !!l.activator), ce = i(() => !ie.value && !se.value && we(r.anchor)), le = i(() => I.value > 0), ue = i(() => !ie.value && r.scrim), de = i(() => !ue.value || !!p), fe = i(() => ue.value ? "manual" : "auto"), pe = i(() => ie.value ? M.value : r.modelValue), me = i(() => r.variant ?? f?.variant.value ?? "standard"), he = i(() => r.color ?? f?.color.value), ge = i(() => r.closeOnClick), { colorStyle: _e } = un(he), ve = i(() => {
 			if (r.maxLength === void 0) return;
-			let e = Tt(r.maxLength, {
+			let e = wn(r.maxLength, {
 				property: "max-block-size",
 				positive: !0
 			});
@@ -8889,7 +9147,7 @@ var Fo = {
 			be.value,
 			c.style,
 			ve.value
-		]), Ce = Ui({
+		]), Ce = Va({
 			root: S,
 			selector: "[data-mat-menu-item]",
 			isAvailable(e) {
@@ -8917,49 +9175,49 @@ var Fo = {
 		function Oe() {
 			J.cancel();
 		}
-		function Q() {
+		function ke() {
 			!ue.value || !g.value || K || (K = !0, g.value.showPopover?.());
 		}
-		function ke() {
+		function Ae() {
 			K && (K = !1, g.value?.hidePopover?.());
 		}
-		function Ae() {
-			S.value && G && (G = !1, q = !0, S.value.hidePopover?.()), ke(), N.value = "closed";
-		}
 		function je() {
-			ke(), N.value = "closed";
+			S.value && G && (G = !1, q = !0, S.value.hidePopover?.()), Ae(), N.value = "closed";
 		}
 		function Me() {
+			Ae(), N.value = "closed";
+		}
+		function Ne() {
 			te.start({
 				canStart: () => !!S.value && N.value !== "closing",
-				duration: cs,
+				duration: oc,
 				getElement: () => S.value,
 				isActive: () => N.value === "closing" && !!S.value,
-				onFinish: je,
+				onFinish: Me,
 				onStart: () => {
 					N.value = "closing";
 				}
 			});
 		}
-		function Ne({ immediate: e = !1 } = {}) {
+		function Pe({ immediate: e = !1 } = {}) {
 			if (!(!S.value || !G)) {
-				if (q = !0, ze({ immediate: !0 }), e) {
-					Oe(), Ae();
+				if (q = !0, Be({ immediate: !0 }), e) {
+					Oe(), je();
 					return;
 				}
 				N.value !== "closing" && te.start({
 					canStart: () => !!(S.value && G) && N.value !== "closing",
-					duration: cs,
+					duration: oc,
 					getElement: () => S.value,
 					isActive: () => N.value === "closing" && !!S.value,
-					onFinish: Ae,
+					onFinish: je,
 					onStart: () => {
 						N.value = "closing";
 					}
 				});
 			}
 		}
-		function Pe() {
+		function Fe() {
 			if (Y = void 0, !S.value || !G) return;
 			let e = b.value ?? {
 				bottom: window.innerHeight,
@@ -8976,7 +9234,7 @@ var Fo = {
 			}, c = 0, l = 0;
 			s.left < e.left + o ? c = e.left + o - s.left : s.right > e.right - o && (c = e.right - o - s.right), s.top < e.top + o ? l = e.top + o - s.top : s.bottom > e.bottom - o && (l = e.bottom - o - s.bottom), t.setProperty("--mat-menu-viewport-shift-x", `${c}px`), t.setProperty("--mat-menu-viewport-shift-y", `${l}px`);
 		}
-		function Fe() {
+		function Ie() {
 			if (!p) {
 				b.value = null;
 				return;
@@ -8989,141 +9247,141 @@ var Fo = {
 				width: `${e.width}px`
 			});
 		}
-		function Ie() {
-			Fe(), Y !== void 0 && cancelAnimationFrame(Y), Y = requestAnimationFrame(Pe);
+		function Le() {
+			Ie(), Y !== void 0 && cancelAnimationFrame(Y), Y = requestAnimationFrame(Fe);
 		}
-		async function Le() {
+		async function Re() {
 			Oe(), q = !1, await v();
 			let e = ce.value ? null : De(), t = ce.value || !!e;
 			if (!S.value || !t) {
 				ie.value || (console.warn(se.value ? "MatMenu: activator Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点" : "MatMenu: modelValue 为 true 时必须通过 anchor 提供元素 id 或视口坐标"), a("update:modelValue", !1));
 				return;
 			}
-			G || (ce.value && document.activeElement instanceof HTMLElement && (X = document.activeElement), Q(), G = !0, S.value.showPopover?.()), N.value = "open", ie.value && (u.submenuOpen.value = !0), Ce.refresh(), Ce.focusFirst(), Ie();
+			G || (ce.value && document.activeElement instanceof HTMLElement && (X = document.activeElement), ke(), G = !0, S.value.showPopover?.()), N.value = "open", ie.value && (u.submenuOpen.value = !0), Ce.refresh(), Ce.focusFirst(), Le();
 		}
-		function Re() {
+		function ze() {
 			let e = Te() ?? X;
 			X = null, v(() => e?.focus());
 		}
-		function ze({ immediate: e = !1 } = {}) {
+		function Be({ immediate: e = !1 } = {}) {
 			R.forEach((t) => t.closeSubmenu({ immediate: e }));
 		}
-		function Be({ focus: e = !0, immediate: t = !1 } = {}) {
-			ze({ immediate: t }), ie.value ? (M.value = !1, u.submenuOpen.value = !1) : a("update:modelValue", !1), Ne({ immediate: t }), e && Re();
+		function Ve({ focus: e = !0, immediate: t = !1 } = {}) {
+			Be({ immediate: t }), ie.value ? (M.value = !1, u.submenuOpen.value = !1) : a("update:modelValue", !1), Pe({ immediate: t }), e && ze();
 		}
-		function Ve() {
+		function He() {
 			if (f) {
 				f.closeTree();
 				return;
 			}
-			Be();
-		}
-		function He(e) {
-			e.preventDefault(), Be();
+			Ve();
 		}
 		function Ue(e) {
+			e.preventDefault(), Ve();
+		}
+		function We(e) {
 			let t = e.target;
-			!(t instanceof Node) || S.value?.contains(t) || g.value?.contains(t) || U?.contains(t) || Be();
+			!(t instanceof Node) || S.value?.contains(t) || g.value?.contains(t) || U?.contains(t) || Ve();
 		}
-		function We() {
+		function Ge() {
 			let e = S.value, t = e ? Array.from(e.querySelectorAll("[data-mat-menu-item]")) : [];
-			La(Array.from(R.values()).filter((e) => !e.grouped), t);
-		}
-		function Ge(e) {
-			R.set(e.element, e), We(), v(We), Ce.queueRefresh();
+			Io(Array.from(R.values()).filter((e) => !e.grouped), t);
 		}
 		function Ke(e) {
-			R.delete(e.element), We(), v(We), Ce.queueRefresh();
+			R.set(e.element, e), Ge(), v(Ge), Ce.queueRefresh();
 		}
-		function qe() {
-			I.value += 1, Ce.queueRefresh();
+		function qe(e) {
+			R.delete(e.element), Ge(), v(Ge), Ce.queueRefresh();
 		}
 		function Je() {
+			I.value += 1, Ce.queueRefresh();
+		}
+		function Ye() {
 			I.value = Math.max(0, I.value - 1), Ce.queueRefresh();
 		}
-		function Ye(e) {
+		function Xe(e) {
 			R.forEach((t) => {
 				t !== e && t.closeSubmenu({ focus: !1 });
 			});
 		}
-		function Xe() {
+		function Ze() {
 			let { current: e, previous: t } = F;
 			for (let n of R.values()) {
 				if (!n.submenuOpen?.value) continue;
 				let r = n.element?.value, i = n.submenuElement?.value;
 				if (!r || !i) continue;
 				let a = r.getBoundingClientRect(), o = i.getBoundingClientRect();
-				if (Ia(e, t, o, o.left < a.left ? "left" : "right")) return !0;
+				if (Fo(e, t, o, o.left < a.left ? "left" : "right")) return !0;
 			}
 			return !1;
 		}
-		function Ze(e) {
-			let t = getComputedStyle(S.value).direction === "rtl" ? "ArrowRight" : "ArrowLeft";
-			e.key === "ArrowDown" || e.key === "ArrowUp" ? (e.preventDefault(), Ce.move(e.target, e.key === "ArrowDown" ? 1 : -1)) : e.key === "Home" ? (e.preventDefault(), Ce.focusFirst()) : e.key === "End" ? (e.preventDefault(), Ce.focusLast()) : e.key === "Escape" || ie.value && e.key === t ? (e.preventDefault(), Be()) : e.key === "Tab" && Ve();
-		}
 		function Qe(e) {
+			let t = getComputedStyle(S.value).direction === "rtl" ? "ArrowRight" : "ArrowLeft";
+			e.key === "ArrowDown" || e.key === "ArrowUp" ? (e.preventDefault(), Ce.move(e.target, e.key === "ArrowDown" ? 1 : -1)) : e.key === "Home" ? (e.preventDefault(), Ce.focusFirst()) : e.key === "End" ? (e.preventDefault(), Ce.focusLast()) : e.key === "Escape" || ie.value && e.key === t ? (e.preventDefault(), Ve()) : e.key === "Tab" && He();
+		}
+		function $e(e) {
 			if (G = e.newState === "open", G) {
-				Ie();
+				Le();
 				return;
 			}
 			let t = q;
-			q = !1, ze(), ie.value && (M.value = !1, u.submenuOpen.value = !1), !(!pe.value || t) && (Me(), ie.value || a("update:modelValue", !1), Re());
+			q = !1, Be(), ie.value && (M.value = !1, u.submenuOpen.value = !1), !(!pe.value || t) && (Ne(), ie.value || a("update:modelValue", !1), ze());
 		}
-		O(Ma, {
-			closeOtherSubmenus: Ye,
-			closeTree: Ve,
+		O(jo, {
+			closeOtherSubmenus: Xe,
+			closeTree: He,
 			closeOnClick: ge,
 			color: he,
-			isPointerInOpenSubmenuTriangle: Xe,
-			registerItem: Ge,
-			registerGroup: qe,
-			unregisterItem: Ke,
-			unregisterGroup: Je,
+			isPointerInOpenSubmenuTriangle: Ze,
+			registerItem: Ke,
+			registerGroup: Je,
+			unregisterItem: qe,
+			unregisterGroup: Ye,
 			variant: me
 		}), u && u.registerSubmenu({
-			close: Be,
+			close: Ve,
 			element: S,
 			id: k,
-			open: Le
+			open: Re
 		}), T(() => {
-			Ce.observe(), window.addEventListener("resize", Ie), window.addEventListener("scroll", Ie, {
+			Ce.observe(), window.addEventListener("resize", Le), window.addEventListener("scroll", Le, {
 				capture: !0,
 				passive: !0
-			}), pe.value && (et(), nt()), typeof ResizeObserver < "u" && (ne = new ResizeObserver(Ie), ne.observe(S.value)), pe.value && Le();
+			}), pe.value && (tt(), rt()), typeof ResizeObserver < "u" && (ne = new ResizeObserver(Le), ne.observe(S.value)), pe.value && Re();
 		}), E(() => {
-			We(), !(ie.value || !pe.value || ce.value) && Te() !== U && (Ee(), Le());
+			Ge(), !(ie.value || !pe.value || ce.value) && Te() !== U && (Ee(), Re());
 		}), C(() => {
-			Oe(), Y !== void 0 && cancelAnimationFrame(Y), ne?.disconnect(), window.removeEventListener("resize", Ie), window.removeEventListener("scroll", Ie, { capture: !0 }), tt(), rt(), Ne({ immediate: !0 }), ke(), Ee(), u?.unregisterSubmenu();
+			Oe(), Y !== void 0 && cancelAnimationFrame(Y), ne?.disconnect(), window.removeEventListener("resize", Le), window.removeEventListener("scroll", Le, { capture: !0 }), nt(), it(), Pe({ immediate: !0 }), Ae(), Ee(), u?.unregisterSubmenu();
 		});
-		function $e(e) {
+		function et(e) {
 			F.previous = F.current, F.current = {
 				x: e.clientX,
 				y: e.clientY
 			};
 		}
-		function et() {
-			f || re || (document.addEventListener("pointermove", $e, !0), re = !0);
-		}
 		function tt() {
-			re &&= (document.removeEventListener("pointermove", $e, !0), !1);
+			f || re || (document.addEventListener("pointermove", et, !0), re = !0);
 		}
 		function nt() {
-			f || !de.value || Z || (document.addEventListener("pointerdown", Ue, !0), Z = !0);
+			re &&= (document.removeEventListener("pointermove", et, !0), !1);
 		}
 		function rt() {
-			Z &&= (document.removeEventListener("pointerdown", Ue, !0), !1);
+			f || !de.value || Z || (document.addEventListener("pointerdown", We, !0), Z = !0);
+		}
+		function it() {
+			Z &&= (document.removeEventListener("pointerdown", We, !0), !1);
 		}
 		return H(pe, (e) => {
-			e ? (et(), nt(), Le()) : (tt(), rt(), Ne());
+			e ? (tt(), rt(), Re()) : (nt(), it(), Pe());
 		}), H(() => r.anchor, async () => {
-			Ee(), pe.value && await Le();
+			Ee(), pe.value && await Re();
 		}, { deep: !0 }), H(() => r.offset, async () => {
-			pe.value && (await v(), Ie());
+			pe.value && (await v(), Le());
 		}, { deep: !0 }), H(() => r.maxLength, async () => {
-			pe.value && (await v(), Ie());
+			pe.value && (await v(), Le());
 		}), H(() => r.scrim, async () => {
-			ie.value || (S.value && G && (G = !1, q = !0, S.value.hidePopover?.()), ke(), rt(), await v(), pe.value && (nt(), await Le()));
-		}), p && H(p.publicContext.layout, Ie), (e, n) => (D(), s(t, null, [
+			ie.value || (S.value && G && (G = !1, q = !0, S.value.hidePopover?.()), Ae(), it(), await v(), pe.value && (rt(), await Re()));
+		}), p && H(p.publicContext.layout, Le), (e, n) => (D(), s(t, null, [
 			!ie.value && se.value ? (D(), s("span", {
 				key: 0,
 				ref_key: "activatorHost",
@@ -9138,9 +9396,9 @@ var Fo = {
 				class: "mat-menu__scrim",
 				popover: "manual",
 				style: x(xe.value),
-				onPointerdown: He
+				onPointerdown: Ue
 			}, null, 36)) : o("", !0),
-			d(Ti, _({
+			d(Ca, _({
 				id: k.value,
 				ref_key: "surface",
 				ref: y
@@ -9155,10 +9413,10 @@ var Fo = {
 				popover: fe.value,
 				role: "menu",
 				onFocusin: z(Ce).handleFocusIn,
-				onKeydown: Ze,
-				onToggle: Qe
+				onKeydown: Qe,
+				onToggle: $e
 			}), {
-				default: W(() => [d(to, {
+				default: W(() => [d(es, {
 					class: "mat-menu__surface",
 					"bar-width": "hidden"
 				}, {
@@ -9175,7 +9433,7 @@ var Fo = {
 			])
 		], 64));
 	}
-}), [["__scopeId", "data-v-3766e101"]]), us = { class: "mat-menu-item-host" }, ds = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-3766e101"]]), cc = { class: "mat-menu-item-host" }, lc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatMenuItem",
 	inheritAttrs: !1
 }, {
@@ -9196,7 +9454,7 @@ var Fo = {
 	},
 	emits: { click: (e) => e instanceof MouseEvent },
 	setup(e, { emit: t }) {
-		let n = $("menuItem", e), r = t, c = V(), u = h(Ma, null), f = h(Pa, null), p = h(Ne, Me), m = j(null), g = i(() => m.value?.root ?? m.value?.$el ?? null), v = j(!1), y = j(void 0), b = j("only"), x = i(() => !!f), S, w = i(() => !!c.submenu);
+		let n = $("menuItem", e), r = t, c = V(), u = h(jo, null), f = h(No, null), p = h(kt, Ot), m = j(null), g = i(() => m.value?.root ?? m.value?.$el ?? null), v = j(!1), y = j(void 0), b = j("only"), x = i(() => !!f), S, w = i(() => !!c.submenu);
 		function E({ focus: e = !1, immediate: t = !1 } = {}) {
 			v.value = !1, S?.close({
 				focus: e,
@@ -9234,7 +9492,7 @@ var Fo = {
 			let t = getComputedStyle(g.value).direction === "rtl" ? "ArrowLeft" : "ArrowRight";
 			(e.key === t || e.key === "Enter" || e.key === " ") && (e.preventDefault(), k());
 		}
-		return O(Na, {
+		return O(Mo, {
 			element: g,
 			registerSubmenu: A,
 			submenuOpen: v,
@@ -9243,11 +9501,11 @@ var Fo = {
 			f?.registerItem(N), u?.registerItem(N);
 		}), C(() => {
 			f?.unregisterItem(N), u?.unregisterItem(N);
-		}), (e, t) => (D(), s("span", us, [z(n).tooltip ? (D(), a(Ln, {
+		}), (e, t) => (D(), s("span", cc, [z(n).tooltip ? (D(), a(Fr, {
 			key: 0,
 			content: z(n).tooltip
 		}, {
-			activator: W(() => [d(ke, _({
+			activator: W(() => [d(jt, _({
 				ref_key: "action",
 				ref: m
 			}, e.$attrs, {
@@ -9268,14 +9526,14 @@ var Fo = {
 				onKeydown: I,
 				onPointerenter: t[0] ||= (e) => k({ pointer: !0 })
 			}), {
-				default: W(() => [d(va, {
+				default: W(() => [d(_o, {
 					namespace: "mat-menu-item-content",
 					"label-typography-class": "mat-sys-typescale-label-large",
 					"line-count": e.$slots.supporting ? 2 : 1,
 					"supporting-typography-class": "mat-sys-typescale-body-small",
 					"trailing-typography-class": "mat-sys-typescale-label-large"
 				}, l({
-					trailing: W(() => [e.$slots.trailing ? P(e.$slots, "trailing", { key: 0 }, void 0, !0) : w.value ? (D(), a(ht, {
+					trailing: W(() => [e.$slots.trailing ? P(e.$slots, "trailing", { key: 0 }, void 0, !0) : w.value ? (D(), a(mn, {
 						key: 1,
 						as: "span",
 						class: "mat-menu-item__submenu-icon",
@@ -9306,7 +9564,7 @@ var Fo = {
 				"use-cursor"
 			])]),
 			_: 3
-		}, 8, ["content"])) : (D(), a(ke, _({
+		}, 8, ["content"])) : (D(), a(jt, _({
 			key: 1,
 			ref_key: "action",
 			ref: m
@@ -9328,14 +9586,14 @@ var Fo = {
 			onKeydown: I,
 			onPointerenter: t[1] ||= (e) => k({ pointer: !0 })
 		}), {
-			default: W(() => [d(va, {
+			default: W(() => [d(_o, {
 				namespace: "mat-menu-item-content",
 				"label-typography-class": "mat-sys-typescale-label-large",
 				"line-count": e.$slots.supporting ? 2 : 1,
 				"supporting-typography-class": "mat-sys-typescale-body-small",
 				"trailing-typography-class": "mat-sys-typescale-label-large"
 			}, l({
-				trailing: W(() => [e.$slots.trailing ? P(e.$slots, "trailing", { key: 0 }, void 0, !0) : w.value ? (D(), a(ht, {
+				trailing: W(() => [e.$slots.trailing ? P(e.$slots, "trailing", { key: 0 }, void 0, !0) : w.value ? (D(), a(mn, {
 					key: 1,
 					as: "span",
 					class: "mat-menu-item__submenu-icon",
@@ -9366,7 +9624,7 @@ var Fo = {
 			"use-cursor"
 		])), e.$slots.submenu ? P(e.$slots, "submenu", { key: 2 }, void 0, !0) : o("", !0)]));
 	}
-}), [["__scopeId", "data-v-76262001"]]), fs = ["aria-labelledby"], ps = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-76262001"]]), uc = ["aria-labelledby"], dc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatMenuGroup",
 	inheritAttrs: !1
 }, {
@@ -9376,10 +9634,10 @@ var Fo = {
 		default: void 0
 	} },
 	setup(e) {
-		let t = $("menuGroup", e), n = ee(), r = h(Ma, null), a = `${B().replace(/[^\w-]/g, "-")}-label`, c = i(() => t.label ? a : n["aria-labelledby"]), l = j(null), u = /* @__PURE__ */ new Set();
+		let t = $("menuGroup", e), n = ee(), r = h(jo, null), a = `${B().replace(/[^\w-]/g, "-")}-label`, c = i(() => t.label ? a : n["aria-labelledby"]), l = j(null), u = /* @__PURE__ */ new Set();
 		function d() {
 			let e = l.value, t = e ? Array.from(e.querySelectorAll("[data-mat-menu-item]")) : [];
-			La(Array.from(u), t);
+			Io(Array.from(u), t);
 		}
 		function f(e) {
 			u.add(e), d(), v(d);
@@ -9387,7 +9645,7 @@ var Fo = {
 		function p(e) {
 			u.delete(e), d(), v(d);
 		}
-		return O(Pa, {
+		return O(No, {
 			registerItem: f,
 			unregisterItem: p
 		}), T(() => r?.registerGroup()), E(d), C(() => r?.unregisterGroup()), (e, n) => (D(), s("div", _({
@@ -9401,9 +9659,9 @@ var Fo = {
 			key: 0,
 			id: a,
 			class: "mat-menu-group__label mat-sys-typescale-label-large"
-		}, R(z(t).label), 1)) : o("", !0), P(e.$slots, "default", {}, void 0, !0)], 16, fs));
+		}, R(z(t).label), 1)) : o("", !0), P(e.$slots, "default", {}, void 0, !0)], 16, uc));
 	}
-}), [["__scopeId", "data-v-b34883b5"]]), ms = [
+}), [["__scopeId", "data-v-b34883b5"]]), fc = [
 	"id",
 	"aria-describedby",
 	"aria-label",
@@ -9412,24 +9670,24 @@ var Fo = {
 	"aria-invalid",
 	"aria-readonly",
 	"tabindex"
-], hs = {
+], pc = {
 	key: 0,
 	class: "mat-select__chips"
-}, gs = {
+}, mc = {
 	key: 1,
 	class: "mat-select__value"
-}, _s = {
+}, hc = {
 	key: 2,
 	class: "mat-select__placeholder"
-}, vs = [
+}, gc = [
 	"disabled",
 	"multiple",
 	"required"
-], ys = ["selected"], bs = [
+], _c = ["selected"], vc = [
 	"disabled",
 	"selected",
 	"value"
-], xs = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+], yc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatSelect",
 	inheritAttrs: !1
 }, {
@@ -9444,7 +9702,7 @@ var Fo = {
 			],
 			default: null,
 			validator(e) {
-				return e === null || Wi(e) || Array.isArray(e) && e.every(Wi);
+				return e === null || Ha(e) || Array.isArray(e) && e.every(Ha);
 			}
 		},
 		items: {
@@ -9478,12 +9736,12 @@ var Fo = {
 		variant: {
 			type: String,
 			default: "outlined",
-			validator: (e) => as.includes(e)
+			validator: (e) => rc.includes(e)
 		},
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		supportingText: {
 			type: String,
@@ -9532,11 +9790,11 @@ var Fo = {
 		}
 	},
 	emits: {
-		"update:modelValue": (e) => e === null || Wi(e) || Array.isArray(e) && e.every(Wi),
-		change: (e) => e === null || Wi(e) || Array.isArray(e) && e.every(Wi)
+		"update:modelValue": (e) => e === null || Ha(e) || Array.isArray(e) && e.every(Ha),
+		change: (e) => e === null || Ha(e) || Array.isArray(e) && e.every(Ha)
 	},
 	setup(e, { emit: n }) {
-		let r = $("select", e), f = n, p = ee(), m = h(Ne, Me), g = j(!1), b = j(!1), S = j(null), C = B().replace(/[^\w-]/g, "-"), w = i(() => p.id ?? `${C}-select`), T = i(() => ({
+		let r = $("select", e), f = n, p = ee(), m = h(kt, Ot), g = j(!1), b = j(!1), S = j(null), C = B().replace(/[^\w-]/g, "-"), w = i(() => p.id ?? `${C}-select`), T = i(() => ({
 			form: p.form,
 			name: p.name
 		}));
@@ -9551,7 +9809,7 @@ var Fo = {
 			};
 			if (!e || typeof e != "object" || Array.isArray(e) || "items" in e) return null;
 			let n = e[r.itemTitle], i = e[r.itemValue], a = e[r.itemSubtitle], o = typeof e.tooltip == "string" ? e.tooltip : void 0;
-			return typeof n != "string" || !Wi(i) ? null : {
+			return typeof n != "string" || !Ha(i) ? null : {
 				disabled: e.disabled === !0,
 				group: t,
 				subtitle: a === void 0 ? void 0 : String(a),
@@ -9620,7 +9878,7 @@ var Fo = {
 			class: y(["mat-select", [{ "mat-select--use-cursor": z(m).useCursor }, e.$attrs.class]]),
 			style: x(e.$attrs.style)
 		}, [
-			d(is, {
+			d(nc, {
 				id: w.value,
 				control: "custom",
 				"model-value": A.value,
@@ -9658,7 +9916,7 @@ var Fo = {
 					onFocus: n[2] ||= (e) => b.value = !0,
 					onKeydown: U
 				}, [
-					z(r).chips && M.value ? (D(), s("span", hs, [(D(!0), s(t, null, N(k.value, (e) => (D(), a(eo, {
+					z(r).chips && M.value ? (D(), s("span", pc, [(D(!0), s(t, null, N(k.value, (e) => (D(), a($o, {
 						key: `${typeof e.value}:${String(e.value)}`,
 						variant: "input",
 						selected: I(e.value),
@@ -9672,16 +9930,16 @@ var Fo = {
 						"selected",
 						"disabled",
 						"onRemove"
-					]))), 128))])) : M.value ? (D(), s("span", gs, R(A.value), 1)) : (D(), s("span", _s, R(z(r).placeholder), 1)),
+					]))), 128))])) : M.value ? (D(), s("span", mc, R(A.value), 1)) : (D(), s("span", hc, R(z(r).placeholder), 1)),
 					n[4] ||= c("span", { class: "mat-select__spacer" }, null, -1),
-					d(ht, {
+					d(mn, {
 						as: "span",
 						icon: "arrow_drop_down",
 						"optical-size": 24,
 						size: "24px",
 						"aria-hidden": "true"
 					})
-				], 40, ms)]),
+				], 40, fc)]),
 				_: 2
 			}, [e.$slots.leading ? {
 				name: "leading",
@@ -9719,20 +9977,20 @@ var Fo = {
 				key: 0,
 				value: "",
 				selected: !M.value
-			}, null, 8, ys)), (D(!0), s(t, null, N(O.value.options, (e) => (D(), s("option", {
+			}, null, 8, _c)), (D(!0), s(t, null, N(O.value.options, (e) => (D(), s("option", {
 				key: `${typeof e.value}:${String(e.value)}`,
 				disabled: e.disabled,
 				selected: I(e.value),
 				value: String(e.value)
-			}, R(e.title), 9, bs))), 128))], 16, vs),
-			d(ls, {
+			}, R(e.title), 9, vc))), 128))], 16, gc),
+			d(sc, {
 				id: F,
 				modelValue: g.value,
 				"onUpdate:modelValue": n[3] ||= (e) => g.value = e,
 				anchor: w.value,
 				"close-on-click": !z(r).multiple
 			}, {
-				default: W(() => [O.value.groups.length === 0 ? (D(!0), s(t, { key: 0 }, N(O.value.ungrouped, (e) => (D(), a(ds, {
+				default: W(() => [O.value.groups.length === 0 ? (D(!0), s(t, { key: 0 }, N(O.value.ungrouped, (e) => (D(), a(lc, {
 					key: `${typeof e.value}:${String(e.value)}`,
 					disabled: e.disabled,
 					selected: z(r).selectionIndicator === "check" && I(e.value),
@@ -9743,14 +10001,14 @@ var Fo = {
 					_: 2
 				}, [(z(r).selectionIndicator === "check" ? I(e.value) : z(r).selectionIndicator === "checkbox") ? {
 					name: "leading",
-					fn: W(() => [z(r).selectionIndicator === "check" ? (D(), a(ht, {
+					fn: W(() => [z(r).selectionIndicator === "check" ? (D(), a(mn, {
 						key: 0,
 						"aria-hidden": "true",
 						as: "span",
 						icon: "check",
 						"optical-size": 20,
 						size: "20px"
-					})) : z(r).selectionIndicator === "checkbox" ? (D(), a(Wa, {
+					})) : z(r).selectionIndicator === "checkbox" ? (D(), a(Uo, {
 						key: 1,
 						"aria-hidden": "true",
 						inert: "",
@@ -9767,8 +10025,8 @@ var Fo = {
 					"selected",
 					"tooltip",
 					"onClick"
-				]))), 128)) : O.value.ungrouped.length > 0 ? (D(), a(ps, { key: 1 }, {
-					default: W(() => [(D(!0), s(t, null, N(O.value.ungrouped, (e) => (D(), a(ds, {
+				]))), 128)) : O.value.ungrouped.length > 0 ? (D(), a(dc, { key: 1 }, {
+					default: W(() => [(D(!0), s(t, null, N(O.value.ungrouped, (e) => (D(), a(lc, {
 						key: `${typeof e.value}:${String(e.value)}`,
 						disabled: e.disabled,
 						selected: z(r).selectionIndicator === "check" && I(e.value),
@@ -9779,14 +10037,14 @@ var Fo = {
 						_: 2
 					}, [(z(r).selectionIndicator === "check" ? I(e.value) : z(r).selectionIndicator === "checkbox") ? {
 						name: "leading",
-						fn: W(() => [z(r).selectionIndicator === "check" ? (D(), a(ht, {
+						fn: W(() => [z(r).selectionIndicator === "check" ? (D(), a(mn, {
 							key: 0,
 							"aria-hidden": "true",
 							as: "span",
 							icon: "check",
 							"optical-size": 20,
 							size: "20px"
-						})) : z(r).selectionIndicator === "checkbox" ? (D(), a(Wa, {
+						})) : z(r).selectionIndicator === "checkbox" ? (D(), a(Uo, {
 							key: 1,
 							"aria-hidden": "true",
 							inert: "",
@@ -9805,11 +10063,11 @@ var Fo = {
 						"onClick"
 					]))), 128))]),
 					_: 1
-				})) : o("", !0), (D(!0), s(t, null, N(O.value.groups, (e) => (D(), a(ps, {
+				})) : o("", !0), (D(!0), s(t, null, N(O.value.groups, (e) => (D(), a(dc, {
 					key: e.label,
 					label: e.label
 				}, {
-					default: W(() => [(D(!0), s(t, null, N(e.options, (e) => (D(), a(ds, {
+					default: W(() => [(D(!0), s(t, null, N(e.options, (e) => (D(), a(lc, {
 						key: `${typeof e.value}:${String(e.value)}`,
 						disabled: e.disabled,
 						selected: z(r).selectionIndicator === "check" && I(e.value),
@@ -9820,14 +10078,14 @@ var Fo = {
 						_: 2
 					}, [(z(r).selectionIndicator === "check" ? I(e.value) : z(r).selectionIndicator === "checkbox") ? {
 						name: "leading",
-						fn: W(() => [z(r).selectionIndicator === "check" ? (D(), a(ht, {
+						fn: W(() => [z(r).selectionIndicator === "check" ? (D(), a(mn, {
 							key: 0,
 							"aria-hidden": "true",
 							as: "span",
 							icon: "check",
 							"optical-size": 20,
 							size: "20px"
-						})) : z(r).selectionIndicator === "checkbox" ? (D(), a(Wa, {
+						})) : z(r).selectionIndicator === "checkbox" ? (D(), a(Uo, {
 							key: 1,
 							"aria-hidden": "true",
 							inert: "",
@@ -9855,13 +10113,13 @@ var Fo = {
 			])
 		], 6));
 	}
-}), [["__scopeId", "data-v-aca83b85"]]), Ss = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-aca83b85"]]), bc = /*@__PURE__*/ Object.assign({
 	name: "MatTextarea",
 	inheritAttrs: !1
 }, {
 	__name: "MatTextarea",
 	props: {
-		...os,
+		...ic,
 		autoGrow: {
 			type: Boolean,
 			default: !1
@@ -9892,7 +10150,7 @@ var Fo = {
 			return Object.hasOwn(r.vnode.props ?? {}, "rows") ? n.rows : 1;
 		}
 		let o = t;
-		return (e, t) => (D(), a(is, _({
+		return (e, t) => (D(), a(nc, _({
 			...e.$attrs,
 			...z(n)
 		}, {
@@ -9909,10 +10167,10 @@ var Fo = {
 			key: "1"
 		} : void 0]), 1040, ["resize-min-rows"]));
 	}
-}), Cs = { class: "mat-docked-container__panel" }, ws = ["id"], Ts = { class: "mat-docked-container__body" }, Es = {
+}), xc = { class: "mat-docked-container__panel" }, Sc = ["id"], Cc = { class: "mat-docked-container__body" }, wc = {
 	key: 1,
 	class: "mat-docked-container__actions"
-}, Ds = 200, Os = 150, ks = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, Tc = 200, Ec = 150, Dc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatDockedContainer",
 	inheritAttrs: !1
 }, {
@@ -9939,7 +10197,7 @@ var Fo = {
 		width: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => Ct(e, {
+			validator: (e) => Sn(e, {
 				property: "inline-size",
 				positive: !0
 			})
@@ -9969,12 +10227,12 @@ var Fo = {
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		maxLength: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => Ct(e, {
+			validator: (e) => Sn(e, {
 				property: "max-block-size",
 				positive: !0
 			})
@@ -9994,9 +10252,9 @@ var Fo = {
 			small: "280px",
 			medium: "328px",
 			large: "560px"
-		}), a = $("dockedContainer", e), l = n, f = ee(), p = V(), m = h(Yt, null), g = j(null), y = j(null), b = j(null), S = L(null), w = i(() => b.value?.root ?? b.value?.$el ?? null), O = B().replace(/[^\w-]/g, "-"), k = i(() => f.id ?? `${O}-docked-container`), A = i(() => `${O}-headline`), M = `--mat-docked-container-anchor-${O}`, N = j("closed"), F = null, I = !1, U = !1, G = !1, K = qt(), q = Jt({ motion: K }), J, te, Y = null, ne = !1, X = i(() => !!p.activator), re = i(() => !X.value && ye(a.anchor)), Z = i(() => a.scrim), ie = i(() => !Z.value || !!m), se = i(() => Z.value ? "manual" : "auto"), ce = i(() => a.modelValue), le = i(() => a.variant ?? "standard"), ue = i(() => a.color), de = i(() => a.headline !== void 0 || !!p.headline), { colorStyle: fe } = dt(ue), pe = i(() => {
+		}), a = $("dockedContainer", e), l = n, f = ee(), p = V(), m = h(Jn, null), g = j(null), y = j(null), b = j(null), S = L(null), w = i(() => b.value?.root ?? b.value?.$el ?? null), O = B().replace(/[^\w-]/g, "-"), k = i(() => f.id ?? `${O}-docked-container`), A = i(() => `${O}-headline`), M = `--mat-docked-container-anchor-${O}`, N = j("closed"), F = null, I = !1, U = !1, G = !1, K = Kn(), q = qn({ motion: K }), J, te, Y = null, ne = !1, X = i(() => !!p.activator), re = i(() => !X.value && ye(a.anchor)), Z = i(() => a.scrim), ie = i(() => !Z.value || !!m), se = i(() => Z.value ? "manual" : "auto"), ce = i(() => a.modelValue), le = i(() => a.variant ?? "standard"), ue = i(() => a.color), de = i(() => a.headline !== void 0 || !!p.headline), { colorStyle: fe } = un(ue), pe = i(() => {
 			if (a.width !== void 0) {
-				let e = Tt(a.width, {
+				let e = wn(a.width, {
 					property: "inline-size",
 					positive: !0
 				});
@@ -10005,7 +10263,7 @@ var Fo = {
 			if (a.size && r[a.size]) return { inlineSize: `min(${r[a.size]}, calc(var(--mat-docked-container-viewport-width) - (2 * var(--mat-docked-container-viewport-space))))` };
 		}), me = i(() => {
 			if (a.maxLength === void 0) return;
-			let e = Tt(a.maxLength, {
+			let e = wn(a.maxLength, {
 				property: "max-block-size",
 				positive: !0
 			});
@@ -10079,7 +10337,7 @@ var Fo = {
 		function Oe() {
 			q.start({
 				canStart: () => !!w.value && N.value !== "closing",
-				duration: Ds,
+				duration: Tc,
 				getElement: () => w.value,
 				isActive: () => N.value === "closing" && !!w.value,
 				onFinish: De,
@@ -10088,7 +10346,7 @@ var Fo = {
 				}
 			});
 		}
-		function Q({ immediate: e = !1 } = {}) {
+		function ke({ immediate: e = !1 } = {}) {
 			if (!(!w.value || !I)) {
 				if (G = !0, e) {
 					Ce(), Ee();
@@ -10096,7 +10354,7 @@ var Fo = {
 				}
 				N.value !== "closing" && q.start({
 					canStart: () => !!(w.value && I) && N.value !== "closing",
-					duration: Ds,
+					duration: Tc,
 					getElement: () => w.value,
 					isActive: () => N.value === "closing" && !!w.value,
 					onFinish: Ee,
@@ -10106,7 +10364,7 @@ var Fo = {
 				});
 			}
 		}
-		function ke() {
+		function Ae() {
 			if (J = void 0, !w.value || !I) return;
 			let e = S.value ?? {
 				bottom: window.innerHeight,
@@ -10123,7 +10381,7 @@ var Fo = {
 			}, c = 0, l = 0;
 			s.left < e.left + o ? c = e.left + o - s.left : s.right > e.right - o && (c = e.right - o - s.right), s.top < e.top + o ? l = e.top + o - s.top : s.bottom > e.bottom - o && (l = e.bottom - o - s.bottom), t.setProperty("--mat-docked-container-viewport-shift-x", `${c}px`), t.setProperty("--mat-docked-container-viewport-shift-y", `${l}px`);
 		}
-		function Ae() {
+		function je() {
 			if (!m) {
 				S.value = null;
 				return;
@@ -10136,74 +10394,74 @@ var Fo = {
 				width: `${e.width}px`
 			});
 		}
-		function je() {
-			Ae(), J !== void 0 && cancelAnimationFrame(J), J = requestAnimationFrame(ke);
+		function Me() {
+			je(), J !== void 0 && cancelAnimationFrame(J), J = requestAnimationFrame(Ae);
 		}
-		async function Me() {
+		async function Ne() {
 			Ce(), G = !1, await v();
 			let e = re.value ? null : Se(), t = re.value || !!e;
 			if (!w.value || !t) {
 				console.warn(X.value ? "MatDockedContainer: activator Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点" : "MatDockedContainer: modelValue 为 true 时必须通过 anchor 提供元素 id 或视口坐标"), l("update:modelValue", !1);
 				return;
 			}
-			I || (re.value && document.activeElement instanceof HTMLElement && (Y = document.activeElement), we(), I = !0, w.value.showPopover?.()), je(), N.value = "opening", K.wait(w.value, Os, () => {
+			I || (re.value && document.activeElement instanceof HTMLElement && (Y = document.activeElement), we(), I = !0, w.value.showPopover?.()), Me(), N.value = "opening", K.wait(w.value, Ec, () => {
 				N.value = "open", l("opened");
 			});
 		}
-		function Ne() {
+		function Pe() {
 			let e = be() ?? Y;
 			Y = null, v(() => {
 				e && typeof e.focus == "function" && e.focus();
 			});
 		}
-		function Pe({ focus: e = !0, immediate: t = !1 } = {}) {
-			l("update:modelValue", !1), Q({ immediate: t }), e && Ne();
-		}
-		function Fe(e) {
-			e.preventDefault(), Pe();
+		function Fe({ focus: e = !0, immediate: t = !1 } = {}) {
+			l("update:modelValue", !1), ke({ immediate: t }), e && Pe();
 		}
 		function Ie(e) {
-			let t = e.target;
-			!(t instanceof Node) || w.value?.contains(t) || y.value?.contains(t) || F?.contains(t) || Pe();
+			e.preventDefault(), Fe();
 		}
 		function Le(e) {
-			e.key === "Escape" && (e.preventDefault(), Pe());
+			let t = e.target;
+			!(t instanceof Node) || w.value?.contains(t) || y.value?.contains(t) || F?.contains(t) || Fe();
 		}
 		function Re(e) {
+			e.key === "Escape" && (e.preventDefault(), Fe());
+		}
+		function ze(e) {
 			if (I = e.newState === "open", I) {
-				je();
+				Me();
 				return;
 			}
 			let t = G;
-			G = !1, !(!ce.value || t) && (Oe(), l("update:modelValue", !1), Ne());
+			G = !1, !(!ce.value || t) && (Oe(), l("update:modelValue", !1), Pe());
 		}
 		T(() => {
-			window.addEventListener("resize", je), window.addEventListener("scroll", je, {
+			window.addEventListener("resize", Me), window.addEventListener("scroll", Me, {
 				capture: !0,
 				passive: !0
-			}), ce.value && ze(), typeof ResizeObserver < "u" && w.value && (te = new ResizeObserver(je), te.observe(w.value)), ce.value && Me();
+			}), ce.value && Be(), typeof ResizeObserver < "u" && w.value && (te = new ResizeObserver(Me), te.observe(w.value)), ce.value && Ne();
 		}), E(() => {
-			!ce.value || re.value || be() !== F && (xe(), Me());
+			!ce.value || re.value || be() !== F && (xe(), Ne());
 		}), C(() => {
-			Ce(), J !== void 0 && cancelAnimationFrame(J), te?.disconnect(), window.removeEventListener("resize", je), window.removeEventListener("scroll", je, { capture: !0 }), Be(), Q({ immediate: !0 }), Te(), xe();
+			Ce(), J !== void 0 && cancelAnimationFrame(J), te?.disconnect(), window.removeEventListener("resize", Me), window.removeEventListener("scroll", Me, { capture: !0 }), Ve(), ke({ immediate: !0 }), Te(), xe();
 		});
-		function ze() {
-			!ie.value || ne || (document.addEventListener("pointerdown", Ie, !0), ne = !0);
-		}
 		function Be() {
-			ne &&= (document.removeEventListener("pointerdown", Ie, !0), !1);
+			!ie.value || ne || (document.addEventListener("pointerdown", Le, !0), ne = !0);
+		}
+		function Ve() {
+			ne &&= (document.removeEventListener("pointerdown", Le, !0), !1);
 		}
 		return H(ce, (e) => {
-			e ? (ze(), Me()) : (Be(), Q(), Ne());
+			e ? (Be(), Ne()) : (Ve(), ke(), Pe());
 		}), H(() => a.anchor, async () => {
-			xe(), ce.value && await Me();
+			xe(), ce.value && await Ne();
 		}, { deep: !0 }), H(() => a.offset, async () => {
-			ce.value && (await v(), je());
+			ce.value && (await v(), Me());
 		}, { deep: !0 }), H(() => a.maxLength, async () => {
-			ce.value && (await v(), je());
+			ce.value && (await v(), Me());
 		}), H(() => a.scrim, async () => {
-			w.value && I && (I = !1, G = !0, w.value.hidePopover?.()), Te(), Be(), await v(), ce.value && (ze(), await Me());
-		}), m && H(m.publicContext.layout, je), (e, n) => (D(), s(t, null, [
+			w.value && I && (I = !1, G = !0, w.value.hidePopover?.()), Te(), Ve(), await v(), ce.value && (Be(), await Ne());
+		}), m && H(m.publicContext.layout, Me), (e, n) => (D(), s(t, null, [
 			X.value ? (D(), s("span", {
 				key: 0,
 				ref_key: "activatorHost",
@@ -10218,9 +10476,9 @@ var Fo = {
 				class: "mat-docked-container__scrim",
 				popover: "manual",
 				style: x(_e.value),
-				onPointerdown: Fe
+				onPointerdown: Ie
 			}, null, 36)) : o("", !0),
-			d(Ti, _({
+			d(Ca, _({
 				id: k.value,
 				ref_key: "surface",
 				ref: b
@@ -10234,17 +10492,17 @@ var Fo = {
 				"aria-labelledby": e.$attrs["aria-labelledby"] ?? (de.value ? A.value : void 0),
 				role: "region",
 				tabindex: "-1",
-				onKeydown: Le,
-				onToggle: Re
+				onKeydown: Re,
+				onToggle: ze
 			}), {
-				default: W(() => [c("div", Cs, [
+				default: W(() => [c("div", xc, [
 					de.value ? (D(), s("header", {
 						key: 0,
 						id: A.value,
 						class: "mat-docked-container__headline mat-sys-typescale-title-medium"
-					}, [e.$slots.headline ? P(e.$slots, "headline", { key: 0 }, void 0, !0) : z(a).headline === void 0 ? o("", !0) : (D(), s(t, { key: 1 }, [u(R(z(a).headline), 1)], 64))], 8, ws)) : o("", !0),
-					c("div", Ts, [P(e.$slots, "default", {}, void 0, !0)]),
-					e.$slots.actions ? (D(), s("footer", Es, [P(e.$slots, "actions", {}, void 0, !0)])) : o("", !0)
+					}, [e.$slots.headline ? P(e.$slots, "headline", { key: 0 }, void 0, !0) : z(a).headline === void 0 ? o("", !0) : (D(), s(t, { key: 1 }, [u(R(z(a).headline), 1)], 64))], 8, Sc)) : o("", !0),
+					c("div", Cc, [P(e.$slots, "default", {}, void 0, !0)]),
+					e.$slots.actions ? (D(), s("footer", wc, [P(e.$slots, "actions", {}, void 0, !0)])) : o("", !0)
 				])]),
 				_: 3
 			}, 16, [
@@ -10256,7 +10514,7 @@ var Fo = {
 			])
 		], 64));
 	}
-}), [["__scopeId", "data-v-33472a63"]]), As = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-33472a63"]]), Oc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatSpacer",
 	inheritAttrs: !1
 }, {
@@ -10267,16 +10525,16 @@ var Fo = {
 			"aria-hidden": "true"
 		}), null, 16));
 	}
-}), [["__scopeId", "data-v-cf9d6504"]]), js = { class: "mat-dialog__header" }, Ms = {
+}), [["__scopeId", "data-v-cf9d6504"]]), kc = { class: "mat-dialog__header" }, Ac = {
 	key: 1,
 	class: "mat-dialog__actions"
-}, Ns = { class: "mat-dialog__content-body" }, Ps = {
+}, jc = { class: "mat-dialog__content-body" }, Mc = {
 	key: 0,
 	class: "mat-dialog__icon"
-}, Fs = { class: "mat-dialog__content-body" }, Is = {
+}, Nc = { class: "mat-dialog__content-body" }, Pc = {
 	key: 3,
 	class: "mat-dialog__actions"
-}, Ls = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, Fc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatDialog",
 	inheritAttrs: !1
 }, {
@@ -10293,7 +10551,7 @@ var Fo = {
 		width: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => Ct(e, {
+			validator: (e) => Sn(e, {
 				property: "inline-size",
 				positive: !0
 			})
@@ -10329,7 +10587,7 @@ var Fo = {
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		}
 	},
 	emits: {
@@ -10338,9 +10596,9 @@ var Fo = {
 		closed: () => !0
 	},
 	setup(e, { emit: r }) {
-		let l = $("dialog", e), p = r, m = ee(), g = V(), y = f(), b = h(Yt, null), S = Object.prototype.hasOwnProperty.call(y?.vnode.props ?? {}, "attach"), w = j(null), E = j(null), O = j(!1), k = j("closed"), A = j(null), M = L(null), N = `${B().replace(/[^\w-]/g, "-")}-title`, F = i(() => E.value?.root ?? E.value?.$el ?? null), I = i(() => !!M.value), G = i(() => l.title !== void 0 || !!g.title), K = i(() => l.content !== void 0 || !!g.default), q = i(() => !l.fullScreen && (l.icon !== void 0 || !!g.icon)), J = i(() => !!g.activator), te = i(() => cr.value.at(-1) === F.value), { colorStyle: Y } = dt(i(() => l.color)), ne = i(() => {
+		let l = $("dialog", e), p = r, m = ee(), g = V(), y = f(), b = h(Jn, null), S = Object.prototype.hasOwnProperty.call(y?.vnode.props ?? {}, "attach"), w = j(null), E = j(null), O = j(!1), k = j("closed"), A = j(null), M = L(null), N = `${B().replace(/[^\w-]/g, "-")}-title`, F = i(() => E.value?.root ?? E.value?.$el ?? null), I = i(() => !!M.value), G = i(() => l.title !== void 0 || !!g.title), K = i(() => l.content !== void 0 || !!g.default), q = i(() => !l.fullScreen && (l.icon !== void 0 || !!g.icon)), J = i(() => !!g.activator), te = i(() => oi.value.at(-1) === F.value), { colorStyle: Y } = un(i(() => l.color)), ne = i(() => {
 			if (l.fullScreen || l.width === void 0) return;
-			let e = Tt(l.width, {
+			let e = wn(l.width, {
 				property: "inline-size",
 				positive: !0
 			});
@@ -10348,8 +10606,8 @@ var Fo = {
 				inlineSize: `min(${e}, calc(100dvi - 48px))`,
 				maxInlineSize: "calc(100dvi - 48px)"
 			};
-		}), X = i(() => [m.style]), re = i(() => [Y.value, ne.value]), Z = !1, ie = qt(), ae = Jt({ motion: ie }), oe = null;
-		Dr(F, i(() => O.value && te.value));
+		}), X = i(() => [m.style]), re = i(() => [Y.value, ne.value]), Z = !1, ie = Kn(), ae = qn({ motion: ie }), oe = null;
+		Ti(F, i(() => O.value && te.value));
 		function se() {
 			let e = w.value ? [...w.value.children] : [];
 			return e.length === 1 && e[0] instanceof HTMLElement && e[0].ownerDocument === document ? e[0] : null;
@@ -10374,7 +10632,7 @@ var Fo = {
 				target: b.modalLayer.value
 			};
 			if (S) {
-				let t = e ? $t(e) : null;
+				let t = e ? Qn(e) : null;
 				if (t) return {
 					context: t,
 					target: t.modalLayer.value
@@ -10426,13 +10684,13 @@ var Fo = {
 				console.warn("MatDialog: attach 必须指向当前 document 中存在的 HTMLElement"), pe();
 				return;
 			}
-			oe = e ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null), M.value = n, A.value = r, O.value = !0, k.value = "opening", me(), await v(), !(!l.modelValue || !F.value) && (F.value.open || F.value.show(), wr(F.value, n ? fe(n.context) : void 0), ge(), le(400, () => {
+			oe = e ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null), M.value = n, A.value = r, O.value = !0, k.value = "opening", me(), await v(), !(!l.modelValue || !F.value) && (F.value.open || F.value.show(), Si(F.value, n ? fe(n.context) : void 0), ge(), le(400, () => {
 				k.value = "open", p("opened");
 			}));
 		}
 		function ve() {
 			let e = F.value;
-			e?.open && e.close(), e && Tr(e), M.value = null, O.value = !1, k.value = "closed", v(() => {
+			e?.open && e.close(), e && Ci(e), M.value = null, O.value = !1, k.value = "closed", v(() => {
 				oe?.isConnected && oe.focus({ preventScroll: !0 }), oe = null, p("closed");
 			});
 		}
@@ -10460,7 +10718,7 @@ var Fo = {
 		return T(() => {
 			Z = !0, l.modelValue && _e();
 		}), C(() => {
-			Z = !1, ce(), F.value && (Tr(F.value), F.value.open && F.value.close());
+			Z = !1, ce(), F.value && (Ci(F.value), F.value.open && F.value.close());
 		}), H(() => l.modelValue, (e) => {
 			Z && (e ? _e() : ye());
 		}), H(() => l.attach, () => {
@@ -10475,7 +10733,7 @@ var Fo = {
 		}, [P(e.$slots, "activator", {}, void 0, !0)], 512)) : o("", !0), O.value ? (D(), a(n, {
 			key: 1,
 			to: A.value
-		}, [d(Ti, _({
+		}, [d(Ca, _({
 			ref_key: "surface",
 			ref: E
 		}, e.$attrs, {
@@ -10498,8 +10756,8 @@ var Fo = {
 			default: W(() => [c("div", {
 				class: "mat-dialog__panel",
 				style: x(re.value)
-			}, [z(l).fullScreen ? (D(), s(t, { key: 0 }, [c("header", js, [
-				d(Yn, {
+			}, [z(l).fullScreen ? (D(), s(t, { key: 0 }, [c("header", kc, [
+				d(qr, {
 					class: "mat-dialog__close",
 					icon: "close",
 					label: z(l).closeLabel,
@@ -10512,19 +10770,19 @@ var Fo = {
 					id: N,
 					class: "mat-dialog__title mat-sys-typescale-title-large"
 				}, [z(l).title === void 0 ? P(e.$slots, "title", { key: 1 }, void 0, !0) : (D(), s(t, { key: 0 }, [u(R(z(l).title), 1)], 64))])) : o("", !0),
-				d(As),
-				e.$slots.actions ? (D(), s("div", Ms, [P(e.$slots, "actions", {}, void 0, !0)])) : o("", !0)
-			]), K.value ? (D(), a(to, {
+				d(Oc),
+				e.$slots.actions ? (D(), s("div", Ac, [P(e.$slots, "actions", {}, void 0, !0)])) : o("", !0)
+			]), K.value ? (D(), a(es, {
 				key: 0,
 				class: "mat-dialog__content mat-sys-typescale-body-medium",
 				orientation: "vertical",
 				"no-scroll-padding": "",
 				"bar-width": "thin"
 			}, {
-				default: W(() => [c("div", Ns, [z(l).content === void 0 ? P(e.$slots, "default", { key: 1 }, void 0, !0) : (D(), s(t, { key: 0 }, [u(R(z(l).content), 1)], 64))])]),
+				default: W(() => [c("div", jc, [z(l).content === void 0 ? P(e.$slots, "default", { key: 1 }, void 0, !0) : (D(), s(t, { key: 0 }, [u(R(z(l).content), 1)], 64))])]),
 				_: 3
 			})) : o("", !0)], 64)) : (D(), s(t, { key: 1 }, [
-				q.value ? (D(), s("div", Ps, [d(ht, {
+				q.value ? (D(), s("div", Mc, [d(mn, {
 					"optical-size": 24,
 					size: "24px",
 					"aria-hidden": "true"
@@ -10537,17 +10795,17 @@ var Fo = {
 					id: N,
 					class: "mat-dialog__title mat-sys-typescale-headline-small"
 				}, [z(l).title === void 0 ? P(e.$slots, "title", { key: 1 }, void 0, !0) : (D(), s(t, { key: 0 }, [u(R(z(l).title), 1)], 64))])) : o("", !0),
-				K.value ? (D(), a(to, {
+				K.value ? (D(), a(es, {
 					key: 2,
 					class: "mat-dialog__content mat-sys-typescale-body-medium",
 					orientation: "vertical",
 					"no-scroll-padding": "",
 					"bar-width": "thin"
 				}, {
-					default: W(() => [c("div", Fs, [z(l).content === void 0 ? P(e.$slots, "default", { key: 1 }, void 0, !0) : (D(), s(t, { key: 0 }, [u(R(z(l).content), 1)], 64))])]),
+					default: W(() => [c("div", Nc, [z(l).content === void 0 ? P(e.$slots, "default", { key: 1 }, void 0, !0) : (D(), s(t, { key: 0 }, [u(R(z(l).content), 1)], 64))])]),
 					_: 3
 				})) : o("", !0),
-				e.$slots.actions ? (D(), s("div", Is, [P(e.$slots, "actions", {}, void 0, !0)])) : o("", !0)
+				e.$slots.actions ? (D(), s("div", Pc, [P(e.$slots, "actions", {}, void 0, !0)])) : o("", !0)
 			], 64))], 4)]),
 			_: 3
 		}, 16, [
@@ -10556,12 +10814,12 @@ var Fo = {
 			"aria-labelledby"
 		])], 8, ["to"])) : o("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-7df0b89c"]]), Rs = .25, zs = [
+}), [["__scopeId", "data-v-7df0b89c"]]), Ic = .25, Lc = [
 	"min",
 	"normal",
 	"max"
 ];
-function Bs({ availableExtent: e, contentExtent: t }) {
+function Rc({ availableExtent: e, contentExtent: t }) {
 	let n = Math.max(0, e), r = Math.max(0, t), i = Math.max(64, Math.min(r, n / 2));
 	return {
 		max: Math.max(i, Math.min(r, n)),
@@ -10569,8 +10827,8 @@ function Bs({ availableExtent: e, contentExtent: t }) {
 		normal: i
 	};
 }
-function Vs(e, t) {
-	let n = Bs(e), r = [
+function zc(e, t) {
+	let n = Rc(e), r = [
 		{
 			size: 0,
 			value: null
@@ -10588,7 +10846,7 @@ function Vs(e, t) {
 			value: "max"
 		}
 	];
-	zs.includes(e.currentValue) || r.push({
+	Lc.includes(e.currentValue) || r.push({
 		size: Math.max(0, e.currentExtent),
 		value: e.currentValue
 	}), r.sort((e, t) => e.size - t.size);
@@ -10599,42 +10857,42 @@ function Vs(e, t) {
 		value: a.value
 	};
 }
-function Hs({ availableExtent: e, extent: t, overshootLimit: n = 0 }) {
+function Bc({ availableExtent: e, extent: t, overshootLimit: n = 0 }) {
 	let r = Math.max(0, e), i = Math.max(0, t);
 	return i > r ? {
 		offset: 0,
-		size: r + Math.min((i - r) * Rs, Math.max(0, n))
+		size: r + Math.min((i - r) * Ic, Math.max(0, n))
 	} : {
 		offset: Math.max(0, 64 - i),
 		size: Math.min(r, Math.max(64, i))
 	};
 }
-function Us({ availableExtent: e, value: t }) {
+function Vc({ availableExtent: e, value: t }) {
 	return t === "min" ? 64 : Math.max(0, e) / 2;
 }
-function Ws({ overshootLimit: e = 0, panelExtent: t, visibleExtent: n }) {
+function Hc({ overshootLimit: e = 0, panelExtent: t, visibleExtent: n }) {
 	let r = Math.max(0, t);
 	if (n > r) {
-		let t = Math.min((n - r) * Rs, Math.max(0, e));
+		let t = Math.min((n - r) * Ic, Math.max(0, e));
 		return t > 0 ? -t : 0;
 	}
 	return Math.min(r, Math.max(0, r - n));
 }
-function Gs({ distance: e, draggingDown: t, pointerType: n, velocity: r }) {
+function Uc({ distance: e, draggingDown: t, pointerType: n, velocity: r }) {
 	return n !== "mouse" && t && e >= 48 && r >= .5;
 }
 //#endregion
 //#region src/components/MatSheetBase.vue
-var Ks = ["aria-label"], qs = {
+var Wc = ["aria-label"], Gc = {
 	key: 1,
 	class: "mat-sheet__header"
-}, Js = {
+}, Kc = {
 	key: 1,
 	class: "mat-sheet__header-actions"
-}, Ys = { class: "mat-sheet__content-body" }, Xs = {
+}, qc = { class: "mat-sheet__content-body" }, Jc = {
 	key: 3,
 	class: "mat-sheet__footer"
-}, Zs = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, Yc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatSheetBase",
 	inheritAttrs: !1
 }, {
@@ -10748,12 +11006,12 @@ var Ks = ["aria-label"], qs = {
 		"update:modelValue": (e) => typeof e == "boolean"
 	},
 	setup(e, { emit: r }) {
-		let l = e, p = r, m = ee(), g = V(), b = f(), S = h(Yt, null), w = Object.prototype.hasOwnProperty.call(b?.vnode.props ?? {}, "attach"), O = j(null), k = j(null), A = j(null), M = j(!1), N = j("closed"), F = j(null), I = L(null), z = j(typeof window > "u" ? 0 : window.innerWidth), U = 0, G = j(!1), K = j(0), J = j(0), te = `${B().replace(/[^\w-]/g, "-")}-title`, Y = i(() => k.value?.root ?? k.value?.$el ?? null), ne = i(() => !!I.value), X = i(() => Z.value ? A.value : Y.value), re = i(() => l.variant === "auto" ? z.value < jt(l.breakpoint, {
+		let l = e, p = r, m = ee(), g = V(), b = f(), S = h(Jn, null), w = Object.prototype.hasOwnProperty.call(b?.vnode.props ?? {}, "attach"), O = j(null), k = j(null), A = j(null), M = j(!1), N = j("closed"), F = j(null), I = L(null), z = j(typeof window > "u" ? 0 : window.innerWidth), U = 0, G = j(!1), K = j(0), J = j(0), te = `${B().replace(/[^\w-]/g, "-")}-title`, Y = i(() => k.value?.root ?? k.value?.$el ?? null), ne = i(() => !!I.value), X = i(() => Z.value ? A.value : Y.value), re = i(() => l.variant === "auto" ? z.value < An(l.breakpoint, {
 			positive: !0,
 			fallback: 840
-		}) ? "modal" : "standard" : l.variant), Z = i(() => re.value === "modal"), ie = i(() => Z.value && cr.value.at(-1) === Y.value), ae = i(() => !!g.activator), oe = i(() => l.title !== void 0 || !!g.title), se = i(() => l.content !== void 0 || !!g.default), ce = i(() => l.closable);
+		}) ? "modal" : "standard" : l.variant), Z = i(() => re.value === "modal"), ie = i(() => Z.value && oi.value.at(-1) === Y.value), ae = i(() => !!g.activator), oe = i(() => l.title !== void 0 || !!g.title), se = i(() => l.content !== void 0 || !!g.default), ce = i(() => l.closable);
 		function le(e) {
-			return e === "full" || e === !0 ? "full" : e === "min" || e === "max" ? e : e === "normal" || e === !1 || e === void 0 ? "normal" : wt(e, { allowNegative: !0 }) ? e : "normal";
+			return e === "full" || e === !0 ? "full" : e === "min" || e === "max" ? e : e === "normal" || e === !1 || e === void 0 ? "normal" : Cn(e, { allowNegative: !0 }) ? e : "normal";
 		}
 		let ue = i(() => l.direction === "bottom" ? le(l.expanded) : l.expanded), de = i(() => l.direction !== "bottom" || ue.value === "min" || ue.value === "normal"), fe = i(() => l.direction === "bottom" && !de.value), pe = i(() => l.direction === "bottom" && l.virtualExpand && (ue.value === "min" || ue.value === "normal")), me = i(() => l.direction !== "bottom" || pe.value ? !1 : ue.value === "normal" || ue.value === "max" ? J.value > 0 : !0), he = i(() => {
 			if (!me.value || ue.value === "full") return;
@@ -10762,7 +11020,7 @@ var Ks = ["aria-label"], qs = {
 				let e = ue.value === "normal" ? "calc(var(--mat-sheet-full-block-size) / 2)" : "var(--mat-sheet-full-block-size)";
 				return `max(64px, min(${J.value}px, ${e}))`;
 			}
-			let e = Tt(ue.value, {
+			let e = wn(ue.value, {
 				allowNegative: !0,
 				property: "block-size"
 			});
@@ -10776,7 +11034,7 @@ var Ks = ["aria-label"], qs = {
 				"mat-sheet__panel--dragging": G.value
 			}
 		]), ve = i(() => de.value ? l.dragHandleLabel : Z.value ? l.expandedDragHandleLabel : l.collapseDragHandleLabel), ye = i(() => oe.value || ce.value || !!g.header || !!g.actions), be = i(() => Z.value ? "dialog" : "aside"), xe = i(() => {
-			if (l.width !== void 0) return Tt(l.width, {
+			if (l.width !== void 0) return wn(l.width, {
 				property: "inline-size",
 				positive: !0
 			});
@@ -10789,19 +11047,19 @@ var Ks = ["aria-label"], qs = {
 			m.style,
 			Se.value,
 			Ce.value
-		]), Te = i(() => [Se.value, Ce.value]), Ee = !1, De = qt(), Oe = Jt({ motion: De }), Q = null, ke = !1, Ae = null, je = 0, Me = 0, Ne = 0, Pe = 0, Fe = 0, Ie = 0, Le = null, Re = 0, ze = null, Be = 0, Ve = 0, He = null, Ue = [];
-		Dr(Y, i(() => Z.value && M.value && ie.value));
-		function We() {
+		]), Te = i(() => [Se.value, Ce.value]), Ee = !1, De = Kn(), Oe = qn({ motion: De }), ke = null, Ae = !1, je = null, Me = 0, Ne = 0, Pe = 0, Fe = 0, Ie = 0, Le = 0, Re = null, ze = 0, Be = null, Ve = 0, He = 0, Ue = null, We = [];
+		Ti(Y, i(() => Z.value && M.value && ie.value));
+		function Ge() {
 			De.cancel();
 		}
-		function Ge(e, t) {
+		function Ke(e, t) {
 			De.wait(Y.value, e, t);
 		}
-		function Ke() {
+		function qe() {
 			let e = O.value ? [...O.value.children] : [];
 			return e.length === 1 && e[0] instanceof HTMLElement && e[0].ownerDocument === document ? e[0] : null;
 		}
-		function qe() {
+		function Je() {
 			if (typeof l.attach == "string") try {
 				return document.querySelector(l.attach);
 			} catch {
@@ -10809,13 +11067,13 @@ var Ks = ["aria-label"], qs = {
 			}
 			return l.attach instanceof HTMLElement && l.attach.ownerDocument === document ? l.attach : null;
 		}
-		function Je(e) {
+		function Ye(e) {
 			if (S && !w) return {
 				context: S,
 				target: S.modalLayer.value
 			};
 			if (w) {
-				let t = e ? $t(e) : null;
+				let t = e ? Qn(e) : null;
 				if (t) return {
 					context: t,
 					target: t.modalLayer.value
@@ -10823,21 +11081,21 @@ var Ks = ["aria-label"], qs = {
 			}
 			return null;
 		}
-		function Ye(e) {
+		function Xe(e) {
 			return {
 				inertElement: e.contentElement.value,
 				scrollElement: e.documentMode.value ? null : e.contentElement.value
 			};
 		}
-		let Xe = null;
-		function Ze() {
+		let Ze = null;
+		function Qe() {
 			return window.innerWidth >= 641 ? 56 : 72;
 		}
-		function Qe() {
-			let e = Z.value ? Y.value?.getBoundingClientRect().height ?? 0 : window.innerHeight;
-			return Math.max(0, e - Ze());
-		}
 		function $e() {
+			let e = Z.value ? Y.value?.getBoundingClientRect().height ?? 0 : window.innerHeight;
+			return Math.max(0, e - Qe());
+		}
+		function et() {
 			let e = X.value;
 			return e ? [
 				".mat-sheet__drag-handle-target",
@@ -10845,96 +11103,96 @@ var Ks = ["aria-label"], qs = {
 				".mat-sheet__footer"
 			].reduce((t, n) => t + (e.querySelector(n)?.getBoundingClientRect().height ?? 0), 0) : 0;
 		}
-		function et() {
-			let e = $e();
+		function tt() {
+			let e = et();
 			return e > 0 ? e : X.value?.getBoundingClientRect().height ?? 0;
 		}
-		function tt() {
+		function nt() {
 			if (!pe.value) {
 				K.value = 0;
 				return;
 			}
-			let e = Qe(), { max: t } = Bs({
+			let e = $e(), { max: t } = Rc({
 				availableExtent: e,
-				contentExtent: et()
+				contentExtent: tt()
 			});
-			K.value = Ws({
+			K.value = Hc({
 				panelExtent: t,
-				visibleExtent: Us({
+				visibleExtent: Vc({
 					availableExtent: e,
 					value: ue.value
 				})
 			});
 		}
-		function nt() {
+		function rt() {
 			if (l.direction !== "bottom") return;
-			let e = $e();
+			let e = et();
 			e !== J.value && (J.value = e);
 		}
-		function rt() {
+		function it() {
 			let e = l.direction === "bottom" && typeof ResizeObserver == "function" ? X.value : null, t = e ? [
 				".mat-sheet__drag-handle-target",
 				".mat-sheet__content-body",
 				".mat-sheet__footer"
 			].map((t) => e.querySelector(t)).filter(Boolean) : [];
-			t.length === Ue.length && t.every((e, t) => e === Ue[t]) || (Ue = t, He?.disconnect(), He = null, t.length !== 0 && (He = new ResizeObserver(nt), t.forEach((e) => He.observe(e))));
-		}
-		function it() {
-			l.direction === "bottom" && (nt(), rt(), tt());
+			t.length === We.length && t.every((e, t) => e === We[t]) || (We = t, Ue?.disconnect(), Ue = null, t.length !== 0 && (Ue = new ResizeObserver(rt), t.forEach((e) => Ue.observe(e))));
 		}
 		function at() {
-			He?.disconnect(), He = null, Ue = [];
+			l.direction === "bottom" && (rt(), it(), nt());
 		}
-		function ot(e) {
-			l.direction !== "bottom" || !l.virtualExpand || fe.value || e.deltaY > 0 && (e.preventDefault(), p("update:expanded", "max"));
+		function ot() {
+			Ue?.disconnect(), Ue = null, We = [];
 		}
 		function st(e) {
-			l.direction !== "bottom" || !l.virtualExpand || fe.value || e.pointerType === "touch" && (Xe = e.clientY);
+			l.direction !== "bottom" || !l.virtualExpand || fe.value || e.deltaY > 0 && (e.preventDefault(), p("update:expanded", "max"));
 		}
 		function ct(e) {
-			l.direction !== "bottom" || !l.virtualExpand || fe.value || e.pointerType === "touch" && Xe !== null && Xe - e.clientY >= 8 && (Xe = null, p("update:expanded", "max"));
+			l.direction !== "bottom" || !l.virtualExpand || fe.value || e.pointerType === "touch" && (Ze = e.clientY);
 		}
 		function lt(e) {
-			e.pointerType === "touch" && (Xe = null);
+			l.direction !== "bottom" || !l.virtualExpand || fe.value || e.pointerType === "touch" && Ze !== null && Ze - e.clientY >= 8 && (Ze = null, p("update:expanded", "max"));
 		}
-		function ut() {
+		function ut(e) {
+			e.pointerType === "touch" && (Ze = null);
+		}
+		function dt() {
 			p("update:modelValue", !1);
 		}
-		function dt(e, t) {
+		function ft(e, t) {
 			if (U = e, Y.value?.style.setProperty("--mat-sheet-drag-offset", `${e}px`), t === null) {
 				Y.value?.style.removeProperty("--mat-sheet-drag-size");
 				return;
 			}
 			Y.value?.style.setProperty("--mat-sheet-drag-size", `${t}px`);
 		}
-		function ft() {
-			dt(0, null);
+		function pt() {
+			ft(0, null);
 		}
-		function pt(e) {
+		function mt(e) {
 			if (!(e.key !== "Enter" && e.key !== " ")) {
 				if (e.preventDefault(), de.value) {
 					p("update:expanded", "max");
 					return;
 				}
 				if (Z.value) {
-					ut();
+					dt();
 					return;
 				}
 				p("update:expanded", "normal");
 			}
 		}
-		function $() {
+		function ht() {
 			console.warn(`${l.componentName}: activator Slot 必须只渲染一个当前 document 中的 HTMLElement 根节点`);
 		}
-		function mt() {
+		function gt() {
 			if (!Z.value || m["aria-label"] || m["aria-labelledby"] || l.direction === "side" && oe.value) return;
 			let e = l.direction === "bottom" ? "必须通过 aria-label 或 aria-labelledby 提供可访问名称" : "必须通过 title、title Slot、aria-label 或 aria-labelledby 提供可访问名称";
 			console.warn(`${l.componentName}: ${e}`);
 		}
-		function ht() {
+		function _t() {
 			console.warn(`${l.componentName}: attach 必须指向当前 document 中存在的 HTMLElement`);
 		}
-		function gt() {
+		function vt() {
 			let e = Y.value;
 			e && (e.querySelector([
 				"[autofocus]",
@@ -10946,201 +11204,201 @@ var Ks = ["aria-label"], qs = {
 				"[tabindex]:not([tabindex=\"-1\"])"
 			].join(",")) ?? e).focus({ preventScroll: !0 });
 		}
-		function _t() {
+		function yt() {
 			let e = Y.value;
 			if (e instanceof HTMLDialogElement) {
 				if (e.open || e.show(), ne.value) {
 					let t = I.value;
 					if (!t) return;
-					wr(e, Ye(t.context));
-				} else wr(e);
-				gt();
+					Si(e, Xe(t.context));
+				} else Si(e);
+				vt();
 			}
 		}
-		async function vt() {
-			if (We(), At(), ft(), M.value) {
-				N.value = "opening", await v(), it(), Ge(400, () => {
+		async function bt() {
+			if (Ge(), At(), pt(), M.value) {
+				N.value = "opening", await v(), at(), Ke(400, () => {
 					N.value = "open", p("opened");
 				});
 				return;
 			}
-			let e = ae.value ? Ke() : null;
+			let e = ae.value ? qe() : null;
 			if (ae.value && !e) {
-				$(), ut();
+				ht(), dt();
 				return;
 			}
 			if (Z.value) {
-				let t = qe(), n = Je(t), r = n ? n.target : t;
+				let t = Je(), n = Ye(t), r = n ? n.target : t;
 				if (!r) {
-					ht(), ut();
+					_t(), dt();
 					return;
 				}
-				I.value = n, F.value = r, Q = e ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+				I.value = n, F.value = r, ke = e ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
 			} else I.value = null;
-			ke = Z.value, M.value = !0, N.value = "opening", mt(), await v(), !(!l.modelValue || !Y.value) && (Z.value && _t(), it(), Ge(400, () => {
+			Ae = Z.value, M.value = !0, N.value = "opening", gt(), await v(), !(!l.modelValue || !Y.value) && (Z.value && yt(), at(), Ke(400, () => {
 				N.value = "open", p("opened");
 			}));
 		}
-		function yt() {
-			ke && Q?.isConnected && Q.focus({ preventScroll: !0 }), Q = null, ke = !1;
+		function xt() {
+			Ae && ke?.isConnected && ke.focus({ preventScroll: !0 }), ke = null, Ae = !1;
 		}
-		function bt() {
+		function St() {
 			let e = Y.value;
-			e instanceof HTMLDialogElement && (e.open && e.close(), Tr(e)), I.value = null, M.value = !1, N.value = "closed", At(), at(), K.value = 0, ft(), v(() => {
-				yt(), p("closed");
+			e instanceof HTMLDialogElement && (e.open && e.close(), Ci(e)), I.value = null, M.value = !1, N.value = "closed", At(), ot(), K.value = 0, pt(), v(() => {
+				xt(), p("closed");
 			});
 		}
-		function xt() {
+		function Ct() {
 			M.value && N.value !== "closing" && Oe.start({
 				canStart: () => M.value && N.value !== "closing",
 				duration: 200,
 				getElement: () => Y.value,
 				isActive: () => Ee && !l.modelValue && N.value === "closing" && M.value && !!Y.value,
-				onFinish: bt,
+				onFinish: St,
 				onStart: () => {
 					N.value = "closing";
 				}
 			});
 		}
-		function St(e) {
-			e.preventDefault(), ut();
+		function wt(e) {
+			e.preventDefault(), dt();
 		}
-		function Ct(e) {
-			e.key === "Escape" && (e.preventDefault(), ut());
+		function Tt(e) {
+			e.key === "Escape" && (e.preventDefault(), dt());
 		}
 		function Et(e) {
 			if (!(!Z.value || !l.closeOnBack || e.target !== Y.value)) {
-				if (ze !== Y.value) {
-					ze = null;
+				if (Be !== Y.value) {
+					Be = null;
 					return;
 				}
-				ze = null, ut();
+				Be = null, dt();
 			}
 		}
 		function Dt(e) {
-			if (e.pointerId === Ae) {
+			if (e.pointerId === je) {
 				if (l.direction === "bottom") {
-					Ve = e.clientY - je;
-					let t = Ne - Ve;
+					He = e.clientY - Me;
+					let t = Pe - He;
 					if (l.virtualExpand) {
-						dt(Ws({
-							overshootLimit: Ie,
-							panelExtent: Me,
+						ft(Hc({
+							overshootLimit: Le,
+							panelExtent: Ne,
 							visibleExtent: t
-						}) - Re, null);
+						}) - ze, null);
 						return;
 					}
-					let n = Hs({
-						availableExtent: Fe,
+					let n = Bc({
+						availableExtent: Ie,
 						extent: t,
-						overshootLimit: Ie
+						overshootLimit: Le
 					});
-					dt(n.offset, n.size);
+					ft(n.offset, n.size);
 					return;
 				}
-				dt(l.position === "start" ? Math.max(0, je - e.clientX) : Math.max(0, e.clientX - je), null);
+				ft(l.position === "start" ? Math.max(0, Me - e.clientX) : Math.max(0, e.clientX - Me), null);
 			}
 		}
-		let Ot = Ji(Dt);
+		let Ot = Ka(Dt);
 		function kt(e) {
-			e.pointerId === Ae && Ot.schedule(e);
+			e.pointerId === je && Ot.schedule(e);
 		}
 		function At({ keepDragging: e = !1 } = {}) {
-			Ae = null, G.value = e, window.removeEventListener("pointermove", kt), window.removeEventListener("pointerup", Ft), window.removeEventListener("pointercancel", It);
+			je = null, G.value = e, window.removeEventListener("pointermove", kt), window.removeEventListener("pointerup", Nt), window.removeEventListener("pointercancel", Pt);
 		}
-		function Mt() {
-			ut(), v(() => {
-				l.modelValue && (At(), ft());
+		function Q() {
+			dt(), v(() => {
+				l.modelValue && (At(), pt());
 			});
 		}
-		function Nt({ distance: e, velocity: t }) {
-			let n = Vs({
-				availableExtent: Fe,
-				contentExtent: Pe,
-				currentExtent: Ne,
+		function jt({ distance: e, velocity: t }) {
+			let n = zc({
+				availableExtent: Ie,
+				contentExtent: Fe,
+				currentExtent: Pe,
 				currentValue: ue.value
-			}, Ne - Ve), r = Gs({
+			}, Pe - He), r = Uc({
 				distance: e,
-				draggingDown: Ve > 0,
-				pointerType: Le,
+				draggingDown: He > 0,
+				pointerType: Re,
 				velocity: t
 			});
 			if (n.close || r) {
-				At({ keepDragging: !0 }), Mt();
+				At({ keepDragging: !0 }), Q();
 				return;
 			}
-			let i = n.value === ue.value || n.size === Ne;
-			At(), ft(), i || p("update:expanded", n.value);
+			let i = n.value === ue.value || n.size === Pe;
+			At(), pt(), i || p("update:expanded", n.value);
 		}
-		function Pt({ distance: e, threshold: t, velocity: n }) {
+		function Mt({ distance: e, threshold: t, velocity: n }) {
 			let r = e >= t || e >= 20 && n >= .35;
 			if (At(), r) {
-				ut();
+				dt();
 				return;
 			}
-			ft();
+			pt();
 		}
-		function Ft(e) {
-			if (e.pointerId !== Ae) return;
+		function Nt(e) {
+			if (e.pointerId !== je) return;
 			Ot.flush();
-			let t = Math.max(1, performance.now() - Be), n = l.direction === "bottom" ? Math.abs(Ve) : U, r = n / t;
+			let t = Math.max(1, performance.now() - Ve), n = l.direction === "bottom" ? Math.abs(He) : U, r = n / t;
 			if (l.direction === "bottom") {
-				Nt({
+				jt({
 					distance: n,
 					velocity: r
 				});
 				return;
 			}
-			Pt({
+			Mt({
 				distance: n,
-				threshold: Math.min(120, Math.max(48, Me * .15)),
+				threshold: Math.min(120, Math.max(48, Ne * .15)),
 				velocity: r
 			});
 		}
-		function It() {
-			Ot.cancel(), At(), ft();
+		function Pt() {
+			Ot.cancel(), At(), pt();
+		}
+		function Ft(e) {
+			!l.draggable || e.button !== 0 || je !== null || (Ot.cancel(), je = e.pointerId, Me = l.direction === "bottom" ? e.clientY : e.clientX, Ne = l.direction === "bottom" ? X.value?.getBoundingClientRect().height ?? 0 : X.value?.getBoundingClientRect().width ?? 0, Re = e.pointerType ?? null, Ve = performance.now(), He = 0, l.direction === "bottom" ? (ze = K.value, Pe = Math.max(0, Ne - ze), Fe = tt(), Ie = $e(), Le = Qe(), ft(0, l.virtualExpand ? null : Ne)) : ft(0, null), G.value = !0, window.addEventListener("pointermove", kt), window.addEventListener("pointerup", Nt), window.addEventListener("pointercancel", Pt));
+		}
+		function It(e) {
+			l.direction !== "side" || e.pointerType !== "touch" || e.target instanceof Element && e.target.closest("button, a, input, textarea, select, [contenteditable=\"true\"]") || Ft(e);
 		}
 		function Lt(e) {
-			!l.draggable || e.button !== 0 || Ae !== null || (Ot.cancel(), Ae = e.pointerId, je = l.direction === "bottom" ? e.clientY : e.clientX, Me = l.direction === "bottom" ? X.value?.getBoundingClientRect().height ?? 0 : X.value?.getBoundingClientRect().width ?? 0, Le = e.pointerType ?? null, Be = performance.now(), Ve = 0, l.direction === "bottom" ? (Re = K.value, Ne = Math.max(0, Me - Re), Pe = et(), Fe = Qe(), Ie = Ze(), dt(0, l.virtualExpand ? null : Me)) : dt(0, null), G.value = !0, window.addEventListener("pointermove", kt), window.addEventListener("pointerup", Ft), window.addEventListener("pointercancel", It));
+			Be = e.target instanceof Node ? e.target : null, Z.value || It(e);
 		}
 		function Rt(e) {
-			l.direction !== "side" || e.pointerType !== "touch" || e.target instanceof Element && e.target.closest("button, a, input, textarea, select, [contenteditable=\"true\"]") || Lt(e);
+			Z.value && It(e);
 		}
 		function zt(e) {
-			ze = e.target instanceof Node ? e.target : null, Z.value || Rt(e);
+			Rt(e), ct(e);
 		}
-		function Bt(e) {
-			Z.value && Rt(e);
+		function Bt() {
+			z.value = window.innerWidth, at();
 		}
-		function Vt(e) {
-			Bt(e), st(e);
-		}
-		function Ht() {
-			z.value = window.innerWidth, it();
-		}
-		async function Ut(e, t) {
+		async function Vt(e, t) {
 			if (!M.value || !l.modelValue || e === t) return;
-			We();
+			Ge();
 			let n = Y.value;
-			if (t === "modal" && n instanceof HTMLDialogElement && (n.open && n.close(), Tr(n), yt(), I.value = null), e === "modal") {
-				let e = qe(), t = Je(e), n = t ? t.target : e;
+			if (t === "modal" && n instanceof HTMLDialogElement && (n.open && n.close(), Ci(n), xt(), I.value = null), e === "modal") {
+				let e = Je(), t = Ye(e), n = t ? t.target : e;
 				if (!n) {
-					ht(), ut();
+					_t(), dt();
 					return;
 				}
-				I.value = t, F.value = n, Q = document.activeElement instanceof HTMLElement ? document.activeElement : null, ke = !0, mt();
+				I.value = t, F.value = n, ke = document.activeElement instanceof HTMLElement ? document.activeElement : null, Ae = !0, gt();
 			}
-			N.value = "open", await v(), e === "modal" && l.modelValue && _t(), it();
+			N.value = "open", await v(), e === "modal" && l.modelValue && yt(), at();
 		}
 		return T(() => {
-			Ee = !0, Ht(), window.addEventListener("resize", Ht), l.modelValue && vt();
-		}), E(it), C(() => {
-			Ot.cancel(), Ee = !1, We(), At(), at(), window.removeEventListener("resize", Ht);
+			Ee = !0, Bt(), window.addEventListener("resize", Bt), l.modelValue && bt();
+		}), E(at), C(() => {
+			Ot.cancel(), Ee = !1, Ge(), At(), ot(), window.removeEventListener("resize", Bt);
 			let e = Y.value;
-			e instanceof HTMLDialogElement && (Tr(e), e.open && e.close());
+			e instanceof HTMLDialogElement && (Ci(e), e.open && e.close());
 		}), H(() => l.modelValue, (e) => {
-			Ee && (e ? vt() : xt());
-		}), H(re, Ut), H(() => l.attach, () => {
+			Ee && (e ? bt() : Ct());
+		}), H(re, Vt), H(() => l.attach, () => {
 			l.modelValue && M.value && Z.value && console.warn(`${l.componentName}: 打开期间修改 attach 将在下次打开时生效`);
 		}), H(() => l.closeLabel, (e) => {
 			e.trim().length === 0 && console.warn(`${l.componentName}: closeLabel 必须是非空字符串`);
@@ -11153,7 +11411,7 @@ var Ks = ["aria-label"], qs = {
 			key: 1,
 			to: F.value ?? "body",
 			disabled: !Z.value
-		}, [d(Ti, _({
+		}, [d(Ca, _({
 			ref_key: "surface",
 			ref: k
 		}, r.$attrs, {
@@ -11179,25 +11437,25 @@ var Ks = ["aria-label"], qs = {
 			"aria-labelledby": r.$attrs["aria-labelledby"] ?? (e.direction === "side" && oe.value ? te : void 0),
 			"aria-modal": Z.value ? "true" : void 0,
 			tabindex: Z.value ? -1 : void 0,
-			onCancel: St,
+			onCancel: wt,
 			onClick: Et,
-			onKeydown: Ct,
-			onPointerdown: zt,
-			onPointermove: ct,
-			onPointerup: lt,
-			onPointercancel: lt,
-			onWheel: ot
+			onKeydown: Tt,
+			onPointerdown: Lt,
+			onPointermove: lt,
+			onPointerup: ut,
+			onPointercancel: ut,
+			onWheel: st
 		}), {
 			default: W(() => [c("div", {
 				ref_key: "panelElement",
 				ref: A,
 				class: y(["mat-sheet__panel", _e.value]),
 				style: x(Te.value),
-				onPointerdown: Vt,
-				onPointermove: ct,
-				onPointerup: lt,
-				onPointercancel: lt,
-				onWheel: ot
+				onPointerdown: zt,
+				onPointermove: lt,
+				onPointerup: ut,
+				onPointercancel: ut,
+				onWheel: st
 			}, [
 				e.direction === "bottom" && e.dragHandle ? (D(), s("button", {
 					key: 0,
@@ -11205,42 +11463,42 @@ var Ks = ["aria-label"], qs = {
 					type: "button",
 					"data-sheet-drag-handle": "",
 					"aria-label": ve.value,
-					onKeydown: pt,
-					onPointerdown: q(Lt, ["stop"])
-				}, [P(r.$slots, "drag-handle", {}, () => [i[0] ||= c("span", { class: "mat-sheet__drag-handle" }, null, -1)], !0)], 40, Ks)) : o("", !0),
-				e.direction === "side" && ye.value ? (D(), s("header", qs, [P(r.$slots, "header", {}, () => [
+					onKeydown: mt,
+					onPointerdown: q(Ft, ["stop"])
+				}, [P(r.$slots, "drag-handle", {}, () => [i[0] ||= c("span", { class: "mat-sheet__drag-handle" }, null, -1)], !0)], 40, Wc)) : o("", !0),
+				e.direction === "side" && ye.value ? (D(), s("header", Gc, [P(r.$slots, "header", {}, () => [
 					oe.value ? (D(), s("h2", {
 						key: 0,
 						id: te,
 						class: "mat-sheet__title mat-sys-typescale-title-large"
 					}, [e.title === void 0 ? P(r.$slots, "title", { key: 1 }, void 0, !0) : (D(), s(t, { key: 0 }, [u(R(e.title), 1)], 64))])) : o("", !0),
-					r.$slots.actions ? (D(), s("div", Js, [P(r.$slots, "actions", {}, void 0, !0)])) : o("", !0),
-					ce.value ? (D(), a(Yn, {
+					r.$slots.actions ? (D(), s("div", Kc, [P(r.$slots, "actions", {}, void 0, !0)])) : o("", !0),
+					ce.value ? (D(), a(qr, {
 						key: 2,
 						class: "mat-sheet__close",
 						icon: "close",
 						label: e.closeLabel,
 						size: "small",
 						variant: "standard",
-						onClick: ut
+						onClick: dt
 					}, null, 8, ["label"])) : o("", !0)
 				], !0)])) : o("", !0),
-				se.value ? (D(), a(to, {
+				se.value ? (D(), a(es, {
 					key: 2,
 					class: "mat-sheet__content mat-sys-typescale-body-medium",
 					orientation: "vertical",
 					"no-scroll-padding": "",
 					"bar-width": "thin",
-					onWheel: ot,
-					onPointerdown: st,
-					onPointermove: ct,
-					onPointerup: lt,
-					onPointercancel: lt
+					onWheel: st,
+					onPointerdown: ct,
+					onPointermove: lt,
+					onPointerup: ut,
+					onPointercancel: ut
 				}, {
-					default: W(() => [c("div", Ys, [e.direction !== "bottom" && e.content !== void 0 ? (D(), s(t, { key: 0 }, [u(R(e.content), 1)], 64)) : r.$slots.default ? P(r.$slots, "default", { key: 1 }, void 0, !0) : e.content === void 0 ? o("", !0) : (D(), s(t, { key: 2 }, [u(R(e.content), 1)], 64))])]),
+					default: W(() => [c("div", qc, [e.direction !== "bottom" && e.content !== void 0 ? (D(), s(t, { key: 0 }, [u(R(e.content), 1)], 64)) : r.$slots.default ? P(r.$slots, "default", { key: 1 }, void 0, !0) : e.content === void 0 ? o("", !0) : (D(), s(t, { key: 2 }, [u(R(e.content), 1)], 64))])]),
 					_: 3
 				})) : o("", !0),
-				r.$slots.footer ? (D(), s("div", Xs, [P(r.$slots, "footer", {}, void 0, !0)])) : o("", !0)
+				r.$slots.footer ? (D(), s("div", Jc, [P(r.$slots, "footer", {}, void 0, !0)])) : o("", !0)
 			], 38)]),
 			_: 3
 		}, 16, [
@@ -11252,7 +11510,7 @@ var Ks = ["aria-label"], qs = {
 			"tabindex"
 		])], 8, ["to", "disabled"])) : o("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-23fb50db"]]), Qs = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-23fb50db"]]), Xc = /*@__PURE__*/ Object.assign({
 	name: "MatBottomSheet",
 	inheritAttrs: !1
 }, {
@@ -11274,7 +11532,7 @@ var Ks = ["aria-label"], qs = {
 		breakpoint: {
 			type: Number,
 			default: 840,
-			validator: (e) => Ct(e, {
+			validator: (e) => Sn(e, {
 				positive: !0,
 				allowUndefined: !1
 			})
@@ -11282,7 +11540,7 @@ var Ks = ["aria-label"], qs = {
 		width: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => Ct(e, {
+			validator: (e) => Sn(e, {
 				property: "inline-size",
 				positive: !0
 			})
@@ -11314,7 +11572,7 @@ var Ks = ["aria-label"], qs = {
 				"min",
 				"normal",
 				"max"
-			].includes(e) || e === "full" || wt(e, { allowNegative: !0 })
+			].includes(e) || e === "full" || Cn(e, { allowNegative: !0 })
 		},
 		virtualExpand: {
 			type: Boolean,
@@ -11364,7 +11622,7 @@ var Ks = ["aria-label"], qs = {
 			let e = { ...r };
 			return delete e.closable, delete e.closeLabel, delete e.title, e;
 		}), d = t;
-		return (e, t) => (D(), a(Zs, _({
+		return (e, t) => (D(), a(Yc, _({
 			...c.value,
 			...u.value
 		}, {
@@ -11397,7 +11655,7 @@ var Ks = ["aria-label"], qs = {
 			} : void 0
 		]), 1040));
 	}
-}), $s = /*@__PURE__*/ Object.assign({
+}), Zc = /*@__PURE__*/ Object.assign({
 	name: "MatSideSheet",
 	inheritAttrs: !1
 }, {
@@ -11419,7 +11677,7 @@ var Ks = ["aria-label"], qs = {
 		breakpoint: {
 			type: Number,
 			default: 840,
-			validator: (e) => Ct(e, {
+			validator: (e) => Sn(e, {
 				positive: !0,
 				allowUndefined: !1
 			})
@@ -11432,7 +11690,7 @@ var Ks = ["aria-label"], qs = {
 		width: {
 			type: [Number, String],
 			default: 400,
-			validator: (e) => Ct(e, {
+			validator: (e) => Sn(e, {
 				property: "inline-size",
 				positive: !0,
 				max: 400
@@ -11486,7 +11744,7 @@ var Ks = ["aria-label"], qs = {
 			let e = { ...n };
 			return delete e.attach, e;
 		}), c = t;
-		return (e, t) => (D(), a(Zs, _({
+		return (e, t) => (D(), a(Yc, _({
 			...s.value,
 			...e.$attrs
 		}, {
@@ -11528,7 +11786,7 @@ var Ks = ["aria-label"], qs = {
 			} : void 0
 		]), 1040));
 	}
-}), ec = { class: "mat-container__content" }, tc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), Qc = { class: "mat-container__content" }, $c = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatContainer",
 	inheritAttrs: !1
 }, {
@@ -11539,9 +11797,9 @@ var Ks = ["aria-label"], qs = {
 	} },
 	setup(e) {
 		let t = $("container", e);
-		return (e, n) => (D(), s("div", _(e.$attrs, { class: ["mat-container", { "mat-container--fluid": z(t).fluid }] }), [c("div", ec, [P(e.$slots, "default", {}, void 0, !0)])], 16));
+		return (e, n) => (D(), s("div", _(e.$attrs, { class: ["mat-container", { "mat-container--fluid": z(t).fluid }] }), [c("div", Qc, [P(e.$slots, "default", {}, void 0, !0)])], 16));
 	}
-}), [["__scopeId", "data-v-f2274c15"]]), nc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-f2274c15"]]), el = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatLayout",
 	inheritAttrs: !1
 }, {
@@ -11592,7 +11850,7 @@ var Ks = ["aria-label"], qs = {
 			}
 			p = setTimeout(e, 0);
 		}
-		let y = tr({ scheduleMeasure: g }), b = y.registerEdge, x = {
+		let y = $r({ scheduleMeasure: g }), b = y.registerEdge, x = {
 			publicContext: Object.freeze({
 				layout: l,
 				padding: s.padding,
@@ -11602,7 +11860,7 @@ var Ks = ["aria-label"], qs = {
 			rootElement: A(r),
 			contentElement: A(o)
 		};
-		return O(or, x), O(nr, {
+		return O(ii, x), O(ei, {
 			kind: "layout",
 			...x
 		}), T(async () => {
@@ -11624,7 +11882,7 @@ var Ks = ["aria-label"], qs = {
 			_: 3
 		}, 16, ["style"]));
 	}
-}), [["__scopeId", "data-v-2fd5a61b"]]), rc = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-2fd5a61b"]]), tl = /*@__PURE__*/ Object.assign({
 	name: "MatTableWrapper",
 	inheritAttrs: !1
 }, {
@@ -11632,7 +11890,7 @@ var Ks = ["aria-label"], qs = {
 	setup(e) {
 		return (e, t) => (D(), s("div", _(e.$attrs, { class: "table-wrapper" }), [P(e.$slots, "default")], 16));
 	}
-}), ic = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), nl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatVirtualScroll",
 	inheritAttrs: !1
 }, {
@@ -11645,12 +11903,12 @@ var Ks = ["aria-label"], qs = {
 		itemHeight: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => Ct(e, { positive: !0 })
+			validator: (e) => Sn(e, { positive: !0 })
 		},
 		estimatedItemHeight: {
 			type: [Number, String],
 			default: 48,
-			validator: (e) => Ct(e, {
+			validator: (e) => Sn(e, {
 				positive: !0,
 				allowUndefined: !1
 			})
@@ -11658,7 +11916,7 @@ var Ks = ["aria-label"], qs = {
 		buffer: {
 			type: [Number, String],
 			default: 3,
-			validator: (e) => Ct(e, { allowUndefined: !1 })
+			validator: (e) => Sn(e, { allowUndefined: !1 })
 		},
 		itemKey: {
 			type: [Function, String],
@@ -11667,7 +11925,7 @@ var Ks = ["aria-label"], qs = {
 		as: {
 			type: String,
 			default: "div",
-			validator: qe
+			validator: Gt
 		}
 	},
 	emits: {
@@ -11675,7 +11933,7 @@ var Ks = ["aria-label"], qs = {
 		"visible-range-change": (e) => typeof e?.startIndex == "number" && typeof e?.endIndex == "number"
 	},
 	setup(e, { expose: n, emit: r }) {
-		let i = $("virtualScroll", e), o = r, l = j(null), u = qi({
+		let i = $("virtualScroll", e), o = r, l = j(null), u = Ga({
 			root: l,
 			props: i,
 			enabled: !0,
@@ -11729,7 +11987,7 @@ var Ks = ["aria-label"], qs = {
 			_: 3
 		}, 512));
 	}
-}), [["__scopeId", "data-v-9159f242"]]), ac = { class: "mat-pull-to-refresh__indicator" }, oc = 80, sc = .5, cc = 4, lc = 600, uc = 1600, dc = 80, fc = 700, pc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatPullToRefresh" }, {
+}), [["__scopeId", "data-v-9159f242"]]), rl = { class: "mat-pull-to-refresh__indicator" }, il = 80, al = .5, ol = 4, sl = 600, cl = 1600, ll = 80, ul = 700, dl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatPullToRefresh" }, {
 	__name: "MatPullToRefresh",
 	props: {
 		modelValue: {
@@ -11757,7 +12015,7 @@ var Ks = ["aria-label"], qs = {
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		},
 		containment: {
 			type: Boolean,
@@ -11769,9 +12027,9 @@ var Ks = ["aria-label"], qs = {
 		"update:modelValue": (e) => typeof e == "boolean"
 	},
 	setup(e, { emit: t }) {
-		let n = 2 * Math.sqrt(fc) * .9, r = e, a = $("pullToRefresh", r), o = t, l = h(Ki, null), u = l?.scroller ?? j(null), f = l?.orientation ?? j("vertical"), p = i(() => f.value === "horizontal"), m = i(() => jt(a.triggerDistance, {
+		let n = 2 * Math.sqrt(ul) * .9, r = e, a = $("pullToRefresh", r), o = t, l = h(Wa, null), u = l?.scroller ?? j(null), f = l?.orientation ?? j("vertical"), p = i(() => f.value === "horizontal"), m = i(() => An(a.triggerDistance, {
 			positive: !0,
-			fallback: oc
+			fallback: il
 		})), g = j("idle"), _ = j(r.modelValue), v = j(0), b = j(0), S = j(0), w = j(0), T = null, E, O = 0, k = 0, A = !1, M = !1, N = !1, P = !1, F = 0, I = !1, L, R = !1, ee, B = i(() => ({
 			"--mat-pull-to-refresh-placeholder-size": `${v.value}px`,
 			"--mat-pull-to-refresh-appear": `${S.value}`,
@@ -11794,9 +12052,9 @@ var Ks = ["aria-label"], qs = {
 		function q() {
 			R = !0, ee !== void 0 && globalThis.clearTimeout(ee), ee = globalThis.setTimeout(() => {
 				ee = void 0, R = !1;
-			}, lc);
+			}, sl);
 		}
-		function J(e, t, n = uc, r = dc) {
+		function J(e, t, n = cl, r = ll) {
 			let i, a = 0, o = 0, s = 0, c;
 			function l() {
 				i !== void 0 && (globalThis.cancelAnimationFrame?.(i), i = void 0), c = void 0;
@@ -11831,7 +12089,7 @@ var Ks = ["aria-label"], qs = {
 			g.value === "collapse" && (g.value = "idle");
 		}), Y = J((e) => {
 			v.value = Math.max(0, e);
-		}, void 0, fc, n);
+		}, void 0, ul, n);
 		function ne() {
 			te.start(S.value, 1);
 		}
@@ -11862,7 +12120,7 @@ var Ks = ["aria-label"], qs = {
 			w.value = Number.isFinite(n) ? n : 0;
 		}
 		function oe() {
-			let e = F * sc;
+			let e = F * al;
 			v.value = Math.min(e, m.value), b.value = m.value > 0 ? e / m.value : 0;
 		}
 		function se(e) {
@@ -11872,13 +12130,13 @@ var Ks = ["aria-label"], qs = {
 			if (e.pointerId !== E || !T || _.value) return;
 			let t = p.value ? e.clientX - O : e.clientY - k;
 			if (!M) {
-				if (!A || t <= cc) {
+				if (!A || t <= ol) {
 					t < -4 && (E = void 0);
 					return;
 				}
 				M = !0, N = !0, ne(), T.setPointerCapture?.(e.pointerId);
 			}
-			if (F = Math.max(0, t - cc), F <= 0) {
+			if (F = Math.max(0, t - ol), F <= 0) {
 				le(e.pointerId);
 				return;
 			}
@@ -11889,7 +12147,7 @@ var Ks = ["aria-label"], qs = {
 			let n = M, r = N, i = T;
 			if (E = void 0, M = !1, N = !1, r && i?.hasPointerCapture?.(e) && i.releasePointerCapture(e), !n) return;
 			G();
-			let a = t && F * sc >= m.value;
+			let a = t && F * al >= m.value;
 			if (F = 0, a) {
 				X(!0);
 				return;
@@ -11923,7 +12181,7 @@ var Ks = ["aria-label"], qs = {
 				P = !1, re();
 				return;
 			}
-			e.preventDefault(), oe(), F * sc >= m.value && X(!0);
+			e.preventDefault(), oe(), F * al >= m.value && X(!0);
 		}
 		function he() {
 			P && (P = !1, F = 0, re());
@@ -11953,7 +12211,7 @@ var Ks = ["aria-label"], qs = {
 				"mat-pull-to-refresh--active": S.value > 0 || _.value
 			}]),
 			style: x(B.value)
-		}, [c("div", ac, [d(Wt, {
+		}, [c("div", rl, [d(Un, {
 			size: z(a).size,
 			color: z(a).color,
 			containment: z(a).containment,
@@ -11965,14 +12223,14 @@ var Ks = ["aria-label"], qs = {
 			"progress"
 		])])], 6));
 	}
-}), [["__scopeId", "data-v-c84588cf"]]), mc = ["aria-valuemax", "aria-valuenow"], hc = ["width", "height"], gc = { key: 0 }, _c = ["width", "height"], vc = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, yc = ["d"], bc = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, xc = ["d"], Sc = ["d", "mask"], Cc = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, wc = ["d"], Tc = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, Ec = ["d"], Dc = ["d"], Oc = {
+}), [["__scopeId", "data-v-c84588cf"]]), fl = ["aria-valuemax", "aria-valuenow"], pl = ["width", "height"], ml = { key: 0 }, hl = ["width", "height"], gl = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, _l = ["d"], vl = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, yl = ["d"], bl = ["d", "mask"], xl = { class: "mat-progress__linear-bar mat-progress__linear-bar--primary" }, Sl = ["d"], Cl = { class: "mat-progress__linear-bar mat-progress__linear-bar--secondary" }, wl = ["d"], Tl = ["d"], El = {
 	key: 1,
 	class: "mat-progress__linear-stop"
-}, kc = ["viewBox"], Ac = { class: "mat-progress__circular-linear-rotate" }, jc = { class: "mat-progress__circular-rotate-arc" }, Mc = [
+}, Dl = ["viewBox"], Ol = { class: "mat-progress__circular-linear-rotate" }, kl = { class: "mat-progress__circular-rotate-arc" }, Al = [
 	"cx",
 	"cy",
 	"r"
-], Nc = ["d"], Pc = 4, Fc = 48, Ic = 24, Lc = 240, Rc = 4, zc = 4.8, Bc = 3, Vc = 40, Hc = 15, Uc = 18, Wc = 20.4, Gc = 2, Kc = 4, qc = .001, Jc = 100, Yc = 300, Xc = 900, Zc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+], jl = ["d"], Ml = 4, Nl = 48, Pl = 24, Fl = 240, Il = 4, Ll = 4.8, Rl = 3, zl = 40, Bl = 15, Vl = 18, Hl = 20.4, Ul = 2, Wl = 4, Gl = .001, Kl = 100, ql = 300, Jl = 900, Yl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatProgress",
 	inheritAttrs: !1
 }, {
@@ -12006,7 +12264,7 @@ var Ks = ["aria-label"], qs = {
 		size: {
 			type: [Number, String],
 			default: 48,
-			validator: (e) => Ct(e, {
+			validator: (e) => Sn(e, {
 				allowUndefined: !1,
 				allowNegative: !0
 			})
@@ -12032,7 +12290,7 @@ var Ks = ["aria-label"], qs = {
 		color: {
 			type: String,
 			default: void 0,
-			validator: Ue
+			validator: Vt
 		}
 	},
 	setup(e) {
@@ -12051,10 +12309,10 @@ var Ks = ["aria-label"], qs = {
 		function u(e, t, n, r, i) {
 			let o = t / 2, s = Math.min(e / 2, n / 2), c = Math.max(s, e - n / 2), l = [`M ${a(s)} ${a(o)}`];
 			for (let e = s + 2; e < c; e += 2) {
-				let t = (e - s) / Vc * Math.PI * 2, n = o - Math.sin(t - i) * r;
+				let t = (e - s) / zl * Math.PI * 2, n = o - Math.sin(t - i) * r;
 				l.push(`L ${a(e)} ${a(n)}`);
 			}
-			let u = (c - s) / Vc * Math.PI * 2, d = o - Math.sin(u - i) * r;
+			let u = (c - s) / zl * Math.PI * 2, d = o - Math.sin(u - i) * r;
 			return l.push(`L ${a(c)} ${a(d)}`), l.join(" ");
 		}
 		function d(e, t, n, r, i) {
@@ -12065,21 +12323,21 @@ var Ks = ["aria-label"], qs = {
 			}
 			return c.push("Z"), c.join(" ");
 		}
-		let f = $("progress", e), { colorStyle: p } = dt(i(() => f.color)), m = j(null), h = j(Jc), g = j(+(f.shape === "wavy")), v = j(0), y = `mat-progress-linear-mask-${B()}`, b, S, w, E = i(() => r(f.max) ? f.max : 1), O = i(() => f.variant === "circular"), k = i(() => f.shape === "wavy"), A = i(() => {
-			let e = jt(f.size, {
+		let f = $("progress", e), { colorStyle: p } = un(i(() => f.color)), m = j(null), h = j(Kl), g = j(+(f.shape === "wavy")), v = j(0), y = `mat-progress-linear-mask-${B()}`, b, S, w, E = i(() => r(f.max) ? f.max : 1), O = i(() => f.variant === "circular"), k = i(() => f.shape === "wavy"), A = i(() => {
+			let e = An(f.size, {
 				allowNegative: !0,
-				fallback: Fc
+				fallback: Nl
 			});
-			return Math.min(Math.max(e, Ic), Lc);
-		}), M = i(() => A.value / 12), N = i(() => M.value * 2), P = i(() => A.value / Fc), F = i(() => 1.6 * P.value), I = i(() => Hc * P.value), L = i(() => Gc * P.value), R = i(() => O.value ? f.thickness === "heavy" ? N.value : M.value : f.thickness === "heavy" ? zc : Rc), ee = i(() => {
+			return Math.min(Math.max(e, Pl), Fl);
+		}), M = i(() => A.value / 12), N = i(() => M.value * 2), P = i(() => A.value / Nl), F = i(() => 1.6 * P.value), I = i(() => Bl * P.value), L = i(() => Ul * P.value), R = i(() => O.value ? f.thickness === "heavy" ? N.value : M.value : f.thickness === "heavy" ? Ll : Il), ee = i(() => {
 			let e = n(f.value) ? f.value : 0;
 			return Math.min(Math.max(e, 0), E.value);
-		}), V = i(() => Number((ee.value / E.value * 100).toFixed(3))), U = i(() => R.value + Bc * 2 * g.value), W = i(() => Math.min(100, R.value / h.value * 100)), G = i(() => {
+		}), V = i(() => Number((ee.value / E.value * 100).toFixed(3))), U = i(() => R.value + Rl * 2 * g.value), W = i(() => Math.min(100, R.value / h.value * 100)), G = i(() => {
 			let e = h.value - R.value;
 			return e <= 0 ? 1 : h.value / e;
-		}), K = i(() => V.value === 100 ? 100 : Math.min(100, Math.max(V.value, W.value + qc))), q = i(() => u(h.value, U.value, R.value, 0, 0)), J = i(() => u(h.value, U.value, R.value, Bc * g.value, v.value)), te = i(() => A.value / 2), Y = i(() => (Uc + (Wc - Uc) * g.value) * P.value), ne = i(() => `0 0 ${A.value} ${A.value}`), X = i(() => d(te.value, Y.value, F.value * g.value, v.value, I.value)), re = i(() => {
+		}), K = i(() => V.value === 100 ? 100 : Math.min(100, Math.max(V.value, W.value + Gl))), q = i(() => u(h.value, U.value, R.value, 0, 0)), J = i(() => u(h.value, U.value, R.value, Rl * g.value, v.value)), te = i(() => A.value / 2), Y = i(() => (Vl + (Hl - Vl) * g.value) * P.value), ne = i(() => `0 0 ${A.value} ${A.value}`), X = i(() => d(te.value, Y.value, F.value * g.value, v.value, I.value)), re = i(() => {
 			let e = Math.PI * 2 * Y.value;
-			return (Pc + R.value) / e * 100;
+			return (Ml + R.value) / e * 100;
 		}), Z = i(() => Math.min(12, re.value)), ie = i(() => {
 			if (f.indeterminate) return {};
 			let e = Number(Math.max(0, 100 - V.value - re.value * 2).toFixed(3)), t = Number(Math.min(100, V.value + re.value).toFixed(3));
@@ -12088,30 +12346,30 @@ var Ks = ["aria-label"], qs = {
 				strokeDasharray: `${a(e)} ${a(100 - e)}`,
 				strokeDashoffset: `-${a(t)}`
 			};
-		}), ae = i(() => f.indeterminate ? {} : { strokeDasharray: `${a(V.value === 0 ? qc : V.value)} 200` }), oe = i(() => ({
+		}), ae = i(() => f.indeterminate ? {} : { strokeDasharray: `${a(V.value === 0 ? Gl : V.value)} 200` }), oe = i(() => ({
 			...p.value,
 			"--mat-progress-circular-gap-progress": a(Z.value),
 			"--mat-progress-circular-margin": `${L.value}px`,
 			"--mat-progress-circular-radius": `${Y.value}px`,
 			"--mat-progress-circular-size": `${A.value}px`,
-			"--mat-progress-indicator-gap-size": `${Pc}px`,
+			"--mat-progress-indicator-gap-size": `${Ml}px`,
 			"--mat-progress-linear-cap-progress": a(W.value),
 			"--mat-progress-linear-path-scale": a(G.value),
 			"--mat-progress-linear-segment-end": a(K.value),
 			"--mat-progress-linear-segment-end-position": `${a(K.value)}%`,
 			"--mat-progress-linear-size": `${U.value}px`,
 			"--mat-progress-progress": `${V.value}`,
-			"--mat-progress-stop-indicator-size": `${Kc}px`,
+			"--mat-progress-stop-indicator-size": `${Wl}px`,
 			"--mat-progress-thickness": `${R.value}px`
 		}));
 		function se(e) {
 			S = void 0;
 			let t = w === void 0 ? 0 : Math.min(64, e - w), n = +!!k.value, r = n - g.value;
 			if (w = e, t > 0 && r !== 0) {
-				let e = Math.min(Math.abs(r), t / Yc);
+				let e = Math.min(Math.abs(r), t / ql);
 				g.value += Math.sign(r) * e;
 			}
-			t > 0 && f.waveMotion && g.value > 0 && (v.value += t / Xc * Math.PI * 2, v.value %= Math.PI * 2);
+			t > 0 && f.waveMotion && g.value > 0 && (v.value += t / Jl * Math.PI * 2, v.value %= Math.PI * 2);
 			let i = g.value !== n, a = f.waveMotion && g.value > 0;
 			i || a ? S = globalThis.requestAnimationFrame(se) : w = void 0;
 		}
@@ -12148,19 +12406,19 @@ var Ks = ["aria-label"], qs = {
 			class: "mat-progress__circular",
 			viewBox: ne.value,
 			"aria-hidden": "true"
-		}, [c("g", Ac, [c("g", jc, [c("circle", {
+		}, [c("g", Ol, [c("g", kl, [c("circle", {
 			class: "mat-progress__circular-track",
 			cx: te.value,
 			cy: te.value,
 			r: Y.value,
 			pathLength: "100",
 			style: x(ie.value)
-		}, null, 12, Mc), c("path", {
+		}, null, 12, Al), c("path", {
 			class: "mat-progress__circular-active",
 			d: X.value,
 			pathLength: "100",
 			style: x(ae.value)
-		}, null, 12, Nc)])])], 8, kc)) : (D(), s("span", {
+		}, null, 12, jl)])])], 8, Dl)) : (D(), s("span", {
 			key: 0,
 			ref_key: "linearElement",
 			ref: m,
@@ -12173,7 +12431,7 @@ var Ks = ["aria-label"], qs = {
 				width: h.value,
 				height: U.value
 			}, [
-				z(f).indeterminate ? (D(), s("defs", gc, [c("mask", {
+				z(f).indeterminate ? (D(), s("defs", ml, [c("mask", {
 					id: y,
 					maskUnits: "userSpaceOnUse",
 					x: "0",
@@ -12186,68 +12444,68 @@ var Ks = ["aria-label"], qs = {
 						height: "100%",
 						fill: "white"
 					}, null, -1),
-					c("g", vc, [c("path", {
+					c("g", gl, [c("path", {
 						class: "mat-progress__linear-segment mat-progress__linear-segment--primary mat-progress__linear-gap mat-progress__linear-gap--primary",
 						d: J.value,
 						pathLength: "100"
-					}, null, 8, yc)]),
-					c("g", bc, [c("path", {
+					}, null, 8, _l)]),
+					c("g", vl, [c("path", {
 						class: "mat-progress__linear-segment mat-progress__linear-segment--secondary mat-progress__linear-gap mat-progress__linear-gap--secondary",
 						d: J.value,
 						pathLength: "100"
-					}, null, 8, xc)])
-				], 8, _c)])) : o("", !0),
+					}, null, 8, yl)])
+				], 8, hl)])) : o("", !0),
 				z(f).indeterminate ? (D(), s("path", {
 					key: 1,
 					class: "mat-progress__linear-indeterminate-track",
 					d: q.value,
 					pathLength: "100",
 					mask: `url(#${y})`
-				}, null, 8, Sc)) : o("", !0),
-				z(f).indeterminate ? (D(), s(t, { key: 2 }, [c("g", Cc, [c("path", {
+				}, null, 8, bl)) : o("", !0),
+				z(f).indeterminate ? (D(), s(t, { key: 2 }, [c("g", xl, [c("path", {
 					class: "mat-progress__linear-active mat-progress__linear-active--primary mat-progress__linear-segment mat-progress__linear-segment--primary",
 					d: J.value,
 					pathLength: "100"
-				}, null, 8, wc)]), c("g", Tc, [c("path", {
+				}, null, 8, Sl)]), c("g", Cl, [c("path", {
 					class: "mat-progress__linear-active mat-progress__linear-active--secondary mat-progress__linear-segment mat-progress__linear-segment--secondary",
 					d: J.value,
 					pathLength: "100"
-				}, null, 8, Ec)])], 64)) : (D(), s("path", {
+				}, null, 8, wl)])], 64)) : (D(), s("path", {
 					key: 3,
 					class: "mat-progress__linear-active mat-progress__linear-active--determinate",
 					d: J.value,
 					pathLength: "100"
-				}, null, 8, Dc))
-			], 8, hc)),
-			z(f).indeterminate ? o("", !0) : (D(), s("span", Oc))
-		], 512))], 16, mc));
+				}, null, 8, Tl))
+			], 8, pl)),
+			z(f).indeterminate ? o("", !0) : (D(), s("span", El))
+		], 512))], 16, fl));
 	}
-}), [["__scopeId", "data-v-90a3c307"]]), Qc = Symbol("mat-snackbar-externally-managed"), $c = [], el = null;
-function tl() {
-	el || $c.length === 0 || (el = $c.shift(), el.activate());
+}), [["__scopeId", "data-v-90a3c307"]]), Xl = Symbol("mat-snackbar-externally-managed"), Zl = [], Ql = null;
+function $l() {
+	Ql || Zl.length === 0 || (Ql = Zl.shift(), Ql.activate());
 }
-function nl(e) {
-	e === el || $c.includes(e) || ($c.push(e), tl());
+function eu(e) {
+	e === Ql || Zl.includes(e) || (Zl.push(e), $l());
 }
-function rl(e) {
-	let t = $c.indexOf(e);
-	t !== -1 && $c.splice(t, 1);
+function tu(e) {
+	let t = Zl.indexOf(e);
+	t !== -1 && Zl.splice(t, 1);
 }
-function il(e) {
-	el === e && (el = null, tl());
+function nu(e) {
+	Ql === e && (Ql = null, $l());
 }
 //#endregion
 //#region src/components/mat-snackbar/MatSnackbar.vue
-var al = { class: "mat-snackbar__text" }, ol = {
+var ru = { class: "mat-snackbar__text" }, iu = {
 	key: 0,
 	class: "mat-snackbar__controls"
-}, sl = {
+}, au = {
 	key: 0,
 	class: "mat-snackbar__action"
-}, cl = {
+}, ou = {
 	key: 1,
 	class: "mat-snackbar__close"
-}, ll = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, su = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatSnackbar",
 	inheritAttrs: !1
 }, {
@@ -12304,9 +12562,9 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		closed: () => !0
 	},
 	setup(e, { emit: r }) {
-		let l = $("snackbar", e), f = r, p = V(), m = h(Ne, Me), g = h(Yt, null), y = h(Qc, !1), b = j(!1), x = j("closed"), S = j(!1), w = i(() => !!p.default || typeof l.text == "string" && l.text.trim().length > 0), E = i(() => !!p.action || typeof l.actionText == "string" && l.actionText.trim().length > 0), O = i(() => !!p.close || l.closable), k = i(() => E.value || O.value), A = j(0), M = j(null), N = i(() => g ? g.snackbarLayer.value : document.body), F = i(() => typeof l.closeLabel == "string" && l.closeLabel.trim().length > 0 ? l.closeLabel : "关闭"), I = !1, L, ee = qt(), B = Jt({ motion: ee }), U = !1, G = null, K = i(() => ({ "--mat-snackbar-toolbar-clearance": `${A.value}px` }));
+		let l = $("snackbar", e), f = r, p = V(), m = h(kt, Ot), g = h(Jn, null), y = h(Xl, !1), b = j(!1), x = j("closed"), S = j(!1), w = i(() => !!p.default || typeof l.text == "string" && l.text.trim().length > 0), E = i(() => !!p.action || typeof l.actionText == "string" && l.actionText.trim().length > 0), O = i(() => !!p.close || l.closable), k = i(() => E.value || O.value), A = j(0), M = j(null), N = i(() => g ? g.snackbarLayer.value : document.body), F = i(() => typeof l.closeLabel == "string" && l.closeLabel.trim().length > 0 ? l.closeLabel : "关闭"), I = !1, L, ee = Kn(), B = qn({ motion: ee }), U = !1, G = null, K = i(() => ({ "--mat-snackbar-toolbar-clearance": `${A.value}px` }));
 		function q() {
-			A.value = kn();
+			A.value = Dr();
 		}
 		let J = { activate: le };
 		function te() {
@@ -12332,11 +12590,11 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			U || (U = !0, console.warn("MatSnackbar: 必须通过 text 或默认 Slot 提供内容"));
 		}
 		function ie() {
-			b.value && (b.value = !1, x.value = "closed", f("closed"), y || il(J));
+			b.value && (b.value = !1, x.value = "closed", f("closed"), y || nu(J));
 		}
 		function ae() {
 			if (te(), !b.value) {
-				y || rl(J);
+				y || tu(J);
 				return;
 			}
 			x.value !== "closing" && B.start({
@@ -12361,7 +12619,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		}
 		async function le() {
 			if (!I || !l.modelValue || S.value || !w.value) {
-				w.value || (Z(), oe()), y || il(J);
+				w.value || (Z(), oe()), y || nu(J);
 				return;
 			}
 			te(), Y(), b.value = !0, x.value = "opening", await v(), !(!I || !b.value || x.value === "closing") && ne(400, () => {
@@ -12381,12 +12639,12 @@ var al = { class: "mat-snackbar__text" }, ol = {
 				le();
 				return;
 			}
-			nl(J);
+			eu(J);
 		}
 		return T(() => {
-			I = !0, g || (G = An(q), q()), l.modelValue && ue();
+			I = !0, g || (G = Or(q), q()), l.modelValue && ue();
 		}), C(() => {
-			I = !1, G?.(), G = null, te(), Y(), y || (b.value ? il(J) : rl(J));
+			I = !1, G?.(), G = null, te(), Y(), y || (b.value ? nu(J) : tu(J));
 		}), H(() => l.modelValue, (e) => {
 			if (I) {
 				if (e) {
@@ -12425,10 +12683,10 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			"aria-atomic": "true",
 			"aria-live": "polite",
 			role: "status"
-		}), [c("div", al, [e.$slots.default ? P(e.$slots, "default", { key: 0 }, void 0, !0) : (D(), s(t, { key: 1 }, [u(R(z(l).text), 1)], 64))]), k.value ? (D(), s("div", ol, [E.value ? (D(), s("div", sl, [e.$slots.action ? P(e.$slots, "action", {
+		}), [c("div", ru, [e.$slots.default ? P(e.$slots, "default", { key: 0 }, void 0, !0) : (D(), s(t, { key: 1 }, [u(R(z(l).text), 1)], 64))]), k.value ? (D(), s("div", iu, [E.value ? (D(), s("div", au, [e.$slots.action ? P(e.$slots, "action", {
 			key: 0,
 			action: ce
-		}, void 0, !0) : (D(), a(ke, {
+		}, void 0, !0) : (D(), a(jt, {
 			key: 1,
 			class: "mat-snackbar__default-action mat-sys-typescale-label-large",
 			"use-cursor": z(m).useCursor,
@@ -12436,17 +12694,17 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		}, {
 			default: W(() => [u(R(z(l).actionText), 1)]),
 			_: 1
-		}, 8, ["use-cursor"]))])) : o("", !0), O.value ? (D(), s("div", cl, [e.$slots.close ? P(e.$slots, "close", {
+		}, 8, ["use-cursor"]))])) : o("", !0), O.value ? (D(), s("div", ou, [e.$slots.close ? P(e.$slots, "close", {
 			key: 0,
 			close: se
-		}, void 0, !0) : (D(), a(ke, {
+		}, void 0, !0) : (D(), a(jt, {
 			key: 1,
 			class: "mat-snackbar__default-close",
 			"aria-label": F.value,
 			"use-cursor": z(m).useCursor,
 			onClick: se
 		}, {
-			default: W(() => [d(ht, {
+			default: W(() => [d(mn, {
 				class: "mat-snackbar__close-icon",
 				icon: "close",
 				size: "24px",
@@ -12456,7 +12714,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			_: 1
 		}, 8, ["aria-label", "use-cursor"]))])) : o("", !0)])) : o("", !0)], 16)) : o("", !0)], 8, ["to"])) : o("", !0);
 	}
-}), [["__scopeId", "data-v-6a4f08b6"]]), ul = ["aria-orientation"], dl = { class: "mat-toolbar__surface" }, fl = { class: "mat-toolbar__content" }, pl = 200, ml = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-6a4f08b6"]]), cu = ["aria-orientation"], lu = { class: "mat-toolbar__surface" }, uu = { class: "mat-toolbar__content" }, du = 200, fu = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatToolbar",
 	inheritAttrs: !1
 }, {
@@ -12510,7 +12768,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		bottomPlaceholder: {
 			type: [Number, String],
 			default: 0,
-			validator: (e) => Ct(e, {
+			validator: (e) => Sn(e, {
 				property: "block-size",
 				allowUndefined: !1
 			})
@@ -12529,7 +12787,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		function l(e) {
 			return e instanceof HTMLElement && e.ownerDocument === document ? e : null;
 		}
-		let u = $("toolbar", e), d = ee(), p = V(), m = f(), g = h(Yt, null), y = m?.vnode.props ?? {}, b = Object.prototype.hasOwnProperty.call(y, "attach"), S = j(u.modelValue), w = j(u.modelValue ? "open" : "closed"), E = j(null), O = j(null), k = j({
+		let u = $("toolbar", e), d = ee(), p = V(), m = f(), g = h(Jn, null), y = m?.vnode.props ?? {}, b = Object.prototype.hasOwnProperty.call(y, "attach"), S = j(u.modelValue), w = j(u.modelValue ? "open" : "closed"), E = j(null), O = j(null), k = j({
 			blockSize: 0,
 			inlineSize: 0
 		}), A = i(() => r.includes(u.variant) ? u.variant === "floating" ? "floating-bottom" : u.variant : "docked"), M = i(() => [
@@ -12546,7 +12804,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			}
 			return l(u.attach);
 		}), U = i(() => {
-			let e = Tt(u.bottomPlaceholder, {
+			let e = wn(u.bottomPlaceholder, {
 				property: "block-size",
 				fallback: "0px"
 			});
@@ -12568,12 +12826,12 @@ var al = { class: "mat-snackbar__text" }, ol = {
 				"mat-toolbar--vertical": F.value,
 				"mat-toolbar--vibrant": u.vibrant
 			}
-		]), J = L(null), te, Y, ne = !1, X = !1, re = qt(), Z = Jt({ motion: re }), ie = !1;
+		]), J = L(null), te, Y, ne = !1, X = !1, re = Kn(), Z = qn({ motion: re }), ie = !1;
 		function ae() {
 			re.cancel();
 		}
 		function oe(e) {
-			re.wait(E.value, pl, e);
+			re.wait(E.value, du, e);
 		}
 		async function se() {
 			ae(), S.value = !0, w.value = "opening", await v(), !(!X || !S.value || !u.modelValue || w.value !== "opening") && oe(() => {
@@ -12587,7 +12845,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			}
 			w.value !== "closing" && Z.start({
 				canStart: () => S.value && w.value !== "closing",
-				duration: pl,
+				duration: du,
 				getElement: () => E.value,
 				isActive: () => X && !u.modelValue && S.value && w.value === "closing",
 				onFinish: () => {
@@ -12637,7 +12895,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 				ne || (ne = !0, Y = typeof ResizeObserver > "u" ? void 0 : new ResizeObserver(ue), Y?.observe(E.value), window.addEventListener("resize", ue)), R.value ? (te?.unregister(), te = void 0, !N.value && !J.value && (J.value = g.publicContext.registerEdge({
 					edge: "bottom",
 					element: E.value
-				})), N.value && J.value && (J.value.unregister(), J.value = null)) : (J.value?.unregister(), J.value = null, te ||= Dn(E.value, {
+				})), N.value && J.value && (J.value.unregister(), J.value = null)) : (J.value?.unregister(), J.value = null, te ||= Tr(E.value, {
 					getRect: de,
 					isBottom: () => I.value
 				})), O.value && Y?.observe(O.value), ue(), le();
@@ -12685,20 +12943,20 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			style: G.value,
 			role: "toolbar",
 			"aria-orientation": F.value ? "vertical" : void 0
-		}), [c("div", dl, [c("div", fl, [P(r.$slots, "default", {}, void 0, !0)])]), N.value && z(p).fab ? (D(), s("div", {
+		}), [c("div", lu, [c("div", uu, [P(r.$slots, "default", {}, void 0, !0)])]), N.value && z(p).fab ? (D(), s("div", {
 			key: 0,
 			ref_key: "fabElement",
 			ref: O,
 			class: "mat-toolbar__fab"
-		}, [P(r.$slots, "fab", {}, void 0, !0)], 512)) : o("", !0)], 16, ul)) : o("", !0)], 8, ["to", "disabled"]))], 64));
+		}, [P(r.$slots, "fab", {}, void 0, !0)], 512)) : o("", !0)], 16, cu)) : o("", !0)], 8, ["to", "disabled"]))], 64));
 	}
-}), [["__scopeId", "data-v-49a9f065"]]), hl = Symbol("mat-panes"), gl = [
+}), [["__scopeId", "data-v-49a9f065"]]), pu = Symbol("mat-panes"), mu = [
 	"compact",
 	"medium",
 	"expanded",
 	"large",
 	"extra-large"
-], _l = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+], hu = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatPanes",
 	inheritAttrs: !1
 }, {
@@ -12719,7 +12977,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 	emits: {
 		"update:sizes": (e) => e !== null && !Array.isArray(e) && Object.values(e).every((e) => typeof e == "number" && Number.isFinite(e) && e >= 0),
 		"update:widths": (e) => e !== null && !Array.isArray(e) && Object.values(e).every((e) => typeof e == "number" && Number.isInteger(e) && e >= 0),
-		"update:breakpoint": (e) => gl.includes(e)
+		"update:breakpoint": (e) => mu.includes(e)
 	},
 	setup(e, { emit: t }) {
 		let n = $("panes", e), r = t, a = j(null), o = I([]), c = j(null), l = j(null), u = j(null), d = /* @__PURE__ */ new Map(), f, p, m, h, g, y = i(() => c.value ?? b.value), b = i(() => {
@@ -12832,7 +13090,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			let r = x(f.metrics.leftWidth + t.clientX - f.startX, 0, f.metrics.totalWidth);
 			c.value = U(n.left.id, n.right.id, r, f.metrics.totalWidth, f.startWeights), f.changed = !0;
 		}
-		let q = Ji(({ event: e, id: t }) => {
+		let q = Ka(({ event: e, id: t }) => {
 			K(t, e);
 		});
 		function J(e, t) {
@@ -12915,7 +13173,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		function le() {
 			ce();
 		}
-		return O(hl, {
+		return O(pu, {
 			getHandleAttributes: z,
 			getPaneStyle: N,
 			hasBoundary: L,
@@ -12942,17 +13200,17 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			ref: a
 		}, e.$attrs, { class: "mat-panes" }), [P(e.$slots, "default", {}, void 0, !0)], 16));
 	}
-}), [["__scopeId", "data-v-e119bd21"]]), vl = ["id"], yl = {
+}), [["__scopeId", "data-v-e119bd21"]]), gu = ["id"], _u = {
 	key: 0,
 	class: "mat-pane__separator"
-}, bl = [
+}, vu = [
 	"aria-controls",
 	"aria-label",
 	"aria-orientation",
 	"aria-valuemax",
 	"aria-valuemin",
 	"aria-valuenow"
-], xl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+], yu = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatPane",
 	inheritAttrs: !1
 }, {
@@ -12971,7 +13229,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		}
 	},
 	setup(e) {
-		let n = $("pane", e), r = h(hl, null), a = j(null), l = i(() => n.resizeLabel), u, d = i(() => r?.getPaneStyle(n.id) ?? { "--mat-pane-weight": 1 }), f = i(() => !!r?.hasBoundary(n.id)), p = i(() => !!r?.isHandleVisible(n.id)), m = i(() => r?.getHandleAttributes(n.id) ?? {}), g = i(() => !!r?.isBoundaryActive(n.id));
+		let n = $("pane", e), r = h(pu, null), a = j(null), l = i(() => n.resizeLabel), u, d = i(() => r?.getPaneStyle(n.id) ?? { "--mat-pane-weight": 1 }), f = i(() => !!r?.hasBoundary(n.id)), p = i(() => !!r?.isHandleVisible(n.id)), m = i(() => r?.getHandleAttributes(n.id) ?? {}), g = i(() => !!r?.isBoundaryActive(n.id));
 		function v() {
 			u?.(), u = void 0, r && (u = r.registerPane({
 				element: a,
@@ -12986,7 +13244,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			id: z(n).id,
 			class: "mat-pane",
 			style: d.value
-		}), [P(i.$slots, "default", {}, void 0, !0)], 16, vl), f.value ? (D(), s("div", yl, [p.value ? (D(), s("div", {
+		}), [P(i.$slots, "default", {}, void 0, !0)], 16, gu), f.value ? (D(), s("div", _u, [p.value ? (D(), s("div", {
 			key: 0,
 			class: y(["mat-pane__handle", { "mat-pane__handle--active": g.value }]),
 			role: "separator",
@@ -13003,26 +13261,26 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			onPointerdown: l[3] ||= (t) => z(r).handlePointerDown(e.id, t),
 			onPointermove: l[4] ||= (t) => z(r).handlePointerMove(e.id, t),
 			onPointerup: l[5] ||= (t) => z(r).finishPointerInteraction(e.id, t, !0)
-		}, null, 42, bl)) : o("", !0)])) : o("", !0)], 64));
+		}, null, 42, vu)) : o("", !0)])) : o("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-1bf28501"]]), Sl = Symbol("mat-navigation-rail"), Cl = { class: "mat-navigation-item__indicator mat-navigation-rail-item__indicator mat-navigation-bar-item__indicator" }, wl = {
+}), [["__scopeId", "data-v-1bf28501"]]), bu = Symbol("mat-navigation-rail"), xu = { class: "mat-navigation-item__indicator mat-navigation-rail-item__indicator mat-navigation-bar-item__indicator" }, Su = {
 	key: 0,
 	class: "mat-navigation-item__icon-wrap mat-navigation-rail-item__icon-wrap mat-navigation-bar-item__icon-wrap"
-}, Tl = { class: "mat-navigation-item__label-wrap mat-navigation-rail-item__label-wrap mat-navigation-bar-item__label-wrap" }, El = {
+}, Cu = { class: "mat-navigation-item__label-wrap mat-navigation-rail-item__label-wrap mat-navigation-bar-item__label-wrap" }, wu = {
 	key: 0,
 	class: "mat-navigation-item__spacer mat-navigation-rail-item__spacer",
 	"aria-hidden": "true"
-}, Dl = {
+}, Tu = {
 	key: 1,
 	class: "mat-navigation-item__trailing mat-navigation-rail-item__trailing"
-}, Ol = {
+}, Eu = {
 	key: 0,
 	class: "mat-navigation-item__spacer mat-navigation-rail-item__spacer",
 	"aria-hidden": "true"
-}, kl = {
+}, Du = {
 	key: 1,
 	class: "mat-navigation-item__trailing mat-navigation-rail-item__trailing"
-}, Al = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, Ou = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationItem",
 	inheritAttrs: !1
 }, {
@@ -13068,7 +13326,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			"bottom",
 			"bottom-start",
 			"start"
-		], l = $("navigationItem", e), u = n, d = V(), f = h(Ne, Me), p = h(Sl, null), m = i(() => p?.expanded.value ?? !1), g = i(() => p?.fullWidth.value ?? !1), v = i(() => p?.orientation.value === "horizontal"), b = i(() => p?.isSelected(l.value) ?? !1), x = i(() => !!(d.icon || l.icon && l.icon.trim())), S = i(() => x.value || !m.value), C = i(() => x.value ? l.icon : "circle"), w = i(() => {
+		], l = $("navigationItem", e), u = n, d = V(), f = h(kt, Ot), p = h(bu, null), m = i(() => p?.expanded.value ?? !1), g = i(() => p?.fullWidth.value ?? !1), v = i(() => p?.orientation.value === "horizontal"), b = i(() => p?.isSelected(l.value) ?? !1), x = i(() => !!(d.icon || l.icon && l.icon.trim())), S = i(() => x.value || !m.value), C = i(() => x.value ? l.icon : "circle"), w = i(() => {
 			let e = l.badge;
 			return e ? {
 				content: m.value ? void 0 : e.content,
@@ -13076,7 +13334,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 				location: r.includes(e.location) ? e.location : "top-end",
 				color: e.color
 			} : null;
-		}), T = i(() => qn("label", m.value && !v.value ? "large" : "medium")), E = i(() => qn("label", "medium")), O = i(() => ({
+		}), T = i(() => Gr("label", m.value && !v.value ? "large" : "medium")), E = i(() => Gr("label", "medium")), O = i(() => ({
 			"mat-navigation-item": !0,
 			"mat-navigation-rail-item": !v.value,
 			"mat-navigation-bar-item": v.value,
@@ -13100,7 +13358,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		function k(e) {
 			l.disabled || p?.requestSelection(l.value), u("click", e);
 		}
-		return (e, n) => (D(), a(ke, _(e.$attrs, {
+		return (e, n) => (D(), a(jt, _(e.$attrs, {
 			class: ["mat-navigation-item", O.value],
 			"aria-current": b.value ? "page" : void 0,
 			disabled: z(l).disabled,
@@ -13110,8 +13368,8 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			onClick: k
 		}), {
 			default: W(() => [
-				c("span", Cl, [
-					S.value ? (D(), s("span", wl, [w.value ? (D(), a(Ya, {
+				c("span", xu, [
+					S.value ? (D(), s("span", Su, [w.value ? (D(), a(Jo, {
 						key: 0,
 						color: w.value.color,
 						content: w.value.content,
@@ -13121,7 +13379,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 						default: W(() => [z(d).icon ? P(e.$slots, "icon", {
 							key: 0,
 							selected: b.value
-						}, void 0, !0) : (D(), a(ht, {
+						}, void 0, !0) : (D(), a(mn, {
 							key: 1,
 							fill: +!!b.value,
 							icon: C.value,
@@ -13137,20 +13395,20 @@ var al = { class: "mat-snackbar__text" }, ol = {
 					])) : (D(), s(t, { key: 1 }, [z(d).icon ? P(e.$slots, "icon", {
 						key: 0,
 						selected: b.value
-					}, void 0, !0) : (D(), a(ht, {
+					}, void 0, !0) : (D(), a(mn, {
 						key: 1,
 						fill: +!!b.value,
 						icon: C.value,
 						class: "mat-navigation-item__icon mat-navigation-rail-item__icon mat-navigation-bar-item__icon",
 						"aria-hidden": "true"
 					}, null, 8, ["fill", "icon"]))], 64))])) : o("", !0),
-					c("span", Tl, [c("span", { class: y([
+					c("span", Cu, [c("span", { class: y([
 						"mat-navigation-item__label",
 						"mat-navigation-rail-item__label",
 						"mat-navigation-bar-item__label",
 						T.value
 					]) }, [P(e.$slots, "default", {}, void 0, !0)], 2)]),
-					g.value ? (D(), s(t, { key: 1 }, [e.$slots.trailing ? (D(), s("span", El)) : o("", !0), e.$slots.trailing ? (D(), s("span", Dl, [P(e.$slots, "trailing", {
+					g.value ? (D(), s(t, { key: 1 }, [e.$slots.trailing ? (D(), s("span", wu)) : o("", !0), e.$slots.trailing ? (D(), s("span", Tu, [P(e.$slots, "trailing", {
 						expanded: m.value,
 						selected: b.value
 					}, void 0, !0)])) : o("", !0)], 64)) : o("", !0)
@@ -13161,7 +13419,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 					"mat-navigation-bar-item__label",
 					E.value
 				]) }, [P(e.$slots, "default", {}, void 0, !0)], 2),
-				g.value ? o("", !0) : (D(), s(t, { key: 0 }, [e.$slots.trailing ? (D(), s("span", Ol)) : o("", !0), e.$slots.trailing ? (D(), s("span", kl, [P(e.$slots, "trailing", {
+				g.value ? o("", !0) : (D(), s(t, { key: 0 }, [e.$slots.trailing ? (D(), s("span", Eu)) : o("", !0), e.$slots.trailing ? (D(), s("span", Du, [P(e.$slots, "trailing", {
 					expanded: m.value,
 					selected: b.value
 				}, void 0, !0)])) : o("", !0)], 64))
@@ -13175,7 +13433,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-93081cfe"]]), jl = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-93081cfe"]]), ku = /*@__PURE__*/ Object.assign({
 	name: "MatNavigationRailItem",
 	inheritAttrs: !1
 }, {
@@ -13209,7 +13467,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 	emits: { click: (e) => e instanceof MouseEvent },
 	setup(e, { emit: t }) {
 		let n = $("navigationRailItem", e), r = t;
-		return (e, t) => (D(), a(Al, _({
+		return (e, t) => (D(), a(Ou, _({
 			...e.$attrs,
 			...z(n)
 		}, {
@@ -13220,13 +13478,13 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			fn: W((t) => [P(e.$slots, n, b(p(t)))])
 		}))]), 1040));
 	}
-}), Ml = { class: "mat-navigation-rail__layout" }, Nl = {
+}), Au = { class: "mat-navigation-rail__layout" }, ju = {
 	key: 0,
 	class: "mat-navigation-rail__header"
-}, Pl = {
+}, Mu = {
 	key: 1,
 	class: "mat-navigation-rail__content"
-}, Fl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, Nu = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationRail",
 	inheritAttrs: !1
 }, {
@@ -13247,7 +13505,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		width: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => Ct(e, { property: "inline-size" })
+			validator: (e) => Sn(e, { property: "inline-size" })
 		},
 		fullWidth: {
 			type: Boolean,
@@ -13354,10 +13612,10 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		"update:open": (e) => typeof e == "boolean"
 	},
 	setup(e, { expose: n, emit: l }) {
-		let u = $("navigationRail", e), f = l, p = h(Ne, Me), v = V(), b = ee(), S = h(nr, null), w = i(() => {
+		let u = $("navigationRail", e), f = l, p = h(kt, Ot), v = V(), b = ee(), S = h(ei, null), w = i(() => {
 			let e = { ...b };
 			return delete e.app, e;
-		}), T = j(null), E = i(() => u.mode === void 0 ? S ? "docked" : "flow" : u.mode), k = i(() => u.layout === "modal"), A = i(() => u.hideOnCollapse && !u.expanded), M = j(u.expanded), N = j(!A.value), F = i(() => N.value && !!v.header), I = i(() => u.expanded), L = i(() => u.open === void 0 ? u.hideOnCollapse || k.value ? u.expanded : !0 : u.open), R = qt(), B = Jt({ motion: R });
+		}), T = j(null), E = i(() => u.mode === void 0 ? S ? "docked" : "flow" : u.mode), k = i(() => u.layout === "modal"), A = i(() => u.hideOnCollapse && !u.expanded), M = j(u.expanded), N = j(!A.value), F = i(() => N.value && !!v.header), I = i(() => u.expanded), L = i(() => u.open === void 0 ? u.hideOnCollapse || k.value ? u.expanded : !0 : u.open), R = Kn(), B = qn({ motion: R });
 		function U() {
 			if (R.cancel(), u.expanded || !A.value) {
 				M.value = u.expanded, N.value = !0;
@@ -13378,7 +13636,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		}
 		H(() => u.expanded, U);
 		function G(e) {
-			return e.type === jl || e.type?.name === "MatNavigationRailItem" || e.type === Al || e.type?.name === "MatNavigationItem";
+			return e.type === ku || e.type?.name === "MatNavigationRailItem" || e.type === Ou || e.type?.name === "MatNavigationItem";
 		}
 		function K(e) {
 			if (G(e)) return !0;
@@ -13396,7 +13654,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		}
 		let te = i(() => {
 			if (u.width !== void 0) {
-				let e = Tt(u.width, { property: "inline-size" });
+				let e = wn(u.width, { property: "inline-size" });
 				if (e !== void 0) return e === "0" ? "0" : e;
 			}
 			return u.expanded || k.value ? "var(--mat-navigation-rail-expanded-width, 240px)" : "var(--mat-navigation-rail-collapsed-width, 80px)";
@@ -13416,7 +13674,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		})), ne = i(() => {
 			let e = {};
 			if (u.width !== void 0) {
-				let t = Tt(u.width, { property: "inline-size" });
+				let t = wn(u.width, { property: "inline-size" });
 				t !== void 0 && (e["--mat-navigation-rail-expanded-width"] = t);
 			}
 			return k.value && (e.maxInlineSize = S?.rootElement?.value ? "calc(100% - var(--mat-navigation-rail-modal-edge-space, 8px))" : "calc(100dvi - var(--mat-navigation-rail-modal-edge-space, 8px))"), e;
@@ -13424,7 +13682,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		function X(e) {
 			f("update:open", e), !e && (k.value || u.hideOnCollapse) && f("update:expanded", !1);
 		}
-		return O(Sl, {
+		return O(bu, {
 			expanded: i(() => u.expanded),
 			fullWidth: i(() => u.fullWidth),
 			orientation: i(() => "vertical"),
@@ -13438,7 +13696,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		}), n({
 			asideRef: T,
 			hostElement: i(() => T.value?.hostElement)
-		}), (e, t) => (D(), a(kr, _({
+		}), (e, t) => (D(), a(Di, _({
 			ref_key: "asideRef",
 			ref: T,
 			as: "nav",
@@ -13464,14 +13722,14 @@ var al = { class: "mat-snackbar__text" }, ol = {
 				style: x(e),
 				"aria-hidden": "true"
 			}, null, 4)]),
-			default: W(() => [d(to, {
+			default: W(() => [d(es, {
 				class: "mat-navigation-rail__scroll-area",
 				orientation: "vertical",
 				"bar-width": "thin",
 				"shadow-length": 0,
 				"no-scroll-padding": ""
 			}, {
-				default: W(() => [c("div", Ml, [F.value && N.value ? (D(), s("div", Nl, [P(e.$slots, "header", { expanded: z(u).expanded }, void 0, !0)])) : o("", !0), N.value ? (D(), s("div", Pl, [c("div", { class: y(["mat-navigation-rail__destinations", [`mat-navigation-rail__destinations--${z(u).alignment}`, { "mat-navigation-rail__destinations--show-custom-content": I.value }]]) }, [d(J)], 2)])) : o("", !0)])]),
+				default: W(() => [c("div", Au, [F.value && N.value ? (D(), s("div", ju, [P(e.$slots, "header", { expanded: z(u).expanded }, void 0, !0)])) : o("", !0), N.value ? (D(), s("div", Mu, [c("div", { class: y(["mat-navigation-rail__destinations", [`mat-navigation-rail__destinations--${z(u).alignment}`, { "mat-navigation-rail__destinations--show-custom-content": I.value }]]) }, [d(J)], 2)])) : o("", !0)])]),
 				_: 3
 			})]),
 			_: 3
@@ -13491,7 +13749,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			"style"
 		]));
 	}
-}), [["__scopeId", "data-v-bef8c7df"]]), Il = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-bef8c7df"]]), Pu = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationBar",
 	inheritAttrs: !1
 }, {
@@ -13531,7 +13789,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		height: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => e === void 0 || Ct(e, {
+			validator: (e) => e === void 0 || Sn(e, {
 				property: "block-size",
 				positive: !0
 			})
@@ -13586,11 +13844,11 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		"update:open": (e) => typeof e == "boolean"
 	},
 	setup(e, { expose: t, emit: n }) {
-		let r = $("navigationBar", e), o = n, s = h(Ne, Me), l = h(or, null), u = j(null), d = f()?.vnode.props ?? {}, p = i(() => Object.prototype.hasOwnProperty.call(d, "attach") && d.attach !== void 0), m = i(() => p.value ? r.attach : void 0), g = i(() => {
+		let r = $("navigationBar", e), o = n, s = h(kt, Ot), l = h(ii, null), u = j(null), d = f()?.vnode.props ?? {}, p = i(() => Object.prototype.hasOwnProperty.call(d, "attach") && d.attach !== void 0), m = i(() => p.value ? r.attach : void 0), g = i(() => {
 			if (r.mode !== void 0) return r.mode;
 			if (!r.app) return l ? "docked" : "flow";
 		}), v = i(() => r.height === void 0 ? 64 : r.height);
-		return O(Sl, {
+		return O(bu, {
 			expanded: i(() => !1),
 			fullWidth: i(() => !1),
 			orientation: i(() => "horizontal"),
@@ -13602,7 +13860,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		}), t({
 			asideRef: u,
 			hostElement: i(() => u.value?.hostElement)
-		}), (e, t) => (D(), a(kr, _({
+		}), (e, t) => (D(), a(Di, _({
 			ref_key: "asideRef",
 			ref: u,
 			as: "nav",
@@ -13636,7 +13894,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			"z-index"
 		]));
 	}
-}), [["__scopeId", "data-v-a6a8d1ff"]]), Ll = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-a6a8d1ff"]]), Fu = /*@__PURE__*/ Object.assign({
 	name: "MatNavigationBarItem",
 	inheritAttrs: !1
 }, {
@@ -13670,7 +13928,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 	emits: { click: (e) => e instanceof MouseEvent },
 	setup(e, { emit: t }) {
 		let n = $("navigationBarItem", e), r = t;
-		return (e, t) => (D(), a(Al, _({
+		return (e, t) => (D(), a(Ou, _({
 			...e.$attrs,
 			...z(n)
 		}, {
@@ -13681,7 +13939,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			fn: W((t) => [P(e.$slots, n, b(p(t)))])
 		}))]), 1040));
 	}
-}), Rl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), Iu = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationDrawer",
 	inheritAttrs: !1
 }, {
@@ -13702,7 +13960,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		width: {
 			type: [Number, String],
 			default: void 0,
-			validator: (e) => Ct(e, { property: "inline-size" })
+			validator: (e) => Sn(e, { property: "inline-size" })
 		},
 		layout: {
 			type: String,
@@ -13773,7 +14031,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 	},
 	setup(e, { emit: t }) {
 		let n = $("navigationDrawer", e), r = t;
-		return (e, t) => (D(), a(Fl, _(e.$attrs, {
+		return (e, t) => (D(), a(Nu, _(e.$attrs, {
 			class: "mat-navigation-drawer",
 			"model-value": z(n).modelValue,
 			expanded: z(n).expanded,
@@ -13810,7 +14068,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			"mode"
 		]));
 	}
-}), [["__scopeId", "data-v-beef4203"]]), zl = ["aria-hidden"], Bl = { class: "mat-navigation-group__items" }, Vl = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-beef4203"]]), Lu = ["aria-hidden"], Ru = { class: "mat-navigation-group__items" }, zu = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationGroup",
 	inheritAttrs: !1
 }, {
@@ -13849,7 +14107,7 @@ var al = { class: "mat-snackbar__text" }, ol = {
 			let e = !o.value;
 			a.value = e, r("update:expanded", e), r("update:modelValue", e);
 		}
-		let u = i(() => ({ "--mat-navigation-group-indent": Tt(n.indent, {
+		let u = i(() => ({ "--mat-navigation-group-indent": wn(n.indent, {
 			property: "inline-size",
 			fallback: "16px"
 		}) }));
@@ -13862,10 +14120,10 @@ var al = { class: "mat-snackbar__text" }, ol = {
 		}, void 0, !0), c("div", {
 			class: "mat-navigation-group__content",
 			"aria-hidden": o.value ? void 0 : "true"
-		}, [c("div", Bl, [P(e.$slots, "default", {}, void 0, !0)])], 8, zl)], 16));
+		}, [c("div", Ru, [P(e.$slots, "default", {}, void 0, !0)])], 8, Lu)], 16));
 	}
-}), [["__scopeId", "data-v-260c72e4"]]), Hl = /* @__PURE__ */ new WeakMap();
-function Ul(e) {
+}), [["__scopeId", "data-v-260c72e4"]]), Bu = /* @__PURE__ */ new WeakMap();
+function Vu(e) {
 	return typeof e == "function" ? {
 		handler: e,
 		options: {}
@@ -13874,15 +14132,15 @@ function Ul(e) {
 		options: e.options ?? {}
 	} : { options: {} };
 }
-function Wl(e, t) {
+function Hu(e, t) {
 	if (typeof IntersectionObserver > "u") return;
-	let { handler: n, options: r } = Ul(t.value), i = new IntersectionObserver((t, r) => {
-		let i = Hl.get(e);
+	let { handler: n, options: r } = Vu(t.value), i = new IntersectionObserver((t, r) => {
+		let i = Bu.get(e);
 		if (!i || i.observer !== r) return;
 		let a = t.some((e) => e.isIntersecting), o = !i.initialized;
-		i.initialized = !0, n && !(i.quiet && o) && n(a, t, r), i.once && a && (r.unobserve(e), Hl.delete(e));
+		i.initialized = !0, n && !(i.quiet && o) && n(a, t, r), i.once && a && (r.unobserve(e), Bu.delete(e));
 	}, r);
-	Hl.set(e, {
+	Bu.set(e, {
 		handler: n,
 		observer: i,
 		once: !!t.modifiers?.once,
@@ -13890,72 +14148,72 @@ function Wl(e, t) {
 		initialized: !1
 	}), i.observe(e);
 }
-function Gl(e) {
-	let t = Hl.get(e);
-	t && (t.observer.unobserve(e), Hl.delete(e));
+function Uu(e) {
+	let t = Bu.get(e);
+	t && (t.observer.unobserve(e), Bu.delete(e));
 }
-var Kl = {
-	mounted: Wl,
+var Wu = {
+	mounted: Hu,
 	updated(e, t) {
-		Hl.has(e) && (Gl(e), Wl(e, t));
+		Bu.has(e) && (Uu(e), Hu(e, t));
 	},
-	unmounted: Gl
-}, ql = Object.freeze({
+	unmounted: Uu
+}, Gu = Object.freeze({
 	MatDynamicText: Object.freeze(["MdeDynamicText", "mde-dynamic-text"]),
 	MatSharedElement: Object.freeze(["MdeSharedElement", "mde-shared-element"]),
 	MatVirtualScroll: Object.freeze(["MdeVirtualScroll", "mde-virtual-scroll"])
-}), Jl = Me, Yl = null;
-function Xl(e, t) {
-	Jl = e, Yl = t;
+}), Ku = Ot, qu = null;
+function Ju(e, t) {
+	Ku = e, qu = t;
 }
-function Zl() {
-	return Jl;
+function Yu() {
+	return Ku;
 }
-function Ql() {
-	return Yl;
+function Xu() {
+	return qu;
 }
 //#endregion
 //#region src/theme.js
-var $l = "#20a6fc", eu = "(prefers-color-scheme: dark)";
-function tu(e) {
+var Zu = "#20a6fc", Qu = "(prefers-color-scheme: dark)";
+function $u(e) {
 	if (![
 		"light",
 		"dark",
 		"system"
 	].includes(e)) throw TypeError("theme.mode 必须是 light、dark 或 system");
 }
-function nu(e) {
-	if (!Qe.includes(e)) throw TypeError(`不支持主题配色变体：${String(e)}`);
+function ed(e) {
+	if (!Xt.includes(e)) throw TypeError(`不支持主题配色变体：${String(e)}`);
 }
-function ru(e) {
+function td(e) {
 	if (typeof e != "number" || !Number.isFinite(e) || e < -1 || e > 1) throw RangeError("theme.contrastLevel 必须是 -1 到 1 之间的有限数字");
 }
-function iu(e) {
+function nd(e) {
 	if (!e || typeof e != "object" || typeof e.style?.setProperty != "function") throw TypeError("theme.target 必须是可设置 CSS 自定义属性的 HTML 元素");
 }
-function au(e) {
+function rd(e) {
 	if (typeof e != "string" || !/^#(?:[\da-f]{3}|[\da-f]{6})$/i.test(e)) throw TypeError("theme.seedColor 必须是 #RGB 或 #RRGGBB 格式的十六进制颜色");
 }
-function ou(e = {}) {
+function id(e = {}) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("theme 选项必须是对象");
-	let t = e.mode ?? "system", n = e.seedColor ?? $l, r = e.schemeVariant ?? "tonal-spot", i = e.contrastLevel ?? 0, a = e.target ?? document.documentElement;
-	tu(t), au(n), nu(r), ru(i), iu(a);
-	let o = j(t), s = j(it(n)), c = j(r), l = j(i), u = j("light"), d = null, f = !1, p = !1;
+	let t = e.mode ?? "system", n = e.seedColor ?? Zu, r = e.schemeVariant ?? "tonal-spot", i = e.contrastLevel ?? 0, a = e.target ?? document.documentElement;
+	$u(t), rd(n), ed(r), td(i), nd(a);
+	let o = j(t), s = j(nn(n)), c = j(r), l = j(i), u = j("light"), d = null, f = !1, p = !1;
 	function m() {
-		return !d && typeof window.matchMedia == "function" && (d = window.matchMedia(eu)), d;
+		return !d && typeof window.matchMedia == "function" && (d = window.matchMedia(Qu)), d;
 	}
 	function h() {
 		return o.value === "system" ? m()?.matches ? "dark" : "light" : o.value;
 	}
 	function g() {
 		u.value = h();
-		let e = at({
+		let e = rn({
 			seedColor: s.value,
 			isDark: u.value === "dark",
 			schemeVariant: c.value,
 			contrastLevel: l.value
 		});
-		Object.entries($e).forEach(([t, n]) => {
+		Object.entries(Zt).forEach(([t, n]) => {
 			a.style.setProperty(`--mat-sys-color-${n}`, Z(e[t]));
 		}), a.setAttribute?.("data-mat-theme", u.value), a.style.colorScheme = u.value;
 	}
@@ -13971,19 +14229,19 @@ function ou(e = {}) {
 		e && (e.addEventListener("change", _), f = !0);
 	}
 	function b(e) {
-		tu(e), o.value = e, y(), g();
+		$u(e), o.value = e, y(), g();
 	}
 	function x(e) {
-		au(e), s.value = it(e), g();
+		rd(e), s.value = nn(e), g();
 	}
 	function S(e) {
-		nu(e), c.value = e, g();
+		ed(e), c.value = e, g();
 	}
 	function C(e) {
-		ru(e), l.value = e, g();
+		td(e), l.value = e, g();
 	}
 	function w() {
-		p = !0, v(), Object.values($e).forEach((e) => {
+		p = !0, v(), Object.values(Zt).forEach((e) => {
 			a.style.removeProperty(`--mat-sys-color-${e}`);
 		}), a.removeAttribute?.("data-mat-theme"), a.style.removeProperty("color-scheme");
 	}
@@ -14003,454 +14261,455 @@ function ou(e = {}) {
 }
 //#endregion
 //#region src/plugin.js
-var su = [
+var ad = [
 	[
 		"MatAppRoot",
 		"mat-app-root",
-		ar
+		ri
 	],
 	[
 		"MatAppBar",
 		"mat-app-bar",
-		Vr
+		zi
 	],
 	[
 		"MatSearch",
 		"mat-search",
-		Gr
+		Ui
 	],
 	[
 		"MatBtn",
 		"mat-btn",
-		Yn
+		qr
 	],
 	[
 		"MatBtnGroup",
 		"mat-btn-group",
-		qr
+		Gi
 	],
 	[
 		"MatFab",
 		"mat-fab",
-		ei
+		Qi
 	],
 	[
 		"MatFabMenu",
 		"mat-fab-menu",
-		ai
+		ra
 	],
 	[
 		"MatIcon",
 		"mat-icon",
-		ht
+		mn
 	],
 	[
 		"MatImage",
 		"mat-image",
-		si
+		aa
 	],
 	[
 		"MatSharedElement",
 		"mat-shared-element",
-		fi
+		ua
 	],
 	[
 		"MatAvatar",
 		"mat-avatar",
-		hi
+		pa
 	],
 	[
 		"MatShape",
 		"mat-shape",
-		Ft
+		Pn
 	],
 	[
 		"MatText",
 		"mat-text",
-		gi
+		ma
 	],
 	[
 		"MatDynamicText",
 		"mat-dynamic-text",
-		Si
+		ba
 	],
 	[
 		"MatSplitBtn",
 		"mat-split-btn",
-		wi
+		Sa
 	],
 	[
 		"MatCard",
 		"mat-card",
-		Mi
+		Aa
 	],
 	[
 		"MatCardActionArea",
 		"mat-card-action-area",
-		Pi
+		Ma
 	],
 	[
 		"MatCardContent",
 		"mat-card-content",
-		Ii
+		Pa
 	],
 	[
 		"MatCardActions",
 		"mat-card-actions",
-		Ri
+		Ia
 	],
 	[
 		"MatCardHeadline",
 		"mat-card-headline",
-		Di
+		Ta
 	],
 	[
 		"MatCardSubhead",
 		"mat-card-subhead",
-		ji
+		ka
 	],
 	[
 		"MatCardMedia",
 		"mat-card-media",
-		ki
+		Da
 	],
 	[
 		"MatExpansion",
 		"mat-expansion",
-		ma
+		po
 	],
 	[
 		"MatExpansionPanel",
 		"mat-expansion-panel",
-		ja
+		Ao
 	],
 	[
 		"MatList",
 		"mat-list",
-		fa
+		uo
 	],
 	[
 		"MatListGroup",
 		"mat-list-group",
-		Oa
+		Do
 	],
 	[
 		"MatListItem",
 		"mat-list-item",
-		Ta
+		wo
 	],
 	[
 		"MatDivider",
 		"mat-divider",
-		Ra
+		Lo
 	],
 	[
 		"MatCheckbox",
 		"mat-checkbox",
-		Wa
+		Uo
 	],
 	[
 		"MatBadge",
 		"mat-badge",
-		Ya
+		Jo
 	],
 	[
 		"MatChip",
 		"mat-chip",
-		eo
+		$o
 	],
 	[
 		"MatChipSet",
 		"mat-chip-set",
-		ro
+		ns
 	],
 	[
 		"MatRadio",
 		"mat-radio",
-		ao
+		is
 	],
 	[
 		"MatRadioGroup",
 		"mat-radio-group",
-		co
+		ss
 	],
 	[
 		"MatSwitch",
 		"mat-switch",
-		lo
+		cs
 	],
 	[
 		"MatSlider",
 		"mat-slider",
-		zo
+		Ls
 	],
 	[
 		"MatRangeSlider",
 		"mat-range-slider",
-		Uo
+		Vs
 	],
 	[
 		"MatTextField",
 		"mat-text-field",
-		ss
+		ac
 	],
 	[
 		"MatSelect",
 		"mat-select",
-		xs
+		yc
 	],
 	[
 		"MatTextarea",
 		"mat-textarea",
-		Ss
+		bc
 	],
 	[
 		"MatInputBase",
 		"mat-input-base",
-		Hr
+		Bi
 	],
 	[
 		"MatMenu",
 		"mat-menu",
-		ls
+		sc
 	],
 	[
 		"MatMenuGroup",
 		"mat-menu-group",
-		ps
+		dc
 	],
 	[
 		"MatMenuItem",
 		"mat-menu-item",
-		ds
+		lc
 	],
 	[
 		"MatDockedContainer",
 		"mat-docked-container",
-		ks
+		Dc
 	],
 	[
 		"MatDialog",
 		"mat-dialog",
-		Ls
+		Fc
 	],
 	[
 		"MatBottomSheet",
 		"mat-bottom-sheet",
-		Qs
+		Xc
 	],
 	[
 		"MatSideSheet",
 		"mat-side-sheet",
-		$s
+		Zc
 	],
 	[
 		"MatHover",
 		"mat-hover",
-		Gt
+		Wn
 	],
 	[
 		"MatContainer",
 		"mat-container",
-		tc
+		$c
 	],
 	[
 		"MatLayout",
 		"mat-layout",
-		nc
+		el
 	],
 	[
 		"MatAside",
 		"mat-aside",
-		kr
+		Di
 	],
 	[
 		"MatSpacer",
 		"mat-spacer",
-		As
+		Oc
 	],
 	[
 		"MatTableWrapper",
 		"mat-table-wrapper",
-		rc
+		tl
 	],
 	[
 		"MatScrollArea",
 		"mat-scroll-area",
-		to
+		es
 	],
 	[
 		"MatVirtualScroll",
 		"mat-virtual-scroll",
-		ic
+		nl
 	],
 	[
 		"MatLoading",
 		"mat-loading",
-		Wt
+		Un
 	],
 	[
 		"MatPullToRefresh",
 		"mat-pull-to-refresh",
-		pc
+		dl
 	],
 	[
 		"MatProgress",
 		"mat-progress",
-		Zc
+		Yl
 	],
 	[
 		"MatTooltip",
 		"mat-tooltip",
-		Ln
+		Fr
 	],
 	[
 		"MatSnackbar",
 		"mat-snackbar",
-		ll
+		su
 	],
 	[
 		"MatToolbar",
 		"mat-toolbar",
-		ml
+		fu
 	],
 	[
 		"MatPanes",
 		"mat-panes",
-		_l
+		hu
 	],
 	[
 		"MatPane",
 		"mat-pane",
-		xl
+		yu
 	],
 	[
 		"MatNavigationRail",
 		"mat-navigation-rail",
-		Fl
+		Nu
 	],
 	[
 		"MatNavigationRailItem",
 		"mat-navigation-rail-item",
-		jl
+		ku
 	],
 	[
 		"MatNavigationBar",
 		"mat-navigation-bar",
-		Il
+		Pu
 	],
 	[
 		"MatNavigationBarItem",
 		"mat-navigation-bar-item",
-		Ll
+		Fu
 	],
 	[
 		"MatNavigationItem",
 		"mat-navigation-item",
-		Al
+		Ou
 	],
 	[
 		"MatNavigationDrawer",
 		"mat-navigation-drawer",
-		Rl
+		Iu
 	],
 	[
 		"MatNavigationGroup",
 		"mat-navigation-group",
-		Vl
+		zu
 	]
-], cu = new Map(su.map(([e, , t]) => [Pe(e), t]));
-function lu(e, t) {
+], od = new Map(ad.map(([e, , t]) => [At(e), t]));
+function sd(e, t) {
 	let n = e[t];
 	if (n !== void 0 && typeof n != "boolean") throw TypeError(`createMatUi ${t} 必须是 boolean`);
 	return n ?? !1;
 }
-function uu(e) {
+function cd(e) {
 	let t = e.iconClass;
 	if (t !== void 0 && typeof t != "string") throw TypeError("createMatUi iconClass 必须是 string");
-	return t ?? Me.iconClass;
+	return t ?? Ot.iconClass;
 }
-function du(e, t) {
+function ld(e, t) {
 	let n = e[t];
-	if (n === void 0) return je[t];
+	if (n === void 0) return Dt[t];
 	if (typeof n != "number") throw TypeError(`createMatUi tooltip.${t} 必须是 number`);
 	if (!Number.isFinite(n) || n < 0) throw RangeError(`createMatUi tooltip.${t} 必须是非负有限数字`);
 	return n;
 }
-function fu(e) {
-	if (e === void 0) return je;
+function ud(e) {
+	if (e === void 0) return Dt;
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("createMatUi defaults.tooltip 必须是对象");
 	return Object.freeze({
-		openDelay: du(e, "openDelay"),
-		closeDelay: du(e, "closeDelay")
+		openDelay: ld(e, "openDelay"),
+		closeDelay: ld(e, "closeDelay")
 	});
 }
-function pu(e) {
+function dd(e) {
 	let t = Object.keys(e.props ?? {}), n = new Set(Object.keys(e.emits ?? {}).filter((e) => e.startsWith("update:")).map((e) => e.slice(7)));
 	return new Set(t.filter((e) => !n.has(e)));
 }
-function mu(e) {
+function fd(e) {
 	let t = e.defaults;
-	if (t === void 0) return Object.freeze({ tooltip: je });
+	if (t === void 0) return Object.freeze({ tooltip: Dt });
 	if (!t || typeof t != "object" || Array.isArray(t)) throw TypeError("createMatUi defaults 必须是对象");
-	let n = { tooltip: fu(t.tooltip) };
+	let n = { tooltip: ud(t.tooltip) };
 	return Object.entries(t).forEach(([e, t]) => {
 		if (e === "tooltip") return;
-		let r = cu.get(e);
+		let r = od.get(e);
 		if (!r) throw TypeError(`createMatUi defaults 未知组件键 ${e}`);
 		if (!t || typeof t != "object" || Array.isArray(t)) throw TypeError(`createMatUi defaults.${e} 必须是对象`);
-		let i = pu(r), a = {};
+		let i = dd(r), a = {};
 		Object.entries(t).forEach(([t, n]) => {
 			if (!i.has(t)) throw TypeError(`createMatUi defaults.${e}.${t} 不是可配置属性`);
 			a[t] = n;
 		}), n[e] = Object.freeze(a);
 	}), Object.freeze(n);
 }
-function hu(e = {}) {
+function pd(e = {}) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("createMatUi 选项必须是对象");
 	let t = Object.freeze({
-		iconClass: uu(e),
-		useCursor: lu(e, "useCursor"),
-		defaults: mu(e)
-	}), n = ou(e.theme);
+		iconClass: cd(e),
+		useCursor: sd(e, "useCursor"),
+		useRipple: sd(e, "useRipple"),
+		defaults: fd(e)
+	}), n = id(e.theme);
 	return {
 		theme: n,
 		install(e) {
-			su.forEach(([t, n, r]) => {
-				e.component(t, r), e.component(n, r), (ql[t] ?? []).forEach((t) => {
+			ad.forEach(([t, n, r]) => {
+				e.component(t, r), e.component(n, r), (Gu[t] ?? []).forEach((t) => {
 					e.component(t, r);
 				});
-			}), e.directive("intersection", Kl), e.directive("state-layer", Oe), e.provide(Ne, t), e.provide(ct, n), Xl(t, n);
+			}), e.directive("intersection", Wu), e.directive("state-layer", Et), e.directive("ripple", lt), e.provide(kt, t), e.provide(sn, n), Ju(t, n);
 		}
 	};
 }
-function gu() {
-	let e = h(ct, null);
+function md() {
+	let e = h(sn, null);
 	if (!e) throw Error("useMatTheme() 必须在已安装 mde-vue 插件的 Vue 应用中调用");
 	return e;
 }
 //#endregion
 //#region src/view-transition.js
-function _u() {
+function hd() {
 	return typeof globalThis.matchMedia == "function" && globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
-function vu() {
+function gd() {
 	return typeof document > "u" || typeof document.startViewTransition != "function" ? null : document.startViewTransition.bind(document);
 }
-function yu(e) {
+function _d(e) {
 	if (e === void 0) return [];
 	let t = Array.isArray(e) ? e : [e];
 	if (t.some((e) => typeof e != "string" || e.trim().length === 0)) throw TypeError("useMatViewTransition.start names 必须是非空字符串或非空字符串数组");
 	return [...new Set(t)];
 }
-function bu() {
+function vd() {
 	let e = null, t = null;
 	async function n(n, r = {}) {
 		if (typeof n != "function") throw TypeError("useMatViewTransition.start update 必须是函数");
-		let i = yu(r.names);
+		let i = _d(r.names);
 		t && await t, e &&= (e.skipTransition?.(), await e.finished.catch(() => {}), null);
-		let a = vu();
-		if (r.skip || !a || _u()) {
+		let a = gd();
+		if (r.skip || !a || hd()) {
 			await n();
 			return;
 		}
@@ -14458,24 +14717,24 @@ function bu() {
 			o = e;
 		});
 		t = s;
-		let c = ui(i), l;
+		let c = ca(i), l;
 		try {
 			await v(), l = a(() => n()), e = l, o(), t === s && (t = null), await l.finished;
 		} finally {
-			o(), t === s && (t = null), e === l && (e = null), di(c), await v();
+			o(), t === s && (t = null), e === l && (e = null), la(c), await v();
 		}
 	}
 	return Object.freeze({
 		get supported() {
-			return !!vu();
+			return !!gd();
 		},
 		start: n
 	});
 }
-var xu = bu, Su = {
+var yd = vd, bd = {
 	key: 0,
 	class: "mat-dialog-prompt__content"
-}, Cu = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatImperativeDialogHost" }, {
+}, xd = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatImperativeDialogHost" }, {
 	__name: "ImperativeDialogHost",
 	props: {
 		options: {
@@ -14501,9 +14760,9 @@ var xu = bu, Su = {
 	},
 	setup(e) {
 		let n = e;
-		O(Ne, Zl());
-		let r = Ql();
-		r && O(ct, r);
+		O(kt, Yu());
+		let r = Xu();
+		r && O(sn, r);
 		let c = j(!0), l = L(n.cancelValue), f = j(n.options.promptConfig?.defaultValue ?? ""), p = i(() => !!n.options.promptConfig), m = i(() => n.options.promptConfig?.required ?? !1), h = i(() => m.value && f.value.trim().length === 0), g = i(() => {
 			let e = { ...n.options };
 			return delete e.actions, delete e.ariaLabel, delete e.promptConfig, n.options.promptConfig && delete e.content, e;
@@ -14514,14 +14773,14 @@ var xu = bu, Su = {
 		function y() {
 			n.onClosed(l.value);
 		}
-		return (n, r) => (D(), a(Ls, _({
+		return (n, r) => (D(), a(Fc, _({
 			modelValue: c.value,
 			"onUpdate:modelValue": r[1] ||= (e) => c.value = e
 		}, g.value, {
 			"aria-label": e.options.ariaLabel,
 			onClosed: y
 		}), {
-			actions: W(() => [d(As), (D(!0), s(t, null, N(e.options.actions, (t, n) => (D(), a(Yn, {
+			actions: W(() => [d(Oc), (D(!0), s(t, null, N(e.options.actions, (t, n) => (D(), a(qr, {
 				key: n,
 				color: t.color,
 				disabled: t.disabled || p.value && n === e.options.actions.length - 1 && h.value,
@@ -14536,7 +14795,7 @@ var xu = bu, Su = {
 				"variant",
 				"onClick"
 			]))), 128))]),
-			default: W(() => [p.value ? (D(), s(t, { key: 0 }, [e.options.content ? (D(), s("p", Su, R(e.options.content), 1)) : o("", !0), d(ss, {
+			default: W(() => [p.value ? (D(), s(t, { key: 0 }, [e.options.content ? (D(), s("p", bd, R(e.options.content), 1)) : o("", !0), d(ac, {
 				modelValue: f.value,
 				"onUpdate:modelValue": r[0] ||= (e) => f.value = e,
 				autofocus: "",
@@ -14552,34 +14811,34 @@ var xu = bu, Su = {
 			_: 1
 		}, 16, ["modelValue", "aria-label"]));
 	}
-}), [["__scopeId", "data-v-ba439738"]]), wu = [
+}), [["__scopeId", "data-v-ba439738"]]), Sd = [
 	"elevated",
 	"filled",
 	"filled-tonal",
 	"outlined",
 	"standard",
 	"text"
-], Tu = [
+], Cd = [
 	"fullScreen",
 	"scrim",
 	"closeOnBack"
-], Eu = [
+], wd = [
 	"title",
 	"content",
 	"icon",
 	"closeLabel",
 	"ariaLabel"
 ];
-function Du(e) {
+function Td(e) {
 	return typeof e == "number" ? Number.isFinite(e) && e > 0 : typeof e == "string" && e.trim().length > 0;
 }
-function Ou() {
+function Ed() {
 	if (typeof window > "u" || typeof document > "u") throw Error("Dialog 命令式函数只能在客户端环境中调用");
 }
-function ku(e) {
+function Dd(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("dialog options 必须是对象");
 }
-function Au(e) {
+function Od(e) {
 	let t = e ?? "body", n = null;
 	if (typeof t == "string") try {
 		n = document.querySelector(t);
@@ -14591,11 +14850,11 @@ function Au(e) {
 	if (!n) throw TypeError("dialog attach 未找到目标元素");
 	return n;
 }
-function ju(e) {
+function kd(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("dialog action 必须是对象");
 	if (typeof e.text != "string" || e.text.trim().length === 0) throw TypeError("dialog action text 必须是非空字符串");
-	if (e.variant !== void 0 && !wu.includes(e.variant)) throw TypeError("dialog action variant 无效");
-	if (e.color !== void 0 && !Ue(e.color)) throw TypeError("dialog action color 无效");
+	if (e.variant !== void 0 && !Sd.includes(e.variant)) throw TypeError("dialog action variant 无效");
+	if (e.color !== void 0 && !Vt(e.color)) throw TypeError("dialog action color 无效");
 	if (e.disabled !== void 0 && typeof e.disabled != "boolean") throw TypeError("dialog action disabled 必须是 boolean");
 	return {
 		...e,
@@ -14604,40 +14863,40 @@ function ju(e) {
 		variant: e.variant ?? "text"
 	};
 }
-function Mu(e) {
-	if (ku(e), Tu.forEach((t) => {
+function Ad(e) {
+	if (Dd(e), Cd.forEach((t) => {
 		if (e[t] !== void 0 && typeof e[t] != "boolean") throw TypeError(`dialog ${t} 必须是 boolean`);
-	}), Eu.forEach((t) => {
+	}), wd.forEach((t) => {
 		if (e[t] !== void 0 && typeof e[t] != "string") throw TypeError(`dialog ${t} 必须是 string`);
 	}), e.closeLabel !== void 0 && e.closeLabel.trim().length === 0) throw TypeError("dialog closeLabel 必须是非空字符串");
-	if (e.color !== void 0 && !Ue(e.color)) throw TypeError("dialog color 无效");
-	if (e.width !== void 0 && !Du(e.width)) throw TypeError("dialog width 无效");
+	if (e.color !== void 0 && !Vt(e.color)) throw TypeError("dialog color 无效");
+	if (e.width !== void 0 && !Td(e.width)) throw TypeError("dialog width 无效");
 	if (e.actions !== void 0 && !Array.isArray(e.actions)) throw TypeError("dialog actions 必须是数组");
 	let t = {
 		actions: (e.actions ?? [{
 			text: "确定",
 			value: void 0
-		}]).map(ju),
-		attach: Au(e.attach)
+		}]).map(kd),
+		attach: Od(e.attach)
 	};
 	return [
-		...Tu,
-		...Eu,
+		...Cd,
+		...wd,
 		"color",
 		"width"
 	].forEach((n) => {
 		e[n] !== void 0 && (t[n] = e[n]);
 	}), e.promptConfig && (t.promptConfig = e.promptConfig), t;
 }
-function Nu(e, t) {
+function jd(e, t) {
 	try {
-		Ou();
-		let n = Mu(e);
+		Ed();
+		let n = Ad(e);
 		return new Promise((e, r) => {
 			let i = document.createElement("div");
 			i.dataset.matDialogHost = "", document.body.append(i);
 			try {
-				M(m(Cu, {
+				M(m(xd, {
 					cancelValue: t,
 					options: n,
 					onClosed(t) {
@@ -14652,13 +14911,13 @@ function Nu(e, t) {
 		return Promise.reject(e);
 	}
 }
-function Pu(e = {}) {
-	return Nu(e, void 0);
+function Md(e = {}) {
+	return jd(e, void 0);
 }
-function Fu(e = {}) {
+function Nd(e = {}) {
 	try {
-		if (ku(e), e.confirmText !== void 0 && (typeof e.confirmText != "string" || e.confirmText.trim().length === 0)) throw TypeError("alert confirmText 必须是非空字符串");
-		return Nu({
+		if (Dd(e), e.confirmText !== void 0 && (typeof e.confirmText != "string" || e.confirmText.trim().length === 0)) throw TypeError("alert confirmText 必须是非空字符串");
+		return jd({
 			...e,
 			actions: [{
 				text: e.confirmText ?? "确定",
@@ -14669,13 +14928,13 @@ function Fu(e = {}) {
 		return Promise.reject(e);
 	}
 }
-function Iu(e = {}) {
+function Pd(e = {}) {
 	try {
-		ku(e);
+		Dd(e);
 		let t = e.confirmText ?? "确定", n = e.cancelText ?? "取消";
 		if (typeof t != "string" || t.trim().length === 0) throw TypeError("confirm confirmText 必须是非空字符串");
 		if (typeof n != "string" || n.trim().length === 0) throw TypeError("confirm cancelText 必须是非空字符串");
-		return Nu({
+		return jd({
 			...e,
 			actions: [{
 				text: n,
@@ -14689,9 +14948,9 @@ function Iu(e = {}) {
 		return Promise.reject(e);
 	}
 }
-function Lu(e = {}) {
+function Fd(e = {}) {
 	try {
-		ku(e);
+		Dd(e);
 		let t = e.confirmText ?? "确定", n = e.cancelText ?? "取消", r = e.defaultValue ?? "", i = e.required ?? !1;
 		if ([
 			[
@@ -14722,7 +14981,7 @@ function Lu(e = {}) {
 		].forEach(([e, t, n]) => {
 			if (t !== void 0 && (typeof t != "string" || n && t.trim().length === 0)) throw TypeError(`prompt ${e} 必须是${n ? "非空" : ""}字符串`);
 		}), typeof i != "boolean") throw TypeError("prompt required 必须是 boolean");
-		return Nu({
+		return jd({
 			...e,
 			actions: [{
 				text: n,
@@ -14744,7 +15003,7 @@ function Lu(e = {}) {
 }
 //#endregion
 //#region src/components/mat-snackbar/ImperativeSnackbarHost.vue
-var Ru = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
+var Id = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
 	__name: "ImperativeSnackbarHost",
 	props: {
 		options: {
@@ -14758,9 +15017,9 @@ var Ru = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
 	},
 	setup(e) {
 		let t = e;
-		O(Ne, Zl()), O(Qc, !0);
-		let n = Ql();
-		n && O(ct, n);
+		O(kt, Yu()), O(Xl, !0);
+		let n = Xu();
+		n && O(sn, n);
 		let r = j(!0), o = i(() => {
 			let e = { ...t.options };
 			return delete e.onAction, e;
@@ -14771,7 +15030,7 @@ var Ru = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
 		function c() {
 			t.options.onAction?.();
 		}
-		return (e, t) => (D(), a(ll, _({
+		return (e, t) => (D(), a(su, _({
 			modelValue: r.value,
 			"onUpdate:modelValue": t[0] ||= (e) => r.value = e
 		}, o.value, {
@@ -14779,24 +15038,24 @@ var Ru = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
 			onClosed: s
 		}), null, 16, ["modelValue"]));
 	}
-}), zu = [
+}), Ld = [
 	"left",
 	"center",
 	"right"
-], Bu = null;
-function Vu() {
+], Rd = null;
+function zd() {
 	if (typeof document > "u" || !document.body) throw Error("Snackbar 命令式函数只能在客户端环境中调用");
 }
-function Hu(e) {
+function Bd(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("snackbar options 必须是对象");
 }
-function Uu(e) {
-	if (Hu(e), typeof e.text != "string" || e.text.trim().length === 0) throw TypeError("snackbar text 必须是非空字符串");
+function Vd(e) {
+	if (Bd(e), typeof e.text != "string" || e.text.trim().length === 0) throw TypeError("snackbar text 必须是非空字符串");
 	if (e.actionText !== void 0 && (typeof e.actionText != "string" || e.actionText.trim().length === 0)) throw TypeError("snackbar actionText 必须是非空字符串");
 	if (e.onAction !== void 0 && typeof e.onAction != "function") throw TypeError("snackbar onAction 必须是函数");
 	if (e.closable !== void 0 && typeof e.closable != "boolean") throw TypeError("snackbar closable 必须是 boolean");
 	if (e.closeLabel !== void 0 && (typeof e.closeLabel != "string" || e.closeLabel.trim().length === 0)) throw TypeError("snackbar closeLabel 必须是非空字符串");
-	if (e.position !== void 0 && !zu.includes(e.position)) throw TypeError("snackbar position 无效");
+	if (e.position !== void 0 && !Ld.includes(e.position)) throw TypeError("snackbar position 无效");
 	if (e.duration !== void 0 && (!Number.isFinite(e.duration) || e.duration < 0)) throw TypeError("snackbar duration 必须是大于等于 0 的有限数字");
 	return {
 		actionText: e.actionText,
@@ -14808,46 +15067,46 @@ function Uu(e) {
 		text: e.text
 	};
 }
-function Wu() {
-	return Bu?.isConnected ? Bu : (Bu = document.createElement("div"), Bu.dataset.matSnackbarHost = "", document.body.append(Bu), Bu);
+function Hd() {
+	return Rd?.isConnected ? Rd : (Rd = document.createElement("div"), Rd.dataset.matSnackbarHost = "", document.body.append(Rd), Rd);
 }
-function Gu() {
-	!Bu || Bu.childNodes.length > 0 || (Bu.remove(), Bu = null);
+function Ud() {
+	!Rd || Rd.childNodes.length > 0 || (Rd.remove(), Rd = null);
 }
-function Ku(e) {
+function Wd(e) {
 	try {
-		Vu();
-		let t = Uu(e);
+		zd();
+		let t = Vd(e);
 		return new Promise((e, n) => {
 			let r = !1, i;
 			function a() {
 				if (r) return;
 				r = !0;
-				let t = Bu;
-				t && M(null, t), e(), il(i), Gu();
+				let t = Rd;
+				t && M(null, t), e(), nu(i), Ud();
 			}
 			function o(e) {
 				if (r) return;
 				r = !0;
-				let t = Bu;
-				t && M(null, t), n(e), il(i), Gu();
+				let t = Rd;
+				t && M(null, t), n(e), nu(i), Ud();
 			}
 			i = { activate() {
 				try {
-					let e = Wu();
-					M(m(Ru, {
+					let e = Hd();
+					M(m(Id, {
 						onClosed: a,
 						options: t
 					}), e);
 				} catch (e) {
 					o(e);
 				}
-			} }, nl(i);
+			} }, eu(i);
 		});
 	} catch (e) {
 		return Promise.reject(e);
 	}
 }
-var qu = Ku;
+var Gd = Wd;
 //#endregion
-export { Kl as Intersection, Vr as MatAppBar, ar as MatAppRoot, kr as MatAside, hi as MatAvatar, Ya as MatBadge, Qs as MatBottomSheet, Yn as MatBtn, qr as MatBtnGroup, Mi as MatCard, Pi as MatCardActionArea, Ri as MatCardActions, Ii as MatCardContent, Di as MatCardHeadline, ki as MatCardMedia, ji as MatCardSubhead, Wa as MatCheckbox, eo as MatChip, ro as MatChipSet, tc as MatContainer, Ls as MatDialog, Ra as MatDivider, ks as MatDockedContainer, Si as MatDynamicText, ma as MatExpansion, ja as MatExpansionPanel, ei as MatFab, ai as MatFabMenu, Gt as MatHover, ht as MatIcon, si as MatImage, Hr as MatInputBase, nc as MatLayout, fa as MatList, Oa as MatListGroup, Ta as MatListItem, Wt as MatLoading, ls as MatMenu, ps as MatMenuGroup, ds as MatMenuItem, Il as MatNavigationBar, Ll as MatNavigationBarItem, Rl as MatNavigationDrawer, Vl as MatNavigationGroup, Al as MatNavigationItem, Fl as MatNavigationRail, jl as MatNavigationRailItem, xl as MatPane, _l as MatPanes, Zc as MatProgress, pc as MatPullToRefresh, ao as MatRadio, co as MatRadioGroup, Uo as MatRangeSlider, to as MatScrollArea, Gr as MatSearch, xs as MatSelect, Ft as MatShape, fi as MatSharedElement, fi as MdeSharedElement, $s as MatSideSheet, zo as MatSlider, ll as MatSnackbar, As as MatSpacer, wi as MatSplitBtn, lo as MatSwitch, rc as MatTableWrapper, gi as MatText, ss as MatTextField, Ss as MatTextarea, ml as MatToolbar, Ln as MatTooltip, ic as MatVirtualScroll, ic as MdeVirtualScroll, Oe as StateLayer, Fu as alert, Iu as confirm, hu as createMatUi, Pu as dialog, Lu as prompt, Ku as snackbar, qu as toast, sr as useLayout, en as useMatApp, $ as useMatProps, gu as useMatTheme, bu as useMatViewTransition, xu as useMdeViewTransition };
+export { Wu as Intersection, zi as MatAppBar, ri as MatAppRoot, Di as MatAside, pa as MatAvatar, Jo as MatBadge, Xc as MatBottomSheet, qr as MatBtn, Gi as MatBtnGroup, Aa as MatCard, Ma as MatCardActionArea, Ia as MatCardActions, Pa as MatCardContent, Ta as MatCardHeadline, Da as MatCardMedia, ka as MatCardSubhead, Uo as MatCheckbox, $o as MatChip, ns as MatChipSet, $c as MatContainer, Fc as MatDialog, Lo as MatDivider, Dc as MatDockedContainer, ba as MatDynamicText, po as MatExpansion, Ao as MatExpansionPanel, Qi as MatFab, ra as MatFabMenu, Wn as MatHover, mn as MatIcon, aa as MatImage, Bi as MatInputBase, el as MatLayout, uo as MatList, Do as MatListGroup, wo as MatListItem, Un as MatLoading, sc as MatMenu, dc as MatMenuGroup, lc as MatMenuItem, Pu as MatNavigationBar, Fu as MatNavigationBarItem, Iu as MatNavigationDrawer, zu as MatNavigationGroup, Ou as MatNavigationItem, Nu as MatNavigationRail, ku as MatNavigationRailItem, yu as MatPane, hu as MatPanes, Yl as MatProgress, dl as MatPullToRefresh, is as MatRadio, ss as MatRadioGroup, Vs as MatRangeSlider, es as MatScrollArea, Ui as MatSearch, yc as MatSelect, Pn as MatShape, ua as MatSharedElement, ua as MdeSharedElement, Zc as MatSideSheet, Ls as MatSlider, su as MatSnackbar, Oc as MatSpacer, Sa as MatSplitBtn, cs as MatSwitch, tl as MatTableWrapper, ma as MatText, ac as MatTextField, bc as MatTextarea, fu as MatToolbar, Fr as MatTooltip, nl as MatVirtualScroll, nl as MdeVirtualScroll, lt as Ripple, Et as StateLayer, Nd as alert, Pd as confirm, pd as createMatUi, Md as dialog, Fd as prompt, Wd as snackbar, Gd as toast, ai as useLayout, $n as useMatApp, $ as useMatProps, md as useMatTheme, vd as useMatViewTransition, yd as useMdeViewTransition };

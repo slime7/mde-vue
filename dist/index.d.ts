@@ -4652,6 +4652,7 @@ export interface MatUiOptions {
   iconClass?: string;
   defaults?: MatComponentDefaults;
   useCursor?: boolean;
+  useRipple?: boolean;
 }
 export type MatComponentDefaults = {
   tooltip?: { closeDelay?: number; openDelay?: number };
@@ -4730,6 +4731,11 @@ export interface StateLayerOptions {
   color?: string;
 }
 export declare const StateLayer: import('vue').ObjectDirective<HTMLElement, StateLayerOptions | undefined>;
+export interface RippleOptions {
+  color?: string;
+  variant?: 'circle' | 'dots' | 'glow' | 'rings' | 'burst';
+}
+export declare const Ripple: import('vue').ObjectDirective<HTMLElement, RippleOptions | undefined>;
 
 export type DialogActionVariant = 'elevated' | 'filled' | 'filled-tonal' | 'outlined' | 'standard' | 'text';
 export interface DialogAction<T = unknown> {

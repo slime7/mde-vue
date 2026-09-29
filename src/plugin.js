@@ -80,6 +80,7 @@ import MAT_UI_KEY, {
 import createThemeController from './theme';
 import MAT_THEME_KEY from './theme-context';
 import { Intersection } from './directives/intersection';
+import { Ripple } from './directives/ripple';
 import { StateLayer } from './directives/state-layer';
 
 export const GLOBAL_COMPONENTS = [
@@ -165,6 +166,7 @@ const COMPONENT_DEFAULTS_REGISTRY = new Map(
  * @property {import('./theme.js').MatThemeOptions} [theme]
  * @property {string} [iconClass='material-symbols-outlined']
  * @property {boolean} [useCursor=false]
+ * @property {boolean} [useRipple=false] 是否为操作类组件启用按压涟漪；涟漪绘制在状态层之上。
  * @property {object} [defaults] 按组件键设置的默认属性；键为组件名去掉 mat- 前缀后的 camelCase，
  *   值为该组件可配置的 prop 默认值。v-model 属性不可配置。
  */
@@ -177,7 +179,7 @@ const COMPONENT_DEFAULTS_REGISTRY = new Map(
 
 /**
  * @param {MatUiOptions} options
- * @param {'useCursor'} name
+ * @param {'useCursor' | 'useRipple'} name
  * @returns {boolean}
  */
 function readBooleanOption(options, name) {
@@ -329,6 +331,7 @@ export function createMatUi(options = {}) {
   const componentOptions = Object.freeze({
     iconClass: readIconClass(options),
     useCursor: readBooleanOption(options, 'useCursor'),
+    useRipple: readBooleanOption(options, 'useRipple'),
     defaults: readDefaults(options),
   });
   const theme = createThemeController(options.theme);
@@ -346,6 +349,7 @@ export function createMatUi(options = {}) {
       });
       app.directive('intersection', Intersection);
       app.directive('state-layer', StateLayer);
+      app.directive('ripple', Ripple);
       app.provide(MAT_UI_KEY, componentOptions);
       app.provide(MAT_THEME_KEY, theme);
       setImperativeContext(componentOptions, theme);

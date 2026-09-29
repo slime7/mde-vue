@@ -61,6 +61,7 @@ llms: false
 - Snackbar：`docs/site/components/snackbar.md`
 - Intersection：`docs/site/directives/intersection.md`
 - State layer：`docs/site/directives/state-layer.md`
+- Ripple：`docs/site/directives/ripple.md`
 - Spacer：`docs/site/components/spacer.md`
 - Table wrapper：`docs/site/components/table-wrapper.md`
 - Shape：`docs/site/components/shape.md`

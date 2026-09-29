@@ -36,7 +36,7 @@ const matUi = createMatUi({
 createApp(App).use(matUi).mount('#app');
 ```
 
-所有选项都可以省略。传给 `createMatUi()` 的值必须是对象，`useCursor` 必须是 `boolean`，`iconClass` 必须是 `string`，`defaults` 必须是对象且每个组件条目必须是对象，否则会抛出 `TypeError`。`defaults` 的组件键必须是现有公共组件，属性键必须是该组件可配置的 prop（v-model 属性除外），否则也会抛出 `TypeError`。Tooltip 延迟必须是非负有限数字，非法数值会抛出 `RangeError`。
+所有选项都可以省略。传给 `createMatUi()` 的值必须是对象，`useCursor` 和 `useRipple` 必须是 `boolean`，`iconClass` 必须是 `string`，`defaults` 必须是对象且每个组件条目必须是对象，否则会抛出 `TypeError`。`defaults` 的组件键必须是现有公共组件，属性键必须是该组件可配置的 prop（v-model 属性除外），否则也会抛出 `TypeError`。Tooltip 延迟必须是非负有限数字，非法数值会抛出 `RangeError`。
 
 ## 选项
 
@@ -44,6 +44,7 @@ createApp(App).use(matUi).mount('#app');
 | --- | --- | --- | --- |
 | `iconClass` | `string` | `'material-symbols-outlined'` | 应用于 `MatIcon` 和组件图标容器的空格分隔 class |
 | `useCursor` | `boolean` | `false` | 是否为可用交互组件显示 `cursor: pointer` |
+| `useRipple` | `boolean` | `false` | 是否为操作类组件启用按压涟漪，涟漪绘制在状态层之上 |
 | `defaults` | `object` | `{ tooltip: { openDelay: 0, closeDelay: 600 } }` | 按组件键设置的默认属性，值为项目内该组件的 prop 默认值 |
 | `theme` | `object` | 默认主题配置 | 动态主题的初始模式、种子色、配色变体、对比度和写入目标 |
 
@@ -98,6 +99,18 @@ createApp(App).use(createMatUi({
 ```
 
 该选项只控制 mde-vue 组件，不修改页面中的原生按钮或其他应用元素。
+
+## 按压涟漪
+
+默认不显示涟漪。传入 `useRipple: true` 后，`MatBtn`、`MatFab`、`MatChip`、`MatMenuItem`、操作模式列表项、`MatCardActionArea` 和导航项目等基于操作交互的组件在主指针按压时显示 Material 3 涟漪；涟漪绘制在组件内建状态层之上，并尊重减少动态效果偏好。
+
+```js
+createApp(App).use(createMatUi({
+  useRipple: true,
+}));
+```
+
+自定义元素上的涟漪由公共 `v-ripple` 指令提供，不受该选项影响；需要单独关闭某个组件实例的涟漪时，在该组件上设置 `v-ripple="{ disabled: true }"`。涟漪的行为与选项详见 [Ripple 涟漪指令](/directives/ripple)。
 
 ## Material Symbols
 

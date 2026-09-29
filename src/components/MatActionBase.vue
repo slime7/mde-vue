@@ -1,6 +1,8 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
+import vRipple from '../directives/ripple';
 import vStateLayer from '../directives/state-layer';
+import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../mat-ui-context';
 
 defineOptions({ name: 'MatActionBase', inheritAttrs: false });
 
@@ -15,6 +17,9 @@ const props = defineProps({
 const emit = defineEmits({
   click(payload) { return payload instanceof MouseEvent; },
 });
+const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
+// 全局关闭时通过 disabled 选项跳过涟漪，不在宿主内留下任何 DOM。
+const rippleBinding = computed(() => (matUi.useRipple ? undefined : { disabled: true }));
 const isLink = computed(() => props.href !== undefined);
 const component = computed(() => (isLink.value ? 'a' : props.as));
 const isButton = computed(() => component.value === 'button');
@@ -36,6 +41,7 @@ defineExpose({ root });
     :is="component"
     ref="root"
     v-state-layer="{ color: 'var(--mat-action-state-color, currentcolor)' }"
+    v-ripple="rippleBinding"
     v-bind="$attrs"
     class="mat-action-base"
     :class="{
