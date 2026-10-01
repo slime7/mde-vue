@@ -147,7 +147,7 @@ order: 117
 
 ### 模态浮层
 
-设置 `modal` 使 Aside 作为局部的模态浮层展现。开启时 Aside 不向 `mat-layout` 或 `mat-app-root` 申请正文内边距避让，而是浮动覆盖在正文之上，并在其后渲染半透明背景遮罩，点击遮罩或按下 Escape 键可请求关闭。此时 `placeholder` 才会在声明位置生效；普通边缘模式直接使用根布局 padding，不需要 placeholder。
+设置 `modal` 使 Aside 作为局部的模态浮层展现。开启时 Aside 不向 `mat-layout` 或 `mat-app-root` 申请正文内边距避让，而是浮动覆盖在正文之上，并在其后渲染半透明背景遮罩，默认点击遮罩或按下 Escape 键可请求关闭，两者都受 `closeOnBack` 控制，禁用后不再请求关闭。此时 `placeholder` 才会在声明位置生效；普通边缘模式直接使用根布局 padding，不需要 placeholder。
 
 :::: details 查看示例代码
 ::: code-group
@@ -190,7 +190,7 @@ order: 117
 | `zIndex` | `number \| string \| undefined` | `undefined` | 显式指定 CSS 层级；省略时根据 `location` 提供预设层级。 |
 | `attach` | `string \| HTMLElement` | `undefined` | `mode="fixed"` 时的挂载目标。未指定时保留在声明位置，显式传入后才 Teleport 到目标。 |
 | `transition` | `boolean` | `true` | 是否启用默认滑入滑出过渡动效。设为 `false` 时立即切换显隐。 |
-| `closeOnBack` | `boolean` | `true` | `modal=true` 时点击背景遮罩是否请求关闭。 |
+| `closeOnBack` | `boolean` | `true` | `modal=true` 时是否通过点击背景遮罩或按 Escape 请求关闭，禁用后两者都不请求关闭。 |
 
 组件没有公开方法。通过模板 ref 暴露 `hostElement`（根 DOM 元素）、`activeInsets`（当前生效的正交避让数据）和 `phase`（动效阶段）。未被消费的属性、`class`、`style` 作用于外层根元素。
 

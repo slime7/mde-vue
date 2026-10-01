@@ -253,7 +253,7 @@ const props = defineProps({
     default: undefined,
   },
   /**
-   * modal=true 时点击背景遮罩是否请求关闭。
+   * modal=true 时是否通过点击背景遮罩或按 Escape 请求关闭；禁用后两者都不请求关闭。
    *
    * @type {boolean}
    * @default true
@@ -644,10 +644,16 @@ function handleScrimClick() {
 }
 
 function handleGlobalKeyDown(event) {
-  if (isModal.value && isTop.value && event.key === 'Escape') {
-    event.preventDefault();
-    requestClose();
+  if (!isModal.value || !isTop.value || event.key !== 'Escape') {
+    return;
   }
+
+  if (!propsWithDefaults.closeOnBack) {
+    return;
+  }
+
+  event.preventDefault();
+  requestClose();
 }
 
 function syncMeasurement() {

@@ -203,7 +203,7 @@ Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦�
 | `width` | `number \| string` | 未设置 | 首选宽度；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS 宽度值，非法时使用默认宽度；最终仍受 640px 最大宽度限制 |
 | `attach` | `string \| HTMLElement` | `'body'` | modal 的 Teleport 目标；standard 忽略。位于 `MatAppRoot` 内且省略时自动进入该 AppRoot 的模态层，指向 AppRoot 根元素时同样按应用范围展示 |
 | `scrim` | `boolean` | `true` | modal 是否显示帷幕；false 时仍阻止背景指针交互 |
-| `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否允许点击 modal 帷幕关闭 |
+| `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否通过点击 modal 帷幕或按 Escape 关闭，禁用后两者都不请求关闭 |
 | `dragHandle` | `boolean` | `true` | 模板属性为 `drag-handle`；是否显示顶部拖动把手 |
 | `expanded` | `'min' \| 'normal' \| 'max' \| 'full' \| number \| string` | `'normal'` | min 固定 64px；normal 取内容完整高度并以可用高度一半封顶；max 按内容完整高度展开且不超过可用高度；full 使用当前最大展开高度；数字与纯数字字符串按 px 处理，其他字符串按合法 CSS `block-size` 处理；实际高度不会低于 64px，非法值回退 normal |
 | `virtualExpand` | `boolean` | `false` | 模板属性为 `virtual-expand`；min 与 normal 档按 min(内容高度, 可用高度) 布局面板，只露出 64px 或可用高度的一半，其余留在屏幕下方，内容区可滚动；内容区向下滚轮或向上滑动时请求 max |
@@ -228,7 +228,7 @@ Bottom sheet 的宽度不超过 640px。宽屏顶部安全间距至少为 56px�
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
-| `update:modelValue` | `boolean` | Escape、允许的帷幕点击，或向下拖动落在关闭分区、触控与手写笔快速甩动时请求关闭并发出 `false` |
+| `update:modelValue` | `boolean` | `closeOnBack` 允许的 Escape 与帷幕点击，或向下拖动落在关闭分区、触控与手写笔快速甩动时请求关闭并发出 `false` |
 | `update:expanded` | `'min' \| 'normal' \| 'max'` | 键盘操作、拖动或 `virtualExpand` 内容手势请求高度状态变化时发出；`full` 与自定义高度只能由绑定值设置，拖动不会发出 |
 | `opened` | 无 | 进入动画完成后触发 |
 | `closed` | 无 | 退出动画完成且 DOM 清理后触发 |

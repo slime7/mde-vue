@@ -132,7 +132,7 @@ order: 102
 | `width` | `number \| string` | `400` | 首选宽度；数字与纯数字字符串按 px 处理（数值大于 0 且不超过 400），其他字符串需为 trim 后合法的 CSS 宽度值，非法时使用默认宽度；最终不超过 400px |
 | `attach` | `string \| HTMLElement` | `'body'` | modal 的 Teleport 目标；standard 忽略。位于 `MatAppRoot` 内且省略时自动进入该 AppRoot 的模态层，指向 AppRoot 根元素时同样按应用范围展示 |
 | `scrim` | `boolean` | `true` | modal 是否显示帷幕；false 时仍阻止背景指针交互 |
-| `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否允许点击 modal 帷幕关闭 |
+| `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否通过点击 modal 帷幕或按 Escape 关闭，禁用后两者都不请求关闭 |
 | `draggable` | `boolean` | `true` | 是否允许触摸用户向依附边缘滑动关闭 |
 | `closable` | `boolean` | `true` | 是否在默认头部显示内置关闭按钮 |
 | `closeLabel` | `string` | `'关闭'` | 模板属性为 `close-label`；内置关闭按钮的非空可访问名称 |
@@ -148,7 +148,7 @@ Standard 必须放在横向 flex 父容器中才能与主内容并排；主内�
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
-| `update:modelValue` | `boolean` | Escape、允许的帷幕点击、关闭按钮或达到阈值的触摸滑动请求关闭时发出 `false` |
+| `update:modelValue` | `boolean` | `closeOnBack` 允许的 Escape 与帷幕点击、关闭按钮或达到阈值的触摸滑动请求关闭时发出 `false` |
 | `opened` | 无 | 进入动画完成后触发 |
 | `closed` | 无 | 退出动画完成且 DOM 清理后触发 |
 

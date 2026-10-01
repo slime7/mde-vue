@@ -2704,7 +2704,7 @@ export interface MatDialogProps {
   */
   scrim?: boolean;
   /**
-  * 点击 Dialog 外帷幕时是否请求关闭。
+  * 是否通过点击 Dialog 外帷幕或按 Escape 请求关闭；禁用后两者都不请求关闭。
   *
   * @type {boolean}
   * @default false
@@ -2810,7 +2810,7 @@ export interface MatBottomSheetProps {
   */
   scrim?: boolean;
   /**
-  * 点击 modal 帷幕时是否请求关闭。
+  * 是否通过点击 modal 帷幕或按 Escape 请求关闭；禁用后两者都不请求关闭。
   *
   * @type {boolean}
   * @default true
@@ -2973,7 +2973,7 @@ export interface MatSideSheetProps {
   */
   scrim?: boolean;
   /**
-  * 点击 modal 帷幕时是否请求关闭。
+  * 是否通过点击 modal 帷幕或按 Escape 请求关闭；禁用后两者都不请求关闭。
   *
   * @type {boolean}
   * @default true
@@ -3252,7 +3252,7 @@ export interface MatAsideProps {
   */
   scrimClass?: string | undefined;
   /**
-  * modal=true 时点击背景遮罩是否请求关闭。
+  * modal=true 时是否通过点击背景遮罩或按 Escape 请求关闭；禁用后两者都不请求关闭。
   *
   * @type {boolean}
   * @default true

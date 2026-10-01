@@ -330,7 +330,7 @@ Dialog 使用原生 `<dialog>` 元素（非模态 `show()`）与 Vue Teleport，
 | `width` | `number \| string` | 未设置 | 基础 Dialog 的首选宽度；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS 宽度值，非法时省略宽度样式；小屏按视口可用宽度限制，全屏布局忽略此属性 |
 | `attach` | `string \| HTMLElement` | `'body'` | Teleport 目标；字符串按当前 document 的 CSS 选择器解析；位于 `MatAppRoot` 内且省略时自动进入该 AppRoot 的模态层，指向 AppRoot 根元素时同样按应用范围展示 |
 | `scrim` | `boolean` | `true` | 是否显示顶层帷幕；`false` 时帷幕透明但仍阻止背景交互 |
-| `closeOnBack` | `boolean` | `false` | 模板属性为 `close-on-back`；点击 Dialog 外帷幕时是否请求关闭 |
+| `closeOnBack` | `boolean` | `false` | 模板属性为 `close-on-back`；是否通过点击 Dialog 外帷幕或按 Escape 请求关闭，禁用后两者都不请求关闭 |
 | `title` | `string` | 未设置 | 简单标题；设置后优先于 `title` Slot |
 | `content` | `string` | 未设置 | 简单正文；设置后优先于默认 Slot |
 | `icon` | `string` | 未设置 | 基础 Dialog 的 Material Symbols 字形；设置后优先于 `icon` Slot |
@@ -375,17 +375,17 @@ import {
 
 省略 `dialog()` 的 `actions` 时显示一个“确定”按钮。`prompt()` 会自动聚焦输入框；`required=true` 且内容去除首尾空白后为空时，确认按钮保持禁用。第一版不包含异步动作回调、自定义校验器、完整 Text field 配置、调用队列或 `dialog.alert()` 等成员别名。
 
-参数类型、动作、`attach` 或客户端运行环境无效时，函数返回 rejected Promise；Escape、帷幕、取消按钮和全屏关闭按钮等正常取消不会拒绝。Promise 只在退出动画完成、Dialog 关闭并移除一次性宿主后结算。多个调用可以并行打开，只有顶层实例显示帷幕颜色。命令式函数默认挂载到 body；把 `attach` 设为 `MatAppRoot` 根元素时，Dialog 同样进入该 AppRoot 的模态层并按应用范围展示。
+参数类型、动作、`attach` 或客户端运行环境无效时，函数返回 rejected Promise；帷幕、取消按钮和全屏关闭按钮等正常取消不会拒绝，`closeOnBack=true` 时 Escape 同样按取消结果结算。Promise 只在退出动画完成、Dialog 关闭并移除一次性宿主后结算。多个调用可以并行打开，只有顶层实例显示帷幕颜色。命令式函数默认挂载到 body；把 `attach` 设为 `MatAppRoot` 根元素时，Dialog 同样进入该 AppRoot 的模态层并按应用范围展示。
 
 ## 事件
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
-| `update:modelValue` | `boolean` | Escape、允许的帷幕点击或全屏关闭按钮请求关闭时发出 `false` |
+| `update:modelValue` | `boolean` | `closeOnBack` 允许的 Escape 或帷幕点击、全屏关闭按钮请求关闭时发出 `false` |
 | `opened` | 无 | 进入动画完成后触发 |
 | `closed` | 无 | 退出动画完成、原生 Dialog 关闭且 DOM 移除后触发 |
 
-组件是受控的：收到 `update:modelValue(false)` 后，使用者必须更新绑定值才会开始退出。打开后焦点进入显式 `autofocus` 或第一个可交互元素；浏览器报告实际退出动画完成后移除 DOM 并恢复到打开前的元素，快速反向打开会使旧关闭等待失效。Escape 始终请求关闭，不受 `close-on-back` 影响。减少动态效果时直接完成阶段切换。
+组件是受控的：收到 `update:modelValue(false)` 后，使用者必须更新绑定值才会开始退出。打开后焦点进入显式 `autofocus` 或第一个可交互元素；浏览器报告实际退出动画完成后移除 DOM 并恢复到打开前的元素，快速反向打开会使旧关闭等待失效。Escape 与帷幕点击都受 `close-on-back` 控制，禁用后不请求关闭，需要保留 Escape 关闭时显式开启该属性。减少动态效果时直接完成阶段切换。
 
 ## Slots
 

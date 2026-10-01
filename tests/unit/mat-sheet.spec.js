@@ -798,7 +798,7 @@ describe('MatBottomSheet', () => {
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
   });
 
-  it('Escape 与帷幕点击按公共关闭规则请求更新', async () => {
+  it('Escape 与 cancel 跟随 closeOnBack 请求更新', async () => {
     const wrapper = mount(MatBottomSheet, {
       props: {
         modelValue: true,
@@ -819,28 +819,37 @@ describe('MatBottomSheet', () => {
     expect(cancelEvent.defaultPrevented).toBe(true);
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
 
-    sheet.getBoundingClientRect = () => ({
-      bottom: 700,
-      left: 0,
-      right: 500,
-      top: 300,
-    });
-    dispatchPointer(sheet, 'pointerdown', {
-      button: 0,
-      clientX: 20,
-      clientY: 20,
-      pointerId: 11,
-      pointerType: 'mouse',
-    });
-    sheet.dispatchEvent(new MouseEvent('click', {
+    const escapeEvent = new KeyboardEvent('keydown', {
       bubbles: true,
-      clientX: 20,
-      clientY: 20,
-    }));
+      cancelable: true,
+      key: 'Escape',
+    });
 
+    sheet.dispatchEvent(escapeEvent);
+
+    expect(escapeEvent.defaultPrevented).toBe(true);
     expect(wrapper.emitted('update:modelValue')).toHaveLength(2);
 
     await wrapper.setProps({ closeOnBack: false });
+
+    const blockedCancel = new Event('cancel', { cancelable: true });
+
+    sheet.dispatchEvent(blockedCancel);
+
+    expect(blockedCancel.defaultPrevented).toBe(true);
+    expect(wrapper.emitted('update:modelValue')).toHaveLength(2);
+
+    const blockedEscape = new KeyboardEvent('keydown', {
+      bubbles: true,
+      cancelable: true,
+      key: 'Escape',
+    });
+
+    sheet.dispatchEvent(blockedEscape);
+
+    expect(blockedEscape.defaultPrevented).toBe(false);
+    expect(wrapper.emitted('update:modelValue')).toHaveLength(2);
+
     sheet.dispatchEvent(new MouseEvent('click', {
       bubbles: true,
       clientX: 20,

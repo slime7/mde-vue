@@ -402,10 +402,11 @@ describe('MatDialog', () => {
     expect(element.querySelector('.mat-spacer')).not.toBeNull();
   });
 
-  it('Escape 总是请求关闭，点击帷幕仅由 closeOnBack 控制', async () => {
+  it('closeOnBack=true 时 cancel、Escape 与帷幕点击都请求关闭', async () => {
     const wrapper = mount(MatDialog, {
       props: {
         modelValue: true,
+        closeOnBack: true,
         title: '关闭行为',
       },
     });
@@ -443,16 +444,51 @@ describe('MatDialog', () => {
       clientY: 0,
     }));
 
-    expect(wrapper.emitted('update:modelValue')).toHaveLength(2);
+    expect(wrapper.emitted('update:modelValue')).toHaveLength(3);
+  });
 
-    await wrapper.setProps({ closeOnBack: true });
+  it('closeOnBack=false 时 Escape 只阻止原生关闭，不请求关闭', async () => {
+    const wrapper = mount(MatDialog, {
+      props: {
+        modelValue: true,
+        title: '关闭行为',
+      },
+    });
+
+    await settleRender();
+
+    const element = document.body.querySelector('dialog');
+    const cancelEvent = new Event('cancel', { cancelable: true });
+
+    element.dispatchEvent(cancelEvent);
+
+    expect(cancelEvent.defaultPrevented).toBe(true);
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+
+    const escapeEvent = new KeyboardEvent('keydown', {
+      bubbles: true,
+      cancelable: true,
+      key: 'Escape',
+    });
+
+    element.dispatchEvent(escapeEvent);
+
+    expect(escapeEvent.defaultPrevented).toBe(false);
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+
+    element.getBoundingClientRect = () => ({
+      bottom: 200,
+      left: 100,
+      right: 200,
+      top: 100,
+    });
     element.dispatchEvent(new MouseEvent('click', {
       bubbles: true,
       clientX: 0,
       clientY: 0,
     }));
 
-    expect(wrapper.emitted('update:modelValue')).toHaveLength(3);
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
 
   it('scrim=false 保持透明帷幕，多 Dialog 只显示顶层帷幕', async () => {

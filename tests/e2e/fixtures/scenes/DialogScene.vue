@@ -27,6 +27,7 @@ async function runConfirm() {
     <div class="fixed-actions">
       <mat-dialog
         v-model="open"
+        close-on-back
         title="确认操作"
         @closed="record('dialog-closed')"
       >

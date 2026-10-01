@@ -94,7 +94,7 @@ const props = defineProps({
     default: true,
   },
   /**
-   * 点击 Dialog 外帷幕时是否请求关闭。
+   * 是否通过点击 Dialog 外帷幕或按 Escape 请求关闭；禁用后两者都不请求关闭。
    *
    * @type {boolean}
    * @default false
@@ -457,6 +457,11 @@ function closeDialog() {
  */
 function handleCancel(event) {
   event.preventDefault();
+
+  if (!propsWithDefaults.closeOnBack) {
+    return;
+  }
+
   requestClose();
 }
 
@@ -464,7 +469,7 @@ function handleCancel(event) {
  * @param {KeyboardEvent} event
  */
 function handleKeyDown(event) {
-  if (event.key !== 'Escape') {
+  if (event.key !== 'Escape' || !propsWithDefaults.closeOnBack) {
     return;
   }
 

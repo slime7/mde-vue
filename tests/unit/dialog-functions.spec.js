@@ -136,7 +136,7 @@ describe('Dialog 命令式函数', () => {
     await expect(result).resolves.toBeUndefined();
   });
 
-  it('confirm 确认返回 true，Escape 返回 false', async () => {
+  it('confirm 确认返回 true，closeOnBack=true 时 Escape 返回 false', async () => {
     const accepted = confirm({ title: '确认发布？' });
 
     await settleRender();
@@ -145,13 +145,28 @@ describe('Dialog 命令式函数', () => {
 
     await expect(accepted).resolves.toBe(true);
 
-    const cancelled = confirm({ title: '确认删除？' });
+    const cancelled = confirm({ title: '确认删除？', closeOnBack: true });
 
     await settleRender();
     document.body.querySelector('dialog').dispatchEvent(new Event('cancel', { cancelable: true }));
     await closeAnimation();
 
     await expect(cancelled).resolves.toBe(false);
+  });
+
+  it('默认 closeOnBack=false 时 Escape 不结算 Promise', async () => {
+    const cancelled = confirm({ title: '确认删除？' });
+    let settled = false;
+
+    cancelled.then(() => {
+      settled = true;
+    });
+
+    await settleRender();
+    document.body.querySelector('dialog').dispatchEvent(new Event('cancel', { cancelable: true }));
+    await closeAnimation();
+
+    expect(settled).toBe(false);
   });
 
   it('prompt 返回输入字符串，取消时返回 null', async () => {

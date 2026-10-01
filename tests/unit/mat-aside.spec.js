@@ -352,6 +352,32 @@ describe('MatAside 边缘组件', () => {
     wrapper.unmount();
   });
 
+  it('modal 模式的 Escape 跟随 closeOnBack 请求关闭', async () => {
+    const wrapper = mount(MatAside, {
+      attachTo: document.body,
+      props: {
+        modal: true,
+        transition: false,
+        blockSize: 200,
+        modelValue: true,
+        closeOnBack: false,
+      },
+    });
+
+    await settle();
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+
+    await wrapper.setProps({ closeOnBack: true });
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+
+    expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
+    wrapper.unmount();
+  });
+
   it('多个模态同时打开时只有栈顶元素激活遮罩背景，验证单层遮罩不叠加', async () => {
     const wrapper1 = mount(MatAside, { attachTo: document.body, props: { modal: true, blockSize: 200 } });
     await settle();

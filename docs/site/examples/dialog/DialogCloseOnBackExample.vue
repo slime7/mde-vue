@@ -16,7 +16,7 @@ const open = ref(false);
     v-model="open"
     close-on-back
     title="点击外部区域"
-    content="点击 Dialog 外的帷幕即可关闭。"
+    content="点击 Dialog 外的帷幕或按 Escape 即可关闭。"
   >
     <template #actions>
       <mat-spacer />

@@ -3124,7 +3124,7 @@ var Ei = 200, Di = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			!ae.value || !d.closeOnBack || Ce();
 		}
 		function Te(e) {
-			ae.value && se.value && e.key === "Escape" && (e.preventDefault(), Ce());
+			!ae.value || !se.value || e.key !== "Escape" || d.closeOnBack && (e.preventDefault(), Ce());
 		}
 		function Ee() {
 			if (!R || !b.value) return;
@@ -3318,7 +3318,7 @@ var Ei = 200, Di = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"style"
 		])) : o("", !0);
 	}
-}), [["__scopeId", "data-v-dc44c35a"]]), Oi = /* @__PURE__ */ new WeakMap(), ki = /* @__PURE__ */ new WeakMap();
+}), [["__scopeId", "data-v-a3be626f"]]), Oi = /* @__PURE__ */ new WeakMap(), ki = /* @__PURE__ */ new WeakMap();
 function Ai(e, t, n) {
 	let r = [n.initialValue, ...n.names].filter((e) => e && e !== "none"), i = e.style;
 	i[t] = r.join(", ");
@@ -10751,10 +10751,10 @@ var Fs = {
 			});
 		}
 		function be(e) {
-			e.preventDefault(), pe();
+			e.preventDefault(), l.closeOnBack && pe();
 		}
 		function xe(e) {
-			e.key === "Escape" && (e.preventDefault(), pe());
+			e.key !== "Escape" || !l.closeOnBack || (e.preventDefault(), pe());
 		}
 		function Se(e) {
 			!l.closeOnBack || e.target !== F.value || pe();
@@ -10858,7 +10858,7 @@ var Fs = {
 			"aria-labelledby"
 		])], 8, ["to"])) : o("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-7df0b89c"]]), Uc = .25, Wc = [
+}), [["__scopeId", "data-v-49ed0ea9"]]), Uc = .25, Wc = [
 	"min",
 	"normal",
 	"max"
@@ -11305,10 +11305,10 @@ var Zc = ["aria-label"], Qc = {
 			});
 		}
 		function wt(e) {
-			e.preventDefault(), dt();
+			e.preventDefault(), l.closeOnBack && dt();
 		}
 		function Tt(e) {
-			e.key === "Escape" && (e.preventDefault(), dt());
+			e.key !== "Escape" || !l.closeOnBack || (e.preventDefault(), dt());
 		}
 		function Et(e) {
 			if (!(!Z.value || !l.closeOnBack || e.target !== J.value)) {
@@ -11554,7 +11554,7 @@ var Zc = ["aria-label"], Qc = {
 			"tabindex"
 		])], 8, ["to", "disabled"])) : o("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-23fb50db"]]), rl = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-fd18caae"]]), rl = /*@__PURE__*/ Object.assign({
 	name: "MatBottomSheet",
 	inheritAttrs: !1
 }, {

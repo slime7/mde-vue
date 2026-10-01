@@ -907,6 +907,11 @@ function closeSheet() {
  */
 function handleCancel(event) {
   event.preventDefault();
+
+  if (!props.closeOnBack) {
+    return;
+  }
+
   requestClose();
 }
 
@@ -914,7 +919,7 @@ function handleCancel(event) {
  * @param {KeyboardEvent} event
  */
 function handleKeyDown(event) {
-  if (event.key !== 'Escape') {
+  if (event.key !== 'Escape' || !props.closeOnBack) {
     return;
   }
 

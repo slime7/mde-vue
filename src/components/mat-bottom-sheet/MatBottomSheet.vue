@@ -81,7 +81,7 @@ const props = defineProps({
     default: true,
   },
   /**
-   * 点击 modal 帷幕时是否请求关闭。
+   * 是否通过点击 modal 帷幕或按 Escape 请求关闭；禁用后两者都不请求关闭。
    *
    * @type {boolean}
    * @default true
