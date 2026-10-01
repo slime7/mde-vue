@@ -21115,17 +21115,17 @@ import TooltipRichSlotsExample from '../examples/tooltip/TooltipRichSlotsExample
 import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
 </script>
 
-# Expand transition 折叠过渡
+# Simple expansion 简易折叠
 
 ## 组件简介
 
-`<mat-expand-transition>` 的组件导出名是 `MatExpandTransition`。它是一个无渲染过渡容器，为外部状态驱动的折叠内容提供 Material 3 Expressive 高度过渡：进入时从高度 0 展开到自然高度，离开时折叠回 0。
+`<mat-simple-expansion>` 的组件导出名是 `MatSimpleExpansion`。它是一个不带外观的折叠容器，效果等同于去掉触发器与容器视觉的 `<mat-expansion-panel>`：内容始终挂载，折叠时在高度 `0` 与自然高度之间播放 Material 3 Expressive 弹簧过渡，并同步渐隐。
 
-组件不维护展开状态，也不渲染任何包装元素。把需要折叠的内容作为默认插槽的唯一子元素，用 `v-show` 或 `v-if` 由任意外部状态驱动显隐即可。与自带触发器和手风琴语义的 `<mat-expansion-panel>` 不同，它专门服务「开关控制的子设置展开」这类由外部状态决定的折叠场景。
+组件通过 `v-model` 绑定布尔展开状态，自身不渲染任何触发器，展开与折叠完全由外部开关或按钮驱动，适合「开关控制的子设置展开」这类由外部状态决定折叠的场景。需要自带触发器和手风琴语义时，请使用 `<mat-expansion-panel>`。
 
 ## 示例
 
-### `v-show` 驱动的折叠
+### 开关绑定 `v-model`
 
 :::: details 查看示例代码
 ::: code-group
@@ -21133,15 +21133,14 @@ import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
 ```vue
 <template>
   <div class="example">
-    <mat-switch v-model="open">显示详情</mat-switch>
-    <mat-expand-transition>
-      <div
-        v-show="open"
-        class="panel"
-      >
-        这段内容由外部状态经 <code>v-show</code> 驱动显隐，切换时在高度 0 与自然高度之间播放折叠过渡，内容始终保持挂载。
-      </div>
-    </mat-expand-transition>
+    <mat-switch v-model="open">
+      显示详情
+    </mat-switch>
+    <mat-simple-expansion v-model="open">
+      <p class="panel">
+        折叠内容由外部开关通过 <code>v-model</code> 驱动，组件自身不渲染触发器；内容保持挂载，折叠时以高度与透明度弹簧过渡收起。
+      </p>
+    </mat-simple-expansion>
   </div>
 </template>
 ```
@@ -21162,6 +21161,7 @@ const open = ref(true);
 }
 
 .panel {
+  margin: 0;
   padding: 16px;
   background: var(--mat-sys-color-surface-container-low);
   border-radius: var(--mat-sys-shape-corner-medium);
@@ -21173,12 +21173,12 @@ const open = ref(true);
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Expand transition 显隐预览">
-    <ExpandTransitionShowExample />
+  <DocsPreview label="Simple expansion 开关预览">
+    <SimpleExpansionSwitchExample />
   </DocsPreview>
 </ClientOnly>
 
-### 开关控制的子设置展开
+### 外部按钮触发子设置展开
 
 :::: details 查看示例代码
 ::: code-group
@@ -21186,12 +21186,14 @@ const open = ref(true);
 ```vue
 <template>
   <div class="example">
-    <mat-switch v-model="advanced">高级设置</mat-switch>
-    <mat-expand-transition>
-      <div
-        v-show="advanced"
-        class="settings"
-      >
+    <mat-btn
+      :variant="advanced ? 'filled-tonal' : 'outlined'"
+      @click="advanced = !advanced"
+    >
+      {{ advanced ? '收起高级设置' : '展开高级设置' }}
+    </mat-btn>
+    <mat-simple-expansion v-model="advanced">
+      <div class="settings">
         <mat-slider
           v-model="volume"
           aria-label="音量微调"
@@ -21203,7 +21205,7 @@ const open = ref(true);
           label="备注标签"
         />
       </div>
-    </mat-expand-transition>
+    </mat-simple-expansion>
   </div>
 </template>
 ```
@@ -21239,8 +21241,8 @@ const tag = ref('');
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Expand transition 子设置预览">
-    <ExpandTransitionSettingExample />
+  <DocsPreview label="Simple expansion 按钮预览">
+    <SimpleExpansionButtonExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -21248,29 +21250,40 @@ const tag = ref('');
 
 ### 属性
 
-组件没有属性。显隐完全由插槽子元素上的 `v-show` 或 `v-if` 控制，组件只负责过渡动画。
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `modelValue` | `boolean` | `false` | `v-model` 展开状态；`true` 展开内容，`false` 折叠内容。展开状态完全由外部驱动 |
+
+未被组件消费的原生属性、`class` 和 `style` 传递给折叠容器根 `div`。
 
 ## 事件
 
-组件没有自定义事件。
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `boolean` | 为 `v-model` 绑定声明；组件自身不改变状态，从不发出该事件 |
 
 ## Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
-| 默认 | 需要折叠过渡的内容；必须提供单个根元素，显隐由该元素上的 `v-show` 或 `v-if` 驱动 |
+| 默认 | 折叠内容；始终挂载，可放置任意流式内容或组件 |
 
 ## 状态与说明
 
-- 过渡使用系统空间弹簧动效令牌；`prefers-reduced-motion: reduce` 下取消过渡，直接呈现展开或折叠后的状态。
-- 过渡期间内容容器为 `overflow: hidden`，过渡结束后恢复原有 overflow。折叠内容无需约定固定高度，按内容自然撑开。
-- 内容根元素的纵向外边距建议改为内边距或由外层容器承载，避免折叠首尾出现跳变。
+- 折叠时容器高度收为 `0` 并渐隐，展开时过渡到自然高度；动画使用系统空间与效果弹簧令牌，机制与 `<mat-expansion-panel>` 一致。
+- 折叠期间容器声明 `aria-hidden="true"` 与 `inert`，内容同时离开无障碍树和焦点顺序；展开后两者立即移除。
+- 过渡期间容器裁剪溢出内容；浮层类组件（如 Menu、Dialog）自身会传送挂载，不受裁剪影响。
+- `prefers-reduced-motion: reduce` 下取消过渡，直接呈现展开或折叠后的状态。
 - 高度在 `0` 与 `auto` 之间的过渡依赖现代浏览器的 `interpolate-size` 特性；不支持该特性的环境中显隐仍然正确，只是没有动画。
 - 初次挂载时不播放过渡，内容直接按初始状态显示或隐藏。
 
+## 参考来源
+
+折叠过渡机制与 `<mat-expansion-panel>` 共享，交互模式参考 [APG Disclosure Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/)；触发控件与状态管理由使用方组合。
+
 <script setup>
-import ExpandTransitionSettingExample from '../examples/expand-transition/ExpandTransitionSettingExample.vue';
-import ExpandTransitionShowExample from '../examples/expand-transition/ExpandTransitionShowExample.vue';
+import SimpleExpansionButtonExample from '../examples/simple-expansion/SimpleExpansionButtonExample.vue';
+import SimpleExpansionSwitchExample from '../examples/simple-expansion/SimpleExpansionSwitchExample.vue';
 </script>
 
 # Navigation bar 底部导航栏

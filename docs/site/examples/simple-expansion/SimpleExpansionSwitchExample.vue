@@ -9,15 +9,14 @@ const open = ref(true);
 <!-- #region template -->
 <template>
   <div class="example">
-    <mat-switch v-model="open">显示详情</mat-switch>
-    <mat-expand-transition>
-      <div
-        v-show="open"
-        class="panel"
-      >
-        这段内容由外部状态经 <code>v-show</code> 驱动显隐，切换时在高度 0 与自然高度之间播放折叠过渡，内容始终保持挂载。
-      </div>
-    </mat-expand-transition>
+    <mat-switch v-model="open">
+      显示详情
+    </mat-switch>
+    <mat-simple-expansion v-model="open">
+      <p class="panel">
+        折叠内容由外部开关通过 <code>v-model</code> 驱动，组件自身不渲染触发器；内容保持挂载，折叠时以高度与透明度弹簧过渡收起。
+      </p>
+    </mat-simple-expansion>
   </div>
 </template>
 <!-- #endregion template -->
@@ -32,6 +31,7 @@ const open = ref(true);
 }
 
 .panel {
+  margin: 0;
   padding: 16px;
   background: var(--mat-sys-color-surface-container-low);
   border-radius: var(--mat-sys-shape-corner-medium);

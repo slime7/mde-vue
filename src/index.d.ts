@@ -1114,12 +1114,6 @@ export interface MatCardMediaProps {
 export type MatCardMediaComponent = DefineComponent<MatCardMediaProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatCardMedia: MatCardMediaComponent;
 
-export interface MatExpandTransitionProps {
-}
-
-export type MatExpandTransitionComponent = DefineComponent<MatExpandTransitionProps, {}, {}, {}, {}, {}, {}, {}>;
-export declare const MatExpandTransition: MatExpandTransitionComponent;
-
 export interface MatExpansionProps {
   /**
   * 受控展开值；多选时为数组，手风琴模式 (multiple=false) 时为单值或 null。
@@ -1174,6 +1168,24 @@ export interface MatExpansionEmits {
 
 export type MatExpansionComponent = DefineComponent<MatExpansionProps, {}, {}, {}, {}, {}, {}, MatExpansionEmits>;
 export declare const MatExpansion: MatExpansionComponent;
+
+export interface MatSimpleExpansionProps {
+  /**
+  * `v-model` 展开状态；true 展开内容，false 折叠内容。展开状态完全由外部驱动，
+  * 组件自身不渲染触发器，也不会发出变更。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  modelValue?: boolean;
+}
+
+export interface MatSimpleExpansionEmits {
+  "update:modelValue": (payload: unknown) => unknown;
+}
+
+export type MatSimpleExpansionComponent = DefineComponent<MatSimpleExpansionProps, {}, {}, {}, {}, {}, {}, MatSimpleExpansionEmits>;
+export declare const MatSimpleExpansion: MatSimpleExpansionComponent;
 
 export interface MatExpansionPanelProps {
   /**
@@ -4833,10 +4845,10 @@ declare module 'vue' {
     'mat-card-subhead': typeof MatCardSubhead;
     MatCardMedia: typeof MatCardMedia;
     'mat-card-media': typeof MatCardMedia;
-    MatExpandTransition: typeof MatExpandTransition;
-    'mat-expand-transition': typeof MatExpandTransition;
     MatExpansion: typeof MatExpansion;
     'mat-expansion': typeof MatExpansion;
+    MatSimpleExpansion: typeof MatSimpleExpansion;
+    'mat-simple-expansion': typeof MatSimpleExpansion;
     MatExpansionPanel: typeof MatExpansionPanel;
     'mat-expansion-panel': typeof MatExpansionPanel;
     MatList: typeof MatList;

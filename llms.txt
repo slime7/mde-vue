@@ -49,7 +49,7 @@
 - [Expansion 折叠面板](components/expansion.md): mat-expansion 与 mat-expansion-panel 的 Material 3 Expressive 外观、分立与一体化折叠、受控绑定与手风琴协同。
 - [Navigation rail 导航栏](components/navigation-rail.md): mat-navigation-rail 的 Material 3 Expressive 纵向导航栏。
 - [Tooltip 文字提示](components/tooltip.md): mat-tooltip 的 Material 3 Plain 与 Rich tooltip、展示元素、固定定位、延迟和无障碍说明。
-- [Expand transition 折叠过渡](components/expand-transition.md): mat-expand-transition 的外部状态驱动折叠过渡容器，为 v-show 或 v-if 切换的内容提供高度折叠动画。
+- [Simple expansion 简易折叠](components/simple-expansion.md): mat-simple-expansion 的外部 v-model 驱动折叠容器，不带外观与触发器，为开关控制的子设置展开提供折叠过渡。
 - [Navigation bar 底部导航栏](components/navigation-bar.md): mat-navigation-bar 的 Material 3 底部导航栏组件。
 - [Divider 分隔线](components/divider.md): mat-divider 的 Material 3 全宽、起始缩进、两侧 inset 与 Card Actions 分隔方式。
 - [Snackbar 消息提示](components/snackbar.md): mat-snackbar 的 Material 3 底部消息提示、文字 action、全局 FIFO 队列和 Promise 函数。

@@ -26,7 +26,7 @@
 
 任一 Tooltip 显示时，其他实例切换进入可跳过打开延迟；Tooltip 关闭后、尚未显示和重新进入同一实例不得共享延迟。受控 Tooltip 不参与该自动状态。
 
-`MatExpandTransition` 是无渲染折叠过渡容器，导出名 `MatExpandTransition`。它不维护展开状态、不渲染包装元素、没有属性和事件，只把默认插槽的唯一子元素交给 Vue Transition：显隐完全由使用方在该元素上的 `v-show` 或 `v-if` 驱动，组件负责在高度 `0` 与自然高度之间播放系统空间弹簧过渡，并在减少动态效果或环境不支持 `interpolate-size` 时正确呈现最终状态。需要触发器和手风琴语义的折叠使用 Expansion 组件族，而不是为本组件添加状态。
+`MatSimpleExpansion` 是不带外观的简易折叠容器，导出名 `MatSimpleExpansion`。展开状态通过布尔 `v-model` 完全交由外部驱动：组件不渲染触发器、不发出 `update:modelValue`（该事件仅为 v-model 契约声明），默认插槽内容始终挂载，折叠期间声明 `aria-hidden="true"` 与 `inert` 离开无障碍树和焦点顺序。折叠动画复用 Expansion 面板的机制：class 切换驱动 `block-size: 0` 与 `auto` 之间的空间弹簧过渡并同步渐隐，减少动态效果或环境不支持 `interpolate-size` 时正确呈现最终状态。需要触发器和手风琴语义的折叠使用 Expansion 组件族，而不是为本组件添加状态。
 
 ## ESM 分发边界
 
