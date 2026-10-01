@@ -204,6 +204,7 @@ const emit = defineEmits({
 const attrs = useAttrs();
 const slots = useSlots();
 const root = ref(null);
+const body = ref(null);
 const handle = ref(null);
 const interaction = ref(null);
 const nativeInput = ref(null);
@@ -322,19 +323,19 @@ function updateInsetIconPlacement() {
   if (
     !showInsetIcon.value
     || propsWithDefaults.variant !== 'standard'
-    || !root.value
+    || !body.value
   ) {
     insetIconPlacement.value = 'active';
     return;
   }
 
-  const rootRect = root.value.getBoundingClientRect();
+  const rootRect = body.value.getBoundingClientRect();
   const trackLength = propsWithDefaults.orientation === 'vertical'
     ? rootRect.height
     : rootRect.width;
   const iconLength = propsWithDefaults.size === 'extra-large' ? 32 : 24;
   const handleWidth = Number.parseFloat(
-    getComputedStyle(root.value).getPropertyValue('--mat-slider-handle-width'),
+    getComputedStyle(body.value).getPropertyValue('--mat-slider-handle-width'),
   ) || 4;
   const handlePosition = SLIDER_TRACK_END_INSET
     + ((trackLength - (SLIDER_TRACK_END_INSET * 2)) * valuePosition.value) / 100;
@@ -350,9 +351,9 @@ let insetIconResizeObserver;
 onMounted(() => {
   updateInsetIconPlacement();
 
-  if (typeof ResizeObserver !== 'undefined') {
+  if (typeof ResizeObserver !== 'undefined' && body.value) {
     insetIconResizeObserver = new ResizeObserver(updateInsetIconPlacement);
-    insetIconResizeObserver.observe(root.value);
+    insetIconResizeObserver.observe(body.value);
   }
 });
 
@@ -513,118 +514,137 @@ function handleKeyDown(event) {
     :style="rootStyle"
   >
     <span
-      class="mat-slider__track"
-      aria-hidden="true"
+      v-if="slots.prepend"
+      class="mat-slider__affix mat-slider__affix--prepend"
     >
-      <span class="mat-slider__inactive-track mat-slider__inactive-track--before" />
-      <span
-        class="mat-slider__active-track"
-        :class="{ 'mat-slider__active-track--from-start': propsWithDefaults.variant === 'standard' }"
-      />
-      <span class="mat-slider__inactive-track mat-slider__inactive-track--after" />
-
-      <span
-        v-for="stopValue in stopValues"
-        :key="stopValue"
-        class="mat-slider__stop"
-        :class="{
-          'mat-slider__stop--active': stopValue >= Math.min(trackOriginValue, displayedValue)
-            && stopValue <= Math.max(trackOriginValue, displayedValue),
-        }"
-        :style="{
-          '--mat-slider-stop-position': getSliderVisualPosition(
-            getSliderPercentage(stopValue, bounds),
-          ),
-        }"
-      />
-
-      <MatIcon
-        v-if="showInsetIcon && propsWithDefaults.variant === 'standard'"
-        class="mat-slider__inset-icon"
-        :font-color="insetIconPlacement === 'active'
-          ? 'var(--mat-on-accent-color, var(--mat-slider-inset-icon-color))'
-          : 'var(--mat-slider-inset-icon-inactive-color)'"
-        :icon="propsWithDefaults.insetIcon"
-        :optical-size="insetIconOpticalSize"
-        size="var(--mat-slider-current-inset-icon-size)"
-        aria-hidden="true"
-      />
-
-      <template v-else-if="showInsetIcon">
-        <span class="mat-slider__inset-icon-layer">
-          <MatIcon
-            class="mat-slider__inset-icon mat-slider__inset-icon--inactive"
-            font-color="var(--mat-slider-inset-icon-inactive-color)"
-            :icon="propsWithDefaults.insetIcon"
-            :optical-size="insetIconOpticalSize"
-            size="var(--mat-slider-current-inset-icon-size)"
-            aria-hidden="true"
-          />
-        </span>
-
-        <span class="mat-slider__inset-icon-layer mat-slider__inset-icon-layer--active">
-          <MatIcon
-            class="mat-slider__inset-icon mat-slider__inset-icon--active"
-            font-color="var(--mat-on-accent-color, var(--mat-slider-inset-icon-color))"
-            :icon="propsWithDefaults.insetIcon"
-            :optical-size="insetIconOpticalSize"
-            size="var(--mat-slider-current-inset-icon-size)"
-            aria-hidden="true"
-          />
-        </span>
-      </template>
-
-      <span ref="handle" class="mat-slider__handle">
-        <span class="mat-slider__handle-shape" />
-      </span>
+      <slot name="prepend" />
     </span>
 
-    <MatTooltip
-      class="mat-slider__value-indicator"
-      data-slider-value-indicator
-      :location="orientation === 'vertical' ? 'right' : 'top'"
-      :model-value="showValueIndicatorState"
-      :target="handle"
+    <span
+      ref="body"
+      class="mat-slider__body"
     >
-      <slot
-        v-if="slots['indicator-label']"
-        name="indicator-label"
-        :model-value="displayedValue"
+      <span
+        class="mat-slider__track"
+        aria-hidden="true"
+      >
+        <span class="mat-slider__inactive-track mat-slider__inactive-track--before" />
+        <span
+          class="mat-slider__active-track"
+          :class="{ 'mat-slider__active-track--from-start': propsWithDefaults.variant === 'standard' }"
+        />
+        <span class="mat-slider__inactive-track mat-slider__inactive-track--after" />
+
+        <span
+          v-for="stopValue in stopValues"
+          :key="stopValue"
+          class="mat-slider__stop"
+          :class="{
+            'mat-slider__stop--active': stopValue >= Math.min(trackOriginValue, displayedValue)
+              && stopValue <= Math.max(trackOriginValue, displayedValue),
+          }"
+          :style="{
+            '--mat-slider-stop-position': getSliderVisualPosition(
+              getSliderPercentage(stopValue, bounds),
+            ),
+          }"
+        />
+
+        <MatIcon
+          v-if="showInsetIcon && propsWithDefaults.variant === 'standard'"
+          class="mat-slider__inset-icon"
+          :font-color="insetIconPlacement === 'active'
+            ? 'var(--mat-on-accent-color, var(--mat-slider-inset-icon-color))'
+            : 'var(--mat-slider-inset-icon-inactive-color)'"
+          :icon="propsWithDefaults.insetIcon"
+          :optical-size="insetIconOpticalSize"
+          size="var(--mat-slider-current-inset-icon-size)"
+          aria-hidden="true"
+        />
+
+        <template v-else-if="showInsetIcon">
+          <span class="mat-slider__inset-icon-layer">
+            <MatIcon
+              class="mat-slider__inset-icon mat-slider__inset-icon--inactive"
+              font-color="var(--mat-slider-inset-icon-inactive-color)"
+              :icon="propsWithDefaults.insetIcon"
+              :optical-size="insetIconOpticalSize"
+              size="var(--mat-slider-current-inset-icon-size)"
+              aria-hidden="true"
+            />
+          </span>
+
+          <span class="mat-slider__inset-icon-layer mat-slider__inset-icon-layer--active">
+            <MatIcon
+              class="mat-slider__inset-icon mat-slider__inset-icon--active"
+              font-color="var(--mat-on-accent-color, var(--mat-slider-inset-icon-color))"
+              :icon="propsWithDefaults.insetIcon"
+              :optical-size="insetIconOpticalSize"
+              size="var(--mat-slider-current-inset-icon-size)"
+              aria-hidden="true"
+            />
+          </span>
+        </template>
+
+        <span ref="handle" class="mat-slider__handle">
+          <span class="mat-slider__handle-shape" />
+        </span>
+      </span>
+
+      <MatTooltip
+        class="mat-slider__value-indicator"
+        data-slider-value-indicator
+        :location="orientation === 'vertical' ? 'right' : 'top'"
+        :model-value="showValueIndicatorState"
+        :target="handle"
+      >
+        <slot
+          v-if="slots['indicator-label']"
+          name="indicator-label"
+          :model-value="displayedValue"
+        />
+        <template v-else>
+          {{ displayedValue }}
+        </template>
+      </MatTooltip>
+
+      <span
+        ref="interaction"
+        class="mat-slider__interaction"
+        aria-hidden="true"
+        @lostpointercapture="finishPointerInteraction($event, false)"
+        @pointercancel="finishPointerInteraction($event, false)"
+        @pointerdown="handlePointerDown"
+        @pointermove="handlePointerMove"
+        @pointerup="finishPointerInteraction($event, true)"
       />
-      <template v-else>
-        {{ displayedValue }}
-      </template>
-    </MatTooltip>
+
+      <input
+        ref="nativeInput"
+        class="mat-slider__native-input"
+        type="range"
+        :aria-label="attrs['aria-label']"
+        :aria-orientation="propsWithDefaults.orientation"
+        :aria-valuemax="bounds.max"
+        :aria-valuemin="bounds.min"
+        :aria-valuenow="displayedValue"
+        :disabled="propsWithDefaults.disabled"
+        :max="bounds.max"
+        :min="bounds.min"
+        :step="resolvedStep"
+        :value="displayedValue"
+        @blur="isFocused = false"
+        @focus="isFocused = true"
+        @keydown="handleKeyDown"
+      >
+    </span>
 
     <span
-      ref="interaction"
-      class="mat-slider__interaction"
-      aria-hidden="true"
-      @lostpointercapture="finishPointerInteraction($event, false)"
-      @pointercancel="finishPointerInteraction($event, false)"
-      @pointerdown="handlePointerDown"
-      @pointermove="handlePointerMove"
-      @pointerup="finishPointerInteraction($event, true)"
-    />
-
-    <input
-      ref="nativeInput"
-      class="mat-slider__native-input"
-      type="range"
-      :aria-label="attrs['aria-label']"
-      :aria-orientation="propsWithDefaults.orientation"
-      :aria-valuemax="bounds.max"
-      :aria-valuemin="bounds.min"
-      :aria-valuenow="displayedValue"
-      :disabled="propsWithDefaults.disabled"
-      :max="bounds.max"
-      :min="bounds.min"
-      :step="resolvedStep"
-      :value="displayedValue"
-      @blur="isFocused = false"
-      @focus="isFocused = true"
-      @keydown="handleKeyDown"
+      v-if="slots.append"
+      class="mat-slider__affix mat-slider__affix--append"
     >
+      <slot name="append" />
+    </span>
   </div>
 </template>
 
@@ -640,7 +660,8 @@ function handleKeyDown(event) {
     --mat-slider-current-handle-height: var(--mat-slider-extra-small-handle-height);
     --mat-slider-current-inset-icon-size: 0;
     position: relative;
-    display: block;
+    display: flex;
+    gap: 8px;
     box-sizing: border-box;
     inline-size: 100%;
     min-inline-size: 112px;
@@ -648,6 +669,21 @@ function handleKeyDown(event) {
     color: var(--mat-sys-color-on-surface);
     isolation: isolate;
     user-select: none;
+  }
+
+  .mat-slider__body {
+    position: relative;
+    display: block;
+    flex-grow: 1;
+    min-inline-size: 0;
+    min-block-size: 0;
+    align-self: stretch;
+  }
+
+  .mat-slider__affix {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
   }
 
   .mat-slider--size-small {
@@ -834,6 +870,8 @@ function handleKeyDown(event) {
   }
 
   .mat-slider--vertical {
+    flex-direction: column;
+    align-items: center;
     inline-size: max(var(--mat-sys-interaction-target-min-size), var(--mat-slider-current-track-height));
     min-inline-size: 0;
     block-size: var(--mat-slider-vertical-length);

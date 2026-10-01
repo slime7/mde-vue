@@ -13,6 +13,7 @@ import MatAvatar from './components/mat-avatar/MatAvatar.vue';
 import MatShape from './components/mat-shape/MatShape.vue';
 import MatText from './components/mat-text/MatText.vue';
 import MatDynamicText from './components/mat-dynamic-text/MatDynamicText.vue';
+import MatExpandTransition from './components/mat-expand-transition/MatExpandTransition.vue';
 import MatSplitBtn from './components/mat-split-btn/MatSplitBtn.vue';
 import MatCard from './components/mat-card/MatCard.vue';
 import MatCardActionArea from './components/mat-card/MatCardActionArea.vue';
@@ -106,6 +107,7 @@ export const GLOBAL_COMPONENTS = [
   ['MatCardHeadline', 'mat-card-headline', MatCardHeadline],
   ['MatCardSubhead', 'mat-card-subhead', MatCardSubhead],
   ['MatCardMedia', 'mat-card-media', MatCardMedia],
+  ['MatExpandTransition', 'mat-expand-transition', MatExpandTransition],
   ['MatExpansion', 'mat-expansion', MatExpansion],
   ['MatExpansionPanel', 'mat-expansion-panel', MatExpansionPanel],
   ['MatList', 'mat-list', MatList],

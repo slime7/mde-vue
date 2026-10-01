@@ -281,6 +281,7 @@ export default defineConfig({
               { text: 'Avatar 头像', link: '/components/avatar' },
               { text: 'Card 卡片', link: '/components/card' },
               { text: 'Divider 分隔线', link: '/components/divider' },
+              { text: 'Expand transition 折叠过渡', link: '/components/expand-transition' },
               { text: 'Icon 图标', link: '/components/icon' },
               { text: 'Image 图片', link: '/components/image' },
               { text: 'Shared Element 同元素转移', link: '/components/shared-element' },

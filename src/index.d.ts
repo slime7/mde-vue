@@ -1114,6 +1114,12 @@ export interface MatCardMediaProps {
 export type MatCardMediaComponent = DefineComponent<MatCardMediaProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatCardMedia: MatCardMediaComponent;
 
+export interface MatExpandTransitionProps {
+}
+
+export type MatExpandTransitionComponent = DefineComponent<MatExpandTransitionProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatExpandTransition: MatExpandTransitionComponent;
+
 export interface MatExpansionProps {
   /**
   * 受控展开值；多选时为数组，手风琴模式 (multiple=false) 时为单值或 null。
@@ -4827,6 +4833,8 @@ declare module 'vue' {
     'mat-card-subhead': typeof MatCardSubhead;
     MatCardMedia: typeof MatCardMedia;
     'mat-card-media': typeof MatCardMedia;
+    MatExpandTransition: typeof MatExpandTransition;
+    'mat-expand-transition': typeof MatExpandTransition;
     MatExpansion: typeof MatExpansion;
     'mat-expansion': typeof MatExpansion;
     MatExpansionPanel: typeof MatExpansionPanel;

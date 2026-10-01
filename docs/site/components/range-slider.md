@@ -153,6 +153,26 @@ order: 87.5
   </DocsPreview>
 </ClientOnly>
 
+### `prepend` 与 `append` Slots
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/RangeSliderPrependAppendExample.vue#template [template]
+
+<<< @/examples/slider/RangeSliderPrependAppendExample.vue#script [script]
+
+<<< @/examples/slider/RangeSliderPrependAppendExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Range slider 前后插槽预览" stacked>
+    <RangeSliderPrependAppendExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -186,6 +206,8 @@ order: 87.5
 
 | Slot | 作用域 | 用途 |
 | --- | --- | --- |
+| `prepend` | 无 | 轨道起始侧的自由内容，用于放置最小值标签等同行元素；纵向滑块中位于轨道上方 |
+| `append` | 无 | 轨道末侧的自由内容，用于放置最大值标签等同行元素；纵向滑块中位于轨道下方 |
 | `indicator-label` | `{ modelValue: number, index: 0 \| 1 }` | 自定义当前活动端点的数值指示内容；`modelValue` 是该端点当前显示值，`index` 的 `0` 代表起点、`1` 代表终点。指示器至少为 48px 圆形，内容较长时横向增长为胶囊形；未提供 Slot 时显示纯数值 |
 
 两个端点的可访问名称由 `aria-label-start` 与 `aria-label-end` 提供；不要依赖未命名的范围滑块表达两个端点的含义。
@@ -193,6 +215,8 @@ order: 87.5
 ## 状态与交互
 
 组件支持 focus-visible、pressed、disabled 和减少动态效果偏好。键盘焦点使用 `secondary` 语义色的 3px 胶囊轮廓表示，轮廓与当前活跃手柄相隔 2px，不绘制圆形背景状态层；点击轨道时选择较近的端点。拖动期间，同一绘制帧内的连续指针输入合并为最新位置，活动轨道、非活动轨道和当前活跃手柄不会播放位置补间，释放前会同步刷新最终区间。按下或拖动时仅当前活跃手柄由 4px 收窄至 2px，轨道在两个手柄两侧各保留 6px 断口且断口圆角为 2px；数值指示也只显示当前活跃手柄。指针默认使用 `default`，并遵循 `createMatUi()` 的全局 `useCursor` 设置。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至当前端点允许的最小和最大位置。组件没有公开方法。
+
+`prepend` 与 `append` 插槽内容不压缩：横向滑块中它们与轨道同行排列，纵向滑块中分别位于轨道上方与下方，整体尺寸不超过 `--mat-slider-vertical-length`。插槽内容不参与取值，指针取值只发生在轨道区域；提供了任一插槽时，轨道与插槽内容之间保留 8px 间距。
 
 ## 参考来源
 
@@ -203,6 +227,7 @@ import RangeSliderColorExample from '../examples/slider/RangeSliderColorExample.
 import RangeSliderDisabledExample from '../examples/slider/RangeSliderDisabledExample.vue';
 import RangeSliderModelValueExample from '../examples/slider/RangeSliderModelValueExample.vue';
 import RangeSliderOrientationExample from '../examples/slider/RangeSliderOrientationExample.vue';
+import RangeSliderPrependAppendExample from '../examples/slider/RangeSliderPrependAppendExample.vue';
 import RangeSliderShowStopIndicatorExample from '../examples/slider/RangeSliderShowStopIndicatorExample.vue';
 import RangeSliderShowValueIndicatorExample from '../examples/slider/RangeSliderShowValueIndicatorExample.vue';
 import RangeSliderSizeExample from '../examples/slider/RangeSliderSizeExample.vue';

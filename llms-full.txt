@@ -9033,6 +9033,80 @@ const seededValue = ref(70);
   </DocsPreview>
 </ClientOnly>
 
+### `prepend` 与 `append` Slots
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example">
+    <mat-slider
+      v-model="volume"
+      aria-label="音量"
+      :max="100"
+      :min="0"
+    >
+      <template #prepend>
+        <span class="bound">0</span>
+      </template>
+      <template #append>
+        <span class="bound">100</span>
+      </template>
+    </mat-slider>
+
+    <mat-slider
+      v-model="brightness"
+      aria-label="亮度"
+      :max="100"
+      :min="0"
+      orientation="vertical"
+    >
+      <template #prepend>
+        <span class="bound">最多</span>
+      </template>
+      <template #append>
+        <span class="bound">最少</span>
+      </template>
+    </mat-slider>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const volume = ref(30);
+const brightness = ref(70);
+</script>
+```
+```vue
+<style scoped>
+.example {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  inline-size: 100%;
+}
+
+.example > mat-slider:first-child {
+  flex-grow: 1;
+}
+
+.bound {
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Slider 前后插槽预览" stacked>
+    <SliderPrependAppendExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -9067,11 +9141,15 @@ const seededValue = ref(70);
 
 | Slot | 作用域 | 用途 |
 | --- | --- | --- |
+| `prepend` | 无 | 轨道起始侧的自由内容，用于放置最小值标签等同行元素；纵向滑块中位于轨道上方 |
+| `append` | 无 | 轨道末侧的自由内容，用于放置最大值标签等同行元素；纵向滑块中位于轨道下方 |
 | `indicator-label` | `{ modelValue: number }` | 自定义数值指示内容；`modelValue` 是范围钳制、按 `step` 对齐且在拖动中实时更新的当前显示值。指示器至少为 48px 圆形，内容较长时横向增长为胶囊形；未提供 Slot 时显示纯数值 |
 
 ## 状态与交互
 
 组件支持 focus-visible、pressed、disabled 和减少动态效果偏好。键盘焦点使用 `secondary` 语义色的 3px 胶囊轮廓表示，轮廓与手柄相隔 2px，不绘制圆形背景状态层；拖动期间，同一绘制帧内的连续指针输入合并为最新位置，活动轨道、非活动轨道和手柄不会播放位置补间，释放前会同步刷新最终值。按下或拖动时，当前手柄会由 4px 收窄至 2px，轨道在手柄两侧保留 6px 断口且断口圆角为 2px。指针默认使用 `default`，并遵循 `createMatUi()` 的全局 `useCursor` 设置。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至最小和最大可对齐值。纵向滑块以底部为最小值、顶部为最大值。组件没有公开方法。
+
+`prepend` 与 `append` 插槽内容不压缩：横向滑块中它们与轨道同行排列，纵向滑块中分别位于轨道上方与下方，整体尺寸不超过 `--mat-slider-vertical-length`。插槽内容不参与取值，指针取值只发生在轨道区域；提供了任一插槽时，轨道与插槽内容之间保留 8px 间距。
 
 ## 参考来源
 
@@ -9083,6 +9161,7 @@ import SliderDisabledExample from '../examples/slider/SliderDisabledExample.vue'
 import SliderInsetIconExample from '../examples/slider/SliderInsetIconExample.vue';
 import SliderModelValueExample from '../examples/slider/SliderModelValueExample.vue';
 import SliderOrientationExample from '../examples/slider/SliderOrientationExample.vue';
+import SliderPrependAppendExample from '../examples/slider/SliderPrependAppendExample.vue';
 import SliderShowStopIndicatorExample from '../examples/slider/SliderShowStopIndicatorExample.vue';
 import SliderShowValueIndicatorExample from '../examples/slider/SliderShowValueIndicatorExample.vue';
 import SliderSizeExample from '../examples/slider/SliderSizeExample.vue';
@@ -9452,6 +9531,82 @@ const seededRange = ref([35, 80]);
   </DocsPreview>
 </ClientOnly>
 
+### `prepend` 与 `append` Slots
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example">
+    <mat-range-slider
+      v-model="price"
+      aria-label-end="价格上限"
+      aria-label-start="价格下限"
+      :max="100"
+      :min="0"
+    >
+      <template #prepend>
+        <span class="bound">0</span>
+      </template>
+      <template #append>
+        <span class="bound">100</span>
+      </template>
+    </mat-range-slider>
+
+    <mat-range-slider
+      v-model="depth"
+      aria-label-end="最大深度"
+      aria-label-start="最小深度"
+      :max="100"
+      :min="0"
+      orientation="vertical"
+    >
+      <template #prepend>
+        <span class="bound">深</span>
+      </template>
+      <template #append>
+        <span class="bound">浅</span>
+      </template>
+    </mat-range-slider>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const price = ref([20, 80]);
+const depth = ref([10, 60]);
+</script>
+```
+```vue
+<style scoped>
+.example {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  inline-size: 100%;
+}
+
+.example > mat-range-slider:first-child {
+  flex-grow: 1;
+}
+
+.bound {
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Range slider 前后插槽预览" stacked>
+    <RangeSliderPrependAppendExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -9485,6 +9640,8 @@ const seededRange = ref([35, 80]);
 
 | Slot | 作用域 | 用途 |
 | --- | --- | --- |
+| `prepend` | 无 | 轨道起始侧的自由内容，用于放置最小值标签等同行元素；纵向滑块中位于轨道上方 |
+| `append` | 无 | 轨道末侧的自由内容，用于放置最大值标签等同行元素；纵向滑块中位于轨道下方 |
 | `indicator-label` | `{ modelValue: number, index: 0 \| 1 }` | 自定义当前活动端点的数值指示内容；`modelValue` 是该端点当前显示值，`index` 的 `0` 代表起点、`1` 代表终点。指示器至少为 48px 圆形，内容较长时横向增长为胶囊形；未提供 Slot 时显示纯数值 |
 
 两个端点的可访问名称由 `aria-label-start` 与 `aria-label-end` 提供；不要依赖未命名的范围滑块表达两个端点的含义。
@@ -9492,6 +9649,8 @@ const seededRange = ref([35, 80]);
 ## 状态与交互
 
 组件支持 focus-visible、pressed、disabled 和减少动态效果偏好。键盘焦点使用 `secondary` 语义色的 3px 胶囊轮廓表示，轮廓与当前活跃手柄相隔 2px，不绘制圆形背景状态层；点击轨道时选择较近的端点。拖动期间，同一绘制帧内的连续指针输入合并为最新位置，活动轨道、非活动轨道和当前活跃手柄不会播放位置补间，释放前会同步刷新最终区间。按下或拖动时仅当前活跃手柄由 4px 收窄至 2px，轨道在两个手柄两侧各保留 6px 断口且断口圆角为 2px；数值指示也只显示当前活跃手柄。指针默认使用 `default`，并遵循 `createMatUi()` 的全局 `useCursor` 设置。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至当前端点允许的最小和最大位置。组件没有公开方法。
+
+`prepend` 与 `append` 插槽内容不压缩：横向滑块中它们与轨道同行排列，纵向滑块中分别位于轨道上方与下方，整体尺寸不超过 `--mat-slider-vertical-length`。插槽内容不参与取值，指针取值只发生在轨道区域；提供了任一插槽时，轨道与插槽内容之间保留 8px 间距。
 
 ## 参考来源
 
@@ -9502,6 +9661,7 @@ import RangeSliderColorExample from '../examples/slider/RangeSliderColorExample.
 import RangeSliderDisabledExample from '../examples/slider/RangeSliderDisabledExample.vue';
 import RangeSliderModelValueExample from '../examples/slider/RangeSliderModelValueExample.vue';
 import RangeSliderOrientationExample from '../examples/slider/RangeSliderOrientationExample.vue';
+import RangeSliderPrependAppendExample from '../examples/slider/RangeSliderPrependAppendExample.vue';
 import RangeSliderShowStopIndicatorExample from '../examples/slider/RangeSliderShowStopIndicatorExample.vue';
 import RangeSliderShowValueIndicatorExample from '../examples/slider/RangeSliderShowValueIndicatorExample.vue';
 import RangeSliderSizeExample from '../examples/slider/RangeSliderSizeExample.vue';
@@ -20953,6 +21113,164 @@ import TooltipQuickSwitchExample from '../examples/tooltip/TooltipQuickSwitchExa
 import TooltipRichExample from '../examples/tooltip/TooltipRichExample.vue';
 import TooltipRichSlotsExample from '../examples/tooltip/TooltipRichSlotsExample.vue';
 import TooltipTargetExample from '../examples/tooltip/TooltipTargetExample.vue';
+</script>
+
+# Expand transition 折叠过渡
+
+## 组件简介
+
+`<mat-expand-transition>` 的组件导出名是 `MatExpandTransition`。它是一个无渲染过渡容器，为外部状态驱动的折叠内容提供 Material 3 Expressive 高度过渡：进入时从高度 0 展开到自然高度，离开时折叠回 0。
+
+组件不维护展开状态，也不渲染任何包装元素。把需要折叠的内容作为默认插槽的唯一子元素，用 `v-show` 或 `v-if` 由任意外部状态驱动显隐即可。与自带触发器和手风琴语义的 `<mat-expansion-panel>` 不同，它专门服务「开关控制的子设置展开」这类由外部状态决定的折叠场景。
+
+## 示例
+
+### `v-show` 驱动的折叠
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example">
+    <mat-switch v-model="open">显示详情</mat-switch>
+    <mat-expand-transition>
+      <div
+        v-show="open"
+        class="panel"
+      >
+        这段内容由外部状态经 <code>v-show</code> 驱动显隐，切换时在高度 0 与自然高度之间播放折叠过渡，内容始终保持挂载。
+      </div>
+    </mat-expand-transition>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const open = ref(true);
+</script>
+```
+```vue
+<style scoped>
+.example {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  inline-size: 100%;
+}
+
+.panel {
+  padding: 16px;
+  background: var(--mat-sys-color-surface-container-low);
+  border-radius: var(--mat-sys-shape-corner-medium);
+  color: var(--mat-sys-color-on-surface);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Expand transition 显隐预览">
+    <ExpandTransitionShowExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 开关控制的子设置展开
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example">
+    <mat-switch v-model="advanced">高级设置</mat-switch>
+    <mat-expand-transition>
+      <div
+        v-show="advanced"
+        class="settings"
+      >
+        <mat-slider
+          v-model="volume"
+          aria-label="音量微调"
+          :max="100"
+          :min="0"
+        />
+        <mat-text-field
+          v-model="tag"
+          label="备注标签"
+        />
+      </div>
+    </mat-expand-transition>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const advanced = ref(false);
+const volume = ref(40);
+const tag = ref('');
+</script>
+```
+```vue
+<style scoped>
+.example {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  inline-size: 100%;
+}
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--mat-sys-color-surface-container-low);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Expand transition 子设置预览">
+    <ExpandTransitionSettingExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+组件没有属性。显隐完全由插槽子元素上的 `v-show` 或 `v-if` 控制，组件只负责过渡动画。
+
+## 事件
+
+组件没有自定义事件。
+
+## Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 需要折叠过渡的内容；必须提供单个根元素，显隐由该元素上的 `v-show` 或 `v-if` 驱动 |
+
+## 状态与说明
+
+- 过渡使用系统空间弹簧动效令牌；`prefers-reduced-motion: reduce` 下取消过渡，直接呈现展开或折叠后的状态。
+- 过渡期间内容容器为 `overflow: hidden`，过渡结束后恢复原有 overflow。折叠内容无需约定固定高度，按内容自然撑开。
+- 内容根元素的纵向外边距建议改为内边距或由外层容器承载，避免折叠首尾出现跳变。
+- 高度在 `0` 与 `auto` 之间的过渡依赖现代浏览器的 `interpolate-size` 特性；不支持该特性的环境中显隐仍然正确，只是没有动画。
+- 初次挂载时不播放过渡，内容直接按初始状态显示或隐藏。
+
+<script setup>
+import ExpandTransitionSettingExample from '../examples/expand-transition/ExpandTransitionSettingExample.vue';
+import ExpandTransitionShowExample from '../examples/expand-transition/ExpandTransitionShowExample.vue';
 </script>
 
 # Navigation bar 底部导航栏

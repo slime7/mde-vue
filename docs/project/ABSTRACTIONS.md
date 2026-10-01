@@ -26,6 +26,8 @@
 
 任一 Tooltip 显示时，其他实例切换进入可跳过打开延迟；Tooltip 关闭后、尚未显示和重新进入同一实例不得共享延迟。受控 Tooltip 不参与该自动状态。
 
+`MatExpandTransition` 是无渲染折叠过渡容器，导出名 `MatExpandTransition`。它不维护展开状态、不渲染包装元素、没有属性和事件，只把默认插槽的唯一子元素交给 Vue Transition：显隐完全由使用方在该元素上的 `v-show` 或 `v-if` 驱动，组件负责在高度 `0` 与自然高度之间播放系统空间弹簧过渡，并在减少动态效果或环境不支持 `interpolate-size` 时正确呈现最终状态。需要触发器和手风琴语义的折叠使用 Expansion 组件族，而不是为本组件添加状态。
+
 ## ESM 分发边界
 
 `src/` 是组件、插件、指令、函数和样式的维护权威，`dist/` 是使用方唯一可解析的运行时与类型边界。所有运行时实现必须进入同一个 `dist/mde-vue.js`，公共 JavaScript API 只通过 `mde-vue` 根入口具名导入，使内部上下文、队列和协调器只存在一个模块实例。Vue 保持 peer dependency，Material Color Utilities 保持普通外部依赖；分发产物不包含 `.vue` 导入，也不要求使用方执行依赖生命周期脚本。

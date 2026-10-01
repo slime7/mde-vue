@@ -193,6 +193,26 @@ order: 87
   </DocsPreview>
 </ClientOnly>
 
+### `prepend` 与 `append` Slots
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/slider/SliderPrependAppendExample.vue#template [template]
+
+<<< @/examples/slider/SliderPrependAppendExample.vue#script [script]
+
+<<< @/examples/slider/SliderPrependAppendExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Slider 前后插槽预览" stacked>
+    <SliderPrependAppendExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -227,11 +247,15 @@ order: 87
 
 | Slot | 作用域 | 用途 |
 | --- | --- | --- |
+| `prepend` | 无 | 轨道起始侧的自由内容，用于放置最小值标签等同行元素；纵向滑块中位于轨道上方 |
+| `append` | 无 | 轨道末侧的自由内容，用于放置最大值标签等同行元素；纵向滑块中位于轨道下方 |
 | `indicator-label` | `{ modelValue: number }` | 自定义数值指示内容；`modelValue` 是范围钳制、按 `step` 对齐且在拖动中实时更新的当前显示值。指示器至少为 48px 圆形，内容较长时横向增长为胶囊形；未提供 Slot 时显示纯数值 |
 
 ## 状态与交互
 
 组件支持 focus-visible、pressed、disabled 和减少动态效果偏好。键盘焦点使用 `secondary` 语义色的 3px 胶囊轮廓表示，轮廓与手柄相隔 2px，不绘制圆形背景状态层；拖动期间，同一绘制帧内的连续指针输入合并为最新位置，活动轨道、非活动轨道和手柄不会播放位置补间，释放前会同步刷新最终值。按下或拖动时，当前手柄会由 4px 收窄至 2px，轨道在手柄两侧保留 6px 断口且断口圆角为 2px。指针默认使用 `default`，并遵循 `createMatUi()` 的全局 `useCursor` 设置。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至最小和最大可对齐值。纵向滑块以底部为最小值、顶部为最大值。组件没有公开方法。
+
+`prepend` 与 `append` 插槽内容不压缩：横向滑块中它们与轨道同行排列，纵向滑块中分别位于轨道上方与下方，整体尺寸不超过 `--mat-slider-vertical-length`。插槽内容不参与取值，指针取值只发生在轨道区域；提供了任一插槽时，轨道与插槽内容之间保留 8px 间距。
 
 ## 参考来源
 
@@ -243,6 +267,7 @@ import SliderDisabledExample from '../examples/slider/SliderDisabledExample.vue'
 import SliderInsetIconExample from '../examples/slider/SliderInsetIconExample.vue';
 import SliderModelValueExample from '../examples/slider/SliderModelValueExample.vue';
 import SliderOrientationExample from '../examples/slider/SliderOrientationExample.vue';
+import SliderPrependAppendExample from '../examples/slider/SliderPrependAppendExample.vue';
 import SliderShowStopIndicatorExample from '../examples/slider/SliderShowStopIndicatorExample.vue';
 import SliderShowValueIndicatorExample from '../examples/slider/SliderShowValueIndicatorExample.vue';
 import SliderSizeExample from '../examples/slider/SliderSizeExample.vue';

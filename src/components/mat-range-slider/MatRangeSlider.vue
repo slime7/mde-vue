@@ -455,108 +455,124 @@ function setHandleElement(index, element) {
     :style="rootStyle"
   >
     <span
-      class="mat-range-slider__track"
-      aria-hidden="true"
+      v-if="slots.prepend"
+      class="mat-range-slider__affix mat-range-slider__affix--prepend"
     >
-      <span class="mat-range-slider__inactive-track mat-range-slider__inactive-track--before" />
-      <span class="mat-range-slider__active-track" />
-      <span class="mat-range-slider__inactive-track mat-range-slider__inactive-track--after" />
-
-      <span
-        v-for="stopValue in stopValues"
-        :key="stopValue"
-        class="mat-range-slider__stop"
-        :class="{
-          'mat-range-slider__stop--active': stopValue >= displayedValue[0]
-            && stopValue <= displayedValue[1],
-        }"
-        :style="{
-          '--mat-range-slider-stop-position': getSliderVisualPosition(
-            getSliderPercentage(stopValue, bounds),
-          ),
-        }"
-      />
-
-      <span
-        v-for="(value, index) in displayedValue"
-        :key="index"
-        :ref="(element) => setHandleElement(index, element)"
-        class="mat-range-slider__handle"
-        :class="[
-          `mat-range-slider__handle--${index === 0 ? 'start' : 'end'}`,
-          { 'mat-range-slider__handle--active': activeHandle === index },
-        ]"
-      >
-        <span class="mat-range-slider__handle-shape" />
-      </span>
+      <slot name="prepend" />
     </span>
 
-    <MatTooltip
-      class="mat-range-slider__value-indicator"
-      data-slider-value-indicator
-      :location="propsWithDefaults.orientation === 'vertical' ? 'right' : 'top'"
-      :model-value="showValueIndicatorState"
-      :target="activeHandleElement"
-    >
-      <slot
-        v-if="slots['indicator-label']"
-        name="indicator-label"
-        :index="activeHandle"
-        :model-value="activeValue"
+    <span class="mat-range-slider__body">
+      <span
+        class="mat-range-slider__track"
+        aria-hidden="true"
+      >
+        <span class="mat-range-slider__inactive-track mat-range-slider__inactive-track--before" />
+        <span class="mat-range-slider__active-track" />
+        <span class="mat-range-slider__inactive-track mat-range-slider__inactive-track--after" />
+
+        <span
+          v-for="stopValue in stopValues"
+          :key="stopValue"
+          class="mat-range-slider__stop"
+          :class="{
+            'mat-range-slider__stop--active': stopValue >= displayedValue[0]
+              && stopValue <= displayedValue[1],
+          }"
+          :style="{
+            '--mat-range-slider-stop-position': getSliderVisualPosition(
+              getSliderPercentage(stopValue, bounds),
+            ),
+          }"
+        />
+
+        <span
+          v-for="(value, index) in displayedValue"
+          :key="index"
+          :ref="(element) => setHandleElement(index, element)"
+          class="mat-range-slider__handle"
+          :class="[
+            `mat-range-slider__handle--${index === 0 ? 'start' : 'end'}`,
+            { 'mat-range-slider__handle--active': activeHandle === index },
+          ]"
+        >
+          <span class="mat-range-slider__handle-shape" />
+        </span>
+      </span>
+
+      <MatTooltip
+        class="mat-range-slider__value-indicator"
+        data-slider-value-indicator
+        :location="propsWithDefaults.orientation === 'vertical' ? 'right' : 'top'"
+        :model-value="showValueIndicatorState"
+        :target="activeHandleElement"
+      >
+        <slot
+          v-if="slots['indicator-label']"
+          name="indicator-label"
+          :index="activeHandle"
+          :model-value="activeValue"
+        />
+        <template v-else>
+          {{ activeValue }}
+        </template>
+      </MatTooltip>
+
+      <span
+        ref="interaction"
+        class="mat-range-slider__interaction"
+        aria-hidden="true"
+        @lostpointercapture="finishPointerInteraction($event, false)"
+        @pointercancel="finishPointerInteraction($event, false)"
+        @pointerdown="handlePointerDown"
+        @pointermove="handlePointerMove"
+        @pointerup="finishPointerInteraction($event, true)"
       />
-      <template v-else>
-        {{ activeValue }}
-      </template>
-    </MatTooltip>
+
+      <input
+        ref="startInput"
+        class="mat-range-slider__native-input"
+        type="range"
+        :aria-label="propsWithDefaults.ariaLabelStart"
+        :aria-orientation="propsWithDefaults.orientation"
+        :aria-valuemax="displayedValue[1]"
+        :aria-valuemin="bounds.min"
+        :aria-valuenow="displayedValue[0]"
+        :disabled="propsWithDefaults.disabled"
+        :max="displayedValue[1]"
+        :min="bounds.min"
+        :step="resolvedStep"
+        :value="displayedValue[0]"
+        @blur="handleBlur(0)"
+        @focus="handleFocus(0)"
+        @keydown="handleKeyDown(0, $event)"
+      >
+
+      <input
+        ref="endInput"
+        class="mat-range-slider__native-input"
+        type="range"
+        :aria-label="propsWithDefaults.ariaLabelEnd"
+        :aria-orientation="propsWithDefaults.orientation"
+        :aria-valuemax="bounds.max"
+        :aria-valuemin="displayedValue[0]"
+        :aria-valuenow="displayedValue[1]"
+        :disabled="propsWithDefaults.disabled"
+        :max="bounds.max"
+        :min="displayedValue[0]"
+        :step="resolvedStep"
+        :value="displayedValue[1]"
+        @blur="handleBlur(1)"
+        @focus="handleFocus(1)"
+        @keydown="handleKeyDown(1, $event)"
+      >
+    </span>
 
     <span
-      ref="interaction"
-      class="mat-range-slider__interaction"
-      aria-hidden="true"
-      @lostpointercapture="finishPointerInteraction($event, false)"
-      @pointercancel="finishPointerInteraction($event, false)"
-      @pointerdown="handlePointerDown"
-      @pointermove="handlePointerMove"
-      @pointerup="finishPointerInteraction($event, true)"
-    />
-
-    <input
-      ref="startInput"
-      class="mat-range-slider__native-input"
-      type="range"
-      :aria-label="propsWithDefaults.ariaLabelStart"
-      :aria-orientation="propsWithDefaults.orientation"
-      :aria-valuemax="displayedValue[1]"
-      :aria-valuemin="bounds.min"
-      :aria-valuenow="displayedValue[0]"
-      :disabled="propsWithDefaults.disabled"
-      :max="displayedValue[1]"
-      :min="bounds.min"
-      :step="resolvedStep"
-      :value="displayedValue[0]"
-      @blur="handleBlur(0)"
-      @focus="handleFocus(0)"
-      @keydown="handleKeyDown(0, $event)"
+      v-if="slots.append"
+      class="mat-range-slider__affix mat-range-slider__affix--append"
     >
-
-    <input
-      ref="endInput"
-      class="mat-range-slider__native-input"
-      type="range"
-      :aria-label="propsWithDefaults.ariaLabelEnd"
-      :aria-orientation="propsWithDefaults.orientation"
-      :aria-valuemax="bounds.max"
-      :aria-valuemin="displayedValue[0]"
-      :aria-valuenow="displayedValue[1]"
-      :disabled="propsWithDefaults.disabled"
-      :max="bounds.max"
-      :min="displayedValue[0]"
-      :step="resolvedStep"
-      :value="displayedValue[1]"
-      @blur="handleBlur(1)"
-      @focus="handleFocus(1)"
-      @keydown="handleKeyDown(1, $event)"
-    >
+      <slot name="append" />
+    </span>
   </div>
 </template>
 
@@ -571,7 +587,8 @@ function setHandleElement(index, element) {
     --mat-range-slider-current-track-height: var(--mat-slider-extra-small-track-height);
     --mat-range-slider-current-handle-height: var(--mat-slider-extra-small-handle-height);
     position: relative;
-    display: block;
+    display: flex;
+    gap: 8px;
     box-sizing: border-box;
     inline-size: 100%;
     min-inline-size: 112px;
@@ -579,6 +596,21 @@ function setHandleElement(index, element) {
     color: var(--mat-sys-color-on-surface);
     isolation: isolate;
     user-select: none;
+  }
+
+  .mat-range-slider__body {
+    position: relative;
+    display: block;
+    flex-grow: 1;
+    min-inline-size: 0;
+    min-block-size: 0;
+    align-self: stretch;
+  }
+
+  .mat-range-slider__affix {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
   }
 
   .mat-range-slider--size-small {
@@ -742,6 +774,8 @@ function setHandleElement(index, element) {
   }
 
   .mat-range-slider--vertical {
+    flex-direction: column;
+    align-items: center;
     inline-size: max(var(--mat-sys-interaction-target-min-size), var(--mat-range-slider-current-track-height));
     min-inline-size: 0;
     block-size: var(--mat-slider-vertical-length);

@@ -2,7 +2,9 @@ import { mount } from '@vue/test-utils';
 import {
   afterEach, describe, expect, it, vi,
 } from 'vitest';
-import { nextTick } from 'vue';
+import {
+  h, nextTick,
+} from 'vue';
 import { MatRangeSlider, MatTooltip } from '../../src';
 
 /**
@@ -236,6 +238,52 @@ describe('MatRangeSlider', () => {
     }));
     expect(document.body.querySelector('[role="tooltip"]')?.textContent).toContain('0:2%');
     wrapper.unmount();
+  });
+
+  it('prepend 与 append 插槽渲染轨道两侧自由内容，且不破坏取值交互', async () => {
+    const wrapper = mount(MatRangeSlider, {
+      props: {
+        max: 10,
+        min: 0,
+        modelValue: [2, 8],
+      },
+      slots: {
+        append: () => h('span', { class: 'affix-max' }, '最大'),
+        prepend: () => h('span', { class: 'affix-min' }, '最小'),
+      },
+    });
+
+    expect(wrapper.find('.affix-min').text()).toBe('最小');
+    expect(wrapper.find('.affix-max').text()).toBe('最大');
+
+    const interaction = wrapper.find('.mat-range-slider__interaction');
+
+    mockInteractionRect(wrapper);
+    await dispatchPointer(interaction, 'pointerdown', {
+      clientX: 10,
+      pointerId: 1,
+    });
+    await dispatchPointer(interaction, 'pointerup', {
+      clientX: 10,
+      pointerId: 1,
+    });
+
+    expect(wrapper.emitted('update:modelValue')?.[0][0]).toEqual([0, 8]);
+  });
+
+  it('纵向方向的 prepend 与 append 插槽渲染在上下的自由内容', () => {
+    const wrapper = mount(MatRangeSlider, {
+      props: {
+        orientation: 'vertical',
+      },
+      slots: {
+        append: () => h('span', { class: 'affix-bottom' }, '下端'),
+        prepend: () => h('span', { class: 'affix-top' }, '上端'),
+      },
+    });
+
+    expect(wrapper.find('.affix-top').text()).toBe('上端');
+    expect(wrapper.find('.affix-bottom').text()).toBe('下端');
   });
 
   it('校验范围专有属性', () => {
