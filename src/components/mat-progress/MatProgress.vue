@@ -68,6 +68,16 @@ function prefersReducedMotion() {
 }
 
 /**
+ * @param {number} timeRatio
+ * @returns {number}
+ */
+function easeShapeMorph(timeRatio) {
+  return timeRatio < 0.5
+    ? 4 * timeRatio * timeRatio * timeRatio
+    : 1 - (((-2 * timeRatio + 2) ** 3) / 2);
+}
+
+/**
  * @param {number} width
  * @param {number} height
  * @param {number} thickness
@@ -80,17 +90,17 @@ function createLinearPath(width, height, thickness, amplitude, phase) {
   const start = Math.min(width / 2, thickness / 2);
   const end = Math.max(start, width - (thickness / 2));
   const sampleSize = 2;
-  const parts = [`M ${formatCoordinate(start)} ${formatCoordinate(center)}`];
+  const parts = [];
 
-  for (let x = start + sampleSize; x < end; x += sampleSize) {
+  for (let x = start; x < end; x += sampleSize) {
     const pathPhase = ((x - start) / LINEAR_WAVE_WAVELENGTH) * Math.PI * 2;
     const y = center - (Math.sin(pathPhase - phase) * amplitude);
 
-    parts.push(`L ${formatCoordinate(x)} ${formatCoordinate(y)}`);
+    parts.push(`${parts.length === 0 ? 'M' : 'L'} ${formatCoordinate(x)} ${formatCoordinate(y)}`);
   }
 
-  const pathPhase = ((end - start) / LINEAR_WAVE_WAVELENGTH) * Math.PI * 2;
-  const endY = center - (Math.sin(pathPhase - phase) * amplitude);
+  const endPhase = ((end - start) / LINEAR_WAVE_WAVELENGTH) * Math.PI * 2;
+  const endY = center - (Math.sin(endPhase - phase) * amplitude);
 
   parts.push(`L ${formatCoordinate(end)} ${formatCoordinate(endY)}`);
 
@@ -250,12 +260,16 @@ const linearMaskId = `mat-progress-linear-mask-${useId()}`;
 let linearResizeObserver;
 let waveAnimationFrame;
 let previousFrameTime;
+let morphTarget = propsWithDefaults.shape === 'wavy' ? 1 : 0;
+let morphStartProgress = morphTarget;
+let morphStartTime = 0;
 
 const resolvedMax = computed(() => (
   isPositiveNumber(propsWithDefaults.max) ? propsWithDefaults.max : 1
 ));
 const isCircular = computed(() => propsWithDefaults.variant === 'circular');
 const isWavy = computed(() => propsWithDefaults.shape === 'wavy');
+const isShapeMorphing = computed(() => waveMorphProgress.value !== (isWavy.value ? 1 : 0));
 const resolvedCircularSize = computed(() => {
   const size = normalizeNumber(propsWithDefaults.size, {
     allowNegative: true,
@@ -411,18 +425,25 @@ function updateWaveAnimation(frameTime) {
   const elapsed = previousFrameTime === undefined
     ? 0
     : Math.min(64, frameTime - previousFrameTime);
-  const targetProgress = isWavy.value ? 1 : 0;
-  const progressDifference = targetProgress - waveMorphProgress.value;
 
   previousFrameTime = frameTime;
 
-  if (elapsed > 0 && progressDifference !== 0) {
-    const progressStep = Math.min(
-      Math.abs(progressDifference),
-      elapsed / SHAPE_MORPH_DURATION,
+  const targetProgress = isWavy.value ? 1 : 0;
+
+  if (targetProgress !== morphTarget) {
+    morphTarget = targetProgress;
+    morphStartProgress = waveMorphProgress.value;
+    morphStartTime = frameTime;
+  }
+
+  if (waveMorphProgress.value !== morphTarget) {
+    const morphRatio = easeShapeMorph(
+      Math.min(1, (frameTime - morphStartTime) / SHAPE_MORPH_DURATION),
     );
 
-    waveMorphProgress.value += Math.sign(progressDifference) * progressStep;
+    waveMorphProgress.value = morphRatio === 1
+      ? morphTarget
+      : morphStartProgress + ((morphTarget - morphStartProgress) * morphRatio);
   }
 
   if (elapsed > 0 && propsWithDefaults.waveMotion && waveMorphProgress.value > 0) {
@@ -430,7 +451,7 @@ function updateWaveAnimation(frameTime) {
     wavePhase.value %= Math.PI * 2;
   }
 
-  const shouldContinueMorphing = waveMorphProgress.value !== targetProgress;
+  const shouldContinueMorphing = waveMorphProgress.value !== morphTarget;
   const shouldContinueFlowing = propsWithDefaults.waveMotion && waveMorphProgress.value > 0;
 
   if (shouldContinueMorphing || shouldContinueFlowing) {
@@ -442,7 +463,9 @@ function updateWaveAnimation(frameTime) {
 
 function requestWaveAnimation() {
   if (prefersReducedMotion() || typeof globalThis.requestAnimationFrame !== 'function') {
-    waveMorphProgress.value = isWavy.value ? 1 : 0;
+    morphTarget = isWavy.value ? 1 : 0;
+    morphStartProgress = morphTarget;
+    waveMorphProgress.value = morphTarget;
     return;
   }
 
@@ -491,6 +514,7 @@ onBeforeUnmount(() => {
       {
         'mat-progress--indeterminate': propsWithDefaults.indeterminate,
         'mat-progress--wave-motion': propsWithDefaults.waveMotion,
+        'mat-progress--shape-morphing': isShapeMorphing,
       },
     ]"
     :style="rootStyle"
@@ -641,6 +665,16 @@ onBeforeUnmount(() => {
     block-size: var(--mat-progress-linear-size);
     overflow: clip;
     transition: block-size var(--mat-sys-motion-spring-fast-spatial);
+  }
+
+  /* 形状过渡的容器高度与虚线断口由逐帧动画精确驱动；保留 CSS 过渡会滞后于振幅，波峰被容器边缘裁切、断口拖影。 */
+  .mat-progress--shape-morphing .mat-progress__linear {
+    transition: none;
+  }
+
+  .mat-progress--shape-morphing .mat-progress__circular-track,
+  .mat-progress--shape-morphing .mat-progress__circular-active {
+    transition: none;
   }
 
   .mat-progress__linear-track {
