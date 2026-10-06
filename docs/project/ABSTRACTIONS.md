@@ -140,13 +140,13 @@ Tailwind CSS v4 使用方必须预先声明 `tailwind-theme`、`tailwind-reset`�
 
 ## `<mat-fab>`
 
-`<mat-fab>` 的导出名是 `MatFab`，默认 Slot 没有非空内容时表现为纯图标 FAB，有内容时表现为 Extended FAB；不另设 `MatExtendedFab`。尺寸只接受 `small`、`medium`、`large`，高度分别为 56px、80px、96px，`small` 统一普通 FAB 与 small Extended FAB 的 56px 规格。纯图标模式要求非空 `icon` 和 `label`；label 写入 `aria-label` 并作为默认 Tooltip，Extended FAB 可以没有 icon 但默认 Slot 标签仍然有效。`app=true` 时自动进入最近 AppRoot 的普通浮动组，`position` 控制逻辑起点、居中或逻辑终点对齐；AppRoot 外保持声明位置的按钮行为。
+`<mat-fab>` 的导出名是 `MatFab`，默认 Slot 没有非空内容时表现为纯图标 FAB，有内容时表现为 Extended FAB；不另设 `MatExtendedFab`。尺寸只接受 `small`、`medium`、`large`，高度分别为 56px、80px、96px，`small` 统一普通 FAB 与 small Extended FAB 的 56px 规格。纯图标模式要求非空 `icon` 和 `label`；label 写入 `aria-label` 并作为默认 Tooltip，Extended FAB 可以没有 icon 但默认 Slot 标签仍然有效。`app=true` 时自动进入最近 AppRoot 的普通浮动组，`position` 控制逻辑起点、居中或逻辑终点对齐；浮动组不登记边缘，正文从 FAB 下方滚过，其占用高度经 `layout.floating.height` 导出。AppRoot 外保持声明位置的按钮行为。
 
 ## AppRoot 应用布局
 
 `<mat-app-root>` 与导出 `MatAppRoot` 建立应用坐标系。默认 `fillViewport=true` 且 `scrollable=false`：根至少为 `100dvb`，正文增长并由 document/body 滚动；`scrollable=true` 把正文切换为内部滚动容器，`fillViewport=false` 时使用方必须提供确定高度。组件不修改 `html`、`body` 或挂载节点。允许多个同级容器化 AppRoot，不允许嵌套。
 
-`useMatApp()` 只在 AppRoot 后代 setup 中可用，返回同一个深只读响应式 `layout` 与 `registerEdge()`。断点按 AppRoot 宽度的 600/840/1200/1600 边界计算；layout 同时提供布局 size、六向 padding、扣除 padding 的 content、breakpointRange 和六向 edges。安全区由 AppRoot 统一并入 padding；`as` 只改变 AppRoot 根标签，不改变应用覆盖层、滚动模式或上下文。
+`useMatApp()` 只在 AppRoot 后代 setup 中可用，返回同一个深只读响应式 `layout` 与 `registerEdge()`。断点按 AppRoot 宽度的 600/840/1200/1600 边界计算；layout 同时提供布局 size、六向 padding、扣除 padding 的 content、浮动组占用的 floating、breakpointRange 和六向 edges。`floating.height` 表示普通浮动组（如 `app` 模式 FAB）在正文底部占据的总高度（浮动元素栈高加与容器边缘的间距，空组为 0），不参与 padding，是否据此留白由正文决定。安全区由 AppRoot 统一并入 padding；`as` 只改变 AppRoot 根标签，不改变应用覆盖层、滚动模式或上下文。
 
 `registerEdge({ edge, element })` 接受 `top`、`bottom`、`left`、`right`、`start`、`end` 六向边缘和当前 document 中的 HTMLElement，并返回包含完整六向 `insets` 的只读响应式对象、`update()`、幂等 `unregister()`。同侧连续登记项按 DOM 顺序累加；正交边缘按登记顺序确定优先级，较晚登记项通过 cross-axis insets 避让较早项。默认 Slot 只承载正文和布局组件，覆盖层不作为公共 Slot 暴露。
 

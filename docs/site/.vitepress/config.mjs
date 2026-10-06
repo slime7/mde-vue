@@ -304,6 +304,12 @@ export default defineConfig({
         ],
       },
       {
+        text: '示例',
+        items: [
+          { text: '典型布局', link: '/examples' },
+        ],
+      },
+      {
         text: 'AI',
         items: [
           { text: 'LLMs.txt 使用说明', link: '/ai/llms' },

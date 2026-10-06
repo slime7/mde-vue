@@ -21,10 +21,10 @@ test.describe('MatAppRoot 边缘登记与断点', () => {
     await openScene(page, 'app-root');
 
     const breakpoint = page.getByTestId('breakpoint');
-    await expect(breakpoint).not.toHaveText('', { timeout: 5000 });
-    const before = await breakpoint.textContent();
+    // 首帧测量完成前断点保持初始值 compact，先等待配置视口 1280 宽度下的稳定值再做对照。
+    await expect(breakpoint).toHaveText('large', { timeout: 5000 });
 
     await page.setViewportSize({ width: 500, height: 800 });
-    await expect(breakpoint).not.toHaveText(before, { timeout: 5000 });
+    await expect(breakpoint).toHaveText('compact', { timeout: 5000 });
   });
 });

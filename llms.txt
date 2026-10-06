@@ -66,3 +66,4 @@
 - [Intersection 指令](directives/intersection.md): v-intersection 的 IntersectionObserver 绑定值、选项和修饰符。
 - [State layer 指令](directives/state-layer.md): v-state-layer 的颜色配置、交互状态、宿主约束和生命周期。
 - [Ripple 涟漪指令](directives/ripple.md): v-ripple 的按压涟漪、颜色与波点、柔光、圆环、星芒形态配置、宿主约束和生命周期。
+- [典型布局示例](examples.md): 用 mat-app-root 组合导航、表单与移动端外壳的三组典型页面布局，每个示例只保留最简单的交互，可直接作为新页面的骨架起点。

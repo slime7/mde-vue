@@ -4708,6 +4708,7 @@ export interface MatAppLayout {
   readonly size: Readonly<{ width: number; height: number }>;
   readonly padding: Readonly<{ top: number; bottom: number; left: number; right: number; start: number; end: number }>;
   readonly content: Readonly<{ width: number; height: number }>;
+  readonly floating: Readonly<{ height: number }>;
   readonly breakpoint: MatAppBreakpoint;
   readonly breakpointRange: Readonly<{ min: number; max: number }>;
   readonly edges: Readonly<Record<MatAppEdge, MatAppEdgeInfo>>;

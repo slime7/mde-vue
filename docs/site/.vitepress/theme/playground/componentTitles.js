@@ -30,6 +30,7 @@ export const componentTitles = {
   'input-base': 'Input base 输入基础层',
   intersection: 'Intersection 相交观察',
   layout: 'Layout 布局容器',
+  layouts: '典型布局示例',
   list: 'List 列表',
   loading: 'Loading 加载指示器',
   menu: 'Menu 菜单',

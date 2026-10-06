@@ -177,6 +177,7 @@ const { layout, registerEdge } = useMatApp();
 | `size { width, height }` | 当前应用布局坐标区尺寸；默认文档滚动模式使用视口高度，内部滚动和容器化模式使用 AppRoot 边框盒 |
 | `padding { top, bottom, left, right, start, end }` | 安全区与各边缘元素外延共同形成的正文避让值；`left/right` 与 `start/end` 会按统一六向算法同步计算 |
 | `content { width, height }` | `size` 减去对应两侧 `padding` 后的非负尺寸 |
+| `floating { height }` | 浮动组（如 `app` 模式 FAB）在正文底部占据的总高度：浮动元素栈高（含元素间距）加与容器边缘的间距，浮动组为空时为 0；不参与 `padding`，是否用它做底部避让由正文自行决定 |
 | `breakpoint` | 按 AppRoot 宽度计算的 `compact`、`medium`、`expanded`、`large` 或 `extra-large` |
 | `breakpointRange { min, max }` | 当前断点的闭区间；五档边界依次为 0、600、840、1200、1600px，最后一档 `max` 为 `Infinity` |
 | `edges` | `top`、`bottom`、`left`、`right`、`start`、`end` 的 `{ size, startInset, endInset }` 汇总 |
@@ -200,7 +201,7 @@ const { layout, registerEdge } = useMatApp();
 - `MatToolbar app`：省略 `attach` 时自动进入当前 AppRoot。docked 登记 `bottom`；所有 floating 变体不占布局，但会避让已登记边缘。floating 仍可显式设置 `placeholder`，为声明处的长内容保留滚动末端空间。显式 `attach` 始终优先，并沿用视口固定模式。
 - `MatNavigationRail` / `MatNavigationDrawer`：自动进入最近的 AppRoot 或 Layout。纵向登记 `start`；standard rail 或 drawer 的 collapsed/expanded 实际宽度都会同步到最近根的 padding，modal 展开层覆盖正文且不登记边缘。两者不提供应用级 `app` 开关；显式 `mode="fixed"` 时仍可按 Aside 规则使用 `attach`。
 - `MatSnackbar`：模板实例自动进入当前 AppRoot 的 Snackbar 组，并由 AppRoot 处理安全区、边缘避让和 16px 容器边距；内部滚动模式下，该间距从浮动组边界向内计算，不把滚动条占用计作间距。命令式 `snackbar()`/`toast()` 仍挂载到 body，并使用旧 Toolbar 几何注册表。
-- `MatFab app`：自动进入普通浮动组，与容器边缘保持 16px 间距；内部滚动模式下同样从浮动组边界向内计算。`position` 控制 `start`、`center`、`end` 对齐；未设置 `app` 时仍是声明位置的原生按钮。
+- `MatFab app`：自动进入普通浮动组，与容器边缘保持 16px 间距；内部滚动模式下同样从浮动组边界向内计算。`position` 控制 `start`、`center`、`end` 对齐；未设置 `app` 时仍是声明位置的原生按钮。浮动组不登记边缘、不进入 `padding`，正文从 FAB 下方滚过；其在正文底部占据的高度通过 `layout.floating.height` 实时导出并随 FAB 尺寸变化同步，正文可据此自行留白（示例见[典型布局示例](/examples)）。
 - `MatTooltip`：省略 `attach` 且展示目标位于当前 AppRoot 时进入应用覆盖层，并避让 `layout.padding`；目标位于 AppRoot 外时回退到 body。已打开的 dialog/Popover 和显式 `attach` 仍具有更高优先级。
 - `MatDialog` 与 modal Bottom sheet、Side sheet：位于 AppRoot 内且省略 `attach` 时，进入 AppRoot 内部的模态层，表面与帷幕限制在应用矩形内，正文层设为 `inert` 并锁定滚动；AppRoot 外的内容（如自绘任务栏）保持可见且可点击。`attach` 显式指向 AppRoot 根元素时同样按应用范围展示；指向其他元素时保持铺满视口的原有行为。document 模式（`fillViewport=true` 且 `scrollable=false`）下应用范围等于视口，任务栏等 AppRoot 外内容应使用 `scrollable` 或 `fillViewport=false` 布局。
 - `MatMenu`：位于 AppRoot 内时，菜单的视口夹紧与透明 scrim 都限制在应用矩形内，点击应用外只关闭菜单且不拦截该次事件。

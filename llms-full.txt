@@ -7048,6 +7048,7 @@ const { layout, registerEdge } = useMatApp();
 | `size { width, height }` | 当前应用布局坐标区尺寸；默认文档滚动模式使用视口高度，内部滚动和容器化模式使用 AppRoot 边框盒 |
 | `padding { top, bottom, left, right, start, end }` | 安全区与各边缘元素外延共同形成的正文避让值；`left/right` 与 `start/end` 会按统一六向算法同步计算 |
 | `content { width, height }` | `size` 减去对应两侧 `padding` 后的非负尺寸 |
+| `floating { height }` | 浮动组（如 `app` 模式 FAB）在正文底部占据的总高度：浮动元素栈高（含元素间距）加与容器边缘的间距，浮动组为空时为 0；不参与 `padding`，是否用它做底部避让由正文自行决定 |
 | `breakpoint` | 按 AppRoot 宽度计算的 `compact`、`medium`、`expanded`、`large` 或 `extra-large` |
 | `breakpointRange { min, max }` | 当前断点的闭区间；五档边界依次为 0、600、840、1200、1600px，最后一档 `max` 为 `Infinity` |
 | `edges` | `top`、`bottom`、`left`、`right`、`start`、`end` 的 `{ size, startInset, endInset }` 汇总 |
@@ -7071,7 +7072,7 @@ const { layout, registerEdge } = useMatApp();
 - `MatToolbar app`：省略 `attach` 时自动进入当前 AppRoot。docked 登记 `bottom`；所有 floating 变体不占布局，但会避让已登记边缘。floating 仍可显式设置 `placeholder`，为声明处的长内容保留滚动末端空间。显式 `attach` 始终优先，并沿用视口固定模式。
 - `MatNavigationRail` / `MatNavigationDrawer`：自动进入最近的 AppRoot 或 Layout。纵向登记 `start`；standard rail 或 drawer 的 collapsed/expanded 实际宽度都会同步到最近根的 padding，modal 展开层覆盖正文且不登记边缘。两者不提供应用级 `app` 开关；显式 `mode="fixed"` 时仍可按 Aside 规则使用 `attach`。
 - `MatSnackbar`：模板实例自动进入当前 AppRoot 的 Snackbar 组，并由 AppRoot 处理安全区、边缘避让和 16px 容器边距；内部滚动模式下，该间距从浮动组边界向内计算，不把滚动条占用计作间距。命令式 `snackbar()`/`toast()` 仍挂载到 body，并使用旧 Toolbar 几何注册表。
-- `MatFab app`：自动进入普通浮动组，与容器边缘保持 16px 间距；内部滚动模式下同样从浮动组边界向内计算。`position` 控制 `start`、`center`、`end` 对齐；未设置 `app` 时仍是声明位置的原生按钮。
+- `MatFab app`：自动进入普通浮动组，与容器边缘保持 16px 间距；内部滚动模式下同样从浮动组边界向内计算。`position` 控制 `start`、`center`、`end` 对齐；未设置 `app` 时仍是声明位置的原生按钮。浮动组不登记边缘、不进入 `padding`，正文从 FAB 下方滚过；其在正文底部占据的高度通过 `layout.floating.height` 实时导出并随 FAB 尺寸变化同步，正文可据此自行留白（示例见[典型布局示例](/examples)）。
 - `MatTooltip`：省略 `attach` 且展示目标位于当前 AppRoot 时进入应用覆盖层，并避让 `layout.padding`；目标位于 AppRoot 外时回退到 body。已打开的 dialog/Popover 和显式 `attach` 仍具有更高优先级。
 - `MatDialog` 与 modal Bottom sheet、Side sheet：位于 AppRoot 内且省略 `attach` 时，进入 AppRoot 内部的模态层，表面与帷幕限制在应用矩形内，正文层设为 `inert` 并锁定滚动；AppRoot 外的内容（如自绘任务栏）保持可见且可点击。`attach` 显式指向 AppRoot 根元素时同样按应用范围展示；指向其他元素时保持铺满视口的原有行为。document 模式（`fillViewport=true` 且 `scrollable=false`）下应用范围等于视口，任务栏等 AppRoot 外内容应使用 `scrollable` 或 `fillViewport=false` 布局。
 - `MatMenu`：位于 AppRoot 内时，菜单的视口夹紧与透明 scrim 都限制在应用矩形内，点击应用外只关闭菜单且不拦截该次事件。
@@ -27708,4 +27709,524 @@ import RippleColorExample from '../examples/ripple/RippleColorExample.vue';
 import RippleDefaultExample from '../examples/ripple/RippleDefaultExample.vue';
 import RippleDivExample from '../examples/ripple/RippleDivExample.vue';
 import RippleVariantsExample from '../examples/ripple/RippleVariantsExample.vue';
+</script>
+
+# 典型布局示例
+
+本页展示几组常见的页面布局组合。每个示例都以 `<mat-app-root>` 的容器化模式为布局根，只保留最简单的交互，并且只用组件自身能力完成布局，示例样式只负责示例自己的内容。AppRoot 不允许嵌套，整页应用只放置一个铺满视口的 AppRoot；在卡片、工作区等局部区域需要独立的边缘停靠协调时，改用 `<mat-layout>` 配合 `<mat-aside>`。
+
+## 应用外壳：侧边导航 + 顶栏 + 滚动正文
+
+桌面端最常见的三段式外壳。开启 `scrollable` 后正文使用应用根的内部滚动容器：导航抽屉停靠在起始侧并占据完整高度，App bar 停靠在顶部、覆盖抽屉以外的宽度，正文滚动时二者保持固定。左上角按钮切换抽屉展开与收起，正文留白同步回流；切换导航项时，顶栏标题与正文标题同步更新。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-app-root
+    :fill-viewport="false"
+    scrollable
+    class="layouts-app-shell-example"
+  >
+    <mat-navigation-drawer
+      v-model="current"
+      v-model:expanded="drawerOpen"
+      bordered
+      aria-label="主导航"
+    >
+      <template #header>
+        <p class="layouts-app-shell-example__brand">
+          拾光相册
+        </p>
+      </template>
+      <mat-navigation-rail-item
+        value="home"
+        icon="photo_library"
+      >
+        共享相册
+      </mat-navigation-rail-item>
+      <mat-navigation-rail-item
+        value="albums"
+        icon="collections_bookmark"
+      >
+        相册归档
+      </mat-navigation-rail-item>
+      <mat-navigation-rail-item
+        value="trash"
+        icon="delete"
+      >
+        回收站
+      </mat-navigation-rail-item>
+    </mat-navigation-drawer>
+
+    <mat-app-bar app>
+      <template #leading>
+        <mat-btn
+          variant="standard"
+          size="small"
+          :icon="drawerOpen ? 'menu_open' : 'menu'"
+          :label="drawerOpen ? '收起导航' : '展开导航'"
+          @click="drawerOpen = !drawerOpen"
+        />
+      </template>
+      {{ currentTitle }}
+    </mat-app-bar>
+
+    <mat-scroll-area>
+      <mat-container>
+        <section class="layouts-app-shell-example__content">
+          <h3>{{ currentTitle }}</h3>
+          <p>导航抽屉停靠在起始侧并占据完整高度，App bar 停靠在顶部、覆盖抽屉以外的宽度；正文在应用根的内部滚动容器中移动，导航与顶栏保持固定。</p>
+          <article
+            v-for="index in 4"
+            :key="index"
+            class="layouts-app-shell-example__card"
+          >
+            <h4>照片故事 {{ index }}</h4>
+            <p>占位内容，用于演示正文的滚动与边缘避让。</p>
+          </article>
+        </section>
+      </mat-container>
+    </mat-scroll-area>
+  </mat-app-root>
+</template>
+```
+```vue
+<script setup>
+import { computed, ref } from 'vue';
+
+const drawerOpen = ref(true);
+const current = ref('home');
+
+const titles = {
+  home: '共享相册',
+  albums: '相册归档',
+  trash: '回收站',
+};
+
+const currentTitle = computed(() => titles[current.value] || titles.home);
+</script>
+```
+```vue
+<style scoped>
+.layouts-app-shell-example {
+  position: relative;
+  block-size: 100%;
+  overflow: hidden;
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.layouts-app-shell-example__brand {
+  margin: 0;
+  padding: 12px 16px 4px;
+  color: var(--mat-sys-color-on-surface-variant);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.layouts-app-shell-example__content h3 {
+  margin: 0 0 8px;
+}
+
+.layouts-app-shell-example__content p {
+  margin: 0 0 16px;
+}
+
+.layouts-app-shell-example__card {
+  margin-block: 12px;
+  padding: 12px 16px;
+  background: var(--mat-sys-color-surface-container);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+
+.layouts-app-shell-example__card h4 {
+  margin: 0 0 8px;
+}
+
+.layouts-app-shell-example__card p {
+  margin: 0;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="应用外壳布局预览" height="420px">
+    <LayoutsAppShellExample />
+  </DocsPreview>
+</ClientOnly>
+
+## 设置页：分区表单 + 底部操作栏
+
+表单页按用途把字段分成两组，正文在 ScrollArea 内滚动；底部 docked Toolbar 固定操作区，正文自动避让，不会被长表单推出视口。「保存更改」通过 Snackbar 给出反馈，「恢复默认」还原全部控件。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-app-root
+    :fill-viewport="false"
+    scrollable
+    class="layouts-settings-example"
+  >
+    <mat-app-bar app>
+      偏好设置
+    </mat-app-bar>
+
+    <mat-scroll-area>
+      <mat-container>
+        <section class="layouts-settings-example__group">
+          <h3>阅读偏好</h3>
+          <mat-text-field
+            v-model="penName"
+            label="笔名"
+            supporting-text="展示在书评与笔记的署名"
+            class="layouts-settings-example__field"
+          />
+          <mat-select
+            v-model="language"
+            label="阅读语言"
+            :items="languageItems"
+            class="layouts-settings-example__field"
+          />
+        </section>
+
+        <section class="layouts-settings-example__group">
+          <h3>通知与提醒</h3>
+          <mat-switch v-model="newBookNotice">
+            新书上架提醒
+          </mat-switch>
+          <mat-switch v-model="goalNotice">
+            阅读目标提醒
+          </mat-switch>
+          <div class="layouts-settings-example__slider">
+            <span>提示音量</span>
+            <mat-slider
+              v-model="volume"
+              aria-label="提示音量"
+              :max="100"
+              :min="0"
+              :step="10"
+              class="layouts-settings-example__volume"
+            />
+            <output>{{ volume }}</output>
+          </div>
+        </section>
+      </mat-container>
+    </mat-scroll-area>
+
+    <mat-toolbar
+      app
+      variant="docked"
+    >
+      <mat-btn
+        variant="text"
+        @click="restoreDefaults"
+      >
+        恢复默认
+      </mat-btn>
+      <mat-spacer />
+      <mat-btn @click="save">
+        保存更改
+      </mat-btn>
+    </mat-toolbar>
+
+    <mat-snackbar
+      v-model="snackOpen"
+      :text="snackText"
+    />
+  </mat-app-root>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const defaults = {
+  penName: '山鹿',
+  language: '简体中文',
+  newBookNotice: true,
+  goalNotice: false,
+  volume: 40,
+};
+
+const penName = ref(defaults.penName);
+const language = ref(defaults.language);
+const newBookNotice = ref(defaults.newBookNotice);
+const goalNotice = ref(defaults.goalNotice);
+const volume = ref(defaults.volume);
+
+const snackOpen = ref(false);
+const snackText = ref('');
+
+const languageItems = ['简体中文', '繁體中文', 'English'];
+
+function restoreDefaults() {
+  penName.value = defaults.penName;
+  language.value = defaults.language;
+  newBookNotice.value = defaults.newBookNotice;
+  goalNotice.value = defaults.goalNotice;
+  volume.value = defaults.volume;
+}
+
+function save() {
+  snackText.value = '偏好设置已保存';
+  snackOpen.value = true;
+}
+</script>
+```
+```vue
+<style scoped>
+.layouts-settings-example {
+  position: relative;
+  block-size: 100%;
+  overflow: hidden;
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+.layouts-settings-example__group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-block-end: 24px;
+}
+
+.layouts-settings-example__group h3 {
+  margin: 0;
+}
+
+.layouts-settings-example__field {
+  inline-size: 100%;
+}
+
+.layouts-settings-example__slider {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.layouts-settings-example__slider span {
+  flex: 0 0 auto;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+
+.layouts-settings-example__volume {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="设置页布局预览" height="460px">
+    <LayoutsSettingsExample />
+  </DocsPreview>
+</ClientOnly>
+
+## 移动端首页：顶栏 + 列表 + FAB + 底部导航
+
+窄屏应用把 AppRoot 收口在手机宽度内居中，正文是单列列表。App bar 标题随底部导航切换，FAB 悬浮于右下角并自动避让底部导航栏；FAB 不避让普通正文，正文在 AppRoot 的后代组件中调用 `useMatApp()`，把 `layout.floating.height` 导出的浮动组占用转为列表的底部留白，让最后一项可以滚出 FAB 区域，FAB 尺寸变化时留白同步更新。点击 FAB 在列表顶部记入一笔，并通过 Snackbar 反馈。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-app-root
+    :fill-viewport="false"
+    scrollable
+    class="layouts-mobile-home-example"
+  >
+    <mat-app-bar app>
+      <template #leading>
+        <mat-btn
+          variant="standard"
+          size="small"
+          icon="menu"
+          label="打开菜单"
+        />
+      </template>
+      {{ tabTitles[tab] }}
+      <template #trailing>
+        <mat-btn
+          variant="standard"
+          size="small"
+          icon="search"
+          label="搜索记录"
+        />
+      </template>
+    </mat-app-bar>
+
+    <mat-scroll-area>
+      <mat-container>
+        <FabInset>
+          <mat-list
+            v-if="tab === 'ledger'"
+            aria-label="支出明细"
+          >
+            <mat-list-item
+              v-for="record in records"
+              :key="record.id"
+            >
+              {{ record.name }}
+              <template #supporting>
+                {{ record.meta }}
+              </template>
+              <template #trailing>
+                <span class="layouts-mobile-home-example__amount">{{ record.amount }}</span>
+              </template>
+            </mat-list-item>
+          </mat-list>
+
+          <section
+            v-else
+            class="layouts-mobile-home-example__panel"
+          >
+            <p>{{ tabTitles[tab] }}是占位内容，切换底部导航即可更新正文。</p>
+          </section>
+        </FabInset>
+      </mat-container>
+    </mat-scroll-area>
+
+    <mat-fab
+      app
+      icon="add"
+      label="记一笔"
+      position="end"
+      @click="addRecord"
+    />
+
+    <mat-navigation-bar
+      v-model="tab"
+      app
+      aria-label="底部导航"
+    >
+      <mat-navigation-bar-item
+        value="ledger"
+        icon="receipt_long"
+      >
+        明细
+      </mat-navigation-bar-item>
+      <mat-navigation-bar-item
+        value="stats"
+        icon="donut_small"
+      >
+        构成
+      </mat-navigation-bar-item>
+      <mat-navigation-bar-item
+        value="mine"
+        icon="person"
+      >
+        我的
+      </mat-navigation-bar-item>
+    </mat-navigation-bar>
+
+    <mat-snackbar
+      v-model="snackOpen"
+      text="已记一笔：手冲咖啡"
+    />
+  </mat-app-root>
+</template>
+```
+```vue
+<script setup>
+import { defineComponent, h, ref } from 'vue';
+import { useMatApp } from 'mde-vue';
+
+// useMatApp() 必须在 AppRoot 的后代组件中调用；这层包装把浮动组占用转成正文的底部留白。
+const FabInset = defineComponent({
+  name: 'FabInset',
+  setup(_, { slots }) {
+    const { layout } = useMatApp();
+
+    return () => h('div', {
+      style: { paddingBlockEnd: `${layout.floating.height}px` },
+    }, slots.default?.());
+  },
+});
+
+const tab = ref('ledger');
+
+const tabTitles = {
+  ledger: '本月支出',
+  stats: '支出构成',
+  mine: '我的账户',
+};
+
+let nextId = 4;
+const records = ref([
+  { id: 1, name: '周三十味食堂', meta: '今天 12:24', amount: '-28.50' },
+  { id: 2, name: '地铁通勤', meta: '今天 08:41', amount: '-4.00' },
+  { id: 3, name: '便利店早餐', meta: '昨天 07:55', amount: '-9.90' },
+]);
+
+const snackOpen = ref(false);
+
+function addRecord() {
+  records.value.unshift({
+    id: nextId,
+    name: '手冲咖啡',
+    meta: '刚刚',
+    amount: '-18.00',
+  });
+  nextId += 1;
+  snackOpen.value = true;
+}
+</script>
+```
+```vue
+<style scoped>
+.layouts-mobile-home-example {
+  position: relative;
+  block-size: 100%;
+  overflow: hidden;
+  max-inline-size: 400px;
+  margin-inline: auto;
+  background: var(--mat-sys-color-surface);
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: var(--mat-sys-shape-corner-large);
+}
+
+/* FAB 悬浮于正文之上且不进入 padding；正文通过 layout.floating.height 取得浮动组占用并转为底部留白。 */
+.layouts-mobile-home-example__amount {
+  color: var(--mat-sys-color-on-surface-variant);
+  font-variant-numeric: tabular-nums;
+}
+
+.layouts-mobile-home-example__panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  color: var(--mat-sys-color-on-surface-variant);
+  background: var(--mat-sys-color-surface-container);
+  border-radius: var(--mat-sys-shape-corner-medium);
+}
+
+.layouts-mobile-home-example__panel p {
+  margin: 0;
+  text-align: center;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="移动端首页布局预览" height="520px">
+    <LayoutsMobileHomeExample />
+  </DocsPreview>
+</ClientOnly>
+
+<script setup>
+import LayoutsAppShellExample from './examples/layouts/LayoutsAppShellExample.vue';
+import LayoutsMobileHomeExample from './examples/layouts/LayoutsMobileHomeExample.vue';
+import LayoutsSettingsExample from './examples/layouts/LayoutsSettingsExample.vue';
 </script>

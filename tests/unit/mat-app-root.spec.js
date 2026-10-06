@@ -7,6 +7,7 @@ import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
 import MatAppRoot from '../../src/components/mat-app-root/MatAppRoot.vue';
+import MatFab from '../../src/components/mat-fab/MatFab.vue';
 import { useMatApp } from '../../src/components/mat-app-root/mat-app-root-context';
 
 function rect({
@@ -370,6 +371,181 @@ describe('MatAppRoot', () => {
     handle.unregister();
     expect(handle.unregister).not.toThrow();
     expect(handle.update).not.toThrow();
+
+    wrapper.unmount();
+  });
+
+  it('导出浮动组占据的底部高度，并随 FAB 尺寸变化与移除更新', async () => {
+    let app;
+    const Consumer = defineComponent({
+      setup() {
+        app = useMatApp();
+        return () => null;
+      },
+    });
+    const wrapper = mount(MatAppRoot, {
+      attachTo: document.body,
+      props: { fillViewport: false },
+      slots: {
+        default: () => [
+          h(Consumer),
+          h(MatFab, { app: true, icon: 'add', label: '记一笔' }),
+        ],
+      },
+    });
+    await settleLayout();
+
+    const bottomStack = wrapper.element.querySelector('.mat-app-root__bottom-stack');
+    const floatingLayer = wrapper.element.querySelector('.mat-app-root__floating-layer');
+
+    expect(floatingLayer.contains(wrapper.element.querySelector('.mat-fab'))).toBe(true);
+
+    vi.spyOn(wrapper.element, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 600,
+      height: 600,
+      right: 800,
+      width: 800,
+    }));
+    vi.spyOn(bottomStack, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 600,
+      height: 600,
+      right: 800,
+      width: 800,
+    }));
+    const floatingRect = vi.spyOn(floatingLayer, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 584,
+      height: 56,
+      right: 768,
+      top: 528,
+      width: 56,
+    }));
+
+    window.dispatchEvent(new Event('resize'));
+    await settleLayout();
+
+    expect(app.layout.floating.height).toBe(72);
+
+    floatingRect.mockReturnValue(rect({
+      bottom: 584,
+      height: 96,
+      right: 772,
+      top: 488,
+      width: 72,
+    }));
+    window.dispatchEvent(new Event('resize'));
+    await settleLayout();
+    expect(app.layout.floating.height).toBe(112);
+
+    floatingRect.mockReturnValue(rect({
+      bottom: 600,
+      height: 0,
+      right: 768,
+      top: 600,
+      width: 56,
+    }));
+    window.dispatchEvent(new Event('resize'));
+    await settleLayout();
+    expect(app.layout.floating.height).toBe(0);
+
+    wrapper.unmount();
+  });
+
+  it('浮动组高度不进入 padding、content 与边缘汇总', async () => {
+    let app;
+    const Consumer = defineComponent({
+      setup() {
+        app = useMatApp();
+        return () => null;
+      },
+    });
+    const wrapper = mount(MatAppRoot, {
+      attachTo: document.body,
+      props: { fillViewport: false },
+      slots: {
+        default: () => [
+          h(Consumer),
+          h(MatFab, { app: true, icon: 'add', label: '记一笔' }),
+        ],
+      },
+    });
+    await settleLayout();
+
+    const bottomStack = wrapper.element.querySelector('.mat-app-root__bottom-stack');
+    const floatingLayer = wrapper.element.querySelector('.mat-app-root__floating-layer');
+
+    vi.spyOn(wrapper.element, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 600,
+      height: 600,
+      right: 800,
+      width: 800,
+    }));
+    vi.spyOn(bottomStack, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 600,
+      height: 600,
+      right: 800,
+      width: 800,
+    }));
+    vi.spyOn(floatingLayer, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 584,
+      height: 56,
+      right: 768,
+      top: 528,
+      width: 56,
+    }));
+
+    window.dispatchEvent(new Event('resize'));
+    await settleLayout();
+
+    expect(app.layout.floating.height).toBe(72);
+    expect(app.layout.padding).toEqual({
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      start: 0,
+      end: 0,
+    });
+    expect(app.layout.content).toEqual({ width: 800, height: 600 });
+    expect(app.layout.edges.bottom).toEqual({ size: 0, startInset: 0, endInset: 0 });
+
+    wrapper.unmount();
+  });
+
+  it('声明位置的普通 FAB 不产生浮动占用', async () => {
+    let app;
+    const Consumer = defineComponent({
+      setup() {
+        app = useMatApp();
+        return () => null;
+      },
+    });
+    const wrapper = mount(MatAppRoot, {
+      attachTo: document.body,
+      props: { fillViewport: false },
+      slots: {
+        default: () => [
+          h(Consumer),
+          h(MatFab, { icon: 'add', label: '记一笔' }),
+        ],
+      },
+    });
+    await settleLayout();
+
+    const floatingLayer = wrapper.element.querySelector('.mat-app-root__floating-layer');
+    const floatingRect = vi.spyOn(floatingLayer, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 600,
+      height: 0,
+      right: 768,
+      top: 600,
+      width: 56,
+    }));
+
+    window.dispatchEvent(new Event('resize'));
+    await settleLayout();
+
+    expect(floatingLayer.contains(wrapper.element.querySelector('.mat-fab'))).toBe(false);
+    expect(floatingRect).toHaveBeenCalled();
+    expect(app.layout.floating.height).toBe(0);
 
     wrapper.unmount();
   });

@@ -88,28 +88,29 @@ function toggleCode() {
     <div class="docs-preview__header">
       <div class="docs-preview__header-left" />
       <div class="docs-preview__header-actions">
-        <a
+        <!-- no-icon 豁免 VitePress 对 .vp-doc 内 target="_blank" 链接追加的外链箭头，
+             避免斜向箭头叠在图标按钮上。 -->
+        <mat-btn
           v-if="playgroundUrl"
+          class="no-icon"
           :href="playgroundUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="docs-preview__action-btn"
-          title="在演练场中打开"
-          aria-label="在演练场中打开"
-        >
-          <mat-icon icon="terminal" aria-hidden="true" />
-        </a>
-        <button
+          icon="terminal"
+          variant="standard"
+          size="extra-small"
+          label="在演练场中打开"
+        />
+        <mat-btn
           v-if="hasCode"
-          type="button"
-          class="docs-preview__action-btn"
-          :class="{ 'is-active': isCodeOpen }"
-          title="查看代码"
-          aria-label="查看代码"
+          icon="code"
+          variant="standard"
+          size="extra-small"
+          toggle
+          :selected="isCodeOpen"
+          label="查看代码"
           @click="toggleCode"
-        >
-          <mat-icon icon="code" aria-hidden="true" />
-        </button>
+        />
       </div>
     </div>
 
@@ -147,7 +148,7 @@ function toggleCode() {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-block-size: 38px;
+  min-block-size: 40px;
   padding: 4px 8px;
   border-block-end: 1px solid var(--mat-sys-color-outline-variant);
   background: var(--mat-sys-color-surface-container-low);
@@ -163,39 +164,6 @@ function toggleCode() {
   align-items: center;
   gap: 4px;
   margin-inline-start: auto;
-}
-
-.docs-preview__action-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  inline-size: 30px;
-  block-size: 30px;
-  padding: 0;
-  color: var(--mat-sys-color-on-surface-variant);
-  background: transparent;
-  border: none;
-  border-radius: var(--mat-sys-shape-corner-full);
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color .2s, color .2s;
-}
-
-.docs-preview__action-btn:hover {
-  color: var(--mat-sys-color-on-surface);
-  background: var(--mat-sys-color-surface-container-high);
-}
-
-.docs-preview__action-btn:active,
-.docs-preview__action-btn.is-active {
-  color: var(--mat-sys-color-primary);
-  background: var(--mat-sys-color-surface-container-highest);
-}
-
-.docs-preview__action-btn :deep(.mat-icon) {
-  font-size: 20px;
-  inline-size: 20px;
-  block-size: 20px;
 }
 
 .docs-preview__code {

@@ -41,6 +41,7 @@ llms: false
 - 主题：`docs/site/guide/theme.md`
 - 组件配色：`docs/site/guide/component-color.md`
 - 样式：`docs/site/guide/styles.md`
+- 典型布局示例：`docs/site/examples.md`
 - App root：`docs/site/components/app-root.md`
 - App bar：`docs/site/components/app-bar.md`
 - Search：`docs/site/components/search.md`

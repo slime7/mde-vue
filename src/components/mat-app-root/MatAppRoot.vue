@@ -82,6 +82,7 @@ const freeLayer = ref(null);
 const modalLayer = ref(null);
 const snackbarLayer = ref(null);
 const floatingLayer = ref(null);
+const bottomStack = ref(null);
 const safeAreaProbe = ref(null);
 const layoutState = reactive({
   size: { width: 0, height: 0 },
@@ -89,6 +90,7 @@ const layoutState = reactive({
     top: 0, bottom: 0, left: 0, right: 0, start: 0, end: 0,
   },
   content: { width: 0, height: 0 },
+  floating: { height: 0 },
   breakpoint: 'compact',
   breakpointRange: { min: 0, max: 599 },
   edges: {
@@ -155,6 +157,31 @@ function readSafeArea() {
   };
 }
 
+// 浮动组与容器边缘的间距由 bottom-stack 的 padding 提供，实时从两矩形差值推导，避免解析自定义属性。
+function measureFloating(bottomPadding) {
+  const stackHost = bottomStack.value;
+  const stackLayer = floatingLayer.value;
+
+  if (!stackHost || !stackLayer) {
+    return 0;
+  }
+
+  const stackRect = stackLayer.getBoundingClientRect();
+  const stackHeight = Math.max(0, Number(stackRect.height) || 0);
+
+  if (!stackHeight) {
+    return 0;
+  }
+
+  const hostRect = stackHost.getBoundingClientRect();
+  const edgeSpace = Math.max(
+    0,
+    (Number(hostRect.bottom) || 0) - (Number(stackRect.bottom) || 0) - bottomPadding,
+  );
+
+  return stackHeight + edgeSpace;
+}
+
 function measureLayout() {
   if (!mounted || !rootElement.value) {
     return;
@@ -188,6 +215,9 @@ function measureLayout() {
   Object.assign(layoutState.content, {
     width: Math.max(0, width - measured.padding.start - measured.padding.end),
     height: Math.max(0, height - measured.padding.top - measured.padding.bottom),
+  });
+  Object.assign(layoutState.floating, {
+    height: measureFloating(measured.padding.bottom),
   });
   layoutState.breakpoint = breakpoint.name;
   Object.assign(layoutState.breakpointRange, {
@@ -305,6 +335,7 @@ onMounted(async () => {
     ? undefined
     : new ResizeObserver(scheduleMeasure);
   resizeObserver?.observe(rootElement.value);
+  resizeObserver?.observe(floatingLayer.value);
   edgeLayout.setResizeObserver(resizeObserver);
   addViewportListeners();
   await nextTick();
@@ -351,7 +382,7 @@ watch([
     <div class="mat-app-root__overlay">
       <div ref="freeLayer" class="mat-app-root__free-layer" />
 
-      <div class="mat-app-root__bottom-stack">
+      <div ref="bottomStack" class="mat-app-root__bottom-stack">
         <span class="mat-app-root__stack-spacer" aria-hidden="true" />
         <div ref="snackbarLayer" class="mat-app-root__snackbar-layer" />
         <div ref="floatingLayer" class="mat-app-root__floating-layer" />

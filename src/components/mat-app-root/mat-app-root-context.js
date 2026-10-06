@@ -80,6 +80,8 @@ export function useMatApp() {
  * @property {{width: number, height: number}} size
  * @property {{top: number, bottom: number, left: number, right: number, start: number, end: number}} padding
  * @property {{width: number, height: number}} content
+ * @property {{height: number}} floating
+ *   浮动组（如 `app` 模式 FAB）在正文区域底部占据的总高度：浮动元素栈高（含元素间距）加浮动组与容器边缘的间距，浮动组为空时为 0。浮动组不参与 `padding`，是否用它做底部避让由正文自行决定。
  * @property {MatAppBreakpoint} breakpoint
  * @property {{min: number, max: number}} breakpointRange
  * @property {{top: MatAppEdgeInfo, bottom: MatAppEdgeInfo, left: MatAppEdgeInfo, right: MatAppEdgeInfo, start: MatAppEdgeInfo, end: MatAppEdgeInfo}} edges
