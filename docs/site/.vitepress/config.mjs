@@ -241,6 +241,7 @@ export default defineConfig({
             items: [
               { text: 'Checkbox 复选框', link: '/components/checkbox' },
               { text: 'Chips 标签', link: '/components/chip' },
+              { text: 'Date picker 日期选择器', link: '/components/date-picker' },
               { text: 'Input base 输入基础层', link: '/components/input-base' },
               { text: 'Radio 单选按钮与单选组', link: '/components/radio' },
               { text: 'Range slider 范围滑块', link: '/components/range-slider' },
@@ -249,6 +250,7 @@ export default defineConfig({
               { text: 'Slider 滑块', link: '/components/slider' },
               { text: 'Switch 开关', link: '/components/switch' },
               { text: 'Text field 文本输入', link: '/components/text-field' },
+              { text: 'Time picker 时间选择器', link: '/components/time-picker' },
             ],
           },
           {
@@ -280,6 +282,7 @@ export default defineConfig({
             items: [
               { text: 'Avatar 头像', link: '/components/avatar' },
               { text: 'Card 卡片', link: '/components/card' },
+              { text: 'Carousel 轮播', link: '/components/carousel' },
               { text: 'Divider 分隔线', link: '/components/divider' },
               { text: 'Icon 图标', link: '/components/icon' },
               { text: 'Image 图片', link: '/components/image' },

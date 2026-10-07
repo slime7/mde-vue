@@ -2634,7 +2634,7 @@ import AvatarSrcExample from '../examples/avatar/AvatarSrcExample.vue';
 
 ## 组件简介
 
-`<mat-shape>` 的组件导出名是 `MatShape`。它使用现代 CSS `clip-path: shape()` 展示 35 种 Material 3 Expressive 归一化形状，并可通过 `size`、`color`、`as` 和默认 Slot 作为装饰图形或内容容器使用。默认渲染 48px 的 primary circle，根元素为 `div`。
+`<mat-shape>` 的组件导出名是 `MatShape`。它使用现代 CSS `clip-path: shape()` 展示 35 种 Material 3 Expressive 归一化形状，并可通过 `size`、`color`、`as`、`morph` 和默认 Slot 作为装饰图形或内容容器使用。默认渲染 48px 的 primary circle，根元素为 `div`。
 
 ## 示例
 
@@ -2857,6 +2857,119 @@ const shapes = [
   </DocsPreview>
 </ClientOnly>
 
+### `morph`
+
+开启 `morph` 后，`name` 变化以同拓扑轮廓的弹簧动画过渡到目标形状；关闭时立即切换。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="shape-morph-stage">
+    <mat-shape
+      as="button"
+      class="shape-morph-stage__preview"
+      :name="activeShape"
+      morph
+      size="160"
+      type="button"
+      :aria-label="`切换到下一个形状，当前是${activeLabel}`"
+      @click="selectNextShape"
+    />
+
+    <div
+      class="shape-morph-stage__options"
+      role="group"
+      aria-label="形状选择"
+    >
+      <mat-shape
+        v-for="shape in shapes"
+        :key="shape.name"
+        as="button"
+        class="shape-morph-stage__option"
+        :class="{ 'shape-morph-stage__option--active': shape.name === activeShape }"
+        :name="shape.name"
+        morph
+        size="40"
+        :color="shape.name === activeShape ? 'primary' : 'secondary-container'"
+        type="button"
+        :aria-label="shape.label"
+        :aria-pressed="shape.name === activeShape"
+        @click="activeShape = shape.name"
+      />
+    </div>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { computed, ref } from 'vue';
+
+const shapes = [
+  { name: '4-sided-cookie', label: '四角饼干' },
+  { name: '6-sided-cookie', label: '六角饼干' },
+  { name: '9-sided-cookie', label: '九角饼干' },
+  { name: '12-sided-cookie', label: '十二角饼干' },
+  { name: 'flower', label: '花朵' },
+  { name: 'heart', label: '爱心' },
+  { name: 'pill', label: '药丸' },
+  { name: 'square', label: '方形' },
+];
+const activeShape = ref('9-sided-cookie');
+const activeLabel = computed(() => (
+  shapes.find((shape) => shape.name === activeShape.value)?.label ?? ''
+));
+
+function selectNextShape() {
+  const currentIndex = shapes.findIndex((shape) => shape.name === activeShape.value);
+
+  activeShape.value = shapes[(currentIndex + 1) % shapes.length].name;
+}
+</script>
+```
+```vue
+<style scoped>
+.shape-morph-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding-block: 8px;
+}
+
+.shape-morph-stage__preview,
+.shape-morph-stage__option {
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+.shape-morph-stage__options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.shape-morph-stage__option {
+  transition: transform var(--mat-sys-motion-spring-fast-spatial);
+}
+
+.shape-morph-stage__option--active {
+  transform: scale(1.2);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Shape morph 预览">
+    <ShapeMorphExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### 默认 Slot
 
 默认 Slot 在形状内水平、垂直居中，超出轮廓的部分随 `clip-path` 裁剪。内容不会自动获得交互语义。
@@ -2905,6 +3018,7 @@ const shapes = [
 | `size` | `number \| string` | `48` | 正方形边长；数字与纯数字字符串按 px，其他字符串须为合法正 CSS 长度，非法值回退 `48px` |
 | `color` | `string` | `'primary'` | Material 语义色、系统颜色角色或六位十六进制种子色 |
 | `as` | `string` | `'div'` | 合法 HTML 标签名，用作实际根元素 |
+| `morph` | `boolean` | `false` | 开启后 `name` 变化以同拓扑轮廓的弹簧动画过渡到目标形状，时长与缓动跟随 `--mat-sys-motion-spring-default-spatial`；减少动态效果偏好下直接呈现目标形状 |
 
 `name` 合法值为：
 
@@ -2924,7 +3038,7 @@ const shapes = [
 
 ## 状态与无障碍
 
-Shape 本身不建立交互语义。装饰性形状应设置 `aria-hidden="true"`；承载信息时应为根元素提供合适的语义和可访问名称。`clip-path` 只改变绘制和命中轮廓，不会自动改变 Slot 内容的布局边界，复杂内容应留出足够的内部空间。
+Shape 本身不建立交互语义。装饰性形状应设置 `aria-hidden="true"`；承载信息时应为根元素提供合适的语义和可访问名称。`clip-path` 只改变绘制和命中轮廓，不会自动改变 Slot 内容的布局边界，复杂内容应留出足够的内部空间。开启 `morph` 后的形状切换动画仅为视觉过渡，不改变状态语义；减少动态效果偏好下动画被跳过并直接呈现目标形状。
 
 ## 参考来源
 
@@ -2933,9 +3047,760 @@ Shape 本身不建立交互语义。装饰性形状应设置 `aria-hidden="true"
 <script setup>
 import ShapeAsExample from '../examples/shape/ShapeAsExample.vue';
 import ShapeColorExample from '../examples/shape/ShapeColorExample.vue';
+import ShapeMorphExample from '../examples/shape/ShapeMorphExample.vue';
 import ShapeNamesExample from '../examples/shape/ShapeNamesExample.vue';
 import ShapeSizeExample from '../examples/shape/ShapeSizeExample.vue';
 import ShapeSlotExample from '../examples/shape/ShapeSlotExample.vue';
+</script>
+
+# Carousel 轮播
+
+## 组件简介
+
+`<mat-carousel>` 的组件导出名是 `MatCarousel`，`<mat-carousel-item>` 的组件导出名是 `MatCarouselItem`。Carousel 提供 Material 3 Expressive 轮播容器能力，通过 `variant` 切换布局，项目由 `mat-carousel-item` 提供并基于 `mat-image` 渲染。组件铺满所在容器，使用方须提供确定块轴尺寸；除 `full-screen` 外面板高度不超过 320px。`full-screen` 沿块轴纵向滑动并由原生 scroll snap 逐屏停靠；其余布局沿行轴横向滑动，支持触摸拖拽、鼠标拖拽与横向滚轮滚动。动态宽度布局（`multi-browse`、`hero`、`hero-center-aligned`）在当前项展开为目标宽度的同时，在边缘保留 56px 预览位；`uncontained` 与 `uncontained-multi-aspect` 保持固定宽度，首尾停靠保留 16px 边距。当 `switch-on-click` 为 `true` 时，点击未展开的项目平滑滚动并展开该项目。滚动容器聚焦后支持方向键、Home 与 End 键盘导航。
+
+## 示例
+
+### `variant`
+
+`variant` 选择轮播布局。multi-browse、hero、hero-center-aligned 布局的项目在接近起始边缘时由小尺寸动态展开到目标宽度并伴随视觉视差，未滚动到的项目压缩为小尺寸预览；uncontained 与 uncontained-multi-aspect 在滚经起始边缘时收缩为小尺寸预览并伴随取景视差；full-screen 铺满容器并纵向滑动。项目通过默认 Slots 放置简短文本，项目压缩到小尺寸预览位时文本自动淡出。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="carousel-variants">
+    <section
+      v-for="demo in demos"
+      :key="demo.variant"
+      class="carousel-variants__demo"
+    >
+      <h4 class="carousel-variants__title">
+        {{ demo.label }}
+      </h4>
+      <div
+        class="carousel-variants__stage"
+        :class="{ 'carousel-variants__stage--vertical': demo.variant === 'full-screen' }"
+      >
+        <mat-carousel
+          :variant="demo.variant"
+          :aria-label="`${demo.label}轮播`"
+        >
+          <mat-carousel-item
+            v-for="(image, index) in demo.images"
+            :key="`${demo.variant}-${index}`"
+            :src="image.src"
+            :alt="`${image.title}示例图`"
+            :aspect-ratio="demo.aspectRatios?.[index]"
+          >
+            <span class="carousel-variants__item-title">{{ image.title }}</span>
+            <span class="carousel-variants__item-label">{{ image.label }}</span>
+          </mat-carousel-item>
+        </mat-carousel>
+      </div>
+    </section>
+  </div>
+</template>
+```
+```vue
+<script setup>
+function makeImage(background, accent) {
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">'
+    + `<rect width="640" height="360" fill="${background}"/>`
+    + `<circle cx="320" cy="180" r="78" fill="${accent}"/>`
+    + '</svg>';
+
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
+const palettes = [
+  ['#cfeaff', '#20a6fc', '群岛日出', '3 天前'],
+  ['#ffd8e4', '#ff4f9a', '晚樱小径', '1 周前'],
+  ['#d9ffe2', '#1fae5f', '茶山晨雾', '2 周前'],
+  ['#fff3c4', '#f2a413', '麦田日落', '3 周前'],
+  ['#e6dcff', '#7b5cd6', '薰衣草田', '1 个月前'],
+  ['#c9f5ef', '#0f9e8e', '湖心倒影', '1 个月前'],
+  ['#ffe0cc', '#f2703a', '丹霞公路', '2 个月前'],
+  ['#d6e4ff', '#3d6df2', '雪后松林', '2 个月前'],
+  ['#f5d6e8', '#d63d92', '花市灯火', '3 个月前'],
+  ['#e2f0d6', '#5c9e31', '梯田秋收', '3 个月前'],
+];
+
+const images = palettes.map(([background, accent, title, label]) => ({
+  src: makeImage(background, accent),
+  title,
+  label,
+}));
+
+const aspectRatios = ['16/9', '9/16', '1/1', '3/4', '16/10', '4/3', '9/16', '1/1', '3/4', '16/9'];
+
+const demos = [
+  { variant: 'multi-browse', label: 'multi-browse', images },
+  { variant: 'uncontained', label: 'uncontained', images },
+  {
+    variant: 'uncontained-multi-aspect',
+    label: 'uncontained-multi-aspect',
+    images,
+    aspectRatios,
+  },
+  { variant: 'hero', label: 'hero', images },
+  { variant: 'hero-center-aligned', label: 'hero-center-aligned', images },
+  { variant: 'full-screen', label: 'full-screen', images },
+];
+</script>
+```
+```vue
+<style scoped>
+.carousel-variants {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.carousel-variants__demo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.carousel-variants__title {
+  margin: 0;
+  color: var(--mat-sys-color-on-surface-variant);
+  font-size: var(--mat-sys-typescale-label-large-size);
+  font-weight: var(--mat-sys-typescale-label-large-weight);
+}
+
+/*
+ * 横向布局的圆角由 mat-carousel 自带，stage 只提供块轴尺寸；
+ * full-screen 保持直角铺满，仍由外部舞台提供圆角。
+ */
+
+.carousel-variants__stage {
+  block-size: 200px;
+}
+
+.carousel-variants__stage--vertical {
+  block-size: 280px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.carousel-variants__item-title {
+  color: inherit;
+  font-size: var(--mat-sys-typescale-title-medium-size);
+  font-weight: var(--mat-sys-typescale-title-medium-weight);
+  line-height: var(--mat-sys-typescale-title-medium-line-height);
+}
+
+.carousel-variants__item-label {
+  color: inherit;
+  opacity: .85;
+  font-size: var(--mat-sys-typescale-body-small-size);
+  line-height: var(--mat-sys-typescale-body-small-line-height);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Carousel variant 预览">
+    <CarouselVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 点击项目
+
+`mat-carousel-item` 支持标准的点击交互。轮播卡片常用于内容预览，配合 `@click` 事件可在用户点击卡片时进入详情或查看大图。默认情况下点击卡片不切换轮播；若希望点击未展开项目时平滑滚动切换并展开该项目，可设置 `switch-on-click` 为 `true`。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="carousel-click-example">
+    <div class="carousel-click-example__stage">
+      <mat-carousel
+        variant="multi-browse"
+        aria-label="可点击的项目轮播"
+      >
+        <mat-carousel-item
+          v-for="image in images"
+          :key="image.title"
+          :src="image.src"
+          :alt="`${image.title}示例图`"
+          @click="selected = image.title"
+        >
+          <span class="carousel-click-example__item-title">{{ image.title }}</span>
+          <span class="carousel-click-example__item-label">{{ image.label }}</span>
+        </mat-carousel-item>
+      </mat-carousel>
+    </div>
+    <p class="carousel-click-example__status">
+      {{ selected ? `点击了：${selected}` : '点击轮播卡片查看反馈' }}
+    </p>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+function makeImage(background, accent) {
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">'
+    + `<rect width="640" height="360" fill="${background}"/>`
+    + `<circle cx="320" cy="180" r="78" fill="${accent}"/>`
+    + '</svg>';
+
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
+const images = [
+  { src: makeImage('#cfeaff', '#20a6fc'), title: '群岛日出', label: '3 天前' },
+  { src: makeImage('#ffd8e4', '#ff4f9a'), title: '晚樱小径', label: '1 周前' },
+  { src: makeImage('#d9ffe2', '#1fae5f'), title: '茶山晨雾', label: '2 周前' },
+  { src: makeImage('#fff3c4', '#f2a413'), title: '麦田日落', label: '3 周前' },
+  { src: makeImage('#e6dcff', '#7b5cd6'), title: '薰衣草田', label: '1 个月前' },
+  { src: makeImage('#c9f5ef', '#0f9e8e'), title: '湖心倒影', label: '1 个月前' },
+];
+
+const selected = ref('');
+</script>
+```
+```vue
+<style scoped>
+.carousel-click-example {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.carousel-click-example__stage {
+  block-size: 200px;
+}
+
+.carousel-click-example__item-title {
+  color: inherit;
+  font-size: var(--mat-sys-typescale-title-medium-size);
+  font-weight: var(--mat-sys-typescale-title-medium-weight);
+  line-height: var(--mat-sys-typescale-title-medium-line-height);
+}
+
+.carousel-click-example__item-label {
+  color: inherit;
+  opacity: .85;
+  font-size: var(--mat-sys-typescale-body-small-size);
+  line-height: var(--mat-sys-typescale-body-small-line-height);
+}
+
+.carousel-click-example__status {
+  margin: 0;
+  color: var(--mat-sys-color-on-surface-variant);
+  font-size: var(--mat-sys-typescale-body-medium-size);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Carousel 点击项目预览">
+    <CarouselClickExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### `<mat-carousel>` 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `variant` | `string` | `'multi-browse'` | 轮播布局；合法值为 `multi-browse`、`uncontained`、`uncontained-multi-aspect`、`hero`、`hero-center-aligned`、`full-screen`，非法值发出 Vue 校验警告 |
+| `switch-on-click` | `boolean` | `false` | 点击未展开的项目时是否滚动切换至该项目；默认为 `false`，仅保留卡片自身的点击事件；设置为 `true` 时点击未展开项目触发滚动停靠 |
+
+布局差异：`multi-browse`、`hero`、`hero-center-aligned` 两侧保留 16px 内边距，`uncontained` 与 `uncontained-multi-aspect` 在首尾停靠保留左右 16px 边距、中间状态项目铺满容器边缘；`full-screen` 无内边距，项目间距为 16px，其余布局为 8px。动态目标宽度默认按容器尺寸推导：multi-browse 为内容宽度的一半并封顶 560px，hero 与 hero-center-aligned 为内容宽度减去两侧预览位、uncontained 为内容宽度减去一个项目预览位（这三者随容器缩放、不封顶），保证预览位始终完整贴合容器两端；动态布局的相邻停靠位相距一个大项宽度加间距。uncontained 布局的全部项目保持同一固定宽度，uncontained-multi-aspect 由各项目 `aspectRatio` 决定宽度。官方规格的小尺寸预览位宽度为 40–56dp 动态，本组件取 56dp。
+
+### `<mat-carousel-item>` 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `src` | `string` | 必填 | 图片资源地址，转发给内部图片 |
+| `alt` | `string \| undefined` | `undefined` | 图片替代文本，转发给内部图片 |
+| `aspectRatio` | `number \| string \| undefined` | `undefined` | 项目宽高比；`uncontained-multi-aspect` 布局据此计算项目自然宽度 |
+| `width` | `number \| undefined` | `undefined` | 使用方设置的目标宽度（px）；动态宽度布局的项目到达起始边缘时展开到该宽度，`uncontained` 与 `uncontained-multi-aspect` 布局直接使用该固定宽度 |
+
+两个组件都没有公开方法。`mat-carousel` 上未消费的 class、style、ARIA 属性和原生事件监听器传递给根元素，`aria-label` 同时作用于滚动容器；`mat-carousel-item` 上未消费的属性与监听器传递给项目根元素。
+
+## 事件
+
+组件不触发自定义事件。
+
+## Slots
+
+| 组件 | 名称 | 内容约束 |
+| --- | --- | --- |
+| `mat-carousel` | 默认 | 只应放置 `mat-carousel-item` 项目；其他内容不参与宽度计算与停靠 |
+| `mat-carousel-item` | 默认 | 项目的简短文本内容，渲染在图片上方并带底部渐变遮罩；项目压缩到小尺寸预览位（宽度小于 96px）时整体淡出 |
+
+## 状态与无障碍
+
+滚动容器可获得键盘焦点，聚焦时显示可见焦点框；方向键按停靠位步进，Home 与 End 跳转首尾。横向布局的拖拽或滚轮停止后平滑吸附至最近停靠位，在减少动态效果偏好下直接跳转。可通过 `aria-label` 为 `mat-carousel` 提供轮播说明；`mat-carousel-item` 通过 `alt` 提供替代文本。
+
+## 参考来源
+
+布局结构、间距、圆角、动态宽度与停靠行为依据 [Material 3 Carousel 官方页面](https://m3.material.io/components/carousel/overview)（Specs 与 Guidelines 标签页）复刻；官方 Web 实现标记为不可用，本组件为按规格的 Vue 实现，动态宽度与视差为按官方行为描述的简化实现。
+
+<script setup>
+import CarouselVariantExample from '../examples/carousel/CarouselVariantExample.vue';
+import CarouselClickExample from '../examples/carousel/CarouselClickExample.vue';
+</script>
+
+# Date picker 日期选择器
+
+## 组件简介
+
+`<mat-date-picker>` 的组件导出名是 `MatDatePicker`。它提供 Material 3 日期选择面板，包含日期读出、月份与年份导航以及 6 行 7 列的日期网格。面板为透明背景，由外部容器提供外观与弹出控制。`v-model` 绑定选中的日期。
+
+## 示例
+
+### `v-model`
+
+`v-model` 绑定本地时区当天 0 点的 `Date`，`null` 表示未选择。网格中高亮今天与选中日期，点击月外日期会同时选中并切换到所在月份。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="date-picker-basic">
+    <mat-date-picker
+      v-model="selected"
+      aria-label="选择日期"
+    />
+    <p class="date-picker-basic__value">
+      当前选择：{{ formatted }}
+    </p>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { computed, ref } from 'vue';
+
+const selected = ref(new Date());
+
+const formatted = computed(() => (
+  selected.value === null
+    ? '未选择'
+    : new Intl.DateTimeFormat('zh-CN', { dateStyle: 'long' }).format(selected.value)
+));
+</script>
+```
+```vue
+<style scoped>
+.date-picker-basic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.date-picker-basic__value {
+  margin: 0;
+  color: var(--mat-sys-color-on-surface-variant);
+  font-size: var(--mat-sys-typescale-body-medium-size);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Date picker v-model 预览">
+    <DatePickerBasicExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 放入外部容器
+
+面板自带透明背景；卡片、Dialog 或 Sheet 提供的背景色、圆角与阴影会直接成为面板外观。`color` 更换选中态强调色。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="date-picker-container">
+    <p class="date-picker-container__hint">
+      面板本身不带背景、圆角与阴影，全部外观由下面的卡片容器提供。
+    </p>
+    <div class="date-picker-container__surface">
+      <mat-date-picker
+        v-model="selected"
+        color="tertiary"
+        aria-label="在卡片内选择日期"
+      />
+    </div>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const selected = ref(new Date());
+</script>
+```
+```vue
+<style scoped>
+.date-picker-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.date-picker-container__hint {
+  margin: 0;
+  color: var(--mat-sys-color-on-surface-variant);
+  font-size: var(--mat-sys-typescale-body-medium-size);
+  text-align: center;
+}
+
+.date-picker-container__surface {
+  padding: 8px;
+  border-radius: var(--mat-sys-shape-corner-extra-large);
+  background: var(--mat-sys-color-surface-container);
+  box-shadow: var(--mat-sys-elevation-level2);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Date picker 容器预览">
+    <DatePickerContainerExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `v-model` | `Date \| null` | `null` | 选中的日期；值为本地时区当天 0 点的 `Date`，时间分量会被忽略，非法值发出 Vue 校验警告 |
+| `color` | `string \| undefined` | `undefined` | Material 语义色、系统颜色角色或六位十六进制种子色，强调选中的日期与年份；省略时使用 primary |
+
+面板宽度为 328px，超过容器时按容器收缩。日期网格支持键盘操作：选中日期（无选中时为今天）是唯一 Tab 停靠点，方向键按日或周移动焦点，Enter 与空格确认。
+
+组件没有公开方法。未消费的 class、style、ARIA 属性和原生事件监听器传递给根元素。
+
+## 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | 当天 0 点的 `Date` | 点击日期按钮（含月外日期）时发出；月份与年份切换不发出 |
+
+## Slots
+
+组件不提供 Slots。星期标签与标题文字由组件按浏览器默认语言渲染。
+
+## 状态与无障碍
+
+日期网格使用 `role="grid"` 语义，每个日期按钮带完整日期的 `aria-label`、`aria-pressed` 表示选中，`aria-current="date"` 标记今天。年视图的年份按钮带 `aria-pressed`。面板没有自动动画；交互状态使用共享状态令牌，焦点环在键盘聚焦时可见。
+
+## 参考来源
+
+面板结构（月份与年份选择、前后导航、星期标签、今天/选中/月外日期）依据 [Material 3 Date pickers 官方页面](https://m3.material.io/components/date-pickers/overview)（Specs 标签页，docked 结构去掉外层文本框）复刻；官方 Web 实现标记为不可用，本组件为按规格的 Vue 实现。
+
+<script setup>
+import DatePickerBasicExample from '../examples/date-picker/DatePickerBasicExample.vue';
+import DatePickerContainerExample from '../examples/date-picker/DatePickerContainerExample.vue';
+</script>
+
+# Time picker 时间选择器
+
+## 组件简介
+
+`<mat-time-picker>` 的组件导出名是 `MatTimePicker`。它提供 Material 3 时间选择面板，包含时间读出与表盘；支持 24 小时制与 12 小时制、表盘模式与输入模式切换。面板为透明背景，由外部容器提供外观与弹出控制。`v-model` 绑定 24 小时制 `HH:mm` 时间字符串。
+
+## 示例
+
+### `v-model`
+
+`v-model` 绑定 `HH:mm` 字符串，`null` 表示未选择。选择小时后表盘自动进入分钟视图；分钟表盘除 5 分钟刻度外，还可以拖拽指针选择任意分钟。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="time-picker-basic">
+    <mat-time-picker
+      v-model="selected"
+      aria-label="选择时间"
+    />
+    <p class="time-picker-basic__value">
+      当前选择：{{ selected ?? '未选择' }}
+    </p>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const selected = ref('13:30');
+</script>
+```
+```vue
+<style scoped>
+.time-picker-basic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.time-picker-basic__value {
+  margin: 0;
+  color: var(--mat-sys-color-on-surface-variant);
+  font-size: var(--mat-sys-typescale-body-medium-size);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Time picker v-model 预览">
+    <TimePickerBasicExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 12 小时制与 24 小时制
+
+通过 `format`（`'24h'` 或 `'12h'`）或便捷属性 `is-24-hour` 切换制式。12 小时制下表盘显示 1–12 单环刻度，右侧提供 AM/PM 时段切换器，`v-model` 输出 24 小时制 `HH:mm` 字符串。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="time-picker-format">
+    <div class="time-picker-format__controls">
+      <label class="time-picker-format__label">
+        <input
+          v-model="format"
+          type="radio"
+          value="24h"
+        >
+        24 小时制
+      </label>
+      <label class="time-picker-format__label">
+        <input
+          v-model="format"
+          type="radio"
+          value="12h"
+        >
+        12 小时制
+      </label>
+    </div>
+    <mat-time-picker
+      v-model="selected"
+      :format="format"
+      aria-label="选择时间"
+    />
+    <p class="time-picker-format__value">
+      底层值（24 小时制）：{{ selected ?? '未选择' }}
+    </p>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const format = ref('12h');
+const selected = ref('14:30');
+</script>
+```
+```vue
+<style scoped>
+.time-picker-format {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.time-picker-format__controls {
+  display: flex;
+  gap: 16px;
+}
+
+.time-picker-format__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--mat-sys-typescale-body-medium-size);
+  color: var(--mat-sys-color-on-surface);
+  cursor: pointer;
+}
+
+.time-picker-format__value {
+  margin: 0;
+  color: var(--mat-sys-color-on-surface-variant);
+  font-size: var(--mat-sys-typescale-body-medium-size);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Time picker 制式切换预览">
+    <TimePickerFormatExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 表盘模式与输入模式
+
+通过 `mode` 属性（`'dial'` 或 `'input'`）控制当前交互模式，支持 `v-model:mode`。设置 `show-mode-toggle` 可显示底部模式切换按钮。处于输入模式时，通过 `#input` 插槽承载自定义输入界面。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="time-picker-mode">
+    <mat-time-picker
+      v-model="selected"
+      v-model:mode="mode"
+      show-mode-toggle
+      aria-label="选择时间"
+    >
+      <template #input>
+        <div class="time-picker-mode__custom-input">
+          <label class="time-picker-mode__input-label">
+            自定义时间输入：
+            <input
+              v-model="selected"
+              type="time"
+              class="time-picker-mode__native-input"
+            >
+          </label>
+        </div>
+      </template>
+    </mat-time-picker>
+    <p class="time-picker-mode__value">
+      当前模式：{{ mode === 'dial' ? '表盘模式' : '输入模式' }} ｜ 时间：{{ selected ?? '未选择' }}
+    </p>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const mode = ref('dial');
+const selected = ref('09:15');
+</script>
+```
+```vue
+<style scoped>
+.time-picker-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.time-picker-mode__custom-input {
+  padding: 24px;
+  text-align: center;
+}
+
+.time-picker-mode__input-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--mat-sys-color-on-surface);
+  font-size: var(--mat-sys-typescale-body-medium-size);
+}
+
+.time-picker-mode__native-input {
+  box-sizing: border-box;
+  padding: 8px 12px;
+  border: 1px solid var(--mat-sys-color-outline);
+  border-radius: var(--mat-sys-shape-corner-small);
+  background: var(--mat-sys-color-surface-container-highest);
+  color: inherit;
+  font-size: var(--mat-sys-typescale-title-medium-size);
+}
+
+.time-picker-mode__value {
+  margin: 0;
+  color: var(--mat-sys-color-on-surface-variant);
+  font-size: var(--mat-sys-typescale-body-medium-size);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Time picker 模式切换预览">
+    <TimePickerModeExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `v-model` | `string \| null` | `null` | 选中的时间；24 小时制 `HH:mm` 零填充字符串，非法值发出 Vue 校验警告 |
+| `color` | `string \| undefined` | `undefined` | Material 语义色、系统颜色角色或六位十六进制种子色，强调读出、指针与选中刻度；省略时使用 primary |
+| `format` | `'24h' \| '12h'` | `'24h'` | 时间显示制式 |
+| `is24Hour` | `boolean \| undefined` | `undefined` | 是否为 24 小时制；显式传入时优先级高于 `format` |
+| `mode` | `'dial' \| 'input'` | `'dial'` | 交互模式，支持 `v-model:mode` |
+| `show-mode-toggle` | `boolean` | `false` | 是否在面板中显示表盘与输入模式的切换图标按钮 |
+
+面板宽度为 328px，超过容器时按容器收缩。表盘是一个 `role="slider"` 的键盘表面：方向键按 1 调整，Home 与 End 跳到边界，小时视图按 Enter 或空格进入分钟视图。选择小时刻度后自动进入分钟视图；分钟视图在 5 分钟刻度之外支持按角度连续拖拽。
+
+组件没有公开方法。未消费的 class、style、ARIA 属性和原生事件监听器传递给根元素。
+
+## 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `HH:mm` 字符串 | 小时或分钟值变化时发出；切换视图本身不发出 |
+| `update:mode` | `'dial' \| 'input'` | 交互模式在表盘和输入模式之间切换时发出 |
+
+## Slots
+
+| 插槽名 | 说明 |
+| --- | --- |
+| `input` | 输入模式（`mode="input"`）下的自定义内容插槽 |
+
+## 状态与无障碍
+
+数字读出使用 `aria-pressed` 标记当前编辑的小时或分钟；12 小时制下的 AM/PM 选择器具备单选组（`role="radiogroup"` 与 `aria-checked`）语义；表盘提供 slider 语义（`aria-valuemin`、`aria-valuemax`、`aria-valuenow` 与中文 `aria-valuetext`），键盘聚焦时显示焦点环。模式切换按钮具备清晰的中文 `aria-label`。指针拖拽与刻度点击是即时反馈，不引入自动动画；减少动态效果偏好下指针过渡直接落位。
+
+## 参考来源
+
+时间选择器面板（数字读出、12/24 小时制、小时与分钟切换、表盘与输入模式切换）依据 [Material 3 Time pickers 官方页面](https://m3.material.io/components/time-pickers/overview) 复刻；官方 Web 实现标记为不可用，本组件为按规格的 Vue 实现。
+
+<script setup>
+import TimePickerBasicExample from '../examples/time-picker/TimePickerBasicExample.vue';
+import TimePickerFormatExample from '../examples/time-picker/TimePickerFormatExample.vue';
+import TimePickerModeExample from '../examples/time-picker/TimePickerModeExample.vue';
 </script>
 
 # Button 按钮

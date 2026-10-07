@@ -3,6 +3,8 @@ import { ref } from 'vue';
 
 const value = ref(0);
 const disabledValue = ref(30);
+const extraLargeValue = ref(30);
+const rangeValue = ref([20, 80]);
 </script>
 
 <template>
@@ -19,6 +21,30 @@ const disabledValue = ref(30);
         :min="0"
         :max="100"
         :step="10"
+      />
+    </div>
+    <div
+      class="slider-zone"
+      data-testid="extra-large-zone"
+    >
+      <mat-slider
+        v-model="extraLargeValue"
+        aria-label="大尺寸滑块"
+        :min="0"
+        :max="100"
+        size="extra-large"
+      />
+    </div>
+    <div
+      class="slider-zone"
+      data-testid="range-extra-large-zone"
+    >
+      <mat-range-slider
+        v-model="rangeValue"
+        aria-label="范围滑块"
+        :min="0"
+        :max="100"
+        size="extra-large"
       />
     </div>
     <p>

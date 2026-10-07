@@ -1,5 +1,6 @@
 import AppRootScene from './AppRootScene.vue';
 import BottomSheetScene from './BottomSheetScene.vue';
+import CarouselScene from './CarouselScene.vue';
 import DialogScene from './DialogScene.vue';
 import MenuScene from './MenuScene.vue';
 import PanesScene from './PanesScene.vue';
@@ -13,6 +14,7 @@ import TooltipScene from './TooltipScene.vue';
 export const scenes = {
   'app-root': AppRootScene,
   'bottom-sheet': BottomSheetScene,
+  carousel: CarouselScene,
   dialog: DialogScene,
   menu: MenuScene,
   panes: PanesScene,

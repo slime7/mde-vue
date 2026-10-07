@@ -70,9 +70,13 @@ Tooltip 的模块级协调器继续保证同一时间只有一个活动实例，
 
 Icon 统一字体字形、SVG 资源和默认 Slot 中的 SVG 元素，负责 Material Symbols 经典四轴、尺寸、内容颜色和动态根标签。内容来源优先级固定为 `src`、`icon`、默认 Slot；组件级 `iconClass` 可覆盖或关闭插件全局值。按钮、List、Menu 和文本输入复用同一公共 Icon 实现，但各自负责上下文尺寸、颜色和无障碍语义。
 
-Shape 把 35 个归一化 Material 3 Expressive 轮廓固化为 CSS `clip-path: shape()` 百分比曲线，按名称查表渲染，不在运行时执行几何转换。组件以等宽高容器承载居中的默认 Slot，统一复用 CSS 长度处理、局部 Material 配色和动态 HTML 根标签；默认是 48px primary circle 的 `div`。
+Shape 把 35 个归一化 Material 3 Expressive 轮廓固化为 CSS `clip-path: shape()` 百分比曲线，按名称查表渲染；静态渲染不在运行时执行几何转换。`morph` 开启时与 Loading 复用共享形状采样模块，把相邻轮廓按需采样为同拓扑 `polygon()` 帧并读取 default spatial 弹簧令牌播放变形。组件以等宽高容器承载居中的默认 Slot，统一复用 CSS 长度处理、局部 Material 配色和动态 HTML 根标签；默认是 48px primary circle 的 `div`。
 
 `MatImage` 以根容器包裹内部原生 `<img>`，提供可配置圆角（默认引用 extra-large 形状令牌）、`cover`/`contain` 填充、宽高比和默认开启的 outline 描边。组件上的 class 与 style 属于根容器，其余原生属性与监听器以及 `img-class`、`img-style` 定向到 `img`；根元素对 `aspect-ratio`、`inline-size`、`block-size` 和 `border-radius` 使用系统动效令牌表达尺寸变化。
+
+Carousel 由 `MatCarousel` 容器与 `MatCarouselItem` 项目组成，复用 `MatImage` 渲染视觉。容器始终铺满所在容器并持有原生滚动加 scroll snap；注册进共享上下文的项目由容器按帧读取几何信息，沿行轴写入动态宽度（56px 小尺寸到目标宽度的到达插值）与视差位移变量，full-screen 变体只写视差并由容器 CSS 铺满项目。
+
+Date picker 与 Time picker 是无外观的面板组件：不渲染激活器、输入框或弹出层，也不绘制表面背景、圆角或阴影，由外部容器决定外观。Date picker 用本地 Date 计算 6 行 7 列日历与年视图，向外发出当天 0 点的 `update:modelValue`；Time picker 由数字读出与表盘组成，支持 12/24 小时制与表盘/输入模式切换，向外发出 `HH:mm` 的 `update:modelValue` 及 `update:mode`。
 
 `MatSharedElement` 保存稳定的 View Transition 名称，但默认不写入动态 HTML 根元素，也不管理应用状态或路由。`useMatViewTransition()` 只在单次调用期间激活 `names` 指定的元素，完成或失败后清理名称，从而隔离同页其他实例；它负责执行应用状态更新、等待同一文档 View Transition 完成，并在同一协调器实例内跳过尚未完成的旧动画。不支持 API、显式跳过或减少动态效果时仍直接执行更新。基础样式以系统 duration/easing 令牌设置文档 View Transition 伪元素，并允许应用样式覆盖。
 

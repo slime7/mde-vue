@@ -1,7 +1,14 @@
 import { mount } from '@vue/test-utils';
 import { nextTick } from 'vue';
-import { describe, expect, it } from 'vitest';
+import {
+  afterEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest';
 import { createMatUi, MatShape } from '../../src';
+import { SHAPE_PATHS } from '../../src/components/mat-shape/shape-paths';
 
 const SHAPE_NAMES = [
   'circle',
@@ -134,5 +141,97 @@ describe('MatShape', () => {
     expect(defaults.attributes('style')).toContain('inline-size: 56px');
     expect(explicit.attributes('style')).toContain('inline-size: 32px');
     expect(explicit.props('name')).toBe('square');
+  });
+});
+
+describe('MatShape morph', () => {
+  let animateCalls;
+  let restoreAnimate;
+
+  function stubAnimate() {
+    const original = Element.prototype.animate;
+    animateCalls = [];
+
+    Object.defineProperty(Element.prototype, 'animate', {
+      configurable: true,
+      writable: true,
+      value(keyframes, options) {
+        animateCalls.push({ keyframes, options });
+        return {
+          cancel() {},
+          finished: Promise.resolve(),
+        };
+      },
+    });
+    restoreAnimate = () => {
+      if (original === undefined) {
+        delete Element.prototype.animate;
+        return;
+      }
+
+      Element.prototype.animate = original;
+    };
+  }
+
+  afterEach(() => {
+    restoreAnimate?.();
+  });
+
+  it('morph 默认关闭且只接受布尔值', () => {
+    expect(MatShape.props.morph.type).toBe(Boolean);
+    expect(MatShape.props.morph.default).toBe(false);
+  });
+
+  it('开启 morph 后 name 变化以同拓扑轮廓动画过渡到目标形状', async () => {
+    stubAnimate();
+    const wrapper = mount(MatShape, { props: { name: 'circle', morph: true } });
+
+    await wrapper.setProps({ name: 'heart' });
+    await nextTick();
+
+    expect(animateCalls).toHaveLength(1);
+    const [{ keyframes, options }] = animateCalls;
+    expect(keyframes).toHaveLength(2);
+    expect(keyframes[0].clipPath).toMatch(/^polygon\(/);
+    expect(keyframes[1].clipPath).toMatch(/^polygon\(/);
+    expect(options.duration).toBeGreaterThan(0);
+    expect(typeof options.easing).toBe('string');
+    expect(options.easing.length).toBeGreaterThan(0);
+
+    const countPoints = (clipPath) => clipPath
+      .replace(/^polygon\(/, '')
+      .replace(/\)$/, '')
+      .split(',')
+      .length;
+    expect(countPoints(keyframes[0].clipPath)).toBe(countPoints(keyframes[1].clipPath));
+    expect(keyframes[0].clipPath).not.toBe(keyframes[1].clipPath);
+    expect(wrapper.attributes('style')).toContain(SHAPE_PATHS.heart);
+  });
+
+  it('未开启 morph 或初始渲染时不产生变形动画', async () => {
+    stubAnimate();
+    const plain = mount(MatShape, { props: { name: 'circle' } });
+
+    await plain.setProps({ name: 'heart' });
+    await nextTick();
+    expect(animateCalls).toHaveLength(0);
+
+    const morphed = mount(MatShape, { props: { name: 'circle', morph: true } });
+    await nextTick();
+    await morphed.setProps({ name: 'circle' });
+    await nextTick();
+    expect(animateCalls).toHaveLength(0);
+  });
+
+  it('减少动态效果偏好下跳过变形动画并直接呈现目标形状', async () => {
+    vi.stubGlobal('matchMedia', () => ({ matches: true }));
+    stubAnimate();
+    const wrapper = mount(MatShape, { props: { name: 'circle', morph: true } });
+
+    await wrapper.setProps({ name: 'heart' });
+    await nextTick();
+
+    expect(animateCalls).toHaveLength(0);
+    expect(wrapper.attributes('style')).toContain(SHAPE_PATHS.heart);
   });
 });

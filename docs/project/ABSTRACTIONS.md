@@ -164,9 +164,9 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 ## `<mat-shape>`
 
-`<mat-shape>` 的导出名是 `MatShape`，默认以 `div` 渲染 48px 的 primary circle。`name` 只接受 35 个 Material 3 Expressive 公共名称，内部使用归一化百分比 `clip-path: shape()` 查表，非法名称由 Vue 报告并防御性回退 circle；组件不在运行时生成、下载或解析几何数据。
+`<mat-shape>` 的导出名是 `MatShape`，默认以 `div` 渲染 48px 的 primary circle。`name` 只接受 35 个 Material 3 Expressive 公共名称，内部使用归一化百分比 `clip-path: shape()` 查表，非法名称由 Vue 报告并防御性回退 circle；静态渲染不在运行时生成、下载或解析几何数据。
 
-`size` 同时控制宽高，数字与纯数字字符串按 px 处理，其他字符串须为合法正 CSS 长度，非法值回退 48px。`color` 使用统一组件配色并把配对的 on-color 传给居中的默认 Slot；`as` 接受合法 HTML 标签名。Slot 内容随外轮廓裁剪但不自动获得交互或无障碍语义，未消费的属性与监听器落到实际根元素。
+`size` 同时控制宽高，数字与纯数字字符串按 px 处理，其他字符串须为合法正 CSS 长度，非法值回退 48px。`color` 使用统一组件配色并把配对的 on-color 传给居中的默认 Slot；`as` 接受合法 HTML 标签名。`morph` 开启后 `name` 切换与 Loading 复用共享形状采样模块，把相邻轮廓按需采样为同拓扑 `polygon()` 并以 default spatial 弹簧动画过渡，连续快速切换从当前插值轮廓继续，减少动态效果偏好下直接呈现目标形状；关闭时不产生动画。Slot 内容随外轮廓裁剪但不自动获得交互或无障碍语义，未消费的属性与监听器落到实际根元素。
 
 ## `<mat-badge>`
 
@@ -178,7 +178,21 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 `<mat-image>` 的导出名是 `MatImage`，根元素是包裹内部原生 `<img>` 的 `div`。`radius` 省略时使用 `--mat-sys-shape-corner-extra-large`（28px），数字与纯数字字符串按 px 处理（0 不带单位），其他字符串须为 trim 后合法的 CSS 长度值，非法时回退默认令牌；`fit` 只接受 `cover`（默认）与 `contain`；`aspect-ratio` 接受宽/高比数字或 trim 后合法的 CSS `aspect-ratio` 字符串，省略或非法时保持图片自然比例；`outline` 默认开启 1px 描边，颜色使用 `--mat-sys-color-outline`，可设置为 `false` 关闭。组件上的 `class` 与 `style` 属于根容器，其余未消费的原生属性和监听器以及 `img-class`、`img-style` 定向到内部 `img`。根元素对 `aspect-ratio`、`inline-size`、`block-size` 和 `border-radius` 使用系统动效令牌过渡，并尊重减少动画偏好；`fit` 切换不参与过渡。组件没有 Slots、自定义事件或公开方法。
 
+## `<mat-carousel>`
+
+`<mat-carousel>` 与 `<mat-carousel-item>` 的导出名分别是 `MatCarousel` 与 `MatCarouselItem`。Carousel 提供轮播容器能力，始终铺满所在容器，使用方须提供确定块轴尺寸；除 full-screen 外面板高度不超过 320px。项目由默认 Slot 中的 `mat-carousel-item` 提供，内部组合 `MatImage` 渲染图片，默认 Slot 放置随项目尺寸缩放的简短文本，项目压缩至小尺寸预览位时文本整体淡出。`variant` 支持 `multi-browse`、`uncontained`、`uncontained-multi-aspect`、`hero`、`hero-center-aligned` 与 `full-screen`。full-screen 沿块轴铺满并纵向滑动，一次显示一张整幅图片，由原生 scroll snap 逐屏停靠；其余布局沿行轴横向滑动并展示多张图片，支持触摸拖拽、鼠标拖拽与横向滚轮逐像素滚动。`switchOnClick` 为 `true` 时支持点击未展开项目滚动切换至该项目，默认为 `false`。滚动容器聚焦后显示焦点框，方向键按停靠位滚动，Home 与 End 跳转首尾。组件整体禁用文本选择与原生图片拖拽。
+
+横向布局的项目几何跟随滚动位置逐帧更新。动态宽度布局（`multi-browse`、`hero`、`hero-center-aligned`）相邻停靠位相距一个大项宽度加间距，当前项展开为目标宽度并对齐锚点（`hero-center-aligned` 居中，其余对齐前缘），前导侧保留 56px 预览位；`multi-browse` 的后随侧以中等宽度项目填充并在末端保留 56px 预览位，`hero` 与 `hero-center-aligned` 后随侧保留一个 56px 预览位。末端停靠位主项贴右缘并保留 16px 边距。全部项目展开填不满容器内宽时整体展开且不产生滚动。`uncontained` 系列保持固定宽度，首尾停靠保留 16px 边距，最后一个项目完整可滚入视口；`uncontained-multi-aspect` 项目宽度由 `aspectRatio` 决定。目标宽度支持通过项目 `width` 设置，未设置时由容器尺寸推导。拖拽释放或滚轮停止后逐帧过渡吸附至最近停靠位，减少动态效果偏好下直接跳转。图片取景随停靠距离产生视差位移。项目不建立交互语义，通过 `alt` 提供替代文本。组件没有自定义事件与公开方法。
+
 `<mat-shared-element>` 的导出名是 `MatSharedElement`，公共入口和全局注册另提供 `MdeSharedElement` 别名。必填 `name` 是同一文档 View Transition 的稳定 CSS `<custom-ident>`，在每次旧快照或新快照中必须唯一；名称默认不写入 DOM，只在 `useMatViewTransition().start()` 的 `names` 选项指定后临时启用并在完成或失败后清理，避免无关实例进入过渡顶层。`as` 只改变合法 HTML 根标签，`disabled` 阻止同名临时激活。组件不更新状态、不启动动画，也不赋予 Slot 交互或无障碍语义。`useMatViewTransition()` 与别名 `useMdeViewTransition()` 每次调用创建独立协调器；协调器在同一实例内跳过尚未完成的旧动画，并在 API 不可用、显式跳过或减少动态效果时直接执行更新。更新函数与动画完成错误向调用方传播。
+
+## `<mat-date-picker>` 与 `<mat-time-picker>`
+
+`<mat-date-picker>` 与 `<mat-time-picker>` 的导出名分别是 `MatDatePicker` 与 `MatTimePicker`。两者都只提供选择面板：不渲染激活按钮、输入框或弹出层，也不带背景色、圆角和阴影，可放入普通内容、Dialog 或各种 Sheet，外观由外部容器提供。激活、弹出与提交流程由使用者自行组合。
+
+Date picker 的 `v-model` 绑定本地时区当天 0 点的 `Date` 或 `null`，时间分量被忽略。面板头部按浏览器默认语言以大号文字显示所选日期（未选择时显示今天），分隔线下方是月份菜单按钮、前后导航、星期标签和 6 行 7 列的日期网格；月份标题切换年视图，年份按三列展示。月外日期可选并联动切换月份；选中日期（无选中时为今天）是网格的唯一 Tab 停靠点，方向键移动焦点。`color` 遵循统一组件配色约定，强调选中日期与年份。
+
+Time picker 的 `v-model` 绑定 24 小时制 `HH:mm` 零填充字符串或 `null`。面板由读出区与表盘组成。支持 24 小时制与 12 小时制（附带 AM/PM 切换器），通过 `format` 或 `is24Hour` 设置；支持表盘（dial）与输入模式（input）切换，通过 `mode` 或 `v-model:mode` 控制，`showModeToggle` 控制模式切换按钮。输入模式下通过 `#input` 插槽承载自定义输入界面；表盘具备 `role="slider"` 语义，支持点击刻度、角度拖拽与键盘方向键导航，选择小时后自动进入分钟视图。模式切换发出 `update:mode` 事件。
 
 ## `<mat-avatar>`
 

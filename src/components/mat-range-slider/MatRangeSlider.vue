@@ -657,14 +657,34 @@ function setHandleElement(index, element) {
   }
 
   .mat-range-slider__inactive-track {
-    background: var(--mat-range-slider-current-inactive-track-color);
+    background: none;
   }
 
+  /* 外端圆角端帽。 */
   .mat-range-slider__inactive-track--before {
     inset-inline: 0 auto;
     inline-size: var(--mat-range-slider-inactive-before-size);
-    border-end-start-radius: var(--mat-range-slider-current-track-corner);
-    border-start-start-radius: var(--mat-range-slider-current-track-corner);
+    overflow: hidden;
+  }
+
+  .mat-range-slider__inactive-track--before::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: var(--mat-range-slider-current-track-corner);
+    background: var(--mat-range-slider-current-inactive-track-color);
+    border-radius: var(--mat-range-slider-current-track-corner) 0 0 var(--mat-range-slider-current-track-corner);
+    transition: background-color var(--mat-sys-motion-spring-fast-effects);
+  }
+
+  .mat-range-slider__inactive-track--before::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline: var(--mat-range-slider-current-track-corner) 0;
+    background: var(--mat-range-slider-current-inactive-track-color);
+    transition: background-color var(--mat-sys-motion-spring-fast-effects);
   }
 
   .mat-range-slider__active-track {
@@ -676,8 +696,27 @@ function setHandleElement(index, element) {
   .mat-range-slider__inactive-track--after {
     inset-inline: var(--mat-range-slider-inactive-after-start) auto;
     inline-size: var(--mat-range-slider-inactive-after-size);
-    border-end-end-radius: var(--mat-range-slider-current-track-corner);
-    border-start-end-radius: var(--mat-range-slider-current-track-corner);
+    overflow: hidden;
+  }
+
+  .mat-range-slider__inactive-track--after::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    inline-size: var(--mat-range-slider-current-track-corner);
+    background: var(--mat-range-slider-current-inactive-track-color);
+    border-radius: 0 var(--mat-range-slider-current-track-corner) var(--mat-range-slider-current-track-corner) 0;
+    transition: background-color var(--mat-sys-motion-spring-fast-effects);
+  }
+
+  .mat-range-slider__inactive-track--after::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline: 0 var(--mat-range-slider-current-track-corner);
+    background: var(--mat-range-slider-current-inactive-track-color);
+    transition: background-color var(--mat-sys-motion-spring-fast-effects);
   }
 
   .mat-range-slider__stop {
@@ -795,9 +834,19 @@ function setHandleElement(index, element) {
     inset-inline: 0;
     inline-size: auto;
     block-size: var(--mat-range-slider-inactive-before-size);
-    border-radius: var(--mat-slider-track-gap-corner);
-    border-end-end-radius: var(--mat-range-slider-current-track-corner);
-    border-end-start-radius: var(--mat-range-slider-current-track-corner);
+  }
+
+  .mat-range-slider--vertical .mat-range-slider__inactive-track--before::before {
+    inset-block: auto 0;
+    inset-inline: 0;
+    inline-size: auto;
+    block-size: var(--mat-range-slider-current-track-corner);
+    border-radius: 0 0 var(--mat-range-slider-current-track-corner) var(--mat-range-slider-current-track-corner);
+  }
+
+  .mat-range-slider--vertical .mat-range-slider__inactive-track--before::after {
+    inset-block: 0 var(--mat-range-slider-current-track-corner);
+    inset-inline: 0;
   }
 
   .mat-range-slider--vertical .mat-range-slider__active-track {
@@ -813,9 +862,19 @@ function setHandleElement(index, element) {
     inset-inline: 0;
     inline-size: auto;
     block-size: var(--mat-range-slider-inactive-after-size);
-    border-radius: var(--mat-slider-track-gap-corner);
-    border-start-end-radius: var(--mat-range-slider-current-track-corner);
-    border-start-start-radius: var(--mat-range-slider-current-track-corner);
+  }
+
+  .mat-range-slider--vertical .mat-range-slider__inactive-track--after::before {
+    inset-block: 0 auto;
+    inset-inline: 0;
+    inline-size: auto;
+    block-size: var(--mat-range-slider-current-track-corner);
+    border-radius: var(--mat-range-slider-current-track-corner) var(--mat-range-slider-current-track-corner) 0 0;
+  }
+
+  .mat-range-slider--vertical .mat-range-slider__inactive-track--after::after {
+    inset-block: var(--mat-range-slider-current-track-corner) 0;
+    inset-inline: 0;
   }
 
   .mat-range-slider--vertical .mat-range-slider__stop {

@@ -16,6 +16,9 @@
 - [Text 文字](components/text.md): mat-text 的 Material 3 文字类型、尺寸、强调样式和动态根元素。
 - [Avatar 头像](components/avatar.md): mat-avatar 的图片、图标、默认 Slot 内容、尺寸与 Material 配色。
 - [Shape 形状](components/shape.md): mat-shape 的 35 种 Material 3 Expressive 形状、尺寸、配色、根标签和内容。
+- [Carousel 轮播](components/carousel.md): mat-carousel 的六种 Material 3 Expressive 轮播布局、动态宽度、视差滚动与 mat-carousel-item 图片项目。
+- [Date picker 日期选择器](components/date-picker.md): mat-date-picker 的日历面板、年份视图、v-model 绑定与外部容器外观约定。
+- [Time picker 时间选择器](components/time-picker.md): mat-time-picker 的表盘面板、12/24 小时制、表盘与输入模式切换及 v-model 绑定。
 - [Button 按钮](components/button.md): mat-btn 的普通与图标模式、尺寸与尺寸过渡、宽度、形态、配色、受控切换、loading 状态、事件和 slots。
 - [样式](guide/styles.md): 使用 mde-vue 的 CSS 级联层、公共设计令牌与 Tailwind CSS v4 语义映射。
 - [FAB 浮动操作按钮](components/fab.md): mat-fab 的纯图标 FAB 与 Extended FAB、尺寸与尺寸过渡、官方颜色角色、禁用状态和无障碍名称。

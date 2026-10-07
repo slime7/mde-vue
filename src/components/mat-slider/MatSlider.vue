@@ -733,14 +733,7 @@ function handleKeyDown(event) {
   }
 
   .mat-slider__inactive-track {
-    background: var(--mat-slider-current-inactive-track-color);
-  }
-
-  .mat-slider__inactive-track--before {
-    inset-inline: 0 auto;
-    inline-size: var(--mat-slider-inactive-before-size);
-    border-end-start-radius: var(--mat-slider-current-track-corner);
-    border-start-start-radius: var(--mat-slider-current-track-corner);
+    background: none;
   }
 
   .mat-slider__active-track {
@@ -749,16 +742,72 @@ function handleKeyDown(event) {
     background: var(--mat-slider-current-active-track-color);
   }
 
+  /* 外端圆角端帽。 */
+  .mat-slider__inactive-track--before,
+  .mat-slider__inactive-track--after,
   .mat-slider__active-track--from-start {
-    border-end-start-radius: var(--mat-slider-current-track-corner);
-    border-start-start-radius: var(--mat-slider-current-track-corner);
+    overflow: hidden;
+    background: none;
+  }
+
+  .mat-slider__inactive-track--before {
+    inset-inline: 0 auto;
+    inline-size: var(--mat-slider-inactive-before-size);
+  }
+
+  .mat-slider__inactive-track--before::before,
+  .mat-slider__active-track--from-start::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: var(--mat-slider-current-track-corner);
+    background: var(--mat-slider-current-inactive-track-color);
+    border-radius: var(--mat-slider-current-track-corner) 0 0 var(--mat-slider-current-track-corner);
+    transition: background-color var(--mat-sys-motion-spring-fast-effects);
+  }
+
+  .mat-slider__active-track--from-start::before {
+    background: var(--mat-slider-current-active-track-color);
+  }
+
+  .mat-slider__inactive-track--before::after,
+  .mat-slider__active-track--from-start::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline: var(--mat-slider-current-track-corner) 0;
+    background: var(--mat-slider-current-inactive-track-color);
+    transition: background-color var(--mat-sys-motion-spring-fast-effects);
+  }
+
+  .mat-slider__active-track--from-start::after {
+    background: var(--mat-slider-current-active-track-color);
   }
 
   .mat-slider__inactive-track--after {
     inset-inline: var(--mat-slider-inactive-after-start) auto;
     inline-size: var(--mat-slider-inactive-after-size);
-    border-end-end-radius: var(--mat-slider-current-track-corner);
-    border-start-end-radius: var(--mat-slider-current-track-corner);
+  }
+
+  .mat-slider__inactive-track--after::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    inline-size: var(--mat-slider-current-track-corner);
+    background: var(--mat-slider-current-inactive-track-color);
+    border-radius: 0 var(--mat-slider-current-track-corner) var(--mat-slider-current-track-corner) 0;
+    transition: background-color var(--mat-sys-motion-spring-fast-effects);
+  }
+
+  .mat-slider__inactive-track--after::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline: 0 var(--mat-slider-current-track-corner);
+    background: var(--mat-slider-current-inactive-track-color);
+    transition: background-color var(--mat-sys-motion-spring-fast-effects);
   }
 
   .mat-slider__stop {
@@ -891,9 +940,21 @@ function handleKeyDown(event) {
     inset-inline: 0;
     inline-size: auto;
     block-size: var(--mat-slider-inactive-before-size);
-    border-radius: var(--mat-slider-track-gap-corner);
-    border-end-end-radius: var(--mat-slider-current-track-corner);
-    border-end-start-radius: var(--mat-slider-current-track-corner);
+  }
+
+  .mat-slider--vertical .mat-slider__inactive-track--before::before,
+  .mat-slider--vertical .mat-slider__active-track--from-start::before {
+    inset-block: auto 0;
+    inset-inline: 0;
+    inline-size: auto;
+    block-size: var(--mat-slider-current-track-corner);
+    border-radius: 0 0 var(--mat-slider-current-track-corner) var(--mat-slider-current-track-corner);
+  }
+
+  .mat-slider--vertical .mat-slider__inactive-track--before::after,
+  .mat-slider--vertical .mat-slider__active-track--from-start::after {
+    inset-block: 0 var(--mat-slider-current-track-corner);
+    inset-inline: 0;
   }
 
   .mat-slider--vertical .mat-slider__active-track {
@@ -904,20 +965,24 @@ function handleKeyDown(event) {
     transition: inset-block-end var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial), background-color var(--mat-sys-motion-spring-fast-effects);
   }
 
-  .mat-slider--vertical .mat-slider__active-track--from-start {
-    border-radius: var(--mat-slider-track-gap-corner);
-    border-end-end-radius: var(--mat-slider-current-track-corner);
-    border-end-start-radius: var(--mat-slider-current-track-corner);
-  }
-
   .mat-slider--vertical .mat-slider__inactive-track--after {
     inset-block: auto var(--mat-slider-inactive-after-start);
     inset-inline: 0;
     inline-size: auto;
     block-size: var(--mat-slider-inactive-after-size);
-    border-radius: var(--mat-slider-track-gap-corner);
-    border-start-end-radius: var(--mat-slider-current-track-corner);
-    border-start-start-radius: var(--mat-slider-current-track-corner);
+  }
+
+  .mat-slider--vertical .mat-slider__inactive-track--after::before {
+    inset-block: 0 auto;
+    inset-inline: 0;
+    inline-size: auto;
+    block-size: var(--mat-slider-current-track-corner);
+    border-radius: var(--mat-slider-current-track-corner) var(--mat-slider-current-track-corner) 0 0;
+  }
+
+  .mat-slider--vertical .mat-slider__inactive-track--after::after {
+    inset-block: var(--mat-slider-current-track-corner) 0;
+    inset-inline: 0;
   }
 
   .mat-slider--vertical .mat-slider__stop {
@@ -971,6 +1036,12 @@ function handleKeyDown(event) {
     .mat-slider__track,
     .mat-slider__active-track,
     .mat-slider__inactive-track,
+    .mat-slider__inactive-track--before::before,
+    .mat-slider__inactive-track--before::after,
+    .mat-slider__active-track--from-start::before,
+    .mat-slider__active-track--from-start::after,
+    .mat-slider__inactive-track--after::before,
+    .mat-slider__inactive-track--after::after,
     .mat-slider__handle,
     .mat-slider__handle-shape,
     .mat-slider__inset-icon {

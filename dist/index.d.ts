@@ -763,6 +763,152 @@ export interface MatImageProps {
 export type MatImageComponent = DefineComponent<MatImageProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatImage: MatImageComponent;
 
+export interface MatCarouselProps {
+  /**
+  * Material 3 Expressive 轮播布局；可选值为 `multi-browse`、`uncontained`、
+  * `uncontained-multi-aspect`、`hero`、`hero-center-aligned`、`full-screen`。
+  * full-screen 沿块轴整幅铺满并纵向滑动，其余布局沿行轴横向滑动。
+  *
+  * @type {string}
+  * @default 'multi-browse'
+  */
+  variant?: string;
+  /**
+  * 点击未展开的项目时是否滚动并切换至该项目。
+  * 为 `true` 时点击未展开项目触发滚动停靠；默认为 `false`，仅保留卡片自身的点击事件。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  switchOnClick?: boolean;
+}
+
+export type MatCarouselComponent = DefineComponent<MatCarouselProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatCarousel: MatCarouselComponent;
+
+export interface MatCarouselItemProps {
+  /**
+  * 图片资源地址。
+  *
+  * @type {string}
+  * @required
+  */
+  src: string;
+  /**
+  * 图片替代文本；转发给内部 img 元素。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  alt?: string | undefined;
+  /**
+  * 项目宽高比；数字与纯数字字符串表示宽/高比，其他字符串须为合法 CSS
+  * `aspect-ratio` 值。`uncontained-multi-aspect` 变体据此决定项目自然宽度。
+  *
+  * @type {number | string | undefined}
+  * @default undefined
+  */
+  aspectRatio?: number | string | undefined;
+  /**
+  * 使用方设置的目标宽度（px）；动态宽度变体到达起始边缘时展开到该宽度，
+  * uncontained 与 multi-aspect 布局直接使用该固定宽度。
+  *
+  * @type {number | undefined}
+  * @default undefined
+  */
+  width?: number | undefined;
+}
+
+export type MatCarouselItemComponent = DefineComponent<MatCarouselItemProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatCarouselItem: MatCarouselItemComponent;
+
+export interface MatDatePickerProps {
+  /**
+  * `v-model` 当前选中的日期；本地时区当天 0 点的 Date，null 表示未选择。
+  * 选择只关心日期，传入值的时间分量会被忽略。
+  *
+  * @type {Date | null}
+  * @default null
+  */
+  modelValue?: Date | null;
+  /**
+  * Material 语义色、系统颜色角色或六位十六进制种子色；强调选中的日期与年份。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  color?: string | undefined;
+}
+
+export interface MatDatePickerEmits {
+  /**
+  * 选择日期时发出下一个本地时区当天 0 点的 Date。
+  */
+  "update:modelValue": (payload: unknown) => unknown;
+}
+
+export type MatDatePickerComponent = DefineComponent<MatDatePickerProps, {}, {}, {}, {}, {}, {}, MatDatePickerEmits>;
+export declare const MatDatePicker: MatDatePickerComponent;
+
+export interface MatTimePickerProps {
+  /**
+  * `v-model` 当前选中的时间；24 小时制 `HH:mm` 字符串，null 表示未选择。
+  *
+  * @type {string | null}
+  * @default null
+  */
+  modelValue?: string | null;
+  /**
+  * Material 语义色、系统颜色角色或六位十六进制种子色；强调读出、表盘指针与选中刻度。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  color?: string | undefined;
+  /**
+  * 时间显示制式，可选 '24h' 或 '12h'。
+  *
+  * @type {'24h' | '12h'}
+  * @default '24h'
+  */
+  format?: '24h' | '12h';
+  /**
+  * 是否为 24 小时制。若显式提供，优先级高于 format。
+  *
+  * @type {boolean | undefined}
+  * @default undefined
+  */
+  is24Hour?: boolean | undefined;
+  /**
+  * 当前交互模式，可选 'dial' 或 'input'。
+  *
+  * @type {'dial' | 'input'}
+  * @default 'dial'
+  */
+  mode?: 'dial' | 'input';
+  /**
+  * 是否在面板中显示模式切换按钮。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  showModeToggle?: boolean;
+}
+
+export interface MatTimePickerEmits {
+  /**
+  * 小时或分钟变化时发出下一个 24 小时制 `HH:mm` 字符串。
+  */
+  "update:modelValue": (payload: unknown) => unknown;
+  /**
+  * 模式改变时发出新模式。
+  */
+  "update:mode": (payload: unknown) => unknown;
+}
+
+export type MatTimePickerComponent = DefineComponent<MatTimePickerProps, {}, {}, {}, {}, {}, {}, MatTimePickerEmits>;
+export declare const MatTimePicker: MatTimePickerComponent;
+
 export interface MatSharedElementProps {
   /**
   * View Transition 使用的共享元素名称；同一文档快照中必须保持唯一。
@@ -880,6 +1026,13 @@ export interface MatShapeProps {
   * @default 'div'
   */
   as?: string;
+  /**
+  * 是否在 `name` 切换时以同拓扑轮廓动画过渡到目标形状；关闭时立即切换。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  morph?: boolean;
 }
 
 export type MatShapeComponent = DefineComponent<MatShapeProps, {}, {}, {}, {}, {}, {}, {}>;
@@ -4814,6 +4967,14 @@ declare module 'vue' {
     'mat-icon': typeof MatIcon;
     MatImage: typeof MatImage;
     'mat-image': typeof MatImage;
+    MatCarousel: typeof MatCarousel;
+    'mat-carousel': typeof MatCarousel;
+    MatCarouselItem: typeof MatCarouselItem;
+    'mat-carousel-item': typeof MatCarouselItem;
+    MatDatePicker: typeof MatDatePicker;
+    'mat-date-picker': typeof MatDatePicker;
+    MatTimePicker: typeof MatTimePicker;
+    'mat-time-picker': typeof MatTimePicker;
     MatSharedElement: typeof MatSharedElement;
     'mat-shared-element': typeof MatSharedElement;
     MdeSharedElement: typeof MatSharedElement;

@@ -9,7 +9,7 @@ order: 39
 
 ## 组件简介
 
-`<mat-shape>` 的组件导出名是 `MatShape`。它使用现代 CSS `clip-path: shape()` 展示 35 种 Material 3 Expressive 归一化形状，并可通过 `size`、`color`、`as` 和默认 Slot 作为装饰图形或内容容器使用。默认渲染 48px 的 primary circle，根元素为 `div`。
+`<mat-shape>` 的组件导出名是 `MatShape`。它使用现代 CSS `clip-path: shape()` 展示 35 种 Material 3 Expressive 归一化形状，并可通过 `size`、`color`、`as`、`morph` 和默认 Slot 作为装饰图形或内容容器使用。默认渲染 48px 的 primary circle，根元素为 `div`。
 
 ## 示例
 
@@ -95,6 +95,28 @@ order: 39
   </DocsPreview>
 </ClientOnly>
 
+### `morph`
+
+开启 `morph` 后，`name` 变化以同拓扑轮廓的弹簧动画过渡到目标形状；关闭时立即切换。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/shape/ShapeMorphExample.vue#template [template]
+
+<<< @/examples/shape/ShapeMorphExample.vue#script [script]
+
+<<< @/examples/shape/ShapeMorphExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Shape morph 预览">
+    <ShapeMorphExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### 默认 Slot
 
 默认 Slot 在形状内水平、垂直居中，超出轮廓的部分随 `clip-path` 裁剪。内容不会自动获得交互语义。
@@ -125,6 +147,7 @@ order: 39
 | `size` | `number \| string` | `48` | 正方形边长；数字与纯数字字符串按 px，其他字符串须为合法正 CSS 长度，非法值回退 `48px` |
 | `color` | `string` | `'primary'` | Material 语义色、系统颜色角色或六位十六进制种子色 |
 | `as` | `string` | `'div'` | 合法 HTML 标签名，用作实际根元素 |
+| `morph` | `boolean` | `false` | 开启后 `name` 变化以同拓扑轮廓的弹簧动画过渡到目标形状，时长与缓动跟随 `--mat-sys-motion-spring-default-spatial`；减少动态效果偏好下直接呈现目标形状 |
 
 `name` 合法值为：
 
@@ -144,7 +167,7 @@ order: 39
 
 ## 状态与无障碍
 
-Shape 本身不建立交互语义。装饰性形状应设置 `aria-hidden="true"`；承载信息时应为根元素提供合适的语义和可访问名称。`clip-path` 只改变绘制和命中轮廓，不会自动改变 Slot 内容的布局边界，复杂内容应留出足够的内部空间。
+Shape 本身不建立交互语义。装饰性形状应设置 `aria-hidden="true"`；承载信息时应为根元素提供合适的语义和可访问名称。`clip-path` 只改变绘制和命中轮廓，不会自动改变 Slot 内容的布局边界，复杂内容应留出足够的内部空间。开启 `morph` 后的形状切换动画仅为视觉过渡，不改变状态语义；减少动态效果偏好下动画被跳过并直接呈现目标形状。
 
 ## 参考来源
 
@@ -153,6 +176,7 @@ Shape 本身不建立交互语义。装饰性形状应设置 `aria-hidden="true"
 <script setup>
 import ShapeAsExample from '../examples/shape/ShapeAsExample.vue';
 import ShapeColorExample from '../examples/shape/ShapeColorExample.vue';
+import ShapeMorphExample from '../examples/shape/ShapeMorphExample.vue';
 import ShapeNamesExample from '../examples/shape/ShapeNamesExample.vue';
 import ShapeSizeExample from '../examples/shape/ShapeSizeExample.vue';
 import ShapeSlotExample from '../examples/shape/ShapeSlotExample.vue';
