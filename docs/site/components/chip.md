@@ -25,7 +25,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip variant 预览" stacked><ChipVariantExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip variant 预览" stacked>
+    <ChipVariantExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `elevated`
 
@@ -35,7 +39,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip elevated 预览" stacked><ChipElevatedExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip elevated 预览" stacked>
+    <ChipElevatedExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `selected`
 
@@ -45,7 +53,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip selected 预览" stacked><ChipSelectedExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip selected 预览" stacked>
+    <ChipSelectedExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `hide-selected-icon`
 
@@ -55,7 +67,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip hide-selected-icon 预览" stacked><ChipHideSelectedIconExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip hide-selected-icon 预览" stacked>
+    <ChipHideSelectedIconExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### input `remove`
 
@@ -67,7 +83,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Input Chip remove 预览" stacked><ChipRemoveExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Input Chip remove 预览" stacked>
+    <ChipRemoveExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `remove-icon` prop
 
@@ -77,7 +97,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip remove-icon prop 预览"><ChipRemoveIconExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip remove-icon prop 预览">
+    <ChipRemoveIconExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `disabled`
 
@@ -87,7 +111,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip disabled 预览" stacked><ChipDisabledExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip disabled 预览" stacked>
+    <ChipDisabledExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `color`
 
@@ -97,7 +125,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip color 预览" stacked><ChipColorExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip color 预览" stacked>
+    <ChipColorExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `leading` Slot
 
@@ -107,7 +139,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip leading Slot 预览"><ChipLeadingSlotExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip leading Slot 预览">
+    <ChipLeadingSlotExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `avatar` Slot
 
@@ -117,7 +153,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip avatar Slot 预览"><ChipAvatarSlotExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip avatar Slot 预览">
+    <ChipAvatarSlotExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `remove-icon` Slot
 
@@ -127,7 +167,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip remove-icon Slot 预览"><ChipRemoveIconSlotExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip remove-icon Slot 预览">
+    <ChipRemoveIconSlotExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### ChipSet 布局
 
@@ -139,7 +183,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="ChipSet 布局预览" stacked><ChipSetLayoutExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="ChipSet 布局预览" stacked>
+    <ChipSetLayoutExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### ChipSet `v-model`
 
@@ -151,7 +199,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="ChipSet v-model 预览" stacked><ChipSetSelectionExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="ChipSet v-model 预览" stacked>
+    <ChipSetSelectionExample />
+  </DocsPreview>
+</ClientOnly>
 
 ## API
 

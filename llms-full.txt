@@ -8621,7 +8621,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip variant 预览" stacked><ChipVariantExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip variant 预览" stacked>
+    <ChipVariantExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `elevated`
 
@@ -8640,7 +8644,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip elevated 预览" stacked><ChipElevatedExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip elevated 预览" stacked>
+    <ChipElevatedExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `selected`
 
@@ -8664,7 +8672,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip selected 预览" stacked><ChipSelectedExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip selected 预览" stacked>
+    <ChipSelectedExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `hide-selected-icon`
 
@@ -8685,7 +8697,11 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip hide-selected-icon 预览" stacked><ChipHideSelectedIconExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip hide-selected-icon 预览" stacked>
+    <ChipHideSelectedIconExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### input `remove`
 
@@ -8738,7 +8754,11 @@ function removeContact(contact) {
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Input Chip remove 预览" stacked><ChipRemoveExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Input Chip remove 预览" stacked>
+    <ChipRemoveExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `remove-icon` prop
 
@@ -8754,7 +8774,11 @@ function removeContact(contact) {
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip remove-icon prop 预览"><ChipRemoveIconExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip remove-icon prop 预览">
+    <ChipRemoveIconExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `disabled`
 
@@ -8776,7 +8800,11 @@ function removeContact(contact) {
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip disabled 预览" stacked><ChipDisabledExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip disabled 预览" stacked>
+    <ChipDisabledExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `color`
 
@@ -8806,7 +8834,11 @@ function removeContact(contact) {
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip color 预览" stacked><ChipColorExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip color 预览" stacked>
+    <ChipColorExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `leading` Slot
 
@@ -8825,7 +8857,11 @@ function removeContact(contact) {
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip leading Slot 预览"><ChipLeadingSlotExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip leading Slot 预览">
+    <ChipLeadingSlotExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `avatar` Slot
 
@@ -8846,7 +8882,11 @@ function removeContact(contact) {
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip avatar Slot 预览"><ChipAvatarSlotExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip avatar Slot 预览">
+    <ChipAvatarSlotExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `remove-icon` Slot
 
@@ -8865,7 +8905,11 @@ function removeContact(contact) {
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Chip remove-icon Slot 预览"><ChipRemoveIconSlotExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Chip remove-icon Slot 预览">
+    <ChipRemoveIconSlotExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### ChipSet 布局
 
@@ -8909,7 +8953,11 @@ const labels = ['设计', '开发', '测试', '发布', '文档', '运维'];
 :::
 ::::
 
-<ClientOnly><DocsPreview label="ChipSet 布局预览" stacked><ChipSetLayoutExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="ChipSet 布局预览" stacked>
+    <ChipSetLayoutExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### ChipSet `v-model`
 
@@ -8971,7 +9019,11 @@ const multiple = ref(['文档']);
 :::
 ::::
 
-<ClientOnly><DocsPreview label="ChipSet v-model 预览" stacked><ChipSetSelectionExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="ChipSet v-model 预览" stacked>
+    <ChipSetSelectionExample />
+  </DocsPreview>
+</ClientOnly>
 
 ## API
 
@@ -11764,7 +11816,11 @@ const items = [
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select items 预览"><SelectItemsExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select items 预览">
+    <SelectItemsExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `multiple`
 
@@ -11792,7 +11848,11 @@ const items = [
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select multiple 预览"><SelectMultipleExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select multiple 预览">
+    <SelectMultipleExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `selectionIndicator`
 
@@ -11854,7 +11914,11 @@ const items = [
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select selectionIndicator 预览"><SelectSelectionIndicatorExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select selectionIndicator 预览">
+    <SelectSelectionIndicatorExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### 选项 `tooltip`
 
@@ -11910,7 +11974,11 @@ const items = [
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select tooltip 预览"><SelectTooltipExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select tooltip 预览">
+    <SelectTooltipExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `chips`
 
@@ -11938,7 +12006,11 @@ const items = [
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select chips 预览"><SelectChipsExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select chips 预览">
+    <SelectChipsExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `variant` 与 `color`
 
@@ -11976,7 +12048,11 @@ const items = ['甲', '乙', '丙'];
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select variant 预览"><SelectVariantExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select variant 预览">
+    <SelectVariantExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### 状态
 
@@ -12016,7 +12092,11 @@ const items = ['甲', '乙', '丙'];
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select 状态预览"><SelectStateExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select 状态预览">
+    <SelectStateExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `prefixText`
 
@@ -12048,7 +12128,11 @@ const items = [
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select prefixText 预览"><SelectPrefixTextExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select prefixText 预览">
+    <SelectPrefixTextExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `suffixText`
 
@@ -12081,7 +12165,11 @@ const items = [
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select suffixText 预览"><SelectSuffixTextExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select suffixText 预览">
+    <SelectSuffixTextExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `leading` 与 `trailing` Slots
 
@@ -12115,7 +12203,11 @@ const items = [
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select Slots 预览"><SelectSlotsExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select Slots 预览">
+    <SelectSlotsExample />
+  </DocsPreview>
+</ClientOnly>
 
 ## API
 

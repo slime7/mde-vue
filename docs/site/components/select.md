@@ -46,7 +46,11 @@ order: 88
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select items 预览"><SelectItemsExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select items 预览">
+    <SelectItemsExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `multiple`
 
@@ -59,7 +63,11 @@ order: 88
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select multiple 预览"><SelectMultipleExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select multiple 预览">
+    <SelectMultipleExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `selectionIndicator`
 
@@ -73,7 +81,11 @@ order: 88
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select selectionIndicator 预览"><SelectSelectionIndicatorExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select selectionIndicator 预览">
+    <SelectSelectionIndicatorExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### 选项 `tooltip`
 
@@ -87,7 +99,11 @@ order: 88
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select tooltip 预览"><SelectTooltipExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select tooltip 预览">
+    <SelectTooltipExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `chips`
 
@@ -100,7 +116,11 @@ order: 88
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select chips 预览"><SelectChipsExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select chips 预览">
+    <SelectChipsExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `variant` 与 `color`
 
@@ -112,7 +132,11 @@ order: 88
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select variant 预览"><SelectVariantExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select variant 预览">
+    <SelectVariantExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### 状态
 
@@ -124,7 +148,11 @@ order: 88
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select 状态预览"><SelectStateExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select 状态预览">
+    <SelectStateExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `prefixText`
 
@@ -137,7 +165,11 @@ order: 88
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select prefixText 预览"><SelectPrefixTextExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select prefixText 预览">
+    <SelectPrefixTextExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `suffixText`
 
@@ -150,7 +182,11 @@ order: 88
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select suffixText 预览"><SelectSuffixTextExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select suffixText 预览">
+    <SelectSuffixTextExample />
+  </DocsPreview>
+</ClientOnly>
 
 ### `leading` 与 `trailing` Slots
 
@@ -163,7 +199,11 @@ order: 88
 :::
 ::::
 
-<ClientOnly><DocsPreview label="Select Slots 预览"><SelectSlotsExample /></DocsPreview></ClientOnly>
+<ClientOnly>
+  <DocsPreview label="Select Slots 预览">
+    <SelectSlotsExample />
+  </DocsPreview>
+</ClientOnly>
 
 ## API
 
