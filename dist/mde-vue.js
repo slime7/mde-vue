@@ -4939,37 +4939,37 @@ var Oa = ["aria-label"], ka = { class: "mat-carousel__canvas" }, Aa = 56, ja = 1
 					let p = e + n;
 					p <= a && (t[p] = f, r[p] = Aa, u(p + 1, a, h));
 				} else if (n.variant === "multi-browse") {
-					let n = l ? 80 : ja, i = h - Aa, o = Math.max(i - Ma - (n + d[e] + Ma), 0), s = (f + Aa) / 2, c = Math.min(Math.round((o + Ma) / (s + Ma)), 4);
-					for (; c > 0 && (o - (c - 1) * Ma) / c <= 64;) --c;
-					let p = c + 1, m = a - e, g, _ = !1;
-					if (e === a) g = h - d[e], _ = !0;
-					else if (d.length > 3 && m < p && h > 800) {
-						let t = Math.max(m - 1, 0) * ((c > 0 ? (o - (c - 1) * Ma) / c : s) + Ma) + Aa;
-						g = h - t - Ma - d[e], _ = !0;
-					} else g = n;
-					if (t[e] = g, r[e] = d[e], _) {
-						let n = g + d[e] + Ma, o = Math.max(m - 1, 0), c = Math.max(i - n, 0), l = o > 0 ? (c - (o - 1) * Ma) / o : 0;
+					let n = l ? 80 : ja, i = h - Aa, o = Math.max(i - Ma - (n + d[e]), 0), s = Math.max(o - Ma, 0), c = (f + Aa) / 2, p = Math.min(Math.round((s + Ma) / (c + Ma)), 4);
+					for (; p > 0 && (s - (p - 1) * Ma) / p <= 64;) --p;
+					let m = p === 0 && o > 0 ? d[e] + o : d[e], g = p + 1, _ = a - e, v, y = !1;
+					if (e === a) p === 0 && l && m < h - n ? (v = n, m = h - n) : v = h - m, y = !0;
+					else if (d.length > 3 && _ < g) {
+						let e = Math.max(_ - 1, 0) * ((p > 0 ? (s - (p - 1) * Ma) / p : c) + Ma) + Aa;
+						v = h - e - Ma - m, y = !0;
+					} else v = n;
+					if (t[e] = v, r[e] = m, y) {
+						let n = v + m + Ma, o = Math.max(_ - 1, 0), s = Math.max(i - Ma - n, 0), l = o > 0 ? (s - (o - 1) * Ma) / o : 0;
 						for (let i = e + 1; i <= e + o; i += 1) r[i] = l, t[i] = n, n += l + Ma;
 						e < a && (t[a] = i, r[a] = Aa);
-						let f = Math.max(g - Ma - ja, 0), p = e;
-						if (p > 1 && f > 0) {
-							let n = Math.max(f - Aa - Ma, 0), i = Math.min(Math.round((n + Ma) / (s + Ma)), p - 1);
+						let d = Math.max(v - Ma - ja, 0), f = e;
+						if (f > 1 && d > 0) {
+							let n = Math.max(d - Aa - Ma, 0), i = Math.min(Math.round((n + Ma) / (c + Ma)), f - 1);
 							for (; i > 0 && (n - (i - 1) * Ma) / i <= 64;) --i;
 							if (i > 0) {
-								let a = (n - (i - 1) * Ma) / i, o = g - Ma;
+								let a = (n - (i - 1) * Ma) / i, o = v - Ma;
 								for (let n = e - 1; n >= e - i; --n) o -= a, r[n] = a, t[n] = o, o -= Ma;
 								let s = e - i - 1;
 								t[s] = ja, r[s] = Aa, u(0, s - 1, ja);
 							} else t[e - 1] = ja, r[e - 1] = Aa, u(0, e - 2, ja);
-						} else if (p > 0) {
-							let n = f > 0 ? ja : g - Ma - Aa;
+						} else if (f > 0) {
+							let n = d > 0 ? ja : v - Ma - Aa;
 							t[e - 1] = n, r[e - 1] = Aa, u(0, e - 2, n);
 						}
 					} else if (l && (t[e - 1] = ja, r[e - 1] = Aa, u(0, e - 2, ja)), e + 1 <= a) {
-						let n = g + d[e] + Ma, s = Math.min(e + c, a - 1), l = Math.max(s - e, 0) > 0 ? (o - (c - 1) * Ma) / c : 0;
-						for (let i = e + 1; i <= s; i += 1) r[i] = l, t[i] = n, n += l + Ma;
-						let f = s + 1;
-						f <= a && (t[f] = i, r[f] = Aa, u(f + 1, a, h));
+						let n = v + m + Ma, o = Math.min(e + p, a - 1), c = Math.max(o - e, 0) > 0 ? (s - (p - 1) * Ma) / p : 0;
+						for (let i = e + 1; i <= o; i += 1) r[i] = c, t[i] = n, n += c + Ma;
+						let l = o + 1;
+						l <= a && (t[l] = i, r[l] = Aa, u(l + 1, a, h));
 					}
 				} else if (!c) {
 					let n = o >= 1400 ? 3 : o >= 840 ? 2 : 1, i = l ? 80 : ja;
@@ -5180,7 +5180,7 @@ var Oa = ["aria-label"], ka = { class: "mat-carousel__canvas" }, Aa = 56, ja = 1
 			"aria-hidden": "true"
 		}, null, 4))], 64))), 128))])], 40, Oa)], 16));
 	}
-}), [["__scopeId", "data-v-98d437ce"]]), La = {
+}), [["__scopeId", "data-v-6e3a2b25"]]), La = {
 	key: 0,
 	class: "mat-carousel-item__content"
 }, Ra = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({

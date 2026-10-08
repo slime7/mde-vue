@@ -124,11 +124,12 @@ async function loadExample(key) {
 }
 
 function handleComponentChange(newCompKey) {
-  if (!newCompKey || newCompKey === selectedComponentKey.value) {
+  if (!newCompKey) {
     return;
   }
   selectedComponentKey.value = newCompKey;
-  const examples = currentComponentExamples.value;
+  const found = componentList.value.find((c) => c.key === newCompKey);
+  const examples = found ? found.examples : [];
   if (examples.length > 0) {
     selectedExampleKey.value = examples[0].key;
     loadExample(examples[0].key);
@@ -136,7 +137,7 @@ function handleComponentChange(newCompKey) {
 }
 
 function handleExampleChange(newExKey) {
-  if (!newExKey || newExKey === selectedExampleKey.value) {
+  if (!newExKey) {
     return;
   }
   selectedExampleKey.value = newExKey;

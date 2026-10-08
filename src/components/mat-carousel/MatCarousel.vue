@@ -335,7 +335,8 @@ function updateItems() {
       } else if (propsWithDefaults.variant === 'multi-browse') {
         const defaultMainLeft = hasHistory ? EDGE_PADDING + SMALL_ITEM_WIDTH + ITEM_GAP : EDGE_PADDING;
         const smallSlot = innerWidth - SMALL_ITEM_WIDTH;
-        const normalTrailingRegion = Math.max(smallSlot - ITEM_GAP - (defaultMainLeft + targets[cell] + ITEM_GAP), 0);
+        const availableSpace = Math.max(smallSlot - ITEM_GAP - (defaultMainLeft + targets[cell]), 0);
+        const normalTrailingRegion = Math.max(availableSpace - ITEM_GAP, 0);
         const targetMedium = (maxTarget + SMALL_ITEM_WIDTH) / 2;
         let maxFitMediumCount = Math.min(
           Math.round((normalTrailingRegion + ITEM_GAP) / (targetMedium + ITEM_GAP)),
@@ -345,28 +346,36 @@ function updateItems() {
           && (normalTrailingRegion - (maxFitMediumCount - 1) * ITEM_GAP) / maxFitMediumCount <= SMALL_ITEM_WIDTH + ITEM_GAP) {
           maxFitMediumCount -= 1;
         }
+        let cellTarget = (maxFitMediumCount === 0 && availableSpace > 0)
+          ? targets[cell] + availableSpace
+          : targets[cell];
         const fullTrailingItems = maxFitMediumCount + 1;
         const itemsRemaining = lastCell - cell;
         let mainLeft;
         let isEndShifted = false;
 
         if (cell === lastCell) {
-          mainLeft = innerWidth - targets[cell];
+          if (maxFitMediumCount === 0 && hasHistory && cellTarget < innerWidth - defaultMainLeft) {
+            mainLeft = defaultMainLeft;
+            cellTarget = innerWidth - defaultMainLeft;
+          } else {
+            mainLeft = innerWidth - cellTarget;
+          }
           isEndShifted = true;
-        } else if (targets.length > 3 && itemsRemaining < fullTrailingItems && innerWidth > 800) {
+        } else if (targets.length > 3 && itemsRemaining < fullTrailingItems) {
           const trailingMediumCount = Math.max(itemsRemaining - 1, 0);
           const mediumWidth = maxFitMediumCount > 0
             ? (normalTrailingRegion - (maxFitMediumCount - 1) * ITEM_GAP) / maxFitMediumCount
             : targetMedium;
           const trailingSpan = trailingMediumCount * (mediumWidth + ITEM_GAP) + SMALL_ITEM_WIDTH;
-          mainLeft = innerWidth - trailingSpan - ITEM_GAP - targets[cell];
+          mainLeft = innerWidth - trailingSpan - ITEM_GAP - cellTarget;
           isEndShifted = true;
         } else {
           mainLeft = defaultMainLeft;
         }
 
         positions[cell] = mainLeft;
-        widths[cell] = targets[cell];
+        widths[cell] = cellTarget;
 
         if (!isEndShifted) {
           if (hasHistory) {
@@ -376,7 +385,7 @@ function updateItems() {
           }
 
           if (cell + 1 <= lastCell) {
-            let cursor = mainLeft + targets[cell] + ITEM_GAP;
+            let cursor = mainLeft + cellTarget + ITEM_GAP;
             const maxMediumIdx = Math.min(cell + maxFitMediumCount, lastCell - 1);
             const actualMediumCount = Math.max(maxMediumIdx - cell, 0);
             const mediumWidth = actualMediumCount > 0
@@ -395,9 +404,9 @@ function updateItems() {
             }
           }
         } else {
-          let cursor = mainLeft + targets[cell] + ITEM_GAP;
+          let cursor = mainLeft + cellTarget + ITEM_GAP;
           const trailingMediumCount = Math.max(itemsRemaining - 1, 0);
-          const trailingRegion = Math.max(smallSlot - cursor, 0);
+          const trailingRegion = Math.max(smallSlot - ITEM_GAP - cursor, 0);
           const mediumWidth = trailingMediumCount > 0
             ? (trailingRegion - (trailingMediumCount - 1) * ITEM_GAP) / trailingMediumCount
             : 0;
@@ -1034,6 +1043,7 @@ onBeforeUnmount(() => {
 <style scoped>
 @layer mde.components {
   .mat-carousel {
+    position: relative;
     display: flex;
     inline-size: 100%;
     block-size: 100%;
@@ -1094,8 +1104,18 @@ onBeforeUnmount(() => {
   }
 
   .mat-carousel__scroller:focus-visible {
+    outline: none;
+  }
+
+  .mat-carousel:has(.mat-carousel__scroller:focus-visible)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
     outline: var(--mat-sys-interaction-focus-ring-width) solid var(--mat-sys-color-secondary);
     outline-offset: -2px;
+    pointer-events: none;
+    z-index: 2;
   }
 
   .mat-carousel__canvas {

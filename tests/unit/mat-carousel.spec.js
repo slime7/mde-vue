@@ -1049,4 +1049,43 @@ describe('MatCarousel 交互', () => {
       delete Element.prototype.scrollBy;
     }
   });
+
+  it('multi-browse 在容器宽度 680 下末端停靠项目连续且无断层间隙', async () => {
+    stubRequestAnimationFrame();
+    stubScrollerRect(680);
+    const wrapper = mount(MatCarousel, {
+      props: { variant: 'multi-browse' },
+      slots: {
+        default: () => Array.from({ length: 10 }, (_, index) => (
+          h(MatCarouselItem, { src: `${index}.svg`, alt: `图 ${index + 1}` })
+        )),
+      },
+    });
+    mountedWrappers.push(wrapper);
+
+    const { scroller, items } = queryParts(wrapper);
+    await nextTick();
+
+    /* 滚动到倒数第二个大项展开位（对应 cell = 8）。 */
+    const marks = wrapper.findAll('.mat-carousel__snap-mark');
+    const penultimateOffset = parseFloat(marks[8].element.style.insetInlineStart);
+    scroller.element.scrollLeft = penultimateOffset;
+    await scroller.trigger('scroll');
+    await nextTick();
+
+    /* 提取所有可见项目（宽度大于 0），按从左到右排序并验证相邻间隙均为 8px。 */
+    const visible = items
+      .map((item) => ({
+        left: parseFloat(item.element.style.insetInlineStart),
+        width: parseFloat(item.element.style.inlineSize),
+      }))
+      .filter((item) => item.width > 0)
+      .sort((a, b) => a.left - b.left);
+
+    expect(visible.length).toBeGreaterThanOrEqual(3);
+    for (let i = 0; i < visible.length - 1; i += 1) {
+      const gap = visible[i + 1].left - (visible[i].left + visible[i].width);
+      expect(Math.abs(gap - 8)).toBeLessThanOrEqual(1);
+    }
+  });
 });

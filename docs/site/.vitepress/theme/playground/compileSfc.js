@@ -15,7 +15,7 @@ let compileIndex = 0;
  * @returns {{ code: string, css: string, errors: string[] }}
  */
 export function compileSfc(rawCode, baseId = 'mde-playground') {
-  let source = (rawCode || '').trim();
+  const source = (rawCode || '').trim();
   if (!source) {
     return {
       code: 'export default {};',
@@ -24,16 +24,31 @@ export function compileSfc(rawCode, baseId = 'mde-playground') {
     };
   }
 
-  if (!/<template[\s>]/i.test(source) && !/<script[\s>]/i.test(source)) {
-    source = `<template>\n${source}\n</template>`;
-  }
-
   compileIndex += 1;
   const scopeId = `data-v-${baseId}-${compileIndex}`;
 
-  const { descriptor, errors: parseErrors } = parse(source, {
+  let { descriptor, errors: parseErrors } = parse(source, {
     filename: 'PlaygroundApp.vue',
   });
+
+  if (!descriptor.template && !descriptor.script && !descriptor.scriptSetup) {
+    const styles = [];
+    let templateSource = source.replace(/<style\b[^>]*>([\s\S]*?)<\/style>/gi, (match) => {
+      styles.push(match);
+      return '';
+    }).trim();
+
+    if (!templateSource) {
+      templateSource = '<div />';
+    }
+
+    const reconstructed = `<template>\n${templateSource}\n</template>\n${styles.join('\n')}`;
+    const reparsed = parse(reconstructed, {
+      filename: 'PlaygroundApp.vue',
+    });
+    descriptor = reparsed.descriptor;
+    parseErrors = reparsed.errors;
+  }
 
   if (parseErrors && parseErrors.length > 0) {
     return {

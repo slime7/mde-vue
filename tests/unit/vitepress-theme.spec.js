@@ -228,4 +228,30 @@ describe('VitePress 文档自定义主题', () => {
       '<a href="/playground?example=aside%2FAsideFixedExample"',
     );
   });
+
+  it('compileSfc 编译包含插槽 template 或仅含 style 的代码时不报错', async () => {
+    const { compileSfc } = await import('../../docs/site/.vitepress/theme/playground/compileSfc.js');
+
+    const slotSnippet = `<mat-carousel>
+  <template #default>
+    <mat-carousel-item />
+  </template>
+</mat-carousel>`;
+    const slotResult = compileSfc(slotSnippet);
+    expect(slotResult.errors).toEqual([]);
+    expect(slotResult.code).toContain('export default');
+
+    const styleSnippet = `<style scoped>
+.carousel { color: red; }
+</style>`;
+    const styleResult = compileSfc(styleSnippet);
+    expect(styleResult.errors).toEqual([]);
+    expect(styleResult.css).toContain('.carousel');
+  });
+
+  it('演练场组件标题包含 carousel 等组件映射', async () => {
+    const { componentTitles } = await import('../../docs/site/.vitepress/theme/playground/componentTitles.js');
+
+    expect(componentTitles.carousel).toBe('Carousel 轮播');
+  });
 });
