@@ -257,4 +257,18 @@ describe('VitePress 文档自定义主题', () => {
 
     expect(componentTitles.carousel).toBe('Carousel 轮播');
   });
+
+  it('演练场支持直接接收合法的 example 标识并同步更新示例与选项', () => {
+    const playgroundView = readFileSync(resolve('docs/site/.vitepress/theme/playground/PlaygroundView.vue'), 'utf8');
+
+    expect(playgroundView).toContain('EXAMPLE_KEY_PATTERN.test(requestedKey)');
+    expect(playgroundView).toContain('comp.examples.some((e) => e.key === initialKey)');
+  });
+
+  it('开发服务器监听 examples 变动并自动同步演练场资源', () => {
+    const configSource = readFileSync(resolve('docs/site/.vitepress/config.mjs'), 'utf8');
+
+    expect(configSource).toContain('syncPlaygroundExamples');
+    expect(configSource).toContain('configureServer(server)');
+  });
 });

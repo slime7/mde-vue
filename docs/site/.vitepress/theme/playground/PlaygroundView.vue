@@ -10,8 +10,10 @@ import { useMatTheme } from 'mde-vue';
 import { withBase } from 'vitepress';
 import MonacoEditor from './MonacoEditor.vue';
 import { compileSfc } from './compileSfc.js';
+import { componentTitles } from './componentTitles.js';
 import {
   DEFAULT_EXAMPLE_KEY,
+  EXAMPLE_KEY_PATTERN,
   loadExampleIndex,
   loadExampleSource,
 } from './examples.js';
@@ -238,7 +240,7 @@ function resolveInitialExampleKey() {
     .flatMap((component) => component.examples.map((example) => example.key));
   const requestedKey = new URLSearchParams(window.location.search).get('example');
 
-  if (requestedKey && availableKeys.includes(requestedKey)) {
+  if (requestedKey && (availableKeys.includes(requestedKey) || EXAMPLE_KEY_PATTERN.test(requestedKey))) {
     return requestedKey;
   }
 
@@ -268,7 +270,24 @@ onMounted(async () => {
     return;
   }
 
-  selectedComponentKey.value = initialKey.split('/')[0];
+  const [compKey] = initialKey.split('/');
+  let comp = componentList.value.find((c) => c.key === compKey);
+  if (!comp) {
+    comp = {
+      key: compKey,
+      label: componentTitles[compKey] || compKey,
+      examples: [],
+    };
+    componentList.value.push(comp);
+    componentList.value.sort((a, b) => a.label.localeCompare(b.label, 'zh-CN'));
+  }
+  if (!comp.examples.some((e) => e.key === initialKey)) {
+    const exampleName = initialKey.slice(compKey.length + 1);
+    comp.examples.push({ key: initialKey, name: exampleName });
+    comp.examples.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  selectedComponentKey.value = compKey;
   selectedExampleKey.value = initialKey;
   loadExample(initialKey);
 });

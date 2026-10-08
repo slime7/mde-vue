@@ -8,7 +8,10 @@ import {
   copyLlmsArtifacts,
   createLlmsArtifactsPlugin,
 } from '../../../scripts/build-llms.mjs';
-import { buildPlaygroundAssets } from '../../../scripts/build-playground-assets.mjs';
+import {
+  buildPlaygroundAssets,
+  syncPlaygroundExamples,
+} from '../../../scripts/build-playground-assets.mjs';
 /* eslint-enable import-x/extensions */
 
 const googleFontsApiUrl = 'https://fonts.googleapis.com/css2';
@@ -29,6 +32,18 @@ function createPlaygroundAssetsPlugin() {
     name: 'mde-vue-playground-assets',
     async buildStart() {
       await buildPlaygroundAssets();
+    },
+    configureServer(server) {
+      const examplesSrcDir = fileURLToPath(new URL('../examples', import.meta.url));
+      server.watcher.add(examplesSrcDir);
+      const sync = async (file) => {
+        if (file && file.replaceAll('\\', '/').includes('/examples/') && file.endsWith('.vue')) {
+          await syncPlaygroundExamples();
+        }
+      };
+      server.watcher.on('add', sync);
+      server.watcher.on('unlink', sync);
+      server.watcher.on('change', sync);
     },
   };
 }

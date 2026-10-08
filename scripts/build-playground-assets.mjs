@@ -107,6 +107,11 @@ async function writeExamplesIndex() {
   await writeFile(examplesIndexPath, `${JSON.stringify(components, null, 2)}\n`, 'utf8');
 }
 
+export async function syncPlaygroundExamples() {
+  await syncDirectory(examplesSrcDir, examplesDir);
+  await writeExamplesIndex();
+}
+
 export async function buildPlaygroundAssets() {
   await mkdir(assetsDir, { recursive: true });
   await syncDirectory(examplesSrcDir, examplesDir);

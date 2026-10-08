@@ -3,7 +3,7 @@ import { withBase } from 'vitepress';
 /** playground 默认打开的示例，与 `?example=` 查询参数使用同一套标识 */
 export const DEFAULT_EXAMPLE_KEY = 'button/ButtonVariantExample';
 
-const EXAMPLE_KEY_PATTERN = /^[\w.-]+\/[\w.-]+$/;
+export const EXAMPLE_KEY_PATTERN = /^[\w.-]+\/[\w.-]+$/;
 
 /** @type {Promise<Array<{ key: string, label: string, examples: Array<{ key: string, name: string }> }>> | null} */
 let indexPromise = null;
