@@ -2323,6 +2323,13 @@ export declare const MatTextField: MatTextFieldComponent;
 
 export interface MatSelectProps {
   /**
+  * 忽略默认的 488px 最大宽度限制，允许宽度铺满父容器。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  block?: boolean;
+  /**
   * 单选使用基础值或 null，多选使用基础值数组。
   *
   * @type {string | number | boolean | Array<string | number | boolean> | null}

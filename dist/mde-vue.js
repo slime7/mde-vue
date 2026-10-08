@@ -10133,7 +10133,7 @@ var Wc = {
 			class: "mat-text-input__supporting mat-sys-typescale-body-small"
 		}, [c("span", gl, R(O.value), 1), e.maxLength === void 0 ? o("", !0) : (D(), s("span", _l, R(e.modelValue.length) + " / " + R(e.maxLength), 1))])) : o("", !0)], 14, il));
 	}
-}), [["__scopeId", "data-v-bbb451bd"]]), yl = ["filled", "outlined"], bl = {
+}), [["__scopeId", "data-v-8a952475"]]), yl = ["filled", "outlined"], bl = {
 	block: {
 		type: Boolean,
 		default: !1
@@ -10877,6 +10877,10 @@ var Wc = {
 }, {
 	__name: "MatSelect",
 	props: {
+		block: {
+			type: Boolean,
+			default: !1
+		},
 		modelValue: {
 			type: [
 				String,
@@ -11059,7 +11063,10 @@ var Wc = {
 			r.disabled || r.readonly || (r.multiple ? L(e) : (f("update:modelValue", null), f("change", null)), v(() => S.value?.focus()));
 		}
 		return (e, n) => (D(), s("div", {
-			class: y(["mat-select", [{ "mat-select--use-cursor": z(m).useCursor }, e.$attrs.class]]),
+			class: y(["mat-select", [{
+				"mat-select--use-cursor": z(m).useCursor,
+				"mat-select--block": z(r).block
+			}, e.$attrs.class]]),
 			style: x(e.$attrs.style)
 		}, [
 			d(vl, {
@@ -11298,7 +11305,7 @@ var Wc = {
 			])
 		], 6));
 	}
-}), [["__scopeId", "data-v-2c649de6"]]), Il = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-358f778e"]]), Il = /*@__PURE__*/ Object.assign({
 	name: "MatTextarea",
 	inheritAttrs: !1
 }, {

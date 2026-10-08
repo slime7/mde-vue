@@ -368,4 +368,28 @@ describe('MatSelect', () => {
     expect(items[1].get('[role="menuitem"]').classes()).toContain('mat-menu-item--middle');
     expect(items[2].get('[role="menuitem"]').classes()).toContain('mat-menu-item--last');
   });
+
+  it('默认限制 488px 最大宽度，可通过 block 属性忽略该限制', () => {
+    const defaultWrapper = mount(MatSelect, {
+      props: {
+        modelValue: null,
+        items: ['甲'],
+      },
+    });
+    const blockWrapper = mount(MatSelect, {
+      props: {
+        modelValue: null,
+        items: ['甲'],
+        block: true,
+      },
+    });
+
+    expect(defaultWrapper.props('block')).toBe(false);
+    expect(defaultWrapper.classes()).not.toContain('mat-select--block');
+    expect(defaultWrapper.get('select').attributes('block')).toBeUndefined();
+
+    expect(blockWrapper.props('block')).toBe(true);
+    expect(blockWrapper.classes()).toContain('mat-select--block');
+    expect(blockWrapper.get('select').attributes('block')).toBeUndefined();
+  });
 });

@@ -470,6 +470,7 @@ function handleModelValue(value) {
     background: var(--mat-text-input-container-color);
     border-radius: var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small) 0 0;
     box-shadow: inset 0 -1px 0 var(--mat-text-input-outline-color);
+    transition: box-shadow var(--mat-sys-motion-spring-fast-effects);
   }
 
   .mat-text-input__indicator {
@@ -686,7 +687,7 @@ function handleModelValue(value) {
     --mat-text-input-label-color: var(--mat-text-input-accent-color);
   }
 
-  .mat-text-input--outlined:not(.mat-text-input--focused):not(.mat-text-input--error):not(.mat-text-input--disabled):hover {
+  .mat-text-input:not(.mat-text-input--focused):not(.mat-text-input--error):not(.mat-text-input--disabled):hover {
     --mat-text-input-outline-color: var(--mat-sys-color-on-surface);
   }
 
@@ -704,8 +705,10 @@ function handleModelValue(value) {
 
   @media (prefers-reduced-motion: reduce) {
     .mat-text-input__affix,
+    .mat-text-input__container,
     .mat-text-input__indicator,
-    .mat-text-input__label {
+    .mat-text-input__label,
+    .mat-text-input__outline {
       transition-duration: 0s;
     }
   }

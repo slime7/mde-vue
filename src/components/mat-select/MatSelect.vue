@@ -22,6 +22,16 @@ defineOptions({
 
 const props = defineProps({
   /**
+   * 忽略默认的 488px 最大宽度限制，允许宽度铺满父容器。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  block: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * 单选使用基础值或 null，多选使用基础值数组。
    *
    * @type {string | number | boolean | Array<string | number | boolean> | null}
@@ -304,7 +314,13 @@ function removeValue(value) {
 <template>
   <div
     class="mat-select"
-    :class="[{ 'mat-select--use-cursor': matUi.useCursor }, $attrs.class]"
+    :class="[
+      {
+        'mat-select--use-cursor': matUi.useCursor,
+        'mat-select--block': propsWithDefaults.block,
+      },
+      $attrs.class,
+    ]"
     :style="$attrs.style"
   >
     <MatTextInputBase
@@ -532,6 +548,11 @@ function removeValue(value) {
     position: relative;
     min-inline-size: 0;
     inline-size: 100%;
+    max-inline-size: 488px;
+  }
+
+  .mat-select--block {
+    max-inline-size: none;
   }
 
   .mat-select--use-cursor :deep(.mat-text-input:not(.mat-text-input--disabled) .mat-text-input__container) {

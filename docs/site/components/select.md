@@ -15,6 +15,26 @@ order: 88
 
 ## 示例
 
+### `block`
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/select/SelectBlockExample.vue#template [template]
+
+<<< @/examples/select/SelectBlockExample.vue#script [script]
+
+<<< @/examples/select/SelectBlockExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Select block 预览">
+    <SelectBlockExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `items`、字段映射与分组
 
 字符串项以自身作为标题和值。对象项默认读取 `title`、`value`、`subtitle`，也可以用 `item-title`、`item-value`、`item-subtitle` 更换字段。分组使用 `{ group, items }`，不允许嵌套分组。
@@ -151,6 +171,7 @@ order: 88
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `block` | `boolean` | `false` | 忽略默认的 488px 最大宽度限制，允许宽度铺满父容器 |
 | `modelValue` | 基础值、基础值数组或 `null` | `null` | 单选使用基础值或 null，多选使用数组 |
 | `items` | `Array` | 必填 | 字符串、对象或 `{ group: string, items: Array }` 分组 |
 | `multiple` | `boolean` | `false` | 启用多选，并保持菜单打开 |
@@ -205,6 +226,7 @@ order: 88
 Select 的组合外观由 mde-vue 根据 Material 3 [Text fields](https://m3.material.io/components/text-fields/overview)、[Menus](https://m3.material.io/components/menus/overview)、[Chips](https://m3.material.io/components/chips/overview) 与 [Checkbox](https://m3.material.io/components/checkbox/overview) 总结；这些页面没有规定本组件完整的 Select API 或组合方式。
 
 <script setup>
+import SelectBlockExample from '../examples/select/SelectBlockExample.vue';
 import SelectChipsExample from '../examples/select/SelectChipsExample.vue';
 import SelectItemsExample from '../examples/select/SelectItemsExample.vue';
 import SelectMultipleExample from '../examples/select/SelectMultipleExample.vue';
