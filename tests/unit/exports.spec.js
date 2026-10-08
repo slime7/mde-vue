@@ -9,6 +9,7 @@ import {
   confirm,
   createMatUi,
   dialog,
+  extractColorFromImage,
   prompt,
   Intersection as RootIntersection,
   MatAppRoot as RootMatAppRoot,
@@ -354,6 +355,7 @@ describe('公共组件导出', () => {
     expect(alert).toBeTypeOf('function');
     expect(confirm).toBeTypeOf('function');
     expect(prompt).toBeTypeOf('function');
+    expect(extractColorFromImage).toBeTypeOf('function');
   });
 
   it('不再提供 MatIconBtn 单组件入口', () => {

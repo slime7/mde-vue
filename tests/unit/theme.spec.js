@@ -240,4 +240,28 @@ describe('主题控制器', () => {
     expect(wrapper.findComponent(MatBtnGroup).exists()).toBe(true);
     expect(wrapper.findComponent(MatSplitBtn).exists()).toBe(true);
   });
+
+  it('支持通过图片提取主色设置主题种子色（莫奈取色）', async () => {
+    const target = document.createElement('div');
+    const plugin = createMatUi({
+      theme: {
+        mode: 'light',
+        target,
+      },
+    });
+    const initialPrimary = target.style.getPropertyValue('--mat-sys-color-primary');
+    const redPixels = new Uint8ClampedArray([255, 0, 0, 255]);
+
+    const extractedColor = await plugin.theme.setSeedColorFromImage(redPixels);
+
+    expect(extractedColor).toBe('#ff0000');
+    expect(plugin.theme.seedColor.value).toBe('#ff0000');
+    expect(target.style.getPropertyValue('--mat-sys-color-primary')).not.toBe(initialPrimary);
+
+    // extractColorFromImage 仅提取颜色而不更新主题
+    const greenPixels = new Uint8ClampedArray([0, 255, 0, 255]);
+    const greenColor = await plugin.theme.extractColorFromImage(greenPixels);
+    expect(greenColor).toBe('#00ff00');
+    expect(plugin.theme.seedColor.value).toBe('#ff0000');
+  });
 });

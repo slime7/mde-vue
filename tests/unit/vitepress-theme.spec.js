@@ -74,6 +74,7 @@ describe('VitePress 文档自定义主题', () => {
     expect(formSource).toContain('useMatTheme');
     expect(formSource).toContain('setMode');
     expect(formSource).toContain('setSeedColor');
+    expect(formSource).toContain('setSeedColorFromImage');
     expect(formSource).toContain('setSchemeVariant');
     expect(formSource).toContain('setContrastLevel');
     expect(formSource).toContain('<mat-radio-group');
@@ -83,6 +84,8 @@ describe('VitePress 文档自定义主题', () => {
     expect(formSource).toContain('#trailing');
     expect(formSource).toContain('<mat-slider');
     expect(formSource).toContain('icon="casino"');
+    expect(formSource).toContain('openImagePicker');
+    expect(formSource).toContain('theme-form__image-button');
     expect(formSource).toContain('theme-form__seed-row');
   });
 

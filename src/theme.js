@@ -2,6 +2,7 @@ import { hexFromArgb } from '@material/material-color-utilities';
 import { readonly, ref } from 'vue';
 import {
   createMaterialScheme,
+  extractColorFromImage,
   MAT_COLOR_ROLES,
   MAT_SCHEME_VARIANTS,
   normalizeSeedColor,
@@ -33,6 +34,8 @@ const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
  * @property {HTMLElement} target
  * @property {(value: MatThemeMode) => void} setMode
  * @property {(value: string) => void} setSeedColor
+ * @property {(image: HTMLImageElement | HTMLCanvasElement | ImageData | ImageBitmap | Blob | File | string | Uint8ClampedArray | Uint8Array) => Promise<string>} setSeedColorFromImage
+ * @property {(image: HTMLImageElement | HTMLCanvasElement | ImageData | ImageBitmap | Blob | File | string | Uint8ClampedArray | Uint8Array) => Promise<string>} extractColorFromImage
  * @property {(value: MatSchemeVariant) => void} setSchemeVariant
  * @property {(value: number) => void} setContrastLevel
  * @property {() => void} dispose
@@ -218,6 +221,18 @@ export default function createThemeController(options = {}) {
   }
 
   /**
+   * 从图片或像素数据中提取主色并更新为主题种子色（莫奈取色）。
+   *
+   * @param {HTMLImageElement | HTMLCanvasElement | ImageData | ImageBitmap | Blob | File | string | Uint8ClampedArray | Uint8Array} image
+   * @returns {Promise<string>}
+   */
+  async function setSeedColorFromImage(image) {
+    const extractedColor = await extractColorFromImage(image);
+    setSeedColor(extractedColor);
+    return extractedColor;
+  }
+
+  /**
    * @param {MatSchemeVariant} value
    */
   function setSchemeVariant(value) {
@@ -259,6 +274,8 @@ export default function createThemeController(options = {}) {
     target,
     setMode,
     setSeedColor,
+    setSeedColorFromImage,
+    extractColorFromImage,
     setSchemeVariant,
     setContrastLevel,
     dispose,

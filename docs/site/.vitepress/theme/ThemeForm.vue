@@ -21,6 +21,7 @@ const theme = useMatTheme();
 const seedColorInput = ref(theme.seedColor.value);
 const seedColorError = ref('');
 const colorPicker = ref(null);
+const imagePicker = ref(null);
 
 watch(() => theme.seedColor.value, (value) => {
   seedColorInput.value = value;
@@ -60,6 +61,32 @@ function applyRandomSeedColor() {
   seedColorInput.value = randomColor;
   seedColorError.value = '';
   theme.setSeedColor(randomColor);
+}
+
+function openImagePicker() {
+  imagePicker.value?.click();
+}
+
+/**
+ * @param {Event} event
+ */
+async function handleImagePickerChange(event) {
+  const input = /** @type {HTMLInputElement} */ (event.target);
+  const file = input.files?.[0];
+
+  if (!file) {
+    return;
+  }
+
+  try {
+    const extractedColor = await theme.setSeedColorFromImage(file);
+    seedColorInput.value = extractedColor;
+    seedColorError.value = '';
+  } catch (error) {
+    seedColorError.value = error instanceof Error ? error.message : '从图片提取种子色失败';
+  } finally {
+    input.value = '';
+  }
 }
 
 function resetTheme() {
@@ -133,6 +160,23 @@ function resetTheme() {
         title="随机种子色"
         @click="applyRandomSeedColor"
       />
+
+      <mat-btn
+        class="theme-form__image-button"
+        variant="standard"
+        icon="image"
+        label="图片取色"
+        title="从图片提取种子色（莫奈取色）"
+        @click="openImagePicker"
+      />
+      <input
+        ref="imagePicker"
+        class="theme-form__image-input"
+        type="file"
+        accept="image/*"
+        aria-label="从图片提取种子色"
+        @change="handleImagePickerChange"
+      >
     </div>
 
     <mat-radio-group
@@ -197,7 +241,8 @@ function resetTheme() {
   min-inline-size: 0;
 }
 
-.theme-form__random-button {
+.theme-form__random-button,
+.theme-form__image-button {
   flex-shrink: 0;
 }
 
@@ -233,7 +278,8 @@ function resetTheme() {
   box-shadow: 0 0 0 1px var(--mat-sys-color-outline-variant);
 }
 
-.theme-form__color-input {
+.theme-form__color-input,
+.theme-form__image-input {
   position: absolute;
   inline-size: 1px;
   block-size: 1px;

@@ -92,3 +92,5 @@ export {
   alert, confirm, dialog, prompt,
 } from './components/mat-dialog/dialog';
 export { snackbar, toast } from './components/mat-snackbar/snackbar';
+// eslint-disable-next-line import-x/extensions
+export { extractColorFromImage } from './material-color.js';

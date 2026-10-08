@@ -4814,6 +4814,8 @@ export interface MatThemeController {
   target: HTMLElement;
   setMode(value: MatThemeMode): void;
   setSeedColor(value: string): void;
+  setSeedColorFromImage(image: HTMLImageElement | HTMLCanvasElement | ImageData | ImageBitmap | Blob | File | string | Uint8ClampedArray | Uint8Array): Promise<string>;
+  extractColorFromImage(image: HTMLImageElement | HTMLCanvasElement | ImageData | ImageBitmap | Blob | File | string | Uint8ClampedArray | Uint8Array): Promise<string>;
   setSchemeVariant(value: MatSchemeVariant): void;
   setContrastLevel(value: number): void;
   dispose(): void;
@@ -4946,6 +4948,7 @@ export interface SnackbarOptions {
 }
 export declare function snackbar(options: SnackbarOptions): Promise<void>;
 export declare const toast: typeof snackbar;
+export declare function extractColorFromImage(image: HTMLImageElement | HTMLCanvasElement | ImageData | ImageBitmap | Blob | File | string | Uint8ClampedArray | Uint8Array): Promise<string>;
 
 declare module 'vue' {
   export interface GlobalComponents {

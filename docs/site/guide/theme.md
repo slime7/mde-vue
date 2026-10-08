@@ -81,6 +81,10 @@ function enableDarkMode() {
 function changeSeedColor() {
   theme.setSeedColor('#6750a4');
 }
+
+async function extractThemeFromImage(file) {
+  await theme.setSeedColorFromImage(file);
+}
 </script>
 ```
 
@@ -96,6 +100,8 @@ function changeSeedColor() {
 | `target` | `HTMLElement` | 当前令牌写入目标 |
 | `setMode(value)` | 方法 | 更新模式并重新应用主题 |
 | `setSeedColor(value)` | 方法 | 更新种子色并重新生成配色 |
+| `setSeedColorFromImage(image)` | 方法 | 从图片或像素数据提取主色更新种子色（莫奈取色），返回十六进制种子色 `Promise` |
+| `extractColorFromImage(image)` | 方法 | 从图片或像素数据提取主色（不修改主题种子色），返回十六进制种子色 `Promise` |
 | `setSchemeVariant(value)` | 方法 | 更新配色变体 |
 | `setContrastLevel(value)` | 方法 | 更新对比度 |
 | `dispose()` | 方法 | 停止监听系统主题，移除控制器写入的颜色令牌和主题属性；可重复调用 |
@@ -110,6 +116,14 @@ app.use(matUi).mount('#app');
 
 // 应用宿主确认不再使用主题时调用。
 matUi.theme.dispose();
+```
+
+也可以直接从根入口按需导入独立的 `extractColorFromImage` 工具函数，用于非全局主题的图片取色场景：
+
+```js
+import { extractColorFromImage } from 'mde-vue';
+
+const seedColor = await extractColorFromImage(imageFile);
 ```
 
 主题使用的公共 CSS 令牌、级联层契约和 Tailwind CSS v4 接入方式统一见[样式](/guide/styles)。
