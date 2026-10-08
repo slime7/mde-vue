@@ -81,13 +81,20 @@ describe('文本输入组件', () => {
     wrapper.unmount();
   });
 
-  it('Text field 和 Textarea 使用块级 flex 根且忽略已移除的 block 属性', () => {
+  it('Text field 和 Textarea 默认限制 488px 最大宽度，可通过 block 属性忽略该限制', () => {
     [MatTextField, MatTextarea].forEach((component) => {
-      const wrapper = mount(component, { attrs: { block: true } });
+      const defaultWrapper = mount(component);
+      const blockWrapper = mount(component, { props: { block: true } });
 
-      expect(component.props.block).toBeUndefined();
-      expect(wrapper.attributes('block')).toBeUndefined();
-      expect(wrapper.get('input, textarea').attributes('block')).toBeUndefined();
+      expect(defaultWrapper.props('block')).toBe(false);
+      expect(defaultWrapper.classes()).not.toContain('mat-text-input--block');
+      expect(defaultWrapper.attributes('block')).toBeUndefined();
+      expect(defaultWrapper.get('input, textarea').attributes('block')).toBeUndefined();
+
+      expect(blockWrapper.props('block')).toBe(true);
+      expect(blockWrapper.classes()).toContain('mat-text-input--block');
+      expect(blockWrapper.attributes('block')).toBeUndefined();
+      expect(blockWrapper.get('input, textarea').attributes('block')).toBeUndefined();
     });
   });
 

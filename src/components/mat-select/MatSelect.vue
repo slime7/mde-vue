@@ -324,6 +324,7 @@ function removeValue(value) {
       :error="propsWithDefaults.error"
       :custom-focused="focused || open"
       :placeholder="propsWithDefaults.placeholder"
+      :block="true"
     >
       <template v-if="$slots.leading" #leading>
         <slot name="leading" />

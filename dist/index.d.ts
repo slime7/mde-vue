@@ -2199,6 +2199,13 @@ export declare const MatRangeSlider: MatRangeSliderComponent;
 
 export interface MatTextFieldProps {
   /**
+  * 忽略默认的 488px 最大宽度限制，允许宽度铺满父容器。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  block?: boolean;
+  /**
   * 受控输入值，可使用 `v-model`。
   *
   * @type {string}
@@ -2393,6 +2400,13 @@ export type MatSelectComponent = DefineComponent<MatSelectProps, {}, {}, {}, {},
 export declare const MatSelect: MatSelectComponent;
 
 export interface MatTextareaProps {
+  /**
+  * 忽略默认的 488px 最大宽度限制，允许宽度铺满父容器。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  block?: boolean;
   /**
   * 受控输入值，可使用 `v-model`。
   *

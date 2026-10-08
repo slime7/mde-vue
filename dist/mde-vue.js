@@ -9902,6 +9902,10 @@ var Wc = {
 }, {
 	__name: "MatTextInputBase",
 	props: {
+		block: {
+			type: Boolean,
+			default: !1
+		},
 		control: {
 			type: String,
 			required: !0,
@@ -10060,7 +10064,8 @@ var Wc = {
 					"mat-text-input--floating": E.value,
 					"mat-text-input--focused": w.value,
 					"mat-text-input--error": e.error,
-					"mat-text-input--disabled": e.disabled
+					"mat-text-input--disabled": e.disabled,
+					"mat-text-input--block": e.block
 				}
 			]]),
 			style: x(M.value),
@@ -10128,7 +10133,11 @@ var Wc = {
 			class: "mat-text-input__supporting mat-sys-typescale-body-small"
 		}, [c("span", gl, R(O.value), 1), e.maxLength === void 0 ? o("", !0) : (D(), s("span", _l, R(e.modelValue.length) + " / " + R(e.maxLength), 1))])) : o("", !0)], 14, il));
 	}
-}), [["__scopeId", "data-v-ca1b6083"]]), yl = ["filled", "outlined"], bl = {
+}), [["__scopeId", "data-v-bbb451bd"]]), yl = ["filled", "outlined"], bl = {
+	block: {
+		type: Boolean,
+		default: !1
+	},
 	modelValue: {
 		type: String,
 		default: ""
@@ -11069,7 +11078,8 @@ var Wc = {
 				required: z(r).required,
 				error: z(r).error,
 				"custom-focused": b.value || g.value,
-				placeholder: z(r).placeholder
+				placeholder: z(r).placeholder,
+				block: !0
 			}, l({
 				control: H(({ controlId: i, describedBy: o }) => [c("div", {
 					id: i,
@@ -11288,7 +11298,7 @@ var Wc = {
 			])
 		], 6));
 	}
-}), [["__scopeId", "data-v-aca83b85"]]), Il = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-2c649de6"]]), Il = /*@__PURE__*/ Object.assign({
 	name: "MatTextarea",
 	inheritAttrs: !1
 }, {
@@ -16011,6 +16021,7 @@ var If = Ff, Lf = {
 				modelValue: f.value,
 				"onUpdate:modelValue": r[0] ||= (e) => f.value = e,
 				autofocus: "",
+				block: "",
 				label: e.options.promptConfig.label,
 				placeholder: e.options.promptConfig.placeholder,
 				required: e.options.promptConfig.required
@@ -16023,7 +16034,7 @@ var If = Ff, Lf = {
 			_: 1
 		}, 16, ["modelValue", "aria-label"]));
 	}
-}), [["__scopeId", "data-v-ba439738"]]), zf = [
+}), [["__scopeId", "data-v-cac78251"]]), zf = [
 	"elevated",
 	"filled",
 	"filled-tonal",

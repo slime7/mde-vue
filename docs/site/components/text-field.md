@@ -15,6 +15,24 @@ order: 90
 
 `error` 与 `errorText`、输入值与 `v-model` 等只保留必要依赖。
 
+### `block`
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldBlockExample.vue#template [template]
+
+<<< @/examples/text-field/TextFieldBlockExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Text field 与 Textarea block 预览">
+    <TextFieldBlockExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `modelValue`
 
 :::: details 查看示例代码
@@ -367,6 +385,7 @@ order: 90
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `block` | `boolean` | `false` | 忽略默认的 488px 最大宽度限制，允许宽度铺满父容器 |
 | `modelValue` | `string` | `''` | 受控输入值，可使用 `v-model` |
 | `label` | `string` | 未设置 | 始终可见的输入标签；输入有值、获得焦点或设置 placeholder 时浮动 |
 | `variant` | `'outlined' \| 'filled'` | `'outlined'` | 完整轮廓或带底部活动指示器的填充外观 |
@@ -436,6 +455,7 @@ order: 90
 结构、尺寸、状态和使用原则依据 Material 3 [Text fields overview](https://m3.material.io/components/text-fields/overview)、[Text fields specs](https://m3.material.io/components/text-fields/specs) 与 [Text fields guidelines](https://m3.material.io/components/text-fields/guidelines)。
 
 <script setup>
+import TextFieldBlockExample from '../examples/text-field/TextFieldBlockExample.vue';
 import TextFieldColorExample from '../examples/text-field/TextFieldColorExample.vue';
 import TextFieldDisabledExample from '../examples/text-field/TextFieldDisabledExample.vue';
 import TextFieldErrorExample from '../examples/text-field/TextFieldErrorExample.vue';

@@ -11,6 +11,10 @@ defineOptions({
 });
 
 const props = defineProps({
+  block: {
+    type: Boolean,
+    default: false,
+  },
   control: {
     type: String,
     required: true,
@@ -277,6 +281,7 @@ function handleModelValue(value) {
         'mat-text-input--focused': effectiveFocused,
         'mat-text-input--error': error,
         'mat-text-input--disabled': disabled,
+        'mat-text-input--block': block,
       },
     ]"
     :style="rootStyle"
@@ -403,8 +408,13 @@ function handleModelValue(value) {
     flex-direction: column;
     min-inline-size: 0;
     inline-size: 100%;
+    max-inline-size: 488px;
     color: var(--mat-text-input-content-color);
     user-select: none;
+  }
+
+  .mat-text-input--block {
+    max-inline-size: none;
   }
 
   .mat-text-input--input,

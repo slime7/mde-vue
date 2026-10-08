@@ -4,6 +4,16 @@ export const TEXT_INPUT_VARIANTS = ['filled', 'outlined'];
 
 export const TEXT_INPUT_PROPS = {
   /**
+   * 忽略默认的 488px 最大宽度限制，允许宽度铺满父容器。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  block: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * 受控输入值，可使用 `v-model`。
    *
    * @type {string}
