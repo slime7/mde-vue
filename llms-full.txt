@@ -2131,7 +2131,7 @@ const locations = [
 | --- | --- |
 | 默认 Slot | 覆盖模式的目标内容；`location="inline"` 时忽略。 |
 
-### 状态与布局
+## 状态与布局
 
 `dot=false` 且没有有效 `content` 时，覆盖模式仍渲染 Slot 和包装容器，但不显示指示器；Inline 模式不渲染任何 DOM。覆盖模式使用逻辑方向，因此 start/end 会随书写方向变化。`offset.inline` 正值朝 inline-end 移动，`offset.block` 正值朝 block-end 移动。
 
@@ -2139,7 +2139,7 @@ const locations = [
 
 开启 `border` 后，指示器外围增加约 2px 的主题背景色边框，边框会覆盖并截断被指示器压住的内容，视觉上把指示器与目标内容隔开；指示器自身的位置、尺寸和文字排布保持不变。
 
-## 参考
+## 参考来源
 
 尺寸、形态和默认位置参考 Material 3 [Badge specs](https://m3.material.io/components/badges/specs) 与 [Badge guidelines](https://m3.material.io/components/badges/guidelines)。
 
@@ -3320,7 +3320,7 @@ const selected = ref('');
 
 ## API
 
-### `<mat-carousel>` 属性
+### MatCarousel 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -3329,7 +3329,7 @@ const selected = ref('');
 
 布局差异：`multi-browse`、`hero`、`hero-center-aligned` 两侧保留 16px 内边距，`uncontained` 与 `uncontained-multi-aspect` 在首尾停靠保留左右 16px 边距、中间状态项目铺满容器边缘；`full-screen` 无内边距，项目间距为 16px，其余布局为 8px。动态目标宽度默认按容器尺寸推导：multi-browse 为内容宽度的一半并封顶 560px，hero 与 hero-center-aligned 为内容宽度减去两侧预览位、uncontained 为内容宽度减去一个项目预览位（这三者随容器缩放、不封顶），保证预览位始终完整贴合容器两端；动态布局的相邻停靠位相距一个大项宽度加间距。uncontained 布局的全部项目保持同一固定宽度，uncontained-multi-aspect 由各项目 `aspectRatio` 决定宽度。官方规格的小尺寸预览位宽度为 40–56dp 动态，本组件取 56dp。
 
-### `<mat-carousel-item>` 属性
+### MatCarouselItem 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -3346,10 +3346,17 @@ const selected = ref('');
 
 ## Slots
 
-| 组件 | 名称 | 内容约束 |
-| --- | --- | --- |
-| `mat-carousel` | 默认 | 只应放置 `mat-carousel-item` 项目；其他内容不参与宽度计算与停靠 |
-| `mat-carousel-item` | 默认 | 项目的简短文本内容，渲染在图片上方并带底部渐变遮罩；项目压缩到小尺寸预览位（宽度小于 96px）时整体淡出 |
+### MatCarousel Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 只应放置 `mat-carousel-item` 项目；其他内容不参与宽度计算与停靠 |
+
+### MatCarouselItem Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 项目的简短文本内容，渲染在图片上方并带底部渐变遮罩；项目压缩到小尺寸预览位（宽度小于 96px）时整体淡出 |
 
 ## 状态与无障碍
 
@@ -6908,7 +6915,7 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 | --- | --- |
 | 默认 | 直接放置普通或图标模式的 `MatBtn`；不要嵌套额外布局容器 |
 
-### 状态与键盘
+## 状态与键盘
 
 组根节点使用 `role="group"`，没有 `tabindex`。Tab 依次进入每个子按钮，Space 和 Enter 使用原生按钮激活；不实现方向键或 roving tabindex。standard 与 connected 的选择项都使用 `aria-pressed`，不模拟 radio/radiogroup。`required` 阻止取消最后一个选中项。
 
@@ -9029,17 +9036,24 @@ const multiple = ref(['文档']);
 
 ## 事件
 
-| 组件 | 事件 | 载荷 | 触发条件 |
-| --- | --- | --- | --- |
-| MatChip | `click` | `MouseEvent` | 启用的根按钮被点击或通过键盘激活 |
-| MatChip | `remove` | `MouseEvent` | 启用的 input 移除图标区域被点击；不会同时触发 click |
-| MatChipSet | `update:modelValue` | 下一基础值、基础值数组或 `null` | 参与选择的 Chip 请求切换状态，用于 `v-model` |
+### MatChip 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `click` | `MouseEvent` | 启用的根按钮被点击或通过键盘激活 |
+| `remove` | `MouseEvent` | 启用的 input 移除图标区域被点击；不会同时触发 click |
+
+### MatChipSet 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | 下一基础值、基础值数组或 `null` | 参与选择的 Chip 请求切换状态，用于 `v-model` |
 
 MatChipSet 不提供额外的 select 或 selected 事件。remove 不自动删除 Chip，也不修改 ChipSet 模型；应用负责更新对应的数据源。
 
 ## Slots
 
-### MatChip
+### MatChip Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
@@ -9050,7 +9064,7 @@ MatChipSet 不提供额外的 select 或 selected 事件。remove 不自动删�
 
 已选 filter 没有 avatar 或 leading 时显示默认勾选图标，设置 `hide-selected-icon` 时不显示；input 始终显示默认或自定义移除图标。移除图标的指针命中区域至少为 48×48px，启用时显示圆形 hover/pressed state layer，但不建立独立键盘焦点；`remove-icon` Slot 只替换图标内容，不改变 remove 事件行为。旧 `trailing` Slot 不属于 MatChip API。
 
-### MatChipSet
+### MatChipSet Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
@@ -13029,9 +13043,11 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
 
 ## 事件
 
-| 组件 | 事件 | 载荷 | 触发条件 |
-| --- | --- | --- | --- |
-| `MatCardActionArea` | `click` | 原生 `MouseEvent` | 启用的按钮或链接被用户激活时触发；禁用时不触发 |
+### MatCardActionArea 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `click` | 原生 `MouseEvent` | 启用的按钮或链接被用户激活时触发；禁用时不触发 |
 
 除 `MatCardActionArea` 外，Card 组件族不定义自定义事件；传入的原生事件监听器作用于各自的根元素。
 
@@ -14048,7 +14064,7 @@ function submitSearch() {
 
 ## API
 
-### `MatSearch` 属性
+### 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -14061,7 +14077,7 @@ function submitSearch() {
 
 `class` 与 `style` 传给搜索 `<form role="search">` 容器；其他未消费属性传给内部 `MatInputBase` 的原生 `<input type="search">`。原生搜索清除按钮由 `MatInputBase` 隐藏，清空能力由 trailing Slot 中的组件操作明确提供。
 
-### `MatSearch` 方法
+### 方法
 
 | 方法 | 参数 | 返回值 | 说明 |
 | --- | --- | --- | --- |
@@ -14433,7 +14449,7 @@ const scrollTarget = ref(null);
 
 ## API
 
-### `MatAppBar` 属性
+### 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -14462,8 +14478,6 @@ const scrollTarget = ref(null);
 | `update:modelValue` | `boolean` | 请求切换显隐状态时发出新的布尔值 |
 
 ## Slots
-
-### `MatAppBar` Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
@@ -15427,10 +15441,17 @@ Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项
 
 ## 事件
 
-| 组件 | 事件 | 载荷 | 触发条件 |
-| --- | --- | --- | --- |
-| `MatMenu` | `update:modelValue` | `boolean` | 根菜单请求关闭，透明 scrim 被点击，或 `scrim=false` 时浏览器通过 Escape、轻触外部等方式关闭 Popover |
-| `MatMenuItem` | `click` | 原生 `MouseEvent` | 启用的叶子项目被激活；`closeOnClick=true` 时随后关闭整条菜单链 |
+### MatMenu 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `boolean` | 根菜单请求关闭，透明 scrim 被点击，或 `scrim=false` 时浏览器通过 Escape、轻触外部等方式关闭 Popover |
+
+### MatMenuItem 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `click` | 原生 `MouseEvent` | 启用的叶子项目被激活；`closeOnClick=true` 时随后关闭整条菜单链 |
 
 MatMenuGroup 没有自定义事件。包含 submenu 的项目把点击、Enter、Space 和朝子菜单方向的方向键用于展开，不发出叶子 click。元素锚点菜单关闭后把焦点还给 anchor；坐标菜单恢复打开前的焦点元素。
 
@@ -17432,7 +17453,7 @@ const selected = ref('two');
 ```vue
 <template>
   <mat-list interaction="single-action" aria-label="链接列表" class="example-list">
-    <mat-list-item href="#list-api">
+    <mat-list-item href="#api">
       跳转到 List API
     </mat-list-item>
   </mat-list>
@@ -17960,7 +17981,7 @@ const lastAction = ref('无');
 
 省略 `lines` 时，组件按 overline、默认标签和 supporting Slot 的数量推断一至三行。单操作模式的 leading、文字和 trailing 共同构成一个主操作；多操作模式把 trailing 放在主操作之外。
 
-## API {#list-api}
+## API
 
 ### MatList 属性
 
@@ -18005,20 +18026,7 @@ const lastAction = ref('无');
 
 操作模式中未消费的原生属性传给主按钮或链接，可设置 `target`、`rel` 等链接属性；非交互和选择模式中传给项目根元素。`href` 在非交互或选择模式中会被忽略并发出开发警告。
 
-## 事件
-
-| 组件 | 事件 | 载荷 | 触发条件 |
-| --- | --- | --- | --- |
-| `MatList` | `select` | `{ value, selected, nextSelected, originalEvent }` | 启用的选择项通过指针、Space 或 Enter 请求改变选择 |
-| `MatList` | `update:expanded` | `(string \| number \| boolean)[]` | 有值分组请求展开或收起，用于 `v-model:expanded` |
-| `MatList` | `reorder` | `{ value, fromIndex, toIndex, originalEvent }` | `draggable` 项目长按拖动并在新位置释放 |
-| `MatList` | `scroll` | `{ scrollTop, scrollHeight, clientHeight, startIndex, endIndex }` | 开启虚拟滚动时滚动触发 |
-| `MatList` | `visible-range-change` | `{ startIndex, endIndex }` | 开启虚拟滚动时可见索引区间变化触发 |
-| `MatListItem` | `click` | 原生 `MouseEvent` | 单操作或多操作模式中的启用主操作被激活 |
-
-single-select 再次激活当前项不会取消选择，也不会发出 `select`。multi-select 每次激活都返回不修改原数组的新数组。`originalEvent` 是实际的 `MouseEvent` 或 `KeyboardEvent`。非交互模式没有自定义事件，trailing 中的独立控件使用自己的事件。MatListGroup 没有自定义事件；无值分组不会触发根 List 的 `update:expanded`。
-
-## 方法
+### MatList 方法
 
 通过模板引用（`ref`）可调用 `MatList` 暴露的公共方法：
 
@@ -18029,6 +18037,26 @@ single-select 再次激活当前项不会取消选择，也不会发出 `select`
 | `scrollTo` | `options: ScrollToOptions` | `void` | 滚动容器原生 `scrollTo` 代理 |
 | `scrollToIndex` | `index: number, options?: { align?: 'start' \| 'center' \| 'end' \| 'auto', behavior?: ScrollBehavior }` | `void` | 滚动到指定索引项 |
 | `getScroller` | 无 | `HTMLElement \| Window \| null` | 获取关联的滚动容器元素 |
+
+## 事件
+
+### MatList 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `select` | `{ value, selected, nextSelected, originalEvent }` | 启用的选择项通过指针、Space 或 Enter 请求改变选择 |
+| `update:expanded` | `(string \| number \| boolean)[]` | 有值分组请求展开或收起，用于 `v-model:expanded` |
+| `reorder` | `{ value, fromIndex, toIndex, originalEvent }` | `draggable` 项目长按拖动并在新位置释放 |
+| `scroll` | `{ scrollTop, scrollHeight, clientHeight, startIndex, endIndex }` | 开启虚拟滚动时滚动触发 |
+| `visible-range-change` | `{ startIndex, endIndex }` | 开启虚拟滚动时可见索引区间变化触发 |
+
+### MatListItem 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `click` | 原生 `MouseEvent` | 单操作或多操作模式中的启用主操作被激活 |
+
+single-select 再次激活当前项不会取消选择，也不会发出 `select`。multi-select 每次激活都返回不修改原数组的新数组。`originalEvent` 是实际的 `MouseEvent` 或 `KeyboardEvent`。非交互模式没有自定义事件，trailing 中的独立控件使用自己的事件。MatListGroup 没有自定义事件；无值分组不会触发根 List 的 `update:expanded`。
 
 ## Slots
 
@@ -20151,10 +20179,17 @@ section {
 
 ## 事件
 
-| 组件 | 事件 | 载荷 | 触发条件 |
-| --- | --- | --- | --- |
-| `MatExpansion` | `update:modelValue` | 基础值数组、单值或 `null` | 子面板展开状态变更时触发 |
-| `MatExpansionPanel` | `update:modelValue` | `boolean` | 当前面板展开状态变更时触发 |
+### MatExpansion 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | 基础值数组、单值或 `null` | 子面板展开状态变更时触发 |
+
+### MatExpansionPanel 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `boolean` | 当前面板展开状态变更时触发 |
 
 ## Slots
 
@@ -21545,12 +21580,19 @@ const selected = ref('inbox');
 
 ## 事件
 
-| 组件 | 事件 | 载荷 | 触发条件 |
-| --- | --- | --- | --- |
-| `MatNavigationRail` | `update:modelValue` | `string \| number \| boolean` | 未禁用、带 `value` 且尚未选中的 Item 被激活 |
-| `MatNavigationRail` | `update:expanded` | `boolean` | 菜单按钮、modal 遮罩或 modal 状态下的 Escape 请求改变展开状态 |
-| `MatNavigationRail` | `update:open` | `boolean` | 请求切换显示或隐藏状态时触发 |
-| `MatNavigationRailItem` | `click` | `MouseEvent` | Item 的原生按钮或链接被激活 |
+### MatNavigationRail 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `string \| number \| boolean` | 未禁用、带 `value` 且尚未选中的 Item 被激活 |
+| `update:expanded` | `boolean` | 菜单按钮、modal 遮罩或 modal 状态下的 Escape 请求改变展开状态 |
+| `update:open` | `boolean` | 请求切换显示或隐藏状态时触发 |
+
+### MatNavigationRailItem 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `click` | `MouseEvent` | Item 的原生按钮或链接被激活 |
 
 ## Slots
 
@@ -22581,10 +22623,14 @@ const selected = ref('dashboard');
 
 ## 事件
 
+### MatNavigationBar 事件
+
 | 事件名 | 载荷 | 触发条件 |
 | --- | --- | --- |
 | `update:modelValue` | `string \| number \| boolean` | 用户点击未禁用的子项且值与当前不一致时触发。 |
 | `update:open` | `boolean` | 请求切换显示状态时发出新的布尔值。 |
+
+MatNavigationBarItem 没有自定义事件。
 
 ## Slots
 
@@ -22995,12 +23041,19 @@ const selected = ref('inbox');
 
 ## 事件
 
-| 组件 | 事件 | 载荷 | 触发条件 |
-| --- | --- | --- | --- |
-| `MatNavigationDrawer` | `update:modelValue` | `string \| number \| boolean` | 启用的子 Item 被激活时发出 |
-| `MatNavigationDrawer` | `update:expanded` | `boolean` | 遮罩点击或按下 Escape 请求关闭时发出 |
-| `MatNavigationGroup` | `update:expanded` | `boolean` | 分组展开/折叠状态改变时发出 |
-| `MatNavigationGroup` | `update:modelValue` | `boolean` | 分组展开/折叠状态改变时发出 |
+### MatNavigationDrawer 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `string \| number \| boolean` | 启用的子 Item 被激活时发出 |
+| `update:expanded` | `boolean` | 遮罩点击或按下 Escape 请求关闭时发出 |
+
+### MatNavigationGroup 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:expanded` | `boolean` | 分组展开/折叠状态改变时发出 |
+| `update:modelValue` | `boolean` | 分组展开/折叠状态改变时发出 |
 
 ## Slots
 
@@ -27442,7 +27495,7 @@ const widths = ref({});
 
 ## API
 
-### `MatPanes` 属性
+### MatPanes 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -27451,7 +27504,7 @@ const widths = ref({});
 
 权重只决定可见 Pane 的相对宽度，调整空间本身不计入 Pane 权重。缺少可见 Pane 权重时组件会发出开发警告并临时使用等分权重；重复 `id` 也会发出开发警告。
 
-### `MatPane` 属性
+### MatPane 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -27462,13 +27515,15 @@ const widths = ref({});
 
 ## 事件
 
-| 组件与事件 | 载荷 | 触发条件 |
-| --- | --- | --- |
-| `MatPanes @update:sizes` | `Record<string, number>` | 指针拖动释放或一次键盘调整完成后，发送完整的下一组受控权重 |
-| `MatPanes @update:widths` | `Record<string, number>` | 初始布局、Pane 集合或实际宽度稳定后发送取整后的像素宽度；常规变化尾端防抖约 100ms，拖动提交后下一渲染帧补发 |
-| `MatPanes @update:breakpoint` | `'compact' \| 'medium' \| 'expanded' \| 'large' \| 'extra-large'` | 挂载时发送一次，之后仅在 `window.innerWidth` 跨过 `<600`、`600–839`、`840–1199`、`1200–1599` 或 `≥1600` 边界时发送 |
+### MatPanes 事件
 
-组件不会保存尺寸、不根据断点自动调整 Pane，也不会代替应用决定何时使用 `v-if`。
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:sizes` | `Record<string, number>` | 指针拖动释放或一次键盘调整完成后，发送完整的下一组受控权重 |
+| `update:widths` | `Record<string, number>` | 初始布局、Pane 集合或实际宽度稳定后发送取整后的像素宽度；常规变化尾端防抖约 100ms，拖动提交后下一渲染帧补发 |
+| `update:breakpoint` | `'compact' \| 'medium' \| 'expanded' \| 'large' \| 'extra-large'` | 挂载时发送一次，之后仅在 `window.innerWidth` 跨过 `<600`、`600–839`、`840–1199`、`1200–1599` 或 `≥1600` 边界时发送 |
+
+MatPane 没有自定义事件。组件不会保存尺寸、不根据断点自动调整 Pane，也不会代替应用决定何时使用 `v-if`。
 
 ## Slots
 

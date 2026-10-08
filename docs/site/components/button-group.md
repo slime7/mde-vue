@@ -238,7 +238,7 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 | --- | --- |
 | 默认 | 直接放置普通或图标模式的 `MatBtn`；不要嵌套额外布局容器 |
 
-### 状态与键盘
+## 状态与键盘
 
 组根节点使用 `role="group"`，没有 `tabindex`。Tab 依次进入每个子按钮，Space 和 Enter 使用原生按钮激活；不实现方向键或 roving tabindex。standard 与 connected 的选择项都使用 `aria-pressed`，不模拟 radio/radiogroup。`required` 阻止取消最后一个选中项。
 

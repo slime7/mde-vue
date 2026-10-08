@@ -1,7 +1,7 @@
 <!-- #region template -->
 <template>
   <mat-list interaction="single-action" aria-label="链接列表" class="example-list">
-    <mat-list-item href="#list-api">
+    <mat-list-item href="#api">
       跳转到 List API
     </mat-list-item>
   </mat-list>

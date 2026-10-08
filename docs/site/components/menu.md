@@ -396,10 +396,17 @@ Menu 触发器的点击和 ARIA 由调用方控制；嵌套菜单自动以父项
 
 ## 事件
 
-| 组件 | 事件 | 载荷 | 触发条件 |
-| --- | --- | --- | --- |
-| `MatMenu` | `update:modelValue` | `boolean` | 根菜单请求关闭，透明 scrim 被点击，或 `scrim=false` 时浏览器通过 Escape、轻触外部等方式关闭 Popover |
-| `MatMenuItem` | `click` | 原生 `MouseEvent` | 启用的叶子项目被激活；`closeOnClick=true` 时随后关闭整条菜单链 |
+### MatMenu 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `boolean` | 根菜单请求关闭，透明 scrim 被点击，或 `scrim=false` 时浏览器通过 Escape、轻触外部等方式关闭 Popover |
+
+### MatMenuItem 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `click` | 原生 `MouseEvent` | 启用的叶子项目被激活；`closeOnClick=true` 时随后关闭整条菜单链 |
 
 MatMenuGroup 没有自定义事件。包含 submenu 的项目把点击、Enter、Space 和朝子菜单方向的方向键用于展开，不发出叶子 click。元素锚点菜单关闭后把焦点还给 anchor；坐标菜单恢复打开前的焦点元素。
 

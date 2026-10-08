@@ -235,17 +235,24 @@ Chip 保留至少 48×48px 的按钮命中区域，32px 容器是其中的可见
 
 ## 事件
 
-| 组件 | 事件 | 载荷 | 触发条件 |
-| --- | --- | --- | --- |
-| MatChip | `click` | `MouseEvent` | 启用的根按钮被点击或通过键盘激活 |
-| MatChip | `remove` | `MouseEvent` | 启用的 input 移除图标区域被点击；不会同时触发 click |
-| MatChipSet | `update:modelValue` | 下一基础值、基础值数组或 `null` | 参与选择的 Chip 请求切换状态，用于 `v-model` |
+### MatChip 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `click` | `MouseEvent` | 启用的根按钮被点击或通过键盘激活 |
+| `remove` | `MouseEvent` | 启用的 input 移除图标区域被点击；不会同时触发 click |
+
+### MatChipSet 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | 下一基础值、基础值数组或 `null` | 参与选择的 Chip 请求切换状态，用于 `v-model` |
 
 MatChipSet 不提供额外的 select 或 selected 事件。remove 不自动删除 Chip，也不修改 ChipSet 模型；应用负责更新对应的数据源。
 
 ## Slots
 
-### MatChip
+### MatChip Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
@@ -256,7 +263,7 @@ MatChipSet 不提供额外的 select 或 selected 事件。remove 不自动删�
 
 已选 filter 没有 avatar 或 leading 时显示默认勾选图标，设置 `hide-selected-icon` 时不显示；input 始终显示默认或自定义移除图标。移除图标的指针命中区域至少为 48×48px，启用时显示圆形 hover/pressed state layer，但不建立独立键盘焦点；`remove-icon` Slot 只替换图标内容，不改变 remove 事件行为。旧 `trailing` Slot 不属于 MatChip API。
 
-### MatChipSet
+### MatChipSet Slots
 
 | 名称 | 内容约束 |
 | --- | --- |

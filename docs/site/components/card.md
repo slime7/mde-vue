@@ -250,9 +250,11 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
 
 ## 事件
 
-| 组件 | 事件 | 载荷 | 触发条件 |
-| --- | --- | --- | --- |
-| `MatCardActionArea` | `click` | 原生 `MouseEvent` | 启用的按钮或链接被用户激活时触发；禁用时不触发 |
+### MatCardActionArea 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `click` | 原生 `MouseEvent` | 启用的按钮或链接被用户激活时触发；禁用时不触发 |
 
 除 `MatCardActionArea` 外，Card 组件族不定义自定义事件；传入的原生事件监听器作用于各自的根元素。
 

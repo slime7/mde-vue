@@ -119,10 +119,14 @@ order: 106
 
 ## 事件
 
+### MatNavigationBar 事件
+
 | 事件名 | 载荷 | 触发条件 |
 | --- | --- | --- |
 | `update:modelValue` | `string \| number \| boolean` | 用户点击未禁用的子项且值与当前不一致时触发。 |
 | `update:open` | `boolean` | 请求切换显示状态时发出新的布尔值。 |
+
+MatNavigationBarItem 没有自定义事件。
 
 ## Slots
 

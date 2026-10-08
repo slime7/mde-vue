@@ -37,8 +37,8 @@ describe('选择控件文档示例', () => {
 
     expect(existsSync(resolve('docs/site/components/radio-group.md'))).toBe(false);
     expect(config).not.toContain('/components/radio-group');
-    expect(radioPage).toContain('## MatRadio API');
-    expect(radioPage).toContain('## MatRadioGroup API');
+    expect(radioPage).toContain('### MatRadio 属性');
+    expect(radioPage).toContain('### MatRadioGroup 属性');
   });
 
   it('AI 完整文档展开 Vue 示例源码', () => {

@@ -59,7 +59,7 @@ order: 40
 
 ## API
 
-### `<mat-carousel>` 属性
+### MatCarousel 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -68,7 +68,7 @@ order: 40
 
 布局差异：`multi-browse`、`hero`、`hero-center-aligned` 两侧保留 16px 内边距，`uncontained` 与 `uncontained-multi-aspect` 在首尾停靠保留左右 16px 边距、中间状态项目铺满容器边缘；`full-screen` 无内边距，项目间距为 16px，其余布局为 8px。动态目标宽度默认按容器尺寸推导：multi-browse 为内容宽度的一半并封顶 560px，hero 与 hero-center-aligned 为内容宽度减去两侧预览位、uncontained 为内容宽度减去一个项目预览位（这三者随容器缩放、不封顶），保证预览位始终完整贴合容器两端；动态布局的相邻停靠位相距一个大项宽度加间距。uncontained 布局的全部项目保持同一固定宽度，uncontained-multi-aspect 由各项目 `aspectRatio` 决定宽度。官方规格的小尺寸预览位宽度为 40–56dp 动态，本组件取 56dp。
 
-### `<mat-carousel-item>` 属性
+### MatCarouselItem 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -85,10 +85,17 @@ order: 40
 
 ## Slots
 
-| 组件 | 名称 | 内容约束 |
-| --- | --- | --- |
-| `mat-carousel` | 默认 | 只应放置 `mat-carousel-item` 项目；其他内容不参与宽度计算与停靠 |
-| `mat-carousel-item` | 默认 | 项目的简短文本内容，渲染在图片上方并带底部渐变遮罩；项目压缩到小尺寸预览位（宽度小于 96px）时整体淡出 |
+### MatCarousel Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 只应放置 `mat-carousel-item` 项目；其他内容不参与宽度计算与停靠 |
+
+### MatCarouselItem Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 项目的简短文本内容，渲染在图片上方并带底部渐变遮罩；项目压缩到小尺寸预览位（宽度小于 96px）时整体淡出 |
 
 ## 状态与无障碍
 

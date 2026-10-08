@@ -133,12 +133,19 @@ Navigation drawer 为应用提供主导航侧边抽屉，支持标准抽屉（�
 
 ## 事件
 
-| 组件 | 事件 | 载荷 | 触发条件 |
-| --- | --- | --- | --- |
-| `MatNavigationDrawer` | `update:modelValue` | `string \| number \| boolean` | 启用的子 Item 被激活时发出 |
-| `MatNavigationDrawer` | `update:expanded` | `boolean` | 遮罩点击或按下 Escape 请求关闭时发出 |
-| `MatNavigationGroup` | `update:expanded` | `boolean` | 分组展开/折叠状态改变时发出 |
-| `MatNavigationGroup` | `update:modelValue` | `boolean` | 分组展开/折叠状态改变时发出 |
+### MatNavigationDrawer 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `string \| number \| boolean` | 启用的子 Item 被激活时发出 |
+| `update:expanded` | `boolean` | 遮罩点击或按下 Escape 请求关闭时发出 |
+
+### MatNavigationGroup 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:expanded` | `boolean` | 分组展开/折叠状态改变时发出 |
+| `update:modelValue` | `boolean` | 分组展开/折叠状态改变时发出 |
 
 ## Slots
 

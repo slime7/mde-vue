@@ -81,7 +81,7 @@ order: 91
 
 ## API
 
-### `MatSearch` 属性
+### 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -94,7 +94,7 @@ order: 91
 
 `class` 与 `style` 传给搜索 `<form role="search">` 容器；其他未消费属性传给内部 `MatInputBase` 的原生 `<input type="search">`。原生搜索清除按钮由 `MatInputBase` 隐藏，清空能力由 trailing Slot 中的组件操作明确提供。
 
-### `MatSearch` 方法
+### 方法
 
 | 方法 | 参数 | 返回值 | 说明 |
 | --- | --- | --- | --- |

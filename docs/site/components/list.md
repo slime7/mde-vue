@@ -403,7 +403,7 @@ order: 100
 
 省略 `lines` 时，组件按 overline、默认标签和 supporting Slot 的数量推断一至三行。单操作模式的 leading、文字和 trailing 共同构成一个主操作；多操作模式把 trailing 放在主操作之外。
 
-## API {#list-api}
+## API
 
 ### MatList 属性
 
@@ -448,20 +448,7 @@ order: 100
 
 操作模式中未消费的原生属性传给主按钮或链接，可设置 `target`、`rel` 等链接属性；非交互和选择模式中传给项目根元素。`href` 在非交互或选择模式中会被忽略并发出开发警告。
 
-## 事件
-
-| 组件 | 事件 | 载荷 | 触发条件 |
-| --- | --- | --- | --- |
-| `MatList` | `select` | `{ value, selected, nextSelected, originalEvent }` | 启用的选择项通过指针、Space 或 Enter 请求改变选择 |
-| `MatList` | `update:expanded` | `(string \| number \| boolean)[]` | 有值分组请求展开或收起，用于 `v-model:expanded` |
-| `MatList` | `reorder` | `{ value, fromIndex, toIndex, originalEvent }` | `draggable` 项目长按拖动并在新位置释放 |
-| `MatList` | `scroll` | `{ scrollTop, scrollHeight, clientHeight, startIndex, endIndex }` | 开启虚拟滚动时滚动触发 |
-| `MatList` | `visible-range-change` | `{ startIndex, endIndex }` | 开启虚拟滚动时可见索引区间变化触发 |
-| `MatListItem` | `click` | 原生 `MouseEvent` | 单操作或多操作模式中的启用主操作被激活 |
-
-single-select 再次激活当前项不会取消选择，也不会发出 `select`。multi-select 每次激活都返回不修改原数组的新数组。`originalEvent` 是实际的 `MouseEvent` 或 `KeyboardEvent`。非交互模式没有自定义事件，trailing 中的独立控件使用自己的事件。MatListGroup 没有自定义事件；无值分组不会触发根 List 的 `update:expanded`。
-
-## 方法
+### MatList 方法
 
 通过模板引用（`ref`）可调用 `MatList` 暴露的公共方法：
 
@@ -472,6 +459,26 @@ single-select 再次激活当前项不会取消选择，也不会发出 `select`
 | `scrollTo` | `options: ScrollToOptions` | `void` | 滚动容器原生 `scrollTo` 代理 |
 | `scrollToIndex` | `index: number, options?: { align?: 'start' \| 'center' \| 'end' \| 'auto', behavior?: ScrollBehavior }` | `void` | 滚动到指定索引项 |
 | `getScroller` | 无 | `HTMLElement \| Window \| null` | 获取关联的滚动容器元素 |
+
+## 事件
+
+### MatList 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `select` | `{ value, selected, nextSelected, originalEvent }` | 启用的选择项通过指针、Space 或 Enter 请求改变选择 |
+| `update:expanded` | `(string \| number \| boolean)[]` | 有值分组请求展开或收起，用于 `v-model:expanded` |
+| `reorder` | `{ value, fromIndex, toIndex, originalEvent }` | `draggable` 项目长按拖动并在新位置释放 |
+| `scroll` | `{ scrollTop, scrollHeight, clientHeight, startIndex, endIndex }` | 开启虚拟滚动时滚动触发 |
+| `visible-range-change` | `{ startIndex, endIndex }` | 开启虚拟滚动时可见索引区间变化触发 |
+
+### MatListItem 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `click` | 原生 `MouseEvent` | 单操作或多操作模式中的启用主操作被激活 |
+
+single-select 再次激活当前项不会取消选择，也不会发出 `select`。multi-select 每次激活都返回不修改原数组的新数组。`originalEvent` 是实际的 `MouseEvent` 或 `KeyboardEvent`。非交互模式没有自定义事件，trailing 中的独立控件使用自己的事件。MatListGroup 没有自定义事件；无值分组不会触发根 List 的 `update:expanded`。
 
 ## Slots
 

@@ -120,7 +120,7 @@ order: 95
 
 ## API
 
-### `MatAppBar` 属性
+### 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -149,8 +149,6 @@ order: 95
 | `update:modelValue` | `boolean` | 请求切换显隐状态时发出新的布尔值 |
 
 ## Slots
-
-### `MatAppBar` Slots
 
 | 名称 | 内容约束 |
 | --- | --- |

@@ -22,11 +22,11 @@ describe('App bar 文档', () => {
 
     expect(page).toContain('llms: true');
     expect(page).toContain('`<mat-app-bar>` 的组件导出名是 `MatAppBar`');
-    expect(page).toContain('`<mat-search>` 的组件导出名是 `MatSearch`');
+    expect(page).toContain('`<mat-search>`（组件导出名 `MatSearch`）');
     ['## 组件简介', '## 示例', '## API', '## 事件', '## Slots'].forEach((heading) => {
       expect(page).toContain(heading);
     });
-    expect(page).toContain('CSS `scroll-timeline`');
+    expect(page).toContain('CSS timeline');
     expect(page).toContain('| 默认 | 唯一主内容区域');
     expect(config).toContain("{ text: 'App bar 应用栏', link: '/components/app-bar' }");
     expect(installation).toContain('MatAppBar,');

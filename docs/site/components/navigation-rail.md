@@ -367,12 +367,19 @@ Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导�
 
 ## 事件
 
-| 组件 | 事件 | 载荷 | 触发条件 |
-| --- | --- | --- | --- |
-| `MatNavigationRail` | `update:modelValue` | `string \| number \| boolean` | 未禁用、带 `value` 且尚未选中的 Item 被激活 |
-| `MatNavigationRail` | `update:expanded` | `boolean` | 菜单按钮、modal 遮罩或 modal 状态下的 Escape 请求改变展开状态 |
-| `MatNavigationRail` | `update:open` | `boolean` | 请求切换显示或隐藏状态时触发 |
-| `MatNavigationRailItem` | `click` | `MouseEvent` | Item 的原生按钮或链接被激活 |
+### MatNavigationRail 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `string \| number \| boolean` | 未禁用、带 `value` 且尚未选中的 Item 被激活 |
+| `update:expanded` | `boolean` | 菜单按钮、modal 遮罩或 modal 状态下的 Escape 请求改变展开状态 |
+| `update:open` | `boolean` | 请求切换显示或隐藏状态时触发 |
+
+### MatNavigationRailItem 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `click` | `MouseEvent` | Item 的原生按钮或链接被激活 |
 
 ## Slots
 

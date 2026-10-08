@@ -152,10 +152,17 @@ order: 105
 
 ## 事件
 
-| 组件 | 事件 | 载荷 | 触发条件 |
-| --- | --- | --- | --- |
-| `MatExpansion` | `update:modelValue` | 基础值数组、单值或 `null` | 子面板展开状态变更时触发 |
-| `MatExpansionPanel` | `update:modelValue` | `boolean` | 当前面板展开状态变更时触发 |
+### MatExpansion 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | 基础值数组、单值或 `null` | 子面板展开状态变更时触发 |
+
+### MatExpansionPanel 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `boolean` | 当前面板展开状态变更时触发 |
 
 ## Slots
 

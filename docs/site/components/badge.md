@@ -164,7 +164,7 @@ Badge 指示器不接收指针事件，不会阻断 Slot 内控件的点击、ho
 | --- | --- |
 | 默认 Slot | 覆盖模式的目标内容；`location="inline"` 时忽略。 |
 
-### 状态与布局
+## 状态与布局
 
 `dot=false` 且没有有效 `content` 时，覆盖模式仍渲染 Slot 和包装容器，但不显示指示器；Inline 模式不渲染任何 DOM。覆盖模式使用逻辑方向，因此 start/end 会随书写方向变化。`offset.inline` 正值朝 inline-end 移动，`offset.block` 正值朝 block-end 移动。
 
@@ -172,7 +172,7 @@ Badge 指示器不接收指针事件，不会阻断 Slot 内控件的点击、ho
 
 开启 `border` 后，指示器外围增加约 2px 的主题背景色边框，边框会覆盖并截断被指示器压住的内容，视觉上把指示器与目标内容隔开；指示器自身的位置、尺寸和文字排布保持不变。
 
-## 参考
+## 参考来源
 
 尺寸、形态和默认位置参考 Material 3 [Badge specs](https://m3.material.io/components/badges/specs) 与 [Badge guidelines](https://m3.material.io/components/badges/guidelines)。
 
