@@ -95,13 +95,9 @@ order: 121
 - 原生 `button` 和 `role="button"` 使用 Space、Enter 表达键盘 pressed；具有 `href` 的 `a` 和 `role="link"` 使用 Enter；其他宿主不由指令推导键盘 pressed。
 - `disabled` 或 `aria-disabled="true"` 的宿主不显示交互状态。
 
-150ms 是 mde-vue 为避免短按反馈闪烁而采用的视觉保持策略，不是 Material 规范规定的固定时长。
+### 宿主说明
 
-### 宿主与生命周期
-
-宿主必须能容纳子元素，且不能使用 `display: contents`。`input`、`img` 等不能可靠容纳子元素的元素不支持该指令。自定义交互容器仍需由使用方提供正确的 `role`、`tabindex`、键盘激活和点击行为。
-
-指令会加入一个绝对定位且 `aria-hidden="true"` 的内部子元素，并使用 CSS Anchor Positioning 让其覆盖宿主。不要依赖该子元素的 class、DOM 顺序或其他内部属性。绑定更新只更新选项；卸载时会清理状态层、观察器、事件监听和指令添加的 anchor 名称。
+宿主需能容纳子元素（不能使用 `display: contents`）。`input`、`img` 等不可容纳子元素的标签不支持该指令；非按钮元素需自行提供交互语义与键盘支持。
 
 <script setup>
 import StateLayerColorExample from '../examples/state-layer/StateLayerColorExample.vue';

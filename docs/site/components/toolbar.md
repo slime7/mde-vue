@@ -94,8 +94,6 @@ Toolbar 默认显示，使用 `modelValue` 或 `v-model` 可以播放进入、�
 
 `placeholder=true` 时，横向 Toolbar 占用实际 Toolbar 的 block-size，垂直 Toolbar 占用实际 Toolbar 的 inline-size；占位尺寸包含有效的 `bottomPlaceholder`。floating Toolbar 不登记 AppRoot 边缘，因此仍可使用显式 placeholder 为声明位置的长滚动内容保留空间。AppRoot 会统一处理安全区，自动接入时 `bottomPlaceholder` 只作为额外下限。无效值不产生额外空间。显式 `attach` 只在 `app=true` 时解析；无法解析时组件给出警告且不渲染 Toolbar。`fab` Slot 在 docked 模式不会渲染并会给出警告。
 
-组件没有公开方法。
-
 ## 事件
 
 组件不定义自定义事件；显示状态由 `modelValue` 或 `v-model` 控制。未消费的属性、`class`、`style`、`id` 和 ARIA 属性传递给 Toolbar 根节点；`app=true` 时该根节点 Teleport 到 AppRoot 或显式 `attach`，前者相对应用覆盖层绝对定位，后者相对视口固定定位。
@@ -109,7 +107,7 @@ Toolbar 默认显示，使用 `modelValue` 或 `v-model` 可以播放进入、�
 
 ## 覆盖层与避让
 
-在 AppRoot 内，docked Toolbar 登记 `bottom` 并推动正文与浮动组；floating Toolbar 不占正文布局，但会读取 AppRoot 的四向避让值。非 AppRoot 场景继续使用内部 Toolbar 几何注册表，让 Snackbar 与 Tooltip 避让。Dialog 始终位于这些普通覆盖层之上；位于 AppRoot 内时进入其模态层并限制在应用矩形内。
+在 `MatAppRoot` 内，docked Toolbar 停靠在底部并推动正文；floating Toolbar 不占据正文空间并根据边缘安全区自动避让。
 
 ## 无障碍
 

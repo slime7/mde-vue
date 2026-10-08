@@ -520,8 +520,6 @@ single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌�
 - `fromIndex` 和 `toIndex` 按全部直属 MatListItem 计算，不包含 Divider 与 MatListGroup。位置没有变化时不触发 `reorder`；拖动成功后抑制同一次 click 或选择请求。
 - 拖动支持鼠标、触控笔和触摸主指针，不提供键盘排序或跨 List 拖放。Escape、窗口失焦、关闭 `draggable` 和组件卸载会取消当前拖动。
 
-组件没有公开方法。
-
 ## 参考来源
 
 外观、内容结构和交互依据 Material 3 [List overview](https://m3.material.io/components/lists/overview)、[List specs](https://m3.material.io/components/lists/specs) 与 [List guidelines](https://m3.material.io/components/lists/guidelines)。折叠效果参考官方 Lists specs 的 [Expand 演示](https://m3.material.io/components/lists/specs#43f774a6-b1fb-4719-9376-f706c7b82eac)：官方页面说明 Android List 可以展开和折叠，本组件的受控数组、Vue Slots 和 Web 无障碍语义是面向浏览器的适配。选择模式的语义限制参考 [WAI-ARIA Listbox Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/)。

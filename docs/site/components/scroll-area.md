@@ -9,13 +9,7 @@ order: 114
 
 ## 组件简介
 
-`<mat-scroll-area>` 的组件导出名是 `MatScrollArea`。组件拥有一个纵向或横向原生滚动元素，并在仍有内容可滚动时用真实 CSS mask 渐隐对应边缘；效果不依赖容器背景色，适合透明表面、图片和任意主题背景。滚动方向两端默认保留 28px 内边距，内容在两端始终留出间距，`noScrollPadding` 可以关闭这个内边距。滚动条始终贴住容器边缘，即使容器根元素设置了水平或垂直内边距，内容仍保留同样的内边距间距。
-
-组件默认背景透明，作为容器使用时可以通过 `color` 属性填充 `surface`、`surface-container` 等系统颜色角色或六位十六进制种子色，并同步内容文字颜色；`rounded` 属性可以添加接近 28px 的系统大圆角。滚动条拇指使用 primary 令牌、轨道透明，尺寸以内联 CSS 变量 `--mat-scroll-area-scrollbar-width` 暴露在组件根元素上供子元素读取（该变量属于内部实现，不承诺公共兼容）。
-
-组件一次只管理一个滚动轴。使用方必须为纵向模式提供确定的块轴尺寸，或为横向模式提供确定的行轴尺寸和不会收缩的内部内容，才能形成滚动边界。配合 `<mat-pull-to-refresh>` 可以在滚动区域起始端提供下拉刷新手势。
-
-边缘阴影带默认紧贴边缘，`shadowOffset` 可以让起始端、末端的阴影带从边缘向内偏移；偏移区内的滚动内容不会被遮罩覆盖，适合放置不透明的 sticky 元素。
+`<mat-scroll-area>` 的组件导出名是 `MatScrollArea`。组件为单轴（纵向或横向）内容提供原生滚动容器，并在有溢出内容时通过两端渐隐遮罩平滑过渡边缘。支持通过 `color` 填充容器背景色、`rounded` 应用系统大圆角，以及自定义滚动条外观。
 
 ## 示例
 
@@ -83,7 +77,7 @@ order: 114
 
 ### 搭配 Container
 
-`<mat-scroll-area>` 常作为页面正文的滚动容器，推荐把 `<mat-container>` 直接放在默认 Slot 内：容器提供两侧响应式内边距与最大宽度，正文在滚动区域内左右各保留 16px（`>=600px` 时为 24px）。容器会继承组件根元素上的 `--mat-scroll-area-scrollbar-width`（`thin` 8px、`default` 16px、`hidden` 0），并自动把右侧内边距减去滚动条宽度，正文在滚动条占据右侧空间后仍保持视觉居中；切换 `bar-width` 后补偿自动跟随，无需使用方手动覆盖。
+`<mat-scroll-area>` 常作为页面正文的滚动容器，推荐把 `<mat-container>` 直接放在默认 Slot 内：容器提供两侧响应式内边距与最大宽度，正文在滚动区域内左右各保留 16px（`>=600px` 时为 24px）。容器与滚动区域搭配使用时，会自动协同右侧内边距与滚动条宽度，保持正文视觉居中。
 
 :::: details 查看示例代码
 ::: code-group
@@ -328,7 +322,7 @@ order: 114
 | `reach-end` | `{ distance: number, target: HTMLElement }` | 滚动进入末端阈值区域时触发一次；`distance` 是距末端像素数，`target` 是原生滚动元素 |
 | `scroll` | 原生 `Event` | 滚动元素触发原生 scroll 事件，监听器直接透传 |
 
-初次挂载、ResizeObserver 同步、默认 Slot 内容变化，以及 `orientation` 或 `reachThreshold` 变化只更新内部边缘状态，不派发 `reach-start` 或 `reach-end`。
+仅在滚动到达两端阈值时派发 `reach-start` 或 `reach-end` 事件。
 
 ## Slots
 

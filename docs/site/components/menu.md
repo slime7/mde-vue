@@ -9,7 +9,7 @@ order: 95
 
 ## 组件简介
 
-`<mat-menu>` 的组件导出名是 `MatMenu`，使用原生 Popover API 在 top layer 显示临时操作集合；`<mat-menu-group>` 的组件导出名是 `MatMenuGroup`，以带可选标签的独立表面组织相关操作；`<mat-menu-item>` 的组件导出名是 `MatMenuItem`，渲染原生按钮和 `menuitem` 语义。Menu 支持 standard、vibrant 配色、expressive 间隙分组、多级子菜单、局部 `color`、最大高度滚动、默认透明 scrim、循环键盘焦点、元素锚点换边和右键坐标定位。位于 `MatAppRoot` 内时，菜单的视口夹紧与透明 scrim 都限制在该 AppRoot 的应用矩形内，AppRoot 外的内容保持可交互。
+`<mat-menu>` 的组件导出名是 `MatMenu`，在浮层中显示临时操作集合；`<mat-menu-group>` 的组件导出名是 `MatMenuGroup`，以带可选标签的独立表面组织相关操作；`<mat-menu-item>` 的组件导出名是 `MatMenuItem`，渲染原生按钮和 `menuitem` 语义。Menu 支持 standard、vibrant 配色、expressive 间隙分组、多级子菜单、局部 `color`、最大高度滚动、默认透明 scrim、循环键盘焦点、元素锚点换边和右键坐标定位。位于 `MatAppRoot` 内时，菜单的视口夹紧与透明 scrim 都限制在该 AppRoot 的应用矩形内，AppRoot 外的内容保持可交互。
 
 ## 示例
 
@@ -111,7 +111,7 @@ order: 95
 
 ### `maxLength`
 
-`maxLength` 接受正数、纯数字字符串或合法 CSS 长度。数字按 px 处理；最终最大高度不会超过视口安全范围。内容溢出后在菜单内部纵向滚动，原生滚动条隐藏，并只在仍有内容可滚动的一侧显示 16px 边缘渐隐。滚动区域四周会保留键盘焦点环所需的不可见空间，因此聚焦首项、末项或靠近行轴边缘的项目时，焦点环仍完整可见。
+`maxLength` 接受正数、纯数字字符串或合法 CSS 长度。数字按 px 处理；最终最大高度不会超过视口安全范围。内容溢出后在菜单内部纵向滚动，原生滚动条隐藏，并只在仍有内容可滚动的一侧显示 16px 边缘渐隐。滚动区域四周预留留白，聚焦各边缘项目时焦点环仍完整可见。
 
 :::: details 查看示例代码
 ::: code-group

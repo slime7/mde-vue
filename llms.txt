@@ -54,6 +54,7 @@
 - [Tooltip 文字提示](components/tooltip.md): mat-tooltip 的 Material 3 Plain 与 Rich tooltip、展示元素、固定定位、延迟和无障碍说明。
 - [Simple expansion 简易折叠](components/simple-expansion.md): mat-simple-expansion 的外部 v-model 驱动折叠容器，不带外观与触发器，为开关控制的子设置展开提供折叠过渡。
 - [Navigation bar 底部导航栏](components/navigation-bar.md): mat-navigation-bar 的 Material 3 底部导航栏组件。
+- [Navigation drawer 导航抽屉](components/navigation-drawer.md): Material 3 Expressive 风格的侧边导航抽屉组件与二级菜单分组，支持标准与模态布局。
 - [Divider 分隔线](components/divider.md): mat-divider 的 Material 3 全宽、起始缩进、两侧 inset 与 Card Actions 分隔方式。
 - [Snackbar 消息提示](components/snackbar.md): mat-snackbar 的 Material 3 底部消息提示、文字 action、全局 FIFO 队列和 Promise 函数。
 - [Scroll area 滚动区域](components/scroll-area.md): mat-scroll-area 与 MatScrollArea 为单轴内容提供边缘渐隐、容器配色、圆角、公共滚动条样式和无限滚动事件。

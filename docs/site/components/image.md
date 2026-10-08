@@ -9,7 +9,7 @@ order: 36
 
 ## 组件简介
 
-`<mat-image>` 的组件导出名是 `MatImage`。它以内部原生 `<img>` 提供图片容器，可设置组件圆角（默认 28px）、`cover`/`contain` 填充方式和宽高比，并默认带 1px 轮廓描边；切换宽高比、宽高或圆角时使用 Material 动效令牌平滑过渡。`src` 与其他原生图片属性、事件监听器透传到 `img`，`img-class`、`img-style` 定向到 `img`。
+`<mat-image>` 的组件导出名是 `MatImage`。它提供图片容器，可设置组件圆角（默认 28px）、`cover`/`contain` 填充方式和宽高比，并默认带 1px 轮廓描边；切换宽高比、宽高或圆角时平滑过渡。原生图片属性透传到图片元素，支持通过 `img-class` 与 `img-style` 单独定制图片样式。
 
 ## 示例
 
@@ -181,7 +181,7 @@ order: 36
 | `img-class` | `string \| array \| object` | 未设置 | 合并到内部 `img` 的 class |
 | `img-style` | `string \| array \| object` | 未设置 | 合并到内部 `img` 的 style |
 
-组件上的 `class` 与 `style` 作用于根容器，用于控制尺寸等布局；其余未消费的原生属性和事件监听器透传到内部 `img`。组件没有公开方法。
+组件上的 `class` 与 `style` 作用于根容器，用于控制尺寸等布局；其余未消费的原生属性和事件监听器透传到内部 `img`。
 
 ## 事件
 

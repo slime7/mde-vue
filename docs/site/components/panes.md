@@ -139,8 +139,6 @@ Pane 默认与 `MatPanes` 保持相同的块轴高度，内容超出时在 Pane 
 
 `MatPane` 根元素默认使用 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`。如果应用用 `v-if` 移除或重新显示 Pane，组件会按新的 Slot 顺序重建调整控件并更新宽度信息。
 
-组件没有公开方法。
-
 ## 事件
 
 | 组件与事件 | 载荷 | 触发条件 |

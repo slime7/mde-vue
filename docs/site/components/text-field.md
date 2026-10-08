@@ -9,7 +9,7 @@ order: 90
 
 ## 组件简介
 
-`<mat-text-field>` 的组件导出名是 `MatTextField`，渲染单行原生 `input`；`<mat-textarea>` 的组件导出名是 `MatTextarea`，渲染多行原生 `textarea`，并可根据内容自动增高、限制最大行数或禁止手动调整尺寸。两者共享 outlined、filled 外观、浮动标签、辅助或错误文字、字符计数、前后缀和局部 `color` 配色，但不执行表单校验。有标签的 outlined 外观会在顶部保留浮动标签空间，并以透明缺口裁剪描边，因此可以放在任意主题表面色上。
+`<mat-text-field>` 的组件导出名是 `MatTextField`，渲染单行原生 `input`；`<mat-textarea>` 的组件导出名是 `MatTextarea`，渲染多行原生 `textarea`，并可根据内容自动增高、限制最大行数或禁止手动调整尺寸。两者共享 outlined、filled 外观、浮动标签、辅助或错误文字、字符计数、前后缀和局部 `color` 配色，但不执行表单校验。
 
 ## 示例
 
@@ -417,8 +417,6 @@ order: 90
 | `maxRows` | 正整数 | 未设置 | autoGrow 的最大行数；小于 rows 时按 rows 处理，达到上限后内容在控件内滚动 |
 | `noResize` | `boolean` | `false` | 隐藏浏览器尺寸调整手柄，禁止使用者拖动改变 textarea 大小 |
 
-组件没有公开方法。
-
 ## 事件
 
 | 事件 | 载荷 | 触发条件 |
@@ -445,7 +443,7 @@ order: 90
 - 调用方已有的 `aria-describedby` 会与组件说明区域合并。
 - filled 和 outlined 在同一区域内应保持一致，不应在同一个表单内交替使用。
 - textarea 默认允许纵向调整尺寸，初始内容区高度严格按 `rows` 与正文行高计算；未显式设置 `rows` 时最小可调整到一行，显式设置后不能低于该行数；`noResize` 可以关闭手动调整。
-- `autoGrow` 以 `rows` 为下限重新测量内容高度；`maxRows` 未设置时不限制增长，设置后在达到上限时改为内部滚动。自动增高不会隐式关闭手动调整；手动缩小到内容无法完整显示时出现内部滚动条，下一次内容或宽度变化会重新按内容计算高度。
+- `autoGrow` 根据输入内容自适应高度；设置 `maxRows` 可限制最大行数并在超出时允许内部滚动。
 - textarea 在顶部内边距区域渐隐滚动内容，同时保持右侧滚动条和调整手柄完整可见；带标签时渐隐区域覆盖标签留白，避免文字与标签重叠。
 - Text field 的 multi-line 形态来自 Material 3；`autoGrow`、`maxRows` 和 `noResize` 是 mde-vue 扩展 API。
 - 减少动态效果偏好下关闭标签、描边与活动指示器的非必要过渡。

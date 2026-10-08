@@ -13,8 +13,6 @@ order: 60
 
 ## 示例
 
-示例代码默认收起，预览直接可见。
-
 ### `block`
 
 :::: details 查看示例代码
@@ -226,7 +224,7 @@ order: 60
 
 connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色和视觉层级，不使用 `text` 或 `standard` Button。违反这些组合约束时开发环境会警告。
 
-### 事件
+## 事件
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
@@ -234,7 +232,7 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 
 `value` 是本次项目值，`selected` 是该项目的候选布尔状态，`nextSelected` 是调用方应回写的单值、数组或 `null`，`originalEvent` 是原生 `MouseEvent`。组件不会修改 `selected`。
 
-### Slots
+## Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
@@ -243,8 +241,6 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 ### 状态与键盘
 
 组根节点使用 `role="group"`，没有 `tabindex`。Tab 依次进入每个子按钮，Space 和 Enter 使用原生按钮激活；不实现方向键或 roving tabindex。standard 与 connected 的选择项都使用 `aria-pressed`，不模拟 radio/radiogroup。`required` 阻止取消最后一个选中项。
-
-组件没有公开方法。
 
 ## 参考来源
 

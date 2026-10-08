@@ -1,14 +1,17 @@
 ---
 title: Navigation drawer 导航抽屉
 description: Material 3 Expressive 风格的侧边导航抽屉组件与二级菜单分组，支持标准与模态布局。
-outline: [2, 3]
+llms: true
+order: 107
 ---
 
 # Navigation drawer 导航抽屉
 
+## 组件简介
+
 `<mat-navigation-drawer>` 的组件导出名是 `MatNavigationDrawer`，配套的二级菜单分组组件为 `<mat-navigation-group>`（组件导出名 `MatNavigationGroup`）。
 
-Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail` 的 `hide-on-collapse` 沉浸隐藏模式，固定采用纵向全宽布局（`full-width`、`collapsible`、`hide-on-collapse`）。未展开时整体隐藏（宽度置为 0），展开时呈现标准抽屉（向最近的 `MatLayout` 或 `MatAppRoot` 登记并占据布局空间）或模态抽屉（覆盖页面并带有遮罩）。模态抽屉的宽度不会超过当前视口并保留 8px 边缘间距。默认 Slot 支持混排菜单切换按钮、FAB、导航项以及结合 `<mat-spacer />` 的底部操作。
+Navigation drawer 为应用提供主导航侧边抽屉，支持标准抽屉（展开时占据布局空间）和模态抽屉（覆盖页面并带有遮罩）。默认 Slot 支持混排导航项、二级菜单分组、操作按钮以及通过 `<mat-spacer />` 底部占位。
 
 ## 示例
 
@@ -127,8 +130,6 @@ Navigation drawer 为应用提供主导航目的地，复用 `MatNavigationRail`
 | `model-value` | `boolean` | `undefined` | 受控展开状态别名，支持 `v-model` |
 | `title` | `string` | `undefined` | 分组标题文本 |
 | `indent` | `number \| string` | `16` | 二级子项的前置缩进量（默认 16px） |
-
-组件没有公开方法。
 
 ## 事件
 

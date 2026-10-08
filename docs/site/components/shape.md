@@ -151,9 +151,7 @@ order: 39
 
 `name` 合法值为：
 
-`circle`、`square`、`slanted`、`arch`、`semicircle`、`oval`、`pill`、`triangle`、`arrow`、`fan`、`diamond`、`clamshell`、`pentagon`、`gem`、`very-sunny`、`sunny`、`4-sided-cookie`、`6-sided-cookie`、`7-sided-cookie`、`9-sided-cookie`、`12-sided-cookie`、`4-leaf-clover`、`8-leaf-clover`、`burst`、`soft-burst`、`boom`、`soft-boom`、`flower`、`puffy`、`puffy-diamond`、`ghost-ish`、`pixel-circle`、`pixel-triangle`、`bun`、`heart`。
-
-组件没有公开方法。未消费的 class、style、ARIA 属性和原生事件监听器传递给实际根元素。
+`circle`、`square`、`slanted`、`arch`、`semicircle`、`oval`、`pill`、`triangle`、`arrow`、`fan`、`diamond`、`clamshell`、`pentagon`、`gem`、`very-sunny`、`sunny`、`4-sided-cookie`、`6-sided-cookie`、`7-sided-cookie`、`9-sided-cookie`、`12-sided-cookie`、`4-leaf-clover`、`8-leaf-clover`、`burst`、`soft-burst`、`boom`、`soft-boom`、`flower`、`puffy`、`puffy-diamond`、`ghost-ish`、`pixel-circle`、`pixel-triangle`、`bun`、`heart`。未消费的 class、style、ARIA 属性和原生事件监听器传递给实际根元素。
 
 ## 事件
 

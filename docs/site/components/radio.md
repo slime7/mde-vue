@@ -15,8 +15,6 @@ Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互
 
 ## 示例
 
-以下代码块由 VitePress 直接读取实际渲染的 Vue 示例文件，因此代码与紧随其后的预览始终来自同一份源码。
-
 ### 独立绑定
 
 :::: details 查看示例代码
@@ -127,9 +125,9 @@ Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互
   </DocsPreview>
 </ClientOnly>
 
-## MatRadio API
+## API
 
-### 属性
+### MatRadio 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -140,26 +138,7 @@ Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互
 
 进入 `MatRadioGroup` 后，Group 的模型、禁用和颜色上下文生效；子项显式 `disabled` 与 Group 禁用叠加，显式 `color` 优先。此时不要再给子项传入 `v-model`。
 
-### 事件
-
-| 事件 | 载荷 | 触发条件 |
-| --- | --- | --- |
-| `update:modelValue` | 当前 `value` | 独立 Radio 被选中；Group 内由 Group 发出更新 |
-| `change` | 原生 `Event` 或触发方向键的 `KeyboardEvent` | 当前 Radio 请求成为选中项 |
-
-### Slots
-
-| 名称 | 内容约束 |
-| --- | --- |
-| 默认 | 描述当前候选值的相邻标签；省略时必须提供 `aria-label` |
-
-### 状态
-
-Radio 支持未选中、选中、hover、focus-visible、pressed 和 disabled。focus-visible 使用公共焦点环宽度与偏移，不叠加状态层填充；hover 和 pressed 继续使用圆形状态层。已经选中的 Radio 再次操作不会取消选择。组件没有公开方法。
-
-## MatRadioGroup API
-
-### 属性
+### MatRadioGroup 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -170,27 +149,42 @@ Radio 支持未选中、选中、hover、focus-visible、pressed 和 disabled。
 
 Group 只管理 Vue 状态，不公开 `name`、`required`、`form`、表单提交或原生校验能力。
 
-### 事件
+## 事件
+
+### MatRadio 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | 当前 `value` | 独立 Radio 被选中；Group 内由 Group 发出更新 |
+| `change` | 原生 `Event` 或触发方向键的 `KeyboardEvent` | 当前 Radio 请求成为选中项 |
+
+### MatRadioGroup 事件
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
 | `update:modelValue` | 下一选中值 | 指针、Space 或方向键选择新的 Radio |
 | `change` | 原生 `Event` 或 `KeyboardEvent` | 选中值实际发生变化 |
 
-### Slots
+## Slots
+
+### MatRadio Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 描述当前候选值的相邻标签；省略时必须提供 `aria-label` |
+
+### MatRadioGroup Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
 | 默认 | 放置 `MatRadio`；可以经过普通布局组件，但不要混入另一套单选组 |
 
-### 状态与键盘
+## 状态与键盘
 
 - Tab 只进入当前选中项；没有选中值时进入首个可用项。
 - `ArrowRight`、`ArrowDown` 选择下一项，`ArrowLeft`、`ArrowUp` 选择上一项；到边界后循环并跳过禁用项。
 - Space 使用原生 Radio 行为选择当前项。
 - Group 禁用与子项禁用叠加；子项显式 `color` 优先于 Group。
-
-Group 没有公开方法。
 
 ## 参考来源
 

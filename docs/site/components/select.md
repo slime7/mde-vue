@@ -11,7 +11,7 @@ order: 88
 
 `<mat-select>` 的组件导出名是 `MatSelect`。它使用 Text field 的 outlined 或 filled 字段外观，并通过 Menu 展示由 `items` 生成的选项。单选显示一个标题，多选按 `items` 顺序用逗号连接标题；启用 `chips` 后，已选内容改用可移除的 input Chip 展示。
 
-组件内部保留完全隐藏的原生 `select`，同步 `name`、`form`、`required`、`disabled`、`multiple`、options 和选择状态。可见字段承担 combobox 焦点、键盘与菜单交互。Select 是 mde-vue 根据 Text field、Menu、Chip 与 Checkbox 总结的组合组件，不是 Material 官方定义的独立 Web Select 规格。
+组件提供选择框输入外观与下拉选项菜单，支持单选、多选与 Chip 模式展示。
 
 ## 示例
 
@@ -235,7 +235,7 @@ order: 88
 
 对象项的 `disabled: true` 禁止选择，可选的 `tooltip` 字符串字段会自动挂载为菜单项提示。title 必须是字符串，value 只支持 `string`、`number`、`boolean`；非法项、嵌套分组、按 `Object.is()` 重复或 `String(value)` 冲突的后续项会在开发环境警告并跳过。
 
-`class` 和 `style` 应用于 Select 根；`id` 与 `aria-label` 应用于可见 combobox，`name` 与 `form` 应用于隐藏 select。number 与 boolean 在 Vue 模型中保留原类型，HTML 表单值按 `String(value)` 提交。组件没有公开方法。
+`class` 和 `style` 应用于 Select 根；`id` 与 `aria-label` 应用于可见 combobox，`name` 与 `form` 应用于隐藏 select。number 与 boolean 在 Vue 模型中保留原类型，HTML 表单值按 `String(value)` 提交。
 
 ## 事件
 

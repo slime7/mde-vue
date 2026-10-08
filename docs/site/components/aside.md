@@ -9,11 +9,9 @@ order: 117
 
 ## 组件简介
 
-`<mat-aside>` 的组件导出名是 `MatAside`。它是专用于停靠在 `mat-layout` 或 `mat-app-root` 边缘的布局基础设施组件。通过统一管理四个停靠方向（`top`、`bottom`、`left`、`right`）的厚度尺寸与安全区留白，协调边缘占据与正交方向上的互斥避让，未来可作为各边缘组件（如顶部应用栏、导航侧栏、底部栏等）的底层根 DOM。
+`<mat-aside>` 的组件导出名是 `MatAside`。它是专用于停靠在 `mat-layout` 或 `mat-app-root` 边缘的布局基础设施组件。通过统一管理四个停靠方向（`top`、`bottom`、`left`、`right`）的厚度尺寸与安全区留白，协调边缘占据与相邻方向的尺寸避让。
 
-同一个组件树同时存在 `MatLayout` 与 `MatAppRoot` 时，Aside 只向最近的一个根登记一次，不会同时改变两层正文 padding。`docked` 与 `fixed` 都会参与最近根的边缘计算；`flow` 与 `sticky` 不登记边缘。`fixed` 组件显式 Teleport 后仍沿用原有挂载行为，但不会因为 Teleport 目标产生第二份登记。
-
-组件的核心排布机制遵循“先出现先占满”原则：在模板 DOM 中居前的边缘组件优先占满延展方向（例如居前的顶部栏占满横向整宽），而居后的边缘组件根据前序组件的占用尺寸自动偏移避让（例如居后的侧边栏高度自动避让顶部栏）。
+组件树中同时存在嵌套布局根时，Aside 仅向最近的一个布局根登记边缘避让。
 
 ## 示例
 
@@ -190,9 +188,7 @@ order: 117
 | `zIndex` | `number \| string \| undefined` | `undefined` | 显式指定 CSS 层级；省略时根据 `location` 提供预设层级。 |
 | `attach` | `string \| HTMLElement` | `undefined` | `mode="fixed"` 时的挂载目标。未指定时保留在声明位置，显式传入后才 Teleport 到目标。 |
 | `transition` | `boolean` | `true` | 是否启用默认滑入滑出过渡动效。设为 `false` 时立即切换显隐。 |
-| `closeOnBack` | `boolean` | `true` | `modal=true` 时是否通过点击背景遮罩或按 Escape 请求关闭，禁用后两者都不请求关闭。 |
-
-组件没有公开方法。通过模板 ref 暴露 `hostElement`（根 DOM 元素）、`activeInsets`（当前生效的正交避让数据）和 `phase`（动效阶段）。未被消费的属性、`class`、`style` 作用于外层根元素。
+| `closeOnBack` | `boolean` | `true` | `modal=true` 时是否通过点击背景遮罩或按 Escape 请求关闭，禁用后两者都不请求关闭。 |通过模板 ref 暴露 `hostElement`（根 DOM 元素）、`activeInsets`（当前生效的正交避让数据）和 `phase`（动效阶段）。未被消费的属性、`class`、`style` 作用于外层根元素。
 
 ## 事件
 

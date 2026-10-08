@@ -9,11 +9,11 @@ order: 69
 
 ## 组件简介
 
-`<mat-app-root>` 的组件导出名是 `MatAppRoot`。它在 Vue 应用内承担通常由 `body` 承担的页面布局职责：建立隔离的覆盖层坐标系，统一处理安全区、固定边缘占位、正文避让、浮动组件排列和基于容器宽度的断点。边缘登记遵循与 `<mat-layout>` 相同的六向顺序计算规则，AppRoot 自己保留应用覆盖层和滚动能力。应用通常只放置一个铺满视口的 AppRoot；文档预览等容器化场景可以放置多个同级实例，但 AppRoot 不允许嵌套。
+`<mat-app-root>` 的组件导出名是 `MatAppRoot`。它在 Vue 应用内承担通常由 `body` 承担的页面布局职责：建立隔离的覆盖层坐标系，统一处理安全区、固定边缘占位、正文避让、浮动组件排列和基于容器宽度的断点。应用通常只放置一个铺满视口的 AppRoot；文档预览等容器化场景可以放置多个同级实例，但 AppRoot 不允许嵌套。
 
-边缘组件只登记到组件树中最近的一个 `MatLayout` 或 `MatAppRoot`。因此当 AppRoot 内还有 Layout，或 Layout 内还有 AppRoot 时，外层根不会重复计算同一个边缘。`docked` 与 `fixed` 都会让最近根的正文获得对应 padding；`modal` 组件不登记边缘，只有显式启用的 modal placeholder 才会在声明位置占位。
+边缘组件会自动接入最近的 `MatLayout` 或 `MatAppRoot`，正文区域自动获得相应的避让内边距。
 
-默认模式沿用 Vuetify `VApp`/`VMain` 的文档滚动思路：AppRoot 至少铺满动态视口，内容增长时由 `document`/`body` 滚动，组件不会修改 `html` 或 `body` 的 `overflow`。设置 `scrollable` 后，AppRoot 保持确定高度，正文层改为内部滚动容器；`fillViewport=false` 与 `scrollable=true` 组合使用时，必须通过自身样式或父级布局提供确定的块轴高度。
+默认模式下 AppRoot 铺满视口并随内容自然滚动；开启 `scrollable` 后，正文层改为内部滚动容器。
 
 ## 示例
 
@@ -206,7 +206,7 @@ const { layout, registerEdge } = useMatApp();
 - `MatDialog` 与 modal Bottom sheet、Side sheet：位于 AppRoot 内且省略 `attach` 时，进入 AppRoot 内部的模态层，表面与帷幕限制在应用矩形内，正文层设为 `inert` 并锁定滚动；AppRoot 外的内容（如自绘任务栏）保持可见且可点击。`attach` 显式指向 AppRoot 根元素时同样按应用范围展示；指向其他元素时保持铺满视口的原有行为。document 模式（`fillViewport=true` 且 `scrollable=false`）下应用范围等于视口，任务栏等 AppRoot 外内容应使用 `scrollable` 或 `fillViewport=false` 布局。
 - `MatMenu`：位于 AppRoot 内时，菜单的视口夹紧与透明 scrim 都限制在应用矩形内，点击应用外只关闭菜单且不拦截该次事件。
 
-模态层位于浮动组与 Snackbar 层之上，多个模态实例仍由共享堆叠管理器只显示顶层帷幕；Menu 继续使用浏览器 Popover top layer。
+模态层位于浮动组与 Snackbar 层之上；多个模态实例会自动协同遮罩。
 
 ## 参考来源
 

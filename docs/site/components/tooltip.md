@@ -9,7 +9,7 @@ order: 105
 
 ## 组件简介
 
-`<mat-tooltip>` 的组件导出名是 `MatTooltip`。它实现 Material 3 Plain 与 Rich tooltip：Plain tooltip 用于补充展示元素的简短说明；Rich tooltip 用于较长的解释，并可包含简短标题、链接和最多两个操作按钮。组件以覆盖定位 Teleport 到合适容器，默认显示在展示元素上方；省略 `attach` 时，依次选择展示元素所在的已打开 `dialog`/Popover、目标所属 `MatAppRoot`、`body`。AppRoot 内会避让布局边缘，其他场景会把 Toolbar 作为避让区域，必要时自动换边。组件不包含箭头、触屏长按或 persistent rich tooltip。
+`<mat-tooltip>` 的组件导出名是 `MatTooltip`。它实现 Material 3 的 Plain（纯文本简短提示）与 Rich（富文本，可含标题与操作按钮）两种提示气泡。组件自动根据位置避让边缘并在空间不足时自动换边。
 
 ## 示例
 

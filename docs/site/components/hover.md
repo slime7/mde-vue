@@ -101,15 +101,13 @@ order: 119
 | `closeDelay` | `number \| string` | `0` | 离开目标后等待的毫秒数；数字或纯数字字符串，非有限或负值触发 prop 校验警告并按 `0` 处理。 |
 | `target` | `HTMLElement \| string \| Ref<HTMLElement \| null>` | — | 指定时由组件直接监听目标元素或选择器；适合目标元素无法绑定默认 Slot 的场景。 |
 
-组件没有公开方法。
-
-### 事件
+## 事件
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
 | `update:modelValue` | `boolean` | 非 disabled 状态下，进入或离开延迟完成，或 disabled 重新启用时触发。 |
 
-### Slots
+## Slots
 
 | Slot | 参数 | 内容约束 |
 | --- | --- | --- |

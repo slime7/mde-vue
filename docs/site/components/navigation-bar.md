@@ -11,7 +11,7 @@ order: 106
 
 `<mat-navigation-bar>` 的组件导出名是 `MatNavigationBar`，配套子项组件 `<mat-navigation-bar-item>`（`MatNavigationBarItem`）或通用导航子项 `<mat-navigation-item>`（`MatNavigationItem`）。该组件遵循 Material 3 Navigation Bar 设计规范，专用于在移动端或紧凑型应用窗口底部呈现 3–5 个核心顶级导航目的地。
 
-组件底层根元素基于 `MatAside` 呈现，默认停靠在布局容器的 `bottom` 边缘，统管底部定位、安全区预留与切入退场动效。开启 `app` 属性后，若位于 `MatAppRoot` 或 `MatLayout` 内部且未显式指定 `attach`，会向最近的一个根登记底部边缘并自适应底部安全区，正文内容自动获得相应内边距避让；否则支持固定至视口并挂载至指定 `attach` 容器。
+组件默认停靠在布局容器的底部边缘。开启 `app` 属性后，可自动接入 `MatAppRoot` 或 `MatLayout`，正文内容自动获得避让内边距。
 
 ## 示例
 

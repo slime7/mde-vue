@@ -11,7 +11,7 @@ order: 37
 
 `<mat-badge>` 的组件导出名是 `MatBadge`。它用于显示与目标有关的状态、通知或数量。默认模式通过包装容器把 Badge 覆盖到默认 Slot 的边缘；`location="inline"` 时只显示 Badge 自身，并让它作为普通行内元素参与自然布局。
 
-覆盖模式会增加一个 `inline-flex` 包装层，因此直接子选择器和 flex/grid 子项关系会相应改变。Badge 指示器不接收指针事件，不会阻断 Slot 内控件的点击、hover、焦点或键盘操作。
+Badge 指示器不接收指针事件，不会阻断 Slot 内控件的点击、hover 或焦点操作。
 
 ## 示例
 
@@ -153,8 +153,6 @@ order: 37
 | `offset` | `{ inline?: number \| string, block?: number \| string }` | `{ inline: 0, block: 0 }` | 覆盖模式的逻辑轴微调；数字按 px，字符串须为合法 CSS 长度。Inline 模式忽略。 |
 | `color` | `string` | `error` | Material 语义色、系统颜色角色或六位十六进制种子色。 |
 | `border` | `boolean` | `false` | 在指示器外围显示约 2px 的主题背景色边框，从视觉上截断被覆盖的内容；不改变指示器的位置和尺寸。 |
-
-组件没有公开方法。
 
 ## 事件
 

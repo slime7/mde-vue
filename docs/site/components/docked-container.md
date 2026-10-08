@@ -9,7 +9,7 @@ order: 97
 
 ## 组件简介
 
-`<mat-docked-container>` 的组件导出名是 `MatDockedContainer`。它结合了 Menu 的锚点弹出定位能力与 Dialog 的结构化内容布局，使用原生 Popover API 在 top layer 显示依附于锚点或视口坐标的浮动容器表面。组件支持 standard 与 vibrant 配色变体、透明全屏遮罩、内置尺寸预设（small、medium、large）与自定义宽度，并提供 `headline`、`actions` 和 `activator` 插槽。
+`<mat-docked-container>` 的组件导出名是 `MatDockedContainer`。它结合了 Menu 的锚点弹出定位能力与 Dialog 的内容布局，显示依附于锚点或视口坐标的浮动容器表面。组件支持 standard 与 vibrant 配色变体、透明全屏遮罩、内置尺寸预设（small、medium、large）与自定义宽度，并提供 `headline`、`actions` 和 `activator` 插槽。
 
 ## 示例
 

@@ -922,7 +922,7 @@ const sourceIcon = `data:image/svg+xml,${encodeURIComponent(`
 | `as` | `string` | `'i'` | 非空 HTML 标签名，用作实际根元素 |
 | `icon-class` | `string` | 继承全局值 | 空格分隔的图标 class；默认全局值为 `material-symbols-outlined`，空字符串关闭全局值 |
 
-未被消费的原生属性传递给实际根元素。组件没有公开方法。Slot SVG 只有在自身使用 `currentColor` 时才继承组件颜色；`src` 资源保留自己的内部颜色。
+未被消费的原生属性传递给实际根元素。Slot SVG 只有在自身使用 `currentColor` 时才继承组件颜色；`src` 资源保留自己的内部颜色。
 
 ## 事件
 
@@ -1099,7 +1099,7 @@ import IconWeightExample from '../examples/icon/IconWeightExample.vue';
 
 ## 组件简介
 
-`<mat-image>` 的组件导出名是 `MatImage`。它以内部原生 `<img>` 提供图片容器，可设置组件圆角（默认 28px）、`cover`/`contain` 填充方式和宽高比，并默认带 1px 轮廓描边；切换宽高比、宽高或圆角时使用 Material 动效令牌平滑过渡。`src` 与其他原生图片属性、事件监听器透传到 `img`，`img-class`、`img-style` 定向到 `img`。
+`<mat-image>` 的组件导出名是 `MatImage`。它提供图片容器，可设置组件圆角（默认 28px）、`cover`/`contain` 填充方式和宽高比，并默认带 1px 轮廓描边；切换宽高比、宽高或圆角时平滑过渡。原生图片属性透传到图片元素，支持通过 `img-class` 与 `img-style` 单独定制图片样式。
 
 ## 示例
 
@@ -1575,7 +1575,7 @@ const source = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
 | `img-class` | `string \| array \| object` | 未设置 | 合并到内部 `img` 的 class |
 | `img-style` | `string \| array \| object` | 未设置 | 合并到内部 `img` 的 style |
 
-组件上的 `class` 与 `style` 作用于根容器，用于控制尺寸等布局；其余未消费的原生属性和事件监听器透传到内部 `img`。组件没有公开方法。
+组件上的 `class` 与 `style` 作用于根容器，用于控制尺寸等布局；其余未消费的原生属性和事件监听器透传到内部 `img`。
 
 ## 事件
 
@@ -1813,7 +1813,7 @@ function toggleFull() {
 | `diff` | `boolean` | `true` | 是否仅对发生变化的位置执行动画；关闭后每次更新全量重新入场 |
 | `appear` | `boolean` | `false` | 首次挂载时是否执行入场动画 |
 
-未被组件消费的原生属性会传递给 `as` 指定的根元素。组件没有公开方法。
+未被组件消费的原生属性会传递给 `as` 指定的根元素。
 
 ## 事件
 
@@ -1839,7 +1839,7 @@ import DynamicTextInheritExample from '../examples/dynamic-text/DynamicTextInher
 
 `<mat-badge>` 的组件导出名是 `MatBadge`。它用于显示与目标有关的状态、通知或数量。默认模式通过包装容器把 Badge 覆盖到默认 Slot 的边缘；`location="inline"` 时只显示 Badge 自身，并让它作为普通行内元素参与自然布局。
 
-覆盖模式会增加一个 `inline-flex` 包装层，因此直接子选择器和 flex/grid 子项关系会相应改变。Badge 指示器不接收指针事件，不会阻断 Slot 内控件的点击、hover、焦点或键盘操作。
+Badge 指示器不接收指针事件，不会阻断 Slot 内控件的点击、hover 或焦点操作。
 
 ## 示例
 
@@ -2121,8 +2121,6 @@ const locations = [
 | `color` | `string` | `error` | Material 语义色、系统颜色角色或六位十六进制种子色。 |
 | `border` | `boolean` | `false` | 在指示器外围显示约 2px 的主题背景色边框，从视觉上截断被覆盖的内容；不改变指示器的位置和尺寸。 |
 
-组件没有公开方法。
-
 ## 事件
 
 组件没有自定义事件。覆盖层不接收指针事件，默认 Slot 内元素保持自己的原生或组件事件。
@@ -2358,7 +2356,7 @@ emphasized 样式用于局部传达层级或重要性，例如选中或激活的
 | `emphasized` | `boolean` | `false` | 使用同类型同尺寸的 emphasized 样式 |
 | `as` | `string` | `'span'` | 合法 HTML 标签名，用作实际根元素 |
 
-未被组件消费的原生属性会传递给 `as` 指定的根元素。组件没有公开方法。
+未被组件消费的原生属性会传递给 `as` 指定的根元素。
 
 ## 事件
 
@@ -2619,8 +2617,6 @@ const slotSource = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
 | `icon` | `string` | 未设置 | Material Symbols 字形文本；非空字符串有效，空字符串等同未设置 |
 | `color` | `string` | `'primary'` | Material 语义色、系统颜色角色或六位十六进制种子色 |
 | `size` | `number \| string` | `40` | 头像边长；数字与纯数字字符串按 px，其他字符串须为合法正 CSS 长度，非法值回退 `40px` |
-
-组件没有公开方法。
 
 ## 事件
 
@@ -3036,9 +3032,7 @@ function selectNextShape() {
 
 `name` 合法值为：
 
-`circle`、`square`、`slanted`、`arch`、`semicircle`、`oval`、`pill`、`triangle`、`arrow`、`fan`、`diamond`、`clamshell`、`pentagon`、`gem`、`very-sunny`、`sunny`、`4-sided-cookie`、`6-sided-cookie`、`7-sided-cookie`、`9-sided-cookie`、`12-sided-cookie`、`4-leaf-clover`、`8-leaf-clover`、`burst`、`soft-burst`、`boom`、`soft-boom`、`flower`、`puffy`、`puffy-diamond`、`ghost-ish`、`pixel-circle`、`pixel-triangle`、`bun`、`heart`。
-
-组件没有公开方法。未消费的 class、style、ARIA 属性和原生事件监听器传递给实际根元素。
+`circle`、`square`、`slanted`、`arch`、`semicircle`、`oval`、`pill`、`triangle`、`arrow`、`fan`、`diamond`、`clamshell`、`pentagon`、`gem`、`very-sunny`、`sunny`、`4-sided-cookie`、`6-sided-cookie`、`7-sided-cookie`、`9-sided-cookie`、`12-sided-cookie`、`4-leaf-clover`、`8-leaf-clover`、`burst`、`soft-burst`、`boom`、`soft-boom`、`flower`、`puffy`、`puffy-diamond`、`ghost-ish`、`pixel-circle`、`pixel-triangle`、`bun`、`heart`。未消费的 class、style、ARIA 属性和原生事件监听器传递给实际根元素。
 
 ## 事件
 
@@ -3508,9 +3502,7 @@ const selected = ref(new Date());
 | `v-model` | `Date \| null` | `null` | 选中的日期；值为本地时区当天 0 点的 `Date`，时间分量会被忽略，非法值发出 Vue 校验警告 |
 | `color` | `string \| undefined` | `undefined` | Material 语义色、系统颜色角色或六位十六进制种子色，强调选中的日期与年份；省略时使用 primary |
 
-面板宽度为 328px，超过容器时按容器收缩。日期网格支持键盘操作：选中日期（无选中时为今天）是唯一 Tab 停靠点，方向键按日或周移动焦点，Enter 与空格确认。
-
-组件没有公开方法。未消费的 class、style、ARIA 属性和原生事件监听器传递给根元素。
+面板宽度为 328px，超过容器时按容器收缩。日期网格支持键盘操作：选中日期（无选中时为今天）是唯一 Tab 停靠点，方向键按日或周移动焦点，Enter 与空格确认。未消费的 class、style、ARIA 属性和原生事件监听器传递给根元素。
 
 ## 事件
 
@@ -3786,9 +3778,7 @@ const selected = ref('09:15');
 | `mode` | `'dial' \| 'input'` | `'dial'` | 交互模式，支持 `v-model:mode` |
 | `show-mode-toggle` | `boolean` | `false` | 是否在面板中显示表盘与输入模式的切换图标按钮 |
 
-面板宽度为 328px，超过容器时按容器收缩。表盘是一个 `role="slider"` 的键盘表面：方向键按 1 调整，Home 与 End 跳到边界，小时视图按 Enter 或空格进入分钟视图。选择小时刻度后自动进入分钟视图；分钟视图在 5 分钟刻度之外支持按角度连续拖拽。
-
-组件没有公开方法。未消费的 class、style、ARIA 属性和原生事件监听器传递给根元素。
+面板宽度为 328px，超过容器时按容器收缩。表盘是一个 `role="slider"` 的键盘表面：方向键按 1 调整，Home 与 End 跳到边界，小时视图按 Enter 或空格进入分钟视图。选择小时刻度后自动进入分钟视图；分钟视图在 5 分钟刻度之外支持按角度连续拖拽。未消费的 class、style、ARIA 属性和原生事件监听器传递给根元素。
 
 ## 事件
 
@@ -3824,8 +3814,6 @@ import TimePickerModeExample from '../examples/time-picker/TimePickerModeExample
 `<mat-btn>` 的组件导出名是 `MatBtn`。它统一渲染普通按钮和图标按钮：省略 `icon` 时由默认 Slot 提供内容；`icon` 为 `true` 时把默认 Slot 文本解析为 Material Symbols，传入字符串时使用 prop 文本作为图标。没有使用 `icon` 时，也可以直接在默认 Slot 放置 `MatIcon`，此时仍按普通按钮处理。两种模式都渲染原生 `<button>`。
 
 ## 示例
-
-代码默认收起，预览直接可见。
 
 ### 交互参数配置
 
@@ -4962,11 +4950,11 @@ function updateSelection({ nextSelected }) {
 
 未被组件消费的 `name`、`form`、`aria-*`、`data-*` 等属性传给内部 `<button>`。图标模式下显式 `title` 优先于 `label` 作为 Tooltip 文本，组件不会为图标按钮生成原生 HTML `title` 提示。`color` 支持四个语义色、对应的 `-container` 角色、`surface` 与 `surface-container-*` 等表面角色，以及严格六位十六进制种子色；`text` 形态额外支持 `on-*` 内容色令牌（如 `on-primary-container`），非 `text` 形态使用 `on-*` 会警告并按默认配色处理。
 
-### 事件
+## 事件
 
 组件不定义状态更新事件。`click` 使用原生 `MouseEvent`，`focus`、`blur` 和其他原生按钮事件按 Vue 属性透传规则生效。禁用时浏览器不会触发 click。
 
-### Slots
+## Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
@@ -4976,7 +4964,7 @@ function updateSelection({ nextSelected }) {
 | `selected` | 普通模式 toggle 选中时替换默认标签；图标模式忽略 |
 | `loading` | 加载中替换内建指示器的内容，可放置图标、进度组件等任意图形；未提供时使用内建旋转指示器 |
 
-### 状态
+## 状态
 
 | 状态 | 用户可观察行为 |
 | --- | --- |
@@ -4988,8 +4976,6 @@ function updateSelection({ nextSelected }) {
 | loading | 渲染内建形状变形指示器（复用 Loading 组件）或 `loading` Slot 内容并替换前缀图标（图标模式替换图标），保留变体正常配色，原生禁用语义阻止点击，`aria-busy="true"`，指示器持续变形旋转；减少动态效果偏好下指示器静止 |
 
 `extra-small` 与 `small` 的视觉高度分别是 32px 和 40px，但交互目标至少为 48px。减少动态效果偏好下保留最终状态并取消过渡。
-
-组件没有公开方法，也不提供链接模式、涟漪、密度参数或完整表单方法代理。
 
 ## 参考来源
 
@@ -5130,7 +5116,7 @@ import './styles/app.css';
 
 ## 组件简介
 
-`<mat-fab>` 的组件导出名是 `MatFab`。它使用同一个组件表达普通 FAB 和 Extended FAB：没有默认 Slot 文本时渲染纯图标 FAB；有默认 Slot 文本时渲染带标签的 Extended FAB。Extended FAB 可以通过 `expanded` 在保留同一组件实例的情况下收缩为图标态。默认在声明位置参与普通布局；设置 `app` 后自动进入最近 `MatAppRoot` 的普通浮动组。组件不实现滚动驱动的自动收缩、FAB menu 或页面级动效。
+`<mat-fab>` 的组件导出名是 `MatFab`。它使用同一个组件表达普通 FAB 和 Extended FAB：没有默认 Slot 文本时渲染纯图标 FAB；有默认 Slot 文本时渲染带标签的 Extended FAB。Extended FAB 可以通过 `expanded` 在保留同一组件实例的情况下收缩为图标态。默认在声明位置参与普通布局；设置 `app` 后自动进入最近 `MatAppRoot` 的普通浮动组。
 
 纯图标模式需要传入非空 `icon` 和 `label`。`label` 同时作为按钮的可访问名称和默认 Tooltip 文本；Extended FAB 可以省略图标，默认 Slot 标签仍然有效。标签保持单行，超出可用宽度时隐藏溢出内容。
 
@@ -5586,11 +5572,11 @@ const colors = [
 
 没有默认 Slot 时，`aria-label` 取 `label`；有默认 Slot 时，默认 Slot 提供可见名称并保留调用方传入的 `aria-label`。未消费的 `name`、`form`、`aria-*`、`data-*` 等原生属性和事件继续传给内部 `<button>`。
 
-### 事件
+## 事件
 
 组件发出原生 `click`，载荷为 `MouseEvent`。`focus`、`blur` 和其他未消费的原生按钮事件按 Vue 属性透传规则生效；禁用时浏览器不会触发 click。
 
-### Slots
+## Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
@@ -5598,7 +5584,7 @@ const colors = [
 
 组件没有其他 Slots，也没有公共方法。
 
-### 状态
+## 状态
 
 | 状态 | 用户可观察行为 |
 | --- | --- |
@@ -5607,7 +5593,7 @@ const colors = [
 | pressed | 使用基础按钮层的按下状态层和状态处理 |
 | disabled | 使用原生禁用语义、禁用内容对比并移除阴影 |
 
-组件不自行计算固定坐标；`app` 模式由 AppRoot 负责布局、边缘避让和安全区。组件不实现滚动收缩、FAB menu 或页面级动效。减少动态效果偏好下，基础按钮层、图标和标签的过渡会被取消。
+组件不自行计算固定坐标；`app` 模式由 AppRoot 负责布局、边缘避让和安全区。减少动态效果偏好下，基础按钮层、图标和标签的过渡会被取消。
 
 ## 参考来源
 
@@ -6009,7 +5995,7 @@ const isFloating = ref(false);
 
 组件的 `app` 属性固定内置为 `true`，在 `MatAppRoot` 下自动挂载至右下角浮动层，无需手动传入。菜单固定向上展开，关闭按钮固定为 56px 圆形并定位于右上角。
 
-### 事件
+## 事件
 
 | 事件名 | 载荷 | 触发条件 |
 | --- | --- | --- |
@@ -6017,7 +6003,7 @@ const isFloating = ref(false);
 | `open` | 无 | 菜单展开时派发 |
 | `close` | 无 | 菜单收起时派发 |
 
-### Slots
+## Slots
 
 | 名称 | 参数 | 内容约束 |
 | --- | --- | --- |
@@ -6053,8 +6039,6 @@ import FabMenuToolbarExample from '../examples/fab-menu/FabMenuToolbarExample.vu
 `<mat-btn-group>` 的组件导出名是 `MatBtnGroup`。它在单行中组织普通或图标模式的 `MatBtn`。standard 与 connected 都支持 `none`、`single` 和 `multiple` 选择模式；connected 使用 `none` 时会发出开发警告。standard 保留独立按钮间距，connected 按连接规则排列。组容器不聚焦，每个子按钮保持独立 Tab 停靠点。
 
 ## 示例
-
-示例代码默认收起，预览直接可见。
 
 ### `block`
 
@@ -6910,7 +6894,7 @@ const selected = ref(['bold']);
 
 connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色和视觉层级，不使用 `text` 或 `standard` Button。违反这些组合约束时开发环境会警告。
 
-### 事件
+## 事件
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
@@ -6918,7 +6902,7 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 
 `value` 是本次项目值，`selected` 是该项目的候选布尔状态，`nextSelected` 是调用方应回写的单值、数组或 `null`，`originalEvent` 是原生 `MouseEvent`。组件不会修改 `selected`。
 
-### Slots
+## Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
@@ -6927,8 +6911,6 @@ connected 应使用 `single` 或 `multiple`，所有子项应使用相同颜色�
 ### 状态与键盘
 
 组根节点使用 `role="group"`，没有 `tabindex`。Tab 依次进入每个子按钮，Space 和 Enter 使用原生按钮激活；不实现方向键或 roving tabindex。standard 与 connected 的选择项都使用 `aria-pressed`，不模拟 radio/radiogroup。`required` 阻止取消最后一个选中项。
-
-组件没有公开方法。
 
 ## 参考来源
 
@@ -7385,7 +7367,7 @@ const open = ref(false);
 
 父组件的 `variant`、`size`、`color` 和 `disabled` 对两侧按钮具有最终决定权，slot 子按钮上的同名视觉值不会覆盖组合参数。expanded 不改变基础颜色，只加入 12% 状态层，将 trailing 的四个普通及按下圆角保持为 full，并把图标居中后旋转 180°。
 
-### 事件
+## 事件
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
@@ -7395,7 +7377,7 @@ const open = ref(false);
 
 slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展开值，不持有内部展开状态。
 
-### Slots
+## Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
@@ -7407,8 +7389,6 @@ slot 子按钮自己的 `click` 监听器仍会执行。组件只发出候选展
 ### 状态与键盘
 
 两侧按钮都是独立 Tab 停靠点，使用原生 Space/Enter 激活。与 `MatMenu` 组合时，应用用同一个状态连接 `expanded` 与 MatMenu 的普通 `v-model`；MatMenu 负责菜单内部方向键、Escape、外部关闭和触发器焦点恢复。
-
-组件没有公开方法。
 
 ## 参考来源
 
@@ -7430,11 +7410,11 @@ import SplitButtonVariantExample from '../examples/button/SplitButtonVariantExam
 
 ## 组件简介
 
-`<mat-app-root>` 的组件导出名是 `MatAppRoot`。它在 Vue 应用内承担通常由 `body` 承担的页面布局职责：建立隔离的覆盖层坐标系，统一处理安全区、固定边缘占位、正文避让、浮动组件排列和基于容器宽度的断点。边缘登记遵循与 `<mat-layout>` 相同的六向顺序计算规则，AppRoot 自己保留应用覆盖层和滚动能力。应用通常只放置一个铺满视口的 AppRoot；文档预览等容器化场景可以放置多个同级实例，但 AppRoot 不允许嵌套。
+`<mat-app-root>` 的组件导出名是 `MatAppRoot`。它在 Vue 应用内承担通常由 `body` 承担的页面布局职责：建立隔离的覆盖层坐标系，统一处理安全区、固定边缘占位、正文避让、浮动组件排列和基于容器宽度的断点。应用通常只放置一个铺满视口的 AppRoot；文档预览等容器化场景可以放置多个同级实例，但 AppRoot 不允许嵌套。
 
-边缘组件只登记到组件树中最近的一个 `MatLayout` 或 `MatAppRoot`。因此当 AppRoot 内还有 Layout，或 Layout 内还有 AppRoot 时，外层根不会重复计算同一个边缘。`docked` 与 `fixed` 都会让最近根的正文获得对应 padding；`modal` 组件不登记边缘，只有显式启用的 modal placeholder 才会在声明位置占位。
+边缘组件会自动接入最近的 `MatLayout` 或 `MatAppRoot`，正文区域自动获得相应的避让内边距。
 
-默认模式沿用 Vuetify `VApp`/`VMain` 的文档滚动思路：AppRoot 至少铺满动态视口，内容增长时由 `document`/`body` 滚动，组件不会修改 `html` 或 `body` 的 `overflow`。设置 `scrollable` 后，AppRoot 保持确定高度，正文层改为内部滚动容器；`fillViewport=false` 与 `scrollable=true` 组合使用时，必须通过自身样式或父级布局提供确定的块轴高度。
+默认模式下 AppRoot 铺满视口并随内容自然滚动；开启 `scrollable` 后，正文层改为内部滚动容器。
 
 ## 示例
 
@@ -7956,7 +7936,7 @@ const { layout, registerEdge } = useMatApp();
 - `MatDialog` 与 modal Bottom sheet、Side sheet：位于 AppRoot 内且省略 `attach` 时，进入 AppRoot 内部的模态层，表面与帷幕限制在应用矩形内，正文层设为 `inert` 并锁定滚动；AppRoot 外的内容（如自绘任务栏）保持可见且可点击。`attach` 显式指向 AppRoot 根元素时同样按应用范围展示；指向其他元素时保持铺满视口的原有行为。document 模式（`fillViewport=true` 且 `scrollable=false`）下应用范围等于视口，任务栏等 AppRoot 外内容应使用 `scrollable` 或 `fillViewport=false` 布局。
 - `MatMenu`：位于 AppRoot 内时，菜单的视口夹紧与透明 scrim 都限制在应用矩形内，点击应用外只关闭菜单且不拦截该次事件。
 
-模态层位于浮动组与 Snackbar 层之上，多个模态实例仍由共享堆叠管理器只显示顶层帷幕；Menu 继续使用浏览器 Popover top layer。
+模态层位于浮动组与 Snackbar 层之上；多个模态实例会自动协同遮罩。
 
 ## 参考来源
 
@@ -8249,7 +8229,7 @@ function toggleAll(checked) {
 
 ## 状态
 
-组件支持未选中、选中、不确定、hover、focus-visible、pressed 和 disabled。focus-visible 使用公共焦点环宽度与偏移，不叠加状态层填充；hover 和 pressed 继续使用圆形状态层。减少动态效果偏好下关闭勾号、横线、焦点环和状态层过渡。组件没有公开方法。
+组件支持未选中、选中、不确定、hover、focus-visible、pressed 和 disabled。focus-visible 使用公共焦点环宽度与偏移，不叠加状态层填充；hover 和 pressed 继续使用圆形状态层。减少动态效果偏好下关闭勾号、横线、焦点环和状态层过渡。
 
 ## 参考来源
 
@@ -8272,8 +8252,6 @@ import CheckboxIndeterminateExample from '../examples/selection/CheckboxIndeterm
 Radio 按 Material 3 提供 20px 图标、40px 状态层和至少 48px 的交互目标。需要标准方向键导航、唯一 Tab 停靠点或组级禁用与配色时，应使用 Radio Group。
 
 ## 示例
-
-以下代码块由 VitePress 直接读取实际渲染的 Vue 示例文件，因此代码与紧随其后的预览始终来自同一份源码。
 
 ### 独立绑定
 
@@ -8506,9 +8484,9 @@ const themeMode = ref('system');
   </DocsPreview>
 </ClientOnly>
 
-## MatRadio API
+## API
 
-### 属性
+### MatRadio 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -8519,26 +8497,7 @@ const themeMode = ref('system');
 
 进入 `MatRadioGroup` 后，Group 的模型、禁用和颜色上下文生效；子项显式 `disabled` 与 Group 禁用叠加，显式 `color` 优先。此时不要再给子项传入 `v-model`。
 
-### 事件
-
-| 事件 | 载荷 | 触发条件 |
-| --- | --- | --- |
-| `update:modelValue` | 当前 `value` | 独立 Radio 被选中；Group 内由 Group 发出更新 |
-| `change` | 原生 `Event` 或触发方向键的 `KeyboardEvent` | 当前 Radio 请求成为选中项 |
-
-### Slots
-
-| 名称 | 内容约束 |
-| --- | --- |
-| 默认 | 描述当前候选值的相邻标签；省略时必须提供 `aria-label` |
-
-### 状态
-
-Radio 支持未选中、选中、hover、focus-visible、pressed 和 disabled。focus-visible 使用公共焦点环宽度与偏移，不叠加状态层填充；hover 和 pressed 继续使用圆形状态层。已经选中的 Radio 再次操作不会取消选择。组件没有公开方法。
-
-## MatRadioGroup API
-
-### 属性
+### MatRadioGroup 属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -8549,27 +8508,42 @@ Radio 支持未选中、选中、hover、focus-visible、pressed 和 disabled。
 
 Group 只管理 Vue 状态，不公开 `name`、`required`、`form`、表单提交或原生校验能力。
 
-### 事件
+## 事件
+
+### MatRadio 事件
+
+| 事件 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | 当前 `value` | 独立 Radio 被选中；Group 内由 Group 发出更新 |
+| `change` | 原生 `Event` 或触发方向键的 `KeyboardEvent` | 当前 Radio 请求成为选中项 |
+
+### MatRadioGroup 事件
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
 | `update:modelValue` | 下一选中值 | 指针、Space 或方向键选择新的 Radio |
 | `change` | 原生 `Event` 或 `KeyboardEvent` | 选中值实际发生变化 |
 
-### Slots
+## Slots
+
+### MatRadio Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 描述当前候选值的相邻标签；省略时必须提供 `aria-label` |
+
+### MatRadioGroup Slots
 
 | 名称 | 内容约束 |
 | --- | --- |
 | 默认 | 放置 `MatRadio`；可以经过普通布局组件，但不要混入另一套单选组 |
 
-### 状态与键盘
+## 状态与键盘
 
 - Tab 只进入当前选中项；没有选中值时进入首个可用项。
 - `ArrowRight`、`ArrowDown` 选择下一项，`ArrowLeft`、`ArrowUp` 选择上一项；到边界后循环并跳过禁用项。
 - Space 使用原生 Radio 行为选择当前项。
 - Group 禁用与子项禁用叠加；子项显式 `color` 优先于 Group。
-
-Group 没有公开方法。
 
 ## 参考来源
 
@@ -9300,7 +9274,7 @@ Switch 只表示二元状态，不用于在两个对立选项间选择。组件�
 
 ## 状态
 
-组件支持关闭、开启、hover、focus-visible、pressed 和 disabled。focus-visible 使用公共焦点环宽度与偏移包围完整轨道，不叠加手柄状态层填充；hover 和 pressed 的状态层跟随当前手柄。按下时手柄扩展到 28px；减少动态效果偏好下关闭手柄、图标、焦点环和状态层过渡。组件没有公开方法。
+组件支持关闭、开启、hover、focus-visible、pressed 和 disabled。focus-visible 使用公共焦点环宽度与偏移包围完整轨道，不叠加手柄状态层填充；hover 和 pressed 的状态层跟随当前手柄。按下时手柄扩展到 28px；减少动态效果偏好下关闭手柄、图标、焦点环和状态层过渡。
 
 ## 参考来源
 
@@ -9321,7 +9295,7 @@ import SwitchModelValueExample from '../examples/selection/SwitchModelValueExamp
 
 组件根元素始终是块级 `div`，默认水平居中。无论是否启用 `containment`，活动形状均按 38 : 48 比例限制在背景容器尺寸内并居中（未开启时背景容器透明）；`containment` 开启后在指示器外显示圆形背景容器，适合叠加在已有内容之上，活动形状自动换用同组 on-container 内容色。组件每 650ms 启动一次低阻尼弹簧变化，轮廓在前段快速接近下一个形状，额外 90° 旋转使用同一弹簧进度并轻微越过目标后回稳；组件另有 4666ms 的匀速整圈旋转。形状采样点会按整个循环对齐起点，减少轮廓特征在变形时沿边界滑动。
 
-受控模式使用 AndroidX Determinate LoadingIndicator 的两帧参数：从经过 18° 起始旋转处理的圆形变为 `soft-burst`，`0` 到 `1` 之间的进度直接控制形变与 `-progress × 180°` 旋转；进度超过 `1` 后保持 `soft-burst`，继续追加相同方向的旋转。设置 `progress` 会停止自动形状循环和旋转，移除后恢复自动模式。配合 `<mat-pull-to-refresh>` 可直接获得完整的下拉刷新手势。
+设置 `progress`（0 到 1）进入受控进度模式，形变与旋转角度跟随进度变化。配合 `<mat-pull-to-refresh>` 可直接获得下拉刷新手势动画。
 
 ## 示例
 
@@ -9479,7 +9453,7 @@ const manual = ref(true);
 
 ## 状态
 
-根元素提供 `role="progressbar"`、`aria-valuemin="0"` 与 `aria-valuemax="1"`。省略 `progress` 时不声明 `aria-valuenow`，活动形状按 650ms 间隔在 7 个官方形状之间变换，同一弹簧进度驱动额外 90° 旋转并与 4666ms 的整圈匀速旋转叠加。设置有限 `progress` 后声明限制在 `0` 至 `1` 的 `aria-valuenow`，暂停自动动画，以进度取样两帧 `polygon()` 轮廓并使用 `-progress × 180°` 旋转；超过 `1` 时轮廓保持 `soft-burst`，旋转继续累加。启用减少动态效果偏好时，自动模式保持首个形状并停止帧循环，受控模式仍显示传入进度对应的轮廓和旋转。组件没有公开方法。
+根元素提供 `role="progressbar"`、`aria-valuemin="0"` 与 `aria-valuemax="1"`。省略 `progress` 时不声明 `aria-valuenow`，活动形状按 650ms 间隔在 7 个官方形状之间变换，同一弹簧进度驱动额外 90° 旋转并与 4666ms 的整圈匀速旋转叠加。设置有限 `progress` 后声明限制在 `0` 至 `1` 的 `aria-valuenow`，暂停自动动画，以进度取样两帧 `polygon()` 轮廓并使用 `-progress × 180°` 旋转；超过 `1` 时轮廓保持 `soft-burst`，旋转继续累加。启用减少动态效果偏好时，自动模式保持首个形状并停止帧循环，受控模式仍显示传入进度对应的轮廓和旋转。
 
 ## 参考来源
 
@@ -10079,7 +10053,7 @@ const brightness = ref(70);
 
 ## 状态与交互
 
-组件支持 focus-visible、pressed、disabled 和减少动态效果偏好。键盘焦点使用 `secondary` 语义色的 3px 胶囊轮廓表示，轮廓与手柄相隔 2px，不绘制圆形背景状态层；拖动期间，同一绘制帧内的连续指针输入合并为最新位置，活动轨道、非活动轨道和手柄不会播放位置补间，释放前会同步刷新最终值。按下或拖动时，当前手柄会由 4px 收窄至 2px，轨道在手柄两侧保留 6px 断口且断口圆角为 2px。指针默认使用 `default`，并遵循 `createMatUi()` 的全局 `useCursor` 设置。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至最小和最大可对齐值。纵向滑块以底部为最小值、顶部为最大值。组件没有公开方法。
+组件支持 focus-visible、pressed、disabled 和减少动态效果偏好。键盘焦点使用 `secondary` 语义色的 3px 胶囊轮廓表示，轮廓与手柄相隔 2px，不绘制圆形背景状态层；拖动期间，同一绘制帧内的连续指针输入合并为最新位置，活动轨道、非活动轨道和手柄不会播放位置补间，释放前会同步刷新最终值。按下或拖动时，当前手柄会由 4px 收窄至 2px，轨道在手柄两侧保留 6px 断口且断口圆角为 2px。指针默认使用 `default`，并遵循 `createMatUi()` 的全局 `useCursor` 设置。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至最小和最大可对齐值。纵向滑块以底部为最小值、顶部为最大值。
 
 `prepend` 与 `append` 插槽内容不压缩：横向滑块中它们与轨道同行排列，纵向滑块中分别位于轨道上方与下方，整体尺寸不超过 `--mat-slider-vertical-length`。插槽内容不参与取值，指针取值只发生在轨道区域；提供了任一插槽时，轨道与插槽内容之间保留 8px 间距。
 
@@ -10580,7 +10554,7 @@ const depth = ref([10, 60]);
 
 ## 状态与交互
 
-组件支持 focus-visible、pressed、disabled 和减少动态效果偏好。键盘焦点使用 `secondary` 语义色的 3px 胶囊轮廓表示，轮廓与当前活跃手柄相隔 2px，不绘制圆形背景状态层；点击轨道时选择较近的端点。拖动期间，同一绘制帧内的连续指针输入合并为最新位置，活动轨道、非活动轨道和当前活跃手柄不会播放位置补间，释放前会同步刷新最终区间。按下或拖动时仅当前活跃手柄由 4px 收窄至 2px，轨道在两个手柄两侧各保留 6px 断口且断口圆角为 2px；数值指示也只显示当前活跃手柄。指针默认使用 `default`，并遵循 `createMatUi()` 的全局 `useCursor` 设置。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至当前端点允许的最小和最大位置。组件没有公开方法。
+组件支持 focus-visible、pressed、disabled 和减少动态效果偏好。键盘焦点使用 `secondary` 语义色的 3px 胶囊轮廓表示，轮廓与当前活跃手柄相隔 2px，不绘制圆形背景状态层；点击轨道时选择较近的端点。拖动期间，同一绘制帧内的连续指针输入合并为最新位置，活动轨道、非活动轨道和当前活跃手柄不会播放位置补间，释放前会同步刷新最终区间。按下或拖动时仅当前活跃手柄由 4px 收窄至 2px，轨道在两个手柄两侧各保留 6px 断口且断口圆角为 2px；数值指示也只显示当前活跃手柄。指针默认使用 `default`，并遵循 `createMatUi()` 的全局 `useCursor` 设置。方向键每次移动一个步长，`Page Up` 与 `Page Down` 每次移动十个步长，`Home` 与 `End` 分别跳至当前端点允许的最小和最大位置。
 
 `prepend` 与 `append` 插槽内容不压缩：横向滑块中它们与轨道同行排列，纵向滑块中分别位于轨道上方与下方，整体尺寸不超过 `--mat-slider-vertical-length`。插槽内容不参与取值，指针取值只发生在轨道区域；提供了任一插槽时，轨道与插槽内容之间保留 8px 间距。
 
@@ -11044,7 +11018,7 @@ const thickness = ref('default');
 
 确定进度以 `role="progressbar"`、`aria-valuemin`、`aria-valuemax` 和 `aria-valuenow` 暴露当前比例。不确定状态保留 `progressbar` 语义但不声明具体值，并让活动片段沿轨道或环形轨道伸缩移动。线条形使用两段错开的活动线段，分别按 Material Web 的平移和伸缩时间轴连续越过轨道；环形组合弧长伸缩、分段旋转和匀速整圈旋转。两种形态的轨道断口都会与活动段同步。在能取得实际进度后，应切换为确定状态。
 
-波浪形默认保持静态；设置 `waveMotion` 后，波浪相位会沿线条或环形路径连续前进，形成流动效果，SVG 圆口仍与活动路径端点重合。切换 `shape` 时始终复用同一条活动路径，并让波峰振幅逐渐增大或收平到直线，不使用两个图层交叉填色。修改 `size` 或 `thickness` 时，容器和线条粗细继续使用系统动效令牌过渡。启用减少动态效果偏好时，组件显示静态活动片段并关闭这些动画和过渡。组件没有公开方法。
+波浪形默认保持静态；设置 `waveMotion` 后，波浪相位会沿线条或环形路径连续前进，形成流动效果，SVG 圆口仍与活动路径端点重合。切换 `shape` 时始终复用同一条活动路径，并让波峰振幅逐渐增大或收平到直线，不使用两个图层交叉填色。修改 `size` 或 `thickness` 时，容器和线条粗细继续使用系统动效令牌过渡。启用减少动态效果偏好时，组件显示静态活动片段并关闭这些动画和过渡。
 
 ## 参考来源
 
@@ -11067,7 +11041,7 @@ import ProgressWaveMotionExample from '../examples/progress/ProgressWaveMotionEx
 
 `<mat-pull-to-refresh>` 的组件导出名是 `MatPullToRefresh`。它在滚动区域起始端提供 Material 3 风格的下拉刷新手势：垂直 `mat-scroll-area` 滚动到顶部后继续向下拉动、水平 `mat-scroll-area` 滚动到最左端后继续向右拉动，都会以短暂的淡入放大动画显示内部的 `mat-loading` 指示器；释放时拉动距离达到触发距离即发出刷新，未达到则取消。鼠标、触摸、笔的拖拽与滚轮、触控板在边界朝界外的滚动都能触发。滚轮与触控板驱动的刷新必须从边界静止位开始：从内容中间连续滚动越过边界时不触发，滚轮活动静止约 600ms 后才视为新的手势，避免惯性滚动误触发。
 
-组件没有 Slots，只负责手势与指示器：把它作为 `mat-scroll-area` 内容的第一个子元素，列表或其他内容作为兄弟元素跟在组件后面，组件渲染为零尺寸元素悬浮在内容上方。开启 `placeholder` 后组件自身随拉动变高（水平时变宽），把后面的内容推离起点，呈现列表"被拉动"的视觉效果。入场与回弹动画的阈值、拖拽系数和弹簧参数对应 AndroidX Material 3 `PullToRefresh` 的官方数值，刷新期间指示器切换到 `mat-loading` 的自动旋转模式。
+组件作为滚动内容起始位置的元素使用。开启 `placeholder` 后组件随拉动展开，把后续内容推离起点，呈现列表被拉动的视觉效果；松手刷新期间指示器自动旋转。
 
 不需要刷新能力时设置 `disabled` 关闭手势，无需用 `v-if` 反复重建组件和滚动内容：禁用期间拖拽与滚轮都不会触发刷新，进行中的拉动手势会被取消，重新启用后手势恢复。
 
@@ -11704,7 +11678,7 @@ async function onRefresh() {
 
 ## 状态
 
-拖动开始后指示器以短暂的淡入放大动画入场，并固定在距起点 80px 的静止位。内部 `mat-loading` 进入受控进度模式：进度为拉动距离与触发距离之比，`0` 至 `1` 控制圆形到 `soft-burst` 的形变，超过 `1` 后保持 `soft-burst` 并继续旋转。释放达到阈值后切换到 `mat-loading` 的自动旋转模式，`placeholder` 以空间弹簧回弹归零、内容复位；未达阈值或刷新结束时指示器在原位淡出。启用减少动态效果偏好时，动画直接落位。组件没有公开方法。
+拉动时指示器随手势距离展示形变进度；释放达到阈值后进入刷新状态，未达阈值或刷新结束时指示器淡出复位。
 
 ## 参考来源
 
@@ -11725,7 +11699,7 @@ import PullToRefreshTriggerDistanceExample from '../examples/pull-to-refresh/Pul
 
 `<mat-select>` 的组件导出名是 `MatSelect`。它使用 Text field 的 outlined 或 filled 字段外观，并通过 Menu 展示由 `items` 生成的选项。单选显示一个标题，多选按 `items` 顺序用逗号连接标题；启用 `chips` 后，已选内容改用可移除的 input Chip 展示。
 
-组件内部保留完全隐藏的原生 `select`，同步 `name`、`form`、`required`、`disabled`、`multiple`、options 和选择状态。可见字段承担 combobox 焦点、键盘与菜单交互。Select 是 mde-vue 根据 Text field、Menu、Chip 与 Checkbox 总结的组合组件，不是 Material 官方定义的独立 Web Select 规格。
+组件提供选择框输入外观与下拉选项菜单，支持单选、多选与 Chip 模式展示。
 
 ## 示例
 
@@ -12239,7 +12213,7 @@ const items = [
 
 对象项的 `disabled: true` 禁止选择，可选的 `tooltip` 字符串字段会自动挂载为菜单项提示。title 必须是字符串，value 只支持 `string`、`number`、`boolean`；非法项、嵌套分组、按 `Object.is()` 重复或 `String(value)` 冲突的后续项会在开发环境警告并跳过。
 
-`class` 和 `style` 应用于 Select 根；`id` 与 `aria-label` 应用于可见 combobox，`name` 与 `form` 应用于隐藏 select。number 与 boolean 在 Vue 模型中保留原类型，HTML 表单值按 `String(value)` 提交。组件没有公开方法。
+`class` 和 `style` 应用于 Select 根；`id` 与 `aria-label` 应用于可见 combobox，`name` 与 `form` 应用于隐藏 select。number 与 boolean 在 Vue 模型中保留原类型，HTML 表单值按 `String(value)` 提交。
 
 ## 事件
 
@@ -12287,7 +12261,7 @@ import SelectVariantExample from '../examples/select/SelectVariantExample.vue';
 
 ## 组件简介
 
-`<mat-input-base>` 的组件导出名是 `MatInputBase`。它渲染调用方选择的原生 `input` 或 `textarea`，提供受控字符串值、原生属性透传、模型更新和聚焦方法。组件不提供标签、描边、填充、辅助文字或校验语义，适合由使用方自行绘制输入容器和交互界面。
+`<mat-input-base>` 的组件导出名是 `MatInputBase`。它渲染调用方选择的原生 `input` 或 `textarea`，提供受控字符串值、原生属性透传、模型更新和聚焦方法。组件提供无装饰的基础原生输入能力，适合由使用方自行构建具有定制外观与交互的输入容器。
 
 组件同时隐藏浏览器为 search、number、date/time 等原生控件添加的默认 UI（清除按钮、步进按钮、日历指示器），需要等价操作时由使用方在自己的外层 UI 中提供。
 
@@ -13136,7 +13110,7 @@ import CardVariantExample from '../examples/card/CardVariantExample.vue';
 
 ## 组件简介
 
-`<mat-text-field>` 的组件导出名是 `MatTextField`，渲染单行原生 `input`；`<mat-textarea>` 的组件导出名是 `MatTextarea`，渲染多行原生 `textarea`，并可根据内容自动增高、限制最大行数或禁止手动调整尺寸。两者共享 outlined、filled 外观、浮动标签、辅助或错误文字、字符计数、前后缀和局部 `color` 配色，但不执行表单校验。有标签的 outlined 外观会在顶部保留浮动标签空间，并以透明缺口裁剪描边，因此可以放在任意主题表面色上。
+`<mat-text-field>` 的组件导出名是 `MatTextField`，渲染单行原生 `input`；`<mat-textarea>` 的组件导出名是 `MatTextarea`，渲染多行原生 `textarea`，并可根据内容自动增高、限制最大行数或禁止手动调整尺寸。两者共享 outlined、filled 外观、浮动标签、辅助或错误文字、字符计数、前后缀和局部 `color` 配色，但不执行表单校验。
 
 ## 示例
 
@@ -13817,8 +13791,6 @@ const description = ref('第一行\n第二行\n第三行\n第四行\n第五行\n
 | `maxRows` | 正整数 | 未设置 | autoGrow 的最大行数；小于 rows 时按 rows 处理，达到上限后内容在控件内滚动 |
 | `noResize` | `boolean` | `false` | 隐藏浏览器尺寸调整手柄，禁止使用者拖动改变 textarea 大小 |
 
-组件没有公开方法。
-
 ## 事件
 
 | 事件 | 载荷 | 触发条件 |
@@ -13845,7 +13817,7 @@ const description = ref('第一行\n第二行\n第三行\n第四行\n第五行\n
 - 调用方已有的 `aria-describedby` 会与组件说明区域合并。
 - filled 和 outlined 在同一区域内应保持一致，不应在同一个表单内交替使用。
 - textarea 默认允许纵向调整尺寸，初始内容区高度严格按 `rows` 与正文行高计算；未显式设置 `rows` 时最小可调整到一行，显式设置后不能低于该行数；`noResize` 可以关闭手动调整。
-- `autoGrow` 以 `rows` 为下限重新测量内容高度；`maxRows` 未设置时不限制增长，设置后在达到上限时改为内部滚动。自动增高不会隐式关闭手动调整；手动缩小到内容无法完整显示时出现内部滚动条，下一次内容或宽度变化会重新按内容计算高度。
+- `autoGrow` 根据输入内容自适应高度；设置 `maxRows` 可限制最大行数并在超出时允许内部滚动。
 - textarea 在顶部内边距区域渐隐滚动内容，同时保持右侧滚动条和调整手柄完整可见；带标签时渐隐区域覆盖标签留白，避免文字与标签重叠。
 - Text field 的 multi-line 形态来自 Material 3；`autoGrow`、`maxRows` 和 `noResize` 是 mde-vue 扩展 API。
 - 减少动态效果偏好下关闭标签、描边与活动指示器的非必要过渡。
@@ -14128,13 +14100,9 @@ import SearchStateExample from '../examples/search/SearchStateExample.vue';
 
 ## 组件简介
 
-`<mat-app-bar>` 的组件导出名是 `MatAppBar`。它实现 Material 3 Expressive 的 search、small、medium flexible 和 large flexible 四种 App bar；`content="search"` 时，可在默认 Slot 中放置独立的 `<mat-search>` 作为主内容。`<mat-search>` 的组件导出名是 `MatSearch`。
+`<mat-app-bar>` 的组件导出名是 `MatAppBar`。它实现 Material 3 Expressive 的 search、small、medium flexible 和 large flexible 四种顶部应用栏。通过 `content` 属性（`headline`、`image`、`search`）明确主内容语义；`content="search"` 时可在默认 Slot 中放置独立的 `<mat-search>`（组件导出名 `MatSearch`）。
 
-App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、`content="image"` 或 `content="search"` 明确内容语义，标题、图像和搜索不会同时占据不同的主区域。`variant="search"` 始终按 search 内容处理。leading 和 trailing 操作区保持固定交互尺寸，主内容区使用剩余宽度；`align="center"` 使用对称侧轨，避免两侧操作数量不同时标题发生视觉偏移。
-
-组件默认在声明位置参与文档布局并粘附到滚动容器顶部。small 与 search 在开始滚动时从 `surface` 连续过渡到 `surface container`；medium flexible 和 large flexible 还会分别在前 48px、56px 滚动距离内折叠到 64px。动画由 CSS `scroll-timeline` 和 `animation-timeline` 驱动，标题与图片通过 `scale`、`translate`、`clip-path` 和 `opacity` 在稳定布局盒中变化，不逐帧修改字号、块尺寸或执行 JavaScript 计算。不支持这些 CSS 能力的浏览器保持静态展开；减少动态效果时保留展开几何，仅播放表面填色。
-
-组件底层根元素基于 `MatAside`（`as="header"`）呈现，默认停靠在布局容器的 `top` 边缘，统管顶部定位、安全区预留与切入退场动效。位于 `MatLayout` 或 `MatAppRoot` 内时，`docked` 与 `fixed` 都只登记到最近的一个根并产生正文 padding。
+组件支持吸顶停靠与随滚动连续折叠，提供 `leading`、`trailing` 操作区与 `subtitle` 副标题插槽，支持起始对齐与居中对齐，并支持通过 `app` 属性接入应用根布局。
 
 ## 示例
 
@@ -14374,7 +14342,7 @@ const query = ref('');
 
 ### `scrollTarget` 与连续折叠
 
-滚动示例把容器元素作为显式 `scrollTarget`。在最新浏览器中缓慢滚动，可以观察视觉高度、标题、subtitle 和背景色共享同一个滚动进度；折叠不会改写滚动容器的可滚动高度，因此越过动画终点后仍可正常继续滚动。
+通过 `scrollTarget` 指定滚动容器，App bar 会随滚动进度平滑折叠并过渡背景色。
 
 :::: details 查看示例代码
 
@@ -14484,9 +14452,7 @@ const scrollTarget = ref(null);
 | `zIndex` | `number \| string \| undefined` | `undefined` | 显式指定层级 |
 | `transition` | `boolean` | `true` | 是否启用切入退场动效 |
 
-`app=true` 且自动接入最近的 `MatLayout` 或 `MatAppRoot` 时，64px 收起高度登记为固定顶边，flexible 变体多出的 48px 或 56px 在声明位置成为可滚走的起始占位，从而避免折叠高度反复改变根布局正文 padding。App bar 的根布局盒始终保持 64px，展开态的视觉背景和标题内容在该稳定盒外表达；显式 `attach` 无法解析时不渲染 App bar。
-
-`MatAppBar` 没有公开方法。未消费的属性、`class`、`style`、`id` 和 ARIA 属性传给原生 `<header>`。
+未消费的属性透传给内部原生 `<header>`。
 
 ## 事件
 
@@ -14506,11 +14472,9 @@ const scrollTarget = ref(null);
 | `subtitle` | 标题的辅助文字；flexible 折叠过程中连续淡出，不应与 search 主内容组合 |
 | `trailing` | 末端操作；宽屏可放置最多四个简洁操作，避免挤压主内容 |
 
-## 无障碍与降级
+## 无障碍
 
-App bar 使用原生 `<header>`；`content="search"` 时由独立 `MatSearch` 提供 `<form role="search">` 和原生 search input。所有图标操作都应提供明确的 `label`。sticky App bar 不移动焦点，折叠也不改变 leading 和 trailing 的交互顺序。
-
-组件只面向最新浏览器。CSS scroll timeline 不可用时，App bar 保持展开和 `surface` 背景，不执行定时动画替代方案。`prefers-reduced-motion: reduce` 下保留展开高度和内容，只让滚动后的容器颜色表达内容分隔。
+App bar 使用原生 `<header>`；`content="search"` 时由 `MatSearch` 提供搜索无障碍语义。所有图标按钮操作均应提供明确的 `label` 或 `aria-label`。
 
 ## 参考来源
 
@@ -14528,7 +14492,7 @@ import AppBarVariantExample from '../examples/app-bar/AppBarVariantExample.vue';
 
 ## 组件简介
 
-`<mat-menu>` 的组件导出名是 `MatMenu`，使用原生 Popover API 在 top layer 显示临时操作集合；`<mat-menu-group>` 的组件导出名是 `MatMenuGroup`，以带可选标签的独立表面组织相关操作；`<mat-menu-item>` 的组件导出名是 `MatMenuItem`，渲染原生按钮和 `menuitem` 语义。Menu 支持 standard、vibrant 配色、expressive 间隙分组、多级子菜单、局部 `color`、最大高度滚动、默认透明 scrim、循环键盘焦点、元素锚点换边和右键坐标定位。位于 `MatAppRoot` 内时，菜单的视口夹紧与透明 scrim 都限制在该 AppRoot 的应用矩形内，AppRoot 外的内容保持可交互。
+`<mat-menu>` 的组件导出名是 `MatMenu`，在浮层中显示临时操作集合；`<mat-menu-group>` 的组件导出名是 `MatMenuGroup`，以带可选标签的独立表面组织相关操作；`<mat-menu-item>` 的组件导出名是 `MatMenuItem`，渲染原生按钮和 `menuitem` 语义。Menu 支持 standard、vibrant 配色、expressive 间隙分组、多级子菜单、局部 `color`、最大高度滚动、默认透明 scrim、循环键盘焦点、元素锚点换边和右键坐标定位。位于 `MatAppRoot` 内时，菜单的视口夹紧与透明 scrim 都限制在该 AppRoot 的应用矩形内，AppRoot 外的内容保持可交互。
 
 ## 示例
 
@@ -14761,7 +14725,7 @@ const open = ref(false);
 
 ### `maxLength`
 
-`maxLength` 接受正数、纯数字字符串或合法 CSS 长度。数字按 px 处理；最终最大高度不会超过视口安全范围。内容溢出后在菜单内部纵向滚动，原生滚动条隐藏，并只在仍有内容可滚动的一侧显示 16px 边缘渐隐。滚动区域四周会保留键盘焦点环所需的不可见空间，因此聚焦首项、末项或靠近行轴边缘的项目时，焦点环仍完整可见。
+`maxLength` 接受正数、纯数字字符串或合法 CSS 长度。数字按 px 处理；最终最大高度不会超过视口安全范围。内容溢出后在菜单内部纵向滚动，原生滚动条隐藏，并只在仍有内容可滚动的一侧显示 16px 边缘渐隐。滚动区域四周预留留白，聚焦各边缘项目时焦点环仍完整可见。
 
 :::: details 查看示例代码
 ::: code-group
@@ -15538,7 +15502,7 @@ import MenuVariantExample from '../examples/menu/MenuVariantExample.vue';
 
 ## 组件简介
 
-`<mat-docked-container>` 的组件导出名是 `MatDockedContainer`。它结合了 Menu 的锚点弹出定位能力与 Dialog 的结构化内容布局，使用原生 Popover API 在 top layer 显示依附于锚点或视口坐标的浮动容器表面。组件支持 standard 与 vibrant 配色变体、透明全屏遮罩、内置尺寸预设（small、medium、large）与自定义宽度，并提供 `headline`、`actions` 和 `activator` 插槽。
+`<mat-docked-container>` 的组件导出名是 `MatDockedContainer`。它结合了 Menu 的锚点弹出定位能力与 Dialog 的内容布局，显示依附于锚点或视口坐标的浮动容器表面。组件支持 standard 与 vibrant 配色变体、透明全屏遮罩、内置尺寸预设（small、medium、large）与自定义宽度，并提供 `headline`、`actions` 和 `activator` 插槽。
 
 ## 示例
 
@@ -16002,9 +15966,7 @@ import DockedContainerTimePickerExample from '../examples/docked-container/Docke
 
 ## 组件简介
 
-`<mat-dialog>` 的组件导出名是 `MatDialog`。组件使用原生 `<dialog>` 元素与 Vue Teleport，在基础或全屏布局中展示需要使用者确认、输入或选择的内容，并可通过 `activator` Slot 放置触发元素。Dialog 支持受控开关、进入和退出动画、焦点恢复、多个实例的帷幕合并，以及 `dialog()`、`alert()`、`confirm()`、`prompt()` 四个 Promise 函数。
-
-Dialog 使用原生 `<dialog>` 元素（非模态 `show()`）与 Vue Teleport，组件自管焦点陷阱、背景拦截、滚动锁与堆叠，不依赖浏览器 top layer。正文区域使用垂直 `MatScrollArea`，关闭滚动方向默认内边距并使用 `thin` 滚动条，同时保留边缘渐隐和正文留白；滚动条侧会扣除滚动条宽度，避免末端留白过宽。位于 `MatAppRoot` 内且省略 `attach` 时，Dialog 自动进入该 AppRoot 的模态层，表面与帷幕限制在应用矩形内，AppRoot 正文层设为 `inert`，AppRoot 外的内容（如自绘任务栏）保持可见且可点击；其他场景下 Dialog 铺满视口，位于 Toolbar、Snackbar 和 Tooltip 等普通覆盖层之上。
+`<mat-dialog>` 的组件导出名是 `MatDialog`。组件使用原生 `<dialog>` 元素展示模态对话框，支持基础与全屏布局、遮罩、进入退出动画和焦点管理；支持通过 `activator` Slot 放置触发元素，并提供 `dialog()`、`alert()`、`confirm()`、`prompt()` 四个命令式 Promise 函数。
 
 ## 示例
 
@@ -18115,8 +18077,6 @@ single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌�
 - `fromIndex` 和 `toIndex` 按全部直属 MatListItem 计算，不包含 Divider 与 MatListGroup。位置没有变化时不触发 `reorder`；拖动成功后抑制同一次 click 或选择请求。
 - 拖动支持鼠标、触控笔和触摸主指针，不提供键盘排序或跨 List 拖放。Escape、窗口失焦、关闭 `draggable` 和组件卸载会取消当前拖动。
 
-组件没有公开方法。
-
 ## 参考来源
 
 外观、内容结构和交互依据 Material 3 [List overview](https://m3.material.io/components/lists/overview)、[List specs](https://m3.material.io/components/lists/specs) 与 [List guidelines](https://m3.material.io/components/lists/guidelines)。折叠效果参考官方 Lists specs 的 [Expand 演示](https://m3.material.io/components/lists/specs#43f774a6-b1fb-4719-9376-f706c7b82eac)：官方页面说明 Android List 可以展开和折叠，本组件的受控数组、Vue Slots 和 Web 无障碍语义是面向浏览器的适配。选择模式的语义限制参考 [WAI-ARIA Listbox Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/)。
@@ -18528,8 +18488,6 @@ const bottomPlaceholder = ref(0);
 
 `placeholder=true` 时，横向 Toolbar 占用实际 Toolbar 的 block-size，垂直 Toolbar 占用实际 Toolbar 的 inline-size；占位尺寸包含有效的 `bottomPlaceholder`。floating Toolbar 不登记 AppRoot 边缘，因此仍可使用显式 placeholder 为声明位置的长滚动内容保留空间。AppRoot 会统一处理安全区，自动接入时 `bottomPlaceholder` 只作为额外下限。无效值不产生额外空间。显式 `attach` 只在 `app=true` 时解析；无法解析时组件给出警告且不渲染 Toolbar。`fab` Slot 在 docked 模式不会渲染并会给出警告。
 
-组件没有公开方法。
-
 ## 事件
 
 组件不定义自定义事件；显示状态由 `modelValue` 或 `v-model` 控制。未消费的属性、`class`、`style`、`id` 和 ARIA 属性传递给 Toolbar 根节点；`app=true` 时该根节点 Teleport 到 AppRoot 或显式 `attach`，前者相对应用覆盖层绝对定位，后者相对视口固定定位。
@@ -18543,7 +18501,7 @@ const bottomPlaceholder = ref(0);
 
 ## 覆盖层与避让
 
-在 AppRoot 内，docked Toolbar 登记 `bottom` 并推动正文与浮动组；floating Toolbar 不占正文布局，但会读取 AppRoot 的四向避让值。非 AppRoot 场景继续使用内部 Toolbar 几何注册表，让 Snackbar 与 Tooltip 避让。Dialog 始终位于这些普通覆盖层之上；位于 AppRoot 内时进入其模态层并限制在应用矩形内。
+在 `MatAppRoot` 内，docked Toolbar 停靠在底部并推动正文；floating Toolbar 不占据正文空间并根据边缘安全区自动避让。
 
 ## 无障碍
 
@@ -18563,21 +18521,9 @@ import ToolbarVariantExample from '../examples/toolbar/ToolbarVariantExample.vue
 
 ## 组件简介
 
-`<mat-bottom-sheet>` 的组件导出名是 `MatBottomSheet`。它把补充内容固定在可用区域底部，提供 Material 3 的 `standard` 与 `modal` 两种变体，并保留 `auto` 自适应模式。
+`<mat-bottom-sheet>` 的组件导出名是 `MatBottomSheet`。它将补充内容固定在屏幕或容器底部，提供 `standard`（与主内容共存的常驻面板）与 `modal`（带遮罩与焦点拦截的模态面板）两种变体，以及根据断点自动切换的 `auto` 模式。
 
-Bottom sheet 内置的布局只有 drag handle、用户内容区域和 `footer`。标题、说明、操作控件以及其他内容都应由使用者放入默认 Slot；内容区域不附加内边距，需要留白时由使用者在自己的内容根元素上设置。`content` 仅用于需要显示一段纯文本时的便利场景，也不会附加内边距。`drag-handle` Slot 只替换把手行中的视觉内容，整行至少提供 48px 的拖动命中区域。
-
-Standard 与主内容共存，不锁定页面滚动，也不会主动移动焦点；modal 使用原生 `<dialog>`、帷幕和 Vue Teleport，组件负责焦点陷阱、背景交互拦截以及关闭后的焦点恢复。Modal 没有内置标题，因此必须由使用者提供 `aria-label` 或 `aria-labelledby`，默认 Slot 中的标题由使用者自行关联。位于 `MatAppRoot` 内且省略 `attach` 时，modal 自动进入该 AppRoot 的模态层。
-
-默认 `variant="auto"`：视口宽度小于 `breakpoint` 时使用 modal，达到断点后使用 standard。默认断点为 840px。自动模式只改变 Bottom sheet 自身的布局方式，不会把它替换成 Side sheet。
-
-`expanded` 有四个具名档位，按高度从小到大是 `min`、`normal`、`max` 和 `full`。可用高度指容器高度减去顶部安全间距（宽屏 56px、窄屏 72px）：`min` 固定 64px；`normal` 取内容完整高度并以可用高度一半封顶；`max` 按内容完整高度展开且不超过可用高度；`full` 直接使用可用高度。面板高度不低于 64px，内容超出面板高度时只有内容区滚动。`expanded` 也可以设置数字、纯数字字符串或合法 CSS `block-size` 值；手动高度低于 64px 时只把实际渲染高度限制为 64px，不修改受控值。
-
-组件会测量把手行、内容主体与页脚的高度，把 `normal` 与 `max` 渲染成实测像素值而不是 CSS 关键字，因此 `min`、`normal`、`max`、`full` 与自定义高度之间的切换都是可插值的高度过渡；内容或容器尺寸变化后重新测量并平滑更新高度。高度切换、阴影开关和圆角开关都使用 Material motion 过渡，拖动时会暂时关闭高度过渡以跟随指针，释放后恢复动画。
-
-开启 `virtualExpand` 后，`min` 与 `normal` 两档都按 `min(内容高度, 可用高度)` 布局面板，滚动容器覆盖这段完整内容，再通过向下偏移控制露出多少：`min` 露出 64px，`normal` 露出可用高度的一半，其余内容留在屏幕下方；两档之间切换时面板高度不变，只有整体位移变化，因此内容不会被压缩或重新排布。内容不足时偏移为 0，表现与不开启时一致。不开启 `virtualExpand` 时面板高度等于可见高度，内容在面板内部滚动，屏幕下方没有内容。内容区向下滚轮或向上滑动时请求 `max`，已经展开时不会重复请求。
-
-把手的鼠标点击不会切换高度；键盘 Enter/Space 仍然执行可访问的状态操作：`min` 与 `normal` 请求 `max`，standard 的展开档请求 `normal`，modal 的展开档请求关闭。拖动时面板先跟手缩放到 `min`，越过后改为整体下滑；向上拖动不受当前档位上限约束，可以先放大到可用高度，继续向上则按阻尼继续放大，最多再增加一个顶部安全间距（宽屏 56px、窄屏 72px），松手后回弹到吸附到的档位。松手按相邻档位中点吸附到 `min`、`normal` 或 `max`：落点低于 32px，或触控与手写笔向下快速甩动（位移至少 48px、速度不低于 0.5px/ms）时请求关闭；鼠标拖动不参与甩动判定，只能把落点拖进关闭分区来关闭，避免轻微快速下拉就收起面板。`full` 与自定义高度继续向上拖动不会切换档位，小幅向下拖动也会先回到当前高度；两者都不会成为拖动结果。开启 `virtualExpand` 时拖动只改变预览偏移、不改变面板高度：向上把面板移回屏幕，整块可见后继续向上仍按阻尼上移，松手后回到吸附到的档位与对应露出高度。
+底部工作表提供拖动手柄行（drag handle）、内容区域和底部操作区（footer），支持通过手势拖动或 `expanded` 属性切换面板高度；预设高度档位包括 `min`、`normal`、`max` 和 `full`，也支持指定具体数值高度。开启 `virtualExpand` 可在内容超出时提供平滑位移展开体验。
 
 ## 示例
 
@@ -19286,8 +19232,6 @@ import BottomSheetVirtualExpandExample from '../examples/bottom-sheet/BottomShee
 
 默认 `variant="auto"`：视口宽度小于 840px 时使用 modal，更宽时使用 standard。`position="start|end"` 使用逻辑方向，默认从 end 边进入。自动模式不会把 Side sheet 替换成 Bottom sheet。
 
-触摸拖动按绘制帧合并，并在释放前刷新最新位置；modal 使用 default spatial 进入和无回弹的快速退出，组件以浏览器报告的实际动画完成时间决定 DOM 清理与焦点恢复。减少动态效果时直接呈现最终状态。
-
 ## 示例
 
 ### `standard` 与 `modal`
@@ -19659,7 +19603,7 @@ Standard 必须放在横向 flex 父容器中才能与主内容并排；主内�
 
 组件是受控的。Modal 打开后聚焦显式 `autofocus` 或第一个可交互元素，关闭完成后恢复原焦点。Modal 锁定滚动并阻止背景交互：非 AppRoot 场景锁定页面根滚动，AppRoot 场景锁定正文滚动容器并把正文层设为 `inert`；页面原本存在占据布局宽度的经典滚动条时临时保留其槽位，避免页面宽度跳动，没有经典滚动条时不额外预留空间。Standard 不主动移动焦点，也不锁定页面滚动。
 
-在非 AppRoot 场景下，为防止锁定滚动时页面主内容发生宽度跳动，根节点会启用 `scrollbar-gutter: stable` 保留滚动条槽位。由于浏览器标准将该槽位作为视口排版边界的一部分，右侧模态 Side sheet 会对齐在槽位左侧，表现为面板与屏幕物理右边缘之间存在与原滚动条等宽的占位间隙。若需要侧边面板无缝紧贴屏幕右边缘并获得更自然的模态范围，推荐使用 `<mat-app-root>`（`MatAppRoot`）构建应用骨架，将页面滚动托管在内部正文容器中。
+推荐搭配 `<mat-app-root>` 使用，可获得无缝紧贴视口边缘的模态侧边栏与正文滚动避让体验。
 
 ## Slots
 
@@ -20233,7 +20177,7 @@ section {
 - 当面板通过 `title` 属性渲染默认激活器时，尾部自动提供随展开状态平滑旋转的箭头指示器。
 - `split=false` 时，触发器与折叠内容区域合并至同一圆角背景容器内，展开时激活器底边角自动变为直角，与下方内容无缝衔接。
 - 折叠区域遵循 Material 3 Expressive 弹簧动效规范，并在 `prefers-reduced-motion: reduce` 下自动禁用过渡动画。
-- 组件完全继承了底层 `MatList` 与 `MatListGroup` 的 WAI-ARIA 语义（包括 `aria-expanded`、`aria-controls` 及键盘回车/空格激活）。
+- 组件支持标准折叠展开 WAI-ARIA 语义，支持回车与空格键激活。
 
 ## 参考来源
 
@@ -20254,7 +20198,7 @@ import ExpansionVariantExample from '../examples/expansion/ExpansionVariantExamp
 
 `<mat-navigation-rail>` 的组件导出名是 `MatNavigationRail`，配套子项组件 `<mat-navigation-rail-item>`（`MatNavigationRailItem`）或通用导航子项 `<mat-navigation-item>`（`MatNavigationItem`）。该组件遵循 Material 3 Expressive 规范，专用于在平板、桌面等中大尺寸屏幕中提供 3–7 个主要目的地、菜单入口、FAB 与底部操作的纵向导航栏。
 
-组件底层根元素基于 `MatAside` 呈现，默认停靠在布局容器的 `start`（起始侧）边缘，统管侧边定位、安全区留白、展开收起动画和模态遮罩。位于 `MatAppRoot` 或 `MatLayout` 内时会自动向最近的根登记起始侧边缘，主内容层自动避让；组件树中同时存在两个根时不会重复登记。AppRoot 只额外提供覆盖层、Snackbar、布局尺寸和边缘上下文等应用能力，不改变 Navigation rail 的停靠规则。
+组件默认停靠在布局容器的起始侧边缘，位于 `MatAppRoot` 或 `MatLayout` 内时会自动接入布局并避让正文内容。
 
 ## 示例
 
@@ -21162,8 +21106,6 @@ Material Design 规范推荐间距：
 - **导航项之间**：收起态为 **4px**（`--mat-navigation-rail-item-space`），展开态为 **0px**。
 - **导航项与底部操作之间**：插入 `<mat-spacer />` 自动填充剩余可用空间。
 
-组件样式内置智能相邻选择器，当检测到菜单按钮与 FAB、或 FAB/按钮与导航项紧邻时会自动注入对应的 12px 与 40px 间距，用户亦可通过 inline style 显式指定。
-
 :::: details 查看示例代码
 ::: code-group
 
@@ -21601,8 +21543,6 @@ const selected = ref('inbox');
 | `href` | `string` | `undefined` | 提供后渲染为原生链接，否则渲染为按钮 |
 | `disabled` | `boolean` | `false` | 禁用原生交互和选择请求，并降低内容强调 |
 
-组件没有公开方法。
-
 ## 事件
 
 | 组件 | 事件 | 载荷 | 触发条件 |
@@ -21664,7 +21604,7 @@ import NavigationRailWidthExample from '../examples/navigation-rail/NavigationRa
 
 ## 组件简介
 
-`<mat-tooltip>` 的组件导出名是 `MatTooltip`。它实现 Material 3 Plain 与 Rich tooltip：Plain tooltip 用于补充展示元素的简短说明；Rich tooltip 用于较长的解释，并可包含简短标题、链接和最多两个操作按钮。组件以覆盖定位 Teleport 到合适容器，默认显示在展示元素上方；省略 `attach` 时，依次选择展示元素所在的已打开 `dialog`/Popover、目标所属 `MatAppRoot`、`body`。AppRoot 内会避让布局边缘，其他场景会把 Toolbar 作为避让区域，必要时自动换边。组件不包含箭头、触屏长按或 persistent rich tooltip。
+`<mat-tooltip>` 的组件导出名是 `MatTooltip`。它实现 Material 3 的 Plain（纯文本简短提示）与 Rich（富文本，可含标题与操作按钮）两种提示气泡。组件自动根据位置避让边缘并在空间不足时自动换边。
 
 ## 示例
 
@@ -22361,7 +22301,7 @@ import SimpleExpansionSwitchExample from '../examples/simple-expansion/SimpleExp
 
 `<mat-navigation-bar>` 的组件导出名是 `MatNavigationBar`，配套子项组件 `<mat-navigation-bar-item>`（`MatNavigationBarItem`）或通用导航子项 `<mat-navigation-item>`（`MatNavigationItem`）。该组件遵循 Material 3 Navigation Bar 设计规范，专用于在移动端或紧凑型应用窗口底部呈现 3–5 个核心顶级导航目的地。
 
-组件底层根元素基于 `MatAside` 呈现，默认停靠在布局容器的 `bottom` 边缘，统管底部定位、安全区预留与切入退场动效。开启 `app` 属性后，若位于 `MatAppRoot` 或 `MatLayout` 内部且未显式指定 `attach`，会向最近的一个根登记底部边缘并自适应底部安全区，正文内容自动获得相应内边距避让；否则支持固定至视口并挂载至指定 `attach` 容器。
+组件默认停靠在布局容器的底部边缘。开启 `app` 属性后，可自动接入 `MatAppRoot` 或 `MatLayout`，正文内容自动获得避让内边距。
 
 ## 示例
 
@@ -22667,6 +22607,424 @@ import NavigationBarAlignmentExample from '../examples/navigation-bar/Navigation
 import NavigationBarAppExample from '../examples/navigation-bar/NavigationBarAppExample.vue';
 </script>
 
+# Navigation drawer 导航抽屉
+
+## 组件简介
+
+`<mat-navigation-drawer>` 的组件导出名是 `MatNavigationDrawer`，配套的二级菜单分组组件为 `<mat-navigation-group>`（组件导出名 `MatNavigationGroup`）。
+
+Navigation drawer 为应用提供主导航侧边抽屉，支持标准抽屉（展开时占据布局空间）和模态抽屉（覆盖页面并带有遮罩）。默认 Slot 支持混排导航项、二级菜单分组、操作按钮以及通过 `<mat-spacer />` 底部占位。
+
+## 示例
+
+### 基础导航抽屉
+
+导航抽屉默认在收起时隐藏，展开时占据左侧布局空间。通过在默认 Slot 中混排按钮或在外部提供触发按钮切换展开状态。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-layout class="navigation-drawer-example-shell">
+    <mat-navigation-drawer
+      v-model="selected"
+      v-model:expanded="expanded"
+      bordered
+      aria-label="基础导航抽屉"
+    >
+      <template #default="{ expanded: currentExpanded }">
+        <mat-btn
+          variant="standard"
+          :icon="currentExpanded ? 'menu_open' : 'menu'"
+          :label="currentExpanded ? '收起抽屉' : '展开抽屉'"
+          @click="expanded = !expanded"
+        />
+        <mat-navigation-rail-item value="inbox" icon="inbox">
+          收件箱
+        </mat-navigation-rail-item>
+        <mat-navigation-rail-item value="starred" icon="star">
+          收藏夹
+        </mat-navigation-rail-item>
+        <mat-navigation-rail-item value="sent" icon="send">
+          已发送
+        </mat-navigation-rail-item>
+      </template>
+    </mat-navigation-drawer>
+
+    <div class="navigation-drawer-example-content">
+      <mat-btn
+        v-if="!expanded"
+        icon="menu"
+        label="展开导航抽屉"
+        @click="expanded = true"
+      >
+        展开导航抽屉
+      </mat-btn>
+      <span v-else>抽屉已展开，选中：{{ selected }}</span>
+    </div>
+  </mat-layout>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const expanded = ref(true);
+const selected = ref('inbox');
+</script>
+```
+```vue
+<style scoped>
+.navigation-drawer-example-shell {
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: hidden;
+}
+
+.navigation-drawer-example-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 0;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="基础导航抽屉预览" height="352px">
+    <NavigationDrawerBasicExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 模态导航抽屉与遮罩
+
+设置 layout="modal" 可呈现覆盖在页面上方的模态抽屉，带有半透明遮罩背景。点击遮罩或按下 Escape 键时会自动请求收起抽屉。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-layout class="navigation-drawer-example-shell">
+    <mat-navigation-drawer
+      v-model="selected"
+      v-model:expanded="expanded"
+      layout="modal"
+      bordered
+      aria-label="模态导航抽屉"
+    >
+      <template #default="{ expanded: currentExpanded }">
+        <mat-btn
+          variant="standard"
+          :icon="currentExpanded ? 'menu_open' : 'menu'"
+          :label="currentExpanded ? '收起抽屉' : '展开抽屉'"
+          @click="expanded = !expanded"
+        />
+        <mat-navigation-rail-item value="home" icon="home">
+          首页
+        </mat-navigation-rail-item>
+        <mat-navigation-rail-item value="explore" icon="explore">
+          探索
+        </mat-navigation-rail-item>
+        <mat-navigation-rail-item value="settings" icon="settings">
+          设置
+        </mat-navigation-rail-item>
+      </template>
+    </mat-navigation-drawer>
+
+    <div class="navigation-drawer-example-content">
+      <mat-btn
+        icon="menu"
+        label="打开模态抽屉"
+        @click="expanded = true"
+      >
+        打开模态抽屉
+      </mat-btn>
+    </div>
+  </mat-layout>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const expanded = ref(false);
+const selected = ref('home');
+</script>
+```
+```vue
+<style scoped>
+.navigation-drawer-example-shell {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: hidden;
+}
+
+.navigation-drawer-example-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 0;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="模态导航抽屉预览" height="352px">
+    <NavigationDrawerModalExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 二级菜单分组与底部操作
+
+利用 `<mat-navigation-group>` 可轻松组织带前置缩进的二级子菜单，并通过 `#activator` 插槽自定义带折叠图标的一级导航项。利用 `<mat-spacer />` 还可以将辅助或帮助按钮自动推至抽屉底部。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-layout class="navigation-drawer-example-shell">
+    <mat-navigation-drawer
+      v-model="selected"
+      v-model:expanded="expanded"
+      bordered
+      aria-label="二级分组抽屉"
+    >
+      <template #default="{ expanded: currentExpanded }">
+        <mat-btn
+          variant="standard"
+          :icon="currentExpanded ? 'menu_open' : 'menu'"
+          :label="currentExpanded ? '收起抽屉' : '展开抽屉'"
+          @click="expanded = !expanded"
+        />
+        <mat-navigation-rail-item value="dashboard" icon="dashboard">
+          仪表盘
+        </mat-navigation-rail-item>
+
+        <mat-navigation-group v-model:expanded="groupExpanded">
+          <template #activator="{ expanded: isGroupOpen, toggle }">
+            <mat-navigation-rail-item
+              icon="folder"
+              @click="toggle"
+            >
+              工作空间
+              <template #trailing>
+                <mat-icon
+                  :icon="isGroupOpen ? 'expand_less' : 'expand_more'"
+                  aria-hidden="true"
+                />
+              </template>
+            </mat-navigation-rail-item>
+          </template>
+
+          <mat-navigation-rail-item value="file-1" icon="description">
+            设计规范.pdf
+          </mat-navigation-rail-item>
+          <mat-navigation-rail-item value="file-2" icon="description">
+            组件架构.md
+          </mat-navigation-rail-item>
+        </mat-navigation-group>
+
+        <mat-spacer />
+
+        <mat-btn
+          variant="standard"
+          icon="help"
+          label="帮助与支持"
+        />
+      </template>
+    </mat-navigation-drawer>
+
+    <div class="navigation-drawer-example-content">
+      当前选中目的地：{{ selected }}
+    </div>
+  </mat-layout>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const expanded = ref(true);
+const groupExpanded = ref(true);
+const selected = ref('file-1');
+</script>
+```
+```vue
+<style scoped>
+.navigation-drawer-example-shell {
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: hidden;
+}
+
+.navigation-drawer-example-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 0;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="二级菜单分组抽屉预览" height="412px">
+    <NavigationDrawerGroupExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `container-color`
+
+`container-color` 默认关闭。开启后，standard Drawer 的容器背景改用与 `layout="modal"` 相同的语义色；`layout="modal"` 本身始终使用 modal 语义色，不受该属性影响。下方示例在同一个 standard Drawer 上切换该属性，以便观察容器色变化。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <mat-layout class="navigation-drawer-container-color-example__shell">
+    <mat-navigation-drawer
+      v-model="selected"
+      expanded
+      :container-color="containerColor"
+      bordered
+      aria-label="容器配色导航抽屉"
+    >
+      <mat-navigation-rail-item value="inbox" icon="inbox">
+        收件箱
+      </mat-navigation-rail-item>
+      <mat-navigation-rail-item value="starred" icon="star">
+        收藏夹
+      </mat-navigation-rail-item>
+      <mat-navigation-rail-item value="sent" icon="send">
+        已发送
+      </mat-navigation-rail-item>
+    </mat-navigation-drawer>
+
+    <div class="navigation-drawer-container-color-example__content">
+      <mat-btn
+        variant="outlined"
+        @click="containerColor = !containerColor"
+      >
+        {{ containerColor ? '恢复 standard 容器色' : '启用 modal 容器色' }}
+      </mat-btn>
+      <p>当前容器色：{{ containerColor ? 'modal 语义' : 'standard 语义' }}</p>
+    </div>
+  </mat-layout>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const containerColor = ref(false);
+const selected = ref('inbox');
+</script>
+```
+```vue
+<style scoped>
+.navigation-drawer-container-color-example__shell {
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: hidden;
+}
+
+.navigation-drawer-container-color-example__content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 0;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+
+.navigation-drawer-container-color-example__content p {
+  margin: 0;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Navigation drawer 容器语义色预览" height="352px">
+    <NavigationDrawerContainerColorExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### MatNavigationDrawer 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `model-value` | `string \| number \| boolean \| null` | `null` | 受控的当前目的地值，支持 `v-model` |
+| `expanded` | `boolean` | `false` | 受控展开状态，支持 `v-model:expanded`；收起时抽屉隐藏，展开时显示 |
+| `width` | `number \| string` | `undefined` | 展开状态宽度；数字按 px 处理，字符串须为合法 CSS 宽度，非法时使用默认宽度 |
+| `layout` | `'standard' \| 'modal'` | `'standard'` | 抽屉布局；`standard` 占据空间，`modal` 覆盖内容并附带遮罩 |
+| `mode` | `'docked' \| 'flow' \| 'sticky' \| 'fixed'` | `undefined` | 排布与定位模式；省略时在最近 Layout/AppRoot 中自动 docked，其他场景保留 Aside 的 flow 行为 |
+| `alignment` | `'start' \| 'center' \| 'end'` | `'start'` | 默认 Slot 内容在纵向轴上的对齐方式 |
+| `attach` | `string \| HTMLElement` | `undefined` | 仅 `mode="fixed"` 时指定 Teleport 目标；省略时保留在声明位置 |
+| `placeholder` | `boolean` | `false` | 仅 modal 抽屉在声明位置生成占位；standard 抽屉使用最近根的 padding |
+| `bordered` | `boolean` | `false` | 是否复用 Aside 的边框修饰，在面向内容的一侧渲染 1px 细边框 |
+| `container-color` | `boolean` | `false` | 非 modal 布局使用与 modal 相同的容器背景语义色；modal 布局始终使用 modal 语义色 |
+
+注：`full-width`、`collapsible` 与 `hide-on-collapse` 在组件内部固定为 `true`，无需且不可配置。
+
+### MatNavigationGroup 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `expanded` | `boolean` | `false` | 受控展开状态，支持 `v-model:expanded` |
+| `model-value` | `boolean` | `undefined` | 受控展开状态别名，支持 `v-model` |
+| `title` | `string` | `undefined` | 分组标题文本 |
+| `indent` | `number \| string` | `16` | 二级子项的前置缩进量（默认 16px） |
+
+## 事件
+
+| 组件 | 事件 | 载荷 | 触发条件 |
+| --- | --- | --- | --- |
+| `MatNavigationDrawer` | `update:modelValue` | `string \| number \| boolean` | 启用的子 Item 被激活时发出 |
+| `MatNavigationDrawer` | `update:expanded` | `boolean` | 遮罩点击或按下 Escape 请求关闭时发出 |
+| `MatNavigationGroup` | `update:expanded` | `boolean` | 分组展开/折叠状态改变时发出 |
+| `MatNavigationGroup` | `update:modelValue` | `boolean` | 分组展开/折叠状态改变时发出 |
+
+## Slots
+
+### MatNavigationDrawer Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 混排菜单按钮、FAB、NavigationItem、NavigationGroup、Spacer 与底部操作。Slot 参数为 `{ expanded, orientation }` |
+| `header` | 可选的顶部品牌标识区域；Slot 参数为 `{ expanded }` |
+
+### MatNavigationGroup Slots
+
+| 名称 | 内容约束 |
+| --- | --- |
+| 默认 | 二级导航子项内容，自动应用前置缩进 |
+| `activator` | 一级触发项插槽；Slot 参数为 `{ expanded, toggle }` |
+
+<script setup>
+import NavigationDrawerBasicExample from '../examples/navigation-drawer/NavigationDrawerBasicExample.vue';
+import NavigationDrawerContainerColorExample from '../examples/navigation-drawer/NavigationDrawerContainerColorExample.vue';
+import NavigationDrawerModalExample from '../examples/navigation-drawer/NavigationDrawerModalExample.vue';
+import NavigationDrawerGroupExample from '../examples/navigation-drawer/NavigationDrawerGroupExample.vue';
+</script>
+
 # Divider 分隔线
 
 ## 组件简介
@@ -22867,7 +23225,7 @@ import NavigationBarAppExample from '../examples/navigation-bar/NavigationBarApp
 | `inset` | `boolean \| 'none' \| 'start' \| 'middle'` | `false` | `false`/`'none'` 为全宽，`true`/`'middle'` 为两侧各缩进 16px，`'start'` 只缩进起始侧 |
 | `vertical` | `boolean` | `false` | 是否为竖向分隔线 |
 
-未被消费的原生属性传递给实际根元素。独立使用时根元素是 `hr`；普通 List 中是 `li`；选择 List 中是展示用 `div`。组件没有公开方法。
+未被消费的原生属性传递给实际根元素。独立使用时根元素是 `hr`；普通 List 中是 `li`；选择 List 中是展示用 `div`。
 
 ## 事件
 
@@ -23611,13 +23969,7 @@ import SnackbarTextExample from '../examples/snackbar/SnackbarTextExample.vue';
 
 ## 组件简介
 
-`<mat-scroll-area>` 的组件导出名是 `MatScrollArea`。组件拥有一个纵向或横向原生滚动元素，并在仍有内容可滚动时用真实 CSS mask 渐隐对应边缘；效果不依赖容器背景色，适合透明表面、图片和任意主题背景。滚动方向两端默认保留 28px 内边距，内容在两端始终留出间距，`noScrollPadding` 可以关闭这个内边距。滚动条始终贴住容器边缘，即使容器根元素设置了水平或垂直内边距，内容仍保留同样的内边距间距。
-
-组件默认背景透明，作为容器使用时可以通过 `color` 属性填充 `surface`、`surface-container` 等系统颜色角色或六位十六进制种子色，并同步内容文字颜色；`rounded` 属性可以添加接近 28px 的系统大圆角。滚动条拇指使用 primary 令牌、轨道透明，尺寸以内联 CSS 变量 `--mat-scroll-area-scrollbar-width` 暴露在组件根元素上供子元素读取（该变量属于内部实现，不承诺公共兼容）。
-
-组件一次只管理一个滚动轴。使用方必须为纵向模式提供确定的块轴尺寸，或为横向模式提供确定的行轴尺寸和不会收缩的内部内容，才能形成滚动边界。配合 `<mat-pull-to-refresh>` 可以在滚动区域起始端提供下拉刷新手势。
-
-边缘阴影带默认紧贴边缘，`shadowOffset` 可以让起始端、末端的阴影带从边缘向内偏移；偏移区内的滚动内容不会被遮罩覆盖，适合放置不透明的 sticky 元素。
+`<mat-scroll-area>` 的组件导出名是 `MatScrollArea`。组件为单轴（纵向或横向）内容提供原生滚动容器，并在有溢出内容时通过两端渐隐遮罩平滑过渡边缘。支持通过 `color` 填充容器背景色、`rounded` 应用系统大圆角，以及自定义滚动条外观。
 
 ## 示例
 
@@ -23877,7 +24229,7 @@ const colors = ['surface-container', 'surface-container-high', 'surface-containe
 
 ### 搭配 Container
 
-`<mat-scroll-area>` 常作为页面正文的滚动容器，推荐把 `<mat-container>` 直接放在默认 Slot 内：容器提供两侧响应式内边距与最大宽度，正文在滚动区域内左右各保留 16px（`>=600px` 时为 24px）。容器会继承组件根元素上的 `--mat-scroll-area-scrollbar-width`（`thin` 8px、`default` 16px、`hidden` 0），并自动把右侧内边距减去滚动条宽度，正文在滚动条占据右侧空间后仍保持视觉居中；切换 `bar-width` 后补偿自动跟随，无需使用方手动覆盖。
+`<mat-scroll-area>` 常作为页面正文的滚动容器，推荐把 `<mat-container>` 直接放在默认 Slot 内：容器提供两侧响应式内边距与最大宽度，正文在滚动区域内左右各保留 16px（`>=600px` 时为 24px）。容器与滚动区域搭配使用时，会自动协同右侧内边距与滚动条宽度，保持正文视觉居中。
 
 :::: details 查看示例代码
 ::: code-group
@@ -24808,7 +25160,7 @@ function scrollToEnd() {
 | `reach-end` | `{ distance: number, target: HTMLElement }` | 滚动进入末端阈值区域时触发一次；`distance` 是距末端像素数，`target` 是原生滚动元素 |
 | `scroll` | 原生 `Event` | 滚动元素触发原生 scroll 事件，监听器直接透传 |
 
-初次挂载、ResizeObserver 同步、默认 Slot 内容变化，以及 `orientation` 或 `reachThreshold` 变化只更新内部边缘状态，不派发 `reach-start` 或 `reach-end`。
+仅在滚动到达两端阈值时派发 `reach-start` 或 `reach-end` 事件。
 
 ## Slots
 
@@ -25311,7 +25663,7 @@ function scrollTo(index) {
 
 ### 属性
 
-组件没有专用属性。未被消费的原生属性、`class` 和 `style` 传递给根 `span`；组件固定设置 `aria-hidden="true"`，不进入无障碍树。组件没有公开方法。
+组件没有专用属性。未被消费的原生属性、`class` 和 `style` 传递给根 `span`；组件固定设置 `aria-hidden="true"`，不进入无障碍树。
 
 ## 事件
 
@@ -25545,9 +25897,7 @@ import SpacerFlexExample from '../examples/spacer/SpacerFlexExample.vue';
 
 | 名称 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `fluid` | `boolean` | `false` | 为 `false` 时正文最大宽度为 1040px，超过时居中；为 `true` 时正文铺满外层扣除水平内边距后的可用宽度。 |
-
-组件没有公开方法。未被消费的原生属性、`class`、`style` 和事件监听器传给铺满父容器的外层 `div`。
+| `fluid` | `boolean` | `false` | 为 `false` 时正文最大宽度为 1040px，超过时居中；为 `true` 时正文铺满外层扣除水平内边距后的可用宽度。 |未被消费的原生属性、`class`、`style` 和事件监听器传给铺满父容器的外层 `div`。
 
 ## 事件
 
@@ -25569,11 +25919,9 @@ import ContainerHeightExample from '../examples/container/ContainerHeightExample
 
 ## 组件简介
 
-`<mat-aside>` 的组件导出名是 `MatAside`。它是专用于停靠在 `mat-layout` 或 `mat-app-root` 边缘的布局基础设施组件。通过统一管理四个停靠方向（`top`、`bottom`、`left`、`right`）的厚度尺寸与安全区留白，协调边缘占据与正交方向上的互斥避让，未来可作为各边缘组件（如顶部应用栏、导航侧栏、底部栏等）的底层根 DOM。
+`<mat-aside>` 的组件导出名是 `MatAside`。它是专用于停靠在 `mat-layout` 或 `mat-app-root` 边缘的布局基础设施组件。通过统一管理四个停靠方向（`top`、`bottom`、`left`、`right`）的厚度尺寸与安全区留白，协调边缘占据与相邻方向的尺寸避让。
 
-同一个组件树同时存在 `MatLayout` 与 `MatAppRoot` 时，Aside 只向最近的一个根登记一次，不会同时改变两层正文 padding。`docked` 与 `fixed` 都会参与最近根的边缘计算；`flow` 与 `sticky` 不登记边缘。`fixed` 组件显式 Teleport 后仍沿用原有挂载行为，但不会因为 Teleport 目标产生第二份登记。
-
-组件的核心排布机制遵循“先出现先占满”原则：在模板 DOM 中居前的边缘组件优先占满延展方向（例如居前的顶部栏占满横向整宽），而居后的边缘组件根据前序组件的占用尺寸自动偏移避让（例如居后的侧边栏高度自动避让顶部栏）。
+组件树中同时存在嵌套布局根时，Aside 仅向最近的一个布局根登记边缘避让。
 
 ## 示例
 
@@ -26405,9 +26753,7 @@ const open = ref(false);
 | `zIndex` | `number \| string \| undefined` | `undefined` | 显式指定 CSS 层级；省略时根据 `location` 提供预设层级。 |
 | `attach` | `string \| HTMLElement` | `undefined` | `mode="fixed"` 时的挂载目标。未指定时保留在声明位置，显式传入后才 Teleport 到目标。 |
 | `transition` | `boolean` | `true` | 是否启用默认滑入滑出过渡动效。设为 `false` 时立即切换显隐。 |
-| `closeOnBack` | `boolean` | `true` | `modal=true` 时是否通过点击背景遮罩或按 Escape 请求关闭，禁用后两者都不请求关闭。 |
-
-组件没有公开方法。通过模板 ref 暴露 `hostElement`（根 DOM 元素）、`activeInsets`（当前生效的正交避让数据）和 `phase`（动效阶段）。未被消费的属性、`class`、`style` 作用于外层根元素。
+| `closeOnBack` | `boolean` | `true` | `modal=true` 时是否通过点击背景遮罩或按 Escape 请求关闭，禁用后两者都不请求关闭。 |通过模板 ref 暴露 `hostElement`（根 DOM 元素）、`activeInsets`（当前生效的正交避让数据）和 `phase`（动效阶段）。未被消费的属性、`class`、`style` 作用于外层根元素。
 
 ## 事件
 
@@ -26532,7 +26878,7 @@ import AsideModalExample from '../examples/aside/AsideModalExample.vue';
 
 ### 属性
 
-组件没有专用属性。未被消费的原生属性、`class` 和 `style` 传递给根 `div.table-wrapper`。组件没有公开方法。
+组件没有专用属性。未被消费的原生属性、`class` 和 `style` 传递给根 `div.table-wrapper`。
 
 ## 事件
 
@@ -26564,7 +26910,7 @@ import TableWrapperBasicExample from '../examples/table-wrapper/TableWrapperBasi
 
 ## 组件简介
 
-`<mat-layout>` 的组件导出名是 `MatLayout`。它为局部区域（如卡片、工作区或视口分屏）提供多边缘停靠协调上下文。通过与 `<mat-aside>` 搭配使用，自动收集并按 DOM 顺序计算顶、底、左、右、起始、末端各边缘的占用厚度，向正文内容区（`.mat-layout__content`）分发动态累加的内边距，实现无重叠的正交自适应避让。AppRoot 复用同一套内部六向计算规则，但仍保留独立的应用覆盖层上下文。
+`<mat-layout>` 的组件导出名是 `MatLayout`。它为局部区域（如卡片、工作区或视口分屏）提供多边缘停靠协调上下文。与 `<mat-aside>` 搭配使用时，自动计算各边缘占用厚度并为正文内容区提供自适应避让内边距。
 
 ## 示例
 
@@ -26662,9 +27008,7 @@ import TableWrapperBasicExample from '../examples/table-wrapper/TableWrapperBasi
 
 | 名称 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `as` | `string` | `'div'` | 根容器渲染的 HTML 标签，如 `'div'`、`'section'`、`'main'` 等。 |
-
-组件没有公开方法。未被消费的属性、`class`、`style` 作用于外层根元素。
+| `as` | `string` | `'div'` | 根容器渲染的 HTML 标签，如 `'div'`、`'section'`、`'main'` 等。 |未被消费的属性、`class`、`style` 作用于外层根元素。
 
 ## 事件
 
@@ -27116,8 +27460,6 @@ const widths = ref({});
 
 `MatPane` 根元素默认使用 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`。如果应用用 `v-if` 移除或重新显示 Pane，组件会按新的 Slot 顺序重建调整控件并更新宽度信息。
 
-组件没有公开方法。
-
 ## 事件
 
 | 组件与事件 | 载荷 | 触发条件 |
@@ -27382,15 +27724,13 @@ const target = ref(null);
 | `closeDelay` | `number \| string` | `0` | 离开目标后等待的毫秒数；数字或纯数字字符串，非有限或负值触发 prop 校验警告并按 `0` 处理。 |
 | `target` | `HTMLElement \| string \| Ref<HTMLElement \| null>` | — | 指定时由组件直接监听目标元素或选择器；适合目标元素无法绑定默认 Slot 的场景。 |
 
-组件没有公开方法。
-
-### 事件
+## 事件
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
 | `update:modelValue` | `boolean` | 非 disabled 状态下，进入或离开延迟完成，或 disabled 重新启用时触发。 |
 
-### Slots
+## Slots
 
 | Slot | 参数 | 内容约束 |
 | --- | --- | --- |
@@ -27929,13 +28269,11 @@ async function toggleDetail() {
 | `as` | `string` | `'div'` | 合法 HTML 标签名，作为实际根元素。 |
 | `disabled` | `boolean` | `false` | 为 `true` 时不向根元素声明共享名称。 |
 
-组件没有公开方法。
-
-### 事件
+## 事件
 
 组件没有自定义事件；根元素的原生事件会透传。
 
-### Slots
+## Slots
 
 | Slot | 内容约束 |
 | --- | --- |
@@ -28471,13 +28809,9 @@ function activate() {
 - 原生 `button` 和 `role="button"` 使用 Space、Enter 表达键盘 pressed；具有 `href` 的 `a` 和 `role="link"` 使用 Enter；其他宿主不由指令推导键盘 pressed。
 - `disabled` 或 `aria-disabled="true"` 的宿主不显示交互状态。
 
-150ms 是 mde-vue 为避免短按反馈闪烁而采用的视觉保持策略，不是 Material 规范规定的固定时长。
+### 宿主说明
 
-### 宿主与生命周期
-
-宿主必须能容纳子元素，且不能使用 `display: contents`。`input`、`img` 等不能可靠容纳子元素的元素不支持该指令。自定义交互容器仍需由使用方提供正确的 `role`、`tabindex`、键盘激活和点击行为。
-
-指令会加入一个绝对定位且 `aria-hidden="true"` 的内部子元素，并使用 CSS Anchor Positioning 让其覆盖宿主。不要依赖该子元素的 class、DOM 顺序或其他内部属性。绑定更新只更新选项；卸载时会清理状态层、观察器、事件监听和指令添加的 anchor 名称。
+宿主需能容纳子元素（不能使用 `display: contents`）。`input`、`img` 等不可容纳子元素的标签不支持该指令；非按钮元素需自行提供交互语义与键盘支持。
 
 <script setup>
 import StateLayerColorExample from '../examples/state-layer/StateLayerColorExample.vue';
@@ -28751,26 +29085,18 @@ function activate() {
 
 `createMatUi({ useRipple: true })` 为基于操作交互的组件（按钮、FAB、Chip、菜单项、操作模式列表项、卡片操作区、导航项目等）统一启用按压涟漪，默认关闭。插件启用后，单个宿主仍可设置 `v-ripple="{ disabled: true }"` 单独关闭；`v-ripple` 在自定义元素上的行为不受该选项影响。详见 [`createMatUi` 配置](/guide/create-mat-ui)。
 
-### 按压行为
+### 按压行为与变体
 
-- 按压点出现圆形波纹，在 225ms 内扩大到覆盖宿主（带 10px 外扩）并从按压点移动到宿主中心，随后保持可见；透明度在 75ms 内淡入到按压状态层透明度 `--mat-sys-state-pressed-state-layer-opacity`。
-- `variant: 'dots'` 时波点固定不动，由与实心圆同轨迹的圆形遮罩逐渐显示：遮罩从按压点扩张并迁移到宿主中心，节奏、颜色与裁剪仍与实心圆相同；波点网格把完整圆点对齐到按压点，点阵排布随按压位置变化，圆点不会在右缘或下缘被裁剪一半。
-- `variant: 'glow'` 时边缘羽化的光斑停留在按压点，按与实心圆相同的半径节奏放大并保持，圆心不向宿主中心迁移；释放后与其他保持型变体一同淡出。
-- `variant: 'rings'` 与 `variant: 'burst'` 是瞬时反馈，不保持按压：两圈 2px 细环间隔约 160ms 先后扩散，约 520ms 消散；八道细光线逐道延迟约 20ms 放射，约 460ms 消散。播放结束后自行从 DOM 移除，释放、快速连点或禁用只会提前结束它们。
-- 柔光、圆环与星芒的可见结构比实心圆更细或更羽化，目标不透明度取按压状态层令牌的四倍（上限 1）作为感知补偿。
-- 释放、取消、失去指针捕获或失焦后，保持型波纹（实心圆、波点、柔光）在 150ms 内淡出并从 DOM 移除；短按提前释放时等待进入时长结束后再淡出，避免反馈闪烁。瞬时波纹（圆环、星芒）自行消散，失焦或禁用时立即移除。
-- 快速连点时每次按压产生新波纹，并让仍在展示中的旧波纹立即结束。
-- 涟漪只响应主指针（鼠标左键、触摸、手写笔）；键盘激活的 pressed 反馈由 `v-state-layer` 表达。
-- `disabled` 或 `aria-disabled="true"` 的宿主不显示涟漪；按压期间禁用会立即结束当前波纹。
-- 减少动态效果偏好下跳过扩大与移动动画：保持型变体直接呈现按压点的静态波纹，瞬时变体呈现完全展开的静止结构，释放后按相同节奏移除。
+- **实心圆（`circle`）**：默认波纹，从按压点向四周扩散并平滑移动至宿主中心，释放后淡出。
+- **波点（`dots`）**：固定点阵网格，通过圆形扩展遮罩逐渐显现。
+- **柔光（`glow`）**：在按压点原地放大并保持的羽化光斑。
+- **圆环（`rings`）**：向外扩散消散的双重细环瞬时反馈。
+- **星芒（`burst`）**：放射状消散的八向光线瞬时反馈。
+- 涟漪响应主指针（鼠标左键、触控和笔输入）；`disabled` 或 `aria-disabled="true"` 的宿主不触发涟漪。
 
-225ms、75ms、150ms 与缓动参考 AndroidX Compose material-ripple 的默认实现，不是 Material 网页规范规定的固定时长。
+### 宿主说明
 
-### 宿主与生命周期
-
-宿主必须能容纳子元素，且不能使用 `display: contents`。`input`、`img` 等不能可靠容纳子元素的元素不支持该指令。自定义交互容器仍需由使用方提供正确的 `role`、`tabindex`、键盘激活和点击行为。
-
-指令会加入一个绝对定位且 `aria-hidden="true"` 的内部子元素作为涟漪容器，并使用 CSS Anchor Positioning 让其覆盖宿主，波纹被容器按宿主圆角裁剪。不要依赖该子元素的 class、DOM 顺序或其他内部属性。绑定更新只更新选项；卸载时会立即清理容器、进行中的波纹、观察器、事件监听和指令添加的 anchor 名称。
+宿主需能容纳子元素（不能使用 `display: contents`）。`input`、`img` 等不可容纳子元素的标签不支持该指令；非按钮元素需自行提供交互语义与键盘支持。
 
 <script setup>
 import RippleColorExample from '../examples/ripple/RippleColorExample.vue';

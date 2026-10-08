@@ -249,7 +249,7 @@ order: 35
 | `as` | `string` | `'i'` | 非空 HTML 标签名，用作实际根元素 |
 | `icon-class` | `string` | 继承全局值 | 空格分隔的图标 class；默认全局值为 `material-symbols-outlined`，空字符串关闭全局值 |
 
-未被消费的原生属性传递给实际根元素。组件没有公开方法。Slot SVG 只有在自身使用 `currentColor` 时才继承组件颜色；`src` 资源保留自己的内部颜色。
+未被消费的原生属性传递给实际根元素。Slot SVG 只有在自身使用 `currentColor` 时才继承组件颜色；`src` 资源保留自己的内部颜色。
 
 ## 事件
 

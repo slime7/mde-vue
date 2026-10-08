@@ -178,7 +178,7 @@ order: 105
 - 当面板通过 `title` 属性渲染默认激活器时，尾部自动提供随展开状态平滑旋转的箭头指示器。
 - `split=false` 时，触发器与折叠内容区域合并至同一圆角背景容器内，展开时激活器底边角自动变为直角，与下方内容无缝衔接。
 - 折叠区域遵循 Material 3 Expressive 弹簧动效规范，并在 `prefers-reduced-motion: reduce` 下自动禁用过渡动画。
-- 组件完全继承了底层 `MatList` 与 `MatListGroup` 的 WAI-ARIA 语义（包括 `aria-expanded`、`aria-controls` 及键盘回车/空格激活）。
+- 组件支持标准折叠展开 WAI-ARIA 语义，支持回车与空格键激活。
 
 ## 参考来源
 

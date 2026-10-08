@@ -37,7 +37,7 @@ order: 117
 
 ### 属性
 
-组件没有专用属性。未被消费的原生属性、`class` 和 `style` 传递给根 `div.table-wrapper`。组件没有公开方法。
+组件没有专用属性。未被消费的原生属性、`class` 和 `style` 传递给根 `div.table-wrapper`。
 
 ## 事件
 

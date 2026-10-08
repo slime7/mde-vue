@@ -9,13 +9,9 @@ order: 95
 
 ## 组件简介
 
-`<mat-app-bar>` 的组件导出名是 `MatAppBar`。它实现 Material 3 Expressive 的 search、small、medium flexible 和 large flexible 四种 App bar；`content="search"` 时，可在默认 Slot 中放置独立的 `<mat-search>` 作为主内容。`<mat-search>` 的组件导出名是 `MatSearch`。
+`<mat-app-bar>` 的组件导出名是 `MatAppBar`。它实现 Material 3 Expressive 的 search、small、medium flexible 和 large flexible 四种顶部应用栏。通过 `content` 属性（`headline`、`image`、`search`）明确主内容语义；`content="search"` 时可在默认 Slot 中放置独立的 `<mat-search>`（组件导出名 `MatSearch`）。
 
-App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、`content="image"` 或 `content="search"` 明确内容语义，标题、图像和搜索不会同时占据不同的主区域。`variant="search"` 始终按 search 内容处理。leading 和 trailing 操作区保持固定交互尺寸，主内容区使用剩余宽度；`align="center"` 使用对称侧轨，避免两侧操作数量不同时标题发生视觉偏移。
-
-组件默认在声明位置参与文档布局并粘附到滚动容器顶部。small 与 search 在开始滚动时从 `surface` 连续过渡到 `surface container`；medium flexible 和 large flexible 还会分别在前 48px、56px 滚动距离内折叠到 64px。动画由 CSS `scroll-timeline` 和 `animation-timeline` 驱动，标题与图片通过 `scale`、`translate`、`clip-path` 和 `opacity` 在稳定布局盒中变化，不逐帧修改字号、块尺寸或执行 JavaScript 计算。不支持这些 CSS 能力的浏览器保持静态展开；减少动态效果时保留展开几何，仅播放表面填色。
-
-组件底层根元素基于 `MatAside`（`as="header"`）呈现，默认停靠在布局容器的 `top` 边缘，统管顶部定位、安全区预留与切入退场动效。位于 `MatLayout` 或 `MatAppRoot` 内时，`docked` 与 `fixed` 都只登记到最近的一个根并产生正文 padding。
+组件支持吸顶停靠与随滚动连续折叠，提供 `leading`、`trailing` 操作区与 `subtitle` 副标题插槽，支持起始对齐与居中对齐，并支持通过 `app` 属性接入应用根布局。
 
 ## 示例
 
@@ -101,7 +97,7 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 
 ### `scrollTarget` 与连续折叠
 
-滚动示例把容器元素作为显式 `scrollTarget`。在最新浏览器中缓慢滚动，可以观察视觉高度、标题、subtitle 和背景色共享同一个滚动进度；折叠不会改写滚动容器的可滚动高度，因此越过动画终点后仍可正常继续滚动。
+通过 `scrollTarget` 指定滚动容器，App bar 会随滚动进度平滑折叠并过渡背景色。
 
 :::: details 查看示例代码
 
@@ -143,9 +139,7 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 | `zIndex` | `number \| string \| undefined` | `undefined` | 显式指定层级 |
 | `transition` | `boolean` | `true` | 是否启用切入退场动效 |
 
-`app=true` 且自动接入最近的 `MatLayout` 或 `MatAppRoot` 时，64px 收起高度登记为固定顶边，flexible 变体多出的 48px 或 56px 在声明位置成为可滚走的起始占位，从而避免折叠高度反复改变根布局正文 padding。App bar 的根布局盒始终保持 64px，展开态的视觉背景和标题内容在该稳定盒外表达；显式 `attach` 无法解析时不渲染 App bar。
-
-`MatAppBar` 没有公开方法。未消费的属性、`class`、`style`、`id` 和 ARIA 属性传给原生 `<header>`。
+未消费的属性透传给内部原生 `<header>`。
 
 ## 事件
 
@@ -165,11 +159,9 @@ App bar 的默认 Slot 是唯一主内容区域。通过 `content="headline"`、
 | `subtitle` | 标题的辅助文字；flexible 折叠过程中连续淡出，不应与 search 主内容组合 |
 | `trailing` | 末端操作；宽屏可放置最多四个简洁操作，避免挤压主内容 |
 
-## 无障碍与降级
+## 无障碍
 
-App bar 使用原生 `<header>`；`content="search"` 时由独立 `MatSearch` 提供 `<form role="search">` 和原生 search input。所有图标操作都应提供明确的 `label`。sticky App bar 不移动焦点，折叠也不改变 leading 和 trailing 的交互顺序。
-
-组件只面向最新浏览器。CSS scroll timeline 不可用时，App bar 保持展开和 `surface` 背景，不执行定时动画替代方案。`prefers-reduced-motion: reduce` 下保留展开高度和内容，只让滚动后的容器颜色表达内容分隔。
+App bar 使用原生 `<header>`；`content="search"` 时由 `MatSearch` 提供搜索无障碍语义。所有图标按钮操作均应提供明确的 `label` 或 `aria-label`。
 
 ## 参考来源
 

@@ -100,7 +100,7 @@ order: 110
 | `inset` | `boolean \| 'none' \| 'start' \| 'middle'` | `false` | `false`/`'none'` 为全宽，`true`/`'middle'` 为两侧各缩进 16px，`'start'` 只缩进起始侧 |
 | `vertical` | `boolean` | `false` | 是否为竖向分隔线 |
 
-未被消费的原生属性传递给实际根元素。独立使用时根元素是 `hr`；普通 List 中是 `li`；选择 List 中是展示用 `div`。组件没有公开方法。
+未被消费的原生属性传递给实际根元素。独立使用时根元素是 `hr`；普通 List 中是 `li`；选择 List 中是展示用 `div`。
 
 ## 事件
 

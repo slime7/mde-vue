@@ -11,7 +11,7 @@ order: 105
 
 `<mat-navigation-rail>` 的组件导出名是 `MatNavigationRail`，配套子项组件 `<mat-navigation-rail-item>`（`MatNavigationRailItem`）或通用导航子项 `<mat-navigation-item>`（`MatNavigationItem`）。该组件遵循 Material 3 Expressive 规范，专用于在平板、桌面等中大尺寸屏幕中提供 3–7 个主要目的地、菜单入口、FAB 与底部操作的纵向导航栏。
 
-组件底层根元素基于 `MatAside` 呈现，默认停靠在布局容器的 `start`（起始侧）边缘，统管侧边定位、安全区留白、展开收起动画和模态遮罩。位于 `MatAppRoot` 或 `MatLayout` 内时会自动向最近的根登记起始侧边缘，主内容层自动避让；组件树中同时存在两个根时不会重复登记。AppRoot 只额外提供覆盖层、Snackbar、布局尺寸和边缘上下文等应用能力，不改变 Navigation rail 的停靠规则。
+组件默认停靠在布局容器的起始侧边缘，位于 `MatAppRoot` 或 `MatLayout` 内时会自动接入布局并避让正文内容。
 
 ## 示例
 
@@ -249,8 +249,6 @@ Material Design 规范推荐间距：
 - **导航项之间**：收起态为 **4px**（`--mat-navigation-rail-item-space`），展开态为 **0px**。
 - **导航项与底部操作之间**：插入 `<mat-spacer />` 自动填充剩余可用空间。
 
-组件样式内置智能相邻选择器，当检测到菜单按钮与 FAB、或 FAB/按钮与导航项紧邻时会自动注入对应的 12px 与 40px 间距，用户亦可通过 inline style 显式指定。
-
 :::: details 查看示例代码
 ::: code-group
 
@@ -366,8 +364,6 @@ Item 的 `trailing` 只在展开态显示。在 `full-width` 激活时（如导�
 | `badge` | `{ content?: string \| number, dot?: boolean, location?: 'top-start' \| 'top' \| 'top-end' \| 'end' \| 'bottom-end' \| 'bottom' \| 'bottom-start' \| 'start', color?: string }` | `undefined` | 仅绑定到图标区域的 Badge；收缩态显示、展开态隐藏。`content=0` 有效，空字符串不显示，`dot` 优先；不支持 `inline` 和 `offset`，也不在 `createMatUi.defaults` 中提供默认值 |
 | `href` | `string` | `undefined` | 提供后渲染为原生链接，否则渲染为按钮 |
 | `disabled` | `boolean` | `false` | 禁用原生交互和选择请求，并降低内容强调 |
-
-组件没有公开方法。
 
 ## 事件
 
