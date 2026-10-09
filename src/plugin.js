@@ -10,6 +10,9 @@ import MatIcon from './components/mat-icon/MatIcon.vue';
 import MatImage from './components/mat-image/MatImage.vue';
 import MatCarousel from './components/mat-carousel/MatCarousel.vue';
 import MatCarouselItem from './components/mat-carousel/MatCarouselItem.vue';
+import MatTabs from './components/mat-tabs/MatTabs.vue';
+import MatTabItem from './components/mat-tabs/MatTabItem.vue';
+import MatTabContent from './components/mat-tabs/MatTabContent.vue';
 import MatDatePicker from './components/mat-date-picker/MatDatePicker.vue';
 import MatTimePicker from './components/mat-time-picker/MatTimePicker.vue';
 import MatSharedElement from './components/mat-shared-element/MatSharedElement.vue';
@@ -100,6 +103,9 @@ export const GLOBAL_COMPONENTS = [
   ['MatImage', 'mat-image', MatImage],
   ['MatCarousel', 'mat-carousel', MatCarousel],
   ['MatCarouselItem', 'mat-carousel-item', MatCarouselItem],
+  ['MatTabs', 'mat-tabs', MatTabs],
+  ['MatTabItem', 'mat-tab-item', MatTabItem],
+  ['MatTabContent', 'mat-tab-content', MatTabContent],
   ['MatDatePicker', 'mat-date-picker', MatDatePicker],
   ['MatTimePicker', 'mat-time-picker', MatTimePicker],
   ['MatSharedElement', 'mat-shared-element', MatSharedElement],

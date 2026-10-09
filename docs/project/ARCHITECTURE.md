@@ -19,7 +19,7 @@
 
 `MatSurfaceBase` 负责表面组件的动态原生根元素和属性透传；`MatActionBase` 统一处理 button/link 及内部可聚焦宿主的禁用和属性路由，并复用公共 `v-state-layer` 指令表达交互状态；它读取插件设置，在全局涟漪开启时复用公共 `v-ripple` 指令在状态层之上叠加按压涟漪，关闭时不留下任何涟漪 DOM；`MatButtonBase` 在此基础上统一按钮根节点、原生属性、48px 交互目标、焦点和按下形状，供 `MatBtn` 与 `MatFab` 复用；`MatSelectionControlBase` 统一处理选择控件的原生 input、标签、48px 目标区、40px 状态层、属性路由和插件指针设置；`MatTextInputBase` 在此基础上提供浮动标签和辅助信息。`MatItemContentBase` 统一 List 与 MenuItem 的无语义内容排列，`useRovingFocus` 只管理 DOM 顺序和 tabindex，不定义组件键盘含义。这些基础层均为内部实现，不作为公共入口导出。`MatInputBase` 是例外：它作为公共的无边框原生 input/textarea 基础组件，供使用方自定义外层 UI。组件共享的数值工具模块统一处理 CSS 长度、边缘像素值和毫秒延迟的校验、转换与回退（数字与纯数字字符串按数字处理，字符串按 CSS 属性校验），只服务内部组件，不加入公共入口。
 
-内部帧调度器将连续指针输入合并到下一次绘制，并支持交互结束前同步刷新最新输入；Slider、RangeSlider、Panes 与 Sheet 复用该调度器。内部动效控制器优先等待根元素及后代的实际 Web Animations 完成，取消或反向切换时使旧等待失效；只有测试或缺少该 API 的环境使用后备时长。
+内部帧调度器将连续指针输入合并到下一次绘制，并支持交互结束前同步刷新最新输入；Slider、RangeSlider、Panes 与 Sheet 复用该调度器。内部动效控制器优先等待根元素及后代的实际 Web Animations 完成，取消或反向切换时使旧等待失效；只有测试或缺少该 API 的环境使用后备时长。共享滑动手势模块封装仅响应触摸与手写笔的横向跟手拖动，负责意图阈值、按书写方向解析逻辑 start/end、释放速度采样与拖动后 click 抑制；Tabs 内容翻页与 List 项滑动复用该模块，鼠标指针不参与。
 
 ## 技术栈
 
@@ -82,7 +82,9 @@ Date picker 与 Time picker 是无外观的面板组件：不渲染激活器、�
 
 Card 组合 `MatSurfaceBase` 与可选 `MatCardActionArea`，提供 filled、elevated、outlined 三种中性表面和局部种子配色。Headline、Subhead 与 Media 既可以由 Card 的同名具名 Slot 自动创建，也可以作为 `MatCardHeadline`、`MatCardSubhead`、`MatCardMedia` 子组件直接组合；Content 与 Actions 继续负责 16px 内容内边距和末端对齐的操作布局。Divider 作为 Card 直接子项时以明确横向尺寸完整分隔区域，布尔 inset 模式在两侧保留系统缩进。
 
-List 通过内部 provide/inject 上下文统一交互模式、受控选择、折叠值、拖动项目登记和焦点刷新。普通与操作模式保留 `ul/li`；MatListGroup 作为根列表的 `li`，在其中组合 Activator 按钮、可惰化的内容容器和嵌套 `ul`。有值分组由根 List 的 `expanded` 数组控制，无值分组保存内部状态。选择模式使用 `listbox/option`，折叠分组在该模式下降级为始终展开的静态 `group`，避免把 disclosure 按钮放入 listbox。roving tabindex 注册表按 DOM 顺序协调直属项目、分组 Activator、展开项目和 multi-action trailing 控件，并在模式切换或卸载时恢复使用方原有的 tabindex。可选拖动排序使用指针长按、绘制帧调度、临时占位与固定定位预览，只发出受控 `reorder` 请求；Divider、Group、禁用项和无有效值项目形成排序边界。Divider 根据 List 上下文切换合法的根语义，不参与选择与焦点顺序。
+List 通过内部 provide/inject 上下文统一交互模式、受控选择、折叠值、拖动项目登记和焦点刷新。普通与操作模式保留 `ul/li`；MatListGroup 作为根列表的 `li`，在其中组合 Activator 按钮、可惰化的内容容器和嵌套 `ul`。有值分组由根 List 的 `expanded` 数组控制，无值分组保存内部状态。选择模式使用 `listbox/option`，折叠分组在该模式下降级为始终展开的静态 `group`，避免把 disclosure 按钮放入 listbox。roving tabindex 注册表按 DOM 顺序协调直属项目、分组 Activator、展开项目和 multi-action trailing 控件，并在模式切换或卸载时恢复使用方原有的 tabindex。可选拖动排序使用指针长按、绘制帧调度、临时占位与固定定位预览，只发出受控 `reorder` 请求；Divider、Group、禁用项和无有效值项目形成排序边界。Divider 根据 List 上下文切换合法的根语义，不参与选择与焦点顺序。Item 滑动复用共享滑动手势模块，把内容包进滑动前景层并在其下渲染露出操作区；露出与移除的判定、退场动画与函数触发都在 Item 内完成，不改变 List 的选择与排序模型。
+
+Tabs 由 `MatTabs` 容器与 `MatTabItem`、`MatTabContent` 子组件组成。容器在渲染期按组件类型拆分默认 Slot：Item 克隆进 tablist 并写入 id 与 `aria-controls`，Content 克隆进滑动轨道并写入 `aria-labelledby`；选中状态由 provide/inject 上下文派生，子组件不复制选择协议。活动指示器是 tablist 内的绝对定位元素，位置由活动标签的测量结果驱动，并在结构、变体、字体或容器尺寸变化时重新测量。内容轨道以浮点页偏移驱动 transform：滑动时禁用过渡逐帧跟手，释放按位移与速度提交相邻页；受控值跨越多页时只播放相邻一页的过渡。键盘导航复用 roving tabindex，方向键自动激活并跳过禁用项。
 
 Panes 通过内部 provide/inject 注册直接的 `MatPane` 子项，按受控权重使用横向 flex 布局，并由每个相邻 Pane 的子级渲染垂直 separator 调整控件。父组件只在指针释放或键盘调整后发出下一组权重；ResizeObserver 的宽度通知使用尾端防抖，浏览器断点只报告视口等级变化。Pane 默认填满父级块轴高度并在自身内容溢出时滚动，显隐由使用方通过 `v-if` 管理。
 

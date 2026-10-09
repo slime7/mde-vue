@@ -822,6 +822,126 @@ export interface MatCarouselItemProps {
 export type MatCarouselItemComponent = DefineComponent<MatCarouselItemProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatCarouselItem: MatCarouselItemComponent;
 
+export interface MatTabsProps {
+  /**
+  * 当前选中的标签页值，支持 `v-model`；`null` 表示未选择。
+  *
+  * @type {string | number | boolean | null}
+  * @default null
+  */
+  modelValue?: string | number | boolean | null;
+  /**
+  * 标签页变体；`primary` 支持 64px 堆叠图文与居中指示器，
+  * `secondary` 为 48px 水平图文与全宽指示器。
+  *
+  * @type {'primary' | 'secondary'}
+  * @default 'primary'
+  */
+  variant?: 'primary' | 'secondary';
+  /**
+  * 是否允许触摸与手写笔在内容区左右滑动翻页；鼠标指针不参与手势。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  swipeable?: boolean;
+  /**
+  * 是否使用滚动标签行：标签按内容宽度排列并可横向滚动；关闭时均分容器宽度。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  scrollable?: boolean;
+  /**
+  * 滚动标签行中标签的整体对齐方式；均分模式下不产生效果。
+  *
+  * @type {'start' | 'center' | 'end'}
+  * @default 'start'
+  */
+  align?: 'start' | 'center' | 'end';
+  /**
+  * 统一组件配色；作用于活动标签内容与活动指示器，省略时使用 primary 角色。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  color?: string | undefined;
+  /**
+  * 是否在滚动标签行两端显示翻页按钮；仅在 `scrollable` 且内容溢出时可见。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  scrollButtons?: boolean;
+}
+
+export interface MatTabsEmits {
+  /**
+  * 请求更新选中的标签页值。
+  *
+  * @param {string | number | boolean} value
+  */
+  "update:modelValue": (payload: boolean) => unknown;
+}
+
+export type MatTabsComponent = DefineComponent<MatTabsProps, {}, {}, {}, {}, {}, {}, MatTabsEmits>;
+export declare const MatTabs: MatTabsComponent;
+
+export interface MatTabItemProps {
+  /**
+  * 标签页的稳定值，与容器 `modelValue` 和对应 `mat-tab-content` 的 `value` 匹配；
+  * 省略时该项不可被选中。
+  *
+  * @type {string | number | boolean | undefined}
+  * @default undefined
+  */
+  value?: string | number | boolean | undefined;
+  /**
+  * 标签文字；省略时使用默认 Slot 内容。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  label?: string | undefined;
+  /**
+  * Material Symbols 图标文本；primary 渲染在文本上方，secondary 与文本水平并排。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  icon?: string | undefined;
+  /**
+  * 图标或标签上的 Badge 配置，支持 `content`、`dot` 与 `color`。
+  *
+  * @type {{ content?: string | number, dot?: boolean, color?: string } | undefined}
+  * @default undefined
+  */
+  badge?: { content?: string | number, dot?: boolean, color?: string } | undefined;
+  /**
+  * 禁止该标签页被激活。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  disabled?: boolean;
+}
+
+export type MatTabItemComponent = DefineComponent<MatTabItemProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatTabItem: MatTabItemComponent;
+
+export interface MatTabContentProps {
+  /**
+  * 对应 `mat-tab-item` 的稳定值；匹配当前选中项的面板保持可交互。
+  *
+  * @type {string | number | boolean | undefined}
+  * @default undefined
+  */
+  value?: string | number | boolean | undefined;
+}
+
+export type MatTabContentComponent = DefineComponent<MatTabContentProps, {}, {}, {}, {}, {}, {}, {}>;
+export declare const MatTabContent: MatTabContentComponent;
+
 export interface MatDatePickerProps {
   /**
   * `v-model` 当前选中的日期；本地时区当天 0 点的 Date，null 表示未选择。
@@ -1592,6 +1712,29 @@ export interface MatListItemProps {
   * @default false
   */
   separateTrailing?: boolean;
+  /**
+  * 启用触摸与手写笔的横向滑动手势；鼠标指针不参与，PC 端通过 `swipe()` 触发。
+  * 仅在普通列表与 single-action 列表的项目上生效。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  swipeable?: boolean;
+  /**
+  * 没有 `swipe-actions` 插槽时，越过提交阈值的滑动播放退场动画后发出 `remove`。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  swipeRemove?: boolean;
+  /**
+  * 露出模式下允许长划越过阈值触发末尾主要操作；触发时发出 `primary`
+  * 并将前景移出屏幕。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  swipePrimary?: boolean;
 }
 
 export interface MatListItemEmits {
@@ -1599,9 +1742,50 @@ export interface MatListItemEmits {
   * 启用的列表项被用户激活时转发原生点击事件，载荷为 `MouseEvent`。
   */
   "click": (payload: MouseEvent) => unknown;
+  /**
+  * 滑动手势锁定横向意图时发出，载荷为 `{ direction: 'start' | 'end' }`。
+  */
+  "swipestart": (payload: unknown) => unknown;
+  /**
+  * 滑动手势释放时发出，载荷为
+  * `{ direction: 'start' | 'end', distance: number, action: 'none' | 'reveal' | 'remove' | 'primary' }`。
+  */
+  "swipeend": (payload: unknown) => unknown;
+  /**
+  * 移除模式越过提交阈值、退场动画结束后发出，载荷为 `{ direction: 'start' | 'end' }`；
+  * 组件不修改列表数据，由应用决定是否移除对应项目。
+  */
+  "remove": (payload: unknown) => unknown;
+  /**
+  * 露出模式下全划越过主要操作阈值时发出，载荷为 `{ direction: 'start' | 'end' }`。
+  */
+  "primary": (payload: unknown) => unknown;
 }
 
-export type MatListItemComponent = DefineComponent<MatListItemProps, {}, {}, {}, {}, {}, {}, MatListItemEmits>;
+export interface MatListItemExposed {
+  /**
+ * 以函数触发一次完整滑动（PC 场景）；手势未启用的结构不执行。
+ *
+ * @param {'start' | 'end'} direction 滑动方向，内容移向的逻辑边缘
+ */
+  swipe(direction: 'start' | 'end'): void;
+  /**
+ * 展开露出操作区域。
+ *
+ * @param {'start' | 'end'} [direction='start']
+ */
+  reveal(direction?: 'start' | 'end'): void;
+  /**
+ * 立即复位滑动状态并收回前景内容，不发出滑动事件。
+ */
+  resetSwipe(): void;
+  /**
+ * 关闭并收回露出操作区域。
+ */
+  close(): void;
+}
+
+export type MatListItemComponent = DefineComponent<MatListItemProps, MatListItemExposed, {}, {}, {}, {}, {}, MatListItemEmits>;
 export declare const MatListItem: MatListItemComponent;
 
 export interface MatDividerProps {
@@ -4995,6 +5179,12 @@ declare module 'vue' {
     'mat-carousel': typeof MatCarousel;
     MatCarouselItem: typeof MatCarouselItem;
     'mat-carousel-item': typeof MatCarouselItem;
+    MatTabs: typeof MatTabs;
+    'mat-tabs': typeof MatTabs;
+    MatTabItem: typeof MatTabItem;
+    'mat-tab-item': typeof MatTabItem;
+    MatTabContent: typeof MatTabContent;
+    'mat-tab-content': typeof MatTabContent;
     MatDatePicker: typeof MatDatePicker;
     'mat-date-picker': typeof MatDatePicker;
     MatTimePicker: typeof MatTimePicker;

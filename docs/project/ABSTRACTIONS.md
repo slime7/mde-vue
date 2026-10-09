@@ -229,6 +229,8 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 `<mat-list>` 在同一实例中只允许一种 `interaction`。`none`、`single-action`、`multi-action` 使用原生列表结构；`single-select`、`multi-select` 使用 listbox/option，并由父组件以受控 `selected` 和 `select` 事件协调选择。方向键只移动 roving tabindex 焦点，不隐式修改选择。选择 option 内不得放置可聚焦后代，多操作项的附加操作只能位于 trailing Slot。`draggable` 只为具有稳定唯一 `value` 的未禁用直属 MatListItem 提供主指针长按排序，并通过 `reorder` 请求应用更新数据；组件不改变 Slot 数据顺序。Divider、Group、禁用项和无有效值项目是不可跨越的固定边界，键盘排序和跨 List 拖放不属于当前能力。
 `<mat-list-item>` 在选择模式下支持通过 `separateTrailing` 属性将尾部插槽提取至独立操作区，与主选项解耦，使尾部按钮等交互控件独立响应点击与焦点流转，默认关闭时保持纯展示与整行选中。
 
+`<mat-list-item>` 的 `swipeable` 提供仅响应触摸与手写笔的横向跟手滑动；鼠标指针不参与，PC 通过 `swipe(direction)` 触发同一流程。提供 `swipe-actions` 插槽进入露出模式：滑动露出尾部操作胶囊按钮，设置 `swipe-primary` 后长划越过阈值直接触发末尾主要操作并发出 `primary`，未开启时全划阻尼回弹；收回由点击前景或 `resetSwipe()` 完成。`swipeRemove` 且无插槽时进入移除模式：越过约四成半宽度或甩动后项目滑出并收拢，退场动画结束才发出 `remove`，应用在事件中决定数据去留，未移除时项目自动恢复。两种模式皆无时滑动只报告事件并回弹。`swipestart` 与 `swipeend` 载荷使用内容移向的逻辑边缘方向。滑动只在普通列表与 single-action 列表的项目上生效，启用后不参与 `draggable` 排序；不支持的结构发出开发警告并忽略手势。
+
 `<mat-divider>` 独立使用时保持原生 `hr`；进入普通 List 后使用合法的 `li` separator，进入选择 List 后成为不参与 listbox 语义的展示元素。Divider 不进入 Tab 顺序，也不提供强调色。默认 Divider 明确占满可用横向空间；`inset=true` 或兼容值 `middle` 表示两侧各缩进 16px，`start` 只缩进逻辑起始侧。
 
 `<mat-list-group>` 只在普通或操作 List 中提供折叠：Activator Slot 必须是单个普通 MatListItem，该 Item 只承担 disclosure 按钮语义，不再承担链接、选择或叶子点击。根 List 的 `expanded` 数组以 `Object.is()` 管理有值分组，并允许多个值同时展开；无值分组使用独立内部状态。折叠内容必须同时离开焦点顺序和无障碍树。选择 List 中的分组固定为静态标签与始终展开的 `group/option` 结构，不混入 disclosure 交互。
@@ -304,6 +306,10 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
  `containerColor` 默认 `false`，只把 standard 容器背景切换为与 modal 相同的 surface-container 语义色；modal 形态始终使用该语义色，不接受此属性改变。
 
 `orientation="horizontal"` 表达 Flexible navigation bar；`expanded=false` 使用图标上、标签下的纵向 Item，`expanded=true` 使用图标左、标签右的横向 Item，`alignment` 改为沿可用宽度对齐，并始终隐藏非 Item 默认内容。横向模式不响应 `collapsible`、`layout`、`hideOnCollapse`。组件不自动监听窗口尺寸，应用负责在 compact、medium 及更大断点间切换 bar 与 rail，且同一布局不得同时显示两者。Item 使用原生按钮或链接、`aria-current="page"`、完整宽度命中区域和指示器状态层；缺省 icon 在展开态不占空间，收缩态使用圆点占位，展开与方向切换继续过渡标签和指示器。
+
+## Tabs 标签页
+
+`<mat-tabs>` 的导出名是 `MatTabs`，配套 `<mat-tab-item>`（`MatTabItem`）与 `<mat-tab-content>`（`MatTabContent`）。默认 Slot 混排的 Item 与 Content 由容器按组件类型分组渲染：Item 进入 `role="tablist"` 标签行，Content 进入滑动轨道；两者以稳定 `value` 关联，容器 `v-model` 是受控选中值的唯一来源，`null` 表示未选择。变体只接受 `primary`（图标加标签，48/64px）与 `secondary`（图标与标签水平并排，48px）；两种变体的 hover/pressed 状态层与聚焦环形状不同，均由组件自绘。标签行提供 roving tabindex 与自动激活的方向键导航，Content 提供 `tabpanel` 语义，未激活面板以 `aria-hidden` 与 `inert` 离开无障碍树。`scrollable` 把标签行切换为内容宽度、可横向滚动的形态，`align` 控制其整体对齐，均分（fixed）为默认形态。活动指示器 primary 为两侧内缩、两端全圆、最短 24dp 的 3dp 条，secondary 为全宽 2dp 条。`swipeable` 允许触摸与手写笔在内容区跟手滑动翻页，鼠标指针不参与；受控值跨越多页时只播放相邻一页的过渡。变体、尺寸、指示器与配色角色依据 Material 3 Tabs specs。
 
 ## Toolbar 工具栏
 

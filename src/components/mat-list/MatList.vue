@@ -670,5 +670,29 @@ defineExpose({
     --mat-expansion-panel-end-start-shape: var(--mat-list-container-shape);
     --mat-expansion-panel-end-end-shape: var(--mat-list-container-shape);
   }
+
+  /* 相邻项目选择器跨越组件边界，滑动形态的圆角规则需在容器内复述。 */
+  .mat-list > :deep(.mat-list-item--swiping),
+  .mat-list > :deep(.mat-list-item--swiped),
+  .mat-list > :deep(.mat-list-item--removing) {
+    --mat-list-item-start-start-shape: var(--mat-list-container-shape);
+    --mat-list-item-start-end-shape: var(--mat-list-container-shape);
+    --mat-list-item-end-start-shape: var(--mat-list-container-shape);
+    --mat-list-item-end-end-shape: var(--mat-list-container-shape);
+  }
+
+  .mat-list > :deep(.mat-list-item:has(+ .mat-list-item--swiping)),
+  .mat-list > :deep(.mat-list-item:has(+ .mat-list-item--swiped)),
+  .mat-list > :deep(.mat-list-item:has(+ .mat-list-item--removing)) {
+    --mat-list-item-end-start-shape: var(--mat-list-container-shape);
+    --mat-list-item-end-end-shape: var(--mat-list-container-shape);
+  }
+
+  .mat-list > :deep(.mat-list-item--swiping + .mat-list-item),
+  .mat-list > :deep(.mat-list-item--swiped + .mat-list-item),
+  .mat-list > :deep(.mat-list-item--removing + .mat-list-item) {
+    --mat-list-item-start-start-shape: var(--mat-list-container-shape);
+    --mat-list-item-start-end-shape: var(--mat-list-container-shape);
+  }
 }
 </style>

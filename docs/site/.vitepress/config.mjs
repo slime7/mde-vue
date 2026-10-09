@@ -267,6 +267,7 @@ export default defineConfig({
               { text: 'Navigation bar 底部导航栏', link: '/components/navigation-bar' },
               { text: 'Navigation rail 导航栏', link: '/components/navigation-rail' },
               { text: 'Navigation drawer 导航抽屉', link: '/components/navigation-drawer' },
+              { text: 'Tabs 标签页', link: '/components/tabs' },
               { text: 'Menu 菜单', link: '/components/menu' },
             ],
           },

@@ -1,6 +1,6 @@
 ---
 title: List 列表
-description: mat-list、mat-list-group 与 mat-list-item 的 Material 3 Expressive 外观、折叠分组、操作和受控选择。
+description: mat-list、mat-list-group 与 mat-list-item 的 Material 3 Expressive 外观、折叠分组、操作、受控选择和滑动操作。
 llms: true
 order: 100
 ---
@@ -9,7 +9,7 @@ order: 100
 
 ## 组件简介
 
-`<mat-list>` 的组件导出名是 `MatList`，折叠分组 `<mat-list-group>` 的导出名是 `MatListGroup`，项目 `<mat-list-item>` 的导出名是 `MatListItem`。List 纵向组织相关内容，提供 `standard` 与 `segmented` 两种 Material 3 Expressive 外观，默认使用 `segmented`，并支持非交互、单操作、多操作、单选和多选五种互斥的交互模式。MatListGroup 可与直属 MatListItem 混排，其 Activator 仍使用普通 MatListItem。
+`<mat-list>` 的组件导出名是 `MatList`，折叠分组 `<mat-list-group>` 的导出名是 `MatListGroup`，项目 `<mat-list-item>` 的导出名是 `MatListItem`。List 纵向组织相关内容，提供 `standard` 与 `segmented` 两种 Material 3 Expressive 外观，默认使用 `segmented`，并支持非交互、单操作、多操作、单选和多选五种互斥的交互模式。MatListGroup 可与直属 MatListItem 混排，其 Activator 仍使用普通 MatListItem。`mat-list-item` 支持触摸滑动手势，可配置为露出操作按钮或发出移除请求，详见[滑动操作示例](#listitem-的滑动操作)。
 
 ## 示例
 
@@ -273,6 +273,46 @@ order: 100
   </DocsPreview>
 </ClientOnly>
 
+### ListItem 的滑动操作
+
+设置 `swipeable` 后，触摸与手写笔可以横向拖动项目内容并完全跟手，鼠标指针不参与，PC 端可点击末尾替代入口（如「···」按钮）或调用 `reveal()` / `close()` / `swipe()` 控制展开与收回。提供 `#swipe-actions` 插槽进入露出模式：滑动露出尾部操作胶囊按钮（末尾主要操作为高强调色）；设置 `swipe-primary` 后，长划越过阈值直接触发末尾主要操作并发出 `primary`；点击内容区或调用 `close()` 收回。使用 `swipe-remove` 且没有 `swipe-actions` 插槽时进入移除模式：越过提交阈值（约四成半宽度或快速甩动）后项目滑出并收拢，退场动画播完才发出 `remove`，应用在事件中删除数据不会截断动画；不足阈值直接回弹。两种模式都没有时滑动只报告事件并回弹。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListItemSwipeableExample.vue#template [template]
+
+<<< @/examples/list/ListItemSwipeableExample.vue#script [script]
+
+<<< @/examples/list/ListItemSwipeableExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="ListItem 露出操作预览">
+    <ListItemSwipeableExample />
+  </DocsPreview>
+</ClientOnly>
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/list/ListItemSwipeRemoveExample.vue#template [template]
+
+<<< @/examples/list/ListItemSwipeRemoveExample.vue#script [script]
+
+<<< @/examples/list/ListItemSwipeRemoveExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="ListItem 移除模式预览">
+    <ListItemSwipeRemoveExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### ListItem 尺寸
 
 一行项目至少为 56px。24px 图标和 40px 头像维持 56px 最小高度，56px 媒体和 64px 媒体分别把项目撑高至 72px 和 88px；更大的自定义 Slot 内容继续自然扩展。
@@ -445,6 +485,9 @@ order: 100
 | `disabled` | `boolean` | `false` | 禁用主操作、选择和多操作 trailing 区域 |
 | `lines` | `1 \| 2 \| 3` | 按 Slots 推断 | 控制 56、72、88px 最小高度以及三行内容的顶部对齐 |
 | `separateTrailing` | `boolean` | `false` | 是否将 trailing 插槽与主操作/选择区分离渲染为独立操作区；选择模式下用于承载独立按钮等交互控件 |
+| `swipeable` | `boolean` | `false` | 启用触摸与手写笔横向滑动手势；鼠标指针不参与，仅在普通列表与 single-action 列表的项目上生效 |
+| `swipeRemove` | `boolean` | `false` | 没有 `swipe-actions` 插槽时，越过提交阈值的滑动播放退场动画后发出 `remove` |
+| `swipePrimary` | `boolean` | `false` | 露出模式下允许长划越过阈值触发末尾主要操作；触发时发出 `primary` 并将前景移出屏幕 |
 
 操作模式中未消费的原生属性传给主按钮或链接，可设置 `target`、`rel` 等链接属性；非交互和选择模式中传给项目根元素。`href` 在非交互或选择模式中会被忽略并发出开发警告。
 
@@ -459,6 +502,17 @@ order: 100
 | `scrollTo` | `options: ScrollToOptions` | `void` | 滚动容器原生 `scrollTo` 代理 |
 | `scrollToIndex` | `index: number, options?: { align?: 'start' \| 'center' \| 'end' \| 'auto', behavior?: ScrollBehavior }` | `void` | 滚动到指定索引项 |
 | `getScroller` | 无 | `HTMLElement \| Window \| null` | 获取关联的滚动容器元素 |
+
+### MatListItem 方法
+
+通过模板引用（`ref`）可调用 `MatListItem` 暴露的滑动方法；结构不支持滑动时调用直接忽略：
+
+| 方法 | 参数 | 返回值 | 说明 |
+| --- | --- | --- | --- |
+| `swipe` | `direction: 'start' \| 'end'` | `void` | 以函数触发一次完整滑动，发出与手势一致的 `swipestart` 与 `swipeend`；露出模式向 `start` 方向停在展开位，移除模式播放退场动画后在结束时发出 `remove` |
+| `reveal` | `direction?: 'start' \| 'end'` | `void` | 展开露出操作区域，等同于 `swipe('start')` |
+| `resetSwipe` | 无 | `void` | 收回前景内容并复位滑动状态，不发出滑动事件 |
+| `close` | 无 | `void` | 收回露出操作区域并复位滑动状态，等同于 `resetSwipe()` |
 
 ## 事件
 
@@ -477,6 +531,10 @@ order: 100
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
 | `click` | 原生 `MouseEvent` | 单操作或多操作模式中的启用主操作被激活 |
+| `swipestart` | `{ direction: 'start' \| 'end' }` | 滑动手势锁定横向意图时；`direction` 是内容移向的逻辑边缘 |
+| `swipeend` | `{ direction: 'start' \| 'end', distance: number, action: 'none' \| 'reveal' \| 'remove' \| 'primary' }` | 滑动释放时；`distance` 是位移像素数，`action` 说明本次完成结果 |
+| `remove` | `{ direction: 'start' \| 'end' }` | 移除模式越过提交阈值、退场动画结束后发出；组件不修改列表数据，应用在其中删除数据不会截断动画 |
+| `primary` | `{ direction: 'start' \| 'end' }` | 开启 `swipePrimary` 且露出模式长划越过主要操作阈值时触发 |
 
 single-select 再次激活当前项不会取消选择，也不会发出 `select`。multi-select 每次激活都返回不修改原数组的新数组。`originalEvent` 是实际的 `MouseEvent` 或 `KeyboardEvent`。非交互模式没有自定义事件，trailing 中的独立控件使用自己的事件。MatListGroup 没有自定义事件；无值分组不会触发根 List 的 `update:expanded`。
 
@@ -504,6 +562,7 @@ single-select 再次激活当前项不会取消选择，也不会发出 `select`
 | `overline` | 标签上方的短文本 |
 | `supporting` | 一至三行辅助文字 |
 | `trailing` | 尾部短文本、图标；multi-action 或开启 separateTrailing 的选择项可放置可聚焦操作 |
+| `swipe-actions` | 露出模式下被滑动内容遮盖的操作按钮；存在时优先于 `swipeRemove` 生效 |
 
 single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌套其他交互元素。选择模式中的 leading 和默认 trailing 作为展示内容处理，选择状态由 `aria-selected` 表达；若需要在选择模式下放置独立操作按钮，可设置 `separateTrailing` 将尾部操作区与行选择解耦。
 
@@ -526,6 +585,9 @@ single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌�
 - 排序只在连续的有效直属 MatListItem 区段内进行。Divider、MatListGroup、禁用项、缺少 value 或 value 重复的项目是固定边界；multi-action 的 trailing 控件不会启动拖动。
 - `fromIndex` 和 `toIndex` 按全部直属 MatListItem 计算，不包含 Divider 与 MatListGroup。位置没有变化时不触发 `reorder`；拖动成功后抑制同一次 click 或选择请求。
 - 拖动支持鼠标、触控笔和触摸主指针，不提供键盘排序或跨 List 拖放。Escape、窗口失焦、关闭 `draggable` 和组件卸载会取消当前拖动。
+- `swipeable` 只接管触摸与手写笔的横向拖动：锁定横向意图前保留纵向滚动，释放时按位移窗口与甩动速度决定结果。露出模式滑出尾部操作胶囊按钮，设置 `swipe-primary` 后长划可直接触发末尾主要操作并发出 `primary`，未开启时全划阻尼顶住后回弹；移除模式按约四成半宽度或甩动提交，项目滑出并收拢后发出 `remove`，应用未移除数据时自动恢复。停在展开位后点击前景或调用 `close()` 收回；`pointercancel`、禁用状态或新的按下会立即复位。
+- `swipestart` 在锁定横向意图时、`swipeend` 在释放时、`remove` 在退场动画结束后发出，方向按内容移向的逻辑边缘表达（LTR 向左拖为 `start`，RTL 反转）。`swipe-actions` 插槽内容在收回期间声明 `inert`，离开焦点顺序。
+- 启用 `swipeable` 的项目不参与 `draggable` 排序；分组激活器、multi-action 与选择模式中的项目忽略滑动并发出开发警告。函数触发的 `swipe()` 与手势走同一套事件与完成逻辑。
 
 ## 参考来源
 
@@ -543,6 +605,8 @@ import ListItemHrefExample from '../examples/list/ListItemHrefExample.vue';
 import ListItemLeadingSlotExample from '../examples/list/ListItemLeadingSlotExample.vue';
 import ListItemLinesExample from '../examples/list/ListItemLinesExample.vue';
 import ListItemSeparateTrailingExample from '../examples/list/ListItemSeparateTrailingExample.vue';
+import ListItemSwipeableExample from '../examples/list/ListItemSwipeableExample.vue';
+import ListItemSwipeRemoveExample from '../examples/list/ListItemSwipeRemoveExample.vue';
 import ListItemOverlineSlotExample from '../examples/list/ListItemOverlineSlotExample.vue';
 import ListItemSizesExample from '../examples/list/ListItemSizesExample.vue';
 import ListItemSupportingSlotExample from '../examples/list/ListItemSupportingSlotExample.vue';

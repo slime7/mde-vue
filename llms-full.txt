@@ -16899,7 +16899,7 @@ import DialogWidthExample from '../examples/dialog/DialogWidthExample.vue';
 
 ## 组件简介
 
-`<mat-list>` 的组件导出名是 `MatList`，折叠分组 `<mat-list-group>` 的导出名是 `MatListGroup`，项目 `<mat-list-item>` 的导出名是 `MatListItem`。List 纵向组织相关内容，提供 `standard` 与 `segmented` 两种 Material 3 Expressive 外观，默认使用 `segmented`，并支持非交互、单操作、多操作、单选和多选五种互斥的交互模式。MatListGroup 可与直属 MatListItem 混排，其 Activator 仍使用普通 MatListItem。
+`<mat-list>` 的组件导出名是 `MatList`，折叠分组 `<mat-list-group>` 的导出名是 `MatListGroup`，项目 `<mat-list-item>` 的导出名是 `MatListItem`。List 纵向组织相关内容，提供 `standard` 与 `segmented` 两种 Material 3 Expressive 外观，默认使用 `segmented`，并支持非交互、单操作、多操作、单选和多选五种互斥的交互模式。MatListGroup 可与直属 MatListItem 混排，其 Activator 仍使用普通 MatListItem。`mat-list-item` 支持触摸滑动手势，可配置为露出操作按钮或发出移除请求，详见[滑动操作示例](#listitem-的滑动操作)。
 
 ## 示例
 
@@ -17694,6 +17694,259 @@ const lastAction = ref('无');
   </DocsPreview>
 </ClientOnly>
 
+### ListItem 的滑动操作
+
+设置 `swipeable` 后，触摸与手写笔可以横向拖动项目内容并完全跟手，鼠标指针不参与，PC 端可点击末尾替代入口（如「···」按钮）或调用 `reveal()` / `close()` / `swipe()` 控制展开与收回。提供 `#swipe-actions` 插槽进入露出模式：滑动露出尾部操作胶囊按钮（末尾主要操作为高强调色）；设置 `swipe-primary` 后，长划越过阈值直接触发末尾主要操作并发出 `primary`；点击内容区或调用 `close()` 收回。使用 `swipe-remove` 且没有 `swipe-actions` 插槽时进入移除模式：越过提交阈值（约四成半宽度或快速甩动）后项目滑出并收拢，退场动画播完才发出 `remove`，应用在事件中删除数据不会截断动画；不足阈值直接回弹。两种模式都没有时滑动只报告事件并回弹。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="list-swipeable-example">
+    <mat-list interaction="none">
+      <mat-list-item
+        ref="itemRef"
+        value="tacos"
+        swipeable
+        swipe-primary
+        @swipestart="handleSwipeStart"
+        @swipeend="handleSwipeEnd"
+        @primary="handlePrimary"
+      >
+        <template #leading>
+          <div
+            class="list-swipeable-thumb"
+            aria-hidden="true"
+          >
+            <mat-icon icon="lunch_dining" />
+          </div>
+        </template>
+
+        Tacos
+
+        <template #trailing>
+          <mat-btn
+            icon="more_horiz"
+            variant="text"
+            aria-label="更多操作"
+            @click.stop="toggleReveal"
+          />
+        </template>
+
+        <template #swipe-actions>
+          <mat-btn
+            icon="star"
+            variant="filled-tonal"
+            aria-label="收藏"
+            @click="handleAction('收藏')"
+          />
+          <mat-btn
+            icon="logout"
+            variant="filled-tonal"
+            aria-label="导出"
+            @click="handleAction('导出')"
+          />
+          <mat-btn
+            icon="edit"
+            variant="filled"
+            aria-label="编辑"
+            @click="handleAction('编辑')"
+          />
+        </template>
+      </mat-list-item>
+    </mat-list>
+
+    <p class="list-swipeable-state">
+      操作状态：{{ lastEvent }}；触摸或手写笔向左滑出操作胶囊，全划触发主要操作（编辑）；PC 端点击「···」或调用 reveal() / close() 控制。
+    </p>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const lastEvent = ref('无');
+const isRevealed = ref(false);
+const itemRef = ref(null);
+
+function handleSwipeStart(payload) {
+  lastEvent.value = `开始 ${payload.direction}`;
+}
+
+function handleSwipeEnd(payload) {
+  isRevealed.value = payload.action === 'reveal';
+  lastEvent.value = `结束 ${payload.direction}（${payload.action}）`;
+}
+
+function handlePrimary() {
+  lastEvent.value = '全划触发主要操作：编辑';
+  isRevealed.value = false;
+}
+
+function handleAction(name) {
+  lastEvent.value = `点击操作：${name}`;
+  itemRef.value?.close();
+  isRevealed.value = false;
+}
+
+function toggleReveal() {
+  if (isRevealed.value) {
+    itemRef.value?.close();
+    isRevealed.value = false;
+  } else {
+    itemRef.value?.reveal();
+    isRevealed.value = true;
+  }
+}
+</script>
+```
+```vue
+<style scoped>
+.list-swipeable-example {
+  inline-size: 100%;
+}
+
+.list-swipeable-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 48px;
+  block-size: 48px;
+  color: var(--mat-sys-color-primary);
+  background: var(--mat-sys-color-primary-container);
+  border-radius: var(--mat-sys-shape-corner-medium, 12px);
+}
+
+.list-swipeable-state {
+  margin-block: 8px 0;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="ListItem 露出操作预览">
+    <ListItemSwipeableExample />
+  </DocsPreview>
+</ClientOnly>
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="list-swipe-remove-example">
+    <mat-list interaction="none">
+      <mat-list-item
+        v-for="item in items"
+        :key="item.id"
+        :ref="(el) => { if (el) itemRefs[item.id] = el; }"
+        :value="item.id"
+        swipeable
+        swipe-remove
+        @remove="(payload) => handleRemove(payload, item.id)"
+      >
+        {{ item.title }}
+      </mat-list-item>
+    </mat-list>
+
+    <p class="list-swipe-remove-state">
+      最后一次操作：{{ lastEvent }}；剩余项目数：{{ items.length }}
+    </p>
+
+    <p class="list-swipe-remove-hint">
+      触摸或手写笔越过提交阈值后，项目滑出并收拢，动画结束才发出 remove；未在事件中移除数据时自动恢复。
+    </p>
+
+    <div class="list-swipe-remove-actions">
+      <mat-btn
+        variant="outlined"
+        :disabled="items.length === 0"
+        @click="triggerSwipe"
+      >
+        swipe('start') 移除首项
+      </mat-btn>
+      <mat-btn
+        variant="text"
+        @click="restore"
+      >
+        恢复列表
+      </mat-btn>
+    </div>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const items = ref([
+  { id: 'a', title: '第一条通知' },
+  { id: 'b', title: '第二条通知' },
+  { id: 'c', title: '第三条通知' },
+]);
+const itemRefs = ref({});
+const lastEvent = ref('无');
+
+function handleRemove(payload, id) {
+  items.value = items.value.filter((item) => item.id !== id);
+  lastEvent.value = `已移除 ${id}（${payload.direction}）`;
+}
+
+function triggerSwipe() {
+  const firstId = items.value[0]?.id;
+  if (firstId && itemRefs.value[firstId]) {
+    itemRefs.value[firstId].swipe('start');
+  }
+}
+
+function restore() {
+  items.value = [
+    { id: 'a', title: '第一条通知' },
+    { id: 'b', title: '第二条通知' },
+    { id: 'c', title: '第三条通知' },
+  ];
+  lastEvent.value = '已恢复列表';
+}
+</script>
+```
+```vue
+<style scoped>
+.list-swipe-remove-example {
+  inline-size: 100%;
+}
+
+.list-swipe-remove-state {
+  margin-block: 8px 0;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+
+.list-swipe-remove-hint {
+  margin-block: 4px 0;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+
+.list-swipe-remove-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-block-start: 8px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="ListItem 移除模式预览">
+    <ListItemSwipeRemoveExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### ListItem 尺寸
 
 一行项目至少为 56px。24px 图标和 40px 头像维持 56px 最小高度，56px 媒体和 64px 媒体分别把项目撑高至 72px 和 88px；更大的自定义 Slot 内容继续自然扩展。
@@ -18023,6 +18276,9 @@ const lastAction = ref('无');
 | `disabled` | `boolean` | `false` | 禁用主操作、选择和多操作 trailing 区域 |
 | `lines` | `1 \| 2 \| 3` | 按 Slots 推断 | 控制 56、72、88px 最小高度以及三行内容的顶部对齐 |
 | `separateTrailing` | `boolean` | `false` | 是否将 trailing 插槽与主操作/选择区分离渲染为独立操作区；选择模式下用于承载独立按钮等交互控件 |
+| `swipeable` | `boolean` | `false` | 启用触摸与手写笔横向滑动手势；鼠标指针不参与，仅在普通列表与 single-action 列表的项目上生效 |
+| `swipeRemove` | `boolean` | `false` | 没有 `swipe-actions` 插槽时，越过提交阈值的滑动播放退场动画后发出 `remove` |
+| `swipePrimary` | `boolean` | `false` | 露出模式下允许长划越过阈值触发末尾主要操作；触发时发出 `primary` 并将前景移出屏幕 |
 
 操作模式中未消费的原生属性传给主按钮或链接，可设置 `target`、`rel` 等链接属性；非交互和选择模式中传给项目根元素。`href` 在非交互或选择模式中会被忽略并发出开发警告。
 
@@ -18037,6 +18293,17 @@ const lastAction = ref('无');
 | `scrollTo` | `options: ScrollToOptions` | `void` | 滚动容器原生 `scrollTo` 代理 |
 | `scrollToIndex` | `index: number, options?: { align?: 'start' \| 'center' \| 'end' \| 'auto', behavior?: ScrollBehavior }` | `void` | 滚动到指定索引项 |
 | `getScroller` | 无 | `HTMLElement \| Window \| null` | 获取关联的滚动容器元素 |
+
+### MatListItem 方法
+
+通过模板引用（`ref`）可调用 `MatListItem` 暴露的滑动方法；结构不支持滑动时调用直接忽略：
+
+| 方法 | 参数 | 返回值 | 说明 |
+| --- | --- | --- | --- |
+| `swipe` | `direction: 'start' \| 'end'` | `void` | 以函数触发一次完整滑动，发出与手势一致的 `swipestart` 与 `swipeend`；露出模式向 `start` 方向停在展开位，移除模式播放退场动画后在结束时发出 `remove` |
+| `reveal` | `direction?: 'start' \| 'end'` | `void` | 展开露出操作区域，等同于 `swipe('start')` |
+| `resetSwipe` | 无 | `void` | 收回前景内容并复位滑动状态，不发出滑动事件 |
+| `close` | 无 | `void` | 收回露出操作区域并复位滑动状态，等同于 `resetSwipe()` |
 
 ## 事件
 
@@ -18055,6 +18322,10 @@ const lastAction = ref('无');
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
 | `click` | 原生 `MouseEvent` | 单操作或多操作模式中的启用主操作被激活 |
+| `swipestart` | `{ direction: 'start' \| 'end' }` | 滑动手势锁定横向意图时；`direction` 是内容移向的逻辑边缘 |
+| `swipeend` | `{ direction: 'start' \| 'end', distance: number, action: 'none' \| 'reveal' \| 'remove' \| 'primary' }` | 滑动释放时；`distance` 是位移像素数，`action` 说明本次完成结果 |
+| `remove` | `{ direction: 'start' \| 'end' }` | 移除模式越过提交阈值、退场动画结束后发出；组件不修改列表数据，应用在其中删除数据不会截断动画 |
+| `primary` | `{ direction: 'start' \| 'end' }` | 开启 `swipePrimary` 且露出模式长划越过主要操作阈值时触发 |
 
 single-select 再次激活当前项不会取消选择，也不会发出 `select`。multi-select 每次激活都返回不修改原数组的新数组。`originalEvent` 是实际的 `MouseEvent` 或 `KeyboardEvent`。非交互模式没有自定义事件，trailing 中的独立控件使用自己的事件。MatListGroup 没有自定义事件；无值分组不会触发根 List 的 `update:expanded`。
 
@@ -18082,6 +18353,7 @@ single-select 再次激活当前项不会取消选择，也不会发出 `select`
 | `overline` | 标签上方的短文本 |
 | `supporting` | 一至三行辅助文字 |
 | `trailing` | 尾部短文本、图标；multi-action 或开启 separateTrailing 的选择项可放置可聚焦操作 |
+| `swipe-actions` | 露出模式下被滑动内容遮盖的操作按钮；存在时优先于 `swipeRemove` 生效 |
 
 single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌套其他交互元素。选择模式中的 leading 和默认 trailing 作为展示内容处理，选择状态由 `aria-selected` 表达；若需要在选择模式下放置独立操作按钮，可设置 `separateTrailing` 将尾部操作区与行选择解耦。
 
@@ -18104,6 +18376,9 @@ single-action 的所有 Slots 都位于同一个按钮或链接中，不能嵌�
 - 排序只在连续的有效直属 MatListItem 区段内进行。Divider、MatListGroup、禁用项、缺少 value 或 value 重复的项目是固定边界；multi-action 的 trailing 控件不会启动拖动。
 - `fromIndex` 和 `toIndex` 按全部直属 MatListItem 计算，不包含 Divider 与 MatListGroup。位置没有变化时不触发 `reorder`；拖动成功后抑制同一次 click 或选择请求。
 - 拖动支持鼠标、触控笔和触摸主指针，不提供键盘排序或跨 List 拖放。Escape、窗口失焦、关闭 `draggable` 和组件卸载会取消当前拖动。
+- `swipeable` 只接管触摸与手写笔的横向拖动：锁定横向意图前保留纵向滚动，释放时按位移窗口与甩动速度决定结果。露出模式滑出尾部操作胶囊按钮，设置 `swipe-primary` 后长划可直接触发末尾主要操作并发出 `primary`，未开启时全划阻尼顶住后回弹；移除模式按约四成半宽度或甩动提交，项目滑出并收拢后发出 `remove`，应用未移除数据时自动恢复。停在展开位后点击前景或调用 `close()` 收回；`pointercancel`、禁用状态或新的按下会立即复位。
+- `swipestart` 在锁定横向意图时、`swipeend` 在释放时、`remove` 在退场动画结束后发出，方向按内容移向的逻辑边缘表达（LTR 向左拖为 `start`，RTL 反转）。`swipe-actions` 插槽内容在收回期间声明 `inert`，离开焦点顺序。
+- 启用 `swipeable` 的项目不参与 `draggable` 排序；分组激活器、multi-action 与选择模式中的项目忽略滑动并发出开发警告。函数触发的 `swipe()` 与手势走同一套事件与完成逻辑。
 
 ## 参考来源
 
@@ -18121,6 +18396,8 @@ import ListItemHrefExample from '../examples/list/ListItemHrefExample.vue';
 import ListItemLeadingSlotExample from '../examples/list/ListItemLeadingSlotExample.vue';
 import ListItemLinesExample from '../examples/list/ListItemLinesExample.vue';
 import ListItemSeparateTrailingExample from '../examples/list/ListItemSeparateTrailingExample.vue';
+import ListItemSwipeableExample from '../examples/list/ListItemSwipeableExample.vue';
+import ListItemSwipeRemoveExample from '../examples/list/ListItemSwipeRemoveExample.vue';
 import ListItemOverlineSlotExample from '../examples/list/ListItemOverlineSlotExample.vue';
 import ListItemSizesExample from '../examples/list/ListItemSizesExample.vue';
 import ListItemSupportingSlotExample from '../examples/list/ListItemSupportingSlotExample.vue';
@@ -23076,6 +23353,563 @@ import NavigationDrawerBasicExample from '../examples/navigation-drawer/Navigati
 import NavigationDrawerContainerColorExample from '../examples/navigation-drawer/NavigationDrawerContainerColorExample.vue';
 import NavigationDrawerModalExample from '../examples/navigation-drawer/NavigationDrawerModalExample.vue';
 import NavigationDrawerGroupExample from '../examples/navigation-drawer/NavigationDrawerGroupExample.vue';
+</script>
+
+# Tabs 标签页
+
+## 组件简介
+
+`<mat-tabs>` 的组件导出名是 `MatTabs`，配套子项组件 `<mat-tab-item>`（`MatTabItem`）与内容面板 `<mat-tab-content>`（`MatTabContent`）。组件实现 Material 3 的 primary 与 secondary 两种 Tabs 变体，用于在同一层级的内容视图之间切换。
+
+默认 Slot 中混排的 `mat-tab-item` 与 `mat-tab-content` 由容器按组件类型自动分组：Item 渲染进标签行（`role="tablist"`），Content 渲染进内容轨道。两者通过稳定 `value` 关联，容器 `v-model` 是选中值的唯一来源，`null` 表示未选择；未匹配当前值的面板移出无障碍树与焦点顺序。
+
+触摸与手写笔可以在内容区左右滑动翻页并完全跟手，鼠标指针只能通过点击切换。变体、尺寸、指示器与配色角色依据 Material 3 [Tabs specs](https://m3.material.io/components/tabs/specs) 与 [Tabs overview](https://m3.material.io/components/tabs/overview)；滑动翻页是本组件面向 Web 的补充能力，不是官方 Tabs API。
+
+## 示例
+
+### 基础标签页与受控选择
+
+`v-model` 绑定当前选中值，点击子项或滑动内容区都会请求更新；值为 `null` 时没有选中项。
+
+:::: details 查看示例代码
+
+::: code-group
+
+```vue
+<template>
+  <div class="tabs-example">
+    <mat-tabs v-model="active">
+      <mat-tab-item
+        value="home"
+        label="首页"
+      />
+      <mat-tab-item
+        value="albums"
+        label="相册"
+      />
+      <mat-tab-item
+        value="settings"
+        label="设置"
+      />
+
+      <mat-tab-content value="home">
+        <p class="tabs-example-page">
+          首页内容：触摸或手写笔可以在内容区左右滑动翻页，鼠标点击标签切换。
+        </p>
+      </mat-tab-content>
+      <mat-tab-content value="albums">
+        <p class="tabs-example-page">
+          相册内容：跨多页点击也只播放相邻一页的过渡。
+        </p>
+      </mat-tab-content>
+      <mat-tab-content value="settings">
+        <p class="tabs-example-page">
+          设置内容：v-model 始终反映当前选中的标签页。
+        </p>
+      </mat-tab-content>
+    </mat-tabs>
+
+    <p class="tabs-example-state">
+      当前选中：{{ active }}
+    </p>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const active = ref('home');
+</script>
+```
+```vue
+<style scoped>
+.tabs-example {
+  inline-size: 100%;
+}
+
+.tabs-example-page {
+  padding: 20px 16px;
+}
+
+.tabs-example-state {
+  margin-block-start: 8px;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+
+::::
+
+<ClientOnly>
+  <DocsPreview label="Tabs 基础用法预览" height="232px">
+    <TabsBasicExample />
+  </DocsPreview>
+</ClientOnly>
+
+### primary 与 secondary 变体
+
+`primary`（默认）带图标时渲染 64px 堆叠图文，纯标签时渲染 48px，指示器对齐居中内容；`secondary` 固定 48px 水平图文，指示器横跨整个单元格。两种变体底部都带水平分割线。
+
+:::: details 查看示例代码
+
+::: code-group
+
+```vue
+<template>
+  <div class="tabs-variant-example">
+    <p class="tabs-variant-label">
+      primary（64px 堆叠图文）
+    </p>
+    <mat-tabs
+      v-model="primaryActive"
+      variant="primary"
+    >
+      <mat-tab-item
+        value="chat"
+        label="聊天"
+        icon="chat"
+      />
+      <mat-tab-item
+        value="calls"
+        label="通话"
+        icon="call"
+      />
+      <mat-tab-item
+        value="contacts"
+        label="联系人"
+        icon="group"
+      />
+
+      <mat-tab-content value="chat">
+        <p class="tabs-variant-page">
+          聊天列表
+        </p>
+      </mat-tab-content>
+      <mat-tab-content value="calls">
+        <p class="tabs-variant-page">
+          通话记录
+        </p>
+      </mat-tab-content>
+      <mat-tab-content value="contacts">
+        <p class="tabs-variant-page">
+          联系人
+        </p>
+      </mat-tab-content>
+    </mat-tabs>
+
+    <p class="tabs-variant-label">
+      secondary（48px 纯标签）
+    </p>
+    <mat-tabs
+      v-model="secondaryActive"
+      variant="secondary"
+    >
+      <mat-tab-item
+        value="all"
+        label="全部"
+      />
+      <mat-tab-item
+        value="unread"
+        label="未读"
+      />
+      <mat-tab-item
+        value="archived"
+        label="已归档"
+      />
+
+      <mat-tab-content value="all">
+        <p class="tabs-variant-page">
+          全部邮件
+        </p>
+      </mat-tab-content>
+      <mat-tab-content value="unread">
+        <p class="tabs-variant-page">
+          未读邮件
+        </p>
+      </mat-tab-content>
+      <mat-tab-content value="archived">
+        <p class="tabs-variant-page">
+          已归档邮件
+        </p>
+      </mat-tab-content>
+    </mat-tabs>
+
+    <p class="tabs-variant-label">
+      secondary（48px 水平图文与徽标）
+    </p>
+    <mat-tabs
+      v-model="secondaryWithIconActive"
+      variant="secondary"
+    >
+      <mat-tab-item
+        value="overview"
+        label="概述"
+        icon="article"
+        :badge="{ content: 3 }"
+      />
+      <mat-tab-item
+        value="specs"
+        label="规格"
+      />
+
+      <mat-tab-content value="overview">
+        <p class="tabs-variant-page">
+          概述与更新动态
+        </p>
+      </mat-tab-content>
+      <mat-tab-content value="specs">
+        <p class="tabs-variant-page">
+          技术规格与参数
+        </p>
+      </mat-tab-content>
+    </mat-tabs>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const primaryActive = ref('chat');
+const secondaryActive = ref('all');
+const secondaryWithIconActive = ref('overview');
+</script>
+```
+```vue
+<style scoped>
+.tabs-variant-example {
+  inline-size: 100%;
+}
+
+.tabs-variant-label {
+  margin-block: 12px 4px;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+
+.tabs-variant-page {
+  padding: 16px;
+}
+</style>
+```
+:::
+
+::::
+
+<ClientOnly>
+  <DocsPreview label="Tabs 变体预览" height="560px">
+    <TabsVariantExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 标签上的徽标
+
+Item 的 `badge` 在图标或标签上渲染徽标，支持 `content`、`dot` 与 `color`；省略 `label` 时以默认 Slot 内容作为标签文字。
+
+:::: details 查看示例代码
+
+::: code-group
+
+```vue
+<template>
+  <div class="tabs-badge-example">
+    <mat-tabs v-model="active">
+      <mat-tab-item
+        value="messages"
+        label="消息"
+        icon="chat"
+        :badge="{ content: 5 }"
+      />
+      <mat-tab-item
+        value="moments"
+        label="动态"
+        icon="forum"
+        :badge="{ dot: true }"
+      />
+      <mat-tab-item
+        value="profile"
+        label="我的"
+        icon="person"
+      />
+
+      <mat-tab-content value="messages">
+        <p class="tabs-badge-page">
+          badge 属性接收与导航子项相同的配置对象：content 显示数字，dot 显示圆点。
+        </p>
+      </mat-tab-content>
+      <mat-tab-content value="moments">
+        <p class="tabs-badge-page">
+          动态内容
+        </p>
+      </mat-tab-content>
+      <mat-tab-content value="profile">
+        <p class="tabs-badge-page">
+          个人资料
+        </p>
+      </mat-tab-content>
+    </mat-tabs>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const active = ref('messages');
+</script>
+```
+```vue
+<style scoped>
+.tabs-badge-example {
+  inline-size: 100%;
+}
+
+.tabs-badge-page {
+  padding: 20px 16px;
+}
+</style>
+```
+:::
+
+::::
+
+<ClientOnly>
+  <DocsPreview label="Tabs 徽标预览" height="232px">
+    <TabsBadgeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 触摸滑动翻页
+
+`swipeable` 默认开启：触摸与手写笔拖动内容区跟手移动，越过半页宽度或快速甩动时翻到相邻页，否则回弹；首尾两端阻尼回弹，鼠标拖动不触发翻页。减少动态效果偏好下切换不播放过渡。
+
+:::: details 查看示例代码
+
+::: code-group
+
+```vue
+<template>
+  <div class="tabs-swipe-example">
+    <mat-tabs v-model="active">
+      <mat-tab-item
+        value="first"
+        label="第一页"
+      />
+      <mat-tab-item
+        value="second"
+        label="第二页"
+      />
+      <mat-tab-item
+        value="third"
+        label="第三页"
+      />
+
+      <mat-tab-content value="first">
+        <p class="tabs-swipe-page">
+          在触摸设备上向左滑动进入下一页；鼠标指针只能点击标签切换。
+        </p>
+      </mat-tab-content>
+      <mat-tab-content value="second">
+        <p class="tabs-swipe-page">
+          滑动过程完全跟手，越过半页宽度或快速甩动才会翻页，否则回弹。
+        </p>
+      </mat-tab-content>
+      <mat-tab-content value="third">
+        <p class="tabs-swipe-page">
+          首尾两端带阻尼回弹，减少动态效果偏好下直接切换。
+        </p>
+      </mat-tab-content>
+    </mat-tabs>
+
+    <p class="tabs-swipe-state">
+      当前选中：{{ active }}
+    </p>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const active = ref('first');
+</script>
+```
+```vue
+<style scoped>
+.tabs-swipe-example {
+  inline-size: 100%;
+}
+
+.tabs-swipe-page {
+  padding: 20px 16px;
+}
+
+.tabs-swipe-state {
+  margin-block-start: 8px;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+
+::::
+
+<ClientOnly>
+  <DocsPreview label="Tabs 滑动翻页预览" height="232px">
+    <TabsSwipeExample />
+  </DocsPreview>
+</ClientOnly>
+
+### 滚动标签行、居中与翻页按钮
+
+设置 `scrollable` 后标签按内容宽度排列，超出容器时可横向滚动（支持鼠标滚轮）；激活项切换时自动平滑滚动到视口中央，并用边缘渐变提示可滚动方向。开启 `scrollButtons` 可在溢出时显示两端翻页按钮；`align` 控制宽屏下滚动标签行的整体对齐，均分模式不受其影响。
+
+:::: details 查看示例代码
+
+::: code-group
+
+```vue
+<template>
+  <div class="tabs-scrollable-example">
+    <mat-tabs
+      v-model="active"
+      scrollable
+      scroll-buttons
+    >
+      <mat-tab-item
+        v-for="chapter in chapters"
+        :key="chapter"
+        :value="chapter"
+        :label="chapter"
+      />
+
+      <mat-tab-content
+        v-for="chapter in chapters"
+        :key="chapter"
+        :value="chapter"
+      >
+        <p class="tabs-scrollable-page">
+          {{ chapter }}：滚动标签行按内容宽度排列，激活项自动平滑居中，支持鼠标滚轮横向滚动；开启 scroll-buttons 后溢出时显示两端翻页按钮与边缘渐变提示。
+        </p>
+      </mat-tab-content>
+    </mat-tabs>
+
+    <p class="tabs-scrollable-state">
+      当前选中：{{ active }}
+    </p>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const chapters = [
+  '第一章 起步入门', '第二章 核心概念', '第三章 设计令牌',
+  '第四章 响应式断点', '第五章 动效指南', '第六章 组件扩展',
+  '第七章 无障碍规范', '第八章 键盘导航', '第九章 性能调优', '第十章 工程分发',
+];
+const active = ref(chapters[0]);
+</script>
+```
+```vue
+<style scoped>
+.tabs-scrollable-example {
+  inline-size: 100%;
+}
+
+.tabs-scrollable-page {
+  padding: 20px 16px;
+}
+
+.tabs-scrollable-state {
+  margin-block-start: 8px;
+  color: var(--mat-sys-color-on-surface-variant);
+}
+</style>
+```
+:::
+
+::::
+
+<ClientOnly>
+  <DocsPreview label="Tabs 滚动标签行预览" height="232px">
+    <TabsScrollableExample />
+  </DocsPreview>
+</ClientOnly>
+
+## API
+
+### MatTabs 属性
+
+| 属性名 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `modelValue` | `string \| number \| boolean \| null` | `null` | 当前选中的标签页值，支持 `v-model`；`null` 表示未选择。 |
+| `variant` | `'primary' \| 'secondary'` | `'primary'` | 标签页变体；`primary` 支持 64px 堆叠图文与居中指示器，`secondary` 为 48px 水平图文与全宽指示器。 |
+| `swipeable` | `boolean` | `true` | 是否允许触摸与手写笔在内容区左右滑动翻页；鼠标指针不参与手势。 |
+| `scrollable` | `boolean` | `false` | 是否使用滚动标签行：标签按内容宽度排列并可横向滚动；关闭时均分容器宽度。 |
+| `scrollButtons` | `boolean` | `false` | 是否在滚动标签行两端显示翻页按钮；仅在 `scrollable` 且内容溢出时可见。 |
+| `align` | `'start' \| 'center' \| 'end'` | `'start'` | 滚动标签行中标签的整体对齐方式；均分模式下不产生效果。 |
+| `color` | `string \| undefined` | `undefined` | 统一组件配色，作用于活动标签内容与活动指示器；省略时使用 primary 角色。 |
+
+### MatTabItem 属性
+
+| 属性名 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `value` | `string \| number \| boolean` | `undefined` | 标签页的稳定值，与容器 `modelValue` 和对应 `mat-tab-content` 的 `value` 匹配；省略时该项不可被选中。 |
+| `label` | `string \| undefined` | `undefined` | 标签文字；省略时使用默认 Slot 内容。 |
+| `icon` | `string \| undefined` | `undefined` | Material Symbols 图标文本；primary 渲染在文本上方，secondary 与文本水平并排。 |
+| `badge` | `object \| undefined` | `undefined` | 图标或标签上的 Badge 配置，支持 `content`、`dot` 与 `color`。 |
+| `disabled` | `boolean` | `false` | 禁止该标签页被激活；禁用项在键盘导航中被跳过。 |
+
+### MatTabContent 属性
+
+| 属性名 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `value` | `string \| number \| boolean` | `undefined` | 对应 `mat-tab-item` 的稳定值；匹配当前选中项的面板保持可交互。 |
+
+## 事件
+
+### MatTabs 事件
+
+| 事件名 | 载荷 | 触发条件 |
+| --- | --- | --- |
+| `update:modelValue` | `string \| number \| boolean` | 点击未禁用子项、键盘导航或滑动翻页请求切换时触发。 |
+
+MatTabItem 与 MatTabContent 没有自定义事件。
+
+## Slots
+
+### MatTabs Slots
+
+| 插槽名 | 参数 | 说明 |
+| --- | --- | --- |
+| `default` | `-` | 混排放置 `<mat-tab-item>` 与 `<mat-tab-content>`；容器按组件类型自动分组渲染。 |
+
+### MatTabItem Slots
+
+| 插槽名 | 参数 | 说明 |
+| --- | --- | --- |
+| `default` | `-` | 自定义标签文本内容；省略 `label` 时作为标签文字来源。 |
+| `icon` | `{ selected: boolean }` | 自定义图标内容，提供当前选中状态。 |
+
+### MatTabContent Slots
+
+| 插槽名 | 参数 | 说明 |
+| --- | --- | --- |
+| `default` | `-` | 面板内容；面板尺寸由内容撑开，轨道高度取最高面板。 |
+
+## 键盘与状态
+
+标签行提供 `tablist` 语义与 roving tabindex：左右方向键在标签间移动并自动激活（RTL 方向反转），`Home` 与 `End` 跳转首尾，禁用项被跳过。活动指示器随选中标签移动，点击跨越多页时只播放相邻一页的过渡；减少动态效果偏好下指示器与内容直接落位。内容面板提供 `tabpanel` 语义，未激活面板声明 `aria-hidden` 与 `inert`。
+
+<script setup>
+import TabsBasicExample from '../examples/tabs/TabsBasicExample.vue';
+import TabsVariantExample from '../examples/tabs/TabsVariantExample.vue';
+import TabsBadgeExample from '../examples/tabs/TabsBadgeExample.vue';
+import TabsSwipeExample from '../examples/tabs/TabsSwipeExample.vue';
+import TabsScrollableExample from '../examples/tabs/TabsScrollableExample.vue';
 </script>
 
 # Divider 分隔线
