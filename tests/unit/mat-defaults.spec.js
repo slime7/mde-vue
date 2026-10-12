@@ -12,6 +12,7 @@ import {
   dialog,
   MatBtn,
   useMatProps,
+  useMatUi,
 } from '../../src';
 import MAT_UI_KEY, { matComponentKey } from '../../src/mat-ui-context';
 import { GLOBAL_COMPONENTS } from '../../src/plugin';
@@ -227,5 +228,94 @@ describe('defaults 键名与组件接入一致性', () => {
     });
 
     expect(new Set(matched)).toEqual(expected);
+  });
+});
+
+describe('useMatUi 获取全局 UI 配置', () => {
+  it('未安装插件时在组件 setup 中调用返回只读默认配置', () => {
+    let capturedOptions;
+    // eslint-disable-next-line vue/one-component-per-file -- 仅用于测试 useMatUi 独立消费。
+    const Consumer = defineComponent({
+      setup() {
+        capturedOptions = useMatUi();
+        return () => h('div');
+      },
+    });
+
+    mount(Consumer);
+
+    expect(capturedOptions).toEqual({
+      iconClass: 'material-symbols-outlined',
+      useCursor: false,
+      useRipple: false,
+      defaults: {
+        tooltip: {
+          openDelay: 0,
+          closeDelay: 600,
+        },
+      },
+    });
+    expect(Object.isFrozen(capturedOptions)).toBe(true);
+  });
+
+  it('安装插件后返回由 createMatUi 配置的全局选项', () => {
+    let capturedOptions;
+    const plugin = createMatUi({
+      iconClass: 'custom-icons',
+      useCursor: true,
+      useRipple: true,
+      defaults: {
+        btn: { type: 'submit' },
+        tooltip: { openDelay: 500, closeDelay: 800 },
+      },
+    });
+    // eslint-disable-next-line vue/one-component-per-file -- 仅用于测试 useMatUi 插件集成。
+    const Consumer = defineComponent({
+      setup() {
+        capturedOptions = useMatUi();
+        return () => h('div');
+      },
+    });
+
+    mount(Consumer, { global: { plugins: [plugin] } });
+
+    expect(capturedOptions.iconClass).toBe('custom-icons');
+    expect(capturedOptions.useCursor).toBe(true);
+    expect(capturedOptions.useRipple).toBe(true);
+    expect(capturedOptions.defaults.btn).toEqual({ type: 'submit' });
+    expect(capturedOptions.defaults.tooltip).toEqual({ openDelay: 500, closeDelay: 800 });
+  });
+
+  it('用户自创组件可通过 useMatUi 同步光标手势、图标样式与涟漪行为', () => {
+    const plugin = createMatUi({
+      iconClass: 'my-custom-symbol',
+      useCursor: true,
+      useRipple: true,
+    });
+    // eslint-disable-next-line vue/one-component-per-file -- 模拟用户自创组件。
+    const UserCustomComponent = defineComponent({
+      name: 'UserCustomComponent',
+      setup() {
+        const matUi = useMatUi();
+        return () => h('button', {
+          class: [
+            'my-custom-btn',
+            { 'my-custom-btn--pointer': matUi.useCursor },
+            { 'my-custom-btn--ripple': matUi.useRipple },
+          ],
+        }, [
+          h('span', { class: matUi.iconClass }, 'home'),
+          h('span', '自创按钮'),
+        ]);
+      },
+    });
+
+    const wrapper = mount(UserCustomComponent, { global: { plugins: [plugin] } });
+    const button = wrapper.find('button');
+    const icon = wrapper.find('span');
+
+    expect(button.classes()).toContain('my-custom-btn--pointer');
+    expect(button.classes()).toContain('my-custom-btn--ripple');
+    expect(icon.classes()).toContain('my-custom-symbol');
   });
 });

@@ -84,7 +84,7 @@ export { default as Ripple } from './directives/ripple';
 export { default as StateLayer } from './directives/state-layer';
 // Node/Vitest 直接解析包源码时需要保留 JavaScript 扩展名。
 // eslint-disable-next-line import-x/extensions
-export { createMatUi, useMatTheme } from './plugin.js';
+export { createMatUi, useMatTheme, useMatUi } from './plugin.js';
 // eslint-disable-next-line import-x/extensions
 export { useMatProps } from './components/use-mat-props.js';
 // eslint-disable-next-line import-x/extensions

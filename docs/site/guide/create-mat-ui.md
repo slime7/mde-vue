@@ -146,3 +146,31 @@ const matUi = createMatUi();
 matUi.theme.setMode('dark');
 matUi.theme.dispose();
 ```
+
+## 在自创组件中读取配置
+
+`useMatUi()` 从根入口导出，供自创组件或业务组件读取当前应用的组件设置，使图标 class、指针风格、涟漪反馈与 mde-vue 组件保持一致：
+
+```vue
+<script setup>
+import { useMatUi } from 'mde-vue';
+
+const matUi = useMatUi();
+</script>
+
+<template>
+  <button
+    type="button"
+    class="custom-btn"
+    :class="{
+      'custom-btn--pointer': matUi.useCursor,
+      'custom-btn--ripple': matUi.useRipple,
+    }"
+  >
+    <span :class="matUi.iconClass">star</span>
+    <slot />
+  </button>
+</template>
+```
+
+返回对象是只读的，包含 `iconClass`、`useCursor`、`useRipple` 与按组件键组织的 `defaults`。未安装插件时调用 `useMatUi()` 返回默认配置，不抛出异常。

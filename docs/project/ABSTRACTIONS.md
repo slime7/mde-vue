@@ -20,11 +20,13 @@
 
 `MatSurfaceBase`、`MatActionBase`、`MatButtonBase`、`MatSelectionControlBase`、`MatTextInputBase`、`MatItemContentBase` 与 `useRovingFocus` 是内部结构复用层，不属于公共 API。它们分别负责表面根节点、原生 button/link 交互、按钮交互状态、选择控件结构、文本输入视觉、无语义项目内容排列和 tabindex 管理；公共组件不得要求使用者依赖其 class、文件路径或内部 CSS 变量。`MatInputBase` 是公共例外，提供无边框原生 input/textarea、受控字符串值、`update:modelValue`、原生属性透传以及 `focusInput`、`getInput` 方法；它不提供标签、描边、填充、辅助文字或校验语义。
 
-`createMatUi({ theme, useCursor, iconClass, defaults })` 创建一次 Vue 插件安装单元。插件负责以 `mat-*` 和对应 `Mat*` 名称全局注册组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
+`createMatUi({ theme, useCursor, useRipple, iconClass, defaults })` 创建一次 Vue 插件安装单元。插件负责以 `mat-*` 和对应 `Mat*` 名称全局注册组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
 
 `useCursor` 必须是 boolean，默认 `false`，控制可用交互组件是否从 `cursor: default` 改为 `cursor: pointer`。`useRipple` 必须是 boolean，默认 `false`，控制基于 `MatActionBase` 的操作类组件是否在主指针按压时显示涟漪；涟漪绘制在状态层之上，可通过 `v-ripple` 的 `disabled` 选项逐宿主关闭。`iconClass` 必须是 string，默认 `material-symbols-outlined`，作为公共 Icon 与组件图标容器的全局 class；组件级 `iconClass` 可以覆盖或以空字符串关闭它。`defaults` 按组件键设置公共组件的 prop 默认值，键是 `mat-*` 标签去掉前缀后的 camelCase；显式传入的 prop 优先于 defaults，defaults 优先于组件定义默认值，`v-model` 相关属性不接受 defaults 配置。`defaults.tooltip.openDelay` 与 `defaults.tooltip.closeDelay` 必须是非负有限数字，默认分别为 `0` 与 `600`；`openDelay` 是未显式设置 `openDelay` 时的自动打开延迟，`closeDelay` 是未显式设置 `closeDelay` 时的自动关闭延迟，任一 Tooltip 显示时切换进入其他实例可跳过打开延迟。插件不下载字体或图标资源，未安装插件的按需组件使用组件定义默认值。
 
 任一 Tooltip 显示时，其他实例切换进入可跳过打开延迟；Tooltip 关闭后、尚未显示和重新进入同一实例不得共享延迟。受控 Tooltip 不参与该自动状态。
+
+`useMatUi()` 是读取这份不可变组件设置的公共组合函数，返回 `iconClass`、`useCursor`、`useRipple` 与 `defaults`；未安装插件时返回只读默认值。应用自创组件通过它与库内组件保持一致的图标、指针和涟漪行为。
 
 `MatSimpleExpansion` 是不带外观的简易折叠容器，导出名 `MatSimpleExpansion`。展开状态通过布尔 `v-model` 完全交由外部驱动：组件不渲染触发器、不发出 `update:modelValue`（该事件仅为 v-model 契约声明），默认插槽内容始终挂载，折叠期间声明 `aria-hidden="true"` 与 `inert` 离开无障碍树和焦点顺序。折叠动画复用 Expansion 面板的机制：class 切换驱动 `block-size: 0` 与 `auto` 之间的空间弹簧过渡并同步渐隐，减少动态效果或环境不支持 `interpolate-size` 时正确呈现最终状态。需要触发器和手风琴语义的折叠使用 Expansion 组件族，而不是为本组件添加状态。
 

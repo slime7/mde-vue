@@ -387,3 +387,19 @@ export function useMatTheme() {
 
   return theme;
 }
+
+/**
+ * 获取由 createMatUi() 提供的全局组件设置。
+ *
+ * 未安装插件时返回只读默认配置。
+ *
+ * @returns {Readonly<{
+ *   iconClass: string,
+ *   useCursor: boolean,
+ *   useRipple: boolean,
+ *   defaults: Readonly<Record<string, Readonly<object>>>,
+ * }>}
+ */
+export function useMatUi() {
+  return inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
+}

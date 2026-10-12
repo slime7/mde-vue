@@ -5038,6 +5038,13 @@ export type MatComponentDefaults = {
 export declare function createMatUi(options?: MatUiOptions): import('vue').Plugin & { theme: MatThemeController };
 export declare function useMatProps<T extends Record<string, unknown>>(componentName: string, props: T): T & Record<string, unknown>;
 export declare function useMatTheme(): MatThemeController;
+export interface MatUiContext {
+  readonly iconClass: string;
+  readonly useCursor: boolean;
+  readonly useRipple: boolean;
+  readonly defaults: MatComponentDefaults;
+}
+export declare function useMatUi(): MatUiContext;
 export interface MatViewTransitionOptions {
   skip?: boolean;
   names?: string | string[];

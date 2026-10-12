@@ -84,6 +84,7 @@ import {
   useLayout,
   useMatApp,
   useMatProps,
+  useMatUi,
   useMatViewTransition,
   useMdeViewTransition,
 } from 'mde-vue';
@@ -172,6 +173,7 @@ describe('公共组件导出', () => {
     expect(RootMatLayout).toBeTruthy();
     expect(RootMatAside).toBeTruthy();
     expect(useMatProps).toBeTypeOf('function');
+    expect(useMatUi).toBeTypeOf('function');
   });
 
   it('根入口使用可由 Node/Vitest 直接解析的 plugin.js 路径', () => {

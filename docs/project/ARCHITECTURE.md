@@ -39,7 +39,7 @@
 
 ### 公共入口
 
-`src/index.js` 是唯一 JavaScript 公共入口，导出全部组件、`Intersection`、`StateLayer` 与 `Ripple` 指令、命令式 Dialog 与 Snackbar 函数，以及 `createMatUi()`、`useMatTheme()`、`useMatApp()` 和同一文档 View Transition 协调器。构建将该入口编译为唯一运行时文件 `dist/mde-vue.js`，因此所有组件、Vue 上下文键、队列和协调器只存在一个模块实例。`dist/index.d.ts` 是完整根入口类型声明。包不提供组件、指令或函数子入口；`mde-vue/styles.css` 暴露基础令牌与全部组件样式，`mde-vue/tailwind.css` 暴露 Tailwind v4 映射。
+`src/index.js` 是唯一 JavaScript 公共入口，导出全部组件、`Intersection`、`StateLayer` 与 `Ripple` 指令、命令式 Dialog 与 Snackbar 函数，以及 `createMatUi()`、`useMatTheme()`、`useMatUi()`、`useMatApp()` 和同一文档 View Transition 协调器。构建将该入口编译为唯一运行时文件 `dist/mde-vue.js`，因此所有组件、Vue 上下文键、队列和协调器只存在一个模块实例。`dist/index.d.ts` 是完整根入口类型声明。包不提供组件、指令或函数子入口；`mde-vue/styles.css` 暴露基础令牌与全部组件样式，`mde-vue/tailwind.css` 暴露 Tailwind v4 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -53,7 +53,7 @@
 
 ### 插件配置
 
-`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针、是否为操作类组件启用按压涟漪、组件图标容器使用的全局 `iconClass`，以及按组件键配置的默认属性（defaults）。defaults 的键是 `mat-*` 标签去掉前缀后的 camelCase，值为该组件可配置的 prop 默认值；显式传入的 prop 优先，`v-model` 相关属性不接受配置，Tooltip 的打开延迟与同组快速切换时长通过 `defaults.tooltip` 提供。插件以 `mat-*` 和对应 `Mat*` 名称全局注册组件，并注册 `v-intersection`、`v-state-layer` 与 `v-ripple` 指令。顶层选项不会写入主题控制器；未安装插件的按需组件和指令使用组件定义默认值。
+`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针、是否为操作类组件启用按压涟漪、组件图标容器使用的全局 `iconClass`，以及按组件键配置的默认属性（defaults）。defaults 的键是 `mat-*` 标签去掉前缀后的 camelCase，值为该组件可配置的 prop 默认值；显式传入的 prop 优先，`v-model` 相关属性不接受配置，Tooltip 的打开延迟与同组快速切换时长通过 `defaults.tooltip` 提供。插件以 `mat-*` 和对应 `Mat*` 名称全局注册组件，并注册 `v-intersection`、`v-state-layer` 与 `v-ripple` 指令。顶层选项不会写入主题控制器；未安装插件的按需组件和指令使用组件定义默认值。公共组合函数 `useMatUi()` 供应用自创组件读取这份设置，未安装插件时返回默认值。
 
 ### 组件
 

@@ -30,7 +30,7 @@ import {
 import 'mde-vue/styles.css';
 ```
 
-唯一根入口提供 `createMatUi()`、`useMatTheme()`、全部组件、指令和命令式函数的具名导出。构建工具仍可对未使用的具名导出执行 tree shaking。
+唯一根入口提供 `createMatUi()`、`useMatTheme()`、`useMatUi()`、全部组件、指令和命令式函数的具名导出。构建工具仍可对未使用的具名导出执行 tree shaking。
 
 需要动态主题或多个组件时，推荐安装 `createMatUi()` 并使用全局 `mat-*` 标签。仅使用少量组件且接受默认主题时，从同一根入口具名导入并局部注册。两种方式的完整代码见[安装](/guide/installation)，插件的组件设置见 [`createMatUi`](/guide/create-mat-ui)。
 
@@ -208,6 +208,7 @@ import {
   StateLayer as vStateLayer,
   toast,
   useMatApp,
+  useMatUi,
 } from 'mde-vue';
 ```
 
@@ -382,6 +383,34 @@ const matUi = createMatUi();
 matUi.theme.setMode('dark');
 matUi.theme.dispose();
 ```
+
+## 在自创组件中读取配置
+
+`useMatUi()` 从根入口导出，供自创组件或业务组件读取当前应用的组件设置，使图标 class、指针风格、涟漪反馈与 mde-vue 组件保持一致：
+
+```vue
+<script setup>
+import { useMatUi } from 'mde-vue';
+
+const matUi = useMatUi();
+</script>
+
+<template>
+  <button
+    type="button"
+    class="custom-btn"
+    :class="{
+      'custom-btn--pointer': matUi.useCursor,
+      'custom-btn--ripple': matUi.useRipple,
+    }"
+  >
+    <span :class="matUi.iconClass">star</span>
+    <slot />
+  </button>
+</template>
+```
+
+返回对象是只读的，包含 `iconClass`、`useCursor`、`useRipple` 与按组件键组织的 `defaults`。未安装插件时调用 `useMatUi()` 返回默认配置，不抛出异常。
 
 # 主题
 

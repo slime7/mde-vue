@@ -179,6 +179,7 @@ import {
   StateLayer as vStateLayer,
   toast,
   useMatApp,
+  useMatUi,
 } from 'mde-vue';
 ```
 
