@@ -1788,6 +1788,54 @@ export interface MatListItemExposed {
 export type MatListItemComponent = DefineComponent<MatListItemProps, MatListItemExposed, {}, {}, {}, {}, {}, MatListItemEmits>;
 export declare const MatListItem: MatListItemComponent;
 
+export interface MatGridListProps {
+  /**
+  * 网格列数；必须是正整数。
+  *
+  * @type {number}
+  * @default 2
+  */
+  cols?: number;
+  /**
+  * 交互模式；与 MatList 一致，可选值为 `none`、`single-action`、`multi-action`、`single-select`、`multi-select`。
+  *
+  * @type {'none' | 'single-action' | 'multi-action' | 'single-select' | 'multi-select'}
+  * @default 'none'
+  */
+  interaction?: 'none' | 'single-action' | 'multi-action' | 'single-select' | 'multi-select';
+  /**
+  * 受控选中值；single-select 使用单值，multi-select 使用数组。
+  *
+  * @type {string | number | boolean | Array<string | number | boolean> | null}
+  * @default null
+  */
+  selected?: string | number | boolean | Array<string | number | boolean> | null;
+  /**
+  * 网格项通常状态背景色使用的语义色或六位十六进制种子色 `#RRGGBB`。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  color?: string | undefined;
+  /**
+  * 选中网格项背景色使用的语义色或六位十六进制种子色 `#RRGGBB`。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  activeColor?: string | undefined;
+}
+
+export interface MatGridListEmits {
+  /**
+  * 选择规则允许变化时触发，载荷包含 value、selected、nextSelected 和 originalEvent。
+  */
+  "select": (payload: Event) => unknown;
+}
+
+export type MatGridListComponent = DefineComponent<MatGridListProps, {}, {}, {}, {}, {}, {}, MatGridListEmits>;
+export declare const MatGridList: MatGridListComponent;
+
 export interface MatDividerProps {
   /**
   * 分隔线的缩进方式。`true` 表示两侧缩进；字符串值兼容 `none`、`start`、`middle`。
@@ -5240,6 +5288,8 @@ declare module 'vue' {
     'mat-list-group': typeof MatListGroup;
     MatListItem: typeof MatListItem;
     'mat-list-item': typeof MatListItem;
+    MatGridList: typeof MatGridList;
+    'mat-grid-list': typeof MatGridList;
     MatDivider: typeof MatDivider;
     'mat-divider': typeof MatDivider;
     MatCheckbox: typeof MatCheckbox;

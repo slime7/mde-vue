@@ -34,6 +34,7 @@ import MatExpansionPanel from './components/mat-expansion/MatExpansionPanel.vue'
 import MatList from './components/mat-list/MatList.vue';
 import MatListGroup from './components/mat-list-group/MatListGroup.vue';
 import MatListItem from './components/mat-list/MatListItem.vue';
+import MatGridList from './components/mat-grid-list/MatGridList.vue';
 import MatDivider from './components/mat-divider/MatDivider.vue';
 import MatCheckbox from './components/mat-checkbox/MatCheckbox.vue';
 import MatBadge from './components/mat-badge/MatBadge.vue';
@@ -127,6 +128,7 @@ export const GLOBAL_COMPONENTS = [
   ['MatList', 'mat-list', MatList],
   ['MatListGroup', 'mat-list-group', MatListGroup],
   ['MatListItem', 'mat-list-item', MatListItem],
+  ['MatGridList', 'mat-grid-list', MatGridList],
   ['MatDivider', 'mat-divider', MatDivider],
   ['MatCheckbox', 'mat-checkbox', MatCheckbox],
   ['MatBadge', 'mat-badge', MatBadge],

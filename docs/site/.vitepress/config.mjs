@@ -307,6 +307,7 @@ export default defineConfig({
             items: [
               { text: 'Card 卡片', link: '/components/card' },
               { text: 'List 列表', link: '/components/list' },
+              { text: 'Grid list 网格列表', link: '/components/grid-list' },
               { text: 'Table wrapper 表格容器', link: '/components/table-wrapper' },
               { text: 'Expansion 折叠面板', link: '/components/expansion' },
               { text: 'Simple expansion 简易折叠', link: '/components/simple-expansion' },

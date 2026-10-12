@@ -2,6 +2,7 @@ import AppRootScene from './AppRootScene.vue';
 import BottomSheetScene from './BottomSheetScene.vue';
 import CarouselScene from './CarouselScene.vue';
 import DialogScene from './DialogScene.vue';
+import GridListScene from './GridListScene.vue';
 import ListSwipeScene from './ListSwipeScene.vue';
 import MenuScene from './MenuScene.vue';
 import PanesScene from './PanesScene.vue';
@@ -18,6 +19,7 @@ export const scenes = {
   'bottom-sheet': BottomSheetScene,
   carousel: CarouselScene,
   dialog: DialogScene,
+  'grid-list': GridListScene,
   'list-swipe': ListSwipeScene,
   menu: MenuScene,
   panes: PanesScene,

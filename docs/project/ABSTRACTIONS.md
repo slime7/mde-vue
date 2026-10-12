@@ -237,6 +237,10 @@ Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCar
 
 `<mat-list-group>` 只在普通或操作 List 中提供折叠：Activator Slot 必须是单个普通 MatListItem，该 Item 只承担 disclosure 按钮语义，不再承担链接、选择或叶子点击。根 List 的 `expanded` 数组以 `Object.is()` 管理有值分组，并允许多个值同时展开；无值分组使用独立内部状态。折叠内容必须同时离开焦点顺序和无障碍树。选择 List 中的分组固定为静态标签与始终展开的 `group/option` 结构，不混入 disclosure 交互。
 
+## `<mat-grid-list>`
+
+`<mat-grid-list>` 的导出名是 `MatGridList`，以 CSS Grid 按 `cols`（正整数，默认 2）列排列直属 MatListItem，是 List 的网格形态组合实现：内部组合 MatList，交互模式、受控选择、roving focus 和键盘行为与 List 一致。圆角按真实相邻关系表达：某个角只有在其行、列两个朝向上都没有相邻项目时使用 `--mat-list-container-shape`，否则使用 `--mat-list-item-container-shape`；末行缺列时以项目总数和 DOM 顺序推导，暴露空白的角同样使用大圆角。相邻圆角规则由组件运行时注入的每实例唯一作用域样式表达，只覆盖 MatListItem 消费的角落形状变量，不引入新的公共令牌或定制入口。组件不提供 `variant`、拖动排序、虚拟滚动和分组折叠；`swipeable` 跟随 MatListItem 自身的生效条件。Material 3 规范与 AndroidX 没有对应的网格列表组件，组件文档需要保持这一来源说明。
+
 ## Chips
 
 `<mat-chip>` 的导出名是 `MatChip`，始终使用单一原生 button 作为交互根。`variant` 只区分 assist、filter、input 与 suggestion 的用途和内容默认值；独立 filter/input 的 `selected` 是受控视觉状态和 `aria-pressed`。input 默认关闭图标的指针点击区域发出 remove 并阻止同次根 click，但不形成第二个键盘操作目标；自定义 trailing 仍只是主按钮的展示内容。remove 只请求应用删除数据，不修改选中值。

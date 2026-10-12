@@ -34,6 +34,7 @@ export { default as MatExpansionPanel } from './components/mat-expansion/MatExpa
 export { default as MatList } from './components/mat-list/MatList.vue';
 export { default as MatListGroup } from './components/mat-list-group/MatListGroup.vue';
 export { default as MatListItem } from './components/mat-list/MatListItem.vue';
+export { default as MatGridList } from './components/mat-grid-list/MatGridList.vue';
 export { default as MatDivider } from './components/mat-divider/MatDivider.vue';
 export { default as MatCheckbox } from './components/mat-checkbox/MatCheckbox.vue';
 export { default as MatBadge } from './components/mat-badge/MatBadge.vue';
