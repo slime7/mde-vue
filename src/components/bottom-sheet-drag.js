@@ -1,24 +1,32 @@
 /**
- * Bottom sheet 档位与拖动几何计算。
+ * Bottom sheet 档位、拖动几何与嵌套滚动手势计算。
  *
- * 内部模块，不加入公共入口。把拖动几何换算成 min、normal、max 三档高度，
- * 并按松手时的可见高度解析落点；关闭分区高度为 0，低于它与 min 的中点即关闭。
+ * 内部模块，不加入公共入口。把手拖动与内容区手势共用同一套档位与吸附几何：
+ * 把 min、normal、max 三档高度换算成跟手尺寸与偏移，按松手时的可见高度解析
+ * 落点；关闭分区高度为 0，低于它与 min 的中点即关闭。内容区手势在移动超过
+ * 意图阈值后按方向与滚动位置决定拦截方式，参考 AndroidX 嵌套滚动行为。
  */
 
 /** min 档固定高度，单位为 CSS px，与 --mat-sheet-min-block-size 保持一致。 */
 export const MIN_BLOCK_SIZE = 64;
 
-/** 判定向下甩动所需的最小位移，单位为 CSS px。 */
+/** 判定甩动所需的最小位移，单位为 CSS px。 */
 export const FLICK_DISTANCE = 48;
 
-/** 判定向下甩动所需的最小速度，单位为 px/ms。 */
+/** 判定甩动所需的最小速度，单位为 px/ms。 */
 export const FLICK_VELOCITY = 0.5;
 
 /** 向上拖动超过可用高度后的阻尼系数，越小越沉。 */
 export const OVERSHOOT_DAMPING = 0.25;
 
+/** 内容区手势的方向意图阈值，单位为 CSS px。 */
+export const GESTURE_SLOP = 8;
+
 /** 具名档位，其余取值按自定义高度处理。 */
 const NAMED_EXTENTS = ['min', 'normal', 'max'];
+
+/** 键盘步进的档位阶梯；full 与自定义高度视作 max 之上的档位。 */
+const KEYBOARD_TIERS = ['min', 'normal', 'max'];
 
 /**
  * 计算 min、normal、max 三档高度。
@@ -87,7 +95,7 @@ export function resolveBottomSheetDragTarget(geometry, extent) {
  *
  * 向下拖动先把面板缩到 min，越过后固定 min 高度、改用偏移继续下滑；向上
  * 拖动先放大到可用高度，超过部分按阻尼系数继续放大并受 overshootLimit 封顶，
- * 让档位无法提升时仍有跟手反馈。
+ * 让档位无法提升时仍有跟手反馈。内容区手势传入 0 上限，超出部分改为滚动内容。
  *
  * @param {{ availableExtent: number, extent: number, overshootLimit?: number }} geometry
  * @returns {{ offset: number, size: number }}
@@ -116,70 +124,81 @@ export function resolveBottomSheetDragGeometry({
 }
 
 /**
- * 计算虚拟预览在指定档位应露出的高度。
+ * 决定内容区手势的拦截方式。
  *
- * 虚拟预览下面板始终按 min(内容高度, 可用高度) 布局，档位只决定露出多少：
- * min 露出 64px，normal 露出可用高度的一半；因此 normal 与 min 之间切换时
- * 面板高度不变，只有整体位移变化。
+ * deltaY 为按下位置到当前指针位置的纵向位移，向下为正。折叠档向上拖动拦截
+ * 为展开面板；内容滚动在顶部时向下拖动拦截为收缩面板；其余情况交还原生滚动。
+ * 位移未超过意图阈值时返回 null 继续等待。
  *
- * @param {{ availableExtent: number, value: unknown }} geometry
- * @returns {number}
+ * @param {{ deltaY: number, isCollapsed: boolean, scrollTop: number }} gesture
+ * @returns {'collapse'|'expand'|'scroll'|null}
  */
-export function resolveBottomSheetPreviewVisible({ availableExtent, value }) {
-  if (value === 'min') {
-    return MIN_BLOCK_SIZE;
+export function resolveBottomSheetGestureAction({ deltaY, isCollapsed, scrollTop }) {
+  if (deltaY < -GESTURE_SLOP) {
+    return isCollapsed ? 'expand' : 'scroll';
   }
 
-  return Math.max(0, availableExtent) / 2;
+  if (deltaY > GESTURE_SLOP) {
+    return scrollTop <= 0 ? 'collapse' : 'scroll';
+  }
+
+  return null;
 }
 
 /**
- * 计算虚拟预览拖动时的整体偏移。
+ * 判断松手动作是否为触控甩动，并解析甩动方向的目标。
  *
- * 面板保持已布局高度，只把下半部分移出屏幕，可见高度因此等于传入的
- * visibleExtent，最小为 0、最大为面板高度；继续向上拖动时按阻尼改为负偏移，
- * 让整块面板可见后仍有跟手反馈。
+ * 向下甩动解析为 close，向上甩动解析为 expand；expand 目标是否被接受
+ * （仅折叠档接受）由调用方判断。鼠标拖动不参与甩动判定：鼠标位移小、速度
+ * 快，轻微拖动就会误判，因此鼠标只能通过把落点拖进对应分区来改变档位或关闭。
  *
- * @param {{ overshootLimit?: number, panelExtent: number, visibleExtent: number }} geometry
- * @returns {number}
+ * @param {{ delta: number, distance: number, pointerType?: string, velocity: number }} input
+ * @returns {'close'|'expand'|null}
  */
-export function resolveBottomSheetPreviewOffset({
-  overshootLimit = 0,
-  panelExtent,
-  visibleExtent,
-}) {
-  const panel = Math.max(0, panelExtent);
-
-  if (visibleExtent > panel) {
-    const overshoot = Math.min(
-      (visibleExtent - panel) * OVERSHOOT_DAMPING,
-      Math.max(0, overshootLimit),
-    );
-
-    return overshoot > 0 ? -overshoot : 0;
-  }
-
-  return Math.min(panel, Math.max(0, panel - visibleExtent));
-}
-
-/**
- * 判断松手动作是否为向下甩动。
- *
- * 鼠标拖动不参与甩动判定：鼠标位移小、速度快，轻微下拉就会误判为关闭，
- * 因此鼠标只能通过把落点拖进关闭分区来关闭。
- *
- * @param {{ distance: number, draggingDown: boolean, pointerType?: string, velocity: number }} input
- * @returns {boolean}
- */
-export function isBottomSheetFlick({
+export function resolveBottomSheetFlick({
+  delta,
   distance,
-  draggingDown,
   pointerType,
   velocity,
 }) {
   if (pointerType === 'mouse') {
-    return false;
+    return null;
   }
 
-  return draggingDown && distance >= FLICK_DISTANCE && velocity >= FLICK_VELOCITY;
+  if (distance < FLICK_DISTANCE || velocity < FLICK_VELOCITY) {
+    return null;
+  }
+
+  if (delta > 0) {
+    return 'close';
+  }
+
+  if (delta < 0) {
+    return 'expand';
+  }
+
+  return null;
+}
+
+/**
+ * 解析把手方向键请求的档位。
+ *
+ * 档位阶梯为 min、normal、max，step 为 1 时向展开方向步进、-1 时向折叠方向
+ * 步进；full 与自定义高度视作 max 之上的档位，向折叠方向先回到 max。越界时
+ * 返回 null 表示不改变档位。
+ *
+ * @param {unknown} value 当前展开值
+ * @param {number} step 方向步长，1 或 -1
+ * @returns {'max'|'min'|'normal'|null}
+ */
+export function resolveBottomSheetKeyboardTarget(value, step) {
+  const index = KEYBOARD_TIERS.indexOf(value);
+
+  if (index === -1) {
+    return step < 0 ? 'max' : null;
+  }
+
+  const next = KEYBOARD_TIERS[index + step];
+
+  return next ?? null;
 }

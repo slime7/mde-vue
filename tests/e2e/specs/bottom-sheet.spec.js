@@ -48,6 +48,31 @@ test.describe('MatBottomSheet 档位与拖动', () => {
     await expect(page.locator('dialog[open]')).toHaveCount(0);
   });
 
+  test('把手方向键在档位间步进', async ({ page }) => {
+    await openScene(page, 'bottom-sheet');
+    const handle = await openSheet(page);
+    await expect(page.getByTestId('expanded-tier')).toHaveText('normal');
+
+    await handle.focus();
+    await page.keyboard.press('ArrowUp');
+    await expect(page.getByTestId('expanded-tier')).toHaveText('max');
+
+    await page.keyboard.press('ArrowDown');
+    await expect(page.getByTestId('expanded-tier')).toHaveText('normal');
+  });
+
+  test('折叠档内容区滚轮向下自动展开到 max 档', async ({ page }) => {
+    await openScene(page, 'bottom-sheet');
+    await openSheet(page);
+    await expect(page.getByTestId('expanded-tier')).toHaveText('normal');
+
+    await page.getByTestId('sheet-content').hover();
+    await page.mouse.wheel(0, 120);
+
+    await expect(page.getByTestId('expanded-tier')).toHaveText('max', { timeout: 5000 });
+    await expect.poll(() => readEvents(page)).toContainEqual({ name: 'expanded', payload: 'max' });
+  });
+
   test('向上拖动把手释放后吸附到 max 档', async ({ page }) => {
     await openScene(page, 'bottom-sheet');
     const handle = await openSheet(page);

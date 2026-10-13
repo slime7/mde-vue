@@ -18857,7 +18857,9 @@ import ToolbarVariantExample from '../examples/toolbar/ToolbarVariantExample.vue
 
 `<mat-bottom-sheet>` 的组件导出名是 `MatBottomSheet`。它将补充内容固定在屏幕或容器底部，提供 `standard`（与主内容共存的常驻面板）与 `modal`（带遮罩与焦点拦截的模态面板）两种变体，以及根据断点自动切换的 `auto` 模式。
 
-底部工作表提供拖动手柄行（drag handle）、内容区域和底部操作区（footer），支持通过手势拖动或 `expanded` 属性切换面板高度；预设高度档位包括 `min`、`normal`、`max` 和 `full`，也支持指定具体数值高度。开启 `virtualExpand` 可在内容超出时提供平滑位移展开体验。
+底部工作表提供拖动手柄行（drag handle）、内容区域和底部操作区（footer），通过 `expanded` 属性或手势切换面板高度；预设高度档位包括 `min`、`normal`、`max` 和 `full`，也支持指定具体数值高度。
+
+交互参考 AndroidX ModalBottomSheet 的嵌套滚动行为：面板默认以固定高度（`normal` 或自定义高度）弹出，在内容区或把手上向上拖动会跟手展开到 `max`，展开后继续拖动改为滚动内容；内容滚动到顶部后向下拖动先收回面板，继续拖动可以关闭。鼠标与键盘使用滚轮、把手拖动和方向键完成同一组操作。
 
 ## 示例
 
@@ -18957,7 +18959,9 @@ const modalOpen = ref(false);
   </DocsPreview>
 </ClientOnly>
 
-### `virtualExpand` 自动展开
+### 内容区手势与滚轮展开
+
+触摸与手写笔在内容区向上拖动时面板跟手展开到 `max`，超出可用高度后剩余位移交给内容滚动；在内容滚动到顶部后向下拖动先收回面板，落点按档位吸附，快速下甩或拖入关闭分区请求关闭。折叠档下鼠标滚轮向下或把手方向键同样请求展开。示例正文是长列表，可以依次体验预览、跟手展开、内容滚动与收回。
 
 :::: details 查看示例代码
 ::: code-group
@@ -18965,21 +18969,20 @@ const modalOpen = ref(false);
 ```vue
 <template>
   <mat-btn @click="open = true; expanded = 'normal'">
-    打开 virtualExpand Modal
+    打开可拖拽展开的面板
   </mat-btn>
 
   <mat-bottom-sheet
     v-model="open"
     v-model:expanded="expanded"
     variant="modal"
-    virtual-expand
     aria-label="长列表内容"
   >
-    <div class="bottom-sheet-virtual-expand-example__body">
+    <div class="bottom-sheet-gesture-example__body">
       <h2>长列表内容</h2>
-      <p>当前状态：{{ expanded }}。normal 状态按 min(内容高度, full 高度) 布局面板，只显示上半部分，其余内容留在屏幕下方；向下滚动或向上滑动内容区会请求 max。</p>
+      <p>当前高度：{{ expanded }}。在内容区向上拖动会跟手展开到 max，展开后继续拖动改为滚动内容；在内容顶部向下拖动收回面板，继续拖动可以关闭。鼠标滚轮向下与把手方向键同样可以在档位间切换。</p>
       <p v-for="index in 20" :key="index">
-        第 {{ index }} 项内容：初始预览时滚动条覆盖屏幕下方的内容，向下滚动或向上滑动时自动展开。
+        第 {{ index }} 项内容：折叠时显示预览，向上拖动内容区或向下滚动滚轮自动展开，展开后继续滚动查看全部内容。
       </p>
     </div>
   </mat-bottom-sheet>
@@ -18995,7 +18998,7 @@ const expanded = ref('normal');
 ```
 ```vue
 <style scoped>
-.bottom-sheet-virtual-expand-example__body {
+.bottom-sheet-gesture-example__body {
   padding: 24px;
 }
 </style>
@@ -19004,8 +19007,8 @@ const expanded = ref('normal');
 ::::
 
 <ClientOnly>
-  <DocsPreview label="Bottom sheet virtualExpand 预览">
-    <BottomSheetVirtualExpandExample />
+  <DocsPreview label="Bottom sheet 内容区手势预览">
+    <BottomSheetGestureExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -19504,12 +19507,11 @@ const containerColor = ref(false);
 | `scrim` | `boolean` | `true` | modal 是否显示帷幕；false 时仍阻止背景指针交互 |
 | `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否通过点击 modal 帷幕或按 Escape 关闭，禁用后两者都不请求关闭 |
 | `dragHandle` | `boolean` | `true` | 模板属性为 `drag-handle`；是否显示顶部拖动把手 |
-| `expanded` | `'min' \| 'normal' \| 'max' \| 'full' \| number \| string` | `'normal'` | min 固定 64px；normal 取内容完整高度并以可用高度一半封顶；max 按内容完整高度展开且不超过可用高度；full 使用当前最大展开高度；数字与纯数字字符串按 px 处理，其他字符串按合法 CSS `block-size` 处理；实际高度不会低于 64px，非法值回退 normal |
-| `virtualExpand` | `boolean` | `false` | 模板属性为 `virtual-expand`；min 与 normal 档按 min(内容高度, 可用高度) 布局面板，只露出 64px 或可用高度的一半，其余留在屏幕下方，内容区可滚动；内容区向下滚轮或向上滑动时请求 max |
+| `expanded` | `'min' \| 'normal' \| 'max' \| 'full' \| number \| string` | `'normal'` | min 固定 64px；normal 取内容完整高度并以可用高度一半封顶；max 按内容完整高度展开且不超过可用高度；full 使用当前最大展开高度；数字与纯数字字符串按 px 处理，其他字符串按合法 CSS `block-size` 处理；实际高度不会低于 64px，非法值回退 normal。档位是半受控的：手势、滚轮与键盘先更新组件内部档位再发出 `update:expanded`，未监听该事件时组件仍保持切换后的高度 |
 | `dragHandleLabel` | `string` | `'展开底部面板'` | 模板属性为 `drag-handle-label`；min 与 normal 档下把手的可访问名称 |
 | `collapseDragHandleLabel` | `string` | `'折叠底部面板'` | 模板属性为 `collapse-drag-handle-label`；已展开的 standard 状态下把手的可访问名称，用于 max、full 与自定义高度 |
 | `expandedDragHandleLabel` | `string` | `'关闭底部面板'` | 模板属性为 `expanded-drag-handle-label`；已展开的 modal 状态下把手的可访问名称 |
-| `draggable` | `boolean` | `true` | 是否允许通过把手拖动在 min、normal、max 之间切换，或向下拖动关闭 |
+| `draggable` | `boolean` | `true` | 是否允许拖动在档位间切换高度或拖动关闭；禁用后把手拖动、内容区触摸手势与滚轮展开一并关闭 |
 | `content` | `string` | 未设置 | 纯文本内容便利属性，不附加内边距；需要标题、说明、操作布局或自定义留白时使用默认 Slot |
 | `containerColor` | `boolean` | `false` | standard 布局使用与 modal 相同的容器背景语义色；modal 布局始终使用该语义色 |
 | `shadow` | `boolean` | `true` | 是否显示 Material 3 level 1 阴影，切换带效果过渡 |
@@ -19519,6 +19521,14 @@ const containerColor = ref(false);
 
 Bottom sheet 的宽度不超过 640px。宽屏顶部安全间距至少为 56px，窄屏至少为 72px；`normal` 与 `max` 都取内容完整高度，内容超出面板高度时只滚动内容区域。默认内容区域没有内边距，`footer` 固定在内容区下方。把手的完整交互行至少为 48px，灰色视觉条只负责显示。
 
+### 手势与状态
+
+- **把手拖动**：向上拖动跟手放大面板，向下拖动先缩到 64px 再整体下滑；松手按相邻档位中点吸附。落点低于 32px，或触摸与手写笔快速向下甩动时请求关闭；鼠标拖动不参与甩动判定，只能把落点拖进关闭分区。拖拽产生的关闭保留当前尺寸与偏移，退出动画从可见位置继续播放。
+- **内容区触摸手势**：触摸与手写笔在内容区按下并移动超过 8px 后，按方向决定拦截方式——折叠档向上拖动跟手展开，超过可用高度后剩余位移改为滚动内容；内容滚动在顶部时向下拖动跟手收缩。内容已滚动时向下拖动、已展开时向上拖动都交还原生滚动。鼠标在内容区不建立手势，保留文本选择。
+- **滚轮**：折叠档下内容区滚轮向下请求展开到 `max` 并阻止默认滚动；展开档滚轮正常滚动内容。
+- **键盘**：把手上 ArrowUp/ArrowDown 按 min、normal、max 步进（full 与自定义高度先回到 max）；Enter/Space 在折叠档请求 `max`，standard 展开档请求 `normal`，modal 展开档请求关闭；Escape 跟随 `closeOnBack`。
+- **内容滚动到顶的边界**：内容区使用 `overscroll-behavior: contain`，滚动手势进行到一半到达顶部时不会透过面板滚动背景；该手势内不再切换为拖动面板，下一次手势从顶部开始即可收回面板。
+
 ### 方法
 
 组件没有公共方法。
@@ -19527,12 +19537,12 @@ Bottom sheet 的宽度不超过 640px。宽屏顶部安全间距至少为 56px�
 
 | 事件 | 载荷 | 触发条件 |
 | --- | --- | --- |
-| `update:modelValue` | `boolean` | `closeOnBack` 允许的 Escape 与帷幕点击，或向下拖动落在关闭分区、触控与手写笔快速甩动时请求关闭并发出 `false` |
-| `update:expanded` | `'min' \| 'normal' \| 'max'` | 键盘操作、拖动或 `virtualExpand` 内容手势请求高度状态变化时发出；`full` 与自定义高度只能由绑定值设置，拖动不会发出 |
+| `update:modelValue` | `boolean` | `closeOnBack` 允许的 Escape 与帷幕点击，或拖动落在关闭分区、触摸与手写笔快速下甩时请求关闭并发出 `false` |
+| `update:expanded` | `'min' \| 'normal' \| 'max'` | 把手方向键与 Enter/Space、把手或内容区拖动吸附、内容区上甩与滚轮展开请求高度状态变化时发出；`full` 与自定义高度只能由绑定值设置，手势不会发出 |
 | `opened` | 无 | 进入动画完成后触发 |
 | `closed` | 无 | 退出动画完成且 DOM 清理后触发 |
 
-组件是受控的：收到 `update:modelValue(false)` 或 `update:expanded` 后，使用者需要更新对应绑定值。把手的鼠标点击不会发出 `update:expanded`；Enter/Space 仍然执行键盘状态操作。拖动产生的关闭请求会保留当前拖拽尺寸与偏移，让退出动画从可见位置继续播放。Modal 打开后聚焦显式 `autofocus` 或第一个可交互元素，退出完成后恢复原焦点。Standard 不主动移动焦点，也不锁定页面滚动。
+`modelValue` 是受控的：收到 `update:modelValue(false)` 后需要由使用者更新绑定值。`expanded` 是半受控的：组件先更新内部档位再发出 `update:expanded`，未监听该事件时组件仍保持切换后的高度，监听后以绑定值为准。把手的鼠标点击不会发出 `update:expanded`；Enter/Space 与方向键执行键盘状态操作。Modal 打开后聚焦显式 `autofocus` 或第一个可交互元素，退出完成后恢复原焦点。Standard 不主动移动焦点，也不锁定页面滚动。
 
 ## Slots
 
@@ -19545,17 +19555,17 @@ Bottom sheet 的宽度不超过 640px。宽屏顶部安全间距至少为 56px�
 
 ## 参考来源
 
-结构、尺寸、standard/modal 用途和响应式原则依据 Material 3 的 [Bottom sheets overview](https://m3.material.io/components/bottom-sheets/overview)、[specs](https://m3.material.io/components/bottom-sheets/specs) 与 [guidelines](https://m3.material.io/components/bottom-sheets/guidelines)。容器背景、extra-large 圆角、level 1 阴影、640px 最大宽度和 drag handle 交互行参考 [Google Material Components BottomSheet 官方实现说明](https://github.com/material-components/material-components-android/blob/master/docs/components/BottomSheet.md)。Web 端没有对应的 Material Web 组件，本实现使用 Vue、原生 `<dialog>` 和 CSS 复刻用户可观察行为。
+结构、尺寸、standard/modal 用途和响应式原则依据 Material 3 的 [Bottom sheets overview](https://m3.material.io/components/bottom-sheets/overview)、[specs](https://m3.material.io/components/bottom-sheets/specs) 与 [guidelines](https://m3.material.io/components/bottom-sheets/guidelines)。容器背景、extra-large 圆角、level 1 阴影、640px 最大宽度和 drag handle 交互行参考 [Google Material Components BottomSheet 官方实现说明](https://github.com/material-components/material-components-android/blob/master/docs/components/BottomSheet.md)。内容区拖拽展开、滚动到顶后拖动收回与滚轮展开参考 AndroidX Compose [ModalBottomSheet](https://developer.android.com/reference/kotlin/androidx/compose/material3/package-summary#ModalBottomSheet) 的 PartiallyExpanded/Expanded 状态与嵌套滚动行为。Web 端没有对应的 Material Web 组件，本实现使用 Vue、原生 `<dialog>` 和 CSS 复刻用户可观察行为。
 
 <script setup>
 import BottomSheetContainerColorExample from '../examples/bottom-sheet/BottomSheetContainerColorExample.vue';
 import BottomSheetExpandedExample from '../examples/bottom-sheet/BottomSheetExpandedExample.vue';
+import BottomSheetGestureExample from '../examples/bottom-sheet/BottomSheetGestureExample.vue';
 import BottomSheetResponsiveExample from '../examples/bottom-sheet/BottomSheetResponsiveExample.vue';
 import BottomSheetRoundedExample from '../examples/bottom-sheet/BottomSheetRoundedExample.vue';
 import BottomSheetShadowExample from '../examples/bottom-sheet/BottomSheetShadowExample.vue';
 import BottomSheetSlotsExample from '../examples/bottom-sheet/BottomSheetSlotsExample.vue';
 import BottomSheetVariantExample from '../examples/bottom-sheet/BottomSheetVariantExample.vue';
-import BottomSheetVirtualExpandExample from '../examples/bottom-sheet/BottomSheetVirtualExpandExample.vue';
 </script>
 
 # Grid list 网格列表

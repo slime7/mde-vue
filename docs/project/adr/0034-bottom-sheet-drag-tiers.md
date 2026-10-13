@@ -1,8 +1,9 @@
 # 0034 — Bottom sheet 采用 min、normal、max 拖动档位与内容高度预览
 
-- 状态: active
+- 状态: superseded
 - 日期: 2026-09-11
 - 替代: 无
+- 被替代: 0037
 
 ## 背景
 

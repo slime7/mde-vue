@@ -4,11 +4,11 @@ import {
 } from 'vitest';
 import { h, nextTick } from 'vue';
 import {
-  isBottomSheetFlick,
   resolveBottomSheetDragGeometry,
   resolveBottomSheetDragTarget,
-  resolveBottomSheetPreviewOffset,
-  resolveBottomSheetPreviewVisible,
+  resolveBottomSheetFlick,
+  resolveBottomSheetGestureAction,
+  resolveBottomSheetKeyboardTarget,
   resolveBottomSheetTiers,
 } from '../../src/components/bottom-sheet-drag';
 import MatSheetBase from '../../src/components/MatSheetBase.vue';
@@ -150,6 +150,31 @@ async function dragHandleTo(handle, {
 
   dispatchPointer(target, 'pointermove', { clientY: to, pointerId });
   dispatchPointer(target, 'pointerup', { clientY: to, pointerId });
+}
+
+/**
+ * 在内容区完成一次触摸拖动；slow 为 true 时让拖动持续 2 秒，避免被判定为甩动。
+ */
+async function dragContentTo(content, {
+  from,
+  pointerId = 1,
+  pointerType = 'touch',
+  slow = true,
+  to,
+}) {
+  dispatchPointer(content, 'pointerdown', {
+    button: 0,
+    clientY: from,
+    pointerId,
+    pointerType,
+  });
+
+  if (slow) {
+    await vi.advanceTimersByTimeAsync(2000);
+  }
+
+  dispatchPointer(window, 'pointermove', { clientY: to, pointerId });
+  dispatchPointer(window, 'pointerup', { clientY: to, pointerId });
 }
 
 describe('MatBottomSheet', () => {
@@ -554,17 +579,16 @@ describe('MatBottomSheet', () => {
     expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
 
-  it('virtualExpand 开启且在预览状态时，内容区滚轮向下滚动自动请求展开', async () => {
+  it('折叠档内容区滚轮向下请求展开并阻止默认滚动', async () => {
     const wrapper = mount(MatBottomSheet, {
       attachTo: document.body,
       props: {
         content: '长内容预览',
         modelValue: true,
         variant: 'modal',
-        virtualExpand: true,
       },
       attrs: {
-        'aria-label': '虚拟全高',
+        'aria-label': '滚轮展开',
       },
     });
 
@@ -596,45 +620,7 @@ describe('MatBottomSheet', () => {
     expect(wrapper.emitted('update:expanded')).toEqual([['max']]);
   });
 
-  it('virtualExpand 开启且在预览状态时，触控向上滑动内容区自动请求展开', async () => {
-    const wrapper = mount(MatBottomSheet, {
-      attachTo: document.body,
-      props: {
-        content: '长内容预览',
-        modelValue: true,
-        variant: 'modal',
-        virtualExpand: true,
-      },
-      attrs: {
-        'aria-label': '虚拟全高触控',
-      },
-    });
-
-    await settleRender();
-
-    const content = document.body.querySelector('dialog .mat-sheet__content');
-
-    dispatchPointer(content, 'pointerdown', {
-      button: 0,
-      clientY: 300,
-      pointerId: 10,
-      pointerType: 'touch',
-    });
-    dispatchPointer(content, 'pointermove', {
-      clientY: 280,
-      pointerId: 10,
-      pointerType: 'touch',
-    });
-    dispatchPointer(content, 'pointerup', {
-      clientY: 280,
-      pointerId: 10,
-      pointerType: 'touch',
-    });
-
-    expect(wrapper.emitted('update:expanded')).toEqual([['max']]);
-  });
-
-  it('virtualExpand 在已展开状态下滚动内容区不重复请求展开', async () => {
+  it('已展开档内容区滚轮向下不请求展开', async () => {
     const wrapper = mount(MatBottomSheet, {
       attachTo: document.body,
       props: {
@@ -642,10 +628,9 @@ describe('MatBottomSheet', () => {
         expanded: 'full',
         modelValue: true,
         variant: 'modal',
-        virtualExpand: true,
       },
       attrs: {
-        'aria-label': '虚拟全高已展开',
+        'aria-label': '已展开滚轮',
       },
     });
 
@@ -655,36 +640,224 @@ describe('MatBottomSheet', () => {
 
     content.dispatchEvent(new WheelEvent('wheel', {
       bubbles: true,
-      deltaY: 50,
+      cancelable: true,
+      deltaY: 40,
     }));
 
     expect(wrapper.emitted('update:expanded')).toBeUndefined();
   });
 
-  it('virtualExpand 开启且在 standard 模式预览状态时，内容区滚轮向下滚动自动请求展开', async () => {
+  it('折叠档内容区触摸向上拖动越入 max 区时请求 max', async () => {
     const wrapper = mount(MatBottomSheet, {
       attachTo: document.body,
       props: {
-        content: 'Standard 长内容',
+        content: '长内容',
         modelValue: true,
         variant: 'standard',
-        virtualExpand: true,
       },
     });
 
     await settleRender();
 
-    const sheet = wrapper.get('aside');
-    const wheelDownEvent = new WheelEvent('wheel', {
-      bubbles: true,
-      cancelable: true,
-      deltaY: 50,
+    const sheet = wrapper.get('aside').element;
+
+    stubBottomSheetLayout(sheet, { contentHeight: 1048, panelHeight: 348 });
+
+    const content = sheet.querySelector('.mat-sheet__content');
+
+    await dragContentTo(content, { from: 300, pointerId: 30, to: 0 });
+
+    expect(wrapper.emitted('update:expanded')).toEqual([['max']]);
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+  });
+
+  it('折叠档内容区在滚动顶部缓慢下拖越入 min 区时请求 min', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容',
+        modelValue: true,
+        variant: 'standard',
+      },
     });
 
-    sheet.element.dispatchEvent(wheelDownEvent);
+    await settleRender();
 
-    expect(wheelDownEvent.defaultPrevented).toBe(true);
+    const sheet = wrapper.get('aside').element;
+
+    stubBottomSheetLayout(sheet, { contentHeight: 1048, panelHeight: 348 });
+
+    const content = sheet.querySelector('.mat-sheet__content');
+
+    await dragContentTo(content, { from: 200, pointerId: 31, to: 400 });
+
+    expect(wrapper.emitted('update:expanded')).toEqual([['min']]);
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+  });
+
+  it('内容区快速向下甩动请求关闭', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容',
+        modelValue: true,
+        variant: 'standard',
+      },
+    });
+
+    await settleRender();
+
+    const sheet = wrapper.get('aside').element;
+
+    stubBottomSheetLayout(sheet, { contentHeight: 1048, panelHeight: 348 });
+
+    await dragContentTo(sheet.querySelector('.mat-sheet__content'), {
+      from: 200,
+      pointerId: 32,
+      slow: false,
+      to: 400,
+    });
+
+    expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
+  });
+
+  it('折叠档内容区快速向上甩动请求 max', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容',
+        modelValue: true,
+        variant: 'standard',
+      },
+    });
+
+    await settleRender();
+
+    const sheet = wrapper.get('aside').element;
+
+    stubBottomSheetLayout(sheet, { contentHeight: 1048, panelHeight: 348 });
+
+    await dragContentTo(sheet.querySelector('.mat-sheet__content'), {
+      from: 400,
+      pointerId: 33,
+      slow: false,
+      to: 200,
+    });
+
     expect(wrapper.emitted('update:expanded')).toEqual([['max']]);
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+  });
+
+  it('内容已滚动时向下拖动不拦截原生滚动', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容',
+        modelValue: true,
+        variant: 'standard',
+      },
+    });
+
+    await settleRender();
+
+    const sheet = wrapper.get('aside').element;
+
+    stubBottomSheetLayout(sheet, { contentHeight: 1048, panelHeight: 348 });
+
+    const content = sheet.querySelector('.mat-sheet__content');
+    const viewport = content.querySelector('.mat-scroll-area__viewport');
+
+    viewport.scrollTop = 200;
+
+    await dragContentTo(content, { from: 200, pointerId: 34, to: 400 });
+
+    expect(wrapper.emitted('update:expanded')).toBeUndefined();
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+  });
+
+  it('已展开档内容区向上拖动不拦截原生滚动', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容',
+        expanded: 'max',
+        modelValue: true,
+        variant: 'standard',
+      },
+    });
+
+    await settleRender();
+
+    const sheet = wrapper.get('aside').element;
+
+    stubBottomSheetLayout(sheet, { contentHeight: 1048, panelHeight: 696 });
+
+    await dragContentTo(sheet.querySelector('.mat-sheet__content'), {
+      from: 400,
+      pointerId: 35,
+      to: 100,
+    });
+
+    expect(wrapper.emitted('update:expanded')).toBeUndefined();
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+  });
+
+  it('内容区向上拖动超过可用高度后剩余位移交给内容滚动', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容',
+        modelValue: true,
+        variant: 'standard',
+      },
+    });
+
+    await settleRender();
+
+    const sheet = wrapper.get('aside').element;
+
+    stubBottomSheetLayout(sheet, { contentHeight: 1048, panelHeight: 348 });
+
+    const content = sheet.querySelector('.mat-sheet__content');
+    const viewport = content.querySelector('.mat-scroll-area__viewport');
+
+    Object.defineProperty(viewport, 'scrollHeight', { configurable: true, value: 1000 });
+    Object.defineProperty(viewport, 'clientHeight', { configurable: true, value: 200 });
+
+    await dragContentTo(content, { from: 600, pointerId: 36, to: 0 });
+
+    // 可用高度 696，拖动请求 948 的可见高度，超出部分 252 交给内容滚动。
+    expect(viewport.scrollTop).toBe(252);
+    expect(wrapper.emitted('update:expanded')).toEqual([['max']]);
+  });
+
+  it('内容区交互元素上的触摸拖动不建立手势', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      attachTo: document.body,
+      props: {
+        content: '长内容',
+        modelValue: true,
+        variant: 'standard',
+      },
+      slots: {
+        default: '<button type="button">内容按钮</button>',
+      },
+    });
+
+    await settleRender();
+
+    const sheet = wrapper.get('aside').element;
+
+    stubBottomSheetLayout(sheet, { contentHeight: 1048, panelHeight: 348 });
+
+    await dragContentTo(sheet.querySelector('.mat-sheet__content button'), {
+      from: 200,
+      pointerId: 37,
+      to: 0,
+    });
+
+    expect(wrapper.emitted('update:expanded')).toBeUndefined();
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
 
   it('standard 把手点击不切换，键盘在折叠档与 max 之间循环', async () => {
@@ -1129,113 +1302,94 @@ describe('MatBottomSheet', () => {
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
   });
 
-  it('virtualExpand 从预览态向上拖动到 max 区时请求 max', async () => {
+  it('把手方向键按 min、normal、max 步进档位', async () => {
     const wrapper = mount(MatBottomSheet, {
       attachTo: document.body,
       props: {
-        content: '长内容',
         modelValue: true,
-        variant: 'modal',
-        virtualExpand: true,
-      },
-      attrs: {
-        'aria-label': '虚拟预览拖动',
+        variant: 'standard',
       },
     });
 
     await settleRender();
 
-    const sheet = document.body.querySelector('dialog');
-    const panel = sheet.querySelector('.mat-sheet__panel');
+    const handle = () => document.body.querySelector('aside button[data-sheet-drag-handle]');
 
-    stubExtent(sheet, 768);
-    stubBottomSheetLayout(panel, { contentHeight: 1048, panelHeight: 696 });
-    window.dispatchEvent(new Event('resize'));
-    await settleRender();
-
-    await dragHandleTo(sheet.querySelector('button[aria-label="展开底部面板"]'), {
-      from: 600,
-      pointerId: 17,
-      to: 300,
-    });
+    await handle().dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
 
     expect(wrapper.emitted('update:expanded')).toEqual([['max']]);
-    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+
+    await handle().dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+
+    expect(wrapper.emitted('update:expanded')).toEqual([['max'], ['normal']]);
+
+    await handle().dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+
+    expect(wrapper.emitted('update:expanded')).toEqual([['max'], ['normal'], ['min']]);
+
+    await handle().dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+
+    expect(wrapper.emitted('update:expanded')).toHaveLength(3);
+
+    await handle().dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
+
+    expect(wrapper.emitted('update:expanded')).toEqual([['max'], ['normal'], ['min'], ['normal']]);
   });
 
-  it('virtualExpand 从预览态向上拖动不足时不改变档位', async () => {
+  it('full 与自定义高度按方向键先回到 max', async () => {
     const wrapper = mount(MatBottomSheet, {
       attachTo: document.body,
       props: {
-        content: '长内容',
+        expanded: 'full',
         modelValue: true,
-        variant: 'modal',
-        virtualExpand: true,
-      },
-      attrs: {
-        'aria-label': '虚拟预览小幅拖动',
+        variant: 'standard',
       },
     });
 
     await settleRender();
 
-    const sheet = document.body.querySelector('dialog');
-    const panel = sheet.querySelector('.mat-sheet__panel');
+    const handle = wrapper.get('button[aria-label="折叠底部面板"]');
 
-    stubExtent(sheet, 768);
-    stubBottomSheetLayout(panel, { contentHeight: 1048, panelHeight: 696 });
-    window.dispatchEvent(new Event('resize'));
+    await handle.trigger('keydown', { key: 'ArrowDown' });
+
+    expect(wrapper.emitted('update:expanded')).toEqual([['max']]);
+
+    await wrapper.setProps({ expanded: '320px' });
     await settleRender();
 
-    await dragHandleTo(sheet.querySelector('button[aria-label="展开底部面板"]'), {
-      from: 600,
-      pointerId: 18,
-      to: 500,
-    });
+    await wrapper.get('button[aria-label="折叠底部面板"]').trigger('keydown', { key: 'ArrowDown' });
 
-    expect(wrapper.emitted('update:expanded')).toBeUndefined();
-    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+    expect(wrapper.emitted('update:expanded')).toEqual([['max'], ['max']]);
+
+    await wrapper.get('button[aria-label="折叠底部面板"]').trigger('keydown', { key: 'ArrowUp' });
+
+    expect(wrapper.emitted('update:expanded')).toEqual([['max'], ['max']]);
   });
 
-  it('virtualExpand 下 min 与 normal 都保留内容高度，只用位移控制可见高度', async () => {
+  it('未监听 update:expanded 时组件仍更新内部档位与把手名称', async () => {
     const wrapper = mount(MatBottomSheet, {
       attachTo: document.body,
       props: {
-        content: '长内容',
-        expanded: 'normal',
         modelValue: true,
-        variant: 'modal',
-        virtualExpand: true,
-      },
-      attrs: {
-        'aria-label': '虚拟预览档位',
+        variant: 'standard',
       },
     });
 
     await settleRender();
 
-    const sheet = document.body.querySelector('dialog');
-    const panel = sheet.querySelector('.mat-sheet__panel');
+    expect(wrapper.find('button[aria-label="展开底部面板"]').exists()).toBe(true);
 
-    stubExtent(sheet, 768);
-    stubBottomSheetLayout(panel, { contentHeight: 1048, panelHeight: 696 });
-    window.dispatchEvent(new Event('resize'));
-    await settleRender();
+    await wrapper.get('button[aria-label="展开底部面板"]').trigger('keydown', { key: 'Enter' });
 
-    // 可用高度 768 - 72 = 696：normal 露出 348，min 露出 64。
-    expect(sheet.style.getPropertyValue('--mat-sheet-virtual-offset')).toBe('348px');
-    expect(panel.classList.contains('mat-sheet__panel--sized')).toBe(false);
-    expect(sheet.style.getPropertyValue('--mat-sheet-expanded-block-size')).toBe('');
-
-    await wrapper.setProps({ expanded: 'min' });
-    await settleRender();
-
-    expect(sheet.style.getPropertyValue('--mat-sheet-virtual-offset')).toBe('632px');
-    expect(panel.classList.contains('mat-sheet__panel--sized')).toBe(false);
-    expect(sheet.style.getPropertyValue('--mat-sheet-expanded-block-size')).toBe('');
+    expect(wrapper.emitted('update:expanded')).toEqual([['max']]);
+    expect(wrapper.find('button[aria-label="折叠底部面板"]').exists()).toBe(true);
   });
 
-  it('virtualExpand 关闭时 min 仍使用 64px 的显式高度', async () => {
+  it('virtualExpand 不再是公开属性', () => {
+    expect(MatBottomSheet.props.virtualExpand).toBeUndefined();
+  });
+
+  it('min 档使用 64px 的显式高度', async () => {
     const wrapper = mount(MatBottomSheet, {
       attachTo: document.body,
       props: {
@@ -1319,53 +1473,67 @@ describe('Bottom sheet 拖拽档位几何', () => {
     })).toEqual({ offset: 0, size: 696 + 72 });
   });
 
-  it('虚拟预览偏移把面板下半部分留在屏幕下方', () => {
-    expect(resolveBottomSheetPreviewOffset({ panelExtent: 696, visibleExtent: 348 })).toBe(348);
-    expect(resolveBottomSheetPreviewOffset({ panelExtent: 200, visibleExtent: 348 })).toBe(0);
-    expect(resolveBottomSheetPreviewOffset({ panelExtent: 696, visibleExtent: -100 })).toBe(696);
+  it('内容手势按方向与滚动位置决定拦截方式', () => {
+    expect(resolveBottomSheetGestureAction({
+      deltaY: -20, isCollapsed: true, scrollTop: 80,
+    })).toBe('expand');
+    expect(resolveBottomSheetGestureAction({
+      deltaY: 20, isCollapsed: true, scrollTop: 0,
+    })).toBe('collapse');
+    expect(resolveBottomSheetGestureAction({
+      deltaY: 20, isCollapsed: true, scrollTop: 120,
+    })).toBe('scroll');
+    expect(resolveBottomSheetGestureAction({
+      deltaY: -20, isCollapsed: false, scrollTop: 0,
+    })).toBe('scroll');
+    expect(resolveBottomSheetGestureAction({
+      deltaY: 4, isCollapsed: true, scrollTop: 0,
+    })).toBe(null);
+    expect(resolveBottomSheetGestureAction({
+      deltaY: -4, isCollapsed: true, scrollTop: 0,
+    })).toBe(null);
   });
 
-  it('虚拟预览拖动超出面板高度后改为负偏移并受上限封顶', () => {
-    expect(resolveBottomSheetPreviewOffset({
-      overshootLimit: 56,
-      panelExtent: 696,
-      visibleExtent: 796,
-    })).toBe(-25);
-
-    expect(resolveBottomSheetPreviewOffset({
-      overshootLimit: 56,
-      panelExtent: 696,
-      visibleExtent: 2000,
-    })).toBe(-56);
-  });
-
-  it('虚拟预览的可见高度按档位取 min 与可用高度一半', () => {
-    expect(resolveBottomSheetPreviewVisible({ availableExtent: 664, value: 'min' })).toBe(64);
-    expect(resolveBottomSheetPreviewVisible({ availableExtent: 664, value: 'normal' })).toBe(332);
-  });
-
-  it('只有触控向下位移达到 48px 且速度不小于 0.5px/ms 才算甩动', () => {
-    expect(isBottomSheetFlick({
-      distance: 120, draggingDown: true, pointerType: 'touch', velocity: 1,
-    })).toBe(true);
-    expect(isBottomSheetFlick({
-      distance: 120, draggingDown: true, pointerType: 'touch', velocity: 0.2,
-    })).toBe(false);
-    expect(isBottomSheetFlick({
-      distance: 120, draggingDown: false, pointerType: 'touch', velocity: 1,
-    })).toBe(false);
-    expect(isBottomSheetFlick({
-      distance: 20, draggingDown: true, pointerType: 'touch', velocity: 1,
-    })).toBe(false);
+  it('触控快速下甩请求关闭、快速上甩请求展开', () => {
+    expect(resolveBottomSheetFlick({
+      delta: 120, distance: 120, pointerType: 'touch', velocity: 1,
+    })).toBe('close');
+    expect(resolveBottomSheetFlick({
+      delta: -120, distance: 120, pointerType: 'touch', velocity: 1,
+    })).toBe('expand');
+    expect(resolveBottomSheetFlick({
+      delta: -120, distance: 120, pointerType: 'pen', velocity: 1,
+    })).toBe('expand');
+    expect(resolveBottomSheetFlick({
+      delta: -120, distance: 120, pointerType: 'touch', velocity: 0.2,
+    })).toBe(null);
+    expect(resolveBottomSheetFlick({
+      delta: -20, distance: 20, pointerType: 'touch', velocity: 1,
+    })).toBe(null);
+    expect(resolveBottomSheetFlick({
+      delta: 0, distance: 120, pointerType: 'touch', velocity: 1,
+    })).toBe(null);
   });
 
   it('鼠标拖动不参与甩动判定', () => {
-    expect(isBottomSheetFlick({
-      distance: 400, draggingDown: true, pointerType: 'mouse', velocity: 3,
-    })).toBe(false);
-    expect(isBottomSheetFlick({
-      distance: 400, draggingDown: true, pointerType: 'pen', velocity: 3,
-    })).toBe(true);
+    expect(resolveBottomSheetFlick({
+      delta: 400, distance: 400, pointerType: 'mouse', velocity: 3,
+    })).toBe(null);
+    expect(resolveBottomSheetFlick({
+      delta: -400, distance: 400, pointerType: 'mouse', velocity: 3,
+    })).toBe(null);
+  });
+
+  it('键盘档位按 min、normal、max 步进，full 与自定义高度视作 max 之上', () => {
+    expect(resolveBottomSheetKeyboardTarget('min', 1)).toBe('normal');
+    expect(resolveBottomSheetKeyboardTarget('normal', 1)).toBe('max');
+    expect(resolveBottomSheetKeyboardTarget('max', 1)).toBe(null);
+    expect(resolveBottomSheetKeyboardTarget('max', -1)).toBe('normal');
+    expect(resolveBottomSheetKeyboardTarget('normal', -1)).toBe('min');
+    expect(resolveBottomSheetKeyboardTarget('min', -1)).toBe(null);
+    expect(resolveBottomSheetKeyboardTarget('full', -1)).toBe('max');
+    expect(resolveBottomSheetKeyboardTarget('full', 1)).toBe(null);
+    expect(resolveBottomSheetKeyboardTarget('320px', -1)).toBe('max');
   });
 });
 

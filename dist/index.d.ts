@@ -3241,18 +3241,14 @@ export interface MatBottomSheetProps {
   * 展开且不超过可用高度，full 使用当前可用最大高度；数字与纯数字字符串按 px 处理，
   * 其他字符串须为合法的 CSS block-size 值。
   *
+  * 档位是半受控的：拖动、内容区手势、滚轮与把手键盘会先更新组件内部档位再发出
+  * update:expanded，使用者未监听该事件时组件仍保持切换后的高度；传入 expanded
+  * 时以传入值为准。
+  *
   * @type {'min'|'normal'|'max'|'full'|number|string}
   * @default 'normal'
   */
   expanded?: 'min'|'normal'|'max'|'full'|number|string;
-  /**
-  * 虚拟展开模式；开启后 normal 状态保留 min(内容高度, 可用高度) 的面板高度，
-  * 内容区继续支持滚动，并在向下滚动或向上滑动时请求 max。
-  *
-  * @type {boolean}
-  * @default false
-  */
-  virtualExpand?: boolean;
   /**
   * 折叠档（min 与 normal）下拖动把手的可访问名称。
   *
@@ -3268,7 +3264,8 @@ export interface MatBottomSheetProps {
   */
   expandedDragHandleLabel?: string;
   /**
-  * 是否允许通过把手拖动在 min、normal 与 max 之间切换，或向下拖动关闭。
+  * 是否允许拖动在档位间切换高度或拖动关闭；禁用后把手拖动、内容区触摸手势
+  * 与滚轮展开一并关闭。
   *
   * @type {boolean}
   * @default true
@@ -3311,7 +3308,8 @@ export interface MatBottomSheetEmits {
   */
   "update:modelValue": (payload: unknown) => unknown;
   /**
-  * 通过把手、拖动或内容手势请求切换高度时发出 min、normal 或 max。
+  * 通过把手键盘、拖动、内容区触摸手势或滚轮请求切换高度时发出 min、normal
+  * 或 max；full 与自定义高度只能由绑定值设置，手势不会发出。
   */
   "update:expanded": (payload: unknown) => unknown;
   /**

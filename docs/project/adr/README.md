@@ -38,9 +38,10 @@
 | [0031](0031-tooltip-group-display-state-skip.md) | superseded | 同组 Tooltip 延迟跳过基于当前显示状态（已由 0032 替代：移除分组容器） |
 | [0032](0032-tooltip-global-delay-skip.md) | active | 移除 Tooltip 分组容器，延迟跳过全局生效 |
 | [0033](0033-shared-edge-layout-controller.md) | active | MatLayout 与 AppRoot 共享六向边缘布局控制器 |
-| [0034](0034-bottom-sheet-drag-tiers.md) | active | Bottom sheet 采用 min、normal、max 拖动档位与内容高度预览 |
+| [0034](0034-bottom-sheet-drag-tiers.md) | superseded | Bottom sheet 采用 min、normal、max 拖动档位与内容高度预览（内容高度预览已由 0037 替代，档位定义继续有效） |
 | [0035](0035-playwright-e2e-testing.md) | active | 引入 Playwright 端到端测试 |
 | [0036](0036-stdio-mcp-docs-examples.md) | active | 通过 stdio MCP 提供文档与示例查询 |
+| [0037](0037-bottom-sheet-nested-scroll-gesture.md) | active | Bottom sheet 采用 AndroidX 式嵌套滚动手势 |
 
 ## 何时创建 ADR
 

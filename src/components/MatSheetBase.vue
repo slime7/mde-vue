@@ -27,12 +27,12 @@ import {
   MAT_APP_ROOT_KEY,
 } from './mat-app-root/mat-app-root-context';
 import {
-  isBottomSheetFlick,
+  GESTURE_SLOP,
   resolveBottomSheetDragGeometry,
   resolveBottomSheetDragTarget,
-  resolveBottomSheetPreviewOffset,
-  resolveBottomSheetPreviewVisible,
-  resolveBottomSheetTiers,
+  resolveBottomSheetFlick,
+  resolveBottomSheetGestureAction,
+  resolveBottomSheetKeyboardTarget,
 } from './bottom-sheet-drag';
 import useFocusTrap from './use-focus-trap';
 import MatBtn from './mat-btn/MatBtn.vue';
@@ -138,10 +138,6 @@ const props = defineProps({
     type: String,
     default: 'auto',
   },
-  virtualExpand: {
-    type: Boolean,
-    default: false,
-  },
   width: {
     type: [Number, String],
     default: undefined,
@@ -167,6 +163,7 @@ const hasExplicitAttach = Object.prototype.hasOwnProperty.call(
 const activatorHost = ref(null);
 const surface = ref(null);
 const panelElement = ref(null);
+const contentArea = ref(null);
 const rendered = ref(false);
 const phase = ref('closed');
 const teleportTarget = ref(null);
@@ -174,7 +171,6 @@ const scopedContext = shallowRef(null);
 const viewportWidth = ref(typeof window === 'undefined' ? 0 : window.innerWidth);
 let dragOffset = 0;
 const dragging = ref(false);
-const virtualPreviewOffset = ref(0);
 const contentBlockSize = ref(0);
 const titleId = `${useId().replace(/[^\w-]/g, '-')}-title`;
 const root = computed(() => surface.value?.root ?? surface.value?.$el ?? null);
@@ -223,8 +219,23 @@ function resolveBottomExpanded(value) {
 
   return 'normal';
 }
+// 半受控展开档位：拖动、滚轮与键盘先更新内部档位再通知使用者，
+// 使用者未监听 update:expanded 时组件仍保持切换后的高度。
+const expandedState = ref(resolveBottomExpanded(props.expanded));
+watch(() => props.expanded, (value) => {
+  expandedState.value = resolveBottomExpanded(value);
+});
+/**
+ * 应用新的展开档位：更新内部档位并发出更新事件。
+ *
+ * @param {'max'|'min'|'normal'} value
+ */
+function applyExpanded(value) {
+  expandedState.value = value;
+  emit('update:expanded', value);
+}
 const bottomExpanded = computed(() => (
-  props.direction === 'bottom' ? resolveBottomExpanded(props.expanded) : props.expanded
+  props.direction === 'bottom' ? expandedState.value : props.expanded
 ));
 const isBottomCollapsed = computed(() => (
   props.direction !== 'bottom'
@@ -232,16 +243,10 @@ const isBottomCollapsed = computed(() => (
   || bottomExpanded.value === 'normal'
 ));
 const isBottomExpanded = computed(() => props.direction === 'bottom' && !isBottomCollapsed.value);
-// 虚拟展开下面板始终保留内容高度，min 与 normal 只通过整体位移控制露出多少。
-const isVirtualPreview = computed(() => (
-  props.direction === 'bottom'
-  && props.virtualExpand
-  && (bottomExpanded.value === 'min' || bottomExpanded.value === 'normal')
-));
 // min、full 与自定义高度始终使用显式 block-size；normal 与 max 在测量到内容高度后
 // 改用实测值，避免长度与 fit-content 之间无法插值而丢失高度切换动画。
 const usesExplicitBlockSize = computed(() => {
-  if (props.direction !== 'bottom' || isVirtualPreview.value) {
+  if (props.direction !== 'bottom') {
     return false;
   }
 
@@ -283,10 +288,9 @@ const expandedBlockSize = computed(() => {
 
   return `max(64px, ${length})`;
 });
-// normal 档的上限；虚拟预览保留 full 上限并按偏移只露出下半部分。
+// normal 档的上限，保证与 min、max 之间的高度切换都能插值过渡。
 const normalMaxBlockSize = computed(() => (
   props.direction === 'bottom'
-  && !props.virtualExpand
   && bottomExpanded.value === 'normal'
     ? 'calc(var(--mat-sheet-full-block-size) / 2)'
     : undefined
@@ -296,7 +300,6 @@ const panelClasses = computed(() => [
   `mat-sheet__panel--position-${props.position}`,
   {
     'mat-sheet__panel--sized': usesExplicitBlockSize.value,
-    'mat-sheet__panel--virtual-expand': props.direction === 'bottom' && props.virtualExpand,
     'mat-sheet__panel--dragging': dragging.value,
   },
 ]);
@@ -331,7 +334,7 @@ const sizeStyle = computed(() => {
     '--mat-sheet-preferred-width': resolvedWidth.value,
   };
 });
-// 高度基准、显式高度上限与虚拟预览偏移都由组件内部变量表达。
+// 高度基准与显式高度上限由组件内部变量表达。
 const bottomSizeStyle = computed(() => {
   const style = {};
 
@@ -341,10 +344,6 @@ const bottomSizeStyle = computed(() => {
 
   if (normalMaxBlockSize.value) {
     style['--mat-sheet-max-block-size'] = normalMaxBlockSize.value;
-  }
-
-  if (virtualPreviewOffset.value > 0) {
-    style['--mat-sheet-virtual-offset'] = `${virtualPreviewOffset.value}px`;
   }
 
   return Object.keys(style).length > 0 ? style : undefined;
@@ -364,10 +363,14 @@ let dragContentExtent = 0;
 let dragAvailableExtent = 0;
 let dragOvershootLimit = 0;
 let dragPointerType = null;
-let dragPreviewOffset = 0;
-let sheetPressTarget = null;
 let dragStartedAt = 0;
 let dragDistance = 0;
+// 内容手势接管面板拖动后，超出可用高度的位移改为滚动内容。
+let dragHandsOffScroll = false;
+let dragStartScrollTop = 0;
+// 内容区触摸手势：按下只记录，移动超过意图阈值后按方向决定是否拦截。
+let contentGesture = null;
+let sheetPressTarget = null;
 let contentObserver = null;
 let contentObserverTargets = [];
 
@@ -459,8 +462,6 @@ function buildScopeOptions(context) {
   };
 }
 
-let contentTouchStartY = null;
-
 /**
  * 顶部安全间距：宽屏 56px、窄屏 72px，同时也是向上拖动超出可用高度后的上限。
  *
@@ -525,31 +526,6 @@ function resolveContentExtent() {
 }
 
 /**
- * 更新虚拟预览偏移：面板按 min(内容高度, 可用高度) 布局，只把下半部分移出屏幕，
- * 让可见高度等于当前档位应露出的高度。
- */
-function updateVirtualPreviewOffset() {
-  if (!isVirtualPreview.value) {
-    virtualPreviewOffset.value = 0;
-    return;
-  }
-
-  const availableExtent = resolveAvailableExtent();
-  const { max } = resolveBottomSheetTiers({
-    availableExtent,
-    contentExtent: resolveContentExtent(),
-  });
-
-  virtualPreviewOffset.value = resolveBottomSheetPreviewOffset({
-    panelExtent: max,
-    visibleExtent: resolveBottomSheetPreviewVisible({
-      availableExtent,
-      value: bottomExpanded.value,
-    }),
-  });
-}
-
-/**
  * 记录内容完整高度，供 normal 与 max 写出可插值的显式高度。
  */
 function updateBottomContentExtent() {
@@ -565,7 +541,7 @@ function updateBottomContentExtent() {
 }
 
 /**
- * 监听内容与页脚尺寸，内容变化后重新测量高度并更新虚拟预览偏移。
+ * 监听内容与页脚尺寸，内容变化后重新测量高度。
  *
  * 只在观测目标变化时重建观察器，避免每次渲染都重新连接。
  */
@@ -600,7 +576,7 @@ function observeBottomContent() {
 }
 
 /**
- * 重新测量内容高度、连接观察器并刷新虚拟预览偏移。
+ * 重新测量内容高度并连接观察器。
  */
 function refreshBottomGeometry() {
   if (props.direction !== 'bottom') {
@@ -609,7 +585,6 @@ function refreshBottomGeometry() {
 
   updateBottomContentExtent();
   observeBottomContent();
-  updateVirtualPreviewOffset();
 }
 
 function stopContentObserver() {
@@ -618,46 +593,193 @@ function stopContentObserver() {
   contentObserverTargets = [];
 }
 
+/**
+ * 内容滚动元素，手势决策与滚动接管需要读取或写入它的滚动位置。
+ *
+ * @returns {HTMLElement | null}
+ */
+function resolveContentScrollElement() {
+  return contentArea.value?.getScroller?.() ?? null;
+}
+
+/**
+ * @param {EventTarget | null} target
+ * @returns {boolean}
+ */
+function isInteractiveTarget(target) {
+  return target instanceof Element && target.closest(
+    'button, a, input, textarea, select, [contenteditable="true"]',
+  );
+}
+
+/**
+ * 折叠档内容区滚轮向下请求展开到 max，参考 AndroidX shouldExpandOnScroll。
+ *
+ * @param {WheelEvent} event
+ */
 function handleContentWheel(event) {
-  if (props.direction !== 'bottom' || !props.virtualExpand || isBottomExpanded.value) {
+  if (props.direction !== 'bottom' || !props.draggable || isBottomExpanded.value) {
     return;
   }
 
-  if (event.deltaY > 0) {
+  if (event.deltaY <= 0) {
+    return;
+  }
+
+  event.preventDefault();
+  applyExpanded('max');
+}
+
+/**
+ * 底部面板内容手势入口：触摸与手写笔在内容区按下后只做记录，
+ * 移动超过意图阈值再按方向与滚动位置决定是否拦截；鼠标不参与，
+ * 交互元素上的按下交给元素自身。
+ *
+ * @param {PointerEvent} event
+ */
+function handleBottomPress(event) {
+  if (props.direction !== 'bottom' || !props.draggable || activePointerId !== null) {
+    return;
+  }
+
+  if (event.button !== 0 || event.pointerType === 'mouse' || contentGesture) {
+    return;
+  }
+
+  if (!rendered.value || phase.value === 'closing' || isInteractiveTarget(event.target)) {
+    return;
+  }
+
+  contentGesture = {
+    action: null,
+    pointerId: event.pointerId,
+    startedAt: performance.now(),
+    startScrollTop: resolveContentScrollElement()?.scrollTop ?? 0,
+    startY: event.clientY,
+  };
+  window.addEventListener('pointermove', updateContentGesture);
+  window.addEventListener('pointerup', finishContentGesture);
+  window.addEventListener('pointercancel', cancelContentGesture);
+  window.addEventListener('touchmove', blockContentTouchScroll, { passive: false });
+}
+
+function releaseContentGestureListeners() {
+  window.removeEventListener('pointermove', updateContentGesture);
+  window.removeEventListener('pointerup', finishContentGesture);
+  window.removeEventListener('pointercancel', cancelContentGesture);
+  window.removeEventListener('touchmove', blockContentTouchScroll);
+}
+
+/**
+ * 拦截期间阻止原生触摸滚动，让面板跟手。
+ *
+ * @param {TouchEvent} event
+ */
+function blockContentTouchScroll(event) {
+  if (contentGesture?.action === 'collapse' || contentGesture?.action === 'expand') {
     event.preventDefault();
-    emit('update:expanded', 'max');
   }
 }
 
-function handleContentPointerDown(event) {
-  if (props.direction !== 'bottom' || !props.virtualExpand || isBottomExpanded.value) {
-    return;
-  }
+/**
+ * 释放未完成的内容手势并清理窗口监听与拖拽样式。
+ */
+function releaseContentGesture() {
+  const hadGesture = contentGesture !== null;
 
-  if (event.pointerType === 'touch') {
-    contentTouchStartY = event.clientY;
+  contentGesture = null;
+  releaseContentGestureListeners();
+
+  if (hadGesture) {
+    cancelDrag();
   }
 }
 
-function handleContentPointerMove(event) {
-  if (props.direction !== 'bottom' || !props.virtualExpand || isBottomExpanded.value) {
+/**
+ * 把内容手势切换成与把手拖动共用的跟手管线。
+ *
+ * @param {PointerEvent} event
+ */
+function beginContentDrag(event) {
+  activePointerId = contentGesture.pointerId;
+  dragStart = contentGesture.startY;
+  dragStartedAt = contentGesture.startedAt;
+  dragDistance = 0;
+  dragPointerType = event.pointerType ?? null;
+  dragStartExtent = dragElement.value?.getBoundingClientRect().height ?? 0;
+  dragStartVisibleExtent = dragStartExtent;
+  dragContentExtent = resolveContentExtent();
+  dragAvailableExtent = resolveAvailableExtent();
+  dragOvershootLimit = 0;
+  dragStartScrollTop = contentGesture.startScrollTop;
+  dragHandsOffScroll = contentGesture.action === 'expand';
+  writeDragStyle(0, dragStartExtent);
+  dragging.value = true;
+}
+
+/**
+ * 内容手势移动：方向明确后切换为面板拖动，后续位移复用把手拖动管线。
+ *
+ * @param {PointerEvent} event
+ */
+function updateContentGesture(event) {
+  if (!contentGesture || event.pointerId !== contentGesture.pointerId) {
     return;
   }
 
-  if (event.pointerType === 'touch' && contentTouchStartY !== null) {
-    const deltaY = contentTouchStartY - event.clientY;
+  if (!contentGesture.action) {
+    const deltaY = event.clientY - contentGesture.startY;
 
-    if (deltaY >= 8) {
-      contentTouchStartY = null;
-      emit('update:expanded', 'max');
+    if (Math.abs(deltaY) < GESTURE_SLOP) {
+      return;
     }
+
+    contentGesture.action = resolveBottomSheetGestureAction({
+      deltaY,
+      isCollapsed: isBottomCollapsed.value,
+      scrollTop: contentGesture.startScrollTop,
+    });
+
+    if (contentGesture.action !== 'collapse' && contentGesture.action !== 'expand') {
+      return;
+    }
+
+    beginContentDrag(event);
+  }
+
+  updateDrag(event);
+}
+
+/**
+ * @param {PointerEvent} event
+ */
+function finishContentGesture(event) {
+  if (!contentGesture || event.pointerId !== contentGesture.pointerId) {
+    return;
+  }
+
+  const intercepted = contentGesture.action === 'collapse'
+    || contentGesture.action === 'expand';
+
+  releaseContentGestureListeners();
+  contentGesture = null;
+
+  if (intercepted) {
+    finishDrag(event);
   }
 }
 
-function handleContentPointerUp(event) {
-  if (event.pointerType === 'touch') {
-    contentTouchStartY = null;
+/**
+ * @param {PointerEvent} event
+ */
+function cancelContentGesture(event) {
+  if (!contentGesture || event.pointerId !== contentGesture.pointerId) {
+    return;
   }
+
+  releaseContentGestureListeners();
+  contentGesture = null;
+  cancelDrag();
 }
 
 function requestClose() {
@@ -685,9 +807,27 @@ function clearDragStyle() {
 }
 
 /**
+ * 把手键盘操作：方向键在 min、normal、max 间步进，Enter/Space 在折叠档与
+ * max 之间切换；modal 展开档的 Enter/Space 请求关闭。
+ *
  * @param {KeyboardEvent} event
  */
 function handleDragHandleKeydown(event) {
+  if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+    event.preventDefault();
+
+    const target = resolveBottomSheetKeyboardTarget(
+      bottomExpanded.value,
+      event.key === 'ArrowUp' ? 1 : -1,
+    );
+
+    if (target) {
+      applyExpanded(target);
+    }
+
+    return;
+  }
+
   if (event.key !== 'Enter' && event.key !== ' ') {
     return;
   }
@@ -695,7 +835,7 @@ function handleDragHandleKeydown(event) {
   event.preventDefault();
 
   if (isBottomCollapsed.value) {
-    emit('update:expanded', 'max');
+    applyExpanded('max');
     return;
   }
 
@@ -704,7 +844,7 @@ function handleDragHandleKeydown(event) {
     return;
   }
 
-  emit('update:expanded', 'normal');
+  applyExpanded('normal');
 }
 
 function warnForInvalidActivator() {
@@ -868,9 +1008,9 @@ function finishClose() {
   scopedContext.value = null;
   rendered.value = false;
   phase.value = 'closed';
+  releaseContentGesture();
   stopDragging();
   stopContentObserver();
-  virtualPreviewOffset.value = 0;
   clearDragStyle();
   nextTick(() => {
     restoreFocus();
@@ -946,6 +1086,30 @@ function handleSheetClick(event) {
 }
 
 /**
+ * 内容手势向上展开超出可用高度后，把剩余位移交给内容滚动。
+ *
+ * @param {number} extent 当前请求的可见高度
+ */
+function syncDragScrollHandoff(extent) {
+  if (!dragHandsOffScroll) {
+    return;
+  }
+
+  const scroller = resolveContentScrollElement();
+
+  if (!scroller || extent <= dragAvailableExtent) {
+    return;
+  }
+
+  const maxScrollTop = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
+
+  scroller.scrollTop = Math.min(
+    maxScrollTop,
+    Math.max(0, dragStartScrollTop + (extent - dragAvailableExtent)),
+  );
+}
+
+/**
  * @param {PointerEvent} event
  */
 function updateDragNow(event) {
@@ -956,19 +1120,6 @@ function updateDragNow(event) {
   if (props.direction === 'bottom') {
     dragDistance = event.clientY - dragStart;
     const extent = dragStartVisibleExtent - dragDistance;
-
-    if (props.virtualExpand) {
-      writeDragStyle(
-        resolveBottomSheetPreviewOffset({
-          overshootLimit: dragOvershootLimit,
-          panelExtent: dragStartExtent,
-          visibleExtent: extent,
-        }) - dragPreviewOffset,
-        null,
-      );
-      return;
-    }
-
     const geometry = resolveBottomSheetDragGeometry({
       availableExtent: dragAvailableExtent,
       extent,
@@ -976,6 +1127,7 @@ function updateDragNow(event) {
     });
 
     writeDragStyle(geometry.offset, geometry.size);
+    syncDragScrollHandoff(extent);
     return;
   }
 
@@ -1027,6 +1179,9 @@ function requestCloseFromDrag() {
 }
 
 /**
+ * 结算底部拖动：快速下甩或落点在关闭分区时请求关闭，折叠档快速上甩请求
+ * 展开，其余按相邻档位中点吸附。
+ *
  * @param {{distance: number, velocity: number}} input
  */
 function finishBottomDrag({ distance, velocity }) {
@@ -1036,16 +1191,23 @@ function finishBottomDrag({ distance, velocity }) {
     currentExtent: dragStartVisibleExtent,
     currentValue: bottomExpanded.value,
   }, dragStartVisibleExtent - dragDistance);
-  const flicked = isBottomSheetFlick({
+  const flick = resolveBottomSheetFlick({
+    delta: dragDistance,
     distance,
-    draggingDown: dragDistance > 0,
     pointerType: dragPointerType,
     velocity,
   });
 
-  if (target.close || flicked) {
+  if (target.close || flick === 'close') {
     stopDragging({ keepDragging: true });
     requestCloseFromDrag();
+    return;
+  }
+
+  if (flick === 'expand' && isBottomCollapsed.value) {
+    stopDragging();
+    clearDragStyle();
+    applyExpanded('max');
     return;
   }
 
@@ -1056,7 +1218,7 @@ function finishBottomDrag({ distance, velocity }) {
   clearDragStyle();
 
   if (!unchanged) {
-    emit('update:expanded', target.value);
+    applyExpanded(target.value);
   }
 }
 
@@ -1114,7 +1276,7 @@ function cancelDrag() {
  * @param {PointerEvent} event
  */
 function startDrag(event) {
-  if (!props.draggable || event.button !== 0 || activePointerId !== null) {
+  if (!props.draggable || event.button !== 0 || activePointerId !== null || contentGesture) {
     return;
   }
 
@@ -1127,14 +1289,14 @@ function startDrag(event) {
   dragPointerType = event.pointerType ?? null;
   dragStartedAt = performance.now();
   dragDistance = 0;
+  dragHandsOffScroll = false;
 
   if (props.direction === 'bottom') {
-    dragPreviewOffset = virtualPreviewOffset.value;
-    dragStartVisibleExtent = Math.max(0, dragStartExtent - dragPreviewOffset);
+    dragStartVisibleExtent = dragStartExtent;
     dragContentExtent = resolveContentExtent();
     dragAvailableExtent = resolveAvailableExtent();
     dragOvershootLimit = resolveTopGap();
-    writeDragStyle(0, props.virtualExpand ? null : dragStartExtent);
+    writeDragStyle(0, dragStartExtent);
   } else {
     writeDragStyle(0, null);
   }
@@ -1184,9 +1346,14 @@ function handleModalPointerDown(event) {
   }
 }
 
+/**
+ * 面板按下：side modal 沿用触摸拖动关闭，bottom 建立内容手势跟踪。
+ *
+ * @param {PointerEvent} event
+ */
 function handlePanelPointerDown(event) {
   handleModalPointerDown(event);
-  handleContentPointerDown(event);
+  handleBottomPress(event);
 }
 
 function updateViewportWidth() {
@@ -1261,6 +1428,7 @@ onBeforeUnmount(() => {
   dragFrame.cancel();
   mounted = false;
   clearPhaseTimer();
+  releaseContentGesture();
   stopDragging();
   stopContentObserver();
   window.removeEventListener('resize', updateViewportWidth);
@@ -1323,7 +1491,6 @@ watch(() => props.closeLabel, (value) => {
           'mat-sheet--app-root': isAppRootScoped,
           'mat-sheet--dragging': dragging,
           'mat-sheet--sized': usesExplicitBlockSize,
-          'mat-sheet--virtual-expand': direction === 'bottom' && virtualExpand,
           'mat-sheet--no-shadow': !shadow,
           'mat-sheet--no-rounded': !rounded,
           'mat-sheet--top': isTop,
@@ -1339,10 +1506,6 @@ watch(() => props.closeLabel, (value) => {
       @click="handleSheetClick"
       @keydown="handleKeyDown"
       @pointerdown="handleRootPress"
-      @pointermove="handleContentPointerMove"
-      @pointerup="handleContentPointerUp"
-      @pointercancel="handleContentPointerUp"
-      @wheel="handleContentWheel"
     >
       <div
         ref="panelElement"
@@ -1350,9 +1513,6 @@ watch(() => props.closeLabel, (value) => {
         :class="panelClasses"
         :style="panelStyle"
         @pointerdown="handlePanelPointerDown"
-        @pointermove="handleContentPointerMove"
-        @pointerup="handleContentPointerUp"
-        @pointercancel="handleContentPointerUp"
         @wheel="handleContentWheel"
       >
         <button
@@ -1400,15 +1560,11 @@ watch(() => props.closeLabel, (value) => {
 
         <MatScrollArea
           v-if="hasContent"
+          ref="contentArea"
           class="mat-sheet__content mat-sys-typescale-body-medium"
           orientation="vertical"
           no-scroll-padding
           bar-width="thin"
-          @wheel="handleContentWheel"
-          @pointerdown="handleContentPointerDown"
-          @pointermove="handleContentPointerMove"
-          @pointerup="handleContentPointerUp"
-          @pointercancel="handleContentPointerUp"
         >
           <div class="mat-sheet__content-body">
             <template v-if="direction !== 'bottom' && content !== undefined">
@@ -1442,7 +1598,6 @@ watch(() => props.closeLabel, (value) => {
     --mat-sheet-min-block-size: 64px;
     --mat-sheet-preferred-width: 100%;
     --mat-sheet-drag-offset: 0;
-    --mat-sheet-virtual-offset: 0;
     box-sizing: border-box;
     min-inline-size: 0;
     padding: 0;
@@ -1520,7 +1675,7 @@ watch(() => props.closeLabel, (value) => {
       var(--mat-sys-shape-corner-none)
       var(--mat-sys-shape-corner-none);
     box-shadow: var(--mat-sys-elevation-level1), 0 50vh 0 0 var(--mat-sheet-container-color);
-    transform: translateY(var(--mat-sheet-virtual-offset, 0%)) translateY(var(--mat-sheet-drag-offset, 0));
+    transform: translateY(var(--mat-sheet-drag-offset, 0));
     transition: transform var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial), box-shadow var(--mat-sys-motion-spring-fast-effects), border-radius var(--mat-sys-motion-spring-fast-effects);
   }
 
@@ -1541,7 +1696,7 @@ watch(() => props.closeLabel, (value) => {
       var(--mat-sys-shape-corner-none)
       var(--mat-sys-shape-corner-none);
     box-shadow: var(--mat-sys-elevation-level1), 0 50vh 0 0 var(--mat-sheet-container-color);
-    transform: translateY(var(--mat-sheet-virtual-offset, 0%)) translateY(var(--mat-sheet-drag-offset, 0));
+    transform: translateY(var(--mat-sheet-drag-offset, 0));
     transition: transform var(--mat-sys-motion-spring-fast-spatial), block-size var(--mat-sys-motion-spring-fast-spatial), box-shadow var(--mat-sys-motion-spring-fast-effects), border-radius var(--mat-sys-motion-spring-fast-effects);
   }
 
@@ -1745,15 +1900,10 @@ watch(() => props.closeLabel, (value) => {
   }
 
   /* 跟手拖动不受当前档位上限约束，向上超出可用高度的部分由阻尼值给出。 */
-  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--dragging:not(.mat-sheet--virtual-expand),
-  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--dragging:not(.mat-sheet__panel--virtual-expand) {
+  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--dragging,
+  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--dragging {
     block-size: var(--mat-sheet-drag-size);
     max-block-size: none;
-    transition: none;
-  }
-
-  .mat-sheet--standard.mat-sheet--bottom.mat-sheet--dragging.mat-sheet--virtual-expand,
-  .mat-sheet--modal .mat-sheet__panel--bottom.mat-sheet__panel--dragging.mat-sheet__panel--virtual-expand {
     transition: none;
   }
 
