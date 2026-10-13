@@ -1,19 +1,28 @@
 <!-- #region template -->
 <template>
-  <div class="intersection-example__viewport">
-    <p class="intersection-example__hint">
-      向下滚动，让目标元素进入观察区域。
-    </p>
-    <div
-      v-intersection="handleIntersection"
-      class="intersection-example__target"
+  <div class="intersection-example">
+    <p
+      class="intersection-example__status"
+      :class="{ 'intersection-example__status--active': isIntersecting }"
+      aria-live="polite"
     >
-      <strong>{{ isIntersecting ? '元素正在视口内' : '元素不在视口内' }}</strong>
-      <span>在此窗口内滚动会触发 handler。</span>
-    </div>
-    <p class="intersection-example__hint">
-      目标元素离开此区域后状态会更新。
+      {{ isIntersecting ? '相交：目标元素在观察区域内' : '未相交：目标元素在观察区域外' }}
     </p>
+    <div class="intersection-example__viewport">
+      <p class="intersection-example__hint">
+        向下滚动，让目标元素进入观察区域。
+      </p>
+      <div
+        v-intersection="handleIntersection"
+        class="intersection-example__target"
+      >
+        <strong>目标元素</strong>
+        <span>在此窗口内滚动会触发 handler。</span>
+      </div>
+      <p class="intersection-example__hint">
+        目标元素离开此区域后状态会更新。
+      </p>
+    </div>
   </div>
 </template>
 <!-- #endregion template -->
@@ -32,13 +41,40 @@ function handleIntersection(value) {
 
 <!-- #region style -->
 <style scoped>
+.intersection-example {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.intersection-example__status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-block-size: 44px;
+  margin: 0;
+  padding: 8px 16px;
+  color: var(--mat-sys-color-on-surface-variant);
+  background: var(--mat-sys-color-surface-container-high);
+  border-radius: var(--mat-sys-shape-corner-medium);
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.intersection-example__status--active {
+  color: var(--mat-sys-color-on-primary-container);
+  background: var(--mat-sys-color-primary-container);
+}
+
 .intersection-example__viewport {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  inline-size: 100%;
-  block-size: 100%;
+  gap: 12px;
+  flex: 1;
+  min-block-size: 0;
   padding: 16px;
   overflow-block: auto;
   overscroll-behavior: contain;
