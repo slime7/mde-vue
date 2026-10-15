@@ -370,7 +370,7 @@ let dragHandsOffScroll = false;
 let dragStartScrollTop = 0;
 // 内容区触摸手势：按下只记录，移动超过意图阈值后按方向决定是否拦截。
 let contentGesture = null;
-let sheetPressTarget = null;
+let scrimPressed = false;
 let contentObserver = null;
 let contentObserverTargets = [];
 
@@ -1068,20 +1068,30 @@ function handleKeyDown(event) {
 }
 
 /**
+ * 根元素按下：modal 记录按下是否落在帷幕上，供帷幕点击判断按下与抬起同在
+ * 帷幕；standard 下触摸按下进入拖动。
+ *
+ * @param {PointerEvent} event
+ */
+function handleRootPress(event) {
+  scrimPressed = isModal.value && event.target === root.value;
+
+  if (!isModal.value) {
+    handleRootPointerDown(event);
+  }
+}
+
+/**
+ * 帷幕点击：按下与抬起都落在帷幕上时请求关闭，面板内开始的文本选择或拖拽
+ * 不会触发。
+ *
  * @param {MouseEvent} event
  */
 function handleSheetClick(event) {
-  if (!isModal.value || !props.closeOnBack || event.target !== root.value) {
+  if (!isModal.value || !props.closeOnBack || !scrimPressed || event.target !== root.value) {
     return;
   }
 
-  // 只接受按下与抬起都落在帷幕上的点击；从把手开始、松手落到帷幕上的拖拽不关闭。
-  if (sheetPressTarget !== root.value) {
-    sheetPressTarget = null;
-    return;
-  }
-
-  sheetPressTarget = null;
   requestClose();
 }
 
@@ -1322,19 +1332,6 @@ function handleRootPointerDown(event) {
   }
 
   startDrag(event);
-}
-
-/**
- * 记录按下目标并处理根元素上的拖动；帷幕点击只接受按下与抬起都落在根元素上的序列。
- *
- * @param {PointerEvent} event
- */
-function handleRootPress(event) {
-  sheetPressTarget = event.target instanceof Node ? event.target : null;
-
-  if (!isModal.value) {
-    handleRootPointerDown(event);
-  }
 }
 
 /**

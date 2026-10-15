@@ -130,7 +130,7 @@ order: 102
 | `width` | `number \| string` | `400` | 首选宽度；数字与纯数字字符串按 px 处理（数值大于 0 且不超过 400），其他字符串需为 trim 后合法的 CSS 宽度值，非法时使用默认宽度；最终不超过 400px |
 | `attach` | `string \| HTMLElement` | `'body'` | modal 的 Teleport 目标；standard 忽略。位于 `MatAppRoot` 内且省略时自动进入该 AppRoot 的模态层，指向 AppRoot 根元素时同样按应用范围展示 |
 | `scrim` | `boolean` | `true` | modal 是否显示帷幕；false 时仍阻止背景指针交互 |
-| `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否通过点击 modal 帷幕或按 Escape 关闭，禁用后两者都不请求关闭 |
+| `closeOnBack` | `boolean` | `true` | 模板属性为 `close-on-back`；是否通过点击 modal 帷幕或按 Escape 关闭，按下与抬起都落在帷幕上才触发关闭，禁用后两者都不请求关闭 |
 | `draggable` | `boolean` | `true` | 是否允许触摸用户向依附边缘滑动关闭 |
 | `closable` | `boolean` | `true` | 是否在默认头部显示内置关闭按钮 |
 | `closeLabel` | `string` | `'关闭'` | 模板属性为 `close-label`；内置关闭按钮的非空可访问名称 |

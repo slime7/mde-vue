@@ -328,7 +328,7 @@ order: 100
 | `width` | `number \| string` | 未设置 | 基础 Dialog 的首选宽度；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS 宽度值，非法时省略宽度样式；小屏按视口可用宽度限制，全屏布局忽略此属性 |
 | `attach` | `string \| HTMLElement` | `'body'` | Teleport 目标；字符串按当前 document 的 CSS 选择器解析；位于 `MatAppRoot` 内且省略时自动进入该 AppRoot 的模态层，指向 AppRoot 根元素时同样按应用范围展示 |
 | `scrim` | `boolean` | `true` | 是否显示顶层帷幕；`false` 时帷幕透明但仍阻止背景交互 |
-| `closeOnBack` | `boolean` | `false` | 模板属性为 `close-on-back`；是否通过点击 Dialog 外帷幕或按 Escape 请求关闭，禁用后两者都不请求关闭 |
+| `closeOnBack` | `boolean` | `false` | 模板属性为 `close-on-back`；是否通过点击 Dialog 外帷幕或按 Escape 请求关闭，按下与抬起都落在帷幕上才触发关闭，禁用后两者都不请求关闭 |
 | `title` | `string` | 未设置 | 简单标题；设置后优先于 `title` Slot |
 | `content` | `string` | 未设置 | 简单正文；设置后优先于默认 Slot |
 | `icon` | `string` | 未设置 | 基础 Dialog 的 Material Symbols 字形；设置后优先于 `icon` Slot |

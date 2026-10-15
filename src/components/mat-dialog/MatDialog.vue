@@ -222,6 +222,7 @@ let mounted = false;
 const phaseMotion = createMotionController();
 const closeMotion = createCloseMotion({ motion: phaseMotion });
 let previousFocus = null;
+let scrimPressed = false;
 
 useFocusTrap(root, computed(() => rendered.value && isTop.value));
 
@@ -478,10 +479,21 @@ function handleKeyDown(event) {
 }
 
 /**
+ * 记录按下是否落在帷幕上，供帷幕点击判断按下与抬起同在帷幕。
+ *
+ * @param {PointerEvent} event
+ */
+function handleScrimPointerDown(event) {
+  scrimPressed = event.target === root.value;
+}
+
+/**
+ * 按下与抬起都落在帷幕上时请求关闭；面板内开始的文本选择或拖拽不会触发。
+ *
  * @param {MouseEvent} event
  */
-function handleDialogClick(event) {
-  if (!propsWithDefaults.closeOnBack || event.target !== root.value) {
+function handleScrimClick(event) {
+  if (!propsWithDefaults.closeOnBack || !scrimPressed || event.target !== root.value) {
     return;
   }
 
@@ -556,8 +568,9 @@ watchEffect(() => {
       aria-modal="true"
       tabindex="-1"
       @cancel="handleCancel"
-      @click="handleDialogClick"
+      @click="handleScrimClick"
       @keydown="handleKeyDown"
+      @pointerdown="handleScrimPointerDown"
     >
       <div class="mat-dialog__panel" :style="panelStyle">
         <template v-if="propsWithDefaults.fullScreen">

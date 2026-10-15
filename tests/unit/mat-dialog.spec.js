@@ -438,13 +438,33 @@ describe('MatDialog', () => {
       right: 200,
       top: 100,
     });
-    element.dispatchEvent(new MouseEvent('click', {
-      bubbles: true,
-      clientX: 0,
-      clientY: 0,
-    }));
+    element.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+
+    expect(wrapper.emitted('update:modelValue')).toHaveLength(2);
+
+    element.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
     expect(wrapper.emitted('update:modelValue')).toHaveLength(3);
+  });
+
+  it('面板内按下并在帷幕上松开时不请求关闭', async () => {
+    const wrapper = mount(MatDialog, {
+      props: {
+        modelValue: true,
+        closeOnBack: true,
+        title: '文本选择',
+      },
+    });
+
+    await settleRender();
+
+    const element = document.body.querySelector('dialog');
+    const panel = element.querySelector('.mat-dialog__panel');
+
+    panel.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    element.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
 
   it('closeOnBack=false 时 Escape 只阻止原生关闭，不请求关闭', async () => {
@@ -482,11 +502,8 @@ describe('MatDialog', () => {
       right: 200,
       top: 100,
     });
-    element.dispatchEvent(new MouseEvent('click', {
-      bubbles: true,
-      clientX: 0,
-      clientY: 0,
-    }));
+    element.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    element.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
     expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });

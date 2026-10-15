@@ -1023,6 +1023,7 @@ describe('MatBottomSheet', () => {
     expect(blockedEscape.defaultPrevented).toBe(false);
     expect(wrapper.emitted('update:modelValue')).toHaveLength(2);
 
+    sheet.dispatchEvent(new Event('pointerdown', { bubbles: true }));
     sheet.dispatchEvent(new MouseEvent('click', {
       bubbles: true,
       clientX: 20,
@@ -1271,7 +1272,7 @@ describe('MatBottomSheet', () => {
     expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
 
-  it('按下与抬起都在帷幕上时仍然请求关闭', async () => {
+  it('按下与抬起都在帷幕上时请求关闭', async () => {
     const wrapper = mount(MatBottomSheet, {
       props: {
         modelValue: true,
@@ -1293,6 +1294,9 @@ describe('MatBottomSheet', () => {
       pointerId: 16,
       pointerType: 'mouse',
     });
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+
     sheet.dispatchEvent(new MouseEvent('click', {
       bubbles: true,
       clientX: 20,
@@ -1300,6 +1304,36 @@ describe('MatBottomSheet', () => {
     }));
 
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]]);
+  });
+
+  it('面板内按下并在帷幕上松开时不请求关闭', async () => {
+    const wrapper = mount(MatBottomSheet, {
+      props: {
+        modelValue: true,
+        variant: 'modal',
+      },
+      attrs: {
+        'aria-label': '文本选择',
+      },
+    });
+
+    await settleRender();
+
+    const sheet = document.body.querySelector('dialog');
+    const panel = sheet.querySelector('.mat-sheet__panel');
+
+    dispatchPointer(panel, 'pointerdown', {
+      button: 0,
+      pointerId: 17,
+      pointerType: 'mouse',
+    });
+    sheet.dispatchEvent(new MouseEvent('click', {
+      bubbles: true,
+      clientX: 20,
+      clientY: 20,
+    }));
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
   });
 
   it('把手方向键按 min、normal、max 步进档位', async () => {
@@ -1817,6 +1851,9 @@ describe.each([
       pointerId: 19,
       pointerType: 'mouse',
     });
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+
     sheet.dispatchEvent(new MouseEvent('click', {
       bubbles: true,
       clientX: 20,
