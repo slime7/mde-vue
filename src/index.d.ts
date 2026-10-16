@@ -4385,11 +4385,12 @@ export interface MatToolbarProps {
   app?: boolean;
   /**
   * app=true 时的 Teleport 目标；可传选择器或 HTMLElement。
+  * 传入 null、false 等零值时禁用 Teleport 与 AppRoot 接入，直接在正常文档流展示。
   *
-  * @type {string | HTMLElement}
+  * @type {string | HTMLElement | boolean | null | undefined}
   * @default 'body'
   */
-  attach?: string | HTMLElement;
+  attach?: string | HTMLElement | boolean | null | undefined;
   /**
   * 是否在声明位置生成占位。
   *

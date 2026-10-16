@@ -18442,7 +18442,7 @@ import ListVirtualExample from '../examples/list/ListVirtualExample.vue';
 
 ## 组件简介
 
-`<mat-toolbar>` 的组件导出名是 `MatToolbar`。它提供 Material 3 Expressive 的 docked 和 floating 两类 Toolbar：docked 保持横向完整宽度，floating 支持顶部、底部横向和左右垂直布局。默认使用绝对定位，相对声明位置最近的定位容器布局；设置 `app` 后，省略 `attach` 且位于 `MatAppRoot` 内时自动接入应用布局，否则挂载到 `attach` 并固定到视口。默认 Slot 可放置按钮、按钮组和自定义内容，悬浮模式可通过 `fab` Slot 放置外置主操作；当前示例使用接近 Toolbar 高度的 `size="small"`、带 `icon` 和 `label` 的图标 `<mat-btn>`。
+`<mat-toolbar>` 的组件导出名是 `MatToolbar`。它提供 Material 3 Expressive 的 docked 和 floating 两类 Toolbar：docked 保持横向完整宽度，floating 支持顶部、底部横向和左右垂直布局。默认使用绝对定位，相对声明位置最近的定位容器布局；设置 `app` 后，省略 `attach` 且位于 `MatAppRoot` 内时自动接入应用布局，否则挂载到 `attach` 并固定到视口；传入 `attach=false` 或 `null` 等零值时禁用 Teleport 与 AppRoot 接入，直接在正常文档流展示。默认 Slot 可放置按钮、按钮组和自定义内容，悬浮模式可通过 `fab` Slot 放置外置主操作；当前示例使用接近 Toolbar 高度的 `size="small"`、带 `icon` 和 `label` 的图标 `<mat-btn>`。
 
 Toolbar 默认显示，使用 `modelValue` 或 `v-model` 可以播放进入、退出动画并隐藏 Toolbar；组件等待浏览器报告实际动画完成，快速反向切换不会让旧阶段覆盖新状态，减少动态效果时立即完成。不负责随滚动自动隐藏。非应用模式的父容器需要通过 `position: relative` 等方式建立定位上下文；应用模式固定到视口，不要求 `attach` 建立定位上下文。Material 不建议同时显示 Toolbar 与 Navigation bar。
 
@@ -18808,6 +18808,178 @@ const bottomPlaceholder = ref(0);
   </DocsPreview>
 </ClientOnly>
 
+### 同一容器内的双 Toolbar（`attach` 零值流式布局）
+
+在同一容器内容纳两个 Toolbar，一个定位在 `start`，另一个定位在 `end`。传入 `:attach="false"` 或 `null` 禁用 Teleport 与 AppRoot 接入，让两个 Toolbar 直接在正常文档流中展示，并各自根据 `position` 对齐到起始端与结束端。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="toolbar-dual-example">
+    <div class="toolbar-dual-example__canvas">
+      <div class="toolbar-dual-example__content">
+        <mat-switch v-model="active">
+          {{ active ? '隐藏 Toolbar' : '展示 Toolbar' }}
+        </mat-switch>
+        <p class="toolbar-dual-example__hint">
+          白板与绘图工作区：同一容器内容纳两个流式 Toolbar，分别定位在起始端与结束端。
+        </p>
+      </div>
+
+      <div class="toolbar-dual-example__dock">
+        <mat-toolbar
+          v-model="active"
+          :attach="false"
+          variant="floating"
+          position="start"
+        >
+          <mat-btn
+            variant="standard"
+            icon="undo"
+            label="撤销"
+          />
+          <mat-btn
+            variant="standard"
+            icon="redo"
+            label="重做"
+          />
+        </mat-toolbar>
+
+        <mat-toolbar
+          v-model="active"
+          :attach="false"
+          variant="floating"
+          position="end"
+          vibrant
+        >
+          <mat-btn
+            :variant="activeTool === 'pen' ? 'filled' : 'standard'"
+            icon="edit"
+            label="画笔"
+            @click="activeTool = 'pen'"
+          />
+          <mat-btn
+            :variant="activeTool === 'highlighter' ? 'filled' : 'standard'"
+            icon="ink_highlighter"
+            label="荧光笔"
+            @click="activeTool = 'highlighter'"
+          />
+          <mat-btn
+            :variant="activeTool === 'eraser' ? 'filled' : 'standard'"
+            icon="ink_eraser"
+            label="橡皮擦"
+            @click="activeTool = 'eraser'"
+          />
+          <mat-btn
+            :variant="activeTool === 'pointer' ? 'filled' : 'standard'"
+            icon="near_me"
+            label="选择"
+            @click="activeTool = 'pointer'"
+          />
+          <mat-btn
+            variant="standard"
+            icon="add"
+            label="添加"
+          />
+          <mat-btn
+            variant="standard"
+            icon="more_vert"
+            label="更多操作"
+          />
+        </mat-toolbar>
+      </div>
+
+      <div
+        class="toolbar-dual-example__home-indicator"
+        aria-hidden="true"
+      />
+    </div>
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const active = ref(false);
+const activeTool = ref('pen');
+</script>
+```
+```vue
+<style scoped>
+.toolbar-dual-example {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+  background-color: var(--mat-sys-color-surface-container-low);
+  border-radius: 16px;
+}
+
+.toolbar-dual-example__canvas {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-block-size: 260px;
+  overflow: hidden;
+  background-color: var(--mat-sys-color-surface);
+  border: 1px solid var(--mat-sys-color-outline-variant);
+  border-radius: 24px;
+}
+
+.toolbar-dual-example__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  user-select: none;
+}
+
+.toolbar-dual-example__hint {
+  margin: 0;
+  color: var(--mat-sys-color-on-surface-variant);
+  font-size: 14px;
+  text-align: center;
+}
+
+.toolbar-dual-example__dock {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  inline-size: 100%;
+  min-block-size: 56px;
+  padding-inline: 16px;
+  padding-block-end: 8px;
+  box-sizing: border-box;
+}
+
+.toolbar-dual-example__home-indicator {
+  inline-size: 134px;
+  block-size: 4px;
+  margin: 8px auto 10px;
+  background-color: var(--mat-sys-color-on-surface);
+  border-radius: 2px;
+  opacity: .8;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="双 Toolbar 容器流式布局预览" height="420px">
+    <ToolbarDualExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -18819,11 +18991,11 @@ const bottomPlaceholder = ref(0);
 | `position` | `'start' \| 'center' \| 'end'` | `'center'` | 浮动顶部和底部模式按水平方向、左右模式按垂直方向对齐；停靠模式忽略 |
 | `vibrant` | `boolean` | `false` | 使用高强调的 primary container 配色 |
 | `app` | `boolean` | `false` | 启用应用布局模式；位于 `MatAppRoot` 且省略 `attach` 时自动接入，否则固定到 `attach` |
-| `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；一旦显式提供就优先于 AppRoot 自动接入 |
+| `attach` | `string \| HTMLElement \| boolean \| null` | `'body'` | `app=true` 时的显式 Teleport 目标；一旦显式提供就优先于 AppRoot 自动接入；传入 `null`、`false` 等零值时禁用 Teleport 与 AppRoot 接入，直接在正常文档流展示 |
 | `placeholder` | `boolean` | `false` | 在组件声明位置生成占位，避免绝对定位的 Toolbar 遮挡后续内容 |
 | `bottomPlaceholder` | `number \| string` | `0` | docked 和 `floating-bottom` 的额外底部安全区；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS block-size 值（如 `env(safe-area-inset-bottom)` 或 `calc(...)`），非法时回退 0；不负责生成自然布局占位 |
 
-`placeholder=true` 时，横向 Toolbar 占用实际 Toolbar 的 block-size，垂直 Toolbar 占用实际 Toolbar 的 inline-size；占位尺寸包含有效的 `bottomPlaceholder`。floating Toolbar 不登记 AppRoot 边缘，因此仍可使用显式 placeholder 为声明位置的长滚动内容保留空间。AppRoot 会统一处理安全区，自动接入时 `bottomPlaceholder` 只作为额外下限。无效值不产生额外空间。显式 `attach` 只在 `app=true` 时解析；无法解析时组件给出警告且不渲染 Toolbar。`fab` Slot 在 docked 模式不会渲染并会给出警告。
+`placeholder=true` 时，横向 Toolbar 占用实际 Toolbar 的 block-size，垂直 Toolbar 占用实际 Toolbar 的 inline-size；占位尺寸包含有效的 `bottomPlaceholder`。floating Toolbar 不登记 AppRoot 边缘，因此仍可使用显式 placeholder 为声明位置的长滚动内容保留空间。AppRoot 会统一处理安全区，自动接入时 `bottomPlaceholder` 只作为额外下限。无效值不产生额外空间。显式 `attach` 只在 `app=true` 时解析；无法解析时组件给出警告且不渲染 Toolbar；传入 `null`、`false` 等零值时禁用 Teleport 并在正常文档流展示。`fab` Slot 在 docked 模式不会渲染并会给出警告。
 
 ## 事件
 
@@ -18850,6 +19022,7 @@ Toolbar 根节点使用 `role="toolbar"`；顶部和底部悬浮模式保持默�
 
 <script setup>
 import ToolbarBottomPlaceholderExample from '../examples/toolbar/ToolbarBottomPlaceholderExample.vue';
+import ToolbarDualExample from '../examples/toolbar/ToolbarDualExample.vue';
 import ToolbarPlaceholderExample from '../examples/toolbar/ToolbarPlaceholderExample.vue';
 import ToolbarVariantExample from '../examples/toolbar/ToolbarVariantExample.vue';
 </script>

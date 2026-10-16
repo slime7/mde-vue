@@ -7,6 +7,7 @@ const exampleNames = [
   'ToolbarVariantExample',
   'ToolbarPlaceholderExample',
   'ToolbarBottomPlaceholderExample',
+  'ToolbarDualExample',
 ];
 
 describe('Toolbar 文档', () => {
@@ -133,5 +134,17 @@ describe('Toolbar 文档', () => {
     expect(example).toContain('v-model="floatingActive"');
     expect(example).toContain('variant="floating-bottom"');
     expect(example).toContain('position="end"');
+  });
+
+  it('在双 Toolbar 示例中演示同一容器内 start 与 end 的组合，并设置 attach=false', () => {
+    const example = readFileSync(
+      resolve('docs/site/examples/toolbar/ToolbarDualExample.vue'),
+      'utf8',
+    );
+
+    expect(example).toContain(':attach="false"');
+    expect(example).toContain('position="start"');
+    expect(example).toContain('position="end"');
+    expect(example).toContain('vibrant');
   });
 });

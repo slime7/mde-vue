@@ -3,6 +3,7 @@ import {
   afterEach, describe, expect, it, vi,
 } from 'vitest';
 import { h, nextTick } from 'vue';
+import MatAppRoot from '../../src/components/mat-app-root/MatAppRoot.vue';
 import MatToolbar from '../../src/components/mat-toolbar/MatToolbar.vue';
 import {
   getBottomToolbarClearance,
@@ -93,6 +94,73 @@ describe('MatToolbar', () => {
     );
 
     wrapper.unmount();
+  });
+
+  it('attach 支持 null、false 等零值，不 teleport、不向 AppRoot 接入或发出警告，并在声明位置展示内容', async () => {
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const container = document.createElement('div');
+    document.body.append(container);
+
+    const wrapper = mount(MatToolbar, {
+      attachTo: container,
+      props: {
+        attach: false,
+        variant: 'floating-bottom',
+        position: 'start',
+      },
+      slots: {
+        default: () => h('button', { type: 'button' }, '撤销'),
+      },
+    });
+
+    await settleRender();
+
+    const toolbar = container.querySelector('.mat-toolbar');
+    expect(toolbar).not.toBeNull();
+    expect(container.contains(toolbar)).toBe(true);
+    expect(warning).not.toHaveBeenCalled();
+    expect(getToolbarRects()).toHaveLength(0);
+
+    await wrapper.setProps({ attach: null });
+    await settleRender();
+
+    expect(container.querySelector('.mat-toolbar')).not.toBeNull();
+    expect(warning).not.toHaveBeenCalled();
+    expect(getToolbarRects()).toHaveLength(0);
+
+    wrapper.unmount();
+    container.remove();
+  });
+
+  it('在 MatAppRoot 内传入 attach=false 或 null 时，不接入 AppRoot 边缘或浮动层', async () => {
+    const appWrapper = mount(MatAppRoot, {
+      attachTo: document.body,
+      props: {
+        fillViewport: false,
+      },
+      slots: {
+        default: () => h('div', { class: 'custom-container' }, [
+          h(MatToolbar, {
+            app: true,
+            attach: false,
+            variant: 'docked',
+          }, () => h('button', { type: 'button' }, '操作')),
+        ]),
+      },
+    });
+
+    await settleRender();
+
+    const customContainer = document.body.querySelector('.custom-container');
+    const toolbar = customContainer?.querySelector('.mat-toolbar');
+
+    expect(toolbar).not.toBeNull();
+    expect(toolbar.parentElement).toBe(customContainer);
+
+    const appRootEl = document.body.querySelector('.mat-app-root');
+    expect(appRootEl.style.getPropertyValue('--mat-app-root-padding-bottom')).toBe('0px');
+
+    appWrapper.unmount();
   });
 
   it('将 floating 规范化为 floating-bottom，并在悬浮模式渲染 fab Slot', async () => {

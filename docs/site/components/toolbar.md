@@ -9,7 +9,7 @@ order: 100
 
 ## 组件简介
 
-`<mat-toolbar>` 的组件导出名是 `MatToolbar`。它提供 Material 3 Expressive 的 docked 和 floating 两类 Toolbar：docked 保持横向完整宽度，floating 支持顶部、底部横向和左右垂直布局。默认使用绝对定位，相对声明位置最近的定位容器布局；设置 `app` 后，省略 `attach` 且位于 `MatAppRoot` 内时自动接入应用布局，否则挂载到 `attach` 并固定到视口。默认 Slot 可放置按钮、按钮组和自定义内容，悬浮模式可通过 `fab` Slot 放置外置主操作；当前示例使用接近 Toolbar 高度的 `size="small"`、带 `icon` 和 `label` 的图标 `<mat-btn>`。
+`<mat-toolbar>` 的组件导出名是 `MatToolbar`。它提供 Material 3 Expressive 的 docked 和 floating 两类 Toolbar：docked 保持横向完整宽度，floating 支持顶部、底部横向和左右垂直布局。默认使用绝对定位，相对声明位置最近的定位容器布局；设置 `app` 后，省略 `attach` 且位于 `MatAppRoot` 内时自动接入应用布局，否则挂载到 `attach` 并固定到视口；传入 `attach=false` 或 `null` 等零值时禁用 Teleport 与 AppRoot 接入，直接在正常文档流展示。默认 Slot 可放置按钮、按钮组和自定义内容，悬浮模式可通过 `fab` Slot 放置外置主操作；当前示例使用接近 Toolbar 高度的 `size="small"`、带 `icon` 和 `label` 的图标 `<mat-btn>`。
 
 Toolbar 默认显示，使用 `modelValue` 或 `v-model` 可以播放进入、退出动画并隐藏 Toolbar；组件等待浏览器报告实际动画完成，快速反向切换不会让旧阶段覆盖新状态，减少动态效果时立即完成。不负责随滚动自动隐藏。非应用模式的父容器需要通过 `position: relative` 等方式建立定位上下文；应用模式固定到视口，不要求 `attach` 建立定位上下文。Material 不建议同时显示 Toolbar 与 Navigation bar。
 
@@ -77,6 +77,28 @@ Toolbar 默认显示，使用 `modelValue` 或 `v-model` 可以播放进入、�
   </DocsPreview>
 </ClientOnly>
 
+### 同一容器内的双 Toolbar（`attach` 零值流式布局）
+
+在同一容器内容纳两个 Toolbar，一个定位在 `start`，另一个定位在 `end`。传入 `:attach="false"` 或 `null` 禁用 Teleport 与 AppRoot 接入，让两个 Toolbar 直接在正常文档流中展示，并各自根据 `position` 对齐到起始端与结束端。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/toolbar/ToolbarDualExample.vue#template [template]
+
+<<< @/examples/toolbar/ToolbarDualExample.vue#script [script]
+
+<<< @/examples/toolbar/ToolbarDualExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="双 Toolbar 容器流式布局预览" height="420px">
+    <ToolbarDualExample />
+  </DocsPreview>
+</ClientOnly>
+
 ## API
 
 ### 属性
@@ -88,11 +110,11 @@ Toolbar 默认显示，使用 `modelValue` 或 `v-model` 可以播放进入、�
 | `position` | `'start' \| 'center' \| 'end'` | `'center'` | 浮动顶部和底部模式按水平方向、左右模式按垂直方向对齐；停靠模式忽略 |
 | `vibrant` | `boolean` | `false` | 使用高强调的 primary container 配色 |
 | `app` | `boolean` | `false` | 启用应用布局模式；位于 `MatAppRoot` 且省略 `attach` 时自动接入，否则固定到 `attach` |
-| `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；一旦显式提供就优先于 AppRoot 自动接入 |
+| `attach` | `string \| HTMLElement \| boolean \| null` | `'body'` | `app=true` 时的显式 Teleport 目标；一旦显式提供就优先于 AppRoot 自动接入；传入 `null`、`false` 等零值时禁用 Teleport 与 AppRoot 接入，直接在正常文档流展示 |
 | `placeholder` | `boolean` | `false` | 在组件声明位置生成占位，避免绝对定位的 Toolbar 遮挡后续内容 |
 | `bottomPlaceholder` | `number \| string` | `0` | docked 和 `floating-bottom` 的额外底部安全区；数字与纯数字字符串按 px 处理，其他字符串需为 trim 后合法的 CSS block-size 值（如 `env(safe-area-inset-bottom)` 或 `calc(...)`），非法时回退 0；不负责生成自然布局占位 |
 
-`placeholder=true` 时，横向 Toolbar 占用实际 Toolbar 的 block-size，垂直 Toolbar 占用实际 Toolbar 的 inline-size；占位尺寸包含有效的 `bottomPlaceholder`。floating Toolbar 不登记 AppRoot 边缘，因此仍可使用显式 placeholder 为声明位置的长滚动内容保留空间。AppRoot 会统一处理安全区，自动接入时 `bottomPlaceholder` 只作为额外下限。无效值不产生额外空间。显式 `attach` 只在 `app=true` 时解析；无法解析时组件给出警告且不渲染 Toolbar。`fab` Slot 在 docked 模式不会渲染并会给出警告。
+`placeholder=true` 时，横向 Toolbar 占用实际 Toolbar 的 block-size，垂直 Toolbar 占用实际 Toolbar 的 inline-size；占位尺寸包含有效的 `bottomPlaceholder`。floating Toolbar 不登记 AppRoot 边缘，因此仍可使用显式 placeholder 为声明位置的长滚动内容保留空间。AppRoot 会统一处理安全区，自动接入时 `bottomPlaceholder` 只作为额外下限。无效值不产生额外空间。显式 `attach` 只在 `app=true` 时解析；无法解析时组件给出警告且不渲染 Toolbar；传入 `null`、`false` 等零值时禁用 Teleport 并在正常文档流展示。`fab` Slot 在 docked 模式不会渲染并会给出警告。
 
 ## 事件
 
@@ -119,6 +141,7 @@ Toolbar 根节点使用 `role="toolbar"`；顶部和底部悬浮模式保持默�
 
 <script setup>
 import ToolbarBottomPlaceholderExample from '../examples/toolbar/ToolbarBottomPlaceholderExample.vue';
+import ToolbarDualExample from '../examples/toolbar/ToolbarDualExample.vue';
 import ToolbarPlaceholderExample from '../examples/toolbar/ToolbarPlaceholderExample.vue';
 import ToolbarVariantExample from '../examples/toolbar/ToolbarVariantExample.vue';
 </script>

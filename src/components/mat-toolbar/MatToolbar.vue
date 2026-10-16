@@ -117,12 +117,13 @@ const props = defineProps({
   },
   /**
    * app=true 时的 Teleport 目标；可传选择器或 HTMLElement。
+   * 传入 null、false 等零值时禁用 Teleport 与 AppRoot 接入，直接在正常文档流展示。
    *
-   * @type {string | HTMLElement}
+   * @type {string | HTMLElement | boolean | null | undefined}
    * @default 'body'
    */
   attach: {
-    type: [String, Object],
+    type: [String, Object, Boolean, Number],
     default: 'body',
   },
   /**
@@ -194,11 +195,12 @@ const isBottomVariant = computed(() => (
   normalizedVariant.value === 'docked'
   || normalizedVariant.value === 'floating-bottom'
 ));
+const isFalsyAttach = computed(() => !propsWithDefaults.attach);
 const usesAppRoot = computed(() => (
-  propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach
+  !isFalsyAttach.value && propsWithDefaults.app && Boolean(appContext) && !hasExplicitAttach
 ));
 const attachTarget = computed(() => {
-  if (!propsWithDefaults.app) {
+  if (isFalsyAttach.value || !propsWithDefaults.app) {
     return null;
   }
 
@@ -248,7 +250,8 @@ const toolbarClass = computed(() => [
   `mat-toolbar--${normalizedVariant.value}`,
   `mat-toolbar--position-${normalizedPosition.value}`,
   {
-    'mat-toolbar--app': propsWithDefaults.app,
+    'mat-toolbar--flow': isFalsyAttach.value,
+    'mat-toolbar--app': !isFalsyAttach.value && propsWithDefaults.app,
     'mat-toolbar--app-root': usesAppRoot.value,
     'mat-toolbar--vertical': isVertical.value,
     'mat-toolbar--vibrant': propsWithDefaults.vibrant,
@@ -398,8 +401,9 @@ async function syncToolbarRegistration() {
     return;
   }
 
-  if (!rendered.value || !toolbarElement.value) {
+  if (!rendered.value || !toolbarElement.value || isFalsyAttach.value) {
     stopToolbarRegistration();
+    validateFabSlot();
     return;
   }
 
@@ -487,6 +491,10 @@ watch([
 });
 
 function warnForInvalidAttach() {
+  if (isFalsyAttach.value) {
+    return;
+  }
+
   if (propsWithDefaults.app && !usesAppRoot.value && !attachTarget.value) {
     console.warn('MatToolbar: attach 必须指向当前 document 中存在的 HTMLElement');
   }
@@ -495,7 +503,7 @@ function warnForInvalidAttach() {
 
 <template>
   <span
-    v-if="placeholder && rendered && (!app || attachTarget || usesAppRoot)"
+    v-if="!isFalsyAttach && placeholder && rendered && (!app || attachTarget || usesAppRoot)"
     class="mat-toolbar__placeholder"
     :style="placeholderStyle"
     aria-hidden="true"
@@ -503,10 +511,10 @@ function warnForInvalidAttach() {
 
   <Teleport
     :to="attachTarget ?? 'body'"
-    :disabled="!app || (usesAppRoot && !isFloating)"
+    :disabled="isFalsyAttach || !app || (usesAppRoot && !isFloating)"
   >
     <div
-      v-if="rendered && (!app || attachTarget || usesAppRoot)"
+      v-if="rendered && (isFalsyAttach || !app || attachTarget || usesAppRoot)"
       ref="toolbarElement"
       v-bind="$attrs"
       class="mat-toolbar"
@@ -564,6 +572,70 @@ function warnForInvalidAttach() {
 
   .mat-toolbar--app-root {
     position: absolute;
+  }
+
+  .mat-toolbar--flow {
+    position: relative;
+    inset: auto;
+    max-inline-size: 100%;
+    translate: none;
+    pointer-events: auto;
+  }
+
+  .mat-toolbar--flow.mat-toolbar--docked {
+    inline-size: 100%;
+    padding-block-end: 0;
+  }
+
+  .mat-toolbar--flow.mat-toolbar--floating-top,
+  .mat-toolbar--flow.mat-toolbar--floating-bottom {
+    inset-inline: auto;
+    inset-block: auto;
+    max-inline-size: 100%;
+    translate: none;
+    padding-block-end: 0;
+  }
+
+  .mat-toolbar--flow.mat-toolbar--position-start {
+    margin-inline-end: auto;
+  }
+
+  .mat-toolbar--flow.mat-toolbar--position-center {
+    margin-inline: auto;
+  }
+
+  .mat-toolbar--flow.mat-toolbar--position-end {
+    margin-inline-start: auto;
+  }
+
+  .mat-toolbar--flow.mat-toolbar--vertical {
+    inset-block: auto;
+    inset-inline: auto;
+    max-block-size: 100%;
+    translate: none;
+  }
+
+  .mat-toolbar--flow.mat-toolbar--vertical.mat-toolbar--position-start {
+    margin-block-end: auto;
+    margin-inline: 0;
+  }
+
+  .mat-toolbar--flow.mat-toolbar--vertical.mat-toolbar--position-center {
+    margin-block: auto;
+    margin-inline: 0;
+  }
+
+  .mat-toolbar--flow.mat-toolbar--vertical.mat-toolbar--position-end {
+    margin-block-start: auto;
+    margin-inline: 0;
+  }
+
+  .mat-toolbar--flow.mat-toolbar--opening {
+    animation: mat-toolbar-flow-enter var(--mat-sys-motion-spring-fast-spatial) both;
+  }
+
+  .mat-toolbar--flow.mat-toolbar--closing {
+    animation: mat-toolbar-flow-exit var(--mat-sys-motion-spring-fast-effects) both;
   }
 
   .mat-toolbar--closing .mat-toolbar__surface {
@@ -931,6 +1003,30 @@ function warnForInvalidAttach() {
 
     to {
       translate: 100% var(--mat-toolbar-position-translate-y);
+    }
+  }
+
+  @keyframes mat-toolbar-flow-enter {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes mat-toolbar-flow-exit {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateY(8px);
     }
   }
 
