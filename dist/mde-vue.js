@@ -9619,6 +9619,10 @@ var Ec = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				].includes(e);
 			}
 		},
+		autoHideScrollbar: {
+			type: Boolean,
+			default: !0
+		},
 		dragScroll: {
 			type: Boolean,
 			default: !1
@@ -9803,7 +9807,8 @@ var Ec = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		}, W.value, {
 			class: ["mat-scroll-area", [{
 				"mat-scroll-area--rounded": z(r).rounded,
-				"mat-scroll-area--explicit-color": z(o)
+				"mat-scroll-area--explicit-color": z(o),
+				"mat-scroll-area--auto-hide-scrollbar": z(r).autoHideScrollbar
 			}]],
 			style: ne.value
 		}), [c("div", _({
@@ -9830,7 +9835,7 @@ var Ec = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			onScroll: re
 		}), [P(e.$slots, "default", {}, void 0, !0)], 16)], 16));
 	}
-}), [["__scopeId", "data-v-f222c54b"]]), zc = { class: "mat-chip-set__scroll-content" }, Bc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatChipSet" }, {
+}), [["__scopeId", "data-v-6e3976a1"]]), zc = { class: "mat-chip-set__scroll-content" }, Bc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatChipSet" }, {
 	__name: "MatChipSet",
 	props: {
 		layout: {

@@ -90,6 +90,16 @@ const props = defineProps({
     },
   },
   /**
+   * 鼠标不在容器内时是否将滚动条和滚动条背景设置为透明。
+   *
+   * @type {boolean}
+   * @default true
+   */
+  autoHideScrollbar: {
+    type: Boolean,
+    default: true,
+  },
+  /**
    * 横向模式下允许使用鼠标主键或触控笔按住拖拽滚动。
    *
    * @type {boolean}
@@ -589,6 +599,7 @@ defineExpose({
       {
         'mat-scroll-area--rounded': propsWithDefaults.rounded,
         'mat-scroll-area--explicit-color': hasExplicitColor,
+        'mat-scroll-area--auto-hide-scrollbar': propsWithDefaults.autoHideScrollbar,
       },
     ]"
     :style="rootStyleBindings"
@@ -722,6 +733,17 @@ defineExpose({
 
   .mat-scroll-area__viewport--horizontal.mat-scroll-area__viewport--start-overflow.mat-scroll-area__viewport--end-overflow {
     --mat-scroll-area-content-mask: linear-gradient(to right, black 0 var(--mat-scroll-area-shadow-offset-start), transparent var(--mat-scroll-area-shadow-offset-start), black calc(var(--mat-scroll-area-shadow-offset-start) + var(--mat-scroll-area-shadow-length-start)) calc(100% - var(--mat-scroll-area-shadow-offset-end) - var(--mat-scroll-area-shadow-length-end)), transparent calc(100% - var(--mat-scroll-area-shadow-offset-end)), black calc(100% - var(--mat-scroll-area-shadow-offset-end)) 100%);
+  }
+
+  .mat-scroll-area--auto-hide-scrollbar:not(:hover) .mat-scroll-area__viewport {
+    scrollbar-color: transparent transparent;
+  }
+
+  .mat-scroll-area--auto-hide-scrollbar:not(:hover) .mat-scroll-area__viewport::-webkit-scrollbar,
+  .mat-scroll-area--auto-hide-scrollbar:not(:hover) .mat-scroll-area__viewport::-webkit-scrollbar-thumb,
+  .mat-scroll-area--auto-hide-scrollbar:not(:hover) .mat-scroll-area__viewport::-webkit-scrollbar-track,
+  .mat-scroll-area--auto-hide-scrollbar:not(:hover) .mat-scroll-area__viewport::-webkit-scrollbar-corner {
+    background: transparent;
   }
 }
 </style>

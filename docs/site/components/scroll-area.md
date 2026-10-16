@@ -243,6 +243,26 @@ order: 114
   </DocsPreview>
 </ClientOnly>
 
+### 自动隐藏滚动条
+
+`autoHideScrollbar` 默认启用（`true`）。启用时，鼠标不在容器内时滚动条和滚动条背景会自动设置为透明，悬停时恢复显示；若需要滚动条常驻可见，可将 `autoHideScrollbar` 设为 `false`。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/scroll-area/ScrollAreaAutoHideScrollbarExample.vue#template [template]
+
+<<< @/examples/scroll-area/ScrollAreaAutoHideScrollbarExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Scroll area 自动隐藏滚动条预览" height="182px">
+    <ScrollAreaAutoHideScrollbarExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### 按住拖拽
 
 横向模式设置 `dragScroll` 后，鼠标主键和触控笔可以在内容上按住拖拽。移动超过 4px 后才确认拖拽，并阻止这次手势随后产生的点击；短按和键盘激活不受影响。触摸指针不由此能力接管，继续使用浏览器原生滑动与惯性。
@@ -298,6 +318,7 @@ order: 114
 | `shadowLength` | `number \| { start?: number, end?: number }` | `16` | 阴影从对应边缘向内延伸的像素数；数字或纯数字字符串用于两端，对象可分别设置 `start` 与 `end`，值必须是非负有限数字 |
 | `shadowOffset` | `number \| { start?: number, end?: number }` | `0` | 边缘阴影带从对应边缘向内偏移的像素数；数字或纯数字字符串用于两端，对象未提供的一端为 `0`，值必须是非负有限数字。偏移区内的滚动内容不被遮罩覆盖，适合放置不透明的 sticky 元素 |
 | `barWidth` | `'default' \| 'thin' \| 'hidden'` | `'thin'` | 设置滚动条宽度；`thin` 使用 8px，`default` 使用 16px，`hidden` 隐藏滚动条 |
+| `autoHideScrollbar` | `boolean` | `true` | 鼠标不在容器内时自动将滚动条和滚动条背景设置为透明；设为 `false` 则常驻显示滚动条样式 |
 | `dragScroll` | `boolean` | `false` | 横向模式下允许鼠标主键和触控笔按住拖拽；触摸保持原生滑动 |
 | `rounded` | `boolean` | `false` | 为 `true` 时使用 `--mat-sys-shape-corner-extra-large`（28px）作为容器圆角 |
 | `noScrollPadding` | `boolean` | `false` | 关闭当前滚动方向两端的固定 28px 内边距，让内容贴住滚动方向边缘；不影响另一轴的容器内边距补偿 |
@@ -331,6 +352,7 @@ order: 114
 | `default` | 可滚动内容；纵向内容通常自然排列，横向内容需要自行提供不收缩的横向布局 |
 
 <script setup>
+import ScrollAreaAutoHideScrollbarExample from '../examples/scroll-area/ScrollAreaAutoHideScrollbarExample.vue';
 import ScrollAreaBarWidthExample from '../examples/scroll-area/ScrollAreaBarWidthExample.vue';
 import ScrollAreaColorExample from '../examples/scroll-area/ScrollAreaColorExample.vue';
 import ScrollAreaContainerExample from '../examples/scroll-area/ScrollAreaContainerExample.vue';

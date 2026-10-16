@@ -3724,6 +3724,13 @@ export interface MatScrollAreaProps {
   */
   barWidth?: 'default' | 'thin' | 'hidden';
   /**
+  * 鼠标不在容器内时是否将滚动条和滚动条背景设置为透明。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  autoHideScrollbar?: boolean;
+  /**
   * 横向模式下允许使用鼠标主键或触控笔按住拖拽滚动。
   *
   * @type {boolean}
