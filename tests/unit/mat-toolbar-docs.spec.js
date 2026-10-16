@@ -88,7 +88,7 @@ describe('Toolbar 文档', () => {
 
     expect(example).toContain('<mat-btn');
     expect(example).toContain('icon="add"');
-    expect(example).toContain('width="wide"');
+    expect(example).not.toContain('width="wide"');
     expect(example).not.toContain('toolbar-variant-example__fab');
   });
 

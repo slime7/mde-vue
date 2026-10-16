@@ -87,17 +87,20 @@ const isFloating = computed(() => variant.value.startsWith('floating'));
         :position="position"
         :vibrant="vibrant"
       >
-        <mat-btn variant="standard">
-          编辑
-        </mat-btn>
-        <mat-btn variant="standard">
-          分享
-        </mat-btn>
+        <mat-btn
+          variant="standard"
+          icon="edit"
+          label="编辑"
+        />
+        <mat-btn
+          variant="standard"
+          icon="share"
+          label="分享"
+        />
 
         <template v-if="isFloating" #fab>
           <mat-btn
             size="small"
-            width="wide"
             icon="add"
             label="新建"
           />

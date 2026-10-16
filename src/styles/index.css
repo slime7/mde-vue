@@ -520,8 +520,9 @@
 
     /* Toolbar component tokens */
     --mat-toolbar-container-height: 64px;
-    --mat-toolbar-container-padding: 16px;
-    --mat-toolbar-content-gap: 8px;
+    --mat-toolbar-container-padding: 8px;
+    --mat-toolbar-content-gap: 4px;
+    --mat-toolbar-fab-gap: 8px;
     --mat-toolbar-floating-edge-space: 16px;
     --mat-toolbar-vertical-edge-space: 24px;
     --mat-toolbar-container-shape: var(--mat-sys-shape-corner-full);

@@ -552,7 +552,7 @@ function warnForInvalidAttach() {
     z-index: var(--mat-sys-z-index-toolbar);
     box-sizing: border-box;
     display: flex;
-    gap: var(--mat-toolbar-content-gap);
+    gap: var(--mat-toolbar-fab-gap);
     align-items: center;
     color: var(--mat-toolbar-content-color);
     pointer-events: none;
@@ -582,11 +582,10 @@ function warnForInvalidAttach() {
   .mat-toolbar__surface {
     display: flex;
     flex: 0 0 auto;
-    gap: var(--mat-toolbar-content-gap);
     align-items: center;
     box-sizing: border-box;
     min-block-size: var(--mat-toolbar-container-height);
-    padding-inline: var(--mat-toolbar-container-padding);
+    padding: var(--mat-toolbar-container-padding);
     color: inherit;
     background: var(--mat-toolbar-container-color);
     border-radius: var(--mat-toolbar-container-shape);
@@ -768,7 +767,7 @@ function warnForInvalidAttach() {
     flex-direction: column;
     min-block-size: 0;
     max-block-size: inherit;
-    padding-block: var(--mat-toolbar-container-padding);
+    padding: var(--mat-toolbar-container-padding);
     overflow-y: auto;
     overscroll-behavior: contain;
     scrollbar-width: thin;
