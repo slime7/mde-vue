@@ -198,7 +198,7 @@ describe('v-ripple', () => {
     expect(warn).not.toHaveBeenCalled();
   });
 
-  it('variant 为 dots 时渲染波点阵列并遵循相同生命周期', async () => {
+  it('variant 为 dots 时渲染波点阵列并遵循静止形态生命周期', async () => {
     const wrapper = mountHost({ binding: { variant: 'dots' } });
 
     dispatchPointer(wrapper.element, 'pointerdown', { pointerId: 5 });
@@ -207,10 +207,10 @@ describe('v-ripple', () => {
 
     expect(wave.style.backgroundColor).toBe('transparent');
     expect(wave.style.backgroundImage).toContain('radial-gradient');
-    expect(wave.style.backgroundSize).toBe('12px 12px');
+    expect(wave.style.backgroundSize).toBe('8px 8px');
     expect(wave.style.backgroundRepeat).toBe('round');
     // 按压点 (24, 18) 处对齐一个圆点：偏移为按压点减去半个网格。
-    expect(wave.style.backgroundPosition).toBe('18px 12px');
+    expect(wave.style.backgroundPosition).toBe('20px 14px');
     expect(wave.style.borderRadius).toBe('0px');
 
     await vi.advanceTimersByTimeAsync(300);
@@ -305,32 +305,32 @@ describe('v-ripple', () => {
     const container = getContainer(wrapper);
 
     dispatchPointer(wrapper.element, 'pointerdown', { pointerId: 1 });
-    expect(getContainer(wrapper).firstElementChild.style.backgroundImage).toContain('radial-gradient');
+    expect(container.lastElementChild.style.backgroundImage).toContain('radial-gradient');
+    dispatchPointer(window, 'pointerup', { pointerId: 1 });
 
     await wrapper.setData({ binding: { variant: 'circle' } });
 
     expect(getContainer(wrapper)).toBe(container);
 
     dispatchPointer(wrapper.element, 'pointerdown', { pointerId: 2 });
-
-    const waves = container.children;
-
-    expect(waves[0].style.backgroundImage).toContain('radial-gradient');
-    expect(waves[1].style.backgroundImage).toBe('');
+    expect(container.lastElementChild.style.backgroundImage).toBe('');
+    dispatchPointer(window, 'pointerup', { pointerId: 2 });
 
     await wrapper.setData({ binding: { variant: 'dots' } });
     dispatchPointer(wrapper.element, 'pointerdown', { pointerId: 3 });
-
-    expect(container.children[2].style.backgroundImage).toContain('radial-gradient');
+    expect(container.lastElementChild.style.backgroundImage).toContain('radial-gradient');
+    dispatchPointer(window, 'pointerup', { pointerId: 3 });
 
     await wrapper.setData({ binding: { variant: 'glow' } });
     dispatchPointer(wrapper.element, 'pointerdown', { pointerId: 4 });
-    expect(container.children[3].style.backgroundImage).toContain('radial-gradient');
-    expect(container.children[3].style.backgroundColor).toBe('transparent');
+    expect(container.lastElementChild.style.backgroundImage).toContain('radial-gradient');
+    expect(container.lastElementChild.style.backgroundColor).toBe('transparent');
+    dispatchPointer(window, 'pointerup', { pointerId: 4 });
 
     await wrapper.setData({ binding: { variant: 'rings' } });
     dispatchPointer(wrapper.element, 'pointerdown', { pointerId: 5 });
-    expect(container.children[4].childElementCount).toBe(2);
+    expect(container.lastElementChild.childElementCount).toBe(2);
+    dispatchPointer(window, 'pointerup', { pointerId: 5 });
   });
 
   it('无法容纳涟漪的宿主警告并跳过', () => {

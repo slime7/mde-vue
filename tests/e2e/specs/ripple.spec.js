@@ -59,13 +59,13 @@ test.describe('v-ripple 涟漪', () => {
     await expect.poll(async () => countWaves(page)).toBe(0);
   });
 
-  test('variant 选项为 dots 时波点固定不动，由与实心圆同轨迹的遮罩逐渐显示', async ({ page }) => {
+  test('variant 选项为 dots 时波点以环形向外扩展，不保持按压并在动画结束后自行清理', async ({ page }) => {
     await openScene(page, 'ripple');
 
     const host = page.getByTestId('ripple-dots-host');
     const box = await host.boundingBox();
 
-    // 在偏离中心的 20% 处按压，验证遮罩圆心最终仍迁移到宿主中心。
+    // 在偏离中心的 20% 处按压。
     await page.mouse.move(box.x + box.width * 0.2, box.y + box.height / 2);
 
     await page.mouse.down();
@@ -85,52 +85,25 @@ test.describe('v-ripple 涟漪', () => {
         backgroundImage: computed.backgroundImage,
         backgroundPosition: computed.backgroundPosition,
         backgroundRepeat: computed.backgroundRepeat,
-        clipPath: computed.clipPath,
+        maskImage: computed.maskImage || computed.webkitMaskImage,
         scale: computed.scale,
         translate: computed.translate,
       };
     });
 
-    // 与实现一致：round 平铺把间距按宿主尺寸取整，偏移把一个完整圆点对齐到按压点。
-    const dotsTileSize = (length) => (length > 0 ? length / Math.max(1, Math.round(length / 12)) : 12);
+    // 缩小后的圆点使用 8px 网格，round 平铺按宿主尺寸取整，偏移将一个完整圆点对齐到按压点。
+    const dotsTileSize = (length) => (length > 0 ? length / Math.max(1, Math.round(length / 8)) : 8);
 
     expect(waveStyle.backgroundImage).toContain('radial-gradient');
     expect(waveStyle.backgroundPosition).toBe(`${Math.round(box.width * 0.2 - dotsTileSize(box.width) / 2)}px ${Math.round(box.height / 2 - dotsTileSize(box.height) / 2)}px`);
     expect(waveStyle.backgroundRepeat).toBe('round');
-    expect(waveStyle.clipPath).toContain('circle');
+    expect(waveStyle.maskImage).toContain('radial-gradient');
     expect(waveStyle.scale).toBe('none');
     expect(waveStyle.translate).toBe('none');
 
-    await page.waitForTimeout(300);
-
-    const reveal = await page.evaluate(() => {
-      const hostElement = document.querySelector('[data-testid="ripple-dots-host"]');
-      const wave = hostElement?.querySelector('[aria-hidden="true"] > span');
-
-      if (!wave) {
-        return null;
-      }
-
-      const rect = hostElement.getBoundingClientRect();
-      const match = /circle\(([\d.]+)px at ([\d.]+)px ([\d.]+)px\)/.exec(getComputedStyle(wave).clipPath);
-
-      return {
-        height: rect.height,
-        radius: match ? Number(match[1]) : 0,
-        width: rect.width,
-        x: match ? Number(match[2]) : -1,
-        y: match ? Number(match[3]) : -1,
-      };
-    });
-
-    expect(reveal.radius).toBeGreaterThanOrEqual(Math.hypot(reveal.width, reveal.height) / 2 + 10 - 0.5);
-    expect(reveal.x).toBeGreaterThanOrEqual(reveal.width / 2 - 1);
-    expect(reveal.x).toBeLessThanOrEqual(reveal.width / 2 + 1);
-    expect(reveal.y).toBeGreaterThanOrEqual(reveal.height / 2 - 1);
-    expect(reveal.y).toBeLessThanOrEqual(reveal.height / 2 + 1);
-
+    // 瞬时环形波纹在动画播放结束后自行从 DOM 移除，即使保持按压也不永久停留。
+    await expect.poll(async () => countWaves(page, 'ripple-dots-host'), { timeout: 3000 }).toBe(0);
     await page.mouse.up();
-    await expect.poll(async () => countWaves(page, 'ripple-dots-host')).toBe(0);
   });
 
   test('variant 选项为 glow 时羽化光斑在按压点放大并保持，释放后淡出', async ({ page }) => {
@@ -162,15 +135,19 @@ test.describe('v-ripple 涟漪', () => {
         opacity: computed.opacity,
         scale: computed.scale,
         translate: computed.translate,
+        width: computed.width,
       };
     });
+
+    const expectedRadius = Math.hypot(box.width * 0.8, box.height * 0.5) + 10;
 
     expect(waveStyle.backgroundImage).toContain('radial-gradient');
     expect(waveStyle.borderRadius).toBe('50%');
     expect(Number(waveStyle.opacity)).toBeGreaterThan(0);
-    // 进入动画结束后光斑放大到位并保持。
+    // 进入动画结束后光斑放大到位并保持，范围扩展至覆盖整个宿主表面。
     expect(waveStyle.scale).toBe('1');
     expect(waveStyle.translate).toBe('none');
+    expect(Number.parseFloat(waveStyle.width)).toBeCloseTo(expectedRadius * 2, 0);
 
     await page.mouse.up();
     await expect.poll(async () => countWaves(page, 'ripple-glow-host')).toBe(0);
@@ -201,14 +178,18 @@ test.describe('v-ripple 涟漪', () => {
         waveOpacity: getComputedStyle(wave).opacity,
         firstBorderWidth: first.borderTopWidth,
         firstBorderRadius: first.borderRadius,
+        firstWidth: first.width,
       };
     });
+
+    const expectedRadius = Math.hypot(box.width * 0.8, box.height * 0.5) + 10;
 
     expect(rings.childCount).toBe(2);
     // 波纹层必须真实可见，防止被基类样式的 opacity: 0 整体压住。
     expect(Number(rings.waveOpacity)).toBeGreaterThan(0);
     expect(rings.firstBorderWidth).toBe('2px');
     expect(rings.firstBorderRadius).toBe('50%');
+    expect(Number.parseFloat(rings.firstWidth)).toBeCloseTo(expectedRadius * 2, 0);
 
     // 不释放指针，瞬时变体也应在播放结束后自行移除。
     await expect.poll(async () => countWaves(page, 'ripple-rings-host'), { timeout: 3000 }).toBe(0);
@@ -237,13 +218,17 @@ test.describe('v-ripple 涟漪', () => {
         waveOpacity: getComputedStyle(wave).opacity,
         firstRotate: getComputedStyle(wave.firstElementChild).rotate,
         firstBorderRadius: getComputedStyle(wave.firstElementChild).borderRadius,
+        firstHeight: getComputedStyle(wave.firstElementChild).height,
       };
     });
+
+    const expectedRadius = Math.hypot(box.width * 0.8, box.height * 0.5) + 10;
 
     expect(burst.childCount).toBe(8);
     expect(Number(burst.waveOpacity)).toBeGreaterThan(0);
     expect(burst.firstRotate).toBe('22.5deg');
     expect(burst.firstBorderRadius).toBe('2px');
+    expect(Number.parseFloat(burst.firstHeight)).toBeCloseTo(expectedRadius, 0);
 
     // 播放中途释放指针不应让节点残留。
     await page.waitForTimeout(150);
