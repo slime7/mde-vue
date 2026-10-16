@@ -539,13 +539,16 @@ defineExpose({
     z-index: 1;
     display: flex;
     box-sizing: border-box;
-    block-size: 100%;
-    min-block-size: 100%;
+    min-block-size: 0;
     flex-direction: column;
     align-items: stretch;
     color: var(--mat-navigation-rail-content-color);
     background: var(--mat-navigation-rail-current-container-color);
     transition: inset-block var(--mat-sys-motion-spring-default-spatial, .3s ease), inset-inline var(--mat-sys-motion-spring-default-spatial, .3s ease), inline-size var(--mat-sys-motion-spring-default-spatial, .3s ease), block-size var(--mat-sys-motion-spring-default-spatial, .3s ease), border-radius var(--mat-sys-motion-spring-default-spatial, .3s ease);
+  }
+
+  .mat-navigation-rail.mat-aside--mode-flow {
+    block-size: 100%;
   }
 
   .mat-navigation-rail--explicit-container-color {
@@ -612,7 +615,7 @@ defineExpose({
   .mat-navigation-rail__scroll-area {
     flex: 1 1 auto;
     inline-size: 100%;
-    block-size: 100%;
+    min-block-size: 0;
   }
 
   .mat-navigation-rail__layout {

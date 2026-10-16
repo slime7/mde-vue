@@ -904,4 +904,26 @@ describe('MatNavigationRail', () => {
 
     wrapper.unmount();
   });
+
+  it('在不同定位模式下正确应用模式类名，并且 flow 模式具备 mode-flow 特征', () => {
+    const flowWrapper = mount(MatNavigationRail, {
+      props: { mode: 'flow' },
+      slots: { default: navigationItems },
+    });
+    expect(flowWrapper.get('nav').classes()).toContain('mat-aside--mode-flow');
+
+    const fixedWrapper = mount(MatNavigationRail, {
+      props: { mode: 'fixed' },
+      slots: { default: navigationItems },
+    });
+    expect(fixedWrapper.get('nav').classes()).toContain('mat-aside--mode-fixed');
+    expect(fixedWrapper.get('nav').classes()).not.toContain('mat-aside--mode-flow');
+
+    const dockedWrapper = mount(MatNavigationRail, {
+      props: { mode: 'docked' },
+      slots: { default: navigationItems },
+    });
+    expect(dockedWrapper.get('nav').classes()).toContain('mat-aside--mode-docked');
+    expect(dockedWrapper.get('nav').classes()).not.toContain('mat-aside--mode-flow');
+  });
 });
