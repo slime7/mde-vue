@@ -519,7 +519,6 @@
     --mat-tooltip-rich-container-elevation: var(--mat-sys-elevation-level2);
 
     /* Toolbar component tokens */
-    --mat-toolbar-container-height: 64px;
     --mat-toolbar-container-padding: 8px;
     --mat-toolbar-content-gap: 4px;
     --mat-toolbar-fab-gap: 8px;

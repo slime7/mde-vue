@@ -656,7 +656,6 @@ function warnForInvalidAttach() {
     flex: 0 0 auto;
     align-items: center;
     box-sizing: border-box;
-    min-block-size: var(--mat-toolbar-container-height);
     padding: var(--mat-toolbar-container-padding);
     color: inherit;
     background: var(--mat-toolbar-container-color);
