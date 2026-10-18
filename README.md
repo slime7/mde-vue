@@ -14,6 +14,18 @@
 - Vue 3.5+
 - 目标环境：Electron 或其他搭载现代化 Chromium/现代内核的客户端与浏览器环境
 
+### 最低运行环境
+
+组件库直接使用尚未进入 Baseline 的 CSS 特性，运行时最低需要 **Chrome 135**，对应 **Electron 36**（首个搭载 Chromium 136 的稳定版本）；不提供旧内核兼容层。
+
+决定这一下限的三个特性：
+
+| 特性 | 最低 Chrome | 用途 |
+| --- | --- | --- |
+| `clip-path: shape()` | 135 | `MatShape` 的自由形状轮廓与形状间过渡 |
+| `interpolate-size: allow-keywords` | 129 | 折叠与展开时长度与 `auto` 之间的高度、宽度过渡 |
+| `position-area` 逻辑方位值 | 129 | 菜单与停靠容器的锚点定位，配合 `position-try-fallbacks`（128）翻转回退 |
+
 ## 安装
 
 可以通过 GitHub 仓库地址直接安装，建议使用固定提交（Commit SHA）或标签（Tag）锁定版本：

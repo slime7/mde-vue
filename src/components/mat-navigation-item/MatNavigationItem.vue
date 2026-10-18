@@ -443,20 +443,23 @@ function handleClick(event) {
   .mat-navigation-item__label-wrap,
   .mat-navigation-rail-item__label-wrap,
   .mat-navigation-bar-item__label-wrap {
-    display: grid;
+    interpolate-size: allow-keywords;
+    display: block;
     min-inline-size: 0;
-    grid-template-columns: 0fr;
-    transition: grid-template-columns var(--mat-sys-motion-spring-default-effects);
+    overflow: clip;
+    inline-size: 0;
+    transition: inline-size var(--mat-sys-motion-spring-default-effects);
   }
 
   .mat-navigation-item--expanded .mat-navigation-item__label-wrap,
   .mat-navigation-rail-item--expanded .mat-navigation-rail-item__label-wrap {
-    grid-template-columns: 1fr;
+    inline-size: auto;
   }
 
   .mat-navigation-item__label-wrap > .mat-navigation-item__label,
   .mat-navigation-rail-item__label-wrap > .mat-navigation-rail-item__label,
   .mat-navigation-bar-item__label-wrap > .mat-navigation-bar-item__label {
+    display: block;
     min-inline-size: 0;
     overflow: hidden;
     opacity: 0;

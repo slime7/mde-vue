@@ -141,20 +141,22 @@ const groupStyle = computed(() => {
   }
 
   .mat-navigation-group__content {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows var(--mat-sys-motion-spring-default-spatial);
+    interpolate-size: allow-keywords;
+    display: block;
+    min-block-size: 0;
+    overflow: clip;
+    block-size: 0;
+    transition: block-size var(--mat-sys-motion-spring-default-spatial);
   }
 
   .mat-navigation-group--expanded > .mat-navigation-group__content {
-    grid-template-rows: 1fr;
+    block-size: auto;
   }
 
   .mat-navigation-group__items {
     display: flex;
     flex-direction: column;
     min-inline-size: 0;
-    overflow: hidden;
     gap: var(--mat-navigation-rail-item-space, 4px);
     padding-inline-start: var(--mat-navigation-group-indent, 16px);
   }

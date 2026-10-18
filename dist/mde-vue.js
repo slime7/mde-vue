@@ -15588,7 +15588,7 @@ var qd = { class: "mat-snackbar__text" }, Jd = {
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-93081cfe"]]), bf = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-dbe8e398"]]), bf = /*@__PURE__*/ Object.assign({
 	name: "MatNavigationRailItem",
 	inheritAttrs: !1
 }, {
@@ -16277,7 +16277,7 @@ var qd = { class: "mat-snackbar__text" }, Jd = {
 			"aria-hidden": o.value ? void 0 : "true"
 		}, [c("div", kf, [P(e.$slots, "default", {}, void 0, !0)])], 8, Of)], 16));
 	}
-}), [["__scopeId", "data-v-260c72e4"]]), jf = /* @__PURE__ */ new WeakMap();
+}), [["__scopeId", "data-v-687ee2f6"]]), jf = /* @__PURE__ */ new WeakMap();
 function Mf(e) {
 	return typeof e == "function" ? {
 		handler: e,
