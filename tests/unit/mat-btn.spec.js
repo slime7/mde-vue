@@ -484,7 +484,7 @@ describe('MatBtn', () => {
     expect(plain.findAll('[aria-hidden="true"]')).toHaveLength(1);
   });
 
-  it('loading 时使用原生禁用语义阻止点击并声明 aria-busy', () => {
+  it('loading 时保留点击交互并声明 aria-busy', () => {
     const handleClick = vi.fn();
     const wrapper = mount(MatBtn, {
       props: {
@@ -498,9 +498,50 @@ describe('MatBtn', () => {
       },
     });
 
-    expect(wrapper.attributes('disabled')).toBeDefined();
+    expect(wrapper.attributes('disabled')).toBeUndefined();
     expect(wrapper.attributes('aria-busy')).toBe('true');
     expect(wrapper.text()).toBe('搜索插件');
+
+    wrapper.element.click();
+    expect(handleClick).toHaveBeenCalledOnce();
+  });
+
+  it('loading 时跳转按钮保留 href 并可点击', () => {
+    const handleClick = vi.fn((event) => event.preventDefault());
+    const wrapper = mount(MatBtn, {
+      props: {
+        href: 'https://example.com/stop',
+        loading: true,
+      },
+      slots: {
+        default: '停止加载',
+      },
+      attrs: {
+        onClick: handleClick,
+      },
+    });
+
+    expect(wrapper.element.tagName).toBe('A');
+    expect(wrapper.attributes('href')).toBe('https://example.com/stop');
+    expect(wrapper.attributes('aria-disabled')).toBeUndefined();
+
+    wrapper.element.click();
+    expect(handleClick).toHaveBeenCalledOnce();
+  });
+
+  it('显式 disabled 在 loading 时仍阻止点击', () => {
+    const handleClick = vi.fn();
+    const wrapper = mount(MatBtn, {
+      props: {
+        disabled: true,
+        loading: true,
+      },
+      attrs: {
+        onClick: handleClick,
+      },
+    });
+
+    expect(wrapper.attributes('disabled')).toBeDefined();
 
     wrapper.element.click();
     expect(handleClick).not.toHaveBeenCalled();

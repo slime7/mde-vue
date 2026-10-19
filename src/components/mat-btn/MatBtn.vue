@@ -199,7 +199,7 @@ const props = defineProps({
   },
   /**
    * 显示加载状态：渲染形状变形加载指示器（复用 Loading 组件，或 `loading` Slot 内容）
-   * 替换前缀图标，使用原生禁用语义阻止点击并声明 `aria-busy`，
+   * 替换前缀图标并声明 `aria-busy`，加载期间保持可点击，
    * 同时锁定当前最小宽度避免内容宽度抖动。
    *
    * @type {boolean}
@@ -281,7 +281,6 @@ const iconFill = computed(() => {
   return isSelected.value ? 1 : 0;
 });
 const isLoading = computed(() => propsWithDefaults.loading);
-const buttonDisabled = computed(() => effectiveDisabled.value || isLoading.value);
 const loadingMinInlineSize = ref(null);
 watch(isLoading, (loading) => {
   if (!loading) {
@@ -407,7 +406,6 @@ watchEffect(() => {
         'mat-btn--selected': isSelected,
         'mat-btn--split-leading': split?.role === 'leading',
         'mat-btn--no-morph': !propsWithDefaults.morph,
-        'mat-btn--loading': isLoading,
       },
     ]"
     :style="[buttonColorStyle, loadingMinInlineSize ? { 'min-inline-size': loadingMinInlineSize } : null]"
@@ -418,8 +416,7 @@ watchEffect(() => {
     :aria-haspopup="split?.role === 'trailing' ? 'menu' : undefined"
     :aria-pressed="isToggle ? isSelected : undefined"
     :block="propsWithDefaults.block"
-    :disabled="buttonDisabled"
-    :loading="isLoading"
+    :disabled="effectiveDisabled"
     :title="isIcon ? undefined : $attrs.title"
     :type="propsWithDefaults.type"
     :use-cursor="useCursor"
@@ -834,7 +831,7 @@ watchEffect(() => {
     }
   }
 
-  .mat-btn:disabled:not(.mat-btn--loading) {
+  .mat-btn:disabled {
     --mat-button-container-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-container-opacity) * 100%), transparent);
     --mat-btn-label-text-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-content-opacity) * 100%), transparent);
     --mat-btn-icon-color: var(--mat-btn-label-text-color);
@@ -843,13 +840,13 @@ watchEffect(() => {
     --mat-button-border-width: 0;
   }
 
-  .mat-btn--outlined:disabled:not(.mat-btn--loading) {
+  .mat-btn--outlined:disabled {
     --mat-button-container-color: transparent;
     --mat-button-border-color: color-mix(in srgb, var(--mat-sys-color-on-surface) calc(var(--mat-sys-state-disabled-container-opacity) * 100%), transparent);
   }
 
-  .mat-btn--text:disabled:not(.mat-btn--loading),
-  .mat-btn--standard:disabled:not(.mat-btn--loading) {
+  .mat-btn--text:disabled,
+  .mat-btn--standard:disabled {
     --mat-button-container-color: transparent;
   }
 
