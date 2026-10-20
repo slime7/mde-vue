@@ -1,6 +1,7 @@
 import AppRootScene from './AppRootScene.vue';
 import BottomSheetScene from './BottomSheetScene.vue';
 import CarouselScene from './CarouselScene.vue';
+import ChatMinimapScene from './ChatMinimapScene.vue';
 import DialogScene from './DialogScene.vue';
 import GridListScene from './GridListScene.vue';
 import ListSwipeScene from './ListSwipeScene.vue';
@@ -19,6 +20,7 @@ export const scenes = {
   'app-root': AppRootScene,
   'bottom-sheet': BottomSheetScene,
   carousel: CarouselScene,
+  'chat-minimap': ChatMinimapScene,
   dialog: DialogScene,
   'grid-list': GridListScene,
   'list-swipe': ListSwipeScene,

@@ -1226,6 +1226,39 @@ export interface MatDynamicTextProps {
 export type MatDynamicTextComponent = DefineComponent<MatDynamicTextProps, {}, {}, {}, {}, {}, {}, {}>;
 export declare const MatDynamicText: MatDynamicTextComponent;
 
+export interface MatChatMinimapProps {
+  /**
+  * 从上到下展示的条目；每个条目渲染一条短横线。
+  *
+  * `tooltip` 按原样透传给内部 MatTooltip，`id` 用作稳定 key。
+  *
+  * @type {Array<{ id?: string | number, tooltip?: object }>}
+  * @default []
+  */
+  items?: Array<{ id?: string | number, tooltip?: object }>;
+  /**
+  * 短横线的锚定方位。
+  *
+  * `left` 表示缩略图位于左侧，短横线左对齐并向右增长；`right` 表示位于右侧，右对齐并向左增长。
+  *
+  * @type {'left' | 'right'}
+  * @default 'left'
+  */
+  direction?: 'left' | 'right';
+}
+
+export interface MatChatMinimapEmits {
+  /**
+  * 点击条目时发出条目、索引和原始 MouseEvent。
+  *
+  * @type {{ item: { id?: string | number, tooltip?: object }, index: number, originalEvent: MouseEvent }}
+  */
+  "click": (payload: { item: { id?: string | number, tooltip?: object }, index: number, originalEvent: MouseEvent }) => unknown;
+}
+
+export type MatChatMinimapComponent = DefineComponent<MatChatMinimapProps, {}, {}, {}, {}, {}, {}, MatChatMinimapEmits>;
+export declare const MatChatMinimap: MatChatMinimapComponent;
+
 export interface MatSplitBtnProps {
   /**
   * 使用块级 flex 组根，在普通文档流中铺满父元素。
@@ -5266,6 +5299,8 @@ declare module 'vue' {
     'mat-dynamic-text': typeof MatDynamicText;
     MdeDynamicText: typeof MatDynamicText;
     'mde-dynamic-text': typeof MatDynamicText;
+    MatChatMinimap: typeof MatChatMinimap;
+    'mat-chat-minimap': typeof MatChatMinimap;
     MatSplitBtn: typeof MatSplitBtn;
     'mat-split-btn': typeof MatSplitBtn;
     MatCard: typeof MatCard;

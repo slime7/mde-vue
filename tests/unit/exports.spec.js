@@ -26,6 +26,7 @@ import {
   MatCardHeadline as RootMatCardHeadline,
   MatCardMedia as RootMatCardMedia,
   MatCardSubhead as RootMatCardSubhead,
+  MatChatMinimap as RootMatChatMinimap,
   MatCheckbox as RootMatCheckbox,
   MatChip as RootMatChip,
   MatChipSet as RootMatChipSet,
@@ -109,6 +110,7 @@ const globalComponents = [
   ['MatCardHeadline', 'mat-card-headline', RootMatCardHeadline],
   ['MatCardSubhead', 'mat-card-subhead', RootMatCardSubhead],
   ['MatCardMedia', 'mat-card-media', RootMatCardMedia],
+  ['MatChatMinimap', 'mat-chat-minimap', RootMatChatMinimap],
   ['MatSimpleExpansion', 'mat-simple-expansion', RootMatSimpleExpansion],
   ['MatExpansion', 'mat-expansion', RootMatExpansion],
   ['MatExpansionPanel', 'mat-expansion-panel', RootMatExpansionPanel],
@@ -254,6 +256,7 @@ describe('公共组件导出', () => {
     expect(app.component('mat-loading')).toBe(RootMatLoading);
     expect(app.component('mat-progress')).toBe(RootMatProgress);
     expect(app.component('mat-tooltip')).toBe(RootMatTooltip);
+    expect(app.component('mat-chat-minimap')).toBe(RootMatChatMinimap);
     expect(app.component('mat-scroll-area')).toBe(RootMatScrollArea);
     expect(app.component('mat-toolbar')).toBe(RootMatToolbar);
     expect(app.component('mat-panes')).toBe(RootMatPanes);
@@ -325,6 +328,7 @@ describe('公共组件导出', () => {
     expect(declaration).toContain('"reach-start": (payload: { distance: number, target: HTMLElement }) => unknown;');
     expect(declaration).toContain('getScroller(): HTMLElement | null;');
     expect(declaration).toContain('scrollTo(options: ScrollToOptions): void;');
+    expect(declaration).toContain('"click": (payload: { item: { id?: string | number, tooltip?: object }, index: number, originalEvent: MouseEvent }) => unknown;');
     expect(declaration).toContain('getInput(): HTMLInputElement | HTMLTextAreaElement | null;');
   });
 

@@ -140,6 +140,7 @@ import {
   MatCardHeadline,
   MatCardMedia,
   MatCardSubhead,
+  MatChatMinimap,
   MatCheckbox,
   MatChip,
   MatChipSet,
@@ -183,7 +184,7 @@ import {
 } from 'mde-vue';
 ```
 
-局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatAppRoot>`、`<MatAvatar>`、`<MatAppBar>`、`<MatSearch>`、`<MatBadge>`、`<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatShape>`、`<MatText>`、`<MatCard>`、`<MatChip>`、`<MatChipSet>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatScrollArea>`、`<MatSpacer>`、`<MatTableWrapper>`、`<MatLoading>`、`<MatProgress>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection`、`StateLayer` 与 `Ripple` 指令在 `<script setup>` 中建议分别别名为 `vIntersection`、`vStateLayer` 与 `vRipple`，模板中使用 `v-intersection`、`v-state-layer` 与 `v-ripple`；`useMatApp()` 只能在 `<MatAppRoot>` 的后代组件中调用。
+局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatAppRoot>`、`<MatAvatar>`、`<MatAppBar>`、`<MatSearch>`、`<MatBadge>`、`<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatShape>`、`<MatText>`、`<MatCard>`、`<MatChatMinimap>`、`<MatChip>`、`<MatChipSet>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatScrollArea>`、`<MatSpacer>`、`<MatTableWrapper>`、`<MatLoading>`、`<MatProgress>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection`、`StateLayer` 与 `Ripple` 指令在 `<script setup>` 中建议分别别名为 `vIntersection`、`vStateLayer` 与 `vRipple`，模板中使用 `v-intersection`、`v-state-layer` 与 `v-ripple`；`useMatApp()` 只能在 `<MatAppRoot>` 的后代组件中调用。
 
 ## 页面基础尺寸
 
