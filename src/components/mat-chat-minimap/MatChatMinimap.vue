@@ -1,7 +1,8 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import MatTooltip from '../mat-tooltip/MatTooltip.vue';
 import { useMatProps } from '../use-mat-props';
+import { isValidCssLength, toCssLength } from '../value-utils';
 
 const PROXIMITY_RANGE = 3;
 const PROXIMITY_SIGMA = 1.7;
@@ -25,6 +26,51 @@ const props = defineProps({
     default: () => [],
   },
   /**
+   * 短横线的静止宽度，也是悬停展开宽度的二分之一。
+   *
+   * 数字与纯数字字符串按 px 处理，其他字符串须为合法正向 CSS 宽度。
+   *
+   * @type {number | string}
+   * @default 16
+   */
+  itemWidth: {
+    type: [Number, String],
+    default: 16,
+    validator: (value) => isValidCssLength(value, {
+      property: 'inline-size',
+      positive: true,
+    }),
+  },
+  /**
+   * 短横线的厚度。
+   *
+   * 数字与纯数字字符串按 px 处理，其他字符串须为合法正向 CSS 高度。
+   *
+   * @type {number | string}
+   * @default 2
+   */
+  itemHeight: {
+    type: [Number, String],
+    default: 2,
+    validator: (value) => isValidCssLength(value, {
+      property: 'block-size',
+      positive: true,
+    }),
+  },
+  /**
+   * 相邻短横线之间的间距；悬停范围在短横线上下各扩展该间距的一半。
+   *
+   * 数字与纯数字字符串按 px 处理，允许 0，其他字符串须为合法 CSS 间距。
+   *
+   * @type {number | string}
+   * @default 8
+   */
+  itemGap: {
+    type: [Number, String],
+    default: 8,
+    validator: (value) => isValidCssLength(value, { property: 'gap' }),
+  },
+  /**
    * 短横线的锚定方位。
    *
    * `left` 表示缩略图位于左侧，短横线左对齐并向右增长；`right` 表示位于右侧，右对齐并向左增长。
@@ -39,6 +85,22 @@ const props = defineProps({
   },
 });
 const propsWithDefaults = useMatProps('chatMinimap', props);
+const rootStyle = computed(() => ({
+  '--_mat-chat-minimap-item-width': toCssLength(propsWithDefaults.itemWidth, {
+    property: 'inline-size',
+    positive: true,
+    fallback: '16px',
+  }),
+  '--_mat-chat-minimap-item-height': toCssLength(propsWithDefaults.itemHeight, {
+    property: 'block-size',
+    positive: true,
+    fallback: '2px',
+  }),
+  '--_mat-chat-minimap-item-gap': toCssLength(propsWithDefaults.itemGap, {
+    property: 'gap',
+    fallback: '8px',
+  }),
+}));
 const emit = defineEmits({
   /**
    * 点击条目时发出条目、索引和原始 MouseEvent。
@@ -149,6 +211,7 @@ function clearActive() {
     v-bind="$attrs"
     class="mat-chat-minimap"
     :class="`mat-chat-minimap--${propsWithDefaults.direction}`"
+    :style="rootStyle"
     @mouseleave="clearActive"
   >
     <MatTooltip
@@ -183,8 +246,7 @@ function clearActive() {
     flex: 0 0 auto;
     flex-direction: column;
     box-sizing: border-box;
-    inline-size: var(--mat-chat-minimap-bar-expanded-width);
-    gap: var(--mat-chat-minimap-item-gap);
+    inline-size: calc(var(--_mat-chat-minimap-item-width, 16px) * 2);
   }
 
   .mat-chat-minimap__item {
@@ -192,8 +254,7 @@ function clearActive() {
     box-sizing: border-box;
     align-items: center;
     inline-size: 100%;
-    block-size: var(--mat-chat-minimap-item-height);
-    padding: 0;
+    padding: calc(var(--_mat-chat-minimap-item-gap, 8px) / 2) 0;
     margin: 0;
     color: inherit;
     appearance: none;
@@ -222,11 +283,10 @@ function clearActive() {
     flex: 0 0 auto;
     box-sizing: border-box;
     inline-size: calc(
-      var(--mat-chat-minimap-bar-width)
-      + (var(--mat-chat-minimap-bar-expanded-width) - var(--mat-chat-minimap-bar-width))
-      * var(--_mat-chat-minimap-width-scale, 0)
+      var(--_mat-chat-minimap-item-width, 16px)
+      * (1 + var(--_mat-chat-minimap-width-scale, 0))
     );
-    block-size: var(--mat-chat-minimap-bar-height);
+    block-size: var(--_mat-chat-minimap-item-height, 2px);
     color: var(--mat-chat-minimap-bar-color);
     background: currentcolor;
     border-radius: var(--mat-sys-shape-corner-full);

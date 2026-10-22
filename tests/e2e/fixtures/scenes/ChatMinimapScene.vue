@@ -7,6 +7,7 @@ const items = Array.from({ length: 9 }, (_, index) => ({
   },
 }));
 const rightItems = items.slice(0, 7);
+const sizedItems = items.slice(0, 6);
 </script>
 
 <template>
@@ -29,6 +30,17 @@ const rightItems = items.slice(0, 7);
           data-testid="right-minimap"
           direction="right"
           :items="rightItems"
+        />
+      </div>
+
+      <div class="sample">
+        <span class="sample__label">自定义尺寸</span>
+        <mat-chat-minimap
+          data-testid="sized-minimap"
+          :items="sizedItems"
+          :item-width="24"
+          :item-height="4"
+          :item-gap="12"
         />
       </div>
     </div>

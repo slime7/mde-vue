@@ -1237,6 +1237,33 @@ export interface MatChatMinimapProps {
   */
   items?: Array<{ id?: string | number, tooltip?: object }>;
   /**
+  * 短横线的静止宽度，也是悬停展开宽度的二分之一。
+  *
+  * 数字与纯数字字符串按 px 处理，其他字符串须为合法正向 CSS 宽度。
+  *
+  * @type {number | string}
+  * @default 16
+  */
+  itemWidth?: number | string;
+  /**
+  * 短横线的厚度。
+  *
+  * 数字与纯数字字符串按 px 处理，其他字符串须为合法正向 CSS 高度。
+  *
+  * @type {number | string}
+  * @default 2
+  */
+  itemHeight?: number | string;
+  /**
+  * 相邻短横线之间的间距；悬停范围在短横线上下各扩展该间距的一半。
+  *
+  * 数字与纯数字字符串按 px 处理，允许 0，其他字符串须为合法 CSS 间距。
+  *
+  * @type {number | string}
+  * @default 8
+  */
+  itemGap?: number | string;
+  /**
   * 短横线的锚定方位。
   *
   * `left` 表示缩略图位于左侧，短横线左对齐并向右增长；`right` 表示位于右侧，右对齐并向左增长。

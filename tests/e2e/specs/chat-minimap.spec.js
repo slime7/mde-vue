@@ -134,4 +134,68 @@ test.describe('MatChatMinimap 悬停梯度与增长方向', () => {
       expect(box.x + box.width).toBeCloseTo(boxesAfter[0].x + boxesAfter[0].width, 0);
     });
   });
+
+  test('item-width、item-height 与 item-gap 控制短横线尺寸和整行高度', async ({ page }) => {
+    await openScene(page, 'chat-minimap');
+
+    const minimap = page.getByTestId('sized-minimap');
+    const itemRows = minimap.locator(ITEM_SELECTOR);
+    const bars = minimap.locator(BAR_SELECTOR);
+
+    await expect(bars).toHaveCount(6);
+
+    const rootBefore = await minimap.boundingBox();
+    const barsBefore = await readBoxes(bars);
+    const rowsBefore = await readBoxes(itemRows);
+
+    expect(rootBefore.width).toBeCloseTo(48, 0);
+    expect(rootBefore.height).toBeCloseTo(96, 0);
+    barsBefore.forEach((box) => {
+      expect(box.width).toBeCloseTo(24, 0);
+      expect(box.height).toBeCloseTo(4, 0);
+    });
+
+    barsBefore.slice(1).forEach((box, index) => {
+      expect(box.y - barsBefore[index].y).toBeCloseTo(16, 0);
+    });
+
+    rowsBefore.forEach((row) => {
+      expect(row.height).toBeCloseTo(16, 0);
+    });
+    rowsBefore.slice(1).forEach((row, index) => {
+      expect(row.y).toBeCloseTo(rowsBefore[index].y + rowsBefore[index].height, 0);
+    });
+    expect(rowsBefore[0].y).toBeCloseTo(rootBefore.y, 0);
+    expect(rowsBefore[rowsBefore.length - 1].y + rowsBefore[rowsBefore.length - 1].height)
+      .toBeCloseTo(rootBefore.y + rootBefore.height, 0);
+
+    await itemRows.nth(2).hover();
+
+    await expect.poll(async () => {
+      const box = await bars.nth(2).boundingBox();
+
+      return box?.width ?? 0;
+    }).toBeGreaterThanOrEqual(rootBefore.width - 0.5);
+  });
+
+  test('悬停范围覆盖整行与上下半分间距，移动到短横线外侧不会关闭提示', async ({ page }) => {
+    await openScene(page, 'chat-minimap');
+
+    const minimap = page.getByTestId('left-minimap');
+    const itemRows = minimap.locator(ITEM_SELECTOR);
+    const bars = minimap.locator(BAR_SELECTOR);
+
+    const row = await itemRows.nth(2).boundingBox();
+    const bar = await bars.nth(2).boundingBox();
+
+    await page.mouse.move(row.x + row.width - 2, bar.y + bar.height + 3);
+
+    const tooltip = page.getByRole('tooltip').filter({
+      hasText: '第 3 条消息的富文本摘要。',
+    });
+
+    await expect(tooltip).toBeVisible();
+    await page.waitForTimeout(700);
+    await expect(tooltip).toBeVisible();
+  });
 });

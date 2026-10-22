@@ -391,11 +391,6 @@
     --mat-table-wrapper-container-shape: 24px;
 
     /* Chat minimap component tokens */
-    --mat-chat-minimap-bar-width: 16px;
-    --mat-chat-minimap-bar-expanded-width: 32px;
-    --mat-chat-minimap-bar-height: 2px;
-    --mat-chat-minimap-item-height: 6px;
-    --mat-chat-minimap-item-gap: 4px;
     --mat-chat-minimap-bar-color: var(--mat-sys-color-on-surface-variant);
     --mat-chat-minimap-bar-active-color: var(--mat-sys-color-on-surface);
 

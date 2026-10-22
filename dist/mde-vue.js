@@ -6828,6 +6828,27 @@ var Ho = /*@__PURE__*/ Object.assign({
 			type: Array,
 			default: () => []
 		},
+		itemWidth: {
+			type: [Number, String],
+			default: 16,
+			validator: (e) => Qn(e, {
+				property: "inline-size",
+				positive: !0
+			})
+		},
+		itemHeight: {
+			type: [Number, String],
+			default: 2,
+			validator: (e) => Qn(e, {
+				property: "block-size",
+				positive: !0
+			})
+		},
+		itemGap: {
+			type: [Number, String],
+			default: 8,
+			validator: (e) => Qn(e, { property: "gap" })
+		},
 		direction: {
 			type: String,
 			default: "left",
@@ -6836,19 +6857,34 @@ var Ho = /*@__PURE__*/ Object.assign({
 	},
 	emits: { click: (e) => e?.originalEvent instanceof MouseEvent },
 	setup(e, { emit: n }) {
-		let r = $("chatMinimap", e), i = n, o = j(null);
+		let r = $("chatMinimap", e), o = i(() => ({
+			"--_mat-chat-minimap-item-width": er(r.itemWidth, {
+				property: "inline-size",
+				positive: !0,
+				fallback: "16px"
+			}),
+			"--_mat-chat-minimap-item-height": er(r.itemHeight, {
+				property: "block-size",
+				positive: !0,
+				fallback: "2px"
+			}),
+			"--_mat-chat-minimap-item-gap": er(r.itemGap, {
+				property: "gap",
+				fallback: "8px"
+			})
+		})), l = n, u = j(null);
 		V(() => r.items.length, () => {
-			o.value = null;
+			u.value = null;
 		});
-		function l(e) {
-			if (o.value === null) return 0;
-			let t = Math.abs(e - o.value);
+		function d(e) {
+			if (u.value === null) return 0;
+			let t = Math.abs(e - u.value);
 			return t > es ? 0 : Math.exp(-(t * t) / (2 * ts * ts));
 		}
-		function u(e) {
-			return { "--_mat-chat-minimap-width-scale": l(e) };
+		function f(e) {
+			return { "--_mat-chat-minimap-width-scale": d(e) };
 		}
-		function d(e) {
+		function p(e) {
 			let t = e && typeof e.tooltip == "object" && e.tooltip !== null ? e.tooltip : {};
 			return {
 				rich: !0,
@@ -6856,42 +6892,43 @@ var Ho = /*@__PURE__*/ Object.assign({
 				...t
 			};
 		}
-		function f(e) {
+		function m(e) {
 			let t = e && typeof e.tooltip == "object" && e.tooltip !== null ? e.tooltip : {}, n = typeof t.subhead == "string" && t.subhead.length > 0 ? t.subhead : void 0, r = typeof t.content == "string" && t.content.length > 0 ? t.content : void 0;
 			return n ?? r;
 		}
-		function p(e, t, n) {
-			i("click", {
+		function h(e, t, n) {
+			l("click", {
 				item: e,
 				index: t,
 				originalEvent: n
 			});
 		}
-		function m(e) {
-			o.value = e;
+		function g(e) {
+			u.value = e;
 		}
-		function h() {
-			o.value = null;
+		function v() {
+			u.value = null;
 		}
 		return (e, n) => (D(), s("div", _(e.$attrs, {
 			class: ["mat-chat-minimap", `mat-chat-minimap--${z(r).direction}`],
-			onMouseleave: h
-		}), [(D(!0), s(t, null, N(z(r).items, (e, t) => (D(), a(ci, _({ key: e?.id ?? t }, { ref_for: !0 }, d(e)), {
+			style: o.value,
+			onMouseleave: v
+		}), [(D(!0), s(t, null, N(z(r).items, (e, t) => (D(), a(ci, _({ key: e?.id ?? t }, { ref_for: !0 }, p(e)), {
 			activator: U(() => [c("button", {
 				type: "button",
 				class: "mat-chat-minimap__item",
-				"aria-label": f(e),
-				onClick: (n) => p(e, t, n),
-				onMouseenter: (e) => m(t)
+				"aria-label": m(e),
+				onClick: (n) => h(e, t, n),
+				onMouseenter: (e) => g(t)
 			}, [c("span", {
-				class: y(["mat-chat-minimap__bar", { "mat-chat-minimap__bar--active": o.value === t }]),
-				style: x(u(t)),
+				class: y(["mat-chat-minimap__bar", { "mat-chat-minimap__bar--active": u.value === t }]),
+				style: x(f(t)),
 				"aria-hidden": "true"
 			}, null, 6)], 40, $o)]),
 			_: 2
 		}, 1040))), 128))], 16));
 	}
-}), [["__scopeId", "data-v-728c4111"]]), rs = /*@__PURE__*/ Object.assign({ name: "MatSplitSegment" }, {
+}), [["__scopeId", "data-v-e95841de"]]), rs = /*@__PURE__*/ Object.assign({ name: "MatSplitSegment" }, {
 	__name: "MatSplitSegment",
 	props: { role: {
 		type: String,
