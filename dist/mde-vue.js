@@ -2365,27 +2365,19 @@ var yi = {
 		return e instanceof MouseEvent;
 	} },
 	setup(e, { emit: n }) {
-		let r = $("btn", e), c = n, l = ee(), f = te(), p = j(null), m = B(), { colorStyle: h, effectiveColor: v, effectiveDisabled: y, effectiveSelected: b, effectiveShape: x, effectiveSize: S, effectiveToggle: C, effectiveVariant: w, handleClick: E, hasExplicitColor: O, split: k, useCursor: A } = di(r, c), M = i(() => Wt(v.value)), N = i(() => !M.value || w.value === "text"), F = i(() => N.value ? h.value : {}), I = i(() => N.value && O.value), L = i(() => C.value && w.value !== "text"), W = i(() => L.value && b.value), ne = i(() => r.icon === !0 || typeof r.icon == "string" && r.icon.trim().length > 0), G = i(() => r.fill === void 0 ? +!!W.value : r.fill), K = i(() => r.loading), q = j(null);
-		V(K, (e) => {
-			if (!e) {
-				q.value = null;
-				return;
-			}
-			let t = p.value?.$el ?? p.value, n = t instanceof HTMLElement ? t.offsetWidth : 0;
-			q.value = n > 0 ? `${n}px` : null;
-		});
-		function J(e) {
-			return e.flatMap((e) => typeof e == "string" || typeof e == "number" ? [String(e)] : g(e) ? e.type === t && Array.isArray(e.children) ? J(e.children) : typeof e.children == "string" || typeof e.children == "number" ? [String(e.children)] : Array.isArray(e.children) ? J(e.children) : [] : []).join("").trim();
+		let r = $("btn", e), c = n, l = ee(), f = te(), p = j(null), m = B(), { colorStyle: h, effectiveColor: v, effectiveDisabled: y, effectiveSelected: b, effectiveShape: x, effectiveSize: S, effectiveToggle: C, effectiveVariant: w, handleClick: E, hasExplicitColor: O, split: k, useCursor: A } = di(r, c), M = i(() => Wt(v.value)), N = i(() => !M.value || w.value === "text"), F = i(() => N.value ? h.value : {}), I = i(() => N.value && O.value), L = i(() => C.value && w.value !== "text"), V = i(() => L.value && b.value), W = i(() => r.icon === !0 || typeof r.icon == "string" && r.icon.trim().length > 0), ne = i(() => r.fill === void 0 ? +!!V.value : r.fill), G = i(() => r.loading);
+		function K(e) {
+			return e.flatMap((e) => typeof e == "string" || typeof e == "number" ? [String(e)] : g(e) ? e.type === t && Array.isArray(e.children) ? K(e.children) : typeof e.children == "string" || typeof e.children == "number" ? [String(e.children)] : Array.isArray(e.children) ? K(e.children) : [] : []).join("").trim();
 		}
-		let re = i(() => r.icon === !0 ? J(f.default?.() ?? []) : ""), Y = i(() => typeof r.icon == "string" ? r.icon.trim() : re.value), X = i(() => l["aria-label"] ?? r.label), Z = i(() => ne.value ? l.title ?? r.label : void 0), ie = i(() => !ne.value && (r.prefix !== void 0 || !!f.prefix)), ae = i(() => !ne.value && (r.suffix !== void 0 || !!f.suffix)), oe = i(() => W.value && !!f.selected), se = i(() => ({
+		let q = i(() => r.icon === !0 ? K(f.default?.() ?? []) : ""), J = i(() => typeof r.icon == "string" ? r.icon.trim() : q.value), re = i(() => l["aria-label"] ?? r.label), Y = i(() => W.value ? l.title ?? r.label : void 0), X = i(() => !W.value && (r.prefix !== void 0 || !!f.prefix)), Z = i(() => !W.value && (r.suffix !== void 0 || !!f.suffix)), ie = i(() => V.value && !!f.selected), ae = i(() => ({
 			"extra-small": 20,
-			small: ne.value ? 24 : 20,
+			small: W.value ? 24 : 20,
 			medium: 24,
 			large: 32,
 			"extra-large": 40
 		})[S.value]);
-		lr(i(() => K.value ? se.value : null));
-		let ce = i(() => {
+		lr(i(() => G.value ? ae.value : null));
+		let oe = i(() => {
 			let [e, t] = {
 				"extra-small": ["label", "large"],
 				small: ["label", "large"],
@@ -2396,9 +2388,9 @@ var yi = {
 			return vi(e, t, !0);
 		});
 		return T(() => {
-			r.icon === !0 && !re.value && console.warn("MatBtn: icon=true 必须在默认 Slot 提供非空 Material Symbols 文本");
+			r.icon === !0 && !q.value && console.warn("MatBtn: icon=true 必须在默认 Slot 提供非空 Material Symbols 文本");
 		}), H(() => {
-			r.toggle && r.variant === "text" && console.warn("MatBtn: text 形态不支持 toggle，当前按普通文本按钮处理"), M.value && w.value !== "text" && console.warn("MatBtn: on-* 内容色只支持 text 形态，当前按默认配色处理"), ne.value && (!X.value || X.value.trim().length === 0) && console.warn("MatBtn: 图标模式必须提供非空 label 或 aria-label");
+			r.toggle && r.variant === "text" && console.warn("MatBtn: text 形态不支持 toggle，当前按普通文本按钮处理"), M.value && w.value !== "text" && console.warn("MatBtn: on-* 内容色只支持 text 形态，当前按默认配色处理"), W.value && (!re.value || re.value.trim().length === 0) && console.warn("MatBtn: 图标模式必须提供非空 label 或 aria-label");
 		}), (e, n) => (D(), a(It, _({
 			ref_key: "buttonElement",
 			ref: p
@@ -2407,78 +2399,78 @@ var yi = {
 				`mat-btn--${z(w)}`,
 				`mat-btn--size-${z(S)}`,
 				`mat-btn--shape-${z(x)}`,
-				ce.value,
+				oe.value,
 				{
 					"mat-button--explicit-color": I.value,
-					"mat-btn--icon": ne.value,
-					[`mat-btn--width-${z(r).width}`]: ne.value,
+					"mat-btn--icon": W.value,
+					[`mat-btn--width-${z(r).width}`]: W.value,
 					"mat-btn--toggle": L.value,
-					"mat-btn--selected": W.value,
+					"mat-btn--selected": V.value,
 					"mat-btn--split-leading": z(k)?.role === "leading",
 					"mat-btn--no-morph": !z(r).morph
 				}
 			]],
-			style: [F.value, q.value ? { "min-inline-size": q.value } : null],
-			"aria-label": ne.value ? X.value : z(l)["aria-label"],
-			"aria-busy": K.value ? "true" : void 0,
+			style: F.value,
+			"aria-label": W.value ? re.value : z(l)["aria-label"],
+			"aria-busy": G.value ? "true" : void 0,
 			"aria-controls": z(k)?.role === "trailing" ? z(k).controls.value : void 0,
 			"aria-expanded": z(k)?.role === "trailing" ? z(k).expanded.value : void 0,
 			"aria-haspopup": z(k)?.role === "trailing" ? "menu" : void 0,
-			"aria-pressed": L.value ? W.value : void 0,
+			"aria-pressed": L.value ? V.value : void 0,
 			block: z(r).block,
 			disabled: z(y),
-			title: ne.value ? void 0 : z(l).title,
+			title: W.value ? void 0 : z(l).title,
 			type: z(r).type,
 			"use-cursor": z(A),
 			onClick: z(E)
 		}), {
 			default: U(() => [
-				ne.value ? (D(), s(t, { key: 0 }, [K.value ? P(e.$slots, "loading", { key: 0 }, () => [d(gr, {
+				W.value ? (D(), s(t, { key: 0 }, [G.value ? P(e.$slots, "loading", { key: 0 }, () => [d(gr, {
 					class: "mat-btn__loading",
 					"aria-hidden": "true"
 				})], !0) : (D(), a(Cn, {
 					key: 1,
 					as: "span",
 					class: "mat-btn__icon mat-btn__icon--only",
-					fill: G.value,
-					"optical-size": se.value,
+					fill: ne.value,
+					"optical-size": ae.value,
 					size: "var(--mat-btn-icon-size)",
 					"aria-hidden": "true"
 				}, {
-					default: U(() => [u(R(Y.value), 1)]),
+					default: U(() => [u(R(J.value), 1)]),
 					_: 1
 				}, 8, ["fill", "optical-size"]))], 64)) : o("", !0),
-				ne.value ? o("", !0) : (D(), s(t, { key: 1 }, [K.value ? P(e.$slots, "loading", { key: 0 }, () => [d(gr, {
+				W.value ? o("", !0) : (D(), s(t, { key: 1 }, [G.value ? P(e.$slots, "loading", { key: 0 }, () => [d(gr, {
 					class: "mat-btn__loading",
 					"aria-hidden": "true"
-				})], !0) : ie.value ? (D(), a(Cn, {
+				})], !0) : X.value ? (D(), a(Cn, {
 					key: 1,
 					as: "span",
 					class: "mat-btn__icon mat-btn__icon--prefix",
-					fill: G.value,
-					"optical-size": se.value,
+					fill: ne.value,
+					"optical-size": ae.value,
 					size: "var(--mat-btn-icon-size)",
 					"aria-hidden": "true"
 				}, {
 					default: U(() => [z(r).prefix === void 0 ? P(e.$slots, "prefix", { key: 1 }, void 0, !0) : (D(), s(t, { key: 0 }, [u(R(z(r).prefix), 1)], 64))]),
 					_: 3
 				}, 8, ["fill", "optical-size"])) : o("", !0)], 64)),
-				ne.value ? o("", !0) : (D(), s("span", yi, [oe.value ? P(e.$slots, "selected", { key: 0 }, void 0, !0) : P(e.$slots, "default", { key: 1 }, void 0, !0)])),
-				ae.value ? (D(), a(Cn, {
+				W.value ? o("", !0) : (D(), s("span", yi, [ie.value ? P(e.$slots, "selected", { key: 0 }, void 0, !0) : P(e.$slots, "default", { key: 1 }, void 0, !0)])),
+				Z.value ? (D(), a(Cn, {
 					key: 3,
 					as: "span",
 					class: "mat-btn__icon mat-btn__icon--suffix",
-					fill: G.value,
-					"optical-size": se.value,
+					fill: ne.value,
+					"optical-size": ae.value,
 					size: "var(--mat-btn-icon-size)",
 					"aria-hidden": "true"
 				}, {
 					default: U(() => [z(r).suffix === void 0 ? P(e.$slots, "suffix", { key: 1 }, void 0, !0) : (D(), s(t, { key: 0 }, [u(R(z(r).suffix), 1)], 64))]),
 					_: 3
 				}, 8, ["fill", "optical-size"])) : o("", !0),
-				ne.value && Z.value ? (D(), a(ci, {
+				W.value && Y.value ? (D(), a(ci, {
 					key: 4,
-					content: Z.value,
+					content: Y.value,
 					id: `${z(m)}-tooltip`,
 					target: p.value
 				}, null, 8, [
@@ -2505,7 +2497,7 @@ var yi = {
 			"onClick"
 		]));
 	}
-}), [["__scopeId", "data-v-acd1c998"]]), xi = Object.freeze([
+}), [["__scopeId", "data-v-fbf1fe10"]]), xi = Object.freeze([
 	"top",
 	"bottom",
 	"left",

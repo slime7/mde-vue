@@ -1,6 +1,6 @@
 <script setup>
 import {
-  computed, Fragment, isVNode, onMounted, ref, useAttrs, useId, useSlots, watch, watchEffect,
+  computed, Fragment, isVNode, onMounted, ref, useAttrs, useId, useSlots, watchEffect,
 } from 'vue';
 import MatButtonBase from '../MatButtonBase.vue';
 import MatIcon from '../mat-icon/MatIcon.vue';
@@ -199,8 +199,7 @@ const props = defineProps({
   },
   /**
    * 显示加载状态：渲染形状变形加载指示器（复用 Loading 组件，或 `loading` Slot 内容）
-   * 替换前缀图标并声明 `aria-busy`，加载期间保持可点击，
-   * 同时锁定当前最小宽度避免内容宽度抖动。
+   * 替换前缀图标并声明 `aria-busy`，加载期间保持可点击且宽度自然跟随内容。
    *
    * @type {boolean}
    * @default false
@@ -281,18 +280,6 @@ const iconFill = computed(() => {
   return isSelected.value ? 1 : 0;
 });
 const isLoading = computed(() => propsWithDefaults.loading);
-const loadingMinInlineSize = ref(null);
-watch(isLoading, (loading) => {
-  if (!loading) {
-    loadingMinInlineSize.value = null;
-    return;
-  }
-
-  const element = buttonElement.value?.$el ?? buttonElement.value;
-  const width = element instanceof HTMLElement ? element.offsetWidth : 0;
-
-  loadingMinInlineSize.value = width > 0 ? `${width}px` : null;
-});
 
 /**
  * @param {unknown[]} nodes
@@ -408,7 +395,7 @@ watchEffect(() => {
         'mat-btn--no-morph': !propsWithDefaults.morph,
       },
     ]"
-    :style="[buttonColorStyle, loadingMinInlineSize ? { 'min-inline-size': loadingMinInlineSize } : null]"
+    :style="buttonColorStyle"
     :aria-label="isIcon ? accessibleLabel : $attrs['aria-label']"
     :aria-busy="isLoading ? 'true' : undefined"
     :aria-controls="split?.role === 'trailing' ? split.controls.value : undefined"

@@ -113,8 +113,7 @@ export interface MatBtnProps {
   disabled?: boolean;
   /**
   * 显示加载状态：渲染形状变形加载指示器（复用 Loading 组件，或 `loading` Slot 内容）
-  * 替换前缀图标并声明 `aria-busy`，加载期间保持可点击，
-  * 同时锁定当前最小宽度避免内容宽度抖动。
+  * 替换前缀图标并声明 `aria-busy`，加载期间保持可点击且宽度自然跟随内容。
   *
   * @type {boolean}
   * @default false

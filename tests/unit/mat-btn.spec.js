@@ -566,6 +566,28 @@ describe('MatBtn', () => {
     expect(handleClick).toHaveBeenCalledOnce();
   });
 
+  it('loading 时不冻结宽度，不设置 min-inline-size 内联样式', async () => {
+    const wrapper = mount(MatBtn, {
+      attachTo: document.body,
+      props: {
+        loading: false,
+      },
+      slots: {
+        default: '提交订单',
+      },
+    });
+
+    Object.defineProperty(wrapper.element, 'offsetWidth', {
+      configurable: true,
+      value: 120,
+    });
+    expect(wrapper.attributes('style') || '').not.toContain('min-inline-size');
+    await wrapper.setProps({ loading: true });
+    const style = wrapper.attributes('style') || '';
+    expect(style).not.toContain('min-inline-size');
+    wrapper.unmount();
+  });
+
   it('loading 时渲染形状变形内建指示器并替换 prefix 图标，标签保持可见', () => {
     const wrapper = mount(MatBtn, {
       props: {

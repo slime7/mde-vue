@@ -4685,7 +4685,7 @@ const selected = ref(false);
 
 ### `loading`
 
-加载中的按钮渲染内建指示器替换 prefix 图标或图标模式的图标，声明 `aria-busy`，同时锁定最小宽度避免宽度抖动。加载期间按钮保持可点击，结束加载或执行停止操作由使用方的 `click` 处理；需要禁止交互时同时设置 `disabled`。内建指示器复用 Loading 组件的形状变形动画，颜色跟随按钮文字色，尺寸跟随按钮的图标尺寸档位（20px、24px、32px、40px），由按钮内部越过 Loading 公共 `size` 范围的下限渲染。提供 `loading` Slot 时用 Slot 内容替换内建指示器；Slot 中的自定义指示器仍须遵守各组件的公共 API，最后一个按钮使用了官方最小 24px 的环形进度。
+加载中的按钮渲染内建指示器替换 prefix 图标或图标模式的图标，声明 `aria-busy`，宽度不冻结并与普通状态一样跟随内容自适应。加载期间按钮保持可点击，结束加载或执行停止操作由使用方的 `click` 处理；需要禁止交互时同时设置 `disabled`。内建指示器复用 Loading 组件的形状变形动画，颜色跟随按钮文字色，尺寸跟随按钮的图标尺寸档位（20px、24px、32px、40px），由按钮内部越过 Loading 公共 `size` 范围的下限渲染。提供 `loading` Slot 时用 Slot 内容替换内建指示器；Slot 中的自定义指示器仍须遵守各组件的公共 API，最后一个按钮使用了官方最小 24px 的环形进度。
 
 :::: details 查看示例代码
 ::: code-group
@@ -4981,7 +4981,7 @@ function updateSelection({ nextSelected }) {
 | `selected` | `boolean` | `false` | 受控选中状态，仅在 toggle 或选择组中生效 |
 | `value` | `string \| number \| boolean` | 未设置 | 在 `MatBtnGroup` 选择模式中的项目值 |
 | `disabled` | `boolean` | `false` | 原生禁用状态；父组合组件也可强制禁用 |
-| `loading` | `boolean` | `false` | 显示加载状态：渲染内建指示器（或 `loading` Slot 内容）、声明 `aria-busy` 并锁定最小宽度；点击行为由使用方处理 |
+| `loading` | `boolean` | `false` | 显示加载状态：渲染内建指示器（或 `loading` Slot 内容）、声明 `aria-busy` 且宽度跟随内容；点击行为由使用方处理 |
 | `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 原生按钮类型 |
 | `morph` | `boolean` | `true` | 是否开启点击或激活时的圆角变形 |
 
