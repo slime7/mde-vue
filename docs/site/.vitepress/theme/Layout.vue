@@ -12,6 +12,7 @@ import { useData, useRoute } from 'vitepress';
 import VPContent from 'vitepress/dist/client/theme-default/components/VPContent.vue';
 import { usePrevNext } from 'vitepress/dist/client/theme-default/composables/prev-next.js';
 import { useMatTheme } from 'mde-vue';
+import normalizeNavPath from './navigation.js';
 import ThemeForm from './ThemeForm.vue';
 
 // 演练场只在一个页面使用，且会连带浏览器版 Vue 编译器与 Monaco Editor，
@@ -115,17 +116,7 @@ onUnmounted(() => {
   }
 });
 
-function normalizeNavPath(path) {
-  if (!path) {
-    return '';
-  }
-  return path
-    .replace(/\.html$/, '')
-    .replace(/\.md$/, '')
-    .replace(/\/$/, '') || '/';
-}
-
-const activeNavValue = computed(() => normalizeNavPath(route.path));
+const activeNavValue = computed(() => normalizeNavPath(route.path, site.value.base));
 
 watch(() => route.path, async () => {
   if (!isWideScreen.value) {
@@ -201,7 +192,7 @@ function cycleThemeMode() {
 const sidebarGroups = computed(() => theme.value.sidebar || []);
 const topNavLinks = computed(() => {
   const nav = theme.value.nav || [];
-  return nav.filter((item) => normalizeNavPath(item.link) !== '/guide/theme');
+  return nav.filter((item) => normalizeNavPath(item.link, site.value.base) !== '/guide/theme');
 });
 
 const expandedGroups = ref({});
@@ -212,7 +203,9 @@ function isGroupExpanded(groupKey, groupItems) {
   }
   if (groupItems && groupItems.length) {
     const current = activeNavValue.value;
-    const containsActive = groupItems.some((sub) => normalizeNavPath(sub.link) === current);
+    const containsActive = groupItems.some(
+      (sub) => normalizeNavPath(sub.link, site.value.base) === current,
+    );
     if (containsActive) {
       return true;
     }
@@ -229,7 +222,9 @@ watch(activeNavValue, (current) => {
   sidebarGroups.value.forEach((section, sIndex) => {
     section.items?.forEach((item, iIndex) => {
       if (item.items?.length) {
-        const contains = item.items.some((sub) => normalizeNavPath(sub.link) === current);
+        const contains = item.items.some(
+          (sub) => normalizeNavPath(sub.link, site.value.base) === current,
+        );
         if (contains) {
           expandedGroups.value[`${sIndex}-${iIndex}`] = true;
         }
@@ -390,7 +385,7 @@ const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontm
                 v-for="(subItem, subIndex) in item.items"
                 :key="subIndex"
                 :href="normalizeLink(subItem.link)"
-                :value="normalizeNavPath(subItem.link)"
+                :value="normalizeNavPath(subItem.link, site.base)"
                 @click="handleNavItemClick"
               >
                 {{ subItem.text }}
@@ -400,7 +395,7 @@ const hasSidebar = computed(() => !isHome.value && !isPlayground.value && frontm
             <mat-navigation-rail-item
               v-else
               :href="normalizeLink(item.link)"
-              :value="normalizeNavPath(item.link)"
+              :value="normalizeNavPath(item.link, site.base)"
               @click="handleNavItemClick"
             >
               {{ item.text }}

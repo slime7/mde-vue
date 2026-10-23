@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import normalizeNavPath from '../../docs/site/.vitepress/theme/navigation.js';
 
 const themeDirectory = resolve('docs/site/.vitepress/theme');
 
@@ -9,6 +10,16 @@ function readThemeFile(fileName) {
 }
 
 describe('VitePress 文档自定义主题', () => {
+  it('在部署 base 下归一化当前导航路径', () => {
+    expect(normalizeNavPath('/mde-vue/guide/theme', '/mde-vue/')).toBe('/guide/theme');
+    expect(normalizeNavPath('/mde-vue/guide/theme/', '/mde-vue/')).toBe('/guide/theme');
+    expect(normalizeNavPath('/mde-vue/guide/theme.html', '/mde-vue/')).toBe('/guide/theme');
+    expect(normalizeNavPath('/mde-vue/', '/mde-vue/')).toBe('/');
+    expect(normalizeNavPath('/mde-vue', '/mde-vue/')).toBe('/');
+    expect(normalizeNavPath('/guide/theme', '/mde-vue/')).toBe('/guide/theme');
+    expect(normalizeNavPath('/mde-vue-other/guide/theme', '/mde-vue/')).toBe('/mde-vue-other/guide/theme');
+  });
+
   it('扩展默认主题并安装 mde-vue 全局组件', () => {
     const source = readThemeFile('index.js');
 
