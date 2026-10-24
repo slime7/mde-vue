@@ -1271,6 +1271,15 @@ export interface MatChatMinimapProps {
   * @default 'left'
   */
   direction?: 'left' | 'right';
+  /**
+  * 标记为“当前”的条目索引，从 0 开始，语义由使用者定义（例如当前滚动位置）。
+  *
+  * 为有效数字索引且缩略图未处于悬停状态时，对应短横线使用与悬停一致的高亮颜色，但宽度保持静止收缩状态，不参与悬停梯度展开；对应条目按钮始终携带 `aria-current="true"`。悬停期间悬停高亮优先，该标记暂停显示，鼠标离开后恢复。`null` 或超出条目范围的值不标记任何条目。
+  *
+  * @type {number | null}
+  * @default null
+  */
+  current?: number | null;
 }
 
 export interface MatChatMinimapEmits {

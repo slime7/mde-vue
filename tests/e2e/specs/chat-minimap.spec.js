@@ -178,6 +178,89 @@ test.describe('MatChatMinimap 悬停梯度与增长方向', () => {
     }).toBeGreaterThanOrEqual(rootBefore.width - 0.5);
   });
 
+  test('current 标记的条目使用悬停高亮色且宽度保持收缩', async ({ page }) => {
+    await openScene(page, 'chat-minimap');
+
+    const currentMinimap = page.getByTestId('current-minimap');
+    const currentRows = currentMinimap.locator(ITEM_SELECTOR);
+    const currentBars = currentMinimap.locator(BAR_SELECTOR);
+
+    await expect(currentBars).toHaveCount(9);
+
+    const restColor = await currentBars.nth(0).evaluate((el) => getComputedStyle(el).color);
+    const markedColor = await currentBars.nth(4).evaluate((el) => getComputedStyle(el).color);
+
+    expect(markedColor).not.toBe(restColor);
+
+    const leftMinimap = page.getByTestId('left-minimap');
+    const leftRows = leftMinimap.locator(ITEM_SELECTOR);
+    const leftBars = leftMinimap.locator(BAR_SELECTOR);
+
+    await leftRows.nth(4).hover();
+    await page.waitForTimeout(700);
+
+    const hoveredColor = await leftBars.nth(4).evaluate((el) => getComputedStyle(el).color);
+
+    expect(markedColor).toBe(hoveredColor);
+
+    const restWidth = (await currentBars.nth(0).boundingBox()).width;
+
+    expect((await currentBars.nth(4).boundingBox()).width).toBeCloseTo(restWidth, 1);
+
+    await page.waitForTimeout(300);
+
+    expect((await currentBars.nth(4).boundingBox()).width).toBeCloseTo(restWidth, 1);
+
+    const rootWidth = (await currentMinimap.boundingBox()).width;
+
+    await currentRows.nth(4).hover();
+
+    await expect.poll(async () => {
+      const box = await currentBars.nth(4).boundingBox();
+
+      return box?.width ?? 0;
+    }).toBeGreaterThanOrEqual(rootWidth - 0.5);
+
+    await page.mouse.move(1, 1);
+
+    await expect.poll(async () => {
+      const box = await currentBars.nth(4).boundingBox();
+
+      return box?.width ?? 0;
+    }).toBeCloseTo(restWidth, 1);
+
+    await page.waitForTimeout(700);
+
+    expect(await currentBars.nth(4).evaluate((el) => getComputedStyle(el).color)).toBe(hoveredColor);
+  });
+
+  test('悬停其他条目时悬停高亮优先，current 暂停显示并在移出后恢复', async ({ page }) => {
+    await openScene(page, 'chat-minimap');
+
+    const currentMinimap = page.getByTestId('current-minimap');
+    const currentRows = currentMinimap.locator(ITEM_SELECTOR);
+    const currentBars = currentMinimap.locator(BAR_SELECTOR);
+
+    const restColor = await currentBars.nth(0).evaluate((el) => getComputedStyle(el).color);
+    const markedColor = await currentBars.nth(4).evaluate((el) => getComputedStyle(el).color);
+
+    expect(markedColor).not.toBe(restColor);
+
+    await currentRows.nth(0).hover();
+    await page.waitForTimeout(700);
+
+    const hoveredColor = await currentBars.nth(0).evaluate((el) => getComputedStyle(el).color);
+
+    expect(hoveredColor).not.toBe(restColor);
+    expect(await currentBars.nth(4).evaluate((el) => getComputedStyle(el).color)).toBe(restColor);
+
+    await page.mouse.move(1, 1);
+    await page.waitForTimeout(700);
+
+    expect(await currentBars.nth(4).evaluate((el) => getComputedStyle(el).color)).toBe(markedColor);
+    expect(await currentBars.nth(0).evaluate((el) => getComputedStyle(el).color)).toBe(restColor);
+  });
+
   test('悬停范围覆盖整行与上下半分间距，移动到短横线外侧不会关闭提示', async ({ page }) => {
     await openScene(page, 'chat-minimap');
 

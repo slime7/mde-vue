@@ -6808,6 +6808,7 @@ var Ho = /*@__PURE__*/ Object.assign({
 	}
 }), [["__scopeId", "data-v-314708d8"]]), $o = [
 	"aria-label",
+	"aria-current",
 	"onClick",
 	"onMouseenter"
 ], es = 3, ts = 1.7, ns = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
@@ -6845,6 +6846,10 @@ var Ho = /*@__PURE__*/ Object.assign({
 			type: String,
 			default: "left",
 			validator: (e) => ["left", "right"].includes(e)
+		},
+		current: {
+			type: Number,
+			default: null
 		}
 	},
 	emits: { click: (e) => e?.originalEvent instanceof MouseEvent },
@@ -6877,6 +6882,9 @@ var Ho = /*@__PURE__*/ Object.assign({
 			return { "--_mat-chat-minimap-width-scale": d(e) };
 		}
 		function p(e) {
+			return u.value === null ? r.current === e : u.value === e;
+		}
+		function m(e) {
 			let t = e && typeof e.tooltip == "object" && e.tooltip !== null ? e.tooltip : {};
 			return {
 				rich: !0,
@@ -6884,43 +6892,44 @@ var Ho = /*@__PURE__*/ Object.assign({
 				...t
 			};
 		}
-		function m(e) {
+		function h(e) {
 			let t = e && typeof e.tooltip == "object" && e.tooltip !== null ? e.tooltip : {}, n = typeof t.subhead == "string" && t.subhead.length > 0 ? t.subhead : void 0, r = typeof t.content == "string" && t.content.length > 0 ? t.content : void 0;
 			return n ?? r;
 		}
-		function h(e, t, n) {
+		function g(e, t, n) {
 			l("click", {
 				item: e,
 				index: t,
 				originalEvent: n
 			});
 		}
-		function g(e) {
+		function v(e) {
 			u.value = e;
 		}
-		function v() {
+		function b() {
 			u.value = null;
 		}
 		return (e, n) => (D(), s("div", _(e.$attrs, {
 			class: ["mat-chat-minimap", `mat-chat-minimap--${z(r).direction}`],
 			style: o.value,
-			onMouseleave: v
-		}), [(D(!0), s(t, null, N(z(r).items, (e, t) => (D(), a(ci, _({ key: e?.id ?? t }, { ref_for: !0 }, p(e)), {
+			onMouseleave: b
+		}), [(D(!0), s(t, null, N(z(r).items, (e, t) => (D(), a(ci, _({ key: e?.id ?? t }, { ref_for: !0 }, m(e)), {
 			activator: U(() => [c("button", {
 				type: "button",
 				class: "mat-chat-minimap__item",
-				"aria-label": m(e),
-				onClick: (n) => h(e, t, n),
-				onMouseenter: (e) => g(t)
+				"aria-label": h(e),
+				"aria-current": z(r).current === t ? "true" : void 0,
+				onClick: (n) => g(e, t, n),
+				onMouseenter: (e) => v(t)
 			}, [c("span", {
-				class: y(["mat-chat-minimap__bar", { "mat-chat-minimap__bar--active": u.value === t }]),
+				class: y(["mat-chat-minimap__bar", { "mat-chat-minimap__bar--active": p(t) }]),
 				style: x(f(t)),
 				"aria-hidden": "true"
 			}, null, 6)], 40, $o)]),
 			_: 2
 		}, 1040))), 128))], 16));
 	}
-}), [["__scopeId", "data-v-e95841de"]]), rs = /*@__PURE__*/ Object.assign({ name: "MatSplitSegment" }, {
+}), [["__scopeId", "data-v-0a00e532"]]), rs = /*@__PURE__*/ Object.assign({ name: "MatSplitSegment" }, {
 	__name: "MatSplitSegment",
 	props: { role: {
 		type: String,

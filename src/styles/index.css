@@ -391,8 +391,8 @@
     --mat-table-wrapper-container-shape: 24px;
 
     /* Chat minimap component tokens */
-    --mat-chat-minimap-bar-color: var(--mat-sys-color-on-surface-variant);
-    --mat-chat-minimap-bar-active-color: var(--mat-sys-color-on-surface);
+    --mat-chat-minimap-bar-color: var(--mat-sys-color-outline-variant);
+    --mat-chat-minimap-bar-active-color: var(--mat-sys-color-tertiary);
 
     /* Navigation rail and navigation bar component tokens */
     --mat-navigation-rail-collapsed-width: 96px;

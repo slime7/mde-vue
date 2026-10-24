@@ -1,6 +1,6 @@
 ---
 title: Chat minimap 聊天缩略图
-description: mat-chat-minimap 的短横线条目、悬停正态梯度、自定义条目尺寸与整行悬停范围、增长方向、点击事件与 Rich tooltip 透传。
+description: mat-chat-minimap 的短横线条目、悬停正态梯度、current 当前条目标记、自定义条目尺寸与整行悬停范围、增长方向、点击事件与 Rich tooltip 透传。
 llms: true
 order: 105.5
 ---
@@ -12,6 +12,8 @@ order: 105.5
 `<mat-chat-minimap>` 的组件导出名是 `MatChatMinimap`。它把一组聊天条目渲染成纵向排列的短横线，适合放在对话或消息列表边缘作为视觉索引。悬停某一条时，该条变亮并展开到两倍静止宽度，前后各 3 条按距离扩大；横向宽度按正态分布衰减，厚度保持不变。
 
 组件使用自然文档流，自身不负责绝对定位或居中，摆放位置由使用者决定。组件的 `inline-size` 始终预留两倍 `item-width` 的展开宽度，短横线在自身范围内增长，不会推动周围内容。每个条目的悬停范围覆盖整行，并向上下各扩展一半 `item-gap`；高亮和宽度变化只表达视觉效果。`direction` 控制短横线的锚定边和增长方向；条目是可聚焦按钮，点击或使用键盘激活时发出 `click` 事件。
+
+`current` 标记“当前”条目，语义由使用者决定，例如当前滚动位置。它只改变颜色：对应短横线使用与悬停一致的 `tertiary` 高亮颜色，但宽度保持收缩状态，不参与悬停梯度；对应条目按钮携带 `aria-current="true"`。悬停期间悬停高亮优先，`current` 标记暂停显示，鼠标离开后恢复。
 
 ## 示例
 
@@ -81,6 +83,28 @@ order: 105.5
   </DocsPreview>
 </ClientOnly>
 
+### current
+
+`current` 是从 0 开始的条目索引，用来标记“当前”条目，语义由使用者决定，例如当前滚动位置。被标记的短横线使用与悬停一致的 `tertiary` 高亮颜色，但宽度保持收缩状态，不参与悬停梯度；对应条目按钮携带 `aria-current="true"`。悬停缩略图时悬停高亮优先，标记条目暂时回到静止颜色，鼠标离开后恢复。示例中滚动右侧消息列表，左侧缩略图的高亮随滚动进度移动。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/chat-minimap/ChatMinimapCurrentExample.vue#template [template]
+
+<<< @/examples/chat-minimap/ChatMinimapCurrentExample.vue#script [script]
+
+<<< @/examples/chat-minimap/ChatMinimapCurrentExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Chat minimap 当前条目标记预览" height="360px">
+    <ChatMinimapCurrentExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### click
 
 点击条目时发出 `click` 事件，载荷包含原始条目、从 0 开始的索引和原生 `MouseEvent`。条目是按钮元素，也可以用 Tab 聚焦后按 Enter 或 Space 触发。
@@ -114,6 +138,7 @@ order: 105.5
 | `item-height` | `number \| string` | `2` | 短横线的厚度；数字与纯数字字符串按 px 处理，其他字符串须为合法正向 CSS 高度 |
 | `item-gap` | `number \| string` | `8` | 相邻短横线之间的间距，允许 `0`；条目悬停范围在短横线上下各扩展一半，条目之间的命中区域连续 |
 | `direction` | `'left' \| 'right'` | `'left'` | 短横线锚定的方位；`left` 左对齐并向右增长，`right` 右对齐并向左增长 |
+| `current` | `number \| null` | `null` | 标记为“当前”的条目索引，从 0 开始，语义由使用者决定（如当前滚动位置）；有效索引且未处于悬停状态时对应短横线使用悬停高亮色但宽度保持收缩，并携带 `aria-current="true"`；悬停期间悬停高亮优先，该标记暂停显示，移出后恢复；`null` 或超出条目范围的值不标记任何条目 |
 
 `item.tooltip` 支持 `MatTooltip` 的公共属性，例如 `subhead`、`content`、`location`、`openDelay` 和 `closeDelay`。`rich` 默认按 `true` 处理；显式传入时以传入值为准。`target` 由组件管理，条目自身的提示触发器不能被覆盖。默认 `location` 与缩略图所在侧相反：`direction="left"` 时显示在右侧，`direction="right"` 时显示在左侧；需要其他位置时在 `item.tooltip.location` 中覆盖。
 
@@ -131,13 +156,14 @@ order: 105.5
 
 ## 状态与配色
 
-悬停某一条时，该条从 `on-surface-variant` 切换为 `on-surface` 颜色，并在前后各 3 条范围内按正态分布衰减宽度；厚度始终保持不变。鼠标离开整个缩略图后恢复初始状态。每个条目的悬停范围覆盖整行与上下各一半的 `item-gap`，包括首末条目外侧的范围，因此指针在条目之间移动时命中区域连续，不会反复进出。高亮和宽度变化只表达视觉效果，不会改变悬停区域。组件遵循 `prefers-reduced-motion`，减少动态效果时直接切换尺寸。
+悬停某一条时，该条从 `outline-variant` 切换为 `tertiary` 高亮色，并在前后各 3 条范围内按正态分布衰减宽度；厚度始终保持不变。鼠标离开整个缩略图后恢复初始状态。`current` 标记的条目同样使用 `tertiary` 高亮色，但宽度保持收缩；悬停期间悬停高亮优先，标记条目暂时回到静止颜色，鼠标离开后恢复高亮；悬停标记条目本身时正常参与宽度展开，移出后宽度回到收缩状态并恢复高亮。每个条目的悬停范围覆盖整行与上下各一半的 `item-gap`，包括首末条目外侧的范围，因此指针在条目之间移动时命中区域连续，不会反复进出。高亮和宽度变化只表达视觉效果，不会改变悬停区域。组件遵循 `prefers-reduced-motion`，减少动态效果时直接切换尺寸。
 
-短横线的静止宽度、厚度和间距通过 `item-width`、`item-height` 与 `item-gap` 定制；公共配色沿用 Material 3 的 `on-surface-variant` 与 `on-surface` 颜色角色。
+短横线的静止宽度、厚度和间距通过 `item-width`、`item-height` 与 `item-gap` 定制；公共配色沿用 Material 3 的 `outline-variant` 静止色与 `tertiary` 高亮色角色。
 
 <script setup>
 import ChatMinimapBasicExample from '../examples/chat-minimap/ChatMinimapBasicExample.vue';
 import ChatMinimapClickExample from '../examples/chat-minimap/ChatMinimapClickExample.vue';
+import ChatMinimapCurrentExample from '../examples/chat-minimap/ChatMinimapCurrentExample.vue';
 import ChatMinimapDirectionExample from '../examples/chat-minimap/ChatMinimapDirectionExample.vue';
 import ChatMinimapSizeExample from '../examples/chat-minimap/ChatMinimapSizeExample.vue';
 </script>
