@@ -60,6 +60,7 @@
 - [Tabs 标签页](components/tabs.md): mat-tabs 的 Material 3 标签页组件，含 primary/secondary 变体与触摸滑动翻页。
 - [Divider 分隔线](components/divider.md): mat-divider 的 Material 3 全宽、起始缩进、两侧 inset 与 Card Actions 分隔方式。
 - [Snackbar 消息提示](components/snackbar.md): mat-snackbar 的 Material 3 底部消息提示、文字 action、全局 FIFO 队列和 Promise 函数。
+- [Notification 通知](components/notification.md): mat-notification 的 Android 风格单条通知卡片、六向定位、语义配色、操作与关闭。
 - [Scroll area 滚动区域](components/scroll-area.md): mat-scroll-area 与 MatScrollArea 为单轴内容提供边缘渐隐、容器配色、圆角、公共滚动条样式和无限滚动事件。
 - [Virtual scroll 虚拟滚动](components/virtual-scroll.md): mat-virtual-scroll 与 MatVirtualScroll 为大数据列表提供轻量高性能的虚拟列表渲染与滚动联动。
 - [Spacer 弹性占位](components/spacer.md): mat-spacer 在 flex 布局中占据主轴剩余空间。

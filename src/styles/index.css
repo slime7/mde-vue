@@ -246,6 +246,7 @@
     /* Overlay stacking */
     --mat-sys-z-index-toolbar: 100;
     --mat-sys-z-index-snackbar: 200;
+    --mat-sys-z-index-notification: 210;
     --mat-sys-z-index-tooltip: 300;
     --mat-sys-z-index-dialog: 400;
 
@@ -540,6 +541,19 @@
     --mat-snackbar-container-shape: var(--mat-sys-shape-corner-extra-small);
     --mat-snackbar-container-elevation: var(--mat-sys-elevation-level3);
     --mat-snackbar-viewport-margin: 16px;
+
+    /* Notification component tokens */
+    --mat-notification-container-color: var(--mat-sys-color-surface-container-high);
+    --mat-notification-content-color: var(--mat-sys-color-on-surface);
+    --mat-notification-supporting-color: var(--mat-sys-color-on-surface-variant);
+    --mat-notification-icon-color: var(--mat-sys-color-primary);
+    --mat-notification-action-color: var(--mat-sys-color-primary);
+    --mat-notification-container-shape: var(--mat-sys-shape-corner-extra-large);
+    --mat-notification-container-elevation: var(--mat-sys-elevation-level2);
+    --mat-notification-viewport-margin: 16px;
+    --mat-notification-container-max-width: 400px;
+    --mat-notification-action-target-size: 48px;
+    --mat-notification-close-target-size: 48px;
 
     /* FAB component tokens */
     --mat-fab-container-shape: var(--mat-sys-shape-corner-medium);

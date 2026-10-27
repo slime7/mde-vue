@@ -71,6 +71,7 @@ export { default as MatPullToRefresh } from './components/mat-pull-to-refresh/Ma
 export { default as MatProgress } from './components/mat-progress/MatProgress.vue';
 export { default as MatTooltip } from './components/mat-tooltip/MatTooltip.vue';
 export { default as MatSnackbar } from './components/mat-snackbar/MatSnackbar.vue';
+export { default as MatNotification } from './components/mat-notification/MatNotification.vue';
 export { default as MatToolbar } from './components/mat-toolbar/MatToolbar.vue';
 export { default as MatPanes } from './components/mat-panes/MatPanes.vue';
 export { default as MatPane } from './components/mat-panes/MatPane.vue';

@@ -4401,6 +4401,98 @@ export interface MatSnackbarEmits {
 export type MatSnackbarComponent = DefineComponent<MatSnackbarProps, {}, {}, {}, {}, {}, {}, MatSnackbarEmits>;
 export declare const MatSnackbar: MatSnackbarComponent;
 
+export interface MatNotificationProps {
+  /**
+  * 受控展示状态，可使用 v-model。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  modelValue?: boolean;
+  /**
+  * 通知标题。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  title?: string | undefined;
+  /**
+  * 通知正文；默认 Slot 存在时由 Slot 提供正文。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  text?: string | undefined;
+  /**
+  * 前置 Material Symbols 图标；`icon` Slot 存在时由 Slot 替代。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  icon?: string | undefined;
+  /**
+  * 标题行末尾的时间文本。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  time?: string | undefined;
+  /**
+  * 操作列表，最多展示前三个；每项必须包含非空 `text`，可选 `icon`。
+  *
+  * @type {Array<{ text: string, icon?: string }>}
+  * @default []
+  */
+  actions?: Array<{ text: string, icon?: string }>;
+  /**
+  * 是否显示内置关闭按钮。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  closable?: boolean;
+  /**
+  * 内置关闭按钮的非空可访问名称。
+  *
+  * @type {string}
+  * @default '关闭'
+  */
+  closeLabel?: string;
+  /**
+  * 通知方位；可选值为 `top-start`、`top-center`、`top-end`、`bottom-start`、
+  * `bottom-center`、`bottom-end`。独立使用时忽略。
+  *
+  * @type {'top-start' | 'top-center' | 'top-end' | 'bottom-start' | 'bottom-center' | 'bottom-end'}
+  * @default 'top-end'
+  */
+  position?: 'top-start' | 'top-center' | 'top-end' | 'bottom-start' | 'bottom-center' | 'bottom-end';
+  /**
+  * 语义色或六位十六进制种子色 `#RRGGBB`；设置后替换默认表面色。
+  *
+  * @type {string | undefined}
+  * @default undefined
+  */
+  color?: string | undefined;
+}
+
+export interface MatNotificationEmits {
+  /**
+  * 用户触发操作时派发 `{ action, index }`。
+  */
+  "action": (payload: unknown) => unknown;
+  /**
+  * 通知请求关闭时发出 false。
+  */
+  "update:modelValue": (payload: unknown) => unknown;
+  /**
+  * 退出动画和清理完成后触发。
+  */
+  "closed": (payload: unknown) => unknown;
+}
+
+export type MatNotificationComponent = DefineComponent<MatNotificationProps, {}, {}, {}, {}, {}, {}, MatNotificationEmits>;
+export declare const MatNotification: MatNotificationComponent;
+
 export interface MatToolbarProps {
   /**
   * 控制 Toolbar 是否显示，可使用 v-model。
@@ -5429,6 +5521,8 @@ declare module 'vue' {
     'mat-tooltip': typeof MatTooltip;
     MatSnackbar: typeof MatSnackbar;
     'mat-snackbar': typeof MatSnackbar;
+    MatNotification: typeof MatNotification;
+    'mat-notification': typeof MatNotification;
     MatToolbar: typeof MatToolbar;
     'mat-toolbar': typeof MatToolbar;
     MatPanes: typeof MatPanes;

@@ -14961,7 +14961,275 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			_: 1
 		}, 8, ["aria-label", "use-cursor"]))])) : o("", !0)])) : o("", !0)], 16)) : o("", !0)], 8, ["to"])) : o("", !0);
 	}
-}), [["__scopeId", "data-v-6a4f08b6"]]), nf = ["aria-orientation"], rf = { class: "mat-toolbar__surface" }, af = { class: "mat-toolbar__content" }, of = 200, sf = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-6a4f08b6"]]), nf = {
+	key: 0,
+	class: "mat-notification__icon"
+}, rf = { class: "mat-notification__main" }, af = {
+	key: 0,
+	class: "mat-notification__header"
+}, of = {
+	key: 0,
+	class: "mat-notification__title mat-sys-typescale-title-medium"
+}, sf = {
+	key: 1,
+	class: "mat-notification__time mat-sys-typescale-label-medium"
+}, cf = {
+	key: 1,
+	class: "mat-notification__text"
+}, lf = {
+	key: 2,
+	class: "mat-notification__actions"
+}, uf = { class: "mat-notification__action-label" }, df = {
+	key: 1,
+	class: "mat-notification__close"
+}, ff = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+	name: "MatNotification",
+	inheritAttrs: !1
+}, {
+	__name: "MatNotification",
+	props: {
+		modelValue: {
+			type: Boolean,
+			default: !1
+		},
+		title: {
+			type: String,
+			default: void 0
+		},
+		text: {
+			type: String,
+			default: void 0
+		},
+		icon: {
+			type: String,
+			default: void 0
+		},
+		time: {
+			type: String,
+			default: void 0
+		},
+		actions: {
+			type: Array,
+			default: () => [],
+			validator(e) {
+				return Array.isArray(e) && e.every((e) => e && typeof e == "object" && typeof e.text == "string" && e.text.trim().length > 0 && (e.icon === void 0 || typeof e.icon == "string" && e.icon.length > 0));
+			}
+		},
+		closable: {
+			type: Boolean,
+			default: !0
+		},
+		closeLabel: {
+			type: String,
+			default: "关闭",
+			validator(e) {
+				return typeof e == "string" && e.trim().length > 0;
+			}
+		},
+		position: {
+			type: String,
+			default: "top-end",
+			validator(e) {
+				return [
+					"top-start",
+					"top-center",
+					"top-end",
+					"bottom-start",
+					"bottom-center",
+					"bottom-end"
+				].includes(e);
+			}
+		},
+		color: {
+			type: String,
+			default: void 0,
+			validator: Gt
+		}
+	},
+	emits: {
+		action: () => !0,
+		"update:modelValue": (e) => typeof e == "boolean",
+		closed: () => !0
+	},
+	setup(e, { emit: r }) {
+		let l = $("notification", e), f = r, p = te(), m = h(Nt, Mt), g = h(Ai, null), y = h(xr, null), b = g ?? y, { colorStyle: x, hasExplicitColor: S } = yn(i(() => l.color)), w = j(!1), E = j("closed"), O = j(!1), k = j(null), A = i(() => g ? g.rootElement.value : y ? y.freeLayer.value : null), M = i(() => A.value ?? "body"), F = i(() => {
+			if (g) {
+				let e = g.publicContext.padding;
+				return {
+					top: e.top,
+					bottom: e.bottom,
+					start: e.start,
+					end: e.end
+				};
+			}
+			if (y) {
+				let e = y.publicContext.layout.padding;
+				return {
+					top: e.top,
+					bottom: e.bottom,
+					start: e.start,
+					end: e.end
+				};
+			}
+			return {
+				top: 0,
+				bottom: 0,
+				start: 0,
+				end: 0
+			};
+		}), I = i(() => ({
+			"--mat-notification-anchor-top": `${F.value.top}px`,
+			"--mat-notification-anchor-bottom": `${F.value.bottom}px`,
+			"--mat-notification-anchor-start": `${F.value.start}px`,
+			"--mat-notification-anchor-end": `${F.value.end}px`
+		})), L = i(() => [I.value, x.value]), ee = i(() => typeof l.title == "string" && l.title.trim().length > 0), B = i(() => typeof l.text == "string" && l.text.trim().length > 0), H = i(() => typeof l.time == "string" && l.time.trim().length > 0), W = i(() => !!p.icon || typeof l.icon == "string" && l.icon.trim().length > 0), ne = i(() => Array.isArray(l.actions) ? l.actions.filter((e) => e && typeof e == "object" && typeof e.text == "string" && e.text.trim().length > 0).slice(0, 3) : []), G = i(() => !!p.actions || ne.value.length > 0), K = i(() => !!p.close || l.closable), q = i(() => ee.value || B.value || !!p.default), J = i(() => typeof l.closeLabel == "string" && l.closeLabel.trim().length > 0 ? l.closeLabel : "关闭"), re = yr(), Y = br({ motion: re }), X = !1, Z = !1;
+		function ie() {
+			Z || (Z = !0, console.warn("MatNotification: 必须通过 title、text 或默认 Slot 提供内容"));
+		}
+		function ae() {
+			O.value || (O.value = !0, f("update:modelValue", !1));
+		}
+		function oe() {
+			w.value && (w.value = !1, E.value = "closed", f("closed"));
+		}
+		function se() {
+			!w.value || E.value === "closing" || Y.start({
+				canStart: () => w.value && E.value !== "closing",
+				duration: 200,
+				getElement: () => k.value,
+				isActive: () => X && w.value && E.value === "closing" && !!k.value,
+				onFinish: oe,
+				onStart: () => {
+					E.value = "closing";
+				}
+			});
+		}
+		function ce() {
+			ae(), se();
+		}
+		function le(e, t) {
+			!w.value || E.value === "closing" || (ce(), f("action", {
+				action: e,
+				index: t
+			}));
+		}
+		function ue() {
+			re.wait(k.value, 400, () => {
+				!w.value || E.value === "closing" || (E.value = "open");
+			});
+		}
+		async function de() {
+			if (!X || !l.modelValue || O.value || !q.value) {
+				q.value || (ie(), ce());
+				return;
+			}
+			w.value && E.value !== "closing" || (re.cancel(), w.value = !0, E.value = "opening", await v(), !(!X || !w.value || E.value === "closing") && (b && !A.value || ue()));
+		}
+		function fe() {
+			if (O.value || !q.value) {
+				q.value || (ie(), ce());
+				return;
+			}
+			de();
+		}
+		return V(A, (e) => {
+			!X || !e || !w.value || E.value !== "opening" || v(() => {
+				X && w.value && E.value === "opening" && ue();
+			});
+		}), T(() => {
+			X = !0, l.modelValue && fe();
+		}), C(() => {
+			X = !1, re.cancel();
+		}), V(() => l.modelValue, (e) => {
+			if (X) {
+				if (e) {
+					O.value = !1, fe();
+					return;
+				}
+				O.value = !1, se();
+			}
+		}), V(q, (e) => {
+			if (X) {
+				if (!e) {
+					ce();
+					return;
+				}
+				Z = !1, l.modelValue && !w.value && !O.value && fe();
+			}
+		}), (e, r) => !z(b) || A.value ? (D(), a(n, {
+			key: 0,
+			to: M.value,
+			disabled: !A.value
+		}, [w.value ? (D(), s("section", _({
+			key: 0,
+			ref_key: "notificationElement",
+			ref: k
+		}, e.$attrs, {
+			class: ["mat-notification mat-sys-typescale-body-medium", [
+				`mat-notification--${z(l).position}`,
+				`mat-notification--${E.value}`,
+				{
+					"mat-notification--positioned": z(b),
+					"mat-notification--explicit-color": z(S)
+				}
+			]],
+			style: L.value,
+			"aria-atomic": "true",
+			"aria-live": "polite",
+			role: "status"
+		}), [
+			W.value ? (D(), s("div", nf, [e.$slots.icon ? P(e.$slots, "icon", { key: 0 }, void 0, !0) : (D(), a(Cn, {
+				key: 1,
+				icon: z(l).icon,
+				size: "24px",
+				"aria-hidden": "true"
+			}, null, 8, ["icon"]))])) : o("", !0),
+			c("div", rf, [
+				ee.value || H.value ? (D(), s("div", af, [ee.value ? (D(), s("span", of, R(z(l).title), 1)) : o("", !0), H.value ? (D(), s("span", sf, R(z(l).time), 1)) : o("", !0)])) : o("", !0),
+				B.value || e.$slots.default ? (D(), s("div", cf, [e.$slots.default ? P(e.$slots, "default", { key: 0 }, void 0, !0) : (D(), s(t, { key: 1 }, [u(R(z(l).text), 1)], 64))])) : o("", !0),
+				G.value ? (D(), s("div", lf, [e.$slots.actions ? P(e.$slots, "actions", {
+					key: 0,
+					actions: ne.value,
+					action: le,
+					close: ce
+				}, void 0, !0) : (D(!0), s(t, { key: 1 }, N(ne.value, (e, t) => (D(), a(Ft, {
+					key: `${e.text}-${t}`,
+					class: "mat-notification__action mat-sys-typescale-label-large",
+					"use-cursor": z(m).useCursor,
+					onClick: (n) => le(e, t)
+				}, {
+					default: U(() => [e.icon ? (D(), a(Cn, {
+						key: 0,
+						class: "mat-notification__action-icon",
+						icon: e.icon,
+						size: "18px",
+						"aria-hidden": "true"
+					}, null, 8, ["icon"])) : o("", !0), c("span", uf, R(e.text), 1)]),
+					_: 2
+				}, 1032, ["use-cursor", "onClick"]))), 128))])) : o("", !0)
+			]),
+			K.value ? (D(), s("div", df, [e.$slots.close ? P(e.$slots, "close", {
+				key: 0,
+				close: ce
+			}, void 0, !0) : (D(), a(Ft, {
+				key: 1,
+				class: "mat-notification__default-close",
+				"aria-label": J.value,
+				"use-cursor": z(m).useCursor,
+				onClick: ce
+			}, {
+				default: U(() => [d(Cn, {
+					class: "mat-notification__close-icon",
+					icon: "close",
+					size: "24px",
+					"optical-size": 24,
+					"aria-hidden": "true"
+				})]),
+				_: 1
+			}, 8, ["aria-label", "use-cursor"]))])) : o("", !0)
+		], 16)) : o("", !0)], 8, ["to", "disabled"])) : o("", !0);
+	}
+}), [["__scopeId", "data-v-54654188"]]), pf = ["aria-orientation"], mf = { class: "mat-toolbar__surface" }, hf = { class: "mat-toolbar__content" }, gf = 200, _f = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatToolbar",
 	inheritAttrs: !1
 }, {
@@ -15084,7 +15352,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			Z.cancel();
 		}
 		function se(e) {
-			Z.wait(E.value, of, e);
+			Z.wait(E.value, gf, e);
 		}
 		async function ce() {
 			oe(), S.value = !0, w.value = "opening", await v(), !(!X || !S.value || !u.modelValue || w.value !== "opening") && se(() => {
@@ -15098,7 +15366,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			}
 			w.value !== "closing" && ie.start({
 				canStart: () => S.value && w.value !== "closing",
-				duration: of,
+				duration: gf,
 				getElement: () => E.value,
 				isActive: () => X && !u.modelValue && S.value && w.value === "closing",
 				onFinish: () => {
@@ -15196,20 +15464,20 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			style: ne.value,
 			role: "toolbar",
 			"aria-orientation": F.value ? "vertical" : void 0
-		}), [c("div", rf, [c("div", af, [P(r.$slots, "default", {}, void 0, !0)])]), N.value && z(p).fab ? (D(), s("div", {
+		}), [c("div", mf, [c("div", hf, [P(r.$slots, "default", {}, void 0, !0)])]), N.value && z(p).fab ? (D(), s("div", {
 			key: 0,
 			ref_key: "fabElement",
 			ref: O,
 			class: "mat-toolbar__fab"
-		}, [P(r.$slots, "fab", {}, void 0, !0)], 512)) : o("", !0)], 16, nf)) : o("", !0)], 8, ["to", "disabled"]))], 64));
+		}, [P(r.$slots, "fab", {}, void 0, !0)], 512)) : o("", !0)], 16, pf)) : o("", !0)], 8, ["to", "disabled"]))], 64));
 	}
-}), [["__scopeId", "data-v-c377b601"]]), cf = Symbol("mat-panes"), lf = [
+}), [["__scopeId", "data-v-c377b601"]]), vf = Symbol("mat-panes"), yf = [
 	"compact",
 	"medium",
 	"expanded",
 	"large",
 	"extra-large"
-], uf = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+], bf = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatPanes",
 	inheritAttrs: !1
 }, {
@@ -15230,7 +15498,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 	emits: {
 		"update:sizes": (e) => e !== null && !Array.isArray(e) && Object.values(e).every((e) => typeof e == "number" && Number.isFinite(e) && e >= 0),
 		"update:widths": (e) => e !== null && !Array.isArray(e) && Object.values(e).every((e) => typeof e == "number" && Number.isInteger(e) && e >= 0),
-		"update:breakpoint": (e) => lf.includes(e)
+		"update:breakpoint": (e) => yf.includes(e)
 	},
 	setup(e, { emit: t }) {
 		let n = $("panes", e), r = t, a = j(null), o = I([]), c = j(null), l = j(null), u = j(null), d = /* @__PURE__ */ new Map(), f, p, m, h, g, y = i(() => c.value ?? b.value), b = i(() => {
@@ -15426,7 +15694,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 		function le() {
 			ce();
 		}
-		return O(cf, {
+		return O(vf, {
 			getHandleAttributes: z,
 			getPaneStyle: N,
 			hasBoundary: L,
@@ -15453,17 +15721,17 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			ref: a
 		}, e.$attrs, { class: "mat-panes" }), [P(e.$slots, "default", {}, void 0, !0)], 16));
 	}
-}), [["__scopeId", "data-v-e119bd21"]]), df = ["id"], ff = {
+}), [["__scopeId", "data-v-e119bd21"]]), xf = ["id"], Sf = {
 	key: 0,
 	class: "mat-pane__separator"
-}, pf = [
+}, Cf = [
 	"aria-controls",
 	"aria-label",
 	"aria-orientation",
 	"aria-valuemax",
 	"aria-valuemin",
 	"aria-valuenow"
-], mf = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+], wf = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatPane",
 	inheritAttrs: !1
 }, {
@@ -15482,7 +15750,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 		}
 	},
 	setup(e) {
-		let n = $("pane", e), r = h(cf, null), a = j(null), l = i(() => n.resizeLabel), u, d = i(() => r?.getPaneStyle(n.id) ?? { "--mat-pane-weight": 1 }), f = i(() => !!r?.hasBoundary(n.id)), p = i(() => !!r?.isHandleVisible(n.id)), m = i(() => r?.getHandleAttributes(n.id) ?? {}), g = i(() => !!r?.isBoundaryActive(n.id));
+		let n = $("pane", e), r = h(vf, null), a = j(null), l = i(() => n.resizeLabel), u, d = i(() => r?.getPaneStyle(n.id) ?? { "--mat-pane-weight": 1 }), f = i(() => !!r?.hasBoundary(n.id)), p = i(() => !!r?.isHandleVisible(n.id)), m = i(() => r?.getHandleAttributes(n.id) ?? {}), g = i(() => !!r?.isBoundaryActive(n.id));
 		function v() {
 			u?.(), u = void 0, r && (u = r.registerPane({
 				element: a,
@@ -15497,7 +15765,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			id: z(n).id,
 			class: "mat-pane",
 			style: d.value
-		}), [P(i.$slots, "default", {}, void 0, !0)], 16, df), f.value ? (D(), s("div", ff, [p.value ? (D(), s("div", {
+		}), [P(i.$slots, "default", {}, void 0, !0)], 16, xf), f.value ? (D(), s("div", Sf, [p.value ? (D(), s("div", {
 			key: 0,
 			class: y(["mat-pane__handle", { "mat-pane__handle--active": g.value }]),
 			role: "separator",
@@ -15514,26 +15782,26 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			onPointerdown: l[3] ||= (t) => z(r).handlePointerDown(e.id, t),
 			onPointermove: l[4] ||= (t) => z(r).handlePointerMove(e.id, t),
 			onPointerup: l[5] ||= (t) => z(r).finishPointerInteraction(e.id, t, !0)
-		}, null, 42, pf)) : o("", !0)])) : o("", !0)], 64));
+		}, null, 42, Cf)) : o("", !0)])) : o("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-1bf28501"]]), hf = Symbol("mat-navigation-rail"), gf = { class: "mat-navigation-item__indicator mat-navigation-rail-item__indicator mat-navigation-bar-item__indicator" }, _f = {
+}), [["__scopeId", "data-v-1bf28501"]]), Tf = Symbol("mat-navigation-rail"), Ef = { class: "mat-navigation-item__indicator mat-navigation-rail-item__indicator mat-navigation-bar-item__indicator" }, Df = {
 	key: 0,
 	class: "mat-navigation-item__icon-wrap mat-navigation-rail-item__icon-wrap mat-navigation-bar-item__icon-wrap"
-}, vf = { class: "mat-navigation-item__label-wrap mat-navigation-rail-item__label-wrap mat-navigation-bar-item__label-wrap" }, yf = {
+}, Of = { class: "mat-navigation-item__label-wrap mat-navigation-rail-item__label-wrap mat-navigation-bar-item__label-wrap" }, kf = {
 	key: 0,
 	class: "mat-navigation-item__spacer mat-navigation-rail-item__spacer",
 	"aria-hidden": "true"
-}, bf = {
+}, Af = {
 	key: 1,
 	class: "mat-navigation-item__trailing mat-navigation-rail-item__trailing"
-}, xf = {
+}, jf = {
 	key: 0,
 	class: "mat-navigation-item__spacer mat-navigation-rail-item__spacer",
 	"aria-hidden": "true"
-}, Sf = {
+}, Mf = {
 	key: 1,
 	class: "mat-navigation-item__trailing mat-navigation-rail-item__trailing"
-}, Cf = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, Nf = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationItem",
 	inheritAttrs: !1
 }, {
@@ -15579,7 +15847,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			"bottom",
 			"bottom-start",
 			"start"
-		], l = $("navigationItem", e), u = n, d = te(), f = h(Nt, Mt), p = h(hf, null), m = i(() => p?.expanded.value ?? !1), g = i(() => p?.fullWidth.value ?? !1), v = i(() => p?.orientation.value === "horizontal"), b = i(() => p?.isSelected(l.value) ?? !1), x = i(() => !!(d.icon || l.icon && l.icon.trim())), S = i(() => x.value || !m.value), C = i(() => x.value ? l.icon : "circle"), w = i(() => {
+		], l = $("navigationItem", e), u = n, d = te(), f = h(Nt, Mt), p = h(Tf, null), m = i(() => p?.expanded.value ?? !1), g = i(() => p?.fullWidth.value ?? !1), v = i(() => p?.orientation.value === "horizontal"), b = i(() => p?.isSelected(l.value) ?? !1), x = i(() => !!(d.icon || l.icon && l.icon.trim())), S = i(() => x.value || !m.value), C = i(() => x.value ? l.icon : "circle"), w = i(() => {
 			let e = l.badge;
 			return e ? {
 				content: m.value ? void 0 : e.content,
@@ -15621,8 +15889,8 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			onClick: k
 		}), {
 			default: U(() => [
-				c("span", gf, [
-					S.value ? (D(), s("span", _f, [w.value ? (D(), a(oo, {
+				c("span", Ef, [
+					S.value ? (D(), s("span", Df, [w.value ? (D(), a(oo, {
 						key: 0,
 						color: w.value.color,
 						content: w.value.content,
@@ -15655,13 +15923,13 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 						class: "mat-navigation-item__icon mat-navigation-rail-item__icon mat-navigation-bar-item__icon",
 						"aria-hidden": "true"
 					}, null, 8, ["fill", "icon"]))], 64))])) : o("", !0),
-					c("span", vf, [c("span", { class: y([
+					c("span", Of, [c("span", { class: y([
 						"mat-navigation-item__label",
 						"mat-navigation-rail-item__label",
 						"mat-navigation-bar-item__label",
 						T.value
 					]) }, [P(e.$slots, "default", {}, void 0, !0)], 2)]),
-					g.value ? (D(), s(t, { key: 1 }, [e.$slots.trailing ? (D(), s("span", yf)) : o("", !0), e.$slots.trailing ? (D(), s("span", bf, [P(e.$slots, "trailing", {
+					g.value ? (D(), s(t, { key: 1 }, [e.$slots.trailing ? (D(), s("span", kf)) : o("", !0), e.$slots.trailing ? (D(), s("span", Af, [P(e.$slots, "trailing", {
 						expanded: m.value,
 						selected: b.value
 					}, void 0, !0)])) : o("", !0)], 64)) : o("", !0)
@@ -15672,7 +15940,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 					"mat-navigation-bar-item__label",
 					E.value
 				]) }, [P(e.$slots, "default", {}, void 0, !0)], 2),
-				g.value ? o("", !0) : (D(), s(t, { key: 0 }, [e.$slots.trailing ? (D(), s("span", xf)) : o("", !0), e.$slots.trailing ? (D(), s("span", Sf, [P(e.$slots, "trailing", {
+				g.value ? o("", !0) : (D(), s(t, { key: 0 }, [e.$slots.trailing ? (D(), s("span", jf)) : o("", !0), e.$slots.trailing ? (D(), s("span", Mf, [P(e.$slots, "trailing", {
 					expanded: m.value,
 					selected: b.value
 				}, void 0, !0)])) : o("", !0)], 64))
@@ -15686,7 +15954,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			"use-cursor"
 		]));
 	}
-}), [["__scopeId", "data-v-dbe8e398"]]), wf = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-dbe8e398"]]), Pf = /*@__PURE__*/ Object.assign({
 	name: "MatNavigationRailItem",
 	inheritAttrs: !1
 }, {
@@ -15720,7 +15988,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 	emits: { click: (e) => e instanceof MouseEvent },
 	setup(e, { emit: t }) {
 		let n = $("navigationRailItem", e), r = t;
-		return (e, t) => (D(), a(Cf, _({
+		return (e, t) => (D(), a(Nf, _({
 			...e.$attrs,
 			...z(n)
 		}, {
@@ -15731,13 +15999,13 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			fn: U((t) => [P(e.$slots, n, b(p(t)))])
 		}))]), 1040));
 	}
-}), Tf = { class: "mat-navigation-rail__layout" }, Ef = {
+}), Ff = { class: "mat-navigation-rail__layout" }, If = {
 	key: 0,
 	class: "mat-navigation-rail__header"
-}, Df = {
+}, Lf = {
 	key: 1,
 	class: "mat-navigation-rail__content"
-}, Of = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}, Rf = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationRail",
 	inheritAttrs: !1
 }, {
@@ -15889,7 +16157,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 		}
 		V(() => u.expanded, H);
 		function W(e) {
-			return e.type === wf || e.type?.name === "MatNavigationRailItem" || e.type === Cf || e.type?.name === "MatNavigationItem";
+			return e.type === Pf || e.type?.name === "MatNavigationRailItem" || e.type === Nf || e.type?.name === "MatNavigationItem";
 		}
 		function ne(e) {
 			if (W(e)) return !0;
@@ -15935,7 +16203,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 		function Y(e) {
 			f("update:open", e), !e && (k.value || u.hideOnCollapse) && f("update:expanded", !1);
 		}
-		return O(hf, {
+		return O(Tf, {
 			expanded: i(() => u.expanded),
 			fullWidth: i(() => u.fullWidth),
 			orientation: i(() => "vertical"),
@@ -15982,7 +16250,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 				"shadow-length": 0,
 				"no-scroll-padding": ""
 			}, {
-				default: U(() => [c("div", Tf, [F.value && N.value ? (D(), s("div", Ef, [P(e.$slots, "header", { expanded: z(u).expanded }, void 0, !0)])) : o("", !0), N.value ? (D(), s("div", Df, [c("div", { class: y(["mat-navigation-rail__destinations", [`mat-navigation-rail__destinations--${z(u).alignment}`, { "mat-navigation-rail__destinations--show-custom-content": I.value }]]) }, [d(K)], 2)])) : o("", !0)])]),
+				default: U(() => [c("div", Ff, [F.value && N.value ? (D(), s("div", If, [P(e.$slots, "header", { expanded: z(u).expanded }, void 0, !0)])) : o("", !0), N.value ? (D(), s("div", Lf, [c("div", { class: y(["mat-navigation-rail__destinations", [`mat-navigation-rail__destinations--${z(u).alignment}`, { "mat-navigation-rail__destinations--show-custom-content": I.value }]]) }, [d(K)], 2)])) : o("", !0)])]),
 				_: 3
 			})]),
 			_: 3
@@ -16002,7 +16270,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			"style"
 		]));
 	}
-}), [["__scopeId", "data-v-5c8fab23"]]), kf = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-5c8fab23"]]), zf = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationBar",
 	inheritAttrs: !1
 }, {
@@ -16101,7 +16369,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			if (r.mode !== void 0) return r.mode;
 			if (!r.app) return l ? "docked" : "flow";
 		}), v = i(() => r.height === void 0 ? 64 : r.height);
-		return O(hf, {
+		return O(Tf, {
 			expanded: i(() => !1),
 			fullWidth: i(() => !1),
 			orientation: i(() => "horizontal"),
@@ -16147,7 +16415,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			"z-index"
 		]));
 	}
-}), [["__scopeId", "data-v-a6a8d1ff"]]), Af = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-a6a8d1ff"]]), Bf = /*@__PURE__*/ Object.assign({
 	name: "MatNavigationBarItem",
 	inheritAttrs: !1
 }, {
@@ -16181,7 +16449,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 	emits: { click: (e) => e instanceof MouseEvent },
 	setup(e, { emit: t }) {
 		let n = $("navigationBarItem", e), r = t;
-		return (e, t) => (D(), a(Cf, _({
+		return (e, t) => (D(), a(Nf, _({
 			...e.$attrs,
 			...z(n)
 		}, {
@@ -16192,7 +16460,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			fn: U((t) => [P(e.$slots, n, b(p(t)))])
 		}))]), 1040));
 	}
-}), jf = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), Vf = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationDrawer",
 	inheritAttrs: !1
 }, {
@@ -16284,7 +16552,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 	},
 	setup(e, { emit: t }) {
 		let n = $("navigationDrawer", e), r = t;
-		return (e, t) => (D(), a(Of, _(e.$attrs, {
+		return (e, t) => (D(), a(Rf, _(e.$attrs, {
 			class: "mat-navigation-drawer",
 			"model-value": z(n).modelValue,
 			expanded: z(n).expanded,
@@ -16321,7 +16589,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			"mode"
 		]));
 	}
-}), [["__scopeId", "data-v-beef4203"]]), Mf = ["aria-hidden"], Nf = { class: "mat-navigation-group__items" }, Pf = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-beef4203"]]), Hf = ["aria-hidden"], Uf = { class: "mat-navigation-group__items" }, Wf = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatNavigationGroup",
 	inheritAttrs: !1
 }, {
@@ -16373,10 +16641,10 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 		}, void 0, !0), c("div", {
 			class: "mat-navigation-group__content",
 			"aria-hidden": o.value ? void 0 : "true"
-		}, [c("div", Nf, [P(e.$slots, "default", {}, void 0, !0)])], 8, Mf)], 16));
+		}, [c("div", Uf, [P(e.$slots, "default", {}, void 0, !0)])], 8, Hf)], 16));
 	}
-}), [["__scopeId", "data-v-687ee2f6"]]), Ff = /* @__PURE__ */ new WeakMap();
-function If(e) {
+}), [["__scopeId", "data-v-687ee2f6"]]), Gf = /* @__PURE__ */ new WeakMap();
+function Kf(e) {
 	return typeof e == "function" ? {
 		handler: e,
 		options: {}
@@ -16385,15 +16653,15 @@ function If(e) {
 		options: e.options ?? {}
 	} : { options: {} };
 }
-function Lf(e, t) {
+function qf(e, t) {
 	if (typeof IntersectionObserver > "u") return;
-	let { handler: n, options: r } = If(t.value), i = new IntersectionObserver((t, r) => {
-		let i = Ff.get(e);
+	let { handler: n, options: r } = Kf(t.value), i = new IntersectionObserver((t, r) => {
+		let i = Gf.get(e);
 		if (!i || i.observer !== r) return;
 		let a = t.some((e) => e.isIntersecting), o = !i.initialized;
-		i.initialized = !0, n && !(i.quiet && o) && n(a, t, r), i.once && a && (r.unobserve(e), Ff.delete(e));
+		i.initialized = !0, n && !(i.quiet && o) && n(a, t, r), i.once && a && (r.unobserve(e), Gf.delete(e));
 	}, r);
-	Ff.set(e, {
+	Gf.set(e, {
 		handler: n,
 		observer: i,
 		once: !!t.modifiers?.once,
@@ -16401,59 +16669,59 @@ function Lf(e, t) {
 		initialized: !1
 	}), i.observe(e);
 }
-function Rf(e) {
-	let t = Ff.get(e);
-	t && (t.observer.unobserve(e), Ff.delete(e));
+function Jf(e) {
+	let t = Gf.get(e);
+	t && (t.observer.unobserve(e), Gf.delete(e));
 }
-var zf = {
-	mounted: Lf,
+var Yf = {
+	mounted: qf,
 	updated(e, t) {
-		Ff.has(e) && (Rf(e), Lf(e, t));
+		Gf.has(e) && (Jf(e), qf(e, t));
 	},
-	unmounted: Rf
-}, Bf = Object.freeze({
+	unmounted: Jf
+}, Xf = Object.freeze({
 	MatDynamicText: Object.freeze(["MdeDynamicText", "mde-dynamic-text"]),
 	MatSharedElement: Object.freeze(["MdeSharedElement", "mde-shared-element"]),
 	MatVirtualScroll: Object.freeze(["MdeVirtualScroll", "mde-virtual-scroll"])
-}), Vf = Mt, Hf = null;
-function Uf(e, t) {
-	Vf = e, Hf = t;
+}), Zf = Mt, Qf = null;
+function $f(e, t) {
+	Zf = e, Qf = t;
 }
-function Wf() {
-	return Vf;
+function ep() {
+	return Zf;
 }
-function Gf() {
-	return Hf;
+function tp() {
+	return Qf;
 }
 //#endregion
 //#region src/theme.js
-var Kf = "#20a6fc", qf = "(prefers-color-scheme: dark)";
-function Jf(e) {
+var np = "#20a6fc", rp = "(prefers-color-scheme: dark)";
+function ip(e) {
 	if (![
 		"light",
 		"dark",
 		"system"
 	].includes(e)) throw TypeError("theme.mode 必须是 light、dark 或 system");
 }
-function Yf(e) {
+function ap(e) {
 	if (!en.includes(e)) throw TypeError(`不支持主题配色变体：${String(e)}`);
 }
-function Xf(e) {
+function op(e) {
 	if (typeof e != "number" || !Number.isFinite(e) || e < -1 || e > 1) throw RangeError("theme.contrastLevel 必须是 -1 到 1 之间的有限数字");
 }
-function Zf(e) {
+function sp(e) {
 	if (!e || typeof e != "object" || typeof e.style?.setProperty != "function") throw TypeError("theme.target 必须是可设置 CSS 自定义属性的 HTML 元素");
 }
-function Qf(e) {
+function cp(e) {
 	if (typeof e != "string" || !/^#(?:[\da-f]{3}|[\da-f]{6})$/i.test(e)) throw TypeError("theme.seedColor 必须是 #RGB 或 #RRGGBB 格式的十六进制颜色");
 }
-function $f(e = {}) {
+function lp(e = {}) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("theme 选项必须是对象");
-	let t = e.mode ?? "system", n = e.seedColor ?? Kf, r = e.schemeVariant ?? "tonal-spot", i = e.contrastLevel ?? 0, a = e.target ?? document.documentElement;
-	Jf(t), Qf(n), Yf(r), Xf(i), Zf(a);
+	let t = e.mode ?? "system", n = e.seedColor ?? np, r = e.schemeVariant ?? "tonal-spot", i = e.contrastLevel ?? 0, a = e.target ?? document.documentElement;
+	ip(t), cp(n), ap(r), op(i), sp(a);
 	let o = j(t), s = j(sn(n)), c = j(r), l = j(i), u = j("light"), d = null, f = !1, p = !1;
 	function m() {
-		return !d && typeof window.matchMedia == "function" && (d = window.matchMedia(qf)), d;
+		return !d && typeof window.matchMedia == "function" && (d = window.matchMedia(rp)), d;
 	}
 	function h() {
 		return o.value === "system" ? m()?.matches ? "dark" : "light" : o.value;
@@ -16482,20 +16750,20 @@ function $f(e = {}) {
 		e && (e.addEventListener("change", _), f = !0);
 	}
 	function b(e) {
-		Jf(e), o.value = e, y(), g();
+		ip(e), o.value = e, y(), g();
 	}
 	function x(e) {
-		Qf(e), s.value = sn(e), g();
+		cp(e), s.value = sn(e), g();
 	}
 	async function S(e) {
 		let t = await hn(e);
 		return x(t), t;
 	}
 	function C(e) {
-		Yf(e), c.value = e, g();
+		ap(e), c.value = e, g();
 	}
 	function w(e) {
-		Xf(e), l.value = e, g();
+		op(e), l.value = e, g();
 	}
 	function T() {
 		p = !0, v(), Object.values(tn).forEach((e) => {
@@ -16520,7 +16788,7 @@ function $f(e = {}) {
 }
 //#endregion
 //#region src/plugin.js
-var ep = [
+var up = [
 	[
 		"MatAppRoot",
 		"mat-app-root",
@@ -16877,151 +17145,156 @@ var ep = [
 		tf
 	],
 	[
+		"MatNotification",
+		"mat-notification",
+		ff
+	],
+	[
 		"MatToolbar",
 		"mat-toolbar",
-		sf
+		_f
 	],
 	[
 		"MatPanes",
 		"mat-panes",
-		uf
+		bf
 	],
 	[
 		"MatPane",
 		"mat-pane",
-		mf
+		wf
 	],
 	[
 		"MatNavigationRail",
 		"mat-navigation-rail",
-		Of
+		Rf
 	],
 	[
 		"MatNavigationRailItem",
 		"mat-navigation-rail-item",
-		wf
+		Pf
 	],
 	[
 		"MatNavigationBar",
 		"mat-navigation-bar",
-		kf
+		zf
 	],
 	[
 		"MatNavigationBarItem",
 		"mat-navigation-bar-item",
-		Af
+		Bf
 	],
 	[
 		"MatNavigationItem",
 		"mat-navigation-item",
-		Cf
+		Nf
 	],
 	[
 		"MatNavigationDrawer",
 		"mat-navigation-drawer",
-		jf
+		Vf
 	],
 	[
 		"MatNavigationGroup",
 		"mat-navigation-group",
-		Pf
+		Wf
 	]
-], tp = new Map(ep.map(([e, , t]) => [Pt(e), t]));
-function np(e, t) {
+], dp = new Map(up.map(([e, , t]) => [Pt(e), t]));
+function fp(e, t) {
 	let n = e[t];
 	if (n !== void 0 && typeof n != "boolean") throw TypeError(`createMatUi ${t} 必须是 boolean`);
 	return n ?? !1;
 }
-function rp(e) {
+function pp(e) {
 	let t = e.iconClass;
 	if (t !== void 0 && typeof t != "string") throw TypeError("createMatUi iconClass 必须是 string");
 	return t ?? Mt.iconClass;
 }
-function ip(e, t) {
+function mp(e, t) {
 	let n = e[t];
 	if (n === void 0) return jt[t];
 	if (typeof n != "number") throw TypeError(`createMatUi tooltip.${t} 必须是 number`);
 	if (!Number.isFinite(n) || n < 0) throw RangeError(`createMatUi tooltip.${t} 必须是非负有限数字`);
 	return n;
 }
-function ap(e) {
+function hp(e) {
 	if (e === void 0) return jt;
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("createMatUi defaults.tooltip 必须是对象");
 	return Object.freeze({
-		openDelay: ip(e, "openDelay"),
-		closeDelay: ip(e, "closeDelay")
+		openDelay: mp(e, "openDelay"),
+		closeDelay: mp(e, "closeDelay")
 	});
 }
-function op(e) {
+function gp(e) {
 	let t = Object.keys(e.props ?? {}), n = new Set(Object.keys(e.emits ?? {}).filter((e) => e.startsWith("update:")).map((e) => e.slice(7)));
 	return new Set(t.filter((e) => !n.has(e)));
 }
-function sp(e) {
+function _p(e) {
 	let t = e.defaults;
 	if (t === void 0) return Object.freeze({ tooltip: jt });
 	if (!t || typeof t != "object" || Array.isArray(t)) throw TypeError("createMatUi defaults 必须是对象");
-	let n = { tooltip: ap(t.tooltip) };
+	let n = { tooltip: hp(t.tooltip) };
 	return Object.entries(t).forEach(([e, t]) => {
 		if (e === "tooltip") return;
-		let r = tp.get(e);
+		let r = dp.get(e);
 		if (!r) throw TypeError(`createMatUi defaults 未知组件键 ${e}`);
 		if (!t || typeof t != "object" || Array.isArray(t)) throw TypeError(`createMatUi defaults.${e} 必须是对象`);
-		let i = op(r), a = {};
+		let i = gp(r), a = {};
 		Object.entries(t).forEach(([t, n]) => {
 			if (!i.has(t)) throw TypeError(`createMatUi defaults.${e}.${t} 不是可配置属性`);
 			a[t] = n;
 		}), n[e] = Object.freeze(a);
 	}), Object.freeze(n);
 }
-function cp(e = {}) {
+function vp(e = {}) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("createMatUi 选项必须是对象");
 	let t = Object.freeze({
-		iconClass: rp(e),
-		useCursor: np(e, "useCursor"),
-		useRipple: np(e, "useRipple"),
-		defaults: sp(e)
-	}), n = $f(e.theme);
+		iconClass: pp(e),
+		useCursor: fp(e, "useCursor"),
+		useRipple: fp(e, "useRipple"),
+		defaults: _p(e)
+	}), n = lp(e.theme);
 	return {
 		theme: n,
 		install(e) {
-			ep.forEach(([t, n, r]) => {
-				e.component(t, r), e.component(n, r), (Bf[t] ?? []).forEach((t) => {
+			up.forEach(([t, n, r]) => {
+				e.component(t, r), e.component(n, r), (Xf[t] ?? []).forEach((t) => {
 					e.component(t, r);
 				});
-			}), e.directive("intersection", zf), e.directive("state-layer", At), e.directive("ripple", pt), e.provide(Nt, t), e.provide(gn, n), Uf(t, n);
+			}), e.directive("intersection", Yf), e.directive("state-layer", At), e.directive("ripple", pt), e.provide(Nt, t), e.provide(gn, n), $f(t, n);
 		}
 	};
 }
-function lp() {
+function yp() {
 	let e = h(gn, null);
 	if (!e) throw Error("useMatTheme() 必须在已安装 mde-vue 插件的 Vue 应用中调用");
 	return e;
 }
-function up() {
+function bp() {
 	return h(Nt, Mt);
 }
 //#endregion
 //#region src/view-transition.js
-function dp() {
+function xp() {
 	return typeof globalThis.matchMedia == "function" && globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
-function fp() {
+function Sp() {
 	return typeof document > "u" || typeof document.startViewTransition != "function" ? null : document.startViewTransition.bind(document);
 }
-function pp(e) {
+function Cp(e) {
 	if (e === void 0) return [];
 	let t = Array.isArray(e) ? e : [e];
 	if (t.some((e) => typeof e != "string" || e.trim().length === 0)) throw TypeError("useMatViewTransition.start names 必须是非空字符串或非空字符串数组");
 	return [...new Set(t)];
 }
-function mp() {
+function wp() {
 	let e = null, t = null;
 	async function n(n, r = {}) {
 		if (typeof n != "function") throw TypeError("useMatViewTransition.start update 必须是函数");
-		let i = pp(r.names);
+		let i = Cp(r.names);
 		t && await t, e &&= (e.skipTransition?.(), await e.finished.catch(() => {}), null);
-		let a = fp();
-		if (r.skip || !a || dp()) {
+		let a = Sp();
+		if (r.skip || !a || xp()) {
 			await n();
 			return;
 		}
@@ -17038,15 +17311,15 @@ function mp() {
 	}
 	return Object.freeze({
 		get supported() {
-			return !!fp();
+			return !!Sp();
 		},
 		start: n
 	});
 }
-var hp = mp, gp = {
+var Tp = wp, Ep = {
 	key: 0,
 	class: "mat-dialog-prompt__content"
-}, _p = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatImperativeDialogHost" }, {
+}, Dp = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatImperativeDialogHost" }, {
 	__name: "ImperativeDialogHost",
 	props: {
 		options: {
@@ -17072,8 +17345,8 @@ var hp = mp, gp = {
 	},
 	setup(e) {
 		let n = e;
-		O(Nt, Wf());
-		let r = Gf();
+		O(Nt, ep());
+		let r = tp();
 		r && O(gn, r);
 		let c = j(!0), l = L(n.cancelValue), f = j(n.options.promptConfig?.defaultValue ?? ""), p = i(() => !!n.options.promptConfig), m = i(() => n.options.promptConfig?.required ?? !1), h = i(() => m.value && f.value.trim().length === 0), g = i(() => {
 			let e = { ...n.options };
@@ -17107,7 +17380,7 @@ var hp = mp, gp = {
 				"variant",
 				"onClick"
 			]))), 128))]),
-			default: U(() => [p.value ? (D(), s(t, { key: 0 }, [e.options.content ? (D(), s("p", gp, R(e.options.content), 1)) : o("", !0), d(Ql, {
+			default: U(() => [p.value ? (D(), s(t, { key: 0 }, [e.options.content ? (D(), s("p", Ep, R(e.options.content), 1)) : o("", !0), d(Ql, {
 				modelValue: f.value,
 				"onUpdate:modelValue": r[0] ||= (e) => f.value = e,
 				autofocus: "",
@@ -17124,34 +17397,34 @@ var hp = mp, gp = {
 			_: 1
 		}, 16, ["modelValue", "aria-label"]));
 	}
-}), [["__scopeId", "data-v-cac78251"]]), vp = [
+}), [["__scopeId", "data-v-cac78251"]]), Op = [
 	"elevated",
 	"filled",
 	"filled-tonal",
 	"outlined",
 	"standard",
 	"text"
-], yp = [
+], kp = [
 	"fullScreen",
 	"scrim",
 	"closeOnBack"
-], bp = [
+], Ap = [
 	"title",
 	"content",
 	"icon",
 	"closeLabel",
 	"ariaLabel"
 ];
-function xp(e) {
+function jp(e) {
 	return typeof e == "number" ? Number.isFinite(e) && e > 0 : typeof e == "string" && e.trim().length > 0;
 }
-function Sp() {
+function Mp() {
 	if (typeof window > "u" || typeof document > "u") throw Error("Dialog 命令式函数只能在客户端环境中调用");
 }
-function Cp(e) {
+function Np(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("dialog options 必须是对象");
 }
-function wp(e) {
+function Pp(e) {
 	let t = e ?? "body", n = null;
 	if (typeof t == "string") try {
 		n = document.querySelector(t);
@@ -17163,10 +17436,10 @@ function wp(e) {
 	if (!n) throw TypeError("dialog attach 未找到目标元素");
 	return n;
 }
-function Tp(e) {
+function Fp(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("dialog action 必须是对象");
 	if (typeof e.text != "string" || e.text.trim().length === 0) throw TypeError("dialog action text 必须是非空字符串");
-	if (e.variant !== void 0 && !vp.includes(e.variant)) throw TypeError("dialog action variant 无效");
+	if (e.variant !== void 0 && !Op.includes(e.variant)) throw TypeError("dialog action variant 无效");
 	if (e.color !== void 0 && !Gt(e.color)) throw TypeError("dialog action color 无效");
 	if (e.disabled !== void 0 && typeof e.disabled != "boolean") throw TypeError("dialog action disabled 必须是 boolean");
 	return {
@@ -17176,40 +17449,40 @@ function Tp(e) {
 		variant: e.variant ?? "text"
 	};
 }
-function Ep(e) {
-	if (Cp(e), yp.forEach((t) => {
+function Ip(e) {
+	if (Np(e), kp.forEach((t) => {
 		if (e[t] !== void 0 && typeof e[t] != "boolean") throw TypeError(`dialog ${t} 必须是 boolean`);
-	}), bp.forEach((t) => {
+	}), Ap.forEach((t) => {
 		if (e[t] !== void 0 && typeof e[t] != "string") throw TypeError(`dialog ${t} 必须是 string`);
 	}), e.closeLabel !== void 0 && e.closeLabel.trim().length === 0) throw TypeError("dialog closeLabel 必须是非空字符串");
 	if (e.color !== void 0 && !Gt(e.color)) throw TypeError("dialog color 无效");
-	if (e.width !== void 0 && !xp(e.width)) throw TypeError("dialog width 无效");
+	if (e.width !== void 0 && !jp(e.width)) throw TypeError("dialog width 无效");
 	if (e.actions !== void 0 && !Array.isArray(e.actions)) throw TypeError("dialog actions 必须是数组");
 	let t = {
 		actions: (e.actions ?? [{
 			text: "确定",
 			value: void 0
-		}]).map(Tp),
-		attach: wp(e.attach)
+		}]).map(Fp),
+		attach: Pp(e.attach)
 	};
 	return [
-		...yp,
-		...bp,
+		...kp,
+		...Ap,
 		"color",
 		"width"
 	].forEach((n) => {
 		e[n] !== void 0 && (t[n] = e[n]);
 	}), e.promptConfig && (t.promptConfig = e.promptConfig), t;
 }
-function Dp(e, t) {
+function Lp(e, t) {
 	try {
-		Sp();
-		let n = Ep(e);
+		Mp();
+		let n = Ip(e);
 		return new Promise((e, r) => {
 			let i = document.createElement("div");
 			i.dataset.matDialogHost = "", document.body.append(i);
 			try {
-				M(m(_p, {
+				M(m(Dp, {
 					cancelValue: t,
 					options: n,
 					onClosed(t) {
@@ -17224,13 +17497,13 @@ function Dp(e, t) {
 		return Promise.reject(e);
 	}
 }
-function Op(e = {}) {
-	return Dp(e, void 0);
+function Rp(e = {}) {
+	return Lp(e, void 0);
 }
-function kp(e = {}) {
+function zp(e = {}) {
 	try {
-		if (Cp(e), e.confirmText !== void 0 && (typeof e.confirmText != "string" || e.confirmText.trim().length === 0)) throw TypeError("alert confirmText 必须是非空字符串");
-		return Dp({
+		if (Np(e), e.confirmText !== void 0 && (typeof e.confirmText != "string" || e.confirmText.trim().length === 0)) throw TypeError("alert confirmText 必须是非空字符串");
+		return Lp({
 			...e,
 			actions: [{
 				text: e.confirmText ?? "确定",
@@ -17241,13 +17514,13 @@ function kp(e = {}) {
 		return Promise.reject(e);
 	}
 }
-function Ap(e = {}) {
+function Bp(e = {}) {
 	try {
-		Cp(e);
+		Np(e);
 		let t = e.confirmText ?? "确定", n = e.cancelText ?? "取消";
 		if (typeof t != "string" || t.trim().length === 0) throw TypeError("confirm confirmText 必须是非空字符串");
 		if (typeof n != "string" || n.trim().length === 0) throw TypeError("confirm cancelText 必须是非空字符串");
-		return Dp({
+		return Lp({
 			...e,
 			actions: [{
 				text: n,
@@ -17261,9 +17534,9 @@ function Ap(e = {}) {
 		return Promise.reject(e);
 	}
 }
-function jp(e = {}) {
+function Vp(e = {}) {
 	try {
-		Cp(e);
+		Np(e);
 		let t = e.confirmText ?? "确定", n = e.cancelText ?? "取消", r = e.defaultValue ?? "", i = e.required ?? !1;
 		if ([
 			[
@@ -17294,7 +17567,7 @@ function jp(e = {}) {
 		].forEach(([e, t, n]) => {
 			if (t !== void 0 && (typeof t != "string" || n && t.trim().length === 0)) throw TypeError(`prompt ${e} 必须是${n ? "非空" : ""}字符串`);
 		}), typeof i != "boolean") throw TypeError("prompt required 必须是 boolean");
-		return Dp({
+		return Lp({
 			...e,
 			actions: [{
 				text: n,
@@ -17316,7 +17589,7 @@ function jp(e = {}) {
 }
 //#endregion
 //#region src/components/mat-snackbar/ImperativeSnackbarHost.vue
-var Mp = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
+var Hp = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
 	__name: "ImperativeSnackbarHost",
 	props: {
 		options: {
@@ -17330,8 +17603,8 @@ var Mp = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
 	},
 	setup(e) {
 		let t = e;
-		O(Nt, Wf()), O(Wd, !0);
-		let n = Gf();
+		O(Nt, ep()), O(Wd, !0);
+		let n = tp();
 		n && O(gn, n);
 		let r = j(!0), o = i(() => {
 			let e = { ...t.options };
@@ -17351,24 +17624,24 @@ var Mp = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
 			onClosed: s
 		}), null, 16, ["modelValue"]));
 	}
-}), Np = [
+}), Up = [
 	"left",
 	"center",
 	"right"
-], Pp = null;
-function Fp() {
+], Wp = null;
+function Gp() {
 	if (typeof document > "u" || !document.body) throw Error("Snackbar 命令式函数只能在客户端环境中调用");
 }
-function Ip(e) {
+function Kp(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("snackbar options 必须是对象");
 }
-function Lp(e) {
-	if (Ip(e), typeof e.text != "string" || e.text.trim().length === 0) throw TypeError("snackbar text 必须是非空字符串");
+function qp(e) {
+	if (Kp(e), typeof e.text != "string" || e.text.trim().length === 0) throw TypeError("snackbar text 必须是非空字符串");
 	if (e.actionText !== void 0 && (typeof e.actionText != "string" || e.actionText.trim().length === 0)) throw TypeError("snackbar actionText 必须是非空字符串");
 	if (e.onAction !== void 0 && typeof e.onAction != "function") throw TypeError("snackbar onAction 必须是函数");
 	if (e.closable !== void 0 && typeof e.closable != "boolean") throw TypeError("snackbar closable 必须是 boolean");
 	if (e.closeLabel !== void 0 && (typeof e.closeLabel != "string" || e.closeLabel.trim().length === 0)) throw TypeError("snackbar closeLabel 必须是非空字符串");
-	if (e.position !== void 0 && !Np.includes(e.position)) throw TypeError("snackbar position 无效");
+	if (e.position !== void 0 && !Up.includes(e.position)) throw TypeError("snackbar position 无效");
 	if (e.duration !== void 0 && (!Number.isFinite(e.duration) || e.duration < 0)) throw TypeError("snackbar duration 必须是大于等于 0 的有限数字");
 	return {
 		actionText: e.actionText,
@@ -17380,34 +17653,34 @@ function Lp(e) {
 		text: e.text
 	};
 }
-function Rp() {
-	return Pp?.isConnected ? Pp : (Pp = document.createElement("div"), Pp.dataset.matSnackbarHost = "", document.body.append(Pp), Pp);
+function Jp() {
+	return Wp?.isConnected ? Wp : (Wp = document.createElement("div"), Wp.dataset.matSnackbarHost = "", document.body.append(Wp), Wp);
 }
-function zp() {
-	!Pp || Pp.childNodes.length > 0 || (Pp.remove(), Pp = null);
+function Yp() {
+	!Wp || Wp.childNodes.length > 0 || (Wp.remove(), Wp = null);
 }
-function Bp(e) {
+function Xp(e) {
 	try {
-		Fp();
-		let t = Lp(e);
+		Gp();
+		let t = qp(e);
 		return new Promise((e, n) => {
 			let r = !1, i;
 			function a() {
 				if (r) return;
 				r = !0;
-				let t = Pp;
-				t && M(null, t), e(), Xd(i), zp();
+				let t = Wp;
+				t && M(null, t), e(), Xd(i), Yp();
 			}
 			function o(e) {
 				if (r) return;
 				r = !0;
-				let t = Pp;
-				t && M(null, t), n(e), Xd(i), zp();
+				let t = Wp;
+				t && M(null, t), n(e), Xd(i), Yp();
 			}
 			i = { activate() {
 				try {
-					let e = Rp();
-					M(m(Mp, {
+					let e = Jp();
+					M(m(Hp, {
 						onClosed: a,
 						options: t
 					}), e);
@@ -17420,6 +17693,6 @@ function Bp(e) {
 		return Promise.reject(e);
 	}
 }
-var Vp = Bp;
+var Zp = Xp;
 //#endregion
-export { zf as Intersection, da as MatAppBar, ki as MatAppRoot, $i as MatAside, Go as MatAvatar, oo as MatBadge, Wu as MatBottomSheet, bi as MatBtn, _a as MatBtnGroup, fs as MatCard, ms as MatCardActionArea, vs as MatCardActions, gs as MatCardContent, ss as MatCardHeadline, ls as MatCardMedia, ds as MatCardSubhead, Ga as MatCarousel, qa as MatCarouselItem, ns as MatChatMinimap, Ic as MatCheckbox, Vc as MatChip, Wc as MatChipSet, qu as MatContainer, wo as MatDatePicker, Ou as MatDialog, Ac as MatDivider, bu as MatDockedContainer, Qo as MatDynamicText, qs as MatExpansion, _c as MatExpansionPanel, wa as MatFab, ka as MatFabMenu, Cc as MatGridList, _r as MatHover, Cn as MatIcon, ja as MatImage, fa as MatInputBase, Ju as MatLayout, Gs as MatList, mc as MatListGroup, dc as MatListItem, gr as MatLoading, eu as MatMenu, iu as MatMenuGroup, nu as MatMenuItem, kf as MatNavigationBar, Af as MatNavigationBarItem, jf as MatNavigationDrawer, Pf as MatNavigationGroup, Cf as MatNavigationItem, Of as MatNavigationRail, wf as MatNavigationRailItem, mf as MatPane, uf as MatPanes, Ud as MatProgress, ad as MatPullToRefresh, Kc as MatRadio, Yc as MatRadioGroup, Pl as MatRangeSlider, Hc as MatScrollArea, ha as MatSearch, fu as MatSelect, sr as MatShape, Ho as MatSharedElement, Ho as MdeSharedElement, Gu as MatSideSheet, Ys as MatSimpleExpansion, Dl as MatSlider, tf as MatSnackbar, xu as MatSpacer, is as MatSplitBtn, Xc as MatSwitch, to as MatTabContent, uo as MatTabItem, Yu as MatTableWrapper, po as MatTabs, Ko as MatText, Ql as MatTextField, pu as MatTextarea, Lo as MatTimePicker, sf as MatToolbar, ci as MatTooltip, Xu as MatVirtualScroll, Xu as MdeVirtualScroll, pt as Ripple, At as StateLayer, kp as alert, Ap as confirm, cp as createMatUi, Op as dialog, hn as extractColorFromImage, jp as prompt, Bp as snackbar, Vp as toast, ji as useLayout, Er as useMatApp, $ as useMatProps, lp as useMatTheme, up as useMatUi, mp as useMatViewTransition, hp as useMdeViewTransition };
+export { Yf as Intersection, da as MatAppBar, ki as MatAppRoot, $i as MatAside, Go as MatAvatar, oo as MatBadge, Wu as MatBottomSheet, bi as MatBtn, _a as MatBtnGroup, fs as MatCard, ms as MatCardActionArea, vs as MatCardActions, gs as MatCardContent, ss as MatCardHeadline, ls as MatCardMedia, ds as MatCardSubhead, Ga as MatCarousel, qa as MatCarouselItem, ns as MatChatMinimap, Ic as MatCheckbox, Vc as MatChip, Wc as MatChipSet, qu as MatContainer, wo as MatDatePicker, Ou as MatDialog, Ac as MatDivider, bu as MatDockedContainer, Qo as MatDynamicText, qs as MatExpansion, _c as MatExpansionPanel, wa as MatFab, ka as MatFabMenu, Cc as MatGridList, _r as MatHover, Cn as MatIcon, ja as MatImage, fa as MatInputBase, Ju as MatLayout, Gs as MatList, mc as MatListGroup, dc as MatListItem, gr as MatLoading, eu as MatMenu, iu as MatMenuGroup, nu as MatMenuItem, zf as MatNavigationBar, Bf as MatNavigationBarItem, Vf as MatNavigationDrawer, Wf as MatNavigationGroup, Nf as MatNavigationItem, Rf as MatNavigationRail, Pf as MatNavigationRailItem, ff as MatNotification, wf as MatPane, bf as MatPanes, Ud as MatProgress, ad as MatPullToRefresh, Kc as MatRadio, Yc as MatRadioGroup, Pl as MatRangeSlider, Hc as MatScrollArea, ha as MatSearch, fu as MatSelect, sr as MatShape, Ho as MatSharedElement, Ho as MdeSharedElement, Gu as MatSideSheet, Ys as MatSimpleExpansion, Dl as MatSlider, tf as MatSnackbar, xu as MatSpacer, is as MatSplitBtn, Xc as MatSwitch, to as MatTabContent, uo as MatTabItem, Yu as MatTableWrapper, po as MatTabs, Ko as MatText, Ql as MatTextField, pu as MatTextarea, Lo as MatTimePicker, _f as MatToolbar, ci as MatTooltip, Xu as MatVirtualScroll, Xu as MdeVirtualScroll, pt as Ripple, At as StateLayer, zp as alert, Bp as confirm, vp as createMatUi, Rp as dialog, hn as extractColorFromImage, Vp as prompt, Xp as snackbar, Zp as toast, ji as useLayout, Er as useMatApp, $ as useMatProps, yp as useMatTheme, bp as useMatUi, wp as useMatViewTransition, Tp as useMdeViewTransition };

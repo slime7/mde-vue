@@ -61,6 +61,7 @@ llms: false
 - Toolbar：`docs/site/components/toolbar.md`
 - Tooltip：`docs/site/components/tooltip.md`
 - Snackbar：`docs/site/components/snackbar.md`
+- Notification：`docs/site/components/notification.md`
 - Intersection：`docs/site/directives/intersection.md`
 - State layer：`docs/site/directives/state-layer.md`
 - Ripple：`docs/site/directives/ripple.md`

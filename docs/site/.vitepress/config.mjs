@@ -327,6 +327,7 @@ export default defineConfig({
               { text: 'Docked container 浮动容器', link: '/components/docked-container' },
               { text: 'Tooltip 文字提示', link: '/components/tooltip' },
               { text: 'Snackbar 消息提示', link: '/components/snackbar' },
+              { text: 'Notification 通知', link: '/components/notification' },
               { text: 'Loading 加载指示器', link: '/components/loading' },
               { text: 'Progress 进度', link: '/components/progress' },
               { text: 'PullToRefresh 下拉刷新', link: '/components/pull-to-refresh' },

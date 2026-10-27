@@ -70,6 +70,7 @@ import MatPullToRefresh from './components/mat-pull-to-refresh/MatPullToRefresh.
 import MatProgress from './components/mat-progress/MatProgress.vue';
 import MatTooltip from './components/mat-tooltip/MatTooltip.vue';
 import MatSnackbar from './components/mat-snackbar/MatSnackbar.vue';
+import MatNotification from './components/mat-notification/MatNotification.vue';
 import MatToolbar from './components/mat-toolbar/MatToolbar.vue';
 import MatPanes from './components/mat-panes/MatPanes.vue';
 import MatPane from './components/mat-panes/MatPane.vue';
@@ -165,6 +166,7 @@ export const GLOBAL_COMPONENTS = [
   ['MatProgress', 'mat-progress', MatProgress],
   ['MatTooltip', 'mat-tooltip', MatTooltip],
   ['MatSnackbar', 'mat-snackbar', MatSnackbar],
+  ['MatNotification', 'mat-notification', MatNotification],
   ['MatToolbar', 'mat-toolbar', MatToolbar],
   ['MatPanes', 'mat-panes', MatPanes],
   ['MatPane', 'mat-pane', MatPane],
