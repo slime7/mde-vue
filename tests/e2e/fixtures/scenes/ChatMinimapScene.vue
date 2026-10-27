@@ -43,6 +43,15 @@ const sizedItems = items.slice(0, 6);
           :item-gap="12"
         />
       </div>
+
+      <div class="sample">
+        <span class="sample__label">current 标记</span>
+        <mat-chat-minimap
+          data-testid="current-minimap"
+          :items="items"
+          :current="4"
+        />
+      </div>
     </div>
   </section>
 </template>

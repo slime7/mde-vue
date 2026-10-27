@@ -7,6 +7,7 @@ const exampleNames = [
   'ChatMinimapBasicExample',
   'ChatMinimapSizeExample',
   'ChatMinimapDirectionExample',
+  'ChatMinimapCurrentExample',
   'ChatMinimapClickExample',
 ];
 
@@ -30,6 +31,11 @@ describe('Chat minimap 文档', () => {
     expect(page).toContain('item-width');
     expect(page).toContain('item-height');
     expect(page).toContain('item-gap');
+    expect(page).toContain('`current`');
+    expect(page).toContain('aria-current');
+    expect(page).toContain('宽度保持收缩');
+    expect(page).toContain('悬停高亮优先');
+    expect(page).toContain('`tertiary` 高亮');
     expect(page).toContain('悬停范围覆盖整行');
     ['## 组件简介', '## 示例', '## API', '## 事件', '## Slots'].forEach((heading) => {
       expect(page).toContain(heading);

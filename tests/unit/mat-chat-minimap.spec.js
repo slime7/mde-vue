@@ -116,6 +116,44 @@ describe('MatChatMinimap', () => {
     wrapper.unmount();
   });
 
+  it('current 标记的条目携带 aria-current，其余条目不受影响', async () => {
+    const wrapper = mount(MatChatMinimap, {
+      attachTo: document.body,
+      props: {
+        current: 1,
+        items: [{ id: 'first' }, { id: 'second' }, { id: 'third' }],
+      },
+    });
+
+    await settleRender();
+
+    const items = getItems(wrapper);
+
+    expect(items[0].attributes('aria-current')).toBeUndefined();
+    expect(items[1].attributes('aria-current')).toBe('true');
+    expect(items[2].attributes('aria-current')).toBeUndefined();
+
+    wrapper.unmount();
+  });
+
+  it.each([null, 3, -1])('current 为 %s 时不标记任何条目', async (current) => {
+    const wrapper = mount(MatChatMinimap, {
+      attachTo: document.body,
+      props: {
+        current,
+        items: [{ id: 'first' }, { id: 'second' }],
+      },
+    });
+
+    await settleRender();
+
+    getItems(wrapper).forEach((item) => {
+      expect(item.attributes('aria-current')).toBeUndefined();
+    });
+
+    wrapper.unmount();
+  });
+
   it('没有 tooltip 配置的条目只渲染短横线', async () => {
     const wrapper = mount(MatChatMinimap, {
       attachTo: document.body,

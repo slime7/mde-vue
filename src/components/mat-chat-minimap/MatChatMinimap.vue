@@ -83,6 +83,18 @@ const props = defineProps({
     default: 'left',
     validator: (value) => ['left', 'right'].includes(value),
   },
+  /**
+   * 标记为“当前”的条目索引，从 0 开始，语义由使用者定义（例如当前滚动位置）。
+   *
+   * 为有效数字索引且缩略图未处于悬停状态时，对应短横线使用与悬停一致的高亮颜色，但宽度保持静止收缩状态，不参与悬停梯度展开；对应条目按钮始终携带 `aria-current="true"`。悬停期间悬停高亮优先，该标记暂停显示，鼠标离开后恢复。`null` 或超出条目范围的值不标记任何条目。
+   *
+   * @type {number | null}
+   * @default null
+   */
+  current: {
+    type: Number,
+    default: null,
+  },
 });
 const propsWithDefaults = useMatProps('chatMinimap', props);
 const rootStyle = computed(() => ({
@@ -144,6 +156,18 @@ function getBarStyle(index) {
   return {
     '--_mat-chat-minimap-width-scale': getWidthScale(index),
   };
+}
+
+/**
+ * @param {number} index
+ * @returns {boolean}
+ */
+function isBarHighlighted(index) {
+  if (activeIndex.value !== null) {
+    return activeIndex.value === index;
+  }
+
+  return propsWithDefaults.current === index;
 }
 
 /**
@@ -224,12 +248,13 @@ function clearActive() {
           type="button"
           class="mat-chat-minimap__item"
           :aria-label="getItemLabel(item)"
+          :aria-current="propsWithDefaults.current === index ? 'true' : undefined"
           @click="handleItemClick(item, index, $event)"
           @mouseenter="setActive(index)"
         >
           <span
             class="mat-chat-minimap__bar"
-            :class="{ 'mat-chat-minimap__bar--active': activeIndex === index }"
+            :class="{ 'mat-chat-minimap__bar--active': isBarHighlighted(index) }"
             :style="getBarStyle(index)"
             aria-hidden="true"
           />
