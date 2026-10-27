@@ -7,6 +7,7 @@ import GridListScene from './GridListScene.vue';
 import ListSwipeScene from './ListSwipeScene.vue';
 import MenuScene from './MenuScene.vue';
 import NavigationGroupScene from './NavigationGroupScene.vue';
+import NotificationScene from './NotificationScene.vue';
 import PanesScene from './PanesScene.vue';
 import PullToRefreshScene from './PullToRefreshScene.vue';
 import RippleScene from './RippleScene.vue';
@@ -26,6 +27,7 @@ export const scenes = {
   'list-swipe': ListSwipeScene,
   menu: MenuScene,
   'navigation-group': NavigationGroupScene,
+  notification: NotificationScene,
   panes: PanesScene,
   'pull-to-refresh': PullToRefreshScene,
   ripple: RippleScene,
