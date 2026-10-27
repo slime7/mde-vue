@@ -75,6 +75,27 @@ test.describe('MatNotification 定位与交互', () => {
     expect(cardBox.x + cardBox.width).toBeLessThanOrEqual(hostBox.x + hostBox.width + 0.5);
   });
 
+  test('app=false 时即使位于 Layout 内也保持自然布局', async ({ page }) => {
+    await openScene(page, 'notification');
+
+    const stage = page.getByTestId('notification-stage');
+    const host = page.getByTestId('notification-app-false-host');
+    const card = host.getByTestId('notification-app-false');
+
+    await expect(card).toBeVisible();
+    await expect.poll(
+      () => card.evaluate((element) => getComputedStyle(element).position),
+    ).toBe('static');
+
+    const stageBox = await stage.boundingBox();
+    const hostBox = await host.boundingBox();
+    const cardBox = await card.boundingBox();
+
+    expect(cardBox.x).toBeCloseTo(hostBox.x, 0);
+    expect(cardBox.y).toBeCloseTo(hostBox.y, 0);
+    expect(cardBox.y + cardBox.height).toBeLessThanOrEqual(stageBox.y + stageBox.height);
+  });
+
   test('触发操作后派发事件并关闭', async ({ page }) => {
     await openScene(page, 'notification');
 

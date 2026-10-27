@@ -52,6 +52,17 @@ function recordAction({ action }) {
           title="位置测试"
         />
       </div>
+
+      <div data-testid="notification-app-false-host">
+        <mat-notification
+          data-testid="notification-app-false"
+          :app="false"
+          :closable="false"
+          :model-value="true"
+          text="app=false 保持文档流。"
+          title="自然布局通知"
+        />
+      </div>
     </mat-layout>
 
     <div data-testid="notification-inline-host" class="notification-scene__inline-host">

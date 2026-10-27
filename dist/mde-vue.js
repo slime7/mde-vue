@@ -15035,6 +15035,10 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 				return typeof e == "string" && e.trim().length > 0;
 			}
 		},
+		app: {
+			type: Boolean,
+			default: !0
+		},
 		position: {
 			type: String,
 			default: "top-end",
@@ -15061,7 +15065,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 		closed: () => !0
 	},
 	setup(e, { emit: r }) {
-		let l = $("notification", e), f = r, p = te(), m = h(Nt, Mt), g = h(Ai, null), y = h(xr, null), b = g ?? y, { colorStyle: x, hasExplicitColor: S } = yn(i(() => l.color)), w = j(!1), E = j("closed"), O = j(!1), k = j(null), A = i(() => g ? g.rootElement.value : y ? y.freeLayer.value : null), M = i(() => A.value ?? "body"), F = i(() => {
+		let l = $("notification", e), f = r, p = te(), m = h(Nt, Mt), g = h(Ai, null), y = h(xr, null), b = i(() => l.app ? g ?? y : null), { colorStyle: x, hasExplicitColor: S } = yn(i(() => l.color)), w = j(!1), E = j("closed"), O = j(!1), k = j(null), A = i(() => b.value ? g ? g.rootElement.value : y ? y.freeLayer.value : null : null), M = i(() => A.value ?? "body"), F = i(() => {
 			if (g) {
 				let e = g.publicContext.padding;
 				return {
@@ -15132,7 +15136,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 				q.value || (ie(), ce());
 				return;
 			}
-			w.value && E.value !== "closing" || (re.cancel(), w.value = !0, E.value = "opening", await v(), !(!X || !w.value || E.value === "closing") && (b && !A.value || ue()));
+			w.value && E.value !== "closing" || (re.cancel(), w.value = !0, E.value = "opening", await v(), !(!X || !w.value || E.value === "closing") && (b.value && !A.value || ue()));
 		}
 		function fe() {
 			if (O.value || !q.value) {
@@ -15165,7 +15169,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 				}
 				Z = !1, l.modelValue && !w.value && !O.value && fe();
 			}
-		}), (e, r) => !z(b) || A.value ? (D(), a(n, {
+		}), (e, r) => !b.value || A.value ? (D(), a(n, {
 			key: 0,
 			to: M.value,
 			disabled: !A.value
@@ -15178,7 +15182,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 				`mat-notification--${z(l).position}`,
 				`mat-notification--${E.value}`,
 				{
-					"mat-notification--positioned": z(b),
+					"mat-notification--positioned": b.value,
 					"mat-notification--explicit-color": z(S)
 				}
 			]],
@@ -15238,7 +15242,7 @@ var Zd = { class: "mat-snackbar__text" }, Qd = {
 			}, 8, ["aria-label", "use-cursor"]))])) : o("", !0)
 		], 16)) : o("", !0)], 8, ["to", "disabled"])) : o("", !0);
 	}
-}), [["__scopeId", "data-v-54654188"]]), pf = ["aria-orientation"], mf = { class: "mat-toolbar__surface" }, hf = { class: "mat-toolbar__content" }, gf = 200, _f = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-a5a3a475"]]), pf = ["aria-orientation"], mf = { class: "mat-toolbar__surface" }, hf = { class: "mat-toolbar__content" }, gf = 200, _f = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatToolbar",
 	inheritAttrs: !1
 }, {

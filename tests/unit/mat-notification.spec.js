@@ -382,4 +382,90 @@ describe('MatNotification', () => {
     expect(layoutElement.contains(element)).toBe(true);
     expect(document.querySelector('[data-test="host"]').contains(element)).toBe(false);
   });
+
+  it('app=false 时位于 MatLayout 内仍保持自然布局', async () => {
+    mountHost({
+      components: { MatLayout, MatNotification },
+      data() {
+        return { open: true };
+      },
+      template: `
+        <MatLayout>
+          <div data-test="host">
+            <MatNotification v-model="open" :app="false" title="自然布局通知" />
+          </div>
+        </MatLayout>
+      `,
+    });
+
+    await settleRender();
+    await settleRender();
+    await settleRender();
+
+    const element = notificationElement();
+
+    expect(element).not.toBeNull();
+    expect(document.querySelector('[data-test="host"]').contains(element)).toBe(true);
+  });
+
+  it('app=false 时位于 MatAppRoot 内仍保持自然布局', async () => {
+    mountHost({
+      components: { MatAppRoot, MatNotification },
+      data() {
+        return { open: true };
+      },
+      template: `
+        <MatAppRoot>
+          <div data-test="host">
+            <MatNotification v-model="open" :app="false" title="应用内自然布局通知" />
+          </div>
+        </MatAppRoot>
+      `,
+    });
+
+    await settleRender();
+    await settleRender();
+    await settleRender();
+
+    const element = notificationElement();
+
+    expect(element).not.toBeNull();
+    expect(document.querySelector('[data-test="host"]').contains(element)).toBe(true);
+  });
+
+  it('动态切换 app 会在自然布局和自动定位之间移动', async () => {
+    const wrapper = mountHost({
+      components: { MatLayout, MatNotification },
+      data() {
+        return { app: false, open: true };
+      },
+      template: `
+        <MatLayout>
+          <div data-test="host">
+            <MatNotification v-model="open" :app="app" title="切换定位" />
+          </div>
+        </MatLayout>
+      `,
+    });
+
+    await settleRender();
+    await settleRender();
+
+    const host = document.querySelector('[data-test="host"]');
+
+    expect(host.contains(notificationElement())).toBe(true);
+
+    wrapper.vm.app = true;
+    await settleRender();
+    await settleRender();
+
+    expect(host.contains(notificationElement())).toBe(false);
+    expect(wrapper.element.contains(notificationElement())).toBe(true);
+
+    wrapper.vm.app = false;
+    await settleRender();
+    await settleRender();
+
+    expect(host.contains(notificationElement())).toBe(true);
+  });
 });

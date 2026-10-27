@@ -10,6 +10,7 @@ const exampleNames = [
   'NotificationIconExample',
   'NotificationTimeExample',
   'NotificationActionsExample',
+  'NotificationAppExample',
   'NotificationClosableExample',
   'NotificationCloseLabelExample',
   'NotificationPositionExample',
@@ -32,7 +33,9 @@ describe('Notification 文档', () => {
     expect(page).toContain('llms: true');
     expect(page).toContain('`<mat-notification>` 的组件导出名是 `MatNotification`');
     expect(page).toContain('`actions`');
+    expect(page).toContain('`app`');
     expect(page).toContain('`position`');
+    expect(page).toContain('| `app` | `boolean` | `true` |');
     expect(page).toContain('| `action` | `{ action, index }` |');
     ['## 组件简介', '## 示例', '## API', '## 事件', '## Slots'].forEach((heading) => {
       expect(page).toContain(heading);

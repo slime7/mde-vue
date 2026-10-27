@@ -122,6 +122,16 @@ const props = defineProps({
     },
   },
   /**
+   * 是否接入最近的 MatLayout 或 MatAppRoot 自动定位；为 false 时始终按文档流自然排列。
+   *
+   * @type {boolean}
+   * @default true
+   */
+  app: {
+    type: Boolean,
+    default: true,
+  },
+  /**
    * 通知方位；可选值为 `top-start`、`top-center`、`top-end`、`bottom-start`、
    * `bottom-center`、`bottom-end`。独立使用时忽略。
    *
@@ -174,13 +184,23 @@ const slots = useSlots();
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const layoutContext = inject(MAT_LAYOUT_KEY, null);
 const appContext = inject(MAT_APP_ROOT_KEY, null);
-const positioningContext = layoutContext ?? appContext;
+const positioningContext = computed(() => {
+  if (!propsWithDefaults.app) {
+    return null;
+  }
+
+  return layoutContext ?? appContext;
+});
 const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => propsWithDefaults.color));
 const rendered = ref(false);
 const phase = ref('closed');
 const suppressed = ref(false);
 const notificationElement = ref(null);
 const teleportTarget = computed(() => {
+  if (!positioningContext.value) {
+    return null;
+  }
+
   if (layoutContext) {
     return layoutContext.rootElement.value;
   }
@@ -366,7 +386,7 @@ async function openNotification() {
     return;
   }
 
-  if (positioningContext && !teleportTarget.value) {
+  if (positioningContext.value && !teleportTarget.value) {
     return;
   }
 

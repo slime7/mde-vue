@@ -11,7 +11,7 @@ order: 110.5
 
 `<mat-notification>` 的组件导出名是 `MatNotification`。它展示单条 Android 风格通知卡片，包含标题、正文、时间、前置图标、最多三个操作和关闭入口。
 
-独立使用时，组件按自然布局渲染在当前位置。位于 `<mat-layout>` 或 `<mat-app-root>` 内时，组件自动挂载到最近的布局根或应用覆盖层，并按 `position` 吸附到容器角落，同时避让布局 padding 与安全区。它不提供通知中心、通知队列、通知渠道或系统级通知权限。
+独立使用时，组件按自然布局渲染在当前位置。位于 `<mat-layout>` 或 `<mat-app-root>` 内且 `app` 为 `true`（默认）时，组件自动挂载到最近的布局根或应用覆盖层，并按 `position` 吸附到容器角落，同时避让布局 padding 与安全区；设置 `app=false` 可强制保持在文档流中。它不提供通知中心、通知队列、通知渠道或系统级通知权限。
 
 Snackbar 适合短暂、只有一条文字操作反馈的场景；Notification 适合需要常驻、包含多条操作或需要展示标题、时间与图标的通知。两者可以同时存在：Snackbar 固定在底部，Notification 默认显示在右上角。
 
@@ -179,6 +179,28 @@ Snackbar 适合短暂、只有一条文字操作反馈的场景；Notification �
   </DocsPreview>
 </ClientOnly>
 
+### `app`
+
+`app` 默认为 `true`。关闭后即使位于布局容器内，也会始终按文档流自然排列。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/notification/NotificationAppExample.vue#template [template]
+
+<<< @/examples/notification/NotificationAppExample.vue#script [script]
+
+<<< @/examples/notification/NotificationAppExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Notification app 预览">
+    <NotificationAppExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `position`
 
 在布局容器内切换六个方位。容器顶部和底部的 16px 间距由组件的视口边距提供。
@@ -315,7 +337,8 @@ Snackbar 适合短暂、只有一条文字操作反馈的场景；Notification �
 | `actions` | `Array<{ text: string, icon?: string }>` | `[]` | 操作列表；只展示前三项，`text` 必须非空，`icon` 可选 |
 | `closable` | `boolean` | `true` | 是否显示内置关闭按钮；`close` Slot 存在时仍展示 Slot |
 | `closeLabel` | `string` | `'关闭'` | 内置关闭按钮的非空可访问名称 |
-| `position` | `'top-start' \| 'top-center' \| 'top-end' \| 'bottom-start' \| 'bottom-center' \| 'bottom-end'` | `'top-end'` | 自动定位时的通知方位；独立使用时忽略 |
+| `app` | `boolean` | `true` | 是否接入最近的 MatLayout 或 MatAppRoot 自动定位；`false` 时始终按文档流自然排列 |
+| `position` | `'top-start' \| 'top-center' \| 'top-end' \| 'bottom-start' \| 'bottom-center' \| 'bottom-end'` | `'top-end'` | 自动定位时的通知方位；独立使用或 `app=false` 时忽略 |
 | `color` | `string` | 未设置 | 语义色或六位十六进制种子色 `#RRGGBB`；设置后替换默认表面色 |
 
 未消费的 `class`、`style`、`id`、`aria-*` 与原生事件传给 Teleport 后的通知根元素。根元素固定使用 `role="status"`、`aria-live="polite"` 和 `aria-atomic="true"`。没有标题、正文或默认 Slot 时组件不会展示，并请求把 `modelValue` 更新为 `false`。
@@ -345,13 +368,14 @@ Snackbar 适合短暂、只有一条文字操作反馈的场景；Notification �
 
 ## 定位与样式
 
-组件按以下优先级选择定位容器：
+组件按以下优先级选择定位方式：
 
-1. 最近的 `<mat-layout>`：挂载到布局根元素，使用布局的 `padding` 避让 Aside、Navigation bar 等已登记边缘。
-2. 最近的 `<mat-app-root>`：挂载到应用自由覆盖层，使用应用布局 padding 避让 App bar、Toolbar、Navigation 和安全区。
-3. 没有上述祖先：不 Teleport，按自然布局留在原位置；`position` 不生效。
+1. `app=false`：不 Teleport，始终按文档流自然排列，`position` 不生效。
+2. 最近的 `<mat-layout>`：挂载到布局根元素，使用布局的 `padding` 避让 Aside、Navigation bar 等已登记边缘。
+3. 最近的 `<mat-app-root>`：挂载到应用自由覆盖层，使用应用布局 padding 避让 App bar、Toolbar、Navigation 和安全区。
+4. 没有上述祖先：不 Teleport，按自然布局留在原位置；`position` 不生效。
 
-自动定位时，通知与容器边缘保持 16px 视口边距，最大宽度为 400px，窄容器中自动收缩。`top-*` 从容器顶部展开，`bottom-*` 从容器底部展开，进入与退出动画的方向随之变化。同一方位只应展示一条通知；组件不会把同时显示的多条通知排队或堆叠。
+运行中切换 `app` 会立即在自然布局和自动定位之间移动。自动定位时，通知与容器边缘保持 16px 视口边距，最大宽度为 400px，窄容器中自动收缩。`top-*` 从容器顶部展开，`bottom-*` 从容器底部展开，进入与退出动画的方向随之变化。同一方位只应展示一条通知；组件不会把同时显示的多条通知排队或堆叠。
 
 默认表面使用 `surfaceContainerHigh`、`onSurface` 与 `onSurfaceVariant`，形状为 28px extra-large 圆角，阴影为 level 2。前置图标与操作使用 primary；设置 `color` 后，卡片、正文、图标和操作统一改用对应语义色的 container / on-container 角色。标题使用 title medium，正文使用 body medium，时间使用 label medium，操作使用 label large。
 
@@ -364,6 +388,7 @@ Snackbar 适合短暂、只有一条文字操作反馈的场景；Notification �
 <script setup>
 import NotificationActionsExample from '../examples/notification/NotificationActionsExample.vue';
 import NotificationActionsSlotExample from '../examples/notification/NotificationActionsSlotExample.vue';
+import NotificationAppExample from '../examples/notification/NotificationAppExample.vue';
 import NotificationClosableExample from '../examples/notification/NotificationClosableExample.vue';
 import NotificationCloseLabelExample from '../examples/notification/NotificationCloseLabelExample.vue';
 import NotificationCloseSlotExample from '../examples/notification/NotificationCloseSlotExample.vue';

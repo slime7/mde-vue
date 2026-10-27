@@ -4468,6 +4468,13 @@ export interface MatNotificationProps {
   */
   closeLabel?: string;
   /**
+  * 是否接入最近的 MatLayout 或 MatAppRoot 自动定位；为 false 时始终按文档流自然排列。
+  *
+  * @type {boolean}
+  * @default true
+  */
+  app?: boolean;
+  /**
   * 通知方位；可选值为 `top-start`、`top-center`、`top-end`、`bottom-start`、
   * `bottom-center`、`bottom-end`。独立使用时忽略。
   *
