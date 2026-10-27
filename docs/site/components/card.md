@@ -307,7 +307,7 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
 
 ## 状态
 
-只有启用的 ActionArea 才会触发 Card 的 hover、focus 和 pressed 状态。焦点环显示在整张卡片上，减少动态效果偏好下不播放状态层过渡。
+只有启用的 ActionArea 才会触发离它最近的 Card 的 hover、focus 和 pressed 状态；嵌套卡片时，外层 Card 保持静止。焦点环显示在整张卡片上，减少动态效果偏好下不播放状态层过渡。
 
 需要分隔 Actions 时，将 `MatDivider` 放在 `MatCardActions` 前。全宽 Divider 完整划分两个区域；布尔 `inset` 模式在两侧各保留 16px，用于分隔仍属于同一内容组的区域。
 

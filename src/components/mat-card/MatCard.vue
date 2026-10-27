@@ -113,28 +113,29 @@ const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => propsW
     margin-block-end: 16px;
   }
 
-  .mat-card:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):focus-visible) {
+  /* 只让最近的卡片响应 ActionArea；排除条件沿用相同的启用过滤，避免禁用内层操作区误伤外层状态。 */
+  .mat-card:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):focus-visible):not(:has(.mat-card .mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):focus-visible)) {
     outline: var(--mat-sys-interaction-focus-ring-width, 3px) solid var(--mat-sys-color-secondary);
     outline-offset: var(--mat-sys-interaction-focus-ring-offset, 2px);
   }
 
   @media (hover: hover) {
-    .mat-card--filled:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover),
-    .mat-card--outlined:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover) {
+    .mat-card--filled:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover):not(:has(.mat-card .mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover)),
+    .mat-card--outlined:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover):not(:has(.mat-card .mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover)) {
       --mat-card-elevation: var(--mat-sys-elevation-level1);
     }
 
-    .mat-card--elevated:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover) {
+    .mat-card--elevated:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover):not(:has(.mat-card .mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover)) {
       --mat-card-elevation: var(--mat-sys-elevation-level2);
     }
   }
 
-  .mat-card--filled:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed])),
-  .mat-card--outlined:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed])) {
+  .mat-card--filled:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed])):not(:has(.mat-card .mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed]))),
+  .mat-card--outlined:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed])):not(:has(.mat-card .mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed]))) {
     --mat-card-elevation: var(--mat-sys-elevation-level0);
   }
 
-  .mat-card--elevated:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed])) {
+  .mat-card--elevated:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed])):not(:has(.mat-card .mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):is(:active, [data-mat-state-layer-pressed]))) {
     --mat-card-elevation: var(--mat-sys-elevation-level1);
   }
 

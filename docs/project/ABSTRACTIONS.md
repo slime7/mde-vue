@@ -206,7 +206,7 @@ Time picker 的 `v-model` 绑定 24 小时制 `HH:mm` 零填充字符串或 `nul
 
 Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCardHeadline`、`MatCardSubhead`、`MatCardMedia` 渲染；三者也可以通过 `<mat-card-headline>`、`<mat-card-subhead>`、`<mat-card-media>` 直接组合。Headline 使用 title-large，Subhead 使用较低强调的 body-medium；Media 占满可用横向空间并保持图片或视频自身比例。`MatCardContent` 提供 16px 内边距，`MatCardActions` 使用末端对齐、可换行的横向布局、8px 间距和 16px 内边距。
 
-`MatCardActionArea` 使用原生 button 或 link 语义，使整块内容成为主要操作区域；独立按钮、链接和选择控件必须放在同级 Actions 中。只有启用的 ActionArea 才驱动 Card 的 hover、focus 和 pressed 状态，pressed 必须恢复各变体的静止海拔，不能停留在 hover 海拔。`MatDivider` 直接位于 Card 和 Actions 之间时完整分隔两个区域；布尔 `inset` 表达两侧各 16px 的相关内容分隔，`start` 与旧 `middle` 字符串继续兼容。
+`MatCardActionArea` 使用原生 button 或 link 语义，使整块内容成为主要操作区域；独立按钮、链接和选择控件必须放在同级 Actions 中。只有启用的 ActionArea 才驱动离它最近的 Card 的 hover、focus 和 pressed 状态；嵌套卡片时外层 Card 不响应。pressed 必须恢复各变体的静止海拔，不能停留在 hover 海拔。`MatDivider` 直接位于 Card 和 Actions 之间时完整分隔两个区域；布尔 `inset` 表达两侧各 16px 的相关内容分隔，`start` 与旧 `middle` 字符串继续兼容。
 
 ## `<mat-progress>`
 

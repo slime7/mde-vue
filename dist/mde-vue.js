@@ -7151,7 +7151,7 @@ var Ho = /*@__PURE__*/ Object.assign({
 			"as"
 		]));
 	}
-}), [["__scopeId", "data-v-cb7bd9d9"]]), ps = { class: "mat-card-action-area__content" }, ms = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-2dfe7374"]]), ps = { class: "mat-card-action-area__content" }, ms = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatCardActionArea",
 	inheritAttrs: !1
 }, {
