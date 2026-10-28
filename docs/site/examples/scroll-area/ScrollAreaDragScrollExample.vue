@@ -3,8 +3,9 @@
   <mat-scroll-area
     class="drag-scroll-example"
     orientation="horizontal"
-    bar-width="hidden"
     drag-scroll
+    snap="mandatory"
+    :snap-padding="28"
     aria-label="可拖拽横向卡片"
     tabindex="0"
   >
@@ -37,6 +38,7 @@
   flex-shrink: 0;
   inline-size: 152px;
   padding: 24px 16px;
+  scroll-snap-align: start;
 }
 </style>
 <!-- #endregion style -->

@@ -321,6 +321,100 @@ describe('MatScrollArea', () => {
     expect(setPointerCapture).toHaveBeenCalledWith(4);
   });
 
+  it('确认拖拽时同步暂停滚动停靠，重渲染期间保持暂停，松手后恢复', async () => {
+    const wrapper = mount(MatScrollArea, {
+      props: {
+        dragScroll: true,
+        orientation: 'horizontal',
+        snap: 'mandatory',
+      },
+    });
+    const scroller = wrapper.vm.getScroller();
+
+    scroller.setPointerCapture = vi.fn();
+    setScrollLayout(scroller, { scrollLeft: 100 });
+    dispatchPointer(scroller, 'pointerdown', { clientX: 120, pointerId: 1 });
+    dispatchPointer(scroller, 'pointermove', { clientX: 90, pointerId: 1 });
+
+    expect(scroller.style.scrollSnapType).toBe('none');
+    expect(scroller.scrollLeft).toBe(130);
+
+    await wrapper.vm.$nextTick();
+    expect(scroller.style.scrollSnapType).toBe('none');
+
+    dispatchPointer(scroller, 'pointerup', { clientX: 90, pointerId: 1 });
+    await wrapper.vm.$nextTick();
+    expect(scroller.style.scrollSnapType).toBe('x mandatory');
+  });
+
+  it.each(['pointercancel', 'lostpointercapture'])('%s 结束拖拽后恢复滚动停靠', async (eventType) => {
+    const wrapper = mount(MatScrollArea, {
+      props: {
+        dragScroll: true,
+        orientation: 'horizontal',
+        snap: 'mandatory',
+      },
+    });
+    const scroller = wrapper.vm.getScroller();
+
+    scroller.setPointerCapture = vi.fn();
+    setScrollLayout(scroller, { scrollLeft: 100 });
+    dispatchPointer(scroller, 'pointerdown', { clientX: 120, pointerId: 2 });
+    dispatchPointer(scroller, 'pointermove', { clientX: 90, pointerId: 2 });
+    dispatchPointer(scroller, eventType, { pointerId: 2 });
+    await wrapper.vm.$nextTick();
+
+    expect(scroller.style.scrollSnapType).toBe('x mandatory');
+  });
+
+  it('拖拽进行中关闭 dragScroll 后恢复滚动停靠', async () => {
+    const wrapper = mount(MatScrollArea, {
+      props: {
+        dragScroll: true,
+        orientation: 'horizontal',
+        snap: 'mandatory',
+      },
+    });
+    const scroller = wrapper.vm.getScroller();
+
+    scroller.setPointerCapture = vi.fn();
+    setScrollLayout(scroller, { scrollLeft: 100 });
+    dispatchPointer(scroller, 'pointerdown', { clientX: 120, pointerId: 3 });
+    dispatchPointer(scroller, 'pointermove', { clientX: 90, pointerId: 3 });
+    expect(scroller.style.scrollSnapType).toBe('none');
+
+    await wrapper.setProps({ dragScroll: false });
+    expect(scroller.style.scrollSnapType).toBe('x mandatory');
+  });
+
+  it('拖拽手势进行中阻止内容发起原生拖放，结束后恢复', () => {
+    const wrapper = mount(MatScrollArea, {
+      props: { dragScroll: true, orientation: 'horizontal' },
+      slots: {
+        default: () => h('div', { draggable: true }, '内容'),
+      },
+    });
+    const scroller = wrapper.vm.getScroller();
+    const item = wrapper.get('div[draggable="true"]').element;
+
+    scroller.setPointerCapture = vi.fn();
+    const startDrag = () => {
+      const event = new MouseEvent('dragstart', { bubbles: true, cancelable: true });
+
+      item.dispatchEvent(event);
+
+      return event.defaultPrevented;
+    };
+
+    expect(startDrag()).toBe(false);
+
+    dispatchPointer(scroller, 'pointerdown', { clientX: 120, pointerId: 1 });
+    expect(startDrag()).toBe(true);
+
+    dispatchPointer(scroller, 'pointerup', { clientX: 120, pointerId: 1 });
+    expect(startDrag()).toBe(false);
+  });
+
   it('只在超过阈值后抑制紧随拖拽的点击', () => {
     const onClick = vi.fn();
     const wrapper = mount(MatScrollArea, {

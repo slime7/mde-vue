@@ -9791,7 +9791,7 @@ var Ac = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				scrollPaddingLeft: e ? t : void 0,
 				scrollPaddingRight: e ? t : void 0,
 				scrollPaddingTop: e ? void 0 : t,
-				scrollSnapType: r.snap === "none" ? "none" : `${e ? "x" : "y"} ${r.snap}`
+				scrollSnapType: h.value || r.snap === "none" ? "none" : `${e ? "x" : "y"} ${r.snap}`
 			};
 		}), W = i(() => ({
 			class: u.class,
@@ -9863,34 +9863,37 @@ var Ac = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		function ae(e) {
 			if (e.pointerId !== S || !f.value) return;
 			let t = e.clientX - w;
-			!h.value && Math.abs(t) <= 4 || (h.value || (h.value = !0, f.value.setPointerCapture?.(e.pointerId)), e.preventDefault(), f.value.scrollLeft = k - t);
+			!h.value && Math.abs(t) <= 4 || (h.value || (h.value = !0, f.value.style.scrollSnapType = "none", f.value.offsetWidth, f.value.setPointerCapture?.(e.pointerId)), e.preventDefault(), f.value.scrollLeft = k - t);
 		}
 		function oe(e) {
-			e.pointerId === S && (h.value && X(), Z(!0));
+			S !== void 0 && e.preventDefault();
 		}
 		function se(e) {
-			e.pointerId === S && Z(!0);
+			e.pointerId === S && (h.value && X(), Z(!0));
 		}
 		function ce(e) {
-			e.target !== f.value || e.pointerId !== S || (h.value && X(), Z());
+			e.pointerId === S && Z(!0);
 		}
 		function le(e) {
+			e.target !== f.value || e.pointerId !== S || (h.value && X(), Z());
+		}
+		function ue(e) {
 			A && (Y(), e.preventDefault(), e.stopImmediatePropagation());
 		}
-		function ue() {
+		function de() {
 			!x || !f.value || (x.disconnect(), x.observe(f.value), Array.from(f.value.children).forEach((e) => {
 				x.observe(e);
 			}), J(!1));
 		}
-		function de() {
+		function fe() {
 			return f.value;
 		}
-		function fe(e) {
+		function pe(e) {
 			f.value?.scrollTo(e);
 		}
 		return O(Ts, {
-			getScroller: de,
-			scrollTo: fe,
+			getScroller: fe,
+			scrollTo: pe,
 			scroller: f,
 			orientation: N
 		}), V([N, I], async () => {
@@ -9900,14 +9903,14 @@ var Ac = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		}), T(() => {
 			H(), typeof ResizeObserver == "function" && (x = new ResizeObserver(() => {
 				H(), J(!1);
-			})), ue();
+			})), de();
 		}), E(() => {
-			H(), ue();
+			H(), de();
 		}), C(() => {
 			b !== void 0 && cancelAnimationFrame(b), x?.disconnect(), Z(!0), Y();
 		}), t({
-			getScroller: de,
-			scrollTo: fe
+			getScroller: fe,
+			scrollTo: pe
 		}), (e, t) => (D(), s("div", _({
 			ref_key: "root",
 			ref: d
@@ -9933,16 +9936,17 @@ var Ac = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				}
 			]],
 			style: U.value,
-			onClickCapture: le,
-			onLostpointercapture: ce,
-			onPointercancel: se,
+			onClickCapture: ue,
+			onDragstart: oe,
+			onLostpointercapture: le,
+			onPointercancel: ce,
 			onPointerdown: ie,
 			onPointermove: ae,
-			onPointerup: oe,
+			onPointerup: se,
 			onScroll: re
 		}), [P(e.$slots, "default", {}, void 0, !0)], 16)], 16));
 	}
-}), [["__scopeId", "data-v-6e3976a1"]]), Uc = { class: "mat-chip-set__scroll-content" }, Wc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatChipSet" }, {
+}), [["__scopeId", "data-v-c16f9a16"]]), Uc = { class: "mat-chip-set__scroll-content" }, Wc = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatChipSet" }, {
 	__name: "MatChipSet",
 	props: {
 		layout: {

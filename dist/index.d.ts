@@ -3799,7 +3799,8 @@ export interface MatScrollAreaProps {
   */
   autoHideScrollbar?: boolean;
   /**
-  * 横向模式下允许使用鼠标主键或触控笔按住拖拽滚动。
+  * 横向模式下允许使用鼠标主键或触控笔按住拖拽。
+  * 拖拽期间暂停滚动停靠，结束后恢复；手势进行中会阻止内容发起的原生拖放。
   *
   * @type {boolean}
   * @default false

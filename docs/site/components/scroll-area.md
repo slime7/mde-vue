@@ -265,9 +265,9 @@ order: 114
 
 ### 按住拖拽
 
-横向模式设置 `dragScroll` 后，鼠标主键和触控笔可以在内容上按住拖拽。移动超过 4px 后才确认拖拽，并阻止这次手势随后产生的点击；短按和键盘激活不受影响。触摸指针不由此能力接管，继续使用浏览器原生滑动与惯性。
+横向模式设置 `dragScroll` 后，鼠标主键和触控笔可以在内容上按住拖拽。移动超过 4px 后才确认拖拽，并阻止这次手势随后产生的点击；短按和键盘激活不受影响。触摸指针不由此能力接管，继续使用浏览器原生滑动与惯性。与 `snap` 搭配使用时，拖拽期间暂停滚动停靠保证逐像素跟手，松手后恢复配置的停靠强度并吸附到最近停靠点；拖拽手势进行中还会阻止内容发起的原生拖放（例如拖拽图片）。
 
-该能力默认关闭。下面的示例同时使用 `bar-width="hidden"` 完全隐藏滚动条，仍保留键盘和触摸滚动路径。
+该能力默认关闭。下面的示例搭配 `snap="mandatory"` 演示拖拽与停靠的组合：作为停靠目标的卡片自行设置 `scroll-snap-align: start`，`snapPadding` 取 28 让吸附后的卡片停在 28px 内边距位置，避免贴边落入 16px 的边缘阴影；拖拽期间停靠暂停、松手后吸附到最近停靠点，滚动条保持默认的窄样式可见，键盘和触摸滚动路径不受影响。
 
 :::: details 查看示例代码
 ::: code-group
@@ -319,7 +319,7 @@ order: 114
 | `shadowOffset` | `number \| { start?: number, end?: number }` | `0` | 边缘阴影带从对应边缘向内偏移的像素数；数字或纯数字字符串用于两端，对象未提供的一端为 `0`，值必须是非负有限数字。偏移区内的滚动内容不被遮罩覆盖，适合放置不透明的 sticky 元素 |
 | `barWidth` | `'default' \| 'thin' \| 'hidden'` | `'thin'` | 设置滚动条宽度；`thin` 使用 8px，`default` 使用 16px，`hidden` 隐藏滚动条 |
 | `autoHideScrollbar` | `boolean` | `true` | 鼠标不在容器内时自动将滚动条和滚动条背景设置为透明；设为 `false` 则常驻显示滚动条样式 |
-| `dragScroll` | `boolean` | `false` | 横向模式下允许鼠标主键和触控笔按住拖拽；触摸保持原生滑动 |
+| `dragScroll` | `boolean` | `false` | 横向模式下允许鼠标主键和触控笔按住拖拽；拖拽期间暂停滚动停靠、结束后恢复，并阻止内容发起的原生拖放；触摸保持原生滑动 |
 | `rounded` | `boolean` | `false` | 为 `true` 时使用 `--mat-sys-shape-corner-extra-large`（28px）作为容器圆角 |
 | `noScrollPadding` | `boolean` | `false` | 关闭当前滚动方向两端的固定 28px 内边距，让内容贴住滚动方向边缘；不影响另一轴的容器内边距补偿 |
 | `color` | `string \| undefined` | `undefined` | 语义色、系统颜色角色（如 `surface`、`surface-container`）或六位十六进制种子色 `#RRGGBB`；显式设置时填充容器背景并同步内容文字颜色 |

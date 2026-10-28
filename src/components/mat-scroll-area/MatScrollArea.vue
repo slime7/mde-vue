@@ -100,7 +100,8 @@ const props = defineProps({
     default: true,
   },
   /**
-   * 横向模式下允许使用鼠标主键或触控笔按住拖拽滚动。
+   * 横向模式下允许使用鼠标主键或触控笔按住拖拽。
+   * 拖拽期间暂停滚动停靠，结束后恢复；手势进行中会阻止内容发起的原生拖放。
    *
    * @type {boolean}
    * @default false
@@ -267,7 +268,9 @@ const scrollerStyle = computed(() => {
     scrollPaddingLeft: isHorizontal ? padding : undefined,
     scrollPaddingRight: isHorizontal ? padding : undefined,
     scrollPaddingTop: isHorizontal ? undefined : padding,
-    scrollSnapType: propsWithDefaults.snap === 'none'
+    // 拖拽期间必须暂停吸附，否则浏览器会把每次程序化滚动吸附回停靠点；
+    // 松手等退出路径恢复用户配置后，再由 mandatory 重新吸附停靠。
+    scrollSnapType: isDragging.value || propsWithDefaults.snap === 'none'
       ? 'none'
       : `${isHorizontal ? 'x' : 'y'} ${propsWithDefaults.snap}`,
   };
@@ -439,11 +442,26 @@ function handlePointerMove(event) {
 
   if (!isDragging.value) {
     isDragging.value = true;
+    // Vue 的样式补丁要等下一次渲染；这里先同步写入滚动元素并强制刷新布局，
+    // 确保暂停吸附先于第一次 scrollLeft 写入生效。scrollerStyle 已纳入拖动状态，
+    // 渲染后由 Vue 接管该值，退出拖拽时恢复用户配置。
+    scroller.value.style.scrollSnapType = 'none';
+    void scroller.value.offsetWidth;
     scroller.value.setPointerCapture?.(event.pointerId);
   }
 
   event.preventDefault();
   scroller.value.scrollLeft = dragStartScrollLeft - distance;
+}
+
+/**
+ * @param {DragEvent} event
+ * @returns {void}
+ */
+function handleDragStart(event) {
+  if (dragPointerId !== undefined) {
+    event.preventDefault();
+  }
 }
 
 /**
@@ -620,6 +638,7 @@ defineExpose({
         },
       ]"
       @click.capture="handleClickCapture"
+      @dragstart="handleDragStart"
       @lostpointercapture="handleLostPointerCapture"
       @pointercancel="handlePointerCancel"
       @pointerdown="handlePointerDown"
