@@ -365,7 +365,7 @@ describe('MatBottomSheet', () => {
       .toBe('calc(var(--mat-sheet-full-block-size) / 2)');
   });
 
-  it('modal 使用原生 dialog，关闭完成后清理并恢复焦点', async () => {
+  it('modal 使用原生 dialog，入场期间由对话框接收焦点，入场后聚焦首个交互元素', async () => {
     const trigger = document.createElement('button');
 
     trigger.textContent = '打开筛选';
@@ -390,9 +390,10 @@ describe('MatBottomSheet', () => {
 
     expect(sheet?.open).toBe(true);
     expect(document.documentElement.style.overflow).toBe('hidden');
-    expect(document.activeElement?.textContent).toBe('应用');
+    expect(document.activeElement).toBe(sheet);
     await vi.advanceTimersByTimeAsync(400);
 
+    expect(document.activeElement?.textContent).toBe('应用');
     expect(wrapper.emitted('opened')).toHaveLength(1);
 
     await wrapper.setProps({ modelValue: false });
@@ -405,6 +406,31 @@ describe('MatBottomSheet', () => {
     expect(document.documentElement.style.overflow).not.toBe('hidden');
     expect(document.activeElement).toBe(trigger);
     expect(wrapper.emitted('closed')).toHaveLength(1);
+  });
+
+  it('modal 入场期间用户已聚焦面板内容时，入场完成后不改写焦点', async () => {
+    mount(MatBottomSheet, {
+      attrs: {
+        'aria-label': '筛选面板',
+      },
+      props: {
+        modelValue: true,
+        variant: 'modal',
+      },
+      slots: {
+        default: '<button>应用</button><button>取消</button>',
+      },
+    });
+
+    await settleRender();
+
+    const cancel = [...document.body.querySelectorAll('dialog button')]
+      .find((button) => button.textContent === '取消');
+
+    cancel.focus();
+    await vi.advanceTimersByTimeAsync(400);
+
+    expect(document.activeElement).toBe(cancel);
   });
 
   it('退出动画尚未被浏览器报告时，仍保留 DOM 至后备时长结束', async () => {

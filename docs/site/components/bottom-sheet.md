@@ -232,7 +232,7 @@ Bottom sheet 的宽度不超过 640px。宽屏顶部安全间距至少为 56px�
 | `opened` | 无 | 进入动画完成后触发 |
 | `closed` | 无 | 退出动画完成且 DOM 清理后触发 |
 
-`modelValue` 是受控的：收到 `update:modelValue(false)` 后需要由使用者更新绑定值。`expanded` 是半受控的：组件先更新内部档位再发出 `update:expanded`，未监听该事件时组件仍保持切换后的高度，监听后以绑定值为准。把手的鼠标点击不会发出 `update:expanded`；Enter/Space 与方向键执行键盘状态操作。Modal 打开后聚焦显式 `autofocus` 或第一个可交互元素，退出完成后恢复原焦点。Standard 不主动移动焦点，也不锁定页面滚动。
+`modelValue` 是受控的：收到 `update:modelValue(false)` 后需要由使用者更新绑定值。`expanded` 是半受控的：组件先更新内部档位再发出 `update:expanded`，未监听该事件时组件仍保持切换后的高度，监听后以绑定值为准。把手的鼠标点击不会发出 `update:expanded`；Enter/Space 与方向键执行键盘状态操作。Modal 打开时先由对话框根元素接收焦点，进入动画结束后再聚焦显式 `autofocus` 或第一个可交互元素，避免把焦点送入仍在屏幕外的面板；退出完成后恢复原焦点。Standard 不主动移动焦点，也不锁定页面滚动。
 
 ## Slots
 

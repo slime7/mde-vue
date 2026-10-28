@@ -12,6 +12,7 @@ import PanesScene from './PanesScene.vue';
 import PullToRefreshScene from './PullToRefreshScene.vue';
 import RippleScene from './RippleScene.vue';
 import ScrollAreaScene from './ScrollAreaScene.vue';
+import SideSheetScene from './SideSheetScene.vue';
 import SliderScene from './SliderScene.vue';
 import SnackbarScene from './SnackbarScene.vue';
 import TabsScene from './TabsScene.vue';
@@ -32,6 +33,7 @@ export const scenes = {
   'pull-to-refresh': PullToRefreshScene,
   ripple: RippleScene,
   'scroll-area': ScrollAreaScene,
+  'side-sheet': SideSheetScene,
   slider: SliderScene,
   snackbar: SnackbarScene,
   tabs: TabsScene,

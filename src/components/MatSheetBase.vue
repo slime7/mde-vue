@@ -893,7 +893,22 @@ function focusInitialElement() {
   (focusTarget ?? element).focus({ preventScroll: true });
 }
 
-function showModalRoot() {
+// 入场动画期间不聚焦仍在屏幕外的面板内容，避免宿主滚动容器被焦点带动。
+function focusInitialElementWhenIdle() {
+  const element = root.value;
+
+  if (!element || !props.modelValue || !isModal.value || !isTop.value) {
+    return;
+  }
+
+  if (document.activeElement !== element) {
+    return;
+  }
+
+  focusInitialElement();
+}
+
+function showModalRoot({ deferInitialFocus = false } = {}) {
   const element = root.value;
 
   if (!(element instanceof HTMLDialogElement)) {
@@ -915,7 +930,12 @@ function showModalRoot() {
   } else {
     registerDialog(element);
   }
-  focusInitialElement();
+
+  if (deferInitialFocus) {
+    element.focus({ preventScroll: true });
+  } else {
+    focusInitialElement();
+  }
 }
 
 async function openSheet() {
@@ -975,12 +995,13 @@ async function openSheet() {
   }
 
   if (isModal.value) {
-    showModalRoot();
+    showModalRoot({ deferInitialFocus: true });
   }
 
   refreshBottomGeometry();
   waitForPhase(400, () => {
     phase.value = 'open';
+    focusInitialElementWhenIdle();
     emit('opened');
   });
 }

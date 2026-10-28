@@ -13391,7 +13391,7 @@ var Ru = ["aria-label"], zu = {
 		}
 		function mt() {
 			let e = We !== null;
-			We = null, ft(), e && Wt();
+			We = null, ft(), e && Gt();
 		}
 		function ht(e) {
 			Me = We.pointerId, Ne = We.startY, Be = We.startedAt, Ve = 0, ze = e.pointerType ?? null, Pe = Y.value?.getBoundingClientRect().height ?? 0, Fe = Pe, Ie = rt(), Le = tt(), Re = 0, Ue = We.startScrollTop, He = We.action === "expand", bt(0, Pe), ne.value = !0;
@@ -13407,16 +13407,16 @@ var Ru = ["aria-label"], zu = {
 					}), We.action !== "collapse" && We.action !== "expand")) return;
 					ht(e);
 				}
-				Rt(e);
+				zt(e);
 			}
 		}
 		function _t(e) {
 			if (!We || e.pointerId !== We.pointerId) return;
 			let t = We.action === "collapse" || We.action === "expand";
-			ft(), We = null, t && Ut(e);
+			ft(), We = null, t && Wt(e);
 		}
 		function vt(e) {
-			!We || e.pointerId !== We.pointerId || (ft(), We = null, Wt());
+			!We || e.pointerId !== We.pointerId || (ft(), We = null, Gt());
 		}
 		function yt() {
 			p("update:modelValue", !1);
@@ -13475,17 +13475,21 @@ var Ru = ["aria-label"], zu = {
 		}
 		function Dt() {
 			let e = J.value;
-			if (e instanceof HTMLDialogElement) {
-				if (e.open || e.show(), re.value) {
-					let t = z.value;
-					if (!t) return;
-					Ji(e, $e(t.context));
-				} else Ji(e);
-				Et();
+			!e || !l.modelValue || !Z.value || !ie.value || document.activeElement === e && Et();
+		}
+		function Ot({ deferInitialFocus: e = !1 } = {}) {
+			let t = J.value;
+			if (t instanceof HTMLDialogElement) {
+				if (t.open || t.show(), re.value) {
+					let e = z.value;
+					if (!e) return;
+					Ji(t, $e(e.context));
+				} else Ji(t);
+				e ? t.focus({ preventScroll: !0 }) : Et();
 			}
 		}
-		async function Ot() {
-			if (Je(), zt(), xt(), N.value) {
+		async function kt() {
+			if (Je(), Bt(), xt(), N.value) {
 				F.value = "opening", await v(), ot(), Ye(400, () => {
 					F.value = "open", p("opened");
 				});
@@ -13504,51 +13508,51 @@ var Ru = ["aria-label"], zu = {
 				}
 				z.value = n, I.value = r, Ae = e ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
 			} else z.value = null;
-			je = Z.value, N.value = !0, F.value = "opening", wt(), await v(), !(!l.modelValue || !J.value) && (Z.value && Dt(), ot(), Ye(400, () => {
-				F.value = "open", p("opened");
+			je = Z.value, N.value = !0, F.value = "opening", wt(), await v(), !(!l.modelValue || !J.value) && (Z.value && Ot({ deferInitialFocus: !0 }), ot(), Ye(400, () => {
+				F.value = "open", Dt(), p("opened");
 			}));
 		}
-		function kt() {
+		function At() {
 			je && Ae?.isConnected && Ae.focus({ preventScroll: !0 }), Ae = null, je = !1;
 		}
-		function At() {
+		function jt() {
 			let e = J.value;
-			e instanceof HTMLDialogElement && (e.open && e.close(), Yi(e)), z.value = null, N.value = !1, F.value = "closed", mt(), zt(), st(), xt(), v(() => {
-				kt(), p("closed");
+			e instanceof HTMLDialogElement && (e.open && e.close(), Yi(e)), z.value = null, N.value = !1, F.value = "closed", mt(), Bt(), st(), xt(), v(() => {
+				At(), p("closed");
 			});
 		}
-		function jt() {
+		function Mt() {
 			N.value && F.value !== "closing" && ke.start({
 				canStart: () => N.value && F.value !== "closing",
 				duration: 200,
 				getElement: () => J.value,
 				isActive: () => De && !l.modelValue && F.value === "closing" && N.value && !!J.value,
-				onFinish: At,
+				onFinish: jt,
 				onStart: () => {
 					F.value = "closing";
 				}
 			});
 		}
-		function Mt(e) {
+		function Nt(e) {
 			e.preventDefault(), l.closeOnBack && yt();
 		}
-		function Nt(e) {
+		function Pt(e) {
 			e.key !== "Escape" || !l.closeOnBack || (e.preventDefault(), yt());
 		}
-		function Pt(e) {
-			Ge = Z.value && e.target === J.value, Z.value || Kt(e);
-		}
 		function Q(e) {
-			!Z.value || !l.closeOnBack || !Ge || e.target !== J.value || yt();
+			Ge = Z.value && e.target === J.value, Z.value || qt(e);
 		}
 		function Ft(e) {
+			!Z.value || !l.closeOnBack || !Ge || e.target !== J.value || yt();
+		}
+		function It(e) {
 			if (!He) return;
 			let t = ct();
 			if (!t || e <= Le) return;
 			let n = Math.max(0, t.scrollHeight - t.clientHeight);
 			t.scrollTop = Math.min(n, Math.max(0, Ue + (e - Le)));
 		}
-		function It(e) {
+		function Lt(e) {
 			if (e.pointerId === Me) {
 				if (l.direction === "bottom") {
 					Ve = e.clientY - Ne;
@@ -13557,25 +13561,25 @@ var Ru = ["aria-label"], zu = {
 						extent: t,
 						overshootLimit: Re
 					});
-					bt(n.offset, n.size), Ft(t);
+					bt(n.offset, n.size), It(t);
 					return;
 				}
 				bt(l.position === "start" ? Math.max(0, Ne - e.clientX) : Math.max(0, e.clientX - Ne), null);
 			}
 		}
-		let Lt = Ds(It);
-		function Rt(e) {
-			e.pointerId === Me && Lt.schedule(e);
+		let Rt = Ds(Lt);
+		function zt(e) {
+			e.pointerId === Me && Rt.schedule(e);
 		}
-		function zt({ keepDragging: e = !1 } = {}) {
-			Me = null, ne.value = e, window.removeEventListener("pointermove", Rt), window.removeEventListener("pointerup", Ut), window.removeEventListener("pointercancel", Wt);
+		function Bt({ keepDragging: e = !1 } = {}) {
+			Me = null, ne.value = e, window.removeEventListener("pointermove", zt), window.removeEventListener("pointerup", Wt), window.removeEventListener("pointercancel", Gt);
 		}
-		function Bt() {
+		function Vt() {
 			yt(), v(() => {
-				l.modelValue && (zt(), xt());
+				l.modelValue && (Bt(), xt());
 			});
 		}
-		function Vt({ distance: e, velocity: t }) {
+		function Ht({ distance: e, velocity: t }) {
 			let n = Nu({
 				availableExtent: Le,
 				contentExtent: Ie,
@@ -13588,64 +13592,64 @@ var Ru = ["aria-label"], zu = {
 				velocity: t
 			});
 			if (n.close || r === "close") {
-				zt({ keepDragging: !0 }), Bt();
+				Bt({ keepDragging: !0 }), Vt();
 				return;
 			}
 			if (r === "expand" && pe.value) {
-				zt(), xt(), de("max");
+				Bt(), xt(), de("max");
 				return;
 			}
 			let i = n.value === fe.value || n.size === Fe;
-			zt(), xt(), i || de(n.value);
+			Bt(), xt(), i || de(n.value);
 		}
-		function Ht({ distance: e, threshold: t, velocity: n }) {
+		function Ut({ distance: e, threshold: t, velocity: n }) {
 			let r = e >= t || e >= 20 && n >= .35;
-			if (zt(), r) {
+			if (Bt(), r) {
 				yt();
 				return;
 			}
 			xt();
 		}
-		function Ut(e) {
+		function Wt(e) {
 			if (e.pointerId !== Me) return;
-			Lt.flush();
+			Rt.flush();
 			let t = Math.max(1, performance.now() - Be), n = l.direction === "bottom" ? Math.abs(Ve) : W, r = n / t;
 			if (l.direction === "bottom") {
-				Vt({
+				Ht({
 					distance: n,
 					velocity: r
 				});
 				return;
 			}
-			Ht({
+			Ut({
 				distance: n,
 				threshold: Math.min(120, Math.max(48, Pe * .15)),
 				velocity: r
 			});
 		}
-		function Wt() {
-			Lt.cancel(), zt(), xt();
-		}
-		function Gt(e) {
-			!l.draggable || e.button !== 0 || Me !== null || We || (Lt.cancel(), Me = e.pointerId, Ne = l.direction === "bottom" ? e.clientY : e.clientX, Pe = l.direction === "bottom" ? Y.value?.getBoundingClientRect().height ?? 0 : Y.value?.getBoundingClientRect().width ?? 0, ze = e.pointerType ?? null, Be = performance.now(), Ve = 0, He = !1, l.direction === "bottom" ? (Fe = Pe, Ie = rt(), Le = tt(), Re = et(), bt(0, Pe)) : bt(0, null), ne.value = !0, window.addEventListener("pointermove", Rt), window.addEventListener("pointerup", Ut), window.addEventListener("pointercancel", Wt));
+		function Gt() {
+			Rt.cancel(), Bt(), xt();
 		}
 		function Kt(e) {
-			l.direction !== "side" || e.pointerType !== "touch" || e.target instanceof Element && e.target.closest("button, a, input, textarea, select, [contenteditable=\"true\"]") || Gt(e);
+			!l.draggable || e.button !== 0 || Me !== null || We || (Rt.cancel(), Me = e.pointerId, Ne = l.direction === "bottom" ? e.clientY : e.clientX, Pe = l.direction === "bottom" ? Y.value?.getBoundingClientRect().height ?? 0 : Y.value?.getBoundingClientRect().width ?? 0, ze = e.pointerType ?? null, Be = performance.now(), Ve = 0, He = !1, l.direction === "bottom" ? (Fe = Pe, Ie = rt(), Le = tt(), Re = et(), bt(0, Pe)) : bt(0, null), ne.value = !0, window.addEventListener("pointermove", zt), window.addEventListener("pointerup", Wt), window.addEventListener("pointercancel", Gt));
 		}
 		function qt(e) {
-			Z.value && Kt(e);
+			l.direction !== "side" || e.pointerType !== "touch" || e.target instanceof Element && e.target.closest("button, a, input, textarea, select, [contenteditable=\"true\"]") || Kt(e);
 		}
 		function Jt(e) {
-			qt(e), dt(e);
+			Z.value && qt(e);
 		}
-		function Yt() {
+		function Yt(e) {
+			Jt(e), dt(e);
+		}
+		function Xt() {
 			H.value = window.innerWidth, ot();
 		}
-		async function Xt(e, t) {
+		async function Zt(e, t) {
 			if (!N.value || !l.modelValue || e === t) return;
 			Je();
 			let n = J.value;
-			if (t === "modal" && n instanceof HTMLDialogElement && (n.open && n.close(), Yi(n), kt(), z.value = null), e === "modal") {
+			if (t === "modal" && n instanceof HTMLDialogElement && (n.open && n.close(), Yi(n), At(), z.value = null), e === "modal") {
 				let e = Ze(), t = Qe(e), n = t ? t.target : e;
 				if (!n) {
 					Tt(), yt();
@@ -13653,17 +13657,17 @@ var Ru = ["aria-label"], zu = {
 				}
 				z.value = t, I.value = n, Ae = document.activeElement instanceof HTMLElement ? document.activeElement : null, je = !0, wt();
 			}
-			F.value = "open", await v(), e === "modal" && l.modelValue && Dt(), ot();
+			F.value = "open", await v(), e === "modal" && l.modelValue && Ot(), ot();
 		}
 		return T(() => {
-			De = !0, Yt(), window.addEventListener("resize", Yt), l.modelValue && Ot();
+			De = !0, Xt(), window.addEventListener("resize", Xt), l.modelValue && kt();
 		}), E(ot), C(() => {
-			Lt.cancel(), De = !1, Je(), mt(), zt(), st(), window.removeEventListener("resize", Yt);
+			Rt.cancel(), De = !1, Je(), mt(), Bt(), st(), window.removeEventListener("resize", Xt);
 			let e = J.value;
 			e instanceof HTMLDialogElement && (Yi(e), e.open && e.close());
 		}), V(() => l.modelValue, (e) => {
-			De && (e ? Ot() : jt());
-		}), V(X, Xt), V(() => l.attach, () => {
+			De && (e ? kt() : Mt());
+		}), V(X, Zt), V(() => l.attach, () => {
 			l.modelValue && N.value && Z.value && console.warn(`${l.componentName}: 打开期间修改 attach 将在下次打开时生效`);
 		}), V(() => l.closeLabel, (e) => {
 			e.trim().length === 0 && console.warn(`${l.componentName}: closeLabel 必须是非空字符串`);
@@ -13701,17 +13705,17 @@ var Ru = ["aria-label"], zu = {
 			"aria-labelledby": r.$attrs["aria-labelledby"] ?? (e.direction === "side" && oe.value ? q : void 0),
 			"aria-modal": Z.value ? "true" : void 0,
 			tabindex: Z.value ? -1 : void 0,
-			onCancel: Mt,
-			onClick: Q,
-			onKeydown: Nt,
-			onPointerdown: Pt
+			onCancel: Nt,
+			onClick: Ft,
+			onKeydown: Pt,
+			onPointerdown: Q
 		}), {
 			default: U(() => [c("div", {
 				ref_key: "panelElement",
 				ref: A,
 				class: y(["mat-sheet__panel", ve.value]),
 				style: x(Ee.value),
-				onPointerdown: Jt,
+				onPointerdown: Yt,
 				onWheel: ut
 			}, [
 				e.direction === "bottom" && e.dragHandle ? (D(), s("button", {
@@ -13721,7 +13725,7 @@ var Ru = ["aria-label"], zu = {
 					"data-sheet-drag-handle": "",
 					"aria-label": ye.value,
 					onKeydown: St,
-					onPointerdown: G(Gt, ["stop"])
+					onPointerdown: G(Kt, ["stop"])
 				}, [P(r.$slots, "drag-handle", {}, () => [i[0] ||= c("span", { class: "mat-sheet__drag-handle" }, null, -1)], !0)], 40, Ru)) : o("", !0),
 				e.direction === "side" && be.value ? (D(), s("header", zu, [P(r.$slots, "header", {}, () => [
 					oe.value ? (D(), s("h2", {
@@ -13764,7 +13768,7 @@ var Ru = ["aria-label"], zu = {
 			"tabindex"
 		])], 8, ["to", "disabled"])) : o("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-9ec1ebdc"]]), Wu = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-3b7680c4"]]), Wu = /*@__PURE__*/ Object.assign({
 	name: "MatBottomSheet",
 	inheritAttrs: !1
 }, {
