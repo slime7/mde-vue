@@ -160,7 +160,15 @@ describe('主题控制器', () => {
   it('拒绝类型错误的组件选项', () => {
     expect(() => createMatUi({ useCursor: 'pointer' })).toThrow(TypeError);
     expect(() => createMatUi({ useRipple: 'on' })).toThrow(TypeError);
+    expect(() => createMatUi({ useRipple: null })).toThrow(TypeError);
+    expect(() => createMatUi({ useRipple: [] })).toThrow(TypeError);
     expect(() => createMatUi({ iconClass: 1 })).toThrow(TypeError);
+  });
+
+  it('接受 useRipple 对象并拒绝未知变体', () => {
+    expect(() => createMatUi({ useRipple: { variant: 'dots' } })).not.toThrow();
+    expect(() => createMatUi({ useRipple: {} })).not.toThrow();
+    expect(() => createMatUi({ useRipple: { variant: 'speckle' } })).toThrow(TypeError);
   });
 
   it('拒绝无效的 defaults 配置', () => {

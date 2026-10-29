@@ -42,6 +42,7 @@
 | [0035](0035-playwright-e2e-testing.md) | active | 引入 Playwright 端到端测试 |
 | [0036](0036-stdio-mcp-docs-examples.md) | active | 通过 stdio MCP 提供文档与示例查询 |
 | [0037](0037-bottom-sheet-nested-scroll-gesture.md) | active | Bottom sheet 采用 AndroidX 式嵌套滚动手势 |
+| [0038](0038-global-ripple-default-variant.md) | active | useRipple 支持默认涟漪变体配置 |
 
 ## 何时创建 ADR
 

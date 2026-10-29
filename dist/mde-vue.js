@@ -476,7 +476,10 @@ var Q = (e, t) => {
 		return e instanceof MouseEvent;
 	} },
 	setup(e, { expose: t, emit: n }) {
-		let r = e, o = n, s = h(Nt, Mt), c = i(() => s.useRipple ? void 0 : { disabled: !0 }), l = i(() => r.href !== void 0), u = i(() => l.value ? "a" : r.as), d = i(() => u.value === "button"), f = j(null);
+		let r = e, o = n, s = h(Nt, Mt), c = i(() => {
+			let { useRipple: e } = s;
+			return e ? e === !0 ? void 0 : { variant: e.variant } : { disabled: !0 };
+		}), l = i(() => r.href !== void 0), u = i(() => l.value ? "a" : r.as), d = i(() => u.value === "button"), f = j(null);
 		function p(e) {
 			if (r.disabled) {
 				e.preventDefault(), e.stopImmediatePropagation();
@@ -513,7 +516,7 @@ var Q = (e, t) => {
 			"type"
 		])), [[z(At), { color: "var(--mat-action-state-color, currentcolor)" }], [z(pt), c.value]]);
 	}
-}), [["__scopeId", "data-v-afbe7280"]]), It = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-bd21709b"]]), It = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatButtonBase",
 	inheritAttrs: !1
 }, {
@@ -17247,59 +17250,68 @@ var up = [
 		Wf
 	]
 ], dp = new Map(up.map(([e, , t]) => [Pt(e), t]));
-function fp(e, t) {
-	let n = e[t];
-	if (n !== void 0 && typeof n != "boolean") throw TypeError(`createMatUi ${t} 必须是 boolean`);
-	return n ?? !1;
+function fp(e) {
+	let t = e.useCursor;
+	if (t !== void 0 && typeof t != "boolean") throw TypeError("createMatUi useCursor 必须是 boolean");
+	return t ?? !1;
 }
 function pp(e) {
+	let t = e.useRipple;
+	if (t === void 0) return !1;
+	if (typeof t == "boolean") return t;
+	if (!t || typeof t != "object" || Array.isArray(t)) throw TypeError("createMatUi useRipple 必须是 boolean 或对象");
+	if (t.variant === void 0) return !0;
+	if (!Oe.has(t.variant)) throw TypeError("createMatUi useRipple.variant 必须是 'circle'、'dots'、'glow'、'rings' 或 'burst'");
+	return Object.freeze({ variant: t.variant });
+}
+function mp(e) {
 	let t = e.iconClass;
 	if (t !== void 0 && typeof t != "string") throw TypeError("createMatUi iconClass 必须是 string");
 	return t ?? Mt.iconClass;
 }
-function mp(e, t) {
+function hp(e, t) {
 	let n = e[t];
 	if (n === void 0) return jt[t];
 	if (typeof n != "number") throw TypeError(`createMatUi tooltip.${t} 必须是 number`);
 	if (!Number.isFinite(n) || n < 0) throw RangeError(`createMatUi tooltip.${t} 必须是非负有限数字`);
 	return n;
 }
-function hp(e) {
+function gp(e) {
 	if (e === void 0) return jt;
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("createMatUi defaults.tooltip 必须是对象");
 	return Object.freeze({
-		openDelay: mp(e, "openDelay"),
-		closeDelay: mp(e, "closeDelay")
+		openDelay: hp(e, "openDelay"),
+		closeDelay: hp(e, "closeDelay")
 	});
 }
-function gp(e) {
+function _p(e) {
 	let t = Object.keys(e.props ?? {}), n = new Set(Object.keys(e.emits ?? {}).filter((e) => e.startsWith("update:")).map((e) => e.slice(7)));
 	return new Set(t.filter((e) => !n.has(e)));
 }
-function _p(e) {
+function vp(e) {
 	let t = e.defaults;
 	if (t === void 0) return Object.freeze({ tooltip: jt });
 	if (!t || typeof t != "object" || Array.isArray(t)) throw TypeError("createMatUi defaults 必须是对象");
-	let n = { tooltip: hp(t.tooltip) };
+	let n = { tooltip: gp(t.tooltip) };
 	return Object.entries(t).forEach(([e, t]) => {
 		if (e === "tooltip") return;
 		let r = dp.get(e);
 		if (!r) throw TypeError(`createMatUi defaults 未知组件键 ${e}`);
 		if (!t || typeof t != "object" || Array.isArray(t)) throw TypeError(`createMatUi defaults.${e} 必须是对象`);
-		let i = gp(r), a = {};
+		let i = _p(r), a = {};
 		Object.entries(t).forEach(([t, n]) => {
 			if (!i.has(t)) throw TypeError(`createMatUi defaults.${e}.${t} 不是可配置属性`);
 			a[t] = n;
 		}), n[e] = Object.freeze(a);
 	}), Object.freeze(n);
 }
-function vp(e = {}) {
+function yp(e = {}) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("createMatUi 选项必须是对象");
 	let t = Object.freeze({
-		iconClass: pp(e),
-		useCursor: fp(e, "useCursor"),
-		useRipple: fp(e, "useRipple"),
-		defaults: _p(e)
+		iconClass: mp(e),
+		useCursor: fp(e),
+		useRipple: pp(e),
+		defaults: vp(e)
 	}), n = lp(e.theme);
 	return {
 		theme: n,
@@ -17312,36 +17324,36 @@ function vp(e = {}) {
 		}
 	};
 }
-function yp() {
+function bp() {
 	let e = h(gn, null);
 	if (!e) throw Error("useMatTheme() 必须在已安装 mde-vue 插件的 Vue 应用中调用");
 	return e;
 }
-function bp() {
+function xp() {
 	return h(Nt, Mt);
 }
 //#endregion
 //#region src/view-transition.js
-function xp() {
+function Sp() {
 	return typeof globalThis.matchMedia == "function" && globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
-function Sp() {
+function Cp() {
 	return typeof document > "u" || typeof document.startViewTransition != "function" ? null : document.startViewTransition.bind(document);
 }
-function Cp(e) {
+function wp(e) {
 	if (e === void 0) return [];
 	let t = Array.isArray(e) ? e : [e];
 	if (t.some((e) => typeof e != "string" || e.trim().length === 0)) throw TypeError("useMatViewTransition.start names 必须是非空字符串或非空字符串数组");
 	return [...new Set(t)];
 }
-function wp() {
+function Tp() {
 	let e = null, t = null;
 	async function n(n, r = {}) {
 		if (typeof n != "function") throw TypeError("useMatViewTransition.start update 必须是函数");
-		let i = Cp(r.names);
+		let i = wp(r.names);
 		t && await t, e &&= (e.skipTransition?.(), await e.finished.catch(() => {}), null);
-		let a = Sp();
-		if (r.skip || !a || xp()) {
+		let a = Cp();
+		if (r.skip || !a || Sp()) {
 			await n();
 			return;
 		}
@@ -17358,15 +17370,15 @@ function wp() {
 	}
 	return Object.freeze({
 		get supported() {
-			return !!Sp();
+			return !!Cp();
 		},
 		start: n
 	});
 }
-var Tp = wp, Ep = {
+var Ep = Tp, Dp = {
 	key: 0,
 	class: "mat-dialog-prompt__content"
-}, Dp = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatImperativeDialogHost" }, {
+}, Op = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatImperativeDialogHost" }, {
 	__name: "ImperativeDialogHost",
 	props: {
 		options: {
@@ -17427,7 +17439,7 @@ var Tp = wp, Ep = {
 				"variant",
 				"onClick"
 			]))), 128))]),
-			default: U(() => [p.value ? (D(), s(t, { key: 0 }, [e.options.content ? (D(), s("p", Ep, R(e.options.content), 1)) : o("", !0), d(Ql, {
+			default: U(() => [p.value ? (D(), s(t, { key: 0 }, [e.options.content ? (D(), s("p", Dp, R(e.options.content), 1)) : o("", !0), d(Ql, {
 				modelValue: f.value,
 				"onUpdate:modelValue": r[0] ||= (e) => f.value = e,
 				autofocus: "",
@@ -17444,34 +17456,34 @@ var Tp = wp, Ep = {
 			_: 1
 		}, 16, ["modelValue", "aria-label"]));
 	}
-}), [["__scopeId", "data-v-cac78251"]]), Op = [
+}), [["__scopeId", "data-v-cac78251"]]), kp = [
 	"elevated",
 	"filled",
 	"filled-tonal",
 	"outlined",
 	"standard",
 	"text"
-], kp = [
+], Ap = [
 	"fullScreen",
 	"scrim",
 	"closeOnBack"
-], Ap = [
+], jp = [
 	"title",
 	"content",
 	"icon",
 	"closeLabel",
 	"ariaLabel"
 ];
-function jp(e) {
+function Mp(e) {
 	return typeof e == "number" ? Number.isFinite(e) && e > 0 : typeof e == "string" && e.trim().length > 0;
 }
-function Mp() {
+function Np() {
 	if (typeof window > "u" || typeof document > "u") throw Error("Dialog 命令式函数只能在客户端环境中调用");
 }
-function Np(e) {
+function Pp(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("dialog options 必须是对象");
 }
-function Pp(e) {
+function Fp(e) {
 	let t = e ?? "body", n = null;
 	if (typeof t == "string") try {
 		n = document.querySelector(t);
@@ -17483,10 +17495,10 @@ function Pp(e) {
 	if (!n) throw TypeError("dialog attach 未找到目标元素");
 	return n;
 }
-function Fp(e) {
+function Ip(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("dialog action 必须是对象");
 	if (typeof e.text != "string" || e.text.trim().length === 0) throw TypeError("dialog action text 必须是非空字符串");
-	if (e.variant !== void 0 && !Op.includes(e.variant)) throw TypeError("dialog action variant 无效");
+	if (e.variant !== void 0 && !kp.includes(e.variant)) throw TypeError("dialog action variant 无效");
 	if (e.color !== void 0 && !Gt(e.color)) throw TypeError("dialog action color 无效");
 	if (e.disabled !== void 0 && typeof e.disabled != "boolean") throw TypeError("dialog action disabled 必须是 boolean");
 	return {
@@ -17496,40 +17508,40 @@ function Fp(e) {
 		variant: e.variant ?? "text"
 	};
 }
-function Ip(e) {
-	if (Np(e), kp.forEach((t) => {
+function Lp(e) {
+	if (Pp(e), Ap.forEach((t) => {
 		if (e[t] !== void 0 && typeof e[t] != "boolean") throw TypeError(`dialog ${t} 必须是 boolean`);
-	}), Ap.forEach((t) => {
+	}), jp.forEach((t) => {
 		if (e[t] !== void 0 && typeof e[t] != "string") throw TypeError(`dialog ${t} 必须是 string`);
 	}), e.closeLabel !== void 0 && e.closeLabel.trim().length === 0) throw TypeError("dialog closeLabel 必须是非空字符串");
 	if (e.color !== void 0 && !Gt(e.color)) throw TypeError("dialog color 无效");
-	if (e.width !== void 0 && !jp(e.width)) throw TypeError("dialog width 无效");
+	if (e.width !== void 0 && !Mp(e.width)) throw TypeError("dialog width 无效");
 	if (e.actions !== void 0 && !Array.isArray(e.actions)) throw TypeError("dialog actions 必须是数组");
 	let t = {
 		actions: (e.actions ?? [{
 			text: "确定",
 			value: void 0
-		}]).map(Fp),
-		attach: Pp(e.attach)
+		}]).map(Ip),
+		attach: Fp(e.attach)
 	};
 	return [
-		...kp,
 		...Ap,
+		...jp,
 		"color",
 		"width"
 	].forEach((n) => {
 		e[n] !== void 0 && (t[n] = e[n]);
 	}), e.promptConfig && (t.promptConfig = e.promptConfig), t;
 }
-function Lp(e, t) {
+function Rp(e, t) {
 	try {
-		Mp();
-		let n = Ip(e);
+		Np();
+		let n = Lp(e);
 		return new Promise((e, r) => {
 			let i = document.createElement("div");
 			i.dataset.matDialogHost = "", document.body.append(i);
 			try {
-				M(m(Dp, {
+				M(m(Op, {
 					cancelValue: t,
 					options: n,
 					onClosed(t) {
@@ -17544,13 +17556,13 @@ function Lp(e, t) {
 		return Promise.reject(e);
 	}
 }
-function Rp(e = {}) {
-	return Lp(e, void 0);
-}
 function zp(e = {}) {
+	return Rp(e, void 0);
+}
+function Bp(e = {}) {
 	try {
-		if (Np(e), e.confirmText !== void 0 && (typeof e.confirmText != "string" || e.confirmText.trim().length === 0)) throw TypeError("alert confirmText 必须是非空字符串");
-		return Lp({
+		if (Pp(e), e.confirmText !== void 0 && (typeof e.confirmText != "string" || e.confirmText.trim().length === 0)) throw TypeError("alert confirmText 必须是非空字符串");
+		return Rp({
 			...e,
 			actions: [{
 				text: e.confirmText ?? "确定",
@@ -17561,13 +17573,13 @@ function zp(e = {}) {
 		return Promise.reject(e);
 	}
 }
-function Bp(e = {}) {
+function Vp(e = {}) {
 	try {
-		Np(e);
+		Pp(e);
 		let t = e.confirmText ?? "确定", n = e.cancelText ?? "取消";
 		if (typeof t != "string" || t.trim().length === 0) throw TypeError("confirm confirmText 必须是非空字符串");
 		if (typeof n != "string" || n.trim().length === 0) throw TypeError("confirm cancelText 必须是非空字符串");
-		return Lp({
+		return Rp({
 			...e,
 			actions: [{
 				text: n,
@@ -17581,9 +17593,9 @@ function Bp(e = {}) {
 		return Promise.reject(e);
 	}
 }
-function Vp(e = {}) {
+function Hp(e = {}) {
 	try {
-		Np(e);
+		Pp(e);
 		let t = e.confirmText ?? "确定", n = e.cancelText ?? "取消", r = e.defaultValue ?? "", i = e.required ?? !1;
 		if ([
 			[
@@ -17614,7 +17626,7 @@ function Vp(e = {}) {
 		].forEach(([e, t, n]) => {
 			if (t !== void 0 && (typeof t != "string" || n && t.trim().length === 0)) throw TypeError(`prompt ${e} 必须是${n ? "非空" : ""}字符串`);
 		}), typeof i != "boolean") throw TypeError("prompt required 必须是 boolean");
-		return Lp({
+		return Rp({
 			...e,
 			actions: [{
 				text: n,
@@ -17636,7 +17648,7 @@ function Vp(e = {}) {
 }
 //#endregion
 //#region src/components/mat-snackbar/ImperativeSnackbarHost.vue
-var Hp = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
+var Up = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
 	__name: "ImperativeSnackbarHost",
 	props: {
 		options: {
@@ -17671,24 +17683,24 @@ var Hp = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
 			onClosed: s
 		}), null, 16, ["modelValue"]));
 	}
-}), Up = [
+}), Wp = [
 	"left",
 	"center",
 	"right"
-], Wp = null;
-function Gp() {
+], Gp = null;
+function Kp() {
 	if (typeof document > "u" || !document.body) throw Error("Snackbar 命令式函数只能在客户端环境中调用");
 }
-function Kp(e) {
+function qp(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("snackbar options 必须是对象");
 }
-function qp(e) {
-	if (Kp(e), typeof e.text != "string" || e.text.trim().length === 0) throw TypeError("snackbar text 必须是非空字符串");
+function Jp(e) {
+	if (qp(e), typeof e.text != "string" || e.text.trim().length === 0) throw TypeError("snackbar text 必须是非空字符串");
 	if (e.actionText !== void 0 && (typeof e.actionText != "string" || e.actionText.trim().length === 0)) throw TypeError("snackbar actionText 必须是非空字符串");
 	if (e.onAction !== void 0 && typeof e.onAction != "function") throw TypeError("snackbar onAction 必须是函数");
 	if (e.closable !== void 0 && typeof e.closable != "boolean") throw TypeError("snackbar closable 必须是 boolean");
 	if (e.closeLabel !== void 0 && (typeof e.closeLabel != "string" || e.closeLabel.trim().length === 0)) throw TypeError("snackbar closeLabel 必须是非空字符串");
-	if (e.position !== void 0 && !Up.includes(e.position)) throw TypeError("snackbar position 无效");
+	if (e.position !== void 0 && !Wp.includes(e.position)) throw TypeError("snackbar position 无效");
 	if (e.duration !== void 0 && (!Number.isFinite(e.duration) || e.duration < 0)) throw TypeError("snackbar duration 必须是大于等于 0 的有限数字");
 	return {
 		actionText: e.actionText,
@@ -17700,34 +17712,34 @@ function qp(e) {
 		text: e.text
 	};
 }
-function Jp() {
-	return Wp?.isConnected ? Wp : (Wp = document.createElement("div"), Wp.dataset.matSnackbarHost = "", document.body.append(Wp), Wp);
-}
 function Yp() {
-	!Wp || Wp.childNodes.length > 0 || (Wp.remove(), Wp = null);
+	return Gp?.isConnected ? Gp : (Gp = document.createElement("div"), Gp.dataset.matSnackbarHost = "", document.body.append(Gp), Gp);
 }
-function Xp(e) {
+function Xp() {
+	!Gp || Gp.childNodes.length > 0 || (Gp.remove(), Gp = null);
+}
+function Zp(e) {
 	try {
-		Gp();
-		let t = qp(e);
+		Kp();
+		let t = Jp(e);
 		return new Promise((e, n) => {
 			let r = !1, i;
 			function a() {
 				if (r) return;
 				r = !0;
-				let t = Wp;
-				t && M(null, t), e(), Xd(i), Yp();
+				let t = Gp;
+				t && M(null, t), e(), Xd(i), Xp();
 			}
 			function o(e) {
 				if (r) return;
 				r = !0;
-				let t = Wp;
-				t && M(null, t), n(e), Xd(i), Yp();
+				let t = Gp;
+				t && M(null, t), n(e), Xd(i), Xp();
 			}
 			i = { activate() {
 				try {
-					let e = Jp();
-					M(m(Hp, {
+					let e = Yp();
+					M(m(Up, {
 						onClosed: a,
 						options: t
 					}), e);
@@ -17740,6 +17752,6 @@ function Xp(e) {
 		return Promise.reject(e);
 	}
 }
-var Zp = Xp;
+var Qp = Zp;
 //#endregion
-export { Yf as Intersection, da as MatAppBar, ki as MatAppRoot, $i as MatAside, Go as MatAvatar, oo as MatBadge, Wu as MatBottomSheet, bi as MatBtn, _a as MatBtnGroup, fs as MatCard, ms as MatCardActionArea, vs as MatCardActions, gs as MatCardContent, ss as MatCardHeadline, ls as MatCardMedia, ds as MatCardSubhead, Ga as MatCarousel, qa as MatCarouselItem, ns as MatChatMinimap, Ic as MatCheckbox, Vc as MatChip, Wc as MatChipSet, qu as MatContainer, wo as MatDatePicker, Ou as MatDialog, Ac as MatDivider, bu as MatDockedContainer, Qo as MatDynamicText, qs as MatExpansion, _c as MatExpansionPanel, wa as MatFab, ka as MatFabMenu, Cc as MatGridList, _r as MatHover, Cn as MatIcon, ja as MatImage, fa as MatInputBase, Ju as MatLayout, Gs as MatList, mc as MatListGroup, dc as MatListItem, gr as MatLoading, eu as MatMenu, iu as MatMenuGroup, nu as MatMenuItem, zf as MatNavigationBar, Bf as MatNavigationBarItem, Vf as MatNavigationDrawer, Wf as MatNavigationGroup, Nf as MatNavigationItem, Rf as MatNavigationRail, Pf as MatNavigationRailItem, ff as MatNotification, wf as MatPane, bf as MatPanes, Ud as MatProgress, ad as MatPullToRefresh, Kc as MatRadio, Yc as MatRadioGroup, Pl as MatRangeSlider, Hc as MatScrollArea, ha as MatSearch, fu as MatSelect, sr as MatShape, Ho as MatSharedElement, Ho as MdeSharedElement, Gu as MatSideSheet, Ys as MatSimpleExpansion, Dl as MatSlider, tf as MatSnackbar, xu as MatSpacer, is as MatSplitBtn, Xc as MatSwitch, to as MatTabContent, uo as MatTabItem, Yu as MatTableWrapper, po as MatTabs, Ko as MatText, Ql as MatTextField, pu as MatTextarea, Lo as MatTimePicker, _f as MatToolbar, ci as MatTooltip, Xu as MatVirtualScroll, Xu as MdeVirtualScroll, pt as Ripple, At as StateLayer, zp as alert, Bp as confirm, vp as createMatUi, Rp as dialog, hn as extractColorFromImage, Vp as prompt, Xp as snackbar, Zp as toast, ji as useLayout, Er as useMatApp, $ as useMatProps, yp as useMatTheme, bp as useMatUi, wp as useMatViewTransition, Tp as useMdeViewTransition };
+export { Yf as Intersection, da as MatAppBar, ki as MatAppRoot, $i as MatAside, Go as MatAvatar, oo as MatBadge, Wu as MatBottomSheet, bi as MatBtn, _a as MatBtnGroup, fs as MatCard, ms as MatCardActionArea, vs as MatCardActions, gs as MatCardContent, ss as MatCardHeadline, ls as MatCardMedia, ds as MatCardSubhead, Ga as MatCarousel, qa as MatCarouselItem, ns as MatChatMinimap, Ic as MatCheckbox, Vc as MatChip, Wc as MatChipSet, qu as MatContainer, wo as MatDatePicker, Ou as MatDialog, Ac as MatDivider, bu as MatDockedContainer, Qo as MatDynamicText, qs as MatExpansion, _c as MatExpansionPanel, wa as MatFab, ka as MatFabMenu, Cc as MatGridList, _r as MatHover, Cn as MatIcon, ja as MatImage, fa as MatInputBase, Ju as MatLayout, Gs as MatList, mc as MatListGroup, dc as MatListItem, gr as MatLoading, eu as MatMenu, iu as MatMenuGroup, nu as MatMenuItem, zf as MatNavigationBar, Bf as MatNavigationBarItem, Vf as MatNavigationDrawer, Wf as MatNavigationGroup, Nf as MatNavigationItem, Rf as MatNavigationRail, Pf as MatNavigationRailItem, ff as MatNotification, wf as MatPane, bf as MatPanes, Ud as MatProgress, ad as MatPullToRefresh, Kc as MatRadio, Yc as MatRadioGroup, Pl as MatRangeSlider, Hc as MatScrollArea, ha as MatSearch, fu as MatSelect, sr as MatShape, Ho as MatSharedElement, Ho as MdeSharedElement, Gu as MatSideSheet, Ys as MatSimpleExpansion, Dl as MatSlider, tf as MatSnackbar, xu as MatSpacer, is as MatSplitBtn, Xc as MatSwitch, to as MatTabContent, uo as MatTabItem, Yu as MatTableWrapper, po as MatTabs, Ko as MatText, Ql as MatTextField, pu as MatTextarea, Lo as MatTimePicker, _f as MatToolbar, ci as MatTooltip, Xu as MatVirtualScroll, Xu as MdeVirtualScroll, pt as Ripple, At as StateLayer, Bp as alert, Vp as confirm, yp as createMatUi, zp as dialog, hn as extractColorFromImage, Hp as prompt, Zp as snackbar, Qp as toast, ji as useLayout, Er as useMatApp, $ as useMatProps, bp as useMatTheme, xp as useMatUi, Tp as useMatViewTransition, Ep as useMdeViewTransition };

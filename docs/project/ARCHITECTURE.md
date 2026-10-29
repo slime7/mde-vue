@@ -53,7 +53,7 @@
 
 ### 插件配置
 
-`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针、是否为操作类组件启用按压涟漪、组件图标容器使用的全局 `iconClass`，以及按组件键配置的默认属性（defaults）。defaults 的键是 `mat-*` 标签去掉前缀后的 camelCase，值为该组件可配置的 prop 默认值；显式传入的 prop 优先，`v-model` 相关属性不接受配置，Tooltip 的打开延迟与同组快速切换时长通过 `defaults.tooltip` 提供。插件以 `mat-*` 和对应 `Mat*` 名称全局注册组件，并注册 `v-intersection`、`v-state-layer` 与 `v-ripple` 指令。顶层选项不会写入主题控制器；未安装插件的按需组件和指令使用组件定义默认值。公共组合函数 `useMatUi()` 供应用自创组件读取这份设置，未安装插件时返回默认值。
+`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针、是否为操作类组件启用按压涟漪及其默认波纹形状、组件图标容器使用的全局 `iconClass`，以及按组件键配置的默认属性（defaults）。defaults 的键是 `mat-*` 标签去掉前缀后的 camelCase，值为该组件可配置的 prop 默认值；显式传入的 prop 优先，`v-model` 相关属性不接受配置，Tooltip 的打开延迟与同组快速切换时长通过 `defaults.tooltip` 提供。插件以 `mat-*` 和对应 `Mat*` 名称全局注册组件，并注册 `v-intersection`、`v-state-layer` 与 `v-ripple` 指令。顶层选项不会写入主题控制器；未安装插件的按需组件和指令使用组件定义默认值。公共组合函数 `useMatUi()` 供应用自创组件读取这份设置，未安装插件时返回默认值。
 
 ### 组件
 

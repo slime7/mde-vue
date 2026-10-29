@@ -91,7 +91,7 @@ import MAT_UI_KEY, {
 import createThemeController from './theme';
 import MAT_THEME_KEY from './theme-context';
 import { Intersection } from './directives/intersection';
-import { Ripple } from './directives/ripple';
+import { Ripple, RIPPLE_VARIANTS } from './directives/ripple';
 import { StateLayer } from './directives/state-layer';
 
 export const GLOBAL_COMPONENTS = [
@@ -184,11 +184,17 @@ const COMPONENT_DEFAULTS_REGISTRY = new Map(
 );
 
 /**
+ * @typedef {object} MatRippleOptions
+ * @property {'circle' | 'dots' | 'glow' | 'rings' | 'burst'} [variant='circle'] 组件涟漪的默认波纹形状。
+ */
+
+/**
  * @typedef {object} MatUiOptions
  * @property {import('./theme.js').MatThemeOptions} [theme]
  * @property {string} [iconClass='material-symbols-outlined']
  * @property {boolean} [useCursor=false]
- * @property {boolean} [useRipple=false] 是否为操作类组件启用按压涟漪；涟漪绘制在状态层之上。
+ * @property {boolean | MatRippleOptions} [useRipple=false] 是否为操作类组件启用按压涟漪；
+ *   传入对象时启用并设置默认波纹形状，涟漪绘制在状态层之上。
  * @property {object} [defaults] 按组件键设置的默认属性；键为组件名去掉 mat- 前缀后的 camelCase，
  *   值为该组件可配置的 prop 默认值。v-model 属性不可配置。
  */
@@ -201,17 +207,46 @@ const COMPONENT_DEFAULTS_REGISTRY = new Map(
 
 /**
  * @param {MatUiOptions} options
- * @param {'useCursor' | 'useRipple'} name
  * @returns {boolean}
  */
-function readBooleanOption(options, name) {
-  const value = options[name];
+function readCursorOption(options) {
+  const value = options.useCursor;
 
   if (value !== undefined && typeof value !== 'boolean') {
-    throw new TypeError(`createMatUi ${name} 必须是 boolean`);
+    throw new TypeError('createMatUi useCursor 必须是 boolean');
   }
 
   return value ?? false;
+}
+
+/**
+ * @param {MatUiOptions} options
+ * @returns {boolean | Readonly<MatRippleOptions>}
+ */
+function readRippleOption(options) {
+  const value = options.useRipple;
+
+  if (value === undefined) {
+    return false;
+  }
+
+  if (typeof value === 'boolean') {
+    return value;
+  }
+
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new TypeError('createMatUi useRipple 必须是 boolean 或对象');
+  }
+
+  if (value.variant === undefined) {
+    return true;
+  }
+
+  if (!RIPPLE_VARIANTS.has(value.variant)) {
+    throw new TypeError("createMatUi useRipple.variant 必须是 'circle'、'dots'、'glow'、'rings' 或 'burst'");
+  }
+
+  return Object.freeze({ variant: value.variant });
 }
 
 /**
@@ -352,8 +387,8 @@ export function createMatUi(options = {}) {
 
   const componentOptions = Object.freeze({
     iconClass: readIconClass(options),
-    useCursor: readBooleanOption(options, 'useCursor'),
-    useRipple: readBooleanOption(options, 'useRipple'),
+    useCursor: readCursorOption(options),
+    useRipple: readRippleOption(options),
     defaults: readDefaults(options),
   });
   const theme = createThemeController(options.theme);
@@ -402,7 +437,7 @@ export function useMatTheme() {
  * @returns {Readonly<{
  *   iconClass: string,
  *   useCursor: boolean,
- *   useRipple: boolean,
+ *   useRipple: boolean | Readonly<MatRippleOptions>,
  *   defaults: Readonly<Record<string, Readonly<object>>>,
  * }>}
  */

@@ -286,6 +286,23 @@ describe('useMatUi 获取全局 UI 配置', () => {
     expect(capturedOptions.defaults.tooltip).toEqual({ openDelay: 500, closeDelay: 800 });
   });
 
+  it('useRipple 传入对象时保留默认变体并隐含启用', () => {
+    let capturedOptions;
+    const plugin = createMatUi({ useRipple: { variant: 'dots' } });
+    // eslint-disable-next-line vue/one-component-per-file -- 仅用于测试 useMatUi 读取涟漪配置。
+    const Consumer = defineComponent({
+      setup() {
+        capturedOptions = useMatUi();
+        return () => h('div');
+      },
+    });
+
+    mount(Consumer, { global: { plugins: [plugin] } });
+
+    expect(capturedOptions.useRipple).toEqual({ variant: 'dots' });
+    expect(Object.isFrozen(capturedOptions.useRipple)).toBe(true);
+  });
+
   it('用户自创组件可通过 useMatUi 同步光标手势、图标样式与涟漪行为', () => {
     const plugin = createMatUi({
       iconClass: 'my-custom-symbol',

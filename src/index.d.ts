@@ -5261,12 +5261,16 @@ export interface MatThemeController {
   setContrastLevel(value: number): void;
   dispose(): void;
 }
+export type MatRippleVariant = 'circle' | 'dots' | 'glow' | 'rings' | 'burst';
+export interface MatRippleOptions {
+  variant?: MatRippleVariant;
+}
 export interface MatUiOptions {
   theme?: MatThemeOptions;
   iconClass?: string;
   defaults?: MatComponentDefaults;
   useCursor?: boolean;
-  useRipple?: boolean;
+  useRipple?: boolean | MatRippleOptions;
 }
 export type MatComponentDefaults = {
   tooltip?: { closeDelay?: number; openDelay?: number };
@@ -5277,7 +5281,7 @@ export declare function useMatTheme(): MatThemeController;
 export interface MatUiContext {
   readonly iconClass: string;
   readonly useCursor: boolean;
-  readonly useRipple: boolean;
+  readonly useRipple: boolean | Readonly<MatRippleOptions>;
   readonly defaults: MatComponentDefaults;
 }
 export declare function useMatUi(): MatUiContext;
@@ -5355,7 +5359,7 @@ export interface StateLayerOptions {
 export declare const StateLayer: import('vue').ObjectDirective<HTMLElement, StateLayerOptions | undefined>;
 export interface RippleOptions {
   color?: string;
-  variant?: 'circle' | 'dots' | 'glow' | 'rings' | 'burst';
+  variant?: MatRippleVariant;
 }
 export declare const Ripple: import('vue').ObjectDirective<HTMLElement, RippleOptions | undefined>;
 

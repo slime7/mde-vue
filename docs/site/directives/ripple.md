@@ -111,7 +111,7 @@ order: 122
 
 ### 全局设置
 
-`createMatUi({ useRipple: true })` 为基于操作交互的组件（按钮、FAB、Chip、菜单项、操作模式列表项、卡片操作区、导航项目等）统一启用按压涟漪，默认关闭。插件启用后，单个宿主仍可设置 `v-ripple="{ disabled: true }"` 单独关闭；`v-ripple` 在自定义元素上的行为不受该选项影响。详见 [`createMatUi` 配置](/guide/create-mat-ui)。
+`createMatUi({ useRipple: true })` 为基于操作交互的组件（按钮、FAB、Chip、菜单项、操作模式列表项、卡片操作区、导航项目等）统一启用按压涟漪，默认关闭。传入 `useRipple: { variant: 'dots' }` 可以同时设置组件涟漪的默认波纹形状，对象隐含启用涟漪，`variant` 取值与上方绑定值相同，默认 `circle`。插件启用后，单个宿主仍可设置 `v-ripple="{ disabled: true }"` 单独关闭；`v-ripple` 在自定义元素上的行为不受该选项影响。详见 [`createMatUi` 配置](/guide/create-mat-ui)。
 
 ### 按压行为与变体
 

@@ -484,6 +484,30 @@ describe('MatBtn', () => {
     expect(plain.findAll('[aria-hidden="true"]')).toHaveLength(1);
   });
 
+  it('插件 useRipple 传入对象时按全局默认变体绘制涟漪', () => {
+    const wrapper = mount(MatBtn, {
+      global: {
+        provide: {
+          [MAT_UI_KEY]: { useRipple: { variant: 'dots' } },
+        },
+      },
+      slots: {
+        default: '波点按钮',
+      },
+    });
+
+    const layer = wrapper.findAll('[aria-hidden="true"]')[1];
+    const press = new Event('pointerdown', { bubbles: true });
+
+    Object.defineProperties(press, {
+      button: { value: 0 },
+      pointerId: { value: 1 },
+    });
+    wrapper.element.dispatchEvent(press);
+
+    expect(layer.element.firstElementChild.style.backgroundImage).toContain('radial-gradient');
+  });
+
   it('loading 时保留点击交互并声明 aria-busy', () => {
     const handleClick = vi.fn();
     const wrapper = mount(MatBtn, {

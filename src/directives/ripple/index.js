@@ -745,5 +745,5 @@ const Ripple = {
   unmounted: unmountRipple,
 };
 
-export { Ripple };
+export { Ripple, RIPPLE_VARIANTS };
 export default Ripple;

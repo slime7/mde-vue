@@ -36,7 +36,7 @@ const matUi = createMatUi({
 createApp(App).use(matUi).mount('#app');
 ```
 
-所有选项都可以省略。传给 `createMatUi()` 的值必须是对象，`useCursor` 和 `useRipple` 必须是 `boolean`，`iconClass` 必须是 `string`，`defaults` 必须是对象且每个组件条目必须是对象，否则会抛出 `TypeError`。`defaults` 的组件键必须是现有公共组件，属性键必须是该组件可配置的 prop（v-model 属性除外），否则也会抛出 `TypeError`。Tooltip 延迟必须是非负有限数字，非法数值会抛出 `RangeError`。
+所有选项都可以省略。传给 `createMatUi()` 的值必须是对象，`useCursor` 必须是 `boolean`，`useRipple` 必须是 `boolean` 或对象，`iconClass` 必须是 `string`，`defaults` 必须是对象且每个组件条目必须是对象，否则会抛出 `TypeError`。`useRipple` 对象的 `variant` 必须是 `circle`、`dots`、`glow`、`rings` 或 `burst` 之一。`defaults` 的组件键必须是现有公共组件，属性键必须是该组件可配置的 prop（v-model 属性除外），否则也会抛出 `TypeError`。Tooltip 延迟必须是非负有限数字，非法数值会抛出 `RangeError`。
 
 ## 选项
 
@@ -44,7 +44,7 @@ createApp(App).use(matUi).mount('#app');
 | --- | --- | --- | --- |
 | `iconClass` | `string` | `'material-symbols-outlined'` | 应用于 `MatIcon` 和组件图标容器的空格分隔 class |
 | `useCursor` | `boolean` | `false` | 是否为可用交互组件显示 `cursor: pointer` |
-| `useRipple` | `boolean` | `false` | 是否为操作类组件启用按压涟漪，涟漪绘制在状态层之上 |
+| `useRipple` | `boolean \| object` | `false` | 是否为操作类组件启用按压涟漪，对象还可以设置默认波纹形状；涟漪绘制在状态层之上 |
 | `defaults` | `object` | `{ tooltip: { openDelay: 0, closeDelay: 600 } }` | 按组件键设置的默认属性，值为项目内该组件的 prop 默认值 |
 | `theme` | `object` | 默认主题配置 | 动态主题的初始模式、种子色、配色变体、对比度和写入目标 |
 
@@ -110,7 +110,17 @@ createApp(App).use(createMatUi({
 }));
 ```
 
-自定义元素上的涟漪由公共 `v-ripple` 指令提供，不受该选项影响；需要单独关闭某个组件实例的涟漪时，在该组件上设置 `v-ripple="{ disabled: true }"`。涟漪的行为与选项详见 [Ripple 涟漪指令](/directives/ripple)。
+传入对象可以同时启用涟漪并指定组件涟漪的默认波纹形状，对象隐含启用涟漪，空对象等同于 `true`：
+
+```js
+createApp(App).use(createMatUi({
+  useRipple: {
+    variant: 'dots',
+  },
+}));
+```
+
+`variant` 接受 `circle`、`dots`、`glow`、`rings` 和 `burst`，默认 `circle`，含义与 `v-ripple` 的同名选项一致。自定义元素上的涟漪由公共 `v-ripple` 指令提供，不受该选项影响；需要单独关闭某个组件实例的涟漪时，在该组件上设置 `v-ripple="{ disabled: true }"`。涟漪的行为与选项详见 [Ripple 涟漪指令](/directives/ripple)。
 
 ## Material Symbols
 
@@ -173,4 +183,4 @@ const matUi = useMatUi();
 </template>
 ```
 
-返回对象是只读的，包含 `iconClass`、`useCursor`、`useRipple` 与按组件键组织的 `defaults`。未安装插件时调用 `useMatUi()` 返回默认配置，不抛出异常。
+返回对象是只读的，包含 `iconClass`、`useCursor`、`useRipple` 与按组件键组织的 `defaults`。`useRipple` 为 `false`、`true` 或只读的 `{ variant }` 对象。未安装插件时调用 `useMatUi()` 返回默认配置，不抛出异常。

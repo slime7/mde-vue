@@ -19,7 +19,15 @@ const emit = defineEmits({
 });
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 // 全局关闭时通过 disabled 选项跳过涟漪，不在宿主内留下任何 DOM。
-const rippleBinding = computed(() => (matUi.useRipple ? undefined : { disabled: true }));
+const rippleBinding = computed(() => {
+  const { useRipple } = matUi;
+
+  if (!useRipple) {
+    return { disabled: true };
+  }
+
+  return useRipple === true ? undefined : { variant: useRipple.variant };
+});
 const isLink = computed(() => props.href !== undefined);
 const component = computed(() => (isLink.value ? 'a' : props.as));
 const isButton = computed(() => component.value === 'button');
