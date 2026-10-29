@@ -3,6 +3,7 @@ import {
   computed, inject, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch,
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
+import vRipple from '../../directives/ripple';
 import vStateLayer from '../../directives/state-layer';
 import MatActionBase from '../MatActionBase.vue';
 import { BUTTON_TYPES } from '../button-props';
@@ -211,6 +212,19 @@ const itemStateLayerOptions = computed(() => {
 
   return { color: 'var(--mat-action-state-color, currentcolor)' };
 });
+const rippleBinding = computed(() => {
+  const { useRipple } = matUi;
+
+  if (!useRipple) {
+    return { disabled: true };
+  }
+
+  return useRipple === true ? undefined : { variant: useRipple.variant };
+});
+// 多操作项可见状态层在整行，涟漪也挂在整行；单操作项由 primary 承担状态层。
+const rowRippleBinding = computed(() => (
+  isMultiAction.value ? rippleBinding.value : { disabled: true }
+));
 
 const supportsSwipe = computed(() => (
   !groupActivator && (interaction.value === 'none' || interaction.value === 'single-action')
@@ -839,6 +853,7 @@ watch(
     v-else-if="isAction"
     ref="itemRoot"
     v-state-layer="itemStateLayerOptions"
+    v-ripple="rowRippleBinding"
     class="mat-list-item"
     :class="[
       surfaceClasses,
@@ -881,6 +896,7 @@ watch(
         :disabled="propsWithDefaults.disabled"
         :focus-ring="true"
         :href="propsWithDefaults.href"
+        :ripple-disabled="isMultiAction"
         :type="propsWithDefaults.type"
         :use-cursor="matUi.useCursor"
         @click="handlePrimaryClick"

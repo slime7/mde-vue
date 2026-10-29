@@ -341,7 +341,7 @@ createApp(App).use(createMatUi({
 
 ## 按压涟漪
 
-默认不显示涟漪。传入 `useRipple: true` 后，`MatBtn`、`MatFab`、`MatChip`、`MatMenuItem`、操作模式列表项、`MatCardActionArea` 和导航项目等基于操作交互的组件在主指针按压时显示 Material 3 涟漪；涟漪绘制在组件内建状态层之上，并尊重减少动态效果偏好。
+默认不显示涟漪。传入 `useRipple: true` 后，`MatBtn`、`MatFab`、`MatChip`、`MatMenuItem`、操作模式列表项、`MatCardActionArea` 和导航项目等基于操作交互的组件在主指针按压时显示 Material 3 涟漪；涟漪绘制在组件内建状态层之上，覆盖范围与该组件的可见状态层一致，并尊重减少动态效果偏好。
 
 ```js
 createApp(App).use(createMatUi({
@@ -32207,7 +32207,7 @@ import StateLayerDivExample from '../examples/state-layer/StateLayerDivExample.v
 
 ## 指令简介
 
-`v-ripple` 的 JavaScript 导出名是 `Ripple`。它为使用方自己的交互元素增加 Material 3 按压涟漪：主指针按压时默认从按压点出现一个实心圆波纹，扩大到覆盖宿主后保持，释放后淡出移除；`variant` 还提供波点阵列、柔光光斑、扩散圆环与星芒爆发形态。涟漪渲染在 `v-state-layer` 状态层之上；单独使用时也可以独立提供按压反馈。指令只提供视觉反馈，不赋予元素焦点、点击、ARIA 或键盘激活语义，也不响应键盘激活。
+`v-ripple` 的 JavaScript 导出名是 `Ripple`。它为使用方自己的交互元素增加 Material 3 按压涟漪：主指针按压时默认从按压点出现一个实心圆波纹，扩大到覆盖宿主后保持，释放后淡出移除；`variant` 还提供波点阵列、柔光光斑、扩散圆环与星芒爆发形态。`target` 可以把涟漪覆盖范围收窄到与状态层相同的元素。涟漪渲染在 `v-state-layer` 状态层之上；单独使用时也可以独立提供按压反馈。指令只提供视觉反馈，不赋予元素焦点、点击、ARIA 或键盘激活语义，也不响应键盘激活。
 
 ## 示例
 
@@ -32376,6 +32376,76 @@ import StateLayerDivExample from '../examples/state-layer/StateLayerDivExample.v
   </DocsPreview>
 </ClientOnly>
 
+### 限定覆盖范围
+
+`target` 指定涟漪覆盖的目标元素，未设置时覆盖宿主本身。目标元素应位于宿主内或与宿主重叠；涟漪容器仍挂载在宿主上，波纹范围、圆角和按压点坐标都以目标元素为准。适合让宿主保留更大的点击区域，同时把涟漪限制在内部的状态层形状上。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <button
+    v-ripple="{ target: pill }"
+    class="ripple-target-host"
+    type="button"
+  >
+    <span
+      ref="pill"
+      class="ripple-target-pill"
+    >
+      <span class="material-symbols-outlined">touch_app</span>
+      涟漪范围
+    </span>
+  </button>
+</template>
+```
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const pill = ref(null);
+</script>
+```
+```vue
+<style scoped>
+.ripple-target-host {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  inline-size: 320px;
+  padding: 12px;
+  font: inherit;
+  color: var(--mat-sys-color-on-surface);
+  background: var(--mat-sys-color-surface-container);
+  border: 0;
+  border-radius: var(--mat-sys-shape-corner-medium);
+  cursor: pointer;
+}
+
+.ripple-target-pill {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 20px;
+  background: var(--mat-sys-color-surface-container-high);
+  border-radius: var(--mat-sys-shape-corner-full);
+}
+
+.ripple-target-pill .material-symbols-outlined {
+  font-size: 20px;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Ripple 限定覆盖范围预览">
+    <RippleTargetExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### 普通 div 宿主
 
 `div` 没有原生交互语义，使用方需要自行提供 `role="button"`、`tabindex="0"`、键盘激活和点击行为；涟漪只在指针按压时出现。
@@ -32461,9 +32531,10 @@ function activate() {
 | --- | --- | --- | --- |
 | `color` | `string` | `currentcolor` | 涟漪使用的 CSS 颜色，支持颜色值和 `var(...)`。 |
 | `variant` | `'circle'` \| `'dots'` \| `'glow'` \| `'rings'` \| `'burst'` | `circle` | 波纹形状。`circle` 为实心圆；`dots` 为由按压点向外环形扩展并消散的波点阵列；`glow` 为按压点向外扩展至覆盖整个宿主表面并保持的羽化光斑；`rings` 与 `burst` 为向外扩散覆盖容器的瞬时反馈（两圈细环扩散出宿主、八道细光线放射消散），播放结束后自行从 DOM 移除。变体在每次按压时读取，进行中的波纹保持创建时的形状。 |
+| `target` | `HTMLElement` | 宿主元素 | 涟漪覆盖的目标元素；设置后波纹范围、裁剪圆角和按压点坐标以该元素为准。非法值在开发环境警告并回退为宿主。 |
 | `disabled` | `boolean` | `false` | 跳过涟漪；从 `true` 切换为 `false` 时按需挂载，反向切换时立即清理。 |
 
-非法绑定值、未知属性、非法颜色、非布尔值的 `disabled` 或非法 `variant` 会在开发环境发出警告；无效颜色回退为 `currentcolor`，无效 `variant` 回退为 `circle`。
+非法绑定值、未知属性、非法颜色、非布尔值的 `disabled`、非法 `variant` 或非 `HTMLElement` 的 `target` 会在开发环境发出警告；无效颜色回退为 `currentcolor`，无效 `variant` 回退为 `circle`，无效 `target` 回退为宿主元素。
 
 ### 全局设置
 
@@ -32486,6 +32557,7 @@ function activate() {
 import RippleColorExample from '../examples/ripple/RippleColorExample.vue';
 import RippleDefaultExample from '../examples/ripple/RippleDefaultExample.vue';
 import RippleDivExample from '../examples/ripple/RippleDivExample.vue';
+import RippleTargetExample from '../examples/ripple/RippleTargetExample.vue';
 import RippleVariantsExample from '../examples/ripple/RippleVariantsExample.vue';
 </script>
 

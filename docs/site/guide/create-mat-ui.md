@@ -102,7 +102,7 @@ createApp(App).use(createMatUi({
 
 ## 按压涟漪
 
-默认不显示涟漪。传入 `useRipple: true` 后，`MatBtn`、`MatFab`、`MatChip`、`MatMenuItem`、操作模式列表项、`MatCardActionArea` 和导航项目等基于操作交互的组件在主指针按压时显示 Material 3 涟漪；涟漪绘制在组件内建状态层之上，并尊重减少动态效果偏好。
+默认不显示涟漪。传入 `useRipple: true` 后，`MatBtn`、`MatFab`、`MatChip`、`MatMenuItem`、操作模式列表项、`MatCardActionArea` 和导航项目等基于操作交互的组件在主指针按压时显示 Material 3 涟漪；涟漪绘制在组件内建状态层之上，覆盖范围与该组件的可见状态层一致，并尊重减少动态效果偏好。
 
 ```js
 createApp(App).use(createMatUi({

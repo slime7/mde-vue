@@ -951,9 +951,11 @@
 
     /* position-area: center 会把默认对齐改为居中而不是拉伸，必须显式撑满锚点区域。 */
     place-self: stretch;
-    inset: 0;
+
+    /* 组件可通过内部变量把涟漪收窄到状态层范围，默认覆盖整个锚点区域。 */
+    inset: var(--mat-ripple-inset, 0);
     overflow: hidden;
-    border-radius: inherit;
+    border-radius: var(--mat-ripple-radius, inherit);
     pointer-events: none;
   }
 

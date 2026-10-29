@@ -13,6 +13,8 @@ const props = defineProps({
   type: { type: String, default: 'button' },
   useCursor: { type: Boolean, default: false },
   focusRing: { type: Boolean, default: true },
+  rippleDisabled: { type: Boolean, default: false },
+  rippleTarget: { type: Object, default: undefined },
 });
 const emit = defineEmits({
   click(payload) { return payload instanceof MouseEvent; },
@@ -22,11 +24,17 @@ const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const rippleBinding = computed(() => {
   const { useRipple } = matUi;
 
-  if (!useRipple) {
+  if (props.rippleDisabled || !useRipple) {
     return { disabled: true };
   }
 
-  return useRipple === true ? undefined : { variant: useRipple.variant };
+  const options = useRipple === true ? {} : { variant: useRipple.variant };
+
+  if (props.rippleTarget) {
+    options.target = props.rippleTarget;
+  }
+
+  return Object.keys(options).length > 0 ? options : undefined;
 });
 const isLink = computed(() => props.href !== undefined);
 const component = computed(() => (isLink.value ? 'a' : props.as));

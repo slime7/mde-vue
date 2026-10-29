@@ -8,6 +8,7 @@ import {
  * @property {string} [color='currentcolor'] 涟漪颜色。
  * @property {'circle' | 'dots' | 'glow' | 'rings' | 'burst'} [variant='circle'] 波纹形状；
  *   glow 为按压点扩展至整个容器表面的羽化光斑，dots、rings 与 burst 为向外扩散覆盖容器的瞬时动态波纹。
+ * @property {HTMLElement} [target] 涟漪覆盖的目标元素，默认为宿主本身。
  * @property {boolean} [disabled=false] 跳过涟漪；动态切换为 false 时按需挂载。
  */
 
@@ -56,7 +57,7 @@ const BURST_PEAK_OFFSET = 0.25;
 const BURST_DURATION = 460;
 // 瞬时变体的扩散与消散比实心圆更轻盈，使用更快的缓出曲线。
 const TRANSIENT_EASING = 'cubic-bezier(0.2, 0, 0, 1)';
-const OPTION_KEYS = new Set(['color', 'variant', 'disabled']);
+const OPTION_KEYS = new Set(['color', 'variant', 'target', 'disabled']);
 const warn = createDevWarn('v-ripple');
 
 if (typeof CSS !== 'undefined' && typeof CSS.registerProperty === 'function') {
@@ -117,6 +118,23 @@ function readDisabledOption(options) {
 }
 
 /**
+ * @param {unknown} target 选项中的覆盖目标。
+ * @returns {HTMLElement | undefined}
+ */
+function readTargetOption(target) {
+  if (target === undefined) {
+    return undefined;
+  }
+
+  if (typeof HTMLElement !== 'undefined' && target instanceof HTMLElement) {
+    return target;
+  }
+
+  warn('target 必须是 HTMLElement；已回退为宿主元素。');
+  return undefined;
+}
+
+/**
  * @param {unknown} variant 选项中的波纹形状。
  * @returns {string}
  */
@@ -139,10 +157,12 @@ function readVariantOption(variant) {
 function createSkippedRecord() {
   return {
     activePointers: null,
+    anchorElement: null,
     anchorName: undefined,
     container: null,
     observer: null,
     removeEventListeners: () => {},
+    target: null,
     variant: VARIANT_CIRCLE,
     waves: null,
   };
@@ -151,6 +171,8 @@ function createSkippedRecord() {
 /**
  * @typedef {object} RippleRecord
  * @property {HTMLElement | null} container 为 null 表示因 disabled 选项跳过。
+ * @property {HTMLElement | null} anchorElement 承载锚点名称的元素；target 缺省时为宿主。
+ * @property {HTMLElement | null} target 自定义覆盖目标；为 null 时使用宿主。
  * @property {string | undefined} anchorName
  * @property {Set<RippleWave> | null} waves
  * @property {Map<number, RippleWave> | null} activePointers
@@ -275,13 +297,13 @@ class RippleWave {
   }
 
   /**
-   * @param {HTMLElement} host 涟漪宿主元素。
-   * @param {number} originX 相对宿主的横向坐标。
-   * @param {number} originY 相对宿主的纵向坐标。
+   * @param {HTMLElement} surface 涟漪容器元素，决定波纹的覆盖范围。
+   * @param {number} originX 相对容器的横向坐标。
+   * @param {number} originY 相对容器的纵向坐标。
    * @returns {void}
    */
-  place(host, originX, originY) {
-    const rect = host.getBoundingClientRect();
+  place(surface, originX, originY) {
+    const rect = surface.getBoundingClientRect();
     const startRadius = Math.max(rect.width, rect.height) * START_RADIUS_RATIO;
     const endRadius = Math.hypot(rect.width, rect.height) / 2 + BOUNDED_EXTRA_RADIUS;
     const maxRadius = computeSurfaceRadius(rect, originX, originY);
@@ -603,12 +625,17 @@ function handlePointerDown(element, event) {
   // 参照 AndroidX 实现：新按压会结束仍在展示中的旧涟漪；瞬时涟漪直接移除。
   record.waves.forEach((wave) => wave.abort());
 
-  const rect = element.getBoundingClientRect();
+  if (record.target) {
+    // 目标元素可能随组件状态改变形状，每次按压前同步其圆角。
+    record.container.style.borderRadius = getComputedStyle(record.target).borderRadius;
+  }
+
+  const rect = record.container.getBoundingClientRect();
   const originX = Number.isFinite(event.clientX) ? event.clientX - rect.left : rect.width / 2;
   const originY = Number.isFinite(event.clientY) ? event.clientY - rect.top : rect.height / 2;
   const wave = new RippleWave(record, readPressedAlpha(element));
 
-  wave.place(element, originX, originY);
+  wave.place(record.container, originX, originY);
   record.container.append(wave.element);
   record.waves.add(wave);
   record.activePointers.set(event.pointerId, wave);
@@ -633,20 +660,24 @@ function mountRipple(element, options) {
 
   nextAnchorId += 1;
   const anchorName = `--mat-ripple-${nextAnchorId}`;
+  const target = readTargetOption(options.target) ?? null;
+  const anchorElement = target ?? element;
   const container = document.createElement('span');
   container.className = 'mat-ripple';
   container.setAttribute('aria-hidden', 'true');
   container.style.setProperty('position-anchor', anchorName);
   container.style.color = readColorOption(options.color, warn);
-  addAnchorName(element, anchorName);
+  addAnchorName(anchorElement, anchorName);
   element.append(container);
 
   const record = {
     activePointers: new Map(),
+    anchorElement,
     anchorName,
     container,
     observer: undefined,
     removeEventListeners: () => {},
+    target,
     variant: readVariantOption(options.variant),
     waves: new Set(),
   };
@@ -706,7 +737,7 @@ function unmountRipple(element) {
     record.removeEventListeners();
     record.observer.disconnect();
     record.container.remove();
-    removeAnchorName(element, record.anchorName);
+    removeAnchorName(record.anchorElement, record.anchorName);
   }
 
   records.delete(element);
@@ -730,10 +761,17 @@ const Ripple = {
       if (readDisabledOption(options)) {
         unmountRipple(element);
         records.set(element, createSkippedRecord());
-      } else {
-        record.container.style.color = readColorOption(options.color, warn);
-        record.variant = readVariantOption(options.variant);
+        return;
       }
+
+      if (record.target !== (readTargetOption(options.target) ?? null)) {
+        unmountRipple(element);
+        mountRipple(element, options);
+        return;
+      }
+
+      record.container.style.color = readColorOption(options.color, warn);
+      record.variant = readVariantOption(options.variant);
 
       return;
     }

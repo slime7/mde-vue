@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const pagePath = 'docs/site/directives/ripple.md';
-const exampleNames = ['RippleDefaultExample', 'RippleColorExample'];
+const exampleNames = ['RippleDefaultExample', 'RippleColorExample', 'RippleTargetExample'];
 
 describe('Ripple 涟漪指令文档', () => {
   it('提供对象绑定、宿主约束和公共入口说明', () => {

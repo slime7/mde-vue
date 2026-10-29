@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils';
 import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
-import { nextTick } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 import { Ripple } from '../../src/directives/ripple';
 
 function mountHost({
@@ -331,6 +331,49 @@ describe('v-ripple', () => {
     dispatchPointer(wrapper.element, 'pointerdown', { pointerId: 5 });
     expect(container.lastElementChild.childElementCount).toBe(2);
     dispatchPointer(window, 'pointerup', { pointerId: 5 });
+  });
+
+  it('target 选项把涟漪容器锚定到目标元素并在卸载时清理锚点', async () => {
+    const wrapper = mount({
+      setup() {
+        const target = ref(null);
+        const binding = computed(() => ({
+          target: target.value ?? undefined,
+        }));
+
+        return { binding, target };
+      },
+      directives: { ripple: Ripple },
+      template: `
+        <button v-ripple="binding" type="button">
+          <span class="pill" ref="target">范围</span>
+        </button>
+      `,
+    });
+
+    await nextTick();
+
+    const target = wrapper.element.querySelector('.pill');
+    const container = getContainer(wrapper);
+    const anchorName = target.style.getPropertyValue('anchor-name');
+
+    expect(anchorName).toContain('--mat-ripple-');
+    expect(container.style.getPropertyValue('position-anchor')).toBe(anchorName);
+    expect(wrapper.element.style.getPropertyValue('anchor-name')).toBe('');
+
+    dispatchPointer(wrapper.element, 'pointerdown', { pointerId: 1 });
+    expect(getWaveCount(wrapper)).toBe(1);
+
+    wrapper.unmount();
+    expect(target.style.getPropertyValue('anchor-name')).toBe('');
+  });
+
+  it('非法 target 警告并回退为宿主', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const wrapper = mountHost({ binding: { target: 'missing' } });
+
+    expect(getContainer(wrapper)).not.toBeNull();
+    expect(warn.mock.calls.flat().join(' ')).toContain('target');
   });
 
   it('无法容纳涟漪的宿主警告并跳过', () => {

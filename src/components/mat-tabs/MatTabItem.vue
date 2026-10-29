@@ -237,6 +237,8 @@ function handleClick(event) {
 
     /* 关闭 MatActionBase 宿主状态层，状态层由本组件自绘。 */
     --mat-action-state-color: transparent;
+    --mat-ripple-inset: var(--mat-tab-item-state-inset, 0);
+    --mat-ripple-radius: var(--mat-tab-item-state-radius, 0);
     position: relative;
     display: inline-flex;
     box-sizing: border-box;

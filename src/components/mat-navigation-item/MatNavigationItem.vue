@@ -1,6 +1,6 @@
 <script setup>
 import {
-  computed, inject, useSlots, watch,
+  computed, inject, ref, useSlots, watch,
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
 import MatActionBase from '../MatActionBase.vue';
@@ -101,6 +101,7 @@ const emit = defineEmits({
 const slots = useSlots();
 const matUi = inject(MAT_UI_KEY, DEFAULT_MAT_UI_OPTIONS);
 const navigation = inject(MAT_NAVIGATION_KEY, null);
+const indicator = ref(null);
 const expanded = computed(() => navigation?.expanded.value ?? false);
 const fullWidth = computed(() => navigation?.fullWidth.value ?? false);
 const isHorizontal = computed(() => navigation?.orientation.value === 'horizontal');
@@ -185,10 +186,14 @@ function handleClick(event) {
     :disabled="propsWithDefaults.disabled"
     :focus-ring="false"
     :href="propsWithDefaults.href"
+    :ripple-target="indicator"
     :use-cursor="matUi.useCursor"
     @click="handleClick"
   >
-    <span class="mat-navigation-item__indicator mat-navigation-rail-item__indicator mat-navigation-bar-item__indicator">
+    <span
+      ref="indicator"
+      class="mat-navigation-item__indicator mat-navigation-rail-item__indicator mat-navigation-bar-item__indicator"
+    >
       <span
         v-if="showsIcon"
         class="mat-navigation-item__icon-wrap mat-navigation-rail-item__icon-wrap mat-navigation-bar-item__icon-wrap"

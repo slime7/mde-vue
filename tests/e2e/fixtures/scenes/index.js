@@ -12,6 +12,7 @@ import NotificationScene from './NotificationScene.vue';
 import PanesScene from './PanesScene.vue';
 import PullToRefreshScene from './PullToRefreshScene.vue';
 import RippleScene from './RippleScene.vue';
+import RippleScopeScene from './RippleScopeScene.vue';
 import ScrollAreaScene from './ScrollAreaScene.vue';
 import SideSheetScene from './SideSheetScene.vue';
 import SliderScene from './SliderScene.vue';
@@ -34,6 +35,7 @@ export const scenes = {
   panes: PanesScene,
   'pull-to-refresh': PullToRefreshScene,
   ripple: RippleScene,
+  'ripple-scope': RippleScopeScene,
   'scroll-area': ScrollAreaScene,
   'side-sheet': SideSheetScene,
   slider: SliderScene,

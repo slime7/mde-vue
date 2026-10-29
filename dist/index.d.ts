@@ -5360,6 +5360,7 @@ export declare const StateLayer: import('vue').ObjectDirective<HTMLElement, Stat
 export interface RippleOptions {
   color?: string;
   variant?: MatRippleVariant;
+  target?: HTMLElement;
 }
 export declare const Ripple: import('vue').ObjectDirective<HTMLElement, RippleOptions | undefined>;
 

@@ -21,6 +21,11 @@ const pluginOptions = {};
 if (Object.keys(theme).length > 0) {
   pluginOptions.theme = theme;
 }
+if (query.get('ripple')) {
+  pluginOptions.useRipple = query.get('ripple') === 'true'
+    ? true
+    : { variant: query.get('ripple') };
+}
 
 const app = createApp(App);
 app.use(createMatUi(pluginOptions));
