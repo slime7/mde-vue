@@ -80,7 +80,7 @@ Date picker 与 Time picker 是无外观的面板组件：不渲染激活器、�
 
 `MatSharedElement` 保存稳定的 View Transition 名称，但默认不写入动态 HTML 根元素，也不管理应用状态或路由。`useMatViewTransition()` 只在单次调用期间激活 `names` 指定的元素，完成或失败后清理名称，从而隔离同页其他实例；它负责执行应用状态更新、等待同一文档 View Transition 完成，并在同一协调器实例内跳过尚未完成的旧动画。不支持 API、显式跳过或减少动态效果时仍直接执行更新。基础样式以系统 duration/easing 令牌设置文档 View Transition 伪元素，并允许应用样式覆盖。
 
-Card 组合 `MatSurfaceBase` 与可选 `MatCardActionArea`，提供 filled、elevated、outlined 三种中性表面和局部种子配色。Headline、Subhead 与 Media 既可以由 Card 的同名具名 Slot 自动创建，也可以作为 `MatCardHeadline`、`MatCardSubhead`、`MatCardMedia` 子组件直接组合；Content 与 Actions 继续负责 16px 内容内边距和末端对齐的操作布局。Divider 作为 Card 直接子项时以明确横向尺寸完整分隔区域，布尔 inset 模式在两侧保留系统缩进。
+Card 组合 `MatSurfaceBase` 与可选 `MatCardActionArea`，提供 filled、elevated、outlined 三种中性表面和局部种子配色；圆角由 `rounded` 选择系统形状令牌，`flat` 关闭交互时的阴影提升并保留静止层级。Headline、Subhead 与 Media 既可以由 Card 的同名具名 Slot 自动创建，也可以作为 `MatCardHeadline`、`MatCardSubhead`、`MatCardMedia` 子组件直接组合；Content 与 Actions 继续负责 16px 内容内边距和末端对齐的操作布局。Divider 作为 Card 直接子项时以明确横向尺寸完整分隔区域，布尔 inset 模式在两侧保留系统缩进。
 
 List 通过内部 provide/inject 上下文统一交互模式、受控选择、折叠值、拖动项目登记和焦点刷新。普通与操作模式保留 `ul/li`；MatListGroup 作为根列表的 `li`，在其中组合 Activator 按钮、可惰化的内容容器和嵌套 `ul`。有值分组由根 List 的 `expanded` 数组控制，无值分组保存内部状态。选择模式使用 `listbox/option`，折叠分组在该模式下降级为始终展开的静态 `group`，避免把 disclosure 按钮放入 listbox。roving tabindex 注册表按 DOM 顺序协调直属项目、分组 Activator、展开项目和 multi-action trailing 控件，并在模式切换或卸载时恢复使用方原有的 tabindex。可选拖动排序使用指针长按、绘制帧调度、临时占位与固定定位预览，只发出受控 `reorder` 请求；Divider、Group、禁用项和无有效值项目形成排序边界。Divider 根据 List 上下文切换合法的根语义，不参与选择与焦点顺序。Item 滑动复用共享滑动手势模块，把内容包进滑动前景层并在其下渲染露出操作区；露出与移除的判定、退场动画与函数触发都在 Item 内完成，不改变 List 的选择与排序模型。
 

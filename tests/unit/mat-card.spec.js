@@ -74,6 +74,55 @@ describe('MatCard', () => {
     expect(wrapper.getComponent(MatCardMedia).get('video').attributes('aria-label')).toBe('预告片');
   });
 
+  it('rounded 使用形状令牌后缀，默认 medium', () => {
+    const defaultWrapper = mount(MatCard, { slots: { default: '内容' } });
+
+    expect(defaultWrapper.attributes('style'))
+      .toContain('border-radius: var(--mat-sys-shape-corner-medium)');
+
+    const largeWrapper = mount(MatCard, {
+      props: { rounded: 'large' },
+      slots: { default: '内容' },
+    });
+
+    expect(largeWrapper.attributes('style'))
+      .toContain('border-radius: var(--mat-sys-shape-corner-large)');
+  });
+
+  it('rounded 只接受现有形状令牌后缀', () => {
+    [
+      'none',
+      'extra-small',
+      'small',
+      'medium',
+      'large',
+      'large-increased',
+      'extra-large',
+      'extra-large-increased',
+      'extra-extra-large',
+      'full',
+    ].forEach((value) => {
+      expect(MatCard.props.rounded.validator(value)).toBe(true);
+    });
+
+    ['huge', 'x-large', '12px', ''].forEach((value) => {
+      expect(MatCard.props.rounded.validator(value)).toBe(false);
+    });
+  });
+
+  it('flat 默认关闭，圆角与现有内联样式同时生效', () => {
+    const wrapper = mount(MatCard, {
+      props: { rounded: 'large', flat: true },
+      attrs: { style: 'inline-size: 240px' },
+      slots: { default: '内容' },
+    });
+
+    expect(MatCard.props.flat.default).toBe(false);
+    expect(wrapper.attributes('style')).toContain('inline-size: 240px');
+    expect(wrapper.attributes('style'))
+      .toContain('border-radius: var(--mat-sys-shape-corner-large)');
+  });
+
   it('action area 支持链接和禁用链接语义', () => {
     const link = mount(MatCardActionArea, { props: { href: '/detail' } });
     const disabled = mount(MatCardActionArea, { props: { href: '/detail', disabled: true } });

@@ -1380,6 +1380,20 @@ export interface MatCardProps {
   */
   color?: string | undefined;
   /**
+  * 卡片圆角，取值为系统形状令牌后缀，对应 `--mat-sys-shape-corner-*`。
+  *
+  * @type {'none' | 'extra-small' | 'small' | 'medium' | 'large' | 'large-increased' | 'extra-large' | 'extra-large-increased' | 'extra-extra-large' | 'full'}
+  * @default 'medium'
+  */
+  rounded?: 'none' | 'extra-small' | 'small' | 'medium' | 'large' | 'large-increased' | 'extra-large' | 'extra-large-increased' | 'extra-extra-large' | 'full';
+  /**
+  * 交互时不提升阴影；卡片静止阴影保持不变。
+  *
+  * @type {boolean}
+  * @default false
+  */
+  flat?: boolean;
+  /**
   * 根元素语义；可选值为 `div`、`article`、`section`、`li`。
   *
   * @type {'div' | 'article' | 'section' | 'li'}

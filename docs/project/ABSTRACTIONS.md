@@ -202,7 +202,7 @@ Time picker 的 `v-model` 绑定 24 小时制 `HH:mm` 零填充字符串或 `nul
 
 ## `<mat-card>`
 
-`<mat-card>` 的导出名是 `MatCard`，以 `filled`、`elevated`、`outlined` 表达三种 Material 3 层级，默认 filled。根元素可以使用 `div`、`article`、`section` 或 `li`，并继续透传未消费的原生属性。`color` 遵循统一组件配色约定；省略时保持官方中性表面角色。
+`<mat-card>` 的导出名是 `MatCard`，以 `filled`、`elevated`、`outlined` 表达三种 Material 3 层级，默认 filled。根元素可以使用 `div`、`article`、`section` 或 `li`，并继续透传未消费的原生属性。`color` 遵循统一组件配色约定；省略时保持官方中性表面角色。`rounded` 接受系统形状令牌后缀（`none` 至 `full`），默认 `medium` 并对应官方 12dp；`flat` 只关闭 ActionArea 悬停时的阴影提升，静止阴影、pressed 恢复结果和 elevated 的常驻层级不变。
 
 Card 的 `headline`、`subhead`、`media` 具名 Slot 分别自动使用 `MatCardHeadline`、`MatCardSubhead`、`MatCardMedia` 渲染；三者也可以通过 `<mat-card-headline>`、`<mat-card-subhead>`、`<mat-card-media>` 直接组合。Headline 使用 title-large，Subhead 使用较低强调的 body-medium；Media 占满可用横向空间并保持图片或视频自身比例。`MatCardContent` 提供 16px 内边距，`MatCardActions` 使用末端对齐、可换行的横向布局、8px 间距和 16px 内边距。
 

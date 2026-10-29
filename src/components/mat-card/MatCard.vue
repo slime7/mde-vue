@@ -25,6 +25,35 @@ const props = defineProps({
    */
   color: { type: String, default: undefined, validator: isComponentColor },
   /**
+   * 卡片圆角，取值为系统形状令牌后缀，对应 `--mat-sys-shape-corner-*`。
+   *
+   * @type {'none' | 'extra-small' | 'small' | 'medium' | 'large' | 'large-increased' | 'extra-large' | 'extra-large-increased' | 'extra-extra-large' | 'full'}
+   * @default 'medium'
+   */
+  rounded: {
+    type: String,
+    default: 'medium',
+    validator: (value) => [
+      'none',
+      'extra-small',
+      'small',
+      'medium',
+      'large',
+      'large-increased',
+      'extra-large',
+      'extra-large-increased',
+      'extra-extra-large',
+      'full',
+    ].includes(value),
+  },
+  /**
+   * 交互时不提升阴影；卡片静止阴影保持不变。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  flat: { type: Boolean, default: false },
+  /**
    * 根元素语义；可选值为 `div`、`article`、`section`、`li`。
    *
    * @type {'div' | 'article' | 'section' | 'li'}
@@ -34,14 +63,24 @@ const props = defineProps({
 });
 const propsWithDefaults = useMatProps('card', props);
 const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => propsWithDefaults.color));
+const cardStyle = computed(() => ({
+  ...colorStyle.value,
+  borderRadius: `var(--mat-sys-shape-corner-${propsWithDefaults.rounded})`,
+}));
 </script>
 
 <template>
   <MatSurfaceBase
     v-bind="$attrs"
     class="mat-card"
-    :class="[`mat-card--${propsWithDefaults.variant}`, { 'mat-card--explicit-color': hasExplicitColor }]"
-    :style="colorStyle"
+    :class="[
+      `mat-card--${propsWithDefaults.variant}`,
+      {
+        'mat-card--explicit-color': hasExplicitColor,
+        'mat-card--flat': propsWithDefaults.flat,
+      },
+    ]"
+    :style="cardStyle"
     :as="propsWithDefaults.as"
   >
     <MatCardMedia v-if="$slots.media">
@@ -120,12 +159,12 @@ const { colorStyle, hasExplicitColor } = useComponentColor(computed(() => propsW
   }
 
   @media (hover: hover) {
-    .mat-card--filled:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover):not(:has(.mat-card .mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover)),
-    .mat-card--outlined:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover):not(:has(.mat-card .mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover)) {
+    .mat-card--filled:not(.mat-card--flat):has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover):not(:has(.mat-card .mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover)),
+    .mat-card--outlined:not(.mat-card--flat):has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover):not(:has(.mat-card .mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover)) {
       --mat-card-elevation: var(--mat-sys-elevation-level1);
     }
 
-    .mat-card--elevated:has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover):not(:has(.mat-card .mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover)) {
+    .mat-card--elevated:not(.mat-card--flat):has(.mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover):not(:has(.mat-card .mat-card-action-area:not(:disabled):not(.mat-action-base--disabled):hover)) {
       --mat-card-elevation: var(--mat-sys-elevation-level2);
     }
   }

@@ -7111,6 +7111,26 @@ var Ho = /*@__PURE__*/ Object.assign({
 			default: void 0,
 			validator: Gt
 		},
+		rounded: {
+			type: String,
+			default: "medium",
+			validator: (e) => [
+				"none",
+				"extra-small",
+				"small",
+				"medium",
+				"large",
+				"large-increased",
+				"extra-large",
+				"extra-large-increased",
+				"extra-extra-large",
+				"full"
+			].includes(e)
+		},
+		flat: {
+			type: Boolean,
+			default: !1
+		},
 		as: {
 			type: String,
 			default: "div",
@@ -7123,10 +7143,16 @@ var Ho = /*@__PURE__*/ Object.assign({
 		}
 	},
 	setup(e) {
-		let t = $("card", e), { colorStyle: n, hasExplicitColor: r } = yn(i(() => t.color));
-		return (e, i) => (D(), a(as, _(e.$attrs, {
-			class: ["mat-card", [`mat-card--${z(t).variant}`, { "mat-card--explicit-color": z(r) }]],
-			style: z(n),
+		let t = $("card", e), { colorStyle: n, hasExplicitColor: r } = yn(i(() => t.color)), s = i(() => ({
+			...n.value,
+			borderRadius: `var(--mat-sys-shape-corner-${t.rounded})`
+		}));
+		return (e, n) => (D(), a(as, _(e.$attrs, {
+			class: ["mat-card", [`mat-card--${z(t).variant}`, {
+				"mat-card--explicit-color": z(r),
+				"mat-card--flat": z(t).flat
+			}]],
+			style: s.value,
 			as: z(t).as
 		}), {
 			default: U(() => [
@@ -7151,7 +7177,7 @@ var Ho = /*@__PURE__*/ Object.assign({
 			"as"
 		]));
 	}
-}), [["__scopeId", "data-v-2dfe7374"]]), ps = { class: "mat-card-action-area__content" }, ms = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-3194a0ea"]]), ps = { class: "mat-card-action-area__content" }, ms = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatCardActionArea",
 	inheritAttrs: !1
 }, {

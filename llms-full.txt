@@ -12678,6 +12678,125 @@ import InputBaseTextareaExample from '../examples/input-base/InputBaseTextareaEx
   </DocsPreview>
 </ClientOnly>
 
+### `rounded`
+
+`rounded` 接受系统形状令牌的后缀，默认 `medium`；下方滑块可逐档查看全部令牌。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example">
+    <mat-card
+      variant="outlined"
+      :rounded="rounded"
+      class="example-card"
+    >
+      <mat-card-content>
+        <strong>{{ rounded }}</strong>
+        <p>拖动下方滑块查看圆角变化。</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-slider
+      v-model="roundedIndex"
+      aria-label="卡片圆角"
+      :min="0"
+      :max="roundedValues.length - 1"
+      show-stop-indicator
+    />
+  </div>
+</template>
+```
+```vue
+<script setup>
+import { computed, ref } from 'vue';
+
+const roundedValues = [
+  'none',
+  'extra-small',
+  'small',
+  'medium',
+  'large',
+  'large-increased',
+  'extra-large',
+  'extra-large-increased',
+  'extra-extra-large',
+  'full',
+];
+const roundedIndex = ref(3);
+const rounded = computed(() => roundedValues[roundedIndex.value]);
+</script>
+```
+```vue
+<style scoped>
+.example {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  inline-size: 100%;
+}
+
+.example-card {
+  min-block-size: 160px;
+}
+
+p {
+  margin-block: 8px 0;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Card rounded 预览">
+    <CardRoundedExample />
+  </DocsPreview>
+</ClientOnly>
+
+### `flat`
+
+启用后，卡片在有 ActionArea 悬停时保持静止阴影，不再提升层级。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example-column">
+    <mat-card>
+      <mat-card-action-area>
+        <mat-card-content>默认：悬停提升阴影</mat-card-content>
+      </mat-card-action-area>
+    </mat-card>
+    <mat-card flat>
+      <mat-card-action-area>
+        <mat-card-content>flat：悬停不提升阴影</mat-card-content>
+      </mat-card-action-area>
+    </mat-card>
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.example-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  inline-size: 100%;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Card flat 预览">
+    <CardFlatExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `as`
 
 :::: details 查看示例代码
@@ -13050,6 +13169,8 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
 | --- | --- | --- | --- |
 | `variant` | `'elevated' \| 'filled' \| 'outlined'` | `'filled'` | 卡片的层级和边框外观 |
 | `color` | `'primary' \| 'secondary' \| 'tertiary' \| 'error' \| 系统颜色角色 \| #RRGGBB` | 未设置 | 语义色族、主题颜色角色或局部 Material 种子色 |
+| `rounded` | `'none' \| 'extra-small' \| 'small' \| 'medium' \| 'large' \| 'large-increased' \| 'extra-large' \| 'extra-large-increased' \| 'extra-extra-large' \| 'full'` | `'medium'` | 卡片圆角，取值为系统形状令牌后缀，对应 `--mat-sys-shape-corner-*` |
+| `flat` | `boolean` | `false` | 交互时保持静止阴影，不随悬停提升层级 |
 | `as` | `'div' \| 'article' \| 'section' \| 'li'` | `'div'` | 根元素语义 |
 
 未被消费的普通原生属性和事件传递给 `as` 指定的根元素。
@@ -13132,13 +13253,13 @@ ActionArea 内不能再放置按钮或链接；将附加操作放在同级 `MatC
 
 ## 状态
 
-只有启用的 ActionArea 才会触发离它最近的 Card 的 hover、focus 和 pressed 状态；嵌套卡片时，外层 Card 保持静止。焦点环显示在整张卡片上，减少动态效果偏好下不播放状态层过渡。
+只有启用的 ActionArea 才会触发离它最近的 Card 的 hover、focus 和 pressed 状态；嵌套卡片时，外层 Card 保持静止。焦点环显示在整张卡片上，减少动态效果偏好下不播放状态层过渡。`flat` 只关闭悬停时的阴影提升：状态层、焦点环和 pressed 后的静止阴影保持不变，elevated 卡片仍保留自身的静止层级。
 
 需要分隔 Actions 时，将 `MatDivider` 放在 `MatCardActions` 前。全宽 Divider 完整划分两个区域；布尔 `inset` 模式在两侧各保留 16px，用于分隔仍属于同一内容组的区域。
 
 ## 参考来源
 
-结构、颜色、形状、状态和测量依据 Material 3 [Card specs](https://m3.material.io/components/cards/specs) 与 [Card guidelines](https://m3.material.io/components/cards/guidelines)。官方说明 Card 可包含 headline、subhead、supporting text、media 和 actions，卡片左右内容边距为 16dp、圆角为 12dp；本组件以对应系统令牌和 CSS 像素实现 Web 布局。
+结构、颜色、形状、状态和测量依据 Material 3 [Card specs](https://m3.material.io/components/cards/specs) 与 [Card guidelines](https://m3.material.io/components/cards/guidelines)。官方说明 Card 可包含 headline、subhead、supporting text、media 和 actions，卡片左右内容边距为 16dp、圆角为 12dp；本组件以对应系统令牌和 CSS 像素实现 Web 布局，默认 `medium` 圆角对应官方 12dp，其余 `rounded` 取值切换到相同的系统形状令牌。`flat` 是本组件提供的保守表达，只关闭悬停时的阴影提升，不改变官方静止层级。
 
 <script setup>
 import CardActionDisabledExample from '../examples/card/CardActionDisabledExample.vue';
@@ -13148,8 +13269,10 @@ import CardActionsSlotExample from '../examples/card/CardActionsSlotExample.vue'
 import CardAsExample from '../examples/card/CardAsExample.vue';
 import CardColorExample from '../examples/card/CardColorExample.vue';
 import CardContentSlotExample from '../examples/card/CardContentSlotExample.vue';
+import CardFlatExample from '../examples/card/CardFlatExample.vue';
 import CardHeadlineExample from '../examples/card/CardHeadlineExample.vue';
 import CardMediaExample from '../examples/card/CardMediaExample.vue';
+import CardRoundedExample from '../examples/card/CardRoundedExample.vue';
 import CardSubheadExample from '../examples/card/CardSubheadExample.vue';
 import CardVariantExample from '../examples/card/CardVariantExample.vue';
 </script>

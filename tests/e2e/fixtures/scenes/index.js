@@ -1,5 +1,6 @@
 import AppRootScene from './AppRootScene.vue';
 import BottomSheetScene from './BottomSheetScene.vue';
+import CardScene from './CardScene.vue';
 import CarouselScene from './CarouselScene.vue';
 import ChatMinimapScene from './ChatMinimapScene.vue';
 import DialogScene from './DialogScene.vue';
@@ -21,6 +22,7 @@ import TooltipScene from './TooltipScene.vue';
 export const scenes = {
   'app-root': AppRootScene,
   'bottom-sheet': BottomSheetScene,
+  card: CardScene,
   carousel: CarouselScene,
   'chat-minimap': ChatMinimapScene,
   dialog: DialogScene,
