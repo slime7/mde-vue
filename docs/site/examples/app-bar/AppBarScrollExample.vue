@@ -12,6 +12,7 @@ const scrollTarget = ref(null);
     <mat-app-bar
       variant="large-flexible"
       :scroll-target="scrollTarget"
+      scroll-timeline
     >
       最近项目
 

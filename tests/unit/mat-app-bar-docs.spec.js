@@ -48,7 +48,7 @@ describe('App bar 文档', () => {
     });
   });
 
-  it('滚动示例使用显式时间线目标并提供足够的滚动内容', () => {
+  it('滚动示例显式启用时间线、使用显式滚动目标并提供足够的滚动内容', () => {
     const example = readFileSync(
       resolve('docs/site/examples/app-bar/AppBarScrollExample.vue'),
       'utf8',
@@ -56,8 +56,16 @@ describe('App bar 文档', () => {
 
     expect(example).toContain('ref="scrollTarget"');
     expect(example).toContain(':scroll-target="scrollTarget"');
+    expect(example).toContain('scroll-timeline');
     expect(example).toContain('variant="large-flexible"');
     expect(example).toContain('v-for="index in 8"');
+  });
+
+  it('API 说明滚动时间线默认关闭', () => {
+    const page = readFileSync(resolve(pagePath), 'utf8');
+
+    expect(page).toContain('| `scrollTimeline` | `boolean` | `false` |');
+    expect(page).toContain('默认关闭');
   });
 
   it('所有示例都使用局部 Layout 容器隔离滚动源', () => {

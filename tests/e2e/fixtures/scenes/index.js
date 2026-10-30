@@ -1,3 +1,4 @@
+import AppBarScene from './AppBarScene.vue';
 import AppRootScene from './AppRootScene.vue';
 import BottomSheetScene from './BottomSheetScene.vue';
 import CardScene from './CardScene.vue';
@@ -21,6 +22,7 @@ import TabsScene from './TabsScene.vue';
 import TooltipScene from './TooltipScene.vue';
 
 export const scenes = {
+  'app-bar': AppBarScene,
   'app-root': AppRootScene,
   'bottom-sheet': BottomSheetScene,
   card: CardScene,

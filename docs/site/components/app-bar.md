@@ -1,6 +1,6 @@
 ---
 title: App bar 应用栏
-description: mat-app-bar 的 MD3 Expressive 变体、搜索主内容、主内容区域与 CSS 滚动时间线折叠。
+description: mat-app-bar 的 MD3 Expressive 变体、搜索主内容、主内容区域与可选 CSS 滚动时间线折叠。
 llms: true
 order: 95
 ---
@@ -11,7 +11,7 @@ order: 95
 
 `<mat-app-bar>` 的组件导出名是 `MatAppBar`。它实现 Material 3 Expressive 的 search、small、medium flexible 和 large flexible 四种顶部应用栏。通过 `content` 属性（`headline`、`image`、`search`）明确主内容语义；`content="search"` 时可在默认 Slot 中放置独立的 `<mat-search>`（组件导出名 `MatSearch`）。
 
-组件支持吸顶停靠与随滚动连续折叠，提供 `leading`、`trailing` 操作区与 `subtitle` 副标题插槽，支持起始对齐与居中对齐，并支持通过 `app` 属性接入应用根布局。
+组件支持吸顶停靠，并可在显式启用 `scrollTimeline` 后随滚动连续折叠；默认只在滚动后更新基础表面状态。组件提供 `leading`、`trailing` 操作区与 `subtitle` 副标题插槽，支持起始对齐与居中对齐，并支持通过 `app` 属性接入应用根布局。
 
 ## 示例
 
@@ -95,9 +95,9 @@ order: 95
   </DocsPreview>
 </ClientOnly>
 
-### `scrollTarget` 与连续折叠
+### `scrollTarget` 与 `scrollTimeline`
 
-通过 `scrollTarget` 指定滚动容器，App bar 会随滚动进度平滑折叠并过渡背景色。
+通过 `scrollTarget` 指定滚动容器。`scrollTimeline` 默认关闭；显式启用后，App bar 会随滚动进度平滑折叠并过渡背景色。需要连续折叠效果且目标环境滚动表现正常时再开启。也可以通过 `createMatUi({ defaults: { appBar: { scrollTimeline: true } } })` 为未显式传入该属性的实例统一启用。
 
 :::: details 查看示例代码
 
@@ -129,7 +129,8 @@ order: 95
 | `align` | `'start' \| 'center'` | `'start'` | 主内容起始或居中对齐；居中模式使用对称侧轨 |
 | `app` | `boolean` | `false` | 位于 `MatAppRoot` 且省略 `attach` 时登记应用顶边；其他场景固定到 `attach` |
 | `attach` | `string \| HTMLElement` | `'body'` | `app=true` 时的显式 Teleport 目标；显式传入后优先于最近的 `MatAppRoot` |
-| `scrollTarget` | `string \| HTMLElement` | `undefined` | 显式 CSS 时间线滚动源；省略时依次选择可滚动的 AppRoot 正文、最近滚动祖先和 document |
+| `scrollTarget` | `string \| HTMLElement` | `undefined` | 显式滚动源；省略时依次选择可滚动的 AppRoot 正文、最近滚动祖先和 document |
+| `scrollTimeline` | `boolean` | `false` | 是否启用 CSS 滚动时间线驱动的连续折叠与表面过渡；默认关闭并保留滚动后的基础表面状态 |
 | `placeholder` | `boolean` | `false` | small/search 变体是否在声明位置保留 64px 内部占位；flexible 变体始终为展开差值（medium 48px、large 56px）保留内部占位。该占位属于 AppBar 折叠机制，不是 MatAside 的 modal placeholder |
 | `safeArea` | `boolean \| number \| string` | `true` | 顶部安全区留白配置，为 `true` 时自适应环境安全区或 AppRoot 变量 |
 | `safeAreaSize` | `number \| string \| undefined` | `undefined` | 显式指定顶部安全区留白大小 |
@@ -154,7 +155,7 @@ order: 95
 | --- | --- |
 | 默认 | 唯一主内容区域；应与 `content` 一致地放置标题、图像或 `MatSearch` |
 | `leading` | 起始操作，通常是一个具有可访问名称的 48px 目标按钮 |
-| `subtitle` | 标题的辅助文字；flexible 折叠过程中连续淡出，不应与 search 主内容组合 |
+| `subtitle` | 标题的辅助文字；启用 `scrollTimeline` 的 flexible 折叠过程中连续淡出，不应与 search 主内容组合 |
 | `trailing` | 末端操作；宽屏可放置最多四个简洁操作，避免挤压主内容 |
 
 ## 无障碍
@@ -163,7 +164,7 @@ App bar 使用原生 `<header>`；`content="search"` 时由 `MatSearch` 提供�
 
 ## 参考来源
 
-变体、结构、64px small/search 高度、112px medium flexible 高度、120px large flexible 高度、48px 操作目标、滚动填色与 flexible 压缩行为依据 Material 3 [App bars overview](https://m3.material.io/components/app-bars/overview)、[App bars specs](https://m3.material.io/components/app-bars/specs) 和 [App bars guidelines](https://m3.material.io/components/app-bars/guidelines)。滚动驱动实现采用 W3C [Scroll-driven Animations](https://www.w3.org/TR/scroll-animations-1/) 定义的 CSS timeline；该实现方式是 mde-vue 的 Web API 设计，不是 Material 官方组件 API。
+变体、结构、64px small/search 高度、112px medium flexible 高度、120px large flexible 高度、48px 操作目标、滚动填色与 flexible 压缩行为依据 Material 3 [App bars overview](https://m3.material.io/components/app-bars/overview)、[App bars specs](https://m3.material.io/components/app-bars/specs) 和 [App bars guidelines](https://m3.material.io/components/app-bars/guidelines)。可选的滚动驱动实现采用 W3C [Scroll-driven Animations](https://www.w3.org/TR/scroll-animations-1/) 定义的 CSS timeline；该实现方式是 mde-vue 的 Web API 设计，不是 Material 官方组件 API。
 
 <script setup>
 import AppBarAlignExample from '../examples/app-bar/AppBarAlignExample.vue';

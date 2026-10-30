@@ -44,6 +44,7 @@
 | [0037](0037-bottom-sheet-nested-scroll-gesture.md) | active | Bottom sheet 采用 AndroidX 式嵌套滚动手势 |
 | [0038](0038-global-ripple-default-variant.md) | active | useRipple 支持默认涟漪变体配置 |
 | [0039](0039-ripple-coverage-matches-state-layer.md) | active | 涟漪覆盖范围与组件状态层对齐 |
+| [0040](0040-app-bar-opt-in-scroll-timeline.md) | active | App bar 滚动时间线改为显式启用 |
 
 ## 何时创建 ADR
 

@@ -3693,6 +3693,10 @@ var ca = {
 			type: [String, Object],
 			default: void 0
 		},
+		scrollTimeline: {
+			type: Boolean,
+			default: !1
+		},
 		placeholder: {
 			type: Boolean,
 			default: !1
@@ -3766,7 +3770,7 @@ var ca = {
 			`mat-app-bar--${N.value}`,
 			`mat-app-bar--content-${F.value}`,
 			`mat-app-bar--align-${I.value}`
-		]), H = i(() => [g.style, { "--mat-app-bar-timeline": M }]), W = i(() => N.value === "medium-flexible" ? yi("headline", "small") : N.value === "large-flexible" ? yi("headline", "medium") : yi("title", "large")), ne = !1, G, K;
+		]), H = i(() => [g.style, p.scrollTimeline ? { "--mat-app-bar-timeline": M } : {}]), W = i(() => N.value === "medium-flexible" ? yi("headline", "small") : N.value === "large-flexible" ? yi("headline", "medium") : yi("title", "large")), ne = !1, G, K;
 		function q() {
 			return typeof CSS < "u" && typeof CSS.supports == "function" && CSS.supports("animation-timeline", "scroll()");
 		}
@@ -3792,21 +3796,23 @@ var ca = {
 			re();
 			let t = J(p.scrollTarget), n = R.value && S.rootElement.value?.dataset.scrollable === "true" ? S.contentElement.value : null, r = t ?? n ?? oa(e);
 			if (!r) return;
-			let i = sa(r, e);
-			q() && i && (G = aa({
-				name: M,
-				scope: i,
-				source: r
-			}), e.dataset.timelineActive = "");
-			let a = r === document.documentElement || r === document.body || document.scrollingElement !== void 0 && r === document.scrollingElement, o = a ? window : r;
+			if (p.scrollTimeline && q()) {
+				let t = sa(r, e);
+				t && (G = aa({
+					name: M,
+					scope: t,
+					source: r
+				}), e.dataset.timelineActive = "");
+			}
+			let i = r === document.documentElement || r === document.body || document.scrollingElement !== void 0 && r === document.scrollingElement, a = i ? window : r;
+			function o() {
+				return i ? window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0 : r.scrollTop || 0;
+			}
 			function s() {
-				return a ? window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0 : r.scrollTop || 0;
+				o() > 0 ? e?.setAttribute("data-scrolled", "") : e?.removeAttribute("data-scrolled");
 			}
-			function c() {
-				s() > 0 ? e?.setAttribute("data-scrolled", "") : e?.removeAttribute("data-scrolled");
-			}
-			o.addEventListener("scroll", c, { passive: !0 }), c(), K = () => {
-				o.removeEventListener("scroll", c);
+			a.addEventListener("scroll", s, { passive: !0 }), s(), K = () => {
+				a.removeEventListener("scroll", s);
 			};
 		}
 		return T(() => {
@@ -3817,6 +3823,7 @@ var ca = {
 			() => p.app,
 			() => p.attach,
 			() => p.scrollTarget,
+			() => p.scrollTimeline,
 			N
 		], Y), n({
 			asideRef: k,
@@ -3873,7 +3880,7 @@ var ca = {
 			style: x({ blockSize: `${B.value}px` })
 		}, null, 4)) : o("", !0)], 64));
 	}
-}), [["__scopeId", "data-v-abe3039f"]]), pa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
+}), [["__scopeId", "data-v-6e59f1e6"]]), pa = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 	name: "MatInputBase",
 	inheritAttrs: !1
 }, {

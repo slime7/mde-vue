@@ -41,7 +41,7 @@
 - [Card 卡片](components/card.md): mat-card 的 Material 3 外观、标题、副标题、媒体、内容、操作区与链接式交互。
 - [Text field 文本输入](components/text-field.md): mat-text-field 与 mat-textarea 的输入、校验提示、计数、局部配色和原生事件。
 - [Search 搜索](components/search.md): mat-search 的 MD3 contained 搜索条、直接输入、提交和操作 Slots。
-- [App bar 应用栏](components/app-bar.md): mat-app-bar 的 MD3 Expressive 变体、搜索主内容、主内容区域与 CSS 滚动时间线折叠。
+- [App bar 应用栏](components/app-bar.md): mat-app-bar 的 MD3 Expressive 变体、搜索主内容、主内容区域与可选 CSS 滚动时间线折叠。
 - [Menu 菜单](components/menu.md): mat-menu、mat-menu-group 与 mat-menu-item 的分组、坐标定位、多级展开、键盘焦点和局部配色。
 - [Docked container 浮动容器](components/docked-container.md): mat-docked-container 结合菜单锚点定位与弹窗内容布局，支持自定义宽度、尺寸预设、标题与操作栏插槽。
 - [Dialog 对话框](components/dialog.md): mat-dialog 的模态展示、全屏布局、帷幕、动画、滚动区域和 Promise 命令式函数。

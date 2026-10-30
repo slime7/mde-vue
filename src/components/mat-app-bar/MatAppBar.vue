@@ -100,6 +100,16 @@ const props = defineProps({
     default: undefined,
   },
   /**
+   * 是否启用 CSS 滚动时间线驱动的连续折叠与表面过渡。
+   *
+   * @type {boolean}
+   * @default false
+   */
+  scrollTimeline: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * 是否在自然布局位置生成占位。
    *
    * @type {boolean}
@@ -267,9 +277,9 @@ const headerClass = computed(() => [
 ]);
 const headerStyle = computed(() => [
   attrs.style,
-  {
+  propsWithDefaults.scrollTimeline ? {
     '--mat-app-bar-timeline': timelineName,
-  },
+  } : {},
 ]);
 const primaryTypographyClass = computed(() => {
   if (normalizedVariant.value === 'medium-flexible') {
@@ -343,15 +353,17 @@ async function syncRegistrations() {
     return;
   }
 
-  const scope = findTimelineScope(source, el);
+  if (propsWithDefaults.scrollTimeline && supportsScrollTimeline()) {
+    const scope = findTimelineScope(source, el);
 
-  if (supportsScrollTimeline() && scope) {
-    unregisterTimeline = registerAppBarTimeline({
-      name: timelineName,
-      scope,
-      source,
-    });
-    el.dataset.timelineActive = '';
+    if (scope) {
+      unregisterTimeline = registerAppBarTimeline({
+        name: timelineName,
+        scope,
+        source,
+      });
+      el.dataset.timelineActive = '';
+    }
   }
 
   const isDocSource = (
@@ -399,6 +411,7 @@ watch([
   () => propsWithDefaults.app,
   () => propsWithDefaults.attach,
   () => propsWithDefaults.scrollTarget,
+  () => propsWithDefaults.scrollTimeline,
   normalizedVariant,
 ], syncRegistrations);
 
