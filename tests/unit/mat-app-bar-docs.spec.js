@@ -66,6 +66,7 @@ describe('App bar 文档', () => {
 
     expect(page).toContain('| `scrollTimeline` | `boolean` | `false` |');
     expect(page).toContain('默认关闭');
+    expect(page).toContain('顶部观察哨');
   });
 
   it('所有示例都使用局部 Layout 容器隔离滚动源', () => {

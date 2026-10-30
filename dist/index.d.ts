@@ -216,7 +216,7 @@ export interface MatAppBarProps {
   */
   scrollTarget?: string | HTMLElement | undefined;
   /**
-  * 是否启用 CSS 滚动时间线驱动的连续折叠与表面过渡。
+  * 是否启用 CSS 滚动时间线驱动的连续折叠与表面过渡；关闭时使用顶部阈值折叠。
   *
   * @type {boolean}
   * @default false

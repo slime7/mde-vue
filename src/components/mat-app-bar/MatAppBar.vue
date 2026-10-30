@@ -23,6 +23,7 @@ import { useMatProps } from '../use-mat-props';
 const APP_BAR_VARIANTS = ['search', 'small', 'medium-flexible', 'large-flexible'];
 const APP_BAR_CONTENTS = ['headline', 'image', 'search'];
 const APP_BAR_ALIGNMENTS = ['start', 'center'];
+const COLLAPSE_THRESHOLD = 16;
 
 defineOptions({
   name: 'MatAppBar',
@@ -100,7 +101,7 @@ const props = defineProps({
     default: undefined,
   },
   /**
-   * 是否启用 CSS 滚动时间线驱动的连续折叠与表面过渡。
+   * 是否启用 CSS 滚动时间线驱动的连续折叠与表面过渡；关闭时使用顶部阈值折叠。
    *
    * @type {boolean}
    * @default false
@@ -219,6 +220,7 @@ const hasExplicitAttach = computed(() => (
 ));
 const forwardedAttach = computed(() => (hasExplicitAttach.value ? propsWithDefaults.attach : undefined));
 const asideRef = ref(null);
+const scrollSentinelRef = ref(null);
 
 const effectiveMode = computed(() => {
   if (propsWithDefaults.mode !== undefined) {
@@ -296,6 +298,7 @@ const primaryTypographyClass = computed(() => {
 let mounted = false;
 let unregisterTimeline;
 let cleanupScrollListener;
+let collapseObserver;
 
 function supportsScrollTimeline() {
   return typeof CSS !== 'undefined'
@@ -326,11 +329,73 @@ function normalizeElement(value) {
 function stopRegistrations() {
   unregisterTimeline?.();
   unregisterTimeline = undefined;
+  collapseObserver?.disconnect();
+  collapseObserver = undefined;
   cleanupScrollListener?.();
   cleanupScrollListener = undefined;
   const el = asideRef.value?.hostElement;
   el?.removeAttribute('data-timeline-active');
   el?.removeAttribute('data-scrolled');
+  el?.removeAttribute('data-collapsed');
+}
+
+function setPresenceAttribute(el, name, active) {
+  if (!el) {
+    return;
+  }
+
+  const current = el.hasAttribute(name);
+
+  if (active && !current) {
+    el.setAttribute(name, '');
+  } else if (!active && current) {
+    el.removeAttribute(name);
+  }
+}
+
+function updateCollapsed(el, isCollapsed) {
+  setPresenceAttribute(el, 'data-collapsed', isCollapsed);
+}
+
+function observeCollapse(el, source, isDocSource) {
+  const sentinel = scrollSentinelRef.value;
+
+  if (typeof IntersectionObserver === 'undefined' || !sentinel) {
+    return false;
+  }
+
+  if (!isDocSource && !source.contains(sentinel)) {
+    return false;
+  }
+
+  const sourceTop = isDocSource ? 0 : source.getBoundingClientRect().top;
+  const scrollOffset = isDocSource ? window.scrollY : source.scrollTop;
+  const sentinelOffset = Math.max(
+    0,
+    Math.round(sentinel.getBoundingClientRect().top - sourceTop + scrollOffset),
+  );
+  const sourceSize = isDocSource ? window.innerHeight : source.clientHeight;
+
+  if (sentinelOffset >= sourceSize) {
+    return false;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    if (!mounted || collapseObserver !== observer) {
+      return;
+    }
+
+    updateCollapsed(el, !(entries.at(-1)?.isIntersecting ?? false));
+  }, {
+    root: isDocSource ? null : source,
+    rootMargin: `-${sentinelOffset}px 0px 0px 0px`,
+    threshold: 0,
+  });
+
+  collapseObserver = observer;
+  observer.observe(sentinel);
+
+  return true;
 }
 
 async function syncRegistrations() {
@@ -353,19 +418,6 @@ async function syncRegistrations() {
     return;
   }
 
-  if (propsWithDefaults.scrollTimeline && supportsScrollTimeline()) {
-    const scope = findTimelineScope(source, el);
-
-    if (scope) {
-      unregisterTimeline = registerAppBarTimeline({
-        name: timelineName,
-        scope,
-        source,
-      });
-      el.dataset.timelineActive = '';
-    }
-  }
-
   const isDocSource = (
     source === document.documentElement
     || source === document.body
@@ -380,12 +432,32 @@ async function syncRegistrations() {
     return source.scrollTop || 0;
   }
 
+  let usesTimeline = false;
+
+  if (propsWithDefaults.scrollTimeline && supportsScrollTimeline()) {
+    const scope = findTimelineScope(source, el);
+
+    if (scope) {
+      unregisterTimeline = registerAppBarTimeline({
+        name: timelineName,
+        scope,
+        source,
+      });
+      el.dataset.timelineActive = '';
+      usesTimeline = true;
+    }
+  }
+
+  if (!usesTimeline) {
+    updateCollapsed(el, getScrollTop() > COLLAPSE_THRESHOLD);
+    observeCollapse(el, source, isDocSource);
+  }
+
   function handleScroll() {
-    const isScrolled = getScrollTop() > 0;
-    if (isScrolled) {
-      el?.setAttribute('data-scrolled', '');
-    } else {
-      el?.removeAttribute('data-scrolled');
+    setPresenceAttribute(el, 'data-scrolled', getScrollTop() > 0);
+
+    if (!collapseObserver) {
+      updateCollapsed(el, getScrollTop() > COLLAPSE_THRESHOLD);
     }
   }
 
@@ -473,7 +545,12 @@ defineExpose({
     aria-hidden="true"
     class="mat-app-bar__placeholder"
     :style="{ blockSize: `${placeholderHeight}px` }"
-  />
+  >
+    <span
+      ref="scrollSentinelRef"
+      class="mat-app-bar__scroll-sentinel"
+    />
+  </span>
 </template>
 
 <style scoped>
@@ -501,6 +578,7 @@ defineExpose({
     block-size: var(--mat-app-bar-expanded-height);
     clip-path: inset(0);
     background: var(--mat-sys-color-surface);
+    transition: clip-path var(--mat-sys-motion-spring-default-spatial, .3s ease);
     content: '';
     pointer-events: none;
   }
@@ -515,13 +593,18 @@ defineExpose({
     clip-path: inset(0);
     background: var(--mat-sys-color-surface-container);
     opacity: 0;
-    transition: opacity var(--mat-sys-motion-spring-default-spatial, .3s ease);
+    transition: clip-path var(--mat-sys-motion-spring-default-spatial, .3s ease), opacity var(--mat-sys-motion-spring-default-spatial, .3s ease);
     content: '';
     pointer-events: none;
   }
 
   .mat-app-bar[data-scrolled]::after {
     opacity: 1;
+  }
+
+  .mat-app-bar[data-collapsed]:not([data-timeline-active])::before,
+  .mat-app-bar[data-collapsed]:not([data-timeline-active])::after {
+    clip-path: inset(0 0 var(--mat-app-bar-collapsed-inset));
   }
 
   .mat-app-bar--medium-flexible {
@@ -556,6 +639,7 @@ defineExpose({
     flex-direction: column;
     justify-content: center;
     padding-inline: 12px;
+    transition: translate var(--mat-sys-motion-spring-default-spatial, .3s ease);
   }
 
   .mat-app-bar__primary {
@@ -564,6 +648,7 @@ defineExpose({
     text-overflow: ellipsis;
     white-space: nowrap;
     transform-origin: left center;
+    transition: scale var(--mat-sys-motion-spring-default-spatial, .3s ease);
   }
 
   .mat-app-bar__subtitle {
@@ -571,6 +656,7 @@ defineExpose({
     color: var(--mat-sys-color-on-surface-variant);
     text-overflow: ellipsis;
     white-space: nowrap;
+    transition: opacity var(--mat-sys-motion-spring-default-spatial, .3s ease), translate var(--mat-sys-motion-spring-default-spatial, .3s ease);
   }
 
   .mat-app-bar__spacer {
@@ -614,6 +700,22 @@ defineExpose({
     inset-inline: 12px;
   }
 
+  .mat-app-bar--medium-flexible[data-collapsed]:not([data-timeline-active]) .mat-app-bar__main,
+  .mat-app-bar--large-flexible[data-collapsed]:not([data-timeline-active]) .mat-app-bar__main {
+    translate: 0;
+  }
+
+  .mat-app-bar--medium-flexible[data-collapsed]:not([data-timeline-active]) .mat-app-bar__primary,
+  .mat-app-bar--large-flexible[data-collapsed]:not([data-timeline-active]) .mat-app-bar__primary {
+    scale: var(--mat-app-bar-collapsed-title-scale);
+  }
+
+  .mat-app-bar--medium-flexible[data-collapsed]:not([data-timeline-active]) .mat-app-bar__subtitle,
+  .mat-app-bar--large-flexible[data-collapsed]:not([data-timeline-active]) .mat-app-bar__subtitle {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+
   .mat-app-bar--align-center {
     display: grid;
     grid-template-columns: minmax(48px, 1fr) minmax(0, auto) minmax(48px, 1fr);
@@ -653,6 +755,10 @@ defineExpose({
     block-size: 100%;
     object-fit: contain;
     object-position: left center;
+  }
+
+  .mat-app-bar--content-image[data-collapsed]:not([data-timeline-active]) .mat-app-bar__primary {
+    scale: .84;
   }
 
   .mat-app-bar--content-search .mat-app-bar__main {
@@ -808,11 +914,30 @@ defineExpose({
 
   .mat-app-bar__placeholder {
     display: block;
+    position: relative;
     inline-size: 100%;
     pointer-events: none;
   }
 
+  .mat-app-bar__scroll-sentinel {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: 1px;
+    block-size: 16px;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   @media (prefers-reduced-motion: reduce) {
+    .mat-app-bar::before,
+    .mat-app-bar::after,
+    .mat-app-bar__main,
+    .mat-app-bar__primary,
+    .mat-app-bar__subtitle {
+      transition-duration: 0s;
+    }
+
     @supports (animation-timeline: scroll()) {
       .mat-app-bar[data-timeline-active]::before,
       .mat-app-bar--medium-flexible[data-timeline-active]::before,
