@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-`mde-vue` 是一个开源的 Vue 3 单包个人组件库。源码经 Vite 编译为仓库内提交的单一核心 ESM，包 `exports` 只向使用方暴露 `dist/`；仓库同时包含带实时预览的 VitePress 中文使用文档、项目维护文档、测试和由 Markdown 生成的 AI 文档。
+`mde-vue` 是一个开源的 Vue 3 单包个人组件库。源码经 Vite 编译为仓库内提交的运行时 ESM 和构建期 Vite 插件，包 `exports` 只向使用方暴露 `dist/`；仓库同时包含带实时预览的 VitePress 中文使用文档、项目维护文档、测试和由 Markdown 生成的 AI 文档。
 
 长期技术选择及原因记录在 [ADR 索引](adr/README.md)；公共概念和不变量见 [核心抽象](ABSTRACTIONS.md)。
 
@@ -39,7 +39,7 @@
 
 ### 公共入口
 
-`src/index.js` 是唯一 JavaScript 公共入口，导出全部组件、`Intersection`、`StateLayer` 与 `Ripple` 指令、命令式 Dialog 与 Snackbar 函数，以及 `createMatUi()`、`useMatTheme()`、`useMatUi()`、`useMatApp()` 和同一文档 View Transition 协调器。构建将该入口编译为唯一运行时文件 `dist/mde-vue.js`，因此所有组件、Vue 上下文键、队列和协调器只存在一个模块实例。`dist/index.d.ts` 是完整根入口类型声明。包不提供组件、指令或函数子入口；`mde-vue/styles.css` 暴露基础令牌与全部组件样式，`mde-vue/tailwind.css` 暴露 Tailwind v4 映射。
+`src/index.js` 是唯一运行时公共入口，导出全部组件、`Intersection`、`StateLayer` 与 `Ripple` 指令、命令式 Dialog 与 Snackbar 函数，以及 `createMatUi()`、`useMatTheme()`、`useMatUi()`、`useMatApp()` 和同一文档 View Transition 协调器。构建将该入口编译为运行时文件 `dist/mde-vue.js`，因此所有组件、Vue 上下文键、队列和协调器只存在一个模块实例。`src/vite.js` 是构建期自动导入插件入口，编译为 `dist/vite.js` 并通过 `./vite` 子入口暴露；它依赖 `vue/compiler-sfc`，不进入浏览器运行时。`src/component-manifest.js` 由组件源码生成，向运行时 defaults 校验和自动导入插件提供组件名、标签、别名与可配置属性。`dist/index.d.ts` 与 `dist/vite.d.ts` 分别是根入口和 Vite 插件的类型声明。包不提供组件、指令或函数子入口；`mde-vue/styles.css` 暴露基础令牌与全部组件样式，`mde-vue/tailwind.css` 暴露 Tailwind v4 映射。
 
 公共入口不得依赖文档预览、VitePress 或测试代码，也不得要求安装 IDE 专用工具。
 
@@ -53,7 +53,7 @@
 
 ### 插件配置
 
-`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针、是否为操作类组件启用按压涟漪及其默认波纹形状、组件图标容器使用的全局 `iconClass`，以及按组件键配置的默认属性（defaults）。defaults 的键是 `mat-*` 标签去掉前缀后的 camelCase，值为该组件可配置的 prop 默认值；显式传入的 prop 优先，`v-model` 相关属性不接受配置，Tooltip 的打开延迟与同组快速切换时长通过 `defaults.tooltip` 提供。插件以 `mat-*` 和对应 `Mat*` 名称全局注册组件，并注册 `v-intersection`、`v-state-layer` 与 `v-ripple` 指令。顶层选项不会写入主题控制器；未安装插件的按需组件和指令使用组件定义默认值。公共组合函数 `useMatUi()` 供应用自创组件读取这份设置，未安装插件时返回默认值。
+`createMatUi()` 校验顶层插件选项，创建主题控制器，并通过独立的 Vue provide 上下文向组件提供不可变设置。当前组件设置包括是否为可用交互组件显示手指指针、是否为操作类组件启用按压涟漪及其默认波纹形状、组件图标容器使用的全局 `iconClass`，以及按组件键配置的默认属性（defaults）。defaults 的键是 `mat-*` 标签去掉前缀后的 camelCase，值为该组件可配置的 prop 默认值；显式传入的 prop 优先，`v-model` 相关属性不接受配置，Tooltip 的打开延迟与同组快速切换时长通过 `defaults.tooltip` 提供。插件只安装 `v-intersection`、`v-state-layer` 与 `v-ripple` 指令，不注册组件；组件由 `mde-vue/vite` 自动导入或使用方从根入口手动导入。defaults 校验读取构建期生成的组件元数据，因此 `createMatUi()` 不需要在运行时导入全部组件。顶层选项不会写入主题控制器；未安装插件的按需组件和指令使用组件定义默认值。公共组合函数 `useMatUi()` 供应用自创组件读取这份设置，未安装插件时返回默认值。
 
 ### 组件
 
@@ -168,7 +168,7 @@ flowchart LR
 
 ## 构建与验证
 
-`pnpm build` 先生成完整根入口类型声明，再以 Vue 和 Material Color Utilities 为外部依赖编译单一 `dist/mde-vue.js`，将基础令牌与组件样式合并为 `dist/styles.css`。该样式入口固定声明 `mde.tokens`、`mde.components`、`mde.utilities` 与顶层 `mde-final`；SFC 源码样式直接归入 `mde.components`，最终层只保护不会阻断 Vue 运行时样式控制的少量不变量。构建另复制独立的 `src/styles/tailwind.css` 至 `dist/tailwind.css`，并复制 `dist/index.d.ts`。构建后 `dist/` 必须恰好包含这四个文件。`dist/` 随源码提交，公开入口测试从包自身 `exports` 加载产物并检查文件集合。VitePress 只构建 `docs/site/`，并在其 Vite 配置中把公共导入别名解析到 `src/`；文档站按 `tailwind-theme`、`tailwind-reset`、`mde`、`tailwind-utilities`、`mde-final` 的顺序模拟真实 Tailwind 使用方，文档、测试和静态检查在 Node.js 24 环境中运行。单元测试位于 `tests/unit/`，端到端测试位于 `tests/e2e/`：fixture 应用以同样的 Vite alias 直连 `src/`，由 Playwright 在真实 Chromium 中验证浮层定位、模态焦点、指针手势与应用布局等浏览器行为，不参与 `dist/` 与公共入口。
+`pnpm build` 先生成根入口类型声明和组件元数据，再以 Vue 和 Material Color Utilities 为外部依赖编译 `dist/mde-vue.js`，随后以 `vue/compiler-sfc` 为外部依赖编译 `dist/vite.js`，并将基础令牌与组件样式合并为 `dist/styles.css`。该样式入口固定声明 `mde.tokens`、`mde.components`、`mde.utilities` 与顶层 `mde-final`；SFC 源码样式直接归入 `mde.components`，最终层只保护不会阻断 Vue 运行时样式控制的少量不变量。构建另复制独立的 `src/styles/tailwind.css` 至 `dist/tailwind.css`，并复制 `src/index.d.ts` 与 `src/vite.d.ts`。构建后 `dist/` 必须恰好包含 `index.d.ts`、`mde-vue.js`、`styles.css`、`tailwind.css`、`vite.d.ts` 与 `vite.js` 六个文件。`dist/` 随源码提交，公开入口测试从包自身 `exports` 加载产物并检查文件集合。VitePress 只构建 `docs/site/`，并在其 Vite 配置中把公共导入别名解析到 `src/`；文档站同样使用 `mdeVue()` 自动导入主题组件，并按 `tailwind-theme`、`tailwind-reset`、`mde`、`tailwind-utilities`、`mde-final` 的顺序模拟真实 Tailwind 使用方，文档、测试和静态检查在 Node.js 24 环境中运行。单元测试位于 `tests/unit/`，Vitest 配置同样安装 `mdeVue()`，端到端测试位于 `tests/e2e/`：fixture 应用以同样的 Vite alias 直连 `src/`，由 Playwright 在真实 Chromium 中验证浮层定位、模态焦点、指针手势与应用布局等浏览器行为，不参与 `dist/` 与公共入口。
 
 ## 安全与可靠性边界
 

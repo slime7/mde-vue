@@ -16804,11 +16804,1055 @@ var Xf = {
 		Kf.has(e) && (Yf(e), Jf(e, t));
 	},
 	unmounted: Yf
-}, Zf = Object.freeze({
-	MatDynamicText: Object.freeze(["MdeDynamicText", "mde-dynamic-text"]),
-	MatSharedElement: Object.freeze(["MdeSharedElement", "mde-shared-element"]),
-	MatVirtualScroll: Object.freeze(["MdeVirtualScroll", "mde-virtual-scroll"])
-}), Qf = Nt, $f = null;
+}, Zf = [
+	{
+		name: "MatBtn",
+		tag: "mat-btn",
+		aliases: [],
+		defaults: [
+			"block",
+			"variant",
+			"size",
+			"shape",
+			"width",
+			"icon",
+			"fill",
+			"prefix",
+			"suffix",
+			"label",
+			"color",
+			"toggle",
+			"selected",
+			"value",
+			"disabled",
+			"loading",
+			"type",
+			"morph"
+		]
+	},
+	{
+		name: "MatAppRoot",
+		tag: "mat-app-root",
+		aliases: [],
+		defaults: [
+			"as",
+			"fillViewport",
+			"scrollable"
+		]
+	},
+	{
+		name: "MatAppBar",
+		tag: "mat-app-bar",
+		aliases: [],
+		defaults: [
+			"variant",
+			"content",
+			"align",
+			"app",
+			"attach",
+			"scrollTarget",
+			"scrollTimeline",
+			"placeholder",
+			"safeArea",
+			"safeAreaSize",
+			"bordered",
+			"mode",
+			"zIndex",
+			"transition"
+		]
+	},
+	{
+		name: "MatSearch",
+		tag: "mat-search",
+		aliases: [],
+		defaults: [
+			"label",
+			"placeholder",
+			"disabled",
+			"readonly",
+			"maxLength"
+		]
+	},
+	{
+		name: "MatBtnGroup",
+		tag: "mat-btn-group",
+		aliases: [],
+		defaults: [
+			"block",
+			"variant",
+			"size",
+			"shape",
+			"color",
+			"disabled",
+			"selection",
+			"selected",
+			"required",
+			"fullWidth"
+		]
+	},
+	{
+		name: "MatFab",
+		tag: "mat-fab",
+		aliases: [],
+		defaults: [
+			"size",
+			"icon",
+			"label",
+			"expanded",
+			"color",
+			"disabled",
+			"type",
+			"app",
+			"position"
+		]
+	},
+	{
+		name: "MatFabMenu",
+		tag: "mat-fab-menu",
+		aliases: [],
+		defaults: [
+			"size",
+			"icon",
+			"label",
+			"closeIcon",
+			"closeLabel",
+			"color",
+			"disabled",
+			"type",
+			"closeOnClick",
+			"closeOnEsc",
+			"closeOnClickOutside"
+		]
+	},
+	{
+		name: "MatIcon",
+		tag: "mat-icon",
+		aliases: [],
+		defaults: [
+			"icon",
+			"src",
+			"size",
+			"fill",
+			"weight",
+			"grade",
+			"opticalSize",
+			"color",
+			"fontColor",
+			"as",
+			"iconClass"
+		]
+	},
+	{
+		name: "MatImage",
+		tag: "mat-image",
+		aliases: [],
+		defaults: [
+			"src",
+			"radius",
+			"fit",
+			"outline",
+			"aspectRatio",
+			"imgClass",
+			"imgStyle"
+		]
+	},
+	{
+		name: "MatCarousel",
+		tag: "mat-carousel",
+		aliases: [],
+		defaults: ["variant", "switchOnClick"]
+	},
+	{
+		name: "MatCarouselItem",
+		tag: "mat-carousel-item",
+		aliases: [],
+		defaults: [
+			"src",
+			"alt",
+			"aspectRatio",
+			"width"
+		]
+	},
+	{
+		name: "MatTabs",
+		tag: "mat-tabs",
+		aliases: [],
+		defaults: [
+			"variant",
+			"swipeable",
+			"scrollable",
+			"align",
+			"color",
+			"scrollButtons"
+		]
+	},
+	{
+		name: "MatTabItem",
+		tag: "mat-tab-item",
+		aliases: [],
+		defaults: [
+			"value",
+			"label",
+			"icon",
+			"badge",
+			"disabled"
+		]
+	},
+	{
+		name: "MatTabContent",
+		tag: "mat-tab-content",
+		aliases: [],
+		defaults: ["value"]
+	},
+	{
+		name: "MatDatePicker",
+		tag: "mat-date-picker",
+		aliases: [],
+		defaults: ["color"]
+	},
+	{
+		name: "MatTimePicker",
+		tag: "mat-time-picker",
+		aliases: [],
+		defaults: [
+			"color",
+			"format",
+			"is24Hour",
+			"showModeToggle"
+		]
+	},
+	{
+		name: "MatSharedElement",
+		tag: "mat-shared-element",
+		aliases: ["MdeSharedElement", "mde-shared-element"],
+		defaults: [
+			"name",
+			"as",
+			"disabled"
+		]
+	},
+	{
+		name: "MatAvatar",
+		tag: "mat-avatar",
+		aliases: [],
+		defaults: [
+			"src",
+			"icon",
+			"color",
+			"size"
+		]
+	},
+	{
+		name: "MatShape",
+		tag: "mat-shape",
+		aliases: [],
+		defaults: [
+			"name",
+			"size",
+			"color",
+			"as",
+			"morph"
+		]
+	},
+	{
+		name: "MatText",
+		tag: "mat-text",
+		aliases: [],
+		defaults: [
+			"type",
+			"size",
+			"emphasized",
+			"as"
+		]
+	},
+	{
+		name: "MatDynamicText",
+		tag: "mat-dynamic-text",
+		aliases: ["MdeDynamicText", "mde-dynamic-text"],
+		defaults: [
+			"text",
+			"as",
+			"diff",
+			"appear"
+		]
+	},
+	{
+		name: "MatChatMinimap",
+		tag: "mat-chat-minimap",
+		aliases: [],
+		defaults: [
+			"items",
+			"itemWidth",
+			"itemHeight",
+			"itemGap",
+			"direction",
+			"current"
+		]
+	},
+	{
+		name: "MatSplitBtn",
+		tag: "mat-split-btn",
+		aliases: [],
+		defaults: [
+			"block",
+			"variant",
+			"size",
+			"color",
+			"disabled",
+			"controls"
+		]
+	},
+	{
+		name: "MatCard",
+		tag: "mat-card",
+		aliases: [],
+		defaults: [
+			"variant",
+			"color",
+			"rounded",
+			"flat",
+			"as"
+		]
+	},
+	{
+		name: "MatCardActionArea",
+		tag: "mat-card-action-area",
+		aliases: [],
+		defaults: [
+			"href",
+			"disabled",
+			"type"
+		]
+	},
+	{
+		name: "MatCardContent",
+		tag: "mat-card-content",
+		aliases: [],
+		defaults: []
+	},
+	{
+		name: "MatCardActions",
+		tag: "mat-card-actions",
+		aliases: [],
+		defaults: []
+	},
+	{
+		name: "MatCardHeadline",
+		tag: "mat-card-headline",
+		aliases: [],
+		defaults: []
+	},
+	{
+		name: "MatCardSubhead",
+		tag: "mat-card-subhead",
+		aliases: [],
+		defaults: []
+	},
+	{
+		name: "MatCardMedia",
+		tag: "mat-card-media",
+		aliases: [],
+		defaults: []
+	},
+	{
+		name: "MatExpansion",
+		tag: "mat-expansion",
+		aliases: [],
+		defaults: [
+			"multiple",
+			"color",
+			"disabled",
+			"as",
+			"variant"
+		]
+	},
+	{
+		name: "MatSimpleExpansion",
+		tag: "mat-simple-expansion",
+		aliases: [],
+		defaults: []
+	},
+	{
+		name: "MatExpansionPanel",
+		tag: "mat-expansion-panel",
+		aliases: [],
+		defaults: [
+			"value",
+			"title",
+			"split",
+			"color",
+			"disabled",
+			"as"
+		]
+	},
+	{
+		name: "MatList",
+		tag: "mat-list",
+		aliases: [],
+		defaults: [
+			"variant",
+			"interaction",
+			"selected",
+			"color",
+			"activeColor",
+			"draggable",
+			"virtual",
+			"items",
+			"itemHeight",
+			"estimatedItemHeight",
+			"buffer",
+			"itemKey"
+		]
+	},
+	{
+		name: "MatListGroup",
+		tag: "mat-list-group",
+		aliases: [],
+		defaults: ["value", "as"]
+	},
+	{
+		name: "MatListItem",
+		tag: "mat-list-item",
+		aliases: [],
+		defaults: [
+			"value",
+			"href",
+			"type",
+			"disabled",
+			"lines",
+			"separateTrailing",
+			"swipeable",
+			"swipeRemove",
+			"swipePrimary"
+		]
+	},
+	{
+		name: "MatGridList",
+		tag: "mat-grid-list",
+		aliases: [],
+		defaults: [
+			"cols",
+			"interaction",
+			"selected",
+			"color",
+			"activeColor"
+		]
+	},
+	{
+		name: "MatDivider",
+		tag: "mat-divider",
+		aliases: [],
+		defaults: ["inset", "vertical"]
+	},
+	{
+		name: "MatCheckbox",
+		tag: "mat-checkbox",
+		aliases: [],
+		defaults: [
+			"value",
+			"disabled",
+			"color"
+		]
+	},
+	{
+		name: "MatBadge",
+		tag: "mat-badge",
+		aliases: [],
+		defaults: [
+			"content",
+			"dot",
+			"location",
+			"offset",
+			"color",
+			"border"
+		]
+	},
+	{
+		name: "MatChip",
+		tag: "mat-chip",
+		aliases: [],
+		defaults: [
+			"variant",
+			"elevated",
+			"selected",
+			"hideSelectedIcon",
+			"removeIcon",
+			"value",
+			"disabled",
+			"color",
+			"type"
+		]
+	},
+	{
+		name: "MatChipSet",
+		tag: "mat-chip-set",
+		aliases: [],
+		defaults: ["layout", "selection"]
+	},
+	{
+		name: "MatRadio",
+		tag: "mat-radio",
+		aliases: [],
+		defaults: [
+			"value",
+			"disabled",
+			"color"
+		]
+	},
+	{
+		name: "MatRadioGroup",
+		tag: "mat-radio-group",
+		aliases: [],
+		defaults: [
+			"label",
+			"disabled",
+			"color"
+		]
+	},
+	{
+		name: "MatSwitch",
+		tag: "mat-switch",
+		aliases: [],
+		defaults: [
+			"icons",
+			"disabled",
+			"color"
+		]
+	},
+	{
+		name: "MatSlider",
+		tag: "mat-slider",
+		aliases: [],
+		defaults: [
+			"min",
+			"max",
+			"step",
+			"variant",
+			"center",
+			"disabled",
+			"color",
+			"orientation",
+			"size",
+			"insetIcon",
+			"showStopIndicator",
+			"showValueIndicator"
+		]
+	},
+	{
+		name: "MatRangeSlider",
+		tag: "mat-range-slider",
+		aliases: [],
+		defaults: [
+			"min",
+			"max",
+			"step",
+			"disabled",
+			"color",
+			"orientation",
+			"size",
+			"showStopIndicator",
+			"showValueIndicator",
+			"ariaLabelStart",
+			"ariaLabelEnd"
+		]
+	},
+	{
+		name: "MatTextField",
+		tag: "mat-text-field",
+		aliases: [],
+		defaults: [
+			"block",
+			"label",
+			"variant",
+			"color",
+			"supportingText",
+			"errorText",
+			"prefixText",
+			"suffixText",
+			"maxLength",
+			"disabled",
+			"readonly",
+			"required",
+			"error",
+			"type"
+		]
+	},
+	{
+		name: "MatSelect",
+		tag: "mat-select",
+		aliases: [],
+		defaults: [
+			"block",
+			"items",
+			"multiple",
+			"chips",
+			"itemTitle",
+			"itemValue",
+			"itemSubtitle",
+			"label",
+			"variant",
+			"color",
+			"supportingText",
+			"errorText",
+			"prefixText",
+			"suffixText",
+			"disabled",
+			"readonly",
+			"required",
+			"error",
+			"placeholder",
+			"selectionIndicator"
+		]
+	},
+	{
+		name: "MatTextarea",
+		tag: "mat-textarea",
+		aliases: [],
+		defaults: [
+			"block",
+			"label",
+			"variant",
+			"color",
+			"supportingText",
+			"errorText",
+			"prefixText",
+			"suffixText",
+			"maxLength",
+			"disabled",
+			"readonly",
+			"required",
+			"error",
+			"autoGrow",
+			"maxRows",
+			"noResize",
+			"rows"
+		]
+	},
+	{
+		name: "MatInputBase",
+		tag: "mat-input-base",
+		aliases: [],
+		defaults: [
+			"control",
+			"disabled",
+			"maxLength",
+			"readonly",
+			"required",
+			"rows",
+			"type"
+		]
+	},
+	{
+		name: "MatMenu",
+		tag: "mat-menu",
+		aliases: [],
+		defaults: [
+			"anchor",
+			"offset",
+			"variant",
+			"color",
+			"closeOnClick",
+			"maxLength",
+			"scrim"
+		]
+	},
+	{
+		name: "MatMenuGroup",
+		tag: "mat-menu-group",
+		aliases: [],
+		defaults: ["label"]
+	},
+	{
+		name: "MatMenuItem",
+		tag: "mat-menu-item",
+		aliases: [],
+		defaults: [
+			"disabled",
+			"selected",
+			"tooltip"
+		]
+	},
+	{
+		name: "MatDockedContainer",
+		tag: "mat-docked-container",
+		aliases: [],
+		defaults: [
+			"anchor",
+			"offset",
+			"width",
+			"size",
+			"headline",
+			"variant",
+			"color",
+			"maxLength",
+			"scrim"
+		]
+	},
+	{
+		name: "MatDialog",
+		tag: "mat-dialog",
+		aliases: [],
+		defaults: [
+			"fullScreen",
+			"width",
+			"attach",
+			"scrim",
+			"closeOnBack",
+			"title",
+			"content",
+			"icon",
+			"closeLabel",
+			"color"
+		]
+	},
+	{
+		name: "MatBottomSheet",
+		tag: "mat-bottom-sheet",
+		aliases: [],
+		defaults: [
+			"variant",
+			"breakpoint",
+			"width",
+			"attach",
+			"scrim",
+			"closeOnBack",
+			"dragHandle",
+			"collapseDragHandleLabel",
+			"dragHandleLabel",
+			"expandedDragHandleLabel",
+			"draggable",
+			"content",
+			"containerColor",
+			"shadow",
+			"rounded"
+		]
+	},
+	{
+		name: "MatSideSheet",
+		tag: "mat-side-sheet",
+		aliases: [],
+		defaults: [
+			"variant",
+			"breakpoint",
+			"position",
+			"width",
+			"attach",
+			"scrim",
+			"closeOnBack",
+			"draggable",
+			"closable",
+			"closeLabel",
+			"title",
+			"content",
+			"containerColor"
+		]
+	},
+	{
+		name: "MatHover",
+		tag: "mat-hover",
+		aliases: [],
+		defaults: [
+			"disabled",
+			"closeDelay",
+			"openDelay",
+			"target"
+		]
+	},
+	{
+		name: "MatContainer",
+		tag: "mat-container",
+		aliases: [],
+		defaults: ["fluid"]
+	},
+	{
+		name: "MatLayout",
+		tag: "mat-layout",
+		aliases: [],
+		defaults: ["as"]
+	},
+	{
+		name: "MatAside",
+		tag: "mat-aside",
+		aliases: [],
+		defaults: [
+			"as",
+			"location",
+			"app",
+			"mode",
+			"blockSize",
+			"safeArea",
+			"safeAreaSize",
+			"placeholder",
+			"placeholderSize",
+			"bordered",
+			"zIndex",
+			"unmountOnClose",
+			"modal",
+			"attach",
+			"transition",
+			"scrimClass",
+			"closeOnBack"
+		]
+	},
+	{
+		name: "MatSpacer",
+		tag: "mat-spacer",
+		aliases: [],
+		defaults: []
+	},
+	{
+		name: "MatTableWrapper",
+		tag: "mat-table-wrapper",
+		aliases: [],
+		defaults: []
+	},
+	{
+		name: "MatScrollArea",
+		tag: "mat-scroll-area",
+		aliases: [],
+		defaults: [
+			"orientation",
+			"snap",
+			"snapPadding",
+			"shadowLength",
+			"barWidth",
+			"autoHideScrollbar",
+			"dragScroll",
+			"reachThreshold",
+			"shadowOffset",
+			"rounded",
+			"noScrollPadding",
+			"color"
+		]
+	},
+	{
+		name: "MatVirtualScroll",
+		tag: "mat-virtual-scroll",
+		aliases: ["MdeVirtualScroll", "mde-virtual-scroll"],
+		defaults: [
+			"items",
+			"itemHeight",
+			"estimatedItemHeight",
+			"buffer",
+			"itemKey",
+			"as"
+		]
+	},
+	{
+		name: "MatLoading",
+		tag: "mat-loading",
+		aliases: [],
+		defaults: [
+			"containment",
+			"size",
+			"color",
+			"progress"
+		]
+	},
+	{
+		name: "MatPullToRefresh",
+		tag: "mat-pull-to-refresh",
+		aliases: [],
+		defaults: [
+			"placeholder",
+			"disabled",
+			"triggerDistance",
+			"size",
+			"color",
+			"containment"
+		]
+	},
+	{
+		name: "MatProgress",
+		tag: "mat-progress",
+		aliases: [],
+		defaults: [
+			"variant",
+			"value",
+			"max",
+			"indeterminate",
+			"size",
+			"thickness",
+			"shape",
+			"waveMotion",
+			"color"
+		]
+	},
+	{
+		name: "MatTooltip",
+		tag: "mat-tooltip",
+		aliases: [],
+		defaults: [
+			"content",
+			"rich",
+			"subhead",
+			"target",
+			"attach",
+			"location",
+			"openDelay",
+			"closeDelay"
+		]
+	},
+	{
+		name: "MatSnackbar",
+		tag: "mat-snackbar",
+		aliases: [],
+		defaults: [
+			"text",
+			"actionText",
+			"closable",
+			"closeLabel",
+			"position",
+			"duration"
+		]
+	},
+	{
+		name: "MatNotification",
+		tag: "mat-notification",
+		aliases: [],
+		defaults: [
+			"title",
+			"text",
+			"icon",
+			"time",
+			"actions",
+			"closable",
+			"closeLabel",
+			"app",
+			"position",
+			"color"
+		]
+	},
+	{
+		name: "MatToolbar",
+		tag: "mat-toolbar",
+		aliases: [],
+		defaults: [
+			"variant",
+			"position",
+			"vibrant",
+			"app",
+			"attach",
+			"placeholder",
+			"bottomPlaceholder"
+		]
+	},
+	{
+		name: "MatPanes",
+		tag: "mat-panes",
+		aliases: [],
+		defaults: ["resizable"]
+	},
+	{
+		name: "MatPane",
+		tag: "mat-pane",
+		aliases: [],
+		defaults: ["id", "resizeLabel"]
+	},
+	{
+		name: "MatNavigationRail",
+		tag: "mat-navigation-rail",
+		aliases: [],
+		defaults: [
+			"width",
+			"fullWidth",
+			"collapsible",
+			"layout",
+			"hideOnCollapse",
+			"alignment",
+			"openIcon",
+			"closeIcon",
+			"openLabel",
+			"attach",
+			"placeholder",
+			"bordered",
+			"containerColor",
+			"safeArea",
+			"safeAreaSize",
+			"mode",
+			"transition",
+			"zIndex"
+		]
+	},
+	{
+		name: "MatNavigationRailItem",
+		tag: "mat-navigation-rail-item",
+		aliases: [],
+		defaults: [
+			"value",
+			"icon",
+			"badge",
+			"href",
+			"disabled"
+		]
+	},
+	{
+		name: "MatNavigationBar",
+		tag: "mat-navigation-bar",
+		aliases: [],
+		defaults: [
+			"alignment",
+			"app",
+			"attach",
+			"placeholder",
+			"height",
+			"safeArea",
+			"safeAreaSize",
+			"bordered",
+			"transition",
+			"mode",
+			"zIndex"
+		]
+	},
+	{
+		name: "MatNavigationBarItem",
+		tag: "mat-navigation-bar-item",
+		aliases: [],
+		defaults: [
+			"value",
+			"icon",
+			"badge",
+			"href",
+			"disabled"
+		]
+	},
+	{
+		name: "MatNavigationItem",
+		tag: "mat-navigation-item",
+		aliases: [],
+		defaults: [
+			"value",
+			"icon",
+			"badge",
+			"href",
+			"disabled",
+			"componentName"
+		]
+	},
+	{
+		name: "MatNavigationDrawer",
+		tag: "mat-navigation-drawer",
+		aliases: [],
+		defaults: [
+			"width",
+			"layout",
+			"alignment",
+			"attach",
+			"placeholder",
+			"bordered",
+			"containerColor",
+			"safeArea",
+			"safeAreaSize",
+			"mode"
+		]
+	},
+	{
+		name: "MatNavigationGroup",
+		tag: "mat-navigation-group",
+		aliases: [],
+		defaults: ["title", "indent"]
+	}
+], Qf = Nt, $f = null;
 function ep(e, t) {
 	Qf = e, $f = t;
 }
@@ -16913,418 +17957,10 @@ function up(e = {}) {
 }
 //#endregion
 //#region src/plugin.js
-var dp = [
-	[
-		"MatAppRoot",
-		"mat-app-root",
-		Ai
-	],
-	[
-		"MatAppBar",
-		"mat-app-bar",
-		pa
-	],
-	[
-		"MatSearch",
-		"mat-search",
-		_a
-	],
-	[
-		"MatBtn",
-		"mat-btn",
-		xi
-	],
-	[
-		"MatBtnGroup",
-		"mat-btn-group",
-		ya
-	],
-	[
-		"MatFab",
-		"mat-fab",
-		Ea
-	],
-	[
-		"MatFabMenu",
-		"mat-fab-menu",
-		ja
-	],
-	[
-		"MatIcon",
-		"mat-icon",
-		wn
-	],
-	[
-		"MatImage",
-		"mat-image",
-		Na
-	],
-	[
-		"MatCarousel",
-		"mat-carousel",
-		qa
-	],
-	[
-		"MatCarouselItem",
-		"mat-carousel-item",
-		Ya
-	],
-	[
-		"MatTabs",
-		"mat-tabs",
-		ho
-	],
-	[
-		"MatTabItem",
-		"mat-tab-item",
-		po
-	],
-	[
-		"MatTabContent",
-		"mat-tab-content",
-		ro
-	],
-	[
-		"MatDatePicker",
-		"mat-date-picker",
-		Eo
-	],
-	[
-		"MatTimePicker",
-		"mat-time-picker",
-		zo
-	],
-	[
-		"MatSharedElement",
-		"mat-shared-element",
-		Wo
-	],
-	[
-		"MatAvatar",
-		"mat-avatar",
-		qo
-	],
-	[
-		"MatShape",
-		"mat-shape",
-		cr
-	],
-	[
-		"MatText",
-		"mat-text",
-		Jo
-	],
-	[
-		"MatDynamicText",
-		"mat-dynamic-text",
-		es
-	],
-	[
-		"MatChatMinimap",
-		"mat-chat-minimap",
-		is
-	],
-	[
-		"MatSplitBtn",
-		"mat-split-btn",
-		os
-	],
-	[
-		"MatCard",
-		"mat-card",
-		ms
-	],
-	[
-		"MatCardActionArea",
-		"mat-card-action-area",
-		gs
-	],
-	[
-		"MatCardContent",
-		"mat-card-content",
-		vs
-	],
-	[
-		"MatCardActions",
-		"mat-card-actions",
-		bs
-	],
-	[
-		"MatCardHeadline",
-		"mat-card-headline",
-		ls
-	],
-	[
-		"MatCardSubhead",
-		"mat-card-subhead",
-		ps
-	],
-	[
-		"MatCardMedia",
-		"mat-card-media",
-		ds
-	],
-	[
-		"MatSimpleExpansion",
-		"mat-simple-expansion",
-		Zs
-	],
-	[
-		"MatExpansion",
-		"mat-expansion",
-		Ys
-	],
-	[
-		"MatExpansionPanel",
-		"mat-expansion-panel",
-		yc
-	],
-	[
-		"MatList",
-		"mat-list",
-		qs
-	],
-	[
-		"MatListGroup",
-		"mat-list-group",
-		gc
-	],
-	[
-		"MatListItem",
-		"mat-list-item",
-		pc
-	],
-	[
-		"MatGridList",
-		"mat-grid-list",
-		Tc
-	],
-	[
-		"MatDivider",
-		"mat-divider",
-		Mc
-	],
-	[
-		"MatCheckbox",
-		"mat-checkbox",
-		Rc
-	],
-	[
-		"MatBadge",
-		"mat-badge",
-		co
-	],
-	[
-		"MatChip",
-		"mat-chip",
-		Uc
-	],
-	[
-		"MatChipSet",
-		"mat-chip-set",
-		Kc
-	],
-	[
-		"MatRadio",
-		"mat-radio",
-		Jc
-	],
-	[
-		"MatRadioGroup",
-		"mat-radio-group",
-		Zc
-	],
-	[
-		"MatSwitch",
-		"mat-switch",
-		Qc
-	],
-	[
-		"MatSlider",
-		"mat-slider",
-		kl
-	],
-	[
-		"MatRangeSlider",
-		"mat-range-slider",
-		Il
-	],
-	[
-		"MatTextField",
-		"mat-text-field",
-		eu
-	],
-	[
-		"MatSelect",
-		"mat-select",
-		mu
-	],
-	[
-		"MatTextarea",
-		"mat-textarea",
-		hu
-	],
-	[
-		"MatInputBase",
-		"mat-input-base",
-		ma
-	],
-	[
-		"MatMenu",
-		"mat-menu",
-		nu
-	],
-	[
-		"MatMenuGroup",
-		"mat-menu-group",
-		ou
-	],
-	[
-		"MatMenuItem",
-		"mat-menu-item",
-		iu
-	],
-	[
-		"MatDockedContainer",
-		"mat-docked-container",
-		Su
-	],
-	[
-		"MatDialog",
-		"mat-dialog",
-		Au
-	],
-	[
-		"MatBottomSheet",
-		"mat-bottom-sheet",
-		Ku
-	],
-	[
-		"MatSideSheet",
-		"mat-side-sheet",
-		qu
-	],
-	[
-		"MatHover",
-		"mat-hover",
-		vr
-	],
-	[
-		"MatContainer",
-		"mat-container",
-		Yu
-	],
-	[
-		"MatLayout",
-		"mat-layout",
-		Xu
-	],
-	[
-		"MatAside",
-		"mat-aside",
-		ea
-	],
-	[
-		"MatSpacer",
-		"mat-spacer",
-		Cu
-	],
-	[
-		"MatTableWrapper",
-		"mat-table-wrapper",
-		Zu
-	],
-	[
-		"MatScrollArea",
-		"mat-scroll-area",
-		Wc
-	],
-	[
-		"MatVirtualScroll",
-		"mat-virtual-scroll",
-		Qu
-	],
-	[
-		"MatLoading",
-		"mat-loading",
-		_r
-	],
-	[
-		"MatPullToRefresh",
-		"mat-pull-to-refresh",
-		sd
-	],
-	[
-		"MatProgress",
-		"mat-progress",
-		Gd
-	],
-	[
-		"MatTooltip",
-		"mat-tooltip",
-		li
-	],
-	[
-		"MatSnackbar",
-		"mat-snackbar",
-		rf
-	],
-	[
-		"MatNotification",
-		"mat-notification",
-		mf
-	],
-	[
-		"MatToolbar",
-		"mat-toolbar",
-		yf
-	],
-	[
-		"MatPanes",
-		"mat-panes",
-		Sf
-	],
-	[
-		"MatPane",
-		"mat-pane",
-		Ef
-	],
-	[
-		"MatNavigationRail",
-		"mat-navigation-rail",
-		zf
-	],
-	[
-		"MatNavigationRailItem",
-		"mat-navigation-rail-item",
-		Ff
-	],
-	[
-		"MatNavigationBar",
-		"mat-navigation-bar",
-		Bf
-	],
-	[
-		"MatNavigationBarItem",
-		"mat-navigation-bar-item",
-		Vf
-	],
-	[
-		"MatNavigationItem",
-		"mat-navigation-item",
-		Pf
-	],
-	[
-		"MatNavigationDrawer",
-		"mat-navigation-drawer",
-		Hf
-	],
-	[
-		"MatNavigationGroup",
-		"mat-navigation-group",
-		Gf
-	]
-], fp = new Map(dp.map(([e, , t]) => [Ft(e), t]));
+var dp;
+function fp() {
+	return dp ??= new Map(Zf.map((e) => [Ft(e.name), new Set(e.defaults)])), dp;
+}
 function pp(e) {
 	let t = e.useCursor;
 	if (t !== void 0 && typeof t != "boolean") throw TypeError("createMatUi useCursor 必须是 boolean");
@@ -17360,75 +17996,67 @@ function _p(e) {
 	});
 }
 function vp(e) {
-	let t = Object.keys(e.props ?? {}), n = new Set(Object.keys(e.emits ?? {}).filter((e) => e.startsWith("update:")).map((e) => e.slice(7)));
-	return new Set(t.filter((e) => !n.has(e)));
-}
-function yp(e) {
 	let t = e.defaults;
 	if (t === void 0) return Object.freeze({ tooltip: Mt });
 	if (!t || typeof t != "object" || Array.isArray(t)) throw TypeError("createMatUi defaults 必须是对象");
 	let n = { tooltip: _p(t.tooltip) };
 	return Object.entries(t).forEach(([e, t]) => {
 		if (e === "tooltip") return;
-		let r = fp.get(e);
+		let r = fp().get(e);
 		if (!r) throw TypeError(`createMatUi defaults 未知组件键 ${e}`);
 		if (!t || typeof t != "object" || Array.isArray(t)) throw TypeError(`createMatUi defaults.${e} 必须是对象`);
-		let i = vp(r), a = {};
+		let i = {};
 		Object.entries(t).forEach(([t, n]) => {
-			if (!i.has(t)) throw TypeError(`createMatUi defaults.${e}.${t} 不是可配置属性`);
-			a[t] = n;
-		}), n[e] = Object.freeze(a);
+			if (!r.has(t)) throw TypeError(`createMatUi defaults.${e}.${t} 不是可配置属性`);
+			i[t] = n;
+		}), n[e] = Object.freeze(i);
 	}), Object.freeze(n);
 }
-function bp(e = {}) {
+function yp(e = {}) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("createMatUi 选项必须是对象");
 	let t = Object.freeze({
 		iconClass: hp(e),
 		useCursor: pp(e),
 		useRipple: mp(e),
-		defaults: yp(e)
+		defaults: vp(e)
 	}), n = up(e.theme);
 	return {
 		theme: n,
 		install(e) {
-			dp.forEach(([t, n, r]) => {
-				e.component(t, r), e.component(n, r), (Zf[t] ?? []).forEach((t) => {
-					e.component(t, r);
-				});
-			}), e.directive("intersection", Xf), e.directive("state-layer", jt), e.directive("ripple", mt), e.provide(Pt, t), e.provide(_n, n), ep(t, n);
+			e.directive("intersection", Xf), e.directive("state-layer", jt), e.directive("ripple", mt), e.provide(Pt, t), e.provide(_n, n), ep(t, n);
 		}
 	};
 }
-function xp() {
+function bp() {
 	let e = h(_n, null);
 	if (!e) throw Error("useMatTheme() 必须在已安装 mde-vue 插件的 Vue 应用中调用");
 	return e;
 }
-function Sp() {
+function xp() {
 	return h(Pt, Nt);
 }
 //#endregion
 //#region src/view-transition.js
-function Cp() {
+function Sp() {
 	return typeof globalThis.matchMedia == "function" && globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
-function wp() {
+function Cp() {
 	return typeof document > "u" || typeof document.startViewTransition != "function" ? null : document.startViewTransition.bind(document);
 }
-function Tp(e) {
+function wp(e) {
 	if (e === void 0) return [];
 	let t = Array.isArray(e) ? e : [e];
 	if (t.some((e) => typeof e != "string" || e.trim().length === 0)) throw TypeError("useMatViewTransition.start names 必须是非空字符串或非空字符串数组");
 	return [...new Set(t)];
 }
-function Ep() {
+function Tp() {
 	let e = null, t = null;
 	async function n(n, r = {}) {
 		if (typeof n != "function") throw TypeError("useMatViewTransition.start update 必须是函数");
-		let i = Tp(r.names);
+		let i = wp(r.names);
 		t && await t, e &&= (e.skipTransition?.(), await e.finished.catch(() => {}), null);
-		let a = wp();
-		if (r.skip || !a || Cp()) {
+		let a = Cp();
+		if (r.skip || !a || Sp()) {
 			await n();
 			return;
 		}
@@ -17445,15 +18073,15 @@ function Ep() {
 	}
 	return Object.freeze({
 		get supported() {
-			return !!wp();
+			return !!Cp();
 		},
 		start: n
 	});
 }
-var Dp = Ep, Op = {
+var Ep = Tp, Dp = {
 	key: 0,
 	class: "mat-dialog-prompt__content"
-}, kp = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatImperativeDialogHost" }, {
+}, Op = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({ name: "MatImperativeDialogHost" }, {
 	__name: "ImperativeDialogHost",
 	props: {
 		options: {
@@ -17514,7 +18142,7 @@ var Dp = Ep, Op = {
 				"variant",
 				"onClick"
 			]))), 128))]),
-			default: H(() => [p.value ? (D(), s(t, { key: 0 }, [e.options.content ? (D(), s("p", Op, R(e.options.content), 1)) : o("", !0), d(eu, {
+			default: H(() => [p.value ? (D(), s(t, { key: 0 }, [e.options.content ? (D(), s("p", Dp, R(e.options.content), 1)) : o("", !0), d(eu, {
 				modelValue: f.value,
 				"onUpdate:modelValue": r[0] ||= (e) => f.value = e,
 				autofocus: "",
@@ -17531,34 +18159,34 @@ var Dp = Ep, Op = {
 			_: 1
 		}, 16, ["modelValue", "aria-label"]));
 	}
-}), [["__scopeId", "data-v-cac78251"]]), Ap = [
+}), [["__scopeId", "data-v-cac78251"]]), kp = [
 	"elevated",
 	"filled",
 	"filled-tonal",
 	"outlined",
 	"standard",
 	"text"
-], jp = [
+], Ap = [
 	"fullScreen",
 	"scrim",
 	"closeOnBack"
-], Mp = [
+], jp = [
 	"title",
 	"content",
 	"icon",
 	"closeLabel",
 	"ariaLabel"
 ];
-function Np(e) {
+function Mp(e) {
 	return typeof e == "number" ? Number.isFinite(e) && e > 0 : typeof e == "string" && e.trim().length > 0;
 }
-function Pp() {
+function Np() {
 	if (typeof window > "u" || typeof document > "u") throw Error("Dialog 命令式函数只能在客户端环境中调用");
 }
-function Fp(e) {
+function Pp(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("dialog options 必须是对象");
 }
-function Ip(e) {
+function Fp(e) {
 	let t = e ?? "body", n = null;
 	if (typeof t == "string") try {
 		n = document.querySelector(t);
@@ -17570,10 +18198,10 @@ function Ip(e) {
 	if (!n) throw TypeError("dialog attach 未找到目标元素");
 	return n;
 }
-function Lp(e) {
+function Ip(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("dialog action 必须是对象");
 	if (typeof e.text != "string" || e.text.trim().length === 0) throw TypeError("dialog action text 必须是非空字符串");
-	if (e.variant !== void 0 && !Ap.includes(e.variant)) throw TypeError("dialog action variant 无效");
+	if (e.variant !== void 0 && !kp.includes(e.variant)) throw TypeError("dialog action variant 无效");
 	if (e.color !== void 0 && !Kt(e.color)) throw TypeError("dialog action color 无效");
 	if (e.disabled !== void 0 && typeof e.disabled != "boolean") throw TypeError("dialog action disabled 必须是 boolean");
 	return {
@@ -17583,40 +18211,40 @@ function Lp(e) {
 		variant: e.variant ?? "text"
 	};
 }
-function Rp(e) {
-	if (Fp(e), jp.forEach((t) => {
+function Lp(e) {
+	if (Pp(e), Ap.forEach((t) => {
 		if (e[t] !== void 0 && typeof e[t] != "boolean") throw TypeError(`dialog ${t} 必须是 boolean`);
-	}), Mp.forEach((t) => {
+	}), jp.forEach((t) => {
 		if (e[t] !== void 0 && typeof e[t] != "string") throw TypeError(`dialog ${t} 必须是 string`);
 	}), e.closeLabel !== void 0 && e.closeLabel.trim().length === 0) throw TypeError("dialog closeLabel 必须是非空字符串");
 	if (e.color !== void 0 && !Kt(e.color)) throw TypeError("dialog color 无效");
-	if (e.width !== void 0 && !Np(e.width)) throw TypeError("dialog width 无效");
+	if (e.width !== void 0 && !Mp(e.width)) throw TypeError("dialog width 无效");
 	if (e.actions !== void 0 && !Array.isArray(e.actions)) throw TypeError("dialog actions 必须是数组");
 	let t = {
 		actions: (e.actions ?? [{
 			text: "确定",
 			value: void 0
-		}]).map(Lp),
-		attach: Ip(e.attach)
+		}]).map(Ip),
+		attach: Fp(e.attach)
 	};
 	return [
+		...Ap,
 		...jp,
-		...Mp,
 		"color",
 		"width"
 	].forEach((n) => {
 		e[n] !== void 0 && (t[n] = e[n]);
 	}), e.promptConfig && (t.promptConfig = e.promptConfig), t;
 }
-function zp(e, t) {
+function Rp(e, t) {
 	try {
-		Pp();
-		let n = Rp(e);
+		Np();
+		let n = Lp(e);
 		return new Promise((e, r) => {
 			let i = document.createElement("div");
 			i.dataset.matDialogHost = "", document.body.append(i);
 			try {
-				M(m(kp, {
+				M(m(Op, {
 					cancelValue: t,
 					options: n,
 					onClosed(t) {
@@ -17631,13 +18259,13 @@ function zp(e, t) {
 		return Promise.reject(e);
 	}
 }
-function Bp(e = {}) {
-	return zp(e, void 0);
+function zp(e = {}) {
+	return Rp(e, void 0);
 }
-function Vp(e = {}) {
+function Bp(e = {}) {
 	try {
-		if (Fp(e), e.confirmText !== void 0 && (typeof e.confirmText != "string" || e.confirmText.trim().length === 0)) throw TypeError("alert confirmText 必须是非空字符串");
-		return zp({
+		if (Pp(e), e.confirmText !== void 0 && (typeof e.confirmText != "string" || e.confirmText.trim().length === 0)) throw TypeError("alert confirmText 必须是非空字符串");
+		return Rp({
 			...e,
 			actions: [{
 				text: e.confirmText ?? "确定",
@@ -17648,13 +18276,13 @@ function Vp(e = {}) {
 		return Promise.reject(e);
 	}
 }
-function Hp(e = {}) {
+function Vp(e = {}) {
 	try {
-		Fp(e);
+		Pp(e);
 		let t = e.confirmText ?? "确定", n = e.cancelText ?? "取消";
 		if (typeof t != "string" || t.trim().length === 0) throw TypeError("confirm confirmText 必须是非空字符串");
 		if (typeof n != "string" || n.trim().length === 0) throw TypeError("confirm cancelText 必须是非空字符串");
-		return zp({
+		return Rp({
 			...e,
 			actions: [{
 				text: n,
@@ -17668,9 +18296,9 @@ function Hp(e = {}) {
 		return Promise.reject(e);
 	}
 }
-function Up(e = {}) {
+function Hp(e = {}) {
 	try {
-		Fp(e);
+		Pp(e);
 		let t = e.confirmText ?? "确定", n = e.cancelText ?? "取消", r = e.defaultValue ?? "", i = e.required ?? !1;
 		if ([
 			[
@@ -17701,7 +18329,7 @@ function Up(e = {}) {
 		].forEach(([e, t, n]) => {
 			if (t !== void 0 && (typeof t != "string" || n && t.trim().length === 0)) throw TypeError(`prompt ${e} 必须是${n ? "非空" : ""}字符串`);
 		}), typeof i != "boolean") throw TypeError("prompt required 必须是 boolean");
-		return zp({
+		return Rp({
 			...e,
 			actions: [{
 				text: n,
@@ -17723,7 +18351,7 @@ function Up(e = {}) {
 }
 //#endregion
 //#region src/components/mat-snackbar/ImperativeSnackbarHost.vue
-var Wp = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
+var Up = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
 	__name: "ImperativeSnackbarHost",
 	props: {
 		options: {
@@ -17758,24 +18386,24 @@ var Wp = /*@__PURE__*/ Object.assign({ name: "MatImperativeSnackbarHost" }, {
 			onClosed: s
 		}), null, 16, ["modelValue"]));
 	}
-}), Gp = [
+}), Wp = [
 	"left",
 	"center",
 	"right"
-], Kp = null;
-function qp() {
+], Gp = null;
+function Kp() {
 	if (typeof document > "u" || !document.body) throw Error("Snackbar 命令式函数只能在客户端环境中调用");
 }
-function Jp(e) {
+function qp(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw TypeError("snackbar options 必须是对象");
 }
-function Yp(e) {
-	if (Jp(e), typeof e.text != "string" || e.text.trim().length === 0) throw TypeError("snackbar text 必须是非空字符串");
+function Jp(e) {
+	if (qp(e), typeof e.text != "string" || e.text.trim().length === 0) throw TypeError("snackbar text 必须是非空字符串");
 	if (e.actionText !== void 0 && (typeof e.actionText != "string" || e.actionText.trim().length === 0)) throw TypeError("snackbar actionText 必须是非空字符串");
 	if (e.onAction !== void 0 && typeof e.onAction != "function") throw TypeError("snackbar onAction 必须是函数");
 	if (e.closable !== void 0 && typeof e.closable != "boolean") throw TypeError("snackbar closable 必须是 boolean");
 	if (e.closeLabel !== void 0 && (typeof e.closeLabel != "string" || e.closeLabel.trim().length === 0)) throw TypeError("snackbar closeLabel 必须是非空字符串");
-	if (e.position !== void 0 && !Gp.includes(e.position)) throw TypeError("snackbar position 无效");
+	if (e.position !== void 0 && !Wp.includes(e.position)) throw TypeError("snackbar position 无效");
 	if (e.duration !== void 0 && (!Number.isFinite(e.duration) || e.duration < 0)) throw TypeError("snackbar duration 必须是大于等于 0 的有限数字");
 	return {
 		actionText: e.actionText,
@@ -17787,34 +18415,34 @@ function Yp(e) {
 		text: e.text
 	};
 }
+function Yp() {
+	return Gp?.isConnected ? Gp : (Gp = document.createElement("div"), Gp.dataset.matSnackbarHost = "", document.body.append(Gp), Gp);
+}
 function Xp() {
-	return Kp?.isConnected ? Kp : (Kp = document.createElement("div"), Kp.dataset.matSnackbarHost = "", document.body.append(Kp), Kp);
+	!Gp || Gp.childNodes.length > 0 || (Gp.remove(), Gp = null);
 }
-function Zp() {
-	!Kp || Kp.childNodes.length > 0 || (Kp.remove(), Kp = null);
-}
-function Qp(e) {
+function Zp(e) {
 	try {
-		qp();
-		let t = Yp(e);
+		Kp();
+		let t = Jp(e);
 		return new Promise((e, n) => {
 			let r = !1, i;
 			function a() {
 				if (r) return;
 				r = !0;
-				let t = Kp;
-				t && M(null, t), e(), Qd(i), Zp();
+				let t = Gp;
+				t && M(null, t), e(), Qd(i), Xp();
 			}
 			function o(e) {
 				if (r) return;
 				r = !0;
-				let t = Kp;
-				t && M(null, t), n(e), Qd(i), Zp();
+				let t = Gp;
+				t && M(null, t), n(e), Qd(i), Xp();
 			}
 			i = { activate() {
 				try {
-					let e = Xp();
-					M(m(Wp, {
+					let e = Yp();
+					M(m(Up, {
 						onClosed: a,
 						options: t
 					}), e);
@@ -17827,6 +18455,6 @@ function Qp(e) {
 		return Promise.reject(e);
 	}
 }
-var $p = Qp;
+var Qp = Zp;
 //#endregion
-export { Xf as Intersection, pa as MatAppBar, Ai as MatAppRoot, ea as MatAside, qo as MatAvatar, co as MatBadge, Ku as MatBottomSheet, xi as MatBtn, ya as MatBtnGroup, ms as MatCard, gs as MatCardActionArea, bs as MatCardActions, vs as MatCardContent, ls as MatCardHeadline, ds as MatCardMedia, ps as MatCardSubhead, qa as MatCarousel, Ya as MatCarouselItem, is as MatChatMinimap, Rc as MatCheckbox, Uc as MatChip, Kc as MatChipSet, Yu as MatContainer, Eo as MatDatePicker, Au as MatDialog, Mc as MatDivider, Su as MatDockedContainer, es as MatDynamicText, Ys as MatExpansion, yc as MatExpansionPanel, Ea as MatFab, ja as MatFabMenu, Tc as MatGridList, vr as MatHover, wn as MatIcon, Na as MatImage, ma as MatInputBase, Xu as MatLayout, qs as MatList, gc as MatListGroup, pc as MatListItem, _r as MatLoading, nu as MatMenu, ou as MatMenuGroup, iu as MatMenuItem, Bf as MatNavigationBar, Vf as MatNavigationBarItem, Hf as MatNavigationDrawer, Gf as MatNavigationGroup, Pf as MatNavigationItem, zf as MatNavigationRail, Ff as MatNavigationRailItem, mf as MatNotification, Ef as MatPane, Sf as MatPanes, Gd as MatProgress, sd as MatPullToRefresh, Jc as MatRadio, Zc as MatRadioGroup, Il as MatRangeSlider, Wc as MatScrollArea, _a as MatSearch, mu as MatSelect, cr as MatShape, Wo as MatSharedElement, Wo as MdeSharedElement, qu as MatSideSheet, Zs as MatSimpleExpansion, kl as MatSlider, rf as MatSnackbar, Cu as MatSpacer, os as MatSplitBtn, Qc as MatSwitch, ro as MatTabContent, po as MatTabItem, Zu as MatTableWrapper, ho as MatTabs, Jo as MatText, eu as MatTextField, hu as MatTextarea, zo as MatTimePicker, yf as MatToolbar, li as MatTooltip, Qu as MatVirtualScroll, Qu as MdeVirtualScroll, mt as Ripple, jt as StateLayer, Vp as alert, Hp as confirm, bp as createMatUi, Bp as dialog, gn as extractColorFromImage, Up as prompt, Qp as snackbar, $p as toast, Mi as useLayout, Dr as useMatApp, $ as useMatProps, xp as useMatTheme, Sp as useMatUi, Ep as useMatViewTransition, Dp as useMdeViewTransition };
+export { Xf as Intersection, pa as MatAppBar, Ai as MatAppRoot, ea as MatAside, qo as MatAvatar, co as MatBadge, Ku as MatBottomSheet, xi as MatBtn, ya as MatBtnGroup, ms as MatCard, gs as MatCardActionArea, bs as MatCardActions, vs as MatCardContent, ls as MatCardHeadline, ds as MatCardMedia, ps as MatCardSubhead, qa as MatCarousel, Ya as MatCarouselItem, is as MatChatMinimap, Rc as MatCheckbox, Uc as MatChip, Kc as MatChipSet, Yu as MatContainer, Eo as MatDatePicker, Au as MatDialog, Mc as MatDivider, Su as MatDockedContainer, es as MatDynamicText, Ys as MatExpansion, yc as MatExpansionPanel, Ea as MatFab, ja as MatFabMenu, Tc as MatGridList, vr as MatHover, wn as MatIcon, Na as MatImage, ma as MatInputBase, Xu as MatLayout, qs as MatList, gc as MatListGroup, pc as MatListItem, _r as MatLoading, nu as MatMenu, ou as MatMenuGroup, iu as MatMenuItem, Bf as MatNavigationBar, Vf as MatNavigationBarItem, Hf as MatNavigationDrawer, Gf as MatNavigationGroup, Pf as MatNavigationItem, zf as MatNavigationRail, Ff as MatNavigationRailItem, mf as MatNotification, Ef as MatPane, Sf as MatPanes, Gd as MatProgress, sd as MatPullToRefresh, Jc as MatRadio, Zc as MatRadioGroup, Il as MatRangeSlider, Wc as MatScrollArea, _a as MatSearch, mu as MatSelect, cr as MatShape, Wo as MatSharedElement, Wo as MdeSharedElement, qu as MatSideSheet, Zs as MatSimpleExpansion, kl as MatSlider, rf as MatSnackbar, Cu as MatSpacer, os as MatSplitBtn, Qc as MatSwitch, ro as MatTabContent, po as MatTabItem, Zu as MatTableWrapper, ho as MatTabs, Jo as MatText, eu as MatTextField, hu as MatTextarea, zo as MatTimePicker, yf as MatToolbar, li as MatTooltip, Qu as MatVirtualScroll, Qu as MdeVirtualScroll, mt as Ripple, jt as StateLayer, Bp as alert, Vp as confirm, yp as createMatUi, zp as dialog, gn as extractColorFromImage, Hp as prompt, Zp as snackbar, Qp as toast, Mi as useLayout, Dr as useMatApp, $ as useMatProps, bp as useMatTheme, xp as useMatUi, Tp as useMatViewTransition, Ep as useMdeViewTransition };

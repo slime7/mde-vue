@@ -1,13 +1,13 @@
 ---
 title: 安装
-description: 从 GitHub 仓库固定提交或标签安装 mde-vue，并选择全局注册或按需导入组件与指令。
+description: 从 GitHub 仓库固定提交或标签安装 mde-vue，并通过 Vite 自动导入或手动具名导入组件。
 llms: true
 order: 20
 ---
 
 # 安装
 
-`mde-vue` 目前通过 GitHub 仓库分发已构建的单一核心 ESM 产物。使用方需要 Vue 3 以及支持 ESM 的构建环境。
+`mde-vue` 目前通过 GitHub 仓库分发已构建的运行时 ESM、Vite 自动导入插件和样式产物。使用方需要 Vue 3 以及支持 ESM 的构建环境；自动导入插件用于 Vite 项目。
 
 ## 从 GitHub 仓库安装
 
@@ -21,15 +21,33 @@ pnpm add "mde-vue@git+https://github.com/slime7/mde-vue.git#<commit-or-tag>"
 pnpm add "mde-vue@git+ssh://git@github.com/slime7/mde-vue.git#<commit-or-tag>"
 ```
 
-不要使用会随时间移动的分支名代替提交 SHA 或 Tag，否则不同时间安装可能得到不同产物。仓库的 `package.json` 只导出已提交的 `dist`，其中只有一个 JavaScript 文件、一个样式文件和一个类型声明文件。安装时不运行 `prepare`，使用方也不需要编译组件库的 Vue SFC。
+不要使用会随时间移动的分支名代替提交 SHA 或 Tag，否则不同时间安装可能得到不同产物。仓库的 `package.json` 只导出已提交的 `dist`，其中包含运行时 `mde-vue.js`、Vite 自动导入插件 `vite.js`、基础样式 `styles.css`、Tailwind 映射 `tailwind.css` 以及类型声明 `index.d.ts` 与 `vite.d.ts`。安装时不运行 `prepare`，使用方也不需要编译组件库的 Vue SFC。
 
-## 全局注册：推荐用法
+## 推荐用法：运行时插件 + Vite 自动导入
 
-大多数应用应安装 `createMatUi()` 插件。它会初始化动态主题、提供 `useMatTheme()`，以 kebab-case `mat-*` 和 PascalCase `Mat*` 两种名称全局注册所有组件，并注册 `v-intersection`、`v-state-layer` 与 `v-ripple` 指令。不直接对应 Material 官方 API 的非标准组件会额外注册 `mde-*` 标签别名，目前包括 `<MdeDynamicText>`、`<mde-dynamic-text>`、`<MdeSharedElement>` 与 `<mde-shared-element>`。基础样式必须显式导入。它声明 `mde.tokens`、`mde.components`、`mde.utilities` 与顶层 `mde-final`；应用中未分层的普通 CSS 默认优先，可以直接覆盖库样式。Tailwind 项目的完整层序与导入方式见[样式](/guide/styles)。页面级应用建议用 `<mat-app-root>` 包住应用正文和设置 `app` 的布局组件。
+`createMatUi()` 不再全局注册组件。它只创建主题控制器、提供组件设置和主题上下文，并注册 `v-intersection`、`v-state-layer` 与 `v-ripple` 指令。组件由 `mde-vue/vite` 按模板中实际使用的标签自动导入，只有被使用的组件进入产物。
 
-应用入口 `src/main.js`：
+### 配置 Vite
 
 ```js
+// vite.config.js
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import { mdeVue } from 'mde-vue/vite';
+
+export default defineConfig({
+  plugins: [vue(), mdeVue()],
+});
+```
+
+`mdeVue()` 只处理 `.vue` 文件中的普通 HTML 模板，支持 `mat-*`、`Mat*` 和 `mde-*` 别名标签。动态组件、渲染函数、`<script setup src>` 以及 pug 等非 HTML 模板不会被自动导入，需要手动导入组件。可以传入 `include` / `exclude` 限定处理范围，默认跳过 `node_modules`。
+
+### 应用入口
+
+应用入口安装运行时插件并导入基础样式：
+
+```js
+// src/main.js
 import { createApp } from 'vue';
 import { createMatUi } from 'mde-vue';
 import App from './App.vue';
@@ -45,7 +63,9 @@ createApp(App)
   .mount('#app');
 ```
 
-组件 `src/App.vue`：
+### 组件模板
+
+`App.vue` 中的组件标签不需要手动导入：
 
 ```vue
 <template>
@@ -77,11 +97,13 @@ function handleIntersection(isIntersecting) {
 </script>
 ```
 
-全局注册后的模板标签可使用 kebab-case 或 PascalCase，例如 `<mat-btn>` 与 `<MatBtn>`、`<mat-fab>` 与 `<MatFab>`。安装包提供 Vue 全局组件声明；启用 Vue Language Features 的编辑器可为两种名称提供相同的组件提示。
+`v-intersection`、`v-state-layer` 与 `v-ripple` 指令由 `createMatUi()` 全局安装，不需要额外导入。`mat-*`、`Mat*` 与 `mde-*` 组件由 `mdeVue()` 自动导入；同一个组件使用多种标签写法时只注入一次导入。
 
-## 局部注册
+Vite 开发态仍可能预构建整个运行时文件，生产构建才会按实际使用的组件摇树。
 
-只需要少量组件时，也从唯一的 `mde-vue` 根入口具名导入。基础样式仍然必须导入；它包含默认主题、全部组件样式和公共排版工具类。Tailwind CSS v4 语义映射由独立的 `mde-vue/tailwind.css` 提供，不包含组件样式。支持 tree shaking 的构建工具可以移除未使用的具名导出。
+## 手动导入组件
+
+不使用 `mde-vue/vite` 时，从唯一的 `mde-vue` 根入口具名导入实际使用的组件和指令。基础样式仍然必须导入；它包含默认主题、全部组件样式和公共排版工具类。Tailwind CSS v4 语义映射由独立的 `mde-vue/tailwind.css` 提供，不包含组件样式。支持 tree shaking 的构建工具可以移除未使用的具名导出。
 
 ```vue
 <script setup>
@@ -185,7 +207,9 @@ import {
 } from 'mde-vue';
 ```
 
-局部导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatAppRoot>`、`<MatAvatar>`、`<MatAppBar>`、`<MatSearch>`、`<MatBadge>`、`<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatShape>`、`<MatText>`、`<MatCard>`、`<MatChatMinimap>`、`<MatChip>`、`<MatChipSet>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatScrollArea>`、`<MatSpacer>`、`<MatTableWrapper>`、`<MatLoading>`、`<MatProgress>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>`、`<MatNotification>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection`、`StateLayer` 与 `Ripple` 指令在 `<script setup>` 中建议分别别名为 `vIntersection`、`vStateLayer` 与 `vRipple`，模板中使用 `v-intersection`、`v-state-layer` 与 `v-ripple`；`useMatApp()` 只能在 `<MatAppRoot>` 的后代组件中调用。
+手动导入的 Vue 组件在模板中使用 PascalCase，例如 `<MatAppRoot>`、`<MatAvatar>`、`<MatAppBar>`、`<MatSearch>`、`<MatBadge>`、`<MatBtn>`、`<MatFab>`、`<MatIcon>`、`<MatShape>`、`<MatText>`、`<MatCard>`、`<MatChatMinimap>`、`<MatChip>`、`<MatChipSet>`、`<MatTextField>`、`<MatInputBase>`、`<MatMenu>`、`<MatBottomSheet>`、`<MatSideSheet>`、`<MatContainer>`、`<MatScrollArea>`、`<MatSpacer>`、`<MatTableWrapper>`、`<MatLoading>`、`<MatProgress>`、`<MatTooltip>`、`<MatHover>`、`<MatSnackbar>`、`<MatNotification>` 或 `<MatToolbar>`。也可以写成 kebab-case，但 PascalCase 能更明确地表示它来自当前文件的导入。`Intersection`、`StateLayer` 与 `Ripple` 指令在 `<script setup>` 中建议分别别名为 `vIntersection`、`vStateLayer` 与 `vRipple`，模板中使用 `v-intersection`、`v-state-layer` 与 `v-ripple`；`useMatApp()` 只能在 `<MatAppRoot>` 的后代组件中调用。
+
+如果同时安装 `createMatUi()`，三个公共指令已经全局注册，可以省略对应的指令导入；组件仍需要手动导入或由 `mdeVue()` 自动导入。
 
 ## 页面基础尺寸
 
@@ -209,8 +233,9 @@ body {
 
 | 需求 | 推荐方式 |
 | --- | --- |
-| 使用动态主题、`useMatTheme()`、`v-intersection`、`v-state-layer` 或 `v-ripple` | 安装 `createMatUi()`，使用全局组件和指令 |
-| 应用会使用多个 mde-vue 组件 | 安装 `createMatUi()`，统一全局注册 |
-| 只使用少量组件，并接受基础样式的默认主题 | 从 `mde-vue` 根入口具名导入并局部注册 |
+| Vite 项目，希望模板自动导入并保留按需体积 | 安装 `createMatUi()`，并在 Vite 配置中加入 `mdeVue()` |
+| 需要动态主题、`useMatTheme()`、defaults 或公共指令 | 安装 `createMatUi()`；组件由 `mdeVue()` 自动导入或手动导入 |
+| 不使用 Vite 自动导入，只使用少量组件 | 从 `mde-vue` 根入口具名导入组件和指令 |
+| 只使用组件，不需要主题或指令 | 手动导入组件并导入 `mde-vue/styles.css`，可以不安装 `createMatUi()` |
 
-`createMatUi()` 同时负责主题初始化、组件设置、`mat-*` 与 `Mat*` 组件和 `v-intersection`、`v-state-layer`、`v-ripple` 指令的全局注册。已经安装插件时，不需要再局部导入同一个组件或指令。交互指针、图标 class 与主题入口见 [`createMatUi` 配置](/guide/create-mat-ui)。
+`createMatUi()` 负责主题初始化、组件设置和 `v-intersection`、`v-state-layer`、`v-ripple` 指令的全局安装，不注册组件。`mdeVue()` 只负责自动导入模板中的组件；两者可以独立使用。交互指针、图标 class 与主题入口见 [`createMatUi` 配置](/guide/create-mat-ui)。

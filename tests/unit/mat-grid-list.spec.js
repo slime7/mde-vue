@@ -21,7 +21,7 @@ function itemSlots(count) {
 }
 
 describe('MatGridList 网格列表', () => {
-  it('从包根入口导出，并由 createMatUi 全局注册', () => {
+  it('从包根入口导出，且 createMatUi 不注册组件', () => {
     expect(library.MatGridList).toBe(MatGridList);
 
     const app = {
@@ -31,8 +31,7 @@ describe('MatGridList 网格列表', () => {
     };
     createMatUi().install(app);
 
-    expect(app.component).toHaveBeenCalledWith('MatGridList', MatGridList);
-    expect(app.component).toHaveBeenCalledWith('mat-grid-list', MatGridList);
+    expect(app.component).not.toHaveBeenCalled();
   });
 
   it('复用 MatListItem 渲染普通语义列表，并以 grid 布局和默认两列排列', () => {

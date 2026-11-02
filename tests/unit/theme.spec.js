@@ -1,4 +1,4 @@
-import { defineComponent, h, resolveComponent } from 'vue';
+import { defineComponent, h } from 'vue';
 import { mount } from '@vue/test-utils';
 import {
   afterEach, beforeEach, describe, expect, it, vi,
@@ -209,7 +209,7 @@ describe('主题控制器', () => {
     expect(target.style.colorScheme).toBe('');
   });
 
-  it('通过插件注册组件并提供 useMatTheme()', () => {
+  it('插件提供 useMatTheme()，组件使用本地导入', () => {
     let injectedTheme;
     const Consumer = defineComponent({
       name: 'ThemeConsumer',
@@ -217,12 +217,12 @@ describe('主题控制器', () => {
         injectedTheme = useMatTheme();
 
         return () => h('div', [
-          h(resolveComponent('mat-btn'), null, '主题按钮'),
-          h(resolveComponent('mat-btn'), { icon: 'star', label: '图标按钮' }),
-          h(resolveComponent('mat-btn-group'), null, () => h(resolveComponent('mat-btn'), null, '组按钮')),
-          h(resolveComponent('mat-split-btn'), null, {
-            leading: () => h(resolveComponent('mat-btn'), null, '主要操作'),
-            trailing: () => h(resolveComponent('mat-btn'), {
+          h(MatBtn, null, '主题按钮'),
+          h(MatBtn, { icon: 'star', label: '图标按钮' }),
+          h(MatBtnGroup, null, () => h(MatBtn, null, '组按钮')),
+          h(MatSplitBtn, null, {
+            leading: () => h(MatBtn, null, '主要操作'),
+            trailing: () => h(MatBtn, {
               icon: 'arrow_drop_down',
               label: '更多操作',
             }),

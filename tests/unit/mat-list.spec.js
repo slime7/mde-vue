@@ -744,14 +744,14 @@ describe('MatList', () => {
     expectSelectionBlocked(false);
   });
 
-  it('插件全局注册 List、ListItem 和 Divider', () => {
+  it('createMatUi 不再全局注册 List、ListItem 和 Divider', () => {
     const app = createApp({});
 
     app.use(createMatUi());
-    expect(app.component('mat-list')).toBe(MatList);
-    expect(app.component('mat-list-group')).toBe(MatListGroup);
-    expect(app.component('mat-list-item')).toBe(MatListItem);
-    expect(app.component('mat-divider')).toBeDefined();
+    expect(app.component('mat-list')).toBeUndefined();
+    expect(app.component('mat-list-group')).toBeUndefined();
+    expect(app.component('mat-list-item')).toBeUndefined();
+    expect(app.component('mat-divider')).toBeUndefined();
   });
 
   it('有值 Group 通过 expanded 数组受控并返回不可变的新数组', async () => {

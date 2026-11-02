@@ -7,7 +7,7 @@ order: 50
 
 # 样式
 
-`mde-vue/styles.css` 是所有项目都要导入的基础样式入口，包含公共令牌、组件样式、公共排版工具类和少量最终安全不变量。`mde-vue/tailwind.css` 是可选的 Tailwind CSS v4 `@theme inline` 映射，不包含组件样式。
+`mde-vue/styles.css` 是所有项目都要导入的基础样式入口，包含公共令牌、组件样式、公共排版工具类和少量最终安全不变量。`mde-vue/tailwind.css` 是可选的 Tailwind CSS v4 `@theme inline` 映射，不包含组件样式。`mde-vue/vite` 只自动导入组件，不会自动导入样式，样式入口仍需在应用 CSS 或 JavaScript 中显式导入。
 
 ## CSS 级联层
 

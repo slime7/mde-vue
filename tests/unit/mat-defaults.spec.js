@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
-  createApp, defineComponent, h, nextTick, resolveComponent,
+  createApp, defineComponent, h, nextTick,
 } from 'vue';
 import { mount } from '@vue/test-utils';
 import {
@@ -15,7 +15,8 @@ import {
   useMatUi,
 } from '../../src';
 import MAT_UI_KEY, { matComponentKey } from '../../src/mat-ui-context';
-import { GLOBAL_COMPONENTS } from '../../src/plugin';
+import COMPONENT_MANIFEST from '../../src/component-manifest';
+import * as library from '../../src';
 
 // eslint-disable-next-line vue/one-component-per-file -- 仅用于验证 useMatProps 合并语义。
 const DefaultsHarness = defineComponent({
@@ -120,15 +121,15 @@ describe('createMatUi defaults 合并语义', () => {
 });
 
 describe('createMatUi defaults 组件行为', () => {
-  it('defaults 覆盖全局注册组件的定义默认值，显式属性优先', () => {
+  it('defaults 覆盖组件的定义默认值，显式属性优先', () => {
     const plugin = createMatUi({ defaults: { btn: { type: 'submit' } } });
-    // eslint-disable-next-line vue/one-component-per-file -- 仅用于验证全局注册组件的 defaults 行为。
+    // eslint-disable-next-line vue/one-component-per-file -- 仅用于验证本地导入组件的 defaults 行为。
     const Consumer = defineComponent({
       setup() {
         return () => h('div', [
-          h(resolveComponent('mat-btn'), null, { default: () => '默认按钮' }),
-          h(resolveComponent('mat-btn'), { type: 'button' }, { default: () => '显式按钮' }),
-          h(resolveComponent('mat-btn'), { type: undefined }, { default: () => 'undefined 按钮' }),
+          h(MatBtn, null, { default: () => '默认按钮' }),
+          h(MatBtn, { type: 'button' }, { default: () => '显式按钮' }),
+          h(MatBtn, { type: undefined }, { default: () => 'undefined 按钮' }),
         ]);
       },
     });
@@ -203,9 +204,29 @@ describe('命令式宿主继承 defaults', () => {
 });
 
 describe('defaults 键名与组件接入一致性', () => {
+  it('组件元数据中的 defaults 键与组件实际 props 一致', () => {
+    COMPONENT_MANIFEST.forEach((entry) => {
+      // eslint-disable-next-line import-x/namespace -- 组件名来自生成的元数据，无法静态解析。
+      const component = library[entry.name];
+
+      expect(component, entry.name).toBeTruthy();
+
+      const modelProps = new Set(
+        Object.keys(component.emits ?? {})
+          .filter((name) => name.startsWith('update:'))
+          .map((name) => name.slice('update:'.length)),
+      );
+      const props = Object.keys(component.props ?? {})
+        .filter((name) => !modelProps.has(name))
+        .sort();
+
+      expect([...entry.defaults].sort(), entry.name).toEqual(props);
+    });
+  });
+
   it('每个公共组件都以自身规范键名调用 useMatProps', () => {
     const componentsDir = resolve(process.cwd(), 'src/components');
-    const publicNames = new Set(GLOBAL_COMPONENTS.map(([name]) => name));
+    const publicNames = new Set(COMPONENT_MANIFEST.map((entry) => entry.name));
     const expected = new Set();
     const matched = [];
 

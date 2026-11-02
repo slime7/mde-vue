@@ -23,16 +23,16 @@
 - 组件标签统一使用 `mat-*` 前缀，组件目录和导出名称保持一一对应。
 - 组件基于 Vue 实现，不增加 Web Components、React 或其他框架适配层。
 - 样式使用原生 CSS；共享设计值必须通过公开的 `--mat-ref-*` 和 `--mat-sys-*` 令牌表达。组件可以使用 `--mat-<component>-*` 等内部变量组织样式，但这些变量不是公共定制入口。
-- 保持最小 ESM 分发：`dist/` 只包含全部运行时实现的 `mde-vue.js`、基础令牌与组件样式 `styles.css`、Tailwind v4 映射 `tailwind.css` 以及、根入口类型 `index.d.ts`。公共 JavaScript API 只使用包根入口，不提供组件、指令或函数子入口；不添加 npm 发布或 `prepare` 流程。源码是维护权威，`dist/` 必须由 `pnpm build` 生成，禁止手工编辑。
+- 保持最小分发：`dist/` 只包含全部运行时实现的 `mde-vue.js`、构建期 Vite 自动导入插件 `vite.js`、基础令牌与组件样式 `styles.css`、Tailwind v4 映射 `tailwind.css`，以及根入口类型 `index.d.ts` 和 Vite 插件类型 `vite.d.ts`。运行时 JavaScript API 只使用包根入口；唯一子入口是构建期 `mde-vue/vite`，不提供组件、指令或函数子入口；不添加 npm 发布或 `prepare` 流程。源码是维护权威，`dist/` 必须由 `pnpm build` 生成，禁止手工编辑。
 - 主要支持 Electron 等现代化浏览器内核及最新浏览器客户端渲染；不要加入旧浏览器兼容层、SSR 分支、本地化或 IDE 插件。
-- 修改公共导出、组件 props、主题选项或公共 CSS 令牌时，同步更新测试、使用文档和 AI 文档来源页面。
+- 修改公共导出、组件 props、主题选项、Vite 插件选项或公共 CSS 令牌时，同步更新测试、使用文档和 AI 文档来源页面。
 - mdui 改编内容应标注来源；不得删除 `THIRD_PARTY_NOTICES.md` 或 `licenses/mdui-MIT.txt` 中的许可信息。
 
 ## 组件文档约束
 
 - 每个公共组件必须在 `docs/site/components/` 中有对应的中文使用文档，并纳入 AI 文档来源。
 - 组件文档必须包含“组件简介”“示例”“API”“事件”和“Slots”；介绍需同时写明 `mat-*` 模板标签和 PascalCase 组件导出名，方便使用者识别按需导入名称。
-- 全局注册与按需导入的实际写法统一在安装文档中维护，不在每个组件页面重复。
+- 组件自动导入与手动导入的实际写法统一在安装文档中维护，不在每个组件页面重复。
 - 示例必须包含代码和实际渲染预览；代码块与预览必须引用同一个 `docs/site/examples/` Vue 示例文件，不得分别维护两份实现。在保持示例清晰、有效的前提下，尽可能覆盖组件的公共属性、重要状态、事件和 Slots，不为尚未实现的能力编写示例。
 - 除非功能本身需要组合，每个 prop 或 Slot 使用独立的示例文件和预览；同一 prop 的多个合法值可以集中展示。只保留必要依赖，例如 `icon + label`、`toggle + selected`、`error + errorText`、`v-model + value`、菜单的 `open + anchor` 以及拆分按钮的两侧 Slot。
 - 示例代码使用 VitePress 原生 `::: details 查看示例代码` 容器，默认收起；预览放在容器外，`<ClientOnly>` 与 `<DocsPreview>` 必须按多行格式书写，构建时示例代码会自动合并为预览右上角的“查看代码”面板并生成演练场链接。保留 VitePress 原生高亮和复制按钮，不新增自定义代码查看器、标签页或运行时 API。示例文件按 `{Component}{Feature}Example.vue` 命名。示例代码块统一按 template、script、style 的顺序展示。
@@ -66,8 +66,8 @@ pnpm validate:agent-docs
 
 - 根目录 `llms.txt` 和 `llms-full.txt` 由带 AI 文档标记的 Markdown 页面生成，禁止直接编辑。
 - 修改 AI 文档时先编辑对应 Markdown 来源，再运行 `pnpm docs:llms`，并用 `pnpm docs:check` 检查生成结果。
-- `src/index.d.ts` 由 `scripts/build-types.mjs` 根据公共组件 JSDoc 生成，禁止直接编辑；`dist/index.d.ts` 由包构建复制生成。修改组件公共接口注释后运行 `pnpm build`。
-- `dist/` 是必须提交的四文件 ESM 分发产物（包括 `mde-vue.js`、`styles.css`、`tailwind.css` 和 `index.d.ts`）；修改源码、公共入口或样式后运行 `pnpm build` 并提交同步结果。VitePress 缓存和测试覆盖率等其他本地产物不提交。
+- `src/index.d.ts` 由 `scripts/build-types.mjs` 根据公共组件 JSDoc 生成，禁止直接编辑；`src/component-manifest.js` 由同一脚本根据组件源码生成，供运行时 defaults 校验和 Vite 自动导入插件使用，禁止直接编辑。`dist/index.d.ts` 与 `dist/vite.d.ts` 由包构建复制生成。修改组件公共接口注释后运行 `pnpm build`。
+- `dist/` 是必须提交的六文件分发产物（包括 `mde-vue.js`、`vite.js`、`styles.css`、`tailwind.css`、`index.d.ts` 和 `vite.d.ts`）；修改源码、公共入口或样式后运行 `pnpm build` 并提交同步结果。VitePress 缓存和测试覆盖率等其他本地产物不提交。
 
 ## 文档维护映射
 

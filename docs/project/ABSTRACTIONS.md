@@ -14,13 +14,15 @@
 | 主题目标 | 接收运行时 CSS 自定义属性的 DOM 元素，默认是 `document.documentElement` |
 | 组件变体 | 同一组件的视觉层级，例如按钮的 `filled` 或 `outlined`；不等于主题配色变体 |
 | AI 文档来源 | frontmatter 明确标记可进入 AI 文档的 Markdown 使用页面 |
-| ESM 分发产物 | 从 `src/` 可重复构建的单一 ESM、基础与组件 CSS、Tailwind CSS 映射和根入口类型声明 |
+| ESM 分发产物 | 从 `src/` 可重复构建的运行时 ESM、构建期 Vite 自动导入插件、基础与组件 CSS、Tailwind CSS 映射和入口类型声明 |
 
 ## Mat UI 插件
 
 `MatSurfaceBase`、`MatActionBase`、`MatButtonBase`、`MatSelectionControlBase`、`MatTextInputBase`、`MatItemContentBase` 与 `useRovingFocus` 是内部结构复用层，不属于公共 API。它们分别负责表面根节点、原生 button/link 交互、按钮交互状态、选择控件结构、文本输入视觉、无语义项目内容排列和 tabindex 管理；公共组件不得要求使用者依赖其 class、文件路径或内部 CSS 变量。`MatInputBase` 是公共例外，提供无边框原生 input/textarea、受控字符串值、`update:modelValue`、原生属性透传以及 `focusInput`、`getInput` 方法；它不提供标签、描边、填充、辅助文字或校验语义。
 
-`createMatUi({ theme, useCursor, useRipple, iconClass, defaults })` 创建一次 Vue 插件安装单元。插件负责以 `mat-*` 和对应 `Mat*` 名称全局注册组件、建立主题控制器，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置。
+`createMatUi({ theme, useCursor, useRipple, iconClass, defaults })` 创建一次 Vue 运行时插件安装单元。插件建立主题控制器、安装 `v-intersection`、`v-state-layer` 与 `v-ripple` 指令，并通过 Vue provide 分别暴露主题上下文和不可变的组件设置；它不注册组件。组件通过 `mde-vue/vite` 自动导入或由使用方从根入口手动导入。
+
+`mdeVue(options)` 是 `mde-vue/vite` 导出的构建期 Vite 插件，扫描 `.vue` 文件的静态 HTML 模板标签，把实际使用的 `mat-*`、`Mat*` 与 `mde-*` 组件按本地导入注入。它只处理静态模板，不处理动态组件、渲染函数或非 HTML 模板；组件元数据由构建脚本生成，避免运行时为自动导入保留全部组件。
 
 `useCursor` 必须是 boolean，默认 `false`，控制可用交互组件是否从 `cursor: default` 改为 `cursor: pointer`。`useRipple` 必须是 boolean 或对象，默认 `false`，控制基于 `MatActionBase` 的操作类组件是否在主指针按压时显示涟漪；传入 `{ variant }` 时隐含启用并指定默认波纹形状，`variant` 取值与 `v-ripple` 相同，默认 `circle`。涟漪绘制在状态层之上，可通过 `v-ripple` 的 `disabled` 选项逐宿主关闭。`iconClass` 必须是 string，默认 `material-symbols-outlined`，作为公共 Icon 与组件图标容器的全局 class；组件级 `iconClass` 可以覆盖或以空字符串关闭它。`defaults` 按组件键设置公共组件的 prop 默认值，键是 `mat-*` 标签去掉前缀后的 camelCase；显式传入的 prop 优先于 defaults，defaults 优先于组件定义默认值，`v-model` 相关属性不接受 defaults 配置。`defaults.tooltip.openDelay` 与 `defaults.tooltip.closeDelay` 必须是非负有限数字，默认分别为 `0` 与 `600`；`openDelay` 是未显式设置 `openDelay` 时的自动打开延迟，`closeDelay` 是未显式设置 `closeDelay` 时的自动关闭延迟，任一 Tooltip 显示时切换进入其他实例可跳过打开延迟。插件不下载字体或图标资源，未安装插件的按需组件使用组件定义默认值。
 
@@ -34,7 +36,7 @@
 
 `src/` 是组件、插件、指令、函数和样式的维护权威，`dist/` 是使用方唯一可解析的运行时与类型边界。所有运行时实现必须进入同一个 `dist/mde-vue.js`，公共 JavaScript API 只通过 `mde-vue` 根入口具名导入，使内部上下文、队列和协调器只存在一个模块实例。Vue 保持 peer dependency，Material Color Utilities 保持普通外部依赖；分发产物不包含 `.vue` 导入，也不要求使用方执行依赖生命周期脚本。
 
-`dist/styles.css` 由基础令牌与全部 SFC 样式生成，并保留公开的 `mde.tokens`、`mde.components`、`mde.utilities` 与顶层 `mde-final`。`dist/tailwind.css` 来自独立的 Tailwind 映射，`dist/index.d.ts` 包含根入口的组件、插件、指令和命令式函数声明。`dist/` 必须恰好包含这四个文件，且只能通过 `pnpm build` 更新，并与造成变化的源码和文档放在同一提交中。
+`dist/styles.css` 由基础令牌与全部 SFC 样式生成，并保留公开的 `mde.tokens`、`mde.components`、`mde.utilities` 与顶层 `mde-final`。`dist/tailwind.css` 来自独立的 Tailwind 映射，`dist/index.d.ts` 包含根入口的组件、插件、指令和命令式函数声明，`dist/vite.d.ts` 包含自动导入插件声明。`dist/` 必须恰好包含 `index.d.ts`、`mde-vue.js`、`styles.css`、`tailwind.css`、`vite.d.ts` 与 `vite.js` 六个文件，且只能通过 `pnpm build` 更新，并与造成变化的源码和文档放在同一提交中。
 
 `useMatTheme()` 只能读取当前 Vue 应用提供的主题上下文。组件不得自行创建第二套主题状态；应用级主题控制器是运行时配置的权威来源。
 
@@ -115,7 +117,7 @@ Tailwind CSS v4 使用方必须预先声明 `tailwind-theme`、`tailwind-reset`�
 
 ## 组件公共模型
 
-- Vue 组件导出使用 PascalCase，例如 `MatBtn`；安装 `createMatUi()` 后，模板可使用 `mat-*`（如 `<mat-btn>`）或对应 PascalCase（如 `<MatBtn>`）。
+- Vue 组件导出使用 PascalCase，例如 `MatBtn`；组件通过 `mde-vue/vite` 自动导入或从根入口具名导入。模板可使用 `mat-*`（如 `<mat-btn>`）或对应 PascalCase（如 `<MatBtn>`）；`createMatUi()` 不注册组件。
 - `<mat-spacer>` 是无内容、无交互且固定从无障碍树隐藏的 flex 子元素，只负责增长占据父容器主轴剩余空间，不定义父级方向、对齐或间距。
 - `<mat-container>` 的外层始终铺满父容器，使用视口宽度在 `<600px` 时提供 16px、其他宽度提供 24px 的水平内边距；位于 `mat-scroll-area` 内时，右侧内边距自动减去滚动条宽度，正文保持视觉居中。默认 Slot 位于内部正文层；正文层默认以 1040px 最大宽度和 `margin-inline: auto` 居中，在外层具有确定块轴尺寸时同步铺满高度，外层尺寸未确定时仍由内容自然撑开。`fluid=true` 只取消正文层的最大宽度，不改变外层边距或尺寸。
 - 所有组件、插件、指令和命令式函数必须从唯一根入口导出。
@@ -186,7 +188,7 @@ Icon 的 `color` 沿用语义色与六位种子色格式，但省略时继承 `c
 
 横向布局的项目几何跟随滚动位置逐帧更新。动态宽度布局（`multi-browse`、`hero`、`hero-center-aligned`）相邻停靠位相距一个大项宽度加间距，当前项展开为目标宽度并对齐锚点（`hero-center-aligned` 居中，其余对齐前缘），前导侧保留 56px 预览位；`multi-browse` 的后随侧以中等宽度项目填充并在末端保留 56px 预览位，`hero` 与 `hero-center-aligned` 后随侧保留一个 56px 预览位。末端停靠位主项贴右缘并保留 16px 边距。全部项目展开填不满容器内宽时整体展开且不产生滚动。`uncontained` 系列保持固定宽度，首尾停靠保留 16px 边距，最后一个项目完整可滚入视口；`uncontained-multi-aspect` 项目宽度由 `aspectRatio` 决定。目标宽度支持通过项目 `width` 设置，未设置时由容器尺寸推导。拖拽释放或滚轮停止后逐帧过渡吸附至最近停靠位，减少动态效果偏好下直接跳转。图片取景随停靠距离产生视差位移。项目不建立交互语义，通过 `alt` 提供替代文本。组件没有自定义事件与公开方法。
 
-`<mat-shared-element>` 的导出名是 `MatSharedElement`，公共入口和全局注册另提供 `MdeSharedElement` 别名。必填 `name` 是同一文档 View Transition 的稳定 CSS `<custom-ident>`，在每次旧快照或新快照中必须唯一；名称默认不写入 DOM，只在 `useMatViewTransition().start()` 的 `names` 选项指定后临时启用并在完成或失败后清理，避免无关实例进入过渡顶层。`as` 只改变合法 HTML 根标签，`disabled` 阻止同名临时激活。组件不更新状态、不启动动画，也不赋予 Slot 交互或无障碍语义。`useMatViewTransition()` 与别名 `useMdeViewTransition()` 每次调用创建独立协调器；协调器在同一实例内跳过尚未完成的旧动画，并在 API 不可用、显式跳过或减少动态效果时直接执行更新。更新函数与动画完成错误向调用方传播。
+`<mat-shared-element>` 的导出名是 `MatSharedElement`，公共入口和自动导入标签另提供 `MdeSharedElement` 别名。必填 `name` 是同一文档 View Transition 的稳定 CSS `<custom-ident>`，在每次旧快照或新快照中必须唯一；名称默认不写入 DOM，只在 `useMatViewTransition().start()` 的 `names` 选项指定后临时启用并在完成或失败后清理，避免无关实例进入过渡顶层。`as` 只改变合法 HTML 根标签，`disabled` 阻止同名临时激活。组件不更新状态、不启动动画，也不赋予 Slot 交互或无障碍语义。`useMatViewTransition()` 与别名 `useMdeViewTransition()` 每次调用创建独立协调器；协调器在同一实例内跳过尚未完成的旧动画，并在 API 不可用、显式跳过或减少动态效果时直接执行更新。更新函数与动画完成错误向调用方传播。
 
 ## `<mat-date-picker>` 与 `<mat-time-picker>`
 
@@ -337,7 +339,7 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 
 `docs/site/` 中人工编辑的 Markdown 使用页面是组件说明的权威来源。`llms.txt` 只提供适合 AI 发现内容的索引，`llms-full.txt` 是这些页面的合并文本；两者均为可重复生成的派生文件，不接受手工修补。
 
-每个公共组件页面必须包含组件简介、示例、API、事件和 Slots。简介写明全部相关 `mat-*` 模板标签与 PascalCase 组件导出名；示例同时提供代码和实际渲染预览，并在保持清晰、有效的前提下尽可能覆盖公共属性、重要状态、事件和 Slots。同一示例的代码块和预览必须读取同一个 Vue 示例文件，不分别维护两份实现。除非功能本身需要组合，每个 prop 或 Slot 使用独立的示例文件和预览；同一 prop 的多个合法值可以集中展示，只保留必要依赖。示例代码使用 VitePress 原生 `::: details 查看示例代码` 容器并默认收起，预览位于容器外；`<ClientOnly>` 与 `<DocsPreview>` 必须按多行格式书写，构建时示例代码会自动合并为预览右上角的“查看代码”面板并生成演练场链接；不新增自定义代码查看器、标签页或运行时 API。示例文件按 `{Component}{Feature}Example.vue` 命名。事件和 Slots 即使不存在公共能力也需明确说明，方法和状态等其他小节按实际能力添加。全局注册与按需导入写法统一由安装文档维护，不得为尚未实现的接口编写示例，也不得记录组件内部 class 或 CSS 自定义属性。
+每个公共组件页面必须包含组件简介、示例、API、事件和 Slots。简介写明全部相关 `mat-*` 模板标签与 PascalCase 组件导出名；示例同时提供代码和实际渲染预览，并在保持清晰、有效的前提下尽可能覆盖公共属性、重要状态、事件和 Slots。同一示例的代码块和预览必须读取同一个 Vue 示例文件，不分别维护两份实现。除非功能本身需要组合，每个 prop 或 Slot 使用独立的示例文件和预览；同一 prop 的多个合法值可以集中展示，只保留必要依赖。示例代码使用 VitePress 原生 `::: details 查看示例代码` 容器并默认收起，预览位于容器外；`<ClientOnly>` 与 `<DocsPreview>` 必须按多行格式书写，构建时示例代码会自动合并为预览右上角的“查看代码”面板并生成演练场链接；不新增自定义代码查看器、标签页或运行时 API。示例文件按 `{Component}{Feature}Example.vue` 命名。事件和 Slots 即使不存在公共能力也需明确说明，方法和状态等其他小节按实际能力添加。全局组件自动导入与手动导入写法统一由安装文档维护，不得为尚未实现的接口编写示例，也不得记录组件内部 class 或 CSS 自定义属性。
 
 ## 关键不变量
 

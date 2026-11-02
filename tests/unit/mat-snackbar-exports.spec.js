@@ -14,14 +14,14 @@ describe('Snackbar 公共导出', () => {
     expect(toast).toBe(snackbar);
   });
 
-  it('createMatUi 全局注册 mat-snackbar', () => {
+  it('createMatUi 不再全局注册 mat-snackbar', () => {
     const target = document.createElement('div');
     const plugin = createMatUi({ theme: { target } });
     const app = createApp({});
 
     app.use(plugin);
 
-    expect(app.component('mat-snackbar')).toBe(MatSnackbar);
+    expect(app.component('mat-snackbar')).toBeUndefined();
     plugin.theme.dispose();
   });
 });

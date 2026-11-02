@@ -10,7 +10,7 @@ import * as library from '../../src';
 import { createMatUi } from '../../src/plugin.js';
 
 describe('MatAppBar', () => {
-  it('从包根入口导出，并由 createMatUi 全局注册 App bar 与 Search 名称', () => {
+  it('从包根入口导出 App bar 与 Search，且 createMatUi 不注册组件', () => {
     expect(library.MatAppBar).toBe(MatAppBar);
     expect(library.MatSearch).toBe(MatSearch);
     expect(Object.hasOwn(library, 'MatAppBarSearch')).toBe(false);
@@ -18,10 +18,10 @@ describe('MatAppBar', () => {
     const app = createApp({ render: () => null });
 
     app.use(createMatUi());
-    expect(app.component('MatAppBar')).toBe(MatAppBar);
-    expect(app.component('mat-app-bar')).toBe(MatAppBar);
-    expect(app.component('MatSearch')).toBe(MatSearch);
-    expect(app.component('mat-search')).toBe(MatSearch);
+    expect(app.component('MatAppBar')).toBeUndefined();
+    expect(app.component('mat-app-bar')).toBeUndefined();
+    expect(app.component('MatSearch')).toBeUndefined();
+    expect(app.component('mat-search')).toBeUndefined();
     expect(app.component('MatAppBarSearch')).toBeUndefined();
     expect(app.component('mat-app-bar-search')).toBeUndefined();
   });

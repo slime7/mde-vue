@@ -25,7 +25,7 @@
 | [0017](0017-tooltip-delay-groups.md) | superseded | 使用应用配置与显式容器协调 Tooltip 延迟（配置落点已由 0023 替代，延迟策略已由 0031/0032 相继替代） |
 | [0018](0018-distribute-prebuilt-esm-from-private-git.md) | superseded | 通过私有 Git 分发预构建 ESM |
 | [0019](0019-minimize-esm-distribution-files.md) | superseded | 将 ESM 分发压缩为三个文件 |
-| [0020](0020-tailwind-css.md) | active | 恢复 tailwind.css 独立分发入口 |
+| [0020](0020-tailwind-css.md) | superseded | 恢复 tailwind.css 独立分发入口 |
 | [0021](0021-app-root-layout-context.md) | superseded | 采用 AppRoot 应用布局上下文 |
 | [0022](0022-rename-project-to-mde-vue.md) | active | 项目更名为 mde-vue |
 | [0023](0023-mat-ui-component-defaults.md) | active | createMatUi 组件默认属性 defaults 配置 |
@@ -46,6 +46,7 @@
 | [0039](0039-ripple-coverage-matches-state-layer.md) | active | 涟漪覆盖范围与组件状态层对齐 |
 | [0040](0040-app-bar-opt-in-scroll-timeline.md) | active | App bar 滚动时间线改为显式启用 |
 | [0041](0041-app-bar-threshold-collapse-fallback.md) | active | App bar 关闭时间线时提供阈值折叠回退 |
+| [0042](0042-runtime-plugin-and-vite-auto-import.md) | active | 运行时插件与 Vite 自动导入插件分离 |
 
 ## 何时创建 ADR
 

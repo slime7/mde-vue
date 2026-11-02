@@ -90,6 +90,8 @@ import {
   useMatViewTransition,
   useMdeViewTransition,
 } from 'mde-vue';
+import COMPONENT_MANIFEST from '../../src/component-manifest';
+import COMPONENT_ALIASES from '../../src/component-aliases';
 
 const globalComponents = [
   ['MatAppRoot', 'mat-app-root', RootMatAppRoot],
@@ -167,7 +169,7 @@ describe('公共组件导出', () => {
     expect(RootMdeVirtualScroll).toBe(RootMatVirtualScroll);
     expect(useMdeViewTransition).toBe(useMatViewTransition);
   });
-  it('从根入口导出涟漪指令并全局注册', () => {
+  it('从根入口导出涟漪指令', () => {
     expect(RootRipple).toBeTruthy();
   });
   it('从根入口导出应用布局组件与组合函数', () => {
@@ -220,89 +222,56 @@ describe('公共组件导出', () => {
     vi.useRealTimers();
   });
 
-  it('createMatUi 全局注册选择控件组件族', () => {
+  it('createMatUi 安装主题、上下文和指令，但不注册组件', () => {
     const target = document.createElement('div');
     const plugin = createMatUi({
       theme: { target },
     });
-    // eslint-disable-next-line vue/one-component-per-file -- 此根组件仅用于隔离全局注册表。
     const app = createApp({});
 
     app.use(plugin);
 
-    expect(app.component('mat-checkbox')).toBe(RootMatCheckbox);
-    expect(app.component('mat-radio')).toBe(RootMatRadio);
-    expect(app.component('mat-radio-group')).toBe(RootMatRadioGroup);
-    expect(app.component('mat-switch')).toBe(RootMatSwitch);
-    expect(app.component('mat-slider')).toBe(RootMatSlider);
-    expect(app.component('mat-range-slider')).toBe(RootMatRangeSlider);
-    expect(app.component('mat-text-field')).toBe(RootMatTextField);
-    expect(app.component('mat-select')).toBe(RootMatSelect);
-    expect(app.component('mat-textarea')).toBe(RootMatTextarea);
-    expect(app.component('mat-text')).toBe(RootMatText);
-    expect(app.component('mat-dynamic-text')).toBe(RootMatDynamicText);
-    expect(app.component('mat-input-base')).toBe(RootMatInputBase);
-    expect(app.component('mat-menu')).toBe(RootMatMenu);
-    expect(app.component('mat-menu-group')).toBe(RootMatMenuGroup);
-    expect(app.component('mat-menu-item')).toBe(RootMatMenuItem);
-    expect(app.component('mat-docked-container')).toBe(RootMatDockedContainer);
-    expect(app.component('mat-dialog')).toBe(RootMatDialog);
-    expect(app.component('mat-bottom-sheet')).toBe(RootMatBottomSheet);
-    expect(app.component('mat-side-sheet')).toBe(RootMatSideSheet);
-    expect(app.component('mat-hover')).toBe(RootMatHover);
-    expect(app.component('mat-container')).toBe(RootMatContainer);
+    expect(app.component('mat-btn')).toBeUndefined();
+    expect(app.component('MatBtn')).toBeUndefined();
+    expect(app.component('mat-checkbox')).toBeUndefined();
     expect(app.directive('intersection')).toBe(RootIntersection);
     expect(app.directive('state-layer')).toBe(RootStateLayer);
     expect(app.directive('ripple')).toBe(RootRipple);
-    expect(app.component('mat-spacer')).toBe(RootMatSpacer);
-    expect(app.component('mat-loading')).toBe(RootMatLoading);
-    expect(app.component('mat-progress')).toBe(RootMatProgress);
-    expect(app.component('mat-tooltip')).toBe(RootMatTooltip);
-    expect(app.component('mat-chat-minimap')).toBe(RootMatChatMinimap);
-    expect(app.component('mat-scroll-area')).toBe(RootMatScrollArea);
-    expect(app.component('mat-toolbar')).toBe(RootMatToolbar);
-    expect(app.component('mat-panes')).toBe(RootMatPanes);
-    expect(app.component('mat-pane')).toBe(RootMatPane);
-    expect(app.component('mat-navigation-rail')).toBe(RootMatNavigationRail);
-    expect(app.component('mat-navigation-rail-item')).toBe(RootMatNavigationRailItem);
-    expect(app.component('mat-navigation-drawer')).toBe(RootMatNavigationDrawer);
-    expect(app.component('mat-navigation-group')).toBe(RootMatNavigationGroup);
-    expect(app.component('mat-fab')).toBe(RootMatFab);
-    expect(app.component('mat-fab-menu')).toBe(RootMatFabMenu);
-    expect(app.component('mat-icon')).toBe(RootMatIcon);
-    expect(app.component('mat-image')).toBe(RootMatImage);
-    expect(app.component('mat-avatar')).toBe(RootMatAvatar);
-    expect(app.component('mat-shape')).toBe(RootMatShape);
-    expect(app.component('mat-icon-btn')).toBeUndefined();
 
     plugin.theme.dispose();
   });
 
-  it('createMatUi 为每个组件注册 PascalCase 与 kebab-case 别名', () => {
-    const target = document.createElement('div');
-    const plugin = createMatUi({
-      theme: { target },
+  it('组件元数据覆盖所有公共组件、标签和别名', () => {
+    const manifestByName = new Map(COMPONENT_MANIFEST.map((entry) => [entry.name, entry]));
+    const entrySource = readFileSync('src/index.js', 'utf8');
+    const canonical = new Map();
+
+    [...entrySource.matchAll(/export \{ default as (\w+) \} from '([^']+\.vue)'/g)]
+      .forEach(([, name, componentPath]) => {
+        if (!canonical.has(componentPath)) {
+          canonical.set(componentPath, name);
+        }
+      });
+
+    expect(COMPONENT_MANIFEST.map((entry) => entry.name).sort())
+      .toEqual([...canonical.values()].sort());
+
+    COMPONENT_MANIFEST.forEach((entry) => {
+      expect(entry.tag).toBe(entry.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase());
+      expect(entry.aliases).toEqual(COMPONENT_ALIASES[entry.name] ?? []);
     });
-    // eslint-disable-next-line vue/one-component-per-file -- 此根组件仅用于隔离全局注册表。
-    const app = createApp({});
 
-    app.use(plugin);
-
-    globalComponents.forEach(([pascalName, kebabName, component, aliasNames]) => {
-      expect(app.component(pascalName)).toBe(component);
-      expect(app.component(kebabName)).toBe(component);
-
-      if (aliasNames) {
-        aliasNames.forEach((aliasName) => {
-          expect(app.component(aliasName)).toBe(component);
-        });
+    globalComponents.forEach(([pascalName, kebabName, , aliasNames]) => {
+      if (pascalName.startsWith('Mde')) {
+        return;
       }
-    });
 
-    plugin.theme.dispose();
+      expect(manifestByName.get(pascalName)?.tag).toBe(kebabName);
+      expect(manifestByName.get(pascalName)?.aliases).toEqual(aliasNames ?? []);
+    });
   });
 
-  it('包入口提供与全局注册同步的 Vue 类型声明', () => {
+  it('包入口类型声明包含组件类型且不再声明全局组件', () => {
     const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
     const declarationPath = 'dist/index.d.ts';
 
@@ -312,17 +281,10 @@ describe('公共组件导出', () => {
 
     const declaration = readFileSync(declarationPath, 'utf8');
 
-    globalComponents.forEach(([pascalName, kebabName, , aliasNames]) => {
-      expect(declaration).toContain(`  ${pascalName}: typeof ${pascalName};`);
-      expect(declaration).toContain(`  '${kebabName}': typeof ${pascalName};`);
-
-      if (aliasNames) {
-        aliasNames.forEach((aliasName) => {
-          const propertyName = /^[A-Za-z_$][\w$]*$/.test(aliasName) ? aliasName : `'${aliasName}'`;
-          expect(declaration).toContain(`  ${propertyName}: typeof ${pascalName};`);
-        });
-      }
+    COMPONENT_MANIFEST.forEach(({ name }) => {
+      expect(declaration).toContain(`export declare const ${name}: ${name}Component;`);
     });
+    expect(declaration).not.toContain('GlobalComponents');
     expect(declaration).toContain('export interface MatAppLayout');
     expect(declaration).toContain('export interface MatAppEdgeRegistration');
     expect(declaration).toContain('export declare function useMatApp(): MatAppContext;');
@@ -351,11 +313,21 @@ describe('公共组件导出', () => {
     const javascriptFiles = readdirSync('dist', { recursive: true })
       .filter((file) => file.endsWith('.js'));
 
-    expect(Object.keys(packageJson.exports)).toEqual(['.', './styles.css', './tailwind.css']);
+    expect(Object.keys(packageJson.exports)).toEqual(['.', './vite', './styles.css', './tailwind.css']);
     expect(packageJson.exports['.'].default).toBe(packageJson.exports['.'].import);
-    expect(readdirSync('dist').sort()).toEqual(['index.d.ts', 'mde-vue.js', 'styles.css', 'tailwind.css']);
-    expect(javascriptFiles).toEqual(['mde-vue.js']);
-    expect(readFileSync('dist/mde-vue.js', 'utf8')).not.toMatch(/\.vue(?:['"]|\?)/);
+    expect(packageJson.exports['./vite'].default).toBe(packageJson.exports['./vite'].import);
+    expect(packageJson.sideEffects).toEqual(['**/*.css']);
+    expect(readdirSync('dist').sort()).toEqual([
+      'index.d.ts',
+      'mde-vue.js',
+      'styles.css',
+      'tailwind.css',
+      'vite.d.ts',
+      'vite.js',
+    ]);
+    expect(javascriptFiles.sort()).toEqual(['mde-vue.js', 'vite.js']);
+    expect(readFileSync('dist/mde-vue.js', 'utf8')).not.toMatch(/from\s+['"][^'"]+\.vue['"]/);
+    expect(readFileSync('dist/vite.js', 'utf8')).not.toMatch(/from\s+['"][^'"]+\.vue['"]/);
   });
 
   it('从唯一根入口导出命令式函数', () => {

@@ -12,6 +12,7 @@ import {
   buildPlaygroundAssets,
   syncPlaygroundExamples,
 } from '../../../scripts/build-playground-assets.mjs';
+import { mdeVue } from '../../../src/vite';
 /* eslint-enable import-x/extensions */
 
 const googleFontsApiUrl = 'https://fonts.googleapis.com/css2';
@@ -370,6 +371,7 @@ export default defineConfig({
   },
   vite: {
     plugins: [
+      mdeVue(),
       createVitePressStylesLayerPlugin(),
       tailwindcss(),
       createLlmsArtifactsPlugin(),

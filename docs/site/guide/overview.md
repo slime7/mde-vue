@@ -33,6 +33,6 @@ import {
 import 'mde-vue/styles.css';
 ```
 
-唯一根入口提供 `createMatUi()`、`useMatTheme()`、`useMatUi()`、全部组件、指令和命令式函数的具名导出。构建工具仍可对未使用的具名导出执行 tree shaking。
+唯一运行时根入口提供 `createMatUi()`、`useMatTheme()`、`useMatUi()`、全部组件、指令和命令式函数的具名导出；构建期自动导入插件由 `mde-vue/vite` 提供。构建工具仍可对未使用的具名导出执行 tree shaking。
 
-需要动态主题或多个组件时，推荐安装 `createMatUi()` 并使用全局 `mat-*` 标签。仅使用少量组件且接受默认主题时，从同一根入口具名导入并局部注册。两种方式的完整代码见[安装](/guide/installation)，插件的组件设置见 [`createMatUi`](/guide/create-mat-ui)。
+需要动态主题、组件设置或公共指令时，安装 `createMatUi()`；组件使用 `mde-vue/vite` 自动导入，或从同一根入口具名导入。仅使用少量组件且不需要插件时，只导入组件和 `mde-vue/styles.css`。完整代码见[安装](/guide/installation)，插件的组件设置见 [`createMatUi`](/guide/create-mat-ui)。

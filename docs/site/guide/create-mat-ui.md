@@ -1,13 +1,15 @@
 ---
 title: createMatUi
-description: 配置 mde-vue 的全局组件注册、组件默认属性、交互指针、图标 class 和主题控制器。
+description: 配置 mde-vue 的组件默认属性、交互指针、图标 class、公共指令和主题控制器。
 llms: true
 order: 25
 ---
 
 # createMatUi
 
-`createMatUi(options)` 创建供 Vue 应用安装的 mde-vue 插件。插件会全局注册所有 `mat-*` 组件、创建主题控制器，并把组件设置与主题上下文提供给应用后代。
+`createMatUi(options)` 创建供 Vue 应用安装的运行时插件。插件创建主题控制器，把组件设置与主题上下文提供给应用后代，并安装 `v-intersection`、`v-state-layer` 与 `v-ripple` 指令；它不全局注册组件。
+
+组件由 `mde-vue/vite` 按模板实际使用情况自动导入，或由使用方从根入口手动导入。自动导入插件只处理静态 HTML 模板标签；动态组件和渲染函数仍需手动导入。
 
 插件安装时还会把当前主题和组件设置提供给随后创建的 `dialog()`、`alert()`、`confirm()`、`prompt()`、`snackbar()` 与 `toast()`。同一页面安装多个 Vue 应用时，命令式 Dialog 和 Snackbar 使用最后安装的插件配置；未安装插件时使用默认图标 class、指针设置和基础主题令牌。
 
@@ -35,6 +37,24 @@ const matUi = createMatUi({
 
 createApp(App).use(matUi).mount('#app');
 ```
+
+示例中的组件标签假定已通过 [`mde-vue/vite`](/guide/installation) 自动导入或从根入口手动导入。
+
+## 组件导入
+
+`createMatUi()` 不注册组件。Vite 项目推荐在 `vite.config.js` 中加入 `mdeVue()`，由它自动导入模板中使用的 `mat-*`、`Mat*` 与 `mde-*` 组件：
+
+```js
+// vite.config.js
+import vue from '@vitejs/plugin-vue';
+import { mdeVue } from 'mde-vue/vite';
+
+export default {
+  plugins: [vue(), mdeVue()],
+};
+```
+
+不使用自动导入时，从根入口具名导入实际使用的组件。公共指令已由本插件安装，不需要重复导入。
 
 所有选项都可以省略。传给 `createMatUi()` 的值必须是对象，`useCursor` 必须是 `boolean`，`useRipple` 必须是 `boolean` 或对象，`iconClass` 必须是 `string`，`defaults` 必须是对象且每个组件条目必须是对象，否则会抛出 `TypeError`。`useRipple` 对象的 `variant` 必须是 `circle`、`dots`、`glow`、`rings` 或 `burst` 之一。`defaults` 的组件键必须是现有公共组件，属性键必须是该组件可配置的 prop（v-model 属性除外），否则也会抛出 `TypeError`。Tooltip 延迟必须是非负有限数字，非法数值会抛出 `RangeError`。
 

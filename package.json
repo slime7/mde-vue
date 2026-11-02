@@ -10,6 +10,9 @@
   "homepage": "https://slime7.github.io/mde-vue/",
   "private": true,
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "types": "./dist/index.d.ts",
   "packageManager": "pnpm@10.28.0",
   "engines": {
@@ -28,6 +31,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/mde-vue.js",
       "default": "./dist/mde-vue.js"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "import": "./dist/vite.js",
+      "default": "./dist/vite.js"
     },
     "./styles.css": "./dist/styles.css",
     "./tailwind.css": "./dist/tailwind.css"
@@ -63,10 +71,14 @@
   },
   "peerDependencies": {
     "tailwindcss": "^4.0.0",
+    "vite": ">=5.0.0",
     "vue": "^3.5.0"
   },
   "peerDependenciesMeta": {
     "tailwindcss": {
+      "optional": true
+    },
+    "vite": {
       "optional": true
     }
   },

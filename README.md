@@ -2,7 +2,7 @@
 
 `mde-vue` 是一个基于 Vue 3 和原生 CSS 构建的 Material 3 Expressive 个人组件库，主要面向 Electron 等拥有现代化 Chromium/浏览器内核的客户端应用。本项目由个人主导、AI（Coding Agent）重度参与设计、实现与维护。
 
-组件库直接利用现代 Web API 与 CSS 前沿特性（如现代 CSS 动画、`clip-path: shape()`、Scroll Timeline、View Transitions 等），不提供旧浏览器兼容层与 SSR 兼容包袱。通过单一核心 ESM 分发，提供完整的 Material 3 基础组件、Material 2025 动态主题系统、Tailwind CSS v4 语义令牌适配，以及面向 AI 的 `llms.txt` 和 `llms-full.txt` 机器可读文档。
+组件库直接利用现代 Web API 与 CSS 前沿特性（如现代 CSS 动画、`clip-path: shape()`、Scroll Timeline、View Transitions 等），不提供旧浏览器兼容层与 SSR 兼容包袱。通过运行时 ESM 和 Vite 自动导入插件分发，提供完整的 Material 3 基础组件、Material 2025 动态主题系统、Tailwind CSS v4 语义令牌适配，以及面向 AI 的 `llms.txt` 和 `llms-full.txt` 机器可读文档。
 
 - 📖 **在线文档**：[https://slime7.github.io/mde-vue/](https://slime7.github.io/mde-vue/)
 - 🤖 **AI 文档索引**：[llms.txt](llms.txt) / [llms-full.txt](llms-full.txt)
@@ -40,9 +40,21 @@ pnpm add "mde-vue@git+ssh://git@github.com/slime7/mde-vue.git#<commit-or-tag>"
 
 ## 快速上手
 
-在应用入口注册 `createMatUi` 插件并引入核心样式：
+Vite 项目推荐使用 `mde-vue/vite` 自动导入模板中实际使用的组件，并在应用入口安装运行时插件 `createMatUi`：
 
 ```js
+// vite.config.js
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import { mdeVue } from 'mde-vue/vite';
+
+export default defineConfig({
+  plugins: [vue(), mdeVue()],
+});
+```
+
+```js
+// src/main.js
 import { createApp } from 'vue';
 import { createMatUi } from 'mde-vue';
 import 'mde-vue/styles.css';
@@ -57,7 +69,7 @@ createApp(App)
   .mount('#app');
 ```
 
-在模板中使用组件（支持 `mat-*` 和 `Mat*` 两种命名风格）：
+`createMatUi()` 只安装主题、组件设置和 `v-intersection`、`v-state-layer`、`v-ripple` 指令，不注册组件。模板中的 `mat-*`、`Mat*` 与 `mde-*` 标签由 `mdeVue()` 自动导入；不使用自动导入时，从 `mde-vue` 根入口具名导入组件。
 
 ```vue
 <template>

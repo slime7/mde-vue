@@ -10,14 +10,14 @@ describe('Toolbar 公共导出', () => {
     expect(MatToolbar).toBeTypeOf('object');
   });
 
-  it('createMatUi 全局注册 mat-toolbar', () => {
+  it('createMatUi 不再全局注册 mat-toolbar', () => {
     const target = document.createElement('div');
     const plugin = createMatUi({ theme: { target } });
     const app = createApp({});
 
     app.use(plugin);
 
-    expect(app.component('mat-toolbar')).toBe(MatToolbar);
+    expect(app.component('mat-toolbar')).toBeUndefined();
     plugin.theme.dispose();
   });
 });

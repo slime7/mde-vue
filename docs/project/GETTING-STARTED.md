@@ -50,7 +50,7 @@ pnpm docs:dev
 | `pnpm e2e:install` | 安装端到端测试所需的 Chromium 浏览器 |
 | `pnpm types:build` | 根据公共组件 JSDoc 生成 `src/index.d.ts` |
 | `pnpm types:check` | 检查 `src/index.d.ts` 是否与公共组件 JSDoc 同步 |
-| `pnpm build` | 生成单一 ESM、基础与组件 CSS、Tailwind CSS 映射和根入口类型声明四个分发文件 |
+| `pnpm build` | 生成运行时 ESM、Vite 自动导入插件、基础与组件 CSS、Tailwind CSS 映射和入口类型声明六个分发文件 |
 | `pnpm build:check` | 重新生成完整分发产物，用于检查公开入口可构建性 |
 | `pnpm docs:llms` | 从带标记的 Markdown 生成 AI 文档 |
 | `pnpm docs:check` | 检查 `llms.txt` 和 `llms-full.txt` 是否与 Markdown 来源一致 |
@@ -141,14 +141,14 @@ pnpm docs:dev
 
 1. 先添加能覆盖绑定值、修饰符、观察器生命周期和不支持环境的测试，并确认测试按预期失败。
 2. 在 `src/directives/<directive>/` 中维护指令实现并同步唯一根入口。
-3. 同步插件全局注册和根入口导入文档。
+3. 同步组件自动导入、运行时插件和根入口导入文档。
 4. 在 `docs/site/` 中补充带实时预览的指令使用页面，随后重新生成 AI 文档。
 
 ### 编写组件文档
 
 每个公共组件在 `docs/site/components/` 中对应一个纳入 AI 文档的 Markdown 页面。页面必须依次提供组件简介、示例、API、事件和 Slots。介绍需同时写明 `mat-*` 模板标签和 PascalCase 组件导出名，方便使用者从根入口选择正确名称。
 
-全局注册与按需导入的完整写法统一在安装文档中维护，不在每个组件页面重复。安装文档中的入口必须与包 `exports` 一致，并分别展示 `mat-*` 标签与局部导入组件名。
+组件自动导入与手动导入的完整写法统一在安装文档中维护，不在每个组件页面重复。安装文档中的入口必须与包 `exports` 一致，并分别展示 `mat-*` 标签与局部导入组件名。
 
 各章节按以下规则记录：
 
@@ -192,7 +192,7 @@ pnpm docs:dev
 import 'mde-vue/styles.css';
 ```
 
-Tailwind CSS v4 项目需按使用文档预先声明 `tailwind-theme`、`tailwind-reset`、`mde`、`tailwind-utilities`、`mde-final`，再分别导入 Tailwind 各部分、`mde-vue/styles.css` 与 `mde-vue/tailwind.css`。消费方只会加载 `dist/` 中的 ESM 和 CSS，不会编译组件库的 Vue SFC。修改源码或公开入口后运行 `pnpm build`，确认 `dist/` 包含这四个文件且 ESM 不含 `.vue` 导入，并将产物与源码一同提交。
+Tailwind CSS v4 项目需按使用文档预先声明 `tailwind-theme`、`tailwind-reset`、`mde`、`tailwind-utilities`、`mde-final`，再分别导入 Tailwind 各部分、`mde-vue/styles.css` 与 `mde-vue/tailwind.css`。消费方只会加载 `dist/` 中的 ESM、Vite 插件和 CSS，不会编译组件库的 Vue SFC。修改源码或公开入口后运行 `pnpm build`，确认 `dist/` 包含六个文件且运行时 ESM 不含 `.vue` 导入，并将产物与源码一同提交。
 
 ## 常见问题
 

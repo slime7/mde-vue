@@ -31,7 +31,7 @@ function barItems() {
 }
 
 describe('MatNavigationBar 底部导航栏', () => {
-  it('从包根入口导出，并由 createMatUi 全局注册', () => {
+  it('从包根入口导出，且 createMatUi 不注册组件', () => {
     expect(library.MatNavigationBar).toBe(MatNavigationBar);
     expect(library.MatNavigationBarItem).toBe(MatNavigationBarItem);
     expect(library.MatNavigationItem).toBe(MatNavigationItem);
@@ -43,12 +43,7 @@ describe('MatNavigationBar 底部导航栏', () => {
     };
     createMatUi().install(app);
 
-    expect(app.component).toHaveBeenCalledWith('MatNavigationBar', MatNavigationBar);
-    expect(app.component).toHaveBeenCalledWith('mat-navigation-bar', MatNavigationBar);
-    expect(app.component).toHaveBeenCalledWith('MatNavigationBarItem', MatNavigationBarItem);
-    expect(app.component).toHaveBeenCalledWith('mat-navigation-bar-item', MatNavigationBarItem);
-    expect(app.component).toHaveBeenCalledWith('MatNavigationItem', MatNavigationItem);
-    expect(app.component).toHaveBeenCalledWith('mat-navigation-item', MatNavigationItem);
+    expect(app.component).not.toHaveBeenCalled();
   });
 
   it('根元素使用 MatAside 渲染 nav 标签且停靠在 bottom 边缘', () => {

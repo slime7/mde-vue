@@ -6,6 +6,7 @@ import COMPONENT_ALIASES from '../src/component-aliases.js';
 const ROOT = path.resolve(import.meta.dirname, '..');
 const ENTRY = path.join(ROOT, 'src/index.js');
 const OUTPUT = path.join(ROOT, 'src/index.d.ts');
+const MANIFEST_OUTPUT = path.join(ROOT, 'src/component-manifest.js');
 
 function extractCall(source, marker) {
   const markerIndex = source.indexOf(marker);
@@ -445,6 +446,27 @@ function componentTag(name) {
   return name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
+function formatManifest(entries) {
+  const output = [
+    '/* eslint-disable */',
+    '// 此文件由 scripts/build-types.mjs 生成，禁止直接编辑。',
+    'export default [',
+  ];
+
+  entries.forEach((entry) => {
+    output.push('  {');
+    output.push(`    name: ${JSON.stringify(entry.name)},`);
+    output.push(`    tag: ${JSON.stringify(entry.tag)},`);
+    output.push(`    aliases: ${JSON.stringify(entry.aliases)},`);
+    output.push(`    defaults: ${JSON.stringify(entry.defaults)},`);
+    output.push('  },');
+  });
+
+  output.push('];', '');
+
+  return output.join('\n');
+}
+
 function generate() {
   const entrySource = fs.readFileSync(ENTRY, 'utf8');
   const components = [...entrySource.matchAll(/export \{ default as (\w+) \} from '([^']+\.vue)'/g)]
@@ -455,6 +477,8 @@ function generate() {
     "import type { DefineComponent } from 'vue';",
     '',
   ];
+  const manifestEntries = [];
+  const manifestPaths = new Set();
 
   for (const component of components) {
     const absolutePath = path.join(ROOT, component.path);
@@ -468,6 +492,22 @@ function generate() {
     const propsName = `${component.name}Props`;
     const emitsName = `${component.name}Emits`;
     const exposedName = `${component.name}Exposed`;
+
+    if (!manifestPaths.has(component.path)) {
+      manifestPaths.add(component.path);
+      const modelProps = new Set(
+        events
+          .filter((event) => event.name.startsWith('update:'))
+          .map((event) => event.name.slice('update:'.length)),
+      );
+
+      manifestEntries.push({
+        name: component.name,
+        tag: componentTag(component.name),
+        aliases: COMPONENT_ALIASES[component.name] ?? [],
+        defaults: props.map((prop) => prop.name).filter((name) => !modelProps.has(name)),
+      });
+    }
 
     output.push(`export interface ${propsName} {`);
     for (const prop of props) {
@@ -669,32 +709,31 @@ function generate() {
     'export declare function extractColorFromImage(image: HTMLImageElement | HTMLCanvasElement | ImageData | ImageBitmap | Blob | File | string | Uint8ClampedArray | Uint8Array): Promise<string>;',
     '',
   );
-  output.push("declare module 'vue' {");
-  output.push('  export interface GlobalComponents {');
-  for (const component of components) {
-    output.push(`    ${component.name}: typeof ${component.name};`);
-    output.push(`    '${componentTag(component.name)}': typeof ${component.name};`);
 
-    (COMPONENT_ALIASES[component.name] ?? []).forEach((alias) => {
-      const propertyName = /^[A-Za-z_$][\w$]*$/.test(alias) ? alias : `'${alias}'`;
-      output.push(`    ${propertyName}: typeof ${component.name};`);
-    });
-  }
-  output.push('  }', '}', '');
-
-  return output.join('\n');
+  return {
+    declaration: output.join('\n'),
+    manifest: formatManifest(manifestEntries),
+  };
 }
 
 const generated = generate();
 const checkOnly = process.argv.includes('--check');
+const outputs = [
+  [OUTPUT, generated.declaration, '类型声明文件已过期，请运行 pnpm types:build。'],
+  [MANIFEST_OUTPUT, generated.manifest, '组件元数据文件已过期，请运行 pnpm types:build。'],
+];
 
 if (checkOnly) {
-  const current = fs.existsSync(OUTPUT) ? fs.readFileSync(OUTPUT, 'utf8') : '';
+  outputs.forEach(([outputPath, content, message]) => {
+    const current = fs.existsSync(outputPath) ? fs.readFileSync(outputPath, 'utf8') : '';
 
-  if (current !== generated) {
-    console.error('类型声明文件已过期，请运行 pnpm types:build。');
-    process.exitCode = 1;
-  }
+    if (current !== content) {
+      console.error(message);
+      process.exitCode = 1;
+    }
+  });
 } else {
-  fs.writeFileSync(OUTPUT, generated, 'utf8');
+  outputs.forEach(([outputPath, content]) => {
+    fs.writeFileSync(outputPath, content, 'utf8');
+  });
 }

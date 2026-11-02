@@ -1,87 +1,5 @@
 import { inject } from 'vue';
-import MatAppRoot from './components/mat-app-root/MatAppRoot.vue';
-import MatAppBar from './components/mat-app-bar/MatAppBar.vue';
-import MatSearch from './components/mat-search/MatSearch.vue';
-import MatBtn from './components/mat-btn/MatBtn.vue';
-import MatBtnGroup from './components/mat-btn-group/MatBtnGroup.vue';
-import MatFab from './components/mat-fab/MatFab.vue';
-import MatFabMenu from './components/mat-fab-menu/MatFabMenu.vue';
-import MatIcon from './components/mat-icon/MatIcon.vue';
-import MatImage from './components/mat-image/MatImage.vue';
-import MatCarousel from './components/mat-carousel/MatCarousel.vue';
-import MatCarouselItem from './components/mat-carousel/MatCarouselItem.vue';
-import MatTabs from './components/mat-tabs/MatTabs.vue';
-import MatTabItem from './components/mat-tabs/MatTabItem.vue';
-import MatTabContent from './components/mat-tabs/MatTabContent.vue';
-import MatDatePicker from './components/mat-date-picker/MatDatePicker.vue';
-import MatTimePicker from './components/mat-time-picker/MatTimePicker.vue';
-import MatSharedElement from './components/mat-shared-element/MatSharedElement.vue';
-import MatAvatar from './components/mat-avatar/MatAvatar.vue';
-import MatShape from './components/mat-shape/MatShape.vue';
-import MatText from './components/mat-text/MatText.vue';
-import MatDynamicText from './components/mat-dynamic-text/MatDynamicText.vue';
-import MatChatMinimap from './components/mat-chat-minimap/MatChatMinimap.vue';
-import MatSplitBtn from './components/mat-split-btn/MatSplitBtn.vue';
-import MatCard from './components/mat-card/MatCard.vue';
-import MatCardActionArea from './components/mat-card/MatCardActionArea.vue';
-import MatCardContent from './components/mat-card/MatCardContent.vue';
-import MatCardActions from './components/mat-card/MatCardActions.vue';
-import MatCardHeadline from './components/mat-card/MatCardHeadline.vue';
-import MatCardSubhead from './components/mat-card/MatCardSubhead.vue';
-import MatCardMedia from './components/mat-card/MatCardMedia.vue';
-import MatExpansion from './components/mat-expansion/MatExpansion.vue';
-import MatSimpleExpansion from './components/mat-simple-expansion/MatSimpleExpansion.vue';
-import MatExpansionPanel from './components/mat-expansion/MatExpansionPanel.vue';
-import MatList from './components/mat-list/MatList.vue';
-import MatListGroup from './components/mat-list-group/MatListGroup.vue';
-import MatListItem from './components/mat-list/MatListItem.vue';
-import MatGridList from './components/mat-grid-list/MatGridList.vue';
-import MatDivider from './components/mat-divider/MatDivider.vue';
-import MatCheckbox from './components/mat-checkbox/MatCheckbox.vue';
-import MatBadge from './components/mat-badge/MatBadge.vue';
-import MatChip from './components/mat-chip/MatChip.vue';
-import MatChipSet from './components/mat-chip/MatChipSet.vue';
-import MatRadio from './components/mat-radio/MatRadio.vue';
-import MatRadioGroup from './components/mat-radio-group/MatRadioGroup.vue';
-import MatSwitch from './components/mat-switch/MatSwitch.vue';
-import MatSlider from './components/mat-slider/MatSlider.vue';
-import MatRangeSlider from './components/mat-range-slider/MatRangeSlider.vue';
-import MatTextField from './components/mat-text-field/MatTextField.vue';
-import MatSelect from './components/mat-select/MatSelect.vue';
-import MatTextarea from './components/mat-textarea/MatTextarea.vue';
-import MatInputBase from './components/MatInputBase.vue';
-import MatMenu from './components/mat-menu/MatMenu.vue';
-import MatMenuGroup from './components/mat-menu-group/MatMenuGroup.vue';
-import MatMenuItem from './components/mat-menu/MatMenuItem.vue';
-import MatDockedContainer from './components/mat-docked-container/MatDockedContainer.vue';
-import MatDialog from './components/mat-dialog/MatDialog.vue';
-import MatBottomSheet from './components/mat-bottom-sheet/MatBottomSheet.vue';
-import MatSideSheet from './components/mat-side-sheet/MatSideSheet.vue';
-import MatHover from './components/mat-hover/MatHover.vue';
-import MatContainer from './components/mat-container/MatContainer.vue';
-import MatLayout from './components/mat-layout/MatLayout.vue';
-import MatAside from './components/mat-aside/MatAside.vue';
-import MatSpacer from './components/mat-spacer/MatSpacer.vue';
-import MatTableWrapper from './components/mat-table-wrapper/MatTableWrapper.vue';
-import MatScrollArea from './components/mat-scroll-area/MatScrollArea.vue';
-import MatVirtualScroll from './components/mat-virtual-scroll/MatVirtualScroll.vue';
-import MatLoading from './components/mat-loading/MatLoading.vue';
-import MatPullToRefresh from './components/mat-pull-to-refresh/MatPullToRefresh.vue';
-import MatProgress from './components/mat-progress/MatProgress.vue';
-import MatTooltip from './components/mat-tooltip/MatTooltip.vue';
-import MatSnackbar from './components/mat-snackbar/MatSnackbar.vue';
-import MatNotification from './components/mat-notification/MatNotification.vue';
-import MatToolbar from './components/mat-toolbar/MatToolbar.vue';
-import MatPanes from './components/mat-panes/MatPanes.vue';
-import MatPane from './components/mat-panes/MatPane.vue';
-import MatNavigationRail from './components/mat-navigation-rail/MatNavigationRail.vue';
-import MatNavigationRailItem from './components/mat-navigation-rail/MatNavigationRailItem.vue';
-import MatNavigationBar from './components/mat-navigation-bar/MatNavigationBar.vue';
-import MatNavigationBarItem from './components/mat-navigation-bar/MatNavigationBarItem.vue';
-import MatNavigationItem from './components/mat-navigation-item/MatNavigationItem.vue';
-import MatNavigationDrawer from './components/mat-navigation-drawer/MatNavigationDrawer.vue';
-import MatNavigationGroup from './components/mat-navigation-group/MatNavigationGroup.vue';
-import COMPONENT_ALIASES from './component-aliases';
+import COMPONENT_MANIFEST from './component-manifest';
 import { setImperativeContext } from './imperative-context';
 import MAT_UI_KEY, {
   DEFAULT_MAT_UI_OPTIONS,
@@ -94,94 +12,19 @@ import { Intersection } from './directives/intersection';
 import { Ripple, RIPPLE_VARIANTS } from './directives/ripple';
 import { StateLayer } from './directives/state-layer';
 
-export const GLOBAL_COMPONENTS = [
-  ['MatAppRoot', 'mat-app-root', MatAppRoot],
-  ['MatAppBar', 'mat-app-bar', MatAppBar],
-  ['MatSearch', 'mat-search', MatSearch],
-  ['MatBtn', 'mat-btn', MatBtn],
-  ['MatBtnGroup', 'mat-btn-group', MatBtnGroup],
-  ['MatFab', 'mat-fab', MatFab],
-  ['MatFabMenu', 'mat-fab-menu', MatFabMenu],
-  ['MatIcon', 'mat-icon', MatIcon],
-  ['MatImage', 'mat-image', MatImage],
-  ['MatCarousel', 'mat-carousel', MatCarousel],
-  ['MatCarouselItem', 'mat-carousel-item', MatCarouselItem],
-  ['MatTabs', 'mat-tabs', MatTabs],
-  ['MatTabItem', 'mat-tab-item', MatTabItem],
-  ['MatTabContent', 'mat-tab-content', MatTabContent],
-  ['MatDatePicker', 'mat-date-picker', MatDatePicker],
-  ['MatTimePicker', 'mat-time-picker', MatTimePicker],
-  ['MatSharedElement', 'mat-shared-element', MatSharedElement],
-  ['MatAvatar', 'mat-avatar', MatAvatar],
-  ['MatShape', 'mat-shape', MatShape],
-  ['MatText', 'mat-text', MatText],
-  ['MatDynamicText', 'mat-dynamic-text', MatDynamicText],
-  ['MatChatMinimap', 'mat-chat-minimap', MatChatMinimap],
-  ['MatSplitBtn', 'mat-split-btn', MatSplitBtn],
-  ['MatCard', 'mat-card', MatCard],
-  ['MatCardActionArea', 'mat-card-action-area', MatCardActionArea],
-  ['MatCardContent', 'mat-card-content', MatCardContent],
-  ['MatCardActions', 'mat-card-actions', MatCardActions],
-  ['MatCardHeadline', 'mat-card-headline', MatCardHeadline],
-  ['MatCardSubhead', 'mat-card-subhead', MatCardSubhead],
-  ['MatCardMedia', 'mat-card-media', MatCardMedia],
-  ['MatSimpleExpansion', 'mat-simple-expansion', MatSimpleExpansion],
-  ['MatExpansion', 'mat-expansion', MatExpansion],
-  ['MatExpansionPanel', 'mat-expansion-panel', MatExpansionPanel],
-  ['MatList', 'mat-list', MatList],
-  ['MatListGroup', 'mat-list-group', MatListGroup],
-  ['MatListItem', 'mat-list-item', MatListItem],
-  ['MatGridList', 'mat-grid-list', MatGridList],
-  ['MatDivider', 'mat-divider', MatDivider],
-  ['MatCheckbox', 'mat-checkbox', MatCheckbox],
-  ['MatBadge', 'mat-badge', MatBadge],
-  ['MatChip', 'mat-chip', MatChip],
-  ['MatChipSet', 'mat-chip-set', MatChipSet],
-  ['MatRadio', 'mat-radio', MatRadio],
-  ['MatRadioGroup', 'mat-radio-group', MatRadioGroup],
-  ['MatSwitch', 'mat-switch', MatSwitch],
-  ['MatSlider', 'mat-slider', MatSlider],
-  ['MatRangeSlider', 'mat-range-slider', MatRangeSlider],
-  ['MatTextField', 'mat-text-field', MatTextField],
-  ['MatSelect', 'mat-select', MatSelect],
-  ['MatTextarea', 'mat-textarea', MatTextarea],
-  ['MatInputBase', 'mat-input-base', MatInputBase],
-  ['MatMenu', 'mat-menu', MatMenu],
-  ['MatMenuGroup', 'mat-menu-group', MatMenuGroup],
-  ['MatMenuItem', 'mat-menu-item', MatMenuItem],
-  ['MatDockedContainer', 'mat-docked-container', MatDockedContainer],
-  ['MatDialog', 'mat-dialog', MatDialog],
-  ['MatBottomSheet', 'mat-bottom-sheet', MatBottomSheet],
-  ['MatSideSheet', 'mat-side-sheet', MatSideSheet],
-  ['MatHover', 'mat-hover', MatHover],
-  ['MatContainer', 'mat-container', MatContainer],
-  ['MatLayout', 'mat-layout', MatLayout],
-  ['MatAside', 'mat-aside', MatAside],
-  ['MatSpacer', 'mat-spacer', MatSpacer],
-  ['MatTableWrapper', 'mat-table-wrapper', MatTableWrapper],
-  ['MatScrollArea', 'mat-scroll-area', MatScrollArea],
-  ['MatVirtualScroll', 'mat-virtual-scroll', MatVirtualScroll],
-  ['MatLoading', 'mat-loading', MatLoading],
-  ['MatPullToRefresh', 'mat-pull-to-refresh', MatPullToRefresh],
-  ['MatProgress', 'mat-progress', MatProgress],
-  ['MatTooltip', 'mat-tooltip', MatTooltip],
-  ['MatSnackbar', 'mat-snackbar', MatSnackbar],
-  ['MatNotification', 'mat-notification', MatNotification],
-  ['MatToolbar', 'mat-toolbar', MatToolbar],
-  ['MatPanes', 'mat-panes', MatPanes],
-  ['MatPane', 'mat-pane', MatPane],
-  ['MatNavigationRail', 'mat-navigation-rail', MatNavigationRail],
-  ['MatNavigationRailItem', 'mat-navigation-rail-item', MatNavigationRailItem],
-  ['MatNavigationBar', 'mat-navigation-bar', MatNavigationBar],
-  ['MatNavigationBarItem', 'mat-navigation-bar-item', MatNavigationBarItem],
-  ['MatNavigationItem', 'mat-navigation-item', MatNavigationItem],
-  ['MatNavigationDrawer', 'mat-navigation-drawer', MatNavigationDrawer],
-  ['MatNavigationGroup', 'mat-navigation-group', MatNavigationGroup],
-];
+let componentDefaultsRegistry;
 
-const COMPONENT_DEFAULTS_REGISTRY = new Map(
-  GLOBAL_COMPONENTS.map(([pascalName, , component]) => [matComponentKey(pascalName), component]),
-);
+// 惰性构造，避免顶层元数据引用阻断未使用组件的 tree shaking。
+function getComponentDefaultsRegistry() {
+  componentDefaultsRegistry ??= new Map(
+    COMPONENT_MANIFEST.map((entry) => [
+      matComponentKey(entry.name),
+      new Set(entry.defaults),
+    ]),
+  );
+
+  return componentDefaultsRegistry;
+}
 
 /**
  * @typedef {object} MatRippleOptions
@@ -306,24 +149,6 @@ function readTooltipDefaults(value) {
 }
 
 /**
- * 组件声明了对应 `update:<prop>` 事件时，该 prop 属于 v-model 绑定，不允许通过 defaults 配置。
- *
- * @param {import('vue').Component} component
- * @returns {Set<string>}
- */
-function getAllowedDefaultsKeys(component) {
-  const propNames = Object.keys(component.props ?? {});
-  const modelProps = new Set(
-    Object.keys(component.emits ?? {})
-      .filter((eventName) => eventName.startsWith('update:'))
-      .map((eventName) => eventName.slice('update:'.length)),
-  );
-  const allowed = new Set(propNames.filter((propName) => !modelProps.has(propName)));
-
-  return allowed;
-}
-
-/**
  * @param {MatUiOptions} options
  * @returns {Readonly<Record<string, Readonly<object>>>}
  */
@@ -345,9 +170,9 @@ function readDefaults(options) {
       return;
     }
 
-    const component = COMPONENT_DEFAULTS_REGISTRY.get(componentName);
+    const allowedKeys = getComponentDefaultsRegistry().get(componentName);
 
-    if (!component) {
+    if (!allowedKeys) {
       throw new TypeError(`createMatUi defaults 未知组件键 ${componentName}`);
     }
 
@@ -355,7 +180,6 @@ function readDefaults(options) {
       throw new TypeError(`createMatUi defaults.${componentName} 必须是对象`);
     }
 
-    const allowedKeys = getAllowedDefaultsKeys(component);
     const frozenDefaults = {};
 
     Object.entries(componentDefaults).forEach(([propName, propValue]) => {
@@ -373,7 +197,10 @@ function readDefaults(options) {
 }
 
 /**
- * 建立全局组件插件和对应主题控制器。
+ * 建立运行时插件、主题控制器和公共指令。
+ *
+ * 组件不在此处全局注册；使用方应本地导入组件，或使用 `mde-vue/vite`
+ * 自动导入模板中实际使用的组件。
  *
  * @param {MatUiOptions} [options]
  * @returns {import('vue').Plugin & { theme: import('./theme.js').MatThemeController }}
@@ -396,14 +223,6 @@ export function createMatUi(options = {}) {
   return {
     theme,
     install(app) {
-      GLOBAL_COMPONENTS.forEach(([pascalName, kebabName, component]) => {
-        app.component(pascalName, component);
-        app.component(kebabName, component);
-
-        (COMPONENT_ALIASES[pascalName] ?? []).forEach((aliasName) => {
-          app.component(aliasName, component);
-        });
-      });
       app.directive('intersection', Intersection);
       app.directive('state-layer', StateLayer);
       app.directive('ripple', Ripple);

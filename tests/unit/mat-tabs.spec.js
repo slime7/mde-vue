@@ -42,7 +42,7 @@ function panelElements(wrapper) {
 }
 
 describe('MatTabs 标签页', () => {
-  it('从包根入口导出，并由 createMatUi 全局注册', () => {
+  it('从包根入口导出，且 createMatUi 不注册组件', () => {
     expect(library.MatTabs).toBe(MatTabs);
     expect(library.MatTabItem).toBe(MatTabItem);
     expect(library.MatTabContent).toBe(MatTabContent);
@@ -54,12 +54,7 @@ describe('MatTabs 标签页', () => {
     };
     createMatUi().install(app);
 
-    expect(app.component).toHaveBeenCalledWith('MatTabs', MatTabs);
-    expect(app.component).toHaveBeenCalledWith('mat-tabs', MatTabs);
-    expect(app.component).toHaveBeenCalledWith('MatTabItem', MatTabItem);
-    expect(app.component).toHaveBeenCalledWith('mat-tab-item', MatTabItem);
-    expect(app.component).toHaveBeenCalledWith('MatTabContent', MatTabContent);
-    expect(app.component).toHaveBeenCalledWith('mat-tab-content', MatTabContent);
+    expect(app.component).not.toHaveBeenCalled();
   });
 
   it('把默认 Slot 中的 item 与 content 分别渲染为 tablist 与面板', () => {

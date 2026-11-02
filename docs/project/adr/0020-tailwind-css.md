@@ -1,6 +1,6 @@
 # 0020 — 恢复 tailwind.css 独立分发入口
 
-- 状态: active
+- 状态: superseded
 - 日期: 2026-07-31
 - 替代: 0019
 

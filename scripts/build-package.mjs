@@ -11,6 +11,10 @@ await build({
   configFile: resolve(projectRoot, 'vite.lib.config.js'),
 });
 
+await build({
+  configFile: resolve(projectRoot, 'vite.plugin.config.js'),
+});
+
 const [baseStyles, componentStyles] = await Promise.all([
   readFile(resolve(projectRoot, 'src/styles/index.css'), 'utf8'),
   readFile(resolve(distRoot, 'components.css'), 'utf8'),
@@ -20,5 +24,6 @@ await Promise.all([
   writeFile(resolve(distRoot, 'styles.css'), `${baseStyles.trimEnd()}\n\n${componentStyles}`),
   copyFile(resolve(projectRoot, 'src/styles/tailwind.css'), resolve(distRoot, 'tailwind.css')),
   copyFile(resolve(projectRoot, 'src/index.d.ts'), resolve(distRoot, 'index.d.ts')),
+  copyFile(resolve(projectRoot, 'src/vite.d.ts'), resolve(distRoot, 'vite.d.ts')),
   rm(resolve(distRoot, 'components.css')),
 ]);
