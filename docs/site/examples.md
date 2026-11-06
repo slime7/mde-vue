@@ -1,6 +1,6 @@
 ---
 title: 典型布局示例
-description: 用 mat-app-root 组合导航、表单与移动端外壳的三组典型页面布局，每个示例只保留最简单的交互，可直接作为新页面的骨架起点。
+description: 用 mat-app-root 组合导航、表单与移动端外壳的四组典型页面布局，每个示例只保留最简单的交互，可直接作为新页面的骨架起点。
 llms: true
 order: 130
 ---
@@ -28,6 +28,28 @@ order: 130
 <ClientOnly>
   <DocsPreview label="应用外壳布局预览" height="420px">
     <LayoutsAppShellExample />
+  </DocsPreview>
+</ClientOnly>
+
+## 工作台外壳：侧边导航栏 + 子菜单抽屉
+
+目的地带有二级结构时，可以让 Navigation rail 与 Navigation drawer 在起始侧依次停靠：导航栏常驻显示一级目的地，抽屉紧随其后，作为当前目的地的子菜单。点击导航栏中的目的地会切换子菜单内容并自动展开抽屉；导航栏顶部按钮负责开合抽屉，抽屉通过 `width` 固定为 280px。抽屉收起后，App bar 与正文的起始留白同步回流，导航栏保持原位。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/layouts/LayoutsRailDrawerExample.vue#template [template]
+
+<<< @/examples/layouts/LayoutsRailDrawerExample.vue#script [script]
+
+<<< @/examples/layouts/LayoutsRailDrawerExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="侧边导航栏与子菜单抽屉布局预览" height="420px">
+    <LayoutsRailDrawerExample />
   </DocsPreview>
 </ClientOnly>
 
@@ -78,5 +100,6 @@ order: 130
 <script setup>
 import LayoutsAppShellExample from './examples/layouts/LayoutsAppShellExample.vue';
 import LayoutsMobileHomeExample from './examples/layouts/LayoutsMobileHomeExample.vue';
+import LayoutsRailDrawerExample from './examples/layouts/LayoutsRailDrawerExample.vue';
 import LayoutsSettingsExample from './examples/layouts/LayoutsSettingsExample.vue';
 </script>
