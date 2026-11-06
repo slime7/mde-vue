@@ -17,7 +17,11 @@ import {
   registerAppRoot,
   unregisterAppRoot,
 } from './mat-app-root-context';
-import { createEdgeLayoutController, EDGE_NAMES } from '../layout/edge-layout';
+import {
+  createEdgeLayoutController,
+  EDGE_NAMES,
+  getEdgeMotionTiming,
+} from '../layout/edge-layout';
 import { MAT_EDGE_LAYOUT_KEY } from '../layout/edge-layout-context';
 import { useMatProps } from '../use-mat-props';
 
@@ -111,21 +115,6 @@ const rootClass = computed(() => ({
   'mat-app-root--fill-viewport': propsWithDefaults.fillViewport,
   'mat-app-root--scrollable': propsWithDefaults.scrollable,
 }));
-const rootStyle = computed(() => [
-  attrs.style,
-  {
-    '--mat-app-root-padding-top': `${layoutState.padding.top}px`,
-    '--mat-app-root-padding-bottom': `${layoutState.padding.bottom}px`,
-    '--mat-app-root-padding-left': `${layoutState.padding.left}px`,
-    '--mat-app-root-padding-right': `${layoutState.padding.right}px`,
-    '--mat-app-root-padding-start': `${layoutState.padding.start}px`,
-    '--mat-app-root-padding-end': `${layoutState.padding.end}px`,
-    '--mat-app-root-safe-area-top': `${safeAreaState.top}px`,
-    '--mat-app-root-safe-area-bottom': `${safeAreaState.bottom}px`,
-    '--mat-app-root-safe-area-start': `${safeAreaState.start}px`,
-    '--mat-app-root-safe-area-end': `${safeAreaState.end}px`,
-  },
-]);
 let mounted = false;
 let resizeObserver;
 let measureFrame;
@@ -212,6 +201,7 @@ function measureLayout() {
 
   Object.assign(layoutState.size, measured.size);
   Object.assign(layoutState.padding, measured.padding);
+  edgeLayout.completeMotion();
   Object.assign(layoutState.content, {
     width: Math.max(0, width - measured.padding.start - measured.padding.end),
     height: Math.max(0, height - measured.padding.top - measured.padding.bottom),
@@ -250,6 +240,24 @@ function scheduleMeasure() {
 }
 
 const edgeLayout = createEdgeLayoutController({ scheduleMeasure });
+
+const rootStyle = computed(() => [
+  attrs.style,
+  {
+    '--mat-app-root-padding-top': `${layoutState.padding.top}px`,
+    '--mat-app-root-padding-bottom': `${layoutState.padding.bottom}px`,
+    '--mat-app-root-padding-left': `${layoutState.padding.left}px`,
+    '--mat-app-root-padding-right': `${layoutState.padding.right}px`,
+    '--mat-app-root-padding-start': `${layoutState.padding.start}px`,
+    '--mat-app-root-padding-end': `${layoutState.padding.end}px`,
+    '--mat-app-root-safe-area-top': `${safeAreaState.top}px`,
+    '--mat-app-root-safe-area-bottom': `${safeAreaState.bottom}px`,
+    '--mat-app-root-safe-area-start': `${safeAreaState.start}px`,
+    '--mat-app-root-safe-area-end': `${safeAreaState.end}px`,
+    '--mat-edge-motion-block': getEdgeMotionTiming(edgeLayout.motion.block),
+    '--mat-edge-motion-inline': getEdgeMotionTiming(edgeLayout.motion.inline),
+  },
+]);
 
 /**
  * 注册占用应用布局边缘的元素。
@@ -312,6 +320,8 @@ provide(MAT_EDGE_LAYOUT_KEY, {
   publicContext,
   rootElement: internalContext.rootElement,
   contentElement: internalContext.contentElement,
+  motion: edgeLayout.motion,
+  markMotion: edgeLayout.markMotion,
 });
 
 function addViewportListeners() {
@@ -344,6 +354,7 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   mounted = false;
+  edgeLayout.dispose();
   edgeLayout.setResizeObserver(undefined);
   unregisterAppRoot(rootElement.value);
   resizeObserver?.disconnect();

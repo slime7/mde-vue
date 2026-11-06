@@ -108,7 +108,10 @@ describe('MatAside 边缘组件', () => {
 
     await wrapper.setProps({ open: true });
     await settle();
-    await vi.advanceTimersByTimeAsync(200);
+    await vi.advanceTimersByTimeAsync(399);
+    await settle();
+    expect(wrapper.emitted('opened')).toBeUndefined();
+    await vi.advanceTimersByTimeAsync(1);
     await settle();
     expect(wrapper.emitted('opened')).toBeTruthy();
     vi.useRealTimers();
@@ -188,6 +191,73 @@ describe('MatAside 边缘组件', () => {
     await settle();
 
     expect(capturedLayout.padding.start).toBe(200);
+    wrapper.unmount();
+  });
+
+  it('同向堆叠关闭外侧或内侧时按剩余厚度更新正文留白与后续 inset', async () => {
+    let capturedLayout;
+    const Reader = {
+      setup() {
+        capturedLayout = useLayout();
+        return () => h('div', 'content');
+      },
+    };
+    const Host = {
+      props: ['top', 'sub'],
+      setup(props) {
+        return () => h(MatLayout, null, {
+          default: () => [
+            h(MatAside, {
+              location: 'top',
+              blockSize: 44,
+              transition: false,
+              open: props.top,
+            }),
+            h(MatAside, {
+              location: 'top',
+              blockSize: 36,
+              transition: false,
+              open: props.sub,
+            }),
+            h(Reader),
+          ],
+        });
+      },
+    };
+
+    const wrapper = mount(Host, {
+      attachTo: document.body,
+      props: { top: true, sub: true },
+    });
+    await settle();
+
+    const [topAside, subAside] = wrapper.findAllComponents(MatAside);
+    const layoutElement = wrapper.element;
+    vi.spyOn(layoutElement, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 600, height: 600, right: 800, width: 800,
+    }));
+    vi.spyOn(topAside.element, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 44, height: 44, right: 800, width: 800,
+    }));
+    vi.spyOn(subAside.element, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 80, height: 36, top: 44, right: 800, width: 800,
+    }));
+
+    window.dispatchEvent(new Event('resize'));
+    await settle();
+
+    expect(capturedLayout.padding.top).toBe(80);
+    expect(subAside.vm.activeInsets.top).toBe(44);
+
+    await wrapper.setProps({ top: false });
+    await settle();
+    expect(capturedLayout.padding.top).toBe(36);
+    expect(subAside.vm.activeInsets.top).toBe(0);
+
+    await wrapper.setProps({ sub: false });
+    await settle();
+    expect(capturedLayout.padding.top).toBe(0);
+
     wrapper.unmount();
   });
 

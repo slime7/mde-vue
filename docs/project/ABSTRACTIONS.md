@@ -79,7 +79,7 @@ Tailwind CSS v4 使用方必须预先声明 `tailwind-theme`、`tailwind-reset`�
 - `--mat-sys-color-*`：Material 语义颜色及其 on-color。
 - `--mat-sys-typescale-*`、`--mat-sys-shape-*`、`--mat-sys-elevation-*`、`--mat-sys-motion-*`、`--mat-sys-state-*`、`--mat-sys-interaction-*`：跨组件共享的系统语义值。
 
-动效令牌同时提供旧版独立 duration/easing 与 Material 3 Expressive 复合值。`--mat-sys-motion-spring-{fast|default|slow}-spatial` 用于位置、尺寸、旋转和圆角等空间变化，`--mat-sys-motion-spring-{fast|default|slow}-effects` 用于颜色与透明度；复合值可直接用于 transition 或 animation。减少动态效果时，组件取消空间和无限动画并直接呈现静态可理解状态。
+动效令牌同时提供旧版独立 duration/easing 与 Material 3 Expressive 复合值。`--mat-sys-motion-spring-{fast|default|slow}-spatial` 用于位置、尺寸、旋转和圆角等空间变化，`--mat-sys-motion-spring-{fast|default|slow}-effects` 用于颜色与透明度；复合值可直接用于 transition 或 animation。边缘布局与 Aside 使用普通 emphasized 缓动，并按 block、inline 轴的 enter/exit 阶段同步正文 padding、同向堆叠偏移和 Aside 滑入滑出。减少动态效果时，组件取消空间和无限动画并直接呈现静态可理解状态。
 
 组件可以使用 `--mat-<component>-*` 等 CSS 自定义属性集中表达尺寸、颜色、形状、排版、描边、海拔和间距，但这些变量属于内部实现，不是公共定制入口，也不提供名称或行为兼容承诺。组件级定制通过已公开的 Vue props 完成。
 

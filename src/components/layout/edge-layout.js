@@ -1,8 +1,37 @@
-import { reactive, readonly } from 'vue';
+import { nextTick, reactive, readonly } from 'vue';
 
 export const EDGE_NAMES = Object.freeze([
   'top', 'bottom', 'left', 'right', 'start', 'end',
 ]);
+
+export const EDGE_MOTION_PHASES = Object.freeze({
+  idle: 'idle',
+  enter: 'enter',
+  exit: 'exit',
+  instant: 'instant',
+});
+
+export const EDGE_MOTION_TIMING = Object.freeze({
+  idle: 'var(--mat-sys-motion-duration-long2) var(--mat-sys-motion-easing-emphasized)',
+  enter: 'var(--mat-sys-motion-duration-medium4) var(--mat-sys-motion-easing-emphasized-decelerate)',
+  exit: 'var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate)',
+  instant: '0s',
+});
+
+export const EDGE_MOTION_DURATION = Object.freeze({
+  enter: 400,
+  exit: 200,
+});
+
+/**
+ * 读取边缘动效阶段对应的 transition 或 animation 时间值。
+ *
+ * @param {string} phase
+ * @returns {string}
+ */
+export function getEdgeMotionTiming(phase) {
+  return EDGE_MOTION_TIMING[phase] ?? EDGE_MOTION_TIMING.idle;
+}
 
 function readExtent(rect, axis) {
   const direct = Number(rect[axis]);
@@ -52,10 +81,18 @@ function compareRegistrations(registrations, first, second) {
  * 创建边缘布局控制器，统一处理六向登记、DOM 顺序和正交避让。
  *
  * @param {{scheduleMeasure?: () => void}} [options]
- * @returns {{measure: (options?: {baseInsets?: object, width?: number, height?: number}) => object, registerEdge: Function, setResizeObserver: (observer?: ResizeObserver) => void}}
+ * @returns {{measure: (options?: {baseInsets?: object, width?: number, height?: number}) => object, registerEdge: Function, setResizeObserver: (observer?: ResizeObserver) => void, motion: Readonly<{block: string, inline: string}>, markMotion: (edge: string, phase: string) => void, completeMotion: () => void, dispose: () => void}}
  */
 export function createEdgeLayoutController({ scheduleMeasure } = {}) {
   const registrations = [];
+  const motion = reactive({
+    block: EDGE_MOTION_PHASES.idle,
+    inline: EDGE_MOTION_PHASES.idle,
+  });
+  const motionTimers = {
+    block: undefined,
+    inline: undefined,
+  };
   let resizeObserver;
 
   function setResizeObserver(observer) {
@@ -65,6 +102,73 @@ export function createEdgeLayoutController({ scheduleMeasure } = {}) {
         resizeObserver?.observe?.(registration.element);
       }
     });
+  }
+
+  function clearMotionTimer(axis) {
+    if (motionTimers[axis] === undefined) {
+      return;
+    }
+
+    globalThis.clearTimeout(motionTimers[axis]);
+    motionTimers[axis] = undefined;
+  }
+
+  function getEdgeAxis(edge) {
+    return edge === 'top' || edge === 'bottom' ? 'block' : 'inline';
+  }
+
+  /**
+   * 标记边缘轴的运动阶段，并在 enter 或 exit 结束后回到空闲。
+   *
+   * @param {string} edge
+   * @param {'idle' | 'enter' | 'exit' | 'instant'} phase
+   * @returns {void}
+   */
+  function markMotion(edge, phase) {
+    if (!EDGE_MOTION_PHASES[phase]) {
+      return;
+    }
+
+    const axis = getEdgeAxis(edge);
+    const duration = EDGE_MOTION_DURATION[phase];
+
+    clearMotionTimer(axis);
+    motion[axis] = phase;
+
+    if (duration === undefined) {
+      return;
+    }
+
+    motionTimers[axis] = globalThis.setTimeout(() => {
+      motionTimers[axis] = undefined;
+
+      if (motion[axis] === phase) {
+        motion[axis] = EDGE_MOTION_PHASES.idle;
+      }
+    }, duration);
+  }
+
+  /**
+   * 在布局应用本次测量值后清除 instant 阶段，避免无动画切换影响后续尺寸变化。
+   *
+   * @returns {void}
+   */
+  function completeMotion() {
+    nextTick(() => {
+      if (motion.block === EDGE_MOTION_PHASES.instant) {
+        motion.block = EDGE_MOTION_PHASES.idle;
+      }
+      if (motion.inline === EDGE_MOTION_PHASES.instant) {
+        motion.inline = EDGE_MOTION_PHASES.idle;
+      }
+    });
+  }
+
+  function dispose() {
+    clearMotionTimer('block');
+    clearMotionTimer('inline');
+    motion.block = EDGE_MOTION_PHASES.idle;
+    motion.inline = EDGE_MOTION_PHASES.idle;
   }
 
   function measure({ baseInsets, width = 0, height = 0 } = {}) {
@@ -240,5 +344,9 @@ export function createEdgeLayoutController({ scheduleMeasure } = {}) {
     measure,
     registerEdge,
     setResizeObserver,
+    motion: readonly(motion),
+    markMotion,
+    completeMotion,
+    dispose,
   };
 }

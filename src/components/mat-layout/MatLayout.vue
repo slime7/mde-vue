@@ -10,7 +10,7 @@ import {
   ref,
   useAttrs,
 } from 'vue';
-import { createEdgeLayoutController } from '../layout/edge-layout';
+import { createEdgeLayoutController, getEdgeMotionTiming } from '../layout/edge-layout';
 import { MAT_EDGE_LAYOUT_KEY } from '../layout/edge-layout-context';
 import { MAT_LAYOUT_KEY } from './layout-context';
 import { useMatProps } from '../use-mat-props';
@@ -45,18 +45,6 @@ const layoutState = reactive({
 });
 const layout = readonly(layoutState);
 
-const rootStyle = computed(() => [
-  attrs.style,
-  {
-    '--mat-layout-padding-top': `${layoutState.padding.top}px`,
-    '--mat-layout-padding-bottom': `${layoutState.padding.bottom}px`,
-    '--mat-layout-padding-left': `${layoutState.padding.left}px`,
-    '--mat-layout-padding-right': `${layoutState.padding.right}px`,
-    '--mat-layout-padding-start': `${layoutState.padding.start}px`,
-    '--mat-layout-padding-end': `${layoutState.padding.end}px`,
-  },
-]);
-
 let mounted = false;
 let resizeObserver;
 let measureFrame;
@@ -74,6 +62,7 @@ function measureLayout() {
 
   Object.assign(layoutState.size, measured.size);
   Object.assign(layoutState.padding, measured.padding);
+  edgeLayout.completeMotion();
 }
 
 function scheduleMeasure() {
@@ -97,6 +86,20 @@ function scheduleMeasure() {
 }
 
 const edgeLayout = createEdgeLayoutController({ scheduleMeasure });
+
+const rootStyle = computed(() => [
+  attrs.style,
+  {
+    '--mat-layout-padding-top': `${layoutState.padding.top}px`,
+    '--mat-layout-padding-bottom': `${layoutState.padding.bottom}px`,
+    '--mat-layout-padding-left': `${layoutState.padding.left}px`,
+    '--mat-layout-padding-right': `${layoutState.padding.right}px`,
+    '--mat-layout-padding-start': `${layoutState.padding.start}px`,
+    '--mat-layout-padding-end': `${layoutState.padding.end}px`,
+    '--mat-edge-motion-block': getEdgeMotionTiming(edgeLayout.motion.block),
+    '--mat-edge-motion-inline': getEdgeMotionTiming(edgeLayout.motion.inline),
+  },
+]);
 
 /**
  * 注册占用布局边缘的元素。
@@ -124,6 +127,8 @@ provide(MAT_LAYOUT_KEY, layoutContext);
 provide(MAT_EDGE_LAYOUT_KEY, {
   kind: 'layout',
   ...layoutContext,
+  motion: edgeLayout.motion,
+  markMotion: edgeLayout.markMotion,
 });
 
 onMounted(async () => {
@@ -140,6 +145,7 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   mounted = false;
+  edgeLayout.dispose();
   edgeLayout.setResizeObserver(undefined);
   resizeObserver?.disconnect();
   resizeObserver = undefined;

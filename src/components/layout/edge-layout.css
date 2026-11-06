@@ -2,7 +2,7 @@
   .mat-edge-layout__content {
     box-sizing: border-box;
     min-inline-size: 0;
-    transition: padding-top var(--mat-sys-motion-spring-default-spatial, .3s ease), padding-bottom var(--mat-sys-motion-spring-default-spatial, .3s ease), padding-left var(--mat-sys-motion-spring-default-spatial, .3s ease), padding-right var(--mat-sys-motion-spring-default-spatial, .3s ease);
+    transition: padding-top var(--mat-edge-motion-block, var(--mat-sys-motion-duration-long2) var(--mat-sys-motion-easing-emphasized)), padding-bottom var(--mat-edge-motion-block, var(--mat-sys-motion-duration-long2) var(--mat-sys-motion-easing-emphasized)), padding-left var(--mat-edge-motion-inline, var(--mat-sys-motion-duration-long2) var(--mat-sys-motion-easing-emphasized)), padding-right var(--mat-edge-motion-inline, var(--mat-sys-motion-duration-long2) var(--mat-sys-motion-easing-emphasized));
   }
 
   @media (prefers-reduced-motion: reduce) {

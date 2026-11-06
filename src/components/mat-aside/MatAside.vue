@@ -15,6 +15,11 @@ import { MAT_LAYOUT_KEY } from '../mat-layout/layout-context';
 import { MAT_APP_ROOT_KEY } from '../mat-app-root/mat-app-root-context';
 import { MAT_EDGE_LAYOUT_KEY } from '../layout/edge-layout-context';
 import {
+  EDGE_MOTION_DURATION,
+  EDGE_MOTION_PHASES,
+  getEdgeMotionTiming,
+} from '../layout/edge-layout';
+import {
   dialogStack,
   registerDialog,
   unregisterDialog,
@@ -30,7 +35,8 @@ defineOptions({
   inheritAttrs: false,
 });
 
-const ASIDE_ANIMATION_DURATION = 200;
+const ASIDE_ENTER_DURATION = EDGE_MOTION_DURATION.enter;
+const ASIDE_EXIT_DURATION = EDGE_MOTION_DURATION.exit;
 
 function parsePixelNumber(val) {
   if (typeof val === 'number') {
@@ -375,6 +381,22 @@ const normalizedLocation = computed(() => {
   return 'start';
 });
 
+function markEdgeMotion(motionPhase) {
+  edgeContext?.markMotion?.(normalizedLocation.value, motionPhase);
+}
+
+function unregisterEdge(phase = EDGE_MOTION_PHASES.exit) {
+  if (!edgeRegistration.value) {
+    return;
+  }
+
+  markEdgeMotion(
+    propsWithDefaults.transition ? phase : EDGE_MOTION_PHASES.instant,
+  );
+  edgeRegistration.value.unregister();
+  edgeRegistration.value = null;
+}
+
 const isAutoSize = computed(() => (
   propsWithDefaults.blockSize === undefined || propsWithDefaults.blockSize === 'auto'
 ));
@@ -500,6 +522,12 @@ const asideStyle = computed(() => [
     '--mat-aside-insets-left': `${activeInsets.value.left}px`,
     '--mat-aside-insets-right': `${activeInsets.value.right}px`,
     '--mat-aside-insets-offset': `${activeInsets.value.offset}px`,
+    '--mat-aside-motion-block': getEdgeMotionTiming(
+      edgeContext?.motion?.block ?? EDGE_MOTION_PHASES.idle,
+    ),
+    '--mat-aside-motion-inline': getEdgeMotionTiming(
+      edgeContext?.motion?.inline ?? EDGE_MOTION_PHASES.idle,
+    ),
     zIndex: propsWithDefaults.zIndex !== undefined
       ? String(propsWithDefaults.zIndex)
       : (isModal.value ? 'calc(var(--mat-sys-z-index-dialog) + 1)' : defaultZIndex.value),
@@ -559,9 +587,23 @@ const scrimContainer = computed(() => {
     ?? (typeof document === 'undefined' ? null : document.body);
 });
 
+const placeholderMotion = computed(() => {
+  if (!propsWithDefaults.transition) {
+    return EDGE_MOTION_PHASES.instant;
+  }
+  if (phase.value === 'opening') {
+    return EDGE_MOTION_PHASES.enter;
+  }
+  if (phase.value === 'closing') {
+    return EDGE_MOTION_PHASES.exit;
+  }
+  return EDGE_MOTION_PHASES.idle;
+});
+
 const placeholderStyle = computed(() => {
   const isVertical = normalizedLocation.value === 'start' || normalizedLocation.value === 'end';
   const isActive = isControlledOpen.value && phase.value !== 'closed';
+  const motion = getEdgeMotionTiming(placeholderMotion.value);
   let size;
   if (!isActive) {
     size = '0px';
@@ -578,12 +620,14 @@ const placeholderStyle = computed(() => {
 
   if (isVertical) {
     return {
+      '--mat-aside-placeholder-motion': motion,
       inlineSize: size,
       minBlockSize: '100%',
       flexShrink: 0,
     };
   }
   return {
+    '--mat-aside-placeholder-motion': motion,
     blockSize: size,
     inlineSize: '100%',
     flexShrink: 0,
@@ -753,13 +797,11 @@ function scheduleMeasurement() {
 
 function syncRegistration() {
   if (!mounted || !hostElement.value || !rendered.value || !isControlledOpen.value || phase.value === 'closed') {
-    edgeRegistration.value?.unregister();
-    edgeRegistration.value = null;
+    unregisterEdge();
     return;
   }
 
-  edgeRegistration.value?.unregister();
-  edgeRegistration.value = null;
+  unregisterEdge();
 
   if (effectiveMode.value === 'flow'
     || effectiveMode.value === 'sticky'
@@ -768,6 +810,11 @@ function syncRegistration() {
   }
 
   if (edgeContext) {
+    markEdgeMotion(
+      propsWithDefaults.transition
+        ? EDGE_MOTION_PHASES.enter
+        : EDGE_MOTION_PHASES.instant,
+    );
     edgeRegistration.value = edgeContext.publicContext.registerEdge({
       edge: normalizedLocation.value,
       element: hostElement.value,
@@ -799,7 +846,7 @@ function openAside() {
     if (!mounted || !rendered.value || !isControlledOpen.value) {
       return;
     }
-    motion.wait(hostElement.value, ASIDE_ANIMATION_DURATION, () => {
+    motion.wait(hostElement.value, ASIDE_ENTER_DURATION, () => {
       if (rendered.value && isControlledOpen.value) {
         phase.value = 'open';
         emit('opened');
@@ -819,8 +866,7 @@ function closeAside() {
     if (propsWithDefaults.unmountOnClose) {
       rendered.value = false;
     }
-    edgeRegistration.value?.unregister();
-    edgeRegistration.value = null;
+    unregisterEdge(EDGE_MOTION_PHASES.instant);
     unregisterModal();
     restoreFocus();
     emit('closed');
@@ -829,13 +875,12 @@ function closeAside() {
 
   closeMotion.start({
     canStart: () => rendered.value && phase.value !== 'closing',
-    duration: ASIDE_ANIMATION_DURATION,
+    duration: ASIDE_EXIT_DURATION,
     getElement: () => hostElement.value,
     isActive: () => mounted && !isControlledOpen.value && rendered.value,
     onStart: () => {
       phase.value = 'closing';
-      edgeRegistration.value?.unregister();
-      edgeRegistration.value = null;
+      unregisterEdge();
     },
     onFinish: () => {
       if (propsWithDefaults.unmountOnClose) {
@@ -903,8 +948,7 @@ onBeforeUnmount(() => {
   }
   resizeObserver?.disconnect();
   resizeObserver = undefined;
-  edgeRegistration.value?.unregister();
-  edgeRegistration.value = null;
+  unregisterEdge();
   unregisterModal();
 });
 
@@ -1063,9 +1107,13 @@ defineExpose({
 <style scoped>
 @layer mde.components {
   .mat-aside {
+    --mat-aside-enter-motion: var(--mat-sys-motion-duration-medium4) var(--mat-sys-motion-easing-emphasized-decelerate);
+    --mat-aside-exit-motion: var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-emphasized-accelerate);
+    --mat-aside-motion-block: var(--mat-sys-motion-duration-long2) var(--mat-sys-motion-easing-emphasized);
+    --mat-aside-motion-inline: var(--mat-sys-motion-duration-long2) var(--mat-sys-motion-easing-emphasized);
     box-sizing: border-box;
     isolation: isolate;
-    transition: inset-block var(--mat-sys-motion-spring-default-spatial, .3s ease), inset-inline var(--mat-sys-motion-spring-default-spatial, .3s ease), inline-size var(--mat-sys-motion-spring-default-spatial, .3s ease), block-size var(--mat-sys-motion-spring-default-spatial, .3s ease);
+    transition: inset-block var(--mat-aside-motion-block), inset-inline var(--mat-aside-motion-inline), inline-size var(--mat-aside-motion-inline), block-size var(--mat-aside-motion-block), border-radius var(--mat-aside-motion-inline);
   }
 
   .mat-aside[hidden] {
@@ -1078,11 +1126,12 @@ defineExpose({
   }
 
   .mat-aside__placeholder {
+    --mat-aside-placeholder-motion: var(--mat-sys-motion-duration-long2) var(--mat-sys-motion-easing-emphasized);
     display: block;
     pointer-events: none;
     box-sizing: border-box;
     overflow: hidden;
-    transition: inline-size var(--mat-sys-motion-spring-default-spatial, .3s ease), block-size var(--mat-sys-motion-spring-default-spatial, .3s ease);
+    transition: inline-size var(--mat-aside-placeholder-motion), block-size var(--mat-aside-placeholder-motion);
   }
 
   /* Scrim */
@@ -1110,11 +1159,11 @@ defineExpose({
   }
 
   .mat-aside__scrim--top {
-    animation: mat-dialog-scrim-enter var(--mat-sys-motion-spring-default-effects) both;
+    animation: mat-dialog-scrim-enter var(--mat-sys-motion-duration-short4) var(--mat-sys-motion-easing-standard) both;
   }
 
   .mat-aside__scrim--closing {
-    animation: mat-dialog-scrim-exit var(--mat-sys-motion-spring-fast-effects) both;
+    animation: mat-dialog-scrim-exit var(--mat-sys-motion-duration-short3) var(--mat-sys-motion-easing-standard-accelerate) both;
   }
 
   @keyframes mat-dialog-scrim-enter {
@@ -1200,11 +1249,11 @@ defineExpose({
   }
 
   .mat-aside--top.mat-aside--opening {
-    animation: mat-aside-top-enter var(--mat-sys-motion-spring-default-spatial, .3s ease) both;
+    animation: mat-aside-top-enter var(--mat-aside-enter-motion) both;
   }
 
   .mat-aside--top.mat-aside--closing {
-    animation: mat-aside-top-exit var(--mat-sys-motion-spring-fast-effects, .2s ease) both;
+    animation: mat-aside-top-exit var(--mat-aside-exit-motion) both;
   }
 
   .mat-aside--top.mat-aside--closed {
@@ -1242,11 +1291,11 @@ defineExpose({
   }
 
   .mat-aside--bottom.mat-aside--opening {
-    animation: mat-aside-bottom-enter var(--mat-sys-motion-spring-default-spatial, .3s ease) both;
+    animation: mat-aside-bottom-enter var(--mat-aside-enter-motion) both;
   }
 
   .mat-aside--bottom.mat-aside--closing {
-    animation: mat-aside-bottom-exit var(--mat-sys-motion-spring-fast-effects, .2s ease) both;
+    animation: mat-aside-bottom-exit var(--mat-aside-exit-motion) both;
   }
 
   .mat-aside--bottom.mat-aside--closed {
@@ -1292,12 +1341,12 @@ defineExpose({
 
   .mat-aside--start.mat-aside--opening,
   .mat-aside--left.mat-aside--opening {
-    animation: mat-aside-start-enter var(--mat-sys-motion-spring-default-spatial, .3s ease) both;
+    animation: mat-aside-start-enter var(--mat-aside-enter-motion) both;
   }
 
   .mat-aside--start.mat-aside--closing,
   .mat-aside--left.mat-aside--closing {
-    animation: mat-aside-start-exit var(--mat-sys-motion-spring-fast-effects, .2s ease) both;
+    animation: mat-aside-start-exit var(--mat-aside-exit-motion) both;
   }
 
   .mat-aside--start.mat-aside--closed,
@@ -1344,12 +1393,12 @@ defineExpose({
 
   .mat-aside--end.mat-aside--opening,
   .mat-aside--right.mat-aside--opening {
-    animation: mat-aside-end-enter var(--mat-sys-motion-spring-default-spatial, .3s ease) both;
+    animation: mat-aside-end-enter var(--mat-aside-enter-motion) both;
   }
 
   .mat-aside--end.mat-aside--closing,
   .mat-aside--right.mat-aside--closing {
-    animation: mat-aside-end-exit var(--mat-sys-motion-spring-fast-effects, .2s ease) both;
+    animation: mat-aside-end-exit var(--mat-aside-exit-motion) both;
   }
 
   .mat-aside--end.mat-aside--closed,
@@ -1442,7 +1491,8 @@ defineExpose({
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .mat-aside {
+    .mat-aside,
+    .mat-aside__placeholder {
       animation: none !important;
       transition: none !important;
     }

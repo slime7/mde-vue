@@ -109,7 +109,7 @@ Navigation rail 在 `MatLayout` 或 `MatAppRoot` 内统一登记 `start` 边缘�
 
 `collapsible` 支持纵向 rail 折叠展开能力，`expanded` 支持 `v-model:expanded`。组件不再自带内置菜单按钮，使用方可直接在默认 Slot 混排自定义按钮进行切换，不添加则不显示。collapsed Item 为图标上、标签下；expanded Item 的图标与标签位于同一个 56px 高活动指示器中。
 
-展开与收回时，Item 下方的标签渐隐，活动指示器尺寸、Item 高度与间距平滑过渡（展开态 Item 之间间距为 0），展开状态的标签在指示器内逐渐出现；trailing 内容通过弹性 spacer 保持在 Item 尾部。standard rail 的实际宽度变化会同步更新最近根的 padding；多个同向 rail 的总占位和后续 rail 偏移也会随展开、收缩、隐藏和重新打开重新计算。
+展开与收回时，Item 下方的标签渐隐，活动指示器尺寸、Item 高度与间距平滑过渡（展开态 Item 之间间距为 0），展开状态的标签在指示器内逐渐出现；trailing 内容通过弹性 spacer 保持在 Item 尾部。standard rail 的实际宽度变化会同步更新最近根的 padding，并与 Rail 宽度使用同一动效进度；多个同向 rail 的总占位和后续 rail 偏移也会随展开、收缩、隐藏和重新打开重新计算。
 
 :::: details 查看示例代码
 ::: code-group
@@ -175,7 +175,7 @@ Navigation rail 在 `MatLayout` 或 `MatAppRoot` 内统一登记 `start` 边缘�
 
 ### `alignment`
 
-`alignment` 使用 `start`、`center`、`end` 控制默认 Slot 在主轴上的位置。纵向模式在固定 Header/FAB 和 `end` 之间的剩余高度内对齐；横向模式沿水平方向对齐 NavigationItem。内容溢出时安全回退到起始位置，确保滚动起点可达。参与正文排版的 standard rail 使用 default spatial 尺寸过渡；modal 只覆盖正文，不额外改变正文宽度。
+`alignment` 使用 `start`、`center`、`end` 控制默认 Slot 在主轴上的位置。纵向模式在固定 Header/FAB 和 `end` 之间的剩余高度内对齐；横向模式沿水平方向对齐 NavigationItem。内容溢出时安全回退到起始位置，确保滚动起点可达。参与正文排版的 standard rail 使用强调缓动尺寸过渡，并与最近根的 padding 保持同一进度；modal 只覆盖正文，不额外改变正文宽度。
 
 :::: details 查看示例代码
 ::: code-group

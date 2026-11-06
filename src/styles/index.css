@@ -850,11 +850,18 @@
 
 @layer mde.components {
   .mat-aside__placeholder {
+    --mat-aside-placeholder-motion: var(--mat-sys-motion-duration-long2) var(--mat-sys-motion-easing-emphasized);
     display: block;
     pointer-events: none;
     box-sizing: border-box;
     overflow: hidden;
-    transition: inline-size var(--mat-sys-motion-spring-default-spatial, .3s ease), block-size var(--mat-sys-motion-spring-default-spatial, .3s ease);
+    transition: inline-size var(--mat-aside-placeholder-motion), block-size var(--mat-aside-placeholder-motion);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mat-aside__placeholder {
+      transition: none;
+    }
   }
 
   .mat-scrollbar {

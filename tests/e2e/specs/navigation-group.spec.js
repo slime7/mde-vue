@@ -70,6 +70,20 @@ test('分组折叠时高度在 0 与内容高度之间过渡', async ({ page }) 
   await expect.poll(() => readSize(content, 'block'), { timeout: 3000 }).toBe(0);
 });
 
+test('rail 展开时栏宽在收起与展开宽度之间过渡', async ({ page }) => {
+  const rail = page.getByTestId('rail');
+
+  await expect.poll(() => readSize(rail, 'inline'), { timeout: 3000 }).toBeLessThan(100);
+
+  await page.getByTestId('toggle-rail-expanded').click();
+
+  const samples = await sampleSize(rail, 'inline', 200);
+  await expect.poll(() => readSize(rail, 'inline'), { timeout: 3000 }).toBeGreaterThan(200);
+  const settled = await readSize(rail, 'inline');
+
+  expect(samples.some((value) => value > 100 && value < settled * 0.9)).toBe(true);
+});
+
 test('rail 展开时标签宽度在 0 与内容宽度之间过渡', async ({ page }) => {
   const item = page.getByTestId('rail-item');
   const labelWrap = item.locator('.mat-navigation-rail-item__label-wrap');

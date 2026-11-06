@@ -4,6 +4,7 @@ import {
   onBeforeUnmount, provide, ref, useAttrs, useSlots, watch,
 } from 'vue';
 import MAT_UI_KEY, { DEFAULT_MAT_UI_OPTIONS } from '../../mat-ui-context';
+import { EDGE_MOTION_DURATION } from '../layout/edge-layout';
 import { MAT_EDGE_LAYOUT_KEY } from '../layout/edge-layout-context';
 import MatAside from '../mat-aside/MatAside.vue';
 import MatScrollArea from '../mat-scroll-area/MatScrollArea.vue';
@@ -311,7 +312,7 @@ function syncExpandedPresentation() {
   }
   closeMotion.start({
     canStart: () => isHidden.value,
-    duration: 200,
+    duration: EDGE_MOTION_DURATION.exit,
     getElement: () => asideRef.value?.hostElement,
     isActive: () => isHidden.value && showCollapsibleContent.value && Boolean(asideRef.value?.hostElement),
     onFinish: () => {
@@ -544,7 +545,6 @@ defineExpose({
     align-items: stretch;
     color: var(--mat-navigation-rail-content-color);
     background: var(--mat-navigation-rail-current-container-color);
-    transition: inset-block var(--mat-sys-motion-spring-default-spatial, .3s ease), inset-inline var(--mat-sys-motion-spring-default-spatial, .3s ease), inline-size var(--mat-sys-motion-spring-default-spatial, .3s ease), block-size var(--mat-sys-motion-spring-default-spatial, .3s ease), border-radius var(--mat-sys-motion-spring-default-spatial, .3s ease);
   }
 
   .mat-navigation-rail.mat-aside--mode-flow {
@@ -564,7 +564,6 @@ defineExpose({
     pointer-events: none;
     box-sizing: border-box;
     overflow: hidden;
-    transition: inline-size var(--mat-sys-motion-spring-default-spatial, .3s ease);
   }
 
   .mat-navigation-rail--modal {
@@ -633,7 +632,7 @@ defineExpose({
     flex-direction: column;
     align-items: stretch;
     gap: var(--mat-navigation-rail-item-space);
-    transition: gap var(--mat-sys-motion-spring-default-spatial);
+    transition: gap var(--mat-aside-motion-inline, var(--mat-sys-motion-duration-long2) var(--mat-sys-motion-easing-emphasized));
   }
 
   .mat-navigation-rail__destinations > :deep(.mat-btn) {
@@ -680,9 +679,8 @@ defineExpose({
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .mat-navigation-rail,
-    :deep(.mat-navigation-rail__placeholder) {
-      transition-duration: 0s;
+    .mat-navigation-rail__destinations {
+      transition: none;
     }
   }
 }

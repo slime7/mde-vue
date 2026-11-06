@@ -109,4 +109,4 @@ import './styles/app.css';
 - 状态：`--mat-sys-state-*`，包括 hover、focus、pressed、dragged 与 disabled 透明度。
 - 交互：`--mat-sys-interaction-*`，包括最小目标尺寸和焦点环参数。
 
-空间动效使用 spatial 复合令牌，颜色与透明度使用 effects 复合令牌；减少动态效果时，组件直接呈现静态可理解状态。
+空间动效使用 spatial 复合令牌，颜色与透明度使用 effects 复合令牌；边缘布局与 Aside 使用普通 emphasized 缓动，并按展开、收起阶段同步正文留白。减少动态效果时，组件直接呈现静态可理解状态。

@@ -47,6 +47,7 @@
 | [0040](0040-app-bar-opt-in-scroll-timeline.md) | active | App bar 滚动时间线改为显式启用 |
 | [0041](0041-app-bar-threshold-collapse-fallback.md) | active | App bar 关闭时间线时提供阈值折叠回退 |
 | [0042](0042-runtime-plugin-and-vite-auto-import.md) | active | 运行时插件与 Vite 自动导入插件分离 |
+| [0043](0043-edge-layout-phase-motion.md) | active | 边缘布局与 Aside 使用阶段同步的普通缓动 |
 
 ## 何时创建 ADR
 

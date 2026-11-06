@@ -1,5 +1,6 @@
 import AppBarScene from './AppBarScene.vue';
 import AppRootScene from './AppRootScene.vue';
+import AsideScene from './AsideScene.vue';
 import BottomSheetScene from './BottomSheetScene.vue';
 import CardScene from './CardScene.vue';
 import CarouselScene from './CarouselScene.vue';
@@ -24,6 +25,7 @@ import TooltipScene from './TooltipScene.vue';
 export const scenes = {
   'app-bar': AppBarScene,
   'app-root': AppRootScene,
+  aside: AsideScene,
   'bottom-sheet': BottomSheetScene,
   card: CardScene,
   carousel: CarouselScene,

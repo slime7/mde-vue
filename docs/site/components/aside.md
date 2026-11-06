@@ -57,7 +57,7 @@ order: 117
 
 ### 动态切换显隐与回流
 
-使用 `v-model` 控制 Aside 的显示与收起。收起时 Aside 沿边缘方向平滑滑出，Layout 容器的正文留白同步弹性收缩。
+使用 `v-model` 控制 Aside 的显示与收起。收起时 Aside 沿边缘方向平滑滑出，Layout 容器的正文留白同步平滑收缩。
 
 :::: details 查看示例代码
 ::: code-group
@@ -164,6 +164,10 @@ order: 117
     <AsideModalExample />
   </DocsPreview>
 </ClientOnly>
+
+## 状态
+
+展开使用 400ms 强调减速，收起使用 200ms 强调加速。正文留白、同向堆叠中后续 Aside 的偏移与 Aside 的滑入滑出共享同一进度；固定厚度、自适应厚度或 Rail 展开等非开闭尺寸变化使用 500ms 强调缓动。
 
 ## API
 

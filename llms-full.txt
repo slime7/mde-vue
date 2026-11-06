@@ -5203,7 +5203,7 @@ import './styles/app.css';
 - 状态：`--mat-sys-state-*`，包括 hover、focus、pressed、dragged 与 disabled 透明度。
 - 交互：`--mat-sys-interaction-*`，包括最小目标尺寸和焦点环参数。
 
-空间动效使用 spatial 复合令牌，颜色与透明度使用 effects 复合令牌；减少动态效果时，组件直接呈现静态可理解状态。
+空间动效使用 spatial 复合令牌，颜色与透明度使用 effects 复合令牌；边缘布局与 Aside 使用普通 emphasized 缓动，并按展开、收起阶段同步正文留白。减少动态效果时，组件直接呈现静态可理解状态。
 
 # FAB 浮动操作按钮
 
@@ -21508,7 +21508,7 @@ const active = ref(true);
 
 `collapsible` 支持纵向 rail 折叠展开能力，`expanded` 支持 `v-model:expanded`。组件不再自带内置菜单按钮，使用方可直接在默认 Slot 混排自定义按钮进行切换，不添加则不显示。collapsed Item 为图标上、标签下；expanded Item 的图标与标签位于同一个 56px 高活动指示器中。
 
-展开与收回时，Item 下方的标签渐隐，活动指示器尺寸、Item 高度与间距平滑过渡（展开态 Item 之间间距为 0），展开状态的标签在指示器内逐渐出现；trailing 内容通过弹性 spacer 保持在 Item 尾部。standard rail 的实际宽度变化会同步更新最近根的 padding；多个同向 rail 的总占位和后续 rail 偏移也会随展开、收缩、隐藏和重新打开重新计算。
+展开与收回时，Item 下方的标签渐隐，活动指示器尺寸、Item 高度与间距平滑过渡（展开态 Item 之间间距为 0），展开状态的标签在指示器内逐渐出现；trailing 内容通过弹性 spacer 保持在 Item 尾部。standard rail 的实际宽度变化会同步更新最近根的 padding，并与 Rail 宽度使用同一动效进度；多个同向 rail 的总占位和后续 rail 偏移也会随展开、收缩、隐藏和重新打开重新计算。
 
 :::: details 查看示例代码
 ::: code-group
@@ -21784,7 +21784,7 @@ const selected = ref('home');
 
 ### `alignment`
 
-`alignment` 使用 `start`、`center`、`end` 控制默认 Slot 在主轴上的位置。纵向模式在固定 Header/FAB 和 `end` 之间的剩余高度内对齐；横向模式沿水平方向对齐 NavigationItem。内容溢出时安全回退到起始位置，确保滚动起点可达。参与正文排版的 standard rail 使用 default spatial 尺寸过渡；modal 只覆盖正文，不额外改变正文宽度。
+`alignment` 使用 `start`、`center`、`end` 控制默认 Slot 在主轴上的位置。纵向模式在固定 Header/FAB 和 `end` 之间的剩余高度内对齐；横向模式沿水平方向对齐 NavigationItem。内容溢出时安全回退到起始位置，确保滚动起点可达。参与正文排版的 standard rail 使用强调缓动尺寸过渡，并与最近根的 padding 保持同一进度；modal 只覆盖正文，不额外改变正文宽度。
 
 :::: details 查看示例代码
 ::: code-group
@@ -29451,7 +29451,7 @@ import ContainerHeightExample from '../examples/container/ContainerHeightExample
 
 ### 动态切换显隐与回流
 
-使用 `v-model` 控制 Aside 的显示与收起。收起时 Aside 沿边缘方向平滑滑出，Layout 容器的正文留白同步弹性收缩。
+使用 `v-model` 控制 Aside 的显示与收起。收起时 Aside 沿边缘方向平滑滑出，Layout 容器的正文留白同步平滑收缩。
 
 :::: details 查看示例代码
 ::: code-group
@@ -30037,6 +30037,10 @@ const open = ref(false);
   </DocsPreview>
 </ClientOnly>
 
+## 状态
+
+展开使用 400ms 强调减速，收起使用 200ms 强调加速。正文留白、同向堆叠中后续 Aside 的偏移与 Aside 的滑入滑出共享同一进度；固定厚度、自适应厚度或 Rail 展开等非开闭尺寸变化使用 500ms 强调缓动。
+
 ## API
 
 ### 属性
@@ -30223,7 +30227,7 @@ import TableWrapperBasicExample from '../examples/table-wrapper/TableWrapperBasi
 
 ### 基础布局
 
-在 `<mat-layout>` 内声明顶部与侧栏 Aside，正文内容自动留白展示。
+在 `<mat-layout>` 内声明顶部与侧栏 Aside，正文内容自动留白展示。Aside 展开或收起时，正文 padding 与 Aside 滑入滑出使用同一动效阶段；同向堆叠的后续 Aside 和正交方向的避让偏移也会同步重排。非开闭触发的尺寸变化使用强调缓动。
 
 :::: details 查看示例代码
 ::: code-group

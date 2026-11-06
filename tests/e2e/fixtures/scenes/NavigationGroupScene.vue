@@ -49,6 +49,7 @@ const railExpanded = ref(false);
 
       <mat-navigation-rail
         class="rail"
+        data-testid="rail"
         collapsible
         :expanded="railExpanded"
         aria-label="导航栏"

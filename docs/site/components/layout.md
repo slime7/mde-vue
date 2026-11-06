@@ -15,7 +15,7 @@ order: 118
 
 ### 基础布局
 
-在 `<mat-layout>` 内声明顶部与侧栏 Aside，正文内容自动留白展示。
+在 `<mat-layout>` 内声明顶部与侧栏 Aside，正文内容自动留白展示。Aside 展开或收起时，正文 padding 与 Aside 滑入滑出使用同一动效阶段；同向堆叠的后续 Aside 和正交方向的避让偏移也会同步重排。非开闭触发的尺寸变化使用强调缓动。
 
 :::: details 查看示例代码
 ::: code-group

@@ -21,4 +21,6 @@ export function useEdgeLayout() {
  * @property {import('vue').Readonly<import('vue').Ref<HTMLElement | null>>} rootElement
  * @property {import('vue').Readonly<import('vue').Ref<HTMLElement | null>>} contentElement
  * @property {{registerEdge: Function}} publicContext
+ * @property {Readonly<{block: string, inline: string}>} motion
+ * @property {(edge: string, phase: string) => void} markMotion
  */
