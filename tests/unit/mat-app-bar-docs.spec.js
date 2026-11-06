@@ -26,7 +26,7 @@ describe('App bar 文档', () => {
     ['## 组件简介', '## 示例', '## API', '## 事件', '## Slots'].forEach((heading) => {
       expect(page).toContain(heading);
     });
-    expect(page).toContain('CSS timeline');
+    expect(page).toContain('随滚动进度连续折叠');
     expect(page).toContain('| 默认 | 唯一主内容区域');
     expect(config).toContain("{ text: 'App bar 应用栏', link: '/components/app-bar' }");
     expect(installation).toContain('MatAppBar,');
@@ -48,7 +48,7 @@ describe('App bar 文档', () => {
     });
   });
 
-  it('滚动示例显式启用时间线、使用显式滚动目标并提供足够的滚动内容', () => {
+  it('滚动示例显式启用连续折叠、使用显式滚动目标并提供足够的滚动内容', () => {
     const example = readFileSync(
       resolve('docs/site/examples/app-bar/AppBarScrollExample.vue'),
       'utf8',
@@ -61,7 +61,7 @@ describe('App bar 文档', () => {
     expect(example).toContain('v-for="index in 8"');
   });
 
-  it('API 说明滚动时间线默认关闭', () => {
+  it('API 说明连续折叠默认关闭', () => {
     const page = readFileSync(resolve(pagePath), 'utf8');
 
     expect(page).toContain('| `scrollTimeline` | `boolean` | `false` |');

@@ -331,7 +331,7 @@ Pane 默认 `block-size: 100%`、`min-block-size: 0` 和 `overflow: auto`；父�
 
 `<mat-app-bar>` 与导出 `MatAppBar` 只提供 M3 Expressive 推荐的 `search`、`small`、`medium-flexible`、`large-flexible` 四种 variant。默认 Slot 是唯一主内容区域，`content` 必须显式声明为 `headline`、`image` 或 `search`；`variant="search"` 固定使用 search 内容。leading、subtitle 与 trailing 是独立具名 Slot。默认 sticky 布局以稳定的 64px 壳参与文档流，flexible 展开差值由紧随其后的起始占位承担，展开背景和内容变化不改变滚动范围；`app=true` 且自动接入 AppRoot 时仅以折叠后的 64px 登记 top edge，展开差值仍在声明位置随正文滚走。
 
-滚动反馈默认由被动滚动监听更新基础表面状态，并由展开区顶部的观察哨在越过 16px 后切换一次折叠状态；medium flexible 与 large flexible 通过普通 CSS 弹簧过渡变为 small，回到顶部后展开。显式启用 `scrollTimeline` 后，small 和 search 在最初 16px 滚动范围内连续填充 surface container，medium flexible 与 large flexible 分别在 48px、56px 范围内连续折叠为 small。脚本只负责解析滚动源、登记唯一时间线名称、维护观察哨和清理共享作用域，不读取连续滚动进度或逐帧更新样式；关闭时间线或环境不支持该 CSS 能力时使用阈值折叠。
+`scrollTimeline` 是默认 `false` 的布尔属性。关闭时，被动滚动监听更新基础表面状态，展开区顶部的观察哨通过 `IntersectionObserver` 在越过 16px 后切换一次折叠状态；medium flexible 与 large flexible 通过普通 CSS 弹簧过渡变为 small，回到阈值以内后展开，观察哨不可用时由被动滚动监听按同一阈值更新状态。显式启用后，small 和 search 在最初 16px 滚动范围内连续填充 surface container，medium flexible 与 large flexible 分别在 48px、56px 范围内连续折叠为 small。每次 passive scroll 回调只读取一次滚动位置，经共享 `frame-scheduler` 合并到 `requestAnimationFrame` 写入内部视觉进度，不登记 `scrollTimelineName` 或 `timelineScope`，也不使用 CSS `animation-timeline`。切换滚动源、开关或变体以及卸载时清理旧监听、断开观察器并取消待执行帧。两种模式的视觉变化都不修改 64px 布局壳及 medium 48px、large 56px 展开占位的高度，保持滚动范围稳定。
 
 `<mat-search>` 与导出 `MatSearch` 独立复用 `MatInputBase` 渲染原生 search input，实时发出 `update:modelValue`，由 Enter 或默认搜索按钮发出 `search(query)`。浏览器内建的 search 清除按钮被隐藏，清空入口由 trailing Slot 统一提供。它不依赖 App bar，也不实现 Search View、结果列表、网络请求、防抖或查询持久化。
 

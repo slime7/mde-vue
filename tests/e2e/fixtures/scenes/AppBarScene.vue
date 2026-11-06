@@ -3,6 +3,7 @@ import { ref } from 'vue';
 
 const scrollTarget = ref(null);
 const scrollTimeline = ref(false);
+const variant = ref('large-flexible');
 
 function toggleScrollTimeline() {
   scrollTimeline.value = !scrollTimeline.value;
@@ -16,8 +17,18 @@ function toggleScrollTimeline() {
       type="button"
       @click="toggleScrollTimeline"
     >
-      切换滚动时间线
+      切换连续折叠
     </button>
+
+    <label>
+      应用栏规格
+      <select v-model="variant">
+        <option value="small">small</option>
+        <option value="search">search</option>
+        <option value="medium-flexible">medium-flexible</option>
+        <option value="large-flexible">large-flexible</option>
+      </select>
+    </label>
 
     <mat-layout
       ref="scrollTarget"
@@ -27,14 +38,14 @@ function toggleScrollTimeline() {
     >
       <mat-app-bar
         data-testid="app-bar"
-        variant="large-flexible"
+        :variant="variant"
         :scroll-target="scrollTarget"
         :scroll-timeline="scrollTimeline"
       >
         最近项目
 
         <template #subtitle>
-          验证滚动时间线的启用与关闭
+          验证连续折叠的启用与关闭
         </template>
       </mat-app-bar>
 

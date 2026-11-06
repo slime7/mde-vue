@@ -209,14 +209,14 @@ export interface MatAppBarProps {
   */
   attach?: string | HTMLElement;
   /**
-  * CSS scroll timeline 的显式滚动源；省略时依次使用 AppRoot 正文、最近滚动祖先和 document。
+  * 滚动反馈的显式滚动源；省略时依次使用 AppRoot 正文、最近滚动祖先和 document。
   *
   * @type {string | HTMLElement | undefined}
   * @default undefined
   */
   scrollTarget?: string | HTMLElement | undefined;
   /**
-  * 是否启用 CSS 滚动时间线驱动的连续折叠与表面过渡；关闭时使用顶部阈值折叠。
+  * 是否按滚动进度连续折叠并过渡表面色；关闭时使用顶部阈值折叠。
   *
   * @type {boolean}
   * @default false
