@@ -424,8 +424,7 @@ watch([
     min-block-size: 0;
     display: flex;
     flex-direction: column;
-    padding-block: var(--mat-app-root-padding-top) var(--mat-app-root-padding-bottom);
-    padding-inline: var(--mat-app-root-padding-start) var(--mat-app-root-padding-end);
+    padding: var(--mat-app-root-padding-top, 0) var(--mat-app-root-padding-right, 0) var(--mat-app-root-padding-bottom, 0) var(--mat-app-root-padding-left, 0);
   }
 
   .mat-app-root--fill-viewport > .mat-app-root__content {

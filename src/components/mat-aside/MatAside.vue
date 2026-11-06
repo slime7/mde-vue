@@ -656,13 +656,65 @@ function handleGlobalKeyDown(event) {
   requestClose();
 }
 
+const SIZE_AXIS_PROPERTIES = {
+  block: ['height', 'blockSize'],
+  inline: ['width', 'inlineSize'],
+};
+const PIXEL_VALUE_PATTERN = /^-?(?:\d+(?:\.\d+)?|\.\d+)px$/;
+
+/**
+ * 读取正在运行的尺寸过渡终点。
+ * 尺寸过渡逐帧变化，直接登记动画中的尺寸会让正文 padding 过渡每帧重启并滞后于侧边，
+ * 使用终点值可以让正文与侧边按同一弹簧参数同步变化。
+ *
+ * @param {'block' | 'inline'} axis
+ * @returns {number | undefined}
+ */
+function readSizeTransitionTarget(axis) {
+  const element = hostElement.value;
+
+  if (!element || typeof element.getAnimations !== 'function') {
+    return undefined;
+  }
+
+  let target;
+
+  element.getAnimations().forEach((animation) => {
+    if (animation.playState === 'finished') {
+      return;
+    }
+
+    (animation.effect?.getKeyframes?.() ?? []).forEach((keyframe) => {
+      SIZE_AXIS_PROPERTIES[axis].forEach((property) => {
+        const value = keyframe[property];
+
+        if (typeof value === 'string' && PIXEL_VALUE_PATTERN.test(value.trim())) {
+          target = Number.parseFloat(value);
+        }
+      });
+    });
+  });
+
+  return target;
+}
+
+function getRegisteredSize() {
+  const isVerticalEdge = normalizedLocation.value === 'start'
+    || normalizedLocation.value === 'end';
+  return readSizeTransitionTarget(isVerticalEdge ? 'inline' : 'block');
+}
+
 function syncMeasurement() {
   if (!mounted || !hostElement.value) {
     return;
   }
   const rect = hostElement.value.getBoundingClientRect();
-  const nextBlockSize = Math.max(0, Math.ceil(Number(rect.height) || 0));
-  const nextInlineSize = Math.max(0, Math.ceil(Number(rect.width) || 0));
+  const nextBlockSize = Math.max(0, Math.ceil(
+    readSizeTransitionTarget('block') ?? (Number(rect.height) || 0),
+  ));
+  const nextInlineSize = Math.max(0, Math.ceil(
+    readSizeTransitionTarget('inline') ?? (Number(rect.width) || 0),
+  ));
 
   if (measuredSize.value.blockSize === nextBlockSize
     && measuredSize.value.inlineSize === nextInlineSize) {
@@ -708,6 +760,7 @@ function syncRegistration() {
     edgeRegistration.value = edgeContext.publicContext.registerEdge({
       edge: normalizedLocation.value,
       element: hostElement.value,
+      getSize: getRegisteredSize,
     });
   }
 }

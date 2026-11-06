@@ -2578,20 +2578,8 @@ function Di({ scheduleMeasure: e } = {}) {
 			endInset: 0
 		}]));
 		t.filter((e) => e.active).sort((e, n) => Ei(t, e, n)).forEach((e) => {
-			let t = e.element.getBoundingClientRect(), { edge: n } = e, r = e.insets;
-			if (n === "top") {
-				let e = Ci(t, "height");
-				r.top = i.top, r.bottom = 0, r.left = i.left, r.right = i.right, r.start = i.start, r.end = i.end, r.offset = i.top, a.top.startInset = Math.max(a.top.startInset, i.start), a.top.endInset = Math.max(a.top.endInset, i.end), i.top += e;
-			} else if (n === "bottom") {
-				let e = Ci(t, "height");
-				r.top = 0, r.bottom = i.bottom, r.left = i.left, r.right = i.right, r.start = i.start, r.end = i.end, r.offset = i.bottom, a.bottom.startInset = Math.max(a.bottom.startInset, i.start), a.bottom.endInset = Math.max(a.bottom.endInset, i.end), i.bottom += e;
-			} else if (n === "left" || n === "start") {
-				let e = Ci(t, "width");
-				r.top = i.top, r.bottom = i.bottom, r.left = i.left, r.right = 0, r.start = i.start, r.end = 0, r.offset = i.left, a[n].startInset = Math.max(a[n].startInset, i.top), a[n].endInset = Math.max(a[n].endInset, i.bottom), i.left += e, i.start += e;
-			} else if (n === "right" || n === "end") {
-				let e = Ci(t, "width");
-				r.top = i.top, r.bottom = i.bottom, r.left = 0, r.right = i.right, r.start = 0, r.end = i.end, r.offset = i.right, a[n].startInset = Math.max(a[n].startInset, i.top), a[n].endInset = Math.max(a[n].endInset, i.bottom), i.right += e, i.end += e;
-			}
+			let t = e.element.getBoundingClientRect(), { edge: n, getSize: r } = e, o = e.insets, s = r?.(), c = Math.max(0, Number.isFinite(s) ? s : Ci(t, n === "top" || n === "bottom" ? "height" : "width"));
+			n === "top" ? (o.top = i.top, o.bottom = 0, o.left = i.left, o.right = i.right, o.start = i.start, o.end = i.end, o.offset = i.top, a.top.startInset = Math.max(a.top.startInset, i.start), a.top.endInset = Math.max(a.top.endInset, i.end), i.top += c) : n === "bottom" ? (o.top = 0, o.bottom = i.bottom, o.left = i.left, o.right = i.right, o.start = i.start, o.end = i.end, o.offset = i.bottom, a.bottom.startInset = Math.max(a.bottom.startInset, i.start), a.bottom.endInset = Math.max(a.bottom.endInset, i.end), i.bottom += c) : n === "left" || n === "start" ? (o.top = i.top, o.bottom = i.bottom, o.left = i.left, o.right = 0, o.start = i.start, o.end = 0, o.offset = i.left, a[n].startInset = Math.max(a[n].startInset, i.top), a[n].endInset = Math.max(a[n].endInset, i.bottom), i.left += c, i.start += c) : (n === "right" || n === "end") && (o.top = i.top, o.bottom = i.bottom, o.left = 0, o.right = i.right, o.start = 0, o.end = i.end, o.offset = i.right, a[n].startInset = Math.max(a[n].startInset, i.top), a[n].endInset = Math.max(a[n].endInset, i.bottom), i.right += c, i.end += c);
 		});
 		let o = Object.fromEntries(Si.map((e) => [e, {
 			size: i[e],
@@ -2606,10 +2594,10 @@ function Di({ scheduleMeasure: e } = {}) {
 			edges: o
 		};
 	}
-	function a({ edge: r, element: i } = {}) {
+	function a({ edge: r, element: i, getSize: a } = {}) {
 		if (!Si.includes(r)) throw TypeError("registerEdge() 的 edge 必须是 top、bottom、left、right、start 或 end");
 		if (!(i instanceof HTMLElement) || i.ownerDocument !== document) throw TypeError("registerEdge() 的 element 必须是当前 document 中的 HTMLElement");
-		let a = k({
+		let o = k({
 			bottom: 0,
 			end: 0,
 			left: 0,
@@ -2617,19 +2605,20 @@ function Di({ scheduleMeasure: e } = {}) {
 			right: 0,
 			start: 0,
 			top: 0
-		}), o = {
+		}), s = {
 			active: !0,
 			edge: r,
 			element: i,
-			insets: a
+			getSize: typeof a == "function" ? a : void 0,
+			insets: o
 		};
-		return t.push(o), n?.observe?.(i), e?.(), Object.freeze({
-			insets: A(a),
+		return t.push(s), n?.observe?.(i), e?.(), Object.freeze({
+			insets: A(o),
 			unregister: () => {
-				o.active && (o.active = !1, n?.unobserve?.(i), e?.());
+				s.active && (s.active = !1, n?.unobserve?.(i), e?.());
 			},
 			update: () => {
-				o.active && e?.();
+				s.active && e?.();
 			}
 		});
 	}
@@ -2943,7 +2932,7 @@ var Oi = Symbol("mat-edge-layout"), ki = { class: "mat-app-root__overlay" }, Ai 
 			"style"
 		]));
 	}
-}), [["__scopeId", "data-v-ab7a5374"]]), ji = Symbol("mat-layout");
+}), [["__scopeId", "data-v-7eb46c06"]]), ji = Symbol("mat-layout");
 function Mi() {
 	let e = h(ji, null);
 	if (!e) throw Error("useLayout() 必须在 MatLayout 内调用");
@@ -3395,43 +3384,64 @@ var $i = 200, ea = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		function Te(e) {
 			!ae.value || !se.value || e.key !== "Escape" || d.closeOnBack && (e.preventDefault(), Ce());
 		}
-		function Ee() {
+		let Ee = {
+			block: ["height", "blockSize"],
+			inline: ["width", "inlineSize"]
+		}, De = /^-?(?:\d+(?:\.\d+)?|\.\d+)px$/;
+		function Oe(e) {
+			let t = b.value;
+			if (!t || typeof t.getAnimations != "function") return;
+			let n;
+			return t.getAnimations().forEach((t) => {
+				t.playState !== "finished" && (t.effect?.getKeyframes?.() ?? []).forEach((t) => {
+					Ee[e].forEach((e) => {
+						let r = t[e];
+						typeof r == "string" && De.test(r.trim()) && (n = Number.parseFloat(r));
+					});
+				});
+			}), n;
+		}
+		function ke() {
+			return Oe(Y.value === "start" || Y.value === "end" ? "inline" : "block");
+		}
+		function Ae() {
 			if (!R || !b.value) return;
-			let e = b.value.getBoundingClientRect(), t = Math.max(0, Math.ceil(Number(e.height) || 0)), n = Math.max(0, Math.ceil(Number(e.width) || 0));
+			let e = b.value.getBoundingClientRect(), t = Math.max(0, Math.ceil(Oe("block") ?? (Number(e.height) || 0))), n = Math.max(0, Math.ceil(Oe("inline") ?? (Number(e.width) || 0)));
 			Z.value.blockSize === t && Z.value.inlineSize === n || (Z.value = {
 				blockSize: t,
 				inlineSize: n
 			}, S.value?.update());
 		}
-		function De() {
+		function je() {
 			R && v().then(() => {
-				R && Ee();
+				R && Ae();
 			});
 		}
-		function Oe() {
+		function Me() {
 			if (!R || !b.value || !A.value || !k.value || M.value === "closed") {
 				S.value?.unregister(), S.value = null;
 				return;
 			}
 			S.value?.unregister(), S.value = null, !(J.value === "flow" || J.value === "sticky" || d.modal) && W && (S.value = W.publicContext.registerEdge({
 				edge: Y.value,
-				element: b.value
+				element: b.value,
+				getSize: ke
 			}));
 		}
-		function ke() {
+		function Ne() {
 			if (N.cancel(), A.value = !0, ae.value && typeof document < "u" && document.activeElement instanceof HTMLElement && (ne = document.activeElement), !d.transition) {
 				M.value = "open", v().then(() => {
-					Oe(), xe(), p("opened");
+					Me(), xe(), p("opened");
 				});
 				return;
 			}
 			M.value = "opening", v().then(() => {
-				Oe(), xe(), !(!R || !A.value || !k.value) && N.wait(b.value, $i, () => {
+				Me(), xe(), !(!R || !A.value || !k.value) && N.wait(b.value, $i, () => {
 					A.value && k.value && (M.value = "open", p("opened"));
 				});
 			});
 		}
-		function Ae() {
+		function Pe() {
 			if (!A.value || M.value === "closed") {
 				M.value = "closed";
 				return;
@@ -3454,17 +3464,17 @@ var $i = 200, ea = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			});
 		}
 		return B(k, (e) => {
-			e ? ke() : Ae(), De();
+			e ? Ne() : Pe(), je();
 		}), B(Y, () => {
-			Oe(), Ee();
+			Me(), Ae();
 		}), B([
 			J,
 			() => d.app,
 			() => d.modal
 		], () => {
-			Oe(), xe();
-		}), B([ce, le], De, { flush: "post" }), T(async () => {
-			R = !0, typeof window < "u" && window.addEventListener("keydown", Te), A.value && (await v(), Oe(), xe(), te = typeof ResizeObserver > "u" ? void 0 : new ResizeObserver(Ee), b.value && (te?.observe(b.value), Ee()));
+			Me(), xe();
+		}), B([ce, le], je, { flush: "post" }), T(async () => {
+			R = !0, typeof window < "u" && window.addEventListener("keydown", Te), A.value && (await v(), Me(), xe(), te = typeof ResizeObserver > "u" ? void 0 : new ResizeObserver(Ae), b.value && (te?.observe(b.value), Ae()));
 		}), C(() => {
 			R = !1, typeof window < "u" && window.removeEventListener("keydown", Te), te?.disconnect(), te = void 0, S.value?.unregister(), S.value = null, Se();
 		}), r({
@@ -3587,7 +3597,7 @@ var $i = 200, ea = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"style"
 		])) : o("", !0);
 	}
-}), [["__scopeId", "data-v-a3be626f"]]), ta = /* @__PURE__ */ new WeakMap(), na = /* @__PURE__ */ new WeakMap();
+}), [["__scopeId", "data-v-74ae7cc5"]]), ta = /* @__PURE__ */ new WeakMap(), na = /* @__PURE__ */ new WeakMap();
 function ra(e, t, n) {
 	let r = [n.initialValue, ...n.names].filter((e) => e && e !== "none"), i = e.style;
 	i[t] = r.join(", ");

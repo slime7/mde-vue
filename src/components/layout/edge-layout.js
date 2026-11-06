@@ -78,11 +78,14 @@ export function createEdgeLayoutController({ scheduleMeasure } = {}) {
 
     activeRegistrations.forEach((registration) => {
       const rect = registration.element.getBoundingClientRect();
-      const { edge } = registration;
+      const { edge, getSize } = registration;
       const mutableInsets = registration.insets;
+      const reportedExtent = getSize?.();
+      const extent = Math.max(0, Number.isFinite(reportedExtent)
+        ? reportedExtent
+        : readExtent(rect, edge === 'top' || edge === 'bottom' ? 'height' : 'width'));
 
       if (edge === 'top') {
-        const extent = readExtent(rect, 'height');
         mutableInsets.top = currentInsets.top;
         mutableInsets.bottom = 0;
         mutableInsets.left = currentInsets.left;
@@ -100,7 +103,6 @@ export function createEdgeLayoutController({ scheduleMeasure } = {}) {
         );
         currentInsets.top += extent;
       } else if (edge === 'bottom') {
-        const extent = readExtent(rect, 'height');
         mutableInsets.top = 0;
         mutableInsets.bottom = currentInsets.bottom;
         mutableInsets.left = currentInsets.left;
@@ -118,7 +120,6 @@ export function createEdgeLayoutController({ scheduleMeasure } = {}) {
         );
         currentInsets.bottom += extent;
       } else if (edge === 'left' || edge === 'start') {
-        const extent = readExtent(rect, 'width');
         mutableInsets.top = currentInsets.top;
         mutableInsets.bottom = currentInsets.bottom;
         mutableInsets.left = currentInsets.left;
@@ -137,7 +138,6 @@ export function createEdgeLayoutController({ scheduleMeasure } = {}) {
         currentInsets.left += extent;
         currentInsets.start += extent;
       } else if (edge === 'right' || edge === 'end') {
-        const extent = readExtent(rect, 'width');
         mutableInsets.top = currentInsets.top;
         mutableInsets.bottom = currentInsets.bottom;
         mutableInsets.left = 0;
@@ -178,11 +178,12 @@ export function createEdgeLayoutController({ scheduleMeasure } = {}) {
   /**
    * 登记当前 document 中的边缘元素。
    *
-   * @param {{edge: string, element: HTMLElement}} options
+   * @param {{edge: string, element: HTMLElement, getSize?: () => number | undefined}} options
+   * getSize 用于内部组件报告过渡中的目标厚度，返回 undefined 时回退到实测矩形。
    * @returns {{insets: Readonly<object>, update: () => void, unregister: () => void}}
    * @throws {TypeError} edge 或 element 无效时抛出。
    */
-  function registerEdge({ edge, element } = {}) {
+  function registerEdge({ edge, element, getSize } = {}) {
     if (!EDGE_NAMES.includes(edge)) {
       throw new TypeError('registerEdge() 的 edge 必须是 top、bottom、left、right、start 或 end');
     }
@@ -204,6 +205,7 @@ export function createEdgeLayoutController({ scheduleMeasure } = {}) {
       active: true,
       edge,
       element,
+      getSize: typeof getSize === 'function' ? getSize : undefined,
       insets,
     };
     const unregister = () => {

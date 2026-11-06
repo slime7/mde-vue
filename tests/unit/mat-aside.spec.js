@@ -150,6 +150,47 @@ describe('MatAside 边缘组件', () => {
     expect(endWrapper.classes()).toContain('mat-aside--right');
   });
 
+  it('侧边尺寸过渡期间按过渡终点登记边缘，正文不逐帧重定向', async () => {
+    let capturedLayout;
+    const Reader = {
+      setup() {
+        capturedLayout = useLayout();
+        return () => h('div', 'content');
+      },
+    };
+    const wrapper = mount(MatLayout, {
+      attachTo: document.body,
+      slots: {
+        default: () => [
+          h(MatAside, { location: 'start', blockSize: 200 }),
+          h(Reader),
+        ],
+      },
+    });
+
+    const layoutElement = wrapper.element;
+    const asideElement = layoutElement.querySelector('.mat-aside');
+
+    vi.spyOn(layoutElement, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 600, height: 600, right: 800, width: 800,
+    }));
+    vi.spyOn(asideElement, 'getBoundingClientRect').mockReturnValue(rect({
+      bottom: 600, height: 600, right: 120, width: 120,
+    }));
+    asideElement.getAnimations = () => [{
+      playState: 'running',
+      effect: {
+        getKeyframes: () => [{ width: '120px' }, { width: '200px' }],
+      },
+    }];
+
+    window.dispatchEvent(new Event('resize'));
+    await settle();
+
+    expect(capturedLayout.padding.start).toBe(200);
+    wrapper.unmount();
+  });
+
   it('支持 mode="flow" 与 mode="sticky"，不向父级 MatLayout 注册脱流边缘内边距', async () => {
     let capturedLayout;
     const Reader = {
