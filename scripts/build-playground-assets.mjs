@@ -203,6 +203,7 @@ export async function buildPlaygroundAssets() {
 
   <script type="module">
     import { createApp, h } from 'vue';
+    import * as MdeVue from 'mde-vue';
     import { createMatUi } from 'mde-vue';
 
     let currentApp = null;
@@ -315,6 +316,15 @@ export async function buildPlaygroundAssets() {
           });
 
           currentApp.use(matUiInstance);
+
+          // 演示代码在浏览器里运行时编译，不经过 mde-vue/vite 自动导入，
+          // 因此需要把包内导出的组件补注册到沙箱应用。
+          Object.entries(MdeVue).forEach(([name, component]) => {
+            if (/^(?:Mat|Mde)[A-Z]/.test(name)
+              && (typeof component === 'object' || typeof component === 'function')) {
+              currentApp.component(name, component);
+            }
+          });
 
           currentApp.config.errorHandler = (err) => {
             window.parent.postMessage({
