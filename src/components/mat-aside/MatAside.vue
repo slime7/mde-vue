@@ -506,11 +506,19 @@ const asideStyle = computed(() => [
   },
 ]);
 
+const isInsideEdgeContainer = computed(() => Boolean(
+  edgeContext?.rootElement?.value
+    && (edgeContext.kind !== 'app-root' || !hasExplicitAttach.value),
+));
+
 const isScopedToContainer = computed(() => (
-  effectiveMode.value !== 'fixed' && Boolean(
-    edgeContext?.rootElement?.value
-      && (edgeContext.kind !== 'app-root' || !hasExplicitAttach.value),
-  )
+  effectiveMode.value !== 'fixed' && isInsideEdgeContainer.value
+));
+
+const isScrimScoped = computed(() => (
+  isModal.value
+  && isInsideEdgeContainer.value
+  && (effectiveMode.value !== 'fixed' || !hasExplicitAttach.value)
 ));
 
 const shouldTeleport = computed(() => (
@@ -542,10 +550,13 @@ const targetContainer = computed(() => {
 });
 
 const scrimContainer = computed(() => {
-  if (isModal.value && isScopedToContainer.value) {
-    return edgeContext?.contentElement?.value ?? targetContainer.value;
+  if (isScrimScoped.value) {
+    return effectiveMode.value === 'fixed'
+      ? (edgeContext?.rootElement?.value ?? targetContainer.value)
+      : (edgeContext?.contentElement?.value ?? targetContainer.value);
   }
-  return targetContainer.value;
+  return targetContainer.value
+    ?? (typeof document === 'undefined' ? null : document.body);
 });
 
 const placeholderStyle = computed(() => {
@@ -930,7 +941,7 @@ defineExpose({
           {
             'mat-aside__scrim--top': isTop,
             'mat-aside__scrim--closing': phase === 'closing',
-            'mat-aside__scrim--docked': isScopedToContainer,
+            'mat-aside__scrim--docked': isScrimScoped,
           },
         ]"
         aria-hidden="true"
@@ -971,7 +982,7 @@ defineExpose({
             {
               'mat-aside__scrim--top': isTop,
               'mat-aside__scrim--closing': phase === 'closing',
-              'mat-aside__scrim--docked': isScopedToContainer,
+              'mat-aside__scrim--docked': isScrimScoped,
             },
           ]"
           aria-hidden="true"
@@ -996,7 +1007,7 @@ defineExpose({
         {
           'mat-aside__scrim--top': isTop,
           'mat-aside__scrim--closing': phase === 'closing',
-          'mat-aside__scrim--docked': isScopedToContainer,
+          'mat-aside__scrim--docked': isScrimScoped,
         },
       ]"
       aria-hidden="true"
@@ -1037,7 +1048,7 @@ defineExpose({
           {
             'mat-aside__scrim--top': isTop,
             'mat-aside__scrim--closing': phase === 'closing',
-            'mat-aside__scrim--docked': isScopedToContainer,
+            'mat-aside__scrim--docked': isScrimScoped,
           },
         ]"
         aria-hidden="true"

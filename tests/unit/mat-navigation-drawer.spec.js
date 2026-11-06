@@ -174,6 +174,34 @@ describe('MatNavigationDrawer', () => {
     wrapper.unmount();
   });
 
+  it('mode="fixed" 的 modal Drawer 遮罩挂在抽屉外部', async () => {
+    const wrapper = mount(MatAppRoot, {
+      attachTo: document.body,
+      props: { fillViewport: false },
+      slots: {
+        default: () => [
+          h(MatNavigationDrawer, {
+            expanded: true,
+            layout: 'modal',
+            mode: 'fixed',
+          }),
+        ],
+      },
+    });
+
+    await nextTick();
+    await nextTick();
+
+    const nav = wrapper.element.querySelector('nav');
+    const scrim = document.body.querySelector('.mat-navigation-rail__scrim');
+
+    expect(nav).not.toBeNull();
+    expect(scrim).not.toBeNull();
+    expect(nav.contains(scrim)).toBe(false);
+
+    wrapper.unmount();
+  });
+
   it('透传 modelValue 与 update:modelValue 事件', async () => {
     const wrapper = mount(MatNavigationDrawer, {
       props: {

@@ -3306,7 +3306,7 @@ var $i = 200, ea = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				"mat-aside--bordered": d.bordered,
 				"mat-aside--auto-size": X.value,
 				"mat-aside--modal": ae.value,
-				"mat-aside--modal-scoped": ae.value && he.value,
+				"mat-aside--modal-scoped": ae.value && ge.value,
 				"mat-aside--top-scrim": se.value,
 				"mat-aside--no-transition": !d.transition,
 				"mat-aside--app": d.app
@@ -3321,7 +3321,7 @@ var $i = 200, ea = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"--mat-aside-insets-right": `${fe.value.right}px`,
 			"--mat-aside-insets-offset": `${fe.value.offset}px`,
 			zIndex: d.zIndex === void 0 ? ae.value ? "calc(var(--mat-sys-z-index-dialog) + 1)" : de.value : String(d.zIndex)
-		}]), he = i(() => J.value !== "fixed" && !!(W?.rootElement?.value && (W.kind !== "app-root" || !K.value))), ge = i(() => J.value === "fixed" && K.value), _e = i(() => {
+		}]), he = i(() => !!(W?.rootElement?.value && (W.kind !== "app-root" || !K.value))), ge = i(() => J.value !== "fixed" && he.value), _e = i(() => ae.value && he.value && (J.value !== "fixed" || !K.value)), ve = i(() => J.value === "fixed" && K.value), ye = i(() => {
 			if (K.value && d.attach) {
 				if (d.attach instanceof HTMLElement && d.attach.ownerDocument === document) return d.attach;
 				if (typeof d.attach == "string") try {
@@ -3331,7 +3331,7 @@ var $i = 200, ea = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				}
 			}
 			return J.value !== "fixed" && W?.rootElement?.value ? W.rootElement.value : J.value === "fixed" ? null : "body";
-		}), ve = i(() => ae.value && he.value ? W?.contentElement?.value ?? _e.value : _e.value), ye = i(() => {
+		}), be = i(() => _e.value ? J.value === "fixed" ? W?.rootElement?.value ?? ye.value : W?.contentElement?.value ?? ye.value : ye.value ?? (typeof document > "u" ? null : document.body)), xe = i(() => {
 			let e = Y.value === "start" || Y.value === "end", t = k.value && M.value !== "closed", n;
 			return n = t ? d.placeholderSize === void 0 ? X.value ? e ? `${Z.value.inlineSize}px` : `${Z.value.blockSize}px` : ue.value : tr(d.placeholderSize, {
 				property: e ? "inline-size" : "block-size",
@@ -3346,7 +3346,7 @@ var $i = 200, ea = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				flexShrink: 0
 			};
 		});
-		function be() {
+		function Se() {
 			let e = K.value ? U : W ?? U ?? re;
 			if (!e) return {
 				inertElement: null,
@@ -3365,59 +3365,59 @@ var $i = 200, ea = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 				scrollElement: e.rootElement?.value ?? null
 			};
 		}
-		function xe() {
+		function Ce() {
 			if (!R || !b.value || !A.value || !ae.value || !k.value || M.value === "closed") {
 				b.value && Xi(b.value);
 				return;
 			}
-			Yi(b.value, be());
-		}
-		function Se() {
-			b.value && Xi(b.value);
-		}
-		function Ce() {
-			p("update:open", !1), p("update:modelValue", !1);
+			Yi(b.value, Se());
 		}
 		function we() {
-			!ae.value || !d.closeOnBack || Ce();
+			b.value && Xi(b.value);
 		}
-		function Te(e) {
-			!ae.value || !se.value || e.key !== "Escape" || d.closeOnBack && (e.preventDefault(), Ce());
+		function Te() {
+			p("update:open", !1), p("update:modelValue", !1);
 		}
-		let Ee = {
+		function Ee() {
+			!ae.value || !d.closeOnBack || Te();
+		}
+		function De(e) {
+			!ae.value || !se.value || e.key !== "Escape" || d.closeOnBack && (e.preventDefault(), Te());
+		}
+		let Oe = {
 			block: ["height", "blockSize"],
 			inline: ["width", "inlineSize"]
-		}, De = /^-?(?:\d+(?:\.\d+)?|\.\d+)px$/;
-		function Oe(e) {
+		}, ke = /^-?(?:\d+(?:\.\d+)?|\.\d+)px$/;
+		function Ae(e) {
 			let t = b.value;
 			if (!t || typeof t.getAnimations != "function") return;
 			let n;
 			return t.getAnimations().forEach((t) => {
 				t.playState !== "finished" && (t.effect?.getKeyframes?.() ?? []).forEach((t) => {
-					Ee[e].forEach((e) => {
+					Oe[e].forEach((e) => {
 						let r = t[e];
-						typeof r == "string" && De.test(r.trim()) && (n = Number.parseFloat(r));
+						typeof r == "string" && ke.test(r.trim()) && (n = Number.parseFloat(r));
 					});
 				});
 			}), n;
 		}
-		function ke() {
-			return Oe(Y.value === "start" || Y.value === "end" ? "inline" : "block");
+		function je() {
+			return Ae(Y.value === "start" || Y.value === "end" ? "inline" : "block");
 		}
-		function Ae() {
+		function Me() {
 			if (!R || !b.value) return;
-			let e = b.value.getBoundingClientRect(), t = Math.max(0, Math.ceil(Oe("block") ?? (Number(e.height) || 0))), n = Math.max(0, Math.ceil(Oe("inline") ?? (Number(e.width) || 0)));
+			let e = b.value.getBoundingClientRect(), t = Math.max(0, Math.ceil(Ae("block") ?? (Number(e.height) || 0))), n = Math.max(0, Math.ceil(Ae("inline") ?? (Number(e.width) || 0)));
 			Z.value.blockSize === t && Z.value.inlineSize === n || (Z.value = {
 				blockSize: t,
 				inlineSize: n
 			}, S.value?.update());
 		}
-		function je() {
+		function Ne() {
 			R && v().then(() => {
-				R && Ae();
+				R && Me();
 			});
 		}
-		function Me() {
+		function Pe() {
 			if (!R || !b.value || !A.value || !k.value || M.value === "closed") {
 				S.value?.unregister(), S.value = null;
 				return;
@@ -3425,29 +3425,29 @@ var $i = 200, ea = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			S.value?.unregister(), S.value = null, !(J.value === "flow" || J.value === "sticky" || d.modal) && W && (S.value = W.publicContext.registerEdge({
 				edge: Y.value,
 				element: b.value,
-				getSize: ke
+				getSize: je
 			}));
 		}
-		function Ne() {
+		function Fe() {
 			if (N.cancel(), A.value = !0, ae.value && typeof document < "u" && document.activeElement instanceof HTMLElement && (ne = document.activeElement), !d.transition) {
 				M.value = "open", v().then(() => {
-					Me(), xe(), p("opened");
+					Pe(), Ce(), p("opened");
 				});
 				return;
 			}
 			M.value = "opening", v().then(() => {
-				Me(), xe(), !(!R || !A.value || !k.value) && N.wait(b.value, $i, () => {
+				Pe(), Ce(), !(!R || !A.value || !k.value) && N.wait(b.value, $i, () => {
 					A.value && k.value && (M.value = "open", p("opened"));
 				});
 			});
 		}
-		function Pe() {
+		function Ie() {
 			if (!A.value || M.value === "closed") {
 				M.value = "closed";
 				return;
 			}
 			if (!d.transition) {
-				M.value = "closed", d.unmountOnClose && (A.value = !1), S.value?.unregister(), S.value = null, Se(), V(), p("closed");
+				M.value = "closed", d.unmountOnClose && (A.value = !1), S.value?.unregister(), S.value = null, we(), V(), p("closed");
 				return;
 			}
 			I.start({
@@ -3459,45 +3459,45 @@ var $i = 200, ea = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 					M.value = "closing", S.value?.unregister(), S.value = null;
 				},
 				onFinish: () => {
-					d.unmountOnClose && (A.value = !1), M.value = "closed", Se(), V(), p("closed");
+					d.unmountOnClose && (A.value = !1), M.value = "closed", we(), V(), p("closed");
 				}
 			});
 		}
 		return B(k, (e) => {
-			e ? Ne() : Pe(), je();
+			e ? Fe() : Ie(), Ne();
 		}), B(Y, () => {
-			Me(), Ae();
+			Pe(), Me();
 		}), B([
 			J,
 			() => d.app,
 			() => d.modal
 		], () => {
-			Me(), xe();
-		}), B([ce, le], je, { flush: "post" }), T(async () => {
-			R = !0, typeof window < "u" && window.addEventListener("keydown", Te), A.value && (await v(), Me(), xe(), te = typeof ResizeObserver > "u" ? void 0 : new ResizeObserver(Ae), b.value && (te?.observe(b.value), Ae()));
+			Pe(), Ce();
+		}), B([ce, le], Ne, { flush: "post" }), T(async () => {
+			R = !0, typeof window < "u" && window.addEventListener("keydown", De), A.value && (await v(), Pe(), Ce(), te = typeof ResizeObserver > "u" ? void 0 : new ResizeObserver(Me), b.value && (te?.observe(b.value), Me()));
 		}), C(() => {
-			R = !1, typeof window < "u" && window.removeEventListener("keydown", Te), te?.disconnect(), te = void 0, S.value?.unregister(), S.value = null, Se();
+			R = !1, typeof window < "u" && window.removeEventListener("keydown", De), te?.disconnect(), te = void 0, S.value?.unregister(), S.value = null, we();
 		}), r({
 			hostElement: b,
 			activeInsets: fe,
 			phase: M
-		}), (e, r) => oe.value && (A.value || !z(d).unmountOnClose) ? (D(), s(t, { key: 0 }, [P(e.$slots, "placeholder", { style: x(ye.value) }, () => [c("span", {
+		}), (e, r) => oe.value && (A.value || !z(d).unmountOnClose) ? (D(), s(t, { key: 0 }, [P(e.$slots, "placeholder", { style: x(xe.value) }, () => [c("span", {
 			class: "mat-aside__placeholder",
 			"aria-hidden": "true",
-			style: x(ye.value)
-		}, null, 4)], !0), ge.value ? (D(), a(n, {
+			style: x(xe.value)
+		}, null, 4)], !0), ve.value ? (D(), a(n, {
 			key: 0,
-			to: _e.value,
-			disabled: !_e.value
+			to: ye.value,
+			disabled: !ye.value
 		}, [ae.value && A.value && M.value !== "closed" ? (D(), s("div", {
 			key: 0,
 			class: y(["mat-aside__scrim", [z(d).scrimClass, {
 				"mat-aside__scrim--top": se.value,
 				"mat-aside__scrim--closing": M.value === "closing",
-				"mat-aside__scrim--docked": he.value
+				"mat-aside__scrim--docked": _e.value
 			}]]),
 			"aria-hidden": "true",
-			onClick: we
+			onClick: Ee
 		}, null, 2)) : o("", !0), A.value ? (D(), a(F(z(d).as), _({
 			key: 1,
 			ref_key: "hostElement",
@@ -3524,35 +3524,35 @@ var $i = 200, ea = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		}), {
 			default: H(() => [ae.value && A.value && M.value !== "closed" ? (D(), a(n, {
 				key: 0,
-				to: ve.value,
-				disabled: !ve.value
+				to: be.value,
+				disabled: !be.value
 			}, [c("div", {
 				class: y(["mat-aside__scrim", [z(d).scrimClass, {
 					"mat-aside__scrim--top": se.value,
 					"mat-aside__scrim--closing": M.value === "closing",
-					"mat-aside__scrim--docked": he.value
+					"mat-aside__scrim--docked": _e.value
 				}]]),
 				"aria-hidden": "true",
-				onClick: we
+				onClick: Ee
 			}, null, 2)], 8, ["to", "disabled"])) : o("", !0), P(e.$slots, "default", {}, void 0, !0)]),
 			_: 3
 		}, 16, [
 			"hidden",
 			"class",
 			"style"
-		])) : o("", !0)], 64)) : ge.value ? (D(), a(n, {
+		])) : o("", !0)], 64)) : ve.value ? (D(), a(n, {
 			key: 1,
-			to: _e.value,
-			disabled: !_e.value
+			to: ye.value,
+			disabled: !ye.value
 		}, [ae.value && A.value && M.value !== "closed" ? (D(), s("div", {
 			key: 0,
 			class: y(["mat-aside__scrim", [z(d).scrimClass, {
 				"mat-aside__scrim--top": se.value,
 				"mat-aside__scrim--closing": M.value === "closing",
-				"mat-aside__scrim--docked": he.value
+				"mat-aside__scrim--docked": _e.value
 			}]]),
 			"aria-hidden": "true",
-			onClick: we
+			onClick: Ee
 		}, null, 2)) : o("", !0), A.value ? (D(), a(F(z(d).as), _({
 			key: 1,
 			ref_key: "hostElement",
@@ -3579,16 +3579,16 @@ var $i = 200, ea = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 		}), {
 			default: H(() => [ae.value && A.value && M.value !== "closed" ? (D(), a(n, {
 				key: 0,
-				to: ve.value,
-				disabled: !ve.value
+				to: be.value,
+				disabled: !be.value
 			}, [c("div", {
 				class: y(["mat-aside__scrim", [z(d).scrimClass, {
 					"mat-aside__scrim--top": se.value,
 					"mat-aside__scrim--closing": M.value === "closing",
-					"mat-aside__scrim--docked": he.value
+					"mat-aside__scrim--docked": _e.value
 				}]]),
 				"aria-hidden": "true",
-				onClick: we
+				onClick: Ee
 			}, null, 2)], 8, ["to", "disabled"])) : o("", !0), P(e.$slots, "default", {}, void 0, !0)]),
 			_: 3
 		}, 16, [
@@ -3597,7 +3597,7 @@ var $i = 200, ea = /*#__PURE__*/ Q(/* @__PURE__ */ Object.assign({
 			"style"
 		])) : o("", !0);
 	}
-}), [["__scopeId", "data-v-74ae7cc5"]]), ta = /* @__PURE__ */ new WeakMap(), na = /* @__PURE__ */ new WeakMap();
+}), [["__scopeId", "data-v-9ea52b40"]]), ta = /* @__PURE__ */ new WeakMap(), na = /* @__PURE__ */ new WeakMap();
 function ra(e, t, n) {
 	let r = [n.initialValue, ...n.names].filter((e) => e && e !== "none"), i = e.style;
 	i[t] = r.join(", ");
