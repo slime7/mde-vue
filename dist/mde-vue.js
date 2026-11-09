@@ -11378,7 +11378,7 @@ var Ll = {
 			class: "mat-text-input__supporting mat-sys-typescale-body-small"
 		}, [c("span", Xl, R(O.value), 1), e.maxLength === void 0 ? o("", !0) : (D(), s("span", Zl, R(e.modelValue.length) + " / " + R(e.maxLength), 1))])) : o("", !0)], 14, Rl));
 	}
-}), [["__scopeId", "data-v-06c81be6"]]), $l = /*@__PURE__*/ Object.assign({
+}), [["__scopeId", "data-v-4c2943e4"]]), $l = /*@__PURE__*/ Object.assign({
 	name: "MatTextField",
 	inheritAttrs: !1
 }, {

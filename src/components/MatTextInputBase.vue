@@ -413,8 +413,7 @@ function handleModelValue(value) {
     --mat-text-input-supporting-color: var(--mat-sys-color-on-surface-variant);
     --mat-text-input-density-container-height: var(--mat-text-input-container-height);
     --mat-text-input-density-control-block-space: 8px;
-    --mat-text-input-density-labelled-control-block-start: 8px;
-    --mat-text-input-density-labelled-control-block-end: 8px;
+    --mat-text-input-density-label-block-start: 16px;
     --mat-text-input-density-filled-control-block-start: 24px;
     --mat-text-input-density-filled-control-block-end: 8px;
     --mat-text-input-density-filled-label-block-start: 16px;
@@ -430,8 +429,7 @@ function handleModelValue(value) {
   .mat-text-input--compact:not(.mat-text-input--textarea) {
     --mat-text-input-density-container-height: var(--mat-text-input-compact-container-height, 48px);
     --mat-text-input-density-control-block-space: 12px;
-    --mat-text-input-density-labelled-control-block-start: 16px;
-    --mat-text-input-density-labelled-control-block-end: 8px;
+    --mat-text-input-density-label-block-start: 12px;
     --mat-text-input-density-filled-control-block-start: 20px;
     --mat-text-input-density-filled-control-block-end: 4px;
     --mat-text-input-density-filled-label-block-start: 12px;
@@ -532,10 +530,6 @@ function handleModelValue(value) {
     transition: padding-block var(--mat-sys-motion-spring-fast-spatial);
   }
 
-  .mat-text-input:has(.mat-text-input__label):not(.mat-text-input--textarea):not(.mat-text-input--filled) .mat-text-input__control-row {
-    padding-block: var(--mat-text-input-density-labelled-control-block-start) var(--mat-text-input-density-labelled-control-block-end);
-  }
-
   .mat-text-input__control {
     flex: 1 1 0;
     max-inline-size: 100%;
@@ -609,7 +603,7 @@ function handleModelValue(value) {
   .mat-text-input__label {
     position: absolute;
     z-index: 3;
-    inset-block-start: 16px;
+    inset-block-start: var(--mat-text-input-density-label-block-start);
     inset-inline-start: 0;
     max-inline-size: 100%;
     overflow: hidden;

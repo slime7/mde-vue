@@ -29,6 +29,22 @@ async function measureLabelDelta(page, testId, label) {
   return before - await target.relativeTop();
 }
 
+async function relativeContentCenter(page, testId, selector) {
+  const field = page.getByTestId(testId);
+
+  return field.evaluate((element, contentSelector) => {
+    const container = element.querySelector('.mat-text-input__container');
+    const content = element.querySelector(contentSelector);
+    const containerBox = container.getBoundingClientRect();
+    const contentBox = content.getBoundingClientRect();
+
+    return {
+      container: containerBox.top + containerBox.height / 2,
+      content: contentBox.top + contentBox.height / 2,
+    };
+  }, selector);
+}
+
 test.describe('文本输入与选择器密度', () => {
   test('compact 同时压缩 outlined 与 filled 字段，并保留 8px 高度差', async ({ page }) => {
     await openScene(page, 'density');
@@ -61,6 +77,53 @@ test.describe('文本输入与选择器密度', () => {
     expect(deltas[0]).toBeCloseTo(deltas[1], 0);
     expect(deltas[2]).toBeCloseTo(deltas[3], 0);
     expect(deltas[0]).toBeGreaterThan(deltas[2]);
+  });
+
+  test('compact outlined 空字段的标签与控件保持垂直居中', async ({ page }) => {
+    await openScene(page, 'density');
+
+    const cases = [
+      { control: '.mat-text-input__control', testId: 'text-compact-outlined' },
+      { control: '.mat-text-input__control', testId: 'select-compact' },
+    ];
+
+    const centers = await Promise.all(cases.map(async ({ control, testId }) => {
+      const [labelCenter, controlCenter] = await Promise.all([
+        relativeContentCenter(page, testId, '.mat-text-input__label'),
+        relativeContentCenter(page, testId, control),
+      ]);
+
+      return { controlCenter, labelCenter };
+    }));
+
+    centers.forEach(({ controlCenter, labelCenter }) => {
+      expect(labelCenter.content).toBeCloseTo(labelCenter.container, 0);
+      expect(controlCenter.content).toBeCloseTo(controlCenter.container, 0);
+    });
+  });
+
+  test('compact outlined 的 placeholder 保持垂直居中', async ({ page }) => {
+    await openScene(page, 'density');
+
+    const textField = page.getByTestId('text-compact-outlined-placeholder');
+    const select = page.getByTestId('select-compact-outlined-placeholder');
+
+    await expect(textField.getByPlaceholder('请输入内容')).toBeVisible();
+    await expect(select.locator('.mat-select__placeholder')).toHaveText('请选择项目');
+
+    const textControlCenter = await relativeContentCenter(
+      page,
+      'text-compact-outlined-placeholder',
+      '.mat-text-input__control',
+    );
+    const selectPlaceholderCenter = await relativeContentCenter(
+      page,
+      'select-compact-outlined-placeholder',
+      '.mat-select__placeholder',
+    );
+
+    expect(textControlCenter.content).toBeCloseTo(textControlCenter.container, 0);
+    expect(selectPlaceholderCenter.content).toBeCloseTo(selectPlaceholderCenter.container, 0);
   });
 
   test('compact 选择器保留菜单尺寸与选择行为', async ({ page }) => {

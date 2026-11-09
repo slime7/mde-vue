@@ -5,6 +5,7 @@ const items = ['甲', '乙', '丙'];
 const defaultSelect = ref(null);
 const compactSelect = ref(null);
 const compactFilledSelect = ref(null);
+const placeholderSelect = ref(null);
 </script>
 
 <template>
@@ -18,6 +19,10 @@ const compactFilledSelect = ref(null);
 
       <div data-testid="text-compact-outlined">
         <mat-text-field density="compact" label="紧凑浮动标签" />
+      </div>
+
+      <div data-testid="text-compact-outlined-placeholder">
+        <mat-text-field density="compact" placeholder="请输入内容" />
       </div>
 
       <div data-testid="text-default-filled">
@@ -34,6 +39,15 @@ const compactFilledSelect = ref(null);
 
       <div data-testid="select-compact">
         <mat-select v-model="compactSelect" density="compact" label="紧凑选择器" :items="items" />
+      </div>
+
+      <div data-testid="select-compact-outlined-placeholder">
+        <mat-select
+          v-model="placeholderSelect"
+          density="compact"
+          placeholder="请选择项目"
+          :items="items"
+        />
       </div>
 
       <div data-testid="select-compact-filled">
