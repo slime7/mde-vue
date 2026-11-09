@@ -2,6 +2,16 @@ import { isComponentColor } from './button-props';
 
 export const TEXT_INPUT_VARIANTS = ['filled', 'outlined'];
 
+export const TEXT_INPUT_DENSITIES = ['default', 'compact'];
+
+/**
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+export function isTextInputDensity(value) {
+  return TEXT_INPUT_DENSITIES.includes(value);
+}
+
 export const TEXT_INPUT_PROPS = {
   /**
    * 忽略默认的 488px 最大宽度限制，允许宽度铺满父容器。

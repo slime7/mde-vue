@@ -11850,6 +11850,57 @@ const items = ['选项 1', '选项 2', '选项 3'];
   </DocsPreview>
 </ClientOnly>
 
+### `density`
+
+`compact` 把选择器字段高度从 56px 降到 48px，保留相同的标签、图标、焦点和选择行为。下拉菜单的项目高度仍保持 48px，避免缩小可选择区域。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="select-example-grid">
+    <mat-select
+      density="compact"
+      model-value="甲"
+      label="Outlined compact"
+      :items="items"
+    />
+
+    <mat-select
+      density="compact"
+      model-value="乙"
+      label="Filled compact"
+      variant="filled"
+      :items="items"
+    />
+  </div>
+</template>
+```
+```vue
+<script setup>
+const items = ['甲', '乙', '丙'];
+</script>
+```
+```vue
+<style scoped>
+.select-example-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 24px;
+  inline-size: 100%;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Select density 预览">
+    <SelectCompactExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `items`、字段映射与分组
 
 字符串项以自身作为标题和值。对象项默认读取 `title`、`value`、`subtitle`，也可以用 `item-title`、`item-value`、`item-subtitle` 更换字段。分组使用 `{ group, items }`，不允许嵌套分组。
@@ -12291,6 +12342,7 @@ const items = [
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `block` | `boolean` | `false` | 忽略默认的 488px 最大宽度限制，允许宽度铺满父容器 |
+| `density` | `'default' \| 'compact'` | `'default'` | 字段垂直密度；compact 使用 48px 高度，菜单项目保持 48px |
 | `modelValue` | 基础值、基础值数组或 `null` | `null` | 单选使用基础值或 null，多选使用数组 |
 | `items` | `Array` | 必填 | 字符串、对象或 `{ group: string, items: Array }` 分组 |
 | `multiple` | `boolean` | `false` | 启用多选，并保持菜单打开 |
@@ -12339,14 +12391,16 @@ const items = [
 - 多选 Checkbox 只表达状态，不参与焦点或无障碍树，避免在菜单项内产生嵌套交互控件。
 - 单选空值为 `null`，多选空值为 `[]`；`modelValue` 与 multiple 模式不匹配时在开发环境警告。
 - 隐藏 select 不进入 Tab 顺序或无障碍树，只用于原生 options、required 与表单提交。
+- `density="compact"` 只压缩字段外壳，不改变菜单项目高度、键盘操作和选择规则。
 
 ## 参考来源
 
-Select 的组合外观由 mde-vue 根据 Material 3 [Text fields](https://m3.material.io/components/text-fields/overview)、[Menus](https://m3.material.io/components/menus/overview)、[Chips](https://m3.material.io/components/chips/overview) 与 [Checkbox](https://m3.material.io/components/checkbox/overview) 总结；这些页面没有规定本组件完整的 Select API 或组合方式。
+Select 的组合外观由 mde-vue 根据 Material 3 [Text fields](https://m3.material.io/components/text-fields/overview)、[Menus](https://m3.material.io/components/menus/overview)、[Chips](https://m3.material.io/components/chips/overview)、[Checkbox](https://m3.material.io/components/checkbox/overview) 与 [Density](https://m3.material.io/foundations/layout/grids-spacing/density) 总结；这些页面没有规定本组件完整的 Select API 或组合方式。
 
 <script setup>
 import SelectBlockExample from '../examples/select/SelectBlockExample.vue';
 import SelectChipsExample from '../examples/select/SelectChipsExample.vue';
+import SelectCompactExample from '../examples/select/SelectCompactExample.vue';
 import SelectItemsExample from '../examples/select/SelectItemsExample.vue';
 import SelectMultipleExample from '../examples/select/SelectMultipleExample.vue';
 import SelectPrefixTextExample from '../examples/select/SelectPrefixTextExample.vue';
@@ -13389,6 +13443,50 @@ import CardVariantExample from '../examples/card/CardVariantExample.vue';
   </DocsPreview>
 </ClientOnly>
 
+### `density`
+
+`compact` 只压缩 MatTextField 单行字段的上下留白，把可见字段高度从 56px 降到 48px。字号、图标尺寸和浮动标签的移动过程保持不变；Textarea 不提供该属性。
+
+:::: details 查看示例代码
+::: code-group
+
+```vue
+<template>
+  <div class="example-stack">
+    <mat-text-field
+      density="compact"
+      label="outlined compact"
+      model-value="项目甲"
+    />
+
+    <mat-text-field
+      density="compact"
+      label="filled compact"
+      model-value="已启用"
+      variant="filled"
+    />
+  </div>
+</template>
+```
+```vue
+<style scoped>
+.example-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  inline-size: 100%;
+}
+</style>
+```
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Text field density 预览">
+    <TextFieldCompactExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `modelValue`
 
 :::: details 查看示例代码
@@ -14006,6 +14104,7 @@ const description = ref('第一行\n第二行\n第三行\n第四行\n第五行\n
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `density` | `'default' \| 'compact'` | `'default'` | 字段垂直密度；compact 使用 48px 高度，保持字号、图标和浮动标签行为不变 |
 | `type` | `string` | `'text'` | 原生 input type，例如 `email`、`password` 或 `search` |
 
 ### MatTextarea 属性
@@ -14046,15 +14145,17 @@ const description = ref('第一行\n第二行\n第三行\n第四行\n第五行\n
 - `autoGrow` 根据输入内容自适应高度；设置 `maxRows` 可限制最大行数并在超出时允许内部滚动。
 - textarea 在顶部内边距区域渐隐滚动内容，同时保持右侧滚动条和调整手柄完整可见；带标签时渐隐区域覆盖标签留白，避免文字与标签重叠。
 - Text field 的 multi-line 形态来自 Material 3；`autoGrow`、`maxRows` 和 `noResize` 是 mde-vue 扩展 API。
+- `density="compact"` 仅压缩单行 MatTextField 的上下留白；两种密度使用同一套标签、图标和状态结构。
 - 减少动态效果偏好下关闭标签、描边与活动指示器的非必要过渡。
 
 ## 参考来源
 
-结构、尺寸、状态和使用原则依据 Material 3 [Text fields overview](https://m3.material.io/components/text-fields/overview)、[Text fields specs](https://m3.material.io/components/text-fields/specs) 与 [Text fields guidelines](https://m3.material.io/components/text-fields/guidelines)。
+结构、尺寸、状态和使用原则依据 Material 3 [Text fields overview](https://m3.material.io/components/text-fields/overview)、[Text fields specs](https://m3.material.io/components/text-fields/specs)、[Text fields guidelines](https://m3.material.io/components/text-fields/guidelines) 与 [Density](https://m3.material.io/foundations/layout/grids-spacing/density)。
 
 <script setup>
 import TextFieldBlockExample from '../examples/text-field/TextFieldBlockExample.vue';
 import TextFieldColorExample from '../examples/text-field/TextFieldColorExample.vue';
+import TextFieldCompactExample from '../examples/text-field/TextFieldCompactExample.vue';
 import TextFieldDisabledExample from '../examples/text-field/TextFieldDisabledExample.vue';
 import TextFieldErrorExample from '../examples/text-field/TextFieldErrorExample.vue';
 import TextFieldLabelExample from '../examples/text-field/TextFieldLabelExample.vue';

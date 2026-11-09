@@ -3,6 +3,7 @@ import {
   computed, nextTick, onBeforeUnmount, onMounted, ref, useAttrs, useId, watch,
 } from 'vue';
 import MatInputBase from './MatInputBase.vue';
+import { isTextInputDensity } from './text-input-props';
 import useComponentColor from './use-component-color';
 
 defineOptions({
@@ -11,6 +12,11 @@ defineOptions({
 });
 
 const props = defineProps({
+  density: {
+    type: String,
+    default: 'default',
+    validator: isTextInputDensity,
+  },
   block: {
     type: Boolean,
     default: false,
@@ -277,6 +283,7 @@ function handleModelValue(value) {
       `mat-text-input--${variant}`,
       `mat-text-input--${control}`,
       {
+        'mat-text-input--compact': density === 'compact',
         'mat-text-input--floating': isFloating,
         'mat-text-input--focused': effectiveFocused,
         'mat-text-input--error': error,
@@ -404,6 +411,13 @@ function handleModelValue(value) {
     --mat-text-input-label-color: var(--mat-sys-color-on-surface-variant);
     --mat-text-input-outline-color: var(--mat-sys-color-outline);
     --mat-text-input-supporting-color: var(--mat-sys-color-on-surface-variant);
+    --mat-text-input-density-container-height: var(--mat-text-input-container-height);
+    --mat-text-input-density-control-block-space: 8px;
+    --mat-text-input-density-labelled-control-block-start: 8px;
+    --mat-text-input-density-labelled-control-block-end: 8px;
+    --mat-text-input-density-filled-control-block-start: 24px;
+    --mat-text-input-density-filled-control-block-end: 8px;
+    --mat-text-input-density-filled-label-block-start: 16px;
     display: flex;
     flex-direction: column;
     min-inline-size: 0;
@@ -411,6 +425,16 @@ function handleModelValue(value) {
     max-inline-size: 488px;
     color: var(--mat-text-input-content-color);
     user-select: none;
+  }
+
+  .mat-text-input--compact:not(.mat-text-input--textarea) {
+    --mat-text-input-density-container-height: var(--mat-text-input-compact-container-height, 48px);
+    --mat-text-input-density-control-block-space: 12px;
+    --mat-text-input-density-labelled-control-block-start: 16px;
+    --mat-text-input-density-labelled-control-block-end: 8px;
+    --mat-text-input-density-filled-control-block-start: 20px;
+    --mat-text-input-density-filled-control-block-end: 4px;
+    --mat-text-input-density-filled-label-block-start: 12px;
   }
 
   .mat-text-input--block {
@@ -427,10 +451,11 @@ function handleModelValue(value) {
     display: flex;
     align-items: center;
     box-sizing: border-box;
-    min-block-size: var(--mat-text-input-container-height);
+    min-block-size: var(--mat-text-input-density-container-height);
     inline-size: 100%;
     background: transparent;
     border-radius: var(--mat-sys-shape-corner-small);
+    transition: min-block-size var(--mat-sys-motion-spring-fast-spatial);
   }
 
   .mat-text-input__outline {
@@ -470,7 +495,7 @@ function handleModelValue(value) {
     background: var(--mat-text-input-container-color);
     border-radius: var(--mat-sys-shape-corner-small) var(--mat-sys-shape-corner-small) 0 0;
     box-shadow: inset 0 -1px 0 var(--mat-text-input-outline-color);
-    transition: box-shadow var(--mat-sys-motion-spring-fast-effects);
+    transition: box-shadow var(--mat-sys-motion-spring-fast-effects), min-block-size var(--mat-sys-motion-spring-fast-spatial);
   }
 
   .mat-text-input__indicator {
@@ -503,7 +528,12 @@ function handleModelValue(value) {
     gap: 4px;
     align-items: center;
     min-inline-size: 0;
-    padding-block: 8px;
+    padding-block: var(--mat-text-input-density-control-block-space);
+    transition: padding-block var(--mat-sys-motion-spring-fast-spatial);
+  }
+
+  .mat-text-input:has(.mat-text-input__label):not(.mat-text-input--textarea):not(.mat-text-input--filled) .mat-text-input__control-row {
+    padding-block: var(--mat-text-input-density-labelled-control-block-start) var(--mat-text-input-density-labelled-control-block-end);
   }
 
   .mat-text-input__control {
@@ -588,7 +618,11 @@ function handleModelValue(value) {
     white-space: nowrap;
     pointer-events: none;
     transform-origin: top left;
-    transition: color var(--mat-sys-motion-spring-fast-effects), transform var(--mat-sys-motion-spring-fast-spatial);
+    transition: color var(--mat-sys-motion-spring-fast-effects), inset-block-start var(--mat-sys-motion-spring-fast-spatial), transform var(--mat-sys-motion-spring-fast-spatial);
+  }
+
+  .mat-text-input--filled:not(.mat-text-input--textarea) .mat-text-input__label {
+    inset-block-start: var(--mat-text-input-density-filled-label-block-start);
   }
 
   .mat-text-input--floating .mat-text-input__label {
@@ -610,7 +644,7 @@ function handleModelValue(value) {
   }
 
   .mat-text-input--filled:not(.mat-text-input--textarea):has(.mat-text-input__label) .mat-text-input__control-row {
-    padding-block: 24px 8px;
+    padding-block: var(--mat-text-input-density-filled-control-block-start) var(--mat-text-input-density-filled-control-block-end);
   }
 
   .mat-text-input__icon,
@@ -706,6 +740,7 @@ function handleModelValue(value) {
   @media (prefers-reduced-motion: reduce) {
     .mat-text-input__affix,
     .mat-text-input__container,
+    .mat-text-input__control-row,
     .mat-text-input__indicator,
     .mat-text-input__label,
     .mat-text-input__outline {

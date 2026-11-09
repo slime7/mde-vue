@@ -570,6 +570,7 @@ var i = [
 			"readonly",
 			"required",
 			"error",
+			"density",
 			"type"
 		]
 	},
@@ -578,6 +579,7 @@ var i = [
 		tag: "mat-select",
 		aliases: [],
 		defaults: [
+			"density",
 			"block",
 			"items",
 			"multiple",

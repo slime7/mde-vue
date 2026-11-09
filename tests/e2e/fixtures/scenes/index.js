@@ -6,6 +6,7 @@ import CardScene from './CardScene.vue';
 import CarouselScene from './CarouselScene.vue';
 import ChatMinimapScene from './ChatMinimapScene.vue';
 import DialogScene from './DialogScene.vue';
+import DensityScene from './DensityScene.vue';
 import GridListScene from './GridListScene.vue';
 import ListSwipeScene from './ListSwipeScene.vue';
 import MenuScene from './MenuScene.vue';
@@ -31,6 +32,7 @@ export const scenes = {
   carousel: CarouselScene,
   'chat-minimap': ChatMinimapScene,
   dialog: DialogScene,
+  density: DensityScene,
   'grid-list': GridListScene,
   'list-swipe': ListSwipeScene,
   menu: MenuScene,

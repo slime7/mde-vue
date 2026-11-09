@@ -12,7 +12,7 @@ import MatMenu from '../mat-menu/MatMenu.vue';
 import MatMenuItem from '../mat-menu/MatMenuItem.vue';
 import MatMenuGroup from '../mat-menu-group/MatMenuGroup.vue';
 import { isSelectionValue } from '../selection-control';
-import { TEXT_INPUT_VARIANTS } from '../text-input-props';
+import { isTextInputDensity, TEXT_INPUT_VARIANTS } from '../text-input-props';
 import { useMatProps } from '../use-mat-props';
 
 defineOptions({
@@ -21,6 +21,19 @@ defineOptions({
 });
 
 const props = defineProps({
+  /**
+   * 字段的垂直密度。
+   *
+   * 可选值为 `default`、`compact`。compact 保持字号、图标、菜单项高度和交互行为，仅压缩字段的上下留白。
+   *
+   * @type {'default' | 'compact'}
+   * @default 'default'
+   */
+  density: {
+    type: String,
+    default: 'default',
+    validator: isTextInputDensity,
+  },
   /**
    * 忽略默认的 488px 最大宽度限制，允许宽度铺满父容器。
    *
@@ -327,6 +340,7 @@ function removeValue(value) {
       :id="triggerId"
       control="custom"
       :model-value="displayValue"
+      :density="propsWithDefaults.density"
       :label="propsWithDefaults.label"
       :variant="propsWithDefaults.variant"
       :color="propsWithDefaults.color"

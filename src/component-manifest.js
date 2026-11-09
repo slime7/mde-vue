@@ -287,13 +287,13 @@ export default [
     name: "MatTextField",
     tag: "mat-text-field",
     aliases: [],
-    defaults: ["block","label","variant","color","supportingText","errorText","prefixText","suffixText","maxLength","disabled","readonly","required","error","type"],
+    defaults: ["block","label","variant","color","supportingText","errorText","prefixText","suffixText","maxLength","disabled","readonly","required","error","density","type"],
   },
   {
     name: "MatSelect",
     tag: "mat-select",
     aliases: [],
-    defaults: ["block","items","multiple","chips","itemTitle","itemValue","itemSubtitle","label","variant","color","supportingText","errorText","prefixText","suffixText","disabled","readonly","required","error","placeholder","selectionIndicator"],
+    defaults: ["density","block","items","multiple","chips","itemTitle","itemValue","itemSubtitle","label","variant","color","supportingText","errorText","prefixText","suffixText","disabled","readonly","required","error","placeholder","selectionIndicator"],
   },
   {
     name: "MatTextarea",

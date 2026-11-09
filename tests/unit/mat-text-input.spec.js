@@ -98,6 +98,31 @@ describe('文本输入组件', () => {
     });
   });
 
+  it('MatTextField 默认使用 default 密度，compact 不泄漏到原生输入', async () => {
+    const defaultWrapper = mount(MatTextField, {
+      props: {
+        label: '名称',
+        modelValue: '项目甲',
+      },
+    });
+    const compactWrapper = mount(MatTextField, {
+      props: {
+        density: 'compact',
+        label: '名称',
+        modelValue: '项目甲',
+      },
+    });
+
+    expect(defaultWrapper.props('density')).toBe('default');
+    expect(compactWrapper.props('density')).toBe('compact');
+    expect(defaultWrapper.get('input').attributes('density')).toBeUndefined();
+    expect(compactWrapper.get('input').attributes('density')).toBeUndefined();
+
+    await compactWrapper.get('input').setValue('项目乙');
+
+    expect(compactWrapper.emitted('update:modelValue')?.at(-1)).toEqual(['项目乙']);
+  });
+
   it('MatTextField 渲染原生 input、路由属性并请求更新模型', async () => {
     const change = vi.fn();
     const wrapper = mount(MatTextField, {

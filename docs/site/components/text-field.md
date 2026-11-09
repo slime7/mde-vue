@@ -33,6 +33,26 @@ order: 90
   </DocsPreview>
 </ClientOnly>
 
+### `density`
+
+`compact` 只压缩 MatTextField 单行字段的上下留白，把可见字段高度从 56px 降到 48px。字号、图标尺寸和浮动标签的移动过程保持不变；Textarea 不提供该属性。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/text-field/TextFieldCompactExample.vue#template [template]
+
+<<< @/examples/text-field/TextFieldCompactExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Text field density 预览">
+    <TextFieldCompactExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `modelValue`
 
 :::: details 查看示例代码
@@ -406,6 +426,7 @@ order: 90
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `density` | `'default' \| 'compact'` | `'default'` | 字段垂直密度；compact 使用 48px 高度，保持字号、图标和浮动标签行为不变 |
 | `type` | `string` | `'text'` | 原生 input type，例如 `email`、`password` 或 `search` |
 
 ### MatTextarea 属性
@@ -446,15 +467,17 @@ order: 90
 - `autoGrow` 根据输入内容自适应高度；设置 `maxRows` 可限制最大行数并在超出时允许内部滚动。
 - textarea 在顶部内边距区域渐隐滚动内容，同时保持右侧滚动条和调整手柄完整可见；带标签时渐隐区域覆盖标签留白，避免文字与标签重叠。
 - Text field 的 multi-line 形态来自 Material 3；`autoGrow`、`maxRows` 和 `noResize` 是 mde-vue 扩展 API。
+- `density="compact"` 仅压缩单行 MatTextField 的上下留白；两种密度使用同一套标签、图标和状态结构。
 - 减少动态效果偏好下关闭标签、描边与活动指示器的非必要过渡。
 
 ## 参考来源
 
-结构、尺寸、状态和使用原则依据 Material 3 [Text fields overview](https://m3.material.io/components/text-fields/overview)、[Text fields specs](https://m3.material.io/components/text-fields/specs) 与 [Text fields guidelines](https://m3.material.io/components/text-fields/guidelines)。
+结构、尺寸、状态和使用原则依据 Material 3 [Text fields overview](https://m3.material.io/components/text-fields/overview)、[Text fields specs](https://m3.material.io/components/text-fields/specs)、[Text fields guidelines](https://m3.material.io/components/text-fields/guidelines) 与 [Density](https://m3.material.io/foundations/layout/grids-spacing/density)。
 
 <script setup>
 import TextFieldBlockExample from '../examples/text-field/TextFieldBlockExample.vue';
 import TextFieldColorExample from '../examples/text-field/TextFieldColorExample.vue';
+import TextFieldCompactExample from '../examples/text-field/TextFieldCompactExample.vue';
 import TextFieldDisabledExample from '../examples/text-field/TextFieldDisabledExample.vue';
 import TextFieldErrorExample from '../examples/text-field/TextFieldErrorExample.vue';
 import TextFieldLabelExample from '../examples/text-field/TextFieldLabelExample.vue';

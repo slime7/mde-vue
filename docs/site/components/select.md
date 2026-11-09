@@ -35,6 +35,28 @@ order: 88
   </DocsPreview>
 </ClientOnly>
 
+### `density`
+
+`compact` 把选择器字段高度从 56px 降到 48px，保留相同的标签、图标、焦点和选择行为。下拉菜单的项目高度仍保持 48px，避免缩小可选择区域。
+
+:::: details 查看示例代码
+::: code-group
+
+<<< @/examples/select/SelectCompactExample.vue#template [template]
+
+<<< @/examples/select/SelectCompactExample.vue#script [script]
+
+<<< @/examples/select/SelectCompactExample.vue#style [style]
+
+:::
+::::
+
+<ClientOnly>
+  <DocsPreview label="Select density 预览">
+    <SelectCompactExample />
+  </DocsPreview>
+</ClientOnly>
+
 ### `items`、字段映射与分组
 
 字符串项以自身作为标题和值。对象项默认读取 `title`、`value`、`subtitle`，也可以用 `item-title`、`item-value`、`item-subtitle` 更换字段。分组使用 `{ group, items }`，不允许嵌套分组。
@@ -212,6 +234,7 @@ order: 88
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `block` | `boolean` | `false` | 忽略默认的 488px 最大宽度限制，允许宽度铺满父容器 |
+| `density` | `'default' \| 'compact'` | `'default'` | 字段垂直密度；compact 使用 48px 高度，菜单项目保持 48px |
 | `modelValue` | 基础值、基础值数组或 `null` | `null` | 单选使用基础值或 null，多选使用数组 |
 | `items` | `Array` | 必填 | 字符串、对象或 `{ group: string, items: Array }` 分组 |
 | `multiple` | `boolean` | `false` | 启用多选，并保持菜单打开 |
@@ -260,14 +283,16 @@ order: 88
 - 多选 Checkbox 只表达状态，不参与焦点或无障碍树，避免在菜单项内产生嵌套交互控件。
 - 单选空值为 `null`，多选空值为 `[]`；`modelValue` 与 multiple 模式不匹配时在开发环境警告。
 - 隐藏 select 不进入 Tab 顺序或无障碍树，只用于原生 options、required 与表单提交。
+- `density="compact"` 只压缩字段外壳，不改变菜单项目高度、键盘操作和选择规则。
 
 ## 参考来源
 
-Select 的组合外观由 mde-vue 根据 Material 3 [Text fields](https://m3.material.io/components/text-fields/overview)、[Menus](https://m3.material.io/components/menus/overview)、[Chips](https://m3.material.io/components/chips/overview) 与 [Checkbox](https://m3.material.io/components/checkbox/overview) 总结；这些页面没有规定本组件完整的 Select API 或组合方式。
+Select 的组合外观由 mde-vue 根据 Material 3 [Text fields](https://m3.material.io/components/text-fields/overview)、[Menus](https://m3.material.io/components/menus/overview)、[Chips](https://m3.material.io/components/chips/overview)、[Checkbox](https://m3.material.io/components/checkbox/overview) 与 [Density](https://m3.material.io/foundations/layout/grids-spacing/density) 总结；这些页面没有规定本组件完整的 Select API 或组合方式。
 
 <script setup>
 import SelectBlockExample from '../examples/select/SelectBlockExample.vue';
 import SelectChipsExample from '../examples/select/SelectChipsExample.vue';
+import SelectCompactExample from '../examples/select/SelectCompactExample.vue';
 import SelectItemsExample from '../examples/select/SelectItemsExample.vue';
 import SelectMultipleExample from '../examples/select/SelectMultipleExample.vue';
 import SelectPrefixTextExample from '../examples/select/SelectPrefixTextExample.vue';

@@ -332,6 +332,7 @@
 
     /* Text input component tokens */
     --mat-text-input-container-height: 56px;
+    --mat-text-input-compact-container-height: 48px;
 
     /* Menu component tokens */
     --mat-menu-container-min-width: 112px;

@@ -169,4 +169,24 @@ describe('文本输入与菜单文档', () => {
     expect(source).toContain('readonly');
     expect(source).toContain('disabled');
   });
+
+  it('Text field 与 Select 文档覆盖 compact 密度示例', () => {
+    const textPage = readFileSync(resolve('docs/site/components/text-field.md'), 'utf8');
+    const selectPage = readFileSync(resolve('docs/site/components/select.md'), 'utf8');
+    const textExample = readFileSync(
+      resolve('docs/site/examples/text-field/TextFieldCompactExample.vue'),
+      'utf8',
+    );
+    const selectExample = readFileSync(
+      resolve('docs/site/examples/select/SelectCompactExample.vue'),
+      'utf8',
+    );
+
+    expect(textPage).toContain('`density`');
+    expect(textPage).toContain('TextFieldCompactExample.vue');
+    expect(selectPage).toContain('`density`');
+    expect(selectPage).toContain('SelectCompactExample.vue');
+    expect(textExample).toContain('density="compact"');
+    expect(selectExample).toContain('density="compact"');
+  });
 });

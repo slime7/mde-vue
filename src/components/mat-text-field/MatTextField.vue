@@ -1,6 +1,6 @@
 <script setup>
 import MatTextInputBase from '../MatTextInputBase.vue';
-import { TEXT_INPUT_PROPS } from '../text-input-props';
+import { isTextInputDensity, TEXT_INPUT_PROPS } from '../text-input-props';
 import { useMatProps } from '../use-mat-props';
 
 defineOptions({
@@ -10,6 +10,19 @@ defineOptions({
 
 const props = defineProps({
   ...TEXT_INPUT_PROPS,
+  /**
+   * 单行字段的垂直密度。
+   *
+   * 可选值为 `default`、`compact`。compact 保持字号、图标和交互目标，仅压缩字段的上下留白。
+   *
+   * @type {'default' | 'compact'}
+   * @default 'default'
+   */
+  density: {
+    type: String,
+    default: 'default',
+    validator: isTextInputDensity,
+  },
   /**
    * 原生 input 类型。
    *

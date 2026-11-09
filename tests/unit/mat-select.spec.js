@@ -392,4 +392,38 @@ describe('MatSelect', () => {
     expect(blockWrapper.classes()).toContain('mat-select--block');
     expect(blockWrapper.get('select').attributes('block')).toBeUndefined();
   });
+
+  it('默认使用 default 密度，compact 保留选择、焦点和菜单行为', async () => {
+    const defaultWrapper = mount(MatSelect, {
+      props: {
+        modelValue: null,
+        items: ['甲', '乙'],
+      },
+    });
+    const compactWrapper = mount(MatSelect, {
+      attachTo: document.body,
+      props: {
+        density: 'compact',
+        modelValue: null,
+        label: '项目',
+        items: ['甲', '乙'],
+      },
+    });
+
+    expect(defaultWrapper.props('density')).toBe('default');
+    expect(compactWrapper.props('density')).toBe('compact');
+    expect(compactWrapper.get('[role="combobox"]').attributes('density')).toBeUndefined();
+    expect(compactWrapper.get('select').attributes('density')).toBeUndefined();
+
+    await compactWrapper.get('[role="combobox"]').trigger('click');
+    await nextTick();
+    await compactWrapper.get('[role="menuitem"]').trigger('click');
+    await nextTick();
+
+    expect(compactWrapper.emitted('update:modelValue')?.at(-1)).toEqual(['甲']);
+    expect(compactWrapper.emitted('change')?.at(-1)).toEqual(['甲']);
+    expect(document.activeElement).toBe(compactWrapper.get('[role="combobox"]').element);
+
+    compactWrapper.unmount();
+  });
 });

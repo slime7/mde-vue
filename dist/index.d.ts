@@ -2622,6 +2622,15 @@ export interface MatTextFieldProps {
   */
   error?: boolean;
   /**
+  * 单行字段的垂直密度。
+  *
+  * 可选值为 `default`、`compact`。compact 保持字号、图标和交互目标，仅压缩字段的上下留白。
+  *
+  * @type {'default' | 'compact'}
+  * @default 'default'
+  */
+  density?: 'default' | 'compact';
+  /**
   * 原生 input 类型。
   *
   * 常用值包括 `text`、`email`、`number`、`password`、`search`、`tel`、`url`。
@@ -2643,6 +2652,15 @@ export type MatTextFieldComponent = DefineComponent<MatTextFieldProps, {}, {}, {
 export declare const MatTextField: MatTextFieldComponent;
 
 export interface MatSelectProps {
+  /**
+  * 字段的垂直密度。
+  *
+  * 可选值为 `default`、`compact`。compact 保持字号、图标、菜单项高度和交互行为，仅压缩字段的上下留白。
+  *
+  * @type {'default' | 'compact'}
+  * @default 'default'
+  */
+  density?: 'default' | 'compact';
   /**
   * 忽略默认的 488px 最大宽度限制，允许宽度铺满父容器。
   *
